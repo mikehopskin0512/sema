@@ -1,6 +1,6 @@
 import Router from 'next/router'
 import * as types from './types';
-import api from '../../utils/api';
+//import api from '../../utils/api';
 
 const loginRequest = function () {
   return {
