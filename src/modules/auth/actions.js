@@ -1,4 +1,4 @@
-import { push } from 'connected-react-router';
+import Router from 'next/router'
 import * as types from './types';
 import api from '../../utils/api';
 
@@ -113,7 +113,7 @@ export function setBasicUser(user) {
 export function logout() {
   return function (dispatch) {
     dispatch(logoutSuccess());
-    dispatch(push('/login'));
+    dispatch(Router.push('/login'));
   };
 }
 
@@ -164,7 +164,7 @@ export function login(email, password) {
 
         // Not sure why the underscore here. Comes from token response
         dispatch(fetchCurrentUser(data.access_token));
-        dispatch(push(redirect));
+        dispatch(Router.push(redirect));
       })
       .catch((error) => {
         dispatch(loginError(error.response));
