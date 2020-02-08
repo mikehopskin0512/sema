@@ -150,7 +150,7 @@ export function fetchCurrentUserIfNeeded(accessToken) {
   };
 }
 
-export function login(email, password, redirect) {
+export function login(email, password) {
   return function (dispatch) {
     dispatch(loginRequest());
     api.post('/proxy/oauth/token', {
