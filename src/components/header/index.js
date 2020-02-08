@@ -1,11 +1,7 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import "./style.scss";
-
-const linkStyle = {
-  marginRight: 15
-};
+import './style.scss';
 
 const isAuthenticated = true;
 const isAdmin = false;
@@ -61,9 +57,9 @@ const Header = () => {
 
   const handleLogout = () => {
     toggleMenu();
-    //props.logout();
-  };  
- 
+    // props.logout();
+  };
+
   return (
     <header>
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">

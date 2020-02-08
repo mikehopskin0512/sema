@@ -1,8 +1,8 @@
 import Header from '../header';
 import Footer from '../footer';
-import "./style.scss";
+import './style.scss';
 
-const withLayout = Page => {
+const withLayout = (Page) => {
   return () => (
     <div className="Layout">
       <Header />

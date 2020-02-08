@@ -13,10 +13,10 @@ if (process.env.NODE_ENV === 'development') {
   });
 
   makeStore = (initialState, options) => {
-      return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk, logger)));
+    return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk, logger)));
   };
 } else {
   makeStore = (initialState, options) => {
-      return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk)));
+    return createStore(reducer, initialState, composeWithDevTools(applyMiddleware(thunk)));
   };
 }
