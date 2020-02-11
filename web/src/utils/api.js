@@ -1,25 +1,14 @@
 import axios from 'axios';
 
-const isBrowser = typeof window !== 'undefined';
-const { PORT, DEV_PORT } = process.env;
+// const isBrowser = typeof window !== 'undefined';
+const baseUrl = process !== 'undefined' ? process.env.BASE_URL : null;
 
 const api = (function () {
-  const _baseUrl = function () {
-    let baseUrl = '';
-
-    if (!isBrowser) {
-      baseUrl = `http://localhost:${PORT}`;
-    } else if (process.env.NODE_ENV === 'development') {
-      baseUrl = `http://localhost:${DEV_PORT}`;
-    }
-    return baseUrl;
-  };
-
   const _get = function (url, data, token) {
     const payload = {
       method: 'get',
       params: data,
-      url: _baseUrl() + url,
+      url: baseUrl + url,
     };
 
     if (token) {
@@ -44,7 +33,7 @@ const api = (function () {
     const payload = {
       method: 'post',
       data,
-      url: _baseUrl() + url,
+      url: baseUrl + url,
     };
     if (token) {
       payload.headers = {
@@ -66,7 +55,7 @@ const api = (function () {
     const payload = {
       method: 'put',
       data,
-      url: _baseUrl() + url,
+      url: baseUrl + url,
     };
     if (token) {
       payload.headers = {
@@ -89,7 +78,7 @@ const api = (function () {
     const payload = {
       method: 'delete',
       data,
-      url: _baseUrl() + url,
+      url: baseUrl + url,
     };
 
     if (token) {
