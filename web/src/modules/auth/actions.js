@@ -150,27 +150,28 @@ export function fetchCurrentUserIfNeeded(accessToken) {
   };
 }
 
-export function login(email, password) {
-  return function (dispatch) {
+export const login = (email, password) => async (dispatch) => {
+  try {
     dispatch(loginRequest());
-    api.post('/proxy/oauth/token', {
+    const res = await api.post('/login', {
       username: email,
       password,
-      grant_type: 'password',
-    })
-      .then((data) => {
-        dispatch(setCookie(data));
-        dispatch(loginSuccess(data));
+    });
 
-        // Not sure why the underscore here. Comes from token response
-        dispatch(fetchCurrentUser(data.access_token));
-        dispatch(Router.push(redirect));
-      })
-      .catch((error) => {
-        dispatch(loginError(error.response));
-      });
-  };
-}
+    console.log(res);
+    if (res.success) {
+      dispatch(setCookie('token', res.token));
+      dispatch(loginSuccess(res));
+      // dispatch(Router.push('/'));
+    } else {
+      console.log(res);
+      dispatch(loginError(res.error));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(loginError(error.response));
+  }
+};
 
 export function loginViaToken(accessToken) {
   return function (dispatch) {
