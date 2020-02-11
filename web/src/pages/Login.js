@@ -64,7 +64,7 @@ const Login = () => {
                   <Link href="#"><a className="is-size-7">Forgot password?</a></Link>
                 </div>
                 <div className="field">
-                  <button type="button" className="button is-primary is-fullwidth">
+                  <button type="submit" className="button is-primary is-fullwidth">
                     Login
                   </button>
                 </div>
