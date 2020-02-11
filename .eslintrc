@@ -1,6 +1,7 @@
 {
   "extends": ["airbnb", "airbnb/hooks"],
   "rules": {
+    "func-names": 0,  
     "indent": ["warn", 2],
     "max-len": ["warn", 150, 2],
     "no-underscore-dangle": "off",
