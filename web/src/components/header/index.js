@@ -1,18 +1,22 @@
 import { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { logout } from '../../utils/auth';
 import './style.scss';
 
-const isAuthenticated = true;
-const isAdmin = false;
-const userInitials = 'JR';
-
-const Header = () => {
+const Header = (props) => {
   const burger = useRef(null);
   const menu = useRef(null);
   const userMenu = useRef(null);
   const helpMenu = useRef(null);
 
+  const auth = useSelector((state) => state.auth);
+  const { user, token } = auth;
+  const { firstName = '', lastName = '', is_admin: isAdmin = false } = user;
+  const isAuthenticated = true;
+  const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -53,11 +57,11 @@ const Header = () => {
         userMenu.current.classList.add('is-active');
       }
     }
-  };  
+  };
 
   const handleLogout = () => {
     toggleMenu();
-    // props.logout();
+    logout();
   };
 
   return (
