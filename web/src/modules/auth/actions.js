@@ -183,27 +183,29 @@ export function fetchCurrentUserIfNeeded(accessToken) {
   };
 }
 
-export const login = (email, password) => async (dispatch) => {
-  try {
-    dispatch(loginRequest());
-    const res = await api.post('/login', {
-      username: email,
-      password,
-    });
+export const login = (email, password) => {
+  return async (dispatch) => {
+    try {
+      dispatch(loginRequest());
+      const res = await api.post('/login', {
+        username: email,
+        password,
+      });
 
-    console.log(res);
-    if (res.success) {
-      dispatch(setCookie('token', res.token));
-      dispatch(loginSuccess(res));
-      // dispatch(Router.push('/'));
-    } else {
       console.log(res);
-      dispatch(loginError(res.error));
+      if (res.success) {
+        dispatch(setCookie('token', res.token));
+        dispatch(loginSuccess(res));
+        Router.push('/reports');
+      } else {
+        console.log(res);
+        dispatch(loginError(res.error));
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(loginError(error.response));
     }
-  } catch (error) {
-    console.log(error);
-    dispatch(loginError(error.response));
-  }
+  };
 };
 
 export function loginViaToken(accessToken) {
