@@ -21,6 +21,7 @@ export default function auth(state = initialState.auth, action) {
       isFetching: false,
       isAuthenticated: true,
       token: action.token,
+      user: action.user,
       error: {},
     };
   case types.LOGIN_TOKEN_SUCCESS:
