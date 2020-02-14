@@ -1,0 +1,13 @@
+version: '2'
+services:
+  web:
+    image: web-dev-i
+    build:
+      context: web/
+      dockerfile: ../.docker/web/Dockerfile.dev
+    ports:
+     - "3000:3000"
+    volumes:
+     - ./web:/usr/app
+     - /usr/app/node_modules
+    container_name: web.sema.local
