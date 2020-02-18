@@ -100,7 +100,7 @@ const Header = (props) => {
             <Link href="/faq"><a className="navbar-item" onClick={toggleHamburger}>Another nav item</a></Link>
             <hr className="navbar-divider" />
             {isAdmin &&
-              <Link to="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>
+              <Link href="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>
             }
             <span
               role="button"
