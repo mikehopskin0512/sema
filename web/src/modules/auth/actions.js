@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import nextCookie from 'next-cookies';
+// import nextCookie from 'next-cookies';
 import cookie from 'js-cookie';
 
 import * as types from './types';
@@ -56,12 +56,12 @@ const loginRequest = function () {
 
 const loginSuccess = function (data) {
   const now = new Date();
-  const expires = now.setSeconds(now.getSeconds() + data.expires_in);
+  // const expires = now.setSeconds(now.getSeconds() + data.expires_in);
 
   return {
     type: types.AUTH_LOGIN_SUCCESS,
     token: data.token,
-    expires,
+    // expires,
     user: data,
   };
 };
