@@ -75,7 +75,7 @@ const Header = (props) => {
             <img src="/img/sema-logo.svg" alt="Logo" />
           </Link>
 
-          {(isAuthenticated) &&
+          {(token) &&
           <button
             onClick={toggleHamburger}
             type="button"
@@ -110,7 +110,7 @@ const Header = (props) => {
               tabIndex={0}>Logout
             </span>
           </div>
-          {(isAuthenticated) &&
+          {(token) &&
           <div className="navbar-end is-hidden-mobile is-hidden-tablet-only">
             {/* Right icon menu - desktop */}
             <div className="navbar-item has-dropdown" style={{ marginRight: '0.7rem' }} ref={userMenu}>
