@@ -1,21 +1,24 @@
 import { useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { logout } from '../../utils/auth';
 import './style.scss';
+import { authOperations } from '../../modules/auth';
 
 const Header = (props) => {
+  const dispatch = useDispatch();
+  const { logout } = authOperations;
+
+  // Create REFs for menus
   const burger = useRef(null);
   const menu = useRef(null);
   const userMenu = useRef(null);
   const helpMenu = useRef(null);
 
+  // Get auth state
   const auth = useSelector((state) => state.auth);
   const { user, token } = auth;
-  const { firstName = '', lastName = '', is_admin: isAdmin = false } = user;
-  const isAuthenticated = true;
+  const { first_name: firstName = '', last_name: lastName = '', is_admin: isAdmin = false } = user;
   const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   const toggleHamburger = () => {
@@ -60,8 +63,8 @@ const Header = (props) => {
   };
 
   const handleLogout = () => {
-    toggleMenu();
-    logout();
+    toggleUserMenu();
+    dispatch(logout());
   };
 
   return (

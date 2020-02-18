@@ -143,12 +143,11 @@ export function setBasicUser(user) {
   };
 }
 
-export function logout() {
-  return function (dispatch) {
-    dispatch(logoutSuccess());
-    dispatch(Router.push('/login'));
-  };
-}
+export const logout = () => (dispatch) => {
+  removeCookie('sema_token');
+  dispatch(logoutSuccess());
+  Router.push('/login');
+};
 
 const fetchCurrentUser = function (accessToken) {
   return function (dispatch) {
@@ -194,7 +193,7 @@ export const login = (email, password) => {
 
       console.log(res);
       if (res.success) {
-        dispatch(setCookie('token', res.token));
+        setCookie('sema_token', res.token);
         dispatch(loginSuccess(res));
         Router.push('/reports');
       } else {
