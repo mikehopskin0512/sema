@@ -12,7 +12,7 @@ const Reports = () => {
     }),
   );
 
-  console.log(auth);
+  console.log('reports - auth: ', auth);
 
   return (<p>This is the reports page.</p>);
 };
