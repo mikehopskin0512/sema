@@ -27,6 +27,8 @@ const filetypes = [
 	{ label: 'Swift', value: 9}
 ];
 
+// Planning on wrapping Select with something like this class to implement Select All
+// https://medium.com/@alex_escalante/react-select-alloptionoptions-with-a-single-click-1ebf5a33fe31
 const Reports = () => (
 
 <section className='Reports'>
