@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Provider } from 'react-redux';
-import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
