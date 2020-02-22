@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm } from 'react-hook-form';
 
-import withLayout from '../components/layout';
-import './login/styles.scss';
+import withLayout from '../../components/layout';
+import './styles.scss';
 
-import { authOperations } from '../modules/auth';
+import { authOperations } from '../../modules/auth';
 
 const { login } = authOperations;
 
