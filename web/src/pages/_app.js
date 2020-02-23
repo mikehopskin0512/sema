@@ -7,7 +7,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
 import { faUser, faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 
-import { makeStore } from '../modules';
+import { initStore } from '../modules';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faTwitter, faFacebook);
@@ -27,4 +27,4 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   return { pageProps };
 };
 
-export default withRedux(makeStore)(MyApp);
+export default withRedux(initStore)(MyApp);
