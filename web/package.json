@@ -5,9 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "start": "next start"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
@@ -38,10 +36,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
-    "@storybook/addon-actions": "^5.3.9",
-    "@storybook/addon-links": "^5.3.9",
-    "@storybook/addons": "^5.3.9",
-    "@storybook/react": "^5.3.9",
     "babel-loader": "^8.0.6",
     "eslint": "^6.1.0",
     "eslint-config-airbnb": "^18.0.1",
