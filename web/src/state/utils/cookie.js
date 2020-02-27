@@ -7,9 +7,6 @@ export const setCookie = (key, value) => {
       path: '/',
     });
   }
-  return {
-    type: types.SET_AUTH_COOKIE,
-  };
 };
 
 export const removeCookie = (key) => {
