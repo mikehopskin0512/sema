@@ -12,9 +12,9 @@ config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatic
 library.add(faUser, faEnvelope, faLock, faTwitter, faFacebook);
 
 const Application = ({ Component, pageProps, store }) => (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+  <Provider store={store}>
+    <Component {...pageProps} />
+  </Provider>
 );
 
 Application.getInitialProps = async ({ Component, ctx }) => {

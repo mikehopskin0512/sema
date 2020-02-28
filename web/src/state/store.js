@@ -5,8 +5,8 @@ import * as reducers from './features';
 
 const middleware = [thunk];
 
-if (process.env.NODE_ENV === `development`) {
-  const { createLogger } = require(`redux-logger`);
+if (process.env.NODE_ENV === 'development') {
+  const { createLogger } = require('redux-logger');
   const logger = createLogger({
     collapsed: true,
   });
@@ -19,6 +19,6 @@ export const initStore = (initialState = {}) => {
   return createStore(
     rootReducer,
     initialState,
-    composeWithDevTools(applyMiddleware(...middleware))
+    composeWithDevTools(applyMiddleware(...middleware)),
   );
-}
+};
