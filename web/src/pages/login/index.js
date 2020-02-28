@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import withLayout from '../../components/layout';
 import './styles.scss';
 
-import { authOperations } from '../../modules/auth';
+import { authOperations } from '../../state/features/auth';
 
-const { login } = authOperations;
+const { authenticate } = authOperations;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     const { email, password } = data;
-    dispatch(login(email, password));
+    dispatch(authenticate(email, password));
   };
 
   return (

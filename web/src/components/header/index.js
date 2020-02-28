@@ -3,11 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.scss';
-import { authOperations } from '../../modules/auth';
+import { authOperations } from '../../state/features/auth';
 
 const Header = (props) => {
   const dispatch = useDispatch();
-  const { logout } = authOperations;
+  const { deauthenticate } = authOperations;
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -16,7 +16,7 @@ const Header = (props) => {
   const helpMenu = useRef(null);
 
   // Get auth state
-  const auth = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
   const { first_name: firstName = '', last_name: lastName = '', is_admin: isAdmin = false } = user;
   const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
@@ -64,7 +64,7 @@ const Header = (props) => {
 
   const handleLogout = () => {
     toggleUserMenu();
-    dispatch(logout());
+    dispatch(deauthenticate());
   };
 
   return (
