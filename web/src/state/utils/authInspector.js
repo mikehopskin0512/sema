@@ -6,23 +6,24 @@ import { getCookie } from './cookie';
 const { hydrateUser, reauthenticate } = authOperations;
 const authCookie = process.env.AUTH_JWT;
 
-export const initialize  = (ctx) =>  {
+export const initialize  = async (ctx) =>  {
+  const jwt = getCookie(authCookie, ctx.req);
 
-  if(ctx.isServer) {
-    if(ctx.req.headers.cookie) {
-      const jwt = getCookie(authCookie, ctx.req);
-      if (jwt) {
-        ctx.store.dispatch(reauthenticate(jwt));
-        ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
-      }
+  if(!jwt) {
+    if(ctx.pathname !== "/login") {
+      redirect(ctx, "/login");
     }
   } else {
-    const token = ctx.store.getState().authState.token;
-    if(token && (ctx.pathname === '/login' || ctx.pathname === '/register')) {
-      ctx.store.dispatch(hydrateUser(jwtDecode(token)));
-      setTimeout(function() {
-        Router.push('/');
-      }, 0);
-    }
+    ctx.store.dispatch(reauthenticate(jwt));
+    ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
+  }
+}
+
+const redirect = (ctx, location) => {
+  if (ctx.req) {
+    ctx.res.writeHead(302, { Location: location });
+    ctx.res.end();
+  } else {
+    Router.push(location);
   }
 }
