@@ -10,9 +10,7 @@ const Reports = () => {
       auth: state.authState,
     }),
   );
-
-  console.log('reports - auth: ', auth);
-
+  
   return (<p>This is the reports page.</p>);
 };
 
