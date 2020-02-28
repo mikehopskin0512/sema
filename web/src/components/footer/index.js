@@ -1,4 +1,4 @@
-import "./style.scss";
+import './style.scss';
 
 const Footer = () => (
   <footer className="">
@@ -6,6 +6,6 @@ const Footer = () => (
       <p>Sema &copy; {new Date().getFullYear()} / All Rights Reserved</p>
     </div>
   </footer>
-  );
+);
 
 export default Footer;
