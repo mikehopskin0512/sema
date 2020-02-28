@@ -3,12 +3,12 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm } from 'react-hook-form';
 
-import withLayout from '../components/layout';
-import './login/styles.scss';
+import withLayout from '../../components/layout';
+import './styles.scss';
 
-import { authOperations } from '../modules/auth';
+import { authOperations } from '../../state/features/auth';
 
-const { login } = authOperations;
+const { authenticate } = authOperations;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     const { email, password } = data;
-    dispatch(login(email, password));
+    dispatch(authenticate(email, password));
   };
 
   return (
@@ -64,7 +64,7 @@ const Login = () => {
                   <Link href="#"><a className="is-size-7">Forgot password?</a></Link>
                 </div>
                 <div className="field">
-                  <button type="button" className="button is-primary is-fullwidth">
+                  <button type="submit" className="button is-primary is-fullwidth">
                     Login
                   </button>
                 </div>
