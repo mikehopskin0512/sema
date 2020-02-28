@@ -10,9 +10,7 @@ export const initialize  = async (ctx) =>  {
   const jwt = getCookie(authCookie, ctx.req);
 
   if(!jwt) {
-    if(ctx.pathname !== "/login") {
-      redirect(ctx, "/login");
-    }
+    if(ctx.pathname !== "/login") redirect(ctx, "/login");;
   } else {
     ctx.store.dispatch(reauthenticate(jwt));
     ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
