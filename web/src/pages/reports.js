@@ -1,14 +1,13 @@
 import { useSelector, useDispatch } from 'react-redux';
 
 import withLayout from '../components/layout';
-import { withAuthSync } from '../utils/auth';
 
 const Reports = () => {
   const dispatch = useDispatch();
 
   const { auth } = useSelector(
     (state) => ({
-      auth: state.auth,
+      auth: state.authState,
     }),
   );
 
@@ -17,4 +16,4 @@ const Reports = () => {
   return (<p>This is the reports page.</p>);
 };
 
-export default withAuthSync(withLayout(Reports));
+export default withLayout(Reports);
