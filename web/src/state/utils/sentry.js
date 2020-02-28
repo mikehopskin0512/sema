@@ -3,19 +3,20 @@ import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
 import { getCookie } from './cookie';
+
 const { hydrateUser, reauthenticate } = authOperations;
 const authCookie = process.env.AUTH_JWT;
 
-export const initialize  = async (ctx) =>  {
+export const initialize = async (ctx) => {
   const jwt = getCookie(authCookie, ctx.req);
 
-  if(!jwt) {
-    if(ctx.pathname !== "/login") redirect(ctx, "/login");;
+  if (!jwt) {
+    if (ctx.pathname !== '/login') redirect(ctx, '/login');
   } else {
     ctx.store.dispatch(reauthenticate(jwt));
     ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
   }
-}
+};
 
 const redirect = (ctx, location) => {
   if (ctx.req) {
@@ -24,4 +25,4 @@ const redirect = (ctx, location) => {
   } else {
     Router.push(location);
   }
-}
+};
