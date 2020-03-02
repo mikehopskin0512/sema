@@ -1,18 +1,25 @@
 import { useState, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.scss';
+import { authOperations } from '../../state/features/auth';
 
-const isAuthenticated = true;
-const isAdmin = false;
-const userInitials = 'JR';
+const Header = (props) => {
+  const dispatch = useDispatch();
+  const { deauthenticate } = authOperations;
 
-const Header = () => {
+  // Create REFs for menus
   const burger = useRef(null);
   const menu = useRef(null);
   const userMenu = useRef(null);
   const helpMenu = useRef(null);
 
+  // Get auth state
+  const auth = useSelector((state) => state.authState);
+  const { user, token } = auth;
+  const { first_name: firstName = '', last_name: lastName = '', is_admin: isAdmin = false } = user;
+  const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -53,11 +60,11 @@ const Header = () => {
         userMenu.current.classList.add('is-active');
       }
     }
-  };  
+  };
 
   const handleLogout = () => {
-    toggleMenu();
-    // props.logout();
+    toggleUserMenu();
+    dispatch(deauthenticate());
   };
 
   return (
@@ -68,7 +75,7 @@ const Header = () => {
             <img src="/img/sema-logo.svg" alt="Logo" />
           </Link>
 
-          {(isAuthenticated) &&
+          {(token) &&
           <button
             onClick={toggleHamburger}
             type="button"
@@ -93,7 +100,7 @@ const Header = () => {
             <Link href="/faq"><a className="navbar-item" onClick={toggleHamburger}>Another nav item</a></Link>
             <hr className="navbar-divider" />
             {isAdmin &&
-              <Link to="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>
+              <Link href="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>
             }
             <span
               role="button"
@@ -103,7 +110,7 @@ const Header = () => {
               tabIndex={0}>Logout
             </span>
           </div>
-          {(isAuthenticated) &&
+          {(token) &&
           <div className="navbar-end is-hidden-mobile is-hidden-tablet-only">
             {/* Right icon menu - desktop */}
             <div className="navbar-item has-dropdown" style={{ marginRight: '0.7rem' }} ref={userMenu}>
