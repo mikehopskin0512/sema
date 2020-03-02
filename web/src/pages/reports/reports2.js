@@ -1,5 +1,5 @@
-import withLayout from '../components/layout';
-import ReportsHeader from './reports/reportsHeader';
+import withLayout from '../../components/layout';
+import ReportsHeader from './reportsHeader';
 
 const Reports = () => {
   return (
