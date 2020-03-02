@@ -1,9 +1,23 @@
+import { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ReportsHeader = () => {
+  // Create REFs for menus
+  const filterMenu = useRef(null);
+
+  const toggleFilterMenu = () => {
+    if (filterMenu.current) {
+      if (filterMenu.current.classList.contains('is-hidden')) {
+        filterMenu.current.classList.remove('is-hidden');
+      } else {
+        filterMenu.current.classList.add('is-hidden');
+      }
+    }
+  };
+
   return (
     <div>
-      <nav className="navbar has-background-primary" role="navigation" aria-label="main navigation">
+      <nav className="navbar has-background-primary" style={{ zIndex: '1' }} role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <div className="navbar-item has-text-white">
             <FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;<span>Report title goes here</span>
@@ -21,7 +35,10 @@ const ReportsHeader = () => {
 
           <div className="navbar-end">
             <div className="navbar-item">
-              <button type="button" className="button is-small is-primary is-inverted is-outlined margin-right-1">
+              <button
+                type="button"
+                className="button is-small is-primary is-inverted is-outlined margin-right-1"
+                onClick={toggleFilterMenu}>
                 <span className="icon">
                   <FontAwesomeIcon icon="filter" />
                 </span>
@@ -32,12 +49,12 @@ const ReportsHeader = () => {
           </div>
         </div>
       </nav>
-      <div className="columns has-background-white-ter">
-<div className="column">
-<div class="columns is-mobile">
-  <div class="column is-half is-offset-one-quarter">Filters</div>
-</div>      
-</div>
+      <div className="columns has-background-white-ter is-hidden" ref={filterMenu}>
+        <div className="column">
+          <div className="columns is-mobile">
+            <div className="column is-half is-offset-one-quarter">Filters</div>
+          </div>
+        </div>
       </div>
     </div>
   );
