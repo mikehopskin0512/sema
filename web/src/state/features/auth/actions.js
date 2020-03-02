@@ -1,8 +1,9 @@
 import Router from 'next/router';
 import * as types from './types';
-import {auth} from './api';
-import {removeCookie, setCookie} from '../../utils/cookie';
-const authCookie = process.env.AUTH_JWT;
+import { auth } from './api';
+import { removeCookie, setCookie } from '../../utils/cookie';
+
+const authCookie = process.env.AUTH_JWT || 'sema';
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
