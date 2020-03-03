@@ -6,8 +6,8 @@ const requestModeUrl = () => ({
   type: types.REQUEST_MODE_URL,
 });
 
-const recieveModeUrl = (data) => ({
-  type: types.RECIEVE_MODE_URL,
+const receiveModeUrl = (data) => ({
+  type: types.RECEIVE_MODE_URL,
   token: data.token,
 });
 
@@ -23,7 +23,7 @@ export const getModeUrl = (token) => async (dispatch) => {
     dispatch(requestModeUrlError(res.error));
   }
   if (res.data && res.data.token) {
-    dispatch(recieveModeUrl(res.data));
+    dispatch(receiveModeUrl(res.data));
   }
 };
 

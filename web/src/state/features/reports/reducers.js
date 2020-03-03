@@ -12,7 +12,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: true,
     };
-  case types.RECIEVE_MODE_URL:
+  case types.RECEIVE_MODE_URL:
     return {
       ...state,
       isFetching: false,
