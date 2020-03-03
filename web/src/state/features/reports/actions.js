@@ -1,6 +1,6 @@
 import * as types from './types';
 
-import { get } from '../../utils/api';
+import { getAll } from '../../utils/api';
 
 const requestModeUrl = () => ({
   type: types.REQUEST_MODE_URL,
@@ -16,10 +16,9 @@ const requestModeUrlError = (errors) => ({
   errors,
 });
 
-export const getModeUrl = () => async (dispatch) => {
-  const params = '';
+export const getModeUrl = (token) => async (dispatch) => {
   dispatch(requestModeUrl());
-  const res = await get('/embedded_bi', params);
+  const res = await getAll('/v1/embedded_bi', {}, token);
   if (res.error) {
     dispatch(requestModeUrlError(res.error));
   }
