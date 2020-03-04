@@ -5,7 +5,7 @@ import { authOperations } from '../features/auth';
 import { getCookie } from './cookie';
 
 const { hydrateUser, reauthenticate } = authOperations;
-const authCookie = process.env.AUTH_JWT || 'sema';
+const authCookie = process.env.AUTH_JWT;
 
 export const initialize = async (ctx) => {
   const jwt = getCookie(authCookie, ctx.req);
