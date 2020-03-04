@@ -18,12 +18,18 @@ const requestModeUrlError = (errors) => ({
 
 export const getModeUrl = (token) => async (dispatch) => {
   dispatch(requestModeUrl());
-  const res = await getAll('/v1/embedded_bi', {}, token);
-  if (res.error) {
-    dispatch(requestModeUrlError(res.error));
+  const modeReport = await getAll('/v1/embedded_bi', {}, token);
+  //const modePdf = await getAll('/v1/embedded_bi_pdf', {}, token);
+  const modePdf = {};
+  if (modeReport.error) {
+    dispatch(requestModeUrlError(modeReport.error));
   }
-  if (res.data && res.data.token) {
-    dispatch(receiveModeUrl(res.data));
+  const { data: reportData } = modeReport;
+  const { data: pdfData = '' } = modePdf;
+
+  // Send response if report data (not capturing PDF errors)
+  if (reportData) {
+    dispatch(receiveModeUrl(reportData, pdfData));
   }
 };
 
