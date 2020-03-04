@@ -3,7 +3,7 @@ import * as types from './types';
 import { auth } from './api';
 import { removeCookie, setCookie } from '../../utils/cookie';
 
-const authCookie = process.env.AUTH_JWT || 'sema';
+const authCookie = process.env.AUTH_JWT;
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
