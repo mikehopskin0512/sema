@@ -8,7 +8,7 @@ const requestModeUrl = () => ({
 
 const receiveModeUrl = (data) => ({
   type: types.RECEIVE_MODE_URL,
-  token: data.token,
+  reportUrl: data.requestUri,
 });
 
 const requestModeUrlError = (errors) => ({
