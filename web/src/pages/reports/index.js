@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import withLayout from '../../components/layout';
-import ReportsHeader from './reportsHeader';
+import ReportsHeader from '../../components/reports/reportsHeader';
 
 import { reportsOperations } from '../../state/features/reports';
 
