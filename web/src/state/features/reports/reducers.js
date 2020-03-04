@@ -8,12 +8,12 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-  case types.REQUEST_MODE_URL:
+  case types.REQUEST_REPORT_URL:
     return {
       ...state,
       isFetching: true,
     };
-  case types.RECEIVE_MODE_URL:
+  case types.RECEIVE_REPORT_URL:
     return {
       ...state,
       isFetching: false,
@@ -21,7 +21,7 @@ const reducer = (state = initialState, action) => {
       pdfUrl: action.pdfUrl,
       error: {},
     };
-  case types.REQUEST_MODE_URL_ERROR:
+  case types.REQUEST_REPORT_URL_ERROR:
     return {
       ...state,
       isFetching: false,
