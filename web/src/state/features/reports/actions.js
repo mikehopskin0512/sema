@@ -1,6 +1,5 @@
 import * as types from './types';
-
-import { getAll } from '../../utils/api';
+import { getReportUrl } from './api';
 
 const requestModeUrl = () => ({
   type: types.REQUEST_MODE_URL,
@@ -18,8 +17,9 @@ const requestModeUrlError = (errors) => ({
 
 export const getModeUrl = (token) => async (dispatch) => {
   dispatch(requestModeUrl());
-  const modeReport = await getAll('/v1/embedded_bi', {}, token);
-  //const modePdf = await getAll('/v1/embedded_bi_pdf', {}, token);
+  const modeReport = await getReportUrl(token);
+  //const modePdf = await getReportUrl(token);
+
   const modePdf = {};
   if (modeReport.error) {
     dispatch(requestModeUrlError(modeReport.error));
