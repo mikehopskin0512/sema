@@ -2,7 +2,8 @@ import * as types from './types';
 
 const initialState = {
   isFetching: false,
-  modeUrl: '',
+  reportUrl: '',
+  pdfUrl: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,14 +17,14 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      token: action.token,
+      reportUrl: action.reportUrl,
+      pdfUrl: action.pdfUrl,
       error: {},
     };
   case types.REQUEST_MODE_URL_ERROR:
     return {
       ...state,
       isFetching: false,
-      token: {},
       error: action.error,
     };
   default:
