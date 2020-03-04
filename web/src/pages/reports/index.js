@@ -5,7 +5,7 @@ import ReportsHeader from '../../components/reports/reportsHeader';
 
 import { reportsOperations } from '../../state/features/reports';
 
-const { getModeUrl } = reportsOperations;
+const { fetchReportUrl } = reportsOperations;
 
 const Reports = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const Reports = () => {
 
   // Get mode Url from embedded_bi endpoint
   useEffect(() => {
-    dispatch(getModeUrl(auth.token));
+    dispatch(fetchReportUrl(auth.token));
   }, [dispatch, auth.token]);
 
   const { reportUrl } = reports;
