@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 
-import withLayout from '../components/layout';
+import withLayout from '../../components/layout';
 import ReactSelect from 'react-select';
 
 const repos = [

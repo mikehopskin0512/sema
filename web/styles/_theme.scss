@@ -1,7 +1,7 @@
-// Import inital varables
+// Import initial variables
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 
-// Updage Bulma global variables
+// Update Bulma global variables
 $primary: #2E5B82;
 
 @import "../node_modules/bulma/bulma.sass";
@@ -12,5 +12,6 @@ $primary: #2E5B82;
 @import "../node_modules/bulma-extensions/src/sass/index.sass";
 
 // Additional SCSS files
-@import "./fonts";
 @import "./colors";
+@import "./fonts";
+@import "./layout";
