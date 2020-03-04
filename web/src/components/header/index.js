@@ -13,7 +13,6 @@ const Header = (props) => {
   const burger = useRef(null);
   const menu = useRef(null);
   const userMenu = useRef(null);
-  const helpMenu = useRef(null);
 
   // Get auth state
   const auth = useSelector((state) => state.authState);
@@ -48,11 +47,6 @@ const Header = (props) => {
   };
 
   const toggleUserMenu = () => {
-    // Hide user menu if help menu
-    if (helpMenu.current) {
-      helpMenu.current.classList.remove('is-active');
-    }
-
     if (userMenu.current) {
       if (userMenu.current.classList.contains('is-active')) {
         userMenu.current.classList.remove('is-active');

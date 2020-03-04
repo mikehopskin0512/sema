@@ -1,7 +1,8 @@
 import Router from 'next/router';
 import * as types from './types';
-import {auth} from './api';
-import {removeCookie, setCookie} from '../../utils/cookie';
+import { auth } from './api';
+import { removeCookie, setCookie } from '../../utils/cookie';
+
 const authCookie = process.env.AUTH_JWT;
 
 const authenticateRequest = () => ({
@@ -18,9 +19,9 @@ const authenticateError = (errors) => ({
   errors,
 });
 
-export const authenticate  = (username, password) => async (dispatch) => {
+export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
-  const res = await auth({username,password});
+  const res = await auth({ username, password });
   if (res.error) {
     dispatch(authenticateError(res.error));
   }
@@ -30,7 +31,7 @@ export const authenticate  = (username, password) => async (dispatch) => {
     dispatch(hydrateUser(res.data));
     Router.push('/reports');
   }
-}
+};
 
 export const hydrateUser = (data) => ({
   type: types.HYDRATE_USER,
@@ -45,5 +46,5 @@ export const reauthenticate = (token) => ({
 export const deauthenticate = () => (dispatch) => {
   removeCookie(authCookie);
   Router.push('/');
-  dispatch({type: types.DEAUTHENTICATE});
-}
+  dispatch({ type: types.DEAUTHENTICATE });
+};
