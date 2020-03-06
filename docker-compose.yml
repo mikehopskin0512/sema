@@ -10,4 +10,15 @@ services:
     volumes:
      - ./web:/usr/app
      - /usr/app/node_modules
-    container_name: web.sema.local
+    container_name: phoenix.web.sema.local
+  pg:
+    image: postgres:11
+    ports:
+     - "5432:5432"
+    volumes:
+     - ~/docker/volumes/postgres:/var/lib/postgresql/data/
+    container_name: phoenix.pg.sema.local
+networks:
+  default:
+    external:
+      name: pgnetwork
