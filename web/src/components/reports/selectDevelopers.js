@@ -35,8 +35,8 @@ const SelectContributor = (props) => {
   });
 
   const buildParams = (option) => {
-    const paramType = 'param_z_developers';
-    const paramList = _.map(option, (item) => `${paramType}[]=${encodeURIComponent(item.label)}`).join('&');
+    const paramType = 'filter_developers';
+    const paramList = _.map(option, (item) => `param_z_developers%5B%5D=${encodeURIComponent(item.label)}`).join('&');
 
     updateFilters(paramType, paramList);
   };
