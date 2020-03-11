@@ -45,9 +45,16 @@ const Reports = () => {
       <section className="section">
         <div className="container">
           <h1 className="title">Report Title</h1>
+          <p>{reportUrl}</p>
           <h2 className="subtitle">
             <figure className="image is-16by9">
-              <iframe className="has-ratio" src={reportUrl} frameBorder="0" allowFullScreen />
+              <iframe
+                className="has-ratio"
+                key={reportUrl}
+                src={reportUrl}
+                title="Report frame"
+                frameBorder="0"
+                allowFullScreen />
             </figure>
           </h2>
         </div>
