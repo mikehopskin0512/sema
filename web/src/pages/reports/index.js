@@ -46,13 +46,19 @@ const Reports = () => {
     );
   };
 
+  // Update report url when filters change
+  useEffect(() => {
+    setFilterUrl(buildFilterUrl(filters));
+  }, [filters]);
+
   // Get mode Url from embedded_bi endpoint
   useEffect(() => {
-    dispatch(fetchReportUrl(auth.token));
-  }, [dispatch, auth.token]);
+    dispatch(fetchReportUrl(reportId, filterUrl, auth.token));
+  }, [dispatch, filterUrl, auth.token]);
 
   const { reportUrl } = reports;
 
+  console.log(filterUrl);
   return (
     <div>
       <ReportsHeader updateFilters={updateFilters} />
