@@ -27,12 +27,12 @@ const SelectContributor = (props) => {
   }, [dispatch, orgId, auth.token]);
 
   const { data: committers } = users;
-  const userList = _.map(committers, (user) => {
-    return {
+  const userList = _.map(committers, (user) => (
+    {
       value: user.id,
       label: `${user.first_name} ${user.last_name}`,
-    };
-  });
+    }
+  ));
 
   const buildParams = (option) => {
     const paramType = 'filter_developers';
@@ -52,7 +52,7 @@ const SelectContributor = (props) => {
       isMulti
       hideSelectedOptions
       options={userList}
-      placeholderButtonLabel="Developers"
+      placeholder="Developers"
       onChange={(option) => buildParams(option)} />
   );
 };
