@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SelectDevelopers from './SelectDevelopers';
+import SelectDevelopers from './selectDevelopers';
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
