@@ -24,11 +24,11 @@ const Reports = () => {
   const [filters, setFilters] = useState(initialFilters);
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
 
-  // Import state vars
+  // Import Redux vars
   const { auth, reports } = useSelector(
     (state) => ({
       auth: state.authState,
-      reports: state.reportState,
+      reports: state.reportsState,
     }),
   );
   const reportId = '43e7fa173112';
