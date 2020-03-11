@@ -1,9 +1,13 @@
 import { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SelectDevelopers from './SelectDevelopers';
 
-const ReportsHeader = () => {
+const ReportsHeader = (props) => {
   // Create REFs for menus
   const filterMenu = useRef(null);
+
+  const { updateFilters } = props;
 
   const toggleFilterMenu = () => {
     if (filterMenu.current) {
@@ -52,12 +56,18 @@ const ReportsHeader = () => {
       <div className="columns has-background-white-ter is-hidden" ref={filterMenu}>
         <div className="column">
           <div className="columns is-mobile">
-            <div className="column is-half is-offset-one-quarter">Filters</div>
+            <div className="column is-half is-offset-one-quarter">Filters
+              <SelectDevelopers updateFilters={updateFilters} />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+ReportsHeader.propTypes = {
+  updateFilters: PropTypes.func.isRequired,
 };
 
 export default ReportsHeader;
