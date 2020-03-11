@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { format } from 'date-fns';
 import _ from 'lodash';
 import withLayout from '../../components/layout';
 import ReportsHeader from '../../components/reports/reportsHeader';
@@ -8,6 +9,8 @@ import { reportsOperations } from '../../state/features/reports';
 
 const { fetchReportUrl } = reportsOperations;
 
+// Set default filters
+const today = format(new Date(), 'yyyy-MM-dd');
 const initialFilters = {
   param_z_date_end: '2018-10-31',
   param_z_date_start: '2018-04-01',
