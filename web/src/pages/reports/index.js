@@ -31,6 +31,16 @@ const Reports = () => {
       reports: state.reportState,
     }),
   );
+  const updateFilters = (paramType, paramList) => {
+    console.log('type: ', paramType);
+        console.log('list: ', paramList);
+    setFilters(
+      {
+        ...filters,
+        [paramType]: paramList,
+      },
+    );
+  };
 
   // Get mode Url from embedded_bi endpoint
   useEffect(() => {
@@ -41,7 +51,7 @@ const Reports = () => {
 
   return (
     <div>
-      <ReportsHeader />
+      <ReportsHeader updateFilters={updateFilters} />
       <section className="section">
         <div className="container">
           <h1 className="title">Report Title</h1>
