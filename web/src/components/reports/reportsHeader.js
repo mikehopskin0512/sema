@@ -56,7 +56,7 @@ const ReportsHeader = (props) => {
       <div className="columns has-background-white-ter is-hidden" ref={filterMenu}>
         <div className="column">
           <div className="columns is-mobile">
-            <div className="column is-half is-offset-one-quarter">Filters
+            <div className="column is-half is-offset-one-quarter">
               <SelectDevelopers updateFilters={updateFilters} />
             </div>
           </div>
