@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import SelectDevelopers from './selectDevelopers';
+import FilterDevelopers from './filterDevelopers';
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
@@ -57,7 +57,7 @@ const ReportsHeader = (props) => {
         <div className="column">
           <div className="columns is-mobile">
             <div className="column is-half is-offset-one-quarter">
-              <SelectDevelopers updateFilters={updateFilters} />
+              <FilterDevelopers updateFilters={updateFilters} />
             </div>
           </div>
         </div>
