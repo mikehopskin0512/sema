@@ -64,8 +64,6 @@ const Reports = () => {
       <ReportsHeader updateFilters={updateFilters} />
       <section className="section">
         <div className="container">
-          <h1 className="title">Report Title</h1>
-          <p>{reportUrl}</p>
           <h2 className="subtitle">
             <figure className="image is-16by9">
               <iframe
@@ -77,6 +75,7 @@ const Reports = () => {
                 allowFullScreen />
             </figure>
           </h2>
+          <p>Debug: {reportUrl}</p>
         </div>
       </section>
     </div>
