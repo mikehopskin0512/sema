@@ -7,8 +7,19 @@ import { reportsOperations } from '../../state/features/reports';
 
 const { fetchReportUrl } = reportsOperations;
 
+const initialFilters = {
+  param_z_date_end: '2018-10-31',
+  param_z_date_start: '2018-04-01',
+  param_z_developers: 'all',
+  param_z_filetypes: 'all',
+  param_z_projects: 'all',
+};
+
 const Reports = () => {
   const dispatch = useDispatch();
+  // Declare local state var for report filters
+  // const [state, dispatch] = useReducer(counterReducer, initialState);
+  const [filters, setFilters] = useState(initialFilters);
 
   // Import state vars
   const { auth, reports } = useSelector(
