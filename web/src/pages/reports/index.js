@@ -12,11 +12,11 @@ const { fetchReportUrl } = reportsOperations;
 // Set default filters
 const today = format(new Date(), 'yyyy-MM-dd');
 const initialFilters = {
-  param_z_date_end: '2018-10-31',
-  param_z_date_start: '2018-04-01',
-  param_z_developers: 'all',
-  param_z_filetypes: 'all',
-  param_z_projects: 'all',
+  filter_date_end: `param_z_date_end=${today}`,
+  filter_date_start: 'param_z_date_start=2010-01-01',
+  filter_developers: 'param_z_developers=all',
+  filter_filetypes: 'param_z_filetypes=all',
+  filter_projects: 'param_z_projects=all',
 };
 
 const buildFilterUrl = (params) => Object.keys(params).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
