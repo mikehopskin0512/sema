@@ -19,7 +19,9 @@ const initialFilters = {
   filter_projects: 'param_z_projects=all',
 };
 
-const buildFilterUrl = (params) => Object.keys(params).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
+// const buildFilterUrl = (params) => Object.keys(params).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
+const buildFilterUrl = (params) => _.map(params, (param) => param).join('&');
+
 
 const Reports = () => {
   const dispatch = useDispatch();
