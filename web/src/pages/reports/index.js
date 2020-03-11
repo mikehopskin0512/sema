@@ -15,11 +15,14 @@ const initialFilters = {
   param_z_projects: 'all',
 };
 
+const buildFilterUrl = (params) => Object.keys(params).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
+
 const Reports = () => {
   const dispatch = useDispatch();
   // Declare local state var for report filters
   // const [state, dispatch] = useReducer(counterReducer, initialState);
   const [filters, setFilters] = useState(initialFilters);
+  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
 
   // Import state vars
   const { auth, reports } = useSelector(
