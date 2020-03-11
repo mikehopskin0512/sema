@@ -31,6 +31,9 @@ const Reports = () => {
       reports: state.reportState,
     }),
   );
+  const reportId = '43e7fa173112';
+  const urlParams = 'param_z_date_end=2018-10-31&param_z_date_start=2018-04-01&param_z_developers%5B%5D=Angel%20Todorov&param_z_filetypes=all&param_z_projects=all';
+
   const updateFilters = (paramType, paramList) => {
     console.log('type: ', paramType);
         console.log('list: ', paramList);
