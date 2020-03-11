@@ -9,6 +9,9 @@ import { reportsOperations } from '../../state/features/reports';
 
 const { fetchReportUrl } = reportsOperations;
 
+// Hard code reportId
+const reportId = '43e7fa173112';
+
 // Set default filters
 const today = format(new Date(), 'yyyy-MM-dd');
 const initialFilters = {
@@ -19,14 +22,11 @@ const initialFilters = {
   filter_projects: 'param_z_projects=all',
 };
 
-// const buildFilterUrl = (params) => Object.keys(params).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`).join('&');
 const buildFilterUrl = (params) => _.map(params, (param) => param).join('&');
-
 
 const Reports = () => {
   const dispatch = useDispatch();
   // Declare local state var for report filters
-  // const [state, dispatch] = useReducer(counterReducer, initialState);
   const [filters, setFilters] = useState(initialFilters);
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
 
@@ -37,12 +37,8 @@ const Reports = () => {
       reports: state.reportsState,
     }),
   );
-  const reportId = '43e7fa173112';
-  const urlParams = 'param_z_date_end=2018-10-31&param_z_date_start=2018-04-01&param_z_developers%5B%5D=Angel%20Todorov&param_z_filetypes=all&param_z_projects=all';
 
   const updateFilters = (paramType, paramList) => {
-    console.log('type: ', paramType);
-        console.log('list: ', paramList);
     setFilters(
       {
         ...filters,
@@ -63,7 +59,6 @@ const Reports = () => {
 
   const { reportUrl } = reports;
 
-  console.log(filterUrl);
   return (
     <div>
       <ReportsHeader updateFilters={updateFilters} />
