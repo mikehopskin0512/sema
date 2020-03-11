@@ -35,7 +35,7 @@ const SelectContributor = (props) => {
   });
 
   const buildParams = (option) => {
-    const paramType = 'param_committer_list';
+    const paramType = 'param_z_developers';
     const paramList = _.map(option, (item) => `${paramType}[]=${encodeURIComponent(item.label)}`).join('&');
 
     updateFilters(paramType, paramList);
@@ -46,7 +46,7 @@ const SelectContributor = (props) => {
       isMulti
       hideSelectedOptions
       options={userList}
-      placeholderButtonLabel="Committers"
+      placeholderButtonLabel="Developers"
       onChange={(option) => buildParams(option)} />
   );
 };
