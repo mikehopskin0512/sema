@@ -37,7 +37,7 @@ const SelectContributor = (props) => {
   const buildParams = (option) => {
     const paramType = 'filter_developers';
     let paramList;
-    if (option) {
+    if (option && option.length > 0) {
       paramList = _.map(option, (item) => `param_z_developers%5B%5D=${encodeURIComponent(item.label)}`).join('&');
     } else {
       // If options are cleared, reset to default param
