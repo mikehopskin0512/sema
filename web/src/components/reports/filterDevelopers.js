@@ -8,7 +8,7 @@ import { usersOperations } from '../../state/features/users';
 
 const { fetchUsers } = usersOperations;
 
-const SelectContributor = (props) => {
+const FilterDevelopers = (props) => {
   const dispatch = useDispatch();
 
   // Import state vars
@@ -26,8 +26,8 @@ const SelectContributor = (props) => {
     dispatch(fetchUsers(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { data: committers } = users;
-  const userList = _.map(committers, (user) => (
+  const { data } = users;
+  const userList = _.map(data, (user) => (
     {
       value: user.id,
       label: `${user.first_name} ${user.last_name}`,
@@ -57,8 +57,8 @@ const SelectContributor = (props) => {
   );
 };
 
-SelectContributor.propTypes = {
+FilterDevelopers.propTypes = {
   updateFilters: PropTypes.func.isRequired,
 };
 
-export default SelectContributor;
+export default FilterDevelopers;
