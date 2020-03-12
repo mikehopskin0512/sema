@@ -15,11 +15,10 @@ const reportId = '43e7fa173112';
 // Set default filters
 const today = format(new Date(), 'yyyy-MM-dd');
 const initialFilters = {
-  filter_date_end: `param_z_date_end=${today}`,
-  filter_date_start: 'param_z_date_start=2010-01-01',
+  filter_dateRange: `param_z_date_end=${today}&param_z_date_start=2010-01-01`,
   filter_developers: 'param_z_developers=all',
   filter_filetypes: 'param_z_filetypes=all',
-  filter_projects: 'param_z_projects=all',
+  filter_repositories: 'param_z_repositories=all',
 };
 
 const buildFilterUrl = (params) => _.map(params, (param) => param).join('&');
