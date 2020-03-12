@@ -1,7 +1,10 @@
 import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FilterDateRange from './filterDateRange';
 import FilterDevelopers from './filterDevelopers';
+import FilterFileTypes from './FilterFileTypes';
+import FilterRepositories from './filterRepositories';
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
@@ -34,9 +37,7 @@ const ReportsHeader = (props) => {
           </a>
         </div>
 
-        <div id="navbarBasicExample" className="navbar-menu">
-
-
+        <div className="navbar-menu">
           <div className="navbar-end">
             <div className="navbar-item">
               <button
@@ -53,11 +54,20 @@ const ReportsHeader = (props) => {
           </div>
         </div>
       </nav>
-      <div className="columns has-background-white-ter is-hidden" ref={filterMenu}>
-        <div className="column">
-          <div className="columns is-mobile">
-            <div className="column is-half is-offset-one-quarter">
+      <div className="columns is-marginless has-background-white-ter is-hidden" ref={filterMenu}>
+        <div className="column is-10 is-offset-1">
+          <div className="columns">
+            <div className="column">
+              <FilterRepositories updateFilters={updateFilters} />
+            </div>
+            <div className="column">
               <FilterDevelopers updateFilters={updateFilters} />
+            </div>
+            <div className="column">
+              <FilterFileTypes updateFilters={updateFilters} />
+            </div>
+            <div className="column">
+              <FilterDateRange updateFilters={updateFilters} />
             </div>
           </div>
         </div>
