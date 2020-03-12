@@ -4,18 +4,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import ReactSelect from 'react-select';
 
-import { usersOperations } from '../../state/features/users';
+import { organizationsOperations } from '../../state/features/organizations';
 
-const { fetchUsers } = usersOperations;
+const { fetchUsers } = organizationsOperations;
 
 const FilterDevelopers = (props) => {
   const dispatch = useDispatch();
 
   // Import state vars
-  const { auth, users } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      users: state.usersState,
+      organizations: state.organizationsState,
     }),
   );
 
@@ -26,8 +26,8 @@ const FilterDevelopers = (props) => {
     dispatch(fetchUsers(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { data } = users;
-  const userList = _.map(data, (user) => (
+  const { developers } = organizations;
+  const userList = _.map(developers, (user) => (
     {
       value: user.id,
       label: `${user.first_name} ${user.last_name}`,
