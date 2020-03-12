@@ -4,18 +4,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import ReactSelect from 'react-select';
 
-import { repositoriesOperations } from '../../state/features/repositories';
+import { organizationsOperations } from '../../state/features/organizations';
 
-const { fetchRepositories } = repositoriesOperations;
+const { fetchRepositories } = organizationsOperations;
 
 const FilterRepositories = (props) => {
   const dispatch = useDispatch();
 
   // Import state vars
-  const { auth, repositories } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      repositories: state.repositoriesState,
+      organizations: state.organizationsState,
     }),
   );
 
@@ -26,11 +26,11 @@ const FilterRepositories = (props) => {
     dispatch(fetchRepositories(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { data } = repositories;
-  const repositoriesList = _.map(data, (user) => (
+  const { repositories } = organizations;
+  const repositoriesList = _.map(repositories, (repository) => (
     {
-      value: user.id,
-      label: user.name,
+      value: repository.id,
+      label: repository.name,
     }
   ));
 

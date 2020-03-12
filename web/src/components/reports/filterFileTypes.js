@@ -4,18 +4,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import ReactSelect from 'react-select';
 
-import { repositoriesOperations } from '../../state/features/repositories';
+import { organizationsOperations } from '../../state/features/organizations';
 
-const { fetchRepositories } = repositoriesOperations;
+const { fetchFileTypes } = organizationsOperations;
 
 const FilterFileTypes = (props) => {
   const dispatch = useDispatch();
 
   // Import state vars
-  const { auth, repositories } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      repositories: state.repositoriesState,
+      organizations: state.organizationsState,
     }),
   );
 
@@ -23,25 +23,25 @@ const FilterFileTypes = (props) => {
   const { updateFilters } = props;
 
   useEffect(() => {
-    dispatch(fetchRepositories(orgId, auth.token));
+    dispatch(fetchFileTypes(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { data } = repositories;
-  const repositoriesList = _.map(data, (user) => (
+  const { fileTypes } = organizations;
+  const fileTypesList = _.map(fileTypes, (fileType) => (
     {
-      value: user.id,
-      label: user.name,
+      value: fileType.id,
+      label: fileType.typename,
     }
   ));
 
   const buildParams = (option) => {
-    const paramType = 'filter_repositories';
+    const paramType = 'filter_filetypes';
     let paramList;
     if (option && option.length > 0) {
-      paramList = _.map(option, (item) => `param_z_repositories%5B%5D=${encodeURIComponent(item.label)}`).join('&');
+      paramList = _.map(option, (item) => `param_z_filetypes%5B%5D=${encodeURIComponent(item.label)}`).join('&');
     } else {
       // If options are cleared, reset to default param
-      paramList = 'param_z_repositories=all';
+      paramList = 'param_z_filetypes=all';
     }
 
     updateFilters(paramType, paramList);
@@ -51,7 +51,7 @@ const FilterFileTypes = (props) => {
     <ReactSelect
       isMulti
       hideSelectedOptions
-      options={repositoriesList}
+      options={fileTypesList}
       placeholder="File Types"
       onChange={(option) => buildParams(option)} />
   );
