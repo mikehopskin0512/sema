@@ -17,7 +17,7 @@ const requestUsersError = (errors) => ({
 
 export const fetchUsers = (orgId, token) => async (dispatch) => {
   dispatch(requestUsers());
-  const users = await getUsers({ orgId }, token);
+  const users = await getUsers(orgId, token);
 
   if (users.error) {
     dispatch(requestUsersError(users.error));

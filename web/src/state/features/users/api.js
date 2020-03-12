@@ -1,3 +1,3 @@
 import { getAll } from '../../utils/api';
 
-export const getUsers = (params, token) => getAll('/v1/users', { params }, token);
+export const getUsers = (orgId, token) => getAll(`/v1/organizations/${orgId}/users`, {}, token);
