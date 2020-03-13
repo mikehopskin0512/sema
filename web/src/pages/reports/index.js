@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import _ from 'lodash';
@@ -24,6 +24,7 @@ const initialFilters = {
 const buildFilterUrl = (params) => _.map(params, (param) => param).join('&');
 
 const Reports = () => {
+  const reportFrame = useRef(null);
   const dispatch = useDispatch();
   // Declare local state var for report filters
   const [filters, setFilters] = useState(initialFilters);
@@ -46,6 +47,15 @@ const Reports = () => {
     );
   };
 
+  useEffect(() => {
+    const messageOptions = {
+      type: 'reportFilterPanelDisplay',
+      wleFilterPanelToggle: true,
+    };
+
+    reportFrame.current.contentWindow.postMessage(messageOptions, '*');
+  }, []);
+
   // Update report url when filters change
   useEffect(() => {
     setFilterUrl(buildFilterUrl(filters));
@@ -67,6 +77,7 @@ const Reports = () => {
             <figure className="image is-16by9">
               <iframe
                 className="has-ratio"
+                ref={reportFrame}
                 key={reportUrl}
                 src={reportUrl}
                 title="Report frame"
