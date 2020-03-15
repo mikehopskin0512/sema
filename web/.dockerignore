@@ -1,6 +1,6 @@
-*
-!pages
-!components
-!state
-!package.json
-!package-lock.json
+#*
+#!pages
+#!components
+#!state
+#!package.json
+#!package-lock.json
