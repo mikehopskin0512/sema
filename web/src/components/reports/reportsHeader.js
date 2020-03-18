@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DateRangeFilter from './dateRangeFilter';
 import MultiSelectFilter from './multiSelectFilter';
-import _ from 'lodash';
 
 import { organizationsOperations } from '../../state/features/organizations';
 
@@ -32,21 +31,21 @@ const ReportsHeader = (props) => {
 
   const { repositories, developers, fileTypes } = organizations;
 
-  const repositoriesList = _.map(repositories, (repository) => (
+  const repositoriesList = repositories.map((repository) => (
     {
       value: repository.id,
       label: repository.name,
     }
   ));
 
-  const developersList = _.map(developers, (user) => (
+  const developersList = developers.map((user) => (
     {
       value: user.id,
       label: `${user.first_name} ${user.last_name}`,
     }
   ));
 
-  const fileTypesList = _.map(fileTypes, (fileType) => (
+  const fileTypesList = fileTypes.map((fileType) => (
     {
       value: fileType.id,
       label: fileType.typename,
