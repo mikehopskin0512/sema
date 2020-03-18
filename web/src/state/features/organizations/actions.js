@@ -69,7 +69,7 @@ export const fetchRepositories = (orgId, token) => async (dispatch) => {
   }
 };
 
-export const fetchUsers = (orgId, token) => async (dispatch) => {
+export const fetchDevelopers = (orgId, token) => async (dispatch) => {
   dispatch(requestUsers());
   const users = await getUsers(orgId, token);
 
