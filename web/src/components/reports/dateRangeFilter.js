@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { format, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
@@ -8,19 +8,24 @@ import './style.scss';
 const today = new Date();
 const weekAgo = subDays(today, 7);
 
-const FilterDateRange = (props) => {
-  const [startDate, setStartDate] = useState(weekAgo);
-  const [endDate, setEndDate] = useState(today);
+const DateRangeFilter = (props) => {
+  const [startDate, _setStartDate] = useState(weekAgo);
+  const [endDate, _setEndDate] = useState(today);
 
-  const { updateFilters } = props;
+  const { updateFilters, paramStartDate, paramEndDate } = props;
 
   // Update report url when filters change
-  useEffect(() => {
-    const paramType = 'filter_dateRange';
-    const paramList = `param_z_date_end=${format(endDate, 'yyyy-MM-dd')}&param_z_date_start=${format(startDate, 'yyyy-MM-dd')}`;
+  const setStartDate = (date) => {
+    const params = `=${format(date, 'yyyy-MM-dd')}`;
+    updateFilters(paramStartDate, params);
+    _setStartDate(date);
+  };
 
-    updateFilters(paramType, paramList);
-  }, [startDate, endDate]);
+  const setEndDate = (date) => {
+    const params = `=${format(date, 'yyyy-MM-dd')}`;
+    updateFilters(paramEndDate, params);
+    _setEndDate(date);
+  };
 
   return (
     <div>
@@ -40,8 +45,10 @@ const FilterDateRange = (props) => {
   );
 };
 
-FilterDateRange.propTypes = {
+DateRangeFilter.propTypes = {
   updateFilters: PropTypes.func.isRequired,
+  paramStartDate: PropTypes.string.isRequired,
+  paramEndDate: PropTypes.string.isRequired,
 };
 
-export default FilterDateRange;
+export default DateRangeFilter;
