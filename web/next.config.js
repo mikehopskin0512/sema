@@ -11,5 +11,5 @@ module.exports = {
   env: {
     ...dotEnvVariables,
   },
-  ...withCSS(withSass()),
+  ...withSass(withCSS()),
 };

@@ -15,9 +15,9 @@ const requestReportUrlError = (errors) => ({
   errors,
 });
 
-export const fetchReportUrl = (token) => async (dispatch) => {
+export const fetchReportUrl = (reportId, urlParams, token) => async (dispatch) => {
   dispatch(requestReportUrl());
-  const modeReport = await getReportUrl(token);
+  const modeReport = await getReportUrl({ reportId, urlParams }, token);
   // const modePdf = await getPdfUrl(token);
 
   const modePdf = {};
