@@ -26,11 +26,14 @@ const MultiSelectFilter = (props) => {
       .value();
   }
 
+  // Filter out any blank values
+  const filterdSelectData = _.reject(selectData, (item) => item.label === '');
+
   return (
     <ReactSelect
       isMulti
       hideSelectedOptions
-      options={selectData}
+      options={filterdSelectData}
       defaultValue={defaultVals}
       placeholder={placeholder}
       onChange={(option) => buildParams(option)} />
