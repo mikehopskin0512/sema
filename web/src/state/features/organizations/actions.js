@@ -43,6 +43,11 @@ const requestUsersError = (errors) => ({
   errors,
 });
 
+const receiveFilters = (params) => ({
+  type: types.RECEIVE_FILTERS,
+  params,
+});
+
 export const fetchFileTypes = (orgId, token) => async (dispatch) => {
   dispatch(requestFileTypes());
   const fileTypes = await getFileTypes(orgId, token);
@@ -80,4 +85,8 @@ export const fetchDevelopers = (orgId, token) => async (dispatch) => {
   if (users.data) {
     dispatch(receiveUsers(users.data));
   }
+};
+
+export const updateFilters = (params) => async (dispatch) => {
+  dispatch(receiveFilters(params));
 };
