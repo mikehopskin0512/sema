@@ -16,11 +16,22 @@ const MultiSelectFilter = (props) => {
     updateFilters(paramName, paramList);
   };
 
+  const currentParams = currentFilters[paramName] || [];
+  let defaultVals = [];
+
+  if (currentParams.length > 0) {
+    defaultVals = _(selectData)
+      .keyBy('label')
+      .at(currentParams)
+      .value();
+  }
+
   return (
     <ReactSelect
       isMulti
       hideSelectedOptions
       options={selectData}
+      defaultValue={defaultVals}
       placeholder={placeholder}
       onChange={(option) => buildParams(option)} />
   );
@@ -29,6 +40,7 @@ const MultiSelectFilter = (props) => {
 MultiSelectFilter.propTypes = {
   updateFilters: PropTypes.func.isRequired,
   selectData: PropTypes.array.isRequired,
+  currentFilters: PropTypes.object.isRequired,
   paramName: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
 };
