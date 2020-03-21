@@ -1,12 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import withLayout from '../../components/layout';
 import ReportsHeader from '../../components/reports/reportsHeader';
 
 import { reportsOperations } from '../../state/features/reports';
+import { organizationsOperations } from '../../state/features/organizations';
 
 const { fetchReportUrl } = reportsOperations;
+const { updateFilters } = organizationsOperations;
 
 // Hard code reportId
 const reportId = '43e7fa173112';
@@ -28,35 +30,29 @@ const buildFilterUrl = (params) => _.map(params, (value, param) => {
 const Reports = () => {
   const reportFrame = useRef(null);
   const dispatch = useDispatch();
-  // Declare local state var for report filters
-  const [filters, setFilters] = useState(initialFilters);
-  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
 
   // Import Redux vars
-  const { auth, reports } = useSelector(
+  const { auth, reports, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
       reports: state.reportsState,
+      organizations: state.organizationsState,
     }),
   );
 
-  const updateFilters = (paramType, paramList) => {
-    setFilters(
-      {
-        ...filters,
-        [paramType]: paramList,
-      },
-    );
-  };
+  // Get filters from Redux
+  const { filters } = organizations;
 
-  useEffect(() => {
-    const messageOptions = {
-      type: 'reportFilterPanelDisplay',
-      wleFilterPanelToggle: true,
+  // Declare local state var for report filterUrl
+  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
+
+  const handleUpdateFilters = (paramType, paramList) => {
+    const newFilters = {
+      ...filters,
+      [paramType]: paramList,
     };
-
-    reportFrame.current.contentWindow.postMessage(messageOptions, '*');
-  }, []);
+    dispatch(updateFilters(newFilters));
+  };
 
   // Update report url when filters change
   useEffect(() => {
@@ -72,7 +68,7 @@ const Reports = () => {
 
   return (
     <div>
-      <ReportsHeader updateFilters={updateFilters} />
+      <ReportsHeader updateFilters={handleUpdateFilters} />
       <section className="section">
         <div className="container">
           <h2 className="subtitle">
