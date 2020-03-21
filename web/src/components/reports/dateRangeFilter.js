@@ -16,13 +16,13 @@ const DateRangeFilter = (props) => {
 
   // Update report url when filters change
   const setStartDate = (date) => {
-    const params = `=${format(date, 'yyyy-MM-dd')}`;
+    const params = format(date, 'yyyy-MM-dd');
     updateFilters(paramStartDate, params);
     _setStartDate(date);
   };
 
   const setEndDate = (date) => {
-    const params = `=${format(date, 'yyyy-MM-dd')}`;
+    const params = format(date, 'yyyy-MM-dd');
     updateFilters(paramEndDate, params);
     _setEndDate(date);
   };

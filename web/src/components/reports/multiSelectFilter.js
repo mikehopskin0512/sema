@@ -3,17 +3,16 @@ import _ from 'lodash';
 import ReactSelect from 'react-select';
 
 const MultiSelectFilter = (props) => {
-  const { updateFilters, selectData, paramName, placeholder } = props;
+  const {
+    updateFilters, selectData, currentFilters,
+    paramName, placeholder,
+  } = props;
 
   const buildParams = (option) => {
-    let paramList;
+    const paramList = [];
     if (option && option.length > 0) {
-      paramList = _.map(option, (item) => `%5B%5D=${encodeURIComponent(item.label)}`).join('&');
-    } else {
-      // If options are cleared, reset to default param
-      paramList = '=all';
+      _.forEach(option, (item) => paramList.push(item.label));
     }
-
     updateFilters(paramName, paramList);
   };
 
