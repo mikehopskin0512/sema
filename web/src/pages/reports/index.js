@@ -11,7 +11,19 @@ const { fetchReportUrl } = reportsOperations;
 // Hard code reportId
 const reportId = '43e7fa173112';
 
-const buildFilterUrl = (params) => _.map(params, (value, param) => `${param}${value}`).join('&');
+const buildFilterUrl = (params) => _.map(params, (value, param) => {
+  if (_.isArray(value)) {
+    if (value.length > 0) {
+      // Array with values
+      const paramValues = _.map(value, (item) => `%5B%5D=${encodeURIComponent(item)}`).join('&');
+      return `${param}=${paramValues}`;
+    }
+    // Array empty values
+    return `${param}=all`;
+  }
+  // String
+  return `${param}=${value}`;
+}).join('&');
 
 const Reports = () => {
   const reportFrame = useRef(null);
