@@ -12,7 +12,7 @@ const initialState = {
   developers: [],
   fileTypes: [],
   repositories: [],
-  filters: {
+  currentFilters: {
     param_z_date_end: today,
     param_z_date_start: weekAgo,
     param_z_developers: [],
@@ -84,7 +84,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      filters: action.params,
+      currentFilters: action.params,
     };
   default:
     return state;
