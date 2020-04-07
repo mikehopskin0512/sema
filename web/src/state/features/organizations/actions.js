@@ -96,6 +96,5 @@ export const updateFilters = (params) => async (dispatch) => {
 };
 
 export const clearFilters = () => async (dispatch) => {
-  console.log('CLEAR');
   dispatch(resetFilters());
 };
