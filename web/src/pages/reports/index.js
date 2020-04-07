@@ -41,23 +41,24 @@ const Reports = () => {
   );
 
   // Get filters from Redux
-  const { filters } = organizations;
+  const { currentFilters } = organizations;
 
   // Declare local state var for report filterUrl
-  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
+  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));
 
   const handleUpdateFilters = (paramType, paramList) => {
+    console.log('handleUpdateFilters');
     const newFilters = {
-      ...filters,
+      ...currentFilters,
       [paramType]: paramList,
     };
     dispatch(updateFilters(newFilters));
   };
 
-  // Update report url when filters change
+  // Update report url when currentFilters change
   useEffect(() => {
-    setFilterUrl(buildFilterUrl(filters));
-  }, [filters]);
+    setFilterUrl(buildFilterUrl(currentFilters));
+  }, [currentFilters]);
 
   // Get mode Url from embedded_bi endpoint
   useEffect(() => {
