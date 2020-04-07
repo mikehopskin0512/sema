@@ -86,6 +86,12 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       currentFilters: action.params,
     };
+  case types.RESET_FILTERS:
+    return {
+      ...state,
+      isFetching: false,
+      currentFilters: initialState.currentFilters,
+    };
   default:
     return state;
   }

@@ -48,6 +48,10 @@ const receiveFilters = (params) => ({
   params,
 });
 
+const resetFilters = () => ({
+  type: types.RESET_FILTERS,
+});
+
 export const fetchFileTypes = (orgId, token) => async (dispatch) => {
   dispatch(requestFileTypes());
   const fileTypes = await getFileTypes(orgId, token);
@@ -89,4 +93,9 @@ export const fetchDevelopers = (orgId, token) => async (dispatch) => {
 
 export const updateFilters = (params) => async (dispatch) => {
   dispatch(receiveFilters(params));
+};
+
+export const clearFilters = () => async (dispatch) => {
+  console.log('CLEAR');
+  dispatch(resetFilters());
 };
