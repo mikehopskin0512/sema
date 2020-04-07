@@ -34,7 +34,7 @@ const MultiSelectFilter = (props) => {
       isMulti
       hideSelectedOptions
       options={filterdSelectData}
-      defaultValue={defaultVals}
+      value={defaultVals}
       placeholder={placeholder}
       onChange={(option) => buildParams(option)} />
   );

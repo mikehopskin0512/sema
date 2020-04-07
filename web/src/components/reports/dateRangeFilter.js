@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
@@ -10,10 +10,13 @@ const weekAgo = subDays(today, 7);
 
 const DateRangeFilter = (props) => {
   const { updateFilters, currentFilters, paramStartDate, paramEndDate } = props;
-  const currentStartDate = parseISO(currentFilters[paramStartDate]);
-  const currentEndDate = parseISO(currentFilters[paramEndDate]);
-  const [startDate, _setStartDate] = useState(currentStartDate || weekAgo);
-  const [endDate, _setEndDate] = useState(currentEndDate || today);
+  const [startDate, _setStartDate] = useState(weekAgo);
+  const [endDate, _setEndDate] = useState(today);
+
+  useEffect(() => {
+    _setStartDate(parseISO(currentFilters[paramStartDate]));
+    _setEndDate(parseISO(currentFilters[paramEndDate]));
+  }, [currentFilters, paramStartDate, paramEndDate]);
 
   // Update report url when filters change
   const setStartDate = (date) => {

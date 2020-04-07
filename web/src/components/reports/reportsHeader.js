@@ -7,7 +7,7 @@ import MultiSelectFilter from './multiSelectFilter';
 
 import { organizationsOperations } from '../../state/features/organizations';
 
-const { fetchFilterLists } = organizationsOperations;
+const { fetchFilterLists, clearFilters } = organizationsOperations;
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
@@ -52,6 +52,10 @@ const ReportsHeader = (props) => {
     }
   ));
 
+  const handleClearFilters = () => {
+    dispatch(clearFilters());
+  };
+
   const toggleFilterMenu = () => {
     if (filterMenu.current) {
       if (filterMenu.current.classList.contains('is-hidden')) {
@@ -95,8 +99,8 @@ const ReportsHeader = (props) => {
         </div>
       </nav>
       <div className="columns is-marginless has-background-white-ter is-hidden" ref={filterMenu}>
-        <div className="column is-10 is-offset-1">
-          <div className="columns">
+        <div className="column is-11 is-offset-1">
+          <div className="columns is-vcentered">
             <div className="column">
               <MultiSelectFilter
                 updateFilters={updateFilters}
@@ -127,6 +131,13 @@ const ReportsHeader = (props) => {
                 currentFilters={currentFilters}
                 paramStartDate="param_z_date_start"
                 paramEndDate="param_z_date_end" />
+            </div>
+            <div className="column is-1">
+              <button
+                type="button"
+                className="button is-inverted is-outlined is-small"
+                onClick={handleClearFilters}>Clear
+              </button>
             </div>
           </div>
         </div>
