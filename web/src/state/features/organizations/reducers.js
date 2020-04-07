@@ -1,4 +1,9 @@
+import { format, subDays } from 'date-fns';
 import * as types from './types';
+
+// Dates for default filters
+const today = format(new Date(), 'yyyy-MM-dd');
+const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
 
 const initialState = {
   isFetching: false,
@@ -7,6 +12,13 @@ const initialState = {
   developers: [],
   fileTypes: [],
   repositories: [],
+  currentFilters: {
+    param_z_date_end: today,
+    param_z_date_start: weekAgo,
+    param_z_developers: [],
+    param_z_filetypes: [],
+    param_z_repositories: [],
+  },
 };
 
 const reducer = (state = initialState, action) => {
@@ -67,6 +79,12 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       developers: [],
       error: action.error,
+    };
+  case types.RECEIVE_FILTERS:
+    return {
+      ...state,
+      isFetching: false,
+      currentFilters: action.params,
     };
   default:
     return state;
