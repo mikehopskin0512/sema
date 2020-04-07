@@ -7,7 +7,7 @@ import MultiSelectFilter from './multiSelectFilter';
 
 import { organizationsOperations } from '../../state/features/organizations';
 
-const { fetchFilterLists } = organizationsOperations;
+const { fetchFilterLists, clearFilters } = organizationsOperations;
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
@@ -51,6 +51,10 @@ const ReportsHeader = (props) => {
       label: fileType.typename,
     }
   ));
+
+  const handleClearFilters = () => {
+    dispatch(clearFilters());
+  };
 
   const toggleFilterMenu = () => {
     if (filterMenu.current) {
@@ -127,6 +131,13 @@ const ReportsHeader = (props) => {
                 currentFilters={currentFilters}
                 paramStartDate="param_z_date_start"
                 paramEndDate="param_z_date_end" />
+            </div>
+            <div className="column">
+              <button
+                type="button"
+                className="button is-inverted is-outlined"
+                onClick={handleClearFilters}>Clear
+              </button>
             </div>
           </div>
         </div>
