@@ -3,25 +3,38 @@ import _ from 'lodash';
 import ReactSelect from 'react-select';
 
 const MultiSelectFilter = (props) => {
-  const { updateFilters, selectData, paramName, placeholder } = props;
+  const {
+    updateFilters, selectData, currentFilters,
+    paramName, placeholder,
+  } = props;
 
   const buildParams = (option) => {
-    let paramList;
+    const paramList = [];
     if (option && option.length > 0) {
-      paramList = _.map(option, (item) => `%5B%5D=${encodeURIComponent(item.label)}`).join('&');
-    } else {
-      // If options are cleared, reset to default param
-      paramList = '=all';
+      _.forEach(option, (item) => paramList.push(item.label));
     }
-
     updateFilters(paramName, paramList);
   };
+
+  const currentParams = currentFilters[paramName] || [];
+  let defaultVals = [];
+
+  if (currentParams.length > 0) {
+    defaultVals = _(selectData)
+      .keyBy('label')
+      .at(currentParams)
+      .value();
+  }
+
+  // Filter out any blank values
+  const filterdSelectData = _.reject(selectData, (item) => item.label === '');
 
   return (
     <ReactSelect
       isMulti
       hideSelectedOptions
-      options={selectData}
+      options={filterdSelectData}
+      defaultValue={defaultVals}
       placeholder={placeholder}
       onChange={(option) => buildParams(option)} />
   );
@@ -30,6 +43,7 @@ const MultiSelectFilter = (props) => {
 MultiSelectFilter.propTypes = {
   updateFilters: PropTypes.func.isRequired,
   selectData: PropTypes.array.isRequired,
+  currentFilters: PropTypes.object.isRequired,
   paramName: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
 };

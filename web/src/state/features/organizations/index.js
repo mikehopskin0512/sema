@@ -1,6 +1,5 @@
 import reducer from './reducers';
-import * as organizationsOperations from './operations';
 
-export { organizationsOperations };
+export { default as organizationsOperations } from './operations';
 
 export default reducer;

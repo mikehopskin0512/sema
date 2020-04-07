@@ -1,67 +1,64 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { format, subDays } from 'date-fns';
 import _ from 'lodash';
 import withLayout from '../../components/layout';
 import ReportsHeader from '../../components/reports/reportsHeader';
 
 import { reportsOperations } from '../../state/features/reports';
+import { organizationsOperations } from '../../state/features/organizations';
 
 const { fetchReportUrl } = reportsOperations;
+const { updateFilters } = organizationsOperations;
 
 // Hard code reportId
 const reportId = '43e7fa173112';
 
-// Set default filters
-const today = format(new Date(), 'yyyy-MM-dd');
-const weekAgo = format(subDays(new Date(), 7), 'yyyy-MM-dd');
-const initialFilters = {
-  param_z_date_end: `=${today}`,
-  param_z_date_start: `=${weekAgo}`,
-  param_z_developers: '=all',
-  param_z_filetypes: '=all',
-  param_z_repositories: '=all',
-};
-
-const buildFilterUrl = (params) => _.map(params, (value, param) => `${param}${value}`).join('&');
+const buildFilterUrl = (params) => _.map(params, (value, param) => {
+  if (_.isArray(value)) {
+    if (value.length > 0) {
+      // Array with values
+      const paramValues = _.map(value, (item) => `%5B%5D=${encodeURIComponent(item)}`).join('&');
+      return `${param}=${paramValues}`;
+    }
+    // Array empty values
+    return `${param}=all`;
+  }
+  // String
+  return `${param}=${value}`;
+}).join('&');
 
 const Reports = () => {
   const reportFrame = useRef(null);
   const dispatch = useDispatch();
-  // Declare local state var for report filters
-  const [filters, setFilters] = useState(initialFilters);
-  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(filters));
 
   // Import Redux vars
-  const { auth, reports } = useSelector(
+  const { auth, reports, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
       reports: state.reportsState,
+      organizations: state.organizationsState,
     }),
   );
 
-  const updateFilters = (paramType, paramList) => {
-    setFilters(
-      {
-        ...filters,
-        [paramType]: paramList,
-      },
-    );
+  // Get filters from Redux
+  const { currentFilters } = organizations;
+
+  // Declare local state var for report filterUrl
+  const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));
+
+  const handleUpdateFilters = (paramType, paramList) => {
+    console.log('handleUpdateFilters');
+    const newFilters = {
+      ...currentFilters,
+      [paramType]: paramList,
+    };
+    dispatch(updateFilters(newFilters));
   };
 
+  // Update report url when currentFilters change
   useEffect(() => {
-    const messageOptions = {
-      type: 'reportFilterPanelDisplay',
-      wleFilterPanelToggle: true,
-    };
-
-    reportFrame.current.contentWindow.postMessage(messageOptions, '*');
-  }, []);
-
-  // Update report url when filters change
-  useEffect(() => {
-    setFilterUrl(buildFilterUrl(filters));
-  }, [filters]);
+    setFilterUrl(buildFilterUrl(currentFilters));
+  }, [currentFilters]);
 
   // Get mode Url from embedded_bi endpoint
   useEffect(() => {
@@ -72,7 +69,7 @@ const Reports = () => {
 
   return (
     <div>
-      <ReportsHeader updateFilters={updateFilters} />
+      <ReportsHeader updateFilters={handleUpdateFilters} />
       <section className="section">
         <div className="container">
           <h2 className="subtitle">

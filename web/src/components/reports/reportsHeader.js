@@ -29,7 +29,7 @@ const ReportsHeader = (props) => {
     dispatch(fetchFilterLists(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { repositories, developers, fileTypes } = organizations;
+  const { repositories, developers, fileTypes, currentFilters } = organizations;
 
   const repositoriesList = repositories.map((repository) => (
     {
@@ -101,6 +101,7 @@ const ReportsHeader = (props) => {
               <MultiSelectFilter
                 updateFilters={updateFilters}
                 selectData={repositoriesList}
+                currentFilters={currentFilters}
                 paramName="param_z_repositories"
                 placeholder="Repositories" />
             </div>
@@ -108,6 +109,7 @@ const ReportsHeader = (props) => {
               <MultiSelectFilter
                 updateFilters={updateFilters}
                 selectData={developersList}
+                currentFilters={currentFilters}
                 paramName="param_z_developers"
                 placeholder="Developers" />
             </div>
@@ -115,12 +117,14 @@ const ReportsHeader = (props) => {
               <MultiSelectFilter
                 updateFilters={updateFilters}
                 selectData={fileTypesList}
+                currentFilters={currentFilters}
                 paramName="param_z_fileTypes"
                 placeholder="File Types" />
             </div>
             <div className="column">
               <DateRangeFilter
                 updateFilters={updateFilters}
+                currentFilters={currentFilters}
                 paramStartDate="param_z_date_start"
                 paramEndDate="param_z_date_end" />
             </div>
