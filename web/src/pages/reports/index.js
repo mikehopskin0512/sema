@@ -17,8 +17,8 @@ const buildFilterUrl = (params) => _.map(params, (value, param) => {
   if (_.isArray(value)) {
     if (value.length > 0) {
       // Array with values
-      const paramValues = _.map(value, (item) => `%5B%5D=${encodeURIComponent(item)}`).join('&');
-      return `${param}=${paramValues}`;
+      const paramValues = _.map(value, (item) => `${param}%5B%5D=${encodeURIComponent(item)}`).join('&');
+      return paramValues;
     }
     // Array empty values
     return `${param}=all`;
