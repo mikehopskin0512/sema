@@ -20,6 +20,7 @@
     "bulma-extensions": "^6.2.7",
     "date-fns": "^2.10.0",
     "dotenv": "^8.2.0",
+    "file-saver": "^2.0.2",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
