@@ -1,6 +1,6 @@
 import fileSaver from '../../utils/fileSaver';
 import * as types from './types';
-import { getReportUrl, getRunToken, getPdfFile } from './api';
+import { getReportUrl, getReportList, getRunToken, getPdfFile } from './api';
 
 const requestReportUrl = () => ({
   type: types.REQUEST_REPORT_URL,
@@ -23,12 +23,25 @@ const requestReportUrlError = (errors) => ({
   errors,
 });
 
+const requestReportList = () => ({
+  type: types.REQUEST_REPORT_LIST,
+});
+
+const receiveReportList = (reportList) => ({
+  type: types.RECEIVE_REPORT_LIST,
+  reportList,
+});
+
+const requestReportListError = () => ({
+  type: types.REQUEST_REPORT_LIST_ERROR,
+});
+
 const requestDownload = () => ({
   type: types.REQUEST_DOWNLOAD,
 });
 
-const requestDownloadSuccess = () => ({
-  type: types.REQUEST_DOWNLOAD_SUCCESS,
+const receiveDownload = () => ({
+  type: types.RECEIVE_DOWNLOAD,
 });
 
 const requestDownloadError = () => ({
@@ -57,6 +70,16 @@ export const fetchReportUrl = (reportId, urlParams, token) => async (dispatch) =
   }
 };
 
+export const fetchReportList = (spaceId, token) => async (dispatch) => {
+  try {
+    dispatch(requestReportList());
+    const response = await getReportList(spaceId, token);
+    dispatch(receiveReportList(response.data));
+  } catch (err) {
+    dispatch(requestReportListError(err.response));
+  }
+};
+
 export const downloadPdf = (reportId, reportTitle, runToken, token) => async (dispatch) => {
   try {
     dispatch(requestDownload());
@@ -65,7 +88,7 @@ export const downloadPdf = (reportId, reportTitle, runToken, token) => async (di
 
     await fileSaver(file, reportTitle);
 
-    dispatch(requestDownloadSuccess());
+    dispatch(receiveDownload());
   } catch (err) {
     dispatch(requestDownloadError(err.response));
   }
