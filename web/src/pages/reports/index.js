@@ -13,11 +13,10 @@ const Reports = () => {
   const spaceId = 'ff5e7381bd72';
 
   // Import Redux vars
-  const { auth, reports, organizations } = useSelector(
+  const { auth, reports } = useSelector(
     (state) => ({
       auth: state.authState,
       reports: state.reportsState,
-      organizations: state.organizationsState,
     }),
   );
 
