@@ -26,9 +26,17 @@ export const authenticate = (username, password) => async (dispatch) => {
     dispatch(authenticateError(res.error));
   }
   if (res.data && res.data.token) {
+    const { id, organization_id } = res.data;
     setCookie(authCookie, res.data.token);
     dispatch(authenticateSuccess(res.data));
     dispatch(hydrateUser(res.data));
+
+    // Pass custom id and organization_id to Heap
+    if (typeof window !== 'undefined') {
+      window.heap.identify(id);
+      window.heap.addUserProperties({ organization_id });
+    }
+
     Router.push('/reports');
   }
 };
