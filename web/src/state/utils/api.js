@@ -15,7 +15,7 @@ export const getAll = (endpoint, { params } = {}, token = '') => api.get(endpoin
     Authorization: `Bearer ${token}`,
   } });
 
-export const getDownload = (endpoint, { params }, token = '') => api.get(endpoint, { params,
+export const download = (endpoint, { params }, token = '') => api.get(endpoint, { params,
   responseType: 'blob',
   headers: {
     Accept: 'application/pdf',
