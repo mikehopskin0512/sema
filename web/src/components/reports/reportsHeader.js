@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DateRangeFilter from './dateRangeFilter';
 import MultiSelectFilter from './multiSelectFilter';
 
+import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
 
+const { downloadPdf } = reportsOperations;
 const { fetchFilterLists, clearFilters } = organizationsOperations;
 
 const ReportsHeader = (props) => {
@@ -15,10 +17,11 @@ const ReportsHeader = (props) => {
   const dispatch = useDispatch();
 
   // Import state vars
-  const { auth, organizations } = useSelector(
+  const { auth, organizations, reports } = useSelector(
     (state) => ({
       auth: state.authState,
       organizations: state.organizationsState,
+      reports: state.reportsState,
     }),
   );
 
@@ -30,6 +33,7 @@ const ReportsHeader = (props) => {
   }, [dispatch, orgId, auth.token]);
 
   const { repositories, developers, fileTypes, currentFilters } = organizations;
+  const { reportId, reportTitle, runToken } = reports;
 
   const repositoriesList = repositories.map((repository) => (
     {
@@ -51,6 +55,14 @@ const ReportsHeader = (props) => {
       label: fileType.typename,
     }
   ));
+
+  const handlePdfDownload = () => {
+    if (reportId && runToken) {
+      dispatch(downloadPdf(reportId, reportTitle, runToken, auth.token));
+    } else {
+      alert('PDF is still being generated. Try again shortly.');
+    }
+  };
 
   const handleClearFilters = () => {
     dispatch(clearFilters());
@@ -75,9 +87,9 @@ const ReportsHeader = (props) => {
           </div>
 
           <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
           </a>
         </div>
 
@@ -93,7 +105,7 @@ const ReportsHeader = (props) => {
                 </span>
                 <span>Filter report</span>
               </button>
-              <FontAwesomeIcon icon="cloud-download-alt" className="has-text-white" />
+              <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="has-text-white" /></a>
             </div>
           </div>
         </div>

@@ -2,8 +2,10 @@ import * as types from './types';
 
 const initialState = {
   isFetching: false,
+  reportId: '',
   reportUrl: '',
-  pdfUrl: '',
+  reportToken: '',
+  runToken: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,8 +19,16 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
+      reportId: action.reportId,
       reportUrl: action.reportUrl,
-      pdfUrl: action.pdfUrl,
+      error: {},
+    };
+  case types.RECEIVE_REPORT_RUN_TOKEN:
+    return {
+      ...state,
+      isFetching: false,
+      runToken: action.runToken,
+      reportTitle: action.reportTitle,
       error: {},
     };
   case types.REQUEST_REPORT_URL_ERROR:
