@@ -47,7 +47,6 @@ const Reports = () => {
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));
 
   const handleUpdateFilters = (paramType, paramList) => {
-    console.log('handleUpdateFilters');
     const newFilters = {
       ...currentFilters,
       [paramType]: paramList,
