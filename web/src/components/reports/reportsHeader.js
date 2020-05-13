@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -83,7 +84,7 @@ const ReportsHeader = (props) => {
       <nav className="navbar has-background-primary" style={{ zIndex: '1' }} role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <div className="navbar-item has-text-white">
-            <FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;<span>Report title goes here</span>
+            <Link href="/reports/"><span><FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;Report list</span></Link>
           </div>
 
           <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
