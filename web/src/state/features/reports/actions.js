@@ -1,6 +1,6 @@
 import fileSaver from '../../utils/fileSaver';
 import * as types from './types';
-import { getReportUrl, getReportList, getRunToken, getPdfFile } from './api';
+import { getReportUrl, getReportList, generatePdf, getPdfFile } from './api';
 
 const requestReportUrl = () => ({
   type: types.REQUEST_REPORT_URL,
@@ -58,7 +58,7 @@ export const fetchReportUrl = (reportId, urlParams, token) => async (dispatch) =
     dispatch(receiveReportUrl(reportId, reportData));
   }
 
-  const modeReportRun = await getRunToken(reportId, token);
+  const modeReportRun = await generatePdf(reportId, token);
   const { data: { token: runToken, reportTitle } } = modeReportRun;
 
   if (modeReportRun) {
