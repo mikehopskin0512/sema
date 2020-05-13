@@ -10,7 +10,8 @@ const { fetchReportList } = reportsOperations;
 
 const Reports = () => {
   const dispatch = useDispatch();
-  const spaceId = 'ff5e7381bd72';
+  const spaceId = '7290098a6c1c';
+  const testReportId = '43e7fa173112';
 
   // Import Redux vars
   const { auth, reports } = useSelector(
@@ -36,7 +37,10 @@ const Reports = () => {
     <div>
       <section className="section">
         <div className="container">
-          <h2 className="subtitle">Reports</h2>
+          <h2 className="subtitle">Static reports</h2>
+          <p><Link href={`/reports/${testReportId}`}>Test report (use this)</Link></p>
+          <br />
+          <h2 className="subtitle">Dynamic reports from Mode</h2>
           {reportsStuff}
         </div>
       </section>
