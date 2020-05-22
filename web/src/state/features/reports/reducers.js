@@ -2,6 +2,7 @@ import * as types from './types';
 
 const initialState = {
   isFetching: false,
+  reportList: [],
   reportId: '',
   reportUrl: '',
   reportToken: '',
@@ -32,6 +33,24 @@ const reducer = (state = initialState, action) => {
       error: {},
     };
   case types.REQUEST_REPORT_URL_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error,
+    };
+  case types.REQUEST_REPORT_LIST:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.RECEIVE_REPORT_LIST:
+    return {
+      ...state,
+      isFetching: false,
+      reportList: action.reportList,
+      error: {},
+    };
+  case types.REQUEST_REPORT_LIST_ERROR:
     return {
       ...state,
       isFetching: false,
