@@ -1,4 +1,4 @@
-import { getAll, getDownload } from '../../utils/api';
+import { getAll, download } from '../../utils/api';
 
 export const getReportUrl = (params, token) => getAll('/v1/embedded_bi', { params }, token);
 export const generatePdf = (reportId, token) => getAll(`/v1/embedded_bi/${reportId}/pdf`, {}, token);
