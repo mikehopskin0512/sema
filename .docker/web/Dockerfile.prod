@@ -21,9 +21,12 @@ COPY --from=build /src/package.json /usr/app/package.json
 COPY --from=build /src/public /usr/app/public
 COPY --from=build /src/.next /usr/app/.next
 
+RUN npm install --global pm2
+
 USER node
 EXPOSE 3000
 
 ENV NODE_ENV production
 
-CMD ["npm", "start"]
+# Run npm start script with PM2 when container starts
+CMD [ "pm2-runtime", "npm", "--", "start" ]
