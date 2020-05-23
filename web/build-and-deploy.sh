@@ -24,4 +24,4 @@ echo "Pushing image..."
 docker push 091235034633.dkr.ecr.us-east-1.amazonaws.com/$NAME:$VERSION
 
 echo "Updating ECS..."
-aws ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $TASK_NAME
+aws --profile sema-terraform  ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $TASK_NAME
