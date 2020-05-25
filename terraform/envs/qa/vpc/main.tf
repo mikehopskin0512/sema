@@ -13,20 +13,56 @@ resource "aws_vpc_peering_connection" "pc" {
   peer_vpc_id   = "vpc-03eb634f0651b5fb8"
   vpc_id        = module.qa_vpc.vpc_id
   peer_region   = "us-east-2"
-  #auto_accept = true
+
+# Important: these need to be set manually since peer is in another region
+#  accepter {
+#    allow_remote_vpc_dns_resolution = true
+#  }
+
+#  requester {
+#    allow_remote_vpc_dns_resolution = true
+#  }
 
   tags = {
-     Name = "vpc-qa to vpc-03eb634f0651b5fb8 peering"
+     Name = "vpc-qa-vpn"
   }
 }
 
-resource "aws_route" "peering" {
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE THE ROUTE TABLE ENTRIES FOR THE PEERED CONNECTION
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_route" "private" {
   count = 3
 
-  # ID of VPC 1 main route table.
+  # IDs of private route tables.
   route_table_id = element(module.qa_vpc.private_route_tables, count.index)
 
   # CIDR block / IP range for VPC 2.
+  destination_cidr_block = "10.0.0.0/20"
+
+  # ID of VPC peering connection.
+  vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
+}
+
+resource "aws_route" "public" {
+
+  # ID of public route table.
+  route_table_id = module.qa_vpc.public_route_table
+
+  # CIDR block for VPC 2.
+  destination_cidr_block = "10.0.0.0/20"
+
+  # ID of VPC peering connection.
+  vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
+}
+
+resource "aws_route" "vpc" {
+
+  # ID of VPC main route table.
+  route_table_id = module.qa_vpc.vpc_route_table
+
+  # CIDR block for VPC 2.
   destination_cidr_block = "10.0.0.0/20"
 
   # ID of VPC peering connection.
