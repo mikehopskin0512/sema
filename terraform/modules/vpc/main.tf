@@ -82,13 +82,6 @@ resource "aws_subnet" "private" {
    route_table_id = aws_route_table.public.id
  }
 
- # Route the public subnet traffic through the IGW (The vpc main route table automatically comes with your VPC. It controls the routing for all subnets that are not explicitly associated with any other route table (our public subnets).)
-#   resource "aws_route" "internet_access" {
-#     route_table_id         = aws_vpc.main.main_route_table_id
-#     destination_cidr_block = "0.0.0.0/0"
-#     gateway_id             = aws_internet_gateway.gw.id
-#   }
-
   # Create a NAT gateway with an Elastic IP for each private subnet to get internet connectivity
    resource "aws_eip" "gw" {
      count      = var.az_count
@@ -120,11 +113,6 @@ resource "aws_subnet" "private" {
        nat_gateway_id = element(aws_nat_gateway.gw.*.id, count.index)
      }
 
-#     route {
-#       cidr_block     = "10.0.0.0/20"
-#       vpc_peering_connection_id = "${var.vpn_peering_id}"
-#     }
-
      tags = {
        Name = "vpc-${var.env}_private_${count.index + 1}"
        Env  = var.env
@@ -137,30 +125,3 @@ resource "aws_subnet" "private" {
      subnet_id      = element(aws_subnet.private.*.id, count.index)
      route_table_id = element(aws_route_table.private.*.id, count.index)
    }
-
-
-#   resource "aws_vpc_peering_connection" "ohio" {
-#     count = var.enable_peering ? 1 : 0
-#
-#     peer_vpc_id   = var.peer_vpc_id
-#     vpc_id        = aws_vpc.main.id
-#     peer_region   = "us-east-2"
-#     #auto_accept = true
-#
-#     tags = {
-#        Name = "Peering connection"
-#     }
-#   }
-
-#   resource "aws_route" "primary2secondary" {
-#     count = var.enable_peering ? var.az_count : 0
-#
-#     # ID of VPC 1 main route table.
-#     route_table_id = element(aws_route_table.private.*.id, count.index)
-#
-#     # CIDR block / IP range for VPC 2.
-#     destination_cidr_block = "10.0.0.0/20"
-#
-#     # ID of VPC peering connection.
-#     vpc_peering_connection_id = aws_vpc_peering_connection.ohio[0].id
-#   }

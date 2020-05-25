@@ -25,3 +25,11 @@ output "vpc_id" {
 output "private_route_tables" {
   value = aws_route_table.private.*.id
 }
+
+output "public_route_table" {
+  value = aws_route_table.public.id
+}
+
+output "vpc_route_table" {
+  value = aws_vpc.main.main_route_table_id
+}
