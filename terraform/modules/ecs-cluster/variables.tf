@@ -41,3 +41,8 @@ variable "app_count" {
   description = "Number of docker containers to run"
   default     = 3
 }
+
+variable "cert_domain" {
+  description = "The domain for the ssl cert that is being attached to the load balancer"
+  type = string
+}
