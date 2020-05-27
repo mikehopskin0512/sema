@@ -13,6 +13,12 @@ data "aws_subnet_ids" "public" {
   }
 }
 
+data "aws_acm_certificate" "cert" {
+  domain      = var.cert_domain
+  types       = ["AMAZON_ISSUED"]
+  most_recent = true
+}
+
 resource "aws_alb" "main" {
   name            = "${var.env}-${var.cluster_name}"
   subnets         = data.aws_subnet_ids.public.ids
@@ -45,7 +51,28 @@ resource "aws_alb_listener" "front_end" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.app.id
-    type             = "forward"
+    type = "redirect"
+    redirect {
+      port = "443"
+      protocol = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
+
+  #default_action {
+  #  target_group_arn = aws_alb_target_group.app.id
+  #  type             = "forward"
+  #}
+}
+
+resource "aws_alb_listener" "front_end_https" {
+ load_balancer_arn = aws_alb.main.id
+ port = "443"
+ protocol = "HTTPS"
+ certificate_arn = data.aws_acm_certificate.cert.arn
+
+ default_action {
+   type = "forward"
+   target_group_arn = aws_alb_target_group.app.id
+ }
 }
