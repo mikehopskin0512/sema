@@ -1,6 +1,7 @@
-#*
-#!pages
-#!components
-#!state
-#!package.json
-#!package-lock.json
+*
+!public
+!src
+!styles
+!next.config.js
+!package.json
+!package-lock.json
