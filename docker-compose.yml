@@ -11,6 +11,26 @@ services:
      - ./web:/usr/app
      - /usr/app/node_modules
     container_name: phoenix.web.sema.local
+  apollo:
+    image: apollo-dev-i
+    build:
+      context: apollo/
+      dockerfile: ../.docker/apollo/Dockerfile.dev
+    ports:
+     - "3001:3001"
+    volumes:
+     - ./apollo:/usr/app
+     - /usr/app/node_modules
+    depends_on:
+     - mongodb
+    container_name: phoenix.apollo.sema.local
+  mongodb:
+    image: mongo
+    ports:
+     - "27017:27017"
+    volumes:
+     - ~/docker/volumes/mongodb:/data/db
+    container_name: phoenix.mongodb.sema.local    
   pg:
     image: postgres:11
     ports:
@@ -18,6 +38,8 @@ services:
     volumes:
      - ~/docker/volumes/postgres:/var/lib/postgresql/data/
     container_name: phoenix.pg.sema.local
+volumes:
+  ~/docker/volumes/mongodb:
 networks:
   default:
     external:
