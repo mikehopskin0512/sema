@@ -16,7 +16,7 @@ const initialState = {
     param_z_date_end: today,
     param_z_date_start: weekAgo,
     param_z_developers: [],
-    param_z_filetypes: [],
+    param_z_fileTypes: [],
     param_z_repositories: [],
   },
 };
