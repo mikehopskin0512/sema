@@ -1,0 +1,11 @@
+/* Toaster CSS */
+
+.Toaster__message-wrapper {
+  padding: 8px;
+}
+
+.notification.toaster {
+    min-width: 600px;
+    margin-top: 0;
+    border: 1px solid $grey-lighter;
+}
