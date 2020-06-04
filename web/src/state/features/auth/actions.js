@@ -3,6 +3,10 @@ import * as types from './types';
 import { auth } from './api';
 import { removeCookie, setCookie } from '../../utils/cookie';
 
+import { alertOperations } from '../alerts';
+
+const { triggerAlert } = alertOperations;
+
 const authCookie = process.env.AUTH_JWT;
 
 const authenticateRequest = () => ({
@@ -25,6 +29,13 @@ export const authenticate = (username, password) => async (dispatch) => {
   if (res.error) {
     dispatch(authenticateError(res.error));
   }
+
+  // This will be replaced with new backend
+  if (res.data.success === false) {
+    dispatch(authenticateError(res.data.error));
+    dispatch(triggerAlert('Invalid username/password. Please try again.'));
+  }
+
   if (res.data && res.data.token) {
     const { id, organization_id } = res.data;
     setCookie(authCookie, res.data.token);
