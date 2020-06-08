@@ -7,17 +7,6 @@ import { getCookie } from './cookie';
 const { hydrateUser, reauthenticate } = authOperations;
 const authCookie = process.env.AUTH_JWT;
 
-export const initialize = async (ctx) => {
-  const jwt = getCookie(authCookie, ctx.req);
-
-  if (!jwt) {
-    if (ctx.pathname !== '/login') redirect(ctx, '/login');
-  } else {
-    ctx.store.dispatch(reauthenticate(jwt));
-    ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
-  }
-};
-
 const redirect = (ctx, location) => {
   if (ctx.req) {
     ctx.res.writeHead(302, { Location: location });
@@ -26,3 +15,16 @@ const redirect = (ctx, location) => {
     Router.push(location);
   }
 };
+
+const initialize = async (ctx) => {
+  const jwt = getCookie(authCookie, ctx.req);
+
+  if (!jwt) {
+    if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register')) redirect(ctx, '/login');
+  } else {
+    ctx.store.dispatch(reauthenticate(jwt));
+    ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
+  }
+};
+
+export default initialize;

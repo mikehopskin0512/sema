@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import * as types from './types';
-import { auth } from './api';
+import { auth, createUser } from './api';
 import { removeCookie, setCookie } from '../../utils/cookie';
 
 import { alertOperations } from '../alerts';
@@ -22,6 +22,22 @@ const authenticateError = (errors) => ({
   type: types.AUTHENTICATE_FAILURE,
   errors,
 });
+
+export const hydrateUser = (data) => ({
+  type: types.HYDRATE_USER,
+  user: data,
+});
+
+export const reauthenticate = (token) => ({
+  type: types.AUTHENTICATE,
+  token,
+});
+
+export const deauthenticate = () => (dispatch) => {
+  removeCookie(authCookie);
+  Router.push('/');
+  dispatch({ type: types.DEAUTHENTICATE });
+};
 
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
@@ -52,18 +68,34 @@ export const authenticate = (username, password) => async (dispatch) => {
   }
 };
 
-export const hydrateUser = (data) => ({
-  type: types.HYDRATE_USER,
-  user: data,
+const requestRegistration = () => ({
+  type: types.REQUEST_REGISTRATION,
 });
 
-export const reauthenticate = (token) => ({
-  type: types.AUTHENTICATE,
-  token,
+const registrationSucess = (data) => ({
+  type: types.REQUEST_REGISTRATION_SUCCESS,
+  user: data.user,
 });
 
-export const deauthenticate = () => (dispatch) => {
-  removeCookie(authCookie);
-  Router.push('/');
-  dispatch({ type: types.DEAUTHENTICATE });
+const registrationError = (errors) => ({
+  type: types.REQUEST_REGISTRATION_ERROR,
+  errors,
+});
+
+export const registerUser = (user, token) => async (dispatch) => {
+  try {
+    dispatch(requestRegistration());
+    const payload = await createUser(user, token);
+
+    dispatch(registrationSucess(payload.data));
+  } catch (error) {
+    dispatch(registrationError(error.response.data));
+  }
+};
+
+export const setUser = function (user) {
+  return {
+    type: types.SET_USER,
+    user,
+  };
 };
