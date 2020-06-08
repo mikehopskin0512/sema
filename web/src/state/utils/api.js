@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process !== 'undefined' ? process.env.BASE_URL : null,
+  baseURL: process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL : null,
 });
 
 export const get = (endpoint, { id }, token = '') => api.get(`${endpoint}/${id}`, {
