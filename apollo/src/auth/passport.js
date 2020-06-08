@@ -2,8 +2,8 @@ import passport from 'passport';
 import { BasicStrategy } from 'passport-http';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 
-import userModel from '../userService/userModel';
-import credentialService from '../credentialService/credentialService';
+import userModel from '../users/userModel';
+import credentialService from '../credentials/credentialService';
 import accessTokenModel from './accessTokenModel';
 
 import logger from '../shared/logger';

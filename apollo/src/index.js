@@ -1,6 +1,6 @@
 // This is a proxy function for the individual route handler files.
-import credentials from './credentialService';
-import users from './userService';
+import credentials from './credentials';
+import users from './users';
 
 function attachRoutes(app, passport) {
   credentials(app, passport);

@@ -7,7 +7,7 @@ import compression from 'compression';
 // import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import cors from 'cors';
-import './authService/passport';
+import './auth/passport';
 
 import logger from './shared/logger';
 import errors from './shared/errors';
