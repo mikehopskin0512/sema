@@ -7,7 +7,7 @@ const config = {
 const basicAuth = { username: process.env.APOLLO_CLIENT_ID, password: process.env.APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
-  baseURL: process !== 'undefined' ? process.env.BASE_URL_APOLLO : null,
+  baseURL: process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL_APOLLO : null,
 });
 
 export const get = (endpoint, { id }, token = '') => {

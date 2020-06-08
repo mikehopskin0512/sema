@@ -7,7 +7,7 @@ import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
 
-const authCookie = process.env.AUTH_JWT;
+const authCookie = process.env.NEXT_PUBLIC_AUTH_JWT;
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
@@ -60,8 +60,10 @@ export const authenticate = (username, password) => async (dispatch) => {
 
     // Pass custom id and organization_id to Heap
     if (typeof window !== 'undefined') {
-      window.heap.identify(id);
-      window.heap.addUserProperties({ organization_id });
+      if (id && organization_id) {
+        window.heap.identify(id);
+        window.heap.addUserProperties({ organization_id });
+      }
     }
 
     Router.push('/reports');
