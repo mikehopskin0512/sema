@@ -15,15 +15,15 @@
     },
     "environment": [
       {
-        "name": "BASE_URL",
+        "name": "NEXT_PUBLIC_BASE_URL",
         "value": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/api-base-url"
       }, {
-        "name": "AUTH_JWT",
+        "name": "NEXT_PUBLIC_AUTH_JWT",
         "value": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/auth-jwt"
       }],
       "secrets": [
       {
-        "name": "HEAP_ANALYTICS_ID",
+        "name": "NEXT_PUBLIC_HEAP_ANALYTICS_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/heap-analytics-id"
       }],
     "portMappings": [
