@@ -42,6 +42,11 @@ const reducer = (state = initialState, action) => {
       user: {},
       error: {},
     };
+  case types.SET_USER:
+    return {
+      ...state,
+      user: action.user,
+    };
   default:
     return state;
   }

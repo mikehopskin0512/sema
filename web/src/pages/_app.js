@@ -8,7 +8,7 @@ import {
   faFilter, faCloudDownloadAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { initialize } from '../state/utils/sentry';
+import initialize from '../state/utils/sentry';
 import { initStore } from '../state/store';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above

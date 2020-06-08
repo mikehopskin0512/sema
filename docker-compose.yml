@@ -30,7 +30,7 @@ services:
      - "27017:27017"
     volumes:
      - ~/docker/volumes/mongodb:/data/db
-    container_name: phoenix.mongodb.sema.local    
+    container_name: phoenix.mongodb.sema.local
   pg:
     image: postgres:11
     ports:
@@ -38,8 +38,6 @@ services:
     volumes:
      - ~/docker/volumes/postgres:/var/lib/postgresql/data/
     container_name: phoenix.pg.sema.local
-volumes:
-  ~/docker/volumes/mongodb:
 networks:
   default:
     external:
