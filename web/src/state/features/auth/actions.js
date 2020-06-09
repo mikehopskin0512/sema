@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import getConfig from 'next/config';
 import * as types from './types';
 import { auth, createUser } from './api';
 import { removeCookie, setCookie } from '../../utils/cookie';
@@ -7,7 +8,8 @@ import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
 
-const authCookie = process.env.NEXT_PUBLIC_AUTH_JWT;
+const { publicRuntimeConfig: { NEXT_PUBLIC_AUTH_JWT } } = getConfig();
+const authCookie = NEXT_PUBLIC_AUTH_JWT;
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
