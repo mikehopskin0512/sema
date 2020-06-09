@@ -3,6 +3,7 @@ import * as types from './types';
 const initialState = {
   showAlert: false,
   alertLabel: '',
+  alertType: '',
 };
 
 const reducer = (state = initialState, action) => {
@@ -11,6 +12,7 @@ const reducer = (state = initialState, action) => {
     return {
       showAlert: true,
       alertLabel: action.alertLabel,
+      alertType: action.alertType || 'success',
     };
   case types.CLEAR_ALERT:
     return {

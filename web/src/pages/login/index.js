@@ -25,7 +25,7 @@ const Login = () => {
     }),
   );
 
-  const { showAlert, alertLabel } = alerts;
+  const { showAlert, alertType, alertLabel } = alerts;
 
   // Check for updated state in selectedTag
   useEffect(() => {
@@ -42,7 +42,7 @@ const Login = () => {
   return (
     <div>
       <Toaster
-        type="error"
+        type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
       <section className="hero is-primary">
