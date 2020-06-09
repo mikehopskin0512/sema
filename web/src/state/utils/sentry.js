@@ -1,11 +1,14 @@
 import Router from 'next/router';
+import getConfig from 'next/config';
 import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
 import { getCookie } from './cookie';
 
+const { publicRuntimeConfig: { NEXT_PUBLIC_AUTH_JWT } } = getConfig();
+const authCookie = NEXT_PUBLIC_AUTH_JWT;
+
 const { hydrateUser, reauthenticate } = authOperations;
-const authCookie = process.env.NEXT_PUBLIC_AUTH_JWT;
 
 const redirect = (ctx, location) => {
   if (ctx.req) {

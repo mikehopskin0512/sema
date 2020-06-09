@@ -1,7 +1,10 @@
+import getConfig from 'next/config';
 import axios from 'axios';
 
+const { publicRuntimeConfig: { NEXT_PUBLIC_BASE_URL } } = getConfig();
+
 const api = axios.create({
-  baseURL: process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL : null,
+  baseURL: process !== 'undefined' ? NEXT_PUBLIC_BASE_URL : null,
 });
 
 export const get = (endpoint, { id }, token = '') => api.get(`${endpoint}/${id}`, {

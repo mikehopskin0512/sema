@@ -1,10 +1,13 @@
+import getConfig from 'next/config';
 import axios from 'axios';
+
+const { serverRuntimeConfig: { APOLLO_CLIENT_ID, APOLLO_CLIENT_SECRET } } = getConfig();
 
 const config = {
   auth: {},
   headers: {},
 };
-const basicAuth = { username: process.env.APOLLO_CLIENT_ID, password: process.env.APOLLO_CLIENT_SECRET };
+const basicAuth = { username: APOLLO_CLIENT_ID, password: APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
   baseURL: process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL_APOLLO : null,
