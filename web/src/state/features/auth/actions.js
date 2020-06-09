@@ -37,7 +37,8 @@ export const reauthenticate = (token) => ({
 
 export const deauthenticate = () => (dispatch) => {
   removeCookie(authCookie);
-  Router.push('/');
+  Router.push('/login');
+  dispatch(triggerAlert('You have succesfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
 
@@ -51,7 +52,7 @@ export const authenticate = (username, password) => async (dispatch) => {
   // This will be replaced with new backend
   if (res.data.success === false) {
     dispatch(authenticateError(res.data.error));
-    dispatch(triggerAlert('Invalid username/password. Please try again.'));
+    dispatch(triggerAlert('Invalid username/password. Please try again.', 'error'));
   }
 
   if (res.data && res.data.token) {
