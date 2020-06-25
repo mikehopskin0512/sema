@@ -3,8 +3,7 @@ import { BasicStrategy } from 'passport-http';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 
 import userModel from '../users/userModel';
-import credentialService from '../credentials/credentialService';
-import accessTokenModel from './accessTokenModel';
+import { validate } from '../credentials/credentialService';
 
 import logger from '../shared/logger';
 import db from '../shared/mongo';
@@ -21,7 +20,7 @@ passport.use(new BasicStrategy(
 
     if (db.verifyConnection(done)) {
       try {
-        const payload = await credentialService.validate(clientId, clientSecret);
+        const payload = await validate(clientId, clientSecret);
 
         if (!payload) {
           return done(null, false, { message: 'Invalid credentials' });
@@ -47,22 +46,10 @@ passport.use(new BasicStrategy(
  * the authorizing user.
  */
 passport.use(new BearerStrategy(
-  async (accessToken, done) => {
-    // logger.info('BEARER');
+  async (token, done) => {
+    logger.info('BEARER');
 
     try {
-      const token = await accessTokenModel.findOne({ accessToken });
-
-      if (!token) {
-        return done(null, false, { message: 'Invalid access token' });
-      }
-
-      // Check for expired token
-      if (Math.round((Date.now() - token.created) / 1000) > tokenLife) {
-        await accessTokenModel.remove(accessToken);
-        return done(null, false, { message: 'Token expired' });
-      }
-
       // Find user
       const user = await userModel.findById(token.userId);
       if (!user) {

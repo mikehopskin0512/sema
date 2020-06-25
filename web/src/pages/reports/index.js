@@ -26,11 +26,12 @@ const Reports = () => {
 
   // Fetch reports list from Mode space
   useEffect(() => {
-    dispatch(fetchReportList(spaceId, auth.token));
+    // TEMP: Disable fetch until moved to Apollo
+    // dispatch(fetchReportList(spaceId, auth.token));
   }, [dispatch, spaceId, auth.token]);
 
   const reportsStuff = reportList.map((report) => (
-    <p key={report.token}><Link href={`/reports/${report.token}`}>{report.name}</Link></p>
+    <p key={report.token}><Link href={`/reports/${report.token}`}><a title="Test report">{report.name}</a></Link></p>
   ));
 
   return (
@@ -38,7 +39,7 @@ const Reports = () => {
       <section className="section">
         <div className="container">
           <h2 className="subtitle">Static reports</h2>
-          <p><Link href={`/reports/${testReportId}`}>Test report (use this)</Link></p>
+          <p><Link href={`/reports/${testReportId}`}><a title="Test report">Test report (use this)</a></Link></p>
           <br />
           <h2 className="subtitle">Dynamic reports from Mode</h2>
           {reportsStuff}

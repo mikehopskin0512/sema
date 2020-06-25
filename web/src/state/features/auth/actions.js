@@ -1,21 +1,19 @@
 import Router from 'next/router';
+import jwtDecode from 'jwt-decode';
 import * as types from './types';
-import { auth, createUser } from './api';
-import { removeCookie, setCookie } from '../../utils/cookie';
+import { auth, exchangeToken, createUser } from './api';
 
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
 
-const authCookie = process.env.NEXT_PUBLIC_AUTH_JWT;
-
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
 });
 
-const authenticateSuccess = (data) => ({
+const authenticateSuccess = (token) => ({
   type: types.AUTHENTICATE,
-  token: data.token,
+  token,
 });
 
 const authenticateError = (errors) => ({
@@ -23,9 +21,9 @@ const authenticateError = (errors) => ({
   errors,
 });
 
-export const hydrateUser = (data) => ({
+export const hydrateUser = (user) => ({
   type: types.HYDRATE_USER,
-  user: data,
+  user,
 });
 
 export const reauthenticate = (token) => ({
@@ -34,40 +32,72 @@ export const reauthenticate = (token) => ({
 });
 
 export const deauthenticate = () => (dispatch) => {
-  removeCookie(authCookie);
   Router.push('/login');
   dispatch(triggerAlert('You have succesfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
 
+const requestRefreshToken = () => ({
+  type: types.REQUEST_REFRESH_TOKEN,
+});
+
+const requestRefreshTokenSuccess = (token) => ({
+  type: types.RECEIVE_REFRESH_TOKEN_SUCCESS,
+  token,
+});
+
+const requestRefreshTokenError = (errors) => ({
+  type: types.RECEIVE_REFRESH_TOKEN_ERROR,
+  errors,
+});
+
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
-  const res = await auth({ username, password });
-  if (res.error) {
-    dispatch(authenticateError(res.error));
-  }
+  try {
+    const res = await auth({ username, password });
+    const { data: { jwtToken } } = res;
+    const { user } = jwtDecode(jwtToken) || {};
 
-  // This will be replaced with new backend
-  if (res.data.success === false) {
-    dispatch(authenticateError(res.data.error));
-    dispatch(triggerAlert('Invalid username/password. Please try again.', 'error'));
-  }
+    if (user) {
+      const { _id: userId } = user;
+      dispatch(authenticateSuccess(jwtToken));
+      dispatch(hydrateUser(user));
 
-  if (res.data && res.data.token) {
-    const { id, organization_id } = res.data;
-    setCookie(authCookie, res.data.token);
-    dispatch(authenticateSuccess(res.data));
-    dispatch(hydrateUser(res.data));
+      // Pass custom id and organization_id to Heap
+      if (typeof window !== 'undefined') {
+        if (userId) {
+          window.heap.identify(userId);
+        }
 
-    // Pass custom id and organization_id to Heap
-    if (typeof window !== 'undefined') {
-      if (id && organization_id) {
-        window.heap.identify(id);
-        window.heap.addUserProperties({ organization_id });
+        // if (organization_id) {
+        //   window.heap.addUserProperties({ organization_id });
+        // }
       }
-    }
 
-    Router.push('/reports');
+      Router.push('/reports');
+    }
+  } catch (err) {
+    const { response: { data: { message } } } = err;
+    dispatch(authenticateError(err.response.data));
+    dispatch(triggerAlert(message, 'error'));
+  }
+};
+
+export const refreshJwt = (refreshToken) => async (dispatch) => {
+  dispatch(requestRefreshToken());
+
+  try {
+    const res = await exchangeToken({ refreshToken });
+    const { data: { jwtToken } } = res;
+    const { user } = jwtDecode(jwtToken) || {};
+
+    // Send token to state and hydrate user
+    dispatch(requestRefreshTokenSuccess(jwtToken));
+    dispatch(hydrateUser(user));
+  } catch (err) {
+    const { response: { data: { message } } } = err;
+    dispatch(requestRefreshTokenError(err.response.data));
+    dispatch(triggerAlert(message, 'error'));
   }
 };
 

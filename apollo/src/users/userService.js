@@ -5,15 +5,15 @@ import errors from '../shared/errors';
 
 const { Types: { ObjectId } } = mongoose;
 
-const create = async (user) => {
+export const create = async (user) => {
   const {
-    password, email, firstName, lastName,
+    password, username, firstName, lastName,
     jobTitle = '', company = '',
   } = user;
 
   try {
     const newUser = new User({
-      username: email.toLowerCase(),
+      username: username.toLowerCase(),
       password,
       firstName,
       lastName,
@@ -29,7 +29,7 @@ const create = async (user) => {
   }
 };
 
-const update = async (user) => {
+export const update = async (user) => {
   const { _id } = user;
   try {
     const query = User.findOneAndUpdate(
@@ -46,7 +46,7 @@ const update = async (user) => {
   }
 };
 
-const findByUsername = async (username) => {
+export const findByUsername = async (username) => {
   try {
     const query = User.findOne({ username: username.toLowerCase() });
     const user = await query.lean().exec();
@@ -59,7 +59,7 @@ const findByUsername = async (username) => {
   }
 };
 
-const findById = async (id) => {
+export const findById = async (id) => {
   try {
     const query = User.findOne({ _id: id });
     const user = await query.lean().exec();
@@ -72,9 +72,22 @@ const findById = async (id) => {
   }
 };
 
-export {
-  create,
-  update,
-  findByUsername,
-  findById,
+export const validateLogin = async (username, password) => {
+  const query = User.findOne({ username: username.toLowerCase() });
+  const user = await query.select('+password').exec();
+
+  if (!user) {
+    const error = new errors.NotFound('Username not found');
+    throw error;
+  }
+  const validLogin = await user.validatePassword(password);
+
+  if (!validLogin) {
+    throw new errors.Unauthorized('Invalid username/password');
+  }
+
+  const payload = user.toObject();
+  delete payload.password;
+
+  return (payload);
 };

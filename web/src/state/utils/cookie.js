@@ -1,9 +1,9 @@
 import cookie from 'js-cookie';
 
-export const setCookie = (key, value) => {
+export const setCookie = (key, value, expires = 1) => {
   if (process.browser) {
     cookie.set(key, value, {
-      expires: 1,
+      expires,
       path: '/',
     });
   }

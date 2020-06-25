@@ -3,6 +3,11 @@
   "rules": {
     "func-names": 0,  
     "indent": ["warn", 2],
+    "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": ["Link"],
+      "specialLink": ["hrefLeft", "hrefRight"],
+      "aspects": ["invalidHref", "preferButton"]
+    }],
     "max-len": ["warn", 150, 2],
     "no-underscore-dangle": "off",
     "no-unused-vars": "warn",

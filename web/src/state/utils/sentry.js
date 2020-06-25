@@ -1,11 +1,12 @@
 import Router from 'next/router';
-import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
 import { getCookie } from './cookie';
 
-const authCookie = process.env.NEXT_PUBLIC_AUTH_JWT;
-const { hydrateUser, reauthenticate } = authOperations;
+const { refreshJwt } = authOperations;
+
+const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
+const isServer = () => typeof window === "undefined";
 
 const redirect = (ctx, location) => {
   if (ctx.req) {
@@ -17,13 +18,19 @@ const redirect = (ctx, location) => {
 };
 
 const initialize = async (ctx) => {
-  const jwt = getCookie(authCookie, ctx.req);
 
-  if (!jwt) {
-    if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register')) redirect(ctx, '/login');
+  if(isServer()) {
+    const jwtCookie = getCookie(refreshCookie, ctx.req);
+    if(jwtCookie) {
+      await ctx.store.dispatch(refreshJwt(jwtCookie));
+    } else if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register')) {
+        redirect(ctx, '/login');
+    }
   } else {
-    ctx.store.dispatch(reauthenticate(jwt));
-    ctx.store.dispatch(hydrateUser(jwtDecode(jwt)));
+    const { authState: { token : jwt} } = ctx.store.getState();
+    if(!jwt) {
+      redirect(ctx, '/login');
+    }
   }
 };
 

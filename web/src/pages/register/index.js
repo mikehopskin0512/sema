@@ -64,10 +64,10 @@ const Register = () => {
                   <label className="label">Business email</label>
                   <div className="control">
                     <input
-                      className={`input ${errors.email && 'is-danger'}`}
+                      className={`input ${errors.username && 'is-danger'}`}
                       type="email"
                       placeholder="tony@starkindustries.com"
-                      name="email"
+                      name="username"
                       ref={register({
                         required: 'Email is required',
                         pattern:

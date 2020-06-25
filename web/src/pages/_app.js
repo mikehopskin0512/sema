@@ -22,7 +22,7 @@ const Application = ({ Component, pageProps, store }) => (
 );
 
 Application.getInitialProps = async ({ Component, ctx }) => {
-  initialize(ctx);
+  await initialize(ctx);
   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
   return { pageProps };
 };
