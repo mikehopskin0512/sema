@@ -1,13 +1,16 @@
 import axios from 'axios';
+const isServer = () => typeof window === "undefined";
 
 const config = {
   auth: {},
   headers: {},
 };
-const basicAuth = { username: process.env.APOLLO_CLIENT_ID, password: process.env.APOLLO_CLIENT_SECRET };
+const basicAuth = { username: process.env.NEXT_PUBLIC_APOLLO_CLIENT_ID, password: process.env.NEXT_PUBLIC_APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
-  baseURL: process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_URL_APOLLO : null,
+  baseURL: isServer() ?  process.env.NEXT_PRIVATE_BASE_URL_APOLLO : process.env.NEXT_PUBLIC_BASE_URL_APOLLO,
+  withCredentials: true,
+  credentials: 'include',
 });
 
 export const get = (endpoint, { id }, token = '') => {

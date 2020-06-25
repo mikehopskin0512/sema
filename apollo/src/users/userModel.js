@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
 
+const { Schema } = mongoose;
+
 const userSchema = mongoose.Schema({
   username: String,
   password: {
@@ -10,6 +12,8 @@ const userSchema = mongoose.Schema({
   },
   firstName: String,
   lastName: String,
+  orgId: String, // TEMP: Until org object is setup
+  // orgId: { type: Schema.Types.ObjectId, ref: 'Organization' },
   jobTitle: String,
   company: String,
 });
@@ -52,14 +56,8 @@ userSchema.methods.generateHash = (password) => {
 };
 
 // check if password is valid
-userSchema.methods.comparePassword = (candidatePassword, cb) => {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      logger.error(err);
-      return cb(err);
-    }
-    return cb(null, isMatch);
-  });
+userSchema.methods.validatePassword = async function validatePassword(data) {
+  return bcrypt.compare(data, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);

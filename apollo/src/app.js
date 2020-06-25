@@ -4,7 +4,7 @@ import methodOverride from 'method-override';
 import compression from 'compression';
 
 // import path from 'path';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import cors from 'cors';
 import './auth/passport';
@@ -13,12 +13,16 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import routes from '.';
-import { port } from '../config';
+import { port, allowedOrigin } from '../config';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigin,
+  credentials: true
+}));
 app.use(compression());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));

@@ -17,7 +17,8 @@ const Header = (props) => {
   // Get auth state
   const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
-  const { first_name: firstName = '', last_name: lastName = '', is_admin: isAdmin = false } = user;
+  console.log(auth);
+  const { firstName = '', lastName = '', is_admin: isAdmin = false } = user;
   const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   const toggleHamburger = () => {

@@ -1,5 +1,5 @@
-import { create as createSMP } from '../../utils/api';
-import { get, getAll, create } from '../../utils/apiApollo';
+import { create } from '../../utils/apiApollo';
 
-export const auth = (params) => createSMP('/login', params);
+export const auth = (params) => create('v1/auth/token', params);
+export const exchangeToken = (params) => create('v1/auth/refresh-token', params);
 export const createUser = (params) => create('/v1/users', params);

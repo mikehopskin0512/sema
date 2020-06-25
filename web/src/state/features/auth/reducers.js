@@ -42,6 +42,21 @@ const reducer = (state = initialState, action) => {
       user: {},
       error: {},
     };
+  case types.RECEIVE_REFRESH_TOKEN_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      isAuthenticated: true,
+      token: action.token,
+      error: {},
+    };
+  case types.RECEIVE_REFRESH_TOKEN_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      isAuthenticated: false,
+      error: action.errors,
+    };
   case types.SET_USER:
     return {
       ...state,
