@@ -13,4 +13,9 @@ module.exports = {
   privateKeyFile: process.env.PRIVATE_KEY_FILE || '',
   refreshTokenName: process.env.REFRESH_TOKEN_NAME,
   allowedOrigin: process.env.ALLOWED_ORIGIN,
+  github: {
+    clientId: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackUrl: process.env.GITHUB_CALLBACK_URL,
+  }
 };
