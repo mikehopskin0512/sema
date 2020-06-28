@@ -12,6 +12,8 @@
     "serve": "node dist/app.js"
   },
   "dependencies": {
+    "@octokit/auth": "^2.0.0",
+    "@octokit/rest": "^18.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",

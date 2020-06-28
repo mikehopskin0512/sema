@@ -90,12 +90,29 @@ const Login = () => {
                   </div>
                   <div className="field">
                     <button type="submit" className="button is-primary is-fullwidth">
-                      Login
+                      Login with Email
+                    </button>
+                  </div>
+                  <div className="field">
+                    <button type="button" className="button is-fullwidth is-github">
+                      <span className="icon">
+                        <FontAwesomeIcon icon={['fab', 'github']} />
+                      </span>
+                      <span>Login with GitHub</span>
                     </button>
                   </div>
                   <div className="field">
                     <p className="has-text-centered is-size-7">
                       By signing in, you agree to our<br />Terms and Conditions
+                    </p>
+                  </div>
+                  <div className="field">
+                    <div className="is-divider" data-content="OR"></div>
+                    <p className="has-text-centered is-size-7">
+                      Want to sign up for the Sema platfrom?
+                    </p>
+                    <p className="has-text-centered is-size-7">
+                    <Link href="/register"><a className="is-size-7">Create an account</a></Link>
                     </p>
                   </div>
                 </form>

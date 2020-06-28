@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import compression from 'compression';
 
-// import path from 'path';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import cors from 'cors';
