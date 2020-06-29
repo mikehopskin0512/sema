@@ -8,6 +8,11 @@ module.exports = {
   mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED || true,
+  modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
+  modeKey: process.env.MODE_ANALYTICS_API_KEY,
+  modeSecret: process.env.MODE_ANALYTICS_API_SECRET,
+  modeReportId: process.env.MODE_ANALYTICS_REPORT_ID,
+  modeMaxAge: process.env.MODE_ANALYTICS_MAX_AGE, // the most frequent ingestions are typically per hour
   jwtSecret: process.env.JWT_SECRET,
   refreshSecret: process.env.JWT_SECRET,
   privateKeyFile: process.env.PRIVATE_KEY_FILE || '',

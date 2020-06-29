@@ -48,9 +48,9 @@ const requestDownloadError = () => ({
   type: types.REQUEST_DOWNLOAD_ERROR,
 });
 
-export const fetchReportUrl = (reportId, urlParams, token) => async (dispatch) => {
+export const fetchReportUrl = (reportId, orgId, urlParams, token) => async (dispatch) => {
   dispatch(requestReportUrl());
-  const modeReport = await getReportUrl({ reportId, urlParams }, token);
+  const modeReport = await getReportUrl({ orgId, urlParams }, reportId, token);
   const { data: reportData } = modeReport;
 
   // Send response if report data
