@@ -42,8 +42,9 @@ const Report = () => {
     }),
   );
 
-  // Get filters from Redux
+  // Get filters and user.orgId from Redux
   const { currentFilters } = organizations;
+  const { user: { organization_id: orgId } } = auth;
 
   // Declare local state var for report filterUrl
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));
@@ -61,10 +62,10 @@ const Report = () => {
     setFilterUrl(buildFilterUrl(currentFilters));
   }, [currentFilters]);
 
-  // Get mode Url from embedded_bi endpoint
+  // Get mode Url from reports endpoint
   useEffect(() => {
-    dispatch(fetchReportUrl(reportId, filterUrl, auth.token));
-  }, [reportId, dispatch, filterUrl, auth.token]);
+    dispatch(fetchReportUrl(reportId, orgId, filterUrl, auth.token));
+  }, [reportId, orgId, dispatch, filterUrl, auth.token]);
 
   const { reportUrl } = reports;
 

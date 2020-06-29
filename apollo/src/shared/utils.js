@@ -1,8 +1,9 @@
 
-const handle = (promise) => promise
+export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
   .catch((error) => Promise.resolve([undefined, error]));
 
-export {
-  handle,
+export const delay = async (ms) => {
+  // return await for better async stack trace support in case of errors.
+  await new Promise((resolve) => setTimeout(resolve, ms));
 };

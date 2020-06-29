@@ -23,16 +23,22 @@ export const get = (endpoint, { id }, token = '') => {
   return api.get(`${endpoint}/${id}`, config);
 };
 
-export const getAll = (endpoint, { params } = {}, token = '') => api.get(endpoint, { params,
-  headers: {
-    Authorization: `Bearer ${token}`,
-  } });
+export const getAll = (endpoint, { params } = {}, token = '') => {
+  //if (token) {
+  //  config.headers.Authorization = `Bearer ${token}`;
+  //} else {
+    config.auth = basicAuth;
+  //}
+
+  return api.get(endpoint, { params, ...config });
+};
 
 export const download = (endpoint, { params }, token = '') => api.get(endpoint, { params,
+  auth: basicAuth,
   responseType: 'blob',
   headers: {
     Accept: 'application/pdf',
-    Authorization: `Bearer ${token}`,
+    //Authorization: `Bearer ${token}`,
   } });
 
 export const create = (endpoint, item, token = '') => {
