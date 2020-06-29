@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, update, findByUsername, findById } from './userService';
+import {
+  create, update, findByUsername,
+  findById, findByOrgId,
+} from './userService';
 
 const route = Router();
 
@@ -72,4 +75,23 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-}
+
+  route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id: orgId } = req.params;
+
+    try {
+      const users = await findByOrgId(orgId);
+
+      if (!users) {
+        throw new errors.NotFound('Error fetching organization users');
+      }
+
+      return res.status(201).send({
+        users,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+};
