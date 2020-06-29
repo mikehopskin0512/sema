@@ -72,6 +72,19 @@ export const findById = async (id) => {
   }
 };
 
+export const findByOrgId = async (orgId) => {
+  try {
+    const query = User.find({ orgId });
+    const users = await query.select('_id firstName lastName').lean().exec();
+
+    return users;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const validateLogin = async (username, password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
