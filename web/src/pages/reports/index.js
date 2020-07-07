@@ -26,8 +26,7 @@ const Reports = () => {
 
   // Fetch reports list from Mode space
   useEffect(() => {
-    // TEMP: Disable fetch until moved to Apollo
-    // dispatch(fetchReportList(spaceId, auth.token));
+    dispatch(fetchReportList(spaceId, auth.token));
   }, [dispatch, spaceId, auth.token]);
 
   const reportsStuff = reportList.map((report) => (
