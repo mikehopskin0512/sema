@@ -4,18 +4,17 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import { findById, validateLogin } from '../users/userService';
-import {validateRefreshToken, setRefreshToken, createRefreshToken, createAuthToken} from './authService';
+import { validateRefreshToken, setRefreshToken, createRefreshToken, createAuthToken } from './authService';
 
 const route = Router();
 
 export default (app, passport) => {
-
   app.use(`/${version}/auth`, passport.authenticate('basic', { session: false }), route);
 
   route.post('/token', async (req, res) => {
-
-      const { username, password } = req.body;
-      if(!username || !password) {
+    const { username, password } = req.body;
+    try {
+      if (!username || !password) {
         throw new errors.BadRequest('Both username and password are required.');
       }
 
@@ -27,13 +26,16 @@ export default (app, passport) => {
       await setRefreshToken(res, await createRefreshToken(user));
 
       return res.status(201).send({ jwtToken: await createAuthToken(user) });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
   });
 
   route.post('/refresh-token', async (req, res) => {
-
-      const { refreshToken } = req.body;
-
-      if(!refreshToken) {
+    const { refreshToken } = req.body;
+    try {
+      if (!refreshToken) {
         return res.status(400).send('I got nothing');
       }
 
@@ -54,5 +56,9 @@ export default (app, passport) => {
       await setRefreshToken(res, await createRefreshToken(user));
 
       return res.status(201).send({ jwtToken: await createAuthToken(user) });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
   });
-}
+};

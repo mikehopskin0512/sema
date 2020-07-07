@@ -1,21 +1,19 @@
 import axios from 'axios';
-const isServer = () => typeof window === "undefined";
 
-const config = {
-  auth: {},
-  headers: {},
-};
+const isServer = () => typeof window === 'undefined';
+
+const config = {};
 const basicAuth = { username: process.env.NEXT_PUBLIC_APOLLO_CLIENT_ID, password: process.env.NEXT_PUBLIC_APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
-  baseURL: isServer() ?  process.env.NEXT_PRIVATE_BASE_URL_APOLLO : process.env.NEXT_PUBLIC_BASE_URL_APOLLO,
+  baseURL: isServer() ? process.env.NEXT_PRIVATE_BASE_URL_APOLLO : process.env.NEXT_PUBLIC_BASE_URL_APOLLO,
   withCredentials: true,
   credentials: 'include',
 });
 
 export const get = (endpoint, { id }, token = '') => {
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = { Authorization: `Bearer ${token}` };
   } else {
     config.auth = basicAuth;
   }
@@ -24,11 +22,11 @@ export const get = (endpoint, { id }, token = '') => {
 };
 
 export const getAll = (endpoint, { params } = {}, token = '') => {
-  //if (token) {
-  //  config.headers.Authorization = `Bearer ${token}`;
-  //} else {
+  if (token) {
+    config.headers = { Authorization: `Bearer ${token}` };
+  } else {
     config.auth = basicAuth;
-  //}
+  }
 
   return api.get(endpoint, { params, ...config });
 };
@@ -38,12 +36,12 @@ export const download = (endpoint, { params }, token = '') => api.get(endpoint, 
   responseType: 'blob',
   headers: {
     Accept: 'application/pdf',
-    //Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   } });
 
 export const create = (endpoint, item, token = '') => {
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = { Authorization: `Bearer ${token}` };
   } else {
     config.auth = basicAuth;
   }

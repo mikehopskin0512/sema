@@ -90,8 +90,7 @@ export const validateLogin = async (username, password) => {
   const user = await query.select('+password').exec();
 
   if (!user) {
-    const error = new errors.NotFound('Username not found');
-    throw error;
+    throw new errors.NotFound('Username not found');
   }
   const validLogin = await user.validatePassword(password);
 
