@@ -19,7 +19,7 @@ export const create = async (userId, applicationName) => {
     logger.error(err);
     return err;
   }
-}
+};
 
 export const get = async (userId) => {
   try {
@@ -29,7 +29,7 @@ export const get = async (userId) => {
     logger.error(err);
     return err;
   }
-}
+};
 
 export const validate = async (clientId, clientSecret) => {
   const clientSecretHash = crypto.createHash('sha1').update(clientSecret).digest('hex');
@@ -50,4 +50,4 @@ export const validate = async (clientId, clientSecret) => {
   }
 
   return client;
-}
+};

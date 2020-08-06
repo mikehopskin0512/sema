@@ -1,11 +1,14 @@
 import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
-import { auth, exchangeToken, createUser } from './api';
+import {
+  auth, exchangeToken, createUser,
+  verifyUser, resetVerification,
+} from './api';
 
 import { alertOperations } from '../alerts';
 
-const { triggerAlert } = alertOperations;
+const { triggerAlert, clearAlert } = alertOperations;
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
@@ -51,6 +54,19 @@ const requestRefreshTokenError = (errors) => ({
   errors,
 });
 
+const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
+  // Pass custom id and organization_id to Heap
+  if (typeof window !== 'undefined') {
+    if (userId) {
+      window.heap.identify(userId);
+    }
+
+    // if (organization_id) {
+    //   window.heap.addUserProperties({ organization_id });
+    // }
+  }
+};
+
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
   try {
@@ -59,22 +75,19 @@ export const authenticate = (username, password) => async (dispatch) => {
     const { user } = jwtDecode(jwtToken) || {};
 
     if (user) {
-      const { _id: userId } = user;
+      const { _id: userId, isVerified } = user;
+      const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user));
+      logHeapAnalytics(userId, orgId);
 
-      // Pass custom id and organization_id to Heap
-      if (typeof window !== 'undefined') {
-        if (userId) {
-          window.heap.identify(userId);
-        }
-
-        // if (organization_id) {
-        //   window.heap.addUserProperties({ organization_id });
-        // }
+      // Only allow user login if isVerified
+      if (isVerified) {
+        Router.push('/reports');
+      } else {
+        dispatch(authenticateError({ errors: 'User is not verfied' }));
+        Router.push('/register/verify');
       }
-
-      Router.push('/reports');
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
@@ -90,14 +103,23 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
     const { user } = jwtDecode(jwtToken) || {};
+    const { isVerified } = user;
 
     // Send token to state and hydrate user
     dispatch(requestRefreshTokenSuccess(jwtToken));
     dispatch(hydrateUser(user));
+
+    if (!isVerified) {
+      dispatch(authenticateError({ errors: 'User is not verfied' }));
+      Router.push('/register/verify');
+    }
   } catch (err) {
-    const { response: { data: { message } } } = err;
-    dispatch(requestRefreshTokenError(err.response.data));
-    dispatch(triggerAlert(message, 'error'));
+    if (err.response) {
+      const { response: { data = {} } } = err;
+      dispatch(requestRefreshTokenError(data));
+    } else {
+      dispatch(requestRefreshTokenError(err));
+    }
   }
 };
 
@@ -105,7 +127,7 @@ const requestRegistration = () => ({
   type: types.REQUEST_REGISTRATION,
 });
 
-const registrationSucess = (data) => ({
+const registrationSuccess = (data) => ({
   type: types.REQUEST_REGISTRATION_SUCCESS,
   user: data.user,
 });
@@ -115,14 +137,79 @@ const registrationError = (errors) => ({
   errors,
 });
 
+const requestVerifyUser = () => ({
+  type: types.REQUEST_VERIFY_USER,
+});
+
+const verifyUserSuccess = () => ({
+  type: types.VERIFY_USER_SUCCESS,
+});
+
+const verifyUserError = (errors) => ({
+  type: types.VERIFY_USER_ERROR,
+  errors,
+});
+
+const requestResetVerification = () => ({
+  type: types.REQUEST_RESET_VERIFICATION,
+});
+
+const resetVerificationSuccess = () => ({
+  type: types.RESET_VERIFICATION_SUCCESS,
+});
+
+const resetVerificationError = (errors) => ({
+  type: types.RESET_VERIFICATION_ERROR,
+  errors,
+});
+
 export const registerUser = (user, token) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
     const payload = await createUser(user, token);
+    // Send user to verification page after registration
+    Router.push('/register/verify');
 
-    dispatch(registrationSucess(payload.data));
+    dispatch(registrationSuccess(payload.data));
   } catch (error) {
     dispatch(registrationError(error.response.data));
+  }
+};
+
+export const activateUser = (verifyToken) => async (dispatch) => {
+  try {
+    dispatch(requestVerifyUser());
+    const payload = await verifyUser({}, verifyToken);
+
+    // Auto login user
+    const { data: { jwtToken } } = payload;
+    const { user } = jwtDecode(jwtToken) || {};
+
+    if (user) {
+      const { _id: userId } = user;
+      const orgId = null; // TEMP: Until orgs are linked up
+      dispatch(authenticateSuccess(jwtToken));
+      dispatch(hydrateUser(user));
+      logHeapAnalytics(userId, orgId);
+    }
+
+    dispatch(verifyUserSuccess());
+  } catch (error) {
+    dispatch(verifyUserError(error.response));
+    dispatch(triggerAlert('Invalid verification token. Please request a new one below.', 'error'));
+  }
+};
+
+export const resendVerifiction = (username) => async (dispatch) => {
+  try {
+    dispatch(requestResetVerification());
+    await resetVerification({ username });
+
+    dispatch(resetVerificationSuccess());
+    dispatch(triggerAlert('Verifcation Email resent. Please check your email.', 'success'));
+    dispatch(clearAlert());
+  } catch (error) {
+    dispatch(resetVerificationError(error.response.data));
   }
 };
 

@@ -1,4 +1,3 @@
-import './style.scss';
 
 const Footer = () => (
   <footer className="">

@@ -4,8 +4,10 @@ import { Strategy as BearerStrategy } from 'passport-http-bearer';
 
 import userModel from '../users/userModel';
 import { validate } from '../credentials/credentialService';
+import { validateAuthToken } from '../auth/authService';
 
 import logger from '../shared/logger';
+import errors from '../shared/errors';
 import db from '../shared/mongo';
 import { tokenLife } from '../../config';
 
@@ -50,12 +52,7 @@ passport.use(new BearerStrategy(
     logger.info('BEARER');
 
     try {
-      // Find user
-      const user = await userModel.findById(token.userId);
-      if (!user) {
-        return done(null, false, { message: 'Unknown user' });
-      }
-
+      const user = await validateAuthToken(token);
       return done(null, user, { scope: '*' });
     } catch (err) {
       logger.error(err);

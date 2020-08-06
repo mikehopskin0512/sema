@@ -22,12 +22,12 @@ const initialize = async (ctx) => {
     const jwtCookie = getCookie(refreshCookie, ctx.req);
     if (jwtCookie) {
       await ctx.store.dispatch(refreshJwt(jwtCookie));
-    } else if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register')) {
+    } else if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register') && !(ctx.pathname).includes('/password-reset')) {
       redirect(ctx, '/login');
     }
   } else {
     const { authState: { token: jwt } } = ctx.store.getState();
-    if (!jwt) {
+    if (!jwt && ctx.pathname !== '/login' && !(ctx.pathname).includes('/register') && !(ctx.pathname).includes('/password-reset')) {
       redirect(ctx, '/login');
     }
   }

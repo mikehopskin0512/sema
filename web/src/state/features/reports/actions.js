@@ -32,8 +32,9 @@ const receiveReportList = (reportList) => ({
   reportList,
 });
 
-const requestReportListError = () => ({
+const requestReportListError = (errors) => ({
   type: types.REQUEST_REPORT_LIST_ERROR,
+  errors,
 });
 
 const requestDownload = () => ({
