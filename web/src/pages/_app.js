@@ -11,6 +11,8 @@ import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-ic
 import initialize from '../state/utils/sentry';
 import { initStore } from '../state/store';
 
+import '../../styles/_theme.scss';
+
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft,
   faFilter, faCloudDownloadAlt, faGithub, faTwitter, faFacebook);

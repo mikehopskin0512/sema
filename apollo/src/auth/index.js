@@ -36,7 +36,7 @@ export default (app, passport) => {
     const { refreshToken } = req.body;
     try {
       if (!refreshToken) {
-        return res.status(400).send('I got nothing');
+        throw new errors.BadRequest('No refresh token found.');
       }
 
       let refreshPayload = null;
@@ -45,6 +45,10 @@ export default (app, passport) => {
       } catch (error) {
         logger.error(error);
         throw new errors.BadRequest('Invalid refresh token');
+      }
+
+      if (!refreshPayload.user) {
+        throw new errors.BadRequest('No user object found');
       }
 
       const user = await findById(refreshPayload.user._id);

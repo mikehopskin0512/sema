@@ -17,6 +17,7 @@ const reducer = (state = initialState, action) => {
   case types.CLEAR_ALERT:
     return {
       showAlert: false,
+      alertLabel: '',
     };
   default:
     return state;

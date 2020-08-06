@@ -1,5 +1,66 @@
 /* Layout styles */
 
+Header {
+  padding: 1rem 0.5rem 1rem 2rem;
+
+  img {
+    height: 1.8rem;
+    margin-top: 0.5rem;
+    line-height: 1.8rem;
+  }
+}
+
+.Header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  height: 50px;
+  width: 100%;
+
+  padding: 0 20px;
+
+  font-family: $logo-font;
+  font-size: 24px;
+  font-weight: bold;
+  color: $on-secondary;
+  text-transform: uppercase;
+
+  background: $highlight;
+
+  cursor: pointer;
+}
+
+Footer {
+  padding: 1rem;
+}
+
+.Layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  width: 100%;
+
+  .Content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+    background: $secondary;
+    color: $on-secondary;
+    font-family: $core-font;
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
 .margin-right-1 {
   margin-right: 1rem;
 }

@@ -2,8 +2,6 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
 
-const { Schema } = mongoose;
-
 const userSchema = mongoose.Schema({
   username: String,
   password: {
@@ -16,7 +14,13 @@ const userSchema = mongoose.Schema({
   // orgId: { type: Schema.Types.ObjectId, ref: 'Organization' },
   jobTitle: String,
   company: String,
-});
+  isActive: { type: Boolean, default: true },
+  isVerified: { type: Boolean, default: false },
+  verificationToken: String,
+  verificationExpires: Date,
+  resetToken: String,
+  resetExpires: Date,
+}, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;
 
@@ -25,6 +29,23 @@ userSchema.pre('save', async function save(next) {
   try {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
     this.password = await bcrypt.hash(this.password, salt);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// For update pre hook, isModified won't work. Need to get data first and use this.set.
+userSchema.pre('findOneAndUpdate', async function findOneAndUpdate(next) {
+  const data = this.getUpdate();
+  const { $set: { password } } = data;
+  if (!password) {
+    return next();
+  }
+  try {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    this.set({ password: hashedPassword });
     return next();
   } catch (err) {
     return next(err);

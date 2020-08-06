@@ -46,7 +46,6 @@ const Toaster = (props) => {
   return (null);
 };
 
-
 Toaster.propTypes = {
   message: PropTypes.string.isRequired,
 };

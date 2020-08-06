@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
-import './styles.scss';
+import './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
@@ -86,7 +86,7 @@ const Login = () => {
                     </div>
                   </div>
                   <div className="field">
-                    <Link href="#"><a className="is-size-7">Forgot password?</a></Link>
+                    <Link href="/password-reset/"><a className="is-size-7">Forgot password?</a></Link>
                   </div>
                   <div className="field">
                     <button type="submit" className="button is-primary is-fullwidth">
@@ -112,7 +112,7 @@ const Login = () => {
                       Want to sign up for the Sema platfrom?
                     </p>
                     <p className="has-text-centered is-size-7">
-                    <Link href="/register"><a className="is-size-7">Create an account</a></Link>
+                      <Link href="/register"><a className="is-size-7">Create an account</a></Link>
                     </p>
                   </div>
                 </form>

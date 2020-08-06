@@ -2,7 +2,7 @@
   "extends": "airbnb-base",
   "rules": {
     "indent": ["warn", 2],
-    "max-len": ["warn", 130, 2], 
+    "max-len": ["warn", 140, 2], 
     "no-underscore-dangle": "off",
     "object-curly-newline": ["error", { "minProperties": 5, "consistent": true }],    
   }    

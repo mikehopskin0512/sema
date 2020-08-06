@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import './style.scss';
+import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 
 const Header = (props) => {
@@ -17,7 +17,6 @@ const Header = (props) => {
   // Get auth state
   const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
-  console.log(auth);
   const { firstName = '', lastName = '', is_admin: isAdmin = false } = user;
   const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
