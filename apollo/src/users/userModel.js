@@ -2,6 +2,14 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
 
+const identitySchema = mongoose.Schema({
+  provider: String,
+  id: String,
+  email: String,
+  firstName: String,
+  lastName: String,
+});
+
 const userSchema = mongoose.Schema({
   username: String,
   password: {
@@ -20,6 +28,7 @@ const userSchema = mongoose.Schema({
   verificationExpires: Date,
   resetToken: String,
   resetExpires: Date,
+  identities: [identitySchema],
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;

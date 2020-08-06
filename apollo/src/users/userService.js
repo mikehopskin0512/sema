@@ -54,6 +54,33 @@ export const update = async (user) => {
   }
 };
 
+export const updateIdentity = async (user, identity) => {
+  const { _id } = user;
+  const { provider } = identity;
+
+  try {
+    // In order to handle both insert and update
+    // need to pull old identity and then push new one
+    const queryPull = User.updateOne(
+      { _id: new ObjectId(_id) },
+      { $pull: { identities: { provider } } },
+    );
+
+    const queryAdd = User.updateOne(
+      { _id: new ObjectId(_id) },
+      { $addToSet: { identities: identity } },
+    );
+
+    await queryPull.exec();
+    await queryAdd.exec();
+    return true;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
 export const findByUsername = async (username) => {
   try {
     const query = User.findOne({ username: username.toLowerCase() });

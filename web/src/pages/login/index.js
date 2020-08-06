@@ -14,6 +14,9 @@ import { authOperations } from '../../state/features/auth';
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
 
+const githubClient = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
+const githubUri = process.env.NEXT_PUBLIC_GITHUB_REDIRECT;
+
 const Login = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -94,12 +97,15 @@ const Login = () => {
                     </button>
                   </div>
                   <div className="field">
-                    <button type="button" className="button is-fullwidth is-github">
+                    <a
+                      type="button"
+                      className="button is-fullwidth is-github"
+                      href={`https://github.com/login/oauth/authorize?scope=user&client_id=${githubClient}&redirect_uri=${githubUri}`}>
                       <span className="icon">
                         <FontAwesomeIcon icon={['fab', 'github']} />
                       </span>
                       <span>Login with GitHub</span>
-                    </button>
+                    </a>
                   </div>
                   <div className="field">
                     <p className="has-text-centered is-size-7">

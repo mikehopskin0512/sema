@@ -153,6 +153,7 @@ export default (app, passport) => {
 
     try {
       const updatedUser = await initiatePasswordReset(username);
+
       const message = {
         recipient: updatedUser.username,
         url: `${orgDomain}/password-reset/${updatedUser._id}/${updatedUser.resetToken}`,

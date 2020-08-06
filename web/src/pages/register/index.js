@@ -1,6 +1,7 @@
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import jwtDecode from 'jwt-decode';
 
 import withLayout from '../../components/layout/newLayout';
 
@@ -11,6 +12,13 @@ const { setUser } = authOperations;
 const Register = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit, errors } = useForm();
+
+  const router = useRouter();
+  const { token } = router.query;
+
+  console.log(token);
+  const { identity } = jwtDecode(token) || {};
+  const { id, email, firstName, lastName } = identity;
 
   const onSubmit = (data) => {
     const user = { ...data };
@@ -36,6 +44,7 @@ const Register = () => {
                       type="text"
                       placeholder="Tony"
                       name="firstName"
+                      defaultValue={firstName}
                       ref={register({
                         required: 'First name is required',
                         maxLength:
@@ -52,6 +61,7 @@ const Register = () => {
                       type="text"
                       placeholder="Stark"
                       name="lastName"
+                      defaultValue={lastName}
                       ref={register({
                         required: 'Last name is required',
                         maxLength:
@@ -68,6 +78,7 @@ const Register = () => {
                       type="email"
                       placeholder="tony@starkindustries.com"
                       name="username"
+                      defaultValue={email}
                       ref={register({
                         required: 'Email is required',
                         pattern:

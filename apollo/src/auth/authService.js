@@ -5,6 +5,10 @@ export const createAuthToken = async (user) => sign({ user }, jwtSecret, {
   expiresIn: '15m',
 });
 
+export const createIdentityToken = async (identity) => sign({ identity }, jwtSecret, {
+  expiresIn: '15m',
+});
+
 export const createRefreshToken = async (user) => sign({ user }, refreshSecret, {
   expiresIn: '1d',
 });

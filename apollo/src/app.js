@@ -18,7 +18,7 @@ const app = express();
 
 app.use(cors({
   origin: allowedOrigin,
-  credentials: true
+  credentials: true,
 }));
 app.use(compression());
 app.use(cookieParser());
