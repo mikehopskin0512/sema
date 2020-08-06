@@ -1,12 +1,15 @@
 import { Router } from 'express';
 import querystring from 'querystring';
 import { createOAuthAppAuth } from '@octokit/auth';
-import { github } from '../../../config';
+import { github, orgDomain, version } from '../../../config';
+import { getProfile } from './utils';
+import { findByUsername, updateIdentity } from '../../users/userService';
+import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 
 const route = Router();
 
 export default (app) => {
-  app.use('/auth/github', route);
+  app.use(`/${version}/identities/github`, route);
 
   route.get('/', async (req, res) => {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
@@ -30,11 +33,41 @@ export default (app) => {
     });
 
     const { token } = await auth({ type: 'token' });
-
     if (!token) {
       return res.status(401).end('Github authentication failed.');
     }
 
-    return res.redirect('http://localhost:3000/login');
+    const profile = await getProfile(token);
+    if (!profile) {
+      return res.status(401).end('Unable to retrieve Github profile for user.');
+    }
+
+    // Create identity object
+    const fullName = profile.name;
+    const firstName = fullName.split(' ').slice(0, -1).join(' ');
+    const lastName = fullName.split(' ').slice(-1).join(' ');
+    const identity = {
+      provider: 'github',
+      id: profile.id,
+      email: profile.email,
+      firstName,
+      lastName,
+    };
+
+    const user = await findByUsername(profile.email);
+    if (user) {
+      // Update user with identity
+      await updateIdentity(user, identity);
+
+      // Auth Sema
+      await setRefreshToken(res, await createRefreshToken(user));
+
+      // No need to send jwt. It will pick up the refresh token cookie on frontend
+      return res.redirect(`${orgDomain}/reports`);
+      // return res.status(201).send({ jwtToken: await createAuthToken(user) });
+    }
+
+    const identityToken = await createIdentityToken(identity);
+    return res.redirect(`${orgDomain}/register?token=${identityToken}`);
   });
 };
