@@ -26,14 +26,19 @@ const ReportsHeader = (props) => {
     }),
   );
 
-  const { user: { organization_id: orgId } } = auth;
+  const { user: { orgId } } = auth;
   const { updateFilters } = props;
 
   useEffect(() => {
     dispatch(fetchFilterLists(orgId, auth.token));
   }, [dispatch, orgId, auth.token]);
 
-  const { repositories, developers, fileTypes, currentFilters } = organizations;
+  const {
+    repositories = [],
+    contributors = [],
+    fileTypes = [],
+    currentFilters,
+  } = organizations;
   const { reportId, reportTitle, runToken } = reports;
 
   const repositoriesList = repositories.map((repository) => (
@@ -43,10 +48,10 @@ const ReportsHeader = (props) => {
     }
   ));
 
-  const developersList = developers.map((user) => (
+  const contributorsList = contributors.map((contributor) => (
     {
-      value: user.id,
-      label: `${user.first_name} ${user.last_name}`,
+      value: contributor.id,
+      label: contributor.name,
     }
   ));
 
@@ -125,7 +130,7 @@ const ReportsHeader = (props) => {
             <div className="column">
               <MultiSelectFilter
                 updateFilters={updateFilters}
-                selectData={developersList}
+                selectData={contributorsList}
                 currentFilters={currentFilters}
                 paramName="param_z_developers"
                 placeholder="Developers" />

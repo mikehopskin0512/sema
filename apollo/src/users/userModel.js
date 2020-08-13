@@ -8,7 +8,7 @@ const identitySchema = mongoose.Schema({
   email: String,
   firstName: String,
   lastName: String,
-});
+}, { _id: false });
 
 const userSchema = mongoose.Schema({
   username: String,
@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
   },
   firstName: String,
   lastName: String,
-  orgId: String, // TEMP: Until org object is setup
+  orgId: { type: String, default: '84' }, // TEMP: Until org object is setup. Org 84 is temp default.
   // orgId: { type: Schema.Types.ObjectId, ref: 'Organization' },
   jobTitle: String,
   company: String,

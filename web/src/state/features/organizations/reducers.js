@@ -9,7 +9,7 @@ const initialState = {
   isFetching: false,
   data: {},
   error: {},
-  developers: [],
+  contributors: [],
   fileTypes: [],
   repositories: [],
   currentFilters: {
@@ -61,23 +61,23 @@ const reducer = (state = initialState, action) => {
       repositories: [],
       error: action.error,
     };
-  case types.REQUEST_USERS:
+  case types.REQUEST_CONTRIBUTORS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.RECEIVE_USERS:
+  case types.RECEIVE_CONTRIBUTORS:
     return {
       ...state,
       isFetching: false,
-      developers: action.users,
+      contributors: action.users,
       error: {},
     };
-  case types.REQUEST_USERS_ERROR:
+  case types.REQUEST_CONTRIBUTORS_ERROR:
     return {
       ...state,
       isFetching: false,
-      developers: [],
+      contributors: [],
       error: action.error,
     };
   case types.RECEIVE_FILTERS:

@@ -2,16 +2,15 @@ import crypto from 'crypto';
 
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { modeOrg, modeKey, modeSecret, modeMaxAge } from '../../config';
+import { modeOrg, modeEmbedKey, modeEmbedSecret, modeMaxAge } from '../../config';
 import { delay } from '../shared/utils';
-import { getAll } from '../shared/apiMode';
+import { getAll, create } from '../shared/apiMode';
 
 // Fetch PDF (if ready)
 const requestPDF = async (reportToken, mostRecentReportRunToken, timeout) => {
   if (Date.now() >= timeout) return false; // timeout function
   const endpoint = `/api/${modeOrg}/reports/${reportToken}/exports/runs/${mostRecentReportRunToken}/pdf`;
-  const response = await getAll(endpoint, { trk_source: 'report' });
-
+  const response = await create(endpoint, { trk_source: 'report' });
   if (!response) {
     throw new errors.NotFound('No data returned from API');
   }
@@ -76,7 +75,6 @@ export const fetchModePdf = async (reportToken, mostRecentReportRunToken) => {
   }
 };
 
-
 // Get reports from a Mode space
 export const getModeSpace = async (spaceToken) => {
   const endpoint = `api/${modeOrg}/spaces/${spaceToken}/reports?order=asc&order_by=name`;
@@ -112,7 +110,7 @@ export const buildModeReportUri = async (reportId, orgId, urlParams) => {
 
   // The parameters in the query string must be alphabetically sorted
   // The timestamp and signature params must come after any custom params
-  let requestUri = `${reportUrl}/embed?access_key=${modeKey}&max_age=${modeMaxAge}&param_organization_id=${orgId}`;
+  let requestUri = `${reportUrl}/embed?access_key=${modeEmbedKey}&max_age=${modeMaxAge}&param_organization_id=${orgId}`;
 
   // Add custom urlParams if provided
   if (urlParams) { requestUri += `&${urlParams}`; }
@@ -121,7 +119,7 @@ export const buildModeReportUri = async (reportId, orgId, urlParams) => {
   requestUri += `&timestamp=${timestamp}`;
 
   // Sign request and add signature to end
-  requestUri = await signUrl(requestUri, modeKey, modeSecret, timestamp);
+  requestUri = await signUrl(requestUri, modeEmbedKey, modeEmbedSecret, timestamp);
 
   return requestUri;
 };

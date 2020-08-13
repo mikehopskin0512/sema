@@ -31,13 +31,21 @@ export const getAll = (endpoint, { params } = {}, token = '') => {
   return api.get(endpoint, { params, ...config });
 };
 
-export const download = (endpoint, { params }, token = '') => api.get(endpoint, { params,
-  auth: basicAuth,
-  responseType: 'blob',
-  headers: {
-    Accept: 'application/pdf',
-    Authorization: `Bearer ${token}`,
-  } });
+export const download = (endpoint, { params }, token = '') => {
+  config.responseType = 'blob';
+
+  if (token) {
+    config.headers = {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/pdf',
+    };
+  } else {
+    config.auth = basicAuth;
+    config.headers = { Accept: 'application/pdf' };
+  }
+
+  return api.get(endpoint, { params, ...config });
+};
 
 export const create = (endpoint, item, token = '') => {
   if (token) {

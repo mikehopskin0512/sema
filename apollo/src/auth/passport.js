@@ -2,12 +2,10 @@ import passport from 'passport';
 import { BasicStrategy } from 'passport-http';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 
-import userModel from '../users/userModel';
 import { validate } from '../credentials/credentialService';
-import { validateAuthToken } from '../auth/authService';
+import { validateAuthToken } from './authService';
 
 import logger from '../shared/logger';
-import errors from '../shared/errors';
 import db from '../shared/mongo';
 import { tokenLife } from '../../config';
 
@@ -49,7 +47,7 @@ passport.use(new BasicStrategy(
  */
 passport.use(new BearerStrategy(
   async (token, done) => {
-    logger.info('BEARER');
+    // logger.info('BEARER');
 
     try {
       const user = await validateAuthToken(token);
