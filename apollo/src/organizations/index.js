@@ -1,69 +1,56 @@
+import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { selectRepositoriesByOrg, selectContributors, selectFileTypesByOrg } from './organizationService';
 
-async function getRepositories(req, res) {
-  try {
-    const { id: orgId } = req.params;
-    const repos = await selectRepositoriesByOrg(orgId);
-    if (!repos) {
-      throw new errors.BadRequest('Error fetching repositories');
+const route = Router();
+
+export default (app, passport) => {
+  app.use(`/${version}/organizations`, route);
+
+  route.get('/:id/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { id: orgId } = req.params;
+      const repositories = await selectRepositoriesByOrg(orgId);
+      if (!repositories) {
+        throw new errors.BadRequest('Error fetching repositories');
+      }
+
+      return res.status(201).send(repositories);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
+  });
 
-    return res.status(201).send({
-      repos,
-    });
-  } catch (error) {
-    logger.error(error);
-    return res.status(error.statusCode).send(error);
-  }
-}
+  route.get('/:id/contributors', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { id: orgId } = req.params;
+      const contributors = await selectContributors(orgId);
+      if (!contributors) {
+        throw new errors.BadRequest('Error fetching contributors');
+      }
 
-async function getContributors(req, res) {
-  try {
-    const { id: orgId } = req.params;
-    const repos = await selectContributors(orgId);
-    if (!repos) {
-      throw new errors.BadRequest('Error fetching contributors');
+      return res.status(201).send(contributors);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
+  });
 
-    return res.status(201).send({
-      repos,
-    });
-  } catch (error) {
-    logger.error(error);
-    return res.status(error.statusCode).send(error);
-  }
-}
+  route.get('/:id/fileTypes', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { id: orgId } = req.params;
+      const fileTypes = await selectFileTypesByOrg(orgId);
+      if (!fileTypes) {
+        throw new errors.BadRequest('Error fetching file types');
+      }
 
-async function getFileTypes(req, res) {
-  try {
-    const { id: orgId } = req.params;
-    const repos = await selectFileTypesByOrg(orgId);
-    if (!repos) {
-      throw new errors.BadRequest('Error fetching file types');
+      return res.status(201).send(fileTypes);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
-
-    return res.status(201).send({
-      repos,
-    });
-  } catch (error) {
-    logger.error(error);
-    return res.status(error.statusCode).send(error);
-  }
-}
-
-function setup(app, passport) {
-  app.get(`/${version}/organizations/:id/repositories`,
-    passport.authenticate(['basic'], { session: false }),
-    getRepositories);
-  app.get(`/${version}/organizations/:id/contributors`,
-    passport.authenticate(['basic'], { session: false }),
-    getContributors);
-  app.get(`/${version}/organizations/:id/fileTypes`,
-    passport.authenticate(['basic'], { session: false }),
-    getFileTypes);
-}
-
-module.exports = setup;
+  });
+};

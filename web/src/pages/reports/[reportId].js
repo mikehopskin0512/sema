@@ -44,7 +44,7 @@ const Report = () => {
 
   // Get filters and user.orgId from Redux
   const { currentFilters } = organizations;
-  const { user: { organization_id: orgId } } = auth;
+  const { user: { orgId } } = auth;
 
   // Declare local state var for report filterUrl
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));

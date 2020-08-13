@@ -12,6 +12,8 @@ module.exports = {
   modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
   modeKey: process.env.MODE_ANALYTICS_API_KEY,
   modeSecret: process.env.MODE_ANALYTICS_API_SECRET,
+  modeEmbedKey: process.env.MODE_ANALYTICS_ACCESS_KEY,
+  modeEmbedSecret: process.env.MODE_ANALYTICS_ACCESS_SECRET,
   modeReportId: process.env.MODE_ANALYTICS_REPORT_ID,
   modeMaxAge: process.env.MODE_ANALYTICS_MAX_AGE, // the most frequent ingestions are typically per hour
   jwtSecret: process.env.JWT_SECRET,

@@ -50,24 +50,24 @@ const requestDownloadError = () => ({
 });
 
 export const fetchReportUrl = (reportId, orgId, urlParams, token) => async (dispatch) => {
-  dispatch(requestReportUrl());
-  const modeReport = await getReportUrl({ orgId, urlParams }, reportId, token);
-  const { data: reportData } = modeReport;
+  try {
+    dispatch(requestReportUrl());
+    const modeReport = await getReportUrl({ orgId, urlParams }, reportId, token);
+    const { data: reportData } = modeReport;
 
-  // Send response if report data
-  if (reportData) {
-    dispatch(receiveReportUrl(reportId, reportData));
-  }
+    // Send response if report data
+    if (reportData) {
+      dispatch(receiveReportUrl(reportId, reportData));
+    }
 
-  const modeReportRun = await generatePdf(reportId, token);
-  const { data: { token: runToken, reportTitle } } = modeReportRun;
+    const modeReportRun = await generatePdf(reportId, token);
+    const { data: { token: runToken, reportTitle } } = modeReportRun;
 
-  if (modeReportRun) {
-    dispatch(receiveRunToken(runToken, reportTitle));
-  }
-
-  if (modeReport.error) {
-    dispatch(requestReportUrlError(modeReport.error));
+    if (modeReportRun) {
+      dispatch(receiveRunToken(runToken, reportTitle));
+    }
+  } catch (err) {
+    dispatch(requestReportUrlError(err));
   }
 };
 

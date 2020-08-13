@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getFileTypes, getUsers, getRepositories } from './api';
+import { getFileTypes, getContributors, getRepositories } from './api';
 
 const requestFileTypes = () => ({
   type: types.REQUEST_FILETYPES,
@@ -29,17 +29,17 @@ const requestRepositoriesError = (errors) => ({
   errors,
 });
 
-const requestUsers = () => ({
-  type: types.REQUEST_USERS,
+const requestContributors = () => ({
+  type: types.REQUEST_CONTRIBUTORS,
 });
 
-const receiveUsers = (data) => ({
-  type: types.RECEIVE_USERS,
+const receiveContributors = (data) => ({
+  type: types.RECEIVE_CONTRIBUTORS,
   users: data,
 });
 
-const requestUsersError = (errors) => ({
-  type: types.REQUEST_USERS_ERROR,
+const requestContributorsError = (errors) => ({
+  type: types.REQUEST_CONTRIBUTORS_ERROR,
   errors,
 });
 
@@ -78,16 +78,16 @@ export const fetchRepositories = (orgId, token) => async (dispatch) => {
   }
 };
 
-export const fetchDevelopers = (orgId, token) => async (dispatch) => {
-  dispatch(requestUsers());
-  const users = await getUsers(orgId, token);
+export const fetchContributors = (orgId, token) => async (dispatch) => {
+  dispatch(requestContributors());
+  const users = await getContributors(orgId, token);
 
   if (users.error) {
-    dispatch(requestUsersError(users.error));
+    dispatch(requestContributorsError(users.error));
   }
 
   if (users.data) {
-    dispatch(receiveUsers(users.data));
+    dispatch(receiveContributors(users.data));
   }
 };
 

@@ -16,3 +16,4 @@ const api = axios.create({
 
 export const get = (endpoint, { id }) => api.get(`${endpoint}/${id}`, config);
 export const getAll = (endpoint, { params } = {}) => api.get(endpoint, { params, ...config });
+export const create = (endpoint, item) => api.post(endpoint, item, config);

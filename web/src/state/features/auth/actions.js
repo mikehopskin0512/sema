@@ -7,8 +7,10 @@ import {
 } from './api';
 
 import { alertOperations } from '../alerts';
+import { removeCookie } from '../../utils/cookie';
 
 const { triggerAlert, clearAlert } = alertOperations;
+const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
@@ -35,6 +37,7 @@ export const reauthenticate = (token) => ({
 });
 
 export const deauthenticate = () => (dispatch) => {
+  removeCookie(refreshCookie);
   Router.push('/login');
   dispatch(triggerAlert('You have succesfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });

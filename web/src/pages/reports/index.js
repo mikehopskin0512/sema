@@ -10,8 +10,8 @@ const { fetchReportList } = reportsOperations;
 
 const Reports = () => {
   const dispatch = useDispatch();
-  const spaceId = '7290098a6c1c';
-  const testReportId = '43e7fa173112';
+  const spaceId = '9d149b7e7667';
+  const testReportId = '7171e890b648';
 
   // Import Redux vars
   const { auth, reports } = useSelector(

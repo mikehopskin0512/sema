@@ -16,12 +16,15 @@ const Register = () => {
   const router = useRouter();
   const { token } = router.query;
 
-  console.log(token);
-  const { identity } = jwtDecode(token) || {};
-  const { id, email, firstName, lastName } = identity;
+  let identity = {};
+  if (token) {
+    ({ identity } = jwtDecode(token));
+  }
+  const { email, firstName, lastName } = identity;
 
   const onSubmit = (data) => {
     const user = { ...data };
+    if (identity) { user.identities = [identity]; }
     dispatch(setUser(user));
     Router.push('/register/password');
   };
