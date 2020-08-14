@@ -31,7 +31,6 @@ const Register = () => {
   const onSubmit = (data) => {
     const { password } = data;
     const newUser = { ...user, password };
-    console.log(newUser);
     dispatch(registerUser(newUser));
   };
 

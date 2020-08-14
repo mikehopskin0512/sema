@@ -7,7 +7,7 @@ import withLayout from '../../components/layout/newLayout';
 
 import { authOperations } from '../../state/features/auth';
 
-const { setUser } = authOperations;
+const { setUser, registerUser } = authOperations;
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -24,7 +24,12 @@ const Register = () => {
 
   const onSubmit = (data) => {
     const user = { ...data };
-    if (identity) { user.identities = [identity]; }
+
+    // If identity is present, skip password and create user
+    if (identity) {
+      user.identities = [identity];
+      dispatch(registerUser(user));
+    }
     dispatch(setUser(user));
     Router.push('/register/password');
   };

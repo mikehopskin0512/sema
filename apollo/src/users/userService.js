@@ -8,7 +8,7 @@ const { Types: { ObjectId } } = mongoose;
 
 export const create = async (user) => {
   const {
-    password, username, firstName, lastName,
+    password = null, username, firstName, lastName,
     jobTitle = '', company = '', identities,
   } = user;
 
