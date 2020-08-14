@@ -114,6 +114,18 @@ export default (app, passport) => {
       const user = await verifyUser(token);
       await setRefreshToken(res, await createRefreshToken(user));
 
+      if (!user) {
+        throw new errors.BadRequest('Verification error');
+      }
+
+      // Send verification email
+      const message = {
+        recipient: user.username,
+        templateName: 'userConfirm',
+        firstName: user.firstName,
+      };
+      await sendEmail(message);
+
       return res.status(200).send({
         response: 'User successfully verified',
         jwtToken: await createAuthToken(user),

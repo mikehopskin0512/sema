@@ -10,6 +10,7 @@ sgMail.setApiKey(apiKey);
 
 const templates = {
   verifyUser: 'd-ceb1757425874fd9af621484e1e29321',
+  userConfirm: 'd-07e2e2aca47b411a9165885ecb7acdb3',
   passwordResetRequest: 'd-5bede979644f44408a2372ed53557150',
   passwordResetConfirm: 'd-cd1ef124f7a54430b723f9b85e626fb9',
 };
