@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "ecs_task_execution_role" {
 
 # ECS task execution role
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.cluster_name}-EcsTaskExecutionRole"
+  name               = "${var.env}-${var.service_name}-EcsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
 }
 
@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "param_store_policy" {
 }
 
 resource "aws_iam_policy" "param_store_policy" {
-  name   = "${var.env}-${var.aws_region}-parameter-store-policy"
+  name   = "${var.env}-${var.service_name}-parameter-store-policy"
   policy = data.aws_iam_policy_document.param_store_policy.json
 }
 

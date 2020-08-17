@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version } from '../../config';
+import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 

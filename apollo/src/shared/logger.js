@@ -1,5 +1,5 @@
 import bunyan from 'bunyan';
-import { loggerEnabled } from '../../config';
+import { loggerEnabled } from '../config';
 
 let logger = null;
 

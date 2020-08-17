@@ -3,7 +3,7 @@ import { Router } from 'express';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { buildModeReportUri, generatePdf, fetchModePdf, getModeSpace } from './reportsService';
-import { version, modeReportId } from '../../config';
+import { version, modeReportId } from '../config';
 import { delay } from '../shared/utils';
 
 const route = Router();

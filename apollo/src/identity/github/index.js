@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import querystring from 'querystring';
 import { createOAuthAppAuth } from '@octokit/auth';
-import { github, orgDomain, version } from '../../../config';
+import { github, orgDomain, version } from '../../config';
 import { getProfile } from './utils';
 import { findByUsername, updateIdentity } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';

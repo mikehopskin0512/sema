@@ -1,5 +1,5 @@
 import { sign, verify } from 'jsonwebtoken';
-import { jwtSecret, privateKeyFile, refreshSecret, refreshTokenName } from '../../config';
+import { jwtSecret, privateKeyFile, refreshSecret, refreshTokenName } from '../config';
 
 export const createAuthToken = async (user) => sign({ user }, jwtSecret, {
   expiresIn: '15m',

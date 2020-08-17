@@ -1,7 +1,7 @@
 // using Twilio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
 import sgMail from '@sendgrid/mail';
-import { sendgrid } from '../../config';
+import { sendgrid } from '../config';
 import logger from './logger';
 // import errors from './errors';
 

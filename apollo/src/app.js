@@ -12,7 +12,7 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import routes from '.';
-import { port, allowedOrigin } from '../config';
+import { port, allowedOrigin } from './config';
 
 const app = express();
 
@@ -29,6 +29,10 @@ app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(passport.initialize());
 app.disable('x-powered-by');
+
+app.use('/health', (req, res, next) => {
+  res.status(200).send("Nothing to see here.  Move along...");
+});
 
 // Attach routes
 routes.attachRoutes(app, passport);

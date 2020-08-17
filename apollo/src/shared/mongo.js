@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import fs from 'fs';
 import logger from './logger';
 import errors from './errors';
-import { mongooseUri, mongooseCertPath } from '../../config';
+import { mongooseUri, mongooseCertPath } from '../config';
 
 const options = {
   useUnifiedTopology: true,
