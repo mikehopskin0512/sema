@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { modeKey, modeSecret } from '../../config';
+import { modeKey, modeSecret } from '../config';
 
 const config = {
   auth: { username: modeKey, password: modeSecret },

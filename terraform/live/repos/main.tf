@@ -1,8 +1,8 @@
 
-resource "aws_ecr_repository" "phoenix-web" {
-  name = "phoenix-web"
+resource "aws_ecr_repository" "apollo" {
+  name = "apollo"
 }
 
-resource "aws_ecr_repository" "phoenix-apollo" {
-  name = "phoenix-apollo"
+resource "aws_ecr_repository" "phoenix" {
+  name = "phoenix"
 }

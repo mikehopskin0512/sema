@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version } from '../../config';
+import { version } from '../config';
 import errors from '../shared/errors';
 
 const { create, get } = require('./credentialService');

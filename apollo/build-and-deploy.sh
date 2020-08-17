@@ -1,10 +1,10 @@
 #!/bin/bash
 CLUSTER_NAME=qa-frontend
-SERVICE_NAME=phoenix
+SERVICE_NAME=apollo
 
-NAME=phoenix
+NAME=apollo
 # NODE_ENV=staging
-DOCKER_FILE=../.docker/web/Dockerfile.prod
+DOCKER_FILE=../.docker/apollo/Dockerfile.prod
 VERSION=latest
 # BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 # SHA1=$(git rev-parse HEAD)

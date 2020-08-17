@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const { mongooseUri, mongooseCertPath } = require('../config');
+const { mongooseUri, mongooseCertPath } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 

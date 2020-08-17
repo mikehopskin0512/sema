@@ -7,7 +7,7 @@ import { validateAuthToken } from './authService';
 
 import logger from '../shared/logger';
 import db from '../shared/mongo';
-import { tokenLife } from '../../config';
+import { tokenLife } from '../config';
 
 /**
  * These strategies are used to authenticate registered OAuth clients.

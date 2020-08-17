@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { modeOrg, modeEmbedKey, modeEmbedSecret, modeMaxAge } from '../../config';
+import { modeOrg, modeEmbedKey, modeEmbedSecret, modeMaxAge } from '../config';
 import { delay } from '../shared/utils';
 import { getAll, create } from '../shared/apiMode';
 

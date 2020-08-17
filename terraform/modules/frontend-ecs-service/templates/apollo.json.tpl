@@ -1,14 +1,14 @@
 [
   {
-    "name": "${cluster_name}",
-    "image": "${app_image}",
-    "cpu": ${fargate_cpu},
-    "memory": ${fargate_memory},
+    "name": "${container_name}",
+    "image": "${image}",
+    "cpu": ${container_cpu},
+    "memory": ${container_memory},
     "networkMode": "awsvpc",
     "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/${env}-${cluster_name}",
+          "awslogs-group": "/${env}/ecs/${container_name}",
           "awslogs-region": "${aws_region}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -28,8 +28,8 @@
       }],
     "portMappings": [
       {
-        "containerPort": ${app_port},
-        "hostPort": ${app_port}
+        "containerPort": ${port},
+        "hostPort": ${port}
       }
     ]
   }

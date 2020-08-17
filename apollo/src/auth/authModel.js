@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { autoIndex } from '../../config';
+import { autoIndex } from '../config';
 
 const { Schema } = mongoose;
 
