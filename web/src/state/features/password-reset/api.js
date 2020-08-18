@@ -1,4 +1,4 @@
-import { getAll, create } from '../../utils/apiApollo';
+import { getAll, create } from '../../utils/api';
 
 export const initiatePasswordReset = (params) => create('/v1/users/password-reset', params);
 export const validatePasswordReset = (params, userId, resetToken) => getAll(`/v1/users/password-reset/${resetToken}`, params);
