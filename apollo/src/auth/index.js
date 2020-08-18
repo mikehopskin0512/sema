@@ -17,16 +17,16 @@ export default (app, passport) => {
       if (!username || !password) {
         throw new errors.BadRequest('Both username and password are required.');
       }
-console.log('login');
+logger.info('login');
       const user = await validateLogin(username, password);
-console.log('login validated');
+logger.info('login validated');
       if (!user) {
         throw new errors.NotFound('No user found');
       }
-console.log('set refresh cookie');
+logger.info('set refresh cookie');
       await setRefreshToken(res, await createRefreshToken(user));
 const authToken = await createAuthToken(user);
-console.log('authToken: ', authToken);
+logger.info('authToken: ', authToken);
       return res.status(201).send({ jwtToken: authToken });
     } catch (error) {
       logger.error(error);
@@ -40,11 +40,11 @@ console.log('authToken: ', authToken);
       if (!refreshToken) {
         throw new errors.BadRequest('No refresh token found.');
       }
-console.log('refresh token');
+logger.info('refresh token');
       let refreshPayload = null;
       try {
         refreshPayload = await validateRefreshToken(refreshToken);
-console.log('refresh token validated');
+logger.info('refresh token validated');
       } catch (error) {
         logger.error(error);
         throw new errors.BadRequest('Invalid refresh token');
@@ -59,10 +59,10 @@ console.log('refresh token validated');
       if (!user) {
         throw new errors.NotFound('No user found');
       }
-console.log('set refresh cookie');
+logger.info('set refresh cookie');
       await setRefreshToken(res, await createRefreshToken(user));
 const authToken = await createAuthToken(user);
-console.log('authToken: ', authToken);
+logger.info('authToken: ', authToken);
       return res.status(201).send({ jwtToken: authToken });
     } catch (error) {
       logger.error(error);
