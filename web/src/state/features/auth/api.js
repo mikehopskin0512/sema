@@ -1,4 +1,4 @@
-import { getAll, create } from '../../utils/apiApollo';
+import { getAll, create } from '../../utils/api';
 
 export const auth = (params) => create('v1/auth/token', params);
 export const exchangeToken = (params) => create('v1/auth/refresh-token', params);
