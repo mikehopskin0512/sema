@@ -1,4 +1,4 @@
-import { get, getAll, download } from '../../utils/apiApollo';
+import { get, getAll, download } from '../../utils/api';
 
 export const getReportUrl = (params, reportId, token) => getAll(`/v1/reports/${reportId}`, { params }, token);
 export const generatePdf = (reportId, token) => getAll(`/v1/reports/${reportId}/pdf`, {}, token);
