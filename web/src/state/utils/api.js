@@ -32,8 +32,12 @@ export const getAll = (endpoint, { params } = {}, token = '') => {
   }
 
   console.log(endpoint);
+  console.log('----------');
+  console.log(api);
+  console.log('----------');
   console.log(config);
-  return api.get(endpoint, { params, ...config });
+  // return api.get(endpoint, { params, ...config });
+  return api.get(endpoint, { headers: { Authorization: `Bearer ${token}` } });
 };
 
 export const download = (endpoint, { params }, token = '') => {
