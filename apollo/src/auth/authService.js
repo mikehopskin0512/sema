@@ -26,7 +26,7 @@ export const validateAuthToken = async (token) => {
 export const setRefreshToken = (response, token) => {
   response.cookie(refreshTokenName, token, {
     // httpOnly: true
-    // domain: '.semasoftware.com'
+    domain: '.semasoftware.com',
     path: '/',
   });
 };
