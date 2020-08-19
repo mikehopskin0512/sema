@@ -4,7 +4,7 @@ const isServer = () => typeof window === 'undefined';
 const basicAuth = { username: process.env.NEXT_PUBLIC_APOLLO_CLIENT_ID, password: process.env.NEXT_PUBLIC_APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
-  baseURL: isServer() ? process.env.NEXT_PRIVATE_BASE_URL_APOLLO : process.env.NEXT_PUBLIC_BASE_URL_APOLLO,
+  baseURL: isServer() ? process.env.NEXT_PUBLIC_INTERNAL_BASE_URL_APOLLO : process.env.NEXT_PUBLIC_BASE_URL_APOLLO,
   withCredentials: true,
   credentials: 'include',
 });
