@@ -21,7 +21,7 @@ export const get = (endpoint, { id }, token = '') => {
   return api.get(`${endpoint}/${id}`, config);
 };
 
-export const getAll = (endpoint, { params } = {}, token = '') => {
+export const getAll = (endpoint, { params = {} }, token = '') => {
   console.log(token);
   if (token) {
     console.log('BEARER');
@@ -33,14 +33,13 @@ export const getAll = (endpoint, { params } = {}, token = '') => {
 
   console.log(endpoint);
   console.log('----------');
-  console.log(api);
-  console.log('----------');
+  console.log(params);
   console.log(config);
+  const mergedConfig = Object.assign({ params }, config);
+  console.log(mergedConfig);
+  return api.get(endpoint, mergedConfig);
   // return api.get(endpoint, { params, ...config });
-  if (token) {
-    return api.get(endpoint, { headers: { Authorization: `Bearer ${token}` } });
-  }
-  return api.get(endpoint, { auth: basicAuth });
+
 };
 
 export const download = (endpoint, { params }, token = '') => {
