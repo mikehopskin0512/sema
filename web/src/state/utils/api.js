@@ -1,8 +1,6 @@
 import axios from 'axios';
 
 const isServer = () => typeof window === 'undefined';
-
-const config = {};
 const basicAuth = { username: process.env.NEXT_PUBLIC_APOLLO_CLIENT_ID, password: process.env.NEXT_PUBLIC_APOLLO_CLIENT_SECRET };
 
 const api = axios.create({
@@ -12,6 +10,7 @@ const api = axios.create({
 });
 
 export const get = (endpoint, { id }, token = '') => {
+  const config = {};
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
   } else {
@@ -22,6 +21,7 @@ export const get = (endpoint, { id }, token = '') => {
 };
 
 export const getAll = (endpoint, { params = {} }, token = '') => {
+  const config = {};
   console.log(token);
   if (token) {
     console.log('BEARER');
@@ -39,10 +39,10 @@ export const getAll = (endpoint, { params = {} }, token = '') => {
   console.log(mergedConfig);
   return api.get(endpoint, mergedConfig);
   // return api.get(endpoint, { params, ...config });
-
 };
 
 export const download = (endpoint, { params }, token = '') => {
+  const config = {};
   config.responseType = 'blob';
 
   if (token) {
@@ -59,6 +59,7 @@ export const download = (endpoint, { params }, token = '') => {
 };
 
 export const create = (endpoint, item, token = '') => {
+  const config = {};
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
   } else {
