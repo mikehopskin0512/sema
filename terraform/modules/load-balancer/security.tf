@@ -26,6 +26,12 @@ resource "aws_security_group" "lb" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.env}-lb-sg"
+    Env  = var.env
+    Terraform = true
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

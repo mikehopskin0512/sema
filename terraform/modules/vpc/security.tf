@@ -24,6 +24,12 @@ resource "aws_security_group" "public" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.env}-public-sg"
+    Env  = var.env
+    Terraform = true
+  }
 }
 
 # Allow private traffic
@@ -52,6 +58,12 @@ resource "aws_security_group" "private" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.env}-private-sg"
+    Env  = var.env
+    Terraform = true
+  }
 }
 
 # Allow VPN traffic
@@ -72,5 +84,11 @@ resource "aws_security_group" "vpn" {
     from_port   = 0
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.env}-vpn-sg"
+    Env  = var.env
+    Terraform = true
   }
 }

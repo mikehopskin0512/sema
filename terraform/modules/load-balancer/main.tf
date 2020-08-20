@@ -31,6 +31,12 @@ resource "aws_lb" "main" {
   subnets                    = data.aws_subnet_ids.public.ids
   security_groups            = [aws_security_group.lb.id]
   enable_deletion_protection = true
+
+  tags = {
+    Name = var.name
+    Env  = var.env
+    Terraform = true
+  }
 }
 
 resource "aws_lb_listener" "main_http" {
