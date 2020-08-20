@@ -11,6 +11,7 @@ resource "aws_vpc" "main" {
   tags = {
     Name = "vpc-${var.env}"
     Env  = var.env
+    Terraform = true
   }
 }
 
@@ -20,9 +21,11 @@ resource "aws_subnet" "private" {
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
+
   tags = {
     Name = "vpc-${var.env}_private_${count.index + 1}"
     Env  = var.env
+    Terraform = true
   }
 }
 
@@ -33,9 +36,11 @@ resource "aws_subnet" "private" {
    availability_zone       = data.aws_availability_zones.available.names[count.index]
    vpc_id                  = aws_vpc.main.id
    map_public_ip_on_launch = true
+
    tags = {
      Name = "vpc-${var.env}_public_${count.index + 1}"
      Env  = var.env
+     Terraform = true
    }
  }
 
@@ -45,18 +50,22 @@ resource "aws_subnet" "private" {
     cidr_block              = cidrsubnet(aws_vpc.main.cidr_block, 8, var.az_count * 2 + count.index)
     availability_zone       = data.aws_availability_zones.available.names[count.index]
     vpc_id                  = aws_vpc.main.id
+
     tags = {
       Name = "vpc-${var.env}_database_${count.index + 1}"
       Env  = var.env
+      Terraform = true
     }
   }
 
  # Internet Gateway for the public subnet
  resource "aws_internet_gateway" "gw" {
    vpc_id = aws_vpc.main.id
+
    tags = {
      Name = "igw-vpc-${var.env}"
      Env  = var.env
+     Terraform = true
    }
  }
 
@@ -72,6 +81,7 @@ resource "aws_subnet" "private" {
    tags = {
      Name = "vpc-${var.env}_public"
      Env  = var.env
+     Terraform = true
    }
  }
 
@@ -87,9 +97,11 @@ resource "aws_subnet" "private" {
      count      = var.az_count
      vpc        = true
      depends_on = [aws_internet_gateway.gw]
+
      tags = {
        Name = "vpc-${var.env}_eip_${count.index + 1}"
        Env  = var.env
+       Terraform = true
      }
    }
 
@@ -97,9 +109,11 @@ resource "aws_subnet" "private" {
      count         = var.az_count
      subnet_id     = element(aws_subnet.public.*.id, count.index)
      allocation_id = element(aws_eip.gw.*.id, count.index)
+     
      tags = {
        Name = "vpc-${var.env}_nat_${count.index + 1}"
        Env  = var.env
+       Terraform = true
      }
    }
 
@@ -116,6 +130,7 @@ resource "aws_subnet" "private" {
      tags = {
        Name = "vpc-${var.env}_private_${count.index + 1}"
        Env  = var.env
+       Terraform = true
      }
    }
 
