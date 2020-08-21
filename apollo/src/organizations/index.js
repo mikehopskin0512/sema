@@ -10,12 +10,9 @@ export default (app, passport) => {
   app.use(`/${version}/organizations`, route);
 
   route.get('/:id/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    logger.info('Fetch repos');
     try {
       const { id: orgId } = req.params;
       const repositories = await selectRepositoriesByOrg(orgId);
-      logger.info('PG response:');
-      logger.info(repositories);
       if (!repositories) {
         throw new errors.BadRequest('Error fetching repositories');
       }
