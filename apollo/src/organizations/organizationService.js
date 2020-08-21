@@ -6,12 +6,10 @@ import errors from '../shared/errors';
 const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION }); // e.g. postgres://user:password@host:5432/database
 
 const selectRepositoriesByOrg = async (orgId) => {
-  logger.info('Repo query');
   try {
     const query = 'select id, name from projects where organization_id = $1 order by name asc;';
     const repos = await pool.query(query, [orgId]);
-    logger.info('Repo query response:');
-    logger.info(repos);
+
     return repos.rows;
   } catch (err) {
     logger.error(err);
