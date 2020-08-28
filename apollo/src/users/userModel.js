@@ -29,6 +29,8 @@ const userSchema = mongoose.Schema({
   resetToken: String,
   resetExpires: Date,
   identities: [identitySchema],
+  termsAccepted: { type: Boolean, default: false },
+  termsAcceptedAt: { type: Date },
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;
