@@ -50,6 +50,21 @@ const reducer = (state = initialState, action) => {
       token: action.token,
       error: {},
     };
+  case types.REQUEST_REGISTRATION_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      isAuthenticated: false, // Don't authenticate them until after verification
+      user: action.user,
+      error: {},
+    };
+  case types.REQUEST_REGISTRATION_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      isAuthenticated: false,
+      error: action.errors,
+    };
   case types.RECEIVE_REFRESH_TOKEN_ERROR:
     return {
       ...state,
