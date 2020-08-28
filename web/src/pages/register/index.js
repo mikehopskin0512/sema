@@ -1,4 +1,4 @@
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import jwtDecode from 'jwt-decode';
@@ -7,11 +7,11 @@ import withLayout from '../../components/layout/newLayout';
 
 import { authOperations } from '../../state/features/auth';
 
-const { setUser, registerUser } = authOperations;
+const { registerUser } = authOperations;
 
 const Register = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, watch, handleSubmit, errors } = useForm();
 
   const router = useRouter();
   const { token } = router.query;
@@ -21,17 +21,10 @@ const Register = () => {
     ({ identity } = jwtDecode(token));
   }
   const { email, firstName, lastName } = identity;
-
+console.log(errors);
   const onSubmit = (data) => {
     const user = { ...data };
-
-    // If identity is present, skip password and create user
-    if (identity) {
-      user.identities = [identity];
-      dispatch(registerUser(user));
-    }
-    dispatch(setUser(user));
-    Router.push('/register/password');
+    dispatch(registerUser(user));
   };
 
   return (
@@ -40,7 +33,7 @@ const Register = () => {
         <div className="container">
           <div className="columns is-centered">
             <div className="column is-5-tablet is-5-desktop is-5-widescreen">
-              <h3 className="title is-3 is-spaced"><strong>Email Sign Up</strong></h3>
+              <h3 className="title is-3 is-spaced"><strong>Sign Up</strong></h3>
               <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus sed sapien quis sapien ultrices rhoncus.</p>
 
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,7 +86,39 @@ const Register = () => {
                           { value: /^\S+@\S+$/i, message: 'Invaild email format' },
                       })} />
                   </div>
-                  <p className="help is-danger">{errors.email && errors.email.message}</p>
+                  <p className="help is-danger">{errors.username && errors.username.message}</p>
+                </div>
+                <div className="field">
+                  <label className="label">Password</label>
+                  <div className="control">
+                    <input
+                      className={`input ${errors.password && 'is-danger'}`}
+                      type="password"
+                      name="password"
+                      ref={register({
+                        required: 'Password is required',
+
+                      })} />
+                  </div>
+                  <p className="help is-danger">{errors.password && errors.password.message}</p>
+                </div>
+                <div className="field">
+                  <label className="label">Confirm password</label>
+                  <div className="control">
+                    <input
+                      className={`input ${errors.passwordConfirm && 'is-danger'}`}
+                      type="password"
+                      name="passwordConfirm"
+                      ref={register({
+                        validate: (value) => {
+                          if (value === watch('password')) {
+                            return true;
+                          }
+                          return 'Passwords do not match';
+                        },
+                      })} />
+                  </div>
+                  <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
                 </div>
                 <div className="field">
                   <label className="label">Job title</label>
