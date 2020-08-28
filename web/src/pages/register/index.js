@@ -122,7 +122,9 @@ const Register = () => {
                         name="password"
                         ref={register({
                           required: 'Password is required',
-
+                          minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                          maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                          pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
                         })} />
                     </div>
                     <p className="help is-danger">{errors.password && errors.password.message}</p>
