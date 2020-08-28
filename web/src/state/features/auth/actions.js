@@ -166,16 +166,18 @@ const resetVerificationError = (errors) => ({
   errors,
 });
 
-export const registerUser = (user, token) => async (dispatch) => {
+export const registerUser = (user) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
-    const payload = await createUser(user, token);
+    const payload = await createUser(user);
     // Send user to verification page after registration
     Router.push('/register/verify');
 
     dispatch(registrationSuccess(payload.data));
   } catch (error) {
-    dispatch(registrationError(error.response.data));
+    const { response: { data } } = error;
+    dispatch(registrationError(data));
+    dispatch(triggerAlert(data.message, 'error'));
   }
 };
 

@@ -40,7 +40,7 @@ export default (app, passport) => {
 
     try {
       const existingUser = await findByUsername(username);
-      if (existingUser) { throw new errors.BadRequest('User already exisits'); }
+      if (existingUser) { throw new errors.BadRequest('User with this email already exisits. Please try again.'); }
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
