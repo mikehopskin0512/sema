@@ -14,7 +14,7 @@ const { verifyResetToken, changePassword } = passwordOperations;
 
 const InputForm = (props) => {
   // const emailRef = useRef(null);
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = (data) => {
     const { password } = data;
@@ -32,17 +32,20 @@ const InputForm = (props) => {
       <div className="field">
         <div className="control has-icons-left">
           <input
-            className="input"
+            className={`input ${errors.password && 'is-danger'}`}
             type="password"
-            placeholder="*******"
             name="password"
-            ref={register}
-            required
-          />
+            ref={register({
+              required: 'Password is required',
+              minLength: { value: 8, message: 'Minimum of 8 characters required' },
+              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+            })} />
           <span className="icon is-small is-left">
             <FontAwesomeIcon icon="lock" />
           </span>
         </div>
+        <p className="help is-danger">{errors.password && errors.password.message}</p>
       </div>
       <div className="control">
         <button
