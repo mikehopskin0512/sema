@@ -3,8 +3,8 @@
 
 // Update Bulma global variables
 $primary: #4B7DF4;
+$spacing-values: ("1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "15": 15px, "20": 20px, "50": 50px, "70": 70px);
 $input-background-color: #E7E8EA;
-$spacing-values: ("1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "20": 20px, "50": 50px, "70": 70px);
 
 @import "../node_modules/bulma/bulma.sass";
 // Sample of individual module import - in case we want to optimize modules

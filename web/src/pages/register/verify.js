@@ -1,29 +1,33 @@
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import Toaster from '../../components/toaster';
-import withLayout from '../../components/layout/newLayout';
-import { alertOperations } from '../../state/features/alerts';
+import withLayout from '../../components/layout';
 import { authOperations } from '../../state/features/auth';
 
-const { clearAlert } = alertOperations;
 const { activateUser, resendVerifiction } = authOperations;
 
 const ResetMessage = (props) => {
   const { username, handleClick } = props;
-  const message = <p>We sent an email verification to {(username) ? <strong>{username}</strong> : 'you'}. Please check your email and activate your account.</p>;
+  const message = (
+    <p>We sent an email verification to&nbsp;
+      {(username) ? <strong>{username}</strong> : 'you'}.&nbsp;
+      Please check your email and activate your account.
+    </p>
+  );
   return (
     <div>
       {message}
       <br />
       {(username) && (
         <div>
-          <p className="has-text-centered is-size-6">
+          <p>
             <strong>Didn&#39;t get the email?</strong>
           </p>
-          <div className="control has-text-centered margin-top-15">
+          <div className="control mt-15">
             <button
               type="button"
               className="button is-primary"
@@ -32,7 +36,7 @@ const ResetMessage = (props) => {
           </div>
         </div>
       )}
-      <p className="has-text-centered is-size-6 margin-top-15">
+      <p className="mt-20">
         <span>Need help? Email us at <a href="mailto:support@semasoftware.com">support@semasoftware.com</a></span>
       </p>
     </div>
@@ -42,12 +46,12 @@ const ResetMessage = (props) => {
 const Confirmation = () => (
   <div className="columns is-centered">
     <div className="column">
-      <h1 className="title is-size-5 has-text-black has-text-centered">
+      <h2 className="title is-size-5">
         Account verification successful
-      </h1>
-      <p className="has-text-centered">We have verified your email and your account is fully activated</p>
+      </h2>
+      <p>We have verified your email and your account is fully activated</p>
       <br />
-      <Link href="/reports"><a className="button is-primary is-fullwidth">Continue to dashboard</a></Link>
+      <Link href="/reports"><a className="button is-primary">Continue to dashboard</a></Link>
     </div>
   </div>
 );
@@ -81,7 +85,6 @@ const UserVerify = () => {
     }
   }, [callUserActivation, verifyToken]);
 
-
   const handleClick = () => {
     dispatch(resendVerifiction(username));
   };
@@ -92,17 +95,18 @@ const UserVerify = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero is-primary">
+      <section className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
               <div className="column is-8-tablet is-7-desktop is-7-widescreen">
-                <div style={{ padding: '1.25rem' }}><p>Sema</p><p className="is-size-4 has-text-white">Account verification</p></div>
-                <div className="box">
+                <div className="title-topper mt-70 mb-20" />
+                <h1 className="title is-spaced">Account Verification</h1>
+                <p className="subtitle is-6">
                   {(isVerified)
                     ? <Confirmation />
                     : <ResetMessage handleClick={handleClick} username={username} />}
-                </div>
+                </p>
               </div>
             </div>
           </div>
@@ -110,6 +114,15 @@ const UserVerify = () => {
       </section>
     </div>
   );
+};
+
+ResetMessage.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  username: PropTypes.string,
+};
+
+ResetMessage.defaultProps = {
+  username: '',
 };
 
 export default withLayout(UserVerify);
