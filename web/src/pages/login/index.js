@@ -52,7 +52,7 @@ const Login = () => {
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-6-tablet is-5-desktop is-5-widescreen">
+              <div className="column is-5-tablet is-4-desktop is-4-widescreen">
                 <div className="title-topper mt-70 mb-20" />
                 <h1 className="title">Log In</h1>
                 <form className="mt-70" onSubmit={handleSubmit(onSubmit)}>
