@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import jwtDecode from 'jwt-decode';
 
 import Toaster from '../../components/toaster';
-import withLayout from '../../components/layout/newLayout';
+import withLayout from '../../components/layout';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
@@ -53,13 +53,14 @@ const Register = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero has-background-grey-lighter">
+      <section className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
               <div className="column is-5-tablet is-5-desktop is-5-widescreen">
-                <h3 className="title is-3 is-spaced"><strong>Sign Up</strong></h3>
-                <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus sed sapien quis sapien ultrices rhoncus.</p>
+                <div className="title-topper mt-70 mb-20" />
+                <h1 className="title is-spaced">Sign Up</h1>
+                <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="field">
@@ -177,7 +178,7 @@ const Register = () => {
                         type="checkbox"
                         name="terms"
                         ref={register({ required: 'You must accept terms' })} />
-                      <span className="is-size-7">
+                      <span className="is-size-6">
                         &nbsp;&nbsp;By selecting the checkbox you are agreeing to the following <a href="#">terms and conditions</a>
                       </span>
                       <p className="help is-danger">{errors.terms && errors.terms.message}</p>
