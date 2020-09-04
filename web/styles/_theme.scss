@@ -2,7 +2,8 @@
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 
 // Update Bulma global variables
-$primary: #2E5B82;
+$primary: #4B7DF4;
+$spacing-values: ("1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "20": 20px, "50": 50px, "70": 70px);
 
 @import "../node_modules/bulma/bulma.sass";
 // Sample of individual module import - in case we want to optimize modules

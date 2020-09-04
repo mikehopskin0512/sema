@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
+import Logo from '../../../public/img/Sema-logo-black.svg';
 
 const Header = (props) => {
   const dispatch = useDispatch();
@@ -62,27 +63,27 @@ const Header = (props) => {
   };
 
   return (
-    <header>
+    <header className="has-background-primary">
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <Link href="/">
-            <img src="/img/sema-logo.svg" alt="Logo" />
+            <Logo className="logo" fill="#FFFFFF" />
           </Link>
 
-          {(token) &&
-          <button
-            onClick={toggleHamburger}
-            type="button"
-            className="navbar-burger burger"
-            aria-label="menu"
-            aria-expanded="false"
-            data-target="navbarBasicExample"
-            ref={burger}>
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </button>
-          }
+          {(token) && (
+            <button
+              onClick={toggleHamburger}
+              type="button"
+              className="navbar-burger burger"
+              aria-label="menu"
+              aria-expanded="false"
+              data-target="navbarBasicExample"
+              ref={burger}>
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+          )}
         </div>
 
         <div className="navbar-menu" ref={menu}>

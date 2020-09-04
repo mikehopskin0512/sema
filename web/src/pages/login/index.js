@@ -48,16 +48,16 @@ const Login = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero is-primary">
+      <section className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-5-tablet is-4-desktop is-4-widescreen">
-                <div style={{ padding: '1.25rem' }}><p>Sema</p><p className="is-size-4 has-text-white">Code Quality Platform</p></div>
-
-                <form className="box" onSubmit={handleSubmit(onSubmit)}>
+              <div className="column is-6-tablet is-5-desktop is-5-widescreen">
+                <div className="title-topper mt-70 mb-20" />
+                <h1 className="title">Log In</h1>
+                <form className="mt-70" onSubmit={handleSubmit(onSubmit)}>
                   <div className="field">
-                    <label htmlFor="" className="label">Email</label>
+                    <label htmlFor="" className="label has-text-weight-normal">Email Address</label>
                     <div className="control has-icons-left">
                       <input
                         className="input"
@@ -73,7 +73,7 @@ const Login = () => {
                     </div>
                   </div>
                   <div className="field">
-                    <label htmlFor="" className="label">Password</label>
+                    <label htmlFor="" className="label has-text-weight-normal">Password</label>
                     <div className="control has-icons-left">
                       <input
                         className="input"
@@ -88,10 +88,7 @@ const Login = () => {
                       </span>
                     </div>
                   </div>
-                  <div className="field">
-                    <Link href="/password-reset/"><a className="is-size-7">Forgot password?</a></Link>
-                  </div>
-                  <div className="field">
+                  <div className="field mt-2r">
                     <button type="submit" className="button is-primary is-fullwidth">
                       Login with Email
                     </button>
@@ -113,13 +110,21 @@ const Login = () => {
                     </p>
                   </div>
                   <div className="field">
+                    <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href="/password-reset/"><a>Reset password</a></Link></p>
+                  </div>                  
+                  <div className="field">
                     <div className="is-divider" data-content="OR"></div>
-                    <p className="has-text-centered is-size-7">
-                      Want to sign up for the Sema platfrom?
-                    </p>
-                    <p className="has-text-centered is-size-7">
-                      <Link href="/register"><a className="is-size-7">Create an account</a></Link>
-                    </p>
+                    <p><strong>Want to sign up for the Sema platfrom?</strong></p>
+                    <div className="mt-1r">
+                      <Link href="/register">
+                        <a className="button is-primary">
+                          <span className="icon">
+                            <FontAwesomeIcon icon={['fas', 'user']} />
+                          </span>
+                          <span>Create an account</span>
+                        </a>
+                      </Link>
+                    </div>
                   </div>
                 </form>
               </div>

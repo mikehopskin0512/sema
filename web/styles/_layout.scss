@@ -1,34 +1,24 @@
 /* Layout styles */
 
 Header {
-  padding: 1rem 0.5rem 1rem 2rem;
+  padding: 0.8125rem 1.25rem;
+  height: 3.75rem;
+  cursor: pointer;
+
+  .logo {
+    height: 2.125rem;
+    width: 4.375rem;
+
+    path {
+      fill: white;
+    }
+  }
 
   img {
-    height: 1.8rem;
-    margin-top: 0.5rem;
-    line-height: 1.8rem;
+    height: 2.8rem;
+    //margin-top: 0.5rem;
+    line-height: 2.8rem;
   }
-}
-
-.Header {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  height: 50px;
-  width: 100%;
-
-  padding: 0 20px;
-
-  font-family: $logo-font;
-  font-size: 24px;
-  font-weight: bold;
-  color: $on-secondary;
-  text-transform: uppercase;
-
-  background: $highlight;
-
-  cursor: pointer;
 }
 
 Footer {
@@ -59,6 +49,19 @@ Footer {
       color: inherit;
     }
   }
+}
+
+.navbar {
+  &.is-transparent {
+    background-color: transparent;
+    background-image: none;
+  }
+}
+
+.title-topper {
+  // For some reason $primary doesn't work, need to hard code color
+  border-top: 0.5rem solid #4B7DF4;
+  width: 8.5rem;
 }
 
 .margin-right-1 {
