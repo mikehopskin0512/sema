@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm } from 'react-hook-form';
 
-import Toaster from '../../../components/toaster';
 import withLayout from '../../../components/layout';
 import { passwordOperations } from '../../../state/features/password-reset';
 
@@ -27,47 +26,53 @@ const InputForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <p className="has-text-centered">Enter your new password:</p>
-      <br />
-      <div className="field">
-        <div className="control has-icons-left">
-          <input
-            className={`input ${errors.password && 'is-danger'}`}
-            type="password"
-            name="password"
-            ref={register({
-              required: 'Password is required',
-              minLength: { value: 8, message: 'Minimum of 8 characters required' },
-              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-            })} />
-          <span className="icon is-small is-left">
-            <FontAwesomeIcon icon="lock" />
-          </span>
+      <div className="title-topper mt-70 mb-20" />
+      <h1 className="title is-spaced">Reset Password</h1>
+      <p className="subtitle is-6">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Curabitur blandit tempus porttitor. Donec sed odio dui.</p>
+      <div className="columns">
+        <div className="column is-7">
+          <div className="field">
+            <label className="label has-text-weight-normal">Password</label>
+            <div className="control has-icons-left">
+              <input
+                className={`input ${errors.password && 'is-danger'}`}
+                type="password"
+                name="password"
+                ref={register({
+                  required: 'Password is required',
+                  minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                  maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                  pattern: {
+                    value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/,
+                    message: 'Must contain 1 letter, 1 number, and 1 special character',
+                  },
+                })} />
+              <span className="icon is-small is-left">
+                <FontAwesomeIcon icon="lock" />
+              </span>
+            </div>
+            <p className="help is-danger">{errors.password && errors.password.message}</p>
+          </div>
         </div>
-        <p className="help is-danger">{errors.password && errors.password.message}</p>
       </div>
       <div className="control">
         <button
           type="submit"
-          className="button is-primary is-fullwidth">Set new password
+          className="button is-primary">Set new password
         </button>
       </div>
     </form>
   );
 };
 
-
 const Confirmation = () => (
-  <div className="columns is-centered">
-    <div className="column">
-      <h1 className="title is-size-5 has-text-black has-text-centered">
-        Reset Password Complete
-      </h1>
-      <p className="has-text-centered">You have successfully reset the password for the account associated with email</p>
-      <br />
-      <Link href="/login"><a className="button is-primary is-fullwidth">Return to Log in</a></Link>
-    </div>
+  <div>
+    <div className="title-topper mt-70 mb-20" />
+    <h1 className="title is-spaced">Reset Password Completed</h1>
+    <p>You have successfully reset the password for your account</p>
+    <br />
+    <Link href="/login"><a className="button is-primary">Return to Login</a></Link>
+    <br />
   </div>
 );
 
@@ -88,7 +93,6 @@ const PasswordReset = () => {
     callTokenValidation();
   }, [callTokenValidation]);
 
-
   const handlePasswordReset = (password) => {
     dispatch(changePassword(password, resetToken));
     setConfirmation(true);
@@ -96,13 +100,12 @@ const PasswordReset = () => {
 
   return (
     <div>
-      <section className="hero is-primary">
+      <section className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-6-tablet is-5-desktop is-5-widescreen">
-                <div style={{ padding: '1.25rem' }}><p>Sema</p><p className="is-size-4 has-text-white">Reset your password</p></div>
-                <div className="box">
+              <div className="column is-7-tablet is-7-desktop is-7-widescreen">
+                <div>
                   {(confirmation)
                     ? <Confirmation />
                     : <InputForm handleClick={handlePasswordReset} />}

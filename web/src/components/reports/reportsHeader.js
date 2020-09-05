@@ -104,7 +104,7 @@ const ReportsHeader = (props) => {
             <div className="navbar-item">
               <button
                 type="button"
-                className="button is-small is-primary is-inverted is-outlined margin-right-1"
+                className="button is-small is-primary is-inverted is-outlined mr-1r"
                 onClick={toggleFilterMenu}>
                 <span className="icon">
                   <FontAwesomeIcon icon="filter" />
