@@ -99,7 +99,7 @@ const UserVerify = () => {
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-8-tablet is-7-desktop is-7-widescreen">
+              <div className="column is-7-tablet is-7-desktop is-7-widescreen">
                 <div className="title-topper mt-70 mb-20" />
                 <h1 className="title is-spaced">Account Verification</h1>
                 <p className="subtitle is-6">

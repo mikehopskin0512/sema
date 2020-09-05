@@ -22,37 +22,42 @@ const InputForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <p className="has-text-centered">Enter the email address you use to login:</p>
-      <br />
-      <div className="field">
-        <div className="control has-icons-left">
-          <input
-            className="input"
-            type="email"
-            placeholder="e.g. tony@starkindustries.com"
-            name="email"
-            ref={register({
-              required: 'Email is required',
-              pattern:
-                { value: /^\S+@\S+$/i, message: 'Invaild email format' },
-            })}
-            required
-          />
-          <span className="icon is-small is-left">
-            <FontAwesomeIcon icon="envelope" />
-          </span>
+      <div className="title-topper mt-70 mb-20" />
+      <h1 className="title is-spaced">Reset Password</h1>
+      <p className="subtitle is-6">Please enter the email address associated with your account to receive a reset password link.</p>
+      <div className="columns">
+        <div className="column is-7">
+          <div className="field">
+            <label className="label has-text-weight-normal">Email Address</label>
+            <div className="control has-icons-left">
+              <input
+                className="input"
+                type="email"
+                placeholder="e.g. tony@starkindustries.com"
+                name="email"
+                ref={register({
+                  required: 'Email is required',
+                  pattern:
+                    { value: /^\S+@\S+$/i, message: 'Invaild email format' },
+                })}
+                required
+              />
+              <span className="icon is-small is-left">
+                <FontAwesomeIcon icon="envelope" />
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-      <br />
       <div className="control">
         <button
           type="submit"
-          className="button is-primary is-fullwidth">Continue
+          className="button is-primary">Send Link
         </button>
       </div>
       <div className="field">
         <div className="is-divider" />
-        <p className="has-text-centered is-size-6">
+        <p className="is-size-6">
           Having trouble? <a href="mailto:support@semasoftware.com">Email support</a>
         </p>
       </div>
@@ -60,29 +65,32 @@ const InputForm = (props) => {
   );
 };
 
-export const Confirmation = () => (
-  <div className="columns is-centered">
-    <div className="column">
-      <h1 className="title is-size-5 has-text-black has-text-centered">
-        Password reset sent
-      </h1>
-      <p className="has-text-centered">Check your inbox for instructions on how to reset your password.</p>
+export const Confirmation = (props) => {
+  const { emailSubmitted } = props;
+  return (
+    <div>
+      <div className="title-topper mt-70 mb-20" />
+      <h1 className="title is-spaced">Reset Password Link</h1>
+      <p>We have sent a reset password email to {emailSubmitted ? <strong>{emailSubmitted}</strong> : 'your email'}.</p>
+      <p>Please follow the instructions within to reset your password.</p>
       <br />
-      <p className="has-text-centered">Email didn&#39;t arrive? <Link href="/password-reset"><a>Click here</a></Link> to try again</p>
+      <Link href="/login"><a className="button is-primary">Return to Login</a></Link>
       <br />
     </div>
-  </div>
-);
+  );
+};
 
 const ResetRequest = () => {
   const [confirmation, setConfirmation] = useState(false);
   const [alertLabel, setAlertLabel] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [emailSubmitted, setEmailSubmitted] = useState('');
 
   const dispatch = useDispatch();
   const handlePasswordRequest = (email) => {
     dispatch(passwordResetRequest(email));
     setConfirmation(true);
+    setEmailSubmitted(email);
   };
 
   // Check for error in query string
@@ -103,17 +111,14 @@ const ResetRequest = () => {
         type="error"
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero is-primary">
+      <section className="hero">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
-              <div className="column is-6-tablet is-5-desktop is-5-widescreen">
-                <div style={{ padding: '1.25rem' }}><p className="is-size-4 has-text-white">Reset your password</p></div>
-                <div className="box">
-                  {(confirmation)
-                    ? <Confirmation />
-                    : <InputForm handleClick={handlePasswordRequest} />}
-                </div>
+              <div className="column is-7-tablet is-7-desktop is-7-widescreen">
+                {(confirmation)
+                  ? <Confirmation emailSubmitted={emailSubmitted} />
+                  : <InputForm handleClick={handlePasswordRequest} />}
               </div>
             </div>
           </div>
@@ -125,6 +130,14 @@ const ResetRequest = () => {
 
 InputForm.propTypes = {
   handleClick: PropTypes.func.isRequired,
+};
+
+Confirmation.propTypes = {
+  emailSubmitted: PropTypes.string,
+};
+
+Confirmation.defaultProps = {
+  emailSubmitted: '',
 };
 
 export default withLayout(ResetRequest);
