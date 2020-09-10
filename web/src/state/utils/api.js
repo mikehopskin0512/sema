@@ -22,12 +22,9 @@ export const get = (endpoint, { id }, token = '') => {
 
 export const getAll = (endpoint, { params = {} }, token = '') => {
   const config = {};
-  console.log(token);
   if (token) {
-    console.log('BEARER');
     config.headers = { Authorization: `Bearer ${token}` };
   } else {
-    console.log('BASIC');
     config.auth = basicAuth;
   }
 

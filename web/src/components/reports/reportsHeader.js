@@ -86,9 +86,9 @@ const ReportsHeader = (props) => {
 
   return (
     <div>
-      <nav className="navbar has-background-primary" style={{ zIndex: '1' }} role="navigation" aria-label="main navigation">
+      <nav className="navbar has-background-white-ter" style={{ zIndex: '1' }} role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
-          <div className="navbar-item has-text-white">
+          <div className="navbar-item">
             <Link href="/reports/"><span><FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;Report list</span></Link>
           </div>
 
@@ -104,21 +104,21 @@ const ReportsHeader = (props) => {
             <div className="navbar-item">
               <button
                 type="button"
-                className="button is-small is-primary is-inverted is-outlined mr-1r"
+                className="button is-outlined mr-1r"
                 onClick={toggleFilterMenu}>
                 <span className="icon">
                   <FontAwesomeIcon icon="filter" />
                 </span>
                 <span>Filter report</span>
               </button>
-              <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="has-text-white" /></a>
+              <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="is-size-4 has-text-black" /></a>
             </div>
           </div>
         </div>
       </nav>
       <div className="columns is-marginless has-background-white-ter is-hidden" ref={filterMenu}>
         <div className="column is-11 is-offset-1">
-          <div className="columns is-vcentered">
+          <div className="columns">
             <div className="column">
               <MultiSelectFilter
                 updateFilters={updateFilters}
@@ -150,10 +150,10 @@ const ReportsHeader = (props) => {
                 paramStartDate="param_z_date_start"
                 paramEndDate="param_z_date_end" />
             </div>
-            <div className="column is-1">
+            <div className="column">
               <button
                 type="button"
-                className="button is-inverted is-outlined is-small"
+                className="button is-inverted is-outlined"
                 onClick={handleClearFilters}>Clear
               </button>
             </div>

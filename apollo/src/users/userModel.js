@@ -5,9 +5,12 @@ import logger from '../shared/logger';
 const identitySchema = mongoose.Schema({
   provider: String,
   id: String,
+  username: String,
   email: String,
   firstName: String,
   lastName: String,
+  profileUrl: String,
+  avatarUrl: String,
 }, { _id: false });
 
 const userSchema = mongoose.Schema({

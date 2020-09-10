@@ -49,9 +49,12 @@ export default (app) => {
     const identity = {
       provider: 'github',
       id: profile.id,
+      username: profile.login,
       email: profile.email,
       firstName,
       lastName,
+      profileUrl: profile.url,
+      avatarUrl: profile.avatar_url,
     };
 
     const user = await findByUsername(profile.email);

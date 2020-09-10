@@ -5,6 +5,8 @@
 $primary: #4B7DF4;
 $spacing-values: ("1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "15": 15px, "20": 20px, "50": 50px, "70": 70px);
 $input-background-color: #E7E8EA;
+$family-sans-serif: "Montserrat", sans-serif;
+$family-monospace: sans-serif;
 
 @import "../node_modules/bulma/bulma.sass";
 // Sample of individual module import - in case we want to optimize modules
@@ -16,11 +18,13 @@ $input-background-color: #E7E8EA;
 // 3rd party components  (for CSS imports omit extension)
 @import '../node_modules/bulma-social/bin/bulma-social.min';
 
+// React date-picker styles
+@import '../node_modules/react-datepicker/dist/react-datepicker.css';
+
 // Additional SCSS files
-@import "./colors";
 @import "./fonts";
+@import "./forms";
 @import "./layout";
 @import "./toaster";
 
-// React date-picker styles
-@import '../node_modules/react-datepicker/dist/react-datepicker.css';
+

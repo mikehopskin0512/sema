@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway:800|Merriweather+Sans|Share+Tech+Mono');
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800');
 
-$logo-font: 'Share Tech Mono', monospace;
-$header-font: 'Raleway', sans-serif;
-$core-font: 'Merriweather Sans', sans-serif;
+// These aren't needed since Bulma loads the font-family
+// $logo-font: 'Montserrat', monospace;
+// $header-font: 'Montserrat', sans-serif;
+// $core-font: 'Montserrat', sans-serif;

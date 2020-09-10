@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { format, parseISO, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
-import './reports.module.scss';
 
 const today = new Date();
 const weekAgo = subDays(today, 7);
@@ -31,15 +30,17 @@ const DateRangeFilter = (props) => {
   };
 
   return (
-    <div>
+    <div className="datepicker-wrapper">
       <DatePicker
         className="input-datepicker"
+        style={{ width: '5rem' }}
         placeholderText="Start date"
         dateFormat="yyyy-MM-dd"
         selected={startDate}
         onChange={(date) => setStartDate(date)} />-
       <DatePicker
         className="input-datepicker"
+        style={{ width: '5rem' }}
         placeholderText="End date"
         dateFormat="yyyy-MM-dd"
         selected={endDate}

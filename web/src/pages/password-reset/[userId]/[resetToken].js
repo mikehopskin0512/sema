@@ -32,7 +32,7 @@ const InputForm = (props) => {
       <div className="columns">
         <div className="column is-7">
           <div className="field">
-            <label className="label has-text-weight-normal">Password</label>
+            <label className="label">Password</label>
             <div className="control has-icons-left">
               <input
                 className={`input ${errors.password && 'is-danger'}`}

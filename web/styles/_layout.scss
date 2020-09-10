@@ -1,17 +1,27 @@
 /* Layout styles */
 
 Header {
-  padding: 0.8125rem 1.25rem;
+  // padding: 0.75rem 1.25rem 0 1.25rem;
+  padding: 0 1.25rem;
   height: 3.75rem;
   cursor: pointer;
 
   .logo {
     height: 2.125rem;
     width: 4.375rem;
+    margin-top: 0.6rem;
 
     path {
       fill: white;
     }
+  }
+
+  .user-menu {
+    margin-top: 0.5rem;
+  }
+
+  .navbar-item {
+    margin-left: 1.5rem;
   }
 
   img {
@@ -32,23 +42,6 @@ Footer {
 
   height: 100%;
   width: 100%;
-
-  .Content {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-
-    background: $secondary;
-    color: $on-secondary;
-    font-family: $core-font;
-
-    a {
-      color: inherit;
-    }
-  }
 }
 
 .navbar {
@@ -59,7 +52,6 @@ Footer {
 }
 
 .title-topper {
-  // For some reason $primary doesn't work, need to hard code color
-  border-top: 0.5rem solid #4B7DF4;
+  border-top: 0.5rem solid $primary;
   width: 8.5rem;
 }
