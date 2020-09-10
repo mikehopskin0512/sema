@@ -59,7 +59,7 @@ const Login = () => {
                   <div className="column is-7">
                     <form className="mt-50" onSubmit={handleSubmit(onSubmit)}>
                       <div className="field">
-                        <label htmlFor="" className="label has-text-weight-normal">Email Address</label>
+                        <label htmlFor="" className="label">Email Address</label>
                         <div className="control has-icons-left">
                           <input
                             className="input"
@@ -75,7 +75,7 @@ const Login = () => {
                         </div>
                       </div>
                       <div className="field">
-                        <label htmlFor="" className="label has-text-weight-normal">Password</label>
+                        <label htmlFor="" className="label">Password</label>
                         <div className="control has-icons-left">
                           <input
                             className="input"
@@ -113,7 +113,7 @@ const Login = () => {
                       </div>
                       <div className="field">
                         <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href="/password-reset/"><a>Reset password</a></Link></p>
-                      </div>                  
+                      </div>
                       <div className="field">
                         <div className="is-divider" data-content="OR"></div>
                         <p><strong>Want to sign up for the Sema platfrom?</strong></p>

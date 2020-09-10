@@ -37,10 +37,10 @@ const Reports = () => {
     <div>
       <section className="section">
         <div className="container">
-          <h2 className="subtitle">Static reports</h2>
+          <h2 className="subtitle"><strong>Static reports</strong></h2>
           <p><Link href={`/reports/${testReportId}`}><a title="Test report">Test report (use this)</a></Link></p>
           <br />
-          <h2 className="subtitle">Dynamic reports from Mode</h2>
+          <h2 className="subtitle"><strong>Dynamic reports from Mode</strong></h2>
           {reportsStuff}
         </div>
       </section>

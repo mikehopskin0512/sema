@@ -28,7 +28,7 @@ const InputForm = (props) => {
       <div className="columns">
         <div className="column is-7">
           <div className="field">
-            <label className="label has-text-weight-normal">Email Address</label>
+            <label className="label">Email Address</label>
             <div className="control has-icons-left">
               <input
                 className="input"

@@ -65,7 +65,7 @@ const Register = () => {
                   <div className="columns">
                     <div className="column is-7">
                       <div className="field">
-                        <label className="label has-text-weight-normal">First name</label>
+                        <label className="label">First name</label>
                         <div className="control">
                           <input
                             className={`input ${errors.firstName && 'is-danger'}`}
@@ -82,7 +82,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.firstName && errors.firstName.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Last name</label>
+                        <label className="label">Last name</label>
                         <div className="control">
                           <input
                             className={`input ${errors.lastName && 'is-danger'}`}
@@ -99,7 +99,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.lastName && errors.lastName.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Business email</label>
+                        <label className="label">Business email</label>
                         <div className="control">
                           <input
                             className={`input ${errors.username && 'is-danger'}`}
@@ -116,7 +116,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.username && errors.username.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Password</label>
+                        <label className="label">Password</label>
                         <div className="control">
                           <input
                             className={`input ${errors.password && 'is-danger'}`}
@@ -132,7 +132,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.password && errors.password.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Confirm password</label>
+                        <label className="label">Confirm password</label>
                         <div className="control">
                           <input
                             className={`input ${errors.passwordConfirm && 'is-danger'}`}
@@ -150,7 +150,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Job title</label>
+                        <label className="label">Job title</label>
                         <div className="control">
                           <input
                             className={`input ${errors.jobTitle && 'is-danger'}`}
@@ -162,7 +162,7 @@ const Register = () => {
                         <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
                       </div>
                       <div className="field">
-                        <label className="label has-text-weight-normal">Company</label>
+                        <label className="label">Company</label>
                         <div className="control">
                           <input
                             className={`input ${errors.company && 'is-danger'}`}
