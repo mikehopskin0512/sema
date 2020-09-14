@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DateRangeFilter from './dateRangeFilter';
 import MultiSelectFilter from './multiSelectFilter';
-
+import styles from './reportsHeader.module.scss';
 import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
 
@@ -86,36 +86,31 @@ const ReportsHeader = (props) => {
 
   return (
     <div>
-      <nav className="navbar has-background-white-ter" style={{ zIndex: '1' }} role="navigation" aria-label="main navigation">
-        <div className="navbar-brand">
-          <div className="navbar-item">
+      <nav className={`level has-background-white-ter is-mobile ${styles['report-header']}`}>
+        {/* -- Left side -- */}
+        <div className="level-left">
+          <div className="level-item">
             <Link href="/reports/"><span><FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;Report list</span></Link>
           </div>
-
-          <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </a>
         </div>
 
-        <div className="navbar-menu">
-          <div className="navbar-end">
-            <div className="navbar-item">
-              <button
-                type="button"
-                className="button is-outlined mr-1r"
-                onClick={toggleFilterMenu}>
-                <span className="icon">
-                  <FontAwesomeIcon icon="filter" />
-                </span>
-                <span>Filter report</span>
-              </button>
-              <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="is-size-4 has-text-black" /></a>
-            </div>
+        {/* -- Right side -- */}
+        <div className="level-right">
+          <div className="level-item">
+            <button
+              type="button"
+              className="button is-outlined mr-1r"
+              onClick={toggleFilterMenu}>
+              <span className="icon">
+                <FontAwesomeIcon icon="filter" />
+              </span>
+              <span>Filter report</span>
+            </button>
+            <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="is-size-4 has-text-black" /></a>
           </div>
         </div>
       </nav>
+
       <div className="columns is-marginless has-background-white-ter is-hidden" ref={filterMenu}>
         <div className="column is-11 is-offset-1">
           <div className="columns">
