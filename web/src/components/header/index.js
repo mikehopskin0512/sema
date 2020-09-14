@@ -62,7 +62,7 @@ const Header = () => {
     <header className="has-background-primary">
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
-          <Link href="/"><a><Logo className="logo" fill="#FFFFFF" /></a></Link>
+          <Link href="/reports"><a><Logo className="logo" fill="#FFFFFF" /></a></Link>
           {(token) && (
             <button
               onClick={toggleHamburger}
@@ -82,14 +82,14 @@ const Header = () => {
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
             <div className="navbar-start is-hidden-mobile is-hidden-tablet-only">
-              <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Dashboard</a></Link>
+              <Link href="/reports"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Dashboard</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Projects</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Teams</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Reports</a></Link>
             </div>
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Dashboard</a></Link>
+              <Link href="/reports"><a className="navbar-item" onClick={toggleHamburger}>Dashboard</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Projects</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Teams</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Reports</a></Link>

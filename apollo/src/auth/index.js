@@ -43,8 +43,9 @@ export default (app, passport) => {
       try {
         refreshPayload = await validateRefreshToken(refreshToken);
       } catch (error) {
-        logger.error(error);
-        throw new errors.BadRequest('Invalid refresh token');
+        // Supressing error messages since invalid refresh token will happen often
+        // logger.error(error);
+        // throw new errors.BadRequest('Invalid refresh token');
       }
 
       if (!refreshPayload.user) {
