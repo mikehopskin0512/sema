@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,7 +7,7 @@ import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import Logo from '../../../public/img/Sema-logo-black.svg';
 
-const Header = (props) => {
+const Header = () => {
   const dispatch = useDispatch();
   const { deauthenticate } = authOperations;
 
@@ -19,12 +19,13 @@ const Header = (props) => {
   // Get auth state
   const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
-  const { firstName = '', lastName = '', is_admin: isAdmin = false, identities = [] } = user;
+  const {
+    firstName = '', lastName = '', avatarUrl,
+    is_admin: isAdmin = false,
+  } = user;
   const fullName = `${firstName} ${lastName}`;
-  const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
-
-  const githubIdentity = identities.find((i) => i.provider === 'github') || {};
-  const { login: githubHandle } = githubIdentity;
+  // Initials replaced by react-avatar
+  // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -38,16 +39,6 @@ const Header = (props) => {
         burger.current.classList.remove('is-active');
       } else {
         burger.current.classList.add('is-active');
-      }
-    }
-  };
-
-  const toggleMenu = () => {
-    if (menu.current) {
-      if (menu.current.classList.contains('is-active')) {
-        menu.current.classList.remove('is-active');
-      } else {
-        menu.current.classList.add('is-active');
       }
     }
   };
@@ -141,7 +132,8 @@ const Header = (props) => {
                   <Avatar
                     className="mr-10"
                     name={fullName}
-                    githubHandle={githubHandle || null}
+                    src={avatarUrl || null}
+                    // githubHandle={githubHandle || null}
                     size="30"
                     round
                     color="#4974a5"

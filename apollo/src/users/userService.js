@@ -9,7 +9,8 @@ const { Types: { ObjectId } } = mongoose;
 export const create = async (user) => {
   const {
     password = null, username, firstName, lastName,
-    jobTitle = '', company = '', identities, terms,
+    jobTitle = '', company = '', avatarUrl = '',
+    identities, terms,
   } = user;
 
   // Verify token expires 24 hours from now
@@ -25,6 +26,7 @@ export const create = async (user) => {
       lastName,
       jobTitle,
       company,
+      avatarUrl,
       identities,
       verificationToken: token,
       verificationExpires,

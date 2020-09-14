@@ -40,10 +40,10 @@ const Register = () => {
   if (token) {
     ({ identity } = jwtDecode(token));
   }
-  const { email, firstName, lastName } = identity;
+  const { email, firstName, lastName, avatarUrl } = identity;
 
   const onSubmit = (data) => {
-    const user = { ...data };
+    const user = { ...data, avatarUrl };
     dispatch(registerUser(user));
   };
 
