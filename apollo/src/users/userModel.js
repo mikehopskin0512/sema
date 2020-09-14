@@ -25,6 +25,7 @@ const userSchema = mongoose.Schema({
   // orgId: { type: Schema.Types.ObjectId, ref: 'Organization' },
   jobTitle: String,
   company: String,
+  avatarUrl: String,
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   verificationToken: String,

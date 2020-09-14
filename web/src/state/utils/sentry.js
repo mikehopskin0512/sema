@@ -27,7 +27,11 @@ const initialize = async (ctx) => {
     }
   } else {
     const { authState: { token: jwt } } = ctx.store.getState();
-    if (!jwt && ctx.pathname !== '/login' && !(ctx.pathname).includes('/register') && !(ctx.pathname).includes('/password-reset')) {
+    if (!jwt &&
+        ctx.pathname !== '/' &&
+        ctx.pathname !== '/login' &&
+        !(ctx.pathname).includes('/register') &&
+        !(ctx.pathname).includes('/password-reset')) {
       redirect(ctx, '/login');
     }
   }
