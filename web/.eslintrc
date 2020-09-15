@@ -1,4 +1,7 @@
 {
+  "env": {
+    "browser": true,
+  },
   "extends": ["airbnb", "airbnb/hooks"],
   "rules": {
     "func-names": 0,  

@@ -6,6 +6,7 @@ import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import Logo from '../../../public/img/Sema-logo-black.svg';
+import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -43,9 +44,9 @@ const Header = () => {
     }
   };
 
-  const toggleUserMenu = () => {
+  const toggleUserMenu = (status) => {
     if (userMenu.current) {
-      if (userMenu.current.classList.contains('is-active')) {
+      if (userMenu.current.classList.contains('is-active') || status === false) {
         userMenu.current.classList.remove('is-active');
       } else {
         userMenu.current.classList.add('is-active');
@@ -57,6 +58,13 @@ const Header = () => {
     toggleUserMenu();
     dispatch(deauthenticate());
   };
+
+  const onClickOutside = () => {
+    toggleUserMenu(false);
+  };
+
+  // Check for clicks outside of userMenu
+  useOutsideClick(userMenu, onClickOutside);
 
   return (
     <header className="has-background-primary">
