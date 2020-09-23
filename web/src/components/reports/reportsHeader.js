@@ -86,7 +86,7 @@ const ReportsHeader = (props) => {
 
   return (
     <div>
-      <nav className={`level has-background-white-ter is-mobile ${styles['report-header']}`}>
+      <nav className={`level is-marginless has-background-white-ter is-mobile ${styles['report-header']}`}>
         {/* -- Left side -- */}
         <div className="level-left">
           <div className="level-item">
