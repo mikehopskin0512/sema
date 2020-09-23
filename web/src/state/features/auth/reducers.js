@@ -27,6 +27,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       isAuthenticated: false,
+      user: {},
       error: action.errors,
     };
   case types.HYDRATE_USER:

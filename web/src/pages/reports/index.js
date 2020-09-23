@@ -26,7 +26,9 @@ const Reports = () => {
 
   // Fetch reports list from Mode space
   useEffect(() => {
-    dispatch(fetchReportList(spaceId, auth.token));
+    if (auth.token) {
+      dispatch(fetchReportList(spaceId, auth.token));
+    }
   }, [dispatch, spaceId, auth.token]);
 
   const reportsStuff = reportList.map((report) => (

@@ -1,3 +1,4 @@
 import FileSaver from 'file-saver';
 
-export default (fileData, fileName) => FileSaver.saveAs(fileData, fileName);
+const PDFSaver = (fileData, fileName) => FileSaver.saveAs(fileData, fileName);
+export default PDFSaver;

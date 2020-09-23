@@ -1,5 +1,5 @@
 import { getAll, create } from '../../utils/api';
 
-export const initiatePasswordReset = (params) => create('/v1/users/password-reset', params);
-export const validatePasswordReset = (params, userId, resetToken) => getAll(`/v1/users/password-reset/${resetToken}`, params);
-export const resetPassword = (params) => create('/v1/users/password', params);
+export const initiatePasswordReset = (params) => create('/api/proxy/users/password-reset', params);
+export const validatePasswordReset = (params, userId, resetToken) => getAll(`/api/proxy/users/password-reset/${resetToken}`, params);
+export const resetPassword = (params) => create('/api/proxy/users/password', params);

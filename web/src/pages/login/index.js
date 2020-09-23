@@ -14,9 +14,6 @@ import { authOperations } from '../../state/features/auth';
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
 
-const githubClient = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
-const githubUri = process.env.NEXT_PUBLIC_GITHUB_REDIRECT;
-
 const Login = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -99,7 +96,7 @@ const Login = () => {
                         <a
                           type="button"
                           className="button is-fullwidth is-github"
-                          href={`https://github.com/login/oauth/authorize?scope=user&client_id=${githubClient}&redirect_uri=${githubUri}`}>
+                          href="/api/identities/github">
                           <span className="icon">
                             <FontAwesomeIcon icon={['fab', 'github']} />
                           </span>
