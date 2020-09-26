@@ -5,7 +5,7 @@ import toaster from 'toasted-notes';
 const Toaster = (props) => {
   const {
     showAlert = false, type = 'success',
-    message, children,
+    message = 'Request failed', children,
     position = 'top', duration = 4000,
   } = props;
 

@@ -41,7 +41,6 @@ process.on('SIGINT', () => {
   });
 });
 
-
 const mongoService = (() => {
   const _verify = (done) => {
     if (mongoose.connection.readyState === 0) {
