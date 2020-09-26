@@ -175,9 +175,11 @@ export const registerUser = (user) => async (dispatch) => {
 
     dispatch(registrationSuccess(payload.data));
   } catch (error) {
-    const { response: { data } } = error;
-    dispatch(registrationError(data));
-    dispatch(triggerAlert(data.message, 'error'));
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(registrationError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
   }
 };
 
