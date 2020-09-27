@@ -2,8 +2,8 @@
 data "aws_iam_policy_document" "ecs_task_execution_role" {
   version = "2012-10-17"
   statement {
-    sid = ""
-    effect = "Allow"
+    sid     = ""
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
     principals {
@@ -31,12 +31,10 @@ data "aws_iam_policy_document" "param_store_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "ssm:GetParameters",
-      "secretsmanager:GetSecretValue",
-      "kms:Decrypt"
+      "ssm:*"
     ]
     resources = [
-      "arn:aws:ssm:us-east-1:091235034633:parameter/${var.env}/*",
+      "*",
     ]
   }
 }
