@@ -13,18 +13,74 @@
           "awslogs-stream-prefix": "ecs"
         }
     },
-    "environment": [
+    "environment": [],
+    "secrets": [
       {
-        "name": "NEXT_PUBLIC_BASE_URL",
-        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/api-base-url"
+        "name": "GITHUB_CLIENT_SECRET",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-secret"
       }, {
-        "name": "NEXT_PUBLIC_AUTH_JWT",
-        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/auth-jwt"
-      }],
-      "secrets": [
-      {
-        "name": "NEXT_PUBLIC_HEAP_ANALYTICS_ID",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/phoenix/web/heap-analytics-id"
+        "name": "JWT_SECRET",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/secret"
+      }, {
+        "name": "MODE_ANALYTICS_ACCESS_SECRET",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-secret"
+      }, {
+        "name": "MODE_ANALYTICS_API_SECRET",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-secret"
+      }, {
+        "name": "MONGOOSE_URI",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/uri"
+      }, {
+        "name": "POSTGRES_CONNECTION",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/postgres/uri"
+      }, {
+        "name": "ALLOWED_ORIGIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/cors"
+      }, {
+        "name": "GITHUB_CLIENT_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-id"
+      }, {
+        "name": "GITHUB_CALLBACK_URL",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/redirect"
+      }, {
+        "name": "MODE_ANALYTICS_ACCESS_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-key"
+      }, {
+        "name": "MODE_ANALYTICS_REPORT_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/report-id"
+      }, {
+        "name": "MODE_ANALYTICS_MAX_AGE",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/max-age"
+      }, {
+        "name": "MODE_ANALYTICS_ORGANIZATION",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/org"
+      }, {
+        "name": "MODE_ANALYTICS_API_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-key"
+      }, {
+        "name": "MONGOOSE_CERTPATH",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/cert-path"
+      }, {
+        "name": "ORG_DOMAIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/org-domain"
+      }, {
+        "name": "PORT",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/port"
+      }, {
+        "name": "REFRESH_TOKEN_NAME",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/name"
+      }, {
+        "name": "SENDGRID_API_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/api-key"
+      }, {
+        "name": "SENDGRID_DEFAULT_SENDER",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/sender"
+      }, {
+        "name": "TOKENLIFE",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/life"
+      }, {
+        "name": "VERSION",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/version"
       }],
     "portMappings": [
       {
