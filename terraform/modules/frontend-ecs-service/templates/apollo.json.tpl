@@ -17,70 +17,70 @@
     "secrets": [
       {
         "name": "GITHUB_CLIENT_SECRET",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-secret"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-secret"
       }, {
         "name": "JWT_SECRET",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/secret"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/token/secret"
       }, {
         "name": "MODE_ANALYTICS_ACCESS_SECRET",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-secret"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/access-secret"
       }, {
         "name": "MODE_ANALYTICS_API_SECRET",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-secret"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/api-secret"
       }, {
         "name": "MONGOOSE_URI",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/uri"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mongo/uri"
       }, {
         "name": "POSTGRES_CONNECTION",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/postgres/uri"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/postgres/uri"
       }, {
         "name": "ALLOWED_ORIGIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/cors"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/cors"
       }, {
         "name": "GITHUB_CLIENT_ID",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-id"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-id"
       }, {
         "name": "GITHUB_CALLBACK_URL",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/redirect"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/redirect"
       }, {
         "name": "MODE_ANALYTICS_ACCESS_KEY",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-key"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/access-key"
       }, {
         "name": "MODE_ANALYTICS_REPORT_ID",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/report-id"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/report-id"
       }, {
         "name": "MODE_ANALYTICS_MAX_AGE",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/max-age"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/max-age"
       }, {
         "name": "MODE_ANALYTICS_ORGANIZATION",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/org"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/org"
       }, {
         "name": "MODE_ANALYTICS_API_KEY",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-key"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/api-key"
       }, {
         "name": "MONGOOSE_CERTPATH",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/cert-path"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mongo/cert-path"
       }, {
         "name": "ORG_DOMAIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/org-domain"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
       }, {
         "name": "PORT",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/port"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/port"
       }, {
         "name": "REFRESH_TOKEN_NAME",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/name"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/token/name"
       }, {
         "name": "SENDGRID_API_KEY",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/api-key"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/sendgrid/api-key"
       }, {
         "name": "SENDGRID_DEFAULT_SENDER",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/sender"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/sendgrid/sender"
       }, {
         "name": "TOKENLIFE",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/life"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/token/life"
       }, {
         "name": "VERSION",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/version"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/version"
       }],
     "portMappings": [
       {
