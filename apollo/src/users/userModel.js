@@ -99,4 +99,6 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
   return bcrypt.compare(data, this.password);
 };
 
+userSchema.index({ username: 1, 'identities.id': 1 });
+
 module.exports = mongoose.model('User', userSchema);

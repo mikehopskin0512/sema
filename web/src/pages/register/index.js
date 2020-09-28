@@ -44,6 +44,7 @@ const Register = () => {
 
   const onSubmit = (data) => {
     const user = { ...data, avatarUrl };
+    if (identity) { user.identities = [identity]; }
     dispatch(registerUser(user));
   };
 
