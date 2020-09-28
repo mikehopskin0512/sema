@@ -3,7 +3,7 @@ import querystring from 'querystring';
 import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
 import { getProfile } from './utils';
-import { findByUsername, updateIdentity } from '../../users/userService';
+import { findByUsernameOrIdentity, updateIdentity } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 
 const route = Router();
@@ -43,21 +43,28 @@ export default (app) => {
     }
 
     // Create identity object
-    const fullName = profile.name;
+    const { name: fullName } = profile;
+
+    // Github passes 'email: null' when email is set to private
+    // Desturucting fallback value only works on undefined, not null
+    // So need to use profile.email with fallback to handle null emails
+    const email = profile.email || '';
+
     const firstName = fullName.split(' ').slice(0, -1).join(' ');
     const lastName = fullName.split(' ').slice(-1).join(' ');
+
     const identity = {
       provider: 'github',
       id: profile.id,
       username: profile.login,
-      email: profile.email,
+      email,
       firstName,
       lastName,
       profileUrl: profile.url,
       avatarUrl: profile.avatar_url,
     };
 
-    const user = await findByUsername(profile.email);
+    const user = await findByUsernameOrIdentity(email, identity);
     if (user) {
       // Update user with identity
       await updateIdentity(user, identity);

@@ -8,7 +8,7 @@ const { Types: { ObjectId } } = mongoose;
 
 export const create = async (user) => {
   const {
-    password = null, username, firstName, lastName,
+    password = null, username = '', firstName, lastName,
     jobTitle = '', company = '', avatarUrl = '',
     identities, terms,
   } = user;
@@ -86,9 +86,31 @@ export const updateIdentity = async (user, identity) => {
   }
 };
 
-export const findByUsername = async (username) => {
+export const findByUsername = async (username = '') => {
   try {
     const query = User.findOne({ username: username.toLowerCase() });
+    const user = await query.lean().exec();
+
+    return user;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByUsernameOrIdentity = async (username = '', identity = {}) => {
+  try {
+    const query = User.findOne({
+      $or:
+      [
+        { username: username.toLowerCase() },
+        { $and: [
+          { 'identities.provider': identity.provider },
+          { 'identities.id': identity.id },
+        ] },
+      ],
+    });
     const user = await query.lean().exec();
 
     return user;
@@ -125,7 +147,7 @@ export const findByOrgId = async (orgId) => {
   }
 };
 
-export const validateLogin = async (username, password) => {
+export const validateLogin = async (username = '', password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
 
@@ -195,7 +217,7 @@ export const verifyUser = async (verificationToken) => {
   }
 };
 
-export const resetVerification = async (username) => {
+export const resetVerification = async (username = '') => {
   // Verify token expires 24 hours from now
   const token = await generateToken();
   const now = new Date();
