@@ -9,7 +9,7 @@ const { Types: { ObjectId } } = mongoose;
 export const create = async (user) => {
   const {
     password = null, username = '', firstName, lastName,
-    jobTitle = '', company = '', avatarUrl = '',
+    jobTitle = '', avatarUrl = '',
     identities, terms,
   } = user;
 
@@ -25,7 +25,6 @@ export const create = async (user) => {
       firstName,
       lastName,
       jobTitle,
-      company,
       avatarUrl,
       identities,
       verificationToken: token,
@@ -144,6 +143,22 @@ export const findByOrgId = async (orgId) => {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
+  }
+};
+
+export const joinOrg = async (userId, orgId) => {
+  try {
+    const query = User.updateOne(
+      { _id: new ObjectId(userId) },
+      { $addToSet: { organizations: orgId } },
+    );
+
+    await query.exec();
+    return true;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
   }
 };
 

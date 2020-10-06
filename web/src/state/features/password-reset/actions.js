@@ -10,7 +10,7 @@ const requestPasswordResetRequest = () => ({
   type: types.REQUEST_PASSWORD_RESET,
 });
 
-const passwordResetRequestSucess = () => ({
+const passwordResetRequestSuccess = () => ({
   type: types.REQUEST_PASSWORD_RESET_SUCCESS,
 });
 
@@ -23,7 +23,7 @@ const requestVerifyResetToken = () => ({
   type: types.REQUEST_VERIFY_RESET_TOKEN,
 });
 
-const verifyResetTokenSucess = () => ({
+const verifyResetTokenSuccess = () => ({
   type: types.VERIFY_RESET_TOKEN_SUCCESS,
 });
 
@@ -36,7 +36,7 @@ const requestPasswordReset = () => ({
   type: types.RESET_PASSWORD,
 });
 
-const passwordResetSucess = () => ({
+const passwordResetSuccess = () => ({
   type: types.PASSWORD_RESET_SUCCESS,
 });
 
@@ -50,7 +50,7 @@ export const passwordResetRequest = (email) => async (dispatch) => {
     dispatch(requestPasswordResetRequest());
     await initiatePasswordReset({ username: email });
 
-    dispatch(passwordResetRequestSucess());
+    dispatch(passwordResetRequestSuccess());
   } catch (error) {
     dispatch(passwordResetRequestError(error.response.data));
   }
@@ -61,7 +61,7 @@ export const verifyResetToken = (userId, resetToken) => async (dispatch) => {
     dispatch(requestVerifyResetToken());
     await validatePasswordReset({}, userId, resetToken);
 
-    dispatch(verifyResetTokenSucess());
+    dispatch(verifyResetTokenSuccess());
   } catch (error) {
     dispatch(verifyResetTokenError(error.response.data));
     Router.push('/password-reset?err=1');
@@ -73,7 +73,7 @@ export const changePassword = (password, token) => async (dispatch) => {
     dispatch(requestPasswordReset());
     await resetPassword({ token, password });
 
-    dispatch(passwordResetSucess());
+    dispatch(passwordResetSuccess());
   } catch (error) {
     dispatch(passwordResetError(error.response.data));
   }

@@ -162,18 +162,6 @@ const Register = () => {
                         </div>
                         <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
                       </div>
-                      <div className="field">
-                        <label className="label">Company</label>
-                        <div className="control">
-                          <input
-                            className={`input ${errors.company && 'is-danger'}`}
-                            type="text"
-                            placeholder="Stark Industries"
-                            name="company"
-                            ref={register({ required: 'Company is required' })} />
-                        </div>
-                        <p className="help is-danger">{errors.company && errors.company.message}</p>
-                      </div>
                     </div>
                   </div>
                   <div className="field">

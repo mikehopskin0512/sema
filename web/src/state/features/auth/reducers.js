@@ -56,6 +56,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       isAuthenticated: false, // Don't authenticate them until after verification
+      token: action.token,
       user: action.user,
       error: {},
     };

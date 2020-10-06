@@ -21,8 +21,7 @@ const userSchema = mongoose.Schema({
   },
   firstName: String,
   lastName: String,
-  orgId: { type: String, default: '84' }, // TEMP: Until org object is setup. Org 84 is temp default.
-  // orgId: { type: Schema.Types.ObjectId, ref: 'Organization' },
+  organizations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Organization' }],
   jobTitle: String,
   company: String,
   avatarUrl: String,
@@ -100,5 +99,6 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
 };
 
 userSchema.index({ username: 1, 'identities.id': 1 });
+userSchema.index({ orgId: 1 });
 
 module.exports = mongoose.model('User', userSchema);

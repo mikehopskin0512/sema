@@ -44,7 +44,10 @@ const Report = () => {
 
   // Get filters and user.orgId from Redux
   const { currentFilters } = organizations;
-  const { user: { orgId } } = auth;
+
+  // TEMP: Hardcode orgId to 84 until we can make connection between orgs in PG DB
+  // const { user: { orgId } } = auth;
+  const orgId = 84;
 
   // Declare local state var for report filterUrl
   const [filterUrl, setFilterUrl] = useState(buildFilterUrl(currentFilters));
