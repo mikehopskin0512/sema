@@ -37,6 +37,7 @@ const clientSchema = new Schema({
 });
 
 clientSchema.set('autoIndex', autoIndex);
+clientSchema.index({ clientId: 1, userId: 1 });
 
 const Client = mongoose.model('Client', clientSchema);
 

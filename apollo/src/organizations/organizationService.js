@@ -1,9 +1,30 @@
 import { Pool } from 'pg';
-
+import mongoose from 'mongoose';
+import Organization from './organizationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION }); // e.g. postgres://user:password@host:5432/database
+const { Types: { ObjectId } } = mongoose;
+
+export const create = async (org) => {
+  const {
+    orgName = '', slug = '',
+  } = org;
+
+  try {
+    const newOrg = new Organization({
+      orgName,
+      slug,
+    });
+    const savedOrg = await newOrg.save();
+    return savedOrg;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
 
 const selectRepositoriesByOrg = async (orgId) => {
   try {

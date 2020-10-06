@@ -1,5 +1,19 @@
 import * as types from './types';
-import { getFileTypes, getContributors, getRepositories } from './api';
+import { postOrganization, getFileTypes, getContributors, getRepositories } from './api';
+
+const requestCreateOrg = () => ({
+  type: types.REQUEST_CREATE_ORG,
+});
+
+const requestCreateOrgSuccess = (organization) => ({
+  type: types.REQUEST_CREATE_ORG_SUCCESS,
+  organization,
+});
+
+const requestCreateOrgError = (errors) => ({
+  type: types.REQUEST_CREATE_ORG_ERROR,
+  errors,
+});
 
 const requestFileTypes = () => ({
   type: types.REQUEST_FILETYPES,
@@ -51,6 +65,21 @@ const receiveFilters = (params) => ({
 const resetFilters = () => ({
   type: types.RESET_FILTERS,
 });
+
+export const createOrg = (org, token) => async (dispatch) => {
+  try {
+    dispatch(requestCreateOrg());
+    const payload = await postOrganization(org, token);
+    const { data: { organization = {} } } = payload;
+    dispatch(requestCreateOrgSuccess(organization));
+    return organization;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestCreateOrgError(errMessage));
+  }
+};
 
 export const fetchFileTypes = (orgId, token) => async (dispatch) => {
   dispatch(requestFileTypes());

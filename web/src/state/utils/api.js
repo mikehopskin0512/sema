@@ -53,6 +53,6 @@ export const create = (endpoint, item, token = '') => {
   return api.post(endpoint, item, config);
 };
 
-export const update = (endpoint, item) => api.put((`${endpoint}/${item.id}`), item);
+export const update = (endpoint, item) => api.put((`${endpoint}/${item._id}`), item);
 
 export const deleteItem = (endpoint, { id }) => api.delete(`${endpoint}/${id}`);

@@ -3,8 +3,9 @@ import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
-  create, update, findByUsername,
-  findById, findByOrgId, verifyUser, resetVerification,
+  create, update, findByUsername, findById,
+  verifyUser, resetVerification,
+  joinOrg,
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
@@ -15,6 +16,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/users`, route);
 
+  // Fetch user
   route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
 
@@ -25,7 +27,7 @@ export default (app, passport) => {
         throw new errors.NotFound('No user found');
       }
 
-      return res.status(201).send({
+      return res.status(200).send({
         user,
       });
     } catch (error) {
@@ -34,6 +36,7 @@ export default (app, passport) => {
     }
   });
 
+  // Create user
   route.post('/', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { ...user } = req.body;
     const { username } = user;
@@ -63,7 +66,7 @@ export default (app, passport) => {
 
       delete newUser.password;
       return res.status(201).send({
-        user: newUser,
+        jwtToken: await createAuthToken(newUser),
       });
     } catch (error) {
       logger.error(error);
@@ -71,6 +74,7 @@ export default (app, passport) => {
     }
   });
 
+  // Update user
   route.put('/:id', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
     try {
       const user = await update(req.body.user);
@@ -79,7 +83,7 @@ export default (app, passport) => {
       }
 
       delete user.password;
-      return res.status(201).send({
+      return res.status(200).send({
         user,
       });
     } catch (error) {
@@ -88,18 +92,19 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { id: orgId } = req.params;
+  // Join org
+  route.post('/:id/organizations', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id: userId } = req.params;
+    const { orgId } = req.body;
 
     try {
-      const users = await findByOrgId(orgId);
-
-      if (!users) {
-        throw new errors.NotFound('Error fetching organization users');
+      const newUser = await joinOrg(userId, orgId);
+      if (!newUser) {
+        throw new errors.BadRequest('Org join error');
       }
 
-      return res.status(201).send({
-        users,
+      return res.status(200).send({
+        response: 'Org joined successfully',
       });
     } catch (error) {
       logger.error(error);
@@ -107,6 +112,7 @@ export default (app, passport) => {
     }
   });
 
+  // Verify token
   route.get('/verification/:token', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { token } = req.params;
 

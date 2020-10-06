@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import {
   auth, exchangeToken, createUser,
-  verifyUser, resetVerification,
+  postUserOrg, verifyUser, resetVerification,
 } from './api';
 
 import { alertOperations } from '../alerts';
@@ -130,13 +130,28 @@ const requestRegistration = () => ({
   type: types.REQUEST_REGISTRATION,
 });
 
-const registrationSuccess = (data) => ({
+const registrationSuccess = (token, newUser) => ({
   type: types.REQUEST_REGISTRATION_SUCCESS,
-  user: data.user,
+  token,
+  user: newUser,
 });
 
 const registrationError = (errors) => ({
   type: types.REQUEST_REGISTRATION_ERROR,
+  errors,
+});
+
+const requestJoinOrg = () => ({
+  type: types.REQUEST_JOIN_ORG,
+});
+
+const requestJoinOrgSuccess = (organization) => ({
+  type: types.REQUEST_JOIN_ORG_SUCCESS,
+  organization,
+});
+
+const requestJoinOrgError = (errors) => ({
+  type: types.REQUEST_JOIN_ORG_ERROR,
   errors,
 });
 
@@ -170,15 +185,35 @@ export const registerUser = (user) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
     const payload = await createUser(user);
-    // Send user to verification page after registration
-    Router.push('/register/verify');
+    const { data: { jwtToken } } = payload;
+    const { user: newUser } = jwtDecode(jwtToken) || {};
+    dispatch(registrationSuccess(jwtToken, newUser));
 
-    dispatch(registrationSuccess(payload.data));
+    // Send user to verification page after registration
+    Router.push('/register/organization');
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(registrationError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
+  }
+};
+
+export const joinOrg = (userId, orgId, token) => async (dispatch) => {
+  try {
+    dispatch(requestJoinOrg());
+    await postUserOrg(userId, { orgId }, token);
+
+    // Send user to verification page after registration & joinOrg
+    Router.push('/register/verify');
+
+    dispatch(requestJoinOrgSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestJoinOrgError(errMessage));
     dispatch(triggerAlert(errMessage, 'error'));
   }
 };

@@ -102,11 +102,11 @@ const UserVerify = () => {
               <div className="column is-7-tablet is-7-desktop is-7-widescreen">
                 <div className="title-topper mt-70 mb-20" />
                 <h1 className="title is-spaced">Account Verification</h1>
-                <p className="subtitle is-6">
+                <div className="subtitle is-6">
                   {(isVerified)
                     ? <Confirmation />
                     : <ResetMessage handleClick={handleClick} username={username} />}
-                </p>
+                </div>
               </div>
             </div>
           </div>
