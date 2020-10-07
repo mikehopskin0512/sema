@@ -37,7 +37,7 @@ const ResetMessage = (props) => {
         </div>
       )}
       <p className="mt-20">
-        <span>Need help? Email us at <a href="mailto:support@semasoftware.com">support@semasoftware.com</a></span>
+        <span>Need help? Email us at <a href="mailto:support@semasoftware.com">support@semasoftware.com</a> or <Link href="/login"><a title="Login">return to login</a></Link>.</span>
       </p>
     </div>
   );

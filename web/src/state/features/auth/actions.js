@@ -11,6 +11,7 @@ import { removeCookie } from '../../utils/cookie';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
+const isServer = () => typeof window === 'undefined';
 
 const authenticateRequest = () => ({
   type: types.AUTHENTICATE_REQUEST,
@@ -55,6 +56,11 @@ const requestRefreshTokenSuccess = (token) => ({
 const requestRefreshTokenError = (errors) => ({
   type: types.RECEIVE_REFRESH_TOKEN_ERROR,
   errors,
+});
+
+const userNotVerifiedError = (user) => ({
+  type: types.USER_NOT_VERIFIED,
+  user,
 });
 
 const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
@@ -113,9 +119,11 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     dispatch(hydrateUser(user));
 
     if (!isVerified) {
-      dispatch(authenticateError({ errors: 'User is not verfied' }));
-      Router.push('/register/verify');
+      dispatch(userNotVerifiedError(user));
+      // Need server-side check since this is called from sentry
+      if (!isServer) { Router.push('/register/verify'); }
     }
+    return { isVerified };
   } catch (err) {
     if (err.response) {
       const { response: { data = {} } } = err;
@@ -123,6 +131,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     } else {
       dispatch(requestRefreshTokenError(err));
     }
+    return { isVerified: false };
   }
 };
 
