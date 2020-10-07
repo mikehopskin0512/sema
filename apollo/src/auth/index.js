@@ -45,7 +45,7 @@ export default (app, passport) => {
       } catch (error) {
         // Supressing error messages since invalid refresh token will happen often
         // logger.error(error);
-        // throw new errors.BadRequest('Invalid refresh token');
+        throw new errors.BadRequest('Invalid refresh token');
       }
 
       if (!refreshPayload.user) {

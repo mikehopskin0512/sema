@@ -22,7 +22,7 @@ const Header = () => {
   const { user, token } = auth;
   const {
     firstName = '', lastName = '', avatarUrl,
-    is_admin: isAdmin = false,
+    isVerified = false, isAdmin = false,
   } = user;
   const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
@@ -71,7 +71,7 @@ const Header = () => {
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
           <Link href="/reports"><a><Logo className="logo" fill="#FFFFFF" /></a></Link>
-          {(token) && (
+          {(token && isVerified) && (
             <button
               onClick={toggleHamburger}
               type="button"
@@ -86,7 +86,7 @@ const Header = () => {
             </button>
           )}
         </div>
-        {(token) && (
+        {(token && isVerified) && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
             <div className="navbar-start is-hidden-mobile is-hidden-tablet-only">

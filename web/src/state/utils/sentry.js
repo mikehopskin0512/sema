@@ -1,4 +1,5 @@
 import Router from 'next/router';
+import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
 import { getCookie } from './cookie';
@@ -18,22 +19,26 @@ const redirect = (ctx, location) => {
 };
 
 const initialize = async (ctx) => {
+  let jwt = null;
+  let isVerified = false;
   if (isServer()) {
-    const jwtCookie = getCookie(refreshCookie, ctx.req);
-    if (jwtCookie) {
-      await ctx.store.dispatch(refreshJwt(jwtCookie));
-    } else if (ctx.pathname !== '/login' && !(ctx.pathname).includes('/register') && !(ctx.pathname).includes('/password-reset')) {
-      redirect(ctx, '/login');
-    }
+    // On server-side, get refreshCookie and call refreshJwt (which will return isVerified)
+    jwt = getCookie(refreshCookie, ctx.req);
+    const payload = (jwt) ? await ctx.store.dispatch(refreshJwt(jwt)) : {};
+    ({ isVerified = false } = payload);
   } else {
-    const { authState: { token: jwt } } = ctx.store.getState();
-    if (!jwt &&
-        ctx.pathname !== '/' &&
-        ctx.pathname !== '/login' &&
-        !(ctx.pathname).includes('/register') &&
-        !(ctx.pathname).includes('/password-reset')) {
-      redirect(ctx, '/login');
-    }
+    // On client-side, get jwt from state and decode to get isVerified
+    ({ authState: { token: jwt } } = ctx.store.getState());
+    const { user } = (jwt) ? jwtDecode(jwt) : {};
+    ({ isVerified = false } = user);
+  }
+
+  // Redirects w/ exclusions
+  if (ctx.pathname !== '/login' &&
+      !(ctx.pathname).includes('/register') &&
+      !(ctx.pathname).includes('/password-reset')) {
+    if (!jwt) { redirect(ctx, '/login'); }
+    if (!isVerified) { redirect(ctx, '/register/verify'); }
   }
 };
 
