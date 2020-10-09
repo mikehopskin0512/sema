@@ -1,5 +1,8 @@
 import * as types from './types';
-import { postOrganization, getFileTypes, getContributors, getRepositories } from './api';
+import {
+  postOrganization, getOrganization,
+  getFileTypes, getContributors, getRepositories,
+} from './api';
 
 const requestCreateOrg = () => ({
   type: types.REQUEST_CREATE_ORG,
@@ -12,6 +15,20 @@ const requestCreateOrgSuccess = (organization) => ({
 
 const requestCreateOrgError = (errors) => ({
   type: types.REQUEST_CREATE_ORG_ERROR,
+  errors,
+});
+
+const requestOrgBySlug = () => ({
+  type: types.REQUEST_ORG_BY_SLUG,
+});
+
+const requestOrgBySlugSuccess = (organization) => ({
+  type: types.REQUEST_ORG_BY_SLUG_SUCCESS,
+  organization,
+});
+
+const requestOrgBySlugError = (errors) => ({
+  type: types.REQUEST_ORG_BY_SLUG_ERROR,
   errors,
 });
 
@@ -79,6 +96,27 @@ export const createOrg = (org, token) => async (dispatch) => {
 
     dispatch(requestCreateOrgError(errMessage));
   }
+
+  return false;
+};
+
+export const fetchOrganizationBySlug = (slug, token) => async (dispatch) => {
+  try {
+    dispatch(requestOrgBySlug());
+    const payload = await getOrganization({ slug }, token);
+    const { data: { organization = {} } } = payload;
+    dispatch(requestOrgBySlugSuccess(organization));
+
+    // Need to return value for unique slug check in reg
+    return organization;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestOrgBySlugError(errMessage));
+  }
+
+  return false;
 };
 
 export const fetchFileTypes = (orgId, token) => async (dispatch) => {

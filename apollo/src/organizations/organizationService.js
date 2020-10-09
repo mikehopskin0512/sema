@@ -5,7 +5,6 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION }); // e.g. postgres://user:password@host:5432/database
-const { Types: { ObjectId } } = mongoose;
 
 export const create = async (org) => {
   const {
@@ -23,6 +22,19 @@ export const create = async (org) => {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw (error);
+  }
+};
+
+export const findBySlug = async (slug) => {
+  try {
+    const query = Organization.findOne({ slug });
+    const org = await query.lean().exec();
+
+    return org;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
   }
 };
 

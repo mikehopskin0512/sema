@@ -3,7 +3,7 @@ import { autoIndex } from '../config';
 
 const organizationSchema = mongoose.Schema({
   orgName: String,
-  slug: String,
+  slug: { type: String, unique: true },
 }, { timestamps: true });
 
 organizationSchema.set('autoIndex', autoIndex);
