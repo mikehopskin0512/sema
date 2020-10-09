@@ -29,7 +29,7 @@ const initialize = async (ctx) => {
   } else {
     // On client-side, get jwt from state and decode to get isVerified
     ({ authState: { token: jwt } } = ctx.store.getState());
-    const { user } = (jwt) ? jwtDecode(jwt) : {};
+    const { user = {} } = (jwt) ? jwtDecode(jwt) : {};
     ({ isVerified = false } = user);
   }
 

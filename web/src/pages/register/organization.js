@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import Router from 'next/router';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import slugify from 'slugify';
@@ -7,14 +8,17 @@ import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 
 import { authOperations } from '../../state/features/auth';
+import { organizationsOperations } from '../../state/features/organizations';
 
 const { createAndJoinOrg } = authOperations;
+const { fetchOrganizationBySlug } = organizationsOperations;
 
 const JoinOrg = () => {
   const dispatch = useDispatch();
-  const { register, watch, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
 
   const [slug, setSlug] = useState('');
+  const [slugError, setSlugError] = useState('');
 
   // Import state vars
   const { alerts, auth } = useSelector(
@@ -27,14 +31,31 @@ const JoinOrg = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user: { _id: userId } = {} } = auth;
 
-  const onSubmit = (data) => {
+  // Redirect to register page if no userId
+  useEffect(() => {
+    if (!userId) { Router.push('/register'); }
+  });
+
+  const onSubmit = async (data) => {
     const org = { ...data };
-    dispatch(createAndJoinOrg(userId, org, token));
+    const existingOrg = await dispatch(fetchOrganizationBySlug(slug, token));
+
+    if (!existingOrg) {
+      dispatch(createAndJoinOrg(userId, org, token));
+    } else {
+      setSlugError('Organization with this url already exisits. Please select another url.');
+    }
   };
 
   const generateSlug = (orgName) => {
     const slugifiedName = slugify(orgName.currentTarget.value || '');
     setSlug(slugifiedName);
+  };
+
+  const clearSlugError = (field) => {
+    const { target: { value: newSlug = '' } = {} } = field;
+    setSlug(newSlug);
+    setSlugError('');
   };
 
   return (
@@ -76,15 +97,18 @@ const JoinOrg = () => {
                         <label className="label">Unique URL</label>
                         <div className="control">
                           <input
-                            className={`input ${errors.orgName && 'is-danger'}`}
+                            className={`input ${(errors.slug || slugError) && 'is-danger'}`}
                             type="text"
                             name="slug"
+                            autoComplete="off"
+                            onChange={clearSlugError}
                             defaultValue={slug}
                             ref={register({
                               pattern: { value: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/, message: 'URL can\'t contain spaces or special characters' },
                             })} />
                         </div>
                         <p className="help is-danger">{errors.slug && errors.slug.message}</p>
+                        <p className="help is-danger">{slugError}</p>
                       </div>
                     </div>
                   </div>

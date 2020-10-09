@@ -23,6 +23,25 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+  case types.REQUEST_CREATE_ORG:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_CREATE_ORG_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: action.organization,
+      error: {},
+    };
+  case types.REQUEST_CREATE_ORG_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {},
+      error: action.errors,
+    };
   case types.REQUEST_FILETYPES:
     return {
       ...state,

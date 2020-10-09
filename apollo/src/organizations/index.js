@@ -14,16 +14,6 @@ export default (app, passport) => {
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { ...org } = req.body;
-    // Placeholder code for find existing org step
-    // const { slug } = org;
-
-/*    try {
-      const existingOrg = await findBySlug(slug);
-      if (existingOrg) { throw new errors.BadRequest('Organization with this url already exisits. Please try again.'); }
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
-    } */
 
     try {
       const newOrg = await create(org);
@@ -33,6 +23,28 @@ export default (app, passport) => {
 
       return res.status(201).send({
         organization: newOrg,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { orgId, slug } = req.query;
+    let org = {};
+
+    try {
+      if (orgId) {
+        org = await findBySlug(slug);
+        if (!org) { throw new errors.NotFound('Organization ID not found'); }
+      } else if (slug) {
+        org = await findBySlug(slug);
+        if (!org) { throw new errors.NotFound('Organization slug not found'); }
+      }
+
+      return res.status(201).send({
+        organization: org,
       });
     } catch (error) {
       logger.error(error);
