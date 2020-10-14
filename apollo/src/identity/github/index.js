@@ -48,10 +48,10 @@ export default (app) => {
     // Github passes 'email: null' when email is set to private
     // Desturucting fallback value only works on undefined, not null
     // So need to use profile.email with fallback to handle null emails
+    // and need to check for fullName before using split
     const email = profile.email || '';
-
-    const firstName = fullName.split(' ').slice(0, -1).join(' ');
-    const lastName = fullName.split(' ').slice(-1).join(' ');
+    const firstName = (fullName) ? fullName.split(' ').slice(0, -1).join(' ') : '';
+    const lastName = (fullName) ? fullName.split(' ').slice(-1).join(' ') : '';
 
     const identity = {
       provider: 'github',
