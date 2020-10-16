@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import mongoose from 'mongoose';
 import Organization from './organizationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';

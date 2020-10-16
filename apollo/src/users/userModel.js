@@ -2,6 +2,14 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
 
+const userOrgSchema = mongoose.Schema({
+  id: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', index: true },
+  orgName: String,
+  isActive: { type: Boolean, default: true },
+  isAdmin: { type: Boolean, default: false },
+  invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+}, { _id: false, timestamps: true });
+
 const identitySchema = mongoose.Schema({
   provider: String,
   id: String,
@@ -21,7 +29,7 @@ const userSchema = mongoose.Schema({
   },
   firstName: String,
   lastName: String,
-  organizations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Organization' }],
+  organizations: [userOrgSchema],
   jobTitle: String,
   company: String,
   avatarUrl: String,
