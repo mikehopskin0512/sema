@@ -22,11 +22,15 @@ const Header = () => {
   const { user, token } = auth;
   const {
     firstName = '', lastName = '', avatarUrl,
-    isVerified = false, isAdmin = false,
+    isVerified = false, organizations = [],
   } = user;
   const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
+
+  // Use 1st org (for now) and get isAdmin
+  const [currentOrg = {}] = organizations;
+  const { isAdmin = false } = currentOrg;
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -103,7 +107,7 @@ const Header = () => {
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Reports</a></Link>
               <hr className="navbar-divider" />
               {isAdmin &&
-                <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>}
+                <Link href="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>}
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"
@@ -121,7 +125,7 @@ const Header = () => {
                   <Link href="/"><a className="navbar-item" onClick={toggleUserMenu}>User menu item</a></Link>
                   <hr className="navbar-divider" />
                   {isAdmin &&
-                    <Link href="/"><a className="navbar-item" onClick={toggleUserMenu}>Admin Panel</a></Link>
+                    <Link href="/admin"><a className="navbar-item" onClick={toggleUserMenu}>Admin Panel</a></Link>
                   }
                   <span
                     role="button"

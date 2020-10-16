@@ -190,16 +190,21 @@ const resetVerificationError = (errors) => ({
   errors,
 });
 
-export const registerUser = (user) => async (dispatch) => {
+export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
-    const payload = await createUser(user);
+    const payload = await createUser({ user, invitation });
     const { data: { jwtToken } } = payload;
     const { user: newUser } = jwtDecode(jwtToken) || {};
     dispatch(registrationSuccess(jwtToken, newUser));
 
-    // Send user to verification page after registration
-    Router.push('/register/organization');
+    // If invitation, joinOrg and redirect to /verify
+    if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
+      Router.push('/register/verify');
+    } else {
+      // Send user to verification page after registration
+      Router.push('/register/organization');
+    }
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -209,10 +214,10 @@ export const registerUser = (user) => async (dispatch) => {
   }
 };
 
-export const joinOrg = (userId, orgId, token) => async (dispatch) => {
+export const joinOrg = (userId, org, token) => async (dispatch) => {
   try {
     dispatch(requestJoinOrg());
-    await postUserOrg(userId, { orgId }, token);
+    await postUserOrg(userId, { org }, token);
 
     // Send user to verification page after registration & joinOrg
     Router.push('/register/verify');

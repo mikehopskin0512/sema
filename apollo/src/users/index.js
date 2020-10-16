@@ -9,6 +9,7 @@ import {
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
+import { redeemInvite } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -38,7 +39,7 @@ export default (app, passport) => {
 
   // Create user
   route.post('/', passport.authenticate(['basic'], { session: false }), async (req, res) => {
-    const { ...user } = req.body;
+    const { user, invitation } = req.body;
     const { username } = user;
 
     try {
@@ -63,6 +64,20 @@ export default (app, passport) => {
         firstName: newUser.firstName,
       };
       await sendEmail(message);
+
+      // If invitation, call joinOrg function
+      if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
+        const { _id: userId } = newUser;
+        const { orgId, orgName, sender, token } = invitation;
+        const org = { id: orgId, orgName, invitedBy: sender };
+        const invitedUser = await joinOrg(userId, org);
+        if (!invitedUser) {
+          throw new errors.BadRequest('Org join error');
+        }
+
+        // Redeem invite
+        await redeemInvite(token, userId);
+      }
 
       delete newUser.password;
       return res.status(201).send({
@@ -95,10 +110,10 @@ export default (app, passport) => {
   // Join org
   route.post('/:id/organizations', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id: userId } = req.params;
-    const { orgId } = req.body;
+    const { org } = req.body;
 
     try {
-      const newUser = await joinOrg(userId, orgId);
+      const newUser = await joinOrg(userId, org);
       if (!newUser) {
         throw new errors.BadRequest('Org join error');
       }

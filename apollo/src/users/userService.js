@@ -146,11 +146,12 @@ export const findByOrgId = async (orgId) => {
   }
 };
 
-export const joinOrg = async (userId, orgId) => {
+export const joinOrg = async (userId, org) => {
+  const { id: orgId } = org;
   try {
     const query = User.updateOne(
-      { _id: new ObjectId(userId) },
-      { $addToSet: { organizations: orgId } },
+      { _id: new ObjectId(userId), 'orgaizations.id': { $ne: orgId } },
+      { $addToSet: { organizations: org } },
     );
 
     await query.exec();

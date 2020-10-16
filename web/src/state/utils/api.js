@@ -11,7 +11,7 @@ const api = axios.create({
   credentials: 'include',
 });
 
-export const get = (endpoint, { id }, token = '') => {
+export const get = (endpoint, id, token = '') => {
   const config = {};
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
