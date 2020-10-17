@@ -105,7 +105,7 @@ const Login = () => {
                       </div>
                       <div className="field">
                         <p className="has-text-centered is-size-7">
-                          By signing in, you agree to our<br />Terms and Conditions
+                          By signing in, you agree to our<br />terms and conditions
                         </p>
                       </div>
                       <div className="field">
@@ -113,7 +113,7 @@ const Login = () => {
                       </div>
                       <div className="field">
                         <div className="is-divider" data-content="OR"></div>
-                        <p><strong>Want to sign up for the Sema platfrom?</strong></p>
+                        <p><strong>Want to sign up for the Sema platform?</strong></p>
                         <div className="mt-1r">
                           <Link href="/register">
                             <a className="button is-primary">

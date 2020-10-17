@@ -13,18 +13,19 @@ const { activateUser, resendVerifiction } = authOperations;
 const ResetMessage = (props) => {
   const { username, handleClick } = props;
   const message = (
-    <p>We sent an email verification to&nbsp;
-      {(username) ? <strong>{username}</strong> : 'you'}.&nbsp;
-      Please check your email and activate your account.
-    </p>
+    <div>
+      <p>We sent an email verification to&nbsp;
+        {(username) ? <strong>{username}</strong> : 'you'}.
+      </p>
+      <p className="mt-20">Please check your email and activate your account.</p>
+    </div>
   );
   return (
     <div>
       {message}
-      <br />
       {(username) && (
         <div>
-          <p>
+          <p className="mt-20">
             <strong>Didn&#39;t get the email?</strong>
           </p>
           <div className="control mt-15">

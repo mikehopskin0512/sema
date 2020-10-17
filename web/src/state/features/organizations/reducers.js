@@ -12,6 +12,7 @@ const initialState = {
   contributors: [],
   fileTypes: [],
   repositories: [],
+  showFilters: true,
   currentFilters: {
     param_z_date_end: today,
     param_z_date_start: weekAgo,
@@ -110,6 +111,11 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       currentFilters: initialState.currentFilters,
+    };
+  case types.TOGGLE_FILTERS:
+    return {
+      ...state,
+      showFilters: action.showFilters,
     };
   default:
     return state;

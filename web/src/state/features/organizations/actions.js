@@ -162,6 +162,13 @@ export const updateFilters = (params) => async (dispatch) => {
   dispatch(receiveFilters(params));
 };
 
+export const toggleFilters = (showFilters) => async (dispatch) => {
+  dispatch({
+    type: types.TOGGLE_FILTERS,
+    showFilters,
+  });
+};
+
 export const clearFilters = () => async (dispatch) => {
   dispatch(resetFilters());
 };
