@@ -13,7 +13,7 @@ const { verifyResetToken, changePassword } = passwordOperations;
 
 const InputForm = (props) => {
   // const emailRef = useRef(null);
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, watch } = useForm();
 
   const onSubmit = (data) => {
     const { password } = data;
@@ -52,6 +52,27 @@ const InputForm = (props) => {
               </span>
             </div>
             <p className="help is-danger">{errors.password && errors.password.message}</p>
+          </div>
+          <div className="field">
+            <label className="label">Confirm password</label>
+            <div className="control has-icons-left">
+              <input
+                className={`input ${errors.passwordConfirm && 'is-danger'}`}
+                type="password"
+                name="passwordConfirm"
+                ref={register({
+                  validate: (value) => {
+                    if (value === watch('password')) {
+                      return true;
+                    }
+                    return 'Passwords do not match';
+                  },
+                })} />
+              <span className="icon is-small is-left">
+                <FontAwesomeIcon icon="lock" />
+              </span>                
+            </div>
+            <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
 
 const { downloadPdf } = reportsOperations;
-const { fetchFilterLists, clearFilters } = organizationsOperations;
+const { fetchFilterLists, toggleFilters, clearFilters } = organizationsOperations;
 
 const ReportsHeader = (props) => {
   // Create REFs for menus
@@ -26,7 +26,9 @@ const ReportsHeader = (props) => {
     }),
   );
 
-  const { user: { orgId } } = auth;
+  // TEMP: Hardcode orgId to 84 until we can make connection between orgs in PG DB
+  // const { user: { orgId } } = auth;
+  const orgId = 84;
   const { updateFilters } = props;
 
   useEffect(() => {
@@ -37,6 +39,7 @@ const ReportsHeader = (props) => {
     repositories = [],
     contributors = [],
     fileTypes = [],
+    showFilters,
     currentFilters,
   } = organizations;
   const { reportId, reportTitle, runToken } = reports;
@@ -75,13 +78,7 @@ const ReportsHeader = (props) => {
   };
 
   const toggleFilterMenu = () => {
-    if (filterMenu.current) {
-      if (filterMenu.current.classList.contains('is-hidden')) {
-        filterMenu.current.classList.remove('is-hidden');
-      } else {
-        filterMenu.current.classList.add('is-hidden');
-      }
-    }
+    dispatch(toggleFilters(!showFilters));
   };
 
   return (
@@ -104,14 +101,14 @@ const ReportsHeader = (props) => {
               <span className="icon">
                 <FontAwesomeIcon icon="filter" />
               </span>
-              <span>Filter report</span>
+              <span>{(showFilters) ? 'Hide' : 'Show'} filters</span>
             </button>
             <a href='#' onClick={handlePdfDownload} aria-label="Download"><FontAwesomeIcon icon="cloud-download-alt" className="is-size-4 has-text-black" /></a>
           </div>
         </div>
       </nav>
 
-      <div className="columns is-marginless has-background-white-ter is-hidden" ref={filterMenu}>
+      <div className={`columns is-marginless has-background-white-ter ${!showFilters && 'is-hidden'}`} ref={filterMenu}>
         <div className="column is-11 is-offset-1">
           <div className="columns">
             <div className="column">
