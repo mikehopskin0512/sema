@@ -1,0 +1,14 @@
+# ---------- Base ----------
+FROM python:alpine3.12 AS base
+
+RUN apk --update add git
+
+RUN mkdir /src
+WORKDIR /src
+
+COPY get_repo.py ./
+
+RUN mkdir -p ./customer-repos
+
+# Run our script, which expects at least one git repo url
+CMD [ "./get_repo.py", "$REPO_OPTS" ]
