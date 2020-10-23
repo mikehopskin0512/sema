@@ -4,17 +4,17 @@ import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
 
 export const create = async (invitation) => {
-  const {
-    recipient, orgId, orgName,
-    sender, senderName,
-  } = invitation;
-
-  // Generate token and expiration data (2 weeks from now)
-  const token = await generateToken();
-  const now = new Date();
-  const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
-
   try {
+    const {
+      recipient, orgId, orgName,
+      sender, senderName,
+    } = invitation;
+
+    // Generate token and expiration data (2 weeks from now)
+    const token = await generateToken();
+    const now = new Date();
+    const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
+
     const newInvite = new Invitation({
       recipient,
       orgId,
