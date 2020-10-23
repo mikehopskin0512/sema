@@ -36,7 +36,7 @@ export const createInvite = (invitationData, token) => async (dispatch) => {
   const { recipient } = invitationData;
   try {
     dispatch(requestCreateInvite());
-    const payload = await postInvite({ invitationData }, token);
+    const payload = await postInvite({ invitation: invitationData }, token);
     const { data: { invitation = {} } } = payload;
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
