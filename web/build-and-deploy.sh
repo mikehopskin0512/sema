@@ -13,7 +13,7 @@ VERSION=latest
 aws configure set default.region us-east-1
 
 # Authenticate against our Docker registry
-eval $(aws --profile sema-terraform ecr get-login --no-include-email)
+aws --profile sema-terraform ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
 # Build and push the image
 echo "Building image..."
 docker build -f $DOCKER_FILE -t $NAME:$VERSION .
