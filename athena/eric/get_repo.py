@@ -19,7 +19,7 @@ import os
 import argparse
 import logging
 import subprocess
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 import errno
 
 
@@ -63,7 +63,7 @@ def get_repo_auth_uri(config):
     if config.repo_username and config.repo_password:
         url = url._replace(
             netloc="{}:{}@{}".format(
-                config.repo_username, config.repo_password, url.hostname
+                config.repo_username, quote(config.repo_password), url.hostname
             )
         )
     return url.geturl()

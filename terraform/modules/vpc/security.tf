@@ -26,8 +26,8 @@ resource "aws_security_group" "public" {
   }
 
   tags = {
-    Name = "${var.env}-public-sg"
-    Env  = var.env
+    Name      = "${var.env}-public-sg"
+    Env       = var.env
     Terraform = true
   }
 }
@@ -52,6 +52,13 @@ resource "aws_security_group" "private" {
     cidr_blocks = [aws_vpc.main.cidr_block]
   }
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["10.0.0.90/32"]
+  }
+
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -60,8 +67,8 @@ resource "aws_security_group" "private" {
   }
 
   tags = {
-    Name = "${var.env}-private-sg"
-    Env  = var.env
+    Name      = "${var.env}-private-sg"
+    Env       = var.env
     Terraform = true
   }
 }
@@ -87,8 +94,8 @@ resource "aws_security_group" "vpn" {
   }
 
   tags = {
-    Name = "${var.env}-vpn-sg"
-    Env  = var.env
+    Name      = "${var.env}-vpn-sg"
+    Env       = var.env
     Terraform = true
   }
 }

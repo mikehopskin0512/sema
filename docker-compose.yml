@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   web:
     image: web-dev-i
@@ -6,10 +6,10 @@ services:
       context: web/
       dockerfile: ../.docker/web/Dockerfile.dev
     ports:
-     - "3000:3000"
+      - "3000:3000"
     volumes:
-     - ./web:/usr/app
-     - /usr/app/node_modules
+      - ./web:/usr/app
+      - /usr/app/node_modules
     container_name: phoenix.web.sema.local
   apollo:
     image: apollo-dev-i
@@ -17,26 +17,35 @@ services:
       context: apollo/
       dockerfile: ../.docker/apollo/Dockerfile.dev
     ports:
-     - "3001:3001"
+      - "3001:3001"
     volumes:
-     - ./apollo:/usr/app
-     - /usr/app/node_modules
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
     depends_on:
-     - mongodb
+      - mongodb
     container_name: phoenix.apollo.sema.local
+  eric:
+    image: eric-dev-i
+    command: ./get_repo.py ${REPO} --org_name ${ORG} --repo_username ${USERNAME} --repo_password ${PASSWORD}
+    build:
+      context: athena/eric/
+      dockerfile: ../../.docker/athena/eric/Dockerfile.prod
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.eric.sema.local
   mongodb:
     image: mongo
     ports:
-     - "27017:27017"
+      - "27017:27017"
     volumes:
-     - ~/docker/volumes/mongodb:/data/db
+      - ~/docker/volumes/mongodb:/data/db
     container_name: phoenix.mongodb.sema.local
   pg:
     image: postgres:11
     ports:
-     - "5432:5432"
+      - "5432:5432"
     volumes:
-     - ~/docker/volumes/postgres:/var/lib/postgresql/data/
+      - ~/docker/volumes/postgres:/var/lib/postgresql/data/
     container_name: phoenix.pg.sema.local
 networks:
   default:
