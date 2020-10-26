@@ -31,6 +31,9 @@ const Reports = () => {
     }
   }, [dispatch, spaceId, auth.token]);
 
+  // For QA of orgs
+  const { user: { organizations = [] } = {} } = auth;
+
   const reportsStuff = reportList.map((report) => (
     <p key={report.token}><Link href={`/reports/${report.token}`}><a title="Test report">{report.name}</a></Link></p>
   ));
@@ -44,6 +47,8 @@ const Reports = () => {
           <br />
           <h2 className="subtitle"><strong>Dynamic reports from Mode</strong></h2>
           {reportsStuff}
+          <br /><br />
+          <p>Organizations QA: {JSON.stringify(organizations[0], null, 2)}</p>
         </div>
       </section>
     </div>
