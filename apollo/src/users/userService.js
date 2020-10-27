@@ -182,7 +182,7 @@ export const validateLogin = async (username = '', password) => {
   return (payload);
 };
 
-export const initiatePasswordReset = async (username) => {
+export const initiatePasswordReset = async (username = '') => {
   // Token expires 12 hours from now
   const token = await generateToken();
   const now = new Date();
@@ -190,7 +190,7 @@ export const initiatePasswordReset = async (username) => {
 
   try {
     const query = User.findOneAndUpdate(
-      { username },
+      { username: username.toLowerCase() },
       { $set: { resetToken: token, resetExpires } },
       { new: true },
     );

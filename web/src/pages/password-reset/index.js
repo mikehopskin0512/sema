@@ -71,7 +71,7 @@ export const Confirmation = (props) => {
     <div>
       <div className="title-topper mt-70 mb-20" />
       <h1 className="title is-spaced">Reset Password Link</h1>
-      <p>We have sent a reset password email to {emailSubmitted ? <strong>{emailSubmitted}</strong> : 'your email'}.</p>
+      <p>If an account exists with {emailSubmitted ? <strong>{emailSubmitted}</strong> : 'your email'}, you&apos;ll receive an email.</p>
       <p>Please follow the instructions within to reset your password.</p>
       <br />
       <Link href="/login"><a className="button is-primary">Return to Login</a></Link>
