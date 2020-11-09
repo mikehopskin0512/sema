@@ -5,6 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Github PEM file
+config/*.pem
+
 # Runtime data
 pids
 *.pid
