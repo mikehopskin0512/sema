@@ -4,6 +4,7 @@ import { autoIndex } from '../config';
 const organizationSchema = mongoose.Schema({
   orgName: String,
   slug: { type: String, unique: true },
+  legacyId: String,
 }, { timestamps: true });
 
 organizationSchema.set('autoIndex', autoIndex);

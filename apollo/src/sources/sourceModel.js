@@ -3,7 +3,7 @@ import { autoIndex } from '../config';
 
 const sourcesSchema = new mongoose.Schema({
   orgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true },
-  sourceId: { type: String, required: true },
+  externalSourceId: { type: String, required: true },
   type: { type: String, required: true, enum: ['github', 'bitbucket', 'direct'] },
 }, { timestamps: true });
 

@@ -1,13 +1,11 @@
-import * as fs from 'fs';
 import { Router } from 'express';
-import { github, version } from '../config';
-
-import {
-  create, findByOrg,
-} from './sourceService';
-
+import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+
+import {
+  create, find, findByOrg, fetchRepositoriesGithub,
+} from './sourceService';
 
 const route = Router();
 
@@ -41,6 +39,29 @@ export default (app, passport) => {
 
       return res.status(201).send({
         sources,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:sourceId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { sourceId } = req.params;
+
+    try {
+      const source = await find(sourceId);
+      const { externalSourceId, type } = source;
+
+      let repositories = [];
+      if (type === 'github') {
+        repositories = await fetchRepositoriesGithub(externalSourceId);
+      }
+
+      if (!repositories) { throw new errors.NotFound('No repositories found for this source'); }
+
+      return res.status(201).send({
+        repositories,
       });
     } catch (error) {
       logger.error(error);

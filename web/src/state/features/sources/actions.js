@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getSources, postSource } from './api';
+import { getSources, getSourceRepos, postSource } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -32,6 +32,20 @@ const requestFetchSourcesError = (errors) => ({
   errors,
 });
 
+const requestFetchSourceRepos = () => ({
+  type: types.REQUEST_FETCH_SOURCE_REPOS,
+});
+
+const requestFetchSourceReposSuccess = (repositories) => ({
+  type: types.REQUEST_FETCH_SOURCE_REPOS_SUCCESS,
+  repositories,
+});
+
+const requestFetchSourceReposError = (errors) => ({
+  type: types.REQUEST_FETCH_SOURCE_REPOS_ERROR,
+  errors,
+});
+
 export const createSource = (sourceData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateSource());
@@ -60,5 +74,20 @@ export const fetchSources = (orgId, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchSourcesError(errMessage));
+  }
+};
+
+export const fetchSourceRepos = (sourceId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSourceRepos());
+    const payload = await getSourceRepos(sourceId, token);
+    const { data: { repositories = [] } } = payload;
+
+    dispatch(requestFetchSourceReposSuccess(repositories));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFetchSourceReposError(errMessage));
   }
 };
