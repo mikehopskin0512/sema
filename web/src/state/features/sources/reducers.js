@@ -4,6 +4,8 @@ import { upsert } from '../../../utils';
 const initialState = {
   isFetching: false,
   data: [],
+  selectedSource: {},
+  selectedSourceRepos: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +39,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: action.sources,
+      selectedSource: action.sources[0], // TEMP - Until selection is avaiable
       error: {},
     };
   case types.REQUEST_FETCH_SOURCES_ERROR:
@@ -44,6 +47,25 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {},
+      error: action.errors,
+    };
+  case types.REQUEST_FETCH_SOURCE_REPOS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_SOURCE_REPOS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      selectedSourceRepos: action.repositories,
+      error: {},
+    };
+  case types.REQUEST_FETCH_SOURCE_REPOS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      selectedSourceRepos: [],
       error: action.errors,
     };
   default:

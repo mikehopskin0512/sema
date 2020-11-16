@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Github PEM file
-config/*.pem
+src/config/*.pem
 
 # Runtime data
 pids

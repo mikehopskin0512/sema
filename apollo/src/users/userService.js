@@ -166,6 +166,11 @@ export const joinOrg = async (userId, org) => {
 export const validateLogin = async (username = '', password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
+  const { password: currentPassword } = user;
+
+  if (currentPassword === null) {
+    throw new errors.NotFound('No password set. Did you sign up via Github?');
+  }
 
   if (!user) {
     throw new errors.NotFound('Username not found');
