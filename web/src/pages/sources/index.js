@@ -166,7 +166,8 @@ const Sources = () => {
 
   // Get org id from user
   const { user: { organizations = [] } = {} } = auth;
-  const { id: orgId } = organizations[0];
+  const [firstOrg = {}] = organizations;
+  const { id: orgId = null } = firstOrg;
 
   // Post source if cb
   useEffect(() => {
@@ -180,7 +181,7 @@ const Sources = () => {
 
   // Fetch sources list
   useEffect(() => {
-    if (auth.token) {
+    if (auth.token && orgId) {
       dispatch(fetchSources(orgId, auth.token));
     }
   }, [dispatch, orgId, auth.token]);
