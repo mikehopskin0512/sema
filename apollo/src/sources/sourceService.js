@@ -1,24 +1,24 @@
-import mongoose from 'mongoose';
-import * as fs from 'fs';
-import { createAppAuth } from '@octokit/auth';
-import { getAppRepos } from '../identity/github/utils';
-import { github } from '../config';
-import Source from './sourceModel';
-import logger from '../shared/logger';
-import errors from '../shared/errors';
+import mongoose from "mongoose";
+import * as fs from "fs";
+import { createAppAuth } from "@octokit/auth";
+import { getAppRepos } from "../identity/github/utils";
+import { github } from "../config";
+import Source from "./sourceModel";
+import logger from "../shared/logger";
+import errors from "../shared/errors";
 
-const { Types: { ObjectId } } = mongoose;
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 export const create = async (source) => {
   try {
-    const {
-      orgId, type,
-    } = source;
+    const { orgId, type } = source;
 
     const query = Source.findOneAndUpdate(
       { orgId, type },
       { $set: source },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
     );
     const updatedSource = await query.exec();
 
@@ -26,7 +26,7 @@ export const create = async (source) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -58,23 +58,25 @@ export const findByOrg = async (orgId) => {
 
 export const fetchRepositoriesGithub = async (externalSourceId) => {
   try {
-    const privateKey = fs.readFileSync(`${process.cwd()}/src/config/github-app.pem`, { encoding: 'utf8' });
+    // const privateKey = fs.readFileSync(`${process.cwd()}/src/config/github-app.pem`, { encoding: 'utf8' });
 
     const auth = createAppAuth({
       clientId: github.clientId,
       clientSecret: github.clientSecret,
       id: github.appId,
       installationId: externalSourceId,
-      privateKey,
+      privateKey: github.privateKey,
     });
 
-    const { token } = await auth({ type: 'installation' });
+    const { token } = await auth({ type: "installation" });
 
     // Note: response from Github contains count, selection and repos array
     const { repositories } = await getAppRepos(token);
 
     if (!repositories) {
-      throw new errors.NotFound(`No repositories found for installationId ${externalSourceId}`);
+      throw new errors.NotFound(
+        `No repositories found for installationId ${externalSourceId}`
+      );
     }
 
     return repositories;
