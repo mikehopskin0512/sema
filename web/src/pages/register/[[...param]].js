@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import jwtDecode from 'jwt-decode';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
@@ -43,8 +44,10 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+  const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
+
   const { invitation = {} } = props;
-  const { recipient } = invitation;
+  const { token: inviteToken, recipient } = invitation;
 
   // If Github login, use that primarily. Fallback to invite recipient.
   // However normal reg will have neither
@@ -57,145 +60,166 @@ const RegistrationForm = (props) => {
   };
 
   return (
-    <div>
-      <div className="title-topper mt-70 mb-20" />
-      <h1 className="title is-spaced">Sign Up</h1>
-      <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="columns">
-          <div className="column is-9">
-            <div className="field is-horizontal">
-              <div className="field-body">
-                <div className="field">
-                  <label className="label">First name</label>
-                  <div className="control">
-                    <input
-                      className={`input ${errors.firstName && 'is-danger'}`}
-                      type="text"
-                      placeholder="Tony"
-                      name="firstName"
-                      defaultValue={firstName}
-                      ref={register({
-                        required: 'First name is required',
-                        maxLength:
-                          { value: 80, message: 'First name must be less than 80 characters' },
-                      })} />
-                  </div>
-                  <p className="help is-danger">{errors.firstName && errors.firstName.message}</p>
-                </div>
-                <div className="field">
-                  <label className="label">Last name</label>
-                  <div className="control">
-                    <input
-                      className={`input ${errors.lastName && 'is-danger'}`}
-                      type="text"
-                      placeholder="Stark"
-                      name="lastName"
-                      defaultValue={lastName}
-                      ref={register({
-                        required: 'Last name is required',
-                        maxLength:
-                          { value: 100, message: 'Last name must be less than 80 characters' },
-                      })} />
-                  </div>
-                  <p className="help is-danger">{errors.lastName && errors.lastName.message}</p>
-                </div>
-              </div>
-            </div>
+    <div className="columns">
+      <div className="column is-9">
+        <div className="title-topper mt-70 mb-20" />
+        {(!hasIdentity) ? (
+          <div>
+            <h1 className="title is-4 is-spaced">Sign Up with your GitHub account</h1>
+            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
             <div className="field">
-              <label className="label">Job title</label>
-              <div className="control">
-                <input
-                  className={`input ${errors.jobTitle && 'is-danger'}`}
-                  type="text"
-                  placeholder="Job title"
-                  name="jobTitle"
-                  ref={register({ required: 'Job title is required' })} />
-              </div>
-              <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
+              <a
+                type="button"
+                className="button is-github"
+                href={`/api/identities/github/${inviteToken}`}>
+                <span className="icon">
+                  <FontAwesomeIcon icon={['fab', 'github']} />
+                </span>
+                <span>Sign up with GitHub</span>
+              </a>
             </div>
-            <div className="field">
-              <label className="label">Business email</label>
-              <div className="control">
-                <input
-                  className={`input ${errors.username && 'is-danger'}`}
-                  type="email"
-                  placeholder="tony@starkindustries.com"
-                  name="username"
-                  defaultValue={initialEmail}
-                  ref={register({
-                    required: 'Email is required',
-                    pattern:
-                      { value: /^\S+@\S+$/i, message: 'Invaild email format' },
-                  })} />
+            <div className="is-divider" data-content="OR" />
+            <h2 className="title is-4 is-spaced">Or sign up with your email</h2>
+            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
+          </div>
+        ) : (
+          <div>
+            <h1 className="title is-4 is-spaced">Complete your profile information</h1>
+            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
+          </div>
+        )}
+        <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
+          <div className="field is-horizontal">
+            <div className="field-body">
+              <div className="field">
+                <label className="label">First name</label>
+                <div className="control">
+                  <input
+                    className={`input ${errors.firstName && 'is-danger'}`}
+                    type="text"
+                    placeholder="Tony"
+                    name="firstName"
+                    defaultValue={firstName}
+                    ref={register({
+                      required: 'First name is required',
+                      maxLength:
+                        { value: 80, message: 'First name must be less than 80 characters' },
+                    })} />
+                </div>
+                <p className="help is-danger">{errors.firstName && errors.firstName.message}</p>
               </div>
-              <p className="help is-danger">{errors.username && errors.username.message}</p>
+              <div className="field">
+                <label className="label">Last name</label>
+                <div className="control">
+                  <input
+                    className={`input ${errors.lastName && 'is-danger'}`}
+                    type="text"
+                    placeholder="Stark"
+                    name="lastName"
+                    defaultValue={lastName}
+                    ref={register({
+                      required: 'Last name is required',
+                      maxLength:
+                        { value: 100, message: 'Last name must be less than 80 characters' },
+                    })} />
+                </div>
+                <p className="help is-danger">{errors.lastName && errors.lastName.message}</p>
+              </div>
             </div>
-            { // Hide password field if identity (Github) is present
-              (_.isEmpty(identity)) && (
-                <>
-                  <div className="field is-horizontal">
-                    <div className="field-body">
-                      <div className="field">
-                        <label className="label">Password</label>
-                        <div className="control">
-                          <input
-                            className={`input ${errors.password && 'is-danger'}`}
-                            type="password"
-                            name="password"
-                            ref={register({
-                              required: 'Password is required',
-                              minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-                            })} />
-                        </div>
-                        <p className="help is-danger">{errors.password && errors.password.message}</p>
+          </div>
+          <div className="field">
+            <label className="label">Job title</label>
+            <div className="control">
+              <input
+                className={`input ${errors.jobTitle && 'is-danger'}`}
+                type="text"
+                placeholder="Job title"
+                name="jobTitle"
+                ref={register({ required: 'Job title is required' })} />
+            </div>
+            <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
+          </div>
+          <div className="field">
+            <label className="label">Business email</label>
+            <div className="control">
+              <input
+                className={`input ${errors.username && 'is-danger'}`}
+                type="email"
+                placeholder="tony@starkindustries.com"
+                name="username"
+                defaultValue={initialEmail}
+                ref={register({
+                  required: 'Email is required',
+                  pattern:
+                    { value: /^\S+@\S+$/i, message: 'Invaild email format' },
+                })} />
+            </div>
+            <p className="help is-danger">{errors.username && errors.username.message}</p>
+          </div>
+          { // Hide password field if identity (Github) is present
+            (_.isEmpty(identity)) && (
+              <div>
+                <div className="field is-horizontal">
+                  <div className="field-body">
+                    <div className="field">
+                      <label className="label">Password</label>
+                      <div className="control">
+                        <input
+                          className={`input ${errors.password && 'is-danger'}`}
+                          type="password"
+                          name="password"
+                          ref={register({
+                            required: 'Password is required',
+                            minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                            maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                            pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+                          })} />
                       </div>
-                      <div className="field">
-                        <label className="label">Confirm password</label>
-                        <div className="control">
-                          <input
-                            className={`input ${errors.passwordConfirm && 'is-danger'}`}
-                            type="password"
-                            name="passwordConfirm"
-                            ref={register({
-                              validate: (value) => {
-                                if (value === watch('password')) {
-                                  return true;
-                                }
-                                return 'Passwords do not match';
-                              },
-                            })} />
-                        </div>
-                        <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
+                      <p className="help is-danger">{errors.password && errors.password.message}</p>
+                    </div>
+                    <div className="field">
+                      <label className="label">Confirm password</label>
+                      <div className="control">
+                        <input
+                          className={`input ${errors.passwordConfirm && 'is-danger'}`}
+                          type="password"
+                          name="passwordConfirm"
+                          ref={register({
+                            validate: (value) => {
+                              if (value === watch('password')) {
+                                return true;
+                              }
+                              return 'Passwords do not match';
+                            },
+                          })} />
                       </div>
+                      <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
                     </div>
                   </div>
-                </>
-              )
-            }
+                </div>
+              </div>
+            )
+          }
+          <div className="field">
+            <label className="checkbox">
+              <input
+                type="checkbox"
+                name="terms"
+                ref={register({ required: 'You must accept terms' })} />
+              <span className="is-size-6">
+                &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
+              </span>
+              <p className="help is-danger">{errors.terms && errors.terms.message}</p>
+            </label>
           </div>
-        </div>
-        <div className="field">
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              name="terms"
-              ref={register({ required: 'You must accept terms' })} />
-            <span className="is-size-6">
-              &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
-            </span>
-            <p className="help is-danger">{errors.terms && errors.terms.message}</p>
-          </label>
-        </div>
-        <div className="control">
-          <button
-            type="submit"
-            className="button is-primary">Continue
-          </button>
-        </div>
-      </form>
+          <div className="control">
+            <button
+              type="submit"
+              className="button is-primary">Continue
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
