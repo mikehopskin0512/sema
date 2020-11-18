@@ -22,6 +22,7 @@ import subprocess
 from urllib.parse import urlparse
 import errno
 import csv
+import datetime
 
 class Shell:
     def run(command):
@@ -98,7 +99,7 @@ class Persistence:
         with open(config.proj+'.csv', 'w') as out_file:
             out_writer = csv.writer(out_file, delimiter=',')
             for blame_line in blame_iter:
-                blame_line.update({ 'project_id': config.proj, 'commit_hash': config.commit_hash})
+                blame_line.update({ 'project_id': config.proj, 'commit_hash': config.commit_hash, 'commit_timestamp':config.commit_timestamp })
                 if Persistence.print_header:
                     header = blame_line.keys()
                     out_writer.writerow(header)
@@ -110,7 +111,7 @@ class Persistence:
 
     def print(config, blame_iter):
         for blame_line in blame_iter:
-            blame_line.update({ 'project_id': config.proj, 'commit_hash': config.commit_hash})
+            blame_line.update({ 'project_id': config.proj, 'commit_hash': config.commit_hash, 'commit_timestamp':config.commit_timestamp})
             print(blame_line)
             
 def parse_args():
@@ -147,6 +148,10 @@ def parse_args():
             errno.ENOENT, os.strerror(errno.ENOENT), args.repo_dir)
 
     args.commit_hash = Shell.run(['git', '-C', args.repo_dir, 'rev-parse', 'HEAD']).strip()
+
+    args.commit_timestamp = datetime.datetime.strptime(
+        Shell.run(['git', '-C', args.repo_dir, 'log', '-1', '--format=%cd', '--date=iso', 'HEAD']).strip(),
+        "%Y-%m-%d %H:%M:%S %z") # Wed Nov 18 18:10:15 2020 +0000
 
     args.proj = args.project_id if args.project_id else args.project_name
             
