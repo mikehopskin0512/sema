@@ -25,7 +25,9 @@ export default (app) => {
     res.redirect(url);
   });
 
-  route.get('/cb', async (req, res) => {
+  route.get('/cb/:inviteToken?', async (req, res) => {
+    const { inviteToken } = req.params;
+
     const auth = createOAuthAppAuth({
       clientId: github.clientId,
       clientSecret: github.clientSecret,
@@ -78,6 +80,12 @@ export default (app) => {
     }
 
     const identityToken = await createIdentityToken(identity);
-    return res.redirect(`${orgDomain}/register?token=${identityToken}`);
+
+    // Build redirect based on inviteToken
+    const registerRedirect = (inviteToken)
+      ? `${orgDomain}/register/${inviteToken}?token=${identityToken}`
+      : `${orgDomain}/register?token=${identityToken}`;
+
+    return res.redirect(registerRedirect);
   });
 };
