@@ -37,11 +37,17 @@
         "name": "ALLOWED_ORIGIN",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/cors"
       }, {
+        "name": "GITHUB_APP_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/app-id"
+      }, {
         "name": "GITHUB_CLIENT_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-id"
       }, {
         "name": "GITHUB_CALLBACK_URL",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/redirect"
+      }, {
+        "name": "GITHUB_PRIVATE_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/private-key"
       }, {
         "name": "MODE_ANALYTICS_ACCESS_KEY",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mode/access-key"
