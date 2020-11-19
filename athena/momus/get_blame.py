@@ -135,17 +135,18 @@ def parse_args():
                         "Specifies the id of the project to ingest")
 
     args = parser.parse_args()
-                               
+
+            
+    if not os.path.exists(args.repo_dir):
+        print("Error: the repo directory does not exist, expecting something like /src/customer-repos/Demo/locoGP")
+        raise FileNotFoundError(
+            errno.ENOENT, os.strerror(errno.ENOENT), args.repo_dir)
+        
     # if no project or org name set, work it out from the URL
     if not args.org_name:
         args.org_name = urlparse(args.repo_dir).path.split(os.sep)[-1]
     if not args.project_name:
         args.project_name = urlparse(args.repo_dir).path.split(os.sep)[-2]
-        
-    if not os.path.exists(args.repo_dir):
-        print("Error: the repo directory does not exist, expecting something like /src/customer-repos/Demo/locoGP")
-        raise FileNotFoundError(
-            errno.ENOENT, os.strerror(errno.ENOENT), args.repo_dir)
 
     args.commit_hash = Shell.run(['git', '-C', args.repo_dir, 'rev-parse', 'HEAD']).strip()
 
