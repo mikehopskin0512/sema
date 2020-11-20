@@ -26,7 +26,7 @@ module.exports = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.GITHUB_CALLBACK_URL,
     appId: process.env.GITHUB_APP_ID,
-    privateKey: process.env.GITHUB_PRIVATE_KEY,
+    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, "\n"),
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
