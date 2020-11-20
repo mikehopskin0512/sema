@@ -68,21 +68,22 @@ export const fetchRepositoriesGithub = async (externalSourceId) => {
       privateKey: github.privateKey,
     });
 
-    const { token } = await auth({ type: "installation" });
+    const { token } = await auth({ type: 'installation' });
 
     // Note: response from Github contains count, selection and repos array
     const { repositories } = await getAppRepos(token);
 
     if (!repositories) {
       throw new errors.NotFound(
-        `No repositories found for installationId ${externalSourceId}`
+        `No repositories found for installationId ${externalSourceId}`,
       );
     }
 
     return repositories;
   } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
+    // Do not return error, instead throw
+    throw new errors.BadRequest(
+      `Error fetching repositories for installationId ${externalSourceId}`,
+    );
   }
 };
