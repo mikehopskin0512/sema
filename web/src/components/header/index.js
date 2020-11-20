@@ -96,6 +96,7 @@ const Header = () => {
             <div className="navbar-start is-hidden-mobile is-hidden-tablet-only">
               <Link href="/reports"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Dashboard</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Projects</a></Link>
+              <Link href="/repositories"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Repositories</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Teams</a></Link>
               <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Reports</a></Link>
             </div>
@@ -103,6 +104,7 @@ const Header = () => {
             <div className="navbar-start is-hidden-desktop">
               <Link href="/reports"><a className="navbar-item" onClick={toggleHamburger}>Dashboard</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Projects</a></Link>
+              <Link href="/repositories"><a className="navbar-item" onClick={toggleHamburger}>Repositories</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Teams</a></Link>
               <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Reports</a></Link>
               <hr className="navbar-divider" />

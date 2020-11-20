@@ -71,7 +71,7 @@ const RegistrationForm = (props) => {
               <a
                 type="button"
                 className="button is-github"
-                href={`/api/identities/github/${inviteToken}`}>
+                href={`/api/identities/github/${inviteToken || ''}`}>
                 <span className="icon">
                   <FontAwesomeIcon icon={['fab', 'github']} />
                 </span>
