@@ -237,9 +237,9 @@ const Sources = () => {
   return (
     <div>
       <section className="section">
-        <div className="container">
+        <div className="container" style={{ width: '75%' }}>
           <div className="title-topper mt-70 mb-20" />
-          <h1 className="title">Add code from GitHub</h1>
+          <h1 className="title">Add repositories from GitHub</h1>
 
           {
             (Object.keys(firstSource).length === 0) ? (
@@ -253,7 +253,7 @@ const Sources = () => {
                   <span className="icon">
                     <FontAwesomeIcon icon={['fab', 'github']} />
                   </span>
-                  <span>Add code from GitHub</span>
+                  <span>Add repositories from GitHub</span>
                 </a>
               </div>
             )
