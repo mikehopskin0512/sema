@@ -56,17 +56,10 @@ export default (app, passport) => {
         throw new errors.BadRequest('User create error');
       }
 
-      // Send verification email
-      const message = {
-        recipient: newUser.username,
-        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}`,
-        templateName: 'verifyUser',
-        firstName: newUser.firstName,
-      };
-      await sendEmail(message);
-
       // If invitation, call joinOrg function
+      let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
+        hasInvite = true;
         const { _id: userId } = newUser;
         const { orgId, orgName, sender, token } = invitation;
         const org = { id: orgId, orgName, invitedBy: sender };
@@ -78,6 +71,15 @@ export default (app, passport) => {
         // Redeem invite
         await redeemInvite(token, userId);
       }
+
+      // Send verification email
+      const message = {
+        recipient: newUser.username,
+        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}&invite=${hasInvite}`,
+        templateName: 'verifyUser',
+        firstName: newUser.firstName,
+      };
+      await sendEmail(message);
 
       delete newUser.password;
       return res.status(201).send({

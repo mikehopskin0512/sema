@@ -3,7 +3,7 @@ import { autoIndex } from '../config';
 
 const organizationSchema = mongoose.Schema({
   orgName: String,
-  slug: { type: String, unique: true },
+  slug: { type: String, unique: true, lowercase: true },
   legacyId: String,
 }, { timestamps: true });
 
