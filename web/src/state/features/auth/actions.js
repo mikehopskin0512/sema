@@ -198,13 +198,8 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
     const { user: newUser } = jwtDecode(jwtToken) || {};
     dispatch(registrationSuccess(jwtToken, newUser));
 
-    // If invitation, joinOrg and redirect to /verify
-    if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
-      Router.push('/register/verify');
-    } else {
-      // Send user to verification page after registration
-      Router.push('/register/organization');
-    }
+    // Send user to /verify landing page while verification email is sent
+    Router.push('/register/verify');
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -219,8 +214,8 @@ export const joinOrg = (userId, org, token) => async (dispatch) => {
     dispatch(requestJoinOrg());
     await postUserOrg(userId, { org }, token);
 
-    // Send user to verification page after registration & joinOrg
-    Router.push('/register/verify');
+    // Send user to reports page after registration & joinOrg
+    Router.push('/reports');
 
     dispatch(requestJoinOrgSuccess());
   } catch (error) {

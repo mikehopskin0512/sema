@@ -44,25 +44,33 @@ const ResetMessage = (props) => {
   );
 };
 
-const Confirmation = () => (
-  <div className="columns is-centered">
-    <div className="column">
-      <h2 className="title is-size-5">
-        Account verification successful
-      </h2>
-      <p>We have verified your email and your account is fully activated</p>
-      <br />
-      <Link href="/reports"><a className="button is-primary">Continue to dashboard</a></Link>
+const Confirmation = (props) => {
+  const { hasInvite } = props;
+  return (
+    <div className="columns is-centered">
+      <div className="column">
+        <h2 className="title is-size-5">
+          Account verification successful
+        </h2>
+        <p>We have verified your email and your account is fully activated {hasInvite}</p>
+        <br />
+        {(hasInvite)
+          ? <Link href="/reports"><a className="button is-primary">Continue to dashboard</a></Link>
+          : <Link href="/register/organization"><a className="button is-primary">Setup your organization</a></Link>}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const UserVerify = () => {
   const dispatch = useDispatch();
   // Get token from params
   const {
-    query: { token: verifyToken },
+    query: { token: verifyToken, invite },
   } = useRouter();
+
+  // Convert invite querystring to boolean
+  const hasInvite = (invite === 'true');
 
   // Import state vars
   const { alerts, auth } = useSelector(
@@ -105,7 +113,7 @@ const UserVerify = () => {
                 <h1 className="title is-spaced">Account Verification</h1>
                 <div className="subtitle is-6">
                   {(isVerified)
-                    ? <Confirmation />
+                    ? <Confirmation hasInvite={hasInvite} />
                     : <ResetMessage handleClick={handleClick} username={username} />}
                 </div>
               </div>
@@ -115,6 +123,10 @@ const UserVerify = () => {
       </section>
     </div>
   );
+};
+
+Confirmation.propTypes = {
+  hasInvite: PropTypes.bool.isRequired,
 };
 
 ResetMessage.propTypes = {

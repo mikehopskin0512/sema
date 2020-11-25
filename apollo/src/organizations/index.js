@@ -36,8 +36,9 @@ export default (app, passport) => {
 
     try {
       if (orgId) {
-        org = await findBySlug(slug);
-        if (!org) { throw new errors.NotFound('Organization ID not found'); }
+        // For future use
+        // org = await findById(orgId);
+        // if (!org) { throw new errors.NotFound('Organization ID not found'); }
       } else if (slug) {
         org = await findBySlug(slug);
         if (!org) { throw new errors.NotFound('Organization slug not found'); }

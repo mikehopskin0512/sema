@@ -48,7 +48,7 @@ const JoinOrg = () => {
   };
 
   const generateSlug = (orgName) => {
-    const slugifiedName = slugify(orgName.currentTarget.value || '');
+    const slugifiedName = slugify(orgName.currentTarget.value || '').toLowerCase();
     setSlug(slugifiedName);
   };
 
