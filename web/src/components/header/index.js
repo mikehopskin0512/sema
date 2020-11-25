@@ -32,6 +32,10 @@ const Header = () => {
   const [currentOrg = {}] = organizations;
   const { isAdmin = false } = currentOrg;
 
+  const orgMenuList = organizations.map((org) => (
+    <Link href="/reports"><a className="navbar-item has-text-white">{org.orgName}</a></Link>
+  ));
+
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
       if (menu.current.classList.contains('is-active')) {
@@ -93,12 +97,12 @@ const Header = () => {
         {(token && isVerified) && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
-            <div className="navbar-start is-hidden-mobile is-hidden-tablet-only">
-              <Link href="/reports"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Dashboard</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Projects</a></Link>
-              <Link href="/repositories"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Repositories</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Teams</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white is-uppercase is-family-monospace" onClick={toggleHamburger}>Reports</a></Link>
+            <div className="navbar-start is-hidden-mobile is-hidden-tablet-only" style={{ flexGrow: 1, justifyContent: 'center' }}>
+              <Link href="/reports"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Dashboard</a></Link>
+              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Projects</a></Link>
+              <Link href="/repositories"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Repositories</a></Link>
+              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Teams</a></Link>
+              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Reports</a></Link>
             </div>
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
@@ -121,17 +125,30 @@ const Header = () => {
             <div className="navbar-end is-hidden-mobile is-hidden-tablet-only">
               {/* Right icon menu - desktop */}
               <div className="navbar-item has-dropdown" ref={userMenu}>
-                <div className="navbar-dropdown is-right">
-                  <Link href="/"><a className="navbar-item" onClick={toggleUserMenu}>User menu item</a></Link>
-                  <Link href="/"><a className="navbar-item" onClick={toggleUserMenu}>User menu item</a></Link>
-                  <Link href="/"><a className="navbar-item" onClick={toggleUserMenu}>User menu item</a></Link>
-                  <hr className="navbar-divider" />
+                <div className="navbar-dropdown is-right has-background-primary">
+                  <div className="nested navbar-item dropdown">
+                    <div className="dropdown-trigger">
+                      <a className="has-text-white" aria-haspopup="true" aria-controls="dropdown-menu">
+                        Switch Organization
+
+                      </a>
+                    </div>
+                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                      <div className="navbar-dropdown has-background-primary is-right">
+                        {orgMenuList}
+                        <hr className="navbar-divider has-background-grey-lighter" />
+                        <Link href="/register/organization"><a className="navbar-item has-text-white">Create New Organization</a></Link>
+                      </div>
+                    </div>
+                  </div>
+                  <Link href="/"><a className="navbar-item has-text-white" onClick={toggleUserMenu}>My Account</a></Link>
+                  <hr className="navbar-divider has-background-grey-lighter" />
                   {isAdmin &&
-                    <Link href="/admin"><a className="navbar-item" onClick={toggleUserMenu}>Admin Panel</a></Link>
+                    <Link href="/admin"><a className="navbar-item has-text-white" onClick={toggleUserMenu}>Admin Panel</a></Link>
                   }
                   <span
                     role="button"
-                    className="navbar-item"
+                    className="navbar-item has-text-white"
                     style={{ cursor: 'pointer' }}
                     onClick={handleLogout}
                     tabIndex={0}>Logout
@@ -140,9 +157,10 @@ const Header = () => {
                 {/* User menu */}
                 <button
                   type="button"
-                  className="button user-menu"
+                  className="button user-menu is-primary has-text-white"
                   onClick={toggleUserMenu}
                   ref={userMenu}>
+                  <span className="mr-10">{firstName}</span>
                   <Avatar
                     className="mr-10"
                     name={fullName}
@@ -150,10 +168,7 @@ const Header = () => {
                     // githubHandle={githubHandle || null}
                     size="30"
                     round
-                    color="#4974a5"
                     textSizeRatio={2.5} />
-                  <span className="mr-10 is-uppercase"><strong>{fullName}</strong></span>
-                  <FontAwesomeIcon icon={['fas', 'angle-down']} style={{ fontSize: '24px' }} />
                 </button>
               </div>
             </div>
