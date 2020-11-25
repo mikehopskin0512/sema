@@ -141,6 +141,7 @@ function Table({ columns, data, auth }) {
       <button
         type="button"
         className="button is-primary"
+        disabled={Object.keys(selectedRowIds).length === 0}
         onClick={addRepos}>
         <span>Add selected repositories and continue</span>
         <span className="icon is-small">
