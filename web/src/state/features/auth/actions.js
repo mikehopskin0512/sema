@@ -154,9 +154,10 @@ const requestJoinOrg = () => ({
   type: types.REQUEST_JOIN_ORG,
 });
 
-const requestJoinOrgSuccess = (organization) => ({
+const requestJoinOrgSuccess = (token, updatedUser) => ({
   type: types.REQUEST_JOIN_ORG_SUCCESS,
-  organization,
+  token,
+  user: updatedUser,
 });
 
 const requestJoinOrgError = (errors) => ({
@@ -212,12 +213,14 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
 export const joinOrg = (userId, org, token) => async (dispatch) => {
   try {
     dispatch(requestJoinOrg());
-    await postUserOrg(userId, { org }, token);
+    const payload = await postUserOrg(userId, { org }, token);
+    const { data: { jwtToken } } = payload;
+    const { user: updatedUser } = jwtDecode(jwtToken) || {};
 
     // Send user to reports page after registration & joinOrg
     Router.push('/reports');
 
-    dispatch(requestJoinOrgSuccess());
+    dispatch(requestJoinOrgSuccess(jwtToken, updatedUser));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

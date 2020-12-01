@@ -149,13 +149,14 @@ export const findByOrgId = async (orgId) => {
 export const joinOrg = async (userId, org) => {
   const { id: orgId } = org;
   try {
-    const query = User.updateOne(
+    const query = User.findOneAndUpdate(
       { _id: new ObjectId(userId), 'orgaizations.id': { $ne: orgId } },
       { $addToSet: { organizations: org } },
+      { new: true },
     );
 
-    await query.exec();
-    return true;
+    const updatedUser = await query.exec();
+    return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
