@@ -14,7 +14,7 @@ const createAndJoinOrg = (userId, org, token) => async (dispatch) => {
     }
 
     // Update user record with new organization id
-    const userOrg = { id: orgId, orgName };
+    const userOrg = { id: orgId, orgName, isAdmin: true };
     await dispatch(actions.joinOrg(userId, userOrg, token));
   } catch (err) {
     const error = new Error(err);

@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
-import * as fs from "fs";
-import { createAppAuth } from "@octokit/auth";
-import { getAppRepos } from "../identity/github/utils";
-import { github } from "../config";
-import Source from "./sourceModel";
-import logger from "../shared/logger";
-import errors from "../shared/errors";
+import mongoose from 'mongoose';
+import { createAppAuth } from '@octokit/auth';
+import { getAppRepos } from '../identity/github/utils';
+import { github } from '../config';
+import Source from './sourceModel';
+import logger from '../shared/logger';
+import errors from '../shared/errors';
 
 const {
   Types: { ObjectId },
@@ -18,7 +17,7 @@ export const create = async (source) => {
     const query = Source.findOneAndUpdate(
       { orgId, type },
       { $set: source },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, new: true, setDefaultsOnInsert: true },
     );
     const updatedSource = await query.exec();
 

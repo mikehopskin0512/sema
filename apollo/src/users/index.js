@@ -51,7 +51,7 @@ export default (app, passport) => {
     }
 
     try {
-      const newUser = await create(user);
+      let newUser = await create(user);
       if (!newUser) {
         throw new errors.BadRequest('User create error');
       }
@@ -67,6 +67,9 @@ export default (app, passport) => {
         if (!invitedUser) {
           throw new errors.BadRequest('Org join error');
         }
+
+        // Update newUser with invitedUser (containing org data)
+        newUser = invitedUser;
 
         // Redeem invite
         await redeemInvite(token, userId);
@@ -115,13 +118,14 @@ export default (app, passport) => {
     const { org } = req.body;
 
     try {
-      const newUser = await joinOrg(userId, org);
-      if (!newUser) {
+      const updatedUser = await joinOrg(userId, org);
+      if (!updatedUser) {
         throw new errors.BadRequest('Org join error');
       }
 
       return res.status(200).send({
         response: 'Org joined successfully',
+        jwtToken: await createAuthToken(updatedUser),
       });
     } catch (error) {
       logger.error(error);
