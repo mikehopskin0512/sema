@@ -1,7 +1,6 @@
 import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';

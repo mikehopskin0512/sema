@@ -86,17 +86,20 @@ export const authenticate = (username, password) => async (dispatch) => {
     if (user) {
       const { _id: userId, isVerified } = user;
       const orgId = null; // TEMP: Until orgs are linked up
-      dispatch(authenticateSuccess(jwtToken));
-      dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
 
-      // Only allow user login if isVerified
+      // Only allow store token if isVerified
       if (isVerified) {
+        dispatch(authenticateSuccess(jwtToken));
         Router.push('/reports');
       } else {
+        // Auth error clears token but preserves user object
         dispatch(authenticateError({ errors: 'User is not verfied' }));
         Router.push('/register/verify');
       }
+
+      // Hydrate user regardless of isVerified
+      dispatch(hydrateUser(user));
+      logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
