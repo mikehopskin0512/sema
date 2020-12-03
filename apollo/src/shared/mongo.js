@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
-import fs from "fs";
-import logger from "./logger";
-import errors from "./errors";
-import { mongooseUri } from "../config";
+import mongoose from 'mongoose';
+import fs from 'fs';
+import logger from './logger';
+import errors from './errors';
+import { mongooseUri } from '../config';
 
 const options = {
   useUnifiedTopology: true,
@@ -19,24 +19,24 @@ mongoose.Promise = global.Promise;
 // }
 
 // Connect to DB
-mongoose.set("useFindAndModify", false);
+mongoose.set('useFindAndModify', false);
 mongoose.connect(mongooseUri, options);
 
-mongoose.connection.on("connected", () => {
+mongoose.connection.on('connected', () => {
   logger.info(`Mongoose connection open to ${mongooseUri}`);
 });
 
-mongoose.connection.on("error", (err) => {
+mongoose.connection.on('error', (err) => {
   logger.error(`Mongoose connection error: ${err}`);
 });
 
-mongoose.connection.on("disconnected", () => {
-  logger.info("Mongoose connection disconnected");
+mongoose.connection.on('disconnected', () => {
+  logger.info('Mongoose connection disconnected');
 });
 
-process.on("SIGINT", () => {
+process.on('SIGINT', () => {
   mongoose.connection.close(() => {
-    logger.info("Mongoose connection disconnected through app termination");
+    logger.info('Mongoose connection disconnected through app termination');
     process.exit(0);
   });
 });
@@ -44,7 +44,7 @@ process.on("SIGINT", () => {
 const mongoService = (() => {
   const _verify = (done) => {
     if (mongoose.connection.readyState === 0) {
-      const err = new errors.InternalServer("Not connected to MongoDB");
+      const err = new errors.InternalServer('Not connected to MongoDB');
       logger.error(err);
       done(err);
       return false;

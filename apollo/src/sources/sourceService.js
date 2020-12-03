@@ -57,8 +57,6 @@ export const findByOrg = async (orgId) => {
 
 export const fetchRepositoriesGithub = async (externalSourceId) => {
   try {
-    // const privateKey = fs.readFileSync(`${process.cwd()}/src/config/github-app.pem`, { encoding: 'utf8' });
-
     const auth = createAppAuth({
       clientId: github.clientId,
       clientSecret: github.clientSecret,

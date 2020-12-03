@@ -16,6 +16,18 @@
     "environment": [],
     "secrets": [
       {
+        "name": "AMAZON_ACCESS_KEY_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/access-key"
+      }, {
+        "name": "AMAZON_SECRET_ACCESS_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/access-secret"
+      }, {
+        "name": "AMAZON_SNS_CROSS_REGION_TOPIC",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/sns/topic/cross-region-replication"
+      }, {
+        "name": "AMAZON_SNS_ORG_REPLICATION_FILTER",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/sns/topic/filter/org-replication"
+      }, {
         "name": "GITHUB_CLIENT_SECRET",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-secret"
       }, {
