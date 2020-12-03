@@ -2,13 +2,14 @@ import { Pool } from 'pg';
 import Organization from './organizationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import publish from '../shared/sns';
 
+const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
+// const snsFilter = process.env.AMAZON_SNS_ORG_REPLICATION_FILTER;
 const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION }); // e.g. postgres://user:password@host:5432/database
 
 export const create = async (org) => {
-  const {
-    orgName = '', slug = '',
-  } = org;
+  const { orgName = '', slug = '' } = org;
 
   try {
     const newOrg = new Organization({
@@ -20,7 +21,7 @@ export const create = async (org) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -83,8 +84,23 @@ const selectFileTypesByOrg = async (orgId) => {
   }
 };
 
+const sendNotification = async (org) => {
+  if (!snsTopic) return false;
+
+  const snsFilter = {
+    action: {
+      DataType: 'String',
+      StringValue: 'createOrg',
+    },
+  };
+
+  const result = await publish(snsTopic, org, snsFilter);
+  return result;
+};
+
 export {
   selectRepositoriesByOrg,
   selectContributors,
   selectFileTypesByOrg,
+  sendNotification,
 };

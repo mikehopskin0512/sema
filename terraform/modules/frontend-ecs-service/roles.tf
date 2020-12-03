@@ -48,3 +48,22 @@ resource "aws_iam_role_policy_attachment" "param_store_policy" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.param_store_policy.arn
 }
+
+# resource "aws_iam_role_policy" "sns_policy" {
+#   name   = "${var.env}-${var.service_name}-sns-policy"
+#   role   = aws_iam_role.ecs_task_execution_role.name
+#   policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": [
+#         "sns:Publish"
+#       ],
+#       "Effect": "Allow",
+#       "Resource": "*"
+#     }
+#   ]
+# }
+# EOF
+# }

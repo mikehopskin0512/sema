@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg,
+  createMany, findByOrg, sendNotification,
 } from './repositoriesService';
 
 const route = Router();
@@ -20,6 +20,8 @@ export default (app, passport) => {
       if (!newRepositories) {
         throw new errors.BadRequest('Repositories create error');
       }
+
+      await sendNotification(newRepositories);
 
       return res.status(201).send({
         repositories: newRepositories,

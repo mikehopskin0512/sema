@@ -1,6 +1,9 @@
 import Repositories from './repositoryModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import publish from '../shared/sns';
+
+const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
 export const createMany = async (repositories) => {
   try {
@@ -31,4 +34,18 @@ export const findByOrg = async (orgId) => {
     const error = new errors.NotFound(err);
     return error;
   }
+};
+
+export const sendNotification = async (msg) => {
+  if (!snsTopic) return false;
+
+  const snsFilter = {
+    action: {
+      DataType: 'String',
+      StringValue: 'createRepo',
+    },
+  };
+
+  const result = await publish(snsTopic, { repos: msg }, snsFilter);
+  return result;
 };

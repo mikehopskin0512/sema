@@ -16,6 +16,7 @@
     "@octokit/auth": "^2.0.0",
     "@octokit/rest": "^18.0.0",
     "@sendgrid/mail": "^7.2.1",
+    "aws-sdk": "^2.796.0",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
