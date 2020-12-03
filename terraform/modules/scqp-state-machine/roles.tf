@@ -30,7 +30,8 @@ data "aws_iam_policy_document" "ecs_invoke" {
       "ecs:DescribeTasks",
       "events:PutTargets",
       "events:PutRule",
-      "events:DescribeRule"
+      "events:DescribeRule",
+      "iam:PassRole"
     ]
     resources = [
       "*",
