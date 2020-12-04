@@ -53,6 +53,20 @@ export const create = (endpoint, item, token = '') => {
   return api.post(endpoint, item, config);
 };
 
-export const update = (endpoint, item) => api.put((`${endpoint}/${item._id}`), item);
+export const update = (endpoint, item, token = '') => {
+  const config = {};
+  if (token) {
+    config.headers = { Authorization: `Bearer ${token}` };
+  }
 
-export const deleteItem = (endpoint, { id }) => api.delete(`${endpoint}/${id}`);
+  return api.put((`${endpoint}/${item._id}`), item, config);
+};
+
+export const deleteItem = (endpoint, { id }, token = '') => {
+  const config = {};
+  if (token) {
+    config.headers = { Authorization: `Bearer ${token}` };
+  }
+
+  return api.delete(`${endpoint}/${id}`, config);
+};
