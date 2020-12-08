@@ -33,6 +33,15 @@ services:
     volumes:
       - ~/docker/volumes/customer-repos:/src/customer-repos
     container_name: athena.eric.sema.local
+  momus:
+    image: momus-dev-i
+    command: ./get_blame.py ${REPODIR}
+    build:
+      context: athena/momus/
+      dockerfile: ../../.docker/athena/momus/Dockerfile.prod
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.momus.sema.local
   mongodb:
     image: mongo
     ports:
