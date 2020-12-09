@@ -18,7 +18,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { repositoriesOperations } from '../../state/features/repositories';
 
 const { clearAlert } = alertOperations;
-const { fetchRepos } = repositoriesOperations;
+const { fetchRepos, addAnalysis } = repositoriesOperations;
 
 function Table({ columns, data, auth }) {
   // Use the state and functions returned from useTable to build your UI
@@ -124,8 +124,8 @@ const Repos = () => {
   // Get repositories from state
   const { data: repositoriesList = [] } = repositories;
 
-  const doSomething = (value) => {
-    alert(`Injestion started for ${value}`);
+  const onAnalysisPress = (repoId) => {
+    dispatch(addAnalysis(repoId, auth.token));
   };
 
   const columns = useMemo(
@@ -149,7 +149,7 @@ const Repos = () => {
         accessor: '_id',
         Cell: ({ cell: { value } }) => (
           <div style={{ textAlign: 'center' }}>
-            <button type="button" onClick={() => { doSomething(value); }}>Launch Injestion</button>
+            <button type="button" onClick={() => { onAnalysisPress(value); }}>Launch Analysis</button>
           </div>
         ),
       },
