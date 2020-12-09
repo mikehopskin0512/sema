@@ -50,7 +50,7 @@ def get_blame(config):
         r".*\.js$|.*\.py$|.*\.java$|.*\.c$|.*\.cc$|.*\.cpp$|.*\.cxx$|.*\.h$|.*\.hpp$|.*\.hxx$|.*\.swift$|.*\.ts$|.*\.rb$|.*\.php$|.*\.scala$|.*\.cs$"
     )
     auth_ln_re = re.compile(
-        r"[0-f]{40} .* \((?P<author_name>.*) [0-9]{4}-[0-9]{2}-[0-9]{2} *(?P<line_num>[0-9]*)\).*"
+        r"[0-f]{40} .* \((?P<author_name>.*) [0-9]{4}-[0-9]{2}-[0-9]{2} *(?P<line_num>[0-9]*)\) .*"
     )
     blamed_file_count = 0
     file_count = 0
