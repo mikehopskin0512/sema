@@ -15,4 +15,4 @@ const repositoriesSchema = new mongoose.Schema({
 repositoriesSchema.set('autoIndex', autoIndex);
 repositoriesSchema.index({ orgId: 1, externalId: 1 });
 
-module.exports = mongoose.model('Repositories', repositoriesSchema);
+module.exports = mongoose.model('Repository', repositoriesSchema);
