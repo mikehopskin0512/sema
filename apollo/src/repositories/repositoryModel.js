@@ -10,6 +10,7 @@ const repositoriesSchema = new mongoose.Schema({
   repositoryCreatedAt: Date,
   repositoryUpdatedAt: Date,
   legacyId: String,
+  cloneUrl: String,
 }, { timestamps: true });
 
 repositoriesSchema.set('autoIndex', autoIndex);
