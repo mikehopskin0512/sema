@@ -1,29 +1,23 @@
-import mongoose from 'mongoose';
+import { Pool } from 'pg';
 import { createAppAuth } from '@octokit/auth';
-import { getAppRepos } from '../identity/github/utils';
-import { github } from '../config';
+import Analysis from './analysisModel';
+import { github, pgPublicKey } from '../config';
 
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
 
-const {
-  Types: { ObjectId },
-} = mongoose;
+const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION });
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
-export const create = async (source) => {
+export const create = async (repositoryId, runId) => {
   try {
-    const { orgId, type } = source;
-
-    const query = Source.findOneAndUpdate(
-      { orgId, type },
-      { $set: source },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
-    );
-    const updatedSource = await query.exec();
-
-    return updatedSource;
+    const newUser = new Analysis({
+      repositoryId,
+      runId,
+    });
+    const savedUser = await newUser.save();
+    return savedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -31,33 +25,8 @@ export const create = async (source) => {
   }
 };
 
-export const find = async (id) => {
-  try {
-    const query = Source.findOne({ _id: new ObjectId(id) });
-    const source = await query.lean().exec();
-
-    return source;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-export const findByOrg = async (orgId) => {
-  try {
-    const query = Source.find({ orgId });
-    const sources = await query.lean().exec();
-
-    return sources;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-export const fetchRepositoriesGithub = async (externalSourceId) => {
+// GitHub token fetch
+export const fetchGithubToken = async (externalSourceId) => {
   try {
     const auth = createAppAuth({
       clientId: github.clientId,
@@ -68,9 +37,68 @@ export const fetchRepositoriesGithub = async (externalSourceId) => {
     });
 
     const { token } = await auth({ type: 'installation' });
+    if (!token) {
+      throw new errors.NotFound(
+        `No token found for installationId ${externalSourceId}`,
+      );
+    }
 
-    // Note: response from Github contains count, selection and repos array
-    const { repositories } = await getAppRepos(token);
+    return token;
+  } catch (err) {
+    // Do not return error, instead throw
+    throw new errors.BadRequest(
+      `Error fetching token for installationId ${externalSourceId}`,
+    );
+  }
+};
+
+// Postgress functions for SCQP
+export const findByProject = async (legacyId) => {
+  try {
+    const query = 'select * from autoingest_runs where project_id = $1 and (status = 0 or status = 2)'; // pending or running
+    const runs = await pool.query(query, [legacyId]);
+
+    return runs.rows;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const updateProjectWithCreds = async (legacyId, token) => {
+  try {
+    const query = `update projects set 
+      repo_username = pgp_pub_encrypt('x-access-token', (SELECT dearmor('${pgPublicKey}') As pubkey)),
+      repo_password = pgp_pub_encrypt($2, (SELECT dearmor('${pgPublicKey}') As pubkey))
+      where id = $1`;
+    const runs = await pool.query(query, [legacyId, token]);
+
+    return runs.rows;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const createRun = async (legacyId) => {
+  const userId = 118;
+  const analysisType = 'All';
+  try {
+    const query = `insert into autoingest_runs 
+    (starttime, user_id, project_id, status, progress, analysis_type, is_scheduled_run) 
+    VALUES (to_timestamp(${Date.now()} / 1000.0), $1, $2, 0, 0, $3, false) 
+    returning *`;
+    const runs = await pool.query(query, [userId, legacyId, analysisType]);
+
+    return runs.rows[0];
+  } catch (err) {
+    logger.error(err);
+    throw new errors.BadRequest('Unable to start analysis');
+  }
+};
+
 export const sendNotification = async (legacyId, runId) => {
   if (!snsTopic) return false;
 
