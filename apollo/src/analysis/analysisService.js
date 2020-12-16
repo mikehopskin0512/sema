@@ -5,10 +5,12 @@ import { github } from '../config';
 
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import publish from '../shared/sns';
 
 const {
   Types: { ObjectId },
 } = mongoose;
+const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
 export const create = async (source) => {
   try {
@@ -69,18 +71,21 @@ export const fetchRepositoriesGithub = async (externalSourceId) => {
 
     // Note: response from Github contains count, selection and repos array
     const { repositories } = await getAppRepos(token);
+export const sendNotification = async (legacyId, runId) => {
+  if (!snsTopic) return false;
 
-    if (!repositories) {
-      throw new errors.NotFound(
-        `No repositories found for installationId ${externalSourceId}`,
-      );
-    }
+  const snsFilter = {
+    action: {
+      DataType: 'String',
+      StringValue: 'createAnalysis',
+    },
+  };
 
-    return repositories;
-  } catch (err) {
-    // Do not return error, instead throw
-    throw new errors.BadRequest(
-      `Error fetching repositories for installationId ${externalSourceId}`,
-    );
-  }
+  const payload = {
+    projectId: legacyId,
+    runId,
+  };
+
+  const result = await publish(snsTopic, payload, snsFilter);
+  return result;
 };

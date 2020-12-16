@@ -5,6 +5,7 @@ import errors from '../shared/errors';
 
 import {
   create, find,
+  sendNotification,
 } from './analysisService';
 
 const route = Router();
@@ -36,6 +37,7 @@ export default (app, passport) => {
     try {
       const sources = await findByOrg(orgId);
       if (!sources) { throw new errors.NotFound('No sources found for this organization'); }
+      await sendNotification(legacyId, runId);
 
       return res.status(201).send({
         sources,
