@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config();
 
 module.exports = {
   port: process.env.PORT || 3000,
@@ -18,7 +18,7 @@ module.exports = {
   modeMaxAge: process.env.MODE_ANALYTICS_MAX_AGE, // the most frequent ingestions are typically per hour
   jwtSecret: process.env.JWT_SECRET,
   refreshSecret: process.env.JWT_SECRET,
-  privateKeyFile: process.env.PRIVATE_KEY_FILE || "",
+  privateKeyFile: process.env.PRIVATE_KEY_FILE || '',
   refreshTokenName: process.env.REFRESH_TOKEN_NAME,
   allowedOrigin: process.env.ALLOWED_ORIGIN,
   github: {
@@ -26,10 +26,11 @@ module.exports = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.GITHUB_CALLBACK_URL,
     appId: process.env.GITHUB_APP_ID,
-    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, "\n"),
+    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, '\n'),
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
   },
+  pgPublicKey: process.env.PG_PUBLIC_KEY,
 };
