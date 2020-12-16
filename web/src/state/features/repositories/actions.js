@@ -80,13 +80,14 @@ export const fetchRepos = (orgId, token) => async (dispatch) => {
   }
 };
 
-export const addAnalysis = (repositoryId, token) => async (dispatch) => {
+export const addAnalysis = (repository, token) => async (dispatch) => {
+  const { _id: repositoryId, name, legacyId, sourceId: { externalSourceId } } = repository;
   try {
     dispatch(requestCreateAnalysis());
-    const payload = await postAnalysis({ repository: repositoryId }, token);
+    const payload = await postAnalysis({ repositoryId, legacyId, externalSourceId }, token);
     const { data: { repositories = [] } } = payload;
 
-    dispatch(triggerAlert('Something happened', 'success'));
+    dispatch(triggerAlert(`Analysis started for ${name}`, 'success'));
 
     dispatch(requestCreateAnalysisSuccess(repositories));
   } catch (error) {
@@ -94,5 +95,6 @@ export const addAnalysis = (repositoryId, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestCreateAnalysisError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
   }
 };

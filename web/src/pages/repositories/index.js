@@ -124,8 +124,8 @@ const Repos = () => {
   // Get repositories from state
   const { data: repositoriesList = [] } = repositories;
 
-  const onAnalysisPress = (repoId) => {
-    dispatch(addAnalysis(repoId, auth.token));
+  const onAnalysisPress = (repository) => {
+    dispatch(addAnalysis(repository, auth.token));
   };
 
   const columns = useMemo(
@@ -147,9 +147,9 @@ const Repos = () => {
       {
         Header: () => <div style={{ textAlign: 'center' }}>Actions</div>,
         accessor: '_id',
-        Cell: ({ cell: { value } }) => (
+        Cell: (props) => (
           <div style={{ textAlign: 'center' }}>
-            <button type="button" onClick={() => { onAnalysisPress(value); }}>Launch Analysis</button>
+            <button type="button" onClick={() => { onAnalysisPress(props.row.original); }}>Launch Analysis</button>
           </div>
         ),
       },
