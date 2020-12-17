@@ -4,11 +4,9 @@ import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 
+import { findByProject, createRun, updateProjectWithCreds } from '../shared/scqp';
 import { fetchGithubToken } from '../identity/github/utils';
-import {
-  create, findByProject, createRun,
-  updateProjectWithCreds, sendNotification,
-} from './analysisService';
+import { create, sendNotification } from './analysisService';
 
 const route = Router();
 
