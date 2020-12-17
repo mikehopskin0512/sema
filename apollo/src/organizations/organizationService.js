@@ -1,4 +1,3 @@
-import { Pool } from 'pg';
 import Organization from './organizationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -6,7 +5,6 @@ import publish from '../shared/sns';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 // const snsFilter = process.env.AMAZON_SNS_ORG_REPLICATION_FILTER;
-const pool = new Pool({ connectionString: process.env.POSTGRES_CONNECTION }); // e.g. postgres://user:password@host:5432/database
 
 export const create = async (org) => {
   const { orgName = '', slug = '' } = org;
@@ -38,53 +36,7 @@ export const findBySlug = async (slug) => {
   }
 };
 
-const selectRepositoriesByOrg = async (orgId) => {
-  try {
-    const query = 'select id, name from projects where organization_id = $1 order by name asc;';
-    const repos = await pool.query(query, [orgId]);
-
-    return repos.rows;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-const selectContributors = async (orgId) => {
-  try {
-    const query = 'select id, name from committers where organization_id = $1 order by name asc;';
-    const repos = await pool.query(query, [orgId]);
-
-    return repos.rows;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-const selectFileTypesByOrg = async (orgId) => {
-  try {
-    const query = `select distinct ft.id, ft.typename 
-      from commit_analysis ca 
-      left join filetypes ft
-        on ca.file_type_id = ft.id
-      left join projects p
-        on ca.project_id = p.id
-      where p.organization_id = $1
-      order by ft.typename`;
-    const fileTypes = await pool.query(query, [orgId]);
-
-    return fileTypes.rows;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
-const sendNotification = async (org) => {
+export const sendNotification = async (org) => {
   if (!snsTopic) return false;
 
   const snsFilter = {
@@ -96,11 +48,4 @@ const sendNotification = async (org) => {
 
   const result = await publish(snsTopic, org, snsFilter);
   return result;
-};
-
-export {
-  selectRepositoriesByOrg,
-  selectContributors,
-  selectFileTypesByOrg,
-  sendNotification,
 };

@@ -1,3 +1,4 @@
+import analysis from './analysis';
 import auth from './auth';
 import credentials from './credentials';
 import github from './identity/github';
@@ -10,6 +11,7 @@ import sources from './sources';
 import users from './users';
 
 function attachRoutes(app, passport) {
+  analysis(app, passport);
   auth(app, passport);
   credentials(app, passport);
   github(app);

@@ -26,7 +26,7 @@ export const createMany = async (repositories) => {
 export const findByOrg = async (orgId) => {
   try {
     const query = Repositories.find({ orgId });
-    const repositories = await query.lean().exec();
+    const repositories = await query.lean().populate('sourceId', 'externalSourceId').exec();
 
     return repositories;
   } catch (err) {
