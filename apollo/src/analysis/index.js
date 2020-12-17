@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { version } from '../config';
+
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 
+import { fetchGithubToken } from '../identity/github/utils';
 import {
   create, findByProject, createRun,
-  fetchGithubToken, updateProjectWithCreds,
-  sendNotification,
+  updateProjectWithCreds, sendNotification,
 } from './analysisService';
 
 const route = Router();

@@ -1,7 +1,6 @@
 import { Pool } from 'pg';
-import { createAppAuth } from '@octokit/auth';
 import Analysis from './analysisModel';
-import { github, pgPublicKey } from '../config';
+import { pgPublicKey } from '../config';
 
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -22,33 +21,6 @@ export const create = async (repositoryId, runId) => {
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
-  }
-};
-
-// GitHub token fetch
-export const fetchGithubToken = async (externalSourceId) => {
-  try {
-    const auth = createAppAuth({
-      clientId: github.clientId,
-      clientSecret: github.clientSecret,
-      id: github.appId,
-      installationId: externalSourceId,
-      privateKey: github.privateKey,
-    });
-
-    const { token } = await auth({ type: 'installation' });
-    if (!token) {
-      throw new errors.NotFound(
-        `No token found for installationId ${externalSourceId}`,
-      );
-    }
-
-    return token;
-  } catch (err) {
-    // Do not return error, instead throw
-    throw new errors.BadRequest(
-      `Error fetching token for installationId ${externalSourceId}`,
-    );
   }
 };
 
