@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import * as types from './types';
-import { getRepos, postRepositories } from './api';
+import { getRepos, postRepositories, postAnalysis } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -30,6 +30,20 @@ const requestFetchReposSuccess = (repositories) => ({
 
 const requestFetchReposError = (errors) => ({
   type: types.REQUEST_FETCH_REPOS_ERROR,
+  errors,
+});
+
+const requestCreateAnalysis = () => ({
+  type: types.REQUEST_CREATE_ANALYSIS,
+});
+
+const requestCreateAnalysisSuccess = (source) => ({
+  type: types.REQUEST_CREATE_ANALYSIS_SUCCESS,
+  source,
+});
+
+const requestCreateAnalysisError = (errors) => ({
+  type: types.REQUEST_CREATE_ANALYSIS_ERROR,
   errors,
 });
 
@@ -63,5 +77,24 @@ export const fetchRepos = (orgId, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchReposError(errMessage));
+  }
+};
+
+export const addAnalysis = (repository, token) => async (dispatch) => {
+  const { _id: repositoryId, name, legacyId, sourceId: { externalSourceId } } = repository;
+  try {
+    dispatch(requestCreateAnalysis());
+    const payload = await postAnalysis({ repositoryId, legacyId, externalSourceId }, token);
+    const { data: { repositories = [] } } = payload;
+
+    dispatch(triggerAlert(`Analysis started for ${name}`, 'success'));
+
+    dispatch(requestCreateAnalysisSuccess(repositories));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestCreateAnalysisError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
   }
 };

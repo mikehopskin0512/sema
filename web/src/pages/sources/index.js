@@ -203,7 +203,11 @@ const Sources = () => {
   // Map source repository data to only needed fields
   const { selectedSourceRepos: repositoriesData = [] } = sources;
   const simpleRepositories = repositoriesData.map((item) => (
-    ({ id: externalId, name, created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt }) => (
+    ({
+      id: externalId, name,
+      created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt,
+      clone_url: cloneUrl,
+    }) => (
       {
         externalId,
         name,
@@ -212,6 +216,7 @@ const Sources = () => {
         type: 'github',
         orgId,
         sourceId,
+        cloneUrl,
       }
     ))(item));
 

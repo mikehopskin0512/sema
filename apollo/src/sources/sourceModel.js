@@ -9,4 +9,4 @@ const sourcesSchema = new mongoose.Schema({
 
 sourcesSchema.set('autoIndex', autoIndex);
 
-module.exports = mongoose.model('Sources', sourcesSchema);
+module.exports = mongoose.model('Source', sourcesSchema);
