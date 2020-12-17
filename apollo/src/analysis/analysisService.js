@@ -12,12 +12,12 @@ const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
 export const create = async (repositoryId, runId) => {
   try {
-    const newUser = new Analysis({
+    const newAnalysis = new Analysis({
       repositoryId,
       runId,
     });
-    const savedUser = await newUser.save();
-    return savedUser;
+    const savedAnalysis = await newAnalysis.save();
+    return savedAnalysis;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
