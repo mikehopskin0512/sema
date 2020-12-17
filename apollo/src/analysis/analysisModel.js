@@ -3,7 +3,7 @@ import { autoIndex } from '../config';
 
 const analysisSchema = new mongoose.Schema({
   repositoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Repository', required: true },
-  runId: { type: String, required: true },
+  externalId: { type: String, required: true },
   completedAt: Date,
 }, { timestamps: true });
 
