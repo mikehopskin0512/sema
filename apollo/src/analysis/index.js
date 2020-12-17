@@ -30,6 +30,9 @@ export default (app, passport) => {
 
       // Fetch GitHub token
       const token = await fetchGithubToken(externalSourceId);
+      if (!token) {
+        throw new errors.BadRequest('Unable to fetch token');
+      }
 
       // Update product in SCCP with Github credentials
       await updateProjectWithCreds(legacyId, token);
