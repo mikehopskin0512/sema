@@ -22,6 +22,9 @@
         "name": "AMAZON_SECRET_ACCESS_KEY",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/access-secret"
       }, {
+        "name": "AMAZON_SNS_CODE_ANALYSIS_TOPIC",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/sns/topic/code-analysis"
+      }, {
         "name": "AMAZON_SNS_CROSS_REGION_TOPIC",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/aws/sns/topic/cross-region-replication"
       }, {
@@ -42,6 +45,9 @@
       }, {
         "name": "MONGOOSE_URI",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mongo/uri"
+      }, {
+        "name": "PG_PUBLIC_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/postgres/public-key"
       }, {
         "name": "POSTGRES_CONNECTION",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/postgres/uri"

@@ -4,13 +4,13 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
 
-const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
+const snsTopic = process.env.AMAZON_SNS_CODE_ANALYSIS_TOPIC;
 
-export const create = async (repositoryId, runId) => {
+export const create = async (repositoryId, externalId) => {
   try {
     const newAnalysis = new Analysis({
       repositoryId,
-      runId,
+      externalId,
     });
     const savedAnalysis = await newAnalysis.save();
     return savedAnalysis;
@@ -25,9 +25,9 @@ export const sendNotification = async (legacyId, runId) => {
   if (!snsTopic) return false;
 
   const snsFilter = {
-    action: {
+    analysis: {
       DataType: 'String',
-      StringValue: 'createAnalysis',
+      StringValue: 'scqp',
     },
   };
 
