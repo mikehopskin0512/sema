@@ -5,7 +5,7 @@ import errors from '../shared/errors';
 
 import {
   createMany, findByOrg, sendNotification,
-} from './repositoryService';
+} from './repositoriesService';
 
 const route = Router();
 

@@ -7,7 +7,7 @@ import errors from '../shared/errors';
 import { findByProject, createRun, updateProjectWithCreds } from '../shared/scqp';
 import { fetchGithubToken } from '../identity/github/utils';
 import { create, sendNotification } from './analysisService';
-import { get as getRepository } from '../repositories/repositoryService';
+import { get as getRepository } from '../repositories/repositoriesService';
 
 const route = Router();
 
