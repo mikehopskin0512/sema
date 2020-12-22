@@ -1,0 +1,20 @@
+# ---------- Base ----------
+FROM python:alpine3.12 AS base
+
+RUN apk --update add git
+
+RUN pip3 install gitpython 
+
+RUN mkdir /src
+WORKDIR /src
+
+RUN wget https://github.com/go-enry/enry/releases/download/v1.1.0/enry-v1.1.0-linux-amd64.tar.gz
+RUN tar -xzvf enry-v1.1.0-linux-amd64.tar.gz 
+
+COPY get_cli_csv.py ./
+COPY get_enry.py ./
+
+RUN mkdir -p ./customer-repos
+
+# Run our script, which expects at least one git repo url
+CMD [ "./get_enry.py", "$REPO_OPTS" ]

@@ -42,6 +42,33 @@ services:
     volumes:
       - ~/docker/volumes/customer-repos:/src/customer-repos
     container_name: athena.momus.sema.local
+  ananke-wc:
+    image: ananke-wc-dev-i
+    command: ./get_wc.py ${REPODIR}
+    build:
+      context: athena/ananke/
+      dockerfile: ../../.docker/athena/ananke/Dockerfile.wc
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.ananke.wc.sema.local
+  ananke-mime:
+    image: ananke-mime-dev-i
+    command: ./get_mime.py ${REPODIR}
+    build:
+      context: athena/ananke/
+      dockerfile: ../../.docker/athena/ananke/Dockerfile.mime
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.ananke.mime.sema.local
+  ananke-enry:
+    image: ananke-enry-dev-i
+    command: ./get_enry.py ${REPODIR}
+    build:
+      context: athena/ananke/
+      dockerfile: ../../.docker/athena/ananke/Dockerfile.enry
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.ananke.enry.sema.local
   mongodb:
     image: mongo
     ports:
