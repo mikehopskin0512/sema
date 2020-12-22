@@ -62,7 +62,7 @@ resource "aws_sfn_state_machine" "athena_state_machine" {
 
 # step function definition template
 data "template_file" "athena" {
-  template = file("${path.module}/templates/${var.pipeline_name}.json.tpl")
+  template = file("${path.module}/templates/${var.pipeline_name}.json")
 
   vars = {
     env                 = var.env
