@@ -2,7 +2,7 @@
 
 """
 
-Given a repo dir, start and end hash, list either: all commits between, or all files changed between the hashes. 
+Given a repo dir, start and end hash, list either: all commits between, or all files changed between the hashes.
 
 """
 
@@ -10,7 +10,6 @@ import os
 import argparse
 import logging
 import subprocess
-from urllib.parse import urlparse, quote
 import errno
 import json
 
@@ -86,8 +85,12 @@ def parse_args():
         "-r", "--repo_dir", help="Directory that is the target of our analysis"
     )
 
-    parser.add_argument("-s", "--start_hash", help="Commit hash to start from (earlier in time)")
-    parser.add_argument("-e", "--end_hash", help="Commit hash to end on (later in time)")
+    parser.add_argument(
+        "-s", "--start_hash", help="Commit hash to start from (earlier in time)"
+    )
+    parser.add_argument(
+        "-e", "--end_hash", help="Commit hash to end on (later in time)"
+    )
 
     args = parser.parse_args()
 
