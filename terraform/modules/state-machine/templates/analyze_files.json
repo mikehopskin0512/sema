@@ -1,0 +1,77 @@
+{
+    "Comment": "An example of combining workflows using a Step Functions StartExecution task state with various integration patterns.",
+    "StartAt": "Janus",
+    "States": {
+        "Janus": {
+            "Comment": "Start an execution of the janus state machine",
+            "Type": "Task",
+            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+            "InputPath": "$.analysis",
+            "ResultPath": "$.analysis.filesToAnalyze",
+            "OutputPath": "$.analysis",
+            "Parameters": {
+                "StateMachineArn": "${janus_state_machine}",
+                "Input": {
+                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                }
+            },
+            "Next": "Analyze Files"
+        },
+        "Analyze Files": {
+            "Type": "Map",
+            "Next": "Finish",
+            "InputPath": "$.analysis",
+            "ItemsPath": "$.filesToAnalyze",
+            "MaxConcurrency": 40,
+            "Parameters": {
+                "file.$": "$$.Map.Item.Value",
+                "org_name.$": "$.org_name"
+            },
+            "Iterator": {
+                "StartAt": "Momus",
+                "States": {
+                    "Momus": {
+                        "Comment": "Start an execution of the momus state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${momus_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "Next": "Ananke"
+                    },
+                    "Ananke": {
+                        "Comment": "Start an execution of the ananke state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${ananke_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "Next": "Plutus"
+                    },
+                    "Plutus": {
+                        "Comment": "Start an execution of the plutus state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${plutus_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "OutputPath": "$.Output",
+                        "End": true
+                    }
+                }
+            }
+        },
+        "Finish": {
+            "Type": "Succeed"
+        }
+    }
+}
