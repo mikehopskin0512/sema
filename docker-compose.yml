@@ -42,6 +42,15 @@ services:
     volumes:
       - ~/docker/volumes/customer-repos:/src/customer-repos
     container_name: athena.momus.sema.local
+  janus:
+    image: janus-dev-i
+    command: ./list_repo_metadata.py ${LISTTYPE} --repo_dir ${REPODIR} --start_hash ${STARTHASH} --end_hash ${ENDHASH}
+    build:
+      context: athena/janus/
+      dockerfile: ../../.docker/athena/janus/Dockerfile.prod
+    volumes:
+      - ~/docker/volumes/customer-repos:/src/customer-repos
+    container_name: athena.janus.sema.local
   ananke-wc:
     image: ananke-wc-dev-i
     command: ./get_wc.py ${REPODIR}
