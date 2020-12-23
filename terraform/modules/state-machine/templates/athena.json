@@ -40,9 +40,6 @@
                             "Comment": "Start an execution of the analyze files workflow",
                             "Type": "Task",
                             "Resource": "arn:aws:states:::states:startExecution.sync:2",
-                            "InputPath": "$.analysis",
-                            "ResultPath": "$.analysis.commitRange",
-                            "OutputPath": "$.analysis",
                             "Parameters": {
                                 "StateMachineArn": "${analyze_files_state_machine}",
                                 "Input": {
