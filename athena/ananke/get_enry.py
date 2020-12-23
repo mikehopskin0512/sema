@@ -7,7 +7,7 @@ Call file to get mime
 """
 
 import get_cli_csv
-
+import re
 
 def main():
     config = type("", (), {})
@@ -22,8 +22,8 @@ def main():
     vendored:  false
     """
     config.data_row_match_regex = r".*: (?P<line_count>[0-9]+) lines \((?P<sloc_count>[0-9]+) sloc\) *$.* *type: *(?P<file_type>[^\s]*)\s*language: *(?P<language>[^\s]*)\s*vendored: *(?P<vendored>[^\s]*)"
-
-    config.cli_command = ["enry", "x-filename-placeholder-x"]
+    config.regex_flags = re.DOTALL | re.MULTILINE
+    config.cli_command = ["./enry", "x-filename-placeholder-x"]
 
     get_cli_csv.get_cmd_csv(config)
 
