@@ -8,6 +8,7 @@ RUN pip3 install gitpython
 RUN mkdir /src
 WORKDIR /src
 
+COPY get_cli_csv.py ./
 COPY get_blame.py ./
 
 RUN mkdir -p ./customer-repos
