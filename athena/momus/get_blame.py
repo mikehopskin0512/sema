@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" 
+"""
 
 Read blame data for every file for every author from local repo store
 
@@ -13,8 +13,8 @@ CLI wishlist
 
 """
 
-""" 
-Call file to get mime
+"""
+Call file to get blame
 """
 
 import get_cli_csv
@@ -70,6 +70,7 @@ def main():
     ]
     config.extra_processing = get_blame_short
     get_cli_csv.get_cmd_csv(config)
+
 
 if __name__ == "__main__":
     main()
