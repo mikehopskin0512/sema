@@ -1,0 +1,79 @@
+{
+    "Comment": "Athena Code Analysis Pipeline State Machine",
+    "StartAt": "Eric",
+    "States": {
+        "Eric": {
+            "Comment": "Start an execution of the eric state machine",
+            "Type": "Task",
+            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+            "InputPath": "$.analysis",
+            "ResultPath": "$.analysis.commitRange",
+            "OutputPath": "$.analysis",
+            "Parameters": {
+                "StateMachineArn": "${eric_state_machine}",
+                "Input": {
+                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                }
+            },
+            "Next": "Are there commits to process?"
+        },
+        "Are there commits to process?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.analysis.commitRange.startHash",
+                    "StringEqualsPath": "$.analysis.commitRange.endHash",
+                    "Next": "Finish"
+                }
+            ],
+            "Default": "Initiate Workflows"
+        },
+        "Initiate Workflows": {
+            "Comment": "Let's process things in parallel!",
+            "Type": "Parallel",
+            "Next": "Finish",
+            "Branches": [
+                {
+                    "StartAt": "Analyze Files",
+                    "States": {
+                        "Analyze Files": {
+                            "Comment": "Start an execution of the analyze files workflow",
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                            "Parameters": {
+                                "StateMachineArn": "${analyze_files_state_machine}",
+                                "Input": {
+                                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "Analyze Commits",
+                    "States": {
+                        "Analyze Commits": {
+                            "Comment": "Start an execution of the analyze commits workflow",
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                            "InputPath": "$.analysis",
+                            "ResultPath": "$.analysis.commitRange",
+                            "OutputPath": "$.analysis",
+                            "Parameters": {
+                                "StateMachineArn": "${analyze_commits_state_machine}",
+                                "Input": {
+                                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Finish": {
+            "Type": "Succeed"
+        }
+    }
+}
