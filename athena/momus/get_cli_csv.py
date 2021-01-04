@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" 
+"""
 
 Call a cli tool for every file for every author from local repo store
 
@@ -10,34 +10,31 @@ Design decision: use as a library, or load cli/regex from config file
 
 import os
 import argparse
-import logging
 import re
-from pathlib import Path
 import subprocess
 from urllib.parse import urlparse
-import errno
 import csv
 import datetime
 import time
-import json
+import sys
 
-# Shell commands
+
 def run_command(command):
     return subprocess.check_output(command).decode().strip()
+
 
 def get_wc(config):
     # fe_re = re.compile(r'\.js$|.py$|\.java$|\.c$|\.cc$|\.cpp$|\.cxx$|\.h$|\.hpp$|\.hxx$|\.swift$|\.ts$|\.rb$|\.php$|\.scala$|\.cs$')
     fe_re = re.compile(
         r".*\.js$|.*\.py$|.*\.java$|.*\.c$|.*\.cc$|.*\.cpp$|.*\.cxx$|.*\.h$|.*\.hpp$|.*\.hxx$|.*\.swift$|.*\.ts$|.*\.rb$|.*\.php$|.*\.scala$|.*\.cs$"
     )
-    if hasattr(config, 'regex_flags'):
+    if hasattr(config, "regex_flags"):
         auth_ln_re = re.compile(
-            config.data_row_match_regex, flags = config.regex_flags # re.DOTALL | re.MULTILINE)
-        )  
+            config.data_row_match_regex,
+            flags=config.regex_flags,  # re.DOTALL | re.MULTILINE
+        )
     else:
-        auth_ln_re = re.compile(
-            config.data_row_match_regex
-        )  
+        auth_ln_re = re.compile(config.data_row_match_regex)
 
     fn = config.repo_file_path
     if fe_re.match(fn):
@@ -54,7 +51,9 @@ def get_wc(config):
             return_data.update(match.groupdict())
             yield return_data
 
+
 print_header = True
+
 
 def persist_csv_line(config, line):
     global print_header
@@ -142,7 +141,7 @@ def parse_args(config=None):
             ]
         )
     else:
-        print("Error: could not find analysis target file "+args.analysis_target_file)
+        print("Error: could not find analysis target file " + args.analysis_target_file)
         sys.exit(1)
 
     args.repo_file_path = args.analysis_target_file[len(args.repo_dir):]
@@ -151,7 +150,7 @@ def parse_args(config=None):
     while args.repo_file_path.endswith(os.sep):
         args.repo_file_path = args.repo_file_path[:-1]
 
-    print("Will analyze: " + args.repo_file_path + " in " +args.repo_dir )
+    print("Will analyze: " + args.repo_file_path + " in " + args.repo_dir)
 
     args.org_name = urlparse(args.repo_dir).path.split(os.sep)[-2]
     args.project_name = urlparse(args.repo_dir).path.split(os.sep)[-1]
@@ -176,14 +175,19 @@ def parse_args(config=None):
 
     args.tool_name = config.tool_name
     args.data_row_match_regex = config.data_row_match_regex
-    if hasattr(config, 'regex_flags'):
+    if hasattr(config, "regex_flags"):
         args.regex_flags = config.regex_flags
     args.cli_command = config.cli_command
-    if hasattr(config, 'extra_processing'):
+    if hasattr(config, "extra_processing"):
         args.extra_processing = config.extra_processing
 
     args.out_file = (
-        args.project_name + "." + args.tool_name + "." + time.strftime("%Y%m%d%H%M%S") + ".csv"
+        args.project_name
+        + "."
+        + args.tool_name
+        + "."
+        + time.strftime("%Y%m%d%H%M%S")
+        + ".csv"
     )
 
     return args
@@ -196,7 +200,7 @@ def get_cmd_csv(cli_cmd_config):
     )
     config = parse_args(cli_cmd_config)
 
-    if hasattr(config, 'extra_processing'):
+    if hasattr(config, "extra_processing"):
         persist_iter(
             config, config.extra_processing(config, get_wc)
         )  # we pass in the normal cli function, get results from it and then perform extra processing of the output

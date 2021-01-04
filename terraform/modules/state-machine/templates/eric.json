@@ -1,0 +1,23 @@
+{
+    "Comment": "Eric workflow to retrieve the code for analysis",
+    "StartAt": "Eric",
+    "States": {
+        "Eric": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::batch:submitJob.sync",
+            "Comment": "Executes an AWS Batch Job to Clone the Repository that is Being Analyzed",
+            "Parameters": {
+                "JobDefinition": "${eric_job_definition}",
+                "JobName": "${env}-eric-job",
+                "JobQueue": "${eric_job_queue}",
+                "Parameters": {
+                    "repo_url.$": "$.repositoryUrl",
+                    "org_name.$": "$.orgName",
+                    "repo_username.$": "$.repoUsername",
+                    "repo_password.$": "$.repoPassword"
+                }
+            },
+            "End": true
+        }
+    }
+}
