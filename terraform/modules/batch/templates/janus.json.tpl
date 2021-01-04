@@ -1,0 +1,32 @@
+{
+   "image":"${image}",
+   "memory":4096,
+   "vcpus":2,
+   "command":[
+      "./list_repo_metadata.py",
+      "Ref::repo_url",
+      "--org_name",
+      "Ref::org_name",
+      "--repo_username",
+      "Ref::repo_username",
+      "--repo_password",
+      "Ref::repo_password"
+   ],
+   "volumes":[
+      {
+         "host":{
+            "sourcePath":"${host_path}"
+         },
+         "name":"efs"
+      }
+   ],
+   "environment":[
+      
+   ],
+   "mountPoints":[
+      {
+         "containerPath":"${container_path}",
+         "sourceVolume":"efs"
+      }
+   ]
+}
