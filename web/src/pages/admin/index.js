@@ -116,11 +116,13 @@ const Admin = () => {
                       <span>Add another</span>
                     </button>
                   </div>
-                  <div className="control">
-                    <button
-                      type="submit"
-                      className="button is-primary mt-10">Continue
+                  <div className="columns">
+                    <div className="control column is-7">
+                      <button
+                        type="submit"
+                        className="button is-primary mt-10 is-fullwidth">Continue
                     </button>
+                    </div>
                   </div>
                 </form>
               </div>
