@@ -22,6 +22,19 @@ function isTextBox(element) {
     return inputTypes.indexOf(type) >= 0;
 }
 
+function getSemaBar() {
+    return `
+        <div class="sema columns">
+            <div class="column">
+                <button class="button is-primary is-small">Sema Button!</button>
+            </div>
+            <div class="column">
+                <span class="tag">Sema Tag!</span>
+            </div>
+        </div>
+    `
+}
+
 $(function () {
     console.log("Starting...");
 
@@ -34,7 +47,7 @@ $(function () {
         if (isTextBox(activeElement)) {
             const semaElements = $(activeElement).siblings("div.sema");
             if (!semaElements[0]) {
-                $(activeElement).after(`<div class="sema"><button type="button">Sema Button!</button></div>`)
+                $(activeElement).after(getSemaBar())
             }
         }
     }
