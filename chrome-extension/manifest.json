@@ -9,6 +9,10 @@
         "*://github.com/*",
         "*://*.github.com/*"
       ],
+      "css": [
+        "bulma.min.css",
+        "main.css"
+      ],
       "js": [
         "/libs/cash.min.js",
         "main.js"
