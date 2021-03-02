@@ -62,10 +62,14 @@ export function isTextBox(element) {
 
 export function makeCommentTag(currentSemabar, targetTag) {
   const val = targetTag.innerText;
-  $(currentSemabar).append(
-    `<span class="sema-tag sema-is-dark sema-is-rounded sema-mr-2">
-    ${val}
-    <button class="sema-delete sema-is-small"></button>
-  </span>`
-  );
+  const elem = $(`<span class="sema-tag sema-is-dark sema-is-rounded sema-mr-2">
+  ${val}
+  <button class="sema-delete sema-is-small"></button>
+</span>`);
+  $(currentSemabar).append(elem);
+  $(elem)
+    .children('button')
+    .on('click', function () {
+      $(elem).remove();
+    });
 }
