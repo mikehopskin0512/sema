@@ -4,7 +4,7 @@ import {
   TEMPLATES_MAP,
   getImagesHTML,
   isTextBox,
-  onTagClicked,
+  addTagModalToDOM,
 } from './modules/content-util';
 
 console.log('main script working!!!');
@@ -25,20 +25,8 @@ console.log('main script working!!!');
  * - todo: toggle positive and negative tags of the same kind
  */
 
-function showAddTagModal(event, semamodalHTML) {
+function showAddTagModal(event) {
   event.preventDefault();
-
-  const modal = $('#addTagsModal');
-  if (!modal.get(0)) {
-    // modal doesnot exist in the DOM
-    $(semamodalHTML).appendTo(document.body);
-    $('#sema-modal-close').on('click', function () {
-      $('#addTagsModal').removeClass('sema-is-active');
-    });
-    $('#tagsPositiveContainer > span').on('click', onTagClicked);
-
-    $('#tagsNegativeContainer > span').on('click', onTagClicked);
-  }
 
   $('#addTagsModal').addClass('sema-is-active');
 }
@@ -56,6 +44,8 @@ $(async function () {
   const semamodalHTML = mapTemplates['semamodal'];
   console.log('Received template');
 
+  addTagModalToDOM(semamodalHTML);
+
   const targetNode = document.getElementsByTagName('body')[0];
   const config = { subtree: true, childList: true, attributes: true };
 
@@ -70,7 +60,7 @@ $(async function () {
         // todo: dont do this!!!
         // todo: safetly remove listeners?
         $('.semaAddTag').on('click', (event) => {
-          showAddTagModal(event, semamodalHTML);
+          showAddTagModal(event);
         });
       }
     }
