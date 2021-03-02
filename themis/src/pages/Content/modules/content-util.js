@@ -64,3 +64,16 @@ export function onTagClicked(event) {
   const target = event.target;
   $(target).toggleClass('sema-is-light sema-is-dark');
 }
+
+export function addTagModalToDOM(semamodalHTML) {
+  const modal = $('#addTagsModal');
+  if (!modal.get(0)) {
+    // modal doesnot exist in the DOM
+    $(semamodalHTML).appendTo(document.body);
+    $('#sema-modal-close').on('click', function () {
+      $('#addTagsModal').removeClass('sema-is-active');
+    });
+    $('#tagsPositiveContainer > span').on('click', onTagClicked);
+    $('#tagsNegativeContainer > span').on('click', onTagClicked);
+  }
+}
