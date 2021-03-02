@@ -21,3 +21,11 @@
   flex: 1;
   flex-direction: row-reverse;
 }
+
+#tagsPositiveContainer > span {
+  cursor: pointer;
+}
+
+#tagsNegativeContainer > span {
+  cursor: pointer;
+}

@@ -14,6 +14,7 @@ console.log('main script working!!!');
  * - todo: make template html in background.js to avoid fetching everytime?
  * - todo: better way to template, other than sandboxing
  * - todo: remove "Bulma Base" from bulma.css
+ * - todo: toggle positive and negative tags of the same kind
  */
 const {
   runtime: { getURL },
@@ -30,6 +31,7 @@ const IMAGES_MAP = {
 
 const TEMPLATES_MAP = {
   semabar: '/templates/semabar.html',
+  semamodal: '/templates/semamodal.html',
 };
 
 const getTemplates = () => {
@@ -74,11 +76,30 @@ function isTextBox(element) {
   return inputTypes.indexOf(type) >= 0;
 }
 
-function showAddTagModal(event) {
+function showAddTagModal(event, semamodalHTML) {
   event.preventDefault();
 
+  const modal = $('#addTagsModal');
+  if (!modal.get(0)) {
+    // modal doesnot exist in the DOM
+    $(semamodalHTML).appendTo(document.body);
+    $('#sema-modal-close').on('click', function () {
+      $('#addTagsModal').removeClass('sema-is-active');
+    });
+    $('#tagsPositiveContainer > span').on('click', function (event) {
+      const target = event.target;
+      $(target).toggleClass('sema-is-light sema-is-dark');
+      console.log('tag clicked');
+    });
+
+    $('#tagsNegativeContainer > span').on('click', function (event) {
+      const target = event.target;
+      $(target).toggleClass('sema-is-light sema-is-dark');
+      console.log('tag clicked');
+    });
+  }
+
   $('#addTagsModal').addClass('sema-is-active');
-  // $("#addTagsModal").focus();
 }
 
 $(async function () {
@@ -91,6 +112,7 @@ $(async function () {
   }, {});
 
   const semabarHTML = getImagesHTML(mapTemplates['semabar']);
+  const semamodalHTML = mapTemplates['semamodal'];
   console.log('Received template');
 
   const targetNode = document.getElementsByTagName('body')[0];
@@ -107,7 +129,7 @@ $(async function () {
         // todo: dont do this!!!
         // todo: safetly remove listeners?
         $('#semaAddTag').on('click', (event) => {
-          showAddTagModal(event);
+          showAddTagModal(event, semamodalHTML);
         });
       }
     }
