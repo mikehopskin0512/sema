@@ -69,7 +69,7 @@ $(async function () {
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
         // todo: dont do this!!!
         // todo: safetly remove listeners?
-        $('#semaAddTag').on('click', (event) => {
+        $('.semaAddTag').on('click', (event) => {
           showAddTagModal(event, semamodalHTML);
         });
       }
