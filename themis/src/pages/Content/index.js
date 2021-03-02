@@ -4,7 +4,7 @@ import {
   TEMPLATES_MAP,
   getImagesHTML,
   isTextBox,
-  addTagModalToDOM,
+  makeCommentTag,
 } from './modules/content-util';
 
 console.log('main script working!!!');
@@ -25,14 +25,38 @@ console.log('main script working!!!');
  * - todo: toggle positive and negative tags of the same kind
  */
 
+let currentSemabar;
+
+function onTagClicked(event) {
+  const target = event.target;
+  $(target).toggleClass('sema-is-light sema-is-dark');
+  if ($(target).hasClass('sema-is-dark') && currentSemabar) {
+    makeCommentTag(currentSemabar, target);
+  }
+}
+
+function addTagModalToDOM(semamodalHTML) {
+  const modal = $('#addTagsModal');
+  if (!modal.get(0)) {
+    // modal doesnot exist in the DOM
+    $(semamodalHTML).appendTo(document.body);
+    $('#sema-modal-close').on('click', function () {
+      $('#addTagsModal').removeClass('sema-is-active');
+    });
+    $('#tagsPositiveContainer > span').on('click', onTagClicked);
+    $('#tagsNegativeContainer > span').on('click', onTagClicked);
+  }
+}
+
 function showAddTagModal(event) {
   event.preventDefault();
-
+  currentSemabar = event.target.parentElement;
   $('#addTagsModal').addClass('sema-is-active');
 }
 
 $(async function () {
   console.log('Starting...');
+  currentSemabar = null;
 
   const allTemplates = await getTemplates();
   const mapTemplates = Object.keys(TEMPLATES_MAP).reduce((acc, curr, index) => {
