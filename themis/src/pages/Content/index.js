@@ -4,7 +4,9 @@ import {
   TEMPLATES_MAP,
   getImagesHTML,
   isTextBox,
-  makeCommentTag,
+  makeCommentTags,
+  populateModalWithCurrentTags,
+  togglePositiveNegativeTags,
 } from './modules/content-util';
 
 console.log('main script working!!!');
@@ -18,21 +20,17 @@ console.log('main script working!!!');
  * - todo
  * append new sema elements to DOM
  * - todo: donot change DOM for existing textbox, might cause issues with DOM updaters like Reactjs
- * - todo: make it work via NPM
  * - todo: make template html in background.js to avoid fetching everytime?
  * - todo: better way to template, other than sandboxing
  * - todo: remove "Bulma Base" from bulma.css
- * - todo: toggle positive and negative tags of the same kind
  */
 
 let currentSemabar;
 
 function onTagClicked(event) {
   const target = event.target;
-  $(target).toggleClass('sema-is-light sema-is-dark');
-  if ($(target).hasClass('sema-is-dark') && currentSemabar) {
-    makeCommentTag(currentSemabar, target);
-  }
+  togglePositiveNegativeTags(target);
+  makeCommentTags(currentSemabar);
 }
 
 function addTagModalToDOM(semamodalHTML) {
@@ -50,8 +48,13 @@ function addTagModalToDOM(semamodalHTML) {
 
 function showAddTagModal(event) {
   event.preventDefault();
-  currentSemabar = event.target.parentElement;
+  const target = event.target;
+  // clicking on the icon in the button causes the parent to be the button itself
+  // so take the top parent and then get ".sema-tag-container" element
+  const topParent = $(target).parentsUntil('.sema');
+  currentSemabar = topParent.get(topParent.length - 1);
   $('#addTagsModal').addClass('sema-is-active');
+  populateModalWithCurrentTags(currentSemabar);
 }
 
 $(async function () {
