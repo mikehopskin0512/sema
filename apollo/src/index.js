@@ -9,6 +9,8 @@ import reports from './reports';
 import repositories from './repositories';
 import sources from './sources';
 import users from './users';
+import comments from './comments';
+
 
 function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -22,6 +24,7 @@ function attachRoutes(app, passport) {
   repositories(app, passport);
   sources(app, passport);
   users(app, passport);
+  comments(app, passport);
 }
 
 module.exports.attachRoutes = attachRoutes;
