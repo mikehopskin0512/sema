@@ -4,10 +4,13 @@ import {
   TEMPLATES_MAP,
   getImagesHTML,
   isTextBox,
+} from './modules/content-util';
+
+import {
   makeCommentTags,
   populateModalWithCurrentTags,
   togglePositiveNegativeTags,
-} from './modules/content-util';
+} from './modules/tag-util';
 
 console.log('main script working!!!');
 
