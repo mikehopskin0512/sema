@@ -1,5 +1,6 @@
 import analysis from './analysis';
 import auth from './auth';
+import comments from './comments';
 import credentials from './credentials';
 import github from './identity/github';
 import health from './shared/health';
@@ -9,13 +10,13 @@ import reports from './reports';
 import repositories from './repositories';
 import sources from './sources';
 import users from './users';
-import comments from './comments';
 
 
 function attachRoutes(app, passport) {
   analysis(app, passport);
   auth(app, passport);
-  credentials(app, passport);
+  comments(app, passport);
+  credentials(app, passport);    
   github(app);
   health(app);
   invitations(app, passport);
@@ -24,7 +25,7 @@ function attachRoutes(app, passport) {
   repositories(app, passport);
   sources(app, passport);
   users(app, passport);
-  comments(app, passport);
+
 }
 
 module.exports.attachRoutes = attachRoutes;

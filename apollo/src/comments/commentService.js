@@ -10,8 +10,8 @@ var index = new FlexSearch({
     tokenize: "full",
     threshold: 0,
     depth: 5,
-    async: false,
-    worker: false,
+    async: true,
+    worker: 1,
     cache: true,
     stemmer: "en"
 });
@@ -27,9 +27,12 @@ commentBank.forEach(function(comment, i) {
 
 
 export const searchTopComment = async (searchQuery) => {
-    const searchResults = index.search(searchQuery);
-    const topResult = clip(commentBank[searchResults[0]].comment.replace(/<[^>]*>?/gm, ''), 300, { maxLines: 5 });
-    return topResult;
+    const searchResults = await index.search(searchQuery);
+    let returnResults = [];
+    if(searchResults.length>0){
+        returnResults.push(commentBank[searchResults[0]]);
+    }
+    return returnResults;
 };
 
 
