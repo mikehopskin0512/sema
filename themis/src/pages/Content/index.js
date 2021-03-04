@@ -12,6 +12,11 @@ import {
   togglePositiveNegativeTags,
 } from './modules/tag-util';
 
+import {
+  onCollapsedEmojiSelection,
+  onExpandedEmojiSelected,
+} from './modules/emoji-util';
+
 console.log('main script working!!!');
 
 /**
@@ -60,15 +65,6 @@ function showAddTagModal(event) {
   populateModalWithCurrentTags(semaTagContainer);
 }
 
-function onEmojiSelection(event) {
-  event.preventDefault();
-  const target = event.target;
-  const topParent = $(target).parentsUntil('.sema');
-  // semaTagContainer = topParent.get(0);
-  $('.selectedEmoji').hide();
-  $('.expandedEmojis').show();
-}
-
 $(async function () {
   console.log('Starting...');
   semaTagContainer = null;
@@ -102,14 +98,13 @@ $(async function () {
         const semaAddTag = $(addedSemaElement).find(
           '.sema-tag-container .semaAddTag'
         )[0];
-        $(semaAddTag).on('click', (event) => {
-          showAddTagModal(event);
-        });
+        $(semaAddTag).on('click', showAddTagModal);
 
         const selectedEmoji = $(addedSemaElement).find('.selectedEmoji')[0];
-        $(selectedEmoji).on('click', (event) => {
-          onEmojiSelection(event);
-        });
+        $(selectedEmoji).on('click', onCollapsedEmojiSelection);
+
+        const emojis = $(addedSemaElement).find('.expandedEmojis button');
+        $(emojis).on('click', onExpandedEmojiSelected);
       }
     }
   };
