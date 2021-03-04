@@ -29,3 +29,7 @@
 #tagsNegativeContainer > span {
   cursor: pointer;
 }
+
+.expandedEmojis {
+  display: none;
+}

@@ -28,12 +28,12 @@ console.log('main script working!!!');
  * - todo: remove "Bulma Base" from bulma.css
  */
 
-let currentSemabar;
+let semaTagContainer;
 
 function onTagClicked(event) {
   const target = event.target;
   togglePositiveNegativeTags(target);
-  makeCommentTags(currentSemabar);
+  makeCommentTags(semaTagContainer);
 }
 
 function addTagModalToDOM(semamodalHTML) {
@@ -55,14 +55,23 @@ function showAddTagModal(event) {
   // clicking on the icon in the button causes the parent to be the button itself
   // so take the top parent and then get ".sema-tag-container" element
   const topParent = $(target).parentsUntil('.sema');
-  currentSemabar = topParent.get(topParent.length - 1);
+  semaTagContainer = topParent.get(topParent.length - 1);
   $('#addTagsModal').addClass('sema-is-active');
-  populateModalWithCurrentTags(currentSemabar);
+  populateModalWithCurrentTags(semaTagContainer);
+}
+
+function onEmojiSelection(event) {
+  event.preventDefault();
+  const target = event.target;
+  const topParent = $(target).parentsUntil('.sema');
+  // semaTagContainer = topParent.get(0);
+  $('.selectedEmoji').hide();
+  $('.expandedEmojis').show();
 }
 
 $(async function () {
   console.log('Starting...');
-  currentSemabar = null;
+  semaTagContainer = null;
 
   const allTemplates = await getTemplates();
   const mapTemplates = Object.keys(TEMPLATES_MAP).reduce((acc, curr, index) => {
@@ -86,11 +95,20 @@ $(async function () {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
         $(activeElement).after(semabarHTML);
+        const addedSemaElement = $(activeElement).siblings('div.sema')[0];
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
         // todo: dont do this!!!
         // todo: safetly remove listeners?
-        $('.semaAddTag').on('click', (event) => {
+        const semaAddTag = $(addedSemaElement).find(
+          '.sema-tag-container .semaAddTag'
+        )[0];
+        $(semaAddTag).on('click', (event) => {
           showAddTagModal(event);
+        });
+
+        const selectedEmoji = $(addedSemaElement).find('.selectedEmoji')[0];
+        $(selectedEmoji).on('click', (event) => {
+          onEmojiSelection(event);
         });
       }
     }

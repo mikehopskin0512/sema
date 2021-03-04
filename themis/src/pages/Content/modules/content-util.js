@@ -29,7 +29,7 @@ export const getImagesHTML = (rawHTML) => {
   const keys = Object.keys(IMAGES_MAP);
   let imgHTML = rawHTML;
   keys.forEach((key) => {
-    imgHTML = imgHTML.replace(key, getURL(IMAGES_MAP[key]));
+    imgHTML = imgHTML.replaceAll(key, getURL(IMAGES_MAP[key]));
   });
   return imgHTML;
 };
