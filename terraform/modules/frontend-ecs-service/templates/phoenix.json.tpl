@@ -13,24 +13,29 @@
           "awslogs-stream-prefix": "ecs"
         }
     },
-    "environment": [],
-    "secrets": [
-      {
+    "environment": [
+        {
         "name": "APOLLO_CLIENT_SECRET",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/client/secret"
-      }, {
+        "value": "d7f3b825-bf97-4f21-babc-cf03a1babe91"
+        }, 
+       {
         "name": "APOLLO_CLIENT_ID",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/client/id"
-      }, {
+        "value": "3f883860-862e-4a49-b149-f56371e87e88"
+       }, 
+       {
         "name": "BASE_URL_APOLLO",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/api/endpoint"
-      }, {
+        "value": "https://api-${env}.semasoftware.io"
+      }, 
+      {
         "name": "GITHUB_CLIENT_ID",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-id"
-      }, {
+        "value": "Iv1.5fc0e813e59b2277"
+      }, 
+      {
         "name": "GITHUB_REDIRECT",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/redirect"
-      }],
+        "value": "https://api-${env}.semasoftware.io/v1/identities/github/cb"
+      }
+    ],
+    "secrets": [],
     "portMappings": [
       {
         "containerPort": ${port},

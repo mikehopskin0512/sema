@@ -13,7 +13,16 @@
           "awslogs-stream-prefix": "ecs"
         }
     },
-    "environment": [],
+    "environment": [
+      {
+        "name": "ORG_DOMAIN",
+        "value": "https://app-${env}.semasoftware.io"
+      },
+      {
+        "name": "ALLOWED_ORIGIN",
+        "value": "https://app-${env}.semasoftware.io"
+      }
+    ],
     "secrets": [
       {
         "name": "AMAZON_ACCESS_KEY_ID",
@@ -51,10 +60,7 @@
       }, {
         "name": "POSTGRES_CONNECTION",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/postgres/uri"
-      }, {
-        "name": "ALLOWED_ORIGIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/cors"
-      }, {
+      },  {
         "name": "GITHUB_APP_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/app-id"
       }, {
@@ -84,9 +90,6 @@
       }, {
         "name": "MONGOOSE_CERTPATH",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mongo/cert-path"
-      }, {
-        "name": "ORG_DOMAIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
       }, {
         "name": "PORT",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/port"
