@@ -81,10 +81,48 @@ var options = {
         },
         exclude: /node_modules/,
       },
+      // {
+      //   test: (slug) => {
+      //     const shouldResolve =
+      //       slug.includes('pages/Content/') && slug.includes('.html');
+      //     return shouldResolve;
+      //   },
+      //   loader: 'html-loader',
+      //   exclude: /node_modules/,
+      // },
       {
         test: /\.html$/,
         loader: 'html-loader',
         exclude: /node_modules/,
+        options: {
+          sources: {
+            list: [
+              {
+                // Attribute name
+                attribute: 'src',
+                // Type of processing, can be `src` or `scrset`
+                type: 'src',
+                // Allow to filter some attributes (optional)
+                filter: (tag, attribute, attributes, resourcePath) => {
+                  // The `tag` argument contains a name of the HTML tag.
+                  // The `attribute` argument contains a name of the HTML attribute.
+                  // The `attributes` argument contains all attributes of the tag.
+                  // The `resourcePath` argument contains a path to the loaded HTML file.
+
+                  // choose all HTML tags except img tag
+                  let shouldResolve = true;
+                  if (
+                    resourcePath.includes('/pages/Content/') &&
+                    tag.toLowerCase() === 'img'
+                  ) {
+                    return false;
+                  }
+                  return shouldResolve;
+                },
+              },
+            ],
+          },
+        },
       },
       { test: /\.(ts|tsx)$/, loader: 'ts-loader', exclude: /node_modules/ },
       {
@@ -147,15 +185,6 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/pages/Content/templates',
-          to: path.join(__dirname, 'build', 'templates'),
-          force: true,
-        },
-      ],
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
           from: 'src/assets/img',
           to: path.join(__dirname, 'build', 'img'),
           force: true,
@@ -202,7 +231,7 @@ if (env.NODE_ENV === 'development') {
   options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {
-    minimize: true,
+    minimize: false,
     minimizer: [
       new TerserPlugin({
         extractComments: false,
