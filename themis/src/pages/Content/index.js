@@ -68,7 +68,6 @@ $(async function () {
   semaTagContainer = null;
 
   const semabarHTML = getImagesHTML(commentbar);
-  console.log('Received template-->', semabarHTML);
 
   addTagModalToDOM();
 
