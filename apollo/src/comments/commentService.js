@@ -1,41 +1,37 @@
-'use strict';
 const fs = require('fs');
-var FlexSearch = require("flexsearch");
+const FlexSearch = require('flexsearch');
 
-let rawdata = fs.readFileSync(__dirname+'/commentBank.json');
-let commentBank = JSON.parse(rawdata);
+const rawdata = fs.readFileSync(`${__dirname}/commentBank.json`);
+const commentBank = JSON.parse(rawdata);
 
-var index = new FlexSearch({
-    encode: "balance",
-    tokenize: "full",
-    threshold: 0,
-    depth: 5,
-    async: true,
-    worker: 1,
-    cache: true,
-    stemmer: "en"
+const index = new FlexSearch({
+  encode: 'balance',
+  tokenize: 'full',
+  threshold: 0,
+  depth: 5,
+  async: true,
+  worker: 1,
+  cache: true,
+  stemmer: 'en',
 });
 
-let reportEvery = Math.floor(commentBank.length / 10)
+const reportEvery = Math.floor(commentBank.length / 10);
 
-commentBank.forEach(function(comment, i) {
-    index.add(i, comment.comment);
-    if( i % reportEvery == 0 ){
-        console.log("Building comment bank search index: "+i +" / "+commentBank.length + " done");
-    }
-}); 
-
+commentBank.forEach((comment, i) => {
+  index.add(i, comment.comment);
+  if (i % reportEvery == 0) {
+    console.log(`Building comment bank search index: ${i} / ${commentBank.length} done`);
+  }
+});
 
 export const searchTopComment = async (searchQuery) => {
-    const searchResults = await index.search(searchQuery);
-    let returnResults = [];
-    if(searchResults.length>0){
-        returnResults.push(commentBank[searchResults[0]]);
-    }
-    return returnResults;
+  const searchResults = await index.search(searchQuery);
+  const returnResults = [];
+  for (let i = 0; i < 5 && i < searchResults.length; i++) {
+    returnResults.push(commentBank[searchResults[i]]);
+  }
+  return returnResults;
 };
-
-
 
 // exports.index = index
 // exports.commentBank = commentBank;
