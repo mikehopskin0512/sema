@@ -81,15 +81,6 @@ var options = {
         },
         exclude: /node_modules/,
       },
-      // {
-      //   test: (slug) => {
-      //     const shouldResolve =
-      //       slug.includes('pages/Content/') && slug.includes('.html');
-      //     return shouldResolve;
-      //   },
-      //   loader: 'html-loader',
-      //   exclude: /node_modules/,
-      // },
       {
         test: /\.html$/,
         loader: 'html-loader',
@@ -109,7 +100,9 @@ var options = {
                   // The `attributes` argument contains all attributes of the tag.
                   // The `resourcePath` argument contains a path to the loaded HTML file.
 
-                  // choose all HTML tags except img tag
+                  // for content scripts, the image src needs to build from
+                  // chrome.runtime.getURL
+                  // so do not resolve it in the build
                   let shouldResolve = true;
                   if (
                     resourcePath.includes('/pages/Content/') &&
@@ -231,7 +224,7 @@ if (env.NODE_ENV === 'development') {
   options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {
-    minimize: false,
+    minimize: true,
     minimizer: [
       new TerserPlugin({
         extractComments: false,
