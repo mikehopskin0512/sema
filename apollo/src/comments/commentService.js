@@ -24,7 +24,7 @@ commentBank.forEach((comment, i) => {
   }
 });
 
-export const searchTopComment = async (searchQuery) => {
+export const searchComments = async (searchQuery) => {
   const searchResults = await index.search(searchQuery);
   const returnResults = [];
   for (let i = 0; i < 5 && i < searchResults.length; i++) {
