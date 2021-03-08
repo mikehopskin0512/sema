@@ -1,10 +1,5 @@
 import $ from 'cash-dom';
-import {
-  getTemplates,
-  TEMPLATES_MAP,
-  getImagesHTML,
-  isTextBox,
-} from './modules/content-util';
+import { getImagesHTML, isTextBox } from './modules/content-util';
 
 import {
   makeCommentTags,
@@ -16,6 +11,9 @@ import {
   onCollapsedEmojiSelection,
   onExpandedEmojiSelected,
 } from './modules/emoji-util';
+
+import commentbar from './commentbar.html';
+import tagsmodal from './tagsmodal.html';
 
 console.log('main script working!!!');
 
@@ -41,11 +39,11 @@ function onTagClicked(event) {
   makeCommentTags(semaTagContainer);
 }
 
-function addTagModalToDOM(semamodalHTML) {
+function addTagModalToDOM() {
   const modal = $('#addTagsModal');
   if (!modal.get(0)) {
     // modal doesnot exist in the DOM
-    $(semamodalHTML).appendTo(document.body);
+    $(tagsmodal).appendTo(document.body);
     $('#sema-modal-close').on('click', function () {
       $('#addTagsModal').removeClass('sema-is-active');
     });
@@ -69,17 +67,10 @@ $(async function () {
   console.log('Starting...');
   semaTagContainer = null;
 
-  const allTemplates = await getTemplates();
-  const mapTemplates = Object.keys(TEMPLATES_MAP).reduce((acc, curr, index) => {
-    acc[curr] = allTemplates[index];
-    return acc;
-  }, {});
+  const semabarHTML = getImagesHTML(commentbar);
+  console.log('Received template-->', semabarHTML);
 
-  const semabarHTML = getImagesHTML(mapTemplates['semabar']);
-  const semamodalHTML = mapTemplates['semamodal'];
-  console.log('Received template');
-
-  addTagModalToDOM(semamodalHTML);
+  addTagModalToDOM();
 
   const targetNode = document.getElementsByTagName('body')[0];
   const config = { subtree: true, childList: true, attributes: true };

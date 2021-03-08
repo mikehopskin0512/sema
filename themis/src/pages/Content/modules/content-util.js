@@ -1,4 +1,4 @@
-const IMAGES_MAP = {
+export const IMAGES_MAP = {
   sema_trophy: '/img/emoji_trophy.png',
   sema_ok: '/img/emoji_ok.png',
   sema_question: '/img/emoji_question.png',
@@ -7,23 +7,9 @@ const IMAGES_MAP = {
   sema_tag: '/img/price-tags.svg',
 };
 
-export const TEMPLATES_MAP = {
-  semabar: '/templates/semabar.html',
-  semamodal: '/templates/semamodal.html',
-};
-
 const {
   runtime: { getURL },
 } = chrome;
-
-export const getTemplates = () => {
-  const templatePromises = Object.keys(TEMPLATES_MAP).map((templateKey) => {
-    const url = getURL(TEMPLATES_MAP[templateKey]);
-    return fetch(url).then((response) => response.text());
-  });
-
-  return Promise.all(templatePromises);
-};
 
 export const getImagesHTML = (rawHTML) => {
   const keys = Object.keys(IMAGES_MAP);
