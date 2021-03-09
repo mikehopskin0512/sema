@@ -1,10 +1,10 @@
 export const IMAGES_MAP = {
-  sema_trophy: '/img/emoji_trophy.png',
-  sema_ok: '/img/emoji_ok.png',
-  sema_question: '/img/emoji_question.png',
-  sema_tools: '/img/emoji_fix.png',
-  sema_none: '/img/emoji_none.png',
-  sema_tag: '/img/price-tags.svg',
+  sema_trophy: 'img/emoji_trophy.png',
+  sema_ok: 'img/emoji_ok.png',
+  sema_question: 'img/emoji_question.png',
+  sema_tools: 'img/emoji_fix.png',
+  sema_none: 'img/emoji_none.png',
+  sema_tag: 'img/price-tags.svg',
 };
 
 const {

@@ -1,19 +1,15 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import $ from 'cash-dom';
 import { getImagesHTML, isTextBox } from './modules/content-util';
 
-import {
-  makeCommentTags,
-  populateModalWithCurrentTags,
-  togglePositiveNegativeTags,
-} from './modules/tag-util';
+import Semabar from './Semabar.jsx';
 
 import {
   onCollapsedEmojiSelection,
   onExpandedEmojiSelected,
 } from './modules/emoji-util';
-
-import commentbar from './commentbar.html';
-import tagsmodal from './tagsmodal.html';
 
 console.log('main script working!!!');
 
@@ -31,45 +27,8 @@ console.log('main script working!!!');
  * - todo: remove "Bulma Base" from bulma.css
  */
 
-let semaTagContainer;
-
-function onTagClicked(event) {
-  const target = event.target;
-  togglePositiveNegativeTags(target);
-  makeCommentTags(semaTagContainer);
-}
-
-function addTagModalToDOM() {
-  const modal = $('#addTagsModal');
-  if (!modal.get(0)) {
-    // modal doesnot exist in the DOM
-    $(tagsmodal).appendTo(document.body);
-    $('#sema-modal-close').on('click', function () {
-      $('#addTagsModal').removeClass('sema-is-active');
-    });
-    $('#tagsPositiveContainer > span').on('click', onTagClicked);
-    $('#tagsNegativeContainer > span').on('click', onTagClicked);
-  }
-}
-
-function showAddTagModal(event) {
-  event.preventDefault();
-  const target = event.target;
-  // clicking on the icon in the button causes the parent to be the button itself
-  // so take the top parent and then get ".sema-tag-container" element
-  const topParent = $(target).parentsUntil('.sema');
-  semaTagContainer = topParent.get(topParent.length - 1);
-  $('#addTagsModal').addClass('sema-is-active');
-  populateModalWithCurrentTags(semaTagContainer);
-}
-
 $(async function () {
   console.log('Starting...');
-  semaTagContainer = null;
-
-  const semabarHTML = getImagesHTML(commentbar);
-
-  addTagModalToDOM();
 
   const targetNode = document.getElementsByTagName('body')[0];
   const config = { subtree: true, childList: true, attributes: true };
@@ -80,21 +39,11 @@ $(async function () {
     if (isTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        $(activeElement).after(semabarHTML);
-        const addedSemaElement = $(activeElement).siblings('div.sema')[0];
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
-        // todo: dont do this!!!
-        // todo: safetly remove listeners?
-        const semaAddTag = $(addedSemaElement).find(
-          '.sema-tag-container .semaAddTag'
-        )[0];
-        $(semaAddTag).on('click', showAddTagModal);
 
-        const selectedEmoji = $(addedSemaElement).find('.selectedEmoji')[0];
-        $(selectedEmoji).on('click', onCollapsedEmojiSelection);
-
-        const emojis = $(addedSemaElement).find('.expandedEmojis button');
-        $(emojis).on('click', onExpandedEmojiSelected);
+        $(activeElement).after("<div class='sema sema-mt-2'>");
+        const addedSemaElement = $(activeElement).siblings('div.sema')[0];
+        ReactDOM.render(<Semabar />, addedSemaElement);
       }
     }
   };
