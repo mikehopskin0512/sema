@@ -2,14 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import $ from 'cash-dom';
-import { getImagesHTML, isTextBox } from './modules/content-util';
+import { isTextBox } from './modules/content-util';
 
 import Semabar from './Semabar.jsx';
-
-import {
-  onCollapsedEmojiSelection,
-  onExpandedEmojiSelected,
-} from './modules/emoji-util';
 
 console.log('main script working!!!');
 
