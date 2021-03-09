@@ -1,48 +1,19 @@
 import React, { useState } from 'react';
 import TagsModal from './TagsModal.jsx';
-import { DELETE_OP, POSITIVE, NEGATIVE, SELECTED } from './constants';
-
-const TAGS_INIT = [
-  {
-    [POSITIVE]: 'Readable',
-    [NEGATIVE]: 'Unreadable',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Secure',
-    [NEGATIVE]: 'Unsecure',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Efficient',
-    [NEGATIVE]: 'Inefficient',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Elegant',
-    [NEGATIVE]: 'Inelegant',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Reusable',
-    [NEGATIVE]: 'Not reusable',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Fault-tolerant',
-    [NEGATIVE]: 'Brittle',
-    [SELECTED]: null,
-  },
-  {
-    [POSITIVE]: 'Maintainable',
-    [NEGATIVE]: 'Not maintainable',
-    [SELECTED]: null,
-  },
-];
+import EmojiSelection from './EmojiSelection.jsx';
+import {
+  DELETE_OP,
+  POSITIVE,
+  NEGATIVE,
+  SELECTED,
+  TAGS_INIT,
+  EMOJIS,
+} from './constants';
 
 function Semabar() {
   const [isDropdownVisible, toggleDropdown] = useState(false);
   const [allTags, updateSelectedTags] = useState(TAGS_INIT);
+  const [selectedEmoji, updateSelectedEmoji] = useState(EMOJIS[0]);
 
   const toggleTagSelection = (operation) => {
     /**
@@ -142,35 +113,15 @@ function Semabar() {
 
   return (
     <>
-      <div className="selectedEmoji">
-        <button
-          className="sema-button sema-is-small sema-is-squared"
-          title="None"
-        >
-          <img src="sema_none" />
-          <span className="sema-ml-2">None</span>
-        </button>
-      </div>
-      <div className="expandedEmojis">
-        <button className="zoom sema-button sema-is-small" title="Awesome">
-          <img src="sema_trophy" />
-        </button>
-        <button className="zoom sema-button sema-is-small" title="Looks good">
-          <img src="sema_ok" />
-        </button>
-        <button
-          className="zoom sema-button sema-is-small"
-          title="I have a question"
-        >
-          <img src="sema_question" />
-        </button>
-        <button className="zoom sema-button sema-is-small" title="Fix">
-          <img src="sema_tools" />
-        </button>
-        <button className="zoom sema-button sema-is-small" title="None">
-          <img src="sema_none" />
-        </button>
-      </div>
+      {
+        <EmojiSelection
+          allEmojis={EMOJIS}
+          selectedEmoji={selectedEmoji}
+          onEmojiSelected={(emojiObj) => {
+            updateSelectedEmoji(emojiObj);
+          }}
+        />
+      }
       <div className="sema-tag-container">
         {createAddTags()}
         {createActiveTags()}
