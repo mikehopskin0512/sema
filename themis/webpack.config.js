@@ -85,37 +85,6 @@ var options = {
         test: /\.html$/,
         loader: 'html-loader',
         exclude: /node_modules/,
-        options: {
-          sources: {
-            list: [
-              {
-                // Attribute name
-                attribute: 'src',
-                // Type of processing, can be `src` or `scrset`
-                type: 'src',
-                // Allow to filter some attributes (optional)
-                filter: (tag, attribute, attributes, resourcePath) => {
-                  // The `tag` argument contains a name of the HTML tag.
-                  // The `attribute` argument contains a name of the HTML attribute.
-                  // The `attributes` argument contains all attributes of the tag.
-                  // The `resourcePath` argument contains a path to the loaded HTML file.
-
-                  // for content scripts, the image src needs to build from
-                  // chrome.runtime.getURL
-                  // so do not resolve it in the build
-                  let shouldResolve = true;
-                  if (
-                    resourcePath.includes('/pages/Content/') &&
-                    tag.toLowerCase() === 'img'
-                  ) {
-                    return false;
-                  }
-                  return shouldResolve;
-                },
-              },
-            ],
-          },
-        },
       },
       { test: /\.(ts|tsx)$/, loader: 'ts-loader', exclude: /node_modules/ },
       {
