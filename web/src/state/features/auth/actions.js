@@ -63,7 +63,7 @@ const userNotVerifiedError = (user) => ({
   user,
 });
 
-const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
+/*const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
   // Pass custom id and organization_id to Heap
   if (typeof window !== 'undefined') {
     if (userId) {
@@ -74,15 +74,18 @@ const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
     //   window.heap.addUserProperties({ organization_id });
     // }
   }
-};
+};*/
 
 export const authenticate = (username, password) => async (dispatch) => {
-  dispatch(authenticateRequest());
+    console.log("actions authenticate");
+    dispatch(authenticateRequest());
+    console.log("actions dispatch");
   try {
     const res = await auth({ username, password });
     const { data: { jwtToken } } = res;
-    const { user } = jwtDecode(jwtToken) || {};
-
+      const { user } = jwtDecode(jwtToken) || {};
+      console.log("authenticate user password");
+    console.log(user);
     if (user) {
       const { _id: userId, isVerified } = user;
       const orgId = null; // TEMP: Until orgs are linked up
@@ -99,7 +102,7 @@ export const authenticate = (username, password) => async (dispatch) => {
 
       // Hydrate user regardless of isVerified
       dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
+      //logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
@@ -109,14 +112,15 @@ export const authenticate = (username, password) => async (dispatch) => {
 };
 
 export const refreshJwt = (refreshToken) => async (dispatch) => {
+    console.log("refreshJwt");
   dispatch(requestRefreshToken());
-
+    console.log("refreshJwt dispatch");
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
     const { user } = jwtDecode(jwtToken) || {};
     const { isVerified } = user;
-
+    console.log("refreshJwt before send");
     // Send token to state and hydrate user
     dispatch(requestRefreshTokenSuccess(jwtToken));
     dispatch(hydrateUser(user));
@@ -247,7 +251,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
+//      logHeapAnalytics(userId, orgId);
     }
 
     dispatch(verifyUserSuccess());

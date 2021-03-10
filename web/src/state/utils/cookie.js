@@ -3,7 +3,8 @@ import cookie from 'js-cookie';
 const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || 'localhost';
 
 export const setCookie = (key, value, expires = 1) => {
-  if (process.browser) {
+    if (process.browser) {
+	console.log("setCookie browser");
     cookie.set(key, value, {
       expires,
       path: '/',
@@ -23,6 +24,7 @@ export const removeCookie = (key) => {
 const getCookieFromBrowser = (key) => cookie.get(key);
 
 const getCookieFromServer = (key, req) => {
+    	console.log("getCookieFromServer");
   if (!req.headers.cookie) {
     return undefined;
   }

@@ -21,12 +21,14 @@ const redirect = (ctx, location) => {
 const initialize = async (ctx) => {
   let jwt = null;
   let isVerified = false;
-  if (isServer()) {
+    if (isServer()) {
+	console.log("isServer");
     // On server-side, get refreshCookie and call refreshJwt (which will return isVerified)
     jwt = getCookie(refreshCookie, ctx.req);
     const payload = (jwt) ? await ctx.store.dispatch(refreshJwt(jwt)) : {};
     ({ isVerified = false } = payload);
-  } else {
+    } else {
+	console.log("not isServer");
     // On client-side, get jwt from state and decode to get isVerified
     ({ authState: { token: jwt } } = ctx.store.getState());
     const { user = {} } = (jwt) ? jwtDecode(jwt) : {};
