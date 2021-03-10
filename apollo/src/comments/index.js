@@ -21,5 +21,4 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
->>>>>>> PHX-12
 };
