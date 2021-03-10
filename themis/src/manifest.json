@@ -1,0 +1,46 @@
+{
+  "manifest_version": 3,
+  "name": "Sema for Chrome",
+  "description": "Sema chrome extension for github",
+  "version": "1.0",
+  "options_page": "options.html",
+  "background": { "service_worker": "background.bundle.js" },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "/img/sema16.png",
+      "32": "/img/sema32.png",
+      "48": "/img/sema48.png",
+      "128": "/img/sema128.png"
+    }
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "icons": {
+    "16": "/img/sema16.png",
+    "32": "/img/sema32.png",
+    "48": "/img/sema48.png",
+    "128": "/img/sema128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*", "*://*.github.com/*"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["sema-custom.css", "content.styles.css"]
+    }
+  ],
+  "devtools_page": "devtools.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content.styles.css",
+        "icon-128.png",
+        "icon-34.png",
+        "/img/*",
+        "/templates/*"
+      ],
+      "matches": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+.sema {
+  display: flex;
+  flex-direction: row;
+  -webkit-flex-direction: row;
+}
+
+.sema img {
+  height: 20px;
+}
+
+.zoom {
+  transition: transform 0.2s;
+}
+
+.zoom:hover {
+  transform: scale(1.5);
+}
+
+.sema-tag-container {
+  display: flex;
+  flex: 1;
+  flex-direction: row-reverse;
+}
+
+#tagsPositiveContainer > span {
+  cursor: pointer;
+}
+
+#tagsNegativeContainer > span {
+  cursor: pointer;
+}
