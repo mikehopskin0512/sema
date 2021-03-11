@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
+import Emoji from './modules/emoji.js';
 
 function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
   const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
 
-  const { title: selectedTitle, image: selectedImage } = selectedEmoji;
+  const { title: selectedTitle, image: selectedImage, emoji: shownEmoji } = selectedEmoji;
   return (
     <>
       {isSelectingEmoji ? (
         allEmojis.map((emojiObj) => {
-          const { title, image } = emojiObj;
+          const { title, image, emoji } = emojiObj;
           return (
             <button
               className="zoom sema-button sema-is-small"
@@ -19,7 +20,7 @@ function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
                 toggleEmojiSelection(!isSelectingEmoji);
               }}
             >
-              <img src={image} />
+              <Emoji symbol={emoji}/>
             </button>
           );
         })
@@ -31,7 +32,7 @@ function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
             toggleEmojiSelection(!isSelectingEmoji);
           }}
         >
-          <img src={selectedImage} />
+          <Emoji symbol={shownEmoji}/>
           <span className="sema-ml-2">{selectedTitle}</span>
         </button>
       )}

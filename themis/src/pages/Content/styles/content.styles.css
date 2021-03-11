@@ -8,6 +8,10 @@
   height: 20px;
 }
 
+.sema-emoji {
+  font-size: 1rem;
+}
+
 .zoom {
   transition: transform 0.2s;
 }
