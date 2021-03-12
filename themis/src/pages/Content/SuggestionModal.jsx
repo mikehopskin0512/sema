@@ -56,22 +56,30 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
           {getCommentInterface(comment, false)}
           <div className="suggestion-buttons">
             <button
-              className="sema-button sema-is-primary sema-is-inverted"
+              className="sema-button sema-is-inverted sema-is-small"
+              style={{ border: 'none' }}
               onClick={(event) => {
                 event.preventDefault();
                 onCopyPressed(comment);
               }}
             >
-              Copy
+              <span className="sema-icon">
+                <i className="fas fa-copy"></i>
+              </span>
+              <span>Copy</span>
             </button>
             <button
-              className="sema-button sema-is-primary sema-is-inverted"
+              className="sema-button sema-is-inverted sema-is-small"
+              style={{ border: 'none' }}
               onClick={(event) => {
                 event.preventDefault();
                 onViewPressed(searchResult);
               }}
             >
-              View
+              <span className="sema-icon">
+                <i className="fas fa-eye"></i>
+              </span>
+              <span>View</span>
             </button>
           </div>
         </div>
@@ -83,20 +91,30 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     const { comment, sourceName, sourceUrl, title } = currentSuggestion;
     return (
       <>
-        <button className="sema-button" onClick={onCommentDetailBackPressed}>
-          Back
+        <button
+          className="sema-button sema-is-inverted sema-is-small"
+          style={{ border: 'none' }}
+          onClick={onCommentDetailBackPressed}
+        >
+          <span className="sema-icon">
+            <i className="fas fa-arrow-left"></i>
+          </span>
         </button>
         {getCommentTitleInterface(title, sourceName)}
         {getCommentInterface(comment, true)}
         <div className="suggestion-buttons">
           <button
-            className="sema-button sema-is-primary sema-is-inverted"
+            className="sema-button sema-is-inverted sema-is-small"
+            style={{ border: 'none' }}
             onClick={(event) => {
               event.preventDefault();
               onCopyPressed(comment);
             }}
           >
-            Copy
+            <span className="sema-icon">
+              <i className="fas fa-copy"></i>
+            </span>
+            <span>Copy</span>
           </button>
         </div>
       </>

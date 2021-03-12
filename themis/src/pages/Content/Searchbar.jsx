@@ -53,7 +53,7 @@ function SearchBar({ commentBox }) {
 
   const onCopyPressed = (suggestion) => {
     const value = commentBox.value;
-    commentBox.value = `${value} ${suggestion}`;
+    commentBox.value = `${value}\n${suggestion}`;
     toggleDropdown(false);
   };
 
@@ -69,7 +69,7 @@ function SearchBar({ commentBox }) {
     setTimeout(() => {
       toggleIsLoading(false);
       toggleDropdown(true);
-    }, 2000);
+    }, 1500);
   };
 
   const handleKeyPress = (event) => {
