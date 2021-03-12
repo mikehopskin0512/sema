@@ -35,7 +35,7 @@ export const setRefreshToken = (response, token) => {
   };
 
   // Can't use domain on localhost or cookie fails to be set
-  if (nodeEnv !== development) {
+  if (nodeEnv !== 'development') {
     cookieConfig.domain = `.${rootDomain}`;
   } else {
     console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
