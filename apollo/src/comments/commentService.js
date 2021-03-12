@@ -1,8 +1,7 @@
 const fs = require('fs');
 const FlexSearch = require('flexsearch');
 
-const rawdata = fs.readFileSync(`${__dirname}/commentBank.json`);
-const commentBank = JSON.parse(rawdata);
+const commentBank = require('./commentBank.json');
 
 const index = new FlexSearch({
   encode: 'balance',
