@@ -40,7 +40,8 @@
         "icon-34.png",
         "img/*"
       ],
-      "matches": []
+      "matches": ["<all_urls>"],
+      "extension_ids": []
     }
   ]
 }
