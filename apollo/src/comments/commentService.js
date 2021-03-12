@@ -1,7 +1,7 @@
 const fs = require('fs');
 const FlexSearch = require('flexsearch');
 
-const commentBank = require('./commentBank.json');
+const commentBank = require('./commentBank.js');
 
 const index = new FlexSearch({
   encode: 'balance',
