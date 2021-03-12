@@ -1,5 +1,5 @@
 #!/bin/bash
-CLUSTER_NAME=qa-frontend
+CLUSTER_NAME=qa1-frontend
 SERVICE_NAME=phoenix
 
 NAME=phoenix

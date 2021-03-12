@@ -77,19 +77,16 @@ const userNotVerifiedError = (user) => ({
 };*/
 
 export const authenticate = (username, password) => async (dispatch) => {
-    console.log("actions authenticate");
-    dispatch(authenticateRequest());
-    console.log("actions dispatch");
+  dispatch(authenticateRequest());
   try {
     const res = await auth({ username, password });
     const { data: { jwtToken } } = res;
-      const { user } = jwtDecode(jwtToken) || {};
-      console.log("authenticate user password");
-    console.log(user);
+    const { user } = jwtDecode(jwtToken) || {};
+    
     if (user) {
       const { _id: userId, isVerified } = user;
       const orgId = null; // TEMP: Until orgs are linked up
-
+      
       // Only allow store token if isVerified
       if (isVerified) {
         dispatch(authenticateSuccess(jwtToken));
@@ -112,15 +109,13 @@ export const authenticate = (username, password) => async (dispatch) => {
 };
 
 export const refreshJwt = (refreshToken) => async (dispatch) => {
-    console.log("refreshJwt");
   dispatch(requestRefreshToken());
-    console.log("refreshJwt dispatch");
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
     const { user } = jwtDecode(jwtToken) || {};
     const { isVerified } = user;
-    console.log("refreshJwt before send");
+
     // Send token to state and hydrate user
     dispatch(requestRefreshTokenSuccess(jwtToken));
     dispatch(hydrateUser(user));
