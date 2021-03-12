@@ -5,6 +5,7 @@ import $ from 'cash-dom';
 import { isTextBox } from './modules/content-util';
 
 import Semabar from './Semabar.jsx';
+import Searchbar from './Searchbar.jsx';
 
 console.log('main script working!!!');
 
@@ -36,9 +37,18 @@ $(async function () {
       if (!semaElements[0]) {
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
 
-        $(activeElement).after("<div class='sema sema-mt-2'>");
+        $(activeElement).after("<div class='sema sema-mt-2'></div>");
         const addedSemaElement = $(activeElement).siblings('div.sema')[0];
         ReactDOM.render(<Semabar />, addedSemaElement);
+
+        $(activeElement).before(
+          "<div class='sema-search sema-mt-2 sema-mb-2'></div>"
+        );
+        const searchContainer = $(activeElement).siblings('div.sema-search')[0];
+        ReactDOM.render(
+          <Searchbar commentBox={activeElement} />,
+          searchContainer
+        );
       }
     }
   };
