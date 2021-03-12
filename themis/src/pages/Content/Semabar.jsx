@@ -92,10 +92,10 @@ function Semabar() {
               toggleDropdown(!isDropdownVisible);
             }}
           >
-            <span>Add Tags</span>
             <span className="sema-icon sema-is-small">
-              <i className="fas fa-angle-down" ></i>
+              <i className="fas fa-tag"></i>
             </span>
+            <span>Add Tags</span>
           </button>
         </div>
         <div className="sema-dropdown-menu" id="dropdown-menu2" role="menu">
