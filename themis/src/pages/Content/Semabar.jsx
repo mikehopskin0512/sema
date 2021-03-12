@@ -94,7 +94,7 @@ function Semabar() {
           >
             <span>Add Tags</span>
             <span className="sema-icon sema-is-small">
-              <i className="sema-fas sema-fa-angle-down" aria-hidden="true"></i>
+              <i className="fas fa-angle-down" ></i>
             </span>
           </button>
         </div>
