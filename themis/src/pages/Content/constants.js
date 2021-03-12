@@ -49,21 +49,26 @@ export const EMOJIS = [
   {
     title: 'None',
     image: 'sema_none',
+    emoji: '⚪',
   },
   {
     title: 'Awesome',
-    image: 'sema_none',
+    image: 'sema_trophy',
+    emoji: '🏆',
   },
   {
     title: 'Looks good',
-    image: 'sema_none',
+    image: 'sema_ok',
+    emoji: '👌',
   },
   {
     title: 'I have a question',
-    image: 'sema_none',
+    image: 'sema_question',
+    emoji: '❓',
   },
   {
     title: 'Fix',
-    image: 'sema_none',
+    image: 'sema_tools',
+    emoji: '🛠',
   },
 ];
