@@ -1,16 +1,34 @@
 import React, { useState } from 'react';
 import SuggestionModal from './SuggestionModal';
 
-function SearchBar() {
+function SearchBar({ commentBox }) {
   const [isDropdownVisible, toggleDropdown] = useState(false);
   const [searchValue, handleChange] = useState('');
 
   const onInputChanged = (event) => {
+    event.preventDefault();
     const value = event.target.value;
     handleChange(value);
-    if (value.length >= 3 && !isDropdownVisible) {
+  };
+
+  const onCopyPressed = (suggestion) => {
+    const value = commentBox.value;
+    commentBox.value = `${value} ${suggestion}`;
+    toggleDropdown(false);
+  };
+
+  const handleKeyPress = (event) => {
+    const charCode =
+      typeof event.which == 'number' ? event.which : event.keyCode;
+    if (charCode === 13) {
+      // enter is pressed
+      // show dropdown
+      event.preventDefault();
       toggleDropdown(true);
-    } else if (value.length < 3 && isDropdownVisible) {
+    } else if (charCode === 27) {
+      // esc is pressed
+      // hide dropdown
+      event.preventDefault();
       toggleDropdown(false);
     }
   };
@@ -30,17 +48,19 @@ function SearchBar() {
               placeholder="Search.."
               value={searchValue}
               onChange={onInputChanged}
+              onKeyDown={handleKeyPress}
             ></input>
           </div>
         </div>
       </div>
-      <div className="sema-dropdown-menu" id="dropdown-menu2" role="menu">
+      <div
+        className="sema-dropdown-menu suggestion-modal"
+        id="dropdown-menu2"
+        role="menu"
+      >
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
-            <SuggestionModal
-              searchValue={searchValue}
-              onInputChanged={onInputChanged}
-            />
+            <SuggestionModal onCopyPressed={onCopyPressed} />
           </div>
         </div>
       </div>

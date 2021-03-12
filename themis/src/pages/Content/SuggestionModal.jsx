@@ -51,37 +51,100 @@ const truncate = (content) => {
   return content;
 };
 
-function SuggestionModal({ searchValue, onInputChanged }) {
+const getCommentTitleInterface = (title, sourceName) => {
   return (
-    <div className="sema-panel">
-      <div className="panel-block">
-        <div className="sema-control">
-          <input
-            className="sema-input"
-            type="text"
-            placeholder="Search.."
-            value={searchValue}
-            onChange={onInputChanged}
-          ></input>
-        </div>
-      </div>
-      {searchResults.map((searchResult) => {
-        const { comment, sourceName, sourceUrl, title } = searchResult;
-        return (
-          <React.Fragment key={title}>
-            <div>
-              <span>{title}</span> via {sourceName}
-            </div>
-            <div className="sema-card">
-              <div className="sema-card-content">
-                <div className="sema-content">{truncate(comment)}</div>
-              </div>
-            </div>
-          </React.Fragment>
-        );
-      })}
+    <div>
+      <span className="suggestion-title">{title}</span>{' '}
+      <span className="suggestion-via">via {sourceName}</span>
     </div>
   );
+};
+
+const getCommentInterface = (comment, isDetailed) => {
+  const finalComment = isDetailed ? comment : truncate(comment);
+  return (
+    <div className="suggestion-content-truncated-container">
+      <div
+        className="suggestion-content-truncated"
+        dangerouslySetInnerHTML={{ __html: finalComment }}
+      ></div>
+    </div>
+  );
+};
+
+function SuggestionModal({ onCopyPressed }) {
+  const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
+  const [currentSuggestion, setCurrentSuggestion] = useState(null);
+
+  const onViewPressed = (suggestion) => {
+    setCurrentSuggestion(suggestion);
+    toggleCommentDetails(true);
+  };
+
+  const onCommentDetailBackPressed = () => {
+    setCurrentSuggestion(null);
+    toggleCommentDetails(false);
+  };
+
+  const getAllCommentsUI = () => {
+    return searchResults.map((searchResult) => {
+      const { comment, sourceName, sourceUrl, title } = searchResult;
+      return (
+        <div key={title}>
+          {getCommentTitleInterface(title, sourceName)}
+          {getCommentInterface(comment, false)}
+          <div className="suggestion-buttons">
+            <button
+              className="sema-button sema-is-primary sema-is-inverted"
+              onClick={(event) => {
+                event.preventDefault();
+                onCopyPressed(comment);
+              }}
+            >
+              Copy
+            </button>
+            <button
+              className="sema-button sema-is-primary sema-is-inverted"
+              onClick={(event) => {
+                event.preventDefault();
+                onViewPressed(searchResult);
+              }}
+            >
+              View
+            </button>
+          </div>
+        </div>
+      );
+    });
+  };
+
+  const getCommentUI = () => {
+    const { comment, sourceName, sourceUrl, title } = currentSuggestion;
+    return (
+      <>
+        <button className="sema-button" onClick={onCommentDetailBackPressed}>
+          Back
+        </button>
+        {getCommentTitleInterface(title, sourceName)}
+        {getCommentInterface(comment, true)}
+        <div className="suggestion-buttons">
+          <button
+            className="sema-button sema-is-primary sema-is-inverted"
+            onClick={(event) => {
+              event.preventDefault();
+              onCopyPressed(comment);
+            }}
+          >
+            Copy
+          </button>
+        </div>
+      </>
+    );
+  };
+
+  const element = isCommentDetailsVisible ? getCommentUI() : getAllCommentsUI();
+
+  return <div>{element}</div>;
 }
 
 export default SuggestionModal;

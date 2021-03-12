@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import TagsModal from './TagsModal.jsx';
 import EmojiSelection from './EmojiSelection.jsx';
-import Searchbar from './Searchbar.jsx';
 
 import {
   DELETE_OP,
@@ -122,7 +121,6 @@ function Semabar() {
           updateSelectedEmoji(emojiObj);
         }}
       />
-      <Searchbar />
       <div className="sema-tag-container">
         {createAddTags()}
         {createActiveTags()}
