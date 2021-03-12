@@ -3,12 +3,11 @@ CLUSTER_NAME=qa1-frontend
 SERVICE_NAME=phoenix
 
 NAME=phoenix
-# NODE_ENV=staging
-DOCKER_FILE=../.docker/web/Dockerfile.dev
-VERSION=qa1
-# BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
-# SHA1=$(git rev-parse HEAD)
-# VERSION=$BRANCH-$SHA1-$NODE_ENV
+NODE_ENV=staging
+DOCKER_FILE=../.docker/web/Dockerfile.prod
+BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+SHA1=$(git rev-parse HEAD)
+VERSION=$BRANCH-$SHA1-$NODE_ENV
 
 aws configure set default.region us-east-1
 
