@@ -38,7 +38,7 @@ export const setRefreshToken = (response, token) => {
   if (nodeEnv !== development) {
     cookieConfig.domain = `.${rootDomain}`;
   } else {
-    console.log(`${nodeEnv} !== development, so we are NOT setting cookieConfig.domain`);
+    console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }
 
   response.cookie(refreshTokenName, token, cookieConfig);
