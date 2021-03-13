@@ -1,6 +1,8 @@
+import $ from 'cash-dom';
+
 import { EMOJIS, TAGS_INIT, POSITIVE, NEGATIVE, SELECTED } from '../constants';
 
-export function isTextBox(element) {
+export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;
   // if (tagName !== 'input') return false;
@@ -23,7 +25,13 @@ export function isTextBox(element) {
   //   ];
   // return inputTypes.indexOf(type) >= 0;
   return false;
-}
+};
+
+export const isValidSemaTextBox = (element) => {
+  const parent = $(element).parents('.js-file-content');
+  const fileHeaderSibling = parent.length && $(parent).siblings('.file-header');
+  return isTextBox(element) && fileHeaderSibling.length;
+};
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
   `\n**Sema Reaction:** ${selectedEmojiString} | **Sema Tags:**${selectedTagsString}\n`;

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import $ from 'cash-dom';
 import {
-  isTextBox,
+  isValidSemaTextBox,
   getSemaGithubText,
   getInitialSemaValues,
 } from './modules/content-util';
@@ -96,7 +96,7 @@ $(async function () {
 
   const callback = function (mutationList, observer) {
     const activeElement = document.activeElement;
-    if (isTextBox(activeElement)) {
+    if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
