@@ -27,26 +27,26 @@ sudo docker tag $NAME:$VERSION $IMAGE
 echo "Pushing image..."
 sudo docker push $IMAGE
 
+echo "creating new task definition with image..."
 # get the latest task definition
 LATEST_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TASK_FAMILY_NAME)
-
 # get the latest task definition ARN and execution role ARN
 LATEST_TASK_DEFINITION_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.taskDefinitionArn")
 LATEST_TASK_EXECUTION_ROLE_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.executionRoleArn")
-
 # get the latest task definition excution ARN (needed for using secrets from the parameter store)
 LATEST_TASK_EXECUTION_ROLE_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.executionRoleArn")
-
 # update the first container in the containerDefinitions with the new image
 # we only have 1 container per task definition currently
 CONTAINER_DEFINITIONS=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.containerDefinitions[0].image = \"$IMAGE\" | .taskDefinition.containerDefinitions")
-
 # register the new task definition
-aws ecs register-task-definition --family $TASK_FAMILY_NAME --container-definitions "$CONTAINER_DEFINITIONS" --execution-role-arn $LATEST_TASK_EXECUTION_ROLE_ARN
+NEW_TASK_DEFINITION_ARN=$(aws ecs register-task-definition --family $TASK_FAMILY_NAME --container-definitions "$CONTAINER_DEFINITIONS" --execution-role-arn $LATEST_TASK_EXECUTION_ROLE_ARN | jq -r ".taskDefinition.taskDefinitionArn")
 
+echo "making old task definition inactive..."
 # de-register the old task definition
-aws ecs deregister-task-definition --task-definition $LATEST_TASK_DEFINITION_ARN
+aws ecs deregister-task-definition --task-definition $LATEST_TASK_DEFINITION_ARN > /dev/null
 
-# force update and redeploy
-echo "Updating ECS..."
-aws --profile phoenix  ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $SERVICE_NAME > /dev/null
+# force update to use new task definition and redeploy
+echo "Updating ECS with new task definition..."
+aws --profile phoenix ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEFINITION_ARN > /dev/null
+
+echo "done :)"
