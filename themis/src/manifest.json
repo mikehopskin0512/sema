@@ -14,9 +14,6 @@
       "128": "/img/sema128.png"
     }
   },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
-  },
   "icons": {
     "16": "/img/sema16.png",
     "32": "/img/sema32.png",
