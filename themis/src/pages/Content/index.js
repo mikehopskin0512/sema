@@ -12,8 +12,6 @@ import { EMOJIS, SEMA_GITHUB_REGEX } from './constants';
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
 
-console.log('main script working!!!');
-
 window.addEventListener(
   'click',
   function (event) {
@@ -93,8 +91,6 @@ window.addEventListener(
  */
 
 $(async function () {
-  console.log('Starting...');
-
   const targetNode = document.getElementsByTagName('body')[0];
   const config = { subtree: true, childList: true, attributes: true };
 
