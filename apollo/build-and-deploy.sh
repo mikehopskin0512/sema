@@ -34,7 +34,7 @@ LATEST_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TAS
 LATEST_TASK_DEFINITION_ARN=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.taskDefinitionArn")
 
 # update the first container in the containerDefinitions with the new image
-CONTAINER_DEFINITIONS=$(echo $LATEST_TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0].image = '"$IMAGE"' | [.containerDefinitions]')
+CONTAINER_DEFINITIONS=$(echo $LATEST_TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0].image = "$IMAGE" | [.containerDefinitions]')
 
 # register the new task definition
 aws ecs register-task-definition --family $TASK_FAMILY_NAME --container-definitions $CONTAINER_DEFINITIONS
