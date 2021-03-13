@@ -14,8 +14,8 @@ function TagsModal({ allTags, toggleTagSelection }) {
         <span
           key={tag}
           className={classes}
-          onClick={() => {
-            toggleTagSelection({ tag, op: TOGGLE_OP });
+          onClick={(test) => {
+            toggleTagSelection({ tag, isSelected, op: TOGGLE_OP });
           }}
         >
           {tag}

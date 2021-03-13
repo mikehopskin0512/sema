@@ -23,7 +23,7 @@ function Semabar() {
      * op: toggle | delete
      * }
      */
-    const { tag, op } = operation;
+    const { tag, isSelected, op } = operation;
     let updatedTags;
     if (op === DELETE_OP) {
       updatedTags = allTags.map((tagObj) => {
@@ -36,6 +36,14 @@ function Semabar() {
     } else {
       updatedTags = allTags.map((tagObj) => {
         const modifiedObj = { ...tagObj };
+
+        // If tag is already selected, set selection to null on toggle
+        if (isSelected && (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])) {
+          modifiedObj[SELECTED] = null;
+          return modifiedObj;
+        }
+
+        // Otherwise, set positive or negative tag for selection
         if (tag === tagObj[POSITIVE]) {
           modifiedObj[SELECTED] = POSITIVE;
         } else if (tag === tagObj[NEGATIVE]) {
