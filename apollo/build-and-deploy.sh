@@ -28,7 +28,7 @@ echo "Pushing image..."
 sudo docker push $IMAGE
 
 # get the latest task definition
-LATEST_TASK_DEFINITION=aws ecs describe-task-definition --task-definition $TASK_FAMILY_NAME
+LATEST_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TASK_FAMILY_NAME)
 
 # get the latest task definition ARN
 LATEST_TASK_DEFINITION_ARN=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.taskDefinitionArn")
