@@ -49,27 +49,35 @@ export const TAGS_INIT = [
 export const EMOJIS = [
   {
     title: 'None',
-    image: 'sema_none',
     emoji: '⚪',
+    github_emoji: ':white_circle:',
   },
   {
     title: 'Awesome',
-    image: 'sema_trophy',
     emoji: '🏆',
+    github_emoji: ':trophy:',
   },
   {
     title: 'Looks good',
-    image: 'sema_ok',
     emoji: '👌',
+    github_emoji: ':ok_hand:',
   },
   {
     title: 'I have a question',
-    image: 'sema_question',
     emoji: '❓',
+    github_emoji: ':question:',
   },
   {
     title: 'Fix',
-    image: 'sema_tools',
     emoji: '🛠',
+    github_emoji: ':hammer_and_wrench:',
   },
 ];
+
+/* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
+ * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
+ */
+export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
+
+export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
+  `\n**Sema Reaction:** ${selectedEmojiString} | **Sema Tags:**${selectedTagsString}\n`;

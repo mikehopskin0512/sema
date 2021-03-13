@@ -3,11 +3,84 @@ import ReactDOM from 'react-dom';
 
 import $ from 'cash-dom';
 import { isTextBox } from './modules/content-util';
+import { EMOJIS, SEMA_GITHUB_REGEX, getSemaGithubText } from './constants';
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
 
 console.log('main script working!!!');
+
+window.addEventListener(
+  'click',
+  function (event) {
+    const target = event.target;
+    const isButton = $(target).is('button');
+    const isSumbitButton = isButton && $(target).attr('type') === 'submit';
+
+    if (isSumbitButton) {
+      const commentParent = $(target).parentsUntil(
+        'div.inline-comment-form',
+        'form.js-inline-comment-form'
+      )?.[0];
+
+      const updateCommentParent = $(target).parentsUntil(
+        'form',
+        'div.js-previewable-comment-form'
+      )?.[0];
+
+      const textarea =
+        $(commentParent).find(
+          'tab-container file-attachment div text-expander textarea'
+        )?.[0] ||
+        $(updateCommentParent).find(
+          'file-attachment div text-expander textarea'
+        )?.[0];
+
+      if (textarea) {
+        const semabar = $(textarea).siblings('div.sema')?.[0];
+        const semaChildren = $(semabar).children();
+
+        const emojiContainer = semaChildren?.[0];
+        const tagContainer = semaChildren?.[1];
+
+        const selectedEmoji = $(emojiContainer).children()?.[0]?.textContent;
+        const selectedTags = $(tagContainer)
+          .children('.sema-tag')
+          .map((index, tagElement) => tagElement?.textContent);
+
+        const selectedEmojiObj = EMOJIS.find((emoji) =>
+          selectedEmoji?.includes(emoji.title)
+        );
+
+        const selectedEmojiString = `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`;
+
+        let selectedTagsString = '';
+        selectedTags.each((index, tag) => {
+          selectedTagsString = `${selectedTagsString}${
+            index > 0 ? ',' : ''
+          } ${tag}`;
+        });
+
+        const semaString = getSemaGithubText(
+          selectedEmojiString,
+          selectedTagsString
+        );
+
+        let textboxValue = textarea.value;
+
+        if (textboxValue.includes('Sema Reaction')) {
+          // this textbox already has sema text
+          // this is an edit
+          textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
+        }
+
+        textarea.value = `${textboxValue}${semaString}`;
+      }
+    }
+  },
+  // adding listener in the "capturing" phase
+  true
+);
 
 /**
  * Register MutationObserver

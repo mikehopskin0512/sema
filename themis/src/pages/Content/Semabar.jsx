@@ -38,7 +38,10 @@ function Semabar() {
         const modifiedObj = { ...tagObj };
 
         // If tag is already selected, set selection to null on toggle
-        if (isSelected && (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])) {
+        if (
+          isSelected &&
+          (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
+        ) {
           modifiedObj[SELECTED] = null;
           return modifiedObj;
         }
@@ -122,13 +125,15 @@ function Semabar() {
 
   return (
     <>
-      <EmojiSelection
-        allEmojis={EMOJIS}
-        selectedEmoji={selectedEmoji}
-        onEmojiSelected={(emojiObj) => {
-          updateSelectedEmoji(emojiObj);
-        }}
-      />
+      <div className="sema-emoji-container">
+        <EmojiSelection
+          allEmojis={EMOJIS}
+          selectedEmoji={selectedEmoji}
+          onEmojiSelected={(emojiObj) => {
+            updateSelectedEmoji(emojiObj);
+          }}
+        />
+      </div>
       <div className="sema-tag-container">
         {createAddTags()}
         {createActiveTags()}
