@@ -24,23 +24,11 @@ window.addEventListener(
         $(parentButton).attr('type') === 'submit');
 
     if (isSumbitButton) {
-      const commentParent = $(target).parentsUntil(
-        'div.inline-comment-form',
-        'form.js-inline-comment-form'
+      const formParent = $(target).parents('form')?.[0];
+      const textarea = $(formParent).find(
+        'file-attachment div text-expander textarea'
       )?.[0];
 
-      const updateCommentParent = $(target).parentsUntil(
-        'form',
-        'div.js-previewable-comment-form'
-      )?.[0];
-
-      const textarea =
-        $(commentParent).find(
-          'tab-container file-attachment div text-expander textarea'
-        )?.[0] ||
-        $(updateCommentParent).find(
-          'file-attachment div text-expander textarea'
-        )?.[0];
       if (textarea) {
         const semabar = $(textarea).siblings('div.sema')?.[0];
         const semaChildren = $(semabar).children();
@@ -66,7 +54,7 @@ window.addEventListener(
           } ${tag}`;
         });
 
-        const semaString = getSemaGithubText(
+        let semaString = getSemaGithubText(
           selectedEmojiString,
           selectedTagsString
         );
@@ -77,6 +65,8 @@ window.addEventListener(
           // this textbox already has sema text
           // this is an edit
           textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
+        } else {
+          semaString = `\n---${semaString}`;
         }
 
         textarea.value = `${textboxValue}${semaString}`;
