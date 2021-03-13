@@ -16,8 +16,12 @@ window.addEventListener(
   'click',
   function (event) {
     const target = event.target;
-    const isButton = $(target).is('button');
-    const isSumbitButton = isButton && $(target).attr('type') === 'submit';
+    const parentButton = $(target).parents('button')?.[0];
+    const isButton = $(target).is('button') || $(parentButton).is('button');
+    const isSumbitButton =
+      isButton &&
+      ($(target).attr('type') === 'submit' ||
+        $(parentButton).attr('type') === 'submit');
 
     if (isSumbitButton) {
       const commentParent = $(target).parentsUntil(
@@ -37,7 +41,6 @@ window.addEventListener(
         $(updateCommentParent).find(
           'file-attachment div text-expander textarea'
         )?.[0];
-
       if (textarea) {
         const semabar = $(textarea).siblings('div.sema')?.[0];
         const semaChildren = $(semabar).children();
