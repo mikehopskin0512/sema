@@ -39,7 +39,7 @@
         "css/*",
         "webfonts/*"
       ],
-      "matches": ["<all_urls>"],
+      "matches": ["*://github.com/*", "*://*.github.com/*"],
       "extension_ids": []
     }
   ]
