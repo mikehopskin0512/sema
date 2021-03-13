@@ -1,24 +1,4 @@
-export const IMAGES_MAP = {
-  sema_trophy: 'img/emoji_trophy.png',
-  sema_ok: 'img/emoji_ok.png',
-  sema_question: 'img/emoji_question.png',
-  sema_tools: 'img/emoji_fix.png',
-  sema_none: 'img/emoji_none.png',
-  sema_tag: 'img/price-tags.svg',
-};
-
-const {
-  runtime: { getURL },
-} = chrome;
-
-export const getImagesHTML = (rawHTML) => {
-  const keys = Object.keys(IMAGES_MAP);
-  let imgHTML = rawHTML;
-  keys.forEach((key) => {
-    imgHTML = imgHTML.replaceAll(key, getURL(IMAGES_MAP[key]));
-  });
-  return imgHTML;
-};
+import { EMOJIS, TAGS_INIT, POSITIVE, NEGATIVE, SELECTED } from '../constants';
 
 export function isTextBox(element) {
   var tagName = element.tagName.toLowerCase();
@@ -44,3 +24,56 @@ export function isTextBox(element) {
   // return inputTypes.indexOf(type) >= 0;
   return false;
 }
+
+export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
+  `\n**Sema Reaction:** ${selectedEmojiString} | **Sema Tags:**${selectedTagsString}\n`;
+
+export const getInitialSemaValues = (textbox) => {
+  const value = textbox.value;
+  let initialEmoji = EMOJIS[0];
+  let initialTags = TAGS_INIT;
+  let githubEmoji, selectedTags;
+  if (value.includes('Sema Reaction')) {
+    const reaction = '**Sema Reaction:** ';
+    const reactionStart = value.indexOf(reaction) + reaction.length;
+    const reactionEnd = value.indexOf('|') - 1;
+    const reactionStr = value.substring(reactionStart, reactionEnd);
+    githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
+
+    const tags = '**Sema Tags:** ';
+    const tagsStart = value.indexOf(tags) + tags.length;
+    selectedTags = value
+      .substring(tagsStart)
+      .trim()
+      .split(',')
+      .map((tag) => tag.trim());
+  }
+  if (githubEmoji?.trim()) {
+    const emojiObj = EMOJIS.find(
+      (emoji) => emoji.github_emoji === `:${githubEmoji}:`
+    );
+    if (emojiObj) {
+      initialEmoji = emojiObj;
+    }
+  }
+  if (selectedTags && Array.isArray(selectedTags) && selectedTags.length) {
+    initialTags = TAGS_INIT.map((tagObj) => {
+      const positiveTag = tagObj[POSITIVE];
+      const negativeTag = tagObj[NEGATIVE];
+      let selected = tagObj[SELECTED];
+
+      const selectedTag = selectedTags.find(
+        (tag) => tag === positiveTag || tag === negativeTag
+      );
+      if (selectedTag) {
+        selected = selectedTag === positiveTag ? POSITIVE : NEGATIVE;
+      }
+      return {
+        [POSITIVE]: positiveTag,
+        [NEGATIVE]: negativeTag,
+        [SELECTED]: selected,
+      };
+    });
+  }
+  return { initialEmoji, initialTags };
+};

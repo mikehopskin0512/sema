@@ -2,8 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import $ from 'cash-dom';
-import { isTextBox } from './modules/content-util';
-import { EMOJIS, SEMA_GITHUB_REGEX, getSemaGithubText } from './constants';
+import {
+  isTextBox,
+  getSemaGithubText,
+  getInitialSemaValues,
+} from './modules/content-util';
+import { EMOJIS, SEMA_GITHUB_REGEX } from './constants';
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
@@ -85,14 +89,6 @@ window.addEventListener(
 /**
  * Register MutationObserver
  * - todo: try to listen to as less mutation as possible
- * on mutation -> get currrently focussed element
- * if document.activeElement instanceof textarea
- * remove old sema elements from dom on focus change
- * - todo
- * append new sema elements to DOM
- * - todo: donot change DOM for existing textbox, might cause issues with DOM updaters like Reactjs
- * - todo: make template html in background.js to avoid fetching everytime?
- * - todo: better way to template, other than sandboxing
  * - todo: remove "Bulma Base" from bulma.css
  */
 
@@ -112,7 +108,16 @@ $(async function () {
 
         $(activeElement).after("<div class='sema sema-mt-2'></div>");
         const addedSemaElement = $(activeElement).siblings('div.sema')[0];
-        ReactDOM.render(<Semabar />, addedSemaElement);
+
+        const { initialTags, initialEmoji } = getInitialSemaValues(
+          activeElement
+        );
+        console.log(initialTags, initialEmoji);
+
+        ReactDOM.render(
+          <Semabar initialTags={initialTags} initialEmoji={initialEmoji} />,
+          addedSemaElement
+        );
 
         $(activeElement).before(
           "<div class='sema-search sema-mt-2 sema-mb-2'></div>"

@@ -78,6 +78,3 @@ export const EMOJIS = [
  * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
  */
 export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
-
-export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
-  `\n**Sema Reaction:** ${selectedEmojiString} | **Sema Tags:**${selectedTagsString}\n`;

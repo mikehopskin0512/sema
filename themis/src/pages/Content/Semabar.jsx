@@ -11,10 +11,10 @@ import {
   EMOJIS,
 } from './constants';
 
-function Semabar() {
+function Semabar({ initialTags, initialEmoji }) {
   const [isDropdownVisible, toggleDropdown] = useState(false);
-  const [allTags, updateSelectedTags] = useState(TAGS_INIT);
-  const [selectedEmoji, updateSelectedEmoji] = useState(EMOJIS[0]);
+  const [allTags, updateSelectedTags] = useState(initialTags);
+  const [selectedEmoji, updateSelectedEmoji] = useState(initialEmoji);
 
   const toggleTagSelection = (operation) => {
     /**
