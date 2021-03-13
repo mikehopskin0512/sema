@@ -30,14 +30,19 @@ sudo docker push $IMAGE
 # get the latest task definition
 LATEST_TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $TASK_FAMILY_NAME)
 
-# get the latest task definition ARN
-LATEST_TASK_DEFINITION_ARN=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.taskDefinitionArn")
+# get the latest task definition ARN and execution role ARN
+LATEST_TASK_DEFINITION_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.taskDefinitionArn")
+LATEST_TASK_EXECUTION_ROLE_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.executionRoleArn")
+
+# get the latest task definition excution ARN (needed for using secrets from the parameter store)
+LATEST_TASK_EXECUTION_ROLE_ARN=$(echo $LATEST_TASK_DEFINITION | jq -r ".taskDefinition.executionRoleArn")
 
 # update the first container in the containerDefinitions with the new image
-CONTAINER_DEFINITIONS=$(echo $LATEST_TASK_DEFINITION | jq '.taskDefinition.containerDefinitions[0].image = "$IMAGE" | [.containerDefinitions]')
+# we only have 1 container per task definition currently
+CONTAINER_DEFINITIONS=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.containerDefinitions[0].image = \"$IMAGE\" | .taskDefinition.containerDefinitions")
 
 # register the new task definition
-aws ecs register-task-definition --family $TASK_FAMILY_NAME --container-definitions $CONTAINER_DEFINITIONS
+aws ecs register-task-definition --family $TASK_FAMILY_NAME --container-definitions "$CONTAINER_DEFINITIONS" --execution-role-arn $LATEST_TASK_EXECUTION_ROLE_ARN
 
 # de-register the old task definition
 aws ecs deregister-task-definition --task-definition $LATEST_TASK_DEFINITION_ARN
