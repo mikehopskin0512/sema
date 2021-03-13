@@ -95,7 +95,7 @@ window.addEventListener(
 
 $(async function () {
   const targetNode = document.getElementsByTagName('body')[0];
-  const config = { subtree: true, childList: true };
+  const config = { subtree: true, childList: true, attributes: true };
 
   const callback = function (mutationList, observer) {
     const activeElement = document.activeElement;

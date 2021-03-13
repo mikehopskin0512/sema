@@ -28,8 +28,9 @@ export const isTextBox = (element) => {
 };
 
 export const isValidSemaTextBox = (element) => {
-  const parent = $(element).parents('.js-file-content');
-  const fileHeaderSibling = parent.length && $(parent).siblings('.file-header');
+  const parent = $(element).parents('file-attachment');
+  const fileHeaderSibling =
+    parent.length && $(parent).siblings('.comment-form-head');
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
