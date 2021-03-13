@@ -92,10 +92,9 @@ window.addEventListener(
 
 $(async function () {
   const targetNode = document.getElementsByTagName('body')[0];
-  const config = { subtree: true, childList: true, attributes: true };
+  const config = { subtree: true, childList: true };
 
   const callback = function (mutationList, observer) {
-    console.log('Observed!');
     const activeElement = document.activeElement;
     if (isTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
@@ -108,7 +107,6 @@ $(async function () {
         const { initialTags, initialEmoji } = getInitialSemaValues(
           activeElement
         );
-        console.log(initialTags, initialEmoji);
 
         ReactDOM.render(
           <Semabar initialTags={initialTags} initialEmoji={initialEmoji} />,
