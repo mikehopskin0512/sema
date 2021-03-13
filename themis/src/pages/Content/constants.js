@@ -1,3 +1,4 @@
+export const SUGGESTION_URL = 'https://api-qa1.semasoftware.io/v1/comments/?q=';
 export const ADD_OP = 'add';
 export const DELETE_OP = 'delete';
 export const TOGGLE_OP = 'toggle';
