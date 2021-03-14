@@ -9,6 +9,7 @@ import {
 } from './modules/content-util';
 import { EMOJIS, SEMA_GITHUB_REGEX } from './constants';
 
+import { suggest } from './commentSuggestions';
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
 // import SemaIcon from './modules/semaIcon.js';
@@ -117,10 +118,28 @@ $(async function () {
           activeElement
         );
 
+        // Render initial Semabar
         ReactDOM.render(
           <Semabar initialTags={initialTags} initialReaction={initialReaction} />,
           addedSemaElement
         );
+
+        // Get suggested reactions and tags based in input text (after every space)
+        let suggestedReaction = '';
+        let suggestedTags = [];
+        document.addEventListener('keyup', event => {
+          if (event.code === 'Space') {
+            const payload = suggest(activeElement.value);
+            ({ suggestedReaction, suggestedTags } = payload);
+
+            if (suggestedReaction || suggestedTags) {
+              ReactDOM.render(
+                <Semabar initialTags={initialTags} initialReaction={suggestedReaction || initialReaction} />,
+                addedSemaElement
+              );
+            }
+          }
+        })
 
         $(activeElement).before(
           "<div class='sema-search sema-mt-2 sema-mb-2'></div>"
