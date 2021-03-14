@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TagsModal from './TagsModal.jsx';
 import EmojiSelection from './EmojiSelection.jsx';
 
@@ -11,10 +11,22 @@ import {
   EMOJIS,
 } from './constants';
 
-function Semabar({ initialTags, initialEmoji }) {
+function Semabar({ initialTags, initialReaction }) {
   const [isDropdownVisible, toggleDropdown] = useState(false);
   const [allTags, updateSelectedTags] = useState(initialTags);
-  const [selectedEmoji, updateSelectedEmoji] = useState(initialEmoji);
+  const [selectedReaction, updateSelectedReaction] = useState(initialReaction);
+  const [userSelectedReaction, setUserSelectedReaction] = useState(false);
+  const [userSelectedTags, setUserSelectedTags] = useState(false);
+
+  useEffect(() => {
+    if (!userSelectedReaction) { updateSelectedReaction(initialReaction) }
+    if (!userSelectedTags) { updateSelectedTags(initialTags) }
+  }, [initialTags, initialReaction, userSelectedReaction, userSelectedTags])
+
+  const handleReactionSelection = (emojiObj) => {
+    updateSelectedReaction(emojiObj);
+    setUserSelectedReaction(true);
+  }
 
   const toggleTagSelection = (operation) => {
     /**
@@ -130,7 +142,7 @@ function Semabar({ initialTags, initialEmoji }) {
           allEmojis={EMOJIS}
           selectedReaction={selectedReaction}
           onEmojiSelected={(emojiObj) => {
-            updateSelectedEmoji(emojiObj);
+            handleReactionSelection(emojiObj);
           }}
         />
       </div>
