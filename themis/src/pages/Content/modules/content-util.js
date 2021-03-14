@@ -39,7 +39,7 @@ export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
 
 export const getInitialSemaValues = (textbox) => {
   const value = textbox.value;
-  let initialEmoji = EMOJIS[0];
+  let initialReaction = EMOJIS[0];
   let initialTags = TAGS_INIT;
   let githubEmoji, selectedTags;
   if (value.includes('Sema Reaction')) {
@@ -62,7 +62,7 @@ export const getInitialSemaValues = (textbox) => {
       (emoji) => emoji.github_emoji === `:${githubEmoji}:`
     );
     if (emojiObj) {
-      initialEmoji = emojiObj;
+      initialReaction = emojiObj;
     }
   }
   if (selectedTags && Array.isArray(selectedTags) && selectedTags.length) {
@@ -84,5 +84,5 @@ export const getInitialSemaValues = (textbox) => {
       };
     });
   }
-  return { initialEmoji, initialTags };
+  return { initialReaction, initialTags };
 };

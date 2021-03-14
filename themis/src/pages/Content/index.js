@@ -113,12 +113,12 @@ $(async function () {
         $(activeElement).after("<div class='sema'></div>");
         const addedSemaElement = $(activeElement).siblings('div.sema')[0];
 
-        const { initialTags, initialEmoji } = getInitialSemaValues(
+        const { initialTags, initialReaction } = getInitialSemaValues(
           activeElement
         );
 
         ReactDOM.render(
-          <Semabar initialTags={initialTags} initialEmoji={initialEmoji} />,
+          <Semabar initialTags={initialTags} initialReaction={initialReaction} />,
           addedSemaElement
         );
 

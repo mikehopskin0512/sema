@@ -128,7 +128,7 @@ function Semabar({ initialTags, initialEmoji }) {
       <div className="sema-emoji-container">
         <EmojiSelection
           allEmojis={EMOJIS}
-          selectedEmoji={selectedEmoji}
+          selectedReaction={selectedReaction}
           onEmojiSelected={(emojiObj) => {
             updateSelectedEmoji(emojiObj);
           }}
