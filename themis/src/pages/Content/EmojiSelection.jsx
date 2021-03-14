@@ -8,11 +8,12 @@ function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
   return (
     <>
       {isSelectingEmoji ? (
-        allEmojis.map((emojiObj) => {
+        <div className="reaction-selection-wrapper">
+        {allEmojis.map((emojiObj) => {
           const { title, image, emoji } = emojiObj;
           return (
             <button
-              className="zoom sema-button sema-is-small"
+              className="zoom sema-button sema-is-small sema-is-ghost reaction-selection"
               title={title}
               key={title}
               onClick={() => {
@@ -23,7 +24,8 @@ function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
               <Emoji symbol={emoji}/>
             </button>
           );
-        })
+        })}
+        </div>
       ) : (
         <button
           className="sema-button sema-is-small sema-is-squared"

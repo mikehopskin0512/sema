@@ -18,12 +18,12 @@ window.addEventListener(
     const target = event.target;
     const parentButton = $(target).parents('button')?.[0];
     const isButton = $(target).is('button') || $(parentButton).is('button');
-    const isSumbitButton =
+    const isSubmitButton =
       isButton &&
       ($(target).attr('type') === 'submit' ||
         $(parentButton).attr('type') === 'submit');
 
-    if (isSumbitButton) {
+    if (isSubmitButton) {
       const formParent = $(target).parents('form')?.[0];
       const textarea = $(formParent).find(
         'file-attachment div text-expander textarea'
@@ -53,6 +53,7 @@ window.addEventListener(
             index > 0 ? ',' : ''
           } ${tag}`;
         });
+        if (selectedTagsString.length === 0) {selectedTagsString = ' None' }
 
         let semaString = getSemaGithubText(
           selectedEmojiString,
@@ -69,7 +70,7 @@ window.addEventListener(
           semaString = `\n---${semaString}`;
         }
 
-        textarea.value = `${textboxValue}${semaString}`;
+        textarea.value = `${textboxValue}\n${semaString}`;
       }
     }
   },
@@ -94,7 +95,7 @@ $(async function () {
       if (!semaElements[0]) {
         // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
 
-        $(activeElement).after("<div class='sema sema-mt-2'></div>");
+        $(activeElement).after("<div class='sema'></div>");
         const addedSemaElement = $(activeElement).siblings('div.sema')[0];
 
         const { initialTags, initialEmoji } = getInitialSemaValues(

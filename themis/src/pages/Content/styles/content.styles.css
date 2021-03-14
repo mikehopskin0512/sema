@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: row;
   -webkit-flex-direction: row;
+  background-color: #fafbfc;
+  padding: 0.25rem 0.5rem;
+  border-left: 1px solid rgb(225, 228, 232);
+  border-right: 1px solid rgb(225, 228, 232);
 }
 
 .sema img {
@@ -20,10 +24,18 @@
   transform: scale(1.5);
 }
 
+.sema-dropdown-menu {
+  border: 1px solid rgb(225, 228, 232);
+}
+
 .sema-tag-container {
   display: flex;
   flex: 1;
   flex-direction: row-reverse;
+}
+
+.sema-add-tags {
+  border-style: dashed;
 }
 
 #tagsPositiveContainer > span {
@@ -34,13 +46,24 @@
   cursor: pointer;
 }
 
+.reaction-selection-wrapper {
+  background-color: white;
+  border: 1px solid rgb(225, 228, 232);
+  border-radius: 34px;
+}
+
+.reaction-selection {
+  border: unset;
+  background: transparent;
+}
+
 .expandedEmojis {
   display: none;
 }
 
 .suggestion-modal {
   width: 384px;
-  height: 462px;
+  max-height: 462px;
   overflow: auto;
 }
 
