@@ -2,6 +2,10 @@
   display: flex;
   flex-direction: row;
   -webkit-flex-direction: row;
+  background-color: #fafbfc;
+  padding: 0.25rem 0.5rem;
+  border-left: 1px solid rgb(225, 228, 232);
+  border-right: 1px solid rgb(225, 228, 232);
 }
 
 .sema img {
@@ -40,6 +44,17 @@
 
 #tagsNegativeContainer > span {
   cursor: pointer;
+}
+
+.reaction-selection-wrapper {
+  background-color: white;
+  border: 1px solid rgb(225, 228, 232);
+  border-radius: 34px;
+}
+
+.reaction-selection {
+  border: unset;
+  background: transparent;
 }
 
 .expandedEmojis {
