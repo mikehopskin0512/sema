@@ -26,6 +26,10 @@
   flex-direction: row-reverse;
 }
 
+.sema-add-tags {
+  border-style: dashed;
+}
+
 #tagsPositiveContainer > span {
   cursor: pointer;
 }

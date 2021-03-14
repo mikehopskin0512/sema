@@ -95,7 +95,7 @@ function Semabar({ initialTags, initialEmoji }) {
       <div className={containerClasses}>
         <div className="sema-dropdown-trigger">
           <button
-            className="sema-button sema-is-rounded sema-is-small"
+            className="sema-button sema-is-rounded sema-is-small sema-add-tags"
             aria-haspopup="true"
             aria-controls="sema-dropdown-menu2"
             onClick={(event) => {
