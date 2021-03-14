@@ -1,3 +1,6 @@
+
+import { EMOJIS, TAGS_INIT, POSITIVE, NEGATIVE, SELECTED } from './constants';
+
 function suggestReaction(commentText) {
   // return a reaction for the first found instance of one of our keywords
   // any subsequent matching keywords are not checked
@@ -9,39 +12,39 @@ function suggestReaction(commentText) {
 
   // Matt want's negative tags anywhere in comment to always suggest a fix
   const negativeTags = ['Unreadable', 'Unsecure', 'Inefficient', 'Inelegant', 'Not reusable', 'Brittle', 'Not maintainable'];
-  for (i = 0; i < negativeTags.length && (foundReaction === ''); i++) {
+  for (let i = 0; i < negativeTags.length && (foundReaction === ''); i++) {
     if (commentText.includes(negativeTags[i])) {
-      foundReaction = 'sema_tools';
+      foundReaction = EMOJIS[4];
     }
   }
 
-  for (i = 0;
+  for (let i = 0;
     i < words.length && (foundReaction === '');
     i++) {
-    testWord = words[i].toLowerCase();
+    const testWord = words[i].toLowerCase();
 
     if (testWord.includes('?')
             || testWord.includes('why')) {
       // question mark, why → ❓
-      foundReaction = 'sema_question';
+      foundReaction = EMOJIS[3];
     } else if (testWord.includes('change')
             || testWord.includes('bug')
             || testWord.includes('fix')) {
       // change, bug, fix → 🛠️
-      foundReaction = 'sema_tools';
+      foundReaction = EMOJIS[4];
     } else if (testWord.includes('good')
                   || testWord.includes('ok')
                   || testWord.includes('works')
                   || testWord.includes('enough')) {
       // good, ok, works, enough → 👌
-      foundReaction = 'sema_ok';
+      foundReaction = EMOJIS[2];
     } else if (testWord.includes('excellent')
                   || testWord.includes('great')
                   || testWord.includes('brilliant')
                   || testWord.includes('exemplary')
                   || testWord.includes('awesome')) {
       // excellent, great, brilliant, exemplary, awesome → 🏆
-      foundReaction = 'sema_trophy';
+      foundReaction = EMOJIS[1];
     }
   }
   return foundReaction;
@@ -51,8 +54,8 @@ function suggestReaction(commentText) {
 function suggestTags(commentText) {
   const foundTags = [];
   const tags = ['Readable', 'Unreadable', 'Secure', 'Unsecure', 'Efficient', 'Inefficient', 'Elegant', 'Inelegant', 'Reusable', 'Not reusable', 'Fault-tolerant', 'Brittle', 'Maintainable', 'Not maintainable'];
-  commentTextL = commentText.toLowerCase();
-  for (i = 0; i < tags.length; i++) {
+  const commentTextL = commentText.toLowerCase();
+  for (let i = 0; i < tags.length; i++) {
     if (commentTextL.includes(tags[i].toLowerCase())) {
       foundTags.push(tags[i]);
     }
@@ -60,14 +63,12 @@ function suggestTags(commentText) {
   return foundTags;
 }
 
-function suggest(commentText) {
+export function suggest(commentText) {
   const suggestedReaction = suggestReaction(commentText);
   const suggestedTags = suggestTags(commentText);
   return { suggestedReaction,
     suggestedTags };
 }
-
-module.exports.suggest = suggest;
 
 /*
 export const TAGS_INIT = [

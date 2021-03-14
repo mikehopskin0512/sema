@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Emoji from './modules/emoji.js';
 
-function EmojiSelection({ allEmojis, selectedEmoji, onEmojiSelected }) {
+function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected }) {
   const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
 
-  const { title: selectedTitle, image: selectedImage, emoji: shownEmoji } = selectedEmoji;
+  const { title: selectedTitle, image: selectedImage, emoji: shownEmoji } = selectedReaction;
   return (
     <>
       {isSelectingEmoji ? (
