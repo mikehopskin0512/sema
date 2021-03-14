@@ -79,9 +79,9 @@ function SearchBar({ commentBox }) {
         <div className="sema-field" style={{ flex: 1 }}>
           <div className={inputControlClasses}>
             <input
-              className="sema-input"
+              className="sema-input sema-is-small"
               type="text"
-              placeholder="Search.."
+              placeholder="Search comment library"
               value={searchValue}
               onChange={onInputChanged}
               onKeyDown={handleKeyPress}
@@ -91,13 +91,13 @@ function SearchBar({ commentBox }) {
             </span>
           </div>
         </div>
-        <span
+{/*         <span
           className="sema-icon sema-pb-3"
           style={{ cursor: 'pointer' }}
           onClick={onCrossPressed}
         >
           <i className="fas fa-times"></i>
-        </span>
+        </span> */}
       </div>
       <div
         className="sema-dropdown-menu suggestion-modal"
@@ -106,6 +106,17 @@ function SearchBar({ commentBox }) {
       >
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
+            <div className="" style={{ display: 'flex', justifyContent: 'space-between'}}>
+              <div></div>
+              <div
+                className="sema-icon"
+                style={{ cursor: 'pointer' }}
+                onClick={onCrossPressed}
+              >
+                <i className="fas fa-times"></i>
+              </div>
+            </div>
+
             <SuggestionModal
               key={isLoading}
               onCopyPressed={onCopyPressed}

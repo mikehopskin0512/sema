@@ -20,6 +20,10 @@
   transform: scale(1.5);
 }
 
+.sema-dropdown-menu {
+  border: 1px solid rgb(225, 228, 232);
+}
+
 .sema-tag-container {
   display: flex;
   flex: 1;
@@ -44,7 +48,7 @@
 
 .suggestion-modal {
   width: 384px;
-  height: 462px;
+  max-height: 462px;
   overflow: auto;
 }
 
