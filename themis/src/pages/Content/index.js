@@ -53,6 +53,7 @@ window.addEventListener(
             index > 0 ? ',' : ''
           } ${tag}`;
         });
+        if (selectedTagsString.length === 0) {selectedTagsString = ' None' }
 
         let semaString = getSemaGithubText(
           selectedEmojiString,
