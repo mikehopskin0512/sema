@@ -48,7 +48,7 @@ export const TAGS_INIT = [
 
 export const EMOJIS = [
   {
-    title: 'None',
+    title: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
   },
