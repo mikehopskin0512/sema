@@ -70,7 +70,7 @@ window.addEventListener(
           semaString = `\n---${semaString}`;
         }
 
-        textarea.value = `${textboxValue}${semaString}`;
+        textarea.value = `${textboxValue}\n${semaString}`;
       }
     }
   },
