@@ -20,7 +20,6 @@ services:
       - "3001:3001"
     volumes:
       - ./apollo:/usr/app
-      - /usr/app/node_modules
     depends_on:
       - mongodb
     container_name: phoenix.apollo.sema.local
