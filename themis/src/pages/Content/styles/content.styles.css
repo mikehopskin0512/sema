@@ -101,3 +101,18 @@
   flex-direction: row-reverse;
   background: #fbfbfb;
 }
+
+.sema-search pre {
+  white-space: pre-wrap;
+}
+
+.sema-search pre h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-block-start: 0.83em !important;
+  margin-block-end: 0.83em !important;
+  line-height: 1em !important;
+}
