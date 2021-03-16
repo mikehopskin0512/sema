@@ -19,14 +19,18 @@ function Semabar({ initialTags, initialReaction }) {
   const [userSelectedTags, setUserSelectedTags] = useState(false);
 
   useEffect(() => {
-    if (!userSelectedReaction) { updateSelectedReaction(initialReaction) }
-    if (!userSelectedTags) { updateSelectedTags(initialTags) }
-  }, [initialTags, initialReaction, userSelectedReaction, userSelectedTags])
+    if (!userSelectedReaction) {
+      updateSelectedReaction(initialReaction);
+    }
+    if (!userSelectedTags) {
+      updateSelectedTags(initialTags);
+    }
+  }, [initialTags, initialReaction, userSelectedReaction, userSelectedTags]);
 
   const handleReactionSelection = (emojiObj) => {
     updateSelectedReaction(emojiObj);
     setUserSelectedReaction(true);
-  }
+  };
 
   const toggleTagSelection = (operation) => {
     /**
@@ -109,7 +113,6 @@ function Semabar({ initialTags, initialReaction }) {
           <button
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
             aria-haspopup="true"
-            aria-controls="sema-dropdown-menu2"
             onClick={(event) => {
               event.preventDefault();
               toggleDropdown(!isDropdownVisible);
@@ -121,7 +124,7 @@ function Semabar({ initialTags, initialReaction }) {
             <span>Add Tags</span>
           </button>
         </div>
-        <div className="sema-dropdown-menu" id="dropdown-menu2" role="menu">
+        <div className="sema-dropdown-menu" role="menu">
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal

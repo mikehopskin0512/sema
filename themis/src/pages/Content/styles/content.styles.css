@@ -38,11 +38,11 @@
   border-style: dashed;
 }
 
-#tagsPositiveContainer > span {
+.tagsPositiveContainer > span {
   cursor: pointer;
 }
 
-#tagsNegativeContainer > span {
+.tagsNegativeContainer > span {
   cursor: pointer;
 }
 

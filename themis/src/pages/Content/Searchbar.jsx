@@ -91,7 +91,7 @@ function SearchBar({ commentBox }) {
             </span>
           </div>
         </div>
-{/*         <span
+        {/*         <span
           className="sema-icon sema-pb-3"
           style={{ cursor: 'pointer' }}
           onClick={onCrossPressed}
@@ -99,14 +99,10 @@ function SearchBar({ commentBox }) {
           <i className="fas fa-times"></i>
         </span> */}
       </div>
-      <div
-        className="sema-dropdown-menu suggestion-modal"
-        id="dropdown-menu2"
-        role="menu"
-      >
+      <div className="sema-dropdown-menu suggestion-modal" role="menu">
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
-            <div className="" style={{ display: 'flex', justifyContent: 'space-between'}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div></div>
               <div
                 className="sema-icon"

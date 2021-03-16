@@ -26,12 +26,8 @@ function TagsModal({ allTags, toggleTagSelection }) {
 
   return (
     <div className="sema-columns">
-      <div id="tagsPositiveContainer" className="sema-column">
-        {getTags(true)}
-      </div>
-      <div id="tagsNegativeContainer" className="sema-column">
-        {getTags(false)}
-      </div>
+      <div className="sema-column tagsPositiveContainer">{getTags(true)}</div>
+      <div className="sema-column tagsNegativeContainer">{getTags(false)}</div>
     </div>
   );
 }
