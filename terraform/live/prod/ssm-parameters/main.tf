@@ -46,7 +46,7 @@ resource "aws_ssm_parameter" "apollo_mongo_cert-path" {
 resource "aws_ssm_parameter" "apollo_mongo_uri" {
   name  = "/${var.env}/apollo/mongo/uri"
   type  = "SecureString"
-  value = "mongodb://phoenix_admin:0yvYDIsrxraKsKkQ@phoenix-qa.cluster-c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
+  value = "mongodb://phoenix_admin:ftUPcPinHZWR4wvd@phoenix-prod-1.c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
 }
 resource "aws_ssm_parameter" "apollo_org-domain" {
   name  = "/${var.env}/apollo/org-domain"
@@ -151,12 +151,12 @@ resource "aws_ssm_parameter" "aws_sns_topic_filter_org-replication" {
 resource "aws_ssm_parameter" "github_app-id" {
   name  = "/${var.env}/github/app-id"
   type  = "String"
-  value = "67779"
+  value = "104624"
 }
 resource "aws_ssm_parameter" "github_client-id" {
   name  = "/${var.env}/github/client-id"
   type  = "String"
-  value = "Iv1.5fc0e813e59b2277"
+  value = "Iv1.1521fdd01686c281"
 }
 resource "aws_ssm_parameter" "github_client-secret" {
   name  = "/${var.env}/github/client-secret"

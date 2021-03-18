@@ -13,16 +13,7 @@
           "awslogs-stream-prefix": "ecs"
         }
     },
-    "environment": [
-      {
-        "name": "ORG_DOMAIN",
-        "value": "https://app-${env}.semasoftware.io"
-      },
-      {
-        "name": "ALLOWED_ORIGIN",
-        "value": "https://app-${env}.semasoftware.io"
-      }
-    ],
+    "environment": [],
     "secrets": [
       {
         "name": "AMAZON_ACCESS_KEY_ID",
@@ -108,6 +99,15 @@
       }, {
         "name": "VERSION",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/version"
+      }, {
+        "name": "ORG_DOMAIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
+      }, {
+        "name": "ALLOWED_ORIGIN",
+        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/allowed-origin"
+      }, {
+        "name": "NODE_ENV",
+        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/node-env"
       }],
     "portMappings": [
       {

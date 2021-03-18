@@ -28,7 +28,7 @@
       }, 
       {
         "name": "GITHUB_CLIENT_ID",
-        "value": "Iv1.5fc0e813e59b2277"
+        "value": "Iv1.1521fdd01686c281"
       }, 
       {
         "name": "GITHUB_REDIRECT",
