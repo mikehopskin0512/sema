@@ -5,14 +5,16 @@ import $ from 'cash-dom';
 
 import {
   isValidSemaTextBox,
-  getInitialSemaValues,
   onGithubSubmitClicked,
   onCloseAllModalsClicked,
 } from './modules/content-util';
 
-import { SEMA_ICON_ANCHOR } from './constants';
+import {
+  SEMA_ICON_ANCHOR,
+  SEMABAR_CLASS,
+  SEMA_SEARCH_CLASS,
+} from './constants';
 
-import { suggest } from './modules/commentSuggestions';
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
 
@@ -43,6 +45,7 @@ window.addEventListener(
 /**
  * Register MutationObserver
  * - todo: try to listen to as less mutation as possible
+ * - todo: remove mutation listener from the newly added element so that it doesnot trigger updates
  * - todo: remove "Bulma Base" from bulma.css
  */
 
@@ -63,60 +66,62 @@ $(async function () {
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        // todo: remove mutation listener from the newly added element so that it doesnot trigger updates
         const idSuffix = Date.now();
         const semabarContainerId = `semabar${idSuffix}`;
         const semaSearchContainerId = `semasearch${idSuffix}`;
 
+        /** ADD ROOTS FOR REACT COMPONENTS */
+        // search bar container
+        $(activeElement).before(
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2'></div>`
+        );
+        // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='sema'></div>`
-        );
-        const addedSemaElement = $(activeElement).siblings('div.sema')[0];
-
-        // ABHISHEK
-        const { initialTags, initialReaction } = getInitialSemaValues(
-          activeElement
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS}'></div>`
         );
 
+        /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
         store.dispatch(addSemabar({ id: semabarContainerId, activeElement }));
-        // Render initial Semabar
+
+        /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
+        // Render searchbar
+        ReactDOM.render(
+          <Searchbar id={semaSearchContainerId} commentBox={activeElement} />,
+          $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0]
+        );
+        // Render Semabar
         ReactDOM.render(
           <Provider store={store}>
             <Semabar id={semabarContainerId} />
           </Provider>,
-          addedSemaElement
+          $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
 
-        // Get suggested reactions and tags based in input text (after every space)
-        let suggestedReaction = '';
-        let suggestedTags = [];
+        // ABHISHEK
+        // const { initialTags, initialReaction } = getInitialSemaValues(
+        //   activeElement
+        // );
 
         // ABHISHEK: REMOVE THIS
-        document.addEventListener('keyup', (event) => {
-          if (event.code === 'Space') {
-            const payload = suggest(activeElement.value);
-            ({ suggestedReaction, suggestedTags } = payload);
+        // // Get suggested reactions and tags based in input text (after every space)
+        // let suggestedReaction = '';
+        // let suggestedTags = [];
+        // document.addEventListener('keyup', (event) => {
+        //   if (event.code === 'Space') {
+        //     const payload = suggest(activeElement.value);
+        //     ({ suggestedReaction, suggestedTags } = payload);
 
-            if (suggestedReaction || suggestedTags) {
-              ReactDOM.render(
-                <Semabar
-                  initialTags={initialTags}
-                  initialReaction={suggestedReaction || initialReaction}
-                />,
-                addedSemaElement
-              );
-            }
-          }
-        });
-
-        $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='sema-search sema-mt-2 sema-mb-2'></div>`
-        );
-        const searchContainer = $(activeElement).siblings('div.sema-search')[0];
-        ReactDOM.render(
-          <Searchbar id={semaSearchContainerId} commentBox={activeElement} />,
-          searchContainer
-        );
+        //     if (suggestedReaction || suggestedTags) {
+        //       ReactDOM.render(
+        //         <Semabar
+        //           initialTags={initialTags}
+        //           initialReaction={suggestedReaction || initialReaction}
+        //         />,
+        //         addedSemaElement
+        //       );
+        //     }
+        //   }
+        // });
       }
     }
   };

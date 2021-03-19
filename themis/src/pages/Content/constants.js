@@ -87,3 +87,6 @@ export const SEMA_ICON_ANCHOR =
   '</svg>' +
   '</a>' +
   '</span>';
+
+export const SEMABAR_CLASS = 'sema';
+export const SEMA_SEARCH_CLASS = 'sema-search';
