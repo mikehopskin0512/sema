@@ -7,6 +7,7 @@ import {
   isValidSemaTextBox,
   onGithubSubmitClicked,
   onCloseAllModalsClicked,
+  onSuggestion,
 } from './modules/content-util';
 
 import {
@@ -27,20 +28,22 @@ store.subscribe(() => {
   console.log(store.getState());
 });
 
-window.addEventListener(
+document.addEventListener(
   'click',
   onGithubSubmitClicked,
   // adding listener in the "capturing" phase
   true
 );
 
-window.addEventListener(
+document.addEventListener(
   'click',
   (event) => {
     onCloseAllModalsClicked(event, store);
   },
   false
 );
+
+document.addEventListener('keyup', (event) => onSuggestion(event, store));
 
 /**
  * Register MutationObserver
@@ -96,32 +99,6 @@ $(async function () {
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
-
-        // ABHISHEK
-        // const { initialTags, initialReaction } = getInitialSemaValues(
-        //   activeElement
-        // );
-
-        // ABHISHEK: REMOVE THIS
-        // // Get suggested reactions and tags based in input text (after every space)
-        // let suggestedReaction = '';
-        // let suggestedTags = [];
-        // document.addEventListener('keyup', (event) => {
-        //   if (event.code === 'Space') {
-        //     const payload = suggest(activeElement.value);
-        //     ({ suggestedReaction, suggestedTags } = payload);
-
-        //     if (suggestedReaction || suggestedTags) {
-        //       ReactDOM.render(
-        //         <Semabar
-        //           initialTags={initialTags}
-        //           initialReaction={suggestedReaction || initialReaction}
-        //         />,
-        //         addedSemaElement
-        //       );
-        //     }
-        //   }
-        // });
       }
     }
   };

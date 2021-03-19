@@ -34,17 +34,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const Semabar = (props) => {
-  const [userSelectedTags, setUserSelectedTags] = useState(false);
-
-  // ABHISHEK
-  // useEffect(() => {
-  //   if (!userSelectedReaction) {
-  //     updateSelectedReaction(selectedReaction);
-  //   }
-  //   if (!userSelectedTags) {
-  //     updateSelectedTags(selectedTags);
-  //   }
-  // }, [selectedTags, selectedReaction, userSelectedReaction, userSelectedTags]);
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];

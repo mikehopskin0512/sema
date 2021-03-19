@@ -8,9 +8,12 @@ import {
   SELECTED,
   DELETE_OP,
   SEMA_GITHUB_REGEX,
+  SEMABAR_CLASS,
 } from '../constants';
 
-import { closeAllDropdowns } from './redux/action';
+import { suggest } from './commentSuggestions';
+
+import { closeAllDropdowns, updateSelectedEmoji } from './redux/action';
 
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
@@ -212,3 +215,42 @@ export const toggleTagSelection = (operation, tags) => {
   }
   return updatedTags;
 };
+
+export function onSuggestion(event, store) {
+  const activeElement = document.activeElement;
+  const isValid = isValidSemaTextBox(activeElement);
+  if (event.code === 'Space' && isValid) {
+    const semabarContainer = $(activeElement).siblings(
+      `div.${SEMABAR_CLASS}`
+    )[0];
+
+    const semabarId = $(semabarContainer).attr('id');
+
+    const payload = suggest(activeElement.value);
+
+    const { suggestedReaction, suggestedTags } = payload;
+    if (suggestedReaction || suggestedTags) {
+      const state = store.getState();
+      const isSemabarDirty = state.semabars[semabarId].isDirty;
+      if (!isSemabarDirty) {
+        store.dispatch(
+          updateSelectedEmoji({
+            id: semabarId,
+            selectedReaction: suggestedReaction,
+          })
+        );
+      }
+    }
+    // ({ suggestedReaction, suggestedTags } = payload);
+
+    // if (suggestedReaction || suggestedTags) {
+    //   ReactDOM.render(
+    //     <Semabar
+    //       initialTags={initialTags}
+    //       initialReaction={suggestedReaction || initialReaction}
+    //     />,
+    //     addedSemaElement
+    //   );
+    // }
+  }
+}

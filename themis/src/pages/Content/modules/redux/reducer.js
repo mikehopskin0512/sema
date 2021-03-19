@@ -28,6 +28,7 @@ function rootReducer(state = initialState, action) {
       isTagModalVisible: false,
       selectedTags: initialTags,
       selectedReaction: initialReaction,
+      isDirty: false,
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -43,6 +44,7 @@ function rootReducer(state = initialState, action) {
     const { id, selectedReaction } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
+    semabars[id].isDirty = true;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation } = payload;
     const {
@@ -53,6 +55,7 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+    // semabars[id].isDirty = true;
   }
   return newState;
 }
