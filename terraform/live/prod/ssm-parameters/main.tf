@@ -46,7 +46,7 @@ resource "aws_ssm_parameter" "apollo_mongo_cert-path" {
 resource "aws_ssm_parameter" "apollo_mongo_uri" {
   name  = "/${var.env}/apollo/mongo/uri"
   type  = "SecureString"
-  value = "mongodb://phoenix_admin:ftUPcPinHZWR4wvd@phoenix-prod-1.c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
+  value = "mongodb://phoenix_admin:cjXUo7OvmwVX2jX4@phoenix-prod.cluster-c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
 }
 resource "aws_ssm_parameter" "apollo_org-domain" {
   name  = "/${var.env}/apollo/org-domain"
