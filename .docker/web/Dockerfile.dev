@@ -4,11 +4,15 @@ RUN apk add --update --no-cache \
     python \
     make \
     g++
+
  
 WORKDIR /usr/app
 COPY ./.env ./
 COPY ./package*.json ./
-RUN npm install -g
+
+ENV PATH /usr/app/node_modules/.bin:$PATH
+ENV NODE_ENV development
+RUN npm install 
 
 EXPOSE 3000
 

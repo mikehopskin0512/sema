@@ -46,8 +46,7 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "slugify": "^1.4.5",
-    "toasted-notes": "^3.2.0",
-    "babel-plugin-inline-react-svg": "*"
+    "toasted-notes": "^3.2.0"
   },
   "devDependencies": {
     "next": "^9.5.3",

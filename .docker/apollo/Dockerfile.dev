@@ -10,8 +10,7 @@ COPY ./.env ./.env
 COPY ./package*.json ./
 
 ENV NODE_ENV development
-RUN npm install -g --save-dev nodemon @babel/cli @babel/core @babel/node @babel/preset-env
-RUN npm install --save-dev nodemon @babel/cli @babel/core @babel/node @babel/preset-env
+ENV PATH /usr/app/node_modules/.bin:$PATH
 RUN npm install  
 
 EXPOSE 3001
