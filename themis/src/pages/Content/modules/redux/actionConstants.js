@@ -1,0 +1,3 @@
+export const ADD_SEMABAR = 'ADD_SEMABAR';
+export const TOGGLE_TAG_MODAL = 'TOGGLE_TAG_MODAL';
+export const CLOSE_ALL_MODALS = 'CLOSE_ALL_MODALS';
