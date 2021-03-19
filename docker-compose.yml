@@ -11,6 +11,8 @@ services:
       - ./web:/usr/app
       - /usr/app/node_modules
     container_name: phoenix.web.sema.local
+    networks:
+      - sema
   apollo:
     image: apollo-dev-i
     build:
@@ -23,10 +25,16 @@ services:
     depends_on:
       - mongodb
     container_name: phoenix.apollo.sema.local
+    networks:
+      - sema
   mongodb:
     image: mongo
     ports:
-      - "27017:27017"
+      - "5000:27017"
     volumes:
       - ~/docker/volumes/mongodb:/data/db
     container_name: phoenix.mongodb.sema.local
+    networks:
+      - sema
+networks:
+  sema: {}
