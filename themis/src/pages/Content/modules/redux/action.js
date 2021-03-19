@@ -1,12 +1,15 @@
 import {
-  ADD_SEMABAR,
+  ADD_SEMA_COMPONENTS,
   TOGGLE_TAG_MODAL,
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
 } from './actionConstants';
 
-export const addSemabar = (payload) => ({ type: ADD_SEMABAR, payload });
+export const addSemaComponents = (payload) => ({
+  type: ADD_SEMA_COMPONENTS,
+  payload,
+});
 
 export const toggleTagModal = (payload) => ({
   type: TOGGLE_TAG_MODAL,

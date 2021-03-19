@@ -8,6 +8,7 @@ import {
   onGithubSubmitClicked,
   onCloseAllModalsClicked,
   onSuggestion,
+  getSemaIds,
 } from './modules/content-util';
 
 import {
@@ -21,7 +22,7 @@ import Searchbar from './Searchbar.jsx';
 
 import store from './modules/redux/store';
 
-import { addSemabar } from './modules/redux/action';
+import { addSemaComponents } from './modules/redux/action';
 
 store.subscribe(() => {
   console.log('State changed!');
@@ -70,8 +71,10 @@ $(async function () {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
         const idSuffix = Date.now();
-        const semabarContainerId = `semabar${idSuffix}`;
-        const semaSearchContainerId = `semasearch${idSuffix}`;
+
+        const { semabarContainerId, semaSearchContainerId } = getSemaIds(
+          idSuffix
+        );
 
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
@@ -84,12 +87,19 @@ $(async function () {
         );
 
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
-        store.dispatch(addSemabar({ id: semabarContainerId, activeElement }));
+        store.dispatch(
+          addSemaComponents({
+            seedId: idSuffix,
+            activeElement,
+          })
+        );
 
         /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
         // Render searchbar
         ReactDOM.render(
-          <Searchbar id={semaSearchContainerId} commentBox={activeElement} />,
+          <Provider store={store}>
+            <Searchbar id={semaSearchContainerId} commentBox={activeElement} />
+          </Provider>,
           $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0]
         );
         // Render Semabar

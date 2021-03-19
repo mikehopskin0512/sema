@@ -2,13 +2,17 @@ import { clone } from 'ramda';
 
 import initialState from './initialState';
 import {
-  ADD_SEMABAR,
+  ADD_SEMA_COMPONENTS,
   TOGGLE_TAG_MODAL,
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
 } from './actionConstants';
-import { getInitialSemaValues, toggleTagSelection } from '../content-util';
+import {
+  getInitialSemaValues,
+  toggleTagSelection,
+  getSemaIds,
+} from '../content-util';
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -17,18 +21,24 @@ function rootReducer(state = initialState, action) {
 
   const newState = clone(state);
 
-  if (type === ADD_SEMABAR) {
-    const { id, activeElement } = payload;
+  if (type === ADD_SEMA_COMPONENTS) {
+    const { seedId, activeElement } = payload;
+
+    const { semabarContainerId, semaSearchContainerId } = getSemaIds(seedId);
 
     const { initialTags, initialReaction } = getInitialSemaValues(
       activeElement
     );
 
-    newState.semabars[id] = {
+    newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
       selectedTags: initialTags,
       selectedReaction: initialReaction,
       isDirty: false,
+    };
+
+    newState.semasearches[semaSearchContainerId] = {
+      isSearchModalVisible: false,
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;

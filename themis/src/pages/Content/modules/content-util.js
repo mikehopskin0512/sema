@@ -241,16 +241,12 @@ export function onSuggestion(event, store) {
         );
       }
     }
-    // ({ suggestedReaction, suggestedTags } = payload);
-
-    // if (suggestedReaction || suggestedTags) {
-    //   ReactDOM.render(
-    //     <Semabar
-    //       initialTags={initialTags}
-    //       initialReaction={suggestedReaction || initialReaction}
-    //     />,
-    //     addedSemaElement
-    //   );
-    // }
   }
+}
+
+export function getSemaIds(idSuffix) {
+  return {
+    semabarContainerId: `semabar${idSuffix}`,
+    semaSearchContainerId: `semasearch${idSuffix}`,
+  };
 }
