@@ -104,10 +104,10 @@
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
       }, {
         "name": "ALLOWED_ORIGIN",
-        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/allowed-origin"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/allowed-origin"
       }, {
         "name": "NODE_ENV",
-        "value": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/node-env"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/node-env"
       }],
     "portMappings": [
       {
