@@ -84,15 +84,11 @@ $(async function () {
           activeElement
         );
 
-        store.dispatch(addSemabar({ id: semabarContainerId }));
+        store.dispatch(addSemabar({ id: semabarContainerId, activeElement }));
         // Render initial Semabar
         ReactDOM.render(
           <Provider store={store}>
-            <Semabar
-              id={semabarContainerId}
-              initialTags={initialTags}
-              initialReaction={initialReaction}
-            />
+            <Semabar id={semabarContainerId} />
           </Provider>,
           addedSemaElement
         );

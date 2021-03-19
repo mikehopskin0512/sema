@@ -1,24 +1,33 @@
+import { clone } from 'ramda';
+
 import initialState from './initialState';
 import {
   ADD_SEMABAR,
   TOGGLE_TAG_MODAL,
   CLOSE_ALL_MODALS,
+  UPDATE_SELECTED_EMOJI,
+  UPDATE_SELECTED_TAGS,
 } from './actionConstants';
-
-import { clone } from 'ramda';
+import { getInitialSemaValues, toggleTagSelection } from '../content-util';
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
 
+  console.log('-->', action.type);
+
   const newState = clone(state);
 
   if (type === ADD_SEMABAR) {
-    const { id } = payload;
+    const { id, activeElement } = payload;
+
+    const { initialTags, initialReaction } = getInitialSemaValues(
+      activeElement
+    );
+
     newState.semabars[id] = {
       isTagModalVisible: false,
-      selectedTags: [],
-      // ABHISHEK: it is "none" emoji here
-      selectedEmoji: null,
+      selectedTags: initialTags,
+      selectedEmoji: initialReaction,
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -30,6 +39,20 @@ function rootReducer(state = initialState, action) {
     semaIds.forEach((id) => {
       newState.semabars[id].isTagModalVisible = false;
     });
+  } else if (type === UPDATE_SELECTED_EMOJI) {
+    const { id, selectedEmoji } = payload;
+    const { semabars } = newState;
+    semabars[id].selectedEmoji = selectedEmoji;
+  } else if (type === UPDATE_SELECTED_TAGS) {
+    const { id, operation } = payload;
+    const {
+      semabars,
+      semabars: {
+        [id]: { selectedTags },
+      },
+    } = newState;
+    const updatedTags = toggleTagSelection(operation, selectedTags);
+    semabars[id].selectedTags = updatedTags;
   }
   return newState;
 }

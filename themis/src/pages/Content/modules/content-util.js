@@ -6,6 +6,7 @@ import {
   POSITIVE,
   NEGATIVE,
   SELECTED,
+  DELETE_OP,
   SEMA_GITHUB_REGEX,
 } from '../constants';
 
@@ -168,3 +169,46 @@ export function onCloseAllModalsClicked(event, store) {
     store.dispatch(closeAllDropdowns());
   }
 }
+
+export const toggleTagSelection = (operation, tags) => {
+  /**
+   * {
+   * tag: string
+   * isSelected: boolean
+   * op: toggle | delete
+   * }
+   */
+  const { tag, isSelected, op } = operation;
+  let updatedTags;
+  if (op === DELETE_OP) {
+    updatedTags = tags.map((tagObj) => {
+      const modifiedObj = { ...tagObj };
+      if (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]) {
+        modifiedObj[SELECTED] = null;
+      }
+      return modifiedObj;
+    });
+  } else {
+    updatedTags = tags.map((tagObj) => {
+      const modifiedObj = { ...tagObj };
+
+      // If tag is already selected, set selection to null on toggle
+      if (
+        isSelected &&
+        (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
+      ) {
+        modifiedObj[SELECTED] = null;
+        return modifiedObj;
+      }
+
+      // Otherwise, set positive or negative tag for selection
+      if (tag === tagObj[POSITIVE]) {
+        modifiedObj[SELECTED] = POSITIVE;
+      } else if (tag === tagObj[NEGATIVE]) {
+        modifiedObj[SELECTED] = NEGATIVE;
+      }
+      return modifiedObj;
+    });
+  }
+  return updatedTags;
+};

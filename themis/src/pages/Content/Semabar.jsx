@@ -4,91 +4,49 @@ import { connect } from 'react-redux';
 import TagsModal from './TagsModal.jsx';
 import EmojiSelection from './EmojiSelection.jsx';
 
-import { toggleTagModal } from './modules/redux/action';
+import {
+  toggleTagModal,
+  updateSelectedEmoji,
+  updateSelectedTags,
+} from './modules/redux/action';
 
-import { DELETE_OP, POSITIVE, NEGATIVE, SELECTED, EMOJIS } from './constants';
+import { DELETE_OP, SELECTED, EMOJIS } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { semabars } = state;
+  const semabarState = semabars[ownProps.id];
   return {
-    isTagModalVisible: semabars[ownProps.id].isTagModalVisible,
-    initialTags: ownProps.initialTags,
-    initialReaction: ownProps.initialReaction,
+    isTagModalVisible: semabarState.isTagModalVisible,
+    selectedTags: semabarState.selectedTags,
+    selectedEmoji: semabarState.selectedEmoji,
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const { id } = ownProps;
   return {
-    toggleTagModal: () => dispatch(toggleTagModal({ id: ownProps.id })),
+    toggleTagModal: () => dispatch(toggleTagModal({ id })),
+    updateSelectedEmoji: (emojiObj) =>
+      dispatch(updateSelectedEmoji({ id, selectedEmoji: emojiObj })),
+    updateSelectedTags: (operation) =>
+      dispatch(updateSelectedTags({ id, operation })),
   };
 };
 
 const Semabar = (props) => {
-  const [allTags, updateSelectedTags] = useState(props.initialTags);
-  const [selectedReaction, updateSelectedReaction] = useState(
-    props.initialReaction
-  );
-  const [userSelectedReaction, setUserSelectedReaction] = useState(false);
+  // const [allTags, updateSelectedTags] = useState(props.selectedTags);
   const [userSelectedTags, setUserSelectedTags] = useState(false);
 
   // useEffect(() => {
   //   if (!userSelectedReaction) {
-  //     updateSelectedReaction(initialReaction);
+  //     updateSelectedReaction(selectedEmoji);
   //   }
   //   if (!userSelectedTags) {
-  //     updateSelectedTags(initialTags);
+  //     updateSelectedTags(selectedTags);
   //   }
-  // }, [initialTags, initialReaction, userSelectedReaction, userSelectedTags]);
-
-  const handleReactionSelection = (emojiObj) => {
-    updateSelectedReaction(emojiObj);
-    setUserSelectedReaction(true);
-  };
-
-  const toggleTagSelection = (operation) => {
-    /**
-     * {
-     * tag: string
-     * op: toggle | delete
-     * }
-     */
-    const { tag, isSelected, op } = operation;
-    let updatedTags;
-    if (op === DELETE_OP) {
-      updatedTags = allTags.map((tagObj) => {
-        const modifiedObj = { ...tagObj };
-        if (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]) {
-          modifiedObj[SELECTED] = null;
-        }
-        return modifiedObj;
-      });
-    } else {
-      updatedTags = allTags.map((tagObj) => {
-        const modifiedObj = { ...tagObj };
-
-        // If tag is already selected, set selection to null on toggle
-        if (
-          isSelected &&
-          (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
-        ) {
-          modifiedObj[SELECTED] = null;
-          return modifiedObj;
-        }
-
-        // Otherwise, set positive or negative tag for selection
-        if (tag === tagObj[POSITIVE]) {
-          modifiedObj[SELECTED] = POSITIVE;
-        } else if (tag === tagObj[NEGATIVE]) {
-          modifiedObj[SELECTED] = NEGATIVE;
-        }
-        return modifiedObj;
-      });
-    }
-    updateSelectedTags(updatedTags);
-  };
-
+  // }, [selectedTags, selectedEmoji, userSelectedReaction, userSelectedTags]);
   const createActiveTags = () => {
-    const activeTags = allTags.reduce((acc, tagObj) => {
+    const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
       if (selectedTag) {
         acc.push(selectedTag);
@@ -106,7 +64,7 @@ const Semabar = (props) => {
               {tag}
               <button
                 className="sema-delete sema-is-small"
-                onClick={() => toggleTagSelection({ tag, op: DELETE_OP })}
+                onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
               ></button>
             </span>
           );
@@ -141,8 +99,8 @@ const Semabar = (props) => {
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
-                allTags={allTags}
-                toggleTagSelection={toggleTagSelection}
+                allTags={props.selectedTags}
+                toggleTagSelection={props.updateSelectedTags}
               />
             </div>
           </div>
@@ -156,9 +114,9 @@ const Semabar = (props) => {
       <div className="sema-emoji-container">
         <EmojiSelection
           allEmojis={EMOJIS}
-          selectedReaction={selectedReaction}
+          selectedEmoji={props.selectedEmoji}
           onEmojiSelected={(emojiObj) => {
-            handleReactionSelection(emojiObj);
+            props.updateSelectedEmoji(emojiObj);
           }}
         />
       </div>
