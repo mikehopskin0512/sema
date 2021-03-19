@@ -1,12 +1,15 @@
 FROM node:12.15.0-alpine
 
+RUN apk add --update --no-cache \
+    python \
+    make \
+    g++
+ 
 WORKDIR /usr/app
+COPY ./.env ./
 COPY ./package*.json ./
-
-RUN npm install
-COPY ./ ./
+RUN npm install -g
 
 EXPOSE 3000
-USER node
 
 CMD ["npm", "run", "dev"]
