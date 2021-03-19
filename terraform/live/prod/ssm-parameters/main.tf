@@ -161,7 +161,7 @@ resource "aws_ssm_parameter" "github_client-id" {
 resource "aws_ssm_parameter" "github_client-secret" {
   name  = "/${var.env}/github/client-secret"
   type  = "SecureString"
-  value = "0cb124f5a840af2218de1f75300e4f56ae6485cc"
+  value = "9e2930f7115f993ebc40c1d78722ac3a8a90e6d3"
 }
 resource "aws_ssm_parameter" "github_private-key" {
   name  = "/${var.env}/github/private-key"
