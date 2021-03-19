@@ -119,13 +119,13 @@ export function onGithubSubmitClicked(event) {
       const emojiContainer = semaChildren?.[0];
       const tagContainer = semaChildren?.[1];
 
-      const selectedEmoji = $(emojiContainer).children()?.[0]?.textContent;
+      const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
       const selectedTags = $(tagContainer)
         .children('.sema-tag')
         .map((index, tagElement) => tagElement?.textContent);
 
       const selectedEmojiObj = EMOJIS.find((emoji) =>
-        selectedEmoji?.includes(emoji.title)
+        selectedReaction?.includes(emoji.title)
       );
 
       const selectedEmojiString = `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`;

@@ -27,7 +27,7 @@ function rootReducer(state = initialState, action) {
     newState.semabars[id] = {
       isTagModalVisible: false,
       selectedTags: initialTags,
-      selectedEmoji: initialReaction,
+      selectedReaction: initialReaction,
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -40,9 +40,9 @@ function rootReducer(state = initialState, action) {
       newState.semabars[id].isTagModalVisible = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
-    const { id, selectedEmoji } = payload;
+    const { id, selectedReaction } = payload;
     const { semabars } = newState;
-    semabars[id].selectedEmoji = selectedEmoji;
+    semabars[id].selectedReaction = selectedReaction;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation } = payload;
     const {

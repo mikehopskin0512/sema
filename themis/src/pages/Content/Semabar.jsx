@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
-    selectedEmoji: semabarState.selectedEmoji,
+    selectedReaction: semabarState.selectedReaction,
   };
 };
 
@@ -27,24 +27,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     toggleTagModal: () => dispatch(toggleTagModal({ id })),
     updateSelectedEmoji: (emojiObj) =>
-      dispatch(updateSelectedEmoji({ id, selectedEmoji: emojiObj })),
+      dispatch(updateSelectedEmoji({ id, selectedReaction: emojiObj })),
     updateSelectedTags: (operation) =>
       dispatch(updateSelectedTags({ id, operation })),
   };
 };
 
 const Semabar = (props) => {
-  // const [allTags, updateSelectedTags] = useState(props.selectedTags);
   const [userSelectedTags, setUserSelectedTags] = useState(false);
 
+  // ABHISHEK
   // useEffect(() => {
   //   if (!userSelectedReaction) {
-  //     updateSelectedReaction(selectedEmoji);
+  //     updateSelectedReaction(selectedReaction);
   //   }
   //   if (!userSelectedTags) {
   //     updateSelectedTags(selectedTags);
   //   }
-  // }, [selectedTags, selectedEmoji, userSelectedReaction, userSelectedTags]);
+  // }, [selectedTags, selectedReaction, userSelectedReaction, userSelectedTags]);
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -114,7 +114,7 @@ const Semabar = (props) => {
       <div className="sema-emoji-container">
         <EmojiSelection
           allEmojis={EMOJIS}
-          selectedEmoji={props.selectedEmoji}
+          selectedReaction={props.selectedReaction}
           onEmojiSelected={(emojiObj) => {
             props.updateSelectedEmoji(emojiObj);
           }}
