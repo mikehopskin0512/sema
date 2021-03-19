@@ -49,6 +49,7 @@
     "toasted-notes": "^3.2.0"
   },
   "devDependencies": {
+    "next": "^9.5.3",
     "@babel/core": "^7.8.4",
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-react-svg": "^1.1.1",
