@@ -5,12 +5,10 @@ import $ from 'cash-dom';
 
 import {
   isValidSemaTextBox,
-  getSemaGithubText,
   getInitialSemaValues,
   onGithubSubmitClicked,
+  onCloseAllModalsClicked,
 } from './modules/content-util';
-
-import { EMOJIS, SEMA_GITHUB_REGEX } from './constants';
 
 import { suggest } from './commentSuggestions';
 import Semabar from './Semabar.jsx';
@@ -30,6 +28,14 @@ window.addEventListener(
   onGithubSubmitClicked,
   // adding listener in the "capturing" phase
   true
+);
+
+window.addEventListener(
+  'click',
+  (event) => {
+    onCloseAllModalsClicked(event, store);
+  },
+  false
 );
 
 /**

@@ -25,6 +25,7 @@ function rootReducer(state = initialState, action) {
     const { semabars } = newState;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
   } else if (type === CLOSE_ALL_MODALS) {
+    // ABHISHEK: IMPLEMENT FOR SEARCH DROPDOWN TOO
     const semaIds = Object.keys(newState.semabars);
     semaIds.forEach((id) => {
       newState.semabars[id].isTagModalVisible = false;

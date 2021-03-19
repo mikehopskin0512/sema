@@ -9,6 +9,8 @@ import {
   SEMA_GITHUB_REGEX,
 } from '../constants';
 
+import { closeAllDropdowns } from './redux/action';
+
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;
@@ -154,5 +156,15 @@ export function onGithubSubmitClicked(event) {
 
       textarea.value = `${textboxValue}\n${semaString}`;
     }
+  }
+}
+
+export function onCloseAllModalsClicked(event, store) {
+  const target = event.target;
+  const parents = $(target).parents('.sema-dropdown');
+  if (parents.length) {
+    // do nothing
+  } else {
+    store.dispatch(closeAllDropdowns());
   }
 }

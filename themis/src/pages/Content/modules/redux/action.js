@@ -11,7 +11,6 @@ export const toggleTagModal = (payload) => ({
   payload,
 });
 
-export const closeAllDropdowns = (payload) => ({
+export const closeAllDropdowns = () => ({
   type: CLOSE_ALL_MODALS,
-  payload,
 });
