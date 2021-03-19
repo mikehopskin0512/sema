@@ -7,6 +7,7 @@ import {
   isValidSemaTextBox,
   getSemaGithubText,
   getInitialSemaValues,
+  onGithubSubmitClicked,
 } from './modules/content-util';
 
 import { EMOJIS, SEMA_GITHUB_REGEX } from './constants';
@@ -26,68 +27,7 @@ store.subscribe(() => {
 
 window.addEventListener(
   'click',
-  function (event) {
-    const target = event.target;
-    const parentButton = $(target).parents('button')?.[0];
-    const isButton = $(target).is('button') || $(parentButton).is('button');
-    const isSubmitButton =
-      isButton &&
-      ($(target).attr('type') === 'submit' ||
-        $(parentButton).attr('type') === 'submit');
-
-    if (isSubmitButton) {
-      const formParent = $(target).parents('form')?.[0];
-      const textarea = $(formParent).find(
-        'file-attachment div text-expander textarea'
-      )?.[0];
-
-      if (textarea) {
-        const semabar = $(textarea).siblings('div.sema')?.[0];
-        const semaChildren = $(semabar).children();
-
-        const emojiContainer = semaChildren?.[0];
-        const tagContainer = semaChildren?.[1];
-
-        const selectedEmoji = $(emojiContainer).children()?.[0]?.textContent;
-        const selectedTags = $(tagContainer)
-          .children('.sema-tag')
-          .map((index, tagElement) => tagElement?.textContent);
-
-        const selectedEmojiObj = EMOJIS.find((emoji) =>
-          selectedEmoji?.includes(emoji.title)
-        );
-
-        const selectedEmojiString = `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`;
-
-        let selectedTagsString = '';
-        selectedTags.each((index, tag) => {
-          selectedTagsString = `${selectedTagsString}${
-            index > 0 ? ',' : ''
-          } ${tag}`;
-        });
-        if (selectedTagsString.length === 0) {
-          selectedTagsString = ' None';
-        }
-
-        let semaString = getSemaGithubText(
-          selectedEmojiString,
-          selectedTagsString
-        );
-
-        let textboxValue = textarea.value;
-
-        if (textboxValue.includes('Sema Reaction')) {
-          // this textbox already has sema text
-          // this is an edit
-          textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-        } else {
-          semaString = `\n---${semaString}`;
-        }
-
-        textarea.value = `${textboxValue}\n${semaString}`;
-      }
-    }
-  },
+  onGithubSubmitClicked,
   // adding listener in the "capturing" phase
   true
 );
