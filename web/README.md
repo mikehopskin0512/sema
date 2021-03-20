@@ -27,3 +27,24 @@ $ npm run dev
 │── next.config.js              # Used by next.js to add advanced behavior
 └── package.json                # The list of 3rd party libraries and utilities
 ```
+
+### Deploying to QA
+
+```sh
+# make sure you have the phoenix AWS profile configured (will need AWS Access Key ID and Secret):
+$ aws configure --profile phoenix
+# run your build and deploy script
+# defaults to qa
+$ bash ./build-and-deploy.sh
+```
+
+### Pushing to production
+
+1. update `build-and-deploy.sh`'s environment variables:
+   - ENV=prod
+   - NODE_ENV = production
+2. run your build and deploy script:
+   ```sh
+   $ bash ./build-and-deploy.sh
+   ```
+   > NOTE: If you've configured your docker to run without elevated privileges (as in you can just run `docker` without `sudo docker`), you'll need to replace the scripts usage of `sudo docker` to just `docker`.
