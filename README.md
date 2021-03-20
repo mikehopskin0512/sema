@@ -10,9 +10,19 @@ any project that has a .env.template file, be sure to make a copy, rename it to 
 ### Getting Started
 
 ```sh
+$ git clone git@github.com:Semalab/phoenix.git
+$ cd phoenix
+```
+
+### Running the orchestrated servers
+
+```sh
 # make sure you are in the project root
-# to run all projects, as well as install/run postgres and mongodb:
+# to run all projects, as well as install/run postgres and mongodb (will take about 5 minutes to build if running for the first time):
 $ docker-compose up
+# to verify that the web app is running open a new shell and run:
+# look for a "ready - started server on http://localhost:3000" message
+$ docker-compose logs web
 # to run only a single project:
 $ docker-compose run <project name>
 # for example, to run ONLY eric:

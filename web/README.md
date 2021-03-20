@@ -1,13 +1,10 @@
-Phoenix
-===============================================
+# Phoenix
 
-Just as a Phoenix rises from the ashes, so does the Sema Code Quality Platform.
+Phoenix front-end web application
 
 ### Getting Started
 
 ```sh
-$ git clone git@github.com:Semalab/phoenix.git
-$ cd phoenix
 $ npm install
 $ npm run dev
 # project will be available on http://localhost:3000
