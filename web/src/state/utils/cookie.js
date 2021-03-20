@@ -3,12 +3,12 @@ import cookie from 'js-cookie';
 const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || 'localhost';
 
 export const setCookie = (key, value, expires = 1) => {
-    if (process.browser) {
-      cookie.set(key, value, {
-        expires,
-        path: '/',
-      });
-    }
+  if (process.browser) {
+    cookie.set(key, value, {
+      expires,
+      path: '/',
+    });
+  }
 };
 
 export const removeCookie = (key) => {

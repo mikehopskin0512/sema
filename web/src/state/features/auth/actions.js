@@ -82,18 +82,18 @@ export const authenticate = (username, password) => async (dispatch) => {
     const res = await auth({ username, password });
     const { data: { jwtToken } } = res;
     const { user } = jwtDecode(jwtToken) || {};
-    
+
     if (user) {
       const { _id: userId, isVerified } = user;
       const orgId = null; // TEMP: Until orgs are linked up
-      
+
       // Only allow store token if isVerified
       if (isVerified) {
         dispatch(authenticateSuccess(jwtToken));
         Router.push('/reports');
       } else {
         // Auth error clears token but preserves user object
-        dispatch(authenticateError({ errors: 'User is not verfied' }));
+        dispatch(authenticateError({ errors: 'User is not verified' }));
         Router.push('/register/verify');
       }
 
@@ -246,7 +246,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user));
-//      logHeapAnalytics(userId, orgId);
+      // logHeapAnalytics(userId, orgId);
     }
 
     dispatch(verifyUserSuccess());

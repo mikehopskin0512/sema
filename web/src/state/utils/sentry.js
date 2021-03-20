@@ -33,9 +33,11 @@ const initialize = async (ctx) => {
   }
 
   // Redirects w/ exclusions
-  if (ctx.pathname !== '/login' &&
-      !(ctx.pathname).includes('/register') &&
-      !(ctx.pathname).includes('/password-reset')) {
+  if (
+    ctx.pathname !== '/login' &&
+    !(ctx.pathname).includes('/register') &&
+    !(ctx.pathname).includes('/password-reset')
+  ) {
     if (!jwt) { redirect(ctx, '/login'); }
     if (!isVerified) { redirect(ctx, '/register/verify'); }
   }

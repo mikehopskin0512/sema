@@ -26,7 +26,8 @@ export default (app) => {
   });
 
   route.get('/cb/:inviteToken?', async (req, res) => {
-      const { inviteToken } = req.params;
+    const { inviteToken } = req.params;
+
     const auth = createOAuthAppAuth({
       clientId: github.clientId,
       clientSecret: github.clientSecret,
