@@ -103,6 +103,9 @@
         "name": "ORG_DOMAIN",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
       }, {
+        "name": "ROOT_DOMAIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/root-domain"
+      }, {
         "name": "ALLOWED_ORIGIN",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/allowed-origin"
       }, {
