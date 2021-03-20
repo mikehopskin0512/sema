@@ -28,7 +28,7 @@ export const validateAuthToken = async (token) => {
   return payload;
 };
 
-export const setRefreshToken = (response, token) => {
+export const setRefreshToken = async (response, token) => {
   const cookieConfig = {
     // httpOnly: true
     path: '/',
