@@ -1,13 +1,10 @@
-Phoenix
-===============================================
+# Phoenix
 
-Just as a Phoenix rises from the ashes, so does the Sema Code Quality Platform.
+Phoenix front-end web application
 
 ### Getting Started
 
 ```sh
-$ git clone git@github.com:Semalab/phoenix.git
-$ cd phoenix
 $ npm install
 $ npm run dev
 # project will be available on http://localhost:3000
@@ -30,3 +27,24 @@ $ npm run dev
 │── next.config.js              # Used by next.js to add advanced behavior
 └── package.json                # The list of 3rd party libraries and utilities
 ```
+
+### Deploying to QA
+
+```sh
+# make sure you have the phoenix AWS profile configured (will need AWS Access Key ID and Secret):
+$ aws configure --profile phoenix
+# run your build and deploy script
+# defaults to qa
+$ bash ./build-and-deploy.sh
+```
+
+### Pushing to production
+
+1. update `build-and-deploy.sh`'s environment variables:
+   - ENV=prod
+   - NODE_ENV = production
+2. run your build and deploy script:
+   ```sh
+   $ bash ./build-and-deploy.sh
+   ```
+   > NOTE: If you've configured your docker to run without elevated privileges (as in you can just run `docker` without `sudo docker`), you'll need to replace the scripts usage of `sudo docker` to just `docker`.
