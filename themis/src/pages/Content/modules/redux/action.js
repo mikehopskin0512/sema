@@ -4,6 +4,7 @@ import {
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
+  TOGGLE_SEARCH_MODAL,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -27,5 +28,10 @@ export const updateSelectedEmoji = (payload) => ({
 
 export const updateSelectedTags = (payload) => ({
   type: UPDATE_SELECTED_TAGS,
+  payload,
+});
+
+export const toggleSearchModal = (payload) => ({
+  type: TOGGLE_SEARCH_MODAL,
   payload,
 });

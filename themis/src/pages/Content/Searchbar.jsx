@@ -1,9 +1,27 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
 import { SUGGESTION_URL } from './constants';
 
-function SearchBar({ commentBox }) {
-  const [isDropdownVisible, toggleDropdown] = useState(false);
+import { toggleSearchModal } from './modules/redux/action';
+
+const mapStateToProps = (state, ownProps) => {
+  const { semasearches } = state;
+  const semaSearchState = semasearches[ownProps.id];
+  return {
+    isSearchModalVisible: semaSearchState.isSearchModalVisible,
+    commentBox: ownProps.commentBox,
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { id } = ownProps;
+  return {
+    toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
+  };
+};
+
+const SearchBar = (props) => {
   const [searchValue, handleChange] = useState('');
   const [isLoading, toggleIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -15,18 +33,18 @@ function SearchBar({ commentBox }) {
   };
 
   const onCopyPressed = (suggestion) => {
-    let value = commentBox.value;
+    let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
-    commentBox.value = `${value}${suggestion}`;
+    props.commentBox.value = `${value}${suggestion}`;
     setSearchResults([]);
-    toggleDropdown(false);
+    props.toggleSearchModal();
   };
 
   const onCrossPressed = (event) => {
     event.preventDefault();
     handleChange('');
     setSearchResults([]);
-    toggleDropdown(false);
+    props.toggleSearchModal();
   };
 
   const getSemaSuggestions = () => {
@@ -37,7 +55,7 @@ function SearchBar({ commentBox }) {
       .then((data) => {
         setSearchResults(data?.searchResults || []);
         toggleIsLoading(false);
-        toggleDropdown(true);
+        props.toggleSearchModal();
       });
   };
 
@@ -57,7 +75,7 @@ function SearchBar({ commentBox }) {
   };
 
   let containerClasses = `sema-dropdown${
-    isDropdownVisible ? ' sema-is-active' : ''
+    props.isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
   const inputControlClasses = `sema-control sema-has-icons-left${
@@ -123,6 +141,6 @@ function SearchBar({ commentBox }) {
       </div>
     </div>
   );
-}
+};
 
-export default SearchBar;
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);

@@ -5,8 +5,7 @@ import $ from 'cash-dom';
 
 import {
   isValidSemaTextBox,
-  onGithubSubmitClicked,
-  onCloseAllModalsClicked,
+  onDocumentClicked,
   onSuggestion,
   getSemaIds,
 } from './modules/content-util';
@@ -24,24 +23,13 @@ import store from './modules/redux/store';
 
 import { addSemaComponents } from './modules/redux/action';
 
-store.subscribe(() => {
-  console.log('State changed!');
-  console.log(store.getState());
-});
-
-document.addEventListener(
-  'click',
-  onGithubSubmitClicked,
-  // adding listener in the "capturing" phase
-  true
-);
-
 document.addEventListener(
   'click',
   (event) => {
-    onCloseAllModalsClicked(event, store);
+    onDocumentClicked(event, store);
   },
-  false
+  // adding listener in the "capturing" phase
+  true
 );
 
 document.addEventListener('keyup', (event) => onSuggestion(event, store));

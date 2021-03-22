@@ -7,6 +7,7 @@ import {
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
+  TOGGLE_SEARCH_MODAL,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -16,8 +17,6 @@ import {
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
-
-  console.log('-->', action.type);
 
   const newState = clone(state);
 
@@ -45,10 +44,15 @@ function rootReducer(state = initialState, action) {
     const { semabars } = newState;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
   } else if (type === CLOSE_ALL_MODALS) {
-    // ABHISHEK: IMPLEMENT FOR SEARCH DROPDOWN TOO
-    const semaIds = Object.keys(newState.semabars);
+    const { semabars, semasearches } = newState;
+    const semaIds = Object.keys(semabars);
+    const searchIds = Object.keys(semasearches);
+
     semaIds.forEach((id) => {
-      newState.semabars[id].isTagModalVisible = false;
+      semabars[id].isTagModalVisible = false;
+    });
+    searchIds.forEach((id) => {
+      semasearches[id].isSearchModalVisible = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
     const { id, selectedReaction } = payload;
@@ -66,6 +70,11 @@ function rootReducer(state = initialState, action) {
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
     // semabars[id].isDirty = true;
+  } else if (type === TOGGLE_SEARCH_MODAL) {
+    const { id } = payload;
+    const { semasearches } = newState;
+    semasearches[id].isSearchModalVisible = !semasearches[id]
+      .isSearchModalVisible;
   }
   return newState;
 }

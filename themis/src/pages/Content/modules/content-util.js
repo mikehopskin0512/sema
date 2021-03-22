@@ -100,7 +100,12 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-export function onGithubSubmitClicked(event) {
+export function onDocumentClicked(event, store) {
+  onCloseAllModalsClicked(event, store);
+  onGithubSubmitClicked(event);
+}
+
+function onGithubSubmitClicked(event) {
   const target = event.target;
   const parentButton = $(target).parents('button')?.[0];
   const isButton = $(target).is('button') || $(parentButton).is('button');
@@ -163,7 +168,7 @@ export function onGithubSubmitClicked(event) {
   }
 }
 
-export function onCloseAllModalsClicked(event, store) {
+function onCloseAllModalsClicked(event, store) {
   const target = event.target;
   const parents = $(target).parents('.sema-dropdown');
   if (parents.length) {
