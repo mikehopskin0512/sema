@@ -4,27 +4,27 @@ import Emoji from './modules/emoji.js';
 function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected }) {
   const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
 
-  const { title: selectedTitle, image: selectedImage, emoji: shownEmoji } = selectedReaction;
+  const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   return (
     <>
       {isSelectingEmoji ? (
         <div className="reaction-selection-wrapper">
-        {allEmojis.map((emojiObj) => {
-          const { title, image, emoji } = emojiObj;
-          return (
-            <button
-              className="zoom sema-button sema-is-small sema-is-ghost reaction-selection"
-              title={title}
-              key={title}
-              onClick={() => {
-                onEmojiSelected(emojiObj);
-                toggleEmojiSelection(!isSelectingEmoji);
-              }}
-            >
-              <Emoji symbol={emoji}/>
-            </button>
-          );
-        })}
+          {allEmojis.map((emojiObj) => {
+            const { title, emoji } = emojiObj;
+            return (
+              <button
+                className="zoom sema-button sema-is-small sema-is-ghost reaction-selection"
+                title={title}
+                key={title}
+                onClick={() => {
+                  onEmojiSelected(emojiObj);
+                  toggleEmojiSelection(!isSelectingEmoji);
+                }}
+              >
+                <Emoji symbol={emoji} />
+              </button>
+            );
+          })}
         </div>
       ) : (
         <button
@@ -34,7 +34,7 @@ function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected }) {
             toggleEmojiSelection(!isSelectingEmoji);
           }}
         >
-          <Emoji symbol={shownEmoji}/>
+          <Emoji symbol={shownEmoji} />
           <span className="sema-ml-2">{selectedTitle}</span>
         </button>
       )}
