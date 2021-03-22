@@ -234,7 +234,10 @@ export function onSuggestion(event, store) {
     const payload = suggest(activeElement.value);
 
     const { suggestedReaction, suggestedTags } = payload;
-    if (suggestedReaction || suggestedTags) {
+    if (
+      suggestedReaction ||
+      (Array.isArray(suggestedTags) && suggestedTags.length)
+    ) {
       const state = store.getState();
       const isSemabarDirty = state.semabars[semabarId].isDirty;
       if (!isSemabarDirty) {
