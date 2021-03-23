@@ -51,10 +51,7 @@
       }, {
         "name": "POSTGRES_CONNECTION",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/postgres/uri"
-      }, {
-        "name": "ALLOWED_ORIGIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/cors"
-      }, {
+      },  {
         "name": "GITHUB_APP_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/app-id"
       }, {
@@ -85,9 +82,6 @@
         "name": "MONGOOSE_CERTPATH",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mongo/cert-path"
       }, {
-        "name": "ORG_DOMAIN",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
-      }, {
         "name": "PORT",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/port"
       }, {
@@ -105,6 +99,18 @@
       }, {
         "name": "VERSION",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/version"
+      }, {
+        "name": "ORG_DOMAIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/org-domain"
+      }, {
+        "name": "ROOT_DOMAIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/root-domain"
+      }, {
+        "name": "ALLOWED_ORIGIN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/allowed-origin"
+      }, {
+        "name": "NODE_ENV",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/node-env"
       }],
     "portMappings": [
       {

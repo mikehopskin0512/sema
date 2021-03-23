@@ -1,5 +1,8 @@
 import { sign, verify } from 'jsonwebtoken';
-import { jwtSecret, privateKeyFile, refreshSecret, refreshTokenName } from '../config';
+import {
+  jwtSecret, privateKeyFile,
+  refreshSecret, refreshTokenName, rootDomain,
+} from '../config';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
@@ -25,7 +28,7 @@ export const validateAuthToken = async (token) => {
   return payload;
 };
 
-export const setRefreshToken = (response, token) => {
+export const setRefreshToken = async (response, token) => {
   const cookieConfig = {
     // httpOnly: true
     path: '/',
@@ -33,7 +36,9 @@ export const setRefreshToken = (response, token) => {
 
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
-    cookieConfig.domain = '.semasoftware.com';
+    cookieConfig.domain = `.${rootDomain}`;
+  } else {
+    console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }
 
   response.cookie(refreshTokenName, token, cookieConfig);
