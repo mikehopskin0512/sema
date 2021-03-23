@@ -5,7 +5,7 @@ resource "aws_ecs_cluster" "main" {
 module "alb" {
   source = "../../../modules/load-balancer"
 
-  cert_domain = "semasoftware.io"
+  cert_domain = "semasoftware.com"
   env         = "prod"
   name        = "prod-frontend"
   vpc_name    = "vpc-prod"
@@ -18,7 +18,7 @@ module "web" {
   cluster_name      = aws_ecs_cluster.main.name
   cpu               = "1024"
   env               = "prod"
-  domain            = "app.semasoftware.io"
+  domain            = "app.semasoftware.com"
   health_check_path = "/login"
   image             = "091235034633.dkr.ecr.us-east-1.amazonaws.com/phoenix:prod"
   lb_listener_arn   = module.alb.https_listener
@@ -37,7 +37,7 @@ module "api" {
   cluster_name      = aws_ecs_cluster.main.name
   cpu               = "1024"
   env               = "prod"
-  domain            = "api.semasoftware.io"
+  domain            = "api.semasoftware.com"
   health_check_path = "/health"
   image             = "091235034633.dkr.ecr.us-east-1.amazonaws.com/apollo:prod"
   lb_listener_arn   = module.alb.https_listener
