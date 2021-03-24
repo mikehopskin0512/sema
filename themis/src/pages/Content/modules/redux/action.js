@@ -5,6 +5,8 @@ import {
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
   TOGGLE_SEARCH_MODAL,
+  ADD_SUGGESTED_TAGS,
+  UPDATE_SELECTED_TAG_WITH_SUGGESTION,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -33,5 +35,15 @@ export const updateSelectedTags = (payload) => ({
 
 export const toggleSearchModal = (payload) => ({
   type: TOGGLE_SEARCH_MODAL,
+  payload,
+});
+
+export const addSuggestedTags = (payload) => ({
+  type: ADD_SUGGESTED_TAGS,
+  payload,
+});
+
+export const updateSelectedTagsWithSuggestion = (payload) => ({
+  type: UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   payload,
 });

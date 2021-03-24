@@ -8,6 +8,7 @@ import {
   toggleTagModal,
   updateSelectedEmoji,
   updateSelectedTags,
+  updateSelectedTagsWithSuggestion,
 } from './modules/redux/action';
 
 import { DELETE_OP, SELECTED, EMOJIS } from './constants';
@@ -19,6 +20,7 @@ const mapStateToProps = (state, ownProps) => {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
     selectedReaction: semabarState.selectedReaction,
+    suggestedTags: semabarState.suggestedTags,
   };
 };
 
@@ -27,9 +29,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     toggleTagModal: () => dispatch(toggleTagModal({ id })),
     updateSelectedEmoji: (emojiObj) =>
-      dispatch(updateSelectedEmoji({ id, selectedReaction: emojiObj })),
+      dispatch(
+        updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true })
+      ),
     updateSelectedTags: (operation) =>
-      dispatch(updateSelectedTags({ id, operation })),
+      dispatch(updateSelectedTags({ id, operation, isDirty: true })),
+    updateSelectedTagsWithSuggestion: (tag) =>
+      dispatch(updateSelectedTagsWithSuggestion({ id, tag })),
   };
 };
 
@@ -98,6 +104,27 @@ const Semabar = (props) => {
     );
   };
 
+  const createSuggestedTags = () => {
+    return (
+      <>
+        {props.suggestedTags.map((tag) => {
+          return (
+            <span
+              className="sema-tag sema-is-rounded sema-mr-2"
+              style={{ cursor: 'pointer' }}
+              key={tag}
+              onClick={() => {
+                props.updateSelectedTagsWithSuggestion(tag);
+              }}
+            >
+              {tag}
+            </span>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <>
       <div className="sema-emoji-container">
@@ -112,6 +139,7 @@ const Semabar = (props) => {
       <div className="sema-tag-container">
         {createAddTags()}
         {createActiveTags()}
+        {createSuggestedTags()}
       </div>
     </>
   );

@@ -9,11 +9,16 @@ import {
   DELETE_OP,
   SEMA_GITHUB_REGEX,
   SEMABAR_CLASS,
+  ADD_OP,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
 
-import { closeAllDropdowns, updateSelectedEmoji } from './redux/action';
+import {
+  closeAllDropdowns,
+  updateSelectedEmoji,
+  addSuggestedTags,
+} from './redux/action';
 
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
@@ -196,6 +201,16 @@ export const toggleTagSelection = (operation, tags) => {
       }
       return modifiedObj;
     });
+  } else if (op === ADD_OP) {
+    updatedTags = tags.map((tagObj) => {
+      const modifiedObj = { ...tagObj };
+      if (tag === tagObj[POSITIVE]) {
+        modifiedObj[SELECTED] = POSITIVE;
+      } else if (tag === tagObj[NEGATIVE]) {
+        modifiedObj[SELECTED] = NEGATIVE;
+      }
+      return modifiedObj;
+    });
   } else {
     updatedTags = tags.map((tagObj) => {
       const modifiedObj = { ...tagObj };
@@ -233,18 +248,29 @@ export function onSuggestion(event, store) {
 
     const payload = suggest(activeElement.value);
 
+    const state = store.getState();
+
     const { suggestedReaction, suggestedTags } = payload;
-    if (
-      suggestedReaction ||
-      (Array.isArray(suggestedTags) && suggestedTags.length)
-    ) {
-      const state = store.getState();
-      const isSemabarDirty = state.semabars[semabarId].isDirty;
-      if (!isSemabarDirty) {
+    if (suggestedReaction) {
+      const isReactionDirty = state.semabars[semabarId].isReactionDirty;
+      // isReactionDirty is true when reaction is manually selected from UI
+      if (!isReactionDirty) {
         store.dispatch(
           updateSelectedEmoji({
             id: semabarId,
             selectedReaction: suggestedReaction,
+          })
+        );
+      }
+    }
+    if (Array.isArray(suggestedTags) && suggestedTags.length) {
+      const isTagDirty = state.semabars[semabarId].isTagDirty;
+      // isTagDirty is true when tag is manually selected from UI
+      if (!isTagDirty) {
+        store.dispatch(
+          addSuggestedTags({
+            id: semabarId,
+            suggestedTags,
           })
         );
       }
