@@ -7,7 +7,7 @@ any project that has a .env.template file, be sure to make a copy, rename it to 
 
 **Docker is the preferred method to run projects locally! This (should) avoid the _but it works on my machine_ problem.**
 
-### Getting Started
+## Getting Started
 
 ```sh
 # get the code
@@ -27,3 +27,6 @@ $ sudo docker-compose up
 
 # Browse to http://localhost:3000 to test the webapp
 ```
+
+## Development approach
+Branch off, and pull request against `qa`
