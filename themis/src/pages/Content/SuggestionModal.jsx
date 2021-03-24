@@ -66,7 +66,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               <span className="sema-icon">
                 <i className="fas fa-copy"></i>
               </span>
-              <span>Copy</span>
+              <span>Insert</span>
             </button>
             <button
               className="sema-button sema-is-inverted sema-is-small"
