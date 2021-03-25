@@ -25,7 +25,7 @@ const withLayout = (Page) => () => (
       ` }} />
     </Head>
     <Header />
-    <Page />
+    <Page style={{backgroundColor: "#f8f8f8"}} />
     <Footer />
   </div>
 );
