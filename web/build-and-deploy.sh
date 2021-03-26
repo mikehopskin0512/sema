@@ -1,12 +1,12 @@
 #!/bin/bash
 NAME=phoenix
-ENV=qa1
+ENV=qa
 
 ECR_URL=091235034633.dkr.ecr.us-east-1.amazonaws.com
 CLUSTER_NAME=$ENV-frontend
 TASK_FAMILY_NAME=$ENV-$NAME
 
-NODE_ENV=staging
+NODE_ENV=production
 DOCKER_FILE=../.docker/web/Dockerfile.prod
 BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 SHA1=$(git rev-parse HEAD)
