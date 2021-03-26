@@ -23,9 +23,9 @@ export default (app) => {
       }
 
       // Check Postgres DB connection
-      const client = await pool.connect();
-      await client.query('SELECT NOW()');
-      client.release();
+      // const client = await pool.connect();
+      // await client.query('SELECT NOW()');
+      // client.release();
 
       res.status(200).send(healthcheck);
     } catch (e) {

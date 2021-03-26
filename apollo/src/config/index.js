@@ -5,6 +5,7 @@ module.exports = {
   version: process.env.VERSION,
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
+  rootDomain: process.env.ROOT_DOMAIN,
   mongooseUri: process.env.MONGOOSE_URI || '',
   // mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,
