@@ -147,8 +147,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/pages/Content/templates',
-          to: path.join(__dirname, 'build', 'templates'),
+          from: 'src/assets/img',
+          to: path.join(__dirname, 'build', 'img'),
           force: true,
         },
       ],
@@ -156,8 +156,17 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: 'src/assets/img',
-          to: path.join(__dirname, 'build', 'img'),
+          from: 'src/assets/css',
+          to: path.join(__dirname, 'build', 'css'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/webfonts',
+          to: path.join(__dirname, 'build', 'webfonts'),
           force: true,
         },
       ],
