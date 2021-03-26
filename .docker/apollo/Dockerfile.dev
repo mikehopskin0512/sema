@@ -5,19 +5,14 @@ RUN apk add --update --no-cache \
     make \
     g++
 
-
-RUN mkdir -p /usr/app/  && chown -R node:node /usr/app
 WORKDIR /usr/app
-COPY  --chown=node:node ./ ./
-COPY  --chown=node:node ./.env ./.env
-COPY --chown=node:node ./package*.json ./
+COPY ./.env ./.env
+COPY ./package*.json ./
 
-RUN npm install 
-RUN npm install nodemon -g --save
+ENV NODE_ENV development
+ENV PATH /usr/app/node_modules/.bin:$PATH
+RUN npm install  
 
 EXPOSE 3001
-USER node
-ENV NODE_ENV development
-
 
 CMD ["npm", "start"]

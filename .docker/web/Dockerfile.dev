@@ -4,16 +4,15 @@ RUN apk add --update --no-cache \
     python \
     make \
     g++
+
  
-
-RUN mkdir -p /usr/app/  && chown -R node:node /usr/app
-USER node
-
 WORKDIR /usr/app
-COPY --chown=node:node ./package*.json ./
+COPY ./.env ./
+COPY ./package*.json ./
 
-RUN npm install  
-COPY --chown=node:node ./ ./
+ENV PATH /usr/app/node_modules/.bin:$PATH
+ENV NODE_ENV development
+RUN npm install 
 
 EXPOSE 3000
 
