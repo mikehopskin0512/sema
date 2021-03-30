@@ -18,7 +18,7 @@ const Installation = () => {
     <>
       <div className="tile is-ancestor">
         <div className="tile is-parent">
-          <article className="tile is-child notification is-danger box" style={{margin: 25}}>
+          <article className="tile is-child notification is-danger box" style={{margin: "25px !important"}}>
             <p className="title">Note!!</p>
             <p className="subtitle">Read before you proceed</p>
             <div className="content">
