@@ -21,12 +21,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*"],
+      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*", "*://localhost/*"],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
       "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
     }
   ],
+  "externally_connectable": {
+    "matches": ["*://localhost/*"] 
+  },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
