@@ -1,3 +1,7 @@
+/**
+ * - todo: remove "Bulma Base" from bulma.css
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -23,6 +27,11 @@ import store from './modules/redux/store';
 
 import { addSemaComponents } from './modules/redux/action';
 
+/**
+ * Listening to click event for:
+ * 1. if github button is pressed then put sems comments in the textarea
+ * 2. things like closing modals when clicked outside of the element
+ */
 document.addEventListener(
   'click',
   (event) => {
@@ -32,29 +41,20 @@ document.addEventListener(
   true
 );
 
+/**
+ * when "SPACE" is detected on "keyup" event, then generate suggestions for reaction and tags
+ */
 document.addEventListener('keyup', (event) => onSuggestion(event, store));
 
 /**
- * Register MutationObserver
- * - todo: try to listen to as less mutation as possible
- * - todo: remove mutation listener from the newly added element so that it doesnot trigger updates
- * - todo: remove "Bulma Base" from bulma.css
+ * "focus" event is when we put SEMA elements in the DOM
+ * if the event.target is a valid DOM node for SEMA
+ * then appropriate "div" roots are created and React elements are placed in the roots.
  */
-
-$(async function () {
-  const targetNode = document.getElementsByTagName('body')[0];
-  const config = { subtree: true, childList: true, attributes: true };
-
-  // Add Sema icon before Markdown icon
-  $(function () {
-    const markdownIcon = document.getElementsByClassName(
-      'tooltipped tooltipped-nw'
-    );
-    $(markdownIcon).after(SEMA_ICON_ANCHOR);
-  });
-
-  const callback = function (mutationList, observer) {
-    const activeElement = document.activeElement;
+document.addEventListener(
+  'focus',
+  (event) => {
+    const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
@@ -97,12 +97,13 @@ $(async function () {
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
+        // Add Sema icon before Markdown icon
+        const markdownIcon = document.getElementsByClassName(
+          'tooltipped tooltipped-nw'
+        );
+        $(markdownIcon).after(SEMA_ICON_ANCHOR);
       }
     }
-  };
-  // Create an observer instance linked to the callback function
-  const observer = new MutationObserver(callback);
-
-  // Start observing the target node for configured mutations
-  observer.observe(targetNode, config);
-});
+  },
+  true
+);
