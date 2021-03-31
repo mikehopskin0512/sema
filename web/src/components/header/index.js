@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
-import Logo from '../../../public/img/Sema-logo-black.svg';
+import Logo from '../../../public/img/sema-logo-no-border.svg';
 import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
