@@ -33,7 +33,7 @@ LATEST_TASK_DEFINITION=$(aws --profile phoenix ecs describe-task-definition --ta
 # update the first container in the containerDefinitions with the new image
 # remove unallowed values received from latest task defintion for new task creation
 # we only have 1 container per task definition currently
-NEW_TASK_DEFINITION=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.containerDefinitions[0].image = \"$IMAGE\" | del(.taskDefinition.taskDefinitionArn, .taskDefinition.revision, .taskDefinition.status, .taskDefinition.requiresAttributes, .taskDefinition.compatibilities) | .taskDefinition")
+NEW_TASK_DEFINITION=$(echo $LATEST_TASK_DEFINITION | jq ".taskDefinition.containerDefinitions[0].image = \"$IMAGE\" | del(.taskDefinition.registeredAt, .taskDefinition.registeredBy, .taskDefinition.taskDefinitionArn, .taskDefinition.revision, .taskDefinition.status, .taskDefinition.requiresAttributes, .taskDefinition.compatibilities) | .taskDefinition")
 # register the new task definition
 NEW_TASK_DEFINITION_ARN=$(aws --profile phoenix ecs register-task-definition --cli-input-json "$NEW_TASK_DEFINITION" | jq -r ".taskDefinition.taskDefinitionArn")
 

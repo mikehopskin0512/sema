@@ -20,7 +20,7 @@ module "web" {
   env               = "prod"
   domain            = "app.semasoftware.com"
   health_check_path = "/login"
-  image             = "091235034633.dkr.ecr.us-east-1.amazonaws.com/phoenix:prod"
+  image             = "${var.phoenix_image}"
   lb_listener_arn   = module.alb.https_listener
   lb_security_group = module.alb.alb_security_group
   memory            = "2048"
@@ -39,7 +39,7 @@ module "api" {
   env               = "prod"
   domain            = "api.semasoftware.com"
   health_check_path = "/health"
-  image             = "091235034633.dkr.ecr.us-east-1.amazonaws.com/apollo:prod"
+  image             = "${var.apollo_image}"
   lb_listener_arn   = module.alb.https_listener
   lb_security_group = module.alb.alb_security_group
   memory            = "2048"
