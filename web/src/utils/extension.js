@@ -1,5 +1,4 @@
-// const EXTENSION_ID = 'agmmdglecaedfhjaomanoobmmlffphdc';
-const EXTENSION_ID = process.env.EXTENSION_ID;
+const EXTENSION_ID = process.env.NEXT_PUBLIC_EXTENSION_ID;
 
 export const isExtensionInstalled = async () => {
     return new Promise((resolve) => {
@@ -12,7 +11,7 @@ export const isExtensionInstalled = async () => {
             });
         } catch (e) {
             // extension is disabled
-            // console.error(e);
+            console.error(e);
             resolve(false);
         }
     });
