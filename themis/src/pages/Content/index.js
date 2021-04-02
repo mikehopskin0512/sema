@@ -100,7 +100,26 @@ document.addEventListener(
         );
 
         /** RENDER MIRROR*/
-        new Mirror(activeElement, () => {});
+        new Mirror(activeElement, (text) => {
+          const tokens = text.split(/([\s,.!?]+)/g);
+          const alerts = [];
+          let curPos = 0;
+          let id = 0;
+
+          tokens.forEach((t, i) => {
+            if (t.trim().length > 0 && t.trim().length % 2 === 0) {
+              alerts.push({
+                id: (id++).toString(),
+                startOffset: curPos,
+                endOffset: curPos + t.length,
+              });
+            }
+
+            curPos += t.length;
+          });
+
+          return alerts;
+        });
 
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(

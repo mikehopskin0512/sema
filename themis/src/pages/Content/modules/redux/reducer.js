@@ -1,4 +1,4 @@
-import { clone } from 'ramda';
+import { cloneDeep } from 'lodash';
 
 import initialState from './initialState';
 import {
@@ -22,7 +22,7 @@ import { ADD_OP, SELECTED } from '../../constants';
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
 
-  const newState = clone(state);
+  const newState = cloneDeep(state);
 
   if (type === ADD_SEMA_COMPONENTS) {
     const { seedId, activeElement } = payload;

@@ -1,31 +1,40 @@
 import $ from 'cash-dom';
+import { debounce } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
+const HIGHLIGHTER_UNDERLINE_CLASS = 'sema-underline';
+
+const UPDATE_UNDERLINE_INTERVAL_MS = 250;
 
 class Mirror {
   /**
    *
    * @param {HTML textarea} textAreaElement
-   * @param {function()} getTokensToHighlight
+   * @param {function()} getTokenAlerts
    */
-  constructor(textAreaElement, getTokensToHighlight) {
+  constructor(textAreaElement, getTokenAlerts) {
     const id = $(textAreaElement).attr('id');
     if (!id) {
       console.error('Element doesnot have any ID attribute');
       return;
     }
-    if (typeof getTokensToHighlight !== 'function') {
-      console.error('valid getTokensToHighlight function not provided');
+    if (typeof getTokenAlerts !== 'function') {
+      console.error('valid getTokenAlerts function not provided');
       return;
     }
 
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
+
+    this._updateHighlights = debounce(
+      this._updateHighlights.bind(this),
+      UPDATE_UNDERLINE_INTERVAL_MS
+    );
 
     // making sure to have raw DOM element
     this._elementToMimic = document.getElementById(id);
@@ -35,8 +44,10 @@ class Mirror {
     this._highlighterContent = null;
     this._mirror = null;
     this._mirrorContent = null;
+    this._ranges = {};
+    this._highlights = [];
 
-    this._getTokensToHighlight = getTokensToHighlight;
+    this._getTokenAlerts = getTokenAlerts;
     this._addHandlers();
     this._render();
     // set inital text on the mirror div
@@ -46,19 +57,13 @@ class Mirror {
   _render() {
     /*
         <div class="sema-shadow-root">
-            <div class="sema-highlighter">
-                <div class="sema-highlighter-content">
-                --highlight1
-                </div>
-                <div class="sema-highlighter-content">
-                --highlight2
-                </div>
-            </div>
-            <div class="sema-mirror">
-                <div class="sema-mirror-content">
-                    it si something
-                </div>
-            </div>
+          <div class="sema-mirror">
+              <div class="sema-mirror-content">
+                  it si something
+              </div>
+          </div>
+          <div class="sema-underline"></div>
+          <div class="sema-underline"></div>
         </div>
         <textarea>
             it si something
@@ -115,13 +120,8 @@ class Mirror {
 
   _onInput() {
     const value = this._elementToMimic.value;
-    console.log(value);
-
     this._mirrorContent.textContent = value;
-
-    // const boundaries = { indexes: [1, 3] };
-
-    // this._renderMarks(boundaries);
+    this._updateHighlights();
   }
 
   _onScroll() {
@@ -132,11 +132,52 @@ class Mirror {
     console.log('clicked');
   }
 
-  // _renderMarks(boundaries) {
-  //   const input = this._elementToMimic.val();
+  _updateHighlights() {
+    const value = this._mirrorContent.textContent;
+    const alerts = this._getTokenAlerts(value);
 
-  //   $(this._mirrorContent).html('it <mark>si<mark> something');
-  // }
+    Object.keys(this._ranges).forEach((k) => this._ranges[k].detach());
+    this._ranges = {};
+    this._highlights = [];
+    this._removeExistingUnderlines();
+
+    const node = this._mirrorContent.firstChild;
+
+    alerts.forEach((alert) => {
+      const range = document.createRange();
+      range.setStart(node, alert.startOffset);
+      range.setEnd(node, alert.endOffset);
+
+      this._ranges[alert.id] = range;
+
+      const { top, left, height, width } = range.getClientRects()[0];
+
+      const baseElementRect = this._elementToMimic.getBoundingClientRect();
+
+      this._highlights.push({
+        top: top - baseElementRect.top + height,
+        left: left - baseElementRect.left,
+        width: width + 2,
+      });
+    });
+
+    this._highlights.forEach((highlight) => this._createUnderlines(highlight));
+  }
+
+  _createUnderlines(highlight) {
+    const { top, left, width } = highlight;
+
+    const underline = document.createElement('div');
+    underline.className = HIGHLIGHTER_UNDERLINE_CLASS;
+    underline.style.top = `${top}px`;
+    underline.style.left = `${left}px`;
+    underline.style.width = `${width}px`;
+    this._container.appendChild(underline);
+  }
+
+  _removeExistingUnderlines() {
+    $(this._container).children(`.${HIGHLIGHTER_UNDERLINE_CLASS}`).remove();
+  }
 
   destroy() {
     this._elementToMimic.removeEventListener('input', this._onInput),
