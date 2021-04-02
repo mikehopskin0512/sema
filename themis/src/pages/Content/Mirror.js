@@ -2,8 +2,8 @@ import $ from 'cash-dom';
 
 import ElementMeasurement from './ElementMeasurement';
 
-const MIRROR_CONTAINER_CLASS = 'sema-mirror';
-const MIRROR_CANVAS_CLASS = 'sema-mirror-canvas';
+const SHADOW_ROOT_CLASS = 'sema-shadow-root';
+const MIRROR_CLASS = 'sema-mirror';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
 
 class Mirror {
@@ -29,10 +29,12 @@ class Mirror {
 
     // making sure to have raw DOM element
     this._elementToMimic = document.getElementById(id);
-    this._elementMeasurement = new ElementMeasurement(textAreaElement);
+    this._elementMeasurement = new ElementMeasurement(this._elementToMimic);
     this._container = null;
-    this._canvas = null;
-    this._content = null;
+    this._highlighter = null;
+    this._highlighterContent = null;
+    this._mirror = null;
+    this._mirrorContent = null;
 
     this._getTokensToHighlight = getTokensToHighlight;
     this._addHandlers();
@@ -43,12 +45,16 @@ class Mirror {
 
   _render() {
     /*
-        <div class="sema-mirror">
+        <div class="sema-shadow-root">
             <div class="sema-highlighter">
-                <canvas>
-                </canvas>
+                <div class="sema-highlighter-content">
+                --highlight1
+                </div>
+                <div class="sema-highlighter-content">
+                --highlight2
+                </div>
             </div>
-            <div class="sema-mirror-canvas">
+            <div class="sema-mirror">
                 <div class="sema-mirror-content">
                     it si something
                 </div>
@@ -69,25 +75,25 @@ class Mirror {
 
     if (!this._container) {
       this._container = document.createElement('div');
-      this._container.className = MIRROR_CONTAINER_CLASS;
+      this._container.className = SHADOW_ROOT_CLASS;
 
-      this._canvas = document.createElement('div');
-      this._canvas.className = MIRROR_CANVAS_CLASS;
+      this._mirror = document.createElement('div');
+      this._mirror.className = MIRROR_CLASS;
 
-      this._content = document.createElement('div');
-      this._content.className = MIRROR_CONTENT_CLASS;
+      this._mirrorContent = document.createElement('div');
+      this._mirrorContent.className = MIRROR_CONTENT_CLASS;
 
-      this._container.appendChild(this._canvas);
-      this._canvas.appendChild(this._content);
+      this._container.appendChild(this._mirror);
+      this._mirror.appendChild(this._mirrorContent);
 
       $(this._elementToMimic).before(this._container);
     }
 
-    this._content.style.height = height;
-    this._content.style.width = width;
-    this._content.style.padding = padding;
-    this._content.style.borderWidth = borderWidth;
-    this._content.style.lineHeight = lineHeight;
+    this._mirrorContent.style.height = height;
+    this._mirrorContent.style.width = width;
+    this._mirrorContent.style.padding = padding;
+    this._mirrorContent.style.borderWidth = borderWidth;
+    this._mirrorContent.style.lineHeight = lineHeight;
   }
 
   _addHandlers() {
@@ -111,7 +117,7 @@ class Mirror {
     const value = this._elementToMimic.value;
     console.log(value);
 
-    this._content.textContent = value;
+    this._mirrorContent.textContent = value;
 
     // const boundaries = { indexes: [1, 3] };
 
@@ -129,7 +135,7 @@ class Mirror {
   // _renderMarks(boundaries) {
   //   const input = this._elementToMimic.val();
 
-  //   $(this._content).html('it <mark>si<mark> something');
+  //   $(this._mirrorContent).html('it <mark>si<mark> something');
   // }
 
   destroy() {
@@ -140,7 +146,7 @@ class Mirror {
       this._container && this._container.remove(),
       this._elementToMimicResizeObserver &&
         this._elementToMimicResizeObserver.disconnect(),
-      this._domMeasurement.clearCache();
+      this._elementMeasurement.clearCache();
   }
 }
 
