@@ -1,5 +1,7 @@
 import $ from 'cash-dom';
 
+import ElementMeasurement from './ElementMeasurement';
+
 const MIRROR_CONTAINER_CLASS = 'sema-mirror';
 const MIRROR_CANVAS_CLASS = 'sema-mirror-canvas';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
@@ -11,21 +13,32 @@ class Mirror {
    * @param {function()} getTokensToHighlight
    */
   constructor(textAreaElement, getTokensToHighlight) {
-    this._elementToMimic = textAreaElement;
+    const id = $(textAreaElement).attr('id');
+    if (!id) {
+      console.error('Element doesnot have any ID attribute');
+      return;
+    }
+    if (typeof getTokensToHighlight !== 'function') {
+      console.error('valid getTokensToHighlight function not provided');
+      return;
+    }
+
+    this._render = this._render.bind(this);
+    this._addHandlers = this._addHandlers.bind(this);
+    this._onInput = this._onInput.bind(this);
+
+    // making sure to have raw DOM element
+    this._elementToMimic = document.getElementById(id);
+    this._elementMeasurement = new ElementMeasurement(textAreaElement);
     this._container = null;
     this._canvas = null;
     this._content = null;
 
-    this._render = this._render.bind(this);
-    this._addHandlers = this._addHandlers.bind(this);
-
-    if (typeof getTokensToHighlight === 'function') {
-      this._getTokensToHighlight = getTokensToHighlight;
-      this._addHandlers();
-      this._render();
-    } else {
-      console.error('valid getTokensToHighlight object not provided');
-    }
+    this._getTokensToHighlight = getTokensToHighlight;
+    this._addHandlers();
+    this._render();
+    // set inital text on the mirror div
+    this._onInput();
   }
 
   _render() {
@@ -46,18 +59,35 @@ class Mirror {
         </textarea>
       
       */
-    this._container = document.createElement('div');
-    this._container.className = MIRROR_CONTAINER_CLASS;
+    const {
+      height,
+      width,
+      padding,
+      borderWidth,
+      lineHeight,
+    } = this._elementMeasurement.getMirrorDimensions();
 
-    this._canvas = document.createElement('div');
-    this._canvas.className = MIRROR_CANVAS_CLASS;
+    if (!this._container) {
+      this._container = document.createElement('div');
+      this._container.className = MIRROR_CONTAINER_CLASS;
 
-    this._content = document.createElement('div');
-    this._content.className = MIRROR_CONTENT_CLASS;
+      this._canvas = document.createElement('div');
+      this._canvas.className = MIRROR_CANVAS_CLASS;
 
-    $(this._elementToMimic).before(this._container);
-    this._container.appendChild(this._canvas);
-    this._canvas.appendChild(this._content);
+      this._content = document.createElement('div');
+      this._content.className = MIRROR_CONTENT_CLASS;
+
+      this._container.appendChild(this._canvas);
+      this._canvas.appendChild(this._content);
+
+      $(this._elementToMimic).before(this._container);
+    }
+
+    this._content.style.height = height;
+    this._content.style.width = width;
+    this._content.style.padding = padding;
+    this._content.style.borderWidth = borderWidth;
+    this._content.style.lineHeight = lineHeight;
   }
 
   _addHandlers() {
@@ -77,13 +107,15 @@ class Mirror {
     //     config.RENDER_INTERVAL
   }
 
-  _onInput(event) {
-    const value = this._elementToMimic.val();
-    console.log('Inputted');
+  _onInput() {
+    const value = this._elementToMimic.value;
+    console.log(value);
 
-    const boundaries = { indexes: [1, 3] };
+    this._content.textContent = value;
 
-    this._renderMarks(boundaries);
+    // const boundaries = { indexes: [1, 3] };
+
+    // this._renderMarks(boundaries);
   }
 
   _onScroll() {
@@ -94,11 +126,11 @@ class Mirror {
     console.log('clicked');
   }
 
-  _renderMarks(boundaries) {
-    const input = this._elementToMimic.val();
+  // _renderMarks(boundaries) {
+  //   const input = this._elementToMimic.val();
 
-    $(this._content).html('it <mark>si<mark> something');
-  }
+  //   $(this._content).html('it <mark>si<mark> something');
+  // }
 
   destroy() {
     this._elementToMimic.removeEventListener('input', this._onInput),
@@ -111,3 +143,5 @@ class Mirror {
       this._domMeasurement.clearCache();
   }
 }
+
+export default Mirror;

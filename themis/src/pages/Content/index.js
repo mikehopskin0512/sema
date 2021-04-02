@@ -22,6 +22,7 @@ import {
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
+import Mirror from './Mirror';
 
 import store from './modules/redux/store';
 
@@ -97,6 +98,10 @@ document.addEventListener(
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
+
+        /** RENDER MIRROR*/
+        new Mirror(activeElement, () => {});
+
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(
           'tooltipped tooltipped-nw'
