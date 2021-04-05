@@ -1,4 +1,3 @@
-import $ from 'cash-dom';
 class ElementMeasurement {
   constructor(elem) {
     this._element = elem;

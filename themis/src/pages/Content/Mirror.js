@@ -139,6 +139,7 @@ class Mirror {
     this._updateHighlights();
   }
 
+  // TODO: do things to make re-render of underlines faster onchange
   _onScroll(event) {
     // scroll mirror too
     // update highlights
@@ -201,6 +202,7 @@ class Mirror {
     $(this._highlighter).children(`.${HIGHLIGHTER_UNDERLINE_CLASS}`).remove();
   }
 
+  // TODO: implement this
   destroy() {
     this._elementToMimic.removeEventListener('input', this._onInput),
       this._elementToMimic.removeEventListener('scroll', this._onScroll),
