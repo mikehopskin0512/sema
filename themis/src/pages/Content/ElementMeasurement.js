@@ -7,11 +7,9 @@ class ElementMeasurement {
   _getElementDimensions() {
     const computedStyle = window.getComputedStyle(this._element);
 
-    // scroll{H/W}: it includes the element's padding, but not its border, margin or horizontal scrollbar
-
     return {
-      elementHeight: this._element.scrollHeight,
-      elementWidth: this._element.scrollWidth,
+      elementHeight: this._element.clientHeight,
+      elementWidth: this._element.clientWidth,
       elementPadding: computedStyle.getPropertyValue('padding'),
       elementBorderWidth: computedStyle.getPropertyValue('border-width'),
       //   elementMargin: computedStyle.getPropertyValue('margin'),
