@@ -143,6 +143,7 @@ h6 {
 .sema-highlighter {
   position: absolute;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .sema-underline {
