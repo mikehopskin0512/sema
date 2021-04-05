@@ -1,20 +1,27 @@
 #!/bin/bash
-NAME=apollo
-ENV=qa
+readonly NAME="apollo"
+readonly ENV="${1}"
+readonly AWS_ACCOUNT="091235034633"
+readonly AWS_REGION="us-east-1"
 
-ECR_URL=091235034633.dkr.ecr.us-east-1.amazonaws.com
+if [[ -z ${ENV} ]]; then
+  printf "environment name (prod,qa etc) must me specified, e.g. ./build-and-deploy.sh qa \n"
+  exit 1
+fi
+
+ECR_URL="${AWS_ACCOUNT}".dkr.ecr."${AWS_REGION}".amazonaws.com
 CLUSTER_NAME=$ENV-frontend
 TASK_FAMILY_NAME=$ENV-$NAME
 
 NODE_ENV=production
-DOCKER_FILE=../.docker/apollo/Dockerfile.prod
+DOCKER_FILE=../.docker/"${NAME}"/Dockerfile.prod
 BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
 IMAGE=$ECR_URL/$NAME:$VERSION
 
-aws configure set default.region us-east-1
+aws configure set default.region "${AWS_REGION}"
 
 # Authenticate against our Docker registry
 aws --profile phoenix ecr get-login-password | sudo docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
