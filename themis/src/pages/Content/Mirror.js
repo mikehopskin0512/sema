@@ -30,6 +30,8 @@ class Mirror {
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
+    this._onScroll = this._onScroll.bind(this);
+    this._onClick = this._onClick.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
@@ -124,8 +126,15 @@ class Mirror {
     this._updateHighlights();
   }
 
-  _onScroll() {
-    console.log('scrolled');
+  _onScroll(event) {
+    // scroll mirror too
+    // update highlights
+    const {
+      target: { scrollTop },
+    } = event;
+
+    this._mirrorContent.scrollTop = scrollTop;
+    this._updateHighlights();
   }
 
   _onClick() {
