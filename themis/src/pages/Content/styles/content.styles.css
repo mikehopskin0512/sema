@@ -166,7 +166,7 @@ h6 {
   position: static !important;
   white-space: pre-wrap !important;
   border-color: transparent !important;
-  overflow: hidden !important;
+  overflow: auto !important;
 
   /* color: transparent !important;
   background: none transparent !important; */
