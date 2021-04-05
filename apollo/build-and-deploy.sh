@@ -24,15 +24,15 @@ IMAGE=$ECR_URL/$NAME:$VERSION
 aws configure set default.region "${AWS_REGION}"
 
 # Authenticate against our Docker registry
-aws --profile phoenix ecr get-login-password | sudo docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
+aws --profile phoenix ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
 # Build and push the image
 echo "Building image..."
-sudo docker build -f $DOCKER_FILE -t $NAME:$VERSION . --no-cache
+docker build -f $DOCKER_FILE -t $NAME:$VERSION . --no-cache
 #docker build -t $NAME:$VERSION .
 echo "Tagging image..."
-sudo docker tag $NAME:$VERSION $IMAGE
+docker tag $NAME:$VERSION $IMAGE
 echo "Pushing image..."
-sudo docker push $IMAGE
+docker push $IMAGE
 
 echo "creating new task definition with image..."
 # get the latest task definition
