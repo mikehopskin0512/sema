@@ -6,6 +6,7 @@ import ElementMeasurement from './ElementMeasurement';
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
+const HIGHLIGHTER_CLASS = 'sema-highlighter';
 const HIGHLIGHTER_UNDERLINE_CLASS = 'sema-underline';
 
 const UPDATE_UNDERLINE_INTERVAL_MS = 250;
@@ -64,8 +65,10 @@ class Mirror {
                   it si something
               </div>
           </div>
-          <div class="sema-underline"></div>
-          <div class="sema-underline"></div>
+          <div class="sema-highlight">
+            <div class="sema-underline"></div>
+            <div class="sema-underline"></div>
+          </div>
         </div>
         <textarea>
             it si something
@@ -87,10 +90,15 @@ class Mirror {
       this._mirror = document.createElement('div');
       this._mirror.className = MIRROR_CLASS;
 
+      this._highlighter = document.createElement('div');
+      this._highlighter.className = HIGHLIGHTER_CLASS;
+
       this._mirrorContent = document.createElement('div');
       this._mirrorContent.className = MIRROR_CONTENT_CLASS;
 
+      this._container.appendChild(this._highlighter);
       this._container.appendChild(this._mirror);
+
       this._mirror.appendChild(this._mirrorContent);
 
       $(this._elementToMimic).before(this._container);
@@ -101,6 +109,11 @@ class Mirror {
     this._mirrorContent.style.padding = padding;
     this._mirrorContent.style.borderWidth = borderWidth;
     this._mirrorContent.style.lineHeight = lineHeight;
+
+    this._highlighter.style.height = height;
+    this._highlighter.style.width = width;
+    this._highlighter.style.padding = padding;
+    this._highlighter.style.borderWidth = borderWidth;
   }
 
   _addHandlers() {
@@ -181,11 +194,11 @@ class Mirror {
     underline.style.top = `${top}px`;
     underline.style.left = `${left}px`;
     underline.style.width = `${width}px`;
-    this._container.appendChild(underline);
+    this._highlighter.appendChild(underline);
   }
 
   _removeExistingUnderlines() {
-    $(this._container).children(`.${HIGHLIGHTER_UNDERLINE_CLASS}`).remove();
+    $(this._highlighter).children(`.${HIGHLIGHTER_UNDERLINE_CLASS}`).remove();
   }
 
   destroy() {
