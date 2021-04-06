@@ -146,10 +146,9 @@ h6 {
   pointer-events: none;
 }
 
-.sema-underline {
+.sema-highlighter-content {
   position: absolute !important;
-  width: 30px;
-  height: 2px;
-  background-color: red;
+  border-radius: 4px;
+  background: rgba(0, 104, 255, 0.08);
 }
 /* highlight end */

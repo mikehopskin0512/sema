@@ -7,9 +7,9 @@ const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
 const HIGHLIGHTER_CLASS = 'sema-highlighter';
-const HIGHLIGHTER_UNDERLINE_CLASS = 'sema-underline';
+const HIGHLIGHTER_CONTENT_CLASS = 'sema-highlighter-content';
 
-const UPDATE_UNDERLINE_INTERVAL_MS = 250;
+const UPDATE_HIGHLIGHT_INTERVAL_MS = 250;
 
 class Mirror {
   /**
@@ -36,7 +36,7 @@ class Mirror {
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
-      UPDATE_UNDERLINE_INTERVAL_MS
+      UPDATE_HIGHLIGHT_INTERVAL_MS
     );
 
     // making sure to have raw DOM element
@@ -66,8 +66,8 @@ class Mirror {
               </div>
           </div>
           <div class="sema-highlight">
-            <div class="sema-underline"></div>
-            <div class="sema-underline"></div>
+            <div class="sema-highlighter-content"></div>
+            <div class="sema-highlighter-content"></div>
           </div>
         </div>
         <textarea>
@@ -139,7 +139,7 @@ class Mirror {
     this._updateHighlights();
   }
 
-  // TODO: do things to make re-render of underlines faster onchange
+  // TODO: do things to make re-render of highlights faster onchange
   _onScroll(event) {
     // scroll mirror too
     // update highlights
@@ -162,7 +162,7 @@ class Mirror {
     Object.keys(this._ranges).forEach((k) => this._ranges[k].detach());
     this._ranges = {};
     this._highlights = [];
-    this._removeExistingUnderlines();
+    this._removeExistingHighlights();
 
     const node = this._mirrorContent.firstChild;
 
@@ -177,29 +177,34 @@ class Mirror {
 
       const baseElementRect = this._elementToMimic.getBoundingClientRect();
 
+      const extraWidth = 4;
+      const extraTop = 2;
+
       this._highlights.push({
-        top: top - baseElementRect.top + height,
-        left: left - baseElementRect.left,
-        width: width + 2,
+        top: top - baseElementRect.top + extraTop,
+        left: left - baseElementRect.left - extraWidth / 2,
+        width: width + 6,
+        height,
       });
     });
 
-    this._highlights.forEach((highlight) => this._createUnderlines(highlight));
+    this._highlights.forEach((highlight) => this._createHighlights(highlight));
   }
 
-  _createUnderlines(highlight) {
-    const { top, left, width } = highlight;
+  _createHighlights(highlight) {
+    const { top, left, width, height } = highlight;
 
-    const underline = document.createElement('div');
-    underline.className = HIGHLIGHTER_UNDERLINE_CLASS;
-    underline.style.top = `${top}px`;
-    underline.style.left = `${left}px`;
-    underline.style.width = `${width}px`;
-    this._highlighter.appendChild(underline);
+    const highlighterContent = document.createElement('div');
+    highlighterContent.className = HIGHLIGHTER_CONTENT_CLASS;
+    highlighterContent.style.top = `${top}px`;
+    highlighterContent.style.left = `${left}px`;
+    highlighterContent.style.width = `${width}px`;
+    highlighterContent.style.height = `${height}px`;
+    this._highlighter.appendChild(highlighterContent);
   }
 
-  _removeExistingUnderlines() {
-    $(this._highlighter).children(`.${HIGHLIGHTER_UNDERLINE_CLASS}`).remove();
+  _removeExistingHighlights() {
+    $(this._highlighter).children(`.${HIGHLIGHTER_CONTENT_CLASS}`).remove();
   }
 
   // TODO: implement this
