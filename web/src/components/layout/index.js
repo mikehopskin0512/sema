@@ -14,10 +14,11 @@ const withLayout = (Page) => () => (
       div#__next > div {
         height: 100%;
       }
-    `}</style>
+    `}
+    </style>
     <Head>
       {/* Heap Analytics */}
-      <script dangerouslySetInnerHTML={{ __html: `` }} />
+      <script dangerouslySetInnerHTML={{ __html: '' }} />
 
       {/* browser-update.org */}
       <script dangerouslySetInnerHTML={{ __html: `
@@ -32,8 +33,8 @@ const withLayout = (Page) => () => (
       ` }} />
     </Head>
     <Header />
-    <Page style={{backgroundColor: "#f8f8f8"}} />
-    <Footer />
+    <Page style={{ backgroundColor: '#f8f8f8' }} />
+    {/* <Footer /> */}
   </div>
 );
 
