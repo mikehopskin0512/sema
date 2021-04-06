@@ -16,7 +16,7 @@ export const TAGS_INIT = [
   },
   {
     [POSITIVE]: 'Secure',
-    [NEGATIVE]: 'Unsecure',
+    [NEGATIVE]: 'Not secure',
     [SELECTED]: null,
   },
   {
