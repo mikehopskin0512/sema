@@ -32,7 +32,9 @@ class Mirror {
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onScroll = this._onScroll.bind(this);
-    this._onClick = this._onClick.bind(this);
+    // this._onClick = this._onClick.bind(this);
+    this._onHover = this._onHover.bind(this);
+    this._onMousePartial = this._onMousePartial.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
@@ -49,6 +51,10 @@ class Mirror {
     this._mirrorContent = null;
     this._ranges = {};
     this._highlights = [];
+    // when github window is resized the mouseover event should be ignored
+    // mouse is pressed to resize.
+    // so dont do mouseover actions will it is not released
+    this._isMouseDown = false;
 
     this._getTokenAlerts = getTokenAlerts;
     this._addHandlers();
@@ -118,8 +124,10 @@ class Mirror {
 
   _addHandlers() {
     $(this._elementToMimic).on('scroll', this._onScroll);
-    $(this._elementToMimic).on('click', this._onClick);
+    // $(this._elementToMimic).on('click', this._onClick);
     $(this._elementToMimic).on('input', this._onInput);
+    $(this._elementToMimic).on('mousemove', this._onHover);
+    $(this._elementToMimic).on('mouseup mousedown', this._onMousePartial);
 
     if (window.ResizeObserver) {
       this._elementToMimicResizeObserver = new window.ResizeObserver(
@@ -139,6 +147,38 @@ class Mirror {
     this._updateHighlights();
   }
 
+  _onMousePartial(event) {
+    const { type } = event;
+    switch (type) {
+      case 'mousedown':
+        this._isMouseDown = true;
+        break;
+      case 'mouseup':
+        this._isMouseDown = false;
+        break;
+    }
+  }
+
+  _onHover(event) {
+    if (!this._isMouseDown) {
+      const { offsetX, offsetY } = event;
+
+      const highlight = this._highlights.find((highlight) => {
+        const { top, left, width, height } = highlight;
+        if (
+          offsetX >= left &&
+          offsetX <= left + width &&
+          offsetY >= top &&
+          offsetY <= top + height
+        ) {
+          console.log('inside');
+          return highlight;
+        }
+      });
+      highlight && console.log(highlight);
+    }
+  }
+
   // TODO: do things to make re-render of highlights faster onchange
   _onScroll(event) {
     // scroll mirror too
@@ -151,9 +191,9 @@ class Mirror {
     this._updateHighlights();
   }
 
-  _onClick() {
-    console.log('clicked');
-  }
+  // _onClick() {
+  //   console.log('clicked');
+  // }
 
   _updateHighlights() {
     const value = this._mirrorContent.textContent;
@@ -181,6 +221,7 @@ class Mirror {
       const extraTop = 2;
 
       this._highlights.push({
+        id: alert.id,
         top: top - baseElementRect.top + extraTop,
         left: left - baseElementRect.left - extraWidth / 2,
         width: width + 6,
@@ -209,11 +250,13 @@ class Mirror {
 
   // TODO: implement this
   destroy() {
-    this._elementToMimic.removeEventListener('input', this._onInput),
-      this._elementToMimic.removeEventListener('scroll', this._onScroll),
-      this._elementToMimic.removeEventListener('click', this._onClick),
-      //   this._renderInterval && this._renderInterval.destroy(),
-      this._container && this._container.remove(),
+    $(this._elementToMimic).off('input', this._onInput),
+      $(this._elementToMimic).off('scroll', this._onScroll),
+      // $(this._elementToMimic).off('click', this._onClick),
+      $(this._elementToMimic).off('mousemove', this._hover);
+    $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+    //   this._renderInterval && this._renderInterval.destroy(),
+    this._container && this._container.remove(),
       this._elementToMimicResizeObserver &&
         this._elementToMimicResizeObserver.disconnect(),
       this._elementMeasurement.clearCache();
