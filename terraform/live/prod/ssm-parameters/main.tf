@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "apollo_cors" {
   name  = "/${var.env}/apollo/cors"
   type  = "String"
-  value = "https://app.semasoftware.io"
+  value = "https://app.semasoftware.com"
 }
 resource "aws_ssm_parameter" "apollo_mode_access-key" {
   name  = "/${var.env}/apollo/mode/access-key"
@@ -51,7 +51,7 @@ resource "aws_ssm_parameter" "apollo_mongo_uri" {
 resource "aws_ssm_parameter" "apollo_org-domain" {
   name  = "/${var.env}/apollo/org-domain"
   type  = "String"
-  value = "https://app.semasoftware.io"
+  value = "https://app.semasoftware.com"
 }
 resource "aws_ssm_parameter" "apollo_port" {
   name  = "/${var.env}/apollo/port"
@@ -108,19 +108,19 @@ resource "aws_ssm_parameter" "node_env" {
 resource "aws_ssm_parameter" "root_domain" {
   name  = "/${var.env}/apollo/root-domain"
   type  = "String"
-  value = "semasoftware.io"
+  value = "semasoftware.com"
 }
 
 resource "aws_ssm_parameter" "allowed_origin" {
   name  = "/${var.env}/apollo/allowed-origin"
   type  = "String"
-  value = "https://app.semasoftware.io"
+  value = "https://app.semasoftware.com"
 }
 
 resource "aws_ssm_parameter" "org_domain" {
   name  = "/${var.env}/apollo/org-domain"
   type  = "String"
-  value = "https://app.semasoftware.io"
+  value = "https://app.semasoftware.com"
 }
 
 resource "aws_ssm_parameter" "aws_ccess-key" {
@@ -171,12 +171,12 @@ resource "aws_ssm_parameter" "github_private-key" {
 resource "aws_ssm_parameter" "github_redirect" {
   name  = "/${var.env}/github/redirect"
   type  = "String"
-  value = "https://api.semasoftware.io/v1/identities/github/cb"
+  value = "https://api.semasoftware.com/v1/identities/github/cb"
 }
 resource "aws_ssm_parameter" "phoenix_api_endpoint" {
   name  = "/${var.env}/phoenix/api/endpoint"
   type  = "String"
-  value = "https://api.semasoftware.io"
+  value = "https://api.semasoftware.com"
 }
 resource "aws_ssm_parameter" "phoenix_client_id" {
   name  = "/${var.env}/phoenix/client/id"
