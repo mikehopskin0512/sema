@@ -51,22 +51,15 @@ export default (app, passport) => {
     }
 
     try {
-      const newUser = await create(user);
+      let newUser = await create(user);
       if (!newUser) {
         throw new errors.BadRequest('User create error');
       }
 
-      // Send verification email
-      const message = {
-        recipient: newUser.username,
-        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}`,
-        templateName: 'verifyUser',
-        firstName: newUser.firstName,
-      };
-      await sendEmail(message);
-
       // If invitation, call joinOrg function
+      let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
+        hasInvite = true;
         const { _id: userId } = newUser;
         const { orgId, orgName, sender, token } = invitation;
         const org = { id: orgId, orgName, invitedBy: sender };
@@ -75,9 +68,21 @@ export default (app, passport) => {
           throw new errors.BadRequest('Org join error');
         }
 
+        // Update newUser with invitedUser (containing org data)
+        newUser = invitedUser;
+
         // Redeem invite
         await redeemInvite(token, userId);
       }
+
+      // Send verification email
+      const message = {
+        recipient: newUser.username,
+        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}&invite=${hasInvite}`,
+        templateName: 'verifyUser',
+        firstName: newUser.firstName,
+      };
+      await sendEmail(message);
 
       delete newUser.password;
       return res.status(201).send({
@@ -113,13 +118,14 @@ export default (app, passport) => {
     const { org } = req.body;
 
     try {
-      const newUser = await joinOrg(userId, org);
-      if (!newUser) {
+      const updatedUser = await joinOrg(userId, org);
+      if (!updatedUser) {
         throw new errors.BadRequest('Org join error');
       }
 
       return res.status(200).send({
         response: 'Org joined successfully',
+        jwtToken: await createAuthToken(updatedUser),
       });
     } catch (error) {
       logger.error(error);

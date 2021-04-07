@@ -71,7 +71,7 @@ const RegistrationForm = (props) => {
               <a
                 type="button"
                 className="button is-github"
-                href={`/api/identities/github/${inviteToken}`}>
+                href={`/api/identities/github/${inviteToken || ''}`}>
                 <span className="icon">
                   <FontAwesomeIcon icon={['fab', 'github']} />
                 </span>
@@ -151,7 +151,7 @@ const RegistrationForm = (props) => {
                 ref={register({
                   required: 'Email is required',
                   pattern:
-                    { value: /^\S+@\S+$/i, message: 'Invaild email format' },
+                    { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
                 })} />
             </div>
             <p className="help is-danger">{errors.username && errors.username.message}</p>

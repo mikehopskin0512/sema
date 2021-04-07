@@ -63,7 +63,7 @@ const userNotVerifiedError = (user) => ({
   user,
 });
 
-const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
+/*const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
   // Pass custom id and organization_id to Heap
   if (typeof window !== 'undefined') {
     if (userId) {
@@ -74,7 +74,7 @@ const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
     //   window.heap.addUserProperties({ organization_id });
     // }
   }
-};
+};*/
 
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
@@ -86,17 +86,20 @@ export const authenticate = (username, password) => async (dispatch) => {
     if (user) {
       const { _id: userId, isVerified } = user;
       const orgId = null; // TEMP: Until orgs are linked up
-      dispatch(authenticateSuccess(jwtToken));
-      dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
 
-      // Only allow user login if isVerified
+      // Only allow store token if isVerified
       if (isVerified) {
+        dispatch(authenticateSuccess(jwtToken));
         Router.push('/reports');
       } else {
-        dispatch(authenticateError({ errors: 'User is not verfied' }));
+        // Auth error clears token but preserves user object
+        dispatch(authenticateError({ errors: 'User is not verified' }));
         Router.push('/register/verify');
       }
+
+      // Hydrate user regardless of isVerified
+      dispatch(hydrateUser(user));
+      //logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
@@ -107,7 +110,6 @@ export const authenticate = (username, password) => async (dispatch) => {
 
 export const refreshJwt = (refreshToken) => async (dispatch) => {
   dispatch(requestRefreshToken());
-
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
@@ -154,9 +156,10 @@ const requestJoinOrg = () => ({
   type: types.REQUEST_JOIN_ORG,
 });
 
-const requestJoinOrgSuccess = (organization) => ({
+const requestJoinOrgSuccess = (token, updatedUser) => ({
   type: types.REQUEST_JOIN_ORG_SUCCESS,
-  organization,
+  token,
+  user: updatedUser,
 });
 
 const requestJoinOrgError = (errors) => ({
@@ -198,13 +201,8 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
     const { user: newUser } = jwtDecode(jwtToken) || {};
     dispatch(registrationSuccess(jwtToken, newUser));
 
-    // If invitation, joinOrg and redirect to /verify
-    if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
-      Router.push('/register/verify');
-    } else {
-      // Send user to verification page after registration
-      Router.push('/register/organization');
-    }
+    // Send user to /verify landing page while verification email is sent
+    Router.push('/register/verify');
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -217,12 +215,14 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
 export const joinOrg = (userId, org, token) => async (dispatch) => {
   try {
     dispatch(requestJoinOrg());
-    await postUserOrg(userId, { org }, token);
+    const payload = await postUserOrg(userId, { org }, token);
+    const { data: { jwtToken } } = payload;
+    const { user: updatedUser } = jwtDecode(jwtToken) || {};
 
-    // Send user to verification page after registration & joinOrg
-    Router.push('/register/verify');
+    // Send user to reports page after registration & joinOrg
+    Router.push('/reports');
 
-    dispatch(requestJoinOrgSuccess());
+    dispatch(requestJoinOrgSuccess(jwtToken, updatedUser));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -246,7 +246,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
+      // logHeapAnalytics(userId, orgId);
     }
 
     dispatch(verifyUserSuccess());

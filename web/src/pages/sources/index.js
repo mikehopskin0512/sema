@@ -141,6 +141,7 @@ function Table({ columns, data, auth }) {
       <button
         type="button"
         className="button is-primary"
+        disabled={Object.keys(selectedRowIds).length === 0}
         onClick={addRepos}>
         <span>Add selected repositories and continue</span>
         <span className="icon is-small">
@@ -202,7 +203,11 @@ const Sources = () => {
   // Map source repository data to only needed fields
   const { selectedSourceRepos: repositoriesData = [] } = sources;
   const simpleRepositories = repositoriesData.map((item) => (
-    ({ id: externalId, name, created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt }) => (
+    ({
+      id: externalId, name,
+      created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt,
+      clone_url: cloneUrl,
+    }) => (
       {
         externalId,
         name,
@@ -211,6 +216,7 @@ const Sources = () => {
         type: 'github',
         orgId,
         sourceId,
+        cloneUrl,
       }
     ))(item));
 
@@ -237,9 +243,9 @@ const Sources = () => {
   return (
     <div>
       <section className="section">
-        <div className="container">
+        <div className="container" style={{ width: '75%' }}>
           <div className="title-topper mt-70 mb-20" />
-          <h1 className="title">Add code from GitHub</h1>
+          <h1 className="title">Add repositories from GitHub</h1>
 
           {
             (Object.keys(firstSource).length === 0) ? (
@@ -253,7 +259,7 @@ const Sources = () => {
                   <span className="icon">
                     <FontAwesomeIcon icon={['fab', 'github']} />
                   </span>
-                  <span>Add code from GitHub</span>
+                  <span>Add repositories from GitHub</span>
                 </a>
               </div>
             )

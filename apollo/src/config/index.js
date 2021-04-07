@@ -5,6 +5,7 @@ module.exports = {
   version: process.env.VERSION,
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
+  rootDomain: process.env.ROOT_DOMAIN,
   mongooseUri: process.env.MONGOOSE_URI || '',
   // mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,
@@ -26,9 +27,11 @@ module.exports = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackUrl: process.env.GITHUB_CALLBACK_URL,
     appId: process.env.GITHUB_APP_ID,
+    privateKey: process.env.GITHUB_PRIVATE_KEY.replace(/\\n/gm, '\n'),
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
   },
+  pgPublicKey: process.env.PG_PUBLIC_KEY,
 };

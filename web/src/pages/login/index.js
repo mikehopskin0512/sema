@@ -6,135 +6,81 @@ import { useForm } from 'react-hook-form';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
-import './login.module.scss';
+import styles from './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
+import clsx from 'clsx';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const { register, handleSubmit, watch, errors } = useForm();
+    const dispatch = useDispatch();
+    const { register, handleSubmit, watch, errors } = useForm();
 
-  // Import state vars
-  const { alerts } = useSelector(
-    (state) => ({
-      alerts: state.alertsState,
-    }),
-  );
+    // Import state vars
+    const { alerts } = useSelector(
+        (state) => ({
+            alerts: state.alertsState,
+        }),
+    );
 
-  const { showAlert, alertType, alertLabel } = alerts;
+    const { showAlert, alertType, alertLabel } = alerts;
 
-  // Check for updated state in selectedTag
-  useEffect(() => {
-    if (showAlert === true) {
-      dispatch(clearAlert());
-    }
-  }, [showAlert, dispatch]);
+    // Check for updated state in selectedTag
+    useEffect(() => {
+        if (showAlert === true) {
+            dispatch(clearAlert());
+        }
+    }, [showAlert, dispatch]);
 
-  const onSubmit = (data) => {
-    const { email, password } = data;
-    dispatch(authenticate(email, password));
-  };
-
-  return (
-    <div>
-      <Toaster
-        type={alertType}
-        message={alertLabel}
-        showAlert={showAlert} />
-      <section className="hero">
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns is-centered">
-              <div className="column is-7-tablet is-7-desktop is-7-widescreen">
-                <div className="title-topper mt-70 mb-20" />
-                <h1 className="title">Log In</h1>
-                <div className="columns">
-                  <div className="column is-7">
-                    <form className="mt-50" onSubmit={handleSubmit(onSubmit)}>
-                      <div className="field">
-                        <label htmlFor="" className="label">Email Address</label>
-                        <div className="control has-icons-left">
-                          <input
-                            className="input"
-                            type="email"
-                            placeholder="e.g. tony@starkindustries.com"
-                            name="email"
-                            ref={register}
-                            required
-                          />
-                          <span className="icon is-small is-left">
-                            <FontAwesomeIcon icon="envelope" />
-                          </span>
+    const onSubmit = (data) => {
+        const { email, password } = data;
+        dispatch(authenticate(email, password));
+    };
+    console.log(styles)
+    return (
+        <div className={styles["css-container"]}>
+            <Toaster
+                type={alertType}
+                message={alertLabel}
+                showAlert={showAlert} />
+            <section className="hero">
+                <div className="hero-body">
+                    <div className="container">
+                        <div class="tile is-ancestor">
+                            <div class="tile is-6" />
+                            <div className={clsx("tile is-child is-5 box", styles["tile-padding"])}>
+                                <h1 class="title has-text-centered">Welcome to Sema</h1>
+                                <h2 class="subtitle has-text-centered is-size-6">Sema is still a work in progress. Join the waitlist to be amongst the first to try it out.</h2>
+                                <a
+                                    type="button"
+                                    className="button is-black is-fullwidth"
+                                    href="/api/identities/github">
+                                    <span>Join the waitlist with Github</span>
+                                </a>
+                                {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
+                                <p className={styles["through-container"]}>
+                                    <span className={styles.line} />
+                                    <span className={styles["text-container"]}>
+                                        <span className={styles["through-text"]}>Already have an account?</span>
+                                    </span>
+                                </p>
+                                <a
+                                    type="button"
+                                    className="button is-fullwidth"
+                                    href="/api/identities/github">
+                                    <span>Sign in with Github</span>
+                                </a>
+                                {/* <button class="button is-fullwidth">Sign in with Github</button> */}
+                            </div>
                         </div>
-                      </div>
-                      <div className="field">
-                        <label htmlFor="" className="label">Password</label>
-                        <div className="control has-icons-left">
-                          <input
-                            className="input"
-                            type="password"
-                            placeholder="*******"
-                            name="password"
-                            ref={register}
-                            required
-                          />
-                          <span className="icon is-small is-left">
-                            <FontAwesomeIcon icon="lock" />
-                          </span>
-                        </div>
-                      </div>
-                      <div className="field mt-2r">
-                        <button type="submit" className="button is-primary is-fullwidth">
-                          Login with Email
-                        </button>
-                      </div>
-                      <div className="field">
-                        <a
-                          type="button"
-                          className="button is-fullwidth is-github"
-                          href="/api/identities/github">
-                          <span className="icon">
-                            <FontAwesomeIcon icon={['fab', 'github']} />
-                          </span>
-                          <span>Login with GitHub</span>
-                        </a>
-                      </div>
-                      <div className="field">
-                        <p className="has-text-centered is-size-7">
-                          By signing in, you agree to our<br />terms and conditions
-                        </p>
-                      </div>
-                      <div className="field">
-                        <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href="/password-reset/"><a>Reset password</a></Link></p>
-                      </div>
-                      <div className="field">
-                        <div className="is-divider" data-content="OR"></div>
-                        <p><strong>Want to sign up for the Sema platform?</strong></p>
-                        <div className="mt-1r">
-                          <Link href="/register">
-                            <a className="button is-primary">
-                              <span className="icon">
-                                <FontAwesomeIcon icon={['fas', 'user']} />
-                              </span>
-                              <span>Create an account</span>
-                            </a>
-                          </Link>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
+            </section>
         </div>
-      </section>
-    </div>
-  );
+    );
 };
 
 export default withLayout(Login);

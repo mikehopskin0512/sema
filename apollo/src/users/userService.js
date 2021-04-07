@@ -149,13 +149,14 @@ export const findByOrgId = async (orgId) => {
 export const joinOrg = async (userId, org) => {
   const { id: orgId } = org;
   try {
-    const query = User.updateOne(
+    const query = User.findOneAndUpdate(
       { _id: new ObjectId(userId), 'orgaizations.id': { $ne: orgId } },
       { $addToSet: { organizations: org } },
+      { new: true },
     );
 
-    await query.exec();
-    return true;
+    const updatedUser = await query.exec();
+    return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -166,15 +167,17 @@ export const joinOrg = async (userId, org) => {
 export const validateLogin = async (username = '', password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
+
+  if (!user) {
+    throw new errors.NotFound('Username not found');
+  }
+
   const { password: currentPassword } = user;
 
   if (currentPassword === null) {
     throw new errors.NotFound('No password set. Did you sign up via Github?');
   }
 
-  if (!user) {
-    throw new errors.NotFound('Username not found');
-  }
   const validLogin = await user.validatePassword(password);
 
   if (!validLogin) {

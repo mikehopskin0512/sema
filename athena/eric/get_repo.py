@@ -21,6 +21,7 @@ import logging
 import subprocess
 from urllib.parse import urlparse, quote
 import errno
+import json
 
 
 def get_repo(config):
@@ -34,11 +35,24 @@ def get_repo(config):
         execute_shell(["mkdir", "-p", customer_source_destination_dir])
         try:
             execute_shell(["git", "clone", repo_url, customer_source_destination_dir])
+            start_hash = execute_shell(
+                [
+                    "git",
+                    "-C",
+                    customer_source_destination_dir,
+                    "rev-list",
+                    "--max-parents=0",
+                    "HEAD",
+                ]
+            )
             new = True
         except subprocess.CalledProcessError:
             execute_shell(["rmdir", customer_source_destination_dir])
             return
     else:
+        start_hash = execute_shell(
+            ["git", "-C", customer_source_destination_dir, "rev-parse", "HEAD"]
+        )
         execute_shell(["git", "-C", customer_source_destination_dir, "fetch"])
         new = False
     execute_shell(
@@ -55,6 +69,10 @@ def get_repo(config):
                 "origin/" + branch,
             ]
         )
+    end_hash = execute_shell(
+        ["git", "-C", customer_source_destination_dir, "rev-parse", "HEAD"]
+    )
+    return json.dumps({"commitRange": {"startHash": start_hash, "endHash": end_hash}})
 
 
 def get_repo_auth_uri(config):
@@ -132,7 +150,7 @@ def parse_args():
 
 
 def execute_shell(command):
-    return subprocess.check_output(command)
+    return subprocess.check_output(command).decode().strip()
 
 
 def main():
@@ -141,7 +159,7 @@ def main():
         + os.path.basename(__file__)
     )
     config = parse_args()
-    get_repo(config)
+    print(get_repo(config))
 
 
 if __name__ == "__main__":

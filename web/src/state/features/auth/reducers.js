@@ -27,7 +27,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       isAuthenticated: false,
-      user: {},
+      token: null,
       error: action.errors,
     };
   case types.HYDRATE_USER:
@@ -68,6 +68,21 @@ const reducer = (state = initialState, action) => {
       error: action.errors,
     };
   case types.RECEIVE_REFRESH_TOKEN_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      isAuthenticated: false,
+      error: action.errors,
+    };
+  case types.REQUEST_JOIN_ORG_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      token: action.token,
+      user: action.user,
+      error: {},
+    };
+  case types.REQUEST_JOIN_ORG_ERROR:
     return {
       ...state,
       isFetching: false,
