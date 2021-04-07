@@ -26,7 +26,7 @@ module "web" {
   memory            = "2048"
   port              = "3000"
   service_name      = "phoenix"
-  task_count        = 3
+  task_count        = 1
   vpc_name          = "vpc-qa"
 }
 
@@ -45,7 +45,7 @@ module "api" {
   memory            = "2048"
   port              = "3001"
   service_name      = "apollo"
-  task_count        = 3
+  task_count        = 1
   vpc_name          = "vpc-qa"
 }
 
