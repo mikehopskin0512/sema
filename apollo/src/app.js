@@ -17,7 +17,7 @@ import { port, allowedOrigin } from './config';
 const app = express();
 
 app.use(cors({
-  origin: allowedOrigin,
+  origin: [allowedOrigin, 'https://github.com', /\.github\.com$/],
   credentials: true,
 }));
 app.use(compression());

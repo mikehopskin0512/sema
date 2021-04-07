@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Code Review Assistant",
+  "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
+  "version": "0.2",
+  "options_page": "options.html",
+  "background": { "service_worker": "background.bundle.js" },
+  "action": {
+    "default_icon": {
+      "16": "/img/sema16.png",
+      "32": "/img/sema32.png",
+      "48": "/img/sema48.png",
+      "128": "/img/sema128.png"
+    }
+  },
+  "icons": {
+    "16": "/img/sema16.png",
+    "32": "/img/sema32.png",
+    "48": "/img/sema48.png",
+    "128": "/img/sema128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*", "*://localhost/*"],
+      "run_at": "document_start",
+      "js": ["contentScript.bundle.js"],
+      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
+    }
+  ],
+  "externally_connectable": {
+    "matches": ["*://localhost/*"] 
+  },
+  "devtools_page": "devtools.html",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content.styles.css",
+        "icon-128.png",
+        "icon-34.png",
+        "img/*",
+        "css/*",
+        "webfonts/*"
+      ],
+      "matches": ["*://github.com/*", "*://*.github.com/*"],
+      "extension_ids": []
+    }
+  ]
+}

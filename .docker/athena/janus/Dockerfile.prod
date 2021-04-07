@@ -1,0 +1,16 @@
+# ---------- Base ----------
+FROM python:alpine3.12 AS base
+
+RUN apk --update add git
+
+RUN pip3 install gitpython 
+
+RUN mkdir /src
+WORKDIR /src
+
+COPY list_repo_metadata.py ./
+
+RUN mkdir -p ./customer-repos
+
+# Run our script, which expects a repo directory and start and end hash
+CMD [ "./list_repo_metadata.py", "$REPO_OPTS" ]

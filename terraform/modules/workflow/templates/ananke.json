@@ -1,0 +1,73 @@
+{
+    "Comment": "Ananke workflow - wc, mime, and enry tasks",
+    "StartAt": "Begin Ananke Workflow",
+    "States": {
+        "Begin Ananke Workflow": {
+            "Comment": "Let's process things in parallel!",
+            "Type": "Parallel",
+            "Next": "Finish",
+            "Branches": [
+                {
+                    "StartAt": "wc",
+                    "States": {
+                        "wc": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to run wc",
+                            "Parameters": {
+                                "JobDefinition": "${wc_job_definition}",
+                                "JobName": "${env}-wc-job",
+                                "JobQueue": "${wc_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "mime",
+                    "States": {
+                        "mime": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to run mime",
+                            "Parameters": {
+                                "JobDefinition": "${mime_job_definition}",
+                                "JobName": "${env}-mime-job",
+                                "JobQueue": "${mime_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "enry",
+                    "States": {
+                        "enry": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to run enry",
+                            "Parameters": {
+                                "JobDefinition": "${enry_job_definition}",
+                                "JobName": "${env}-enry-job",
+                                "JobQueue": "${enry_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Finish": {
+            "Type": "Succeed"
+        }
+    }
+}

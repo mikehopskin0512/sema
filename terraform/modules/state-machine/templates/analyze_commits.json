@@ -1,0 +1,77 @@
+{
+    "Comment": "The analyze commits workflow, responsible for processing commits in an analysis.",
+    "StartAt": "Janus",
+    "States": {
+        "Janus": {
+            "Comment": "Start an execution of the janus state machine",
+            "Type": "Task",
+            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+            "InputPath": "$.analysis",
+            "ResultPath": "$.analysis.commitsToAnalyze",
+            "OutputPath": "$.analysis",
+            "Parameters": {
+                "StateMachineArn": "${janus_state_machine}",
+                "Input": {
+                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                }
+            },
+            "Next": "Analyze Commits"
+        },
+        "Analyze Commits": {
+            "Type": "Map",
+            "Next": "Finish",
+            "InputPath": "$.analysis",
+            "ItemsPath": "$.commitsToAnalyze",
+            "MaxConcurrency": 40,
+            "Parameters": {
+                "commit.$": "$$.Map.Item.Value",
+                "org_name.$": "$.org_name"
+            },
+            "Iterator": {
+                "StartAt": "SFn1",
+                "States": {
+                    "SFn1": {
+                        "Comment": "Start an execution of the first state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${sfn1_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "Next": "SFn2"
+                    },
+                    "SFn2": {
+                        "Comment": "Start an execution of the second state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${sfn2_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "Next": "SFn3"
+                    },
+                    "SFn3": {
+                        "Comment": "Start an execution of the third state machine",
+                        "Type": "Task",
+                        "Resource": "arn:aws:states:::states:startExecution.sync:2",
+                        "Parameters": {
+                            "StateMachineArn": "${sfn3_state_machine}",
+                            "Input": {
+                                "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                            }
+                        },
+                        "OutputPath": "$.Output",
+                        "End": true
+                    }
+                }
+            }
+        },
+        "Finish": {
+            "Type": "Succeed"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "Comment": "Momus workflow to prepare files and commits for analysis",
+    "StartAt": "Momus",
+    "States": {
+        "Momus": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::batch:submitJob.sync",
+            "Comment": "Executes an AWS Batch Job to run git blame on a single file",
+            "Parameters": {
+                "JobDefinition": "${momus_job_definition}",
+                "JobName": "${env}-momus-job",
+                "JobQueue": "${momus_job_queue}",
+                "Parameters": {
+                    "file_path.$": "$.file"
+                }
+            },
+            "End": true
+        }
+    }
+}

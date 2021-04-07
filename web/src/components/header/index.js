@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
-import Logo from '../../../public/img/Sema-logo-black.svg';
+import Logo from '../../../public/img/sema-logo-no-border.svg';
 import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
@@ -74,10 +74,10 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header className="has-background-primary">
+    <header className="has-background-white">
       <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
-          <Link href="/reports"><a><Logo className="logo" fill="#FFFFFF" /></a></Link>
+          <Link href="/reports"><a><Logo className="logo" /></a></Link>
           {(token && isVerified) && (
             <button
               onClick={toggleHamburger}
@@ -129,7 +129,6 @@ const Header = () => {
                     <div className="dropdown-trigger">
                       <a className="has-text-white" aria-haspopup="true" aria-controls="dropdown-menu">
                         Switch Organization
-
                       </a>
                     </div>
                     <div className="dropdown-menu" id="dropdown-menu" role="menu">

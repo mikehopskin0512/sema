@@ -1,0 +1,21 @@
+{
+    "Comment": "Janus workflow to prepare files and commits for analysis",
+    "StartAt": "Janus",
+    "States": {
+        "Janus": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::batch:submitJob.sync",
+            "Comment": "Executes an AWS Batch Job to get the list of files and commits for the repo that is Being Analyzed",
+            "Parameters": {
+                "JobDefinition": "${job_definition}",
+                "JobName": "${env}-janus-job",
+                "JobQueue": "${job_queue}",
+                "Parameters": {
+                    "start_hash.$": "$.commitRange.startHash",
+                    "end_hash.$": "$.commitRange.endHash"
+                }
+            },
+            "End": true
+        }
+    }
+}

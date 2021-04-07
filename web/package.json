@@ -21,6 +21,7 @@
     "bulma": "^0.9.0",
     "bulma-extensions": "^6.2.7",
     "bulma-social": "^1.1.1",
+    "clsx": "^1.1.1",
     "date-fns": "^2.10.0",
     "dotenv": "^8.2.0",
     "file-saver": "^2.0.2",
@@ -49,6 +50,7 @@
     "toasted-notes": "^3.2.0"
   },
   "devDependencies": {
+    "next": "^9.5.3",
     "@babel/core": "^7.8.4",
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-react-svg": "^1.1.1",

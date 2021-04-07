@@ -1,0 +1,17 @@
+# ---------- Base ----------
+FROM python:alpine3.12 AS base
+
+RUN apk --update add git
+
+RUN pip3 install gitpython 
+
+RUN mkdir /src
+WORKDIR /src
+
+COPY get_cli_csv.py ./
+COPY get_blame.py ./
+
+RUN mkdir -p ./customer-repos
+
+# Run our script, which expects at least one git repo url
+CMD [ "./get_blame.py", "$REPO_OPTS" ]

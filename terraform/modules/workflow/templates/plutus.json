@@ -1,0 +1,73 @@
+{
+    "Comment": "Plutus workflow - cloc, dupes and complexity tasks",
+    "StartAt": "Begin Plutus Workflow",
+    "States": {
+        "Begin Plutus Workflow": {
+            "Comment": "Let's process things in parallel!",
+            "Type": "Parallel",
+            "Next": "Finish",
+            "Branches": [
+                {
+                    "StartAt": "cloc",
+                    "States": {
+                        "cloc": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to run cloc",
+                            "Parameters": {
+                                "JobDefinition": "${cloc_job_definition}",
+                                "JobName": "${env}-cloc-job",
+                                "JobQueue": "${cloc_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "dupes",
+                    "States": {
+                        "dupes": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to detect duplication",
+                            "Parameters": {
+                                "JobDefinition": "${dupes_job_definition}",
+                                "JobName": "${env}-dupes-job",
+                                "JobQueue": "${dupes_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                },
+                {
+                    "StartAt": "complexity",
+                    "States": {
+                        "complexity": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::batch:submitJob.sync",
+                            "Comment": "Executes an AWS Batch Job to detect complexity",
+                            "Parameters": {
+                                "JobDefinition": "${complexity_job_definition}",
+                                "JobName": "${env}-complexity-job",
+                                "JobQueue": "${complexity_job_queue}",
+                                "Parameters": {
+                                    "file_path.$": "$.file"
+                                }
+                            },
+                            "End": true
+                        }
+                    }
+                }
+            ]
+        },
+        "Finish": {
+            "Type": "Succeed"
+        }
+    }
+}

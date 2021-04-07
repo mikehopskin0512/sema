@@ -35,6 +35,7 @@ const userSchema = mongoose.Schema({
   avatarUrl: String,
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
+  isWaitlist: { type: Boolean, default: false },
   verificationToken: String,
   verificationExpires: Date,
   resetToken: String,

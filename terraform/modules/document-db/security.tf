@@ -2,7 +2,7 @@
 data "aws_security_groups" "db" {
   filter {
     name   = "group-name"
-    values = ["*private*", "*apollo*"]
+    values = ["${var.env}-private*", "${var.env}-apollo*"]
   }
 }
 
@@ -20,10 +20,10 @@ resource "aws_security_group" "docdb" {
   }
 
   ingress {
-    protocol        = "tcp"
-    from_port       = 27017
-    to_port         = 27017
-    cidr_blocks     = ["10.0.0.90/32"]
+    protocol    = "tcp"
+    from_port   = 27017
+    to_port     = 27017
+    cidr_blocks = ["10.0.0.90/32"]
   }
 
   egress {
@@ -34,8 +34,8 @@ resource "aws_security_group" "docdb" {
   }
 
   tags = {
-    Name = "${var.name}-${var.env}"
-    Env  = var.env
+    Name      = "${var.name}-${var.env}"
+    Env       = var.env
     Terraform = true
   }
 }

@@ -1,0 +1,20 @@
+{
+    "Comment": "Mime workflow to detect mime type of a file",
+    "StartAt": "Mime",
+    "States": {
+        "Mime": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::batch:submitJob.sync",
+            "Comment": "Executes an AWS Batch Job to run mime on a single file",
+            "Parameters": {
+                "JobDefinition": "${job_definition}",
+                "JobName": "${env}-mime-job",
+                "JobQueue": "${job_queue}",
+                "Parameters": {
+                    "file_path.$": "$.file"
+                }
+            },
+            "End": true
+        }
+    }
+}

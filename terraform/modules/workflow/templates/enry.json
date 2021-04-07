@@ -1,0 +1,20 @@
+{
+    "Comment": "Enry workflow for language detection",
+    "StartAt": "Enry",
+    "States": {
+        "Enry": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::batch:submitJob.sync",
+            "Comment": "Executes an AWS Batch Job to run enry on a single file",
+            "Parameters": {
+                "JobDefinition": "${job_definition}",
+                "JobName": "${env}-enry-job",
+                "JobQueue": "${job_queue}",
+                "Parameters": {
+                    "file_path.$": "$.file"
+                }
+            },
+            "End": true
+        }
+    }
+}
