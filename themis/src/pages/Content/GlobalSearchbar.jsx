@@ -9,13 +9,14 @@ import {
   onGlobalSearchInputChange,
 } from './modules/redux/action';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { isOpen, data, position, isLoading } = state[GLOBAL_SEMA_SEARCH_ID];
   return {
     isSearchModalVisible: isOpen,
     data,
     position,
     isLoading,
+    commentBox: ownProps.commentBox,
   };
 };
 
