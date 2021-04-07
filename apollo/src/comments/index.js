@@ -9,7 +9,8 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/comments`, route);
 
-  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  //route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/', async (req, res) => {
     const searchQuery = req.query.q;
     try {
       const topResult = await searchComments(searchQuery);
