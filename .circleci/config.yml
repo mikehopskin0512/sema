@@ -1,0 +1,35 @@
+version: 2
+
+jobs:
+  deploy-qa:
+    environment:
+      AWS_REGION: us-east-1
+      ENV: qa
+    docker:
+      - image: cimg/base:2020.01
+    steps:
+      - checkout
+      - run:
+          name: install utilities
+          command: sudo apt-get update -y && sudo apt-get install awscli -y && sudo apt-get install jq -y
+      - setup_remote_docker:
+          version: 18.09.3
+      - run:
+          name: create phoenix profile for aws cli
+          command: printf "%s\n%s\n"${AWS_REGION}"\njson" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" | aws configure --profile phoenix
+      - run:
+          name: build and deploy phoenix/web
+          command: cd web && ./build-and-deploy.sh $ENV
+      - run:
+          name: build and deploy apollo
+          command: cd apollo && ./build-and-deploy.sh $ENV
+
+workflows:
+  version: 2
+  primary:
+    jobs:
+      - deploy-qa:
+          filters:
+            branches:
+              only:
+                - qa

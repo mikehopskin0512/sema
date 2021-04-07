@@ -5,9 +5,20 @@ import Footer from '../footer';
 
 const withLayout = (Page) => () => (
   <div className="Layout">
+    {/* Styling for full height width */}
+    <style global jsx>{`
+      html,
+      body,
+      body > div:first-child,
+      div#__next,
+      div#__next > div {
+        height: 100%;
+      }
+    `}
+    </style>
     <Head>
       {/* Heap Analytics */}
-      <script dangerouslySetInnerHTML={{ __html: `` }} />
+      <script dangerouslySetInnerHTML={{ __html: '' }} />
 
       {/* browser-update.org */}
       <script dangerouslySetInnerHTML={{ __html: `
@@ -22,8 +33,8 @@ const withLayout = (Page) => () => (
       ` }} />
     </Head>
     <Header />
-    <Page />
-    <Footer />
+    <Page style={{ backgroundColor: '#f8f8f8' }} />
+    {/* <Footer /> */}
   </div>
 );
 
