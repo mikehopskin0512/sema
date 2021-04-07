@@ -36,7 +36,8 @@ const initialize = async (ctx) => {
   if (
     ctx.pathname !== '/login' &&
     !(ctx.pathname).includes('/register') &&
-    !(ctx.pathname).includes('/password-reset')
+    !(ctx.pathname).includes('/password-reset') && 
+    !(ctx.pathname).includes('/installation') 
   ) {
     if (!jwt) { redirect(ctx, '/login'); }
     if (!isVerified) { redirect(ctx, '/register/verify'); }
