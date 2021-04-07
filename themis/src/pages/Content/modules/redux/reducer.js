@@ -12,6 +12,7 @@ import {
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   TOGGLE_GLOBAL_SEARCH_MODAL,
   TOGGLE_GLOBAL_SEARCH_LOADING,
+  ON_INPUT_GLOBAL_SEARCH,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -23,7 +24,6 @@ import { ADD_OP, SELECTED, GLOBAL_SEMA_SEARCH_ID } from '../../constants';
 
 function rootReducer(state = initialState, action) {
   const { type, payload = {} } = action;
-  console.log(action);
 
   const newState = cloneDeep(state);
 
@@ -137,6 +137,9 @@ function rootReducer(state = initialState, action) {
   } else if (type === TOGGLE_GLOBAL_SEARCH_LOADING) {
     const { isLoading } = payload;
     newState[GLOBAL_SEMA_SEARCH_ID].isLoading = isLoading;
+  } else if (type === ON_INPUT_GLOBAL_SEARCH) {
+    const { data } = payload;
+    newState[GLOBAL_SEMA_SEARCH_ID].data = data;
   }
   return newState;
 }

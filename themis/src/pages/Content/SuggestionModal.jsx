@@ -51,6 +51,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     return searchResults.map((searchResult) => {
       const { comment, sourceName, sourceUrl, title } = searchResult;
       return (
+        // TODO: find out why it is generating same key warning
         <div key={title}>
           {getCommentTitleInterface(title, sourceName)}
           {getCommentInterface(comment, false)}

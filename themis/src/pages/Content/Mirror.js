@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import $ from 'cash-dom';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar.jsx';
@@ -59,6 +59,7 @@ class Mirror {
     this._highlights = [];
     this._onMouseoverHighlight = options?.onMouseoverHighlight;
     this._store = options?.store;
+    this._currentShownHighlight = null;
     // when github window is resized the mouseover event should be ignored
     // mouse is pressed to resize.
     // so dont do mouseover actions will it is not released
@@ -198,15 +199,22 @@ class Mirror {
       });
 
       if (highlight) {
-        const { top, left, height } = highlight;
-
-        this._onMouseoverHighlight({
-          data: this._elementToMimic.value,
-          position: {
-            top: top + height,
-            left: left,
-          },
-        });
+        const { top, left, height, id } = highlight;
+        const store = this._store.getState();
+        const isModalOpen = store.globalSemaSearch.isOpen;
+        if (!isModalOpen && this._currentShownHighlight) {
+          this._currentShownHighlight = null;
+        }
+        if (!isEqual(this._currentShownHighlight, highlight)) {
+          this._currentShownHighlight = highlight;
+          this._onMouseoverHighlight({
+            data: this._ranges[id].token,
+            position: {
+              top: top + height,
+              left: left,
+            },
+          });
+        }
       } else {
         // close modal
       }
@@ -246,6 +254,7 @@ class Mirror {
       range.setEnd(node, alert.endOffset);
 
       this._ranges[alert.id] = range;
+      this._ranges[alert.id].token = alert.token;
 
       const { top, left, height, width } = range.getClientRects()[0];
 

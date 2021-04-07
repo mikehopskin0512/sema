@@ -6,6 +6,7 @@ import { SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
 import {
   toggleGlobalSearchModal,
   toggleGlobalSearchLoading,
+  onGlobalSearchInputChange,
 } from './modules/redux/action';
 
 const mapStateToProps = (state) => {
@@ -21,10 +22,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleSearchModal: () => dispatch(toggleGlobalSearchModal()),
-    handleChange: (data, isLoading = true) =>
-      dispatch(toggleGlobalSearchModal({ data, isLoading })),
     toggleIsLoading: (isLoading) =>
       dispatch(toggleGlobalSearchLoading({ isLoading })),
+    onGlobalSearchInputChange: (value) =>
+      dispatch(onGlobalSearchInputChange({ data: value })),
   };
 };
 
@@ -34,7 +35,7 @@ const GlobalSearchbar = (props) => {
   const onInputChanged = (event) => {
     event.preventDefault();
     const value = event.target.value;
-    props.handleChange(value, false);
+    props.onGlobalSearchInputChange(value);
   };
 
   const onCopyPressed = (suggestion) => {
@@ -47,7 +48,7 @@ const GlobalSearchbar = (props) => {
 
   const onCrossPressed = (event) => {
     event.preventDefault();
-    props.handleChange('');
+    props.onGlobalSearchInputChange('');
     setSearchResults([]);
     props.toggleSearchModal();
   };

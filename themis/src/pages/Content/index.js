@@ -118,6 +118,7 @@ document.addEventListener(
                   id: (id++).toString(),
                   startOffset: curPos,
                   endOffset: curPos + t.length,
+                  token: t,
                 });
               }
 
@@ -128,6 +129,8 @@ document.addEventListener(
           },
           {
             onMouseoverHighlight: (payload) => {
+              // close existing
+              store.dispatch(toggleGlobalSearchModal());
               store.dispatch(
                 toggleGlobalSearchModal({ ...payload, isLoading: true })
               );

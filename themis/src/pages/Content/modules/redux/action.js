@@ -9,6 +9,7 @@ import {
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   TOGGLE_GLOBAL_SEARCH_MODAL,
   TOGGLE_GLOBAL_SEARCH_LOADING,
+  ON_INPUT_GLOBAL_SEARCH,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -57,5 +58,10 @@ export const toggleGlobalSearchModal = (payload) => ({
 
 export const toggleGlobalSearchLoading = (payload) => ({
   type: TOGGLE_GLOBAL_SEARCH_LOADING,
+  payload,
+});
+
+export const onGlobalSearchInputChange = (payload) => ({
+  type: ON_INPUT_GLOBAL_SEARCH,
   payload,
 });
