@@ -90,3 +90,6 @@ export const SEMA_ICON_ANCHOR =
 
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
+
+//TODO: this will need to change. modal is not global
+export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';

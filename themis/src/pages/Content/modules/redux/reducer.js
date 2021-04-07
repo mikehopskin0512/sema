@@ -10,6 +10,8 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  TOGGLE_GLOBAL_SEARCH_MODAL,
+  TOGGLE_GLOBAL_SEARCH_LOADING,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -17,10 +19,11 @@ import {
   getSemaIds,
 } from '../content-util';
 
-import { ADD_OP, SELECTED } from '../../constants';
+import { ADD_OP, SELECTED, GLOBAL_SEMA_SEARCH_ID } from '../../constants';
 
 function rootReducer(state = initialState, action) {
-  const { type, payload } = action;
+  const { type, payload = {} } = action;
+  console.log(action);
 
   const newState = cloneDeep(state);
 
@@ -116,6 +119,24 @@ function rootReducer(state = initialState, action) {
     const operation = { tag, op: ADD_OP };
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+  } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
+    const { data, position, isLoading = false } = payload;
+    const obj = {};
+    if (data) {
+      //open with data
+      obj.data = data;
+      obj.position = position;
+      obj.isOpen = true;
+      obj.isLoading = isLoading;
+    } else {
+      // close
+      obj.data = null;
+      obj.isOpen = false;
+    }
+    newState[GLOBAL_SEMA_SEARCH_ID] = obj;
+  } else if (type === TOGGLE_GLOBAL_SEARCH_LOADING) {
+    const { isLoading } = payload;
+    newState[GLOBAL_SEMA_SEARCH_ID].isLoading = isLoading;
   }
   return newState;
 }

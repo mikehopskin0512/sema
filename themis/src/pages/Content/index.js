@@ -26,7 +26,10 @@ import Mirror from './Mirror';
 
 import store from './modules/redux/store';
 
-import { addSemaComponents } from './modules/redux/action';
+import {
+  addSemaComponents,
+  toggleGlobalSearchModal,
+} from './modules/redux/action';
 
 /**
  * Listening to click event for:
@@ -100,26 +103,38 @@ document.addEventListener(
         );
 
         /** RENDER MIRROR*/
-        new Mirror(activeElement, (text) => {
-          const tokens = text.split(/([\s,.!?]+)/g);
-          const alerts = [];
-          let curPos = 0;
-          let id = 0;
+        // TODO: try to make it into React component for consistency and not to have to pass store
+        new Mirror(
+          activeElement,
+          (text) => {
+            const tokens = text.split(/([\s,.!?]+)/g);
+            const alerts = [];
+            let curPos = 0;
+            let id = 0;
 
-          tokens.forEach((t, i) => {
-            if (t.trim().length > 0 && t.trim().length % 2 === 0) {
-              alerts.push({
-                id: (id++).toString(),
-                startOffset: curPos,
-                endOffset: curPos + t.length,
-              });
-            }
+            tokens.forEach((t, i) => {
+              if (t.trim().length > 0 && t.trim().length % 2 === 0) {
+                alerts.push({
+                  id: (id++).toString(),
+                  startOffset: curPos,
+                  endOffset: curPos + t.length,
+                });
+              }
 
-            curPos += t.length;
-          });
+              curPos += t.length;
+            });
 
-          return alerts;
-        });
+            return alerts;
+          },
+          {
+            onMouseoverHighlight: (payload) => {
+              store.dispatch(
+                toggleGlobalSearchModal({ ...payload, isLoading: true })
+              );
+            },
+            store,
+          }
+        );
 
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(

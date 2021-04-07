@@ -1,7 +1,12 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
 import $ from 'cash-dom';
 import { debounce } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
+import GlobalSearchBar from './GlobalSearchbar.jsx';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -16,8 +21,9 @@ class Mirror {
    *
    * @param {HTML textarea} textAreaElement
    * @param {function()} getTokenAlerts
+   * @param {object} options { onMouseoverHighlight, store }
    */
-  constructor(textAreaElement, getTokenAlerts) {
+  constructor(textAreaElement, getTokenAlerts, options) {
     const id = $(textAreaElement).attr('id');
     if (!id) {
       console.error('Element doesnot have any ID attribute');
@@ -51,6 +57,8 @@ class Mirror {
     this._mirrorContent = null;
     this._ranges = {};
     this._highlights = [];
+    this._onMouseoverHighlight = options?.onMouseoverHighlight;
+    this._store = options?.store;
     // when github window is resized the mouseover event should be ignored
     // mouse is pressed to resize.
     // so dont do mouseover actions will it is not released
@@ -66,6 +74,9 @@ class Mirror {
   _render() {
     /*
         <div class="sema-shadow-root">
+          <div>
+            <ReactDOM/>
+          </div>
           <div class="sema-mirror">
               <div class="sema-mirror-content">
                   it si something
@@ -93,6 +104,16 @@ class Mirror {
       this._container = document.createElement('div');
       this._container.className = SHADOW_ROOT_CLASS;
 
+      this._searchRoot = document.createElement('div');
+      this._searchRoot.style.zIndex = 2147483647;
+      // Render global searchbar
+      ReactDOM.render(
+        <Provider store={this._store}>
+          <GlobalSearchBar />
+        </Provider>,
+        this._searchRoot
+      );
+
       this._mirror = document.createElement('div');
       this._mirror.className = MIRROR_CLASS;
 
@@ -102,6 +123,7 @@ class Mirror {
       this._mirrorContent = document.createElement('div');
       this._mirrorContent.className = MIRROR_CONTENT_CLASS;
 
+      this._container.appendChild(this._searchRoot);
       this._container.appendChild(this._highlighter);
       this._container.appendChild(this._mirror);
 
@@ -171,11 +193,23 @@ class Mirror {
           offsetY >= top &&
           offsetY <= top + height
         ) {
-          console.log('inside');
           return highlight;
         }
       });
-      highlight && console.log(highlight);
+
+      if (highlight) {
+        const { top, left, height } = highlight;
+
+        this._onMouseoverHighlight({
+          data: this._elementToMimic.value,
+          position: {
+            top: top + height,
+            left: left,
+          },
+        });
+      } else {
+        // close modal
+      }
     }
   }
 
@@ -215,15 +249,18 @@ class Mirror {
 
       const { top, left, height, width } = range.getClientRects()[0];
 
-      const baseElementRect = this._elementToMimic.getBoundingClientRect();
+      const {
+        top: baseElementTop,
+        left: baseElementLeft,
+      } = this._elementMeasurement.getElementViewportPosition();
 
       const extraWidth = 4;
       const extraTop = 2;
 
       this._highlights.push({
         id: alert.id,
-        top: top - baseElementRect.top + extraTop,
-        left: left - baseElementRect.left - extraWidth / 2,
+        top: top - baseElementTop + extraTop,
+        left: left - baseElementLeft - extraWidth / 2,
         width: width + 6,
         height,
       });

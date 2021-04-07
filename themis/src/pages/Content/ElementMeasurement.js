@@ -40,6 +40,16 @@ class ElementMeasurement {
       lineHeight: elementLineHeight,
     };
   }
+
+  getElementViewportPosition() {
+    const { top, bottom, right, left } = this._element.getBoundingClientRect();
+    return {
+      top,
+      bottom,
+      right,
+      left,
+    };
+  }
 }
 
 export default ElementMeasurement;
