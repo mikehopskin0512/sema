@@ -78,6 +78,8 @@ export const EMOJIS = [
  * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
  */
 export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
+export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
+export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR =
   "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
