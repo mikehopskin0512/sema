@@ -6,6 +6,7 @@ const initialState = {
   [GLOBAL_SEMA_SEARCH_ID]: {
     data: '',
     isOpen: false,
+    openFor: '',
     isLoading: false,
     position: {
       top: null,

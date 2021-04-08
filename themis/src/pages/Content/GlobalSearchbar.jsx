@@ -10,9 +10,12 @@ import {
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
-  const { isOpen, data, position, isLoading } = state[GLOBAL_SEMA_SEARCH_ID];
+  const { isOpen, openFor, data, position, isLoading } = state[
+    GLOBAL_SEMA_SEARCH_ID
+  ];
   return {
-    isSearchModalVisible: isOpen,
+    isSearchModalVisible:
+      isOpen && (openFor ? openFor === ownProps.activeElementId : true),
     data,
     position,
     isLoading,

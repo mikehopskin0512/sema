@@ -120,7 +120,7 @@ function rootReducer(state = initialState, action) {
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
   } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
-    const { data, position, isLoading = false } = payload;
+    const { data, position, isLoading = false, openFor } = payload;
     const obj = {};
     if (data) {
       //open with data
@@ -128,6 +128,7 @@ function rootReducer(state = initialState, action) {
       obj.position = position;
       obj.isOpen = true;
       obj.isLoading = isLoading;
+      obj.openFor = openFor;
     } else {
       // close
       obj.data = null;

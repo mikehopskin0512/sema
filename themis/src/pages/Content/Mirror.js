@@ -110,7 +110,11 @@ class Mirror {
       // Render global searchbar
       ReactDOM.render(
         <Provider store={this._store}>
-          <GlobalSearchBar mirror={this} commentBox={this._elementToMimic} />
+          <GlobalSearchBar
+            mirror={this}
+            commentBox={this._elementToMimic}
+            activeElementId={$(this._elementToMimic).attr('id')}
+          />
         </Provider>,
         this._searchRoot
       );
