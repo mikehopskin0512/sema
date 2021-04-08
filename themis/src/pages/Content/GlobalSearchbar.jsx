@@ -17,6 +17,7 @@ const mapStateToProps = (state, ownProps) => {
     position,
     isLoading,
     commentBox: ownProps.commentBox,
+    mirror: ownProps.mirror,
   };
 };
 
@@ -41,8 +42,10 @@ const GlobalSearchbar = (props) => {
 
   const onCopyPressed = (suggestion) => {
     let value = props.commentBox.value;
-    value = value ? `${value}\n` : '';
-    props.commentBox.value = `${value}${suggestion}`;
+    props.commentBox.value = `${value}\n\`\`\`\n${suggestion}\n\`\`\``;
+    // directly changing the value will not trigger "oninput" event
+    // so directly call the mirror callback for oninput
+    props.mirror._onInput();
     setSearchResults([]);
     props.toggleSearchModal();
   };
