@@ -54,12 +54,10 @@ export const isValidSemaTextBox = (element) => {
 };
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
-  console.log('selectedEmojiString: ', selectedEmojiString);
-  console.log('selectedTagsString: ', selectedTagsString);
   // If no reactions or tags selected, return blank string
   if (selectedEmojiString.length === 0 && selectedTagsString.length === 0 ) { return '' }
 
-  let semaString = '\n---\n'
+  let semaString = '---\n'
   if (selectedEmojiString) { semaString += `**Sema Reaction:** ${selectedEmojiString}` }
   if (selectedEmojiString.length > 0 && selectedTagsString.length > 0 ) { semaString += ' | ' }
   if (selectedTagsString) { semaString += `**Sema Tags:**${selectedTagsString}` }
@@ -177,17 +175,20 @@ function onGithubSubmitClicked(event) {
       if (textboxValue.includes('Sema Reaction') || textboxValue.includes('Sema Tags')) {
         // this textbox already has sema text
         // this is an edit
+
+        // Use individual REGEX's for reactions and tags
         // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-        textboxValue = textboxValue.replace(/(\r\n|\n|\r)/gm, '');
-        textboxValue = textboxValue.replace('---', '');
+        textboxValue = textboxValue.replace('\n---\n', '');
         textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
         textboxValue = textboxValue.replace(' | ', '');
         textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
-      // } else {
-      //  semaString = `\n---${semaString}`;
-      }
 
-      textarea.value = `${textboxValue}\n${semaString}`;
+        // On edit, do not add extra line breaks
+        textarea.value = `${textboxValue}${semaString}`;
+      } else {
+        // On initial submit, 2 line breaks break up the markdown correctly
+        textarea.value = `${textboxValue}\n\n${semaString}`;
+      }
     }
   }
 }
