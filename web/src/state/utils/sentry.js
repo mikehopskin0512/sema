@@ -38,7 +38,8 @@ const initialize = async (ctx) => {
     ctx.pathname !== '/login' &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset') &&
-    !(ctx.pathname).includes('/installation')
+    !(ctx.pathname).includes('/installation') &&
+    !(ctx.pathname).includes('/invite')
   ) {
     if (!jwt) { redirect(ctx, '/login'); }
     if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, '/login'); }
