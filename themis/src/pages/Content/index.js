@@ -31,6 +31,13 @@ import {
   toggleGlobalSearchModal,
 } from './modules/redux/action';
 
+import highlightPhrases from './modules/highlightPhrases';
+
+const highlightWords = highlightPhrases.reduce((acc, curr) => {
+  acc[curr] = true;
+  return acc;
+}, {});
+
 /**
  * Listening to click event for:
  * 1. if github button is pressed then put sems comments in the textarea
@@ -113,7 +120,7 @@ document.addEventListener(
             let id = 0;
 
             tokens.forEach((t, i) => {
-              if (t.trim().length > 0 && t.trim().length % 2 === 0) {
+              if (highlightWords[t]) {
                 alerts.push({
                   id: (id++).toString(),
                   startOffset: curPos,
