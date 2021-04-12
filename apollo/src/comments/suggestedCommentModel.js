@@ -13,4 +13,4 @@ const suggestedCommentSchema = new Schema({
 suggestedCommentSchema.set('autoIndex', autoIndex);
 suggestedCommentSchema.index({ title: 1 });
 
-module.exports = mongoose.model('SuggestedCommen', suggestedCommentSchema);
+module.exports = mongoose.model('SuggestedComment', suggestedCommentSchema);
