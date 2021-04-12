@@ -55,11 +55,11 @@ export const isValidSemaTextBox = (element) => {
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
   // If no reactions or tags selected, return blank string
-  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0 ) { return '' }
+  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) { return '' }
 
   let semaString = '---\n'
   if (selectedEmojiString) { semaString += `**Sema Reaction:** ${selectedEmojiString}` }
-  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0 ) { semaString += ' | ' }
+  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0) { semaString += ' | ' }
   if (selectedTagsString) { semaString += `**Sema Tags:**${selectedTagsString}` }
   semaString += '\n'
 
@@ -74,7 +74,7 @@ export const getInitialSemaValues = (textbox) => {
   if (value.includes('Sema Reaction')) {
     const reaction = '**Sema Reaction:** ';
     const reactionStart = value.indexOf(reaction) + reaction.length;
-    const reactionEnd = (value.indexOf('|') > 0 ) ? value.indexOf('|') - 1 : value.lastIndexOf(':') + 1;
+    const reactionEnd = (value.indexOf('|') > 0) ? value.indexOf('|') - 1 : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
   }
@@ -160,9 +160,8 @@ function onGithubSubmitClicked(event) {
 
       let selectedTagsString = '';
       selectedTags.each((index, tag) => {
-        selectedTagsString = `${selectedTagsString}${
-          index > 0 ? ',' : ''
-        } ${tag}`;
+        selectedTagsString = `${selectedTagsString}${index > 0 ? ',' : ''
+          } ${tag}`;
       });
 
       let semaString = getSemaGithubText(
@@ -259,7 +258,7 @@ export const toggleTagSelection = (operation, tags) => {
 export function onSuggestion(event, store) {
   const activeElement = document.activeElement;
   const isValid = isValidSemaTextBox(activeElement);
-  if (event.code === 'Space' && isValid) {
+  if (isValid) {
     const semabarContainer = $(activeElement).siblings(
       `div.${SEMABAR_CLASS}`
     )[0];

@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
+import { debounce, isEqual } from 'lodash';
 
 import {
   isValidSemaTextBox,
@@ -64,6 +65,10 @@ document.addEventListener(
           idSuffix
         );
 
+
+        $(activeElement).on('input', debounce((event) => {
+          onSuggestion(event, store);
+        }, 1000));
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
