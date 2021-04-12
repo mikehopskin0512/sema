@@ -48,11 +48,6 @@ resource "aws_ssm_parameter" "apollo_mongo_uri" {
   type  = "SecureString"
   value = "mongodb://phoenix_admin:0yvYDIsrxraKsKkQ@phoenix-qa.cluster-c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
 }
-resource "aws_ssm_parameter" "apollo_org-domain" {
-  name  = "/${var.env}/apollo/org-domain"
-  type  = "String"
-  value = "https://app-qa.semasoftware.com"
-}
 resource "aws_ssm_parameter" "apollo_port" {
   name  = "/${var.env}/apollo/port"
   type  = "String"
@@ -102,7 +97,7 @@ resource "aws_ssm_parameter" "apollo_version" {
 resource "aws_ssm_parameter" "node_env" {
   name  = "/${var.env}/apollo/node-env"
   type  = "String"
-  value = "staging"
+  value = "production"
 }
 
 resource "aws_ssm_parameter" "root_domain" {

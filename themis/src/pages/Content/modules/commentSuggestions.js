@@ -12,7 +12,7 @@ function suggestReaction(commentText) {
   // Matt want's negative tags anywhere in comment to always suggest a fix
   const negativeTags = [
     'Unreadable',
-    'Unsecure',
+    'Not secure',
     'Inefficient',
     'Inelegant',
     'Not reusable',
@@ -67,7 +67,7 @@ function suggestTags(commentText) {
     'Readable',
     'Unreadable',
     'Secure',
-    'Unsecure',
+    'Not secure',
     'Efficient',
     'Inefficient',
     'Elegant',

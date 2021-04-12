@@ -36,12 +36,12 @@
     "method-override": "^3.0.0",
     "migrate": "^1.6.2",
     "mongoose": "^5.9.15",
+    "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "pg": "^8.2.1",
     "request": "^2.88.2",
-    "nodemon": "^2.0.4",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0"
   },
