@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Code Review Assistant",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "0.2",
+  "version": "0.3",
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
   "action": {
@@ -21,12 +21,15 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*"],
+      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*", "*://localhost/*"],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
       "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
     }
   ],
+  "externally_connectable": {
+    "matches": ["*://localhost/*"]
+  },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {

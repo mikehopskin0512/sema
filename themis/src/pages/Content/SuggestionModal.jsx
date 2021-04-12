@@ -48,7 +48,8 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
   };
 
   const getAllCommentsUI = () => {
-    return searchResults.map((searchResult) => {
+    const resultsLength = searchResults.length;
+    return searchResults.map((searchResult, i) => {
       const { comment, sourceName, sourceUrl, title } = searchResult;
       return (
         <div key={title}>
@@ -82,6 +83,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               <span>View</span>
             </button>
           </div>
+          {(resultsLength > i + 1) && <hr />}
         </div>
       );
     });

@@ -31,14 +31,17 @@ const initialize = async (ctx) => {
     const { user = {} } = (jwt) ? jwtDecode(jwt) : {};
     ({ isVerified } = user);
   }
-
+  // console.log("user waitlist", ctx.store.getState().authState.user.isWaitlist)
+  // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
     ctx.pathname !== '/login' &&
     !(ctx.pathname).includes('/register') &&
-    !(ctx.pathname).includes('/password-reset')
+    !(ctx.pathname).includes('/password-reset') &&
+    !(ctx.pathname).includes('/installation')
   ) {
     if (!jwt) { redirect(ctx, '/login'); }
+    if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, '/login'); }
     if (!isVerified) { redirect(ctx, '/register/verify'); }
   }
 };
