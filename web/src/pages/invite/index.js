@@ -45,7 +45,7 @@ const Invite = () => {
   };
 
   const renderIcon = () => {
-    if (loading) {
+    if (!isPluginInstalled) {
       return (
         <div className={clsx(styles.loader)}>
           <Loader type="TailSpin" color="#00BFFF" height={80} width={80} />
@@ -53,21 +53,18 @@ const Invite = () => {
         </div>
       );
     }
-    if (isPluginInstalled) {
-      return (
-        <>
-          <div className={clsx(styles.loader)}>
-            <FontAwesomeIcon
-              icon={faCheckCircle}
-              size="6x"
-              className={styles.block}
-            />
-            <p>Extension Installed!</p>
-          </div>
-        </>
-      );
-    }
-    return "";
+    return (
+      <>
+        <div className={clsx(styles.loader)}>
+          <FontAwesomeIcon
+            icon={faCheckCircle}
+            size="6x"
+            className={styles.block}
+          />
+          <p>Extension Installed!</p>
+        </div>
+      </>
+    );
   };
 
   return (
