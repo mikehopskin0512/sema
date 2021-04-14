@@ -8,7 +8,9 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const { mongooseUri, mongooseCertPath } = require('../src/config');
+const { mongooseUri, mongooseUriLocal, mongooseCertPath } = require('../src/config');
+
+const uri = mongooseUriLocal !== '' ? mongooseUriLocal : mongooseUri;
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -41,7 +43,7 @@ const clients = [{
 }];
 
 exports.up = async (next) => {
-  await mongoose.connect(mongooseUri, options);
+  await mongoose.connect(uri, options);
   const colUsers = mongoose.connection.db.collection('users');
   await colUsers.insertOne(adminUser);
 
@@ -51,7 +53,7 @@ exports.up = async (next) => {
 };
 
 exports.down = async (next) => {
-  await mongoose.connect(mongooseUri, options);
+  await mongoose.connect(uri, options);
   const colUsers = mongoose.connection.db.collection('users');
   await colUsers.deleteOne({ _id: new ObjectId('54f5f63cb840e3027700001e') });
 
