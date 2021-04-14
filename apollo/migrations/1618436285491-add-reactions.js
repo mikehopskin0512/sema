@@ -11,9 +11,9 @@ const { Types: { ObjectId } } = mongoose;
 const reactionsIds = data.map(({ _id }) => new ObjectId(_id));
 
 const reactionsData = data.map(({
-  _id, title, emoji, githubEmoji,
+  _id, title, emoji, githubEmoji, isActive,
 }) => {
-  const reaction = { title, emoji, githubEmoji };
+  const reaction = { title, emoji, githubEmoji, isActive };
   if (_id) {
     reaction._id = new ObjectId(_id);
   }

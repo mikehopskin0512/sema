@@ -2,26 +2,31 @@
     {
       "title": "No reaction",
       "emoji": "⚪",
-      "githubEmoji": ":white_circle:"
+      "githubEmoji": ":white_circle:",
+      "isActive": true
     },
     {
       "title": "Awesome",
       "emoji": "🏆",
-      "githubEmoji": ":trophy:"
+      "githubEmoji": ":trophy:",
+      "isActive": true
     },
     {
       "title": "Looks good",
       "emoji": "👌",
-      "githubEmoji": ":ok_hand:"
+      "githubEmoji": ":ok_hand:",
+      "isActive": true
     },
     {
       "title": "I have a question",
       "emoji": "❓",
-      "githubEmoji": ":question:"
+      "githubEmoji": ":question:",
+      "isActive": true
     },
     {
       "title": "Fix",
       "emoji": "🛠",
-      "githubEmoji": ":hammer_and_wrench:"
+      "githubEmoji": ":hammer_and_wrench:",
+      "isActive": true
     }
   ]
