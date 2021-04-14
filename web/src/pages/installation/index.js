@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { isExtensionInstalled } from 'src/utils/extension';
-import withLayout from 'src/components/layout';
+import { isExtensionInstalled } from '../../utils/extension';
+import withLayout from '../../components/layout';
 import styles from './installation.module.scss';
 
 
