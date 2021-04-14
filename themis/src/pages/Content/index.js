@@ -1,11 +1,13 @@
 /**
- * - todo: remove "Bulma Base" from bulma.css
+ * - TODO: remove "Bulma Base" from bulma.css
+ * - TODO: remove listeners at appropriate time if needed
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
+import { debounce } from 'lodash';
 
 import {
   isValidSemaTextBox,
@@ -18,6 +20,7 @@ import {
   SEMA_ICON_ANCHOR,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
+  ON_INPUT_DEBOUCE_INTERVAL_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -64,6 +67,12 @@ document.addEventListener(
           idSuffix
         );
 
+        $(activeElement).on(
+          'input',
+          debounce((event) => {
+            onSuggestion(event, store);
+          }, ON_INPUT_DEBOUCE_INTERVAL_MS)
+        );
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(

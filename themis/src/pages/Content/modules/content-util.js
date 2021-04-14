@@ -55,16 +55,24 @@ export const isValidSemaTextBox = (element) => {
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
   // If no reactions or tags selected, return blank string
-  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0 ) { return '' }
+  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) {
+    return '';
+  }
 
-  let semaString = '---\n'
-  if (selectedEmojiString) { semaString += `**Sema Reaction:** ${selectedEmojiString}` }
-  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0 ) { semaString += ' | ' }
-  if (selectedTagsString) { semaString += `**Sema Tags:**${selectedTagsString}` }
-  semaString += '\n'
+  let semaString = '---\n';
+  if (selectedEmojiString) {
+    semaString += `**Sema Reaction:** ${selectedEmojiString}`;
+  }
+  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0) {
+    semaString += ' | ';
+  }
+  if (selectedTagsString) {
+    semaString += `**Sema Tags:**${selectedTagsString}`;
+  }
+  semaString += '\n';
 
   return semaString;
-}
+};
 
 export const getInitialSemaValues = (textbox) => {
   const value = textbox.value;
@@ -74,7 +82,10 @@ export const getInitialSemaValues = (textbox) => {
   if (value.includes('Sema Reaction')) {
     const reaction = '**Sema Reaction:** ';
     const reactionStart = value.indexOf(reaction) + reaction.length;
-    const reactionEnd = (value.indexOf('|') > 0 ) ? value.indexOf('|') - 1 : value.lastIndexOf(':') + 1;
+    const reactionEnd =
+      value.indexOf('|') > 0
+        ? value.indexOf('|') - 1
+        : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
   }
@@ -154,9 +165,10 @@ function onGithubSubmitClicked(event) {
         selectedReaction?.includes(emoji.title)
       );
 
-      const selectedEmojiString = (selectedEmojiObj?.title !== "No reaction")
-        ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
-        : '';
+      const selectedEmojiString =
+        selectedEmojiObj?.title !== 'No reaction'
+          ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+          : '';
 
       let selectedTagsString = '';
       selectedTags.each((index, tag) => {
@@ -172,7 +184,10 @@ function onGithubSubmitClicked(event) {
 
       let textboxValue = textarea.value;
 
-      if (textboxValue.includes('Sema Reaction') || textboxValue.includes('Sema Tags')) {
+      if (
+        textboxValue.includes('Sema Reaction') ||
+        textboxValue.includes('Sema Tags')
+      ) {
         // this textbox already has sema text
         // this is an edit
 
@@ -259,7 +274,7 @@ export const toggleTagSelection = (operation, tags) => {
 export function onSuggestion(event, store) {
   const activeElement = document.activeElement;
   const isValid = isValidSemaTextBox(activeElement);
-  if (event.code === 'Space' && isValid) {
+  if (isValid) {
     const semabarContainer = $(activeElement).siblings(
       `div.${SEMABAR_CLASS}`
     )[0];
