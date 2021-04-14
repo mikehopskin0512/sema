@@ -1,0 +1,27 @@
+[
+    {
+      "title": "No reaction",
+      "emoji": "⚪",
+      "githubEmoji": ":white_circle:"
+    },
+    {
+      "title": "Awesome",
+      "emoji": "🏆",
+      "githubEmoji": ":trophy:"
+    },
+    {
+      "title": "Looks good",
+      "emoji": "👌",
+      "githubEmoji": ":ok_hand:"
+    },
+    {
+      "title": "I have a question",
+      "emoji": "❓",
+      "githubEmoji": ":question:"
+    },
+    {
+      "title": "Fix",
+      "emoji": "🛠",
+      "githubEmoji": ":hammer_and_wrench:"
+    }
+  ]
