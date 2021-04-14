@@ -7,7 +7,8 @@ import {
   NEGATIVE,
   SELECTED,
   DELETE_OP,
-  SEMA_GITHUB_REGEX,
+  SEMA_REACTION_REGEX,
+  SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
   ADD_OP,
 } from '../constants';
@@ -52,8 +53,26 @@ export const isValidSemaTextBox = (element) => {
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
-export const getSemaGithubText = (selectedEmojiString, selectedTagsString) =>
-  `\n**Sema Reaction:** ${selectedEmojiString} | **Sema Tags:**${selectedTagsString}\n`;
+export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
+  // If no reactions or tags selected, return blank string
+  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) {
+    return '';
+  }
+
+  let semaString = '---\n';
+  if (selectedEmojiString) {
+    semaString += `**Sema Reaction:** ${selectedEmojiString}`;
+  }
+  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0) {
+    semaString += ' | ';
+  }
+  if (selectedTagsString) {
+    semaString += `**Sema Tags:**${selectedTagsString}`;
+  }
+  semaString += '\n';
+
+  return semaString;
+};
 
 export const getInitialSemaValues = (textbox) => {
   const value = textbox.value;
@@ -63,10 +82,14 @@ export const getInitialSemaValues = (textbox) => {
   if (value.includes('Sema Reaction')) {
     const reaction = '**Sema Reaction:** ';
     const reactionStart = value.indexOf(reaction) + reaction.length;
-    const reactionEnd = value.indexOf('|') - 1;
+    const reactionEnd =
+      value.indexOf('|') > 0
+        ? value.indexOf('|') - 1
+        : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
-
+  }
+  if (value.includes('Sema Tags')) {
     const tags = '**Sema Tags:** ';
     const tagsStart = value.indexOf(tags) + tags.length;
     selectedTags = value
@@ -75,6 +98,7 @@ export const getInitialSemaValues = (textbox) => {
       .split(',')
       .map((tag) => tag.trim());
   }
+
   if (githubEmoji?.trim()) {
     const emojiObj = EMOJIS.find(
       (emoji) => emoji.github_emoji === `:${githubEmoji}:`
@@ -141,7 +165,10 @@ function onGithubSubmitClicked(event) {
         selectedReaction?.includes(emoji.title)
       );
 
-      const selectedEmojiString = `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`;
+      const selectedEmojiString =
+        selectedEmojiObj?.title !== 'No reaction'
+          ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+          : '';
 
       let selectedTagsString = '';
       selectedTags.each((index, tag) => {
@@ -149,9 +176,6 @@ function onGithubSubmitClicked(event) {
           index > 0 ? ',' : ''
         } ${tag}`;
       });
-      if (selectedTagsString.length === 0) {
-        selectedTagsString = ' None';
-      }
 
       let semaString = getSemaGithubText(
         selectedEmojiString,
@@ -160,15 +184,26 @@ function onGithubSubmitClicked(event) {
 
       let textboxValue = textarea.value;
 
-      if (textboxValue.includes('Sema Reaction')) {
+      if (
+        textboxValue.includes('Sema Reaction') ||
+        textboxValue.includes('Sema Tags')
+      ) {
         // this textbox already has sema text
         // this is an edit
-        textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-      } else {
-        semaString = `\n---${semaString}`;
-      }
 
-      textarea.value = `${textboxValue}\n${semaString}`;
+        // Use individual REGEX's for reactions and tags
+        // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
+        textboxValue = textboxValue.replace('\n---\n', '');
+        textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
+        textboxValue = textboxValue.replace(' | ', '');
+        textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
+
+        // On edit, do not add extra line breaks
+        textarea.value = `${textboxValue}${semaString}`;
+      } else {
+        // On initial submit, 2 line breaks break up the markdown correctly
+        textarea.value = `${textboxValue}\n\n${semaString}`;
+      }
     }
   }
 }
@@ -239,7 +274,7 @@ export const toggleTagSelection = (operation, tags) => {
 export function onSuggestion(event, store) {
   const activeElement = document.activeElement;
   const isValid = isValidSemaTextBox(activeElement);
-  if (event.code === 'Space' && isValid) {
+  if (isValid) {
     const semabarContainer = $(activeElement).siblings(
       `div.${SEMABAR_CLASS}`
     )[0];

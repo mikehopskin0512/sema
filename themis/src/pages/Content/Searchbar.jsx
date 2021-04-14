@@ -120,17 +120,6 @@ const SearchBar = (props) => {
       <div className="sema-dropdown-menu suggestion-modal" role="menu">
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div></div>
-              <div
-                className="sema-icon"
-                style={{ cursor: 'pointer' }}
-                onClick={onCrossPressed}
-              >
-                <i className="fas fa-times"></i>
-              </div>
-            </div>
-
             <SuggestionModal
               key={isLoading}
               onCopyPressed={onCopyPressed}
