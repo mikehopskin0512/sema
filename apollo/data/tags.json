@@ -1,0 +1,72 @@
+[
+    {
+        "label": "Readable",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Unreadable",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Secure",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Not secure",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Efficient",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Inefficient",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Elegant",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Inelegant",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Reusable",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Not reusable",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Fault-tolerant",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Brittle",
+        "sentiment": "negative",
+        "isActive": true
+    },
+    {
+        "label": "Maintainable",
+        "sentiment": "positive",
+        "isActive": true
+    },
+    {
+        "label": "Not maintainable",
+        "sentiment": "negative",
+        "isActive": true
+    }
+]
