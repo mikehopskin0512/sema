@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 
 const smartCommentSchema = new Schema({
   comment: String,
-  reactions: [{ type: Schema.Types.ObjectId, ref: 'Reaction' }],
+  suggestedComments: [{ type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
+  reactions: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
 }, { timestamps: true });
 
