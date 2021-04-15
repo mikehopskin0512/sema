@@ -51,8 +51,9 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     const resultsLength = searchResults.length;
     return searchResults.map((searchResult, i) => {
       const { comment, sourceName, sourceUrl, title } = searchResult;
+      let keyIdx = Math.random().toString(36).substring(7);
       return (
-        <div key={title}>
+        <div key={keyIdx}>
           {getCommentTitleInterface(title, sourceName)}
           {getCommentInterface(comment, false)}
           <div className="suggestion-buttons">
