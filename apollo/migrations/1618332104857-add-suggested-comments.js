@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/commentBank');
 
-const { mongooseUri, mongooseUriLocal, mongooseCertPath } = require('../src/config');
-
-const uri = mongooseUriLocal !== '' ? mongooseUriLocal : mongooseUri;
+const { mongooseUri, mongooseCertPath } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -21,14 +19,14 @@ const options = {
   useNewUrlParser: true,
 };
 
-if (mongooseCertPath) { 
+if (mongooseCertPath) {
   const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
   options.mongos.sslCA = ca;
   options.mongos.ca = ca;
 }
 
 exports.up = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   try {
     const colComments = mongoose.connection.db.collection('suggestedComments');
     await colComments.insertMany(suggestedCommentsData);
@@ -39,7 +37,7 @@ exports.up = async (next) => {
 };
 
 exports.down = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   try {
     const colComments = mongoose.connection.db.collection('suggestedComments');
     await colComments.deleteMany({ _id: { $in: suggestedCommentsIds } });
