@@ -41,7 +41,7 @@ export default (app, passport) => {
   });
 
   // Fetch all invitation by senderId
-  route.get('/:senderId/all', async (req, res) => {
+  route.get('/:senderId/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { senderId } = req.params;
 
     try {
