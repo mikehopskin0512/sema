@@ -129,6 +129,62 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
+export function writeSemaToGithub(textarea) {
+  if (textarea) {
+    const semabar = $(textarea).siblings('div.sema')?.[0];
+    const semaChildren = $(semabar).children();
+
+    const emojiContainer = semaChildren?.[0];
+    const tagContainer = semaChildren?.[1];
+
+    const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
+    const selectedTags = $(tagContainer)
+      .children('.sema-tag')
+      .map((index, tagElement) => tagElement?.textContent);
+
+    const selectedEmojiObj = EMOJIS.find((emoji) =>
+      selectedReaction?.includes(emoji.title)
+    );
+
+    const selectedEmojiString =
+      selectedEmojiObj?.title !== 'No reaction'
+        ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+        : '';
+
+    let selectedTagsString = '';
+    selectedTags.each((index, tag) => {
+      selectedTagsString = `${selectedTagsString}${
+        index > 0 ? ',' : ''
+      } ${tag}`;
+    });
+
+    let semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
+
+    let textboxValue = textarea.value;
+
+    if (
+      textboxValue.includes('Sema Reaction') ||
+      textboxValue.includes('Sema Tags')
+    ) {
+      // this textbox already has sema text
+      // this is an edit
+
+      // Use individual REGEX's for reactions and tags
+      // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
+      textboxValue = textboxValue.replace('\n---\n', '');
+      textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
+      textboxValue = textboxValue.replace(' | ', '');
+      textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
+
+      // On edit, do not add extra line breaks
+      textarea.value = `${textboxValue}${semaString}`;
+    } else {
+      // On initial submit, 2 line breaks break up the markdown correctly
+      textarea.value = `${textboxValue}\n\n${semaString}`;
+    }
+  }
+}
+
 export function onDocumentClicked(event, store) {
   onCloseAllModalsClicked(event, store);
   onGithubSubmitClicked(event);
@@ -149,62 +205,7 @@ function onGithubSubmitClicked(event) {
       'file-attachment div text-expander textarea'
     )?.[0];
 
-    if (textarea) {
-      const semabar = $(textarea).siblings('div.sema')?.[0];
-      const semaChildren = $(semabar).children();
-
-      const emojiContainer = semaChildren?.[0];
-      const tagContainer = semaChildren?.[1];
-
-      const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-      const selectedTags = $(tagContainer)
-        .children('.sema-tag')
-        .map((index, tagElement) => tagElement?.textContent);
-
-      const selectedEmojiObj = EMOJIS.find((emoji) =>
-        selectedReaction?.includes(emoji.title)
-      );
-
-      const selectedEmojiString =
-        selectedEmojiObj?.title !== 'No reaction'
-          ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
-          : '';
-
-      let selectedTagsString = '';
-      selectedTags.each((index, tag) => {
-        selectedTagsString = `${selectedTagsString}${
-          index > 0 ? ',' : ''
-        } ${tag}`;
-      });
-
-      let semaString = getSemaGithubText(
-        selectedEmojiString,
-        selectedTagsString
-      );
-
-      let textboxValue = textarea.value;
-
-      if (
-        textboxValue.includes('Sema Reaction') ||
-        textboxValue.includes('Sema Tags')
-      ) {
-        // this textbox already has sema text
-        // this is an edit
-
-        // Use individual REGEX's for reactions and tags
-        // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-        textboxValue = textboxValue.replace('\n---\n', '');
-        textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
-        textboxValue = textboxValue.replace(' | ', '');
-        textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
-
-        // On edit, do not add extra line breaks
-        textarea.value = `${textboxValue}${semaString}`;
-      } else {
-        // On initial submit, 2 line breaks break up the markdown correctly
-        textarea.value = `${textboxValue}\n\n${semaString}`;
-      }
-    }
+    writeSemaToGithub(textarea);
   }
 }
 

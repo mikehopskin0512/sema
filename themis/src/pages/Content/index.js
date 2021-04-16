@@ -14,6 +14,7 @@ import {
   onDocumentClicked,
   onSuggestion,
   getSemaIds,
+  writeSemaToGithub,
 } from './modules/content-util';
 
 import {
@@ -41,6 +42,31 @@ document.addEventListener(
     onDocumentClicked(event, store);
   },
   // adding listener in the "capturing" phase
+  true
+);
+
+/**
+ * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER"
+ * also triggers text submission
+ */
+let lastKeyPressed;
+document.addEventListener(
+  'keydown',
+  (event) => {
+    const { code } = event;
+
+    if (
+      (lastKeyPressed === 'ControlLeft' || lastKeyPressed === 'ControlRight') &&
+      code === 'Enter'
+    ) {
+      const activeElement = document.activeElement;
+      if ($(activeElement).is('textarea')) {
+        writeSemaToGithub(activeElement);
+      }
+    }
+
+    lastKeyPressed = code;
+  },
   true
 );
 
