@@ -45,11 +45,6 @@ document.addEventListener(
 );
 
 /**
- * when "SPACE" is detected on "keyup" event, then generate suggestions for reaction and tags
- */
-document.addEventListener('keyup', (event) => onSuggestion(event, store));
-
-/**
  * "focus" event is when we put SEMA elements in the DOM
  * if the event.target is a valid DOM node for SEMA
  * then appropriate "div" roots are created and React elements are placed in the roots.
