@@ -12,9 +12,13 @@ const suggestedCommentsIds = data.map(({ _id }) => new ObjectId(_id));
 
 const suggestedCommentsData = data.map(({
   _id, comment, sourceName, sourceUrl, title,
-}) => ({
-  _id: new ObjectId(_id), comment, sourceName, sourceUrl, title,
-}));
+}) => {
+  const suggestedComment = { comment, sourceName, sourceUrl, title };
+  if (_id) {
+    suggestedComment._id = new ObjectId(_id);
+  }
+  return suggestedComment;
+});
 
 const options = {
   useUnifiedTopology: true,
@@ -31,7 +35,8 @@ exports.up = async (next) => {
   await mongoose.connect(uri, options);
   try {
     const colComments = mongoose.connection.db.collection('suggestedComments');
-    await colComments.insertMany(suggestedCommentsData);
+    const suggestedComments = await colComments.insertMany(suggestedCommentsData);
+    fs.writeFileSync(`${process.cwd()}/data/commentBank.json`, JSON.stringify(suggestedComments.ops));
   } catch (error) {
     next(error);
   }
