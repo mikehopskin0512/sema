@@ -71,8 +71,8 @@ export const getAllInviteBySender = async (senderId) => {
     
     return result;
   } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
   }
 }
