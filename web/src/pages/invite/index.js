@@ -1,21 +1,66 @@
-import withLayout from '@/components/layout';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import Loader from 'react-loader-spinner';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import { isExtensionInstalled } from 'src/utils/extension';
+import withLayout from '../../components/layout';
+import { isExtensionInstalled } from '../../utils/extension';
+import { invitationsOperations } from '../../state/features/invitations';
 
 import styles from './invite.module.scss';
 
+const { createInvite, getInvitesBySender } = invitationsOperations;
+
 const Invite = () => {
+  const dispatch = useDispatch();
+  const { register, handleSubmit, errors, reset } = useForm();
+
+  // Import state vars
+  const { alerts, auth, invitations } = useSelector((state) => ({
+    alerts: state.alertsState,
+    auth: state.authState,
+    invitations: state.invitationsState,
+  }));
+
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [title, setTitle] = useState('You&apos;re almost there!');
   const [buttonText, setButtonText] = useState('Install Chrome Package');
   const [body2, setBody2] = useState('Learn more about Sema while you wait...');
+  const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
+
+  const { showAlert, alertType, alertLabel } = alerts;
+  const { token, user } = auth;
+  const { _id: userId, firstName, lastName, organizations = [] } = user;
+  const fullName = `${firstName} ${lastName}`;
+  const [currentOrg = {}] = organizations;
+  const { id: orgId, orgName } = currentOrg;
+  console.log(user, invitations);
+  const onSubmit = async (data) => {
+    const { email } = data;
+    // Build invitation data
+    const invitation = {
+      recipient: email,
+      orgId,
+      orgName,
+      sender: userId,
+      senderName: fullName,
+    };
+
+    // Send invite & reset form
+    await dispatch(createInvite(invitation, token));
+    GET_INVITES_BY_USER();
+    reset();
+  };
+
+  const GET_INVITES_BY_USER = async () => {
+    await dispatch(getInvitesBySender(userId, token));
+  };
 
   useEffect(() => {
     if (isPluginInstalled) {
@@ -32,6 +77,7 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     })();
+    GET_INVITES_BY_USER();
   }, []);
 
   const buttonAction = () => {
@@ -126,6 +172,75 @@ const Invite = () => {
                 </article>
               </div>
             </div>
+            <p
+              className={clsx(
+                'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+                // styles.tableHeader
+              )}
+              dangerouslySetInnerHTML={{ __html: tableHeader }}
+            />
+            <p
+              className={clsx(
+                'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
+                // styles.tableSubtitle
+              )}
+            >
+              <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
+              Invites Available
+            </p>
+            <div className="tile is-ancestor">
+              <div className="tile is-parent is-vertical">
+                <div className={clsx('tile is-child', styles['formTile'])}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="tile">
+                      <div className={clsx('tile is-parent', styles.tableForm)}>
+                        <div
+                          className={clsx(
+                            styles.formInput,
+                            `tile is-child is-12`
+                          )}
+                        >
+                          <div class="field">
+                            <label class="label has-text-white">Username</label>
+                            <div class="control has-icons-left has-icons-right">
+                              <input
+                                className={clsx(
+                                  `input`,
+                                  errors.email && 'is-danger'
+                                )}
+                                type="email"
+                                placeholder="juandelacruz@example.com"
+                                name="email"
+                                ref={register({
+                                  required: 'Email is required',
+                                  pattern: {
+                                    value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                    message: 'Invaild email format',
+                                  },
+                                })}
+                                style={{ width: '80%', marginRight: 25 }}
+                              />
+                              <button
+                                className={clsx(
+                                  'button is-white',
+                                  styles.formBtn
+                                )}
+                                type="submit"
+                              >
+                                Send Invite
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div className={clsx('tile is-child', styles.tableTile)}>
+                  <InvitationTable invitations={invitations.data} />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -169,6 +284,46 @@ const PluginStateCard = ({
         </article>
       </div>
     </div>
+  );
+};
+
+const InvitationTable = ({ invitations }) => {
+  return (
+    <table className={clsx('table is-fullwidth', styles.table)}>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {invitations?.length &&
+          invitations.map((el) => {
+            console.log(el);
+            return (
+              <tr>
+                <td>{el.recipient}</td>
+                <td>
+                  {el.isPending ? (
+                    <span class={clsx('tag is-info', styles.tag)}>
+                      Pending Invite
+                    </span>
+                  ) : (
+                    <span class={clsx('tag is-success', styles.tag)}>
+                      Active
+                    </span>
+                  )}
+                </td>
+                <td>
+                  <button class="button is-text">Resend Invitation</button>
+                  <button class="button is-text">Revoke</button>{' '}
+                </td>
+              </tr>
+            );
+          })}
+      </tbody>
+    </table>
   );
 };
 

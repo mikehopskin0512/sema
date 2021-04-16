@@ -66,3 +66,59 @@
     display: block;
     margin: auto;
 }
+
+.tableForm {
+  background-color: #3582a7;
+  padding: 1.5rem 0.75rem !important;
+}
+
+.formBtn {
+  // margin-left: 20px !important;
+  color: #3582a7 !important;
+}
+
+.formInput {
+  // margin-left: 20px !important;
+  padding: 0px 25px !important;
+}
+
+.formTile {
+  margin-bottom: 0px !important;
+}
+
+.table {
+  margin-top: -1.5rem;
+  thead {
+    background-color: #f0f7fa;
+  }
+  th {
+    padding: 1em;
+  }
+  th:first-child {
+    padding-left: 150px !important;
+  }
+  th:last-child {
+    padding-left: 40px !important;
+  }
+  td {
+    padding: 25px;
+  }
+  td:first-child {
+    padding-left: 150px !important;
+  }
+  td:last-child {
+    padding-left: 40px !important;
+  }
+}
+
+.tag {
+  border-radius: 25px !important;
+}
+
+.tableHeader {
+  margin: 60px 0px 0px !important;
+}
+
+.tableSubtitle {
+  margin: 0px 0px 20px !important;
+}
