@@ -46,26 +46,22 @@ document.addEventListener(
 );
 
 /**
- * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER"
+ * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
  * also triggers text submission
  */
-let lastKeyPressed;
+let isLastCtrlOrMetaKey;
 document.addEventListener(
   'keydown',
   (event) => {
-    const { code } = event;
-
-    if (
-      (lastKeyPressed === 'ControlLeft' || lastKeyPressed === 'ControlRight') &&
-      code === 'Enter'
-    ) {
+    const { code, ctrlKey, metaKey } = event;
+    if (isLastCtrlOrMetaKey && code === 'Enter') {
       const activeElement = document.activeElement;
       if ($(activeElement).is('textarea')) {
         writeSemaToGithub(activeElement);
       }
     }
 
-    lastKeyPressed = code;
+    isLastCtrlOrMetaKey = ctrlKey || metaKey;
   },
   true
 );
