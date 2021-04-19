@@ -33,7 +33,7 @@ services:
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
-    command: migrate down && migrate up && exit
+    command: migrate up
     depends_on:
       - mongodb
       - apollo
