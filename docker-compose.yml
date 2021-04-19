@@ -28,6 +28,18 @@ services:
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
+  apollo-migrations:
+    image: apollo-dev-i
+    volumes:
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
+    command: migrate down && migrate up && exit
+    depends_on:
+      - mongodb
+      - apollo
+    container_name: phoenix.apollo.migrations.local
+    networks:
+      - sema
   mongodb:
     image: mongo
     ports:

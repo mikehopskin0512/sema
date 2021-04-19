@@ -51,8 +51,12 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     const resultsLength = searchResults.length;
     return searchResults.map((searchResult, i) => {
       const { comment, sourceName, sourceUrl, title } = searchResult;
+      // TODO: have a deterministic key
+      // "Date.now()" doesn't work for some reason
+      // hence generating keys by another method
+      const keyIdx = Math.random().toString(36).substring(7);
       return (
-        <div key={title}>
+        <div key={keyIdx}>
           {getCommentTitleInterface(title, sourceName)}
           {getCommentInterface(comment, false)}
           <div className="suggestion-buttons">
@@ -83,7 +87,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               <span>View</span>
             </button>
           </div>
-          {(resultsLength > i + 1) && <hr />}
+          {resultsLength > i + 1 && <hr />}
         </div>
       );
     });
