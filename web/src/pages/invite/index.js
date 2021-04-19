@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { Carousel } from 'react-responsive-carousel';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
@@ -239,6 +240,7 @@ const Invite = () => {
                 <div className={clsx('tile is-child', styles.tableTile)}>
                   <InvitationTable invitations={invitations.data} />
                 </div>
+                <PromotionBoard />
               </div>
             </div>
           </div>
@@ -324,6 +326,38 @@ const InvitationTable = ({ invitations }) => {
           })}
       </tbody>
     </table>
+  );
+};
+
+const PromotionBoard = () => {
+  return (
+    <>
+      <p
+        className={clsx(
+          'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+          // styles.tableHeader
+        )}
+        dangerouslySetInnerHTML={{
+          __html: 'Learn more about Sema while you wait...',
+        }}
+      />
+      <Carousel autoPlay>
+        <div>
+          <img
+            alt=""
+            src="https://picsum.photos/200/300"
+          />
+          <p className="legend">Legend 1</p>
+        </div>
+        <div>
+          <img
+            alt=""
+            src="https://picsum.photos/200/300"
+          />
+          <p className="legend">Legend 2</p>
+        </div>
+      </Carousel>
+    </>
   );
 };
 
