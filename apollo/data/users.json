@@ -1,0 +1,282 @@
+[
+    {
+        "isActive": true,
+        "isVerified": true,
+        "isWaitlist": true,
+        "termsAccepted": true,
+        "username": "guillermo@semasoftware.com",
+        "password": null,
+        "firstName": "Guillermo",
+        "lastName": "Mazzoni",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075565?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075565",
+                "username": "mazzonig20",
+                "email": "",
+                "firstName": "",
+                "lastName": "",
+                "profileUrl": "https://api.github.com/users/mazzonig20",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075565?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2021-04-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075565",
+                "orgName": "GMazz Enterprise"
+            }
+        ]
+    },
+    {
+        "isActive": false,
+        "isVerified": false,
+        "isWaitlist": false,
+        "termsAccepted": true,
+        "username": "jay@semasoftware.com",
+        "password": null,
+        "firstName": "Jay",
+        "lastName": "Mendez",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075564?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075562",
+                "username": "jaymendez",
+                "email": "",
+                "firstName": "",
+                "lastName": "",
+                "profileUrl": "https://api.github.com/users/jaymendez",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075564?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2021-03-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": true,
+        "isVerified": true,
+        "isWaitlist": false,
+        "termsAccepted": true,
+        "username": "abhishek@semasoftware.com",
+        "password": null,
+        "firstName": "Abhishek",
+        "lastName": "Abhishek",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075563?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075564",
+                "username": "abhishekaa",
+                "email": "",
+                "firstName": "",
+                "lastName": "",
+                "profileUrl": "https://api.github.com/users/abhishekaa",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075563?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2021-02-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": true,
+        "isVerified": false,
+        "isWaitlist": true,
+        "termsAccepted": true,
+        "username": "justin@semasoftware.com",
+        "password": null,
+        "firstName": "Justin",
+        "lastName": "Ramers",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075562?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075561",
+                "username": "justinramers",
+                "email": "justin@semasoftware.com",
+                "firstName": "Justin",
+                "lastName": "Ramers",
+                "profileUrl": "https://api.github.com/users/justinramers",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075561?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2021-01-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": false,
+        "isVerified": true,
+        "isWaitlist": true,
+        "termsAccepted": true,
+        "username": "brendan@semasoftware.com",
+        "password": null,
+        "firstName": "Brendan",
+        "lastName": "Cody",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075562?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075560",
+                "username": "brendancody",
+                "email": "brendan@semasoftware.com",
+                "firstName": "Brendan",
+                "lastName": "Cody",
+                "profileUrl": "https://api.github.com/users/brendancody",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075560?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2020-12-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": true,
+        "isVerified": false,
+        "isWaitlist": false,
+        "termsAccepted": true,
+        "username": "matt@semasoftware.com",
+        "password": null,
+        "firstName": "Matt",
+        "lastName": "Van Itallie",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075559?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075560",
+                "username": "mvi",
+                "email": "brendan@semasoftware.com",
+                "firstName": "Matt",
+                "lastName": "Van Itallie",
+                "profileUrl": "https://api.github.com/users/mvi",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075559?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2020-06-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": false,
+        "isVerified": false,
+        "isWaitlist": true,
+        "termsAccepted": true,
+        "username": "dave@semasoftware.com",
+        "password": null,
+        "firstName": "Dave",
+        "lastName": "Mustaine",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075558?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075558",
+                "username": "davemustaine",
+                "email": "dave@semasoftware.com",
+                "firstName": "Matt",
+                "lastName": "Mustaine",
+                "profileUrl": "https://api.github.com/users/davemustaine",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075558?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2020-05-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    },
+    {
+        "isActive": false,
+        "isVerified": true,
+        "isWaitlist": false,
+        "termsAccepted": true,
+        "username": "james@semasoftware.com",
+        "password": null,
+        "firstName": "James",
+        "lastName": "Hetfield",
+        "jobTitle": "Engineer",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075557?v=4",
+        "identities": [
+            {
+                "provider": "github",
+                "id": "82075557",
+                "username": "jameshetfield",
+                "email": "james@semasoftware.com",
+                "firstName": "James",
+                "lastName": "Hetfield",
+                "profileUrl": "https://api.github.com/users/jameshetfield",
+                "avatarUrl": "https://avatars.githubusercontent.com/u/82075557?v=4"
+            }
+        ],
+        "verificationToken": null,
+        "verificationExpires": null,
+        "termsAcceptedAt": "2020-04-12T13:53:10.734Z",
+        "organizations": [
+            {
+                "isActive": true,
+                "isAdmin": true,
+                "id": "82075564",
+                "orgName": "Sema"
+            }
+        ]
+    }
+]
