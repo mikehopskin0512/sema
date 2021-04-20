@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getInvite, postInvite, getAllInviteBySender } from './api';
+import { getInvite, postInvite, getInvitations } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -81,7 +81,10 @@ export const fetchInvite = (inviteToken) => async (dispatch) => {
 export const getInvitesBySender = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestGetInvitesBySender());
-    const payload = await getAllInviteBySender(userId, token);
+    const params = {
+      senderId: userId
+    }
+    const payload = await getInvitations(params, token);
     const { data: { data } } = payload;
 
     dispatch(requestGetInvitesBySenderSuccess(data));
