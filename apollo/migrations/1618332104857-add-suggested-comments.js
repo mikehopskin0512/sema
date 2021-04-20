@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/commentBank');
 
-const { mongooseUri, mongooseCertPath } = require('../src/config');
+const { mongooseUri } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -22,12 +22,6 @@ const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
-
-if (mongooseCertPath) {
-  const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
-  options.mongos.sslCA = ca;
-  options.mongos.ca = ca;
-}
 
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
