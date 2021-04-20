@@ -9,6 +9,8 @@ import { isExtensionInstalled } from 'src/utils/extension';
 
 import styles from './invite.module.scss';
 
+const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_ID;
+
 const Invite = () => {
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [title, setTitle] = useState('You&apos;re almost there!');
@@ -26,12 +28,16 @@ const Invite = () => {
   }, [isPluginInstalled]);
 
   useEffect(() => {
-    (async () => {
+    let interval;
+    interval = setInterval(async () => {
+      if (isPluginInstalled) {
+        clearInterval(interval);
+      }
       setLoading(true);
       const res = await isExtensionInstalled();
       togglePluginInstalled(res);
       setLoading(false);
-    })();
+    }, 30000);
   }, []);
 
   const buttonAction = () => {
@@ -39,8 +45,7 @@ const Invite = () => {
       toggleCard(false);
       return;
     }
-    const EXTENSION_LINK =
-      'https://chrome.google.com/webstore/detail/code-review-assistant/nompfgddpldjighjfnkncgehjdbcphbf';
+
     window.open(EXTENSION_LINK, '_blank');
   };
 
