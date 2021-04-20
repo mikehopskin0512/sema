@@ -6,6 +6,7 @@ module.exports = {
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
+  mongooseUriLocal: process.env.MONGOOSE_URI_LOCAL || '',
   mongooseUri: process.env.MONGOOSE_URI || '',
   // mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,

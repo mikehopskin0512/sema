@@ -1,23 +1,27 @@
 /**
- * - todo: remove "Bulma Base" from bulma.css
+ * - TODO: remove "Bulma Base" from bulma.css
+ * - TODO: remove listeners at appropriate time if needed
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
+import { debounce } from 'lodash';
 
 import {
   isValidSemaTextBox,
   onDocumentClicked,
   onSuggestion,
   getSemaIds,
+  writeSemaToGithub,
 } from './modules/content-util';
 
 import {
   SEMA_ICON_ANCHOR,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
+  ON_INPUT_DEBOUCE_INTERVAL_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -42,9 +46,22 @@ document.addEventListener(
 );
 
 /**
- * when "SPACE" is detected on "keyup" event, then generate suggestions for reaction and tags
+ * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
+ * also triggers text submission
  */
-document.addEventListener('keyup', (event) => onSuggestion(event, store));
+document.addEventListener(
+  'keydown',
+  (event) => {
+    const { code, ctrlKey, metaKey } = event;
+    if ((ctrlKey || metaKey) && code === 'Enter') {
+      const activeElement = document.activeElement;
+      if ($(activeElement).is('textarea')) {
+        writeSemaToGithub(activeElement);
+      }
+    }
+  },
+  true
+);
 
 /**
  * "focus" event is when we put SEMA elements in the DOM
@@ -64,6 +81,12 @@ document.addEventListener(
           idSuffix
         );
 
+        $(activeElement).on(
+          'input',
+          debounce((event) => {
+            onSuggestion(event, store);
+          }, ON_INPUT_DEBOUCE_INTERVAL_MS)
+        );
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
