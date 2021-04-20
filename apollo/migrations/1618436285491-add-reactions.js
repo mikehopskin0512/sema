@@ -2,9 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/reactions');
 
-const { mongooseUri, mongooseUriLocal, mongooseCertPath } = require('../src/config');
-
-const uri = mongooseUriLocal !== '' ? mongooseUriLocal : mongooseUri;
+const { mongooseUri } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -25,14 +23,8 @@ const options = {
   useNewUrlParser: true,
 };
 
-if (mongooseCertPath) { 
-  const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
-  options.mongos.sslCA = ca;
-  options.mongos.ca = ca;
-}
-
 exports.up = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   try {
     const colReactions = mongoose.connection.db.collection('reactions');
     const reactions = await colReactions.insertMany(reactionsData);
@@ -44,7 +36,7 @@ exports.up = async (next) => {
 };
 
 exports.down = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   try {
     const colReactions = mongoose.connection.db.collection('reactions');
     await colReactions.deleteMany({ _id: { $in: reactionsIds } });
