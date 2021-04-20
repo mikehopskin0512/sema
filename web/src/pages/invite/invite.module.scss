@@ -1,0 +1,68 @@
+.padded {
+  // padding-left: 25px;
+  display: inline-block;
+  width: 85%;
+}
+
+.circular {
+  border-radius: 25px;
+  background-color: black;
+  color: white;
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+  padding: 5px;
+  vertical-align: top;
+  font-size: 14px;
+  margin-right: 15px;
+}
+
+.styled-container {
+  width: 65%;
+}
+
+.styled-tile {
+  padding: 40px;
+}
+
+.body {
+  padding: 30px 120px;
+}
+
+.loader {
+  margin-bottom: 50px;
+  display: block;
+}
+
+.body2 {
+  margin: 60px 0px !important;
+}
+
+.img-filler {
+  width: 300px;
+  height: 150px;
+  display: block;
+  flex-basis: auto;
+  background-color: #d4d0d04f;
+}
+
+.styled-title {
+    margin-top: 15px;
+}
+
+.title {
+    margin-bottom: 15px;
+}
+
+.hidden {
+    visibility: hidden;
+};
+
+.remove {
+    display: none !important;
+}
+
+.block {
+    display: block;
+    margin: auto;
+}
