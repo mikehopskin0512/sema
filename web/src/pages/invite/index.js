@@ -4,13 +4,13 @@ import clsx from 'clsx';
 import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { Carousel } from 'react-responsive-carousel';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import { invitationsOperations } from '../../state/features/invitations';
+import Carousel from '../../components/utils/Carousel';
 
 import styles from './invite.module.scss';
 
@@ -136,43 +136,6 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
-            <p
-              className={clsx(
-                'title has-text-centered has-text-weight-semibold is-size-4',
-                styles.body2
-              )}
-              dangerouslySetInnerHTML={{ __html: body2 }}
-            />
-            <div className="tile is-ancestor">
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>2</p>
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Type some texts, code suggestion will be highlighted
-                  </p>
-                </article>
-              </div>
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>3</p>
-
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Click on an highlighted word to get smart code reviews.
-                  </p>
-                </article>
-              </div>
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>4</p>
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Open Sema Chrome Plugin to search for lorem ipsum.
-                  </p>
-                </article>
-              </div>
-            </div>
             <p
               className={clsx(
                 'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
@@ -330,33 +293,20 @@ const InvitationTable = ({ invitations }) => {
 };
 
 const PromotionBoard = () => {
+  const [heading,] = useState('Learn more about Sema while you wait...');
+
   return (
     <>
       <p
         className={clsx(
-          'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+          'title has-text-centered has-text-weight-semibold is-size-4 mt-120 mb-50'
           // styles.tableHeader
         )}
         dangerouslySetInnerHTML={{
-          __html: 'Learn more about Sema while you wait...',
+          __html: heading,
         }}
       />
-      <Carousel autoPlay>
-        <div>
-          <img
-            alt=""
-            src="https://picsum.photos/200/300"
-          />
-          <p className="legend">Legend 1</p>
-        </div>
-        <div>
-          <img
-            alt=""
-            src="https://picsum.photos/200/300"
-          />
-          <p className="legend">Legend 2</p>
-        </div>
-      </Carousel>
+      <Carousel />
     </>
   );
 };
