@@ -14,12 +14,14 @@ import {
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
-
 import {
   closeAllDropdowns,
   updateSelectedEmoji,
   addSuggestedTags,
+  onSubmit,
+  addSemaComponents
 } from './redux/action';
+import store from './redux/store';
 
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
@@ -172,9 +174,8 @@ function onGithubSubmitClicked(event) {
 
       let selectedTagsString = '';
       selectedTags.each((index, tag) => {
-        selectedTagsString = `${selectedTagsString}${
-          index > 0 ? ',' : ''
-        } ${tag}`;
+        selectedTagsString = `${selectedTagsString}${index > 0 ? ',' : ''
+          } ${tag}`;
       });
 
       let semaString = getSemaGithubText(
@@ -204,7 +205,8 @@ function onGithubSubmitClicked(event) {
         // On initial submit, 2 line breaks break up the markdown correctly
         textarea.value = `${textboxValue}\n\n${semaString}`;
       }
-    }
+    }     
+    store.dispatch(onSubmit())
   }
 }
 

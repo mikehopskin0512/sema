@@ -10,6 +10,7 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  ON_SUBMIT
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -17,13 +18,12 @@ import {
   getSemaIds,
 } from '../content-util';
 
-import { ADD_OP, SELECTED } from '../../constants';
+import { ADD_OP, SELECTED ,TAGS_INIT,EMOJIS} from '../../constants';
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
 
   const newState = clone(state);
-
   if (type === ADD_SEMA_COMPONENTS) {
     const { seedId, activeElement } = payload;
 
@@ -116,6 +116,13 @@ function rootReducer(state = initialState, action) {
     const operation = { tag, op: ADD_OP };
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+  }
+
+  if(type === ON_SUBMIT){
+    for (const prop of Object.getOwnPropertyNames(newState.semabars)) {
+      newState.semabars[prop].selectedReaction=EMOJIS[0];
+      newState.semabars[prop].selectedTags=TAGS_INIT;
+    }
   }
   return newState;
 }
