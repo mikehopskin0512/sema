@@ -1,24 +1,29 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 import styles from './carousel.module.scss';
 import carouselData from './data';
 
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
+  const [showButton, setShowButton] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
 
   const renderImage = () => {
+    console.log(current);
     switch (current) {
-      case 0:
-        return <Reactions />;
-      case 1:
-        return <Tags />;
-      case 2:
-        return <SuggestedComments />;
-      case 3:
-        return <DeveloperInsights />;
-      case 4:
-        return <SocialGraph />;
-      default:
+    case 0:
+      return <Reactions current={current} />;
+    case 1:
+      console.log('why?');
+      return <Tags current={current} />;
+    case 2:
+      return <SuggestedComments current={current} />;
+    case 3:
+      return <DeveloperInsights current={current} />;
+    case 4:
+      return <SocialGraph current={current} />;
+    default:
     }
   };
 
@@ -52,24 +57,30 @@ const Carousel = () => {
         </div>
       </div>
       <div className={clsx(styles.slider)}>
-        {/* <Tags /> */}
-        {renderImage()}
+        <Reactions current={current} />
+        <Tags current={current} />
+        <SuggestedComments current={current} />
+        <DeveloperInsights current={current} />
+        <SocialGraph current={current} />
+        {/* {renderImage()} */}
       </div>
     </>
   );
 };
 
-const TileAncestor = ({ children }) => (
+const TileAncestor = ({ children, active }) => (
   <>
-    <div className={clsx('tile is-ancestor mt-50')}>
+    {/* <div className={clsx('tile is-ancestor mt-50', active ? 'slid active' : 'slid')}> */}
+    <div className={`tile is-ancestor mt-50 ${active ? 'slide active' : 'slide'}`}>
       {children}
     </div>
+
   </>
 );
 
-const Reactions = () => (
+const Reactions = ({ current }) => (
   <>
-    <TileAncestor>
+    <TileAncestor active={current === 0}>
       <div className="tile is-1" />
       <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
         <p className="title">Reactions</p>
@@ -82,9 +93,9 @@ const Reactions = () => (
   </>
 );
 
-const Tags = () => (
+const Tags = ({ current }) => (
   <>
-    <TileAncestor>
+    <TileAncestor active={current == 1}>
       <div className="tile is-1" />
       <div className="tile is-7">
         <img src={carouselData[1]} alt="tags" className="" />
@@ -97,9 +108,9 @@ const Tags = () => (
   </>
 );
 
-const SuggestedComments = () => (
+const SuggestedComments = ({ current }) => (
   <>
-    <TileAncestor>
+    <TileAncestor active={current === 2}>
       <div className="tile is-1" />
       <div className="tile is-5 is-parent is-vertical mt-70 mr-20">
         <p className="title">Suggested Comments</p>
@@ -112,9 +123,9 @@ const SuggestedComments = () => (
   </>
 );
 
-const DeveloperInsights = () => (
+const DeveloperInsights = ({ current }) => (
   <>
-    <TileAncestor>
+    <TileAncestor active={current === 3}>
       <div className="tile is-1" />
       <div className="tile is-6">
         <img src={carouselData[3]} alt="developer-insights" className="" />
@@ -127,9 +138,9 @@ const DeveloperInsights = () => (
   </>
 );
 
-const SocialGraph = () => (
+const SocialGraph = ({ current }) => (
   <>
-    <TileAncestor>
+    <TileAncestor active={current === 4}>
       <div className="tile is-1" />
       <div className="tile is-4 is-parent is-vertical">
         <p className="title mt-70">Social Graph</p>

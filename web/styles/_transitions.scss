@@ -1,0 +1,17 @@
+
+  
+.slide {
+  opacity: 0;
+  transition: 1s ease;
+  height: 0;
+  margin: 0 !important;
+  
+}
+
+.slide.active {
+    opacity: 1;
+    transition: 1s ease;
+    transform: scale(1.08);
+    height: auto;
+    margin: 50px -12px 12px -12px !important;
+}
