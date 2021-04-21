@@ -13,6 +13,8 @@ import { invitationsOperations } from '../../state/features/invitations';
 
 import styles from './invite.module.scss';
 
+const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_ID;
+
 const { createInvite, getInvitesBySender } = invitationsOperations;
 
 const Invite = () => {
@@ -71,13 +73,21 @@ const Invite = () => {
   }, [isPluginInstalled]);
 
   useEffect(() => {
-    (async () => {
+    let interval;
+    interval = setInterval(async () => {
+      if (isPluginInstalled) {
+        clearInterval(interval);
+      }
       setLoading(true);
       const res = await isExtensionInstalled();
       togglePluginInstalled(res);
       setLoading(false);
+<<<<<<< HEAD
     })();
     GET_INVITES_BY_USER();
+=======
+    }, 30000);
+>>>>>>> 999e7099169e967fe8834a168659c92205f1ccba
   }, []);
 
   const buttonAction = () => {
@@ -85,8 +95,7 @@ const Invite = () => {
       toggleCard(false);
       return;
     }
-    const EXTENSION_LINK =
-      'https://chrome.google.com/webstore/detail/code-review-assistant/nompfgddpldjighjfnkncgehjdbcphbf';
+
     window.open(EXTENSION_LINK, '_blank');
   };
 
