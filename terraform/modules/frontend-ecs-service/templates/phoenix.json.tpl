@@ -18,19 +18,24 @@
       {
         "name": "APOLLO_CLIENT_SECRET",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/client/secret"
-      }, {
+      }, 
+      {
         "name": "APOLLO_CLIENT_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/client/id"
-      }, {
+      }, 
+      {
         "name": "BASE_URL_APOLLO",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/api/endpoint"
-      }, {
+      }, 
+      {
         "name": "GITHUB_CLIENT_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/client-id"
-      }, {
+      }, 
+      {
         "name": "GITHUB_REDIRECT",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/redirect"
-      }],
+      }
+    ],
     "portMappings": [
       {
         "containerPort": ${port},

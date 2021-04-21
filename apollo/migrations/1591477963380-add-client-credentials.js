@@ -1,14 +1,8 @@
-// import mongoose from 'mongoose';
-// import fs from 'fs';
-// import crypto from 'crypto';
-// import async from 'async';
-// import { mongooseUri, mongooseCertPath } from '../config';
-
 const mongoose = require('mongoose');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const { mongooseUri, mongooseCertPath } = require('../src/config');
+const { mongooseUri } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -16,12 +10,6 @@ const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
-
-if (mongooseCertPath) {
-  const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
-  options.mongos.sslCA = ca;
-  options.mongos.ca = ca;
-}
 
 function hash(x) {
   return crypto.createHash('sha1').update(x).digest('hex');

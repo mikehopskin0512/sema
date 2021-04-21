@@ -63,7 +63,7 @@ const userNotVerifiedError = (user) => ({
   user,
 });
 
-const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
+/*const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
   // Pass custom id and organization_id to Heap
   if (typeof window !== 'undefined') {
     if (userId) {
@@ -74,7 +74,7 @@ const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
     //   window.heap.addUserProperties({ organization_id });
     // }
   }
-};
+};*/
 
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
@@ -93,13 +93,13 @@ export const authenticate = (username, password) => async (dispatch) => {
         Router.push('/reports');
       } else {
         // Auth error clears token but preserves user object
-        dispatch(authenticateError({ errors: 'User is not verfied' }));
+        dispatch(authenticateError({ errors: 'User is not verified' }));
         Router.push('/register/verify');
       }
 
       // Hydrate user regardless of isVerified
       dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
+      //logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
@@ -110,7 +110,6 @@ export const authenticate = (username, password) => async (dispatch) => {
 
 export const refreshJwt = (refreshToken) => async (dispatch) => {
   dispatch(requestRefreshToken());
-
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
@@ -247,7 +246,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user));
-      logHeapAnalytics(userId, orgId);
+      // logHeapAnalytics(userId, orgId);
     }
 
     dispatch(verifyUserSuccess());

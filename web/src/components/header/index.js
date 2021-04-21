@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
-import Logo from '../../../public/img/Sema-logo-black.svg';
+import Logo from '../../../public/img/sema-logo-no-border.svg';
 import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
@@ -20,8 +20,11 @@ const Header = () => {
   const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
   const {
-    firstName = '', lastName = '', avatarUrl,
-    isVerified = false, organizations = [],
+    firstName = '',
+    lastName = '',
+    avatarUrl,
+    isVerified = false,
+    organizations = [],
   } = user;
   const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
@@ -32,7 +35,9 @@ const Header = () => {
   const { isAdmin = false } = currentOrg;
 
   const orgMenuList = organizations.map((org) => (
-    <Link href="/reports"><a className="navbar-item has-text-white">{org.orgName}</a></Link>
+    <Link href="/reports">
+      <a className="navbar-item">{org.orgName}</a>
+    </Link>
   ));
 
   const toggleHamburger = () => {
@@ -53,7 +58,10 @@ const Header = () => {
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
-      if (userMenu.current.classList.contains('is-active') || status === false) {
+      if (
+        userMenu.current.classList.contains('is-active') ||
+        status === false
+      ) {
         userMenu.current.classList.remove('is-active');
       } else {
         userMenu.current.classList.add('is-active');
@@ -74,11 +82,19 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header className="has-background-primary">
-      <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
+    <header className="has-background-white">
+      <nav
+        className="navbar is-transparent"
+        role="navigation"
+        aria-label="main navigation"
+      >
         <div className="navbar-brand">
-          <Link href="/reports"><a><Logo className="logo" fill="#FFFFFF" /></a></Link>
-          {(token && isVerified) && (
+          <Link href="/reports">
+            <a>
+              <Logo className="logo" />
+            </a>
+          </Link>
+          {token && isVerified && (
             <button
               onClick={toggleHamburger}
               type="button"
@@ -86,79 +102,150 @@ const Header = () => {
               aria-label="menu"
               aria-expanded="false"
               data-target="navbarBasicExample"
-              ref={burger}>
+              ref={burger}
+            >
               <span aria-hidden="true" />
               <span aria-hidden="true" />
               <span aria-hidden="true" />
             </button>
           )}
         </div>
-        {(token && isVerified) && (
+        {token && isVerified && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
-            <div className="navbar-start is-hidden-mobile is-hidden-tablet-only" style={{ flexGrow: 1, justifyContent: 'center' }}>
-              <Link href="/reports"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Dashboard</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Projects</a></Link>
-              <Link href="/repositories"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Repositories</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Teams</a></Link>
-              <Link href="/"><a className="navbar-item has-text-white" onClick={toggleHamburger}>Reports</a></Link>
+            <div
+              className="navbar-start is-hidden-mobile is-hidden-tablet-only"
+              style={{ flexGrow: 1, justifyContent: 'center' }}
+            >
+              <Link href="/reports">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Dashboard
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Projects
+                </a>
+              </Link>
+              <Link href="/repositories">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Repositories
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Teams
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Reports
+                </a>
+              </Link>
             </div>
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              <Link href="/reports"><a className="navbar-item" onClick={toggleHamburger}>Dashboard</a></Link>
-              <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Projects</a></Link>
-              <Link href="/repositories"><a className="navbar-item" onClick={toggleHamburger}>Repositories</a></Link>
-              <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Teams</a></Link>
-              <Link href="/"><a className="navbar-item" onClick={toggleHamburger}>Reports</a></Link>
+              <Link href="/reports">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Dashboard
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Projects
+                </a>
+              </Link>
+              <Link href="/repositories">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Repositories
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Teams
+                </a>
+              </Link>
+              <Link href="/">
+                <a className="navbar-item" onClick={toggleHamburger}>
+                  Reports
+                </a>
+              </Link>
               <hr className="navbar-divider" />
-              {isAdmin &&
-                <Link href="/admin"><a className="navbar-item" onClick={toggleHamburger}>Admin Panel</a></Link>}
+              {isAdmin && (
+                <Link href="/admin">
+                  <a className="navbar-item" onClick={toggleHamburger}>
+                    Admin Panel
+                  </a>
+                </Link>
+              )}
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"
                 style={{ cursor: 'pointer' }}
                 onClick={handleLogout}
-                tabIndex={0}>Logout
+                tabIndex={0}
+              >
+                Logout
               </span>
             </div>
             <div className="navbar-end is-hidden-mobile is-hidden-tablet-only">
               {/* Right icon menu - desktop */}
               <div className="navbar-item has-dropdown" ref={userMenu}>
-                <div className="navbar-dropdown is-right has-background-primary">
+                <div className="navbar-dropdown is-right">
                   <div className="nested navbar-item dropdown">
                     <div className="dropdown-trigger">
-                      <a className="has-text-white" aria-haspopup="true" aria-controls="dropdown-menu">
+                      <a
+                        // className="has-text-white"
+                        aria-haspopup="true"
+                        aria-controls="dropdown-menu"
+                      >
                         Switch Organization
-
                       </a>
                     </div>
-                    <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                      <div className="navbar-dropdown has-background-primary is-right">
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu"
+                      role="menu"
+                    >
+                      <div className="navbar-dropdown is-right">
                         {orgMenuList}
                         <hr className="navbar-divider has-background-grey-lighter" />
-                        <Link href="/register/organization"><a className="navbar-item has-text-white">Create New Organization</a></Link>
+                        <Link href="/register/organization">
+                          <a className="navbar-item">Create New Organization</a>
+                        </Link>
                       </div>
                     </div>
                   </div>
-                  <Link href="/"><a className="navbar-item has-text-white" onClick={toggleUserMenu}>My Account</a></Link>
+                  <Link href="/">
+                    <a className="navbar-item" onClick={toggleUserMenu}>
+                      My Account
+                    </a>
+                  </Link>
                   <hr className="navbar-divider has-background-grey-lighter" />
-                  {isAdmin &&
-                    <Link href="/admin"><a className="navbar-item has-text-white" onClick={toggleUserMenu}>Admin Panel</a></Link>
-                  }
+                  {isAdmin && (
+                    <Link href="/admin">
+                      <a
+                        type="button"
+                        className="navbar-item"
+                        onClick={toggleUserMenu}
+                      >
+                        Admin Panel
+                      </a>
+                    </Link>
+                  )}
                   <span
                     role="button"
-                    className="navbar-item has-text-white"
+                    className="navbar-item"
                     style={{ cursor: 'pointer' }}
                     onClick={handleLogout}
-                    tabIndex={0}>Logout
+                    tabIndex={0}
+                    aria-hidden="true"
+                  >
+                    Logout
                   </span>
                 </div>
                 {/* User menu */}
-                <button
-                  type="button"
-                  className="button user-menu is-primary has-text-white"
-                  onClick={toggleUserMenu}
-                  ref={userMenu}>
+                <a className="navbar-link " onClick={toggleUserMenu} ref={userMenu}>
                   <span className="mr-10">{firstName}</span>
                   <Avatar
                     className="mr-10"
@@ -167,8 +254,26 @@ const Header = () => {
                     // githubHandle={githubHandle || null}
                     size="30"
                     round
-                    textSizeRatio={2.5} />
-                </button>
+                    textSizeRatio={2.5}
+                  />
+                </a>
+                {/* <button
+                  type="button"
+                  className="button user-menu"
+                  onClick={toggleUserMenu}
+                  ref={userMenu}
+                >
+                  <span className="mr-10">{firstName}</span>
+                  <Avatar
+                    className="mr-10"
+                    name={fullName}
+                    src={avatarUrl || null}
+                    // githubHandle={githubHandle || null}
+                    size="30"
+                    round
+                    textSizeRatio={2.5}
+                  />
+                </button> */}
               </div>
             </div>
           </div>

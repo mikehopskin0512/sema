@@ -96,9 +96,8 @@ const Admin = () => {
                             ref={register({
                               required: 'Email is required',
                               pattern:
-                                { value: /^\S+@\S+$/i, message: 'Invaild email format' },
-                            })}
-                          />
+                                { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
+                            })} />
                         </div>
                         )}
                         <p className="help is-danger">{Array.isArray(errors.emails) && errors.emails?.[errors.emails.length - 1]?.value.message}</p>

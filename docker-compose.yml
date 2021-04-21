@@ -11,6 +11,8 @@ services:
       - ./web:/usr/app
       - /usr/app/node_modules
     container_name: phoenix.web.sema.local
+    networks:
+      - sema
   apollo:
     image: apollo-dev-i
     build:
@@ -24,75 +26,28 @@ services:
     depends_on:
       - mongodb
     container_name: phoenix.apollo.sema.local
-  eric:
-    image: eric-dev-i
-    command: ./get_repo.py ${REPO} --org_name ${ORG} --repo_username ${USERNAME} --repo_password ${PASSWORD}
-    build:
-      context: athena/eric/
-      dockerfile: ../../.docker/athena/eric/Dockerfile.prod
+    networks:
+      - sema
+  apollo-migrations:
+    image: apollo-dev-i
     volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.eric.sema.local
-  momus:
-    image: momus-dev-i
-    command: ./get_blame.py ${REPODIR}
-    build:
-      context: athena/momus/
-      dockerfile: ../../.docker/athena/momus/Dockerfile.prod
-    volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.momus.sema.local
-  janus:
-    image: janus-dev-i
-    command: ./list_repo_metadata.py ${LISTTYPE} --repo_dir ${REPODIR} --start_hash ${STARTHASH} --end_hash ${ENDHASH}
-    build:
-      context: athena/janus/
-      dockerfile: ../../.docker/athena/janus/Dockerfile.prod
-    volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.janus.sema.local
-  ananke-wc:
-    image: ananke-wc-dev-i
-    command: ./get_wc.py ${REPODIR}
-    build:
-      context: athena/ananke/
-      dockerfile: ../../.docker/athena/ananke/Dockerfile.wc
-    volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.ananke.wc.sema.local
-  ananke-mime:
-    image: ananke-mime-dev-i
-    command: ./get_mime.py ${REPODIR}
-    build:
-      context: athena/ananke/
-      dockerfile: ../../.docker/athena/ananke/Dockerfile.mime
-    volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.ananke.mime.sema.local
-  ananke-enry:
-    image: ananke-enry-dev-i
-    command: ./get_enry.py ${REPODIR}
-    build:
-      context: athena/ananke/
-      dockerfile: ../../.docker/athena/ananke/Dockerfile.enry
-    volumes:
-      - ~/docker/volumes/customer-repos:/src/customer-repos
-    container_name: athena.ananke.enry.sema.local
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
+    command: migrate up
+    depends_on:
+      - mongodb
+      - apollo
+    container_name: phoenix.apollo.migrations.local
+    networks:
+      - sema
   mongodb:
     image: mongo
     ports:
-      - "27017:27017"
+      - "5000:27017"
     volumes:
       - ~/docker/volumes/mongodb:/data/db
     container_name: phoenix.mongodb.sema.local
-  pg:
-    image: postgres:11
-    ports:
-      - "5432:5432"
-    volumes:
-      - ~/docker/volumes/postgres:/var/lib/postgresql/data/
-    container_name: phoenix.pg.sema.local
+    networks:
+      - sema
 networks:
-  default:
-    external:
-      name: pgnetwork
+  sema: {}
