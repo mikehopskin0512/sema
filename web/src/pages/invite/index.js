@@ -84,6 +84,7 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     }, 30000);
+
     GET_INVITES_BY_USER();
   }, []);
 
@@ -99,7 +100,7 @@ const Invite = () => {
   const renderIcon = () => {
     if (!isPluginInstalled) {
       return (
-        <div className={clsx(styles.loader)}>
+        <div className="mb-50">
           <Loader type="TailSpin" color="#00BFFF" height={80} width={80} />
           <p>Searching for plugin...</p>
         </div>
@@ -107,11 +108,10 @@ const Invite = () => {
     }
     return (
       <>
-        <div className={clsx(styles.loader)}>
+        <div className="mb-50">
           <FontAwesomeIcon
             icon={faCheckCircle}
             size="6x"
-            className={styles.block}
           />
           <p>Extension Installed!</p>
         </div>
@@ -127,7 +127,7 @@ const Invite = () => {
             <div className="tile is-ancestor">
               <div className="tile is-parent">
                 <article className="tile is-child has-text-centered">
-                  <p className={clsx('title is-size-1', styles.title)}>
+                  <p className={'title is-size-1 mb-15'}>
                     Welcome to Sema!
                   </p>
                 </article>
@@ -142,32 +142,27 @@ const Invite = () => {
               renderIcon={renderIcon}
             />
             <p
-              className={clsx(
+              className={
                 'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
-                // styles.tableHeader
-              )}
+              }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
             <p
-              className={clsx(
+              className={
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
-                // styles.tableSubtitle
-              )}
+                }
             >
               <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
               <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['formTile'])}>
+                <div className={clsx('tile is-child mb-0')}>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="tile">
                       <div className={clsx('tile is-parent', styles.tableForm)}>
                         <div
-                          className={clsx(
-                            styles.formInput,
-                            `tile is-child is-12`
-                          )}
+                          className={`tile is-child is-12 px-20`}
                         >
                           <div class="field">
                             <label class="label has-text-white">Username</label>
@@ -205,7 +200,7 @@ const Invite = () => {
                     </div>
                   </form>
                 </div>
-                <div className={clsx('tile is-child', styles.tableTile)}>
+                <div className={'tile is-child'}>
                   <InvitationTable invitations={invitations.data} />
                 </div>
                 <PromotionBoard />
@@ -227,19 +222,16 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx('tile is-ancestor', !isCardVisible && styles.remove)}>
+    <div className={clsx('tile is-ancestor', !isCardVisible && "remove")}>
       <div className="tile is-parent">
         <article
-          className={clsx(
-            'tile is-child notification has-background-white has-text-centered',
-            styles['styled-tile']
-          )}
+          className={'tile is-child notification has-background-white has-text-centered p-50'}
         >
           <p
-            className={clsx('title is-size-3', styles['styled-title'])}
+            className={'title is-size-3 mt-15'}
             dangerouslySetInnerHTML={{ __html: title }}
           />
-          <p className={clsx('subtitle', styles.body)}>
+          <p className={'subtitle px-120 py-20'}>
             The Sema Chrome Plugin allows us to modify the Github commenting UI
             and supercharge your code review workflow
           </p>

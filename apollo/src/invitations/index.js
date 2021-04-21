@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, findByToken, getAllInviteBySender } from './invitationService';
+import { create, findByToken, getInvitationsBySender } from './invitationService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -41,11 +41,11 @@ export default (app, passport) => {
   });
 
   // Fetch all invitation by senderId
-  route.get('/:senderId/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { senderId } = req.params;
+  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { senderId } = req.query;
 
     try {
-      const invites = await getAllInviteBySender(senderId);
+      const invites = await getInvitationsBySender(senderId);
       if (invites.statusCode === 404) {
         if (invites.name === "Not Found") {
           throw new errors.BadRequest(`Invalid Sender ID`);
