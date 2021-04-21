@@ -14,12 +14,13 @@ import {
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
-
 import {
   closeAllDropdowns,
   updateSelectedEmoji,
   addSuggestedTags,
+  resetSemaStates,
 } from './redux/action';
+import store from './redux/store';
 
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
@@ -182,6 +183,8 @@ export function writeSemaToGithub(textarea) {
       // On initial submit, 2 line breaks break up the markdown correctly
       textarea.value = `${textboxValue}\n\n${semaString}`;
     }
+    const semaIds = getSemaIds($(textarea).attr('id'));
+    store.dispatch(resetSemaStates(semaIds));
   }
 }
 
@@ -316,7 +319,7 @@ export function onSuggestion(event, store) {
 
 export function getSemaIds(idSuffix) {
   return {
-    semabarContainerId: `semabar${idSuffix}`,
-    semaSearchContainerId: `semasearch${idSuffix}`,
+    semabarContainerId: `semabar_${idSuffix}`,
+    semaSearchContainerId: `semasearch_${idSuffix}`,
   };
 }
