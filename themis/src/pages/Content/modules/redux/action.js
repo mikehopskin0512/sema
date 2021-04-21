@@ -7,6 +7,7 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  RESET_SEMA_STATES,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -45,5 +46,10 @@ export const addSuggestedTags = (payload) => ({
 
 export const updateSelectedTagsWithSuggestion = (payload) => ({
   type: UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  payload,
+});
+
+export const resetSemaStates = (payload) => ({
+  type: RESET_SEMA_STATES,
   payload,
 });
