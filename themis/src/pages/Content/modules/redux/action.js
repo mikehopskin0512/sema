@@ -7,7 +7,7 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
-  ON_SUBMIT
+  RESET_SEMA_STATES,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -49,7 +49,7 @@ export const updateSelectedTagsWithSuggestion = (payload) => ({
   payload,
 });
 
-export const onSubmit = (payload) => ({
-  type: ON_SUBMIT,
+export const resetSemaStates = (payload) => ({
+  type: RESET_SEMA_STATES,
   payload,
 });

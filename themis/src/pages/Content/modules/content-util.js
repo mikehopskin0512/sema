@@ -18,8 +18,7 @@ import {
   closeAllDropdowns,
   updateSelectedEmoji,
   addSuggestedTags,
-  onSubmit,
-  addSemaComponents,
+  resetSemaStates,
 } from './redux/action';
 import store from './redux/store';
 
@@ -184,7 +183,8 @@ export function writeSemaToGithub(textarea) {
       // On initial submit, 2 line breaks break up the markdown correctly
       textarea.value = `${textboxValue}\n\n${semaString}`;
     }
-    store.dispatch(onSubmit());
+    const semaIds = getSemaIds($(textarea).attr('id'));
+    store.dispatch(resetSemaStates(semaIds));
   }
 }
 
@@ -319,7 +319,7 @@ export function onSuggestion(event, store) {
 
 export function getSemaIds(idSuffix) {
   return {
-    semabarContainerId: `semabar${idSuffix}`,
-    semaSearchContainerId: `semasearch${idSuffix}`,
+    semabarContainerId: `semabar_${idSuffix}`,
+    semaSearchContainerId: `semasearch_${idSuffix}`,
   };
 }
