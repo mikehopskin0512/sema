@@ -82,12 +82,9 @@ const Invite = () => {
       const res = await isExtensionInstalled();
       togglePluginInstalled(res);
       setLoading(false);
-<<<<<<< HEAD
-    })();
-    GET_INVITES_BY_USER();
-=======
     }, 30000);
->>>>>>> 999e7099169e967fe8834a168659c92205f1ccba
+
+    GET_INVITES_BY_USER();
   }, []);
 
   const buttonAction = () => {
