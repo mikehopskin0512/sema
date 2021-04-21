@@ -61,3 +61,18 @@ export const redeemInvite = async (token, userId) => {
     return error;
   }
 };
+
+export const getInvitationsBySender = async (senderId) => {
+  try {
+    const query = Invitation.find({
+      sender: senderId,
+    });
+    const result = await query.lean().exec();
+
+    return result;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};

@@ -245,7 +245,7 @@ const Header = () => {
                   </span>
                 </div>
                 {/* User menu */}
-                <a class="navbar-link " onClick={toggleUserMenu} ref={userMenu}>
+                <a className="navbar-link " onClick={toggleUserMenu} ref={userMenu}>
                   <span className="mr-10">{firstName}</span>
                   <Avatar
                     className="mr-10"

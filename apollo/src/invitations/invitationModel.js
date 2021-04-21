@@ -15,6 +15,7 @@ const invitationSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now },
   }],
+  isPending: { type: Boolean, default: true },
 }, { timestamps: true });
 
 invitationSchema.set('autoIndex', autoIndex);
