@@ -8,17 +8,17 @@ const Carousel = () => {
 
   const renderImage = () => {
     switch (current) {
-    case 0:
-      return <img src={carouselData[current]} alt="how-to-use" />;
-    case 1:
-      return <Tags />;
-    case 2:
-      return <SuggestedComments />;
-    case 3:
-      return <DeveloperInsights />;
-    case 4:
-      return <SocialGraph />;
-    default:
+      case 0:
+        return <Reactions />;
+      case 1:
+        return <Tags />;
+      case 2:
+        return <SuggestedComments />;
+      case 3:
+        return <DeveloperInsights />;
+      case 4:
+        return <SocialGraph />;
+      default:
     }
   };
 
@@ -67,12 +67,27 @@ const TileAncestor = ({ children }) => (
   </>
 );
 
+const Reactions = () => (
+  <>
+    <TileAncestor>
+      <div className="tile is-1" />
+      <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
+        <p className="title">Reactions</p>
+        <p className="subtitle">Provide a simple, clear summary of the review -- if you want to.</p>
+      </div>
+      <div className="tile is-7">
+        <img src={carouselData[0]} alt="reactions" className="" />
+      </div>
+    </TileAncestor>
+  </>
+);
+
 const Tags = () => (
   <>
     <TileAncestor>
       <div className="tile is-1" />
       <div className="tile is-7">
-        <img src={carouselData[1]} alt="how-to-use" className="" />
+        <img src={carouselData[1]} alt="tags" className="" />
       </div>
       <div className="tile is-4 is-parent is-vertical mt-70">
         <p className="title">Add Tags</p>
@@ -91,7 +106,7 @@ const SuggestedComments = () => (
         <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
       </div>
       <div className="tile is-6">
-        <img src={carouselData[2]} alt="how-to-use" className="" />
+        <img src={carouselData[2]} alt="suggested-comments" className="" />
       </div>
     </TileAncestor>
   </>
@@ -102,7 +117,7 @@ const DeveloperInsights = () => (
     <TileAncestor>
       <div className="tile is-1" />
       <div className="tile is-6">
-        <img src={carouselData[3]} alt="how-to-use" className="" />
+        <img src={carouselData[3]} alt="developer-insights" className="" />
       </div>
       <div className="tile is-4 is-parent is-vertical mt-50">
         <p className="title">Developer Insights</p>
@@ -121,7 +136,7 @@ const SocialGraph = () => (
         <p className="subtitle">The Sema Review Graph drives skill discovery, continuous professional development, and greater social cohesion.</p>
       </div>
       <div className="tile is-7">
-        <img src={carouselData[4]} alt="how-to-use" className="" />
+        <img src={carouselData[4]} alt="social-graph" className="" />
       </div>
     </TileAncestor>
   </>
