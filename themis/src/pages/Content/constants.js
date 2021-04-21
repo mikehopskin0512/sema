@@ -93,3 +93,5 @@ export const SEMA_ICON_ANCHOR =
 
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
+
+export const ON_INPUT_DEBOUCE_INTERVAL_MS = 1000;

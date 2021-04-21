@@ -14,6 +14,8 @@ import Carousel from '../../components/utils/Carousel';
 
 import styles from './invite.module.scss';
 
+const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_ID;
+
 const { createInvite, getInvitesBySender } = invitationsOperations;
 
 const Invite = () => {
@@ -72,12 +74,16 @@ const Invite = () => {
   }, [isPluginInstalled]);
 
   useEffect(() => {
-    (async () => {
+    let interval;
+    interval = setInterval(async () => {
+      if (isPluginInstalled) {
+        clearInterval(interval);
+      }
       setLoading(true);
       const res = await isExtensionInstalled();
       togglePluginInstalled(res);
       setLoading(false);
-    })();
+    }, 30000);
     GET_INVITES_BY_USER();
   }, []);
 
@@ -86,8 +92,7 @@ const Invite = () => {
       toggleCard(false);
       return;
     }
-    const EXTENSION_LINK =
-      'https://chrome.google.com/webstore/detail/code-review-assistant/nompfgddpldjighjfnkncgehjdbcphbf';
+
     window.open(EXTENSION_LINK, '_blank');
   };
 

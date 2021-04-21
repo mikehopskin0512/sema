@@ -7,7 +7,6 @@ module.exports = {
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
   mongooseUri: process.env.MONGOOSE_URI || '',
-  // mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED || true,
   modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
