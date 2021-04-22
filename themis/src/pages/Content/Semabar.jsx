@@ -136,10 +136,12 @@ const Semabar = (props) => {
           }}
         />
       </div>
-      <div className="sema-tag-container">
-        {createAddTags()}
+      <div className="sema-tag-container" id="scroll-style">
         {createActiveTags()}
         {createSuggestedTags()}
+      </div>
+      <div>
+      {createAddTags()}
       </div>
     </>
   );

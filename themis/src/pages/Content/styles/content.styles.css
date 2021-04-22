@@ -32,8 +32,24 @@
   display: flex;
   flex: 1;
   flex-direction: row-reverse;
+  overflow: auto;
 }
 
+#scroll-style::-webkit-scrollbar {
+  height: 8px;
+}
+
+#scroll-style::-webkit-scrollbar-track {
+  background: rgb(243, 243, 243);
+  width: 5px;
+}
+
+#scroll-style::-webkit-scrollbar-thumb {
+  height: 8px;
+  background-color: rgb(81, 50, 252);
+  border-radius: 20px;
+  border: 2px solid rgb(243, 243, 243);
+}
 .sema-add-tags {
   border-style: dashed;
 }
