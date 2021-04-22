@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
@@ -10,6 +11,7 @@ import {
 import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import initialize from '../state/utils/sentry';
 import { initStore } from '../state/store';
+import * as ga from '../utils/analytics';
 
 import '../../styles/_theme.scss';
 
@@ -17,11 +19,30 @@ config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatic
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faFilter, faCloudDownloadAlt, faPlus, faGithub, faTwitter, faFacebook);
 
-const Application = ({ Component, pageProps, store }) => (
-  <Provider store={store}>
-    <Component {...pageProps} />
-  </Provider>
-);
+const Application = ({ Component, pageProps, store }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      ga.pageview(url);
+    };
+    // When the component is mounted, subscribe to router changes
+    // and log those page views
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  );
+};
 
 Application.getInitialProps = async ({ Component, ctx }) => {
   await initialize(ctx);
