@@ -43,7 +43,7 @@ const Invite = () => {
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
-  console.log(user, invitations);
+
   const onSubmit = async (data) => {
     const { email } = data;
     // Build invitation data
@@ -262,7 +262,6 @@ const InvitationTable = ({ invitations }) => {
       <tbody>
         {invitations?.length &&
           invitations.map((el) => {
-            console.log(el);
             return (
               <tr>
                 <td>{el.recipient}</td>
