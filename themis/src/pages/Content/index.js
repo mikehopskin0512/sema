@@ -14,6 +14,7 @@ import {
   onDocumentClicked,
   onSuggestion,
   getSemaIds,
+  writeSemaToGithub,
 } from './modules/content-util';
 
 import {
@@ -45,9 +46,22 @@ document.addEventListener(
 );
 
 /**
- * when "SPACE" is detected on "keyup" event, then generate suggestions for reaction and tags
+ * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
+ * also triggers text submission
  */
-document.addEventListener('keyup', (event) => onSuggestion(event, store));
+document.addEventListener(
+  'keydown',
+  (event) => {
+    const { code, ctrlKey, metaKey } = event;
+    if ((ctrlKey || metaKey) && code === 'Enter') {
+      const activeElement = document.activeElement;
+      if ($(activeElement).is('textarea')) {
+        writeSemaToGithub(activeElement);
+      }
+    }
+  },
+  true
+);
 
 /**
  * "focus" event is when we put SEMA elements in the DOM
@@ -61,7 +75,7 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        const idSuffix = Date.now();
+        const idSuffix = $(activeElement).attr('id');
 
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
           idSuffix

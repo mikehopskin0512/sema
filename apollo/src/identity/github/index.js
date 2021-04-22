@@ -75,7 +75,8 @@ export default (app) => {
       await setRefreshToken(res, await createRefreshToken(user));
 
       // No need to send jwt. It will pick up the refresh token cookie on frontend
-      return res.redirect(`${orgDomain}/reports`);
+      // return res.redirect(`${orgDomain}/reports`);
+      return res.redirect(`${orgDomain}/invite`);
       // return res.status(201).send({ jwtToken: await createAuthToken(user) });
     }
 

@@ -1,16 +1,8 @@
-// import mongoose from 'mongoose';
-// import fs from 'fs';
-// import crypto from 'crypto';
-// import async from 'async';
-// import { mongooseUri, mongooseCertPath } from '../config';
-
 const mongoose = require('mongoose');
 const fs = require('fs');
 const crypto = require('crypto');
 
-const { mongooseUri, mongooseUriLocal, mongooseCertPath } = require('../src/config');
-
-const uri = mongooseUriLocal !== '' ? mongooseUriLocal : mongooseUri;
+const { mongooseUri } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -18,12 +10,6 @@ const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
-
-if (mongooseCertPath) {
-  const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
-  options.mongos.sslCA = ca;
-  options.mongos.ca = ca;
-}
 
 function hash(x) {
   return crypto.createHash('sha1').update(x).digest('hex');
@@ -43,7 +29,7 @@ const clients = [{
 }];
 
 exports.up = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   const colUsers = mongoose.connection.db.collection('users');
   await colUsers.insertOne(adminUser);
 
@@ -53,7 +39,7 @@ exports.up = async (next) => {
 };
 
 exports.down = async (next) => {
-  await mongoose.connect(uri, options);
+  await mongoose.connect(mongooseUri, options);
   const colUsers = mongoose.connection.db.collection('users');
   await colUsers.deleteOne({ _id: new ObjectId('54f5f63cb840e3027700001e') });
 
