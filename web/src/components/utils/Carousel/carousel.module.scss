@@ -1,10 +1,4 @@
-.slide {
-    opacity: 0;
-    transition-duration: 3s;
-}
-
-.active {
-    opacity: 1;
-    transition: 3s ease;
-    transform: scale(1.08);
+.button {
+    background-color: transparent;
+    border-color: transparent;
 }

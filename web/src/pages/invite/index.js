@@ -121,7 +121,7 @@ const Invite = () => {
 
   return (
     <>
-      <section className="hero">
+      <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <div className="tile is-ancestor">
@@ -208,6 +208,7 @@ const Invite = () => {
             </div>
           </div>
         </div>
+        <ContactUs />
       </section>
     </>
   );
@@ -225,7 +226,7 @@ const PluginStateCard = ({
     <div className={clsx('tile is-ancestor', !isCardVisible && "remove")}>
       <div className="tile is-parent">
         <article
-          className={'tile is-child notification has-background-white has-text-centered p-50'}
+          className={'tile is-child notification has-background-white has-text-centered p-50 colored-shadow'}
         >
           <p
             className={'title is-size-3 mt-15'}
@@ -249,8 +250,7 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {
-  invitations = [];
+const InvitationTable = ({ invitations }) => {  
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -315,6 +315,25 @@ const PromotionBoard = () => {
       <Carousel />
     </>
   );
+};
+
+const ContactUs = () => {
+  return (
+    <div className="mt-20 py-50 px-120 tile is-ancestor has-background-info">
+      <div className="tile is-child is-6">
+        <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
+        <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
+      </div>
+      <div className="tile is-child is-1" />
+      <div className="tile is-child is-2">
+        <a href="mailto:support@semasoftware.com" className="button is-white has-text-info is-medium px-70">Email</a> 
+      </div>
+      <div className="tile is-child is-2">
+
+        <button className="button is-white is-medium px-70 has-text-info">Idea Board</button>
+      </div>
+    </div>
+  )
 };
 
 export default withLayout(Invite);

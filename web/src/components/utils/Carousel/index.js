@@ -6,52 +6,37 @@ import carouselData from './data';
 
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
-  const [showButton, setShowButton] = useState(true);
-  const [showMessage, setShowMessage] = useState(false);
-
-  const renderImage = () => {
-    console.log(current);
-    switch (current) {
-    case 0:
-      return <Reactions current={current} />;
-    case 1:
-      console.log('why?');
-      return <Tags current={current} />;
-    case 2:
-      return <SuggestedComments current={current} />;
-    case 3:
-      return <DeveloperInsights current={current} />;
-    case 4:
-      return <SocialGraph current={current} />;
-    default:
-    }
-  };
+  const [screens] = useState(['Reactions', 'Tags', 'Suggested Comments', 'Developer Insights', 'Social Graph']);
+  const buttonProps = (index) => ({
+    onClick: () => setCurrent(index),
+    className: clsx('button is-medium', current === index && 'is-text', styles.button),
+  });
 
   return (
     <>
       <div className="tile is-ancestor">
         <div className="tile is-2">
-          <button onClick={() => setCurrent(0)} type="button" className={clsx('button is-medium is-light', current === 0 && 'is-text')}>
+          <button type="button" {...buttonProps(0)}>
             Reactions
           </button>
         </div>
         <div className="tile is-2">
-          <button onClick={() => setCurrent(1)} type="button" className={clsx('button is-medium is-light', current === 1 && 'is-text')}>
+          <button type="button" {...buttonProps(1)}>
             Tags
           </button>
         </div>
         <div className="tile is-3">
-          <button onClick={() => setCurrent(2)} type="button" className={clsx('button is-medium is-light', current === 2 && 'is-text')}>
+          <button type="button" {...buttonProps(2)}>
             Suggested Comments
           </button>
         </div>
         <div className="tile is-3">
-          <button onClick={() => setCurrent(3)} type="button" className={clsx('button is-medium is-light', current === 3 && 'is-text')}>
+          <button type="button" {...buttonProps(3)}>
             Developer Insights
           </button>
         </div>
         <div className="tile is-3">
-          <button onClick={() => setCurrent(4)} type="button" className={clsx('button is-medium is-light', current === 4 && 'is-text')}>
+          <button type="button" {...buttonProps(4)}>
             Social Graph
           </button>
         </div>
