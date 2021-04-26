@@ -11,9 +11,12 @@ const withLayout = (Page) => () => (
       body,
       body > div:first-child,
       div#__next,
-      div#__next > div, .Layout {
+      div#__next > div, 
+      
+       {
         height: 100%;
       }
+
     `}
     </style>
     <Head>
