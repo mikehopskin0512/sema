@@ -6,7 +6,7 @@ import Footer from '../footer';
 const withLayout = (Page) => () => (
   <div className="Layout">
     {/* Styling for full height width */}
-    {/* <style global jsx>{`
+    <style global jsx>{`
       html,
       body,
       body > div:first-child,
@@ -15,7 +15,7 @@ const withLayout = (Page) => () => (
         height: 100%;
       }
     `}
-    </style> */}
+    </style>
     <Head>
       {/* Heap Analytics */}
       <script dangerouslySetInnerHTML={{ __html: '' }} />
@@ -33,7 +33,7 @@ const withLayout = (Page) => () => (
       ` }} />
     </Head>
     <Header />
-    <Page style={{ backgroundColor: '#f8f8f8' }} />
+    <Page style={{ backgroundColor: '#FCFCFC' }} />
     {/* <Footer /> */}
   </div>
 );

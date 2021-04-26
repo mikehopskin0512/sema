@@ -2,9 +2,8 @@ import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
-import './header.module.scss';
+import styles from './header.module.scss';
 import { authOperations } from '../../state/features/auth';
-import Logo from '../../../public/img/sema-logo-no-border.svg';
 import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
@@ -82,7 +81,7 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header className="has-background-white">
+    <header>
       <nav
         className="navbar is-transparent"
         role="navigation"
@@ -91,7 +90,8 @@ const Header = () => {
         <div className="navbar-brand">
           <Link href="/reports">
             <a>
-              <Logo className="logo" />
+              {/* <Logo className="logo" /> */}
+              <img src="/img/sema-logo.png" alt="sema-logo" />
             </a>
           </Link>
           {token && isVerified && (
@@ -114,66 +114,65 @@ const Header = () => {
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
             <div
-              className="navbar-start is-hidden-mobile is-hidden-tablet-only"
-              style={{ flexGrow: 1, justifyContent: 'center' }}
+              className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
-              <Link href="/reports">
-                <a className="navbar-item" onClick={toggleHamburger}>
+              <Link href="/invite">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Dashboard
                 </a>
               </Link>
               <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Projects
                 </a>
               </Link>
               <Link href="/repositories">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Repositories
                 </a>
               </Link>
               <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Teams
                 </a>
               </Link>
-              <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+              <Link href="/reports">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Reports
                 </a>
               </Link>
             </div>
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              <Link href="/reports">
-                <a className="navbar-item" onClick={toggleHamburger}>
+              <Link href="/invite">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Dashboard
                 </a>
               </Link>
               <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Projects
                 </a>
               </Link>
               <Link href="/repositories">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Repositories
                 </a>
               </Link>
               <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Teams
                 </a>
               </Link>
-              <Link href="/">
-                <a className="navbar-item" onClick={toggleHamburger}>
+              <Link href="/reports">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Reports
                 </a>
               </Link>
               <hr className="navbar-divider" />
               {isAdmin && (
                 <Link href="/admin">
-                  <a className="navbar-item" onClick={toggleHamburger}>
+                  <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Admin Panel
                   </a>
                 </Link>

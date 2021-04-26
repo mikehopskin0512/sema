@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { useForm } from 'react-hook-form';
 import { isEmpty } from "lodash";
 
@@ -48,16 +49,23 @@ const Login = () => {
   const LoginScreen = () => {
     return (
       <>
-        <h1 className="title has-text-centered">Welcome to Sema</h1>
-        <h2 className="subtitle has-text-centered is-size-6">
+        <h1 className="title has-text-centered mb-20">Welcome to Sema</h1>
+        <div className="is-divider is-info mx-90" />
+        <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
           Sema is still a work in progress. Join the waitlist to be
           amongst the first to try it out.
         </h2>
         <a
           type="button"
-          className="button is-black is-fullwidth"
+          className="button is-black p-25 is-info colored-shadow"
           href="/api/identities/github"
         >
+          <span className="icon is-large mr-20">
+            <FontAwesomeIcon
+              icon={['fab', 'github']}
+              size="2x"
+            />
+          </span>
           <span>Join the waitlist with Github</span>
         </a>
         {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
@@ -71,10 +79,16 @@ const Login = () => {
         </p>
         <a
           type="button"
-          className="button is-fullwidth"
+          className="button p-25 colored-shadow"
           href="/api/identities/github"
         >
-          <span>Sign in with Github</span>
+        <span className="icon has-text-info is-large mr-20">
+            <FontAwesomeIcon
+              icon={['fab', 'github']}
+              size="2x"
+            />
+          </span>
+          <span className="has-text-info">Sign in with Github</span>
         </a>
       </>
     );
@@ -94,11 +108,32 @@ const Login = () => {
         <div className="hero-body">
           <div className="container">
             <div className="tile is-ancestor">
-              <div className="tile is-6" />
+              <div className="tile is-vertical is-parent is-6">
+                <img src="/img/sema-logo.png" alt="sema-logo" width="200" />
+                <div className="title is-4 mt-20 mb-50">Your code review assistant</div>
+                <img src="/img/codelines.png" width="500"/>
+                <div className="feature-list mt-50 ml-20">
+                  <ul>
+                    <li className="my-5">
+                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
+                      <span className="is-size-4"> Feature 1</span>
+                    </li>
+                    <li className="my-5">
+                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
+                      <span className="is-size-4"> Feature 2</span>
+                    </li>
+                    <li className="my-5">
+                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
+                      <span className="is-size-4"> Feature 3</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="tile is-1"/>
               <div
                 className={clsx(
-                  'tile is-child is-5 box',
-                  styles['tile-padding'],
+                  'colored-shadow tile is-child is-5 px-70 pb-50 pt-120 box has-text-centered',
+                  styles['login-tile'],
                 )}
               >
                 {renderScreen()}
