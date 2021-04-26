@@ -10,6 +10,7 @@ import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import { invitationsOperations } from '../../state/features/invitations';
+import Carousel from '../../components/utils/Carousel';
 
 import styles from './invite.module.scss';
 
@@ -141,40 +142,6 @@ const Invite = () => {
               renderIcon={renderIcon}
             />
             <p
-              className={'title has-text-centered has-text-weight-semibold is-size-4 m-50'}
-              dangerouslySetInnerHTML={{ __html: body2 }}
-            />
-            <div className="tile is-ancestor">
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>2</p>
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Type some texts, code suggestion will be highlighted
-                  </p>
-                </article>
-              </div>
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>3</p>
-
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Click on an highlighted word to get smart code reviews.
-                  </p>
-                </article>
-              </div>
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child', styles['img-filler'])} />
-                <article className="tile is-child">
-                  <p className={clsx(styles.circular)}>4</p>
-                  <p className={clsx('subtitle', styles.padded)}>
-                    Open Sema Chrome Plugin to search for lorem ipsum.
-                  </p>
-                </article>
-              </div>
-            </div>
-            <p
               className={
                 'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
               }
@@ -236,6 +203,7 @@ const Invite = () => {
                 <div className={'tile is-child'}>
                   <InvitationTable invitations={invitations.data} />
                 </div>
+                <PromotionBoard />
               </div>
             </div>
           </div>
@@ -330,5 +298,23 @@ const InvitationTable = ({ invitations }) => {
   );
 };
 
+const PromotionBoard = () => {
+  const [heading,] = useState('Learn more about Sema while you wait...');
+
+  return (
+    <>
+      <p
+        className={clsx(
+          'title has-text-centered has-text-weight-semibold is-size-4 mt-120 mb-50'
+          // styles.tableHeader
+        )}
+        dangerouslySetInnerHTML={{
+          __html: heading,
+        }}
+      />
+      <Carousel />
+    </>
+  );
+};
 
 export default withLayout(Invite);
