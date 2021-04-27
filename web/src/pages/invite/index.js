@@ -326,7 +326,7 @@ const ContactUs = () => {
       </div>
       <div className="tile is-child is-1" />
       <div className="tile is-child is-2">
-        <a href="mailto:support@semasoftware.com" className="button is-white has-text-info is-medium px-70">Email</a> 
+        <a href="mailto:feedback@semasoftware.com" className="button is-white has-text-info is-medium px-70">Email</a> 
       </div>
       <div className="tile is-child is-2">
 
