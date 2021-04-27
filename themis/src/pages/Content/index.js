@@ -29,7 +29,7 @@ import Searchbar from './Searchbar.jsx';
 
 import store from './modules/redux/store';
 
-import { addSemaComponents } from './modules/redux/action';
+import { addSemaComponents ,updateSemaComponents} from './modules/redux/action';
 
 /**
  * Listening to click event for:
@@ -87,6 +87,24 @@ document.addEventListener(
             onSuggestion(event, store);
           }, ON_INPUT_DEBOUCE_INTERVAL_MS)
         );
+        $(activeElement).on(
+          'input',()=>{
+              const { semabars }=store.getState();
+              store.dispatch(
+                updateSemaComponents({
+                Id: semabarContainerId,
+                typeFlag:false,
+              })
+            );
+              if(semabars[semabarContainerId].isReactionDirty === true){
+                store.dispatch(
+                  updateSemaComponents({
+                  Id: semabarContainerId,
+                  typeFlag:true
+                })
+              );
+              }
+          });
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(

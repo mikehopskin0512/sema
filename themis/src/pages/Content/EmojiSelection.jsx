@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import Emoji from './modules/emoji.js';
 
-function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected }) {
+function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected,userInitialTypeAction }) {
   const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
-
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   return (
-    <>
+    <> 
+      {userInitialTypeAction==false ?(
+        <div><i className="fas fa-circle-notch fa-spin"></i>Calculating...
+        </div>
+        ):
+      <div>
       {isSelectingEmoji ? (
         <div className="reaction-selection-wrapper">
           {allEmojis.map((emojiObj) => {
@@ -38,6 +42,8 @@ function EmojiSelection({ allEmojis, selectedReaction, onEmojiSelected }) {
           <span className="sema-ml-2">{selectedTitle}</span>
         </button>
       )}
+      </div>
+      }
     </>
   );
 }

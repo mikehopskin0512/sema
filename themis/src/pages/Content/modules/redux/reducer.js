@@ -11,6 +11,7 @@ import {
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   RESET_SEMA_STATES,
+  UPDATE_SEMA_COMPONENTS
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -64,7 +65,7 @@ function rootReducer(state = initialState, action) {
     const { id, selectedReaction, isDirty } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
-    semabars[id].isReactionDirty = !!isDirty;
+    semabars[id].isReactionDirty = true
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation, isDirty } = payload;
     const {
@@ -131,7 +132,11 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
     };
+  } else if(type === UPDATE_SEMA_COMPONENTS){
+    const { Id ,typeFlag} = payload;
+    newState.semabars[Id]['typeFlag']=typeFlag;
   }
+
   return newState;
 }
 
