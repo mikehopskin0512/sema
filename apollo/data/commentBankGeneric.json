@@ -1,0 +1,423 @@
+[
+    {
+        "comment": "I'm proud of you.",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I'm proud of you.",
+        "_id": "6087fc4440d63a000d0ceed5"
+    },
+    {
+        "comment": "I'm very proud of you.",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I'm very proud of you.",
+        "_id": "6087fc4440d63a000d0ceed6"
+    },
+    {
+        "comment": "I never would have thought of this",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I never would have thought of this",
+        "_id": "6087fc4440d63a000d0ceed7"
+    },
+    {
+        "comment": "geniu,s",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "genius",
+        "_id": "6087fc4440d63a000d0ceed8"
+    },
+    {
+        "comment": "I'm going to show this to the team",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I'm going to show this to the team",
+        "_id": "6087fc4440d63a000d0ceed9"
+    },
+    {
+        "comment": "This is great code- we'll use it as a example to teach new developers",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "This is great code- we'll use it as a example to teach new developers",
+        "_id": "6087fc4440d63a000d0ceeda"
+    },
+    {
+        "comment": "Looks good to me lgtm",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "Looks good to me lgtm",
+        "_id": "6087fc4440d63a000d0ceedb"
+    },
+    {
+        "comment": "This works",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "This works",
+        "_id": "6087fc4440d63a000d0ceedc"
+    },
+    {
+        "comment": "Our users will be so happy",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "Our users will be so happy",
+        "_id": "6087fc4440d63a000d0ceedd"
+    },
+    {
+        "comment": "Our users will be so psyched",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "Our users will be so psyched",
+        "_id": "6087fc4440d63a000d0ceede"
+    },
+    {
+        "comment": "I'm so glad you fixed that bug",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I'm so glad you fixed that bug",
+        "_id": "6087fc4440d63a000d0ceedf"
+    },
+    {
+        "comment": "super apprecative of you",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "super apprecative of you",
+        "_id": "6087fc4440d63a000d0ceee0"
+    },
+    {
+        "comment": "wow. let's not forget this one 0 https://images.app.goo.gl/mVrhqstfZCeh5zJV9",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "wow. let's not forget this one ;0 https://images.app.goo.gl/mVrhqstfZCeh5zJV9",
+        "_id": "6087fc4440d63a000d0ceee1"
+    },
+    {
+        "comment": "we solve that problem differently here",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "we solve that problem differently here",
+        "_id": "6087fc4440d63a000d0ceee2"
+    },
+    {
+        "comment": "we use a different method here",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "we use a different method here",
+        "_id": "6087fc4440d63a000d0ceee3"
+    },
+    {
+        "comment": "we use a different style for this",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "we use a different style for this",
+        "_id": "6087fc4440d63a000d0ceee4"
+    },
+    {
+        "comment": "have you considered an open source solution?",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "have you considered an open source solution?",
+        "_id": "6087fc4440d63a000d0ceee5"
+    },
+    {
+        "comment": "you should ask",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "you should ask",
+        "_id": "6087fc4440d63a000d0ceee6"
+    },
+    {
+        "comment": "I can't believe you figured that out",
+        "sourceName": "Sema",
+        "sourceUrl": "semasoftware.com",
+        "title": "I can't believe you figured that out",
+        "_id": "6087fc4440d63a000d0ceee7"
+    },
+    {
+        "comment": "Logic is the beginning of wisdom, not the end. - Spock",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "Logic is the beginning of wisdom, not the end. - Spock",
+        "_id": "6087fc4440d63a000d0ceee8"
+    },
+    {
+        "comment": "We prefer to help ourselves. We make mistakes, but we're human-and maybe that's the word that best explains us. - Captain James T. Kirk",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "We prefer to help ourselves. We make mistakes, but we're human-and maybe that's the word that best explains us. - Captain James T. Kirk",
+        "_id": "6087fc4440d63a000d0ceee9"
+    },
+    {
+        "comment": "Improve a mechanical device and you may double productivity. But improve man, you gain a thousandfold. - Khan Noonien Singh",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "Improve a mechanical device and you may double productivity. But improve man, you gain a thousandfold. - Khan Noonien Singh",
+        "_id": "6087fc4440d63a000d0ceeea"
+    },
+    {
+        "comment": "I am pleased to see that we have differences. May we together become greater than the sum of both of us. - Surak",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "I am pleased to see that we have differences. May we together become greater than the sum of both of us. - Surak",
+        "_id": "6087fc4440d63a000d0ceeeb"
+    },
+    {
+        "comment": "Ye canna' change the laws of physics. - Montgomery Scotty Scott",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "Ye canna' change the laws of physics. - Montgomery Scotty Scott",
+        "_id": "6087fc4440d63a000d0ceeec"
+    },
+    {
+        "comment": "Computers make excellent and efficient servants, but I have no wish to serve under them. - Spock",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "Computers make excellent and efficient servants, but I have no wish to serve under them. - Spock",
+        "_id": "6087fc4440d63a000d0ceeed"
+    },
+    {
+        "comment": "There is a way out of every box, a solution to every puzzle; it's just a matter of finding it. - Captain Jean-Luc Picard",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "There is a way out of every box, a solution to every puzzle; it's just a matter of finding it. - Captain Jean-Luc Picard",
+        "_id": "6087fc4440d63a000d0ceeee"
+    },
+    {
+        "comment": "Without freedom of choice there is no creativity. - Captain James T. Kirk",
+        "sourceName": "Star Trek",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Trek",
+        "title": "Without freedom of choice there is no creativity. - Captain James T. Kirk",
+        "_id": "6087fc4440d63a000d0ceeef"
+    },
+    {
+        "comment": "I find your lack of faith disturbing. - Darth Vader",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "I find your lack of faith disturbing. - Darth Vader",
+        "_id": "6087fc4440d63a000d0ceef0"
+    },
+    {
+        "comment": "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man. - Han Solo",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "It’s the ship that made the Kessel run in less than twelve parsecs. I’ve outrun Imperial starships. Not the local bulk cruisers, mind you. I’m talking about the big Corellian ships, now. She’s fast enough for you, old man. - Han Solo",
+        "_id": "6087fc4440d63a000d0ceef1"
+    },
+    {
+        "comment": "Never tell me the odds! - Han Solo",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "Never tell me the odds! - Han Solo",
+        "_id": "6087fc4440d63a000d0ceef2"
+    },
+    {
+        "comment": "Do. Or do not. There is no try. - Yoda",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "Do. Or do not. There is no try. - Yoda",
+        "_id": "6087fc4440d63a000d0ceef3"
+    },
+    {
+        "comment": "When gone am I, the last of the Jedi will you be. The Force runs strong in your family. Pass on what you have learned. - Yoda",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "When gone am I, the last of the Jedi will you be. The Force runs strong in your family. Pass on what you have learned. - Yoda",
+        "_id": "6087fc4440d63a000d0ceef4"
+    },
+    {
+        "comment": "There’s always a bigger fish. - Qui-Gon Jinn",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "There’s always a bigger fish. - Qui-Gon Jinn",
+        "_id": "6087fc4440d63a000d0ceef5"
+    },
+    {
+        "comment": "I’m just a simple man trying to make my way in the universe. - Jango Fett",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "I’m just a simple man trying to make my way in the universe. - Jango Fett",
+        "_id": "6087fc4440d63a000d0ceef6"
+    },
+    {
+        "comment": "Chewie, we’re home. - Han Solo",
+        "sourceName": "Star Wars",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Star_Wars",
+        "title": "Chewie, we’re home. - Han Solo",
+        "_id": "6087fc4440d63a000d0ceef7"
+    },
+    {
+        "comment": "I’m a huge fan of the way you lose control and turn into an enormous green rage monster. – Tony Stark (Iron Man)",
+        "sourceName": "Iron Man",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Iron_Man",
+        "title": "I’m a huge fan of the way you lose control and turn into an enormous green rage monster. – Tony Stark (Iron Man)",
+        "_id": "6087fc4440d63a000d0ceef8"
+    },
+    {
+        "comment": "Are you seriously telling me that your plan to save the universe is based on Back to the Future? – Tony Stark (Iron Man)",
+        "sourceName": "Iron Man",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Iron_Man",
+        "title": "Are you seriously telling me that your plan to save the universe is based on Back to the Future? – Tony Stark (Iron Man)",
+        "_id": "6087fc4440d63a000d0ceef9"
+    },
+    {
+        "comment": "You really have got a lid on it, haven’t you? What’s your secret? Mellow jazz? Bongo drums? Huge bag of weed? – Tony Stark (Iron Man)",
+        "sourceName": "Iron Man",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Iron_Man",
+        "title": "You really have got a lid on it, haven’t you? What’s your secret? Mellow jazz? Bongo drums? Huge bag of weed? – Tony Stark (Iron Man)",
+        "_id": "6087fc4440d63a000d0ceefa"
+    },
+    {
+        "comment": "I don’t like it when you have plans. – Tony Stark (Iron Man)",
+        "sourceName": "Iron Man",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Iron_Man",
+        "title": "I don’t like it when you have plans. – Tony Stark (Iron Man)",
+        "_id": "6087fc4440d63a000d0ceefb"
+    },
+    {
+        "comment": "Go to bed, or I’ll sell all your toys. – Tony Stark (Iron Man)",
+        "sourceName": "Iron Man",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Iron_Man",
+        "title": "Go to bed, or I’ll sell all your toys. – Tony Stark (Iron Man)",
+        "_id": "6087fc4440d63a000d0ceefc"
+    },
+    {
+        "comment": "I am and always will be the optimist. The hoper of far-flung hopes, and the dreamer of improbable dreams. – 11th Doctor ",
+        "sourceName": "Dr. Who",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Doctor_Who",
+        "title": "I am and always will be the optimist. The hoper of far-flung hopes, and the dreamer of improbable dreams. – 11th Doctor ",
+        "_id": "6087fc4440d63a000d0ceefd"
+    },
+    {
+        "comment": "The way I see it, every life is a pile of good things and bad things. The good things don’t always soften the bad things, but vice versa, the bad things don’t always spoil the good things or make them unimportant. – 11th Doctor",
+        "sourceName": "Dr. Who",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Doctor_Who",
+        "title": "The way I see it, every life is a pile of good things and bad things. The good things don’t always soften the bad things, but vice versa, the bad things don’t always spoil the good things or make them unimportant. – 11th Doctor",
+        "_id": "6087fc4440d63a000d0ceefe"
+    },
+    {
+        "comment": "Everything’s got to end sometime. Otherwise nothing would ever get started. – 11th Doctor",
+        "sourceName": "Dr. Who",
+        "sourceUrl": "https://en.wikipedia.org/wiki/Doctor_Who",
+        "title": "Everything’s got to end sometime. Otherwise nothing would ever get started. – 11th Doctor",
+        "_id": "6087fc4440d63a000d0ceeff"
+    },
+    {
+        "comment": "Me Fail English? That's Unpossible. - Ralph Wiggins",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "Me Fail English? That's Unpossible. - Ralph Wiggins",
+        "_id": "6087fc4440d63a000d0cef00"
+    },
+    {
+        "comment": "Everything’s coming up Milhouse! -Milhouse Van Houten",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "Everything’s coming up Milhouse! -Milhouse Van Houten",
+        "_id": "6087fc4440d63a000d0cef01"
+    },
+    {
+        "comment": "You Don’t Win Friends With Salad. - Lisa Simpson",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "You Don’t Win Friends With Salad. - Lisa Simpson",
+        "_id": "6087fc4440d63a000d0cef02"
+    },
+    {
+        "comment": "Unshrink you? Well that would require some sort of a Rebigulator, which is a concept so ridiculous it makes me want to laugh out loud and chortle… -Professor Frink",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "Unshrink you? Well that would require some sort of a Rebigulator, which is a concept so ridiculous it makes me want to laugh out loud and chortle… -Professor Frink",
+        "_id": "6087fc4440d63a000d0cef03"
+    },
+    {
+        "comment": "Talking out of turn…that’s a paddling. Looking out the window…that’s a paddling. Staring at my sandals…that’s a paddling. Paddling the school canoe…ooh, you better believe that’s a paddling. -Jasper",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "Talking out of turn…that’s a paddling. Looking out the window…that’s a paddling. Staring at my sandals…that’s a paddling. Paddling the school canoe…ooh, you better believe that’s a paddling. -Jasper",
+        "_id": "6087fc4440d63a000d0cef04"
+    },
+    {
+        "comment": "Shut up, brain, or I’ll stab you with a Q-tip! -Homer Simpson",
+        "sourceName": "Simpsons",
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Simpsons",
+        "title": "Shut up, brain, or I’ll stab you with a Q-tip! -Homer Simpson",
+        "_id": "6087fc4440d63a000d0cef05"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Dark_Knight_(film)",
+        "sourceName": "The Dark Knight, 2008",
+        "title": "Why so serious?",
+        "comment": "Why so serious?"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Finding_Nemo",
+        "sourceName": "Finding Nemo",
+        "title": "Just keep swimming",
+        "comment": "Just keep swimming"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Godfather",
+        "sourceName": "The Godfather",
+        "title": "I'm going to make him an offer he can't refuse.",
+        "comment": "I'm going to make him an offer he can't refuse."
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Taxi_Drive",
+        "sourceName": "Taxi Driver",
+        "title": "You talking to me?",
+        "comment": "You talking to me?"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Jerry_Maguire",
+        "sourceName": "Jerry Maguire",
+        "title": "Show me the money!",
+        "comment": "Show me the money!"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Forrest_Gump",
+        "sourceName": "Forrest Gump",
+        "title": "Mama always said life was like a box of chocolates. You never know what you're gonna get. ",
+        "comment": "Mama always said life was like a box of chocolates. You never know what you're gonna get. "
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Frankenstein",
+        "sourceName": "Frankenstein",
+        "title": "It's alive! It's alive!",
+        "comment": "It's alive! It's alive!"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/Scarface_(1932_film)",
+        "sourceName": "Scarface",
+        "title": "Say hello to my little friend!",
+        "comment": "Say hello to my little friend!"
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Matrix",
+        "sourceName": "The Matrix",
+        "title": "Machines",
+        "comment": "Throughout human history, we have been dependent on machines to survive. Fate, it seems, is not without a sense of irony."
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Matrix",
+        "sourceName": "The Matrix",
+        "title": "Matrix",
+        "comment": "Unfortunately, no one can be told what The Matrix is. You'll have to see it for yourself."
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Matrix",
+        "sourceName": "The Matrix",
+        "title": "Matrix",
+        "comment": "The matrix is a system Neo, that system is our enemy."
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/The_Matrix",
+        "sourceName": "The Matrix",
+        "title": "Debugging",
+        "comment": "There is a difference between knowing the path and walking the path."
+    },
+    {
+        "sourceUrl": "https://en.wikipedia.org/wiki/BoJack_Horseman",
+        "sourceName": "Bojack Horseman",
+        "title": "How to trick your Fitbit",
+        "comment": "I drove, but I moved my arm a bunch so the Fitbit counted the miles."
+    }
+]
