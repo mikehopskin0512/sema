@@ -8,6 +8,7 @@ import {
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   RESET_SEMA_STATES,
+  UPDATE_SEMA_COMPONENTS
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -53,3 +54,8 @@ export const resetSemaStates = (payload) => ({
   type: RESET_SEMA_STATES,
   payload,
 });
+
+export const updateSemaComponents=(payload)=>({
+  type: UPDATE_SEMA_COMPONENTS,
+  payload,
+})
