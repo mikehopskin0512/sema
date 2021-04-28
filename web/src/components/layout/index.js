@@ -36,8 +36,8 @@ const withLayout = (Page) => () => (
       ` }} />
     </Head>
     <Header />
-    <Page style={{ backgroundColor: '#f8f8f8' }} />
-    {/* <Footer /> */}
+    <Page style={{ backgroundColor: '#FCFCFC' }} />
+    <Footer />
   </div>
 );
 
