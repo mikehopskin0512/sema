@@ -20,7 +20,7 @@ const Footer = () => {
           <a className="button is-ghost has-text-primary-light" href={termsAndConditionsLink}>Terms and Conditions</a>
         </div>
         <div className="tile is-child has-text-centered">
-          <a className="button is-ghost has-text-primary-light" href={`mailto:${semaEmail}`}>Send Feedback</a>
+          <a className="button is-ghost has-text-primary-light" href={`mailto:${semaEmail}?subject=Product Feedback`}>Send Feedback</a>
         </div>
       </div>
     </footer>
