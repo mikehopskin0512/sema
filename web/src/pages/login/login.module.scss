@@ -10,7 +10,7 @@
 }
 
 .through-text {
-  background-color: #fff;
+  background-color: #f4f4f4;;
   padding: 0 20px;
   color: #999898;
 }
@@ -30,9 +30,10 @@
   vertical-align: middle;
 }
 
-.tile-padding {
-  padding: 70px;
-  padding-top: 120px;
+.login-tile {
+  background-color: #F4F4F4;
+  opacity: 0.7;
+  border-radius: 12px;
 }
 
 .head-text {
@@ -45,4 +46,9 @@
 
 .container {
   padding-top: 80px;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("/img/Lines.png");
 }

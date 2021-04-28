@@ -31,7 +31,7 @@ const Invite = () => {
 
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [title, setTitle] = useState('You&apos;re almost there!');
-  const [buttonText, setButtonText] = useState('Install Chrome Package');
+  const [buttonText, setButtonText] = useState('Install Chrome Plugin');
   const [body2, setBody2] = useState('Learn more about Sema while you wait...');
   const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
@@ -68,7 +68,7 @@ const Invite = () => {
   useEffect(() => {
     if (isPluginInstalled) {
       setTitle('Install Complete');
-      setButtonText('Done');
+      setButtonText('Continue');
       setBody2('Here&apos;s how to use Sema');
     }
   }, [isPluginInstalled]);
@@ -83,7 +83,7 @@ const Invite = () => {
       const res = await isExtensionInstalled();
       togglePluginInstalled(res);
       setLoading(false);
-    }, 30000);
+    }, 5000);
 
     GET_INVITES_BY_USER();
   }, []);
@@ -101,7 +101,7 @@ const Invite = () => {
     if (!isPluginInstalled) {
       return (
         <div className="mb-50">
-          <Loader type="TailSpin" color="#00BFFF" height={80} width={80} />
+          <Loader type="Grid" color="#0081A7" height={40} width={40} />
           <p>Searching for plugin...</p>
         </div>
       );
@@ -111,9 +111,9 @@ const Invite = () => {
         <div className="mb-50">
           <FontAwesomeIcon
             icon={faCheckCircle}
-            size="6x"
+            size="4x"
+            className="has-text-info"
           />
-          <p>Extension Installed!</p>
         </div>
       </>
     );
@@ -238,7 +238,7 @@ const PluginStateCard = ({
           {renderIcon()}
           <button
             type="button"
-            className="button has-background-black has-text-white"
+            className="button is-info"
             onClick={buttonAction}
           >
             {buttonText}
@@ -250,8 +250,9 @@ const PluginStateCard = ({
 };
 
 const InvitationTable = ({ invitations }) => {
+  invitations = [];
   return (
-    <table className={clsx('table is-fullwidth', styles.table)}>
+    <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
         <tr>
           <th>User</th>
@@ -260,7 +261,7 @@ const InvitationTable = ({ invitations }) => {
         </tr>
       </thead>
       <tbody>
-        {invitations?.length &&
+        {invitations?.length ? 
           invitations.map((el) => {
             return (
               <tr>
@@ -282,7 +283,16 @@ const InvitationTable = ({ invitations }) => {
                 </td>
               </tr>
             );
-          })}
+          }) : <tr>
+                  <td colSpan="3" >
+                    <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
+                    <img className={styles['no-data-img']} src="/img/empty-invite-table.png"/>
+                    <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
+                      You haven't invited anyone yet.
+                    </div>
+                    </div>
+                  </td>
+                </tr>}
       </tbody>
     </table>
   );
