@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, searchComments } from './commentService';
+import { create } from './smartComments';
+import { searchComments } from './suggestedComments';
 
 const route = Router();
 
@@ -16,7 +17,6 @@ export default (app, passport) => {
       const topResult = await searchComments(searchQuery);
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
-      console.log(error);
       logger.error(error);
       return res.status(error.statusCode).send(error);
     }

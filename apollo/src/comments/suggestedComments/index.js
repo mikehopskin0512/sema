@@ -1,8 +1,4 @@
 import FlexSearch from 'flexsearch';
-
-import logger from '../shared/logger';
-import errors from '../shared/errors';
-import SmartComment from './smartCommentModel';
 import commentBank from './commentBank';
 
 const index = new FlexSearch({
@@ -34,23 +30,6 @@ const searchComments = async (searchQuery) => {
   return returnResults;
 };
 
-const create = async ({ comment = null, suggestedComments = null, reaction = null, tags = null }) => {
-  try {
-    const smartComment = new SmartComment();
-    smartComment.comment = comment;
-    smartComment.suggestedComments = suggestedComments;
-    smartComment.reaction = reaction;
-    smartComment.tags = tags;
-    const savedSmartComment = await smartComment.save();
-    return savedSmartComment;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw error;
-  }
-};
-
 module.exports = {
-  create,
   searchComments,
 };
