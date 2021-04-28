@@ -1,0 +1,91 @@
+version: "3.4"
+services:
+  apollo:
+    environment:
+      ALLOWED_ORIGIN: ${apollo_ALLOWED_ORIGIN}
+      AMAZON_ACCESS_KEY_ID: ${apollo_AMAZON_ACCESS_KEY_ID}
+      AMAZON_SECRET_ACCESS_KEY: ${apollo_AMAZON_SECRET_ACCESS_KEY}
+      AMAZON_SNS_CODE_ANALYSIS_TOPIC: ${apollo_AMAZON_SNS_CODE_ANALYSIS_TOPIC}
+      AMAZON_SNS_CROSS_REGION_TOPIC: ${apollo_AMAZON_SNS_CROSS_REGION_TOPIC}
+      AMAZON_SNS_ORG_REPLICATION_FILTER: ${apollo_AMAZON_SNS_ORG_REPLICATION_FILTER}
+      AWS_CONTAINER_CREDENTIALS_RELATIVE_URI: /creds
+      ECS_CONTAINER_METADATA_URI: http://169.254.170.2/v3
+      GITHUB_APP_ID: ${apollo_GITHUB_APP_ID}
+      GITHUB_CALLBACK_URL: ${apollo_GITHUB_CALLBACK_URL}
+      GITHUB_CLIENT_ID: ${apollo_GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${apollo_GITHUB_CLIENT_SECRET}
+      GITHUB_PRIVATE_KEY: ${apollo_GITHUB_PRIVATE_KEY}
+      JWT_SECRET: ${apollo_JWT_SECRET}
+      MODE_ANALYTICS_ACCESS_KEY: ${apollo_MODE_ANALYTICS_ACCESS_KEY}
+      MODE_ANALYTICS_ACCESS_SECRET: ${apollo_MODE_ANALYTICS_ACCESS_SECRET}
+      MODE_ANALYTICS_API_KEY: ${apollo_MODE_ANALYTICS_API_KEY}
+      MODE_ANALYTICS_API_SECRET: ${apollo_MODE_ANALYTICS_API_SECRET}
+      MODE_ANALYTICS_MAX_AGE: ${apollo_MODE_ANALYTICS_MAX_AGE}
+      MODE_ANALYTICS_ORGANIZATION: ${apollo_MODE_ANALYTICS_ORGANIZATION}
+      MODE_ANALYTICS_REPORT_ID: ${apollo_MODE_ANALYTICS_REPORT_ID}
+      MONGOOSE_CERTPATH: ${apollo_MONGOOSE_CERTPATH}
+      MONGOOSE_URI: ${apollo_MONGOOSE_URI}
+      NODE_ENV: ${apollo_NODE_ENV}
+      ORG_DOMAIN: ${apollo_ORG_DOMAIN}
+      PG_PUBLIC_KEY: ${apollo_PG_PUBLIC_KEY}
+      PORT: ${apollo_PORT}
+      POSTGRES_CONNECTION: ${apollo_POSTGRES_CONNECTION}
+      REFRESH_TOKEN_NAME: ${apollo_REFRESH_TOKEN_NAME}
+      ROOT_DOMAIN: ${apollo_ROOT_DOMAIN}
+      SENDGRID_API_KEY: ${apollo_SENDGRID_API_KEY}
+      SENDGRID_DEFAULT_SENDER: ${apollo_SENDGRID_DEFAULT_SENDER}
+      TOKENLIFE: ${apollo_TOKENLIFE}
+      VERSION: ${apollo_VERSION}
+    image: 091235034633.dkr.ecr.us-east-1.amazonaws.com/apollo:qa-8419e3dc489aac465f942451b19df6ced2906d73-production
+    command: migrate up
+    labels:
+      ecs-local.secret.ALLOWED_ORIGIN: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/allowed-origin
+      ecs-local.secret.AMAZON_ACCESS_KEY_ID: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/access-key
+      ecs-local.secret.AMAZON_SECRET_ACCESS_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/access-secret
+      ecs-local.secret.AMAZON_SNS_CODE_ANALYSIS_TOPIC: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/sns/topic/code-analysis
+      ecs-local.secret.AMAZON_SNS_CROSS_REGION_TOPIC: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/sns/topic/cross-region-replication
+      ecs-local.secret.AMAZON_SNS_ORG_REPLICATION_FILTER: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/sns/topic/filter/org-replication
+      ecs-local.secret.GITHUB_APP_ID: arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/app-id
+      ecs-local.secret.GITHUB_CALLBACK_URL: arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/redirect
+      ecs-local.secret.GITHUB_CLIENT_ID: arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-id
+      ecs-local.secret.GITHUB_CLIENT_SECRET: arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/client-secret
+      ecs-local.secret.GITHUB_PRIVATE_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/github/private-key
+      ecs-local.secret.JWT_SECRET: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/secret
+      ecs-local.secret.MODE_ANALYTICS_ACCESS_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-key
+      ecs-local.secret.MODE_ANALYTICS_ACCESS_SECRET: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/access-secret
+      ecs-local.secret.MODE_ANALYTICS_API_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-key
+      ecs-local.secret.MODE_ANALYTICS_API_SECRET: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/api-secret
+      ecs-local.secret.MODE_ANALYTICS_MAX_AGE: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/max-age
+      ecs-local.secret.MODE_ANALYTICS_ORGANIZATION: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/org
+      ecs-local.secret.MODE_ANALYTICS_REPORT_ID: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mode/report-id
+      ecs-local.secret.MONGOOSE_CERTPATH: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/cert-path
+      ecs-local.secret.MONGOOSE_URI: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/mongo/uri
+      ecs-local.secret.NODE_ENV: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/node-env
+      ecs-local.secret.ORG_DOMAIN: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/org-domain
+      ecs-local.secret.PG_PUBLIC_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/postgres/public-key
+      ecs-local.secret.PORT: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/port
+      ecs-local.secret.POSTGRES_CONNECTION: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/postgres/uri
+      ecs-local.secret.REFRESH_TOKEN_NAME: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/name
+      ecs-local.secret.ROOT_DOMAIN: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/root-domain
+      ecs-local.secret.SENDGRID_API_KEY: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/api-key
+      ecs-local.secret.SENDGRID_DEFAULT_SENDER: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/sendgrid/sender
+      ecs-local.secret.TOKENLIFE: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/token/life
+      ecs-local.secret.VERSION: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/version
+      ecs-local.task-definition-input.type: remote
+      ecs-local.task-definition-input.value: qa-apollo
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /qa/ecs/apollo
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+    networks:
+      ecs-local-network: null
+    ports:
+    - target: 3001
+      published: 3001
+      protocol: tcp
+networks:
+  ecs-local-network:
+    external: true
+
