@@ -37,6 +37,7 @@ services:
       TOKENLIFE: ${apollo_TOKENLIFE}
       VERSION: ${apollo_VERSION}
     image: apollo-migrations-ecr
+    command: migrate up
     build:
       context: apollo/
       dockerfile: ../.docker/apollo/Dockerfile.dev
