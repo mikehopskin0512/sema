@@ -1,5 +1,7 @@
 import FlexSearch from 'flexsearch';
-import commentBank from './commentBank';
+import SuggestedComment from './suggestedCommentModel';
+import errors from '../../shared/errors';
+import logger from '../../shared/logger';
 
 const index = new FlexSearch({
   encode: 'balance',
@@ -12,24 +14,41 @@ const index = new FlexSearch({
   stemmer: 'en',
 });
 
-const reportEvery = Math.floor(commentBank.length / 10);
+const buildSuggestedCommentsIndex = async () => {
+  try {
+    const dbComments = await SuggestedComment.find({});
+    const reportEvery = Math.floor(dbComments.length / 10);
 
-commentBank.forEach((comment, i) => {
-  index.add(i, comment.comment);
-  if (i % reportEvery === 0) {
-    console.log(`Building comment bank search index: ${i} / ${commentBank.length} done`);
+    dbComments.forEach((comment, i) => {
+      // index by MongoDB ID
+      index.add(comment._id, comment.comment);
+      if (i % reportEvery === 0) {
+        logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
+      }
+    });
+  } catch (err) {
+    const error = new errors.InternalServer(err);
+    logger.error(error);
+    throw error;
   }
-});
+};
 
 const searchComments = async (searchQuery) => {
   const searchResults = await index.search(searchQuery);
   const returnResults = [];
   for (let i = 0; i < 5 && i < searchResults.length; i++) {
-    returnResults.push(commentBank[searchResults[i]]);
+    const commentItem = await SuggestedComment.findById(searchResults[i]);
+    returnResults.push({
+      comment: commentItem.comment,
+      title: commentItem.title,
+      sourceUrl: commentItem.sourceUrl,
+      sourceName: commentItem.sourceName,
+    });
   }
   return returnResults;
 };
 
 module.exports = {
+  buildSuggestedCommentsIndex,
   searchComments,
 };
