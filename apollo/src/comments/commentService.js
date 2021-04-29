@@ -15,7 +15,7 @@ const index = new FlexSearch({
   stemmer: 'en',
 });
 
-const indexComments = async () => {
+const buildSuggestedCommentsIndex = async () => {
   try {
     const dbComments = await SuggestedComment.find({});
     const reportEvery = Math.floor(dbComments.length / 10);
@@ -74,6 +74,6 @@ const create = async ({
 
 module.exports = {
   create,
-  indexComments,
+  buildSuggestedCommentsIndex,
   searchComments,
 };

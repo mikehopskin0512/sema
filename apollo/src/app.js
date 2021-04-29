@@ -10,7 +10,7 @@ import './auth/passport';
 
 import logger from './shared/logger';
 import errors from './shared/errors';
-import bootstrap from './shared/bootstrap';
+import { buildSuggestedCommentsIndex } from './comments/commentService';
 
 import routes from '.';
 import { port, allowedOrigin } from './config';
@@ -51,8 +51,8 @@ app.use((error, req, res, next) => {
   });
 });
 
-// bootstrap
-bootstrap();
+// search indexing for suggested comments on service booting
+buildSuggestedCommentsIndex();
 
 app.listen(port, () => {
   logger.info('Server listening on port %d', port);
