@@ -36,8 +36,13 @@ services:
       SENDGRID_DEFAULT_SENDER: ${apollo_SENDGRID_DEFAULT_SENDER}
       TOKENLIFE: ${apollo_TOKENLIFE}
       VERSION: ${apollo_VERSION}
-    image: 091235034633.dkr.ecr.us-east-1.amazonaws.com/apollo:qa-8419e3dc489aac465f942451b19df6ced2906d73-production
-    command: migrate up
+    image: apollo-migrations-ecr
+    build:
+      context: apollo/
+      dockerfile: ../.docker/apollo/Dockerfile.dev
+    volumes:
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
     labels:
       ecs-local.secret.ALLOWED_ORIGIN: arn:aws:ssm:us-east-1:091235034633:parameter/qa/apollo/allowed-origin
       ecs-local.secret.AMAZON_ACCESS_KEY_ID: arn:aws:ssm:us-east-1:091235034633:parameter/qa/aws/access-key
