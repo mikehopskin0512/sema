@@ -1,5 +1,5 @@
-import logger from '../../shared/logger';
-import errors from '../../shared/errors';
+import logger from '../shared/logger';
+import errors from '../shared/errors';
 import SmartComment from './smartCommentModel';
 
 const create = async ({ comment = null, suggestedComments = null, reaction = null, tags = null, githubMetada = null }) => {
