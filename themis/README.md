@@ -2,7 +2,7 @@
 
 # Using .env files to run application locally and in production
 
-- Create a new file `.env`. You can copy the content from `.env-example`.
+- Modify `.env`. 
 - Update `SEMA_URL` variable according to the appropriate development mode.
 - For production run `npm run build` to make the build. The bundle will be in the `build` folder.
 - For development run `npm start` to make the build. The bundle will be in the `build` folder.
