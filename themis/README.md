@@ -1,5 +1,12 @@
 <img src="src/assets/img/icon-128.png" width="64"/>
 
+# Using .env files to run application locally and in production
+
+- Create a new file `.env`. You can copy the content from `.env-example`.
+- Update `SEMA_URL` variable according to the appropriate development mode.
+- For production run `npm run build` to make the build. The bundle will be in the `build` folder.
+- For development run `npm start` to make the build. The bundle will be in the `build` folder.
+
 # Chrome Extension Boilerplate with React 17 and Webpack 5
 
 [![npm](https://img.shields.io/npm/v/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
@@ -117,7 +124,7 @@ $ NODE_ENV=production npm run build
 
 Now, the content of `build` folder will be the extension ready to be submitted to the Chrome Web Store. Just take a look at the [official guide](https://developer.chrome.com/webstore/publish) to more infos about publishing.
 
-## Secrets
+<!-- ## Secrets
 
 If you are developing an extension that talks with some API you probably are using different keys for testing and production. Is a good practice you not commit your secret keys and expose to anyone that have access to the repository.
 
@@ -127,7 +134,7 @@ _./secrets.development.js_
 
 ```js
 export default { key: '123' };
-```
+``` -->
 
 _./src/popup.js_
 
@@ -142,7 +149,3 @@ ApiCall({ key: secrets.key });
 
 - [Webpack documentation](https://webpack.js.org/concepts/)
 - [Chrome Extension documentation](https://developer.chrome.com/extensions/getstarted)
-
----
-
-Michael Xieyang Liu | [Website](https://lxieyang.github.io)
