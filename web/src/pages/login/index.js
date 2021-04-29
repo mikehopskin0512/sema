@@ -57,7 +57,7 @@ const Login = () => {
         </h2>
         <a
           type="button"
-          className="button is-black p-25 is-info colored-shadow"
+          className="button is-black p-25 is-info"
           href="/api/identities/github"
         >
           <span className="icon is-large mr-20">
@@ -79,7 +79,7 @@ const Login = () => {
         </p>
         <a
           type="button"
-          className="button p-25 colored-shadow"
+          className="button p-25"
           href="/api/identities/github"
         >
         <span className="icon has-text-info is-large mr-20">

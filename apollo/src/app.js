@@ -10,7 +10,7 @@ import './auth/passport';
 
 import logger from './shared/logger';
 import errors from './shared/errors';
-import { buildSuggestedCommentsIndex } from './comments/commentService';
+import { buildSuggestedCommentsIndex } from './comments/suggestedComments/suggestedCommentService';
 
 import routes from '.';
 import { port, allowedOrigin } from './config';
