@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { version } from '../config';
-import logger from '../shared/logger';
-import errors from '../shared/errors';
+import { version } from '../../config';
+import logger from '../../shared/logger';
+import errors from '../../shared/errors';
 import { create } from './smartCommentService';
 
 const route = Router();
 
 export default (app, passport) => {
-  app.use(`/${version}/smart-comments`, route);
+  app.use(`/${version}/comments/smart`, route);
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const smartComment = req.body;

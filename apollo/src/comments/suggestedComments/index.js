@@ -1,14 +1,14 @@
 import { Router } from 'express';
-import { version } from '../config';
-import logger from '../shared/logger';
+import { version } from '../../config';
+import logger from '../../shared/logger';
 import { searchComments } from './suggestedCommentService';
 
 const route = Router();
 
 export default (app, passport) => {
-  app.use(`/${version}/suggested-comments`, route);
+  app.use(`/${version}/comments/suggested`, route);
 
-  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/', async (req, res) => {
     const searchQuery = req.query.q;
     try {
       const topResult = await searchComments(searchQuery);
