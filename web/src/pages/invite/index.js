@@ -164,7 +164,7 @@ const Invite = () => {
                                 errors.email && 'is-danger',
                               )}
                               type="email"
-                              placeholder="juandelacruz@example.com"
+                              placeholder="tony@starkindustries.com"
                               name="email"
                               ref={register({
                                 required: 'Email is required',
