@@ -4,6 +4,8 @@ import {
   refreshSecret, refreshTokenName, rootDomain,
 } from '../config';
 
+import RefreshToken from './refreshTokenModel';
+
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 export const createAuthToken = async (user) => sign({ user }, jwtSecret, {
@@ -28,7 +30,7 @@ export const validateAuthToken = async (token) => {
   return payload;
 };
 
-export const setRefreshToken = async (response, token) => {
+export const setRefreshToken = async (response, user, token) => {
   const cookieConfig = {
     // httpOnly: true
     path: '/',
@@ -40,6 +42,12 @@ export const setRefreshToken = async (response, token) => {
   } else {
     console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }
+
+  const filter = { userId: user._id.toString() };
+  const update = { token };
+  const options = { new: true, upsert: true };
+
+  await RefreshToken.findOneAndUpdate(filter, update, options);
 
   response.cookie(refreshTokenName, token, cookieConfig);
 };
