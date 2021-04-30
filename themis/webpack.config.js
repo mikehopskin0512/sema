@@ -5,7 +5,8 @@ var webpack = require('webpack'),
   { CleanWebpackPlugin } = require('clean-webpack-plugin'),
   CopyWebpackPlugin = require('copy-webpack-plugin'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
-  TerserPlugin = require('terser-webpack-plugin');
+  TerserPlugin = require('terser-webpack-plugin'),
+  Dotenv = require('dotenv-webpack');
 
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
@@ -29,6 +30,7 @@ var fileExtensions = [
   'woff2',
 ];
 
+// TODO: remove secrets mechanism and just use .env files instead
 if (fileSystem.existsSync(secretsPath)) {
   alias['secrets'] = secretsPath;
 }
@@ -116,6 +118,7 @@ var options = {
     }),
     // expose and write the allowed env vars on the compiled bundle
     new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new Dotenv(),
     new CopyWebpackPlugin({
       patterns: [
         {

@@ -14,7 +14,7 @@ import Carousel from '../../components/utils/Carousel';
 
 import styles from './invite.module.scss';
 
-const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_ID;
+const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { createInvite, getInvitesBySender } = invitationsOperations;
 
@@ -121,18 +121,12 @@ const Invite = () => {
 
   return (
     <>
-      <section className="hero">
+      <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
-            <div className="tile is-ancestor">
-              <div className="tile is-parent">
-                <article className="tile is-child has-text-centered">
-                  <p className={'title is-size-1 mb-15'}>
+            <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
                     Welcome to Sema!
                   </p>
-                </article>
-              </div>
-            </div>
             <PluginStateCard
               title={title}
               buttonText={buttonText}
@@ -159,41 +153,37 @@ const Invite = () => {
               <div className="tile is-parent is-vertical">
                 <div className={clsx('tile is-child mb-0')}>
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="tile">
-                      <div className={clsx('tile is-parent', styles.tableForm)}>
-                        <div
-                          className={`tile is-child is-12 px-20`}
-                        >
-                          <div class="field">
-                            <label class="label has-text-white">Username</label>
-                            <div class="control has-icons-left has-icons-right">
-                              <input
-                                className={clsx(
-                                  `input`,
-                                  errors.email && 'is-danger'
-                                )}
-                                type="email"
-                                placeholder="juandelacruz@example.com"
-                                name="email"
-                                ref={register({
-                                  required: 'Email is required',
-                                  pattern: {
-                                    value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                                    message: 'Invaild email format',
-                                  },
-                                })}
-                                style={{ width: '80%', marginRight: 25 }}
-                              />
-                              <button
-                                className={clsx(
-                                  'button is-white',
-                                  styles.formBtn
-                                )}
-                                type="submit"
-                              >
-                                Send Invite
-                              </button>
-                            </div>
+                    <div className={styles.tableForm}>
+                      <div className={`is-fullwidth px-20`}>
+                        <div class="field">
+                          <label class="label has-text-white">Username</label>
+                          <div class="control">
+                            <input
+                              className={clsx(
+                                `input mr-25`,
+                                errors.email && 'is-danger',
+                              )}
+                              type="email"
+                              placeholder="tony@starkindustries.com"
+                              name="email"
+                              ref={register({
+                                required: 'Email is required',
+                                pattern: {
+                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                  message: 'Invaild email format',
+                                },
+                              })}
+                              style={{ width: '80%' }}
+                            />
+                            <button
+                              className={clsx(
+                                'button is-white',
+                                styles.formBtn
+                              )}
+                              type="submit"
+                            >
+                              Send Invite
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -208,6 +198,7 @@ const Invite = () => {
             </div>
           </div>
         </div>
+        <ContactUs />
       </section>
     </>
   );
@@ -222,35 +213,32 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx('tile is-ancestor', !isCardVisible && "remove")}>
-      <div className="tile is-parent">
-        <article
-          className={'tile is-child notification has-background-white has-text-centered p-50'}
+    <div className={clsx(!isCardVisible && "remove")}>
+      <article
+        className={'notification has-background-white has-text-centered p-50 colored-shadow'}
+      >
+        <p
+          className={'title is-size-3 mt-15'}
+          dangerouslySetInnerHTML={{ __html: title }}
+        />
+        <p className={'subtitle px-120 py-20'}>
+          The Sema Chrome Plugin allows us to modify the Github commenting UI
+          and supercharge your code review workflow
+        </p>
+        {renderIcon()}
+        <button
+          type="button"
+          className="button is-info"
+          onClick={buttonAction}
         >
-          <p
-            className={'title is-size-3 mt-15'}
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
-          <p className={'subtitle px-120 py-20'}>
-            The Sema Chrome Plugin allows us to modify the Github commenting UI
-            and supercharge your code review workflow
-          </p>
-          {renderIcon()}
-          <button
-            type="button"
-            className="button is-info"
-            onClick={buttonAction}
-          >
-            {buttonText}
-          </button>
-        </article>
-      </div>
+          {buttonText}
+        </button>
+      </article>
     </div>
   );
 };
 
-const InvitationTable = ({ invitations }) => {
-  invitations = [];
+const InvitationTable = ({ invitations }) => {  
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -315,6 +303,23 @@ const PromotionBoard = () => {
       <Carousel />
     </>
   );
+};
+
+const ContactUs = () => {
+  return (
+    <div className="mt-20 py-50 px-120 columns has-background-info is-centered is-vcentered">
+      <div className="column is-6">
+        <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
+        <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
+      </div>
+      <div className="column is-2-widescreen is-offset-1 is-2-tablet">
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-info is-medium is-fullwidth">Email</a> 
+      </div>
+      <div className="column is-2-widescreen is-2-tablet">
+        <button className="button is-white is-medium is-fullwidth has-text-info">Idea Board</button>
+      </div>
+    </div>
+  )
 };
 
 export default withLayout(Invite);
