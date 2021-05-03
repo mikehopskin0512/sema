@@ -1,6 +1,7 @@
 import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
 import CommentSource from './commentSourceModel';
+import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
 
@@ -51,7 +52,21 @@ const searchComments = async (searchQuery) => {
       sourceName: commentItem.source ? commentItem.source.name : '',
     });
   }
-  return returnResults;
+
+  // store the search case to database
+  const newQuery = new Query({
+    searchTerm: searchQuery,
+    matchedCount: searchResults.length,
+  });
+  await newQuery.save();
+
+  return {
+    query: {
+      id: newQuery._id,
+      searchTerm: newQuery.searchTerm,
+    },
+    result: returnResults,
+  };
 };
 
 module.exports = {
