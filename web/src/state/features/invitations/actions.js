@@ -58,7 +58,6 @@ export const createInvite = (invitationData, token) => async (dispatch) => {
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
     dispatch(requestCreateInviteError(errMessage));
   }
 };
@@ -82,8 +81,8 @@ export const getInvitesBySender = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestGetInvitesBySender());
     const params = {
-      senderId: userId
-    }
+      senderId: userId,
+    };
     const payload = await getInvitations(params, token);
     const { data: { data } } = payload;
 

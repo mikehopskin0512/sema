@@ -36,6 +36,7 @@ const Invite = () => {
   const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
+  const [formError, setError] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
@@ -87,6 +88,12 @@ const Invite = () => {
 
     GET_INVITES_BY_USER();
   }, []);
+
+  useEffect(() => {
+    if (invitations.error && typeof invitations.error === "string") {
+      setError(invitations.error);
+    }
+  }, [invitations]);
 
   const buttonAction = () => {
     if (isPluginInstalled) {
@@ -184,6 +191,12 @@ const Invite = () => {
                             >
                               Send Invite
                             </button>
+                            <article className={clsx("message is-danger mt-20", !formError && "is-hidden")} style={{ width: "80%"}}>
+                              <div className="message-body">
+                                {formError}
+                              </div>
+                            </article>
+                            
                           </div>
                         </div>
                       </div>
@@ -238,7 +251,7 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {  
+const InvitationTable = ({ invitations }) => {
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
