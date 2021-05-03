@@ -39,6 +39,7 @@ const searchComments = async (searchQuery) => {
   for (let i = 0; i < 5 && i < searchResults.length; i++) {
     const commentItem = await SuggestedComment.findById(searchResults[i]);
     returnResults.push({
+      id: commentItem._id,
       comment: commentItem.comment,
       title: commentItem.title,
       sourceUrl: commentItem.sourceUrl,
