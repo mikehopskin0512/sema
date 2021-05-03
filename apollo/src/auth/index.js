@@ -23,7 +23,7 @@ export default (app, passport) => {
         throw new errors.NotFound('No user found');
       }
 
-      await setRefreshToken(res, await createRefreshToken(user));
+      await setRefreshToken(res, user, await createRefreshToken(user));
 
       return res.status(201).send({ jwtToken: await createAuthToken(user) });
     } catch (error) {
@@ -58,7 +58,7 @@ export default (app, passport) => {
         throw new errors.NotFound('No user found');
       }
 
-      await setRefreshToken(res, await createRefreshToken(user));
+      await setRefreshToken(res, user, await createRefreshToken(user));
 
       return res.status(201).send({ jwtToken: await createAuthToken(user) });
     } catch (error) {

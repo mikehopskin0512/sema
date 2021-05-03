@@ -72,7 +72,7 @@ export default (app) => {
       await updateIdentity(user, identity);
 
       // Auth Sema
-      await setRefreshToken(res, await createRefreshToken(user));
+      await setRefreshToken(res, user, await createRefreshToken(user));
 
       // No need to send jwt. It will pick up the refresh token cookie on frontend
       // return res.redirect(`${orgDomain}/reports`);
