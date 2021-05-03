@@ -112,7 +112,7 @@ const Invite = () => {
           <FontAwesomeIcon
             icon={faCheckCircle}
             size="4x"
-            className="has-text-info"
+            className="has-text-secondary"
           />
         </div>
       </>
@@ -228,7 +228,7 @@ const PluginStateCard = ({
         {renderIcon()}
         <button
           type="button"
-          className="button is-info"
+          className="button is-secondary"
           onClick={buttonAction}
         >
           {buttonText}
@@ -256,7 +256,7 @@ const InvitationTable = ({ invitations }) => {
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span class={clsx('tag is-info', styles.tag)}>
+                    <span class={clsx('tag is-secondary', styles.tag)}>
                       Pending Invite
                     </span>
                   ) : (
@@ -307,16 +307,16 @@ const PromotionBoard = () => {
 
 const ContactUs = () => {
   return (
-    <div className="mt-20 py-50 px-120 columns has-background-info is-centered is-vcentered">
+    <div className="mt-20 py-50 px-120 columns has-background-secondary is-centered is-vcentered">
       <div className="column is-6">
         <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-info is-medium is-fullwidth">Email</a> 
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-secondary is-medium is-fullwidth">Email</a> 
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <button className="button is-white is-medium is-fullwidth has-text-info">Idea Board</button>
+        <button className="button is-white is-medium is-fullwidth has-text-secondary">Idea Board</button>
       </div>
     </div>
   )
