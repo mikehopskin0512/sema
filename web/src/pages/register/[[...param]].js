@@ -44,6 +44,7 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+  console.log(identity)
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -88,7 +89,7 @@ const RegistrationForm = (props) => {
             <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
           </div>
         )}
-        {/* <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
+        <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
           <div className="field is-horizontal">
             <div className="field-body">
               <div className="field">
@@ -218,7 +219,7 @@ const RegistrationForm = (props) => {
               className="button is-primary">Continue
             </button>
           </div>
-        </form> */}
+        </form>
       </div>
     </div>
   );
@@ -273,12 +274,12 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <>
       <Toaster
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero">
+      <section className="hero full-height">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
@@ -291,7 +292,7 @@ const Register = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
