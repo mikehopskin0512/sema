@@ -109,14 +109,18 @@ export const getInvitesBySender = (userId, token) => async (dispatch) => {
   }
 };
 
-export const resendInvite = (recipient) => async (dispatch) => {
+export const resendInvite = (recipient, token) => async (dispatch) => {
   try {
     dispatch(requestResendInvite());
-    const payload = await postResendInvite({ recipient });
+    const payload = await postResendInvite({ recipient }, token);
+    const { data: { invitation = {} } } = payload;
+    dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
+
+    dispatch(requestResendInviteSuccess(invitation));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
-    dispatch(requestGetInvitesBySenderError(errMessage));
+    dispatch(requestResendInviteError(errMessage));
   }
 };

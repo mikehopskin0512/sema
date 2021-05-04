@@ -109,21 +109,17 @@ export default (app, passport) => {
 
   // send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { recipient } = req.body;
-    console.log("recip",recipient);
-    /* 
-      check if user is not yet invited,
-      check if user is already registered/
-    */
-    const userInvitation = await getInvitationByRecipient(recipient);
-    if (!userInvitation) {
-      return res.status(401).send({message: `${userInvitation.recipient} has not been invited yet.`});
-    }
-    const user = await findByUsername(invitation.recipient);
-    if (user) {
-      return res.status(401).send({message: `${invitation.recipient} is already an active member.`});
-    }
-    try {
+    const { recipient: recipientData } = req.body;
+
+   try {
+      const userInvitation = await getInvitationByRecipient(recipientData);
+      if (!userInvitation) {
+        return res.status(401).send({message: `${userInvitation.recipient} has not been invited yet.`});
+      }
+      const user = await findByUsername(recipientData);
+      if (user) {
+        return res.status(401).send({message: `${recipientData} is already an active member.`});
+      }
       // Send invitation
       const { recipient, token, orgName, senderName } = userInvitation;
       const message = {
