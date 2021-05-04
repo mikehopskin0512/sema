@@ -95,6 +95,10 @@ const Invite = () => {
     }
   }, [invitations]);
 
+  const resendInvite = () => {
+    alert('test');
+  };
+
   const buttonAction = () => {
     if (isPluginInstalled) {
       toggleCard(false);
@@ -124,6 +128,17 @@ const Invite = () => {
         </div>
       </>
     );
+  };
+
+  const renderErrorMessage = () => {
+    console.log(formError)
+    if (formError) {
+      if (formError.search("has already been invited by another user.") >= 0) {
+        // return formError;
+        return <span>{formError} <a onClick={resendInvite}>Click here</a> to remind them.</span>
+      }
+      return formError;
+    }
   };
 
   return (
@@ -193,7 +208,7 @@ const Invite = () => {
                             </button>
                             <article className={clsx("message is-danger mt-20", !formError && "is-hidden")} style={{ width: "80%"}}>
                               <div className="message-body">
-                                {formError}
+                                {renderErrorMessage()}
                               </div>
                             </article>
                             
