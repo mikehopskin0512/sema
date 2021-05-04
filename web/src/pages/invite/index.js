@@ -143,7 +143,7 @@ const Invite = () => {
 
   return (
     <>
-      <section className={clsx("hero", styles.container)}>
+      <section className={clsx("hero pb-50", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
@@ -157,9 +157,15 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
+          </div>
+        </div>
+      </section>
+      <section className="hero background-foggy-white pt-50">
+        <div className="hero-body">
+          <div className={clsx('container', styles['styled-container'])}>
             <p
               className={
-                'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+                'title has-text-centered has-text-weight-semibold is-size-4'
               }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
