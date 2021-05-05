@@ -36,16 +36,17 @@ export const setRefreshToken = async (response, user, token) => {
     path: '/',
   };
 
+  const { _id: userId } = user;
+  const filter = { userId };
+  const update = { token };
+  const options = { new: true, upsert: true };
+
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
     cookieConfig.domain = `.${rootDomain}`;
   } else {
     console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }
-
-  const filter = { userId: user._id.toString() };
-  const update = { token };
-  const options = { new: true, upsert: true };
 
   await RefreshToken.findOneAndUpdate(filter, update, options);
 
