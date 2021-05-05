@@ -78,9 +78,9 @@ const RegistrationForm = (props) => {
                 <span>Sign up with GitHub</span>
               </a>
             </div>
-            <div className="is-divider" data-content="OR" />
+            {/* <div className="is-divider" data-content="OR" />
             <h2 className="title is-4 is-spaced">Or sign up with your email</h2>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
+            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>      */}
           </div>
         ) : (
           <div>
@@ -88,7 +88,7 @@ const RegistrationForm = (props) => {
             <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
           </div>
         )}
-        <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
+        {/* <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
           <div className="field is-horizontal">
             <div className="field-body">
               <div className="field">
@@ -218,7 +218,7 @@ const RegistrationForm = (props) => {
               className="button is-primary">Continue
             </button>
           </div>
-        </form>
+        </form> */}
       </div>
     </div>
   );

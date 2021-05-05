@@ -1,23 +1,27 @@
 /**
- * - todo: remove "Bulma Base" from bulma.css
+ * - TODO: remove "Bulma Base" from bulma.css
+ * - TODO: remove listeners at appropriate time if needed
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
+import { debounce } from 'lodash';
 
 import {
   isValidSemaTextBox,
   onDocumentClicked,
   onSuggestion,
   getSemaIds,
+  writeSemaToGithub,
 } from './modules/content-util';
 
 import {
   SEMA_ICON_ANCHOR,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
+  ON_INPUT_DEBOUCE_INTERVAL_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -29,6 +33,7 @@ import store from './modules/redux/store';
 import {
   addSemaComponents,
   toggleGlobalSearchModal,
+  updateSemaComponents,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
@@ -53,9 +58,22 @@ document.addEventListener(
 );
 
 /**
- * when "SPACE" is detected on "keyup" event, then generate suggestions for reaction and tags
+ * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
+ * also triggers text submission
  */
-document.addEventListener('keyup', (event) => onSuggestion(event, store));
+document.addEventListener(
+  'keydown',
+  (event) => {
+    const { code, ctrlKey, metaKey } = event;
+    if ((ctrlKey || metaKey) && code === 'Enter') {
+      const activeElement = document.activeElement;
+      if ($(activeElement).is('textarea')) {
+        writeSemaToGithub(activeElement);
+      }
+    }
+  },
+  true
+);
 
 /**
  * "focus" event is when we put SEMA elements in the DOM
@@ -69,12 +87,35 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        const idSuffix = Date.now();
+        const idSuffix = $(activeElement).attr('id');
 
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
           idSuffix
         );
 
+        $(activeElement).on(
+          'input',
+          debounce((event) => {
+            onSuggestion(event, store);
+          }, ON_INPUT_DEBOUCE_INTERVAL_MS)
+        );
+        $(activeElement).on('input', () => {
+          const { semabars } = store.getState();
+          store.dispatch(
+            updateSemaComponents({
+              Id: semabarContainerId,
+              typeFlag: false,
+            })
+          );
+          if (semabars[semabarContainerId].isReactionDirty === true) {
+            store.dispatch(
+              updateSemaComponents({
+                Id: semabarContainerId,
+                typeFlag: true,
+              })
+            );
+          }
+        });
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(

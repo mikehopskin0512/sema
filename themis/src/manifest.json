@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Code Review Assistant",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "0.2",
+  "version": "0.4",
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
   "action": {
@@ -28,7 +28,7 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*"] 
+    "matches": ["*://localhost/*"]
   },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [

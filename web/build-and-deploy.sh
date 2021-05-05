@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 readonly NAME=phoenix
 readonly ENV="${1}"
 readonly AWS_ACCOUNT="091235034633"

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
@@ -8,12 +8,24 @@ import withLayout from '../../components/layout';
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+
 const { createInvite } = invitationsOperations;
 const { clearAlert } = alertOperations;
 
 const Admin = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors, reset } = useForm();
+  const { register, handleSubmit, errors, reset, control } = useForm({
+    defaultValues: {
+      emails: [{}]
+    }
+  });
+
+  const { fields, append } = useFieldArray({
+    control,
+    name: "emails"
+  });
 
   // Import state vars
   const { alerts, auth } = useSelector(
@@ -37,19 +49,22 @@ const Admin = () => {
   }, [showAlert, dispatch]);
 
   const onSubmit = async (data) => {
-    const { email } = data;
+    const { emails } = data;
+    const allInvitationsPromises = [];
 
     // Build invitation data
-    const invitation = {
-      recipient: email,
-      orgId,
-      orgName,
-      sender: userId,
-      senderName: fullName,
-    };
+    if (Array.isArray(emails)) {
+      emails.forEach(email => allInvitationsPromises.push(dispatch(createInvite({
+        recipient: email.value,
+        orgId,
+        orgName,
+        sender: userId,
+        senderName: fullName,
+      }, token))));
+    }
 
     // Send invite & reset form
-    await dispatch(createInvite(invitation, token));
+    await Promise.allSettled(allInvitationsPromises);
     reset();
   };
 
@@ -72,27 +87,41 @@ const Admin = () => {
                     <div className="column is-7">
                       <div className="field">
                         <label className="label">Email</label>
-                        <div className="control">
+                        {fields.map((data, index) => <div className={`control ${(index > 0) ? "mt-10" : ""}`} key={data.id}>
                           <input
-                            className={`input ${errors.email && 'is-danger'}`}
+                            className={`input ${errors.emails?.[index]?.value ? 'is-danger' : ""}`}
                             type="email"
                             placeholder="tony@starkindustries.com"
-                            name="email"
+                            name={`emails[${index}].value`}
                             ref={register({
                               required: 'Email is required',
                               pattern:
                                 { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
                             })} />
                         </div>
-                        <p className="help is-danger">{errors.email && errors.email.message}</p>
+                        )}
+                        <p className="help is-danger">{Array.isArray(errors.emails) && errors.emails?.[errors.emails.length - 1]?.value.message}</p>
                       </div>
                     </div>
                   </div>
                   <div className="control">
                     <button
-                      type="submit"
-                      className="button is-primary">Continue
+                      onClick={() => append({})}
+                      type="button"
+                      className="button is-primary is-inverted has-text-weight-semibold">
+                      <span className="icon is-small">
+                        <FontAwesomeIcon icon={faPlusCircle} />
+                      </span>
+                      <span>Add another</span>
                     </button>
+                  </div>
+                  <div className="columns">
+                    <div className="control column is-7">
+                      <button
+                        type="submit"
+                        className="button is-primary mt-10 is-fullwidth">Continue
+                    </button>
+                    </div>
                   </div>
                 </form>
               </div>

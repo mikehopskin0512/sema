@@ -21,6 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedTags: semabarState.selectedTags,
     selectedReaction: semabarState.selectedReaction,
     suggestedTags: semabarState.suggestedTags,
+    userInitialTypeAction: semabarState.typeFlag,
   };
 };
 
@@ -90,7 +91,7 @@ const Semabar = (props) => {
             <span>Add Tags</span>
           </button>
         </div>
-        <div className="sema-dropdown-menu" role="menu">
+        <div className="sema-dropdown-menu tags-selection" role="menu">
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
@@ -134,13 +135,14 @@ const Semabar = (props) => {
           onEmojiSelected={(emojiObj) => {
             props.updateSelectedEmoji(emojiObj);
           }}
+          userInitialTypeAction={props.userInitialTypeAction}
         />
       </div>
-      <div className="sema-tag-container">
-        {createAddTags()}
+      <div className="sema-tag-container" id="scroll-style">
         {createActiveTags()}
         {createSuggestedTags()}
       </div>
+      <div>{createAddTags()}</div>
     </>
   );
 };

@@ -48,11 +48,12 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
   };
 
   const getAllCommentsUI = () => {
-    return searchResults.map((searchResult) => {
-      const { comment, sourceName, sourceUrl, title } = searchResult;
+    const resultsLength = searchResults.length;
+    return searchResults.map((searchResult, i) => {
+      const { comment, sourceName, sourceUrl, title, id } = searchResult;
+
       return (
-        // TODO: find out why it is generating same key warning
-        <div key={title}>
+        <div key={id}>
           {getCommentTitleInterface(title, sourceName)}
           {getCommentInterface(comment, false)}
           <div className="suggestion-buttons">
@@ -83,6 +84,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               <span>View</span>
             </button>
           </div>
+          {resultsLength > i + 1 && <hr />}
         </div>
       );
     });

@@ -17,7 +17,7 @@ $ git clone git@github.com:Semalab/phoenix.git
 $ cd phoenix
 
 # build all docker images for mongo, apollo and web
-# rerun this if you change any docker image build config, such as package.json or node_modules 
+# rerun this if you change any docker image build config, such as package.json or node_modules
 $ sudo docker-compose build --no-cache
 
 # Run all docker servers
@@ -29,4 +29,43 @@ $ sudo docker-compose up
 ```
 
 ## Development approach
+
 Branch off, and pull request against `qa`
+
+### Running a single service
+
+```sh
+docker-compose up [SERVICE...] # SERVICE specified in docker-compose.yml, e.g. apollo
+```
+
+### Running Migrations
+
+By default, migrations will only run locally, but you could update `MONGOOSE_URI` in `apollo/.env` to run migrations on staging/production.
+
+```sh
+docker-compose up apollo-migrations
+```
+
+### Development best practices
+
+In order to follow [best practices](https://12factor.net/) to maintain local environment parity with deployment environments, you should interact with services through `docker-compose` whenever possible.
+
+For example, if you wanted to add a new package `migrate` to `apollo`, you would run:
+
+```sh
+docker-compose run apollo npm install migrate
+```
+
+This updates the _image's_ `node_modules` as well as registers this change in the `package.json` and `package-lock.json` for committing. You should avoid running `npm install` directly, since it will install to the host's `node_modules` and override the `node_modules` on the container, thereby causing the container to have an outdated `node_modules`. See more [here](https://www.digitalocean.com/community/tutorials/containerizing-a-node-js-application-for-development-with-docker-compose).
+
+### Common issues with running docker compose
+
+1. Error starting  web-dev-i proxy: listen tcp 0.0.0.0:3000: bind: address already in use
+
+   Solution: This error means that some container is already running so remove all the running containers `docker rm -f $(docker ps -aq)`
+
+2. Newly installed node modules not getting reflected on running the conatiner
+
+   Solution: In this case remove the image build previously after you install the new module, run `docker images` to get the docker image id for the application and then run `docker rmi -f <image-id>` to remove the image and run `docker-compose up` again.
+          
+ 

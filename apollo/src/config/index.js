@@ -7,7 +7,6 @@ module.exports = {
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
   mongooseUri: process.env.MONGOOSE_URI || '',
-  // mongooseCertPath: process.env.MONGOOSE_CERTPATH,
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED || true,
   modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
@@ -21,6 +20,7 @@ module.exports = {
   refreshSecret: process.env.JWT_SECRET,
   privateKeyFile: process.env.PRIVATE_KEY_FILE || '',
   refreshTokenName: process.env.REFRESH_TOKEN_NAME,
+  refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRATION,
   allowedOrigin: process.env.ALLOWED_ORIGIN,
   github: {
     clientId: process.env.GITHUB_CLIENT_ID,
