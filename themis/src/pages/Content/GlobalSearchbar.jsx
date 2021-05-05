@@ -66,7 +66,7 @@ const GlobalSearchbar = (props) => {
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
-        setSearchResults(data?.searchResults || []);
+        setSearchResults(data?.searchResults?.result || []);
         if (props.isLoading) {
           props.toggleIsLoading(false);
         }
