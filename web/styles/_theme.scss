@@ -4,13 +4,19 @@
 // Import font
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+// Colors
+$blue: #0081A7;
+$neon-blue: #75F4F4;
+$lint-green: #A9DB5F;
+$pink: #E93B89;
+
 // Update Bulma global variables
 // Override colors
-$primary: #0081A7;
-$link: #0081A7;
-$info: #75F4F4;
-$success: #A9DB5F;
-$danger: #E93B89;
+$primary: $blue;
+$link: $blue;
+$info: $neon-blue;
+$success: $lint-green;
+$danger: $pink;
 
 $black: #202020;
 $white: #F4F4F4;
