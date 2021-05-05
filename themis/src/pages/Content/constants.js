@@ -97,3 +97,5 @@ export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
 
 export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
+
+export const SUGGESTED_TAG_LIMIT = 3;

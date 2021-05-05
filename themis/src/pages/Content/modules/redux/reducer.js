@@ -11,7 +11,7 @@ import {
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS
+  UPDATE_SEMA_COMPONENTS,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -19,7 +19,13 @@ import {
   getSemaIds,
 } from '../content-util';
 
-import { ADD_OP, SELECTED, TAGS_INIT, EMOJIS } from '../../constants';
+import {
+  ADD_OP,
+  SELECTED,
+  TAGS_INIT,
+  EMOJIS,
+  SUGGESTED_TAG_LIMIT,
+} from '../../constants';
 
 function rootReducer(state = initialState, action) {
   const { type, payload } = action;
@@ -39,7 +45,6 @@ function rootReducer(state = initialState, action) {
       selectedTags: initialTags,
       selectedReaction: initialReaction,
       isReactionDirty: false,
-      isTagDirty: false,
       suggestedTags: [],
     };
 
@@ -65,7 +70,7 @@ function rootReducer(state = initialState, action) {
     const { id, selectedReaction, isDirty } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
-    semabars[id].isReactionDirty = true
+    semabars[id].isReactionDirty = true;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation, isDirty } = payload;
     const {
@@ -76,7 +81,6 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
-    semabars[id].isTagDirty = !!isDirty;
   } else if (type === TOGGLE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
@@ -87,18 +91,29 @@ function rootReducer(state = initialState, action) {
     const {
       semabars,
       semabars: {
-        [id]: { selectedTags },
+        [id]: { selectedTags = [] },
       },
     } = newState;
 
-    const filteredSeggestions = suggestedTags.filter((suggestion) => {
+    const filteredSuggestions = suggestedTags.filter((suggestion) => {
       const exists = !!selectedTags.find(
         (tagObj) => tagObj[tagObj[SELECTED]] === suggestion
       );
       return !exists;
     });
 
-    semabars[id].suggestedTags = filteredSeggestions;
+    const selectedTagsLength = selectedTags.filter((tagObj) => tagObj[SELECTED])
+      .length;
+
+    let numberOfAllowedSuggestions = SUGGESTED_TAG_LIMIT - selectedTagsLength;
+    numberOfAllowedSuggestions =
+      numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
+
+    while (filteredSuggestions.length > numberOfAllowedSuggestions) {
+      filteredSuggestions.pop();
+    }
+
+    semabars[id].suggestedTags = filteredSuggestions;
   } else if (type === UPDATE_SELECTED_TAG_WITH_SUGGESTION) {
     const { id, tag } = payload;
     // add to selected
@@ -125,16 +140,15 @@ function rootReducer(state = initialState, action) {
       selectedTags: TAGS_INIT,
       selectedReaction: EMOJIS[0],
       isReactionDirty: false,
-      isTagDirty: false,
       suggestedTags: [],
     };
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
     };
-  } else if(type === UPDATE_SEMA_COMPONENTS){
-    const { Id ,typeFlag} = payload;
-    newState.semabars[Id]['typeFlag']=typeFlag;
+  } else if (type === UPDATE_SEMA_COMPONENTS) {
+    const { Id, typeFlag } = payload;
+    newState.semabars[Id]['typeFlag'] = typeFlag;
   }
 
   return newState;

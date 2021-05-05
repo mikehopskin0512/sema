@@ -303,16 +303,12 @@ export function onSuggestion(event, store) {
       }
     }
     if (Array.isArray(suggestedTags) && suggestedTags.length) {
-      const isTagDirty = state.semabars[semabarId].isTagDirty;
-      // isTagDirty is true when tag is manually selected from UI
-      if (!isTagDirty) {
-        store.dispatch(
-          addSuggestedTags({
-            id: semabarId,
-            suggestedTags,
-          })
-        );
-      }
+      store.dispatch(
+        addSuggestedTags({
+          id: semabarId,
+          suggestedTags,
+        })
+      );
     }
   }
 }
