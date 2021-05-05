@@ -53,7 +53,7 @@ const SearchBar = (props) => {
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
-        setSearchResults(data?.searchResults || []);
+        setSearchResults(data?.searchResults?.result || []);
         toggleIsLoading(false);
         props.toggleSearchModal();
       });

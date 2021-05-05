@@ -50,13 +50,10 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
   const getAllCommentsUI = () => {
     const resultsLength = searchResults.length;
     return searchResults.map((searchResult, i) => {
-      const { comment, sourceName, sourceUrl, title } = searchResult;
-      // TODO: have a deterministic key
-      // "Date.now()" doesn't work for some reason
-      // hence generating keys by another method
-      const keyIdx = Math.random().toString(36).substring(7);
+      const { comment, sourceName, sourceUrl, title, id } = searchResult;
+
       return (
-        <div key={keyIdx}>
+        <div key={id}>
           {getCommentTitleInterface(title, sourceName)}
           {getCommentInterface(comment, false)}
           <div className="suggestion-buttons">

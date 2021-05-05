@@ -5,7 +5,7 @@ const invitationSchema = new mongoose.Schema({
   recipient: { type: String, required: true },
   sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   senderName: String,
-  orgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: true },
+  orgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', required: false },
   orgName: String,
   token: { type: String, unique: true, required: true },
   tokenExpires: { type: Date, required: true },

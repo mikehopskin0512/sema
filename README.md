@@ -57,3 +57,15 @@ docker-compose run apollo npm install migrate
 ```
 
 This updates the _image's_ `node_modules` as well as registers this change in the `package.json` and `package-lock.json` for committing. You should avoid running `npm install` directly, since it will install to the host's `node_modules` and override the `node_modules` on the container, thereby causing the container to have an outdated `node_modules`. See more [here](https://www.digitalocean.com/community/tutorials/containerizing-a-node-js-application-for-development-with-docker-compose).
+
+### Common issues with running docker compose
+
+1. Error starting  web-dev-i proxy: listen tcp 0.0.0.0:3000: bind: address already in use
+
+   Solution: This error means that some container is already running so remove all the running containers `docker rm -f $(docker ps -aq)`
+
+2. Newly installed node modules not getting reflected on running the conatiner
+
+   Solution: In this case remove the image build previously after you install the new module, run `docker images` to get the docker image id for the application and then run `docker rmi -f <image-id>` to remove the image and run `docker-compose up` again.
+          
+ 

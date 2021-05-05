@@ -1,6 +1,7 @@
 import analysis from './analysis';
 import auth from './auth';
-import comments from './comments';
+import smartComments from './comments/smartComments';
+import suggestedComments from './comments/suggestedComments';
 import credentials from './credentials';
 import github from './identity/github';
 import health from './shared/health';
@@ -11,12 +12,12 @@ import repositories from './repositories';
 import sources from './sources';
 import users from './users';
 
-
 function attachRoutes(app, passport) {
   analysis(app, passport);
   auth(app, passport);
-  comments(app, passport);
-  credentials(app, passport);    
+  smartComments(app, passport);
+  suggestedComments(app, passport);
+  credentials(app, passport);
   github(app);
   health(app);
   invitations(app, passport);

@@ -26,7 +26,7 @@ const options = {
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    const colComments = mongoose.connection.db.collection('suggestedComments');
+    const colComments = mongoose.connection.db.collection('suggestedcomments');
     const suggestedComments = await colComments.insertMany(suggestedCommentsData);
     fs.writeFileSync(`${process.cwd()}/data/commentBankGeneric.json`, JSON.stringify(suggestedComments.ops));
   } catch (error) {
@@ -38,7 +38,7 @@ exports.up = async (next) => {
 exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    const colComments = mongoose.connection.db.collection('suggestedComments');
+    const colComments = mongoose.connection.db.collection('suggestedcomments');
     await colComments.deleteMany({ _id: { $in: suggestedCommentsIds } });
   } catch (error) {
     next(error);

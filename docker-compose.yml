@@ -25,6 +25,7 @@ services:
       - /usr/app/node_modules
     depends_on:
       - mongodb
+      - apollo-migrations
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
@@ -36,7 +37,6 @@ services:
     command: migrate up
     depends_on:
       - mongodb
-      - apollo
     container_name: phoenix.apollo.migrations.local
     networks:
       - sema
