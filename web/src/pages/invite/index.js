@@ -45,25 +45,29 @@ const Invite = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { _id: userId, firstName, lastName, organizations = [] } = user;
+  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    const { email } = data;
-    // Build invitation data
-    const invitation = {
-      recipient: email,
-      orgId,
-      orgName,
-      sender: userId,
-      senderName: fullName,
-    };
-    // Send invite & reset form
-    setRecipient(email);
-    await dispatch(createInvite(invitation, token));
-    GET_INVITES_BY_USER();
+    if (inviteCount > 0) {    
+      const { email } = data;
+      // Build invitation data
+      const invitation = {
+        recipient: email,
+        orgId,
+        orgName,
+        sender: userId,
+        senderName: fullName,
+        inviteCount
+      };
+      // Send invite & reset form
+      setRecipient(email);
+      await dispatch(createInvite(invitation, token, user));
+      GET_INVITES_BY_USER();
+      reset();
+    }
   };
 
   const GET_INVITES_BY_USER = async () => {
@@ -185,7 +189,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
                 }
             >
-              <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
+              <span class={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -223,6 +227,7 @@ const Invite = () => {
                                 styles.formBtn
                               )}
                               type="submit"
+                              disabled={inviteCount <= 0}
                             >
                               Send Invite
                             </button>
