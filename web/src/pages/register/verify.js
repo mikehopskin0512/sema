@@ -31,7 +31,7 @@ const ResetMessage = (props) => {
           <div className="control mt-15">
             <button
               type="button"
-              className="button is-primary"
+              className="button is-black"
               onClick={handleClick}>Click here to resend verification email
             </button>
           </div>
@@ -55,8 +55,8 @@ const Confirmation = (props) => {
         <p>We have verified your email and your account is fully activated {hasInvite}</p>
         <br />
         {(hasInvite)
-          ? <Link href="/reports"><a className="button is-primary">Continue to dashboard</a></Link>
-          : <Link href="/register/organization"><a className="button is-primary">Setup your organization</a></Link>}
+          ? <Link href="/reports"><a className="button is-black">Continue to dashboard</a></Link>
+          : <Link href="/register/organization"><a className="button is-black">Setup your organization</a></Link>}
       </div>
     </div>
   );

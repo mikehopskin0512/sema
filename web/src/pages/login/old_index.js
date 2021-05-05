@@ -88,7 +88,7 @@ const Login = () => {
                         </div>
                       </div>
                       <div className="field mt-2r">
-                        <button type="submit" className="button is-primary is-fullwidth">
+                        <button type="submit" className="button is-black is-fullwidth">
                           Login with Email
                         </button>
                       </div>
@@ -116,7 +116,7 @@ const Login = () => {
                         <p><strong>Want to sign up for the Sema platform?</strong></p>
                         <div className="mt-1r">
                           <Link href="/register">
-                            <a className="button is-primary">
+                            <a className="button is-black">
                               <span className="icon">
                                 <FontAwesomeIcon icon={['fas', 'user']} />
                               </span>

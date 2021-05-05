@@ -50,14 +50,14 @@ const Login = () => {
     return (
       <>
         <h1 className="title has-text-centered mb-20 has-text-black">Welcome to Sema</h1>
-        <div className="is-divider is-secondary mx-90" />
+        <div className="is-divider is-primary mx-90" />
         <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
           Sema is still a work in progress. Join the waitlist to be
           amongst the first to try it out.
         </h2>
         <a
           type="button"
-          className="button is-black p-25 is-secondary"
+          className="button is-black p-25 is-primary"
           href="/api/identities/github"
         >
           <span className="icon is-large mr-20">
@@ -82,13 +82,13 @@ const Login = () => {
           className="button p-25"
           href="/api/identities/github"
         >
-        <span className="icon has-text-secondary is-large mr-20">
+        <span className="icon has-text-primary is-large mr-20">
             <FontAwesomeIcon
               icon={['fab', 'github']}
               size="2x"
             />
           </span>
-          <span className="has-text-secondary">Sign in with Github</span>
+          <span className="has-text-primary">Sign in with Github</span>
         </a>
       </>
     );
