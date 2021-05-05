@@ -2,6 +2,7 @@ import { sign, verify } from 'jsonwebtoken';
 import {
   jwtSecret, privateKeyFile,
   refreshSecret, refreshTokenName, rootDomain,
+  userVoiceKey,
 } from '../config';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -43,3 +44,7 @@ export const setRefreshToken = async (response, token) => {
 
   response.cookie(refreshTokenName, token, cookieConfig);
 };
+
+export const createUserVoiceIdentityToken = async ({ _id, username, firstName, lastName }) => (
+  sign({ guid: _id, email: username, display_name: `${firstName} ${lastName}` }, userVoiceKey)
+);
