@@ -135,3 +135,10 @@ h6 {
   margin-block-end: 0.83em !important;
   line-height: 1em !important;
 }
+
+@media screen and (max-width: 1010px) {
+  .sema-dropdown-menu.tags-selection {
+    left: -155px !important;
+    max-width: 254px;
+  }
+}
