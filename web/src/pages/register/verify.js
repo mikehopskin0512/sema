@@ -104,12 +104,12 @@ const UserVerify = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero">
+      <section className="hero is-min-fullheight">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
               <div className="column is-7-tablet is-7-desktop is-7-widescreen">
-                <div className="title-topper mt-70 mb-20" />
+                <div className="title-topper mt-70 mb-20 " />
                 <h1 className="title is-spaced">Account Verification</h1>
                 <div className="subtitle is-6">
                   {(isVerified)
