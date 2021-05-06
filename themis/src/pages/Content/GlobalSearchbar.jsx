@@ -45,7 +45,7 @@ const GlobalSearchbar = (props) => {
 
   const onCopyPressed = (suggestion) => {
     let value = props.commentBox.value;
-    props.commentBox.value = `${value}\n\`\`\`\n${suggestion}\n\`\`\``;
+    props.commentBox.value = `${value}\n${suggestion}\n`;
     // directly changing the value will not trigger "oninput" event
     // so directly call the mirror callback for oninput
     props.mirror._onInput();
