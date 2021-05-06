@@ -41,6 +41,7 @@ const Invite = () => {
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
   const [formError, setError] = useState("");
+  const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
@@ -59,8 +60,8 @@ const Invite = () => {
       sender: userId,
       senderName: fullName,
     };
-
     // Send invite & reset form
+    setRecipient(email);
     await dispatch(createInvite(invitation, token));
     GET_INVITES_BY_USER();
   };
@@ -104,8 +105,8 @@ const Invite = () => {
     }
   }, [showAlert, dispatch]);
 
-  const RESEND_INVITE = async () => {
-    await dispatch(resendInvite(getValues('email').email, token));
+  const RESEND_INVITE = async (email) => {
+    await dispatch(resendInvite(email, token));
   };
 
   const buttonAction = () => {
@@ -144,7 +145,7 @@ const Invite = () => {
     if (formError) {
       if (formError.search("has already been invited by another user.") >= 0) {
         // return formError;
-        return <span>{formError} <a onClick={RESEND_INVITE}>Click here</a> to remind them.</span>
+        return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return formError;
     }
@@ -236,7 +237,7 @@ const Invite = () => {
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} />
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE}/>
                 </div>
                 <PromotionBoard />
               </div>
@@ -283,7 +284,7 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {
+const InvitationTable = ({ invitations, RESEND_INVITE }) => {
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -311,7 +312,7 @@ const InvitationTable = ({ invitations }) => {
                   )}
                 </td>
                 <td>
-                  <button class="button is-text">Resend Invitation</button>
+                  <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
                   <button class="button is-text">Revoke</button>{' '}
                 </td>
               </tr>
