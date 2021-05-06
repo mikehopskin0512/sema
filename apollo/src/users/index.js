@@ -78,7 +78,7 @@ export default (app, passport) => {
       // Send verification email
       const message = {
         recipient: newUser.username,
-        url: `${orgDomain}/login?token=${newUser.verificationToken}&invite=${hasInvite}`,
+        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}&invite=${hasInvite}`,
         templateName: 'verifyUser',
         firstName: newUser.firstName,
       };
@@ -172,7 +172,7 @@ export default (app, passport) => {
       // Send verification email
       const message = {
         recipient: user.username,
-        url: `${orgDomain}/login?token=${user.verificationToken}`,
+        url: `${orgDomain}/register/verify?token=${user.verificationToken}`,
         templateName: 'verifyUser',
         firstName: user.firstName,
       };

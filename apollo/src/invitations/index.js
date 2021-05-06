@@ -36,7 +36,7 @@ export default (app, passport) => {
       const { recipient, token, orgName, senderName } = newInvitation;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
@@ -124,7 +124,7 @@ export default (app, passport) => {
       const { recipient, token, orgName, senderName } = userInvitation;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
