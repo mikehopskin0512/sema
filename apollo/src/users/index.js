@@ -139,11 +139,12 @@ export default (app, passport) => {
 
     try {
       const user = await verifyUser(token);
-      await setRefreshToken(res, await createRefreshToken(user));
 
       if (!user) {
         throw new errors.BadRequest('Verification error');
       }
+
+      await setRefreshToken(res, user, await createRefreshToken(user));
 
       // Send verification email
       const message = {

@@ -7,7 +7,7 @@ const { Schema } = mongoose;
 const refreshTokenSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   token: { type: String, unique: true, required: true },
-}, { timestamps: true });
+}, { collection: 'refreshToken', timestamps: true });
 
 refreshTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: refreshTokenExpiration });
 

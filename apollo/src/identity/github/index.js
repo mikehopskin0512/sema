@@ -74,7 +74,7 @@ export default (app) => {
         await updateIdentity(user, identity);
 
         // Auth Sema
-        await setRefreshToken(res, await createRefreshToken(user));
+        await setRefreshToken(res, user, await createRefreshToken(user));
 
         // No need to send jwt. It will pick up the refresh token cookie on frontend
         // return res.redirect(`${orgDomain}/reports`);
@@ -111,7 +111,7 @@ export default (app) => {
       const verifiedUser = await verifyUser(verificationToken);
 
       // Auth Sema
-      await setRefreshToken(res, await createRefreshToken(newUser));
+      await setRefreshToken(res, newUser, await createRefreshToken(newUser));
 
       if (!verifiedUser) {
         throw new errors.BadRequest('Verification error');

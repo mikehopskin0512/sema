@@ -1,5 +1,6 @@
 import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
+import CommentSource from './commentSourceModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
@@ -38,13 +39,17 @@ const searchComments = async (searchQuery) => {
   const searchResults = await index.search(searchQuery);
   const returnResults = [];
   for (let i = 0; i < 5 && i < searchResults.length; i++) {
-    const commentItem = await SuggestedComment.findById(searchResults[i]);
+    const commentItem = await SuggestedComment.findById(searchResults[i]).populate({
+      path: 'source',
+      model: 'CommentSource',
+    });
+
     returnResults.push({
       id: commentItem._id,
       comment: commentItem.comment,
       title: commentItem.title,
-      sourceUrl: commentItem.sourceUrl,
-      sourceName: commentItem.sourceName,
+      sourceUrl: commentItem.source ? commentItem.source.url : '',
+      sourceName: commentItem.source ? commentItem.source.name : '',
     });
   }
 
