@@ -107,7 +107,7 @@ export default (app, passport) => {
     }
   });
 
-  // send email
+  // Send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { recipient: recipientData } = req.body;
 

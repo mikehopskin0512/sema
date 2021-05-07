@@ -57,7 +57,7 @@ const Login = () => {
   const renderCard = () => {
     if (token) {
       if (!isEmpty(invitations.data)) {
-        return <TokenCard senderName={invitations.data.senderName} />
+        return <TokenCard  invitation={invitations} />
       }
     }
     if (user?.isWaitlist) {
@@ -195,18 +195,18 @@ const LoginCard = () => {
   );
 };
 
-const TokenCard = ({senderName}) => {
+const TokenCard = ({invitation}) => {
   return (
     <>
       <h1 className="title has-text-centered mb-20">Welcome to Sema</h1>
       <div className="is-divider is-info mx-90" />
       <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
-        <strong>{senderName}</strong> would love for you to join them.
+        <strong>{invitation.data.senderName}</strong> would love for you to join them.
       </h2>
       <a
         type="button"
         className="button p-25 is-info is-outlined"
-        href="/api/identities/github"
+        href={`/api/identities/github?token=${invitation.data.token}`}
       >
       <span className="icon is-large mr-20">
           <FontAwesomeIcon

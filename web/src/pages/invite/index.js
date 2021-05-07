@@ -185,7 +185,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
                 }
             >
-              <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
+              <span className={clsx('tag is-success is-size-4 m-1r')}>2</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -194,9 +194,9 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div class="field">
-                          <label class="label has-text-white">Username</label>
-                          <div class="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
+                        <div className="field">
+                          <label className="label has-text-white">Username</label>
+                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -213,7 +213,7 @@ const Invite = () => {
                                 },
                               })}
                             />
-                            <span class="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
                               <FontAwesomeIcon  icon={faTimes} size="s" />
                             </span>
                           </div>
@@ -302,18 +302,18 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span class={clsx('tag is-info', styles.tag)}>
+                    <span className={clsx('tag is-info', styles.tag)}>
                       Pending Invite
                     </span>
                   ) : (
-                    <span class={clsx('tag is-success', styles.tag)}>
+                    <span className={clsx('tag is-success', styles.tag)}>
                       Active
                     </span>
                   )}
                 </td>
                 <td>
-                  <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button class="button is-text">Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                  <button className="button is-text">Revoke</button>{' '}
                 </td>
               </tr>
             );
