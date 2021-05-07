@@ -1,12 +1,36 @@
 // Import initial variables
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 
+// Import font
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+// Colors
+$blue: #0081A7;
+$neon-blue: #75F4F4;
+$lint-green: #A9DB5F;
+$pink: #E93B89;
+
 // Update Bulma global variables
-$primary: #1F4EBD;
-$info:#0081A7;
+// Override colors
+$primary: $blue;
+$link: $blue;
+$info: $neon-blue;
+$success: $lint-green;
+$danger: $pink;
+
+$black: #202020;
+$white: #F4F4F4;
+$grey-light: #E4E4E4;
+$gray-light: #E4E4E4;
+
+// Set custom shades
+$custom-shades: (
+    "gray-light": $gray-light,
+);
+
 $spacing-values: ("auto": auto, "0": 0, "1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "15": 15px, "20": 20px, "25": 25px, "50": 50px, "70": 70px, "90": 90px, "120": 120px);
 $input-background-color: #E7E8EA;
-$family-sans-serif: "Montserrat", sans-serif;
+$family-sans-serif: "Inter", "Montserrat", sans-serif;
 $family-monospace: sans-serif;
 
 @import "../node_modules/bulma/bulma.sass";

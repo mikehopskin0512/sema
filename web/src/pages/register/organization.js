@@ -115,7 +115,7 @@ const JoinOrg = () => {
                   <div className="control">
                     <button
                       type="submit"
-                      className="button is-primary">Continue
+                      className="button is-black">Continue
                     </button>
                   </div>
                 </form>

@@ -172,7 +172,7 @@ const Repos = () => {
             </div>
             <div className="column has-text-right">
               <Link href="/sources">
-                <a className="button is-primary">
+                <a className="button is-black">
                   <span className="icon">
                     <FontAwesomeIcon icon={['fas', 'plus']} />
                   </span>
