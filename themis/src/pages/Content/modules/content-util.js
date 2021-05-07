@@ -148,7 +148,7 @@ export function writeSemaToGithub(textarea) {
     );
 
     const selectedEmojiString =
-      selectedEmojiObj?.title !== 'No reaction'
+      selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
         ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
         : '';
 
