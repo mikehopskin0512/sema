@@ -22,6 +22,7 @@ import {
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
   ON_INPUT_DEBOUCE_INTERVAL_MS,
+  CALCULATION_ANIMATION_DURATION_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -96,24 +97,22 @@ document.addEventListener(
         $(activeElement).on(
           'input',
           debounce((event) => {
+            store.dispatch(
+              updateTextareaState({
+                isTyping: true,
+              })
+            );
+            setTimeout(() => {
+              store.dispatch(
+                updateTextareaState({
+                  isTyping: false,
+                })
+              );
+            }, CALCULATION_ANIMATION_DURATION_MS);
+
             onSuggestion(event, store);
           }, ON_INPUT_DEBOUCE_INTERVAL_MS)
         );
-        $(activeElement).on('input', () => {
-          const { semabars } = store.getState();
-          store.dispatch(
-            updateTextareaState({
-              isTyping: true,
-            })
-          );
-          if (semabars[semabarContainerId].isReactionDirty === true) {
-            store.dispatch(
-              updateTextareaState({
-                isTyping: false,
-              })
-            );
-          }
-        });
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
