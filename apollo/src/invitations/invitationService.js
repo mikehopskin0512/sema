@@ -34,6 +34,18 @@ export const create = async (invitation) => {
   }
 };
 
+export const findById = async (id) => {
+  try {
+    const query = Invitation.findById(id);
+    const invite = await query.lean().exec();
+    return invite;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const findByToken = async (token) => {
   try {
     const query = Invitation.findOne({ token });
@@ -84,7 +96,20 @@ export const getInvitationByRecipient = async (recipient) => {
       recipient,
     });
     const result = await query.lean().exec();
+    return result;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
 
+export const deleteInvitation = async (_id) => {
+  try {
+    const query = Invitation.deleteOne({
+      _id
+    });
+    const result = await query.exec();
     return result;
   } catch (err) {
     const error = new errors.BadRequest(err);
