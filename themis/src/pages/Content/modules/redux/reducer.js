@@ -74,10 +74,10 @@ function rootReducer(state = initialState, action) {
       semasearches[id].isSearchModalVisible = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
-    const { id, selectedReaction, isDirty } = payload;
+    const { id, selectedReaction, isReactionDirty = true } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
-    semabars[id].isReactionDirty = true;
+    semabars[id].isReactionDirty = isReactionDirty;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation, isDirty } = payload;
     const {
