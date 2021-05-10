@@ -22,6 +22,7 @@ const mapStateToProps = (state, ownProps) => {
     selectedReaction: semabarState.selectedReaction,
     suggestedTags: semabarState.suggestedTags,
     userInitialTypeAction: semabarState.typeFlag,
+    isReactionDirty: semabarState.isReactionDirty,
   };
 };
 
@@ -136,6 +137,7 @@ const Semabar = (props) => {
             props.updateSelectedEmoji(emojiObj);
           }}
           userInitialTypeAction={props.userInitialTypeAction}
+          isReactionDirty={props.isReactionDirty}
         />
       </div>
       <div className="sema-tag-container" id="scroll-style">
