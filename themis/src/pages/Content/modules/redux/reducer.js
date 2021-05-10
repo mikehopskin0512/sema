@@ -14,7 +14,7 @@ import {
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS,
+  UPDATE_GITHUB_TEXTAREA,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -44,6 +44,8 @@ function rootReducer(state = initialState, action) {
     const { initialTags, initialReaction } = getInitialSemaValues(
       activeElement
     );
+
+    newState.github.isTyping = false;
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
@@ -173,9 +175,9 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
     };
-  } else if (type === UPDATE_SEMA_COMPONENTS) {
-    const { Id, typeFlag } = payload;
-    newState.semabars[Id]['typeFlag'] = typeFlag;
+  } else if (type === UPDATE_GITHUB_TEXTAREA) {
+    const { isTyping } = payload;
+    newState.github.isTyping = isTyping;
   }
 
   return newState;

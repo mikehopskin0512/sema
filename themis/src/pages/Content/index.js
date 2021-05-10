@@ -33,7 +33,7 @@ import store from './modules/redux/store';
 import {
   addSemaComponents,
   toggleGlobalSearchModal,
-  updateSemaComponents,
+  updateTextareaState,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
@@ -87,10 +87,10 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        const idSuffix = $(activeElement).attr('id');
+        const githubTextareaId = $(activeElement).attr('id');
 
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          idSuffix
+          githubTextareaId
         );
 
         $(activeElement).on(
@@ -102,16 +102,14 @@ document.addEventListener(
         $(activeElement).on('input', () => {
           const { semabars } = store.getState();
           store.dispatch(
-            updateSemaComponents({
-              Id: semabarContainerId,
-              typeFlag: false,
+            updateTextareaState({
+              isTyping: true,
             })
           );
           if (semabars[semabarContainerId].isReactionDirty === true) {
             store.dispatch(
-              updateSemaComponents({
-                Id: semabarContainerId,
-                typeFlag: true,
+              updateTextareaState({
+                isTyping: false,
               })
             );
           }
@@ -129,7 +127,7 @@ document.addEventListener(
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
         store.dispatch(
           addSemaComponents({
-            seedId: idSuffix,
+            seedId: githubTextareaId,
             activeElement,
           })
         );
