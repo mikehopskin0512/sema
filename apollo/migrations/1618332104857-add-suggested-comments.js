@@ -50,10 +50,10 @@ exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     // migrate comment sources
-    const colSources = mongoose.connection.db.collection('commentsources');
+    const colSources = mongoose.connection.db.collection('commentSources');
     const commentSources = await colSources.insertMany(commentSourceData);
 
-    const colComments = mongoose.connection.db.collection('suggestedcomments');
+    const colComments = mongoose.connection.db.collection('suggestedComments');
     const suggestedComments = await colComments.insertMany(suggestedCommentsData);
 
     // produce output data
@@ -78,12 +78,12 @@ exports.up = async (next) => {
 exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    const colComments = mongoose.connection.db.collection('suggestedcomments');
+    const colComments = mongoose.connection.db.collection('suggestedComments');
     const commentsData = colComments.find({ _id: { $in: suggestedCommentsIds } });
     await colComments.deleteMany({ _id: { $in: suggestedCommentsIds } });
 
     const commentSourceIds = commentsData.map((comment) => comment.source);
-    const colSources = mongoose.connection.db.collection('commentsources');
+    const colSources = mongoose.connection.db.collection('commentSources');
     await colSources.deleteMany({ _id: { $in: commentSourceIds } });
   } catch (error) {
     next(error);
