@@ -2,7 +2,10 @@ import { sign, verify } from 'jsonwebtoken';
 import {
   jwtSecret, privateKeyFile,
   refreshSecret, refreshTokenName, rootDomain,
+  userVoiceKey,
 } from '../config';
+
+import RefreshToken from './refreshTokenModel';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
@@ -28,11 +31,16 @@ export const validateAuthToken = async (token) => {
   return payload;
 };
 
-export const setRefreshToken = async (response, token) => {
+export const setRefreshToken = async (response, user, token) => {
   const cookieConfig = {
     // httpOnly: true
     path: '/',
   };
+
+  const { _id: userId } = user;
+  const filter = { userId };
+  const update = { token };
+  const options = { new: true, upsert: true };
 
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
@@ -41,5 +49,11 @@ export const setRefreshToken = async (response, token) => {
     console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }
 
+  await RefreshToken.findOneAndUpdate(filter, update, options);
+
   response.cookie(refreshTokenName, token, cookieConfig);
 };
+
+export const createUserVoiceIdentityToken = async ({ _id, username, firstName, lastName }) => (
+  sign({ guid: _id, email: username, display_name: `${firstName} ${lastName}` }, userVoiceKey)
+);

@@ -1,4 +1,6 @@
-export const SUGGESTION_URL = 'https://api-qa1.semasoftware.io/v1/comments/?q=';
+const SEMA_URL = process.env.SEMA_URL;
+
+export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';
@@ -94,4 +96,8 @@ export const SEMA_ICON_ANCHOR =
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
 
+//TODO: this will need to change. modal is not global
+export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';
 export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
+
+export const SUGGESTED_TAG_LIMIT = 3;

@@ -140,7 +140,7 @@ function Table({ columns, data, auth }) {
       <br />
       <button
         type="button"
-        className="button is-primary"
+        className="button is-black"
         disabled={Object.keys(selectedRowIds).length === 0}
         onClick={addRepos}>
         <span>Add selected repositories and continue</span>

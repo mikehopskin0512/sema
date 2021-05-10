@@ -20,6 +20,7 @@ module.exports = {
   refreshSecret: process.env.JWT_SECRET,
   privateKeyFile: process.env.PRIVATE_KEY_FILE || '',
   refreshTokenName: process.env.REFRESH_TOKEN_NAME,
+  refreshTokenExpiration: process.env.REFRESH_TOKEN_EXPIRATION,
   allowedOrigin: process.env.ALLOWED_ORIGIN,
   github: {
     clientId: process.env.GITHUB_CLIENT_ID,
@@ -33,4 +34,5 @@ module.exports = {
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
+  userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
 };
