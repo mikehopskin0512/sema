@@ -6,7 +6,8 @@ import { generateToken } from '../shared/utils';
 export const create = async (invitation) => {
   try {
     const {
-      recipient, orgId, orgName,
+      recipient, 
+      // orgId, orgName,
       sender, senderName,
     } = invitation;
 
@@ -17,8 +18,8 @@ export const create = async (invitation) => {
 
     const newInvite = new Invitation({
       recipient,
-      orgId,
-      orgName,
+      // orgId,
+      // orgName,
       sender,
       senderName,
       token,

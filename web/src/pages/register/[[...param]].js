@@ -44,6 +44,7 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -273,7 +274,7 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <>
       <Toaster
         type={alertType}
         message={alertLabel}
@@ -291,7 +292,7 @@ const Register = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
