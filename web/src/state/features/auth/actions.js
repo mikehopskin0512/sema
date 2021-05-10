@@ -94,7 +94,7 @@ export const authenticate = (username, password) => async (dispatch) => {
       } else {
         // Auth error clears token but preserves user object
         dispatch(authenticateError({ errors: 'User is not verified' }));
-        Router.push('/register/verify');
+        Router.push('/login');
       }
 
       // Hydrate user regardless of isVerified
@@ -123,7 +123,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     if (!isVerified) {
       dispatch(userNotVerifiedError(user));
       // Need server-side check since this is called from sentry
-      if (!isServer) { Router.push('/register/verify'); }
+      if (!isServer) { Router.push('/login'); }
     }
     return { isVerified };
   } catch (err) {

@@ -36,6 +36,7 @@ const Invite = () => {
   const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
+  const [formError, setError] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
@@ -88,6 +89,12 @@ const Invite = () => {
     GET_INVITES_BY_USER();
   }, []);
 
+  useEffect(() => {
+    if (invitations.error && typeof invitations.error === "string") {
+      setError(invitations.error);
+    }
+  }, [invitations]);
+
   const buttonAction = () => {
     if (isPluginInstalled) {
       toggleCard(false);
@@ -112,7 +119,7 @@ const Invite = () => {
           <FontAwesomeIcon
             icon={faCheckCircle}
             size="4x"
-            className="has-text-info"
+            className="has-text-primary"
           />
         </div>
       </>
@@ -184,6 +191,12 @@ const Invite = () => {
                             >
                               Send Invite
                             </button>
+                            <article className={clsx("message is-danger mt-20", !formError && "is-hidden")} style={{ width: "80%"}}>
+                              <div className="message-body">
+                                {formError}
+                              </div>
+                            </article>
+                            
                           </div>
                         </div>
                       </div>
@@ -228,7 +241,7 @@ const PluginStateCard = ({
         {renderIcon()}
         <button
           type="button"
-          className="button is-info"
+          className="button is-primary"
           onClick={buttonAction}
         >
           {buttonText}
@@ -238,7 +251,7 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {  
+const InvitationTable = ({ invitations }) => {
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -256,7 +269,7 @@ const InvitationTable = ({ invitations }) => {
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span class={clsx('tag is-info', styles.tag)}>
+                    <span class={clsx('tag is-primary', styles.tag)}>
                       Pending Invite
                     </span>
                   ) : (
@@ -307,16 +320,16 @@ const PromotionBoard = () => {
 
 const ContactUs = () => {
   return (
-    <div className="mt-20 py-50 px-120 columns has-background-info is-centered is-vcentered">
+    <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
       <div className="column is-6">
         <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-info is-medium is-fullwidth">Email</a> 
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a> 
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <button className="button is-white is-medium is-fullwidth has-text-info">Idea Board</button>
+        <button className="button is-white is-medium is-fullwidth has-text-primary">Idea Board</button>
       </div>
     </div>
   )

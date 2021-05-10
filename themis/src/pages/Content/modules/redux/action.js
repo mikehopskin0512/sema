@@ -7,8 +7,11 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  TOGGLE_GLOBAL_SEARCH_MODAL,
+  TOGGLE_GLOBAL_SEARCH_LOADING,
+  ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS
+  UPDATE_SEMA_COMPONENTS,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -50,12 +53,26 @@ export const updateSelectedTagsWithSuggestion = (payload) => ({
   payload,
 });
 
+export const toggleGlobalSearchModal = (payload) => ({
+  type: TOGGLE_GLOBAL_SEARCH_MODAL,
+  payload,
+});
+
+export const toggleGlobalSearchLoading = (payload) => ({
+  type: TOGGLE_GLOBAL_SEARCH_LOADING,
+  payload,
+});
+
+export const onGlobalSearchInputChange = (payload) => ({
+  type: ON_INPUT_GLOBAL_SEARCH,
+  payload,
+});
 export const resetSemaStates = (payload) => ({
   type: RESET_SEMA_STATES,
   payload,
 });
 
-export const updateSemaComponents=(payload)=>({
+export const updateSemaComponents = (payload) => ({
   type: UPDATE_SEMA_COMPONENTS,
   payload,
-})
+});

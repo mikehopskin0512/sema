@@ -27,7 +27,7 @@ const InviteError = () => (
       </h2>
       <p>Your invitation token is either expired or invalid. Please request a new invitation from your administrator.</p>
       <br />
-      <Link href="/login"><a className="button is-primary">Back to login</a></Link>
+      <Link href="/login"><a className="button is-black">Back to login</a></Link>
     </div>
   </div>
 );
@@ -61,7 +61,7 @@ const RegistrationForm = (props) => {
   };
 
   return (
-    <div className="columns">
+    <div className="columns is-justify-content-center">
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (
@@ -216,7 +216,7 @@ const RegistrationForm = (props) => {
           <div className="control">
             <button
               type="submit"
-              className="button is-primary">Continue
+              className="button is-black">Continue
             </button>
           </div>
         </form>
@@ -279,7 +279,11 @@ const Register = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
+<<<<<<< HEAD
       <section className="hero full-height">
+=======
+      <section className="hero is-min-fullheight">
+>>>>>>> 47c6cba150e76ca7b6e73d025ec03b1429b4fb21
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">

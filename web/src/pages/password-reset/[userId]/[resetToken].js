@@ -79,7 +79,7 @@ const InputForm = (props) => {
       <div className="control">
         <button
           type="submit"
-          className="button is-primary">Set new password
+          className="button is-black">Set new password
         </button>
       </div>
     </form>
@@ -92,7 +92,7 @@ const Confirmation = () => (
     <h1 className="title is-spaced">Reset Password Completed</h1>
     <p>You have successfully reset the password for your account</p>
     <br />
-    <Link href="/login"><a className="button is-primary">Return to Login</a></Link>
+    <Link href="/login"><a className="button is-black">Return to Login</a></Link>
     <br />
   </div>
 );

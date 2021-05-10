@@ -26,13 +26,22 @@ import {
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
+import Mirror from './Mirror';
 
 import store from './modules/redux/store';
 
 import {
   addSemaComponents,
+  toggleGlobalSearchModal,
   updateSemaComponents,
 } from './modules/redux/action';
+
+import highlightPhrases from './modules/highlightPhrases';
+
+const highlightWords = highlightPhrases.reduce((acc, curr) => {
+  acc[curr] = true;
+  return acc;
+}, {});
 
 /**
  * Listening to click event for:
@@ -140,6 +149,48 @@ document.addEventListener(
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
+
+        /** RENDER MIRROR*/
+        // TODO: try to make it into React component for consistency and not to have to pass store
+        new Mirror(
+          activeElement,
+          (text) => {
+            const tokens = text.split(/([\s,.!?]+)/g);
+            const alerts = [];
+            let curPos = 0;
+            let id = 0;
+
+            tokens.forEach((t, i) => {
+              if (highlightWords[t]) {
+                alerts.push({
+                  id: (id++).toString(),
+                  startOffset: curPos,
+                  endOffset: curPos + t.length,
+                  token: t,
+                });
+              }
+
+              curPos += t.length;
+            });
+
+            return alerts;
+          },
+          {
+            onMouseoverHighlight: (payload) => {
+              // close existing
+              store.dispatch(toggleGlobalSearchModal());
+              store.dispatch(
+                toggleGlobalSearchModal({
+                  ...payload,
+                  isLoading: true,
+                  openFor: $(activeElement).attr('id'),
+                })
+              );
+            },
+            store,
+          }
+        );
+
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(
           'tooltipped tooltipped-nw'

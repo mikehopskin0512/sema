@@ -4,10 +4,22 @@ import { autoIndex } from '../../config';
 const { Schema } = mongoose;
 
 const suggestedCommentSchema = new Schema({
-  comment: { type: String, required: true },
-  sourceName: { type: String, required: true },
-  sourceUrl: { type: String, required: true },
-  title: { type: String, required: true },
+  title: {
+    type: String,
+    required: true,
+  },
+  comment: {
+    type: String,
+    required: true,
+  },
+  source: {
+    type: String,
+    ref: 'CommentSource',
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 }, { timestamps: true });
 
 suggestedCommentSchema.set('autoIndex', autoIndex);

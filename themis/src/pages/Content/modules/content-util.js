@@ -148,7 +148,7 @@ export function writeSemaToGithub(textarea) {
     );
 
     const selectedEmojiString =
-      selectedEmojiObj?.title !== 'No reaction'
+      selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
         ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
         : '';
 
@@ -303,16 +303,12 @@ export function onSuggestion(event, store) {
       }
     }
     if (Array.isArray(suggestedTags) && suggestedTags.length) {
-      const isTagDirty = state.semabars[semabarId].isTagDirty;
-      // isTagDirty is true when tag is manually selected from UI
-      if (!isTagDirty) {
-        store.dispatch(
-          addSuggestedTags({
-            id: semabarId,
-            suggestedTags,
-          })
-        );
-      }
+      store.dispatch(
+        addSuggestedTags({
+          id: semabarId,
+          suggestedTags,
+        })
+      );
     }
   }
 }
