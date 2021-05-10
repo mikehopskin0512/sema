@@ -27,6 +27,8 @@ import {
   SELECTED,
   SUGGESTED_TAG_LIMIT,
   GLOBAL_SEMA_SEARCH_ID,
+  TAGS_INIT,
+  EMOJIS,
 } from '../../constants';
 
 function rootReducer(state = initialState, action) {

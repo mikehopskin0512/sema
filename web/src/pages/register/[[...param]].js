@@ -61,7 +61,7 @@ const RegistrationForm = (props) => {
   };
 
   return (
-    <div className="columns">
+    <div className="columns is-justify-content-center">
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (
@@ -279,7 +279,7 @@ const Register = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero full-height">
+      <section className="hero is-min-fullheight">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
