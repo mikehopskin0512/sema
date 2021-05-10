@@ -44,6 +44,7 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -273,12 +274,16 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <>
       <Toaster
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
+<<<<<<< HEAD
+      <section className="hero full-height">
+=======
       <section className="hero is-min-fullheight">
+>>>>>>> 47c6cba150e76ca7b6e73d025ec03b1429b4fb21
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
@@ -291,7 +296,7 @@ const Register = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 
