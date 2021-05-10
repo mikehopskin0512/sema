@@ -279,11 +279,7 @@ const Register = () => {
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-<<<<<<< HEAD
-      <section className="hero full-height">
-=======
       <section className="hero is-min-fullheight">
->>>>>>> 47c6cba150e76ca7b6e73d025ec03b1429b4fb21
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
