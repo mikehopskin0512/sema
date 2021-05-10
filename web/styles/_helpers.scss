@@ -6,6 +6,10 @@
     box-shadow: 8px 8px 0px rgba(229, 42, 145, 0.1);
 }
 
+.background-foggy-white {
+    background-color: #FCFCFC;
+};
+
 // Minimum height of the object is the full height of the screen minus the height of the header and the footer
 .is-min-fullheight {
     min-height: calc(100vh - 152px);

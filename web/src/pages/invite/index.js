@@ -6,21 +6,25 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
-import { invitationsOperations } from '../../state/features/invitations';
 import Carousel from '../../components/utils/Carousel';
+import Toaster from '../../components/toaster';
+
+import { invitationsOperations } from '../../state/features/invitations';
+import { alertOperations } from '../../state/features/alerts';
 
 import styles from './invite.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
-const { createInvite, getInvitesBySender } = invitationsOperations;
+const { clearAlert } = alertOperations;
+const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors, reset } = useForm();
+  const { register, handleSubmit, errors, reset, getValues } = useForm();
 
   // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
@@ -37,6 +41,7 @@ const Invite = () => {
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
   const [formError, setError] = useState("");
+  const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
@@ -55,11 +60,10 @@ const Invite = () => {
       sender: userId,
       senderName: fullName,
     };
-
     // Send invite & reset form
+    setRecipient(email);
     await dispatch(createInvite(invitation, token));
     GET_INVITES_BY_USER();
-    reset();
   };
 
   const GET_INVITES_BY_USER = async () => {
@@ -95,6 +99,16 @@ const Invite = () => {
     }
   }, [invitations]);
 
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
+
+  const RESEND_INVITE = async (email) => {
+    await dispatch(resendInvite(email, token));
+  };
+
   const buttonAction = () => {
     if (isPluginInstalled) {
       toggleCard(false);
@@ -126,9 +140,21 @@ const Invite = () => {
     );
   };
 
+  const renderErrorMessage = () => {
+    console.log(formError)
+    if (formError) {
+      if (formError.search("has already been invited by another user.") >= 0) {
+        // return formError;
+        return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
+      }
+      return formError;
+    }
+  };
+
   return (
     <>
-      <section className={clsx("hero", styles.container)}>
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <section className={clsx("hero pb-50", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
@@ -142,9 +168,15 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
+          </div>
+        </div>
+      </section>
+      <section className="hero background-foggy-white pt-50">
+        <div className="hero-body">
+          <div className={clsx('container', styles['styled-container'])}>
             <p
               className={
-                'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+                'title has-text-centered has-text-weight-semibold is-size-4'
               }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
@@ -164,7 +196,7 @@ const Invite = () => {
                       <div className={`is-fullwidth px-20`}>
                         <div class="field">
                           <label class="label has-text-white">Username</label>
-                          <div class="control">
+                          <div class="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -180,8 +212,11 @@ const Invite = () => {
                                   message: 'Invaild email format',
                                 },
                               })}
-                              style={{ width: '80%' }}
                             />
+                            <span class="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                              <FontAwesomeIcon  icon={faTimes} size="s" />
+                            </span>
+                          </div>
                             <button
                               className={clsx(
                                 'button is-white',
@@ -193,18 +228,16 @@ const Invite = () => {
                             </button>
                             <article className={clsx("message is-danger mt-20", !formError && "is-hidden")} style={{ width: "80%"}}>
                               <div className="message-body">
-                                {formError}
+                                {renderErrorMessage()}
                               </div>
                             </article>
-                            
-                          </div>
                         </div>
                       </div>
                     </div>
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} />
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE}/>
                 </div>
                 <PromotionBoard />
               </div>
@@ -251,7 +284,7 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {
+const InvitationTable = ({ invitations, RESEND_INVITE }) => {
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -279,7 +312,7 @@ const InvitationTable = ({ invitations }) => {
                   )}
                 </td>
                 <td>
-                  <button class="button is-text">Resend Invitation</button>
+                  <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
                   <button class="button is-text">Revoke</button>{' '}
                 </td>
               </tr>
