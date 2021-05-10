@@ -76,3 +76,18 @@ export const getInvitationsBySender = async (senderId) => {
     throw (error);
   }
 };
+
+export const getInvitationByRecipient = async (recipient) => {
+  try {
+    const query = Invitation.findOne({
+      recipient,
+    });
+    const result = await query.lean().exec();
+
+    return result;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
