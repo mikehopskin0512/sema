@@ -44,7 +44,6 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
-
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
