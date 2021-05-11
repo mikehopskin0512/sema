@@ -27,7 +27,7 @@ const InviteError = () => (
       </h2>
       <p>Your invitation token is either expired or invalid. Please request a new invitation from your administrator.</p>
       <br />
-      <Link href="/login"><a className="button is-primary">Back to login</a></Link>
+      <Link href="/login"><a className="button is-black">Back to login</a></Link>
     </div>
   </div>
 );
@@ -44,6 +44,7 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -60,7 +61,7 @@ const RegistrationForm = (props) => {
   };
 
   return (
-    <div className="columns">
+    <div className="columns is-justify-content-center">
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (
@@ -88,7 +89,7 @@ const RegistrationForm = (props) => {
             <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
           </div>
         )}
-        {/* <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
+        <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
           <div className="field is-horizontal">
             <div className="field-body">
               <div className="field">
@@ -215,10 +216,10 @@ const RegistrationForm = (props) => {
           <div className="control">
             <button
               type="submit"
-              className="button is-primary">Continue
+              className="button is-black">Continue
             </button>
           </div>
-        </form> */}
+        </form>
       </div>
     </div>
   );
@@ -273,12 +274,12 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <>
       <Toaster
         type={alertType}
         message={alertLabel}
         showAlert={showAlert} />
-      <section className="hero">
+      <section className="hero is-min-fullheight">
         <div className="hero-body">
           <div className="container">
             <div className="columns is-centered">
@@ -291,7 +292,7 @@ const Register = () => {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

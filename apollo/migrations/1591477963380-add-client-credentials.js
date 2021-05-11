@@ -31,10 +31,18 @@ const clients = [{
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   const colUsers = mongoose.connection.db.collection('users');
-  await colUsers.insertOne(adminUser);
+  try{
+    await colUsers.insertOne(adminUser);
+  } catch (error) {
+    console.log("adminUser already exists");
+  }
 
   const colClients = mongoose.connection.db.collection('clients');
-  await colClients.insertMany(clients);
+  try{
+    await colClients.insertMany(clients);
+  } catch (error) {
+    console.log("clients already exist");
+  }
   mongoose.connection.close();
 };
 

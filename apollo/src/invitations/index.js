@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, findByToken, getInvitationsBySender } from './invitationService';
+import { create, findByToken, getInvitationsBySender, getInvitationByRecipient } from './invitationService';
+import { findByUsername } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -14,12 +15,23 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { invitation } = req.body;
 
+    const user = await findByUsername(invitation.recipient);
+    if (user) {
+      return res.status(401).send({message: `${invitation.recipient} is already an active member.`});
+    }
+    const userInvitation = await getInvitationByRecipient(invitation.recipient);
+    if (userInvitation) {
+      if (userInvitation.sender.toString() === invitation.sender) {
+        return res.status(401).send({message: 'You’ve already invited this user. Either revoke or resend the invitation to continue.'});
+      }
+      return res.status(401).send({message: `${invitation.recipient} has already been invited by another user.`});
+    }
+
     try {
       const newInvitation = await create(invitation);
       if (!newInvitation) {
         throw new errors.BadRequest('Invitation create error');
       }
-
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
       const message = {
@@ -88,6 +100,39 @@ export default (app, passport) => {
 
       return res.status(200).send({
         invitation,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // send email
+  route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { recipient: recipientData } = req.body;
+
+   try {
+      const userInvitation = await getInvitationByRecipient(recipientData);
+      if (!userInvitation) {
+        return res.status(401).send({message: `${userInvitation.recipient} has not been invited yet.`});
+      }
+      const user = await findByUsername(recipientData);
+      if (user) {
+        return res.status(401).send({message: `${recipientData} is already an active member.`});
+      }
+      // Send invitation
+      const { recipient, token, orgName, senderName } = userInvitation;
+      const message = {
+        recipient,
+        url: `${orgDomain}/register/${token}`,
+        templateName: 'inviteUser',
+        orgName,
+        fullName: senderName,
+      };
+      await sendEmail(message);
+
+      return res.status(201).send({
+        response: 'Invitation sent successfully',
       });
     } catch (error) {
       logger.error(error);
