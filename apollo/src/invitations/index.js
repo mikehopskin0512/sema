@@ -14,19 +14,19 @@ export default (app, passport) => {
 
   // Create invitation
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { 
+    const {
       body: { invitation },
-      user: { user }
+      user: { user: userData },
     } = req;
-    
+
     if (invitation.inviteCount <= 0) {
       return res.status(412).send({
         message: 'User does not have enough invites.'
       });
     }
 
-    const user = await findByUsername(invitation.recipient);
-    if (user) {
+    const userRecipient = await findByUsername(invitation.recipient);
+    if (userRecipient) {
       return res.status(401).send({message: `${invitation.recipient} is already an active member.`});
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
@@ -53,9 +53,9 @@ export default (app, passport) => {
       };
       await sendEmail(message);
       await update({
-        ...user,
-        inviteCount: invitation.inviteCount - 1
-      })
+        ...userData,
+        inviteCount: invitation.inviteCount - 1,
+      });
 
       return res.status(201).send({
         response: 'Invitation sent successfully',
