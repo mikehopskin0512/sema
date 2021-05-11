@@ -63,6 +63,18 @@ const reducer = (state = initialState, action) => {
         data: {},
         error: action.errors,
       };
+    case types.REQUEST_DELETE_INVITE:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case types.REQUEST_DELETE_INVITE_ERROR:
+      return {
+        ...state,
+        isFetching: false,
+        data: {},
+        error: action.errors,
+      };
     default:
       return state;
   }

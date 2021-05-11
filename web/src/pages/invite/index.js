@@ -20,7 +20,7 @@ import styles from './invite.module.scss';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { clearAlert } = alertOperations;
-const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations;
+const { createInvite, getInvitesBySender, resendInvite, revokeInvite } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
@@ -237,7 +237,7 @@ const Invite = () => {
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE}/>
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} userId={userId} token={token} />
                 </div>
                 <PromotionBoard />
               </div>
@@ -284,7 +284,13 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations, RESEND_INVITE }) => {
+const InvitationTable = ({ invitations, RESEND_INVITE, userId, token }) => {
+  const dispatch = useDispatch();
+
+  const onRevoke = async (id) => {
+    await dispatch(revokeInvite(id, userId, token));
+  }
+
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -313,7 +319,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                 </td>
                 <td>
                   <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button class="button is-text">Revoke</button>{' '}
+                  <button class="button is-text" onClick={() => onRevoke(el._id)}>Revoke</button>{' '}
                 </td>
               </tr>
             );

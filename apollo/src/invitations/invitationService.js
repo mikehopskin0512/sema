@@ -107,7 +107,7 @@ export const getInvitationByRecipient = async (recipient) => {
 export const deleteInvitation = async (_id) => {
   try {
     const query = Invitation.deleteOne({
-      _id
+      _id,
     });
     const result = await query.exec();
     return result;

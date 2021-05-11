@@ -152,6 +152,9 @@ export default (app, passport) => {
 
       // Find and check if invite exists and if the requester is the sender of the invitation
       const invite = await findById(id);
+      if (!invite) {
+        return res.status(500).send('Error finding invitation.');
+      }
       if (invite.statusCode > 226) {
         return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
       }
