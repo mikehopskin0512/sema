@@ -287,8 +287,8 @@ const PluginStateCard = ({
 const InvitationTable = ({ invitations, RESEND_INVITE, userId, token }) => {
   const dispatch = useDispatch();
 
-  const onRevoke = async (id) => {
-    await dispatch(revokeInvite(id, userId, token));
+  const onRevoke = async (id, recipient) => {
+    await dispatch(revokeInvite(id, userId, token, recipient));
   }
 
   return (
@@ -319,7 +319,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, userId, token }) => {
                 </td>
                 <td>
                   <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button class="button is-text" onClick={() => onRevoke(el._id)}>Revoke</button>{' '}
+                  <button class="button is-text" onClick={() => onRevoke(el._id, el.recipient)}>Revoke</button>{' '}
                 </td>
               </tr>
             );
