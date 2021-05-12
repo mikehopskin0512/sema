@@ -1,4 +1,5 @@
 const SEMA_URL = process.env.SEMA_URL;
+const SEMA_UI_URL=process.env.SEMA_UI_URL;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const ADD_OP = 'ADD_OP';

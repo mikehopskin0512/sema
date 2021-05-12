@@ -5,6 +5,15 @@
   "version": "0.42",
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
+  "host_permissions": [
+    "http://localhost/*",
+    "https://app-qa.semasoftware.com/*"
+  
+  ],
+  "permissions": [
+    "cookies",
+    "tabs"
+  ],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
