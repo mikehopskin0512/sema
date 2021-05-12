@@ -24,7 +24,8 @@ const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations
 
 const Invite = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors, reset, getValues } = useForm();
+  const { register, handleSubmit, formState, reset } = useForm();
+  const { errors } = formState;
 
   // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
@@ -182,7 +183,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
                 }
             >
-              <span class={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
+              <span className={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -197,21 +198,23 @@ const Invite = () => {
                             <input
                               className={clsx(
                                 `input mr-25`,
-                                errors.email && 'is-danger',
+                                errors?.email && 'is-danger',
                               )}
                               type="email"
                               placeholder="tony@starkindustries.com"
-                              name="email"
-                              ref={register({
-                                required: 'Email is required',
-                                pattern: {
-                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                                  message: 'Invaild email format',
-                                },
-                              })}
+                              {
+                                ...register(`email`, 
+                                {
+                                  required: 'Email is required',
+                                  pattern: {
+                                    value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                    message: 'Invaild email format'
+                                  },
+                                })
+                              }
                             />
                             <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
-                              <FontAwesomeIcon  icon={faTimes} size="s" />
+                              <FontAwesomeIcon  icon={faTimes} size="sm" />
                             </span>
                           </div>
                             <button
@@ -294,9 +297,9 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
       </thead>
       <tbody>
         {invitations?.length ? 
-          invitations.map((el) => {
+          invitations.map((el, i) => {
             return (
-              <tr>
+              <tr key={`row-${i}`}>
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (

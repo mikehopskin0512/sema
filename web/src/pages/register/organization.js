@@ -15,7 +15,8 @@ const { fetchOrganizationBySlug } = organizationsOperations;
 
 const JoinOrg = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, formState } = useForm();
+  const { errors } = formState;
 
   const [slug, setSlug] = useState('');
   const [slugError, setSlugError] = useState('');
@@ -85,11 +86,14 @@ const JoinOrg = () => {
                             name="orgName"
                             onChange={(orgName) => generateSlug(orgName)}
                             autoComplete="off"
-                            ref={register({
-                              required: 'Organization name is required',
-                              maxLength:
-                                { value: 80, message: 'Organization name must be less than 80 characters' },
-                            })} />
+                            {
+                              ...register('orgName',
+                                {
+                                  required: 'Organization name is required',
+                                  maxLength: { value: 80, message: 'Organization name must be less than 80 characters' },
+                                })
+                            }
+                          />
                         </div>
                         <p className="help is-danger">{errors.orgName && errors.orgName.message}</p>
                       </div>
@@ -99,13 +103,16 @@ const JoinOrg = () => {
                           <input
                             className={`input ${(errors.slug || slugError) && 'is-danger'}`}
                             type="text"
-                            name="slug"
                             autoComplete="off"
                             onChange={clearSlugError}
                             defaultValue={slug}
-                            ref={register({
-                              pattern: { value: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/, message: 'URL can\'t contain spaces or special characters' },
-                            })} />
+                            {
+                              ...register('slug',
+                                {
+                                  pattern: { value: /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/, message: 'URL can\'t contain spaces or special characters' },
+                                })
+                            }
+                          />
                         </div>
                         <p className="help is-danger">{errors.slug && errors.slug.message}</p>
                         <p className="help is-danger">{slugError}</p>
