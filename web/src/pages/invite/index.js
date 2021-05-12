@@ -64,7 +64,7 @@ const Invite = () => {
       };
       // Send invite & reset form
       setRecipient(email);
-      await dispatch(createInvite(invitation, token, user));
+      await dispatch(createInvite(invitation, token));
       GET_INVITES_BY_USER();
       reset();
     }
