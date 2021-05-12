@@ -57,8 +57,8 @@ exports.up = async (next) => {
     const suggestedComments = await colComments.insertMany(suggestedCommentsData);
 
     // produce output data
-    const outputData = suggestedComments.map((suggestedComment) => {
-      const commentSource = commentSources.findOne((item) => item._id === suggestedComment.source);
+    const outputData = suggestedComments.ops.map((suggestedComment) => {
+      const commentSource = commentSources.ops.find((item) => item._id === suggestedComment.source);
       return {
         _id: suggestedComment._id,
         title: suggestedComment.title,
