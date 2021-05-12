@@ -42,7 +42,7 @@ colQueries.aggregate(
       for ( i in results ){
         returnArray.push(flattenObject(results[i]));
       }
-      console.log(returnArray);
+      console.log(JSON.stringify(returnArray, null, 2));
     }
     process.exit();
   }
