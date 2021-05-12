@@ -14,14 +14,14 @@ import {
 import { DELETE_OP, SELECTED, EMOJIS } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
-  const { semabars } = state;
+  const { semabars, github } = state;
   const semabarState = semabars[ownProps.id];
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
     selectedReaction: semabarState.selectedReaction,
     suggestedTags: semabarState.suggestedTags,
-    userInitialTypeAction: semabarState.typeFlag,
+    isTyping: github.isTyping,
     isReactionDirty: semabarState.isReactionDirty,
   };
 };
@@ -136,7 +136,7 @@ const Semabar = (props) => {
           onEmojiSelected={(emojiObj) => {
             props.updateSelectedEmoji(emojiObj);
           }}
-          userInitialTypeAction={props.userInitialTypeAction}
+          isTyping={props.isTyping}
           isReactionDirty={props.isReactionDirty}
         />
       </div>

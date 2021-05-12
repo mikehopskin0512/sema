@@ -22,6 +22,7 @@ import {
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
   ON_INPUT_DEBOUCE_INTERVAL_MS,
+  CALCULATION_ANIMATION_DURATION_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -33,7 +34,7 @@ import store from './modules/redux/store';
 import {
   addSemaComponents,
   toggleGlobalSearchModal,
-  updateSemaComponents,
+  updateTextareaState,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
@@ -87,35 +88,31 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        const idSuffix = $(activeElement).attr('id');
+        const githubTextareaId = $(activeElement).attr('id');
 
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          idSuffix
+          githubTextareaId
         );
 
         $(activeElement).on(
           'input',
           debounce((event) => {
+            store.dispatch(
+              updateTextareaState({
+                isTyping: true,
+              })
+            );
+            setTimeout(() => {
+              store.dispatch(
+                updateTextareaState({
+                  isTyping: false,
+                })
+              );
+            }, CALCULATION_ANIMATION_DURATION_MS);
+
             onSuggestion(event, store);
           }, ON_INPUT_DEBOUCE_INTERVAL_MS)
         );
-        $(activeElement).on('input', () => {
-          const { semabars } = store.getState();
-          store.dispatch(
-            updateSemaComponents({
-              Id: semabarContainerId,
-              typeFlag: false,
-            })
-          );
-          if (semabars[semabarContainerId].isReactionDirty === true) {
-            store.dispatch(
-              updateSemaComponents({
-                Id: semabarContainerId,
-                typeFlag: true,
-              })
-            );
-          }
-        });
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
@@ -129,7 +126,7 @@ document.addEventListener(
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
         store.dispatch(
           addSemaComponents({
-            seedId: idSuffix,
+            seedId: githubTextareaId,
             activeElement,
           })
         );

@@ -16,7 +16,10 @@ const commentSourceSchema = new Schema({
     type: Boolean,
     default: true,
   },
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  collection: 'commentSources',
+});
 
 commentSourceSchema.set('autoIndex', autoIndex);
 commentSourceSchema.index({ title: 1 });
