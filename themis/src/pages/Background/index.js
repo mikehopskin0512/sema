@@ -44,7 +44,6 @@ const refreshToken = ({ value }) => {
 };
 
 const auth = async () => {
-
   // Get refresh token cookie
   const cookieToken = await chrome.cookies.get({ url: 'https://app-qa.semasoftware.com/', name: '_phoenix' });
   // Verify is refresh token cookie is alive
@@ -56,8 +55,6 @@ const auth = async () => {
   if (decodedToken.exp * 1000 < currentDate.getTime()) {
     isTokenExpired=true;
   }
-      
-
   if (cookieToken && isTokenExpired) {
     try {
       const { jwtToken: newToken } = await refreshToken(cookieToken); // New access token generated 
