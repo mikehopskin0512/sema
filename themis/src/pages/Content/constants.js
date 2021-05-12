@@ -100,5 +100,6 @@ export const SEMA_SEARCH_CLASS = 'sema-search';
 //TODO: this will need to change. modal is not global
 export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';
 export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
+export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 
 export const SUGGESTED_TAG_LIMIT = 3;
