@@ -5,7 +5,7 @@ import errors from '../shared/errors';
 import {
   create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
 } from './invitationService';
-import { findByUsername } from '../users/userService';
+import { findByUsername, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -15,10 +15,19 @@ export default (app, passport) => {
 
   // Create invitation
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { invitation } = req.body;
+    const {
+      body: { invitation },
+      user: { user },
+    } = req;
 
-    const user = await findByUsername(invitation.recipient);
-    if (user) {
+    if (invitation.inviteCount <= 0) {
+      return res.status(412).send({
+        message: 'User does not have enough invites.',
+      });
+    }
+
+    const userRecipient = await findByUsername(invitation.recipient);
+    if (userRecipient) {
       return res.status(401).send({ message: `${invitation.recipient} is already an active member.` });
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
@@ -44,8 +53,13 @@ export default (app, passport) => {
         fullName: senderName,
       };
       await sendEmail(message);
+      const updatedUser = await update({
+        ...user,
+        inviteCount: invitation.inviteCount - 1,
+      });
 
       return res.status(201).send({
+        user: updatedUser,
         response: 'Invitation sent successfully',
       });
     } catch (error) {
