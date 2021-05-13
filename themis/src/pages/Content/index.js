@@ -22,17 +22,27 @@ import {
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
   ON_INPUT_DEBOUCE_INTERVAL_MS,
+  CALCULATION_ANIMATION_DURATION_MS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
+import Mirror from './Mirror';
 
 import store from './modules/redux/store';
 
 import {
   addSemaComponents,
-  updateSemaComponents,
+  toggleGlobalSearchModal,
+  updateTextareaState,
 } from './modules/redux/action';
+
+import highlightPhrases from './modules/highlightPhrases';
+
+const highlightWords = highlightPhrases.reduce((acc, curr) => {
+  acc[curr] = true;
+  return acc;
+}, {});
 
 /**
  * Listening to click event for:
@@ -78,35 +88,31 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       if (!semaElements[0]) {
-        const idSuffix = $(activeElement).attr('id');
+        const githubTextareaId = $(activeElement).attr('id');
 
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          idSuffix
+          githubTextareaId
         );
 
         $(activeElement).on(
           'input',
           debounce((event) => {
+            store.dispatch(
+              updateTextareaState({
+                isTyping: true,
+              })
+            );
+            setTimeout(() => {
+              store.dispatch(
+                updateTextareaState({
+                  isTyping: false,
+                })
+              );
+            }, CALCULATION_ANIMATION_DURATION_MS);
+
             onSuggestion(event, store);
           }, ON_INPUT_DEBOUCE_INTERVAL_MS)
         );
-        $(activeElement).on('input', () => {
-          const { semabars } = store.getState();
-          store.dispatch(
-            updateSemaComponents({
-              Id: semabarContainerId,
-              typeFlag: false,
-            })
-          );
-          if (semabars[semabarContainerId].isReactionDirty === true) {
-            store.dispatch(
-              updateSemaComponents({
-                Id: semabarContainerId,
-                typeFlag: true,
-              })
-            );
-          }
-        });
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
@@ -120,7 +126,7 @@ document.addEventListener(
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
         store.dispatch(
           addSemaComponents({
-            seedId: idSuffix,
+            seedId: githubTextareaId,
             activeElement,
           })
         );
@@ -140,6 +146,48 @@ document.addEventListener(
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );
+
+        /** RENDER MIRROR*/
+        // TODO: try to make it into React component for consistency and not to have to pass store
+        new Mirror(
+          activeElement,
+          (text) => {
+            const tokens = text.split(/([\s,.!?]+)/g);
+            const alerts = [];
+            let curPos = 0;
+            let id = 0;
+
+            tokens.forEach((t, i) => {
+              if (highlightWords[t]) {
+                alerts.push({
+                  id: (id++).toString(),
+                  startOffset: curPos,
+                  endOffset: curPos + t.length,
+                  token: t,
+                });
+              }
+
+              curPos += t.length;
+            });
+
+            return alerts;
+          },
+          {
+            onMouseoverHighlight: (payload) => {
+              // close existing
+              store.dispatch(toggleGlobalSearchModal());
+              store.dispatch(
+                toggleGlobalSearchModal({
+                  ...payload,
+                  isLoading: true,
+                  openFor: $(activeElement).attr('id'),
+                })
+              );
+            },
+            store,
+          }
+        );
+
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(
           'tooltipped tooltipped-nw'

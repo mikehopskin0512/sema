@@ -6,7 +6,8 @@ import { generateToken } from '../shared/utils';
 export const create = async (invitation) => {
   try {
     const {
-      recipient, orgId, orgName,
+      recipient, 
+      // orgId, orgName,
       sender, senderName,
     } = invitation;
 
@@ -17,8 +18,8 @@ export const create = async (invitation) => {
 
     const newInvite = new Invitation({
       recipient,
-      orgId,
-      orgName,
+      // orgId,
+      // orgName,
       sender,
       senderName,
       token,
@@ -66,6 +67,21 @@ export const getInvitationsBySender = async (senderId) => {
   try {
     const query = Invitation.find({
       sender: senderId,
+    });
+    const result = await query.lean().exec();
+
+    return result;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const getInvitationByRecipient = async (recipient) => {
+  try {
+    const query = Invitation.findOne({
+      recipient,
     });
     const result = await query.lean().exec();
 

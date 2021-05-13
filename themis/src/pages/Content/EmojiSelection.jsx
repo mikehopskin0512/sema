@@ -12,22 +12,29 @@ const animationOptions = {
   },
 };
 
-function EmojiSelection({
+const EmojiSelection = ({
   allEmojis,
   selectedReaction,
   onEmojiSelected,
-  userInitialTypeAction,
-}) {
+  isTyping,
+  isReactionDirty,
+}) => {
   const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   return (
     <>
-      {userInitialTypeAction == false ? (
+      {isTyping === true &&
+      isSelectingEmoji === false &&
+      isReactionDirty === false ? (
         <div
+          onClick={() => {
+            toggleEmojiSelection(true);
+          }}
           style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
+            cursor: 'pointer',
           }}
         >
           <Lottie options={animationOptions} height={20} width={20} />{' '}
@@ -73,6 +80,5 @@ function EmojiSelection({
       )}
     </>
   );
-}
-
+};
 export default EmojiSelection;

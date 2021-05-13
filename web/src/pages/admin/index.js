@@ -108,7 +108,7 @@ const Admin = () => {
                     <button
                       onClick={() => append({})}
                       type="button"
-                      className="button is-primary is-inverted has-text-weight-semibold">
+                      className="button is-black is-inverted has-text-weight-semibold">
                       <span className="icon is-small">
                         <FontAwesomeIcon icon={faPlusCircle} />
                       </span>
@@ -119,7 +119,7 @@ const Admin = () => {
                     <div className="control column is-7">
                       <button
                         type="submit"
-                        className="button is-primary mt-10 is-fullwidth">Continue
+                        className="button is-black mt-10 is-fullwidth">Continue
                     </button>
                     </div>
                   </div>

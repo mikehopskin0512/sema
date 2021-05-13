@@ -23,12 +23,37 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
+  build-chrome-extension:
+    docker:
+      - image: cimg/node:15.14.0
+    steps:
+      - checkout
+      - run:
+          name: install python
+          command: sudo apt-get update -y && sudo apt-get install -y python
+      - run:
+          name: build chrome extension
+          command: cd themis && ./build.sh qa
+      - run:
+          name: install utilities
+          command: sudo apt-get update -y && sudo apt-get install awscli
+      - run:
+          name: create phoenix profile for aws cli
+          command: printf "%s\n%s\n"${AWS_REGION}"\njson" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" | aws configure --profile phoenix
+      - run:
+          name: push the extension file to s3
+          command: filename=$(ls themis | grep Sema_Code_Review_Assistant_ | head -1) && aws s3 cp themis/$filename s3://qa-chrome-store/$filename --profile phoenix 
 
 workflows:
   version: 2
   primary:
     jobs:
       - deploy-qa:
+          filters:
+            branches:
+              only:
+                - qa
+      - build-chrome-extension:
           filters:
             branches:
               only:

@@ -1,4 +1,4 @@
-import { clone } from 'ramda';
+import { cloneDeep } from 'lodash';
 
 import initialState from './initialState';
 import {
@@ -10,8 +10,11 @@ import {
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
+  TOGGLE_GLOBAL_SEARCH_MODAL,
+  TOGGLE_GLOBAL_SEARCH_LOADING,
+  ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS,
+  UPDATE_GITHUB_TEXTAREA,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -22,15 +25,17 @@ import {
 import {
   ADD_OP,
   SELECTED,
+  SUGGESTED_TAG_LIMIT,
+  GLOBAL_SEMA_SEARCH_ID,
   TAGS_INIT,
   EMOJIS,
-  SUGGESTED_TAG_LIMIT,
 } from '../../constants';
 
 function rootReducer(state = initialState, action) {
-  const { type, payload } = action;
+  const { type, payload = {} } = action;
 
-  const newState = clone(state);
+  const newState = cloneDeep(state);
+
   if (type === ADD_SEMA_COMPONENTS) {
     const { seedId, activeElement } = payload;
 
@@ -39,6 +44,8 @@ function rootReducer(state = initialState, action) {
     const { initialTags, initialReaction } = getInitialSemaValues(
       activeElement
     );
+
+    newState.github.isTyping = false;
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
@@ -67,10 +74,10 @@ function rootReducer(state = initialState, action) {
       semasearches[id].isSearchModalVisible = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
-    const { id, selectedReaction, isDirty } = payload;
+    const { id, selectedReaction, isReactionDirty = true } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
-    semabars[id].isReactionDirty = true;
+    semabars[id].isReactionDirty = isReactionDirty;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation, isDirty } = payload;
     const {
@@ -132,6 +139,28 @@ function rootReducer(state = initialState, action) {
     const operation = { tag, op: ADD_OP };
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+  } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
+    const { data, position, isLoading = false, openFor } = payload;
+    const obj = {};
+    if (data) {
+      //open with data
+      obj.data = data;
+      obj.position = position;
+      obj.isOpen = true;
+      obj.isLoading = isLoading;
+      obj.openFor = openFor;
+    } else {
+      // close
+      obj.data = null;
+      obj.isOpen = false;
+    }
+    newState[GLOBAL_SEMA_SEARCH_ID] = obj;
+  } else if (type === TOGGLE_GLOBAL_SEARCH_LOADING) {
+    const { isLoading } = payload;
+    newState[GLOBAL_SEMA_SEARCH_ID].isLoading = isLoading;
+  } else if (type === ON_INPUT_GLOBAL_SEARCH) {
+    const { data } = payload;
+    newState[GLOBAL_SEMA_SEARCH_ID].data = data;
   } else if (type === RESET_SEMA_STATES) {
     const { semabarContainerId, semaSearchContainerId } = payload;
 
@@ -146,9 +175,9 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
     };
-  } else if (type === UPDATE_SEMA_COMPONENTS) {
-    const { Id, typeFlag } = payload;
-    newState.semabars[Id]['typeFlag'] = typeFlag;
+  } else if (type === UPDATE_GITHUB_TEXTAREA) {
+    const { isTyping } = payload;
+    newState.github.isTyping = isTyping;
   }
 
   return newState;
