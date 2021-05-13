@@ -363,7 +363,6 @@ const ContactUs = ({ userVoiceToken }) => {
       </div>
       <div className="column is-2-widescreen is-2-tablet">
         <a href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} className="button is-white has-text-primary is-medium is-fullwidth">Idea Board</a> 
-        {/* <button className="button is-white is-medium is-fullwidth has-text-primary">Idea Board</button> */}
       </div>
     </div>
   )
