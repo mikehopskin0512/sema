@@ -44,7 +44,7 @@ const Invite = () => {
   const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;
+  const { token, user, userVoiceToken } = auth;
   const { _id: userId, firstName, lastName, organizations = [] } = user;
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
@@ -244,7 +244,7 @@ const Invite = () => {
             </div>
           </div>
         </div>
-        <ContactUs />
+        <ContactUs userVoiceToken={userVoiceToken}/>
       </section>
     </>
   );
@@ -351,7 +351,7 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = () => {
+const ContactUs = ({ userVoiceToken }) => {
   return (
     <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
       <div className="column is-6">
@@ -362,7 +362,8 @@ const ContactUs = () => {
         <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a> 
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <button className="button is-white is-medium is-fullwidth has-text-primary">Idea Board</button>
+        <a href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} className="button is-white has-text-primary is-medium is-fullwidth">Idea Board</a> 
+        {/* <button className="button is-white is-medium is-fullwidth has-text-primary">Idea Board</button> */}
       </div>
     </div>
   )
