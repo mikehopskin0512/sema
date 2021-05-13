@@ -33,7 +33,7 @@ jobs:
           command: sudo apt-get update -y && sudo apt-get install -y python
       - run:
           name: build chrome extension
-          command: cd themis && ./build.sh
+          command: cd themis && ./build.sh qa
       - run:
           name: install utilities
           command: sudo apt-get update -y && sudo apt-get install awscli
