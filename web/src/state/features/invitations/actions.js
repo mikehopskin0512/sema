@@ -75,10 +75,12 @@ export const createInvite = (invitationData, token, user) => async (dispatch) =>
       ...user,
       inviteCount: user.inviteCount - 1
     }));
+    return payload;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestCreateInviteError(errMessage));
+    return error.response;
   }
 };
 
