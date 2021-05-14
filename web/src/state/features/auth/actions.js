@@ -40,7 +40,7 @@ export const reauthenticate = (token) => ({
 export const deauthenticate = () => (dispatch) => {
   removeCookie(refreshCookie);
   Router.push('/login');
-  dispatch(triggerAlert('You have succesfully logged out', 'success'));
+  dispatch(triggerAlert('You have successfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
 
@@ -256,13 +256,13 @@ export const activateUser = (verifyToken) => async (dispatch) => {
   }
 };
 
-export const resendVerifiction = (username) => async (dispatch) => {
+export const resendVerification = (username) => async (dispatch) => {
   try {
     dispatch(requestResetVerification());
     await resetVerification({ username });
 
     dispatch(resetVerificationSuccess());
-    dispatch(triggerAlert('Verifcation Email resent. Please check your email.', 'success'));
+    dispatch(triggerAlert('Verification Email resent. Please check your email.', 'success'));
     dispatch(clearAlert());
   } catch (error) {
     dispatch(resetVerificationError(error.response.data));
