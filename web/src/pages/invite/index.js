@@ -362,7 +362,7 @@ const ContactUs = ({ userVoiceToken }) => {
         <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a> 
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <a href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} className="button is-white has-text-primary is-medium is-fullwidth">Idea Board</a> 
+        <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
       </div>
     </div>
   )
