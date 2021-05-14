@@ -130,7 +130,8 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-export function writeSemaToGithub(textarea) {
+export function writeSemaToGithub(textarea, githubMetada) {
+  debugger;
   if (textarea) {
     const semabar = $(textarea).siblings('div.sema')?.[0];
     const semaChildren = $(semabar).children();
@@ -188,12 +189,12 @@ export function writeSemaToGithub(textarea) {
   }
 }
 
-export function onDocumentClicked(event, store) {
+export function onDocumentClicked(event, store, githubMetada) {
   onCloseAllModalsClicked(event, store);
-  onGithubSubmitClicked(event);
+  onGithubSubmitClicked(event, githubMetada);
 }
 
-function onGithubSubmitClicked(event) {
+function onGithubSubmitClicked(event, githubMetada) {
   const target = event.target;
   const parentButton = $(target).parents('button')?.[0];
   const isButton = $(target).is('button') || $(parentButton).is('button');
@@ -208,7 +209,7 @@ function onGithubSubmitClicked(event) {
       'file-attachment div text-expander textarea'
     )?.[0];
 
-    writeSemaToGithub(textarea);
+    writeSemaToGithub(textarea, githubMetada);
   }
 }
 
@@ -320,3 +321,29 @@ export function getSemaIds(idSuffix) {
     semaSearchContainerId: `semasearch_${idSuffix}`,
   };
 }
+
+export const getGithubMetadata = (document) => {
+  const url = document.querySelector('meta[property="og:url"]')?.content;
+  const decoupleUrl = url.split('/');
+  const [,,,, repository,, pullRequest] = decoupleUrl;
+  const headBranch = document.querySelector('span[class*="head-ref"] a')?.textContent;
+  const baseBranch = document.querySelector('span[class*="base-ref"] a')?.textContent;
+  const githubUserId = document.querySelector('meta[name="octolytics-dimension-user_id"]')?.content;
+  const requester = document.querySelector('a[class*="author"]')?.textContent;
+
+  const githubMetada = {
+    url,
+    pullRequest,
+    repository,
+    headBranch,
+    baseBranch,
+    githubUserId,
+    requester,
+  };
+
+  return githubMetada;
+};
+
+const createSmartComment = () => {
+
+}; 

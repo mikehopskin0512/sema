@@ -15,6 +15,7 @@ import {
   onSuggestion,
   getSemaIds,
   writeSemaToGithub,
+  getGithubMetadata,
 } from './modules/content-util';
 
 import {
@@ -39,6 +40,14 @@ import {
 
 import highlightPhrases from './modules/highlightPhrases';
 
+let githubMetada = {};
+let stateCheck = setInterval(() => {
+  if (document.readyState === 'complete') {
+    clearInterval(stateCheck);
+    githubMetada = getGithubMetadata(document);
+  }
+}, 100);
+
 const highlightWords = highlightPhrases.reduce((acc, curr) => {
   acc[curr] = true;
   return acc;
@@ -52,7 +61,7 @@ const highlightWords = highlightPhrases.reduce((acc, curr) => {
 document.addEventListener(
   'click',
   (event) => {
-    onDocumentClicked(event, store);
+    onDocumentClicked(event, store, githubMetada);
   },
   // adding listener in the "capturing" phase
   true
@@ -69,7 +78,7 @@ document.addEventListener(
     if ((ctrlKey || metaKey) && code === 'Enter') {
       const activeElement = document.activeElement;
       if ($(activeElement).is('textarea')) {
-        writeSemaToGithub(activeElement);
+        writeSemaToGithub(activeElement, githubMetada);
       }
     }
   },
