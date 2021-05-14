@@ -305,7 +305,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span class={clsx('tag is-primary', styles.tag)}>
+                    <span className={clsx('tag is-primary', styles.tag)}>
                       Pending Invite
                     </span>
                   ) : (

@@ -57,6 +57,7 @@ const Login = () => {
         return <TokenCard  invitation={invitations} />
       }
     }
+
     if (user?.isWaitlist) {
       return <Waitlist />
     }
