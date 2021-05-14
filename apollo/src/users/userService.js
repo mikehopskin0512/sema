@@ -328,3 +328,17 @@ export const validatePasswordReset = async (token) => {
     throw (error);
   }
 };
+
+export const updateLastLogin = async (user) => {
+  try {
+    await update({
+      ...user,
+      lastLogin: Date.now(),
+    });
+    return true;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
