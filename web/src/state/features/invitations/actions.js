@@ -65,10 +65,11 @@ export const createInvite = (invitationData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateInvite());
     const payload = await postInvite({ invitation: invitationData }, token);
-    const { data: { invitation = {} } } = payload;
+    const { data: { invitation = {}, user } } = payload;
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
     dispatch(requestCreateInviteSuccess(invitation));
+    return { invitation, user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

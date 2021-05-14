@@ -33,6 +33,7 @@ const userSchema = mongoose.Schema({
   jobTitle: String,
   company: String,
   avatarUrl: String,
+  inviteCount: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
