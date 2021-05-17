@@ -32,67 +32,69 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
 // For more information visit: https://developer.chrome.com/docs/extensions/reference/webRequest/
 
 // Fetches a new access token if refresh token has not expired
-const refreshToken = ({ value }) => {
-  return new Promise((reject, resolve) => {
-    fetch(`https://api-qa.semasoftware.com/v1/auth/${value}`, { mode: 'cors' })
-      .then((response) => response.text())
-      .then((token) => {
-        console.log('New access token: ', token);
-        resolve(JSON.parse(token));
-      })
-      .catch(function (error) {
-        reject(error);
-      });
-  });
-};
+// const refreshToken = ({ value }) => {
+//   return new Promise((reject, resolve) => {
+//     fetch(`https://api-qa.semasoftware.com/v1/auth/${value}`, { mode: 'cors' })
+//       .then((response) => response.text())
+//       .then((token) => {
+//         console.log('New access token: ', token);
+//         resolve(JSON.parse(token));
+//       })
+//       .catch(function (error) {
+//         reject(error);
+//       });
+//   });
+// };
 
-const auth = async () => {
-  // Get refresh token cookie
-  const cookieToken = await chrome.cookies.get({
-    url: 'https://app-qa.semasoftware.com/',
-    name: '_phoenix',
-  });
-  // Verify is refresh token cookie is alive
-  var isTokenExpired = false;
-  let token = cookieToken.value;
-  let decodedToken = jwt_decode(token);
-  let currentDate = new Date();
-  // JWT exp is in seconds
-  if (decodedToken.exp * 1000 < currentDate.getTime()) {
-    isTokenExpired = true;
-  }
-  if (cookieToken && isTokenExpired) {
-    try {
-      const { jwtToken: newToken } = await refreshToken(cookieToken); // New access token generated
-    } catch (error) {
-      // If error is because the refresh token cookie has expired. Therefore it will redirect you to web app/login
-      chrome.tabs.create({ url: 'https://app-qa.semasoftware.com/login' });
-    }
-  } else {
-    // If no cookie, redirect to web app/login
-    chrome.tabs.create({ url: 'https://app-qa.semasoftware.com/login' });
-  }
-};
+// const auth = async () => {
+//   // Get refresh token cookie
+//   const cookieToken = await chrome.cookies.get({
+//     url: 'https://app-qa.semasoftware.com/',
+//     name: '_phoenix',
+//   });
+//   // Verify is refresh token cookie is alive
+//   var isTokenExpired = false;
+//   let token = cookieToken.value;
+//   let decodedToken = jwt_decode(token);
+//   let currentDate = new Date();
+//   // JWT exp is in seconds
+//   if (decodedToken.exp * 1000 < currentDate.getTime()) {
+//     isTokenExpired = true;
+//   }
+//   if (cookieToken && isTokenExpired) {
+//     try {
+//       const { jwtToken: newToken } = await refreshToken(cookieToken); // New access token generated
+//     } catch (error) {
+//       // If error is because the refresh token cookie has expired. Therefore it will redirect you to web app/login
+//       chrome.tabs.create({ url: 'https://app-qa.semasoftware.com/login' });
+//     }
+//   } else {
+//     // If no cookie, redirect to web app/login
+//     chrome.tabs.create({ url: 'https://app-qa.semasoftware.com/login' });
+//   }
+// };
+
+// auth();
 
 const isLoggedIn = (token) => {
   let hasTokenExpired = false;
   if (!token?.value) hasTokenExpired = true;
+  else {
   const jwt = token.value;
   const decodedToken = jwt_decode(jwt);
   const currentDate = new Date();
   if (decodedToken.exp * 1000 < currentDate.getTime()) {
-    isTokenExpired = true;
+      hasTokenExpired = true;
+    }
   }
   return !hasTokenExpired;
 };
-
-// auth();
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request[WHOAMI]) {
     chrome.cookies
       .get({
-        url: 'https://app-qa.semasoftware.com/',
+        url: SEMA_UI_URL,
         name: '_phoenix',
       })
       .then((token) => {
