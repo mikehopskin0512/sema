@@ -298,6 +298,7 @@ export function onSuggestion(event, store) {
           updateSelectedEmoji({
             id: semabarId,
             selectedReaction: suggestedReaction,
+            isReactionDirty: false,
           })
         );
       }

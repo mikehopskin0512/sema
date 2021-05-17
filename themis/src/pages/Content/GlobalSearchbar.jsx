@@ -46,11 +46,10 @@ const GlobalSearchbar = (props) => {
   const onCopyPressed = (suggestion) => {
     let value = props.commentBox.value;
     props.commentBox.value = `${value}\n${suggestion}\n`;
-    // directly changing the value will not trigger "oninput" event
-    // so directly call the mirror callback for oninput
-    props.mirror._onInput();
     setSearchResults([]);
     props.toggleSearchModal();
+
+    props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
   const onCrossPressed = (event) => {
