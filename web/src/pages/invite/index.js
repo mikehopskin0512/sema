@@ -20,7 +20,7 @@ import styles from './invite.module.scss';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { clearAlert } = alertOperations;
-const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
@@ -65,11 +65,11 @@ const Invite = () => {
       };
       // Send invite & reset form
       setRecipient(email);
-      await dispatch(createInvite(invitation, token, user));
+      await dispatch(createInviteAndHydrateUser(invitation, token));
       await dispatch(getInvitesBySender(userId, token));
       reset();
     }
-  };
+  }
 
   useEffect(() => {
     if (isPluginInstalled) {
