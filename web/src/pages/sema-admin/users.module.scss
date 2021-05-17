@@ -1,0 +1,125 @@
+.users-page {
+    padding: 35px 25px;
+    background: #f7f8fa;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    table {
+        border: 1px solid #dbdbdb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+        thead {
+            background: #f2f1f4;
+
+            th {
+                vertical-align: inherit;
+                padding: .5rem 1.5rem;
+                font-size: 14px;
+                font-weight: 600;
+
+                &:last-child {
+                    padding: 0;
+                }
+            }
+        }
+        td {
+            vertical-align: inherit;
+            padding: .5rem 1.5rem;
+            font-size: 14px;
+            &:last-child {
+                padding: 0;
+            }
+        }
+
+    }
+
+}
+
+.table-wrapper {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+.page-title {
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+    line-height: 45px;
+}
+
+.page-desc {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #9198a4;
+}
+
+.invite-header {
+    background: #E9E1F0;
+    padding-top: .25em;
+}
+
+.subHeader {
+    padding: .25em 0;
+}
+
+.invite-subheader {
+    display: flex;
+    background: #E3D6EF;
+    padding: .25em 0;
+}
+
+.invite-col {
+    flex: 1;
+    text-align: left;
+    padding: 0 1rem;
+}
+
+.search-input-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.name {
+    display: flex;
+    align-items: center;
+
+    img {
+        margin-right: 10px;
+    }
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.button {
+    width: 22px;
+    height: 20px;
+    background: #f0f0f0;
+    border: 0;
+    margin: 0 2px;
+    cursor: pointer;
+
+    &:first-child {
+        margin-left: 10px;
+    }
+    &:focus {
+        outline: none;
+    }
+}
+
+.avatar-img {
+    width: 32px;
+    height: 32px;
+}

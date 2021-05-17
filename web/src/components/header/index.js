@@ -2,8 +2,9 @@ import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
-import styles from './header.module.scss';
+import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
+import Logo from '../../../public/img/sema-logo-no-border.svg';
 import useOutsideClick from '../../utils/useOutsideClick';
 
 const Header = () => {
@@ -81,7 +82,7 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header>
+    <header className="has-background-white">
       <nav
         className="navbar is-transparent"
         role="navigation"
@@ -90,8 +91,7 @@ const Header = () => {
         <div className="navbar-brand">
           <Link href="/reports">
             <a>
-              {/* <Logo className="logo" /> */}
-              <img src="/img/sema-logo.png" alt="sema-logo" />
+              <Logo className="logo" />
             </a>
           </Link>
           {token && isVerified && (

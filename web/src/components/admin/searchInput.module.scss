@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    margin-bottom: 15px;
+
+    input {
+        padding: .5rem 1rem;
+        border: 1px solid #f3f3f3;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+    button {
+        background: #f3f3f3;
+        border: 0;
+        padding: .5rem .75rem;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
