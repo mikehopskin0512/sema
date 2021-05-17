@@ -11,7 +11,7 @@ import {
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS,
+  UPDATE_GITHUB_TEXTAREA,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -72,7 +72,7 @@ export const resetSemaStates = (payload) => ({
   payload,
 });
 
-export const updateSemaComponents = (payload) => ({
-  type: UPDATE_SEMA_COMPONENTS,
+export const updateTextareaState = (payload) => ({
+  type: UPDATE_GITHUB_TEXTAREA,
   payload,
 });

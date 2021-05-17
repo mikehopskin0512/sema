@@ -1,10 +1,8 @@
 import * as types from './types';
 import { getInvite, postInvite, getInvitations, postResendInvite, deleteInvite } from './api';
 import { alertOperations } from '../alerts';
-import { authOperations } from '../auth';
 
 const { triggerAlert, clearAlert } = alertOperations;
-const { hydrateUser } = authOperations;
 
 const requestCreateInvite = () => ({
   type: types.REQUEST_CREATE_INVITE,
@@ -81,7 +79,7 @@ export const createInvite = (invitationData, token) => async (dispatch) => {
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
     dispatch(requestCreateInviteSuccess(invitation));
-    dispatch(hydrateUser(user));
+    return { invitation, user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
