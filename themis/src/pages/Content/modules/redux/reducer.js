@@ -15,6 +15,7 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  UPDATE_SEMA_USER,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -178,6 +179,9 @@ function rootReducer(state = initialState, action) {
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
+  } else if (type === UPDATE_SEMA_USER) {
+    // TODO: proper user object
+    newState.user = { ...payload };
   }
 
   return newState;

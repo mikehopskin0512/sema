@@ -1,5 +1,5 @@
 const SEMA_URL = process.env.SEMA_URL;
-const SEMA_UI_URL=process.env.SEMA_UI_URL;
+const SEMA_UI_URL = process.env.SEMA_UI_URL;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const ADD_OP = 'ADD_OP';
@@ -103,3 +103,5 @@ export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
 export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 
 export const SUGGESTED_TAG_LIMIT = 3;
+
+export const WHOAMI = 'whoami';

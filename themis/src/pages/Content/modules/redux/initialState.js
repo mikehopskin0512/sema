@@ -4,6 +4,9 @@ const initialState = {
   github: {
     isTyping: false,
   },
+  user: {
+    isLoggedIn: false,
+  },
   semabars: {},
   semasearches: {},
   [GLOBAL_SEMA_SEARCH_ID]: {
