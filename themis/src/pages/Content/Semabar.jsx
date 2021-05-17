@@ -11,7 +11,7 @@ import {
   updateSelectedTagsWithSuggestion,
 } from './modules/redux/action';
 
-import { DELETE_OP, SELECTED, EMOJIS } from './constants';
+import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
@@ -154,8 +154,11 @@ const Semabar = (props) => {
       <>
         <div className="sema-emoji-container">
           <span>
-            Please <a href="">Log In</a> to Sema to get the full code review
-            experience.
+            Please{' '}
+            <a href={SEMA_WEB_LOGIN} target="_blank">
+              Log In
+            </a>{' '}
+            to Sema to get the full code review experience.
           </span>
         </div>
         <div className="sema-tag-container" id="scroll-style">
