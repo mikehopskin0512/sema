@@ -154,6 +154,7 @@ class Mirror {
     // TODO: have a dedicated click event once this is confirmed from business
     $(this._elementToMimic).on('click', this._onHover);
     $(this._elementToMimic).on('input', this._onInput);
+    $(this._elementToMimic).on('change', this._onInput);
     // $(this._elementToMimic).on('mousemove', this._onHover);
     $(this._elementToMimic).on('mouseup mousedown', this._onMousePartial);
 

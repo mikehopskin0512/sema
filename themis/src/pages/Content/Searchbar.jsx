@@ -38,6 +38,8 @@ const SearchBar = (props) => {
     props.commentBox.value = `${value}${suggestion}`;
     setSearchResults([]);
     props.toggleSearchModal();
+
+    props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
   const onCrossPressed = (event) => {

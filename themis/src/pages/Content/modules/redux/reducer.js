@@ -14,7 +14,7 @@ import {
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
-  UPDATE_SEMA_COMPONENTS,
+  UPDATE_GITHUB_TEXTAREA,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -45,6 +45,8 @@ function rootReducer(state = initialState, action) {
       activeElement
     );
 
+    newState.github.isTyping = false;
+
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
       selectedTags: initialTags,
@@ -72,10 +74,10 @@ function rootReducer(state = initialState, action) {
       semasearches[id].isSearchModalVisible = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
-    const { id, selectedReaction, isDirty } = payload;
+    const { id, selectedReaction, isReactionDirty = true } = payload;
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
-    semabars[id].isReactionDirty = true;
+    semabars[id].isReactionDirty = isReactionDirty;
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation, isDirty } = payload;
     const {
@@ -173,9 +175,9 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
     };
-  } else if (type === UPDATE_SEMA_COMPONENTS) {
-    const { Id, typeFlag } = payload;
-    newState.semabars[Id]['typeFlag'] = typeFlag;
+  } else if (type === UPDATE_GITHUB_TEXTAREA) {
+    const { isTyping } = payload;
+    newState.github.isTyping = isTyping;
   }
 
   return newState;

@@ -20,7 +20,10 @@ const suggestedCommentSchema = new Schema({
     type: Boolean,
     default: true,
   },
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  collection: 'suggestedComments',
+});
 
 suggestedCommentSchema.set('autoIndex', autoIndex);
 suggestedCommentSchema.index({ title: 1 });
