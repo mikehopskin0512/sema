@@ -71,11 +71,7 @@ export const createInvite = (invitationData, token, user) => async (dispatch) =>
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
     dispatch(requestCreateInviteSuccess(invitation));
-    dispatch(hydrateUser({
-      ...userResponse,
-      inviteCount: user.inviteCount - 1,
-    }));
-    return { invitation, user };
+    return { invitation, user: userResponse };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
