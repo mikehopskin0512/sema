@@ -62,16 +62,16 @@ const requestResendInviteError = (errors) => ({
   errors,
 });
 
-export const createInvite = (invitationData, token, user) => async (dispatch) => {
+export const createInvite = (invitationData, token) => async (dispatch) => {
   const { recipient } = invitationData;
   try {
     dispatch(requestCreateInvite());
     const payload = await postInvite({ invitation: invitationData }, token);
-    const { data: { invitation = {}, userResponse } } = payload;
+    const { data: { invitation = {}, user } } = payload;
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
     dispatch(requestCreateInviteSuccess(invitation));
-    return { invitation, user: userResponse };
+    return { invitation, user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
