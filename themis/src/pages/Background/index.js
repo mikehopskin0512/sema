@@ -90,15 +90,26 @@ const isLoggedIn = (token) => {
   return !hasTokenExpired;
 };
 
+function getTokenResponse(cookie) {
+  let tokenResponse = { cookie: null, isLoggedIn: false };
+  if (cookie) {
+    tokenResponse = {
+      cookie,
+      isLoggedIn: isLoggedIn(cookie),
+    };
+  }
+  return tokenResponse;
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request[WHOAMI]) {
     chrome.cookies
       .get({
         url: SEMA_UI_URL,
-        name: '_phoenix',
+        name: SEMA_COOKIE_NAME,
       })
-      .then((token) => {
-        sendResponse({ token, isLoggedIn: isLoggedIn(token) });
+      .then((cookie) => {
+        sendResponse(getTokenResponse(cookie));
       });
     return true;
   }

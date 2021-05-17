@@ -106,3 +106,4 @@ export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
+export const SEMA_COOKIE_NAME = '_phoenix';
