@@ -74,18 +74,29 @@ const auth = async () => {
   }
 };
 
+const isLoggedIn = (token) => {
+  let hasTokenExpired = false;
+  if (!token?.value) hasTokenExpired = true;
+  const jwt = token.value;
+  const decodedToken = jwt_decode(jwt);
+  const currentDate = new Date();
+  if (decodedToken.exp * 1000 < currentDate.getTime()) {
+    isTokenExpired = true;
+  }
+  return !hasTokenExpired;
+};
+
 // auth();
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request[WHOAMI]) {
-    // const isLoggedIn = await getUser();
     chrome.cookies
       .get({
         url: 'https://app-qa.semasoftware.com/',
         name: '_phoenix',
       })
       .then((token) => {
-        sendResponse({ token });
+        sendResponse({ token, isLoggedIn: isLoggedIn(token) });
       });
     return true;
   }

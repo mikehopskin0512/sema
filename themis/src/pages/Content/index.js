@@ -44,10 +44,8 @@ import highlightPhrases from './modules/highlightPhrases';
 const checkLoggedIn = async () => {
   chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
     console.log({ ...response });
-
     store.dispatch(updateSemaUser({ isLoggedIn: true }));
   });
-  // console.log(res);
 };
 
 checkLoggedIn();
