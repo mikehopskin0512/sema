@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, findByToken, getInvitationsBySender, getInvitationByRecipient } from './invitationService';
+import {
+  create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
+} from './invitationService';
 import { findByUsername, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
@@ -151,6 +153,35 @@ export default (app, passport) => {
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // Delete invitation
+  route.delete('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const {
+        params: { id },
+        user: { user },
+      } = req;
+
+      // Find and check if invite exists and if the requester is the sender of the invitation
+      const invite = await findById(id);
+      if (!invite) {
+        return res.status(500).send('Error finding invitation.');
+      }
+      if (invite.statusCode > 226) {
+        return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
+      }
+      if (!invite.sender.equals(user._id)) {
+        return res.status(405).send('Unable to delete invitation: Unauthorized.');
+      }
+
+      // Delete invitation
+      const response = await deleteInvitation(invite._id);
+      return res.status(200).send(response);
+    } catch (err) {
+      logger.error(err);
+      return res.status(err.statusCode).send(err);
     }
   });
 };
