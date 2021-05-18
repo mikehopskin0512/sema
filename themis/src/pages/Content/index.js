@@ -23,6 +23,7 @@ import {
   SEMA_SEARCH_CLASS,
   ON_INPUT_DEBOUCE_INTERVAL_MS,
   CALCULATION_ANIMATION_DURATION_MS,
+  WHOAMI,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -35,9 +36,23 @@ import {
   addSemaComponents,
   toggleGlobalSearchModal,
   updateTextareaState,
+  updateSemaUser,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  store.dispatch(updateSemaUser({ ...request }));
+});
+
+const checkLoggedIn = async () => {
+  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
+    console.log({ ...response });
+    store.dispatch(updateSemaUser({ ...response }));
+  });
+};
+
+checkLoggedIn();
 
 const highlightWords = highlightPhrases.reduce((acc, curr) => {
   acc[curr] = true;

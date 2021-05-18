@@ -1,6 +1,8 @@
 const SEMA_URL = process.env.SEMA_URL;
+export const SEMA_UI_URL = process.env.SEMA_UI_URL;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
+export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';
@@ -102,3 +104,7 @@ export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
 export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 
 export const SUGGESTED_TAG_LIMIT = 3;
+
+export const WHOAMI = 'whoami';
+export const SEMA_COOKIE_NAME = '_phoenix';
+export const SEMA_COOKIE_DOMAIN = '.semasoftware.com';
