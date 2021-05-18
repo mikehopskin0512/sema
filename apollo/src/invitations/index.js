@@ -43,6 +43,7 @@ export default (app, passport) => {
       if (!newInvitation) {
         throw new errors.BadRequest('Invitation create error');
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
       const message = {
@@ -51,6 +52,7 @@ export default (app, passport) => {
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: user.username,
       };
       await sendEmail(message);
       const updatedUser = await update({
@@ -136,6 +138,7 @@ export default (app, passport) => {
       if (user) {
         return res.status(401).send({ message: `${recipientData} is already an active member.` });
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = userInvitation;
       const message = {
@@ -144,6 +147,7 @@ export default (app, passport) => {
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: user.username,
       };
       await sendEmail(message);
 
