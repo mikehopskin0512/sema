@@ -108,10 +108,6 @@ const Invite = () => {
     await dispatch(resendInvite(email, token));
   };
 
-  const REVOKE_INVITE = async (id, recipient) => {
-    await dispatch(revokeInvite(id, userId, token, recipient));
-  }
-
   const buttonAction = () => {
     if (isPluginInstalled) {
       toggleCard(false);
@@ -239,7 +235,7 @@ const Invite = () => {
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} REVOKE_INVITE={REVOKE_INVITE} />
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
               </div>
@@ -286,7 +282,9 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations, RESEND_INVITE, REVOKE_INVITE }) => {
+const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
+  const { token, user } = auth;
+
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -315,7 +313,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, REVOKE_INVITE }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text" onClick={() => REVOKE_INVITE(el._id, el.recipient)}>Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => dispatch(revokeInvite(id, user._id, token, recipient))}>Revoke</button>{' '}
                 </td>
               </tr>
             );
