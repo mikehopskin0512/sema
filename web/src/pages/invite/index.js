@@ -313,7 +313,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text" onClick={() => dispatch(revokeInvite(id, user._id, token, recipient))}>Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => dispatch(revokeInvite(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
                 </td>
               </tr>
             );

@@ -64,6 +64,10 @@ const requestDeleteInvite = () => ({
   type: types.REQUEST_DELETE_INVITE,
 });
 
+const requestDeleteInviteSuccess = () => ({
+  type: types.REQUEST_DELETE_INVITE_SUCCESS,
+});
+
 const requestDeleteInviteError = (errors) => ({
   type: types.REQUEST_DELETE_INVITE_ERROR,
   errors,
@@ -142,6 +146,7 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
     await deleteInvite(id, token);
     await dispatch(getInvitesBySender(userId, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
+    dispatch(requestDeleteInviteSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
