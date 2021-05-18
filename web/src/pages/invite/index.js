@@ -69,7 +69,7 @@ const Invite = () => {
       await dispatch(getInvitesBySender(userId, token));
       reset();
     }
-  }
+  };
 
   useEffect(() => {
     if (isPluginInstalled) {
