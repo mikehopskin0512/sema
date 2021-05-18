@@ -2,6 +2,8 @@ import {
   SEMA_URL,
   SEMA_UI_URL,
   WHOAMI,
+  SEMA_COOKIE_NAME,
+  SEMA_COOKIE_DOMAIN,
 } from '../../../src/pages/Content/constants';
 import jwt_decode from 'jwt-decode';
 
@@ -22,9 +24,23 @@ chrome.runtime.onMessageExternal.addListener(
 // This logic lives in this file - Background script
 // Cookie onChanged listener for _phoenix refresh token. Utilize/Set by Apollo and Web App
 chrome.cookies.onChanged.addListener(function (changeInfo) {
-  const { cookie, removed } = changeInfo;
-  if (cookie.name === '_phoenix' && removed === false) {
-    console.log('onChange phoenix:', cookie);
+  let { cause, cookie, removed } = changeInfo;
+
+  const isSemaCookie =
+    cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === SEMA_COOKIE_NAME;
+
+  if (isSemaCookie) {
+    if (removed) cookie = undefined;
+    chrome.tabs.query(
+      { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
+      function (tabs) {
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          getTokenResponse(cookie),
+          function (response) {}
+        );
+      }
+    );
   }
 });
 
@@ -50,7 +66,7 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
 //   // Get refresh token cookie
 //   const cookieToken = await chrome.cookies.get({
 //     url: 'https://app-qa.semasoftware.com/',
-//     name: '_phoenix',
+//     name: SEMA_COOKIE_NAME,
 //   });
 //   // Verify is refresh token cookie is alive
 //   var isTokenExpired = false;
@@ -80,10 +96,10 @@ const isLoggedIn = (token) => {
   let hasTokenExpired = false;
   if (!token?.value) hasTokenExpired = true;
   else {
-  const jwt = token.value;
-  const decodedToken = jwt_decode(jwt);
-  const currentDate = new Date();
-  if (decodedToken.exp * 1000 < currentDate.getTime()) {
+    const jwt = token.value;
+    const decodedToken = jwt_decode(jwt);
+    const currentDate = new Date();
+    if (decodedToken.exp * 1000 < currentDate.getTime()) {
       hasTokenExpired = true;
     }
   }

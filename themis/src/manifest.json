@@ -6,14 +6,10 @@
   "options_page": "options.html",
   "background": { "service_worker": "background.bundle.js" },
   "host_permissions": [
-    "http://localhost/*",
+    "*://semasoftware.com/*",
     "https://app-qa.semasoftware.com/*"
-  
   ],
-  "permissions": [
-    "cookies",
-    "tabs"
-  ],
+  "permissions": ["cookies", "tabs"],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
@@ -30,7 +26,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*", "*://localhost/*"],
+      "matches": [
+        "*://github.com/*/pull/*",
+        "*://*.github.com/*/pull/*",
+        "*://localhost/*"
+      ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
       "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]

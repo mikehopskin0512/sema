@@ -107,3 +107,4 @@ export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
 export const SEMA_COOKIE_NAME = '_phoenix';
+export const SEMA_COOKIE_DOMAIN = '.semasoftware.com';
