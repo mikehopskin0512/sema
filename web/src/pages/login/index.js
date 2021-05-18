@@ -14,23 +14,31 @@ import styles from './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
+import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
+const { fetchInvite } = invitationsOperations;
+
 
 const Login = () => {
   const router = useRouter();
+  const {
+    query: { token },
+  } = router;
+
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
 
   // Import state vars
-  const { alerts, auth } = useSelector((state) => ({
+  const { alerts, auth, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
     auth: state.authState,
+    invitations: state.invitationsState,
   }));
 
   const { user, isAuthenticated } = auth;
-  console.log(auth);
+  console.log(invitations);
 
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -46,60 +54,23 @@ const Login = () => {
     dispatch(authenticate(email, password));
   };
 
-  const LoginScreen = () => {
-    return (
-      <>
-        <h1 className="title has-text-centered mb-20 has-text-black">Welcome to Sema</h1>
-        <div className="is-divider is-primary mx-90" />
-        <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
-          Sema is still a work in progress. Join the waitlist to be
-          amongst the first to try it out.
-        </h2>
-        <a
-          type="button"
-          className="button is-black p-25 is-primary"
-          href="/api/identities/github"
-        >
-          <span className="icon is-large mr-20">
-            <FontAwesomeIcon
-              icon={['fab', 'github']}
-              size="2x"
-            />
-          </span>
-          <span>Join the waitlist with Github</span>
-        </a>
-        {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
-        <p className={styles['through-container']}>
-          <span className={styles.line} />
-          <span className={styles['text-container']}>
-            <span className={styles['through-text']}>
-              Already have an account?
-            </span>
-          </span>
-        </p>
-        <a
-          type="button"
-          className="button p-25"
-          href="/api/identities/github"
-        >
-        <span className="icon has-text-primary is-large mr-20">
-            <FontAwesomeIcon
-              icon={['fab', 'github']}
-              size="2x"
-            />
-          </span>
-          <span className="has-text-primary">Sign in with Github</span>
-        </a>
-      </>
-    );
-  };
-
-  const renderScreen = () => {
+  const renderCard = () => {
+    if (token) {
+      if (!isEmpty(invitations.data)) {
+        return <TokenCard  invitation={invitations} />
+      }
+    }
     if (user?.isWaitlist) {
       return <Waitlist />
     }
-    return LoginScreen();
+    return <LoginCard />;
   }
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchInvite(token));
+    }
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -136,7 +107,7 @@ const Login = () => {
                   styles['login-tile'],
                 )}
               >
-                {renderScreen()}
+                {renderCard()}
               </div>
             </div>
           </div>
@@ -175,5 +146,78 @@ const Waitlist = () => (
     </div>
   </>
 );
+
+const LoginCard = () => {
+  return (
+    <>
+      <h1 className="title has-text-centered mb-20">Welcome to Sema</h1>
+      <div className="is-divider is-primary mx-90" />
+      <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
+        Sema is still a work in progress. Join the waitlist to be
+        amongst the first to try it out.
+      </h2>
+      <a
+        type="button"
+        className="button is-black p-25 is-primary"
+        href="/api/identities/github"
+      >
+        <span className="icon is-large mr-20">
+          <FontAwesomeIcon
+            icon={['fab', 'github']}
+            size="2x"
+          />
+        </span>
+        <span>Join the waitlist with Github</span>
+      </a>
+      {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
+      <p className={styles['through-container']}>
+        <span className={styles.line} />
+        <span className={styles['text-container']}>
+          <span className={styles['through-text']}>
+            Already have an account?
+          </span>
+        </span>
+      </p>
+      <a
+        type="button"
+        className="button p-25 is-primary is-outlined"
+        href="/api/identities/github"
+      >
+      <span className="icon is-large mr-20">
+          <FontAwesomeIcon
+            icon={['fab', 'github']}
+            size="2x"
+          />
+        </span>
+        <span>Sign in with Github</span>
+      </a>
+    </>
+  );
+};
+
+const TokenCard = ({invitation}) => {
+  return (
+    <>
+      <h1 className="title has-text-centered mb-20">Welcome to Sema</h1>
+      <div className="is-divider is-primary mx-90" />
+      <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
+        <strong>{invitation.data.senderName}</strong> would love for you to join them.
+      </h2>
+      <a
+        type="button"
+        className="button p-25 is-primary is-outlined"
+        href={`/api/identities/github?token=${invitation.data.token}`}
+      >
+      <span className="icon is-large mr-20">
+          <FontAwesomeIcon
+            icon={['fab', 'github']}
+            size="2x"
+          />
+        </span>
+        <span>Sign in with Github</span>
+      </a>
+    </>
+  );
+};
 
 export default withLayout(Login);

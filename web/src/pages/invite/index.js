@@ -65,13 +65,9 @@ const Invite = () => {
       // Send invite & reset form
       setRecipient(email);
       await dispatch(createInviteAndHydrateUser(invitation, token));
-      GET_INVITES_BY_USER();
+      await dispatch(getInvitesBySender(userId, token));
       reset();
     }
-  };
-
-  const GET_INVITES_BY_USER = async () => {
-    await dispatch(getInvitesBySender(userId, token));
   };
 
   useEffect(() => {
@@ -93,8 +89,7 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     }, 5000);
-
-    GET_INVITES_BY_USER();
+    dispatch(getInvitesBySender(userId, token));
   }, []);
 
   useEffect(() => {
@@ -145,10 +140,8 @@ const Invite = () => {
   };
 
   const renderErrorMessage = () => {
-    console.log(formError)
     if (formError) {
       if (formError.search("has already been invited by another user.") >= 0) {
-        // return formError;
         return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return formError;
@@ -198,9 +191,9 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div class="field">
-                          <label class="label has-text-white">Username</label>
-                          <div class="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
+                        <div className="field">
+                          <label className="label has-text-white">Username</label>
+                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -217,7 +210,7 @@ const Invite = () => {
                                 },
                               })}
                             />
-                            <span class="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
                               <FontAwesomeIcon  icon={faTimes} size="s" />
                             </span>
                           </div>
@@ -311,14 +304,14 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                       Pending Invite
                     </span>
                   ) : (
-                    <span class={clsx('tag is-success', styles.tag)}>
+                    <span className={clsx('tag is-success', styles.tag)}>
                       Active
                     </span>
                   )}
                 </td>
                 <td>
-                  <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button class="button is-text">Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                  <button className="button is-text">Revoke</button>{' '}
                 </td>
               </tr>
             );

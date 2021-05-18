@@ -12,9 +12,11 @@ export const create = async (invitation) => {
     } = invitation;
 
     // Generate token and expiration data (2 weeks from now)
+    /* Token doesn't expire now. */
     const token = await generateToken();
     const now = new Date();
-    const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
+    // const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
+    const tokenExpires = now.setHours(now.getHours() + (9999*999));
 
     const newInvite = new Invitation({
       recipient,
@@ -52,7 +54,7 @@ export const redeemInvite = async (token, userId) => {
     const query = Invitation.findOneAndUpdate({
       token, 'redemptions.user': { $ne: userId },
     },
-    { $push: { redemptions: { user: userId } } });
+    { $push: { redemptions: { user: userId } }, $set: { isPending: false } });
     const invite = await query.lean().exec();
 
     return invite;

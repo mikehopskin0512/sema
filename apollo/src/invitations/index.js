@@ -5,6 +5,7 @@ import errors from '../shared/errors';
 import { create, findByToken, getInvitationsBySender, getInvitationByRecipient } from './invitationService';
 import { findByUsername, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
+import { update } from '../users/userService';
 
 const route = Router();
 
@@ -15,12 +16,12 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
-      user: { user },
+      user: { user: userData },
     } = req;
 
     if (invitation.inviteCount <= 0) {
       return res.status(412).send({
-        message: 'User does not have enough invites.',
+        message: 'User does not have enough invites.'
       });
     }
 
@@ -45,14 +46,14 @@ export default (app, passport) => {
       const { recipient, token, orgName, senderName } = newInvitation;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
       };
       await sendEmail(message);
       const updatedUser = await update({
-        ...user,
+        ...userData,
         inviteCount: invitation.inviteCount - 1,
       });
 
@@ -121,7 +122,7 @@ export default (app, passport) => {
     }
   });
 
-  // send email
+  // Send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { recipient: recipientData } = req.body;
 
@@ -138,7 +139,7 @@ export default (app, passport) => {
       const { recipient, token, orgName, senderName } = userInvitation;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
