@@ -15,12 +15,12 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
-      user: { user },
+      user: { user: userData },
     } = req;
 
     if (invitation.inviteCount <= 0) {
       return res.status(412).send({
-        message: 'User does not have enough invites.',
+        message: 'User does not have enough invites.'
       });
     }
 
@@ -52,7 +52,7 @@ export default (app, passport) => {
       };
       await sendEmail(message);
       const updatedUser = await update({
-        ...user,
+        ...userData,
         inviteCount: invitation.inviteCount - 1,
       });
 

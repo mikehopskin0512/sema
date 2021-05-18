@@ -65,13 +65,9 @@ const Invite = () => {
       // Send invite & reset form
       setRecipient(email);
       await dispatch(createInviteAndHydrateUser(invitation, token));
-      GET_INVITES_BY_USER();
+      await dispatch(getInvitesBySender(userId, token));
       reset();
     }
-  };
-
-  const GET_INVITES_BY_USER = async () => {
-    await dispatch(getInvitesBySender(userId, token));
   };
 
   useEffect(() => {
@@ -93,8 +89,7 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     }, 5000);
-
-    GET_INVITES_BY_USER();
+    dispatch(getInvitesBySender(userId, token));
   }, []);
 
   useEffect(() => {
@@ -145,10 +140,8 @@ const Invite = () => {
   };
 
   const renderErrorMessage = () => {
-    console.log(formError)
     if (formError) {
       if (formError.search("has already been invited by another user.") >= 0) {
-        // return formError;
         return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return formError;
