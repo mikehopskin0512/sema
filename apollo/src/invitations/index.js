@@ -5,7 +5,6 @@ import errors from '../shared/errors';
 import { create, findByToken, getInvitationsBySender, getInvitationByRecipient } from './invitationService';
 import { findByUsername, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
-import { update } from '../users/userService';
 
 const route = Router();
 
