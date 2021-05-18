@@ -1,10 +1,8 @@
 import * as types from './types';
 import { getInvite, postInvite, getInvitations, postResendInvite } from './api';
 import { alertOperations } from '../alerts';
-import { authOperations } from '../auth';
 
 const { triggerAlert, clearAlert } = alertOperations;
-const { hydrateUser } = authOperations;
 
 const requestCreateInvite = () => ({
   type: types.REQUEST_CREATE_INVITE,
