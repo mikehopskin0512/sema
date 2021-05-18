@@ -20,7 +20,7 @@ import styles from './invite.module.scss';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { clearAlert } = alertOperations;
-const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
@@ -45,29 +45,29 @@ const Invite = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
-  const { _id: userId, firstName, lastName, organizations = [] } = user;
+  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    const { email } = data;
-    // Build invitation data
-    const invitation = {
-      recipient: email,
-      orgId,
-      orgName,
-      sender: userId,
-      senderName: fullName,
-    };
-    // Send invite & reset form
-    setRecipient(email);
-    await dispatch(createInvite(invitation, token));
-    GET_INVITES_BY_USER();
-  };
-
-  const GET_INVITES_BY_USER = async () => {
-    await dispatch(getInvitesBySender(userId, token));
+    if (inviteCount > 0) {    
+      const { email } = data;
+      // Build invitation data
+      const invitation = {
+        recipient: email,
+        orgId,
+        orgName,
+        sender: userId,
+        senderName: fullName,
+        inviteCount
+      };
+      // Send invite & reset form
+      setRecipient(email);
+      await dispatch(createInviteAndHydrateUser(invitation, token));
+      await dispatch(getInvitesBySender(userId, token));
+      reset();
+    }
   };
 
   useEffect(() => {
@@ -89,8 +89,7 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     }, 5000);
-
-    GET_INVITES_BY_USER();
+    dispatch(getInvitesBySender(userId, token));
   }, []);
 
   useEffect(() => {
@@ -141,10 +140,8 @@ const Invite = () => {
   };
 
   const renderErrorMessage = () => {
-    console.log(formError)
     if (formError) {
       if (formError.search("has already been invited by another user.") >= 0) {
-        // return formError;
         return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return formError;
@@ -185,7 +182,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
                 }
             >
-              <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
+              <span class={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -194,9 +191,9 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div class="field">
-                          <label class="label has-text-white">Username</label>
-                          <div class="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
+                        <div className="field">
+                          <label className="label has-text-white">Username</label>
+                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -213,7 +210,7 @@ const Invite = () => {
                                 },
                               })}
                             />
-                            <span class="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
                               <FontAwesomeIcon  icon={faTimes} size="s" />
                             </span>
                           </div>
@@ -223,6 +220,7 @@ const Invite = () => {
                                 styles.formBtn
                               )}
                               type="submit"
+                              disabled={inviteCount <= 0}
                             >
                               Send Invite
                             </button>
@@ -306,14 +304,14 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                       Pending Invite
                     </span>
                   ) : (
-                    <span class={clsx('tag is-success', styles.tag)}>
+                    <span className={clsx('tag is-success', styles.tag)}>
                       Active
                     </span>
                   )}
                 </td>
                 <td>
-                  <button class="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button class="button is-text">Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                  <button className="button is-text">Revoke</button>{' '}
                 </td>
               </tr>
             );
