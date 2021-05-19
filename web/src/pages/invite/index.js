@@ -21,7 +21,7 @@ import styles from './invite.module.scss';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { clearAlert } = alertOperations;
-const { createInvite, getInvitesBySender, resendInvite } = invitationsOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInvite } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
@@ -44,8 +44,8 @@ const Invite = () => {
   const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;
-  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0 } = user;
+  const { token, user, userVoiceToken } = auth;
+  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
@@ -64,8 +64,7 @@ const Invite = () => {
       };
       // Send invite & reset form
       setRecipient(email);
-      const response = await dispatch(createInvite(invitation, token, user));
-      console.log(response);
+      const response = await dispatch(createInviteAndHydrateUser(invitation, token));
       if (response.status === 201) {
         reset();
       } else {
@@ -240,14 +239,14 @@ const Invite = () => {
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} />
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
               </div>
             </div>
           </div>
         </div>
-        <ContactUs />
+        <ContactUs userVoiceToken={userVoiceToken}/>
       </section>
     </>
   );
@@ -287,7 +286,9 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations, RESEND_INVITE }) => {
+const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
+  const { token, user } = auth;
+
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -316,7 +317,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text">Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => dispatch(revokeInvite(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
                 </td>
               </tr>
             );
@@ -354,7 +355,7 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = () => {
+const ContactUs = ({ userVoiceToken }) => {
   return (
     <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
       <div className="column is-6">
@@ -365,7 +366,7 @@ const ContactUs = () => {
         <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <button className="button is-white is-medium is-fullwidth has-text-primary">Idea Board</button>
+        <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
       </div>
     </div>
   )
