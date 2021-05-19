@@ -144,10 +144,12 @@ export const resendInvite = (recipient, token) => async (dispatch) => {
 export const revokeInvite = (id, userId, token, recipient) => async (dispatch) => {
   try {
     dispatch(requestDeleteInvite());
-    await deleteInvite(id, token);
-    await dispatch(getInvitesBySender(userId, token));
+    const payload = await deleteInvite(id, token);
+    const { data: { user }} = payload;
+    dispatch(getInvitesBySender(userId, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
     dispatch(requestDeleteInviteSuccess());
+    return { user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
