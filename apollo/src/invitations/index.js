@@ -22,7 +22,7 @@ export default (app, passport) => {
 
     if (invitation.inviteCount <= 0) {
       return res.status(412).send({
-        message: 'User does not have enough invites.'
+        message: 'User does not have enough invites.',
       });
     }
 
