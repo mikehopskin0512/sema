@@ -2,15 +2,34 @@ import User from '../../users/userModel';
 import Invitation from '../../invitations/invitationModel';
 
 export const listUsers = async (params) => {
-  const { page, perPage = 10, search } = params;
+  const { page, perPage = 10, search, status } = params;
 
   const query = User.find(search ? {
     $or: [
       { firstName: new RegExp(search, 'gi') },
       { lastName: new RegExp(search, 'gi') },
       { username: new RegExp(search, 'gi') },
+      { 'identities.email': new RegExp(search, 'gi') },
     ],
   } : {});
+
+  if (status) {
+    const statusQuery = [];
+
+    status.forEach((item) => {
+      if (item === 'Waitlisted') {
+        statusQuery.push({ isActive: true, isWaitlist: true });
+      } else if (item === 'Active') {
+        statusQuery.push({ isActive: true, isWaitlist: false });
+      } else if (item === 'Blocked') {
+        statusQuery.push({ isActive: false, isWaitlist: true });
+      } else {
+        statusQuery.push({ isActive: false, isWaitlist: false });
+      }
+    });
+
+    query.and({ $or: statusQuery });
+  }
 
   const totalCount = await User.countDocuments(query);
   if (page) {

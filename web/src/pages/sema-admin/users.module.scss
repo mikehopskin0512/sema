@@ -8,6 +8,11 @@
     table {
         border: 1px solid #dbdbdb;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        background: none;
+
+        tr {
+            background: none !important;
+        }
 
         thead {
             background: #f2f1f4;
@@ -106,6 +111,7 @@
 .button {
     width: 22px;
     height: 20px;
+    line-height: 20px;
     background: #f0f0f0;
     border: 0;
     margin: 0 2px;
@@ -122,4 +128,11 @@
 .avatar-img {
     width: 32px;
     height: 32px;
+    border-radius: 16px;
+}
+
+.status {
+    svg {
+        margin-left: 10px;
+    }
 }

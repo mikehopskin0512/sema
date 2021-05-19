@@ -3,47 +3,80 @@ import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import SearchInput from '../../components/admin/searchInput';
-import styles from './users.module.scss';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import useDebounce from '../../hooks/useDebounce';
+import StatusFilter from '../../components/admin/statusFilter';
+import styles from './users.module.scss';
 
 const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.usersState);
+
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
+  const [statusFilters, setStatusFilters] = useState({
+    Waitlisted: false,
+    Active: false,
+    Blocked: false,
+    Disabled: false,
+  });
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    const statusQuery = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
 
-  useEffect(() => {
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [debounceSearchTerm]);
+    dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
+  }, [debounceSearchTerm, statusFilters]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const getBadgeColor = (value) => {
+    if (value === 'Waitlisted') return 'blue';
+    if (value === 'Active') return 'green';
+    if (value === 'Blocked') return 'pink';
+
+    return 'purple';
+  };
+
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
         accessor: 'userInfo',
-        sorted: true,
+        sorted: false,
         Cell: ({ cell: { value } }) => (
           <div className={styles.name}>
-            <img src={value.avatarUrl} alt="avatar" className={styles['avatar-img']}/>
+            <img src={value.avatarUrl} alt="avatar" className={styles['avatar-img']} />
             { value.name }
           </div>
+        ),
+      },
+      {
+        Header: () => (
+          <div className={clsx(styles.status, styles.flex)}>
+            <div>Status</div>
+            <StatusFilter value={statusFilters} onChange={setStatusFilters} />
+          </div>
+        ),
+        accessor: 'status',
+        sorted: false,
+        Cell: ({ cell: { value } }) => (
+          <Badge
+            label={value}
+            color={getBadgeColor(value)}
+          />
         ),
       },
       {
@@ -67,6 +100,7 @@ const UsersPage = () => {
       {
         Header: 'Email',
         accessor: 'username',
+        sorted: false,
       },
       {
         Header: () => (
@@ -105,8 +139,16 @@ const UsersPage = () => {
         ),
       },
     ],
-    [debounceSearchTerm],
+    [handleUpdateUserInvitations],
   );
+
+  const getStatus = (user) => {
+    if (user.isActive && user.isWaitlist) return 'Waitlisted';
+    if (user.isActive && !user.isWaitlist) return 'Active';
+    if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+    return 'Disabled';
+  };
 
   const dataSource = users.map((item) => ({
     ...item,
@@ -114,7 +156,8 @@ const UsersPage = () => {
       name: fullName(item),
       avatarUrl: item.avatarUrl,
     },
-    activeDate: `${moment(item.createdAt).format('DD')}d`,
+    status: getStatus(item),
+    activeDate: `${moment().diff(item.createdAt, 'days')}d`,
     invites: {
       available: item.inviteCount,
       pending: item.pendingCount,
