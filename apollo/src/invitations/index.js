@@ -46,13 +46,14 @@ export default (app, passport) => {
 
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
+      const { username } = user;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: user.username,
+        email: username,
       };
       await sendEmail(message);
       const updatedUser = await update({
@@ -141,13 +142,14 @@ export default (app, passport) => {
 
       // Send invitation
       const { recipient, token, orgName, senderName } = userInvitation;
+      const { username } = user;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: user.username,
+        email: username,
       };
       await sendEmail(message);
 
