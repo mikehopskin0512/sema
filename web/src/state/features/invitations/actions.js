@@ -88,6 +88,7 @@ export const createInvite = (invitationData, token) => async (dispatch) => {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestCreateInviteError(errMessage));
+    return error.response;
   }
 };
 

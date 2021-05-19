@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { isEmpty } from "lodash";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -24,9 +25,8 @@ const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInvi
 
 const Invite = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState, reset } = useForm();
+  const { register, handleSubmit, formState, reset, setError } = useForm();
   const { errors } = formState;
-
   // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
@@ -41,7 +41,6 @@ const Invite = () => {
   const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
-  const [formError, setError] = useState("");
   const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
@@ -52,8 +51,7 @@ const Invite = () => {
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    alert("Submit")
-    if (inviteCount > 0) {    
+    if (inviteCount > 0) {
       const { email } = data;
       // Build invitation data
       const invitation = {
@@ -66,9 +64,16 @@ const Invite = () => {
       };
       // Send invite & reset form
       setRecipient(email);
-      await dispatch(createInviteAndHydrateUser(invitation, token));
+      const response = await dispatch(createInviteAndHydrateUser(invitation, token));
+      if (response.status === 201) {
+        reset();
+      } else {
+        setError("email", {
+          type: "manual",
+          message: response.data.message
+        });
+      }
       await dispatch(getInvitesBySender(userId, token));
-      reset();
     }
   };
 
@@ -93,12 +98,6 @@ const Invite = () => {
     }, 5000);
     dispatch(getInvitesBySender(userId, token));
   }, []);
-
-  useEffect(() => {
-    if (invitations.error && typeof invitations.error === "string") {
-      setError(invitations.error);
-    }
-  }, [invitations]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -142,11 +141,12 @@ const Invite = () => {
   };
 
   const renderErrorMessage = () => {
-    if (formError) {
-      if (formError.search("has already been invited by another user.") >= 0) {
-        return <span>{formError} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
+    if (!isEmpty(errors)) {
+      const error = errors.email.message;
+      if (error.search("has already been invited by another user.") >= 0) {
+        return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
-      return formError;
+      return error;
     }
   };
 
@@ -157,7 +157,7 @@ const Invite = () => {
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
-                    Welcome to Sema!
+              Welcome to Sema!
                   </p>
             <PluginStateCard
               title={title}
@@ -182,7 +182,7 @@ const Invite = () => {
             <p
               className={
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
-                }
+              }
             >
               <span className={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
               Invites Available
@@ -204,7 +204,7 @@ const Invite = () => {
                               type="email"
                               placeholder="tony@starkindustries.com"
                               {
-                                ...register(`email`, 
+                              ...register(`email`,
                                 {
                                   required: 'Email is required',
                                   pattern: {
@@ -215,24 +215,24 @@ const Invite = () => {
                               }
                             />
                             <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
-                              <FontAwesomeIcon  icon={faTimes} size="sm" />
+                              <FontAwesomeIcon icon={faTimes} size="sm" />
                             </span>
                           </div>
-                            <button
-                              className={clsx(
-                                'button is-white',
-                                styles.formBtn
-                              )}
-                              type="submit"
-                              disabled={inviteCount <= 0}
-                            >
-                              Send Invite
+                          <button
+                            className={clsx(
+                              'button is-white',
+                              styles.formBtn
+                            )}
+                            type="submit"
+                            disabled={inviteCount <= 0}
+                          >
+                            Send Invite
                             </button>
-                            <article className={clsx("message is-danger mt-20", !formError && "is-hidden")} style={{ width: "80%"}}>
-                              <div className="message-body">
-                                {renderErrorMessage()}
-                              </div>
-                            </article>
+                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden")} style={{ width: "80%" }}>
+                            <div className="message-body">
+                              {renderErrorMessage()}
+                            </div>
+                          </article>
                         </div>
                       </div>
                     </div>
@@ -299,7 +299,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
         </tr>
       </thead>
       <tbody>
-        {invitations?.length ? 
+        {invitations?.length ?
           invitations.map((el, i) => {
             return (
               <tr key={`row-${i}`}>
@@ -322,15 +322,15 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
               </tr>
             );
           }) : <tr>
-                  <td colSpan="3" >
-                    <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-                    <img className={styles['no-data-img']} src="/img/empty-invite-table.png"/>
-                    <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
-                      You haven't invited anyone yet.
+            <td colSpan="3" >
+              <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
+                <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+                <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
+                  You haven't invited anyone yet.
                     </div>
-                    </div>
-                  </td>
-                </tr>}
+              </div>
+            </td>
+          </tr>}
       </tbody>
     </table>
   );
@@ -363,7 +363,7 @@ const ContactUs = ({ userVoiceToken }) => {
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a> 
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
         <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
