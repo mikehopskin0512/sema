@@ -5,7 +5,7 @@ import errors from '../shared/errors';
 import {
   create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
 } from './invitationService';
-import { findByUsername, update } from '../users/userService';
+import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -178,7 +178,12 @@ export default (app, passport) => {
 
       // Delete invitation
       const response = await deleteInvitation(invite._id);
-      return res.status(200).send(response);
+      const updatedUser = await findUserById(user._id);
+      const userData = await update({
+        ...user,
+        inviteCount: updatedUser.inviteCount + 1,
+      });
+      return res.status(200).send({ user: userData, response });
     } catch (err) {
       logger.error(err);
       return res.status(err.statusCode).send(err);
