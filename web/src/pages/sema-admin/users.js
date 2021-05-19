@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
+import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 import styles from './users.module.scss';
 
@@ -137,4 +138,4 @@ const UsersPage = () => {
   );
 };
 
-export default withLayout(UsersPage);
+export default withSemaAdmin(withLayout(UsersPage));

@@ -44,6 +44,7 @@ const userSchema = mongoose.Schema({
   identities: [identitySchema],
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },
+  isSemaAdmin: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;
