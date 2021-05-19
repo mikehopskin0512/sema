@@ -35,7 +35,7 @@ const initialize = async (ctx) => {
   // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
-    ctx.pathname !== '/login' &&
+    !(ctx.pathname).includes('/login') &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset')
   ) {

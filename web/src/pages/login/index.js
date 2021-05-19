@@ -10,27 +10,37 @@ import { isEmpty } from "lodash";
 import clsx from 'clsx';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import LoginCard from '../../components/auth/LoginCard';
+import InviteCard from '../../components/auth/InviteCard';
+import WaitlistCard from '../../components/auth/WaitlistCard';
 import styles from './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
+import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
+const { fetchInvite } = invitationsOperations;
+
 
 const Login = () => {
   const router = useRouter();
+  const {
+    query: { token },
+  } = router;
+
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
 
   // Import state vars
-  const { alerts, auth } = useSelector((state) => ({
+  const { alerts, auth, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
     auth: state.authState,
+    invitations: state.invitationsState,
   }));
 
   const { user, isAuthenticated } = auth;
-  console.log(auth);
 
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -46,60 +56,23 @@ const Login = () => {
     dispatch(authenticate(email, password));
   };
 
-  const LoginScreen = () => {
-    return (
-      <>
-        <h1 className="title has-text-centered mb-20 has-text-black">Welcome to Sema</h1>
-        <div className="is-divider is-primary mx-90" />
-        <h2 className="subtitle has-text-centered is-size-6 has-text-black mt-20 mb-90">
-          Sema is still a work in progress. Join the waitlist to be
-          amongst the first to try it out.
-        </h2>
-        <a
-          type="button"
-          className="button is-black p-25 is-primary"
-          href="/api/identities/github"
-        >
-          <span className="icon is-large mr-20">
-            <FontAwesomeIcon
-              icon={['fab', 'github']}
-              size="2x"
-            />
-          </span>
-          <span>Join the waitlist with Github</span>
-        </a>
-        {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
-        <p className={styles['through-container']}>
-          <span className={styles.line} />
-          <span className={styles['text-container']}>
-            <span className={styles['through-text']}>
-              Already have an account?
-            </span>
-          </span>
-        </p>
-        <a
-          type="button"
-          className="button p-25"
-          href="/api/identities/github"
-        >
-        <span className="icon has-text-primary is-large mr-20">
-            <FontAwesomeIcon
-              icon={['fab', 'github']}
-              size="2x"
-            />
-          </span>
-          <span className="has-text-primary">Sign in with Github</span>
-        </a>
-      </>
-    );
-  };
-
-  const renderScreen = () => {
-    if (user?.isWaitlist) {
-      return <Waitlist />
+  const renderCard = () => {
+    if (token) {
+      if (!isEmpty(invitations.data)) {
+        return <InviteCard  invitation={invitations} />
+      }
     }
-    return LoginScreen();
+    if (user?.isWaitlist) {
+      return <WaitlistCard />
+    }
+    return <LoginCard />;
   }
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchInvite(token));
+    }
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -136,7 +109,7 @@ const Login = () => {
                   styles['login-tile'],
                 )}
               >
-                {renderScreen()}
+                {renderCard()}
               </div>
             </div>
           </div>
@@ -145,35 +118,5 @@ const Login = () => {
     </div>
   );
 };
-
-const Waitlist = () => (
-  <>
-    <div className={styles['head-text']}>
-      <h4 className="title is-4 has-text-centered">You&apos;re on the list!</h4>
-      <h2 className={clsx(
-        'subtitle has-text-centered has-text-weight-medium',
-        styles['foot-text'],
-      )}>
-        Thanks for your interest. We&apos;ve added you on the list. We&apos;ll
-        email as soon as a slot opens up in the private beta
-      </h2>
-    </div>
-    <div className={clsx(
-      'title has-text-centered',
-      styles['foot-text'],
-    )}>
-      Skip the line
-    </div>
-    <div className={clsx(
-      'subtitle has-text-centered has-text-weight-medium',
-      styles['foot-text'],
-    )}>
-      A few people have the ability to invite others.
-      <div>
-        Keep an eye out for our early testers.
-      </div>
-    </div>
-  </>
-);
 
 export default withLayout(Login);

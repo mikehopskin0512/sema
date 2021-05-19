@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getInvite, postInvite, getInvitations, postResendInvite } from './api';
+import { getInvite, postInvite, getInvitations, postResendInvite, deleteInvite } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -60,15 +60,30 @@ const requestResendInviteError = (errors) => ({
   errors,
 });
 
+const requestDeleteInvite = () => ({
+  type: types.REQUEST_DELETE_INVITE,
+});
+
+const requestDeleteInviteSuccess = () => ({
+  type: types.REQUEST_DELETE_INVITE_SUCCESS,
+});
+
+const requestDeleteInviteError = (errors) => ({
+  type: types.REQUEST_DELETE_INVITE_ERROR,
+  errors,
+});
+
+
 export const createInvite = (invitationData, token) => async (dispatch) => {
   const { recipient } = invitationData;
   try {
     dispatch(requestCreateInvite());
     const payload = await postInvite({ invitation: invitationData }, token);
-    const { data: { invitation = {} } } = payload;
+    const { data: { invitation = {}, user } } = payload;
 
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
     dispatch(requestCreateInviteSuccess(invitation));
+    return { invitation, user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -122,5 +137,19 @@ export const resendInvite = (recipient, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestResendInviteError(errMessage));
+  }
+};
+
+export const revokeInvite = (id, userId, token, recipient) => async (dispatch) => {
+  try {
+    dispatch(requestDeleteInvite());
+    await deleteInvite(id, token);
+    await dispatch(getInvitesBySender(userId, token));
+    dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
+    dispatch(requestDeleteInviteSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestDeleteInviteError(errMessage));
   }
 };
