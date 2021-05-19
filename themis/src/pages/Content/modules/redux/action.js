@@ -12,6 +12,8 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  ADD_SUGGESTED_COMMENTS,
+  ADD_GITHUB_METADATA,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -74,5 +76,15 @@ export const resetSemaStates = (payload) => ({
 
 export const updateTextareaState = (payload) => ({
   type: UPDATE_GITHUB_TEXTAREA,
+  payload,
+});
+
+export const addSuggestedComments = (payload) => ({
+  type: ADD_SUGGESTED_COMMENTS,
+  payload,
+});
+
+export const addGithubMetada = (payload) => ({
+  type: ADD_GITHUB_METADATA,
   payload,
 });

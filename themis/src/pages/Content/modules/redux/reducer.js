@@ -15,6 +15,8 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  ADD_SUGGESTED_COMMENTS,
+  ADD_GITHUB_METADATA,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -47,6 +49,19 @@ function rootReducer(state = initialState, action) {
 
     newState.github.isTyping = false;
 
+    newState.githubMetada = {
+      url: null,
+      repo: null,
+      pull_number: null,
+      head: null,
+      base: null,
+      user: { id: null, login: null },
+      requester: null,
+      filename: null,
+      file_extension: null,
+      line_numbers: [],
+    }
+
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
       selectedTags: initialTags,
@@ -57,6 +72,7 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
+      selectedSuggestedComments: [], 
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -174,12 +190,23 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
+      selectedSuggestedComments: [], 
     };
+
+    // Reset to default Github Metadata
+    newState.githubMetada.filename = null;
+    newState.githubMetada.file_extension = null;
+    newState.githubMetada.ine_numbers = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
+  } else if (type === ADD_SUGGESTED_COMMENTS) {
+    const { id, suggestedComment } = payload;
+    newState.semasearches[id].selectedSuggestedComments.push(suggestedComment);
+  } else if (type === ADD_GITHUB_METADATA) {
+    const metadata = payload;
+    newState.githubMetadata = metadata;
   }
-
   return newState;
 }
 

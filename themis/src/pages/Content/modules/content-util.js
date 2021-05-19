@@ -1,8 +1,10 @@
 import $ from 'cash-dom';
 
 import {
+  USER,
   EMOJIS,
   TAGS_INIT,
+  TAGS_ON_DB,
   POSITIVE,
   NEGATIVE,
   SELECTED,
@@ -11,6 +13,7 @@ import {
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
   ADD_OP,
+  CREATE_SMART_COMMENT_URL,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
@@ -130,9 +133,15 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-export function writeSemaToGithub(textarea, githubMetada) {
-  debugger;
+export function writeSemaToGithub(textarea) {
   if (textarea) {
+    let smartComment = {};
+    let inLineMetada = {};
+
+    const type = textarea?.id && textarea.id.includes('new_comment_field') ? 'comment' : 'inline';
+
+    const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
+
     const semabar = $(textarea).siblings('div.sema')?.[0];
     const semaChildren = $(semabar).children();
 
@@ -140,9 +149,9 @@ export function writeSemaToGithub(textarea, githubMetada) {
     const tagContainer = semaChildren?.[1];
 
     const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-    const selectedTags = $(tagContainer)
+    const selectedTags = Array.from($(tagContainer)
       .children('.sema-tag')
-      .map((index, tagElement) => tagElement?.textContent);
+      .map((index, tagElement) => tagElement?.textContent));
 
     const selectedEmojiObj = EMOJIS.find((emoji) =>
       selectedReaction?.includes(emoji.title)
@@ -153,16 +162,35 @@ export function writeSemaToGithub(textarea, githubMetada) {
         ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
         : '';
 
-    let selectedTagsString = '';
-    selectedTags.each((index, tag) => {
-      selectedTagsString = `${selectedTagsString}${
-        index > 0 ? ',' : ''
-      } ${tag}`;
-    });
+    let selectedTagsString = selectedTags.join(', ');
 
     let semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
 
     let textboxValue = textarea.value;
+
+    const { selectedSuggestedComments } = store.getState().semasearches[semaSearchId];
+
+    // TODO: Momentary implementation, for Tags retrieved from MongoDB
+    const tags = selectedTags.map((tag) => (TAGS_ON_DB.find(({label}) => label === tag)._id));
+
+    if (type === 'inline') {
+     inLineMetada = getGithubInlineMetadata(textarea.id);
+    }
+
+    const githubMetadata = store.getState().githubMetadata;
+
+    smartComment = { 
+      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      userId: USER._id,
+      commentId: new Date().getTime(),
+      comment: textboxValue, 
+      type,
+      suggestedComments: selectedSuggestedComments,
+      reaction: selectedEmojiObj._id, 
+      tags,
+    };
+
+    createSmartComment(smartComment);
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -189,12 +217,12 @@ export function writeSemaToGithub(textarea, githubMetada) {
   }
 }
 
-export function onDocumentClicked(event, store, githubMetada) {
+export function onDocumentClicked(event, store) {
   onCloseAllModalsClicked(event, store);
-  onGithubSubmitClicked(event, githubMetada);
+  onGithubSubmitClicked(event);
 }
 
-function onGithubSubmitClicked(event, githubMetada) {
+function onGithubSubmitClicked(event) {
   const target = event.target;
   const parentButton = $(target).parents('button')?.[0];
   const isButton = $(target).is('button') || $(parentButton).is('button');
@@ -209,7 +237,7 @@ function onGithubSubmitClicked(event, githubMetada) {
       'file-attachment div text-expander textarea'
     )?.[0];
 
-    writeSemaToGithub(textarea, githubMetada);
+    writeSemaToGithub(textarea);
   }
 }
 
@@ -322,28 +350,44 @@ export function getSemaIds(idSuffix) {
   };
 }
 
-export const getGithubMetadata = (document) => {
+export const getGithubMetadata = (document, textarea) => {
   const url = document.querySelector('meta[property="og:url"]')?.content;
   const decoupleUrl = url.split('/');
-  const [,,,, repository,, pullRequest] = decoupleUrl;
-  const headBranch = document.querySelector('span[class*="head-ref"] a')?.textContent;
-  const baseBranch = document.querySelector('span[class*="base-ref"] a')?.textContent;
-  const githubUserId = document.querySelector('meta[name="octolytics-dimension-user_id"]')?.content;
+  const [,,,, repo,, pull_number] = decoupleUrl;
+  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
+  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
+  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')?.content;
+  const login = document.querySelector('meta[name="octolytics-actor-login"]')?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
 
   const githubMetada = {
     url,
-    pullRequest,
-    repository,
-    headBranch,
-    baseBranch,
-    githubUserId,
+    repo,
+    pull_number,
+    head,
+    base,
+    user: { id, login },
     requester,
   };
 
   return githubMetada;
 };
 
-const createSmartComment = () => {
+export const getGithubInlineMetadata= (id) => {
+  const [fileDivId] = id.split('new_inline_comment_diff_').pop().split('_');
+  const filename = document.querySelector(`div[id=${fileDivId}] div[class^="file-header"] a`)?.title;
+  const [,file_extension] = filename.split('.');
+  const line_numbers = [ ...new Set(Array.from(document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)).filter(e => e.getAttribute('data-line-number')).map(e => e.getAttribute('data-line-number')))];
 
-}; 
+  const inlineMetada = { filename, file_extension, line_numbers };
+
+  return inlineMetada;
+};
+
+const createSmartComment = (smartComment) => {
+  fetch(CREATE_SMART_COMMENT_URL, {
+    headers: { 'Content-Type': 'application/json' },
+    method:'POST',
+    body: JSON.stringify(smartComment)
+  })
+};

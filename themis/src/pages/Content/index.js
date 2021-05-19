@@ -36,15 +36,17 @@ import {
   addSemaComponents,
   toggleGlobalSearchModal,
   updateTextareaState,
+  addGithubMetada,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
 
-let githubMetada = {};
 let stateCheck = setInterval(() => {
   if (document.readyState === 'complete') {
     clearInterval(stateCheck);
-    githubMetada = getGithubMetadata(document);
+    store.dispatch(
+      addGithubMetada(getGithubMetadata(document))
+    );
   }
 }, 100);
 
@@ -61,7 +63,7 @@ const highlightWords = highlightPhrases.reduce((acc, curr) => {
 document.addEventListener(
   'click',
   (event) => {
-    onDocumentClicked(event, store, githubMetada);
+    onDocumentClicked(event, store);
   },
   // adding listener in the "capturing" phase
   true
@@ -78,7 +80,7 @@ document.addEventListener(
     if ((ctrlKey || metaKey) && code === 'Enter') {
       const activeElement = document.activeElement;
       if ($(activeElement).is('textarea')) {
-        writeSemaToGithub(activeElement, githubMetada);
+        writeSemaToGithub(activeElement);
       }
     }
   },
