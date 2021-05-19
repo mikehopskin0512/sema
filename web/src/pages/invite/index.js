@@ -21,7 +21,7 @@ import styles from './invite.module.scss';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const { clearAlert } = alertOperations;
-const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInvite } = invitationsOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
@@ -239,11 +239,7 @@ const Invite = () => {
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-<<<<<<< HEAD
-                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} />
-=======
                   <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
->>>>>>> d86431431a78ca6d0575602f255bbe2f533025ec
                 </div>
                 <PromotionBoard />
               </div>
@@ -321,7 +317,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text" onClick={() => dispatch(revokeInvite(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
                 </td>
               </tr>
             );
