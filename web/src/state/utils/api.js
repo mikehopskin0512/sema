@@ -62,7 +62,7 @@ export const update = (endpoint, item, token = '') => {
   return api.put((`${endpoint}/${item._id}`), item, config);
 };
 
-export const deleteItem = (endpoint, { id }, token = '') => {
+export const deleteItem = (endpoint, id, token = '') => {
   const config = {};
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
