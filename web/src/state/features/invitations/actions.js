@@ -148,6 +148,7 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
     dispatch(getInvitesBySender(userId, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
     dispatch(requestDeleteInviteSuccess());
+    return { user };
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
