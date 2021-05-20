@@ -5,6 +5,7 @@ import {
   refreshSecret, refreshTokenName, rootDomain,
   userVoiceKey,
 } from '../config';
+import { updateLastLogin } from '../users/userService';
 
 import RefreshToken from './refreshTokenModel';
 
@@ -55,6 +56,8 @@ export const setRefreshToken = async (response, user, token) => {
   }
 
   await RefreshToken.findOneAndUpdate(filter, update, options);
+
+  await updateLastLogin(user);
 
   response.cookie(refreshTokenName, token, cookieConfig);
 };
