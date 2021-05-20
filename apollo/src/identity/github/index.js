@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import querystring from 'querystring';
 import logger from '../../shared/logger';
+import errors from '../../shared/errors';
 import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
 import { getProfile } from './utils';
@@ -84,24 +85,35 @@ export default (app) => {
 
       const identityToken = await createIdentityToken(identity);
 
+      const userBody = {
+        ...identity,
+        // username: invitation.recipient,
+        terms: true,
+        jobTitle: '',
+        identities: [
+          { ...identity },
+        ],
+      };
+      let newUser = '';
+
       // Get invitation
       const invitation = await findByToken(inviteToken);
       if (!invitation) {
-        throw new errors.BadRequest(`User doesn't have invitation`);
-      }
-      const userBody = {
-        ...identity,
-        username: invitation.recipient,
-        terms: true,
-        jobTitle: "",
-        identities: [
-          { ...identity }
-        ]
-      }
-      // Create user using invited email as username
-      let newUser = await create(userBody);
-      if (!newUser) {
-        throw new errors.BadRequest('User create error');
+        // create user but isWaitlist
+        userBody.isWaitlist = true;
+        userBody.origin = 'waitlist';
+        newUser = await create(userBody);
+        if (!newUser) {
+          return res.status(401).end('User create error.');
+        }
+      } else {
+        userBody.username = invitation.recipient;
+        userBody.origin = 'invitation';
+        // Create user using invited email as username
+        newUser = await create(userBody);
+        if (!newUser) {
+          return res.status(401).end('User create error.');
+        }
       }
 
       // Redeem Invite
@@ -114,10 +126,10 @@ export default (app) => {
       await setRefreshToken(res, newUser, await createRefreshToken(newUser));
 
       if (!verifiedUser) {
-        throw new errors.BadRequest('Verification error');
+        return res.status(401).end('Verification error.');
       }
     } catch (error) {
-      console.log("Error", error);
+      console.log("Error ", error);
     }
     return res.redirect(`${orgDomain}/invite`);
   });
