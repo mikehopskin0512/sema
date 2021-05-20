@@ -186,6 +186,6 @@ resource "aws_ssm_parameter" "phoenix_client_id" {
 }
 resource "aws_ssm_parameter" "phoenix_client_secret" {
   name  = "/${var.env}/phoenix/client/secret"
-  type  = "String"
+  type  = "SecureString"
   value = "d7f3b825-bf97-4f21-babc-cf03a1babe91"
 }
