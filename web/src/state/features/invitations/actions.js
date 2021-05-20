@@ -102,8 +102,8 @@ export const fetchInvite = (inviteToken) => async (dispatch) => {
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
     dispatch(requestFetchInviteError(errMessage));
+    dispatch(triggerAlert(`${errMessage}`, 'error'));
   }
 };
 

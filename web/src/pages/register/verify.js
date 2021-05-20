@@ -8,7 +8,7 @@ import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import { authOperations } from '../../state/features/auth';
 
-const { activateUser, resendVerifiction } = authOperations;
+const { activateUser, resendVerification } = authOperations;
 
 const ResetMessage = (props) => {
   const { username, handleClick } = props;
@@ -95,7 +95,7 @@ const UserVerify = () => {
   }, [callUserActivation, verifyToken]);
 
   const handleClick = () => {
-    dispatch(resendVerifiction(username));
+    dispatch(resendVerification(username));
   };
 
   return (
