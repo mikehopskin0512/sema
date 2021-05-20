@@ -11,6 +11,7 @@ export const create = async (user) => {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
     identities, terms,
+    isWaitlist, origin,
   } = user;
 
   // Verify token expires 24 hours from now
@@ -27,6 +28,8 @@ export const create = async (user) => {
       jobTitle,
       avatarUrl,
       identities,
+      isWaitlist,
+      origin,
       verificationToken: token,
       verificationExpires,
       termsAccepted: terms,

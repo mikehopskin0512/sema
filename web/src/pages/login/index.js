@@ -60,6 +60,7 @@ const Login = () => {
         return <InviteCard  invitation={invitations} />
       }
     }
+
     if (user?.isWaitlist) {
       return <WaitlistCard />
     }
