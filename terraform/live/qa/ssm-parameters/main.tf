@@ -1,3 +1,8 @@
+resource "aws_ssm_parameter" "apollo_user_voice_secret_key" {
+  name  = "/${var.env}/apollo/uservoice/secretkey"
+  type  = "String"
+  value = "cca14f748502199512520f2282fdde29"
+}
 resource "aws_ssm_parameter" "apollo_cors" {
   name  = "/${var.env}/apollo/cors"
   type  = "String"
