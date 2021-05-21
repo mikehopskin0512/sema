@@ -47,12 +47,13 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
   }
 });
 
-const getRefreshToken=(cookieToken)=>{
+const getRefreshToken =  (cookieToken)=>{
   let currentTime = new Date().getTime();
   if(expirationTokenTime==currentTime+300000){
-    let interval=setInterval(()=>{
-      const { jwtToken: newToken } = await refreshToken(cookieToken);
+    let interval=setInterval(async ()=>{
+      const { newjwt: newToken } = await refreshToken(cookieToken);
         if(newToken){
+          jwtToken=newjwt;
           stopInterval();
         }
     },10000);
@@ -66,7 +67,6 @@ const getRefreshToken=(cookieToken)=>{
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
   function(details) {
-    headers.append('Authorization','Bearer ')
     details.requestHeaders['Authorization']=`Bearer ${jwtToken}`
     // for (var i = 0; i < details.requestHeaders.length; ++i) {
     //   if (details.requestHeaders[i].name === 'User-Agent') {
@@ -155,6 +155,9 @@ function getTokenResponse(cookie) {
   }
   if(isLoggedIn(cookie)==true){
     getRefreshToken(jwtToken)
+  }
+  if(cookie && isLoggedIn(cookie)==false){
+     jwtToken=undefined;
   }
   return tokenResponse;
 }
