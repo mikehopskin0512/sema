@@ -154,9 +154,8 @@ export function writeSemaToGithub(textarea) {
 
     let selectedTagsString = '';
     selectedTags.each((index, tag) => {
-      selectedTagsString = `${selectedTagsString}${
-        index > 0 ? ',' : ''
-      } ${tag}`;
+      selectedTagsString = `${selectedTagsString}${index > 0 ? ',' : ''
+        } ${tag}`;
     });
 
     let semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
@@ -191,6 +190,20 @@ export function writeSemaToGithub(textarea) {
 export function onDocumentClicked(event, store) {
   onCloseAllModalsClicked(event, store);
   onGithubSubmitClicked(event);
+  onFormClicked(event);
+
+}
+
+function onFormClicked(event) {
+  const activeElement = event.target;
+  console.log(activeElement)
+  if (isValidSemaTextBox(activeElement)) {
+    $('div.sema').addClass('sema-is-bordered');
+    // $('div.sema').classList.add('sema-is-bordered')
+
+  } else {
+    $('div.sema').removeClass('sema-is-bordered');
+  }
 }
 
 function onGithubSubmitClicked(event) {

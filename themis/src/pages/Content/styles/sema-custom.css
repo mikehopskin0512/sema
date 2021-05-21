@@ -12712,3 +12712,8 @@ a.sema-has-text-danger-dark:focus {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
 }
+
+.sema-is-bordered {
+  border-left: 1px solid #0366d6 !important;
+  border-right: 1px solid #0366d6 !important;
+}
