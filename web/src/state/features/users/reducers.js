@@ -44,6 +44,23 @@ const reducer = (state = initialState, action) => {
       users: [],
       error: action.errors,
     };
+  case types.UPDATE_USER_STATUS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.UPDATE_USER_STATUS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      error: {},
+    };
+  case types.UPDATE_USER_STATUS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

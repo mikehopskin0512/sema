@@ -14,7 +14,7 @@ import useDebounce from '../../hooks/useDebounce';
 import StatusFilter from '../../components/admin/statusFilter';
 import styles from './users.module.scss';
 
-const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -42,12 +42,69 @@ const UsersPage = () => {
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const handleAdmitUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isWaitlist',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleBlockOrDisableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleEnableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: true,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'blue';
     if (value === 'Active') return 'green';
     if (value === 'Blocked') return 'pink';
 
     return 'purple';
+  };
+
+  const renderActionCell = (userStatus) => {
+    const { id, status } = userStatus;
+    switch (status) {
+      case 'Active':
+        return (
+          <div className={clsx(styles.actionsCell, styles.flex)}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Disable</a>
+          </div>
+        );
+      case 'Waitlisted':
+        return (
+          <div className={clsx(styles.actionsCell, styles.flex)}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleAdmitUser(id)}>Admit</a>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Block</a>
+          </div>
+        );
+      case 'Disabled':
+        return (
+          <div className={clsx(styles.actionsCell, styles.flex)}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Enable</a>
+          </div>
+        );
+      case 'Blocked':
+        return (
+          <div className={clsx(styles.actionsCell, styles.flex)}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Unblock</a>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   const columns = useMemo(
@@ -138,6 +195,11 @@ const UsersPage = () => {
           </div>
         ),
       },
+      {
+        Header: 'Actions',
+        accessor: 'actionStatus',
+        Cell: ({ cell: { value } }) => renderActionCell(value),
+      },
     ],
     [handleUpdateUserInvitations],
   );
@@ -163,6 +225,10 @@ const UsersPage = () => {
       pending: item.pendingCount,
       accepted: item.acceptCount,
       id: item._id,
+    },
+    actionStatus: {
+      id: item._id,
+      status: getStatus(item),
     },
   }));
 

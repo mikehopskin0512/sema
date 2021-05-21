@@ -1,4 +1,4 @@
-import { getUsers, updateUserInvitations } from './api';
+import { getUsers, updateUserInvitations, updateUserStatus } from './api';
 import * as types from './types';
 
 const requestUpdateUserAvailableInvitations = () => ({
@@ -26,6 +26,20 @@ const requestFetchUsersSuccess = (users) => ({
 
 const requestFetchUsersError = (errors) => ({
   type: types.REQUEST_FETCH_USERS_ERROR,
+  errors,
+});
+
+const requestUpdateUserStatus = () => ({
+  type: types.UPDATE_USER_STATUS,
+});
+
+const requestUpdateUserStatusSuccess = (users) => ({
+  type: types.UPDATE_USER_STATUS_SUCCESS,
+  users,
+});
+
+const requestUpdateUserStatusError = (errors) => ({
+  type: types.UPDATE_USER_STATUS_ERROR,
   errors,
 });
 
@@ -57,5 +71,20 @@ export const updateUserAvailableInvitationsCount = (userId, amount, search) => a
 
     dispatch(requestUpdateUserAvailableInvitationsError(errMessage));
     return Promise.reject();
+  }
+};
+
+export const updateStatus = (params = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdateUserStatus());
+    const payload = await updateUserStatus(params, token);
+    const { data: { users = [] } } = payload;
+
+    dispatch(requestUpdateUserStatusSuccess(users));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestUpdateUserStatusError(errMessage));
   }
 };
