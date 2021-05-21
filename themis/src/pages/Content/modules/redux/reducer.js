@@ -17,6 +17,9 @@ import {
   UPDATE_GITHUB_TEXTAREA,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
+  ADD_SMART_COMMENT,
+  ADD_MUTATION_OBSERVER,
+  REMOVE_MUTATION_OBSERVER,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -48,6 +51,10 @@ function rootReducer(state = initialState, action) {
     );
 
     newState.github.isTyping = false;
+
+    newState.observer = null;
+    
+    newState.smartComment = {};
 
     newState.githubMetada = {
       url: null,
@@ -197,6 +204,7 @@ function rootReducer(state = initialState, action) {
     newState.githubMetada.filename = null;
     newState.githubMetada.file_extension = null;
     newState.githubMetada.ine_numbers = null;
+
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
@@ -206,6 +214,17 @@ function rootReducer(state = initialState, action) {
   } else if (type === ADD_GITHUB_METADATA) {
     const metadata = payload;
     newState.githubMetadata = metadata;
+  }
+  else if (type === ADD_SMART_COMMENT) {
+    const comment = payload;
+    newState.smartComment = comment
+  }
+  else if (type === ADD_MUTATION_OBSERVER) {
+    const observer = payload;
+    newState.observer = observer;
+  }
+  else if (type === REMOVE_MUTATION_OBSERVER) {
+    newState.observer.disconnect();
   }
   return newState;
 }

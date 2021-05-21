@@ -22,6 +22,9 @@ import {
   updateSelectedEmoji,
   addSuggestedTags,
   resetSemaStates,
+  addSmartComment,
+  addMutationObserver,
+  removeMutationObserver,
 } from './redux/action';
 import store from './redux/store';
 
@@ -140,6 +143,13 @@ export function writeSemaToGithub(textarea) {
 
     const type = textarea?.id && textarea.id.includes('new_comment_field') ? 'comment' : 'inline';
 
+    if (type === 'comment') {
+      store.dispatch(addMutationObserver(setMutationObserver()));
+    } else {
+      store.dispatch(addMutationObserver(setMutationObserverInLine()));
+      inLineMetada = getGithubInlineMetadata(textarea.id);
+    }
+
     const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
 
     const semabar = $(textarea).siblings('div.sema')?.[0];
@@ -173,16 +183,12 @@ export function writeSemaToGithub(textarea) {
     // TODO: Momentary implementation, for Tags retrieved from MongoDB
     const tags = selectedTags.map((tag) => (TAGS_ON_DB.find(({label}) => label === tag)._id));
 
-    if (type === 'inline') {
-     inLineMetada = getGithubInlineMetadata(textarea.id);
-    }
-
     const githubMetadata = store.getState().githubMetadata;
 
     smartComment = { 
       githubMetadata: { ...githubMetadata, ...inLineMetada },
       userId: USER._id,
-      commentId: new Date().getTime(),
+      commentId: null,
       comment: textboxValue, 
       type,
       suggestedComments: selectedSuggestedComments,
@@ -190,7 +196,7 @@ export function writeSemaToGithub(textarea) {
       tags,
     };
 
-    createSmartComment(smartComment);
+    store.dispatch(addSmartComment(smartComment));
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -390,4 +396,54 @@ const createSmartComment = (smartComment) => {
     method:'POST',
     body: JSON.stringify(smartComment)
   })
+};
+
+export const setMutationObserver = () => {
+  const observer = new MutationObserver(([mutation]) => {
+    if (mutation.addedNodes.length) {
+      const node = [ ...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('js-timeline-item'));
+      if (node !== -1) {
+        const newCommentDiv = mutation.addedNodes[node];
+        const { id } = newCommentDiv.querySelector('div.timeline-comment-group');
+
+        let smartComment = store.getState().smartComment;
+        smartComment.commentId = id;
+        createSmartComment(smartComment);
+        store.dispatch(removeMutationObserver());
+      }
+    }
+  });
+
+  const commentsTimeline = document.querySelector('div.pull-discussion-timeline .js-discussion');
+  observer.observe(commentsTimeline, { childList: true });
+
+  return observer;
+};
+
+export const setMutationObserverInLine = () => {
+  const observer = new MutationObserver(([mutation]) => {
+    if (mutation.addedNodes.length) {
+      const threadNode = [...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('js-resolvable-timeline-thread-container'));
+      const singleNode = [...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('review-comment'));
+
+      let smartComment = store.getState().smartComment;
+
+      if (threadNode !== -1) {
+        const newCommentDiv = mutation.addedNodes[threadNode];
+        const { id } = newCommentDiv.querySelector('div.review-comment');
+        smartComment.commentId = id;
+      } else if (singleNode !== -1) {
+        const { id } = mutation.addedNodes[singleNode];
+        smartComment.commentId = id;
+      }
+
+      createSmartComment(smartComment);
+      store.dispatch(removeMutationObserver());
+    }
+  });
+
+  const inLineFiles = document.querySelector('div#files');
+  observer.observe(inLineFiles, { childList: true, subtree: true });
+
+  return observer;
 };

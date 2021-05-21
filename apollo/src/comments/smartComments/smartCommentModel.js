@@ -18,7 +18,7 @@ const githubMetadataSchema = new Schema({
 });
 
 const smartCommentSchema = new Schema({
-  commentId: String,
+  commentId: { type: String, unique: true },
   comment: String,
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   type: { type: String, required: true, enum: ['comment', 'inline'] },
