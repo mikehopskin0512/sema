@@ -12712,15 +12712,3 @@ a.sema-has-text-danger-dark:focus {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
 }
-
-.sema-emoji-container {
-  margin: auto;
-}
-
-.sema-tag-container {
-  margin: auto;
-}
-
-.sema-dropdown-container {
-  margin: auto;
-}
