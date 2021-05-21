@@ -9,7 +9,7 @@
     "*://semasoftware.com/*",
     "https://*.semasoftware.com/*"
   ],
-  "permissions": ["cookies", "tabs"],
+  "permissions": ["cookies", "tabs","webRequest"],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",

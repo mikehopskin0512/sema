@@ -7,6 +7,9 @@ import {
 } from '../../../src/pages/Content/constants';
 import jwt_decode from 'jwt-decode';
 
+
+var expirationTokenTime;
+var jwtToken;
 chrome.runtime.onMessageExternal.addListener(
   (message, sender, sendResponse) => {
     if (message === 'version') {
@@ -44,23 +47,57 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
   }
 });
 
+const getRefreshToken=(cookieToken)=>{
+  let currentTime = new Date().getTime();
+  if(expirationTokenTime==currentTime+300000){
+    let interval=setInterval(()=>{
+      const { jwtToken: newToken } = await refreshToken(cookieToken);
+        if(newToken){
+          stopInterval();
+        }
+    },10000);
+
+    function stopInterval(){
+      clearInterval(interval)
+    }
+  }
+}
+
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  function(details) {
+    headers.append('Authorization','Bearer ')
+    details.requestHeaders['Authorization']=`Bearer ${jwtToken}`
+    // for (var i = 0; i < details.requestHeaders.length; ++i) {
+    //   if (details.requestHeaders[i].name === 'User-Agent') {
+    //     details.requestHeaders.splice(i, 1);
+    //     break;
+    //   }
+    // }
+    return {requestHeaders: details.requestHeaders};
+  },
+  {urls: [ "*://semasoftware.com/*","https://*.semasoftware.com/*"]},
+  ["blocking", "requestHeaders"]
+);
+
+
 // This logic should be trigerred on the: onAuthRequired or onBeforeRequest
 // For more information visit: https://developer.chrome.com/docs/extensions/reference/webRequest/
 
 // Fetches a new access token if refresh token has not expired
-// const refreshToken = ({ value }) => {
-//   return new Promise((reject, resolve) => {
-//     fetch(`https://api-qa.semasoftware.com/v1/auth/${value}`, { mode: 'cors' })
-//       .then((response) => response.text())
-//       .then((token) => {
-//         console.log('New access token: ', token);
-//         resolve(JSON.parse(token));
-//       })
-//       .catch(function (error) {
-//         reject(error);
-//       });
-//   });
-// };
+const refreshToken = ({ value }) => {
+  return new Promise((reject, resolve) => {
+    fetch(`https://api-qa.semasoftware.com/v1/auth/${value}`, { mode: 'cors' })
+      .then((response) => response.text())
+      .then((token) => {
+        console.log('New access token: ', token);
+        resolve(JSON.parse(token));
+      })
+      .catch(function (error) {
+        reject(error);
+      });
+  });
+};
 
 // const auth = async () => {
 //   // Get refresh token cookie
@@ -97,8 +134,10 @@ const isLoggedIn = (token) => {
   if (!token?.value) hasTokenExpired = true;
   else {
     const jwt = token.value;
+    jwtToken=token.value;
     const decodedToken = jwt_decode(jwt);
     const currentDate = new Date();
+    expirationTokenTime=decodedToken.exp * 1000;
     if (decodedToken.exp * 1000 < currentDate.getTime()) {
       hasTokenExpired = true;
     }
@@ -113,6 +152,9 @@ function getTokenResponse(cookie) {
       cookie,
       isLoggedIn: isLoggedIn(cookie),
     };
+  }
+  if(isLoggedIn(cookie)==true){
+    getRefreshToken(jwtToken)
   }
   return tokenResponse;
 }
