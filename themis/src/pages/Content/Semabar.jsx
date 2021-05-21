@@ -71,8 +71,9 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${props.isTagModalVisible ? ' sema-is-active' : ''
-      }`;
+    let containerClasses = `sema-dropdown${
+      props.isTagModalVisible ? ' sema-is-active' : ''
+    }`;
 
     return (
       <div className={containerClasses}>
@@ -143,7 +144,7 @@ const Semabar = (props) => {
         {createActiveTags()}
         {createSuggestedTags()}
       </div>
-      <div className="sema-dropdown-container">{createAddTags()}</div>
+      <div>{createAddTags()}</div>
     </>
   );
 };
