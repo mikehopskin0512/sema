@@ -34,7 +34,8 @@ const InviteError = () => (
 
 const RegistrationForm = (props) => {
   const dispatch = useDispatch();
-  const { register, watch, handleSubmit, errors } = useForm();
+  const { register, watch, handleSubmit, formState } = useForm();
+  const { errors } = formState;
 
   const router = useRouter();
   const { token } = router.query;
@@ -44,7 +45,6 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
-
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -86,7 +86,7 @@ const RegistrationForm = (props) => {
         ) : (
           <div>
             <h1 className="title is-4 is-spaced">Complete your profile information</h1>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>     
+            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
           </div>
         )}
         <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
@@ -99,13 +99,15 @@ const RegistrationForm = (props) => {
                     className={`input ${errors.firstName && 'is-danger'}`}
                     type="text"
                     placeholder="Tony"
-                    name="firstName"
                     defaultValue={firstName}
-                    ref={register({
-                      required: 'First name is required',
-                      maxLength:
-                        { value: 80, message: 'First name must be less than 80 characters' },
-                    })} />
+                    {
+                      ...register('firstName',
+                        {
+                          required: 'First name is required',
+                          maxLength: { value: 80, message: 'First name must be less than 80 characters' },
+                        })
+                    }
+                  />
                 </div>
                 <p className="help is-danger">{errors.firstName && errors.firstName.message}</p>
               </div>
@@ -116,13 +118,15 @@ const RegistrationForm = (props) => {
                     className={`input ${errors.lastName && 'is-danger'}`}
                     type="text"
                     placeholder="Stark"
-                    name="lastName"
                     defaultValue={lastName}
-                    ref={register({
-                      required: 'Last name is required',
-                      maxLength:
-                        { value: 100, message: 'Last name must be less than 80 characters' },
-                    })} />
+                    {
+                      ...register('lastName',
+                        {
+                          required: 'Last name is required',
+                          maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
+                        })
+                    }
+                  />
                 </div>
                 <p className="help is-danger">{errors.lastName && errors.lastName.message}</p>
               </div>
@@ -135,8 +139,13 @@ const RegistrationForm = (props) => {
                 className={`input ${errors.jobTitle && 'is-danger'}`}
                 type="text"
                 placeholder="Job title"
-                name="jobTitle"
-                ref={register({ required: 'Job title is required' })} />
+                {
+                  ...register('jobTitle',
+                    {
+                      required: 'Job title is required',
+                    })
+                }
+              />
             </div>
             <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
           </div>
@@ -147,13 +156,15 @@ const RegistrationForm = (props) => {
                 className={`input ${errors.username && 'is-danger'}`}
                 type="email"
                 placeholder="tony@starkindustries.com"
-                name="username"
                 defaultValue={initialEmail}
-                ref={register({
-                  required: 'Email is required',
-                  pattern:
-                    { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
-                })} />
+                {
+                  ...register('username',
+                    {
+                      required: 'Email is required',
+                      pattern: { value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
+                    })
+                }
+              />
             </div>
             <p className="help is-danger">{errors.username && errors.username.message}</p>
           </div>
@@ -168,13 +179,16 @@ const RegistrationForm = (props) => {
                         <input
                           className={`input ${errors.password && 'is-danger'}`}
                           type="password"
-                          name="password"
-                          ref={register({
-                            required: 'Password is required',
-                            minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                            maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                            pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-                          })} />
+                          {
+                            ...register('password',
+                              {
+                                required: 'Password is required',
+                                minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                                maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                                pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+                              })
+                          }
+                        />
                       </div>
                       <p className="help is-danger">{errors.password && errors.password.message}</p>
                     </div>
@@ -184,15 +198,18 @@ const RegistrationForm = (props) => {
                         <input
                           className={`input ${errors.passwordConfirm && 'is-danger'}`}
                           type="password"
-                          name="passwordConfirm"
-                          ref={register({
-                            validate: (value) => {
-                              if (value === watch('password')) {
-                                return true;
-                              }
-                              return 'Passwords do not match';
-                            },
-                          })} />
+                          {
+                            ...register('passwordConfirm',
+                              {
+                                validate: (value) => {
+                                  if (value === watch('password')) {
+                                    return true;
+                                  }
+                                  return 'Passwords do not match';
+                                },
+                              })
+                          }
+                        />
                       </div>
                       <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
                     </div>
@@ -206,7 +223,13 @@ const RegistrationForm = (props) => {
               <input
                 type="checkbox"
                 name="terms"
-                ref={register({ required: 'You must accept terms' })} />
+                {
+                  ...register('terms',
+                    {
+                      required: 'You must accept terms',
+                    })
+                }
+              />
               <span className="is-size-6">
                 &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
               </span>

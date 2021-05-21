@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   token: null,
   user: {},
+  userVoiceToken: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +35,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       user: action.user,
+      userVoiceToken: action.userVoiceToken,
     };
   case types.DEAUTHENTICATE:
     return {
