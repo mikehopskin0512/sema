@@ -113,7 +113,7 @@
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/node-env"
       }, {
         "name": "USER_VOICE_SECRET_KEY",
-        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/uservoice/secretkey"
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/uservoice/secretkey"
       }],
     "portMappings": [
       {
