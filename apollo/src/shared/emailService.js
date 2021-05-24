@@ -19,7 +19,7 @@ const templates = {
 export const sendEmail = async (messageData) => {
   const {
     templateName, sender = defaultSender, recipient,
-    firstName = '', fullName = '', orgName = '', url = '',
+    firstName = '', fullName = '', orgName = '', url = '', email = '',
   } = messageData;
 
   const msg = {
@@ -29,7 +29,9 @@ export const sendEmail = async (messageData) => {
     dynamic_template_data: {
       firstName,
       fullName,
+      email,
       orgName,
+      recipient,
       url,
     },
   };

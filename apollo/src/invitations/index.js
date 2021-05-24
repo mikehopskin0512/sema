@@ -5,7 +5,7 @@ import errors from '../shared/errors';
 import {
   create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
 } from './invitationService';
-import { findByUsername, update } from '../users/userService';
+import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -22,7 +22,7 @@ export default (app, passport) => {
 
     if (invitation.inviteCount <= 0) {
       return res.status(412).send({
-        message: 'User does not have enough invites.'
+        message: 'User does not have enough invites.',
       });
     }
 
@@ -43,14 +43,17 @@ export default (app, passport) => {
       if (!newInvitation) {
         throw new errors.BadRequest('Invitation create error');
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
+      const { username } = user;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: username,
       };
       await sendEmail(message);
       const updatedUser = await update({
@@ -136,14 +139,17 @@ export default (app, passport) => {
       if (user) {
         return res.status(401).send({ message: `${recipientData} is already an active member.` });
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = userInvitation;
+      const { username } = user;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: username,
       };
       await sendEmail(message);
 
@@ -178,7 +184,12 @@ export default (app, passport) => {
 
       // Delete invitation
       const response = await deleteInvitation(invite._id);
-      return res.status(200).send(response);
+      const updatedUser = await findUserById(user._id);
+      const userData = await update({
+        ...user,
+        inviteCount: updatedUser.inviteCount + 1,
+      });
+      return res.status(200).send({ user: userData, response });
     } catch (err) {
       logger.error(err);
       return res.status(err.statusCode).send(err);

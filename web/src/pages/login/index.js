@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import { useForm } from 'react-hook-form';
 import { isEmpty } from "lodash";
 
 import clsx from 'clsx';
@@ -31,7 +30,6 @@ const Login = () => {
   } = router;
 
   const dispatch = useDispatch();
-  const { register, handleSubmit, watch, errors } = useForm();
 
   // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
@@ -62,6 +60,7 @@ const Login = () => {
         return <InviteCard  invitation={invitations} />
       }
     }
+
     if (user?.isWaitlist) {
       return <WaitlistCard />
     }

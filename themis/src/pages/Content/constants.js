@@ -187,10 +187,12 @@ export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR =
   "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
-  "<a href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
-  "<svg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-  "<path fill-rule='evenodd' clip-rule='evenodd' d='M14.85 3.5H1.15C0.52 3.5 0 4.02 0 4.65V12.34C0 12.98 0.52 13.5 1.15 13.5H14.84C15.48 13.5 15.99 12.98 15.99 12.35V4.65C16 4.02 15.48 3.5 14.85 3.5V3.5Z' fill='#586069'/>" +
-  "<path fill-rule='evenodd' clip-rule='evenodd' d='M4.22998 12.7135H5.49039L7.76044 4.28662H6.50003L4.22998 12.7135ZM10.3967 8.68154L10.7696 8.02495L9.80282 7.55312L10.7696 7.08129L10.3967 6.42469L9.49597 7.0285L9.56856 5.95286H8.81957L8.88886 7.0285L7.9881 6.42469L7.61526 7.08129L8.58531 7.55312L7.61526 8.02495L7.9881 8.68154L8.88886 8.07774L8.81957 9.15337H9.56856L9.49597 8.07774L10.3967 8.68154Z' fill='white'/>" +
+  "<a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
+  "<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+  "<rect width='16' height='16' fill='white'/>" +
+  "<path d='M14.9796 13H1.02037C0.453499 13 0 12.5315 0 11.9458V4.05417C0 3.46852 0.453499 3 1.02037 3H14.9796C15.5465 3 16 3.46852 16 4.05417V11.9458C16 12.5168 15.5323 13 14.9796 13Z' fill='#586069'/>" +
+  "<path d='M3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3Z' fill='#F4F4F4'/>" +
+  "<path d='M10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83516 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056V4.75Z' fill='#F4F4F4'/>" +
   '</svg>' +
   '</a>' +
   '</span>';
