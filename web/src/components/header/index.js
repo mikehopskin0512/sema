@@ -191,7 +191,7 @@ const Header = () => {
               {/* Right icon menu - desktop */}
               <div className="navbar-item has-dropdown" ref={userMenu}>
                 <div className="navbar-dropdown is-right">
-                  <div className="nested navbar-item dropdown">
+                  <div className="nested navbar-item dropdown is-hidden">
                     <div className="dropdown-trigger">
                       <a
                         // className="has-text-white"
@@ -216,11 +216,11 @@ const Header = () => {
                     </div>
                   </div>
                   <Link href="/">
-                    <a className="navbar-item" onClick={toggleUserMenu}>
+                    <a className="navbar-item is-hidden" onClick={toggleUserMenu}>
                       My Account
                     </a>
                   </Link>
-                  <hr className="navbar-divider has-background-grey-lighter" />
+                  <hr className="navbar-divider has-background-grey-lighter is-hidden" />
                   {isAdmin && (
                     <Link href="/admin">
                       <a
