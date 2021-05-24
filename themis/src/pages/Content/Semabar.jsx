@@ -14,14 +14,15 @@ import {
 import { DELETE_OP, SELECTED, EMOJIS } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
-  const { semabars } = state;
+  const { semabars, github } = state;
   const semabarState = semabars[ownProps.id];
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
     selectedReaction: semabarState.selectedReaction,
     suggestedTags: semabarState.suggestedTags,
-    userInitialTypeAction: semabarState.typeFlag,
+    isTyping: github.isTyping,
+    isReactionDirty: semabarState.isReactionDirty,
   };
 };
 
@@ -70,9 +71,8 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${
-      props.isTagModalVisible ? ' sema-is-active' : ''
-    }`;
+    let containerClasses = `sema-dropdown${props.isTagModalVisible ? ' sema-is-active' : ''
+      }`;
 
     return (
       <div className={containerClasses}>
@@ -135,14 +135,15 @@ const Semabar = (props) => {
           onEmojiSelected={(emojiObj) => {
             props.updateSelectedEmoji(emojiObj);
           }}
-          userInitialTypeAction={props.userInitialTypeAction}
+          isTyping={props.isTyping}
+          isReactionDirty={props.isReactionDirty}
         />
       </div>
       <div className="sema-tag-container" id="scroll-style">
         {createActiveTags()}
         {createSuggestedTags()}
       </div>
-      <div>{createAddTags()}</div>
+      <div className="sema-dropdown-container">{createAddTags()}</div>
     </>
   );
 };

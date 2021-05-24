@@ -33,6 +33,7 @@ const userSchema = mongoose.Schema({
   jobTitle: String,
   company: String,
   avatarUrl: String,
+  inviteCount: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
@@ -43,6 +44,8 @@ const userSchema = mongoose.Schema({
   identities: [identitySchema],
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },
+  lastLogin: { type: Date, default: Date.now() },
+  origin: { type: String, enum: ['invitation', 'waitlist', 'signup'], default: 'signup' },
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;

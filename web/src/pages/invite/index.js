@@ -4,24 +4,29 @@ import clsx from 'clsx';
 import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import { isEmpty } from "lodash";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
-import { invitationsOperations } from '../../state/features/invitations';
 import Carousel from '../../components/utils/Carousel';
+import Toaster from '../../components/toaster';
+
+import { invitationsOperations } from '../../state/features/invitations';
+import { alertOperations } from '../../state/features/alerts';
 
 import styles from './invite.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
-const { createInvite, getInvitesBySender } = invitationsOperations;
+const { clearAlert } = alertOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const Invite = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors, reset } = useForm();
-
+  const { register, handleSubmit, formState, reset, setError } = useForm();
+  const { errors } = formState;
   // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
@@ -36,33 +41,40 @@ const Invite = () => {
   const [tableHeader, setTableHeader] = useState('Sema is better with friends');
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
+  const [recipient, setRecipient] = useState("");
 
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;
-  const { _id: userId, firstName, lastName, organizations = [] } = user;
+  const { token, user, userVoiceToken } = auth;
+  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
   const fullName = `${firstName} ${lastName}`;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    const { email } = data;
-    // Build invitation data
-    const invitation = {
-      recipient: email,
-      orgId,
-      orgName,
-      sender: userId,
-      senderName: fullName,
-    };
-
-    // Send invite & reset form
-    await dispatch(createInvite(invitation, token));
-    GET_INVITES_BY_USER();
-    reset();
-  };
-
-  const GET_INVITES_BY_USER = async () => {
-    await dispatch(getInvitesBySender(userId, token));
+    if (inviteCount > 0) {
+      const { email } = data;
+      // Build invitation data
+      const invitation = {
+        recipient: email,
+        orgId,
+        orgName,
+        sender: userId,
+        senderName: fullName,
+        inviteCount
+      };
+      // Send invite & reset form
+      setRecipient(email);
+      const response = await dispatch(createInviteAndHydrateUser(invitation, token));
+      if (response.status === 201) {
+        reset();
+      } else {
+        setError("email", {
+          type: "manual",
+          message: response.data.message
+        });
+      }
+      await dispatch(getInvitesBySender(userId, token));
+    }
   };
 
   useEffect(() => {
@@ -84,9 +96,18 @@ const Invite = () => {
       togglePluginInstalled(res);
       setLoading(false);
     }, 5000);
-
-    GET_INVITES_BY_USER();
+    dispatch(getInvitesBySender(userId, token));
   }, []);
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
+
+  const RESEND_INVITE = async (email) => {
+    await dispatch(resendInvite(email, token));
+  };
 
   const buttonAction = () => {
     if (isPluginInstalled) {
@@ -112,20 +133,31 @@ const Invite = () => {
           <FontAwesomeIcon
             icon={faCheckCircle}
             size="4x"
-            className="has-text-info"
+            className="has-text-primary"
           />
         </div>
       </>
     );
   };
 
+  const renderErrorMessage = () => {
+    if (!isEmpty(errors)) {
+      const error = errors.email.message;
+      if (error.search("has already been invited by another user.") >= 0) {
+        return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
+      }
+      return error;
+    }
+  };
+
   return (
     <>
-      <section className={clsx("hero", styles.container)}>
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <section className={clsx("hero pb-50", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
-                    Welcome to Sema!
+              Welcome to Sema!
                   </p>
             <PluginStateCard
               title={title}
@@ -135,18 +167,24 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
+          </div>
+        </div>
+      </section>
+      <section className="hero background-foggy-white pt-50">
+        <div className="hero-body">
+          <div className={clsx('container', styles['styled-container'])}>
             <p
               className={
-                'title has-text-centered has-text-weight-semibold is-size-4 mt-120'
+                'title has-text-centered has-text-weight-semibold is-size-4'
               }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
             <p
               className={
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
-                }
+              }
             >
-              <span class={clsx('tag is-success is-size-4 m-1r')}>2</span>
+              <span className={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -155,50 +193,60 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div class="field">
-                          <label class="label has-text-white">Username</label>
-                          <div class="control">
+                        <div className="field">
+                          <label className="label has-text-white">Username</label>
+                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
                             <input
                               className={clsx(
                                 `input mr-25`,
-                                errors.email && 'is-danger',
+                                errors?.email && 'is-danger',
                               )}
                               type="email"
                               placeholder="tony@starkindustries.com"
-                              name="email"
-                              ref={register({
-                                required: 'Email is required',
-                                pattern: {
-                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                                  message: 'Invaild email format',
-                                },
-                              })}
-                              style={{ width: '80%' }}
+                              {
+                              ...register(`email`,
+                                {
+                                  required: 'Email is required',
+                                  pattern: {
+                                    value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                    message: 'Invaild email format'
+                                  },
+                                })
+                              }
                             />
-                            <button
-                              className={clsx(
-                                'button is-white',
-                                styles.formBtn
-                              )}
-                              type="submit"
-                            >
-                              Send Invite
-                            </button>
+                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                              <FontAwesomeIcon icon={faTimes} size="sm" />
+                            </span>
                           </div>
+                          <button
+                            className={clsx(
+                              'button is-white',
+                              styles.formBtn
+                            )}
+                            type="submit"
+                            disabled={inviteCount <= 0}
+                          >
+                            Send Invite
+                            </button>
+                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden")} style={{ width: "80%" }}>
+                            <div className="message-body">
+                              {renderErrorMessage()}
+                            </div>
+                          </article>
                         </div>
                       </div>
                     </div>
                   </form>
                 </div>
                 <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} />
+                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
               </div>
             </div>
           </div>
         </div>
-        <ContactUs />
+        <ContactUs userVoiceToken={userVoiceToken}/>
       </section>
     </>
   );
@@ -228,7 +276,7 @@ const PluginStateCard = ({
         {renderIcon()}
         <button
           type="button"
-          className="button is-info"
+          className="button is-primary"
           onClick={buttonAction}
         >
           {buttonText}
@@ -238,7 +286,9 @@ const PluginStateCard = ({
   );
 };
 
-const InvitationTable = ({ invitations }) => {  
+const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
+  const { token, user } = auth;
+
   return (
     <table className={clsx('table is-fullwidth shadow', styles.table)}>
       <thead>
@@ -249,38 +299,38 @@ const InvitationTable = ({ invitations }) => {
         </tr>
       </thead>
       <tbody>
-        {invitations?.length ? 
-          invitations.map((el) => {
+        {invitations?.length ?
+          invitations.map((el, i) => {
             return (
-              <tr>
+              <tr key={`row-${i}`}>
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span class={clsx('tag is-info', styles.tag)}>
+                    <span className={clsx('tag is-primary', styles.tag)}>
                       Pending Invite
                     </span>
                   ) : (
-                    <span class={clsx('tag is-success', styles.tag)}>
+                    <span className={clsx('tag is-success', styles.tag)}>
                       Active
                     </span>
                   )}
                 </td>
                 <td>
-                  <button class="button is-text">Resend Invitation</button>
-                  <button class="button is-text">Revoke</button>{' '}
+                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                  <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
                 </td>
               </tr>
             );
           }) : <tr>
-                  <td colSpan="3" >
-                    <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-                    <img className={styles['no-data-img']} src="/img/empty-invite-table.png"/>
-                    <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
-                      You haven't invited anyone yet.
+            <td colSpan="3" >
+              <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
+                <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+                <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
+                  You haven't invited anyone yet.
                     </div>
-                    </div>
-                  </td>
-                </tr>}
+              </div>
+            </td>
+          </tr>}
       </tbody>
     </table>
   );
@@ -305,18 +355,18 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = () => {
+const ContactUs = ({ userVoiceToken }) => {
   return (
-    <div className="mt-20 py-50 px-120 columns has-background-info is-centered is-vcentered">
+    <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
       <div className="column is-6">
         <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-info is-medium is-fullwidth">Email</a> 
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <button className="button is-white is-medium is-fullwidth has-text-info">Idea Board</button>
+        <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
       </div>
     </div>
   )

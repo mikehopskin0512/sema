@@ -34,12 +34,16 @@ const InputForm = (props) => {
                 className="input"
                 type="email"
                 placeholder="e.g. tony@starkindustries.com"
-                name="email"
-                ref={register({
-                  required: 'Email is required',
-                  pattern:
-                    { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
-                })}
+                {
+                  ...register('email',
+                    {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                        message: 'Invaild email format',
+                      },
+                    })
+                }
                 required
               />
               <span className="icon is-small is-left">
@@ -52,7 +56,7 @@ const InputForm = (props) => {
       <div className="control">
         <button
           type="submit"
-          className="button is-primary">Send Link
+          className="button is-black">Send Link
         </button>
       </div>
       <div className="field">
@@ -74,7 +78,7 @@ export const Confirmation = (props) => {
       <p>If an account exists with {emailSubmitted ? <strong>{emailSubmitted}</strong> : 'your email'}, you&apos;ll receive an email.</p>
       <p>Please follow the instructions within to reset your password.</p>
       <br />
-      <Link href="/login"><a className="button is-primary">Return to Login</a></Link>
+      <Link href="/login"><a className="button is-black">Return to Login</a></Link>
       <br />
     </div>
   );

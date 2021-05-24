@@ -34,4 +34,5 @@ module.exports = {
     defaultSender: process.env.SENDGRID_DEFAULT_SENDER,
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
+  userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
 };

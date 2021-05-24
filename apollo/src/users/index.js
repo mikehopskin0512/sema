@@ -62,14 +62,14 @@ export default (app, passport) => {
         hasInvite = true;
         const { _id: userId } = newUser;
         const { orgId, orgName, sender, token } = invitation;
-        const org = { id: orgId, orgName, invitedBy: sender };
-        const invitedUser = await joinOrg(userId, org);
-        if (!invitedUser) {
-          throw new errors.BadRequest('Org join error');
-        }
+        // const org = { id: orgId, orgName, invitedBy: sender };
+        // const invitedUser = await joinOrg(userId, org);
+        // if (!invitedUser) {
+        //   throw new errors.BadRequest('Org join error');
+        // }
 
         // Update newUser with invitedUser (containing org data)
-        newUser = invitedUser;
+        // newUser = invitedUser;
 
         // Redeem invite
         await redeemInvite(token, userId);

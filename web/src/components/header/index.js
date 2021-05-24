@@ -113,7 +113,7 @@ const Header = () => {
         {token && isVerified && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
-            <div
+            {/* <div
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
               <Link href="/invite">
@@ -141,10 +141,10 @@ const Header = () => {
                   Reports
                 </a>
               </Link>
-            </div>
+            </div> */}
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              <Link href="/invite">
+              {/* <Link href="/invite">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Dashboard
                 </a>
@@ -176,7 +176,7 @@ const Header = () => {
                     Admin Panel
                   </a>
                 </Link>
-              )}
+              )} */}
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"

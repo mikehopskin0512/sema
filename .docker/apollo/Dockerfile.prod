@@ -28,8 +28,11 @@ FROM base AS release
 COPY --chown=node:node --from=builder /usr/app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /usr/app/dist ./dist
 COPY --chown=node:node --from=builder /usr/app/logs ./logs
-
+COPY --chown=node:node --from=builder /usr/app/data ./data
+COPY --chown=node:node --from=builder /usr/app/migrations ./migrations
 RUN npm install -g pm2
+
+RUN ln -s dist src
 
 EXPOSE 3001
 USER node

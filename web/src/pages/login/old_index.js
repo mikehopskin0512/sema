@@ -16,7 +16,7 @@ const { authenticate } = authOperations;
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit } = useForm();
 
   // Import state vars
   const { alerts } = useSelector(
@@ -62,8 +62,7 @@ const Login = () => {
                             className="input"
                             type="email"
                             placeholder="e.g. tony@starkindustries.com"
-                            name="email"
-                            ref={register}
+                            {...register('email')}
                             required
                           />
                           <span className="icon is-small is-left">
@@ -78,8 +77,7 @@ const Login = () => {
                             className="input"
                             type="password"
                             placeholder="*******"
-                            name="password"
-                            ref={register}
+                            {...register('password')}
                             required
                           />
                           <span className="icon is-small is-left">
@@ -88,7 +86,7 @@ const Login = () => {
                         </div>
                       </div>
                       <div className="field mt-2r">
-                        <button type="submit" className="button is-primary is-fullwidth">
+                        <button type="submit" className="button is-black is-fullwidth">
                           Login with Email
                         </button>
                       </div>
@@ -112,11 +110,11 @@ const Login = () => {
                         <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href="/password-reset/"><a>Reset password</a></Link></p>
                       </div>
                       <div className="field">
-                        <div className="is-divider" data-content="OR"></div>
+                        <div className="is-divider" data-content="OR" />
                         <p><strong>Want to sign up for the Sema platform?</strong></p>
                         <div className="mt-1r">
                           <Link href="/register">
-                            <a className="button is-primary">
+                            <a className="button is-black">
                               <span className="icon">
                                 <FontAwesomeIcon icon={['fas', 'user']} />
                               </span>
