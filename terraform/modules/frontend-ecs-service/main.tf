@@ -31,6 +31,7 @@ data "template_file" "service" {
 resource "aws_ecs_task_definition" "service" {
   family                   = "${var.env}-${var.service_name}"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.cpu
@@ -41,6 +42,7 @@ resource "aws_ecs_task_definition" "service" {
 resource "aws_ecs_service" "service" {
   name             = var.service_name
   cluster          = data.aws_ecs_cluster.main.id
+  enable_execute_command = true
   task_definition  = aws_ecs_task_definition.service.arn
   desired_count    = var.task_count
   launch_type      = "FARGATE"
