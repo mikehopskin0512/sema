@@ -9,8 +9,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/comments/smart`, route);
 
-  // passport.authenticate(['bearer'], { session: false }),
-  route.post('/', async (req, res) => {
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const smartComment = req.body;
     try {
       const newSmartComment = await create(smartComment);

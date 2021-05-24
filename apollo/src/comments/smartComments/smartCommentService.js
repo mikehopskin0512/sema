@@ -13,15 +13,16 @@ const create = async ({
   githubMetadata = null,
 }) => {
   try {
-    const smartComment = new SmartComment();
-    smartComment.commentId = commentId;
-    smartComment.comment = comment;
-    smartComment.userId = userId;
-    smartComment.type = type;
-    smartComment.suggestedComments = suggestedComments;
-    smartComment.reaction = reaction;
-    smartComment.tags = tags;
-    smartComment.githubMetadata = githubMetadata;
+    const smartComment = new SmartComment({
+      commentId,
+      comment,
+      userId,
+      type,
+      suggestedComments,
+      reaction,
+      tags,
+      githubMetadata,
+    });
     const savedSmartComment = await smartComment.save();
     return savedSmartComment;
   } catch (err) {

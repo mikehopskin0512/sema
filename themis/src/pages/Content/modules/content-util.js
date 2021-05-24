@@ -391,8 +391,10 @@ export const getGithubInlineMetadata= (id) => {
 };
 
 const createSmartComment = (smartComment) => {
+  const token = '';
   fetch(CREATE_SMART_COMMENT_URL, {
     headers: { 'Content-Type': 'application/json' },
+    authorization: `Bearer ${token}`,
     method:'POST',
     body: JSON.stringify(smartComment)
   })
