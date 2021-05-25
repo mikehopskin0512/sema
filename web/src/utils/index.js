@@ -12,7 +12,10 @@ export const upsert = (arr, key, newval) => {
 
 export const fullName = (user) => {
   if (!user) return '';
-  return `${user.firstName} ${user.lastName}`;
+
+  const { firstName, lastName } = user;
+
+  return `${firstName} ${lastName}`;
 };
 
 export const dummy = () => {};
