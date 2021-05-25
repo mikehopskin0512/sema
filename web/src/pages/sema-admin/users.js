@@ -42,14 +42,6 @@ const UsersPage = () => {
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
-  const getBadgeColor = (value) => {
-    if (value === 'Waitlisted') return 'blue';
-    if (value === 'Active') return 'green';
-    if (value === 'Blocked') return 'pink';
-
-    return 'purple';
-  };
-
   const columns = useMemo(
     () => [
       {
@@ -65,18 +57,15 @@ const UsersPage = () => {
       },
       {
         Header: () => (
-          <div className={clsx(styles.status, styles.flex)}>
-            <div>Status</div>
+          <div className='is-flex'>
+            <div className='mr-2'>Status</div>
             <StatusFilter value={statusFilters} onChange={setStatusFilters} />
           </div>
         ),
         accessor: 'status',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <Badge
-            label={value}
-            color={getBadgeColor(value)}
-          />
+          <Badge label={value} />
         ),
       },
       {

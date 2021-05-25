@@ -21,25 +21,6 @@
     }
 }
 
-.actionButton {
-    button {
-        color: #2a113f;
-        text-decoration: underline;
-        background: transparent;
-        border: 0;
-        cursor: pointer;
-
-        &:focus {
-            outline: none;
-        }
-    }
-
-.avatar-img {
-    width: 32px;
-    height: 32px;
-    border-radius: 16px;
-}
-
 .status {
     svg {
         margin-left: 10px;
