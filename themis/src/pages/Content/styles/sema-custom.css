@@ -240,7 +240,7 @@
   -webkit-appearance: none;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: none;
   display: inline-flex;
   font-size: 1rem;
@@ -3793,7 +3793,7 @@ fieldset[disabled] .sema-select select:-ms-input-placeholder,
 
 .sema-is-small.sema-input,
 .sema-is-small.sema-textarea {
-  border-radius: 2px;
+  border-radius: 6px;
   font-size: 0.75rem;
 }
 

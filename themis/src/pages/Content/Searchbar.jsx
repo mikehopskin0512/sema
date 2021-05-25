@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
-import { SEMA_ICON_ANCHOR, SUGGESTION_URL } from './constants';
-import CommentPlaceholder from "../../assets/img/comment-placeholder";
-import { toggleSearchModal } from './modules/redux/action';
+import { SUGGESTION_URL } from './constants';
+
+import { toggleSearchModal, addSuggestedComments } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
   const { semasearches } = state;
@@ -18,6 +18,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
+    selectedSuggestedComments: (suggestedComment) =>
+      dispatch(addSuggestedComments({ id, suggestedComment })),
   };
 };
 
@@ -32,10 +34,11 @@ const SearchBar = (props) => {
     handleChange(value);
   };
 
-  const onCopyPressed = (suggestion) => {
+  const onCopyPressed = (id, suggestion) => {
     let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
     props.commentBox.value = `${value}${suggestion}`;
+    props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
 

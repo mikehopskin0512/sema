@@ -1,8 +1,10 @@
 import $ from 'cash-dom';
 
 import {
+  USER,
   EMOJIS,
   TAGS_INIT,
+  TAGS_ON_DB,
   POSITIVE,
   NEGATIVE,
   SELECTED,
@@ -11,6 +13,7 @@ import {
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
   ADD_OP,
+  CREATE_SMART_COMMENT_URL,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
@@ -19,6 +22,9 @@ import {
   updateSelectedEmoji,
   addSuggestedTags,
   resetSemaStates,
+  addSmartComment,
+  addMutationObserver,
+  removeMutationObserver,
 } from './redux/action';
 import store from './redux/store';
 
@@ -132,6 +138,20 @@ export const getInitialSemaValues = (textbox) => {
 
 export function writeSemaToGithub(textarea) {
   if (textarea) {
+    let smartComment = {};
+    let inLineMetada = {};
+
+    const type = textarea?.id && textarea.id.includes('new_comment_field') ? 'comment' : 'inline';
+
+    if (type === 'comment') {
+      store.dispatch(addMutationObserver(setMutationObserver()));
+    } else {
+      store.dispatch(addMutationObserver(setMutationObserverInLine()));
+      inLineMetada = getGithubInlineMetadata(textarea.id);
+    }
+
+    const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
+
     const semabar = $(textarea).siblings('div.sema')?.[0];
     const semaChildren = $(semabar).children();
 
@@ -139,9 +159,9 @@ export function writeSemaToGithub(textarea) {
     const tagContainer = semaChildren?.[1];
 
     const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-    const selectedTags = $(tagContainer)
+    const selectedTags = Array.from($(tagContainer)
       .children('.sema-tag')
-      .map((index, tagElement) => tagElement?.textContent);
+      .map((index, tagElement) => tagElement?.textContent));
 
     const selectedEmojiObj = EMOJIS.find((emoji) =>
       selectedReaction?.includes(emoji.title)
@@ -152,16 +172,31 @@ export function writeSemaToGithub(textarea) {
         ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
         : '';
 
-    let selectedTagsString = '';
-    selectedTags.each((index, tag) => {
-      selectedTagsString = `${selectedTagsString}${
-        index > 0 ? ',' : ''
-      } ${tag}`;
-    });
+    let selectedTagsString = selectedTags.join(', ');
 
     let semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
 
     let textboxValue = textarea.value;
+
+    const { selectedSuggestedComments } = store.getState().semasearches[semaSearchId];
+
+    // TODO: Momentary implementation, for Tags retrieved from MongoDB
+    const tags = selectedTags.map((tag) => (TAGS_ON_DB.find(({label}) => label === tag)._id));
+
+    const githubMetadata = store.getState().githubMetadata;
+
+    smartComment = { 
+      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      userId: USER._id,
+      commentId: null,
+      comment: textboxValue, 
+      type,
+      suggestedComments: selectedSuggestedComments,
+      reaction: selectedEmojiObj._id, 
+      tags,
+    };
+
+    store.dispatch(addSmartComment(smartComment));
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -320,3 +355,97 @@ export function getSemaIds(idSuffix) {
     semaSearchContainerId: `semasearch_${idSuffix}`,
   };
 }
+
+export const getGithubMetadata = (document, textarea) => {
+  const url = document.querySelector('meta[property="og:url"]')?.content;
+  const decoupleUrl = url.split('/');
+  const [,,,, repo,, pull_number] = decoupleUrl;
+  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
+  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
+  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')?.content;
+  const login = document.querySelector('meta[name="octolytics-actor-login"]')?.content;
+  const requester = document.querySelector('a[class*="author"]')?.textContent;
+
+  const githubMetada = {
+    url,
+    repo,
+    pull_number,
+    head,
+    base,
+    user: { id, login },
+    requester,
+  };
+
+  return githubMetada;
+};
+
+export const getGithubInlineMetadata= (id) => {
+  const [fileDivId] = id.split('new_inline_comment_diff_').pop().split('_');
+  const filename = document.querySelector(`div[id=${fileDivId}] div[class^="file-header"] a`)?.title;
+  const [,file_extension] = filename.split('.');
+  const line_numbers = [ ...new Set(Array.from(document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)).filter(e => e.getAttribute('data-line-number')).map(e => e.getAttribute('data-line-number')))];
+
+  const inlineMetada = { filename, file_extension, line_numbers };
+
+  return inlineMetada;
+};
+
+const createSmartComment = (smartComment) => {
+  const token = '';
+  fetch(CREATE_SMART_COMMENT_URL, {
+    headers: { 'Content-Type': 'application/json' },
+    authorization: `Bearer ${token}`,
+    method:'POST',
+    body: JSON.stringify(smartComment)
+  })
+};
+
+export const setMutationObserver = () => {
+  const observer = new MutationObserver(([mutation]) => {
+    if (mutation.addedNodes.length) {
+      const node = [ ...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('js-timeline-item'));
+      if (node !== -1) {
+        const newCommentDiv = mutation.addedNodes[node];
+        const { id } = newCommentDiv.querySelector('div.timeline-comment-group');
+
+        let smartComment = store.getState().smartComment;
+        smartComment.commentId = id;
+        createSmartComment(smartComment);
+        store.dispatch(removeMutationObserver());
+      }
+    }
+  });
+
+  const commentsTimeline = document.querySelector('div.pull-discussion-timeline .js-discussion');
+  observer.observe(commentsTimeline, { childList: true });
+
+  return observer;
+};
+
+export const setMutationObserverInLine = () => {
+  const observer = new MutationObserver(([mutation]) => {
+    if (mutation.addedNodes.length) {
+      const threadNode = [...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('js-resolvable-timeline-thread-container'));
+      const singleNode = [...mutation.addedNodes].findIndex((node) => 'classList' in node && node.classList.contains('review-comment'));
+
+      let smartComment = store.getState().smartComment;
+
+      if (threadNode !== -1) {
+        const newCommentDiv = mutation.addedNodes[threadNode];
+        const { id } = newCommentDiv.querySelector('div.review-comment');
+        smartComment.commentId = id;
+      } else if (singleNode !== -1) {
+        const { id } = mutation.addedNodes[singleNode];
+        smartComment.commentId = id;
+      }
+
+      createSmartComment(smartComment);
+      store.dispatch(removeMutationObserver());
+    }
+  });
+
+  const inLineFiles = document.querySelector('div#files');
+  observer.observe(inLineFiles, { childList: true, subtree: true });
+
+  return observer;
+};

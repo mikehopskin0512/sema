@@ -12,6 +12,11 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  ADD_SUGGESTED_COMMENTS,
+  ADD_GITHUB_METADATA,
+  ADD_SMART_COMMENT,
+  ADD_MUTATION_OBSERVER,
+  REMOVE_MUTATION_OBSERVER,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -75,4 +80,28 @@ export const resetSemaStates = (payload) => ({
 export const updateTextareaState = (payload) => ({
   type: UPDATE_GITHUB_TEXTAREA,
   payload,
+});
+
+export const addSuggestedComments = (payload) => ({
+  type: ADD_SUGGESTED_COMMENTS,
+  payload,
+});
+
+export const addGithubMetada = (payload) => ({
+  type: ADD_GITHUB_METADATA,
+  payload,
+});
+
+export const addSmartComment = (payload) => ({
+  type: ADD_SMART_COMMENT,
+  payload,
+});
+
+export const addMutationObserver = (payload) => ({
+  type: ADD_MUTATION_OBSERVER,
+  payload,
+});
+
+export const removeMutationObserver = () => ({
+  type: REMOVE_MUTATION_OBSERVER,
 });

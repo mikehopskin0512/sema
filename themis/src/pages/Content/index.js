@@ -15,6 +15,7 @@ import {
   onSuggestion,
   getSemaIds,
   writeSemaToGithub,
+  getGithubMetadata,
 } from './modules/content-util';
 
 import {
@@ -35,9 +36,19 @@ import {
   addSemaComponents,
   toggleGlobalSearchModal,
   updateTextareaState,
+  addGithubMetada,
 } from './modules/redux/action';
 
 import highlightPhrases from './modules/highlightPhrases';
+
+let stateCheck = setInterval(() => {
+  if (document.readyState === 'complete') {
+    clearInterval(stateCheck);
+    store.dispatch(
+      addGithubMetada(getGithubMetadata(document))
+    );
+  }
+}, 100);
 
 const highlightWords = highlightPhrases.reduce((acc, curr) => {
   acc[curr] = true;
