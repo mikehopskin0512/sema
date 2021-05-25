@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
-import { SUGGESTION_URL } from './constants';
-
+import { SEMA_ICON_ANCHOR, SUGGESTION_URL } from './constants';
+import CommentPlaceholder from "../../assets/img/comment-placeholder";
 import { toggleSearchModal } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -61,6 +61,34 @@ const SearchBar = (props) => {
       });
   };
 
+  const renderPlaceholder = () => {
+    // var imgURL = chrome.extension.getURL("../../assets/img/comment-placeholder");
+    const commentPlaceholder = chrome.runtime.getURL("img/comment-placeholder.png");
+    const noResults = chrome.runtime.getURL("img/no-results.png");
+    const loader = chrome.runtime.getURL("img/loader.png");
+    if (isLoading) {
+      return <div className="sema-m-6 sema-comment-placeholder"><img src={loader} />
+        <span className="sema-title sema-is-7 sema-is-block">We are working hard to find code examples for you...</span>
+      </div>
+    } else {
+      if (searchValue.length > 0 && searchResults.length === 0) {
+        // empty
+        return <div className="sema-comment-placeholder"><img className="sema-mb-5" src={noResults} />
+          <span className="sema-title sema-is-7 sema-is-block">No results :( We are still learning!</span>
+          <span className="sema-subtitle sema-is-7 sema-is-block">Sorry, we don't have search result for this one. Try again soon - we've noted your query to improve our results.</span>
+          <a className="sema-mt-2" href="#" onClick={() => window.open(`https://www.google.com/search?q=${searchValue}`, '_blank')}>Try this search on Google</a>
+        </div>
+      } else if (searchValue.length === 0 && searchResults.length === 0) {
+        return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
+          <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here. This is proof of update</span>
+          <span className="sema-subtitle sema-is-7 sema-is-block">Type a few characters and we'll start searching right away.</span>
+        </div>)
+      } else {
+        return ""
+      }
+    }
+  };
+
   const handleKeyPress = (event) => {
     const charCode =
       typeof event.which == 'number' ? event.which : event.keyCode;
@@ -76,13 +104,11 @@ const SearchBar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${
-    props.isSearchModalVisible ? ' sema-is-active' : ''
-  }`;
+  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
+    }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${
-    isLoading ? ' sema-is-loading' : ''
-  }`;
+  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
+    }`;
 
   return (
     <div className={containerClasses} style={{ width: '100%' }}>
@@ -122,14 +148,21 @@ const SearchBar = (props) => {
       <div className="sema-dropdown-menu suggestion-modal" role="menu">
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
+            {renderPlaceholder()}
             <SuggestionModal
               key={isLoading}
               onCopyPressed={onCopyPressed}
               searchResults={searchResults}
             />
           </div>
+          <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
+            <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
+              <img className="sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
+            </span>
+          </div>
         </div>
       </div>
+
     </div>
   );
 };
