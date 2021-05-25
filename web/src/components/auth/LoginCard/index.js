@@ -12,7 +12,7 @@ const LoginCard = () => (
     </h2>
     <a
       type="button"
-      className="button is-black p-25 is-info"
+      className="button is-black p-25 is-primary"
       href="/api/identities/github"
     >
       <span className="icon is-large mr-20">
@@ -34,7 +34,7 @@ const LoginCard = () => (
     </p>
     <a
       type="button"
-      className="button p-25 is-info is-outlined"
+      className="button p-25 is-primary is-outlined"
       href="/api/identities/github"
     >
       <span className="icon is-large mr-20">
