@@ -220,7 +220,7 @@ const Invite = () => {
                           </div>
                           <button
                             className={clsx(
-                              'button is-white',
+                              'button is-white-gray',
                               styles.formBtn
                             )}
                             type="submit"
@@ -263,7 +263,7 @@ const PluginStateCard = ({
   return (
     <div className={clsx(!isCardVisible && "remove")}>
       <article
-        className={'notification has-background-white has-text-centered p-50 colored-shadow'}
+        className={'notification has-background-white shadow has-text-centered p-50'}
       >
         <p
           className={'title is-size-3 mt-15'}
@@ -290,7 +290,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
   const { token, user } = auth;
 
   return (
-    <table className={clsx('table is-fullwidth shadow', styles.table)}>
+    <table className={clsx('table is-fullwidth shadow has-background-white', styles.table)}>
       <thead>
         <tr>
           <th>User</th>
@@ -325,7 +325,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
             <td colSpan="3" >
               <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
                 <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-                <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
+                <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
                   You haven't invited anyone yet.
                     </div>
               </div>
@@ -363,10 +363,10 @@ const ContactUs = ({ userVoiceToken }) => {
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a>
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
+        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
       </div>
     </div>
   )
