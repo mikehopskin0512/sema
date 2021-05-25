@@ -47,7 +47,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 const checkLoggedIn = async () => {
   chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
-    console.log({ ...response });
     store.dispatch(updateSemaUser({ ...response }));
   });
 };
