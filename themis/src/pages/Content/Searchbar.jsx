@@ -83,7 +83,7 @@ const SearchBar = (props) => {
         </div>
       } else if (searchValue.length === 0 && searchResults.length === 0) {
         return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
-          <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here. This is proof of update</span>
+          <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here.</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Type a few characters and we'll start searching right away.</span>
         </div>)
       } else {
