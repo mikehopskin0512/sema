@@ -74,7 +74,7 @@ export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
     semaString += ' | ';
   }
   if (selectedTagsString) {
-    semaString += `**Sema Tags:**${selectedTagsString}`;
+    semaString += `**Sema Tags:** ${selectedTagsString}`;
   }
   semaString += '\n';
 
@@ -438,7 +438,6 @@ export const setMutationObserverInLine = () => {
         const { id } = mutation.addedNodes[singleNode];
         smartComment.commentId = id;
       }
-
       createSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
