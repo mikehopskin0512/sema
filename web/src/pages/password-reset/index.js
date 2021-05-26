@@ -34,12 +34,16 @@ const InputForm = (props) => {
                 className="input"
                 type="email"
                 placeholder="e.g. tony@starkindustries.com"
-                name="email"
-                ref={register({
-                  required: 'Email is required',
-                  pattern:
-                    { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
-                })}
+                {
+                  ...register('email',
+                    {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                        message: 'Invaild email format',
+                      },
+                    })
+                }
                 required
               />
               <span className="icon is-small is-left">

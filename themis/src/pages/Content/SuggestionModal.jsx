@@ -62,7 +62,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               style={{ border: 'none' }}
               onClick={(event) => {
                 event.preventDefault();
-                onCopyPressed(comment);
+                onCopyPressed(id, comment);
               }}
             >
               <span className="sema-icon">
@@ -91,7 +91,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
   };
 
   const getCommentUI = () => {
-    const { comment, sourceName, sourceUrl, title } = currentSuggestion;
+    const { comment, sourceName, sourceUrl, title, id } = currentSuggestion;
     return (
       <>
         <button
@@ -111,7 +111,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
             style={{ border: 'none' }}
             onClick={(event) => {
               event.preventDefault();
-              onCopyPressed(comment);
+              onCopyPressed(id, comment);
             }}
           >
             <span className="sema-icon">

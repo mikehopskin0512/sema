@@ -17,7 +17,7 @@ const { clearAlert } = alertOperations;
 
 const Admin = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, errors, reset, control } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, control } = useForm({
     defaultValues: {
       emails: [{}]
     }
@@ -93,12 +93,17 @@ const Admin = () => {
                             className={`input ${errors.emails?.[index]?.value ? 'is-danger' : ""}`}
                             type="email"
                             placeholder="tony@starkindustries.com"
-                            name={`emails[${index}].value`}
-                            ref={register({
-                              required: 'Email is required',
-                              pattern:
-                                { value:/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
-                            })} />
+                            // name={`emails[${index}].value`}
+                            {
+                              ...register(`emails[${index}].value`, { 
+                                required: 'Email is required', 
+                                pattern: { 
+                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, 
+                                  message: 'Invaild email format' 
+                                },
+                              })
+                            }
+                          />
                         </div>
                         )}
                         <p className="help is-danger">{Array.isArray(errors.emails) && errors.emails?.[errors.emails.length - 1]?.value.message}</p>

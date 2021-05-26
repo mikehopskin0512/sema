@@ -1,15 +1,21 @@
+import { addMinutes } from '../shared/utils';
 import { sign, verify } from 'jsonwebtoken';
 import {
   jwtSecret, privateKeyFile,
   refreshSecret, refreshTokenName, rootDomain,
   userVoiceKey,
 } from '../config';
+import { updateLastLogin } from '../users/userService';
 
 import RefreshToken from './refreshTokenModel';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
-export const createAuthToken = async (user) => sign({ user }, jwtSecret, {
+const createUserVoiceIdentityToken = async ({ _id, username, firstName, lastName }) => (
+  sign({ guid: _id, email: username, display_name: `${firstName} ${lastName}`, exp: addMinutes(15) }, userVoiceKey)
+);
+
+export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user) }, jwtSecret, {
   expiresIn: '15m',
 });
 
@@ -51,9 +57,7 @@ export const setRefreshToken = async (response, user, token) => {
 
   await RefreshToken.findOneAndUpdate(filter, update, options);
 
+  await updateLastLogin(user);
+
   response.cookie(refreshTokenName, token, cookieConfig);
 };
-
-export const createUserVoiceIdentityToken = async ({ _id, username, firstName, lastName }) => (
-  sign({ guid: _id, email: username, display_name: `${firstName} ${lastName}` }, userVoiceKey)
-);

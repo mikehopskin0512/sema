@@ -11,6 +11,7 @@ export const create = async (user) => {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
     identities, terms,
+    isWaitlist, origin,
   } = user;
 
   // Verify token expires 24 hours from now
@@ -27,6 +28,8 @@ export const create = async (user) => {
       jobTitle,
       avatarUrl,
       identities,
+      isWaitlist,
+      origin,
       verificationToken: token,
       verificationExpires,
       termsAccepted: terms,
@@ -322,6 +325,20 @@ export const validatePasswordReset = async (token) => {
       throw new errors.BadRequest('Invalid or expired token');
     }
     return user;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const updateLastLogin = async (user) => {
+  try {
+    await update({
+      ...user,
+      lastLogin: Date.now(),
+    });
+    return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
