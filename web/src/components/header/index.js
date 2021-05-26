@@ -34,7 +34,7 @@ const Header = () => {
   const { isAdmin = false } = currentOrg;
 
   const orgMenuList = organizations.map((org) => (
-    <Link href="/reports">
+    <Link href="/">
       <a className="navbar-item">{org.orgName}</a>
     </Link>
   ));
@@ -88,7 +88,7 @@ const Header = () => {
         aria-label="main navigation"
       >
         <div className="navbar-brand">
-          <Link href="/reports">
+          <Link href="/">
             <a>
               {/* <Logo className="logo" /> */}
               <img src="/img/sema-logo.png" alt="sema-logo" />
