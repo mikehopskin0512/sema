@@ -65,7 +65,6 @@ const SearchBar = (props) => {
   };
 
   const renderPlaceholder = () => {
-    // var imgURL = chrome.extension.getURL("../../assets/img/comment-placeholder");
     const commentPlaceholder = chrome.runtime.getURL("img/comment-placeholder.png");
     const noResults = chrome.runtime.getURL("img/no-results.png");
     const loader = chrome.runtime.getURL("img/loader.png");
@@ -107,11 +106,9 @@ const SearchBar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
-    }`;
+  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''}`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
-    }`;
+  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''}`;
 
   return (
     <div className={containerClasses} style={{ width: '100%' }}>
