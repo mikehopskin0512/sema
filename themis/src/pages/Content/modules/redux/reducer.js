@@ -20,6 +20,7 @@ import {
   ADD_SMART_COMMENT,
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
+  UPDATE_SEARCH_BAR_INPUT_VALUE,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -53,7 +54,7 @@ function rootReducer(state = initialState, action) {
     newState.github.isTyping = false;
 
     newState.observer = null;
-    
+
     newState.smartComment = {};
 
     newState.githubMetada = {
@@ -67,7 +68,7 @@ function rootReducer(state = initialState, action) {
       filename: null,
       file_extension: null,
       line_numbers: [],
-    }
+    };
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
@@ -79,7 +80,8 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
-      selectedSuggestedComments: [], 
+      selectedSuggestedComments: [],
+      searchValue: '',
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -197,14 +199,14 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
-      selectedSuggestedComments: [], 
+      selectedSuggestedComments: [],
+      searchValue: '',
     };
 
     // Reset to default Github Metadata
     newState.githubMetada.filename = null;
     newState.githubMetada.file_extension = null;
     newState.githubMetada.ine_numbers = null;
-
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
@@ -214,17 +216,17 @@ function rootReducer(state = initialState, action) {
   } else if (type === ADD_GITHUB_METADATA) {
     const metadata = payload;
     newState.githubMetadata = metadata;
-  }
-  else if (type === ADD_SMART_COMMENT) {
+  } else if (type === ADD_SMART_COMMENT) {
     const comment = payload;
-    newState.smartComment = comment
-  }
-  else if (type === ADD_MUTATION_OBSERVER) {
+    newState.smartComment = comment;
+  } else if (type === ADD_MUTATION_OBSERVER) {
     const observer = payload;
     newState.observer = observer;
-  }
-  else if (type === REMOVE_MUTATION_OBSERVER) {
+  } else if (type === REMOVE_MUTATION_OBSERVER) {
     newState.observer.disconnect();
+  } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
+    const { id, searchValue } = payload;
+    newState.semasearches[id].searchValue = searchValue;
   }
   return newState;
 }

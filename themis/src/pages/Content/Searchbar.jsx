@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
 import { SUGGESTION_URL } from './constants';
 
-import { toggleSearchModal, addSuggestedComments } from './modules/redux/action';
+import {
+  toggleSearchModal,
+  addSuggestedComments,
+  updatetSearchBarInputValue,
+} from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
   const { semasearches } = state;
@@ -11,6 +15,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
+    searchValue: semaSearchState.searchValue,
   };
 };
 
@@ -18,20 +23,21 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
-    selectedSuggestedComments: (suggestedComment) => 
+    selectedSuggestedComments: (suggestedComment) =>
       dispatch(addSuggestedComments({ id, suggestedComment })),
+    handleChange: (searchValue) =>
+      dispatch(updatetSearchBarInputValue({ id, searchValue })),
   };
 };
 
 const SearchBar = (props) => {
-  const [searchValue, handleChange] = useState('');
   const [isLoading, toggleIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
   const onInputChanged = (event) => {
     event.preventDefault();
     const value = event.target.value;
-    handleChange(value);
+    props.handleChange(value);
   };
 
   const onCopyPressed = (id, suggestion) => {
@@ -47,14 +53,14 @@ const SearchBar = (props) => {
 
   const onCrossPressed = (event) => {
     event.preventDefault();
-    handleChange('');
+    props.handleChange('');
     setSearchResults([]);
     props.toggleSearchModal();
   };
 
   const getSemaSuggestions = () => {
     toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${searchValue}`;
+    const URL = `${SUGGESTION_URL}${props.searchValue}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -105,7 +111,7 @@ const SearchBar = (props) => {
               className="sema-input sema-is-small"
               type="text"
               placeholder="Search comment library"
-              value={searchValue}
+              value={props.searchValue}
               onChange={onInputChanged}
               onKeyDown={handleKeyPress}
             ></input>
