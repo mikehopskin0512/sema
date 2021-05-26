@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
+import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 
 import { usersOperations } from '../../state/features/users';
@@ -138,4 +139,4 @@ const UsersPage = () => {
   );
 };
 
-export default withLayout(UsersPage);
+export default withSemaAdmin(withLayout(UsersPage));

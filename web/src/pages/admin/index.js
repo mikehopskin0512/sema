@@ -4,6 +4,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import withAdmin from '../../components/auth/withAdmin';
 
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
@@ -133,4 +134,4 @@ const Admin = () => {
   );
 };
 
-export default withLayout(Admin);
+export default withAdmin(withLayout(Admin));
