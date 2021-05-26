@@ -46,7 +46,7 @@ export default (app, passport) => {
 
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
-      const { username } = user;
+      const { username } = userData;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,

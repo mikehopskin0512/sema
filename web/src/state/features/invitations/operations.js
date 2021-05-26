@@ -15,7 +15,7 @@ const createInviteAndHydrateUser = (invitationData, token) => async (dispatch) =
     return error;
   }
 
-  return true;
+  return { status: 201 };
 };
 
 const revokeInviteAndHydrateUser = (id, userId, token, recipient) => async (dispatch) => {
