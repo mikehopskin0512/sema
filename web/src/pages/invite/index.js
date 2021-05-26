@@ -51,7 +51,7 @@ const Invite = () => {
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    if (inviteCount > 0) {
+    if (inviteCount > 0 || user.isSemaAdmin) {
       const { email } = data;
       // Build invitation data
       const invitation = {
@@ -184,7 +184,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
               }
             >
-              <span className={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
+              <span className={clsx('tag is-success is-size-4 m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -224,7 +224,7 @@ const Invite = () => {
                               styles.formBtn
                             )}
                             type="submit"
-                            disabled={inviteCount <= 0}
+                            disabled={!user.isSemaAdmin && inviteCount <= 0}
                           >
                             Send Invite
                             </button>
