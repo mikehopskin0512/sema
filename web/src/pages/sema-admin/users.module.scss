@@ -4,32 +4,8 @@
     height: 100%;
 }
 
-.button {
+.increase-button {
     width: 22px;
     height: 20px;
-    background: #f0f0f0;
-    border: 0;
-    margin: 0 2px;
     cursor: pointer;
-
-    &:first-child {
-        margin-left: 10px;
-    }
-    &:focus {
-        outline: none;
-    }
-}
-
-.actionButton {
-    button {
-        color: #2a113f;
-        text-decoration: underline;
-        background: transparent;
-        border: 0;
-        cursor: pointer;
-
-        &:focus {
-            outline: none;
-        }
-    }
 }

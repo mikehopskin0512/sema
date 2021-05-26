@@ -88,14 +88,14 @@ const UsersPage = () => {
               { value.available }
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small ml-5 mr-5", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, 1)}
               >
                 +
               </button>
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, -1)}
               >
                 -

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const SearchInput = ({ value, onChange }) => (
-  <div className="field has-addons mb-15 is-background-white">
+  <div className="field has-addons mb-15 has-background-white">
     <p className="control">
     <input
-      className="input px-20 py-10 is-background-white"
+      className="input px-20 py-10 has-background-white"
       type="text"
       placeholder="Search"
       value={value}
