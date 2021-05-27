@@ -28,7 +28,8 @@ $gray-dark: #AFADAA;
 // Set custom colors
 $custom-colors: (
     "white-gray": $white-gray,
-    "gray-dark": $gray-dark
+    "gray-dark": $gray-dark,
+    "fa-gray": #F2F2F2,
 );
 
 // Set custom shades
@@ -65,5 +66,6 @@ $family-monospace: sans-serif;
 @import "./toaster";
 @import "./transitions";
 @import "./helpers";
+@import "./table";
 
 
