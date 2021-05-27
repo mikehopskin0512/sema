@@ -17,6 +17,7 @@ import {
   ADD_SMART_COMMENT,
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
+  UPDATE_SEARCH_BAR_INPUT_VALUE,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -104,4 +105,9 @@ export const addMutationObserver = (payload) => ({
 
 export const removeMutationObserver = () => ({
   type: REMOVE_MUTATION_OBSERVER,
+});
+
+export const updatetSearchBarInputValue = (payload) => ({
+  type: UPDATE_SEARCH_BAR_INPUT_VALUE,
+  payload,
 });

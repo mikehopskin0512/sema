@@ -206,3 +206,5 @@ export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
 export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 
 export const SUGGESTED_TAG_LIMIT = 3;
+
+export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
