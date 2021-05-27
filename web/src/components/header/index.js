@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
-import styles from './header.module.scss';
+import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 
@@ -34,7 +34,7 @@ const Header = () => {
   const { isAdmin = false } = currentOrg;
 
   const orgMenuList = organizations.map((org) => (
-    <Link href="/reports">
+    <Link href="/">
       <a className="navbar-item">{org.orgName}</a>
     </Link>
   ));
@@ -81,17 +81,16 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header>
+    <header className="has-background-white">
       <nav
         className="navbar is-transparent"
         role="navigation"
         aria-label="main navigation"
       >
         <div className="navbar-brand">
-          <Link href="/reports">
+          <Link href="/">
             <a>
-              {/* <Logo className="logo" /> */}
-              <img src="/img/sema-logo.png" alt="sema-logo" />
+              <img src='/img/sema-logo.png' alt="sema-logo" />
             </a>
           </Link>
           {token && isVerified && (
@@ -191,7 +190,7 @@ const Header = () => {
               {/* Right icon menu - desktop */}
               <div className="navbar-item has-dropdown" ref={userMenu}>
                 <div className="navbar-dropdown is-right">
-                  <div className="nested navbar-item dropdown">
+                  <div className="nested navbar-item dropdown is-hidden">
                     <div className="dropdown-trigger">
                       <a
                         // className="has-text-white"
@@ -216,11 +215,11 @@ const Header = () => {
                     </div>
                   </div>
                   <Link href="/">
-                    <a className="navbar-item" onClick={toggleUserMenu}>
+                    <a className="navbar-item is-hidden" onClick={toggleUserMenu}>
                       My Account
                     </a>
                   </Link>
-                  <hr className="navbar-divider has-background-grey-lighter" />
+                  <hr className="navbar-divider has-background-grey-lighter is-hidden" />
                   {isAdmin && (
                     <Link href="/admin">
                       <a

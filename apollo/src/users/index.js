@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version, orgDomain, userVoiceKey } from '../config';
+import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
@@ -8,7 +8,7 @@ import {
   joinOrg,
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
-import { setRefreshToken, createRefreshToken, createAuthToken, createUserVoiceIdentityToken } from '../auth/authService';
+import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 
@@ -241,23 +241,6 @@ export default (app, passport) => {
       return res.status(200).send({
         user,
       });
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
-    }
-  });
-
-  route.get('/user-voice/:id', passport.authenticate(['basic'], { session: false }), async (req, res) => {
-    const { id } = req.params;
-    try {
-      const user = await findById(id);
-
-      if (!user) {
-        throw new errors.NotFound('No user found');
-      }
-
-      const token = await createUserVoiceIdentityToken(user);
-      return res.status(200).json({ token });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

@@ -21,3 +21,6 @@ export const generateToken = () => new Promise((resolve, reject) => {
     resolve(token);
   });
 });
+
+// add minutes - return in unix time
+export const addMinutes = (minutes = 0, date = new Date()) => (new Date(date).getTime() + minutes * 60000);

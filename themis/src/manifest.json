@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Code Review Assistant",
+  "name": "Sema | Smart Code Reviews",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "0.44",
-  "options_page": "options.html",
+  "version": "0.52",
   "background": { "service_worker": "background.bundle.js" },
   "host_permissions": [
     "*://semasoftware.com/*",
@@ -37,7 +36,7 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*"]
+    "matches": ["*://localhost/*", "*://semasoftware.com/*", "*://*.semasoftware.com/*"]
   },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [
