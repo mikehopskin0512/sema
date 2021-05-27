@@ -12,9 +12,9 @@ export default (app, passport) => {
 
   route.get('/', async (req, res) => {
     try {
-      const { page, perPage = 10, search } = req.query;
+      const { page, perPage = 10, search, status } = req.query;
 
-      const { users, totalCount } = await listUsers({ page, perPage, search });
+      const { users, totalCount } = await listUsers({ page, perPage, search, status });
 
       return res.status(200).json({
         users,

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
+import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
@@ -11,7 +12,7 @@ import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import useDebounce from '../../hooks/useDebounce';
 import { formatDistanceToNowStrict } from 'date-fns';
-
+import StatusFilter from '../../components/admin/statusFilter';
 import styles from './users.module.scss';
 
 const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
@@ -19,33 +20,64 @@ const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
 const UsersPage = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.usersState);
+
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
+  const [statusFilters, setStatusFilters] = useState({
+    Waitlisted: false,
+    Active: false,
+    Blocked: false,
+    Disabled: false,
+  });
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    const statusQuery = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
 
-  useEffect(() => {
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [debounceSearchTerm]);
+    dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
+  }, [debounceSearchTerm, statusFilters]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const getBadgeColor = (value) => {
+    if (value === 'Waitlisted') return 'primary';
+    if (value === 'Active') return 'success';
+    if (value === 'Blocked') return 'danger';
+
+    return 'dark';
+  };
+
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
         accessor: 'userInfo',
-        sorted: true,
+        sorted: false,
         Cell: ({ cell: { value } }) => (
           <div className='is-flex is-align-items-center'>
             <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
             { value.name }
           </div>
+        ),
+      },
+      {
+        Header: () => (
+          <div className='is-flex'>
+            <div className='mr-2'>Status</div>
+            <StatusFilter value={statusFilters} onChange={setStatusFilters} />
+          </div>
+        ),
+        accessor: 'status',
+        sorted: false,
+        Cell: ({ cell: { value } }) => (
+          <Badge
+            label={value}
+            color={getBadgeColor(value)}
+          />
         ),
       },
       {
@@ -69,6 +101,7 @@ const UsersPage = () => {
       {
         Header: 'Email',
         accessor: 'username',
+        sorted: false,
       },
       {
         Header: () => (
@@ -107,8 +140,16 @@ const UsersPage = () => {
         ),
       },
     ],
-    [debounceSearchTerm],
+    [debounceSearchTerm, handleUpdateUserInvitations],
   );
+
+  const getStatus = (user) => {
+    if (user.isActive && user.isWaitlist) return 'Waitlisted';
+    if (user.isActive && !user.isWaitlist) return 'Active';
+    if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+    return 'Disabled';
+  };
 
   const dataSource = users.map((item) => ({
     ...item,
@@ -116,6 +157,7 @@ const UsersPage = () => {
       name: fullName(item),
       avatarUrl: item.avatarUrl,
     },
+    status: getStatus(item),
     activeDate: ((item.createdAt) ? formatDistanceToNowStrict(new Date(item.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
     invites: {
       available: item.inviteCount,
