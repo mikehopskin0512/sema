@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
@@ -9,6 +9,7 @@ import useOutsideClick from '../../utils/useOutsideClick';
 const Header = () => {
   const dispatch = useDispatch();
   const { deauthenticate } = authOperations;
+  const [bgColor, setBgColor] = useState("");
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -38,6 +39,12 @@ const Header = () => {
       <a className="navbar-item">{org.orgName}</a>
     </Link>
   ));
+
+  useEffect(() => {
+    if (window.location.pathname === '/invite') {
+      setBgColor("has-background-white");
+    }
+  }, []);
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -81,7 +88,7 @@ const Header = () => {
   useOutsideClick(userMenu, onClickOutside);
 
   return (
-    <header className="has-background-white">
+    <header className={bgColor}>
       <nav
         className="navbar is-transparent"
         role="navigation"
