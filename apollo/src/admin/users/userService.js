@@ -23,7 +23,7 @@ export const listUsers = async (params) => {
         statusQuery.push({ isActive: true, isWaitlist: false });
       } else if (item === 'Blocked') {
         statusQuery.push({ isActive: false, isWaitlist: true });
-      } else {
+      } else if (item === 'Disabled') {
         statusQuery.push({ isActive: false, isWaitlist: false });
       }
     });

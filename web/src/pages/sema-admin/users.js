@@ -43,6 +43,14 @@ const UsersPage = () => {
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const getBadgeColor = (value) => {
+    if (value === 'Waitlisted') return 'primary';
+    if (value === 'Active') return 'success';
+    if (value === 'Blocked') return 'danger';
+
+    return 'dark';
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -66,7 +74,10 @@ const UsersPage = () => {
         accessor: 'status',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <Badge label={value} />
+          <Badge
+            label={value}
+            color={getBadgeColor(value)}
+          />
         ),
       },
       {
