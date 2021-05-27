@@ -27,9 +27,10 @@ const authenticateError = (errors) => ({
   errors,
 });
 
-export const hydrateUser = (user) => ({
+export const hydrateUser = (user, userVoiceToken) => ({
   type: types.HYDRATE_USER,
   user,
+  userVoiceToken,
 });
 
 export const reauthenticate = (token) => ({
@@ -40,7 +41,7 @@ export const reauthenticate = (token) => ({
 export const deauthenticate = () => (dispatch) => {
   removeCookie(refreshCookie);
   Router.push('/login');
-  dispatch(triggerAlert('You have succesfully logged out', 'success'));
+  dispatch(triggerAlert('You have successfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
 
@@ -81,7 +82,7 @@ export const authenticate = (username, password) => async (dispatch) => {
   try {
     const res = await auth({ username, password });
     const { data: { jwtToken } } = res;
-    const { user } = jwtDecode(jwtToken) || {};
+    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
 
     if (user) {
       const { _id: userId, isVerified } = user;
@@ -98,7 +99,7 @@ export const authenticate = (username, password) => async (dispatch) => {
       }
 
       // Hydrate user regardless of isVerified
-      dispatch(hydrateUser(user));
+      dispatch(hydrateUser(user, userVoiceToken));
       //logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
@@ -113,12 +114,12 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
-    const { user } = jwtDecode(jwtToken) || {};
+    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
     const { isVerified } = user;
 
     // Send token to state and hydrate user
     dispatch(requestRefreshTokenSuccess(jwtToken));
-    dispatch(hydrateUser(user));
+    dispatch(hydrateUser(user, userVoiceToken));
 
     if (!isVerified) {
       dispatch(userNotVerifiedError(user));
@@ -239,13 +240,13 @@ export const activateUser = (verifyToken) => async (dispatch) => {
 
     // Auto login user
     const { data: { jwtToken } } = payload;
-    const { user } = jwtDecode(jwtToken) || {};
+    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
 
     if (user) {
       const { _id: userId } = user;
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
-      dispatch(hydrateUser(user));
+      dispatch(hydrateUser(user, userVoiceToken));
       // logHeapAnalytics(userId, orgId);
     }
 
@@ -256,13 +257,13 @@ export const activateUser = (verifyToken) => async (dispatch) => {
   }
 };
 
-export const resendVerifiction = (username) => async (dispatch) => {
+export const resendVerification = (username) => async (dispatch) => {
   try {
     dispatch(requestResetVerification());
     await resetVerification({ username });
 
     dispatch(resetVerificationSuccess());
-    dispatch(triggerAlert('Verifcation Email resent. Please check your email.', 'success'));
+    dispatch(triggerAlert('Verification Email resent. Please check your email.', 'success'));
     dispatch(clearAlert());
   } catch (error) {
     dispatch(resetVerificationError(error.response.data));

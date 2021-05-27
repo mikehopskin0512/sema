@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
+import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 
 import { usersOperations } from '../../state/features/users';
@@ -109,14 +110,14 @@ const UsersPage = () => {
               { value.available }
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small ml-5 mr-5", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, 1)}
               >
                 +
               </button>
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, -1)}
               >
                 -
@@ -169,4 +170,4 @@ const UsersPage = () => {
   );
 };
 
-export default withLayout(UsersPage);
+export default withSemaAdmin(withLayout(UsersPage));

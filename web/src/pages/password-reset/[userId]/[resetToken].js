@@ -13,7 +13,8 @@ const { verifyResetToken, changePassword } = passwordOperations;
 
 const InputForm = (props) => {
   // const emailRef = useRef(null);
-  const { register, handleSubmit, errors, watch } = useForm();
+  const { register, handleSubmit, formState, watch } = useForm();
+  const { errors } = formState;
 
   const onSubmit = (data) => {
     const { password } = data;
@@ -37,16 +38,19 @@ const InputForm = (props) => {
               <input
                 className={`input ${errors.password && 'is-danger'}`}
                 type="password"
-                name="password"
-                ref={register({
-                  required: 'Password is required',
-                  minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                  maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                  pattern: {
-                    value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/,
-                    message: 'Must contain 1 letter, 1 number, and 1 special character',
-                  },
-                })} />
+                {
+                  ...register('password',
+                    {
+                      required: 'Password is required',
+                      minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                      maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                      pattern: {
+                        value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/,
+                        message: 'Must contain 1 letter, 1 number, and 1 special character',
+                      },
+                    })
+                }
+              />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon="lock" />
               </span>
@@ -59,18 +63,21 @@ const InputForm = (props) => {
               <input
                 className={`input ${errors.passwordConfirm && 'is-danger'}`}
                 type="password"
-                name="passwordConfirm"
-                ref={register({
-                  validate: (value) => {
-                    if (value === watch('password')) {
-                      return true;
-                    }
-                    return 'Passwords do not match';
-                  },
-                })} />
+                {
+                  ...register('passwordConfirm',
+                    {
+                      validate: (value) => {
+                        if (value === watch('password')) {
+                          return true;
+                        }
+                        return 'Passwords do not match';
+                      },
+                    })
+                }
+              />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon="lock" />
-              </span>                
+              </span>
             </div>
             <p className="help is-danger">{errors.passwordConfirm && errors.passwordConfirm.message}</p>
           </div>

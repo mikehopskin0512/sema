@@ -19,7 +19,7 @@ const Sidebar = () => {
   }, [open]);
 
   return (
-    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-full-height`)}>
+    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-fullheight`)}>
       <div className={`is-flex is-align-items-center is-clickable ${open ? 'p-10' : 'px-5 py-10'}`} onClick={() => setOpen(!open)}>
         <img src="/img/logo_short.png" alt="logo" />
         {

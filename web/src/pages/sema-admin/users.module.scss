@@ -4,21 +4,10 @@
     height: 100%;
 }
 
-.button {
+.increase-button {
     width: 22px;
     height: 20px;
-    line-height: 20px;
-    background: #f0f0f0;
-    border: 0;
-    margin: 0 2px;
     cursor: pointer;
-
-    &:first-child {
-        margin-left: 10px;
-    }
-    &:focus {
-        outline: none;
-    }
 }
 
 .status {
