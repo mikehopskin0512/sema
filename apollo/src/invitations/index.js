@@ -2,8 +2,10 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { create, findByToken, getInvitationsBySender, getInvitationByRecipient } from './invitationService';
-import { findByUsername, update } from '../users/userService';
+import {
+  create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
+} from './invitationService';
+import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -15,7 +17,7 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
-      user: { user },
+      user: { user: userData },
     } = req;
 
     if (invitation.inviteCount <= 0) {
@@ -41,18 +43,21 @@ export default (app, passport) => {
       if (!newInvitation) {
         throw new errors.BadRequest('Invitation create error');
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = newInvitation;
+      const { username } = user;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: username,
       };
       await sendEmail(message);
       const updatedUser = await update({
-        ...user,
+        ...userData,
         inviteCount: invitation.inviteCount - 1,
       });
 
@@ -121,7 +126,7 @@ export default (app, passport) => {
     }
   });
 
-  // send email
+  // Send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { recipient: recipientData } = req.body;
 
@@ -134,14 +139,17 @@ export default (app, passport) => {
       if (user) {
         return res.status(401).send({ message: `${recipientData} is already an active member.` });
       }
+
       // Send invitation
       const { recipient, token, orgName, senderName } = userInvitation;
+      const { username } = user;
       const message = {
         recipient,
-        url: `${orgDomain}/register/${token}`,
+        url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
+        email: username,
       };
       await sendEmail(message);
 
@@ -151,6 +159,40 @@ export default (app, passport) => {
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // Delete invitation
+  route.delete('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const {
+        params: { id },
+        user: { user },
+      } = req;
+
+      // Find and check if invite exists and if the requester is the sender of the invitation
+      const invite = await findById(id);
+      if (!invite) {
+        return res.status(500).send('Error finding invitation.');
+      }
+      if (invite.statusCode > 226) {
+        return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
+      }
+      if (!invite.sender.equals(user._id)) {
+        return res.status(405).send('Unable to delete invitation: Unauthorized.');
+      }
+
+      // Delete invitation
+      const response = await deleteInvitation(invite._id);
+      const updatedUser = await findUserById(user._id);
+      const userData = await update({
+        ...user,
+        inviteCount: updatedUser.inviteCount + 1,
+      });
+      return res.status(200).send({ user: userData, response });
+    } catch (err) {
+      logger.error(err);
+      return res.status(err.statusCode).send(err);
     }
   });
 };

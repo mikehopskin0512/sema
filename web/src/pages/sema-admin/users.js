@@ -2,15 +2,17 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
+import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import useDebounce from '../../hooks/useDebounce';
+import { formatDistanceToNowStrict } from 'date-fns';
+
 import StatusFilter from '../../components/admin/statusFilter';
 import styles from './users.module.scss';
 
@@ -114,8 +116,8 @@ const UsersPage = () => {
         accessor: 'userInfo',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <div className={styles.name}>
-            <img src={value.avatarUrl} alt="avatar" className={styles['avatar-img']} />
+          <div className='is-flex is-align-items-center'>
+            <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
             { value.name }
           </div>
         ),
@@ -138,8 +140,8 @@ const UsersPage = () => {
       },
       {
         Header: ({ isSorted, isSortedDesc }) => (
-          <div className={styles['text-center']}>
-            <span style={{ marginRight: 10 }}>Active Date</span>
+          <div className='has-text-centered'>
+            <span className="mr-10">Active Date</span>
             {
               isSorted
                 ? (
@@ -152,7 +154,7 @@ const UsersPage = () => {
           </div>
         ),
         accessor: 'activeDate',
-        Cell: ({ cell: { value } }) => <div style={{ textAlign: 'center' }}>{value}</div>,
+        Cell: ({ cell: { value } }) => <div className="has-text-centered">{value}</div>,
       },
       {
         Header: 'Email',
@@ -161,37 +163,37 @@ const UsersPage = () => {
       },
       {
         Header: () => (
-          <div className={styles['invite-header']} style={{ textAlign: 'center' }}>
+          <div className='has-text-centered pt-10' style={{ background: '#E9E1F0' }}>
             <div>Invite</div>
-            <div className={styles['invite-subheader']}>
-              <div className={styles['invite-col']}>Available</div>
-              <div className={styles['invite-col']}>Pending</div>
-              <div className={styles['invite-col']}>Accepted</div>
+            <div className='is-flex py-10' style={{ background: '#E3D6EF' }}>
+              <div className='has-text-left px-15 py-0 column'>Available</div>
+              <div className='has-text-left px-15 py-0 column'>Pending</div>
+              <div className='has-text-left px-15 py-0 column'>Accepted</div>
             </div>
           </div>
         ),
         accessor: 'invites',
         Cell: ({ cell: { value } }) => (
-          <div className={clsx(styles.subHeader, styles.flex)}>
-            <div className={clsx(styles['flex-1'], styles['invite-col'])}>
+          <div className='is-flex py-10'>
+            <div className='has-text-left px-15 py-0 column'>
               { value.available }
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small ml-5 mr-5", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, 1)}
               >
                 +
               </button>
               <button
                 type="button"
-                className={styles.button}
+                className={clsx("button is-small", styles['increase-button'])}
                 onClick={() => handleUpdateUserInvitations(value.id, -1)}
               >
                 -
               </button>
             </div>
-            <div className={clsx(styles['flex-1'], styles['invite-col'])}>{ value.pending }</div>
-            <div className={clsx(styles['flex-1'], styles['invite-col'])}>{ value.accepted }</div>
+            <div className='has-text-left px-15 py-0 column'>{ value.pending }</div>
+            <div className='has-text-left px-15 py-0 column'>{ value.accepted }</div>
           </div>
         ),
       },
@@ -201,7 +203,7 @@ const UsersPage = () => {
         Cell: ({ cell: { value } }) => renderActionCell(value),
       },
     ],
-    [handleUpdateUserInvitations],
+    [debounceSearchTerm, handleUpdateUserInvitations],
   );
 
   const getStatus = (user) => {
@@ -219,7 +221,7 @@ const UsersPage = () => {
       avatarUrl: item.avatarUrl,
     },
     status: getStatus(item),
-    activeDate: `${moment().diff(item.createdAt, 'days')}d`,
+    activeDate: ((item.createdAt) ? formatDistanceToNowStrict(new Date(item.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
     invites: {
       available: item.inviteCount,
       pending: item.pendingCount,
@@ -233,11 +235,11 @@ const UsersPage = () => {
   }));
 
   return (
-    <div className={styles['users-page']}>
-      <h1 className={styles['page-title']}>User Management</h1>
-      <p className={styles['page-desc']}>Manage your users at a glance</p>
-      <div className={styles['table-wrapper']}>
-        <div className={styles['search-input-wrapper']}>
+    <div className={clsx(styles['users-page'], 'is-flex is-flex-direction-column')}>
+      <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
+      <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
+      <div className='p-20 is-flex-grow-1 is-background-white' style={{ borderRadius: 10 }}>
+        <div className='is-flex is-justify-content-flex-end'>
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
         <Table columns={columns} data={dataSource} />
@@ -246,4 +248,4 @@ const UsersPage = () => {
   );
 };
 
-export default withLayout(UsersPage);
+export default withSemaAdmin(withLayout(UsersPage));

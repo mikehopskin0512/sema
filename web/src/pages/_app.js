@@ -6,7 +6,7 @@ import { config, library } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
 import {
   faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
-  faFilter, faCloudDownloadAlt, faPlus, faChevronDown, faChevronUp, faCaretDown, faCaretUp,
+  faFilter, faCloudDownloadAlt, faPlus, faChevronDown, faChevronUp, faSearch, faCog, faUserFriends, faCaretDown, faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import initialize from '../state/utils/sentry';
@@ -17,7 +17,8 @@ import '../../styles/_theme.scss';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
-  faFilter, faCloudDownloadAlt, faPlus, faGithub, faTwitter, faFacebook, faChevronDown, faChevronUp, faCaretDown, faCaretUp);
+  faFilter, faCloudDownloadAlt, faPlus, faGithub, faTwitter, faFacebook, faChevronDown,
+  faChevronUp, faSearch, faCog, faUserFriends, faCaretDown, faCaretUp);
 
 const Application = ({ Component, pageProps, store }) => {
   const router = useRouter();

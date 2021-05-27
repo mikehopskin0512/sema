@@ -19,13 +19,22 @@ $success: $lint-green;
 $danger: $pink;
 
 $black: #202020;
-$white: #F4F4F4;
+$white: #FFFFFF;
 $grey-light: #E4E4E4;
 $gray-light: #E4E4E4;
+$white-gray: #FCFCFC;
+$gray-dark: #AFADAA;
+
+// Set custom colors
+$custom-colors: (
+    "white-gray": $white-gray,
+    "gray-dark": $gray-dark,
+    "fa-gray": #F2F2F2,
+);
 
 // Set custom shades
 $custom-shades: (
-    "gray-light": $gray-light,
+    "gray-light": $gray-light
 );
 
 $spacing-values: ("auto": auto, "0": 0, "1r": 1rem, "2r": 2rem, "5": 5px, "10": 10px, "15": 15px, "20": 20px, "25": 25px, "50": 50px, "70": 70px, "90": 90px, "120": 120px);
@@ -57,5 +66,6 @@ $family-monospace: sans-serif;
 @import "./toaster";
 @import "./transitions";
 @import "./helpers";
+@import "./table";
 
 

@@ -4,7 +4,7 @@ import Header from '../header';
 import Footer from '../footer';
 
 const withLayout = (Page) => () => (
-  <div className="Layout">
+  <div className="Layout background-foggy-white">
     {/* Styling for full height width */}
     <style global jsx>{`
       html,
