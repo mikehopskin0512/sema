@@ -19,7 +19,7 @@ const Table = ({ columns, data, auth }) => {
 
   // Render the UI for your table
   return (
-    <div>
+    <div className="table-container">
       <table {...getTableProps()} className="table is-striped" style={{ width: '100%' }}>
         <thead>
           {headerGroups.map((headerGroup) => (

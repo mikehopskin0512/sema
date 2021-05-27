@@ -2,18 +2,17 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
+import { formatDistanceToNowStrict } from 'date-fns';
+import useDebounce from '../../hooks/useDebounce';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
+import StatusFilter from '../../components/admin/statusFilter';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import useDebounce from '../../hooks/useDebounce';
-import { formatDistanceToNowStrict } from 'date-fns';
-
-import StatusFilter from '../../components/admin/statusFilter';
 import styles from './users.module.scss';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
@@ -69,11 +68,11 @@ const UsersPage = () => {
   }, [dispatch, searchTerm]);
 
   const getBadgeColor = (value) => {
-    if (value === 'Waitlisted') return 'blue';
-    if (value === 'Active') return 'green';
-    if (value === 'Blocked') return 'pink';
+    if (value === 'Waitlisted') return 'primary';
+    if (value === 'Active') return 'success';
+    if (value === 'Blocked') return 'danger';
 
-    return 'purple';
+    return 'dark';
   };
 
   const renderActionCell = (userStatus) => {
@@ -81,26 +80,26 @@ const UsersPage = () => {
     switch (status) {
       case 'Active':
         return (
-          <div className={clsx(styles.actionsCell, styles.flex)}>
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
             <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Disable</a>
           </div>
         );
       case 'Waitlisted':
         return (
-          <div className={clsx(styles.actionsCell, styles.flex)}>
-            <a className={clsx(styles['flex-1'])} onClick={(e) => handleAdmitUser(id)}>Admit</a>
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'], 'mr-5')} onClick={(e) => handleAdmitUser(id)}>Admit</a>
             <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Block</a>
           </div>
         );
       case 'Disabled':
         return (
-          <div className={clsx(styles.actionsCell, styles.flex)}>
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
             <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Enable</a>
           </div>
         );
       case 'Blocked':
         return (
-          <div className={clsx(styles.actionsCell, styles.flex)}>
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
             <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Unblock</a>
           </div>
         );
@@ -124,8 +123,8 @@ const UsersPage = () => {
       },
       {
         Header: () => (
-          <div className={clsx(styles.status, styles.flex)}>
-            <div>Status</div>
+          <div className='is-flex'>
+            <div className='mr-2'>Status</div>
             <StatusFilter value={statusFilters} onChange={setStatusFilters} />
           </div>
         ),
@@ -175,7 +174,7 @@ const UsersPage = () => {
         accessor: 'invites',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex py-10'>
-            <div className='has-text-left px-15 py-0 column'>
+            <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>
               { value.available }
               <button
                 type="button"

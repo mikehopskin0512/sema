@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import styles from './badge.module.scss';
 
 const Badge = ({ color, label }) => (
-  <div className={clsx(styles.badge, styles[color])}>
+  <div
+    className={`py-5 px-10 has-text-centered has-text-${color}-dark has-background-${color}-light`}
+    style={{ maxWidth: 100, borderRadius: 20 }}
+  >
     {label}
   </div>
 );

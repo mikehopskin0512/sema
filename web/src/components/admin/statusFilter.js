@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import styles from './statusFilter.module.scss';
 
 const statusList = ['Active', 'Waitlisted', 'Blocked', 'Disabled'];
 
@@ -50,30 +49,32 @@ function StatusFilter({ onChange, value }) {
   }, [isOpen]);
 
   return (
-    <div className={styles.statusFilter}>
-      <FontAwesomeIcon
-        icon={!isOpen ? 'caret-down' : 'caret-up'}
-        onClick={handleButtonClick}
-        size="lg"
-      />
-      {
-        isOpen && (
-          <div className={styles.popup} id="status-filter-popup">
-            {
-              statusList.map((status) => (
-                <label key={status} className={styles.listItem}>
-                  <input
-                    type="checkbox"
-                    checked={filters[status]}
-                    onChange={(e) => onFilterChange(status, e.target.checked)}
-                  />
-                  {status}
-                </label>
-              ))
-            }
-          </div>
-        )
-      }
+    <div className={`dropdown is-right ml-5 ${isOpen && 'is-active'}`}>
+      <div className="dropdown-trigger">
+        <FontAwesomeIcon
+          className='is-clickable'
+          icon={!isOpen ? 'caret-down' : 'caret-up'}
+          onClick={handleButtonClick}
+          size="lg"
+        />
+      </div>
+      <div className='dropdown-menu' id="status-filter-popup" role="menu" style={{ minWidth: 'initial' }}>
+        <div className={'dropdown-content px-15 py-10 is-background-white'}>
+          {
+            statusList.map((status) => (
+              <label key={status} className='is-flex is-align-items-center my-5'>
+                <input
+                  className="mr-10"
+                  type="checkbox"
+                  checked={filters[status]}
+                  onChange={(e) => onFilterChange(status, e.target.checked)}
+                />
+                {status}
+              </label>
+            ))
+          }
+        </div>
+      </div>
     </div>
   );
 }
