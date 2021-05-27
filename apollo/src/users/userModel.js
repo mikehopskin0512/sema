@@ -44,6 +44,7 @@ const userSchema = mongoose.Schema({
   identities: [identitySchema],
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },
+  isSemaAdmin: { type: Boolean, default: false },
   lastLogin: { type: Date, default: Date.now() },
   origin: { type: String, enum: ['invitation', 'waitlist', 'signup'], default: 'signup' },
 }, { timestamps: true });

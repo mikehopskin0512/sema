@@ -1,0 +1,33 @@
+.table {
+  border: 1px solid #dbdbdb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background: none;
+
+  tr {
+    background: none !important;
+  }
+
+  thead {
+    background: #f2f1f4;
+
+    th {
+      vertical-align: inherit;
+      padding: 0 1.5rem;
+      font-size: 14px;
+      font-weight: 600;
+
+      &:last-child {
+        padding: 0;
+      }
+    }
+  }
+  td {
+    vertical-align: inherit;
+    padding: .5rem 1.5rem;
+    font-size: 14px;
+
+    &:last-child {
+      padding: 0;
+    }
+  }
+}
