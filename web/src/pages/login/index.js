@@ -82,31 +82,29 @@ const Login = () => {
           <div className="container">
             <div className="tile is-ancestor">
               <div className="tile is-vertical is-parent is-6">
-                <img src="/img/sema-logo.png" alt="sema-logo" width="200" />
-                <div className="title is-4 mt-20 mb-50">Your code review assistant</div>
                 <img src="/img/codelines.png" width="430"/>
                 <div className="feature-list mt-50">
                   <ul>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-10", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faThumbsUp} size="sm" />
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faThumbsUp} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
                       </div>
                     </li>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-10", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faTag} size="sm" />
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faTag} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
                       </div>
                     </li>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-10", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faCommentAlt} size="sm" />
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>
                       </div>
