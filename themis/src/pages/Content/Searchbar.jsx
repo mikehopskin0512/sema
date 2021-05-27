@@ -157,7 +157,7 @@ const SearchBar = (props) => {
           </div>
           <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
             <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
-              <img className="sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
+              <img className="sema-credit-img sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
             </span>
           </div>
         </div>
