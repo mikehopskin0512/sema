@@ -2,7 +2,7 @@
   {
     "isActive": true,
     "isVerified": true,
-    "isWaitlist": true,
+    "isWaitlist": false,
     "termsAccepted": true,
     "username": "guillermo@semasoftware.com",
     "password": null,
@@ -110,7 +110,7 @@
   {
     "isActive": true,
     "isVerified": false,
-    "isWaitlist": true,
+    "isWaitlist": false,
     "termsAccepted": true,
     "username": "justin@semasoftware.com",
     "password": null,
@@ -144,61 +144,40 @@
     "_id": "6076262a404c64f114995377"
   },
   {
-    "_id": "6099620ca6bf0a001d56ed06",
-    "isActive": true,
+    "isActive": false,
     "isVerified": true,
     "isWaitlist": false,
     "termsAccepted": true,
-    "username": "codykenny@gmail.com",
+    "username": "brendan@semasoftware.com",
     "password": null,
     "firstName": "Brendan",
-    "lastName": "Cody-Kenny",
-    "jobTitle": "Goose wrangler",
-    "avatarUrl": "https://avatars.githubusercontent.com/u/6106595?v=4",
+    "lastName": "Cody",
+    "jobTitle": "Engineer",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/82075562?v=4",
     "identities": [
       {
         "provider": "github",
-        "id": "6106595",
-        "username": "codykenb",
-        "email": "codykenny@gmail.com",
+        "id": "82075560",
+        "username": "brendancody",
+        "email": "brendan@semasoftware.com",
         "firstName": "Brendan",
-        "lastName": "Cody-Kenny",
-        "profileUrl": "https://api.github.com/users/codykenb",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/6106595?v=4"
+        "lastName": "Cody",
+        "profileUrl": "https://api.github.com/users/brendancody",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/82075560?v=4"
       }
     ],
     "verificationToken": null,
     "verificationExpires": null,
-    "termsAcceptedAt": {
-      "$date": "2021-05-10T16:40:44.065Z"
-    },
+    "termsAcceptedAt": "2020-12-12T13:53:10.734Z",
     "organizations": [
       {
         "isActive": true,
         "isAdmin": true,
-        "id": {
-          "$oid": "60996225a6bf0a001d56ed07"
-        },
-        "orgName": "OCP",
-        "updatedAt": {
-          "$date": "2021-05-26T17:12:13.896Z"
-        },
-        "createdAt": {
-          "$date": "2021-05-26T17:12:13.896Z"
-        }
+        "id": "82075564",
+        "orgName": "Sema"
       }
     ],
-    "createdAt": {
-      "$date": "2021-05-10T16:40:44.071Z"
-    },
-    "updatedAt": {
-      "$date": "2021-05-26T17:12:13.896Z"
-    },
-    "__v": 0,
-    "inviteCount": 4,
-    "lastLogin": {
-      "$date": "2021-05-26T17:12:13.895Z"
-    }
+    "_id": "6076262a405c64f114995378"
   },
   {
     "isActive": true,
@@ -216,7 +195,7 @@
         "provider": "github",
         "id": "82075560",
         "username": "mvi",
-        "email": "mvi@semasoftware.com",
+        "email": "brendan@semasoftware.com",
         "firstName": "Matt",
         "lastName": "Van Itallie",
         "profileUrl": "https://api.github.com/users/mvi",
@@ -275,7 +254,7 @@
   {
     "isActive": false,
     "isVerified": true,
-    "isWaitlist": false,
+    "isWaitlist": true,
     "termsAccepted": true,
     "username": "james@semasoftware.com",
     "password": null,
