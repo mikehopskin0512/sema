@@ -14,6 +14,8 @@ const templates = {
   inviteUser: 'd-9d3edff986234a619a4681fb3e1dfb80',
   userConfirm: 'd-07e2e2aca47b411a9165885ecb7acdb3',
   verifyUser: 'd-ceb1757425874fd9af621484e1e29321',
+  accountCreated: 'd-e04500d489e24b2e8b8a38cfafab87ab',
+  userAdmitted: 'd-abd207a163c24162b23294f925c5f5cf',
 };
 
 export const sendEmail = async (messageData) => {
@@ -35,7 +37,6 @@ export const sendEmail = async (messageData) => {
       url,
     },
   };
-
   (async () => {
     try {
       await sgMail.send(msg);
