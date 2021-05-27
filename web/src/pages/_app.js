@@ -19,7 +19,8 @@ import '../../styles/_theme.scss';
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faFilter, faCloudDownloadAlt, faPlus, faGithub, faTwitter, faFacebook, faChevronDown, faChevronUp, faCaretDown, faCaretUp,
-  faChevronUp, faSearch, faCog, faUserFriends);
+  faSearch, faCog, faUserFriends,
+);
 
 const Application = ({ Component, pageProps, store }) => {
   const router = useRouter();

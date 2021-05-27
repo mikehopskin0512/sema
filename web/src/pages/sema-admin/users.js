@@ -2,20 +2,20 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
+import { formatDistanceToNowStrict } from 'date-fns';
+import useDebounce from '../../hooks/useDebounce';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
+import StatusFilter from '../../components/admin/statusFilter';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import useDebounce from '../../hooks/useDebounce';
-import { formatDistanceToNowStrict } from 'date-fns';
-import StatusFilter from '../../components/admin/statusFilter';
 import styles from './users.module.scss';
 
-const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -43,12 +43,69 @@ const UsersPage = () => {
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const handleAdmitUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isWaitlist',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleBlockOrDisableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleEnableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: true,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'primary';
     if (value === 'Active') return 'success';
     if (value === 'Blocked') return 'danger';
 
     return 'dark';
+  };
+
+  const renderActionCell = (userStatus) => {
+    const { id, status } = userStatus;
+    switch (status) {
+      case 'Active':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Disable</a>
+          </div>
+        );
+      case 'Waitlisted':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'], 'mr-5')} onClick={(e) => handleAdmitUser(id)}>Admit</a>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Block</a>
+          </div>
+        );
+      case 'Disabled':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Enable</a>
+          </div>
+        );
+      case 'Blocked':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Unblock</a>
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   const columns = useMemo(
@@ -117,7 +174,7 @@ const UsersPage = () => {
         accessor: 'invites',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex py-10'>
-            <div className='has-text-left px-15 py-0 column'>
+            <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>
               { value.available }
               <button
                 type="button"
@@ -138,6 +195,11 @@ const UsersPage = () => {
             <div className='has-text-left px-15 py-0 column'>{ value.accepted }</div>
           </div>
         ),
+      },
+      {
+        Header: 'Actions',
+        accessor: 'actionStatus',
+        Cell: ({ cell: { value } }) => renderActionCell(value),
       },
     ],
     [debounceSearchTerm, handleUpdateUserInvitations],
@@ -164,6 +226,10 @@ const UsersPage = () => {
       pending: item.pendingCount,
       accepted: item.acceptCount,
       id: item._id,
+    },
+    actionStatus: {
+      id: item._id,
+      status: getStatus(item),
     },
   }));
 

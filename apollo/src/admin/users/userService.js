@@ -61,3 +61,11 @@ export const updateUserAvailableInvitesCount = async (id, params) => {
 
   await user.save();
 };
+
+export const updateUserStatus = async (id, params) => {
+  const { key, value } = params;
+
+  const user = await User.findById(id);
+  user[key] = value;
+  await user.save();
+};
