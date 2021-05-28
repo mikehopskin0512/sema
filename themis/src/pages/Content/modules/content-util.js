@@ -159,9 +159,11 @@ export function writeSemaToGithub(textarea) {
     const tagContainer = semaChildren?.[1];
 
     const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-    const selectedTags = Array.from($(tagContainer)
-      .children('.sema-tag')
-      .map((index, tagElement) => tagElement?.textContent));
+    const selectedTags = Array.from(
+      $(tagContainer)
+        .children('.sema-is-dark')
+        .map((index, tagElement) => tagElement?.textContent)
+    );
 
     const selectedEmojiObj = EMOJIS.find((emoji) =>
       selectedReaction?.includes(emoji.title)
@@ -181,7 +183,9 @@ export function writeSemaToGithub(textarea) {
     const { selectedSuggestedComments } = store.getState().semasearches[semaSearchId];
 
     // TODO: Momentary implementation, for Tags retrieved from MongoDB
-    const tags = selectedTags.map((tag) => (TAGS_ON_DB.find(({label}) => label === tag)._id));
+    const tags = selectedTags.map(
+      (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id
+    );
 
     const githubMetadata = store.getState().githubMetadata;
 
