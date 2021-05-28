@@ -2,50 +2,139 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
+import { formatDistanceToNowStrict } from 'date-fns';
+import useDebounce from '../../hooks/useDebounce';
+import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
+import StatusFilter from '../../components/admin/statusFilter';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import useDebounce from '../../hooks/useDebounce';
-import { formatDistanceToNowStrict } from 'date-fns';
-
 import styles from './users.module.scss';
 
-const { fetchUsers, updateUserAvailableInvitationsCount } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.usersState);
+
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
+  const [statusFilters, setStatusFilters] = useState({
+    Waitlisted: false,
+    Active: false,
+    Blocked: false,
+    Disabled: false,
+  });
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    const statusQuery = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
 
-  useEffect(() => {
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [debounceSearchTerm]);
+    dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
+  }, [debounceSearchTerm, statusFilters]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
     dispatch(fetchUsers({ search: searchTerm }));
   }, [dispatch, searchTerm]);
 
+  const handleAdmitUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isWaitlist',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleBlockOrDisableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: false,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const handleEnableUser = useCallback(async (userId) => {
+    await dispatch(updateStatus(userId, {
+      key: 'isActive',
+      value: true,
+    }));
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
+
+  const getBadgeColor = (value) => {
+    if (value === 'Waitlisted') return 'primary';
+    if (value === 'Active') return 'success';
+    if (value === 'Blocked') return 'danger';
+
+    return 'dark';
+  };
+
+  const renderActionCell = (userStatus) => {
+    const { id, status } = userStatus;
+    switch (status) {
+      case 'Active':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Disable</a>
+          </div>
+        );
+      case 'Waitlisted':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'], 'mr-5')} onClick={(e) => handleAdmitUser(id)}>Admit</a>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Block</a>
+          </div>
+        );
+      case 'Disabled':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Enable</a>
+          </div>
+        );
+      case 'Blocked':
+        return (
+          <div className={clsx(styles.actionsCell, 'is-flex')}>
+            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Unblock</a>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   const columns = useMemo(
     () => [
       {
         Header: 'Name',
         accessor: 'userInfo',
-        sorted: true,
+        sorted: false,
         Cell: ({ cell: { value } }) => (
           <div className='is-flex is-align-items-center'>
             <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
             { value.name }
           </div>
+        ),
+      },
+      {
+        Header: () => (
+          <div className='is-flex'>
+            <div className='mr-2'>Status</div>
+            <StatusFilter value={statusFilters} onChange={setStatusFilters} />
+          </div>
+        ),
+        accessor: 'status',
+        sorted: false,
+        Cell: ({ cell: { value } }) => (
+          <Badge
+            label={value}
+            color={getBadgeColor(value)}
+          />
         ),
       },
       {
@@ -69,6 +158,7 @@ const UsersPage = () => {
       {
         Header: 'Email',
         accessor: 'username',
+        sorted: false,
       },
       {
         Header: () => (
@@ -84,7 +174,7 @@ const UsersPage = () => {
         accessor: 'invites',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex py-10'>
-            <div className='has-text-left px-15 py-0 column'>
+            <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>
               { value.available }
               <button
                 type="button"
@@ -106,9 +196,22 @@ const UsersPage = () => {
           </div>
         ),
       },
+      {
+        Header: 'Actions',
+        accessor: 'actionStatus',
+        Cell: ({ cell: { value } }) => renderActionCell(value),
+      },
     ],
-    [debounceSearchTerm],
+    [debounceSearchTerm, handleUpdateUserInvitations],
   );
+
+  const getStatus = (user) => {
+    if (user.isActive && user.isWaitlist) return 'Waitlisted';
+    if (user.isActive && !user.isWaitlist) return 'Active';
+    if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+    return 'Disabled';
+  };
 
   const dataSource = users.map((item) => ({
     ...item,
@@ -116,12 +219,17 @@ const UsersPage = () => {
       name: fullName(item),
       avatarUrl: item.avatarUrl,
     },
+    status: getStatus(item),
     activeDate: ((item.createdAt) ? formatDistanceToNowStrict(new Date(item.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
     invites: {
       available: item.inviteCount,
       pending: item.pendingCount,
       accepted: item.acceptCount,
       id: item._id,
+    },
+    actionStatus: {
+      id: item._id,
+      status: getStatus(item),
     },
   }));
 
