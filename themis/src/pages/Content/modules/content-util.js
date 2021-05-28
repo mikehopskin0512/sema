@@ -74,7 +74,7 @@ export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
     semaString += ' | ';
   }
   if (selectedTagsString) {
-    semaString += `**Sema Tags:**${selectedTagsString}`;
+    semaString += `**Sema Tags:** ${selectedTagsString}`;
   }
   semaString += '\n';
 
@@ -164,7 +164,7 @@ export function writeSemaToGithub(textarea) {
     const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
     const selectedTags = Array.from(
       $(tagContainer)
-        .children('.sema-tag')
+        .children('.sema-is-dark')
         .map((index, tagElement) => tagElement?.textContent)
     );
 
@@ -473,7 +473,6 @@ export const setMutationObserverInLine = () => {
         const { id } = mutation.addedNodes[singleNode];
         smartComment.commentId = id;
       }
-
       createSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
