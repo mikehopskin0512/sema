@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from "lodash";
@@ -122,7 +121,7 @@ const Invite = () => {
     if (!isPluginInstalled) {
       return (
         <div className="mb-50">
-          <Loader type="Grid" color="#0081A7" height={40} width={40} />
+          <img src="/img/loader.gif" />
           <p>Searching for plugin...</p>
         </div>
       );
