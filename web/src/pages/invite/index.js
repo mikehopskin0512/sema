@@ -152,7 +152,7 @@ const Invite = () => {
   return (
     <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <section className={clsx("hero pb-50", styles.container)}>
+      <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
@@ -166,15 +166,9 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
-          </div>
-        </div>
-      </section>
-      <section className="hero background-foggy-white pt-50">
-        <div className="hero-body">
-          <div className={clsx('container', styles['styled-container'])}>
             <p
               className={
-                'title has-text-centered has-text-weight-semibold is-size-4'
+                'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
               }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
@@ -260,7 +254,7 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx(!isCardVisible && "remove")}>
+    <div className={clsx(!isCardVisible && "is-hidden")}>
       <article
         className={'notification has-background-white shadow has-text-centered p-50'}
       >
