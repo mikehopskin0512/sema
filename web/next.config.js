@@ -3,7 +3,7 @@ module.exports = {
     return [
       {
         source: '/',
-        destination: '/invite',
+        destination: '/dashboard',
         permanent: false,
       },
     ];

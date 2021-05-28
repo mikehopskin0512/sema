@@ -116,7 +116,7 @@ const Header = () => {
             {/* <div
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
-              <Link href="/invite">
+              <Link href="/dashboard">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Dashboard
                 </a>
@@ -144,7 +144,7 @@ const Header = () => {
             </div> */}
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              {/* <Link href="/invite">
+              {/* <Link href="/dashboard">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Dashboard
                 </a>
