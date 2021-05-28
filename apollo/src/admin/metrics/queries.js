@@ -34,6 +34,7 @@ colQueries.aggregate(
      searchTermFrequencyCount: {$sum: 1}}},
   { "$sort": { "_id.matchedCount": 1 } },],
   async function(err, docs){
+    console.log(docs);
     if(err){
       console.log(err);
     }else{
