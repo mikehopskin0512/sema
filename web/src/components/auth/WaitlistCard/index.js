@@ -1,34 +1,24 @@
 import React from 'react';
-import clsx from 'clsx';
-import styles from './WaitlistCard.module.scss';
 
 const WaitlistCard = () => (
   <>
-    <div className={styles['head-text']}>
-      <h4 className="title is-4 has-text-centered">You&apos;re on the list!</h4>
-      <h2 className={clsx(
-        'subtitle has-text-centered has-text-weight-medium',
-        styles['foot-text'],
-      )}>
+    <div className="pb-80">
+      <p className="title is-size-3 has-text-weight-semibold has-text-centered has-text-black">You&apos;re on the list!</p>
+      <div className="is-divider is-primary mx-90" />
+      <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
         Thanks for your interest. We&apos;ve added you on the list. We&apos;ll
         email as soon as a slot opens up in the private beta
-      </h2>
+      </p>
     </div>
-    <div className={clsx(
-      'title has-text-centered',
-      styles['foot-text'],
-    )}>
+    <p className="is-size-6 has-text-black-bis has-text-weight-semibold has-text-centered mb-10">
       Skip the line
-    </div>
-    <div className={clsx(
-      'subtitle has-text-centered has-text-weight-medium',
-      styles['foot-text'],
-    )}>
+    </p>
+    <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
       A few people have the ability to invite others.
-      <div>
+      <p>
         Keep an eye out for our early testers.
-      </div>
-    </div>
+      </p>
+    </p>
   </>
 );
 
