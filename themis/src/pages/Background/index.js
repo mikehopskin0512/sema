@@ -25,7 +25,13 @@ function JWT() {
   let token = null;
   let timer = null;
 
-  function startCounter() {
+  function startCounter(jwt) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    // clear old values
+    token = jwt;
+    timer = null;
     if (token) {
       try {
         const decodedToken = jwt_decode(token);
@@ -48,11 +54,7 @@ function JWT() {
 
   return {
     setJwt: function (jwt) {
-      token = jwt;
-      if (timer) {
-        clearTimeout(timer);
-      }
-      startCounter();
+      startCounter(jwt);
     },
     getJwt: function () {
       return token;
