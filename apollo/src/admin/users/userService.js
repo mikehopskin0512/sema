@@ -68,4 +68,5 @@ export const updateUserStatus = async (id, params) => {
   const user = await User.findById(id);
   user[key] = value;
   await user.save();
+  return { user };
 };
