@@ -26,6 +26,6 @@ const smartCommentSchema = new Schema({
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   githubMetadata: githubMetadataSchema,
-}, { collection: 'smartComment', timestamps: true });
+}, { collection: 'smartComments', timestamps: true });
 
 module.exports = mongoose.model('SmartComment', smartCommentSchema);
