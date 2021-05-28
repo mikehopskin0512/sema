@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { version } from '../../config';
+import { version, orgDomain } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import { sendEmail } from '../../shared/emailService';
 
 import {listUsers, updateUserAvailableInvitesCount, updateUserStatus} from './userService';
 
@@ -44,9 +45,25 @@ export default (app, passport) => {
 
   route.put('/:id/status', async (req, res) => {
     try {
-      const { id } = req.params;
+      const { 
+        params: { id },
+        body
+      } = req;
 
-      await updateUserStatus(id, req.body);
+      const { user } = await updateUserStatus(id, body);
+
+      const { key, value } = body;
+
+      if (key === "isWaitlist" && value === false) {
+        const { username } = user;
+        // Send email
+        const message = {
+          recipient: username,
+          url: `${orgDomain}/`,
+          templateName: 'userAdmitted',
+        };
+        await sendEmail(message);
+      }
 
       return res.status(200).json();
     } catch (err) {
