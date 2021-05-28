@@ -366,7 +366,7 @@ export function getSemaIds(idSuffix) {
 }
 
 export const getGithubMetadata = (document, textarea) => {
-  const url = document.querySelector('meta[property="og:url"]')?.content;
+  const url = document.querySelector('meta[property="og:url"]')?.content || '';
   const decoupleUrl = url.split('/');
   const [, , , , repo, , pull_number] = decoupleUrl;
   const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
