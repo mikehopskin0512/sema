@@ -1,4 +1,4 @@
-const SEMA_URL = process.env.SEMA_URL;
+export const SEMA_URL = process.env.SEMA_URL;
 export const SEMA_UI_URL = process.env.SEMA_UI_URL;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
@@ -53,90 +53,90 @@ export const TAGS_INIT = [
 
 export const TAGS_ON_DB = [
   {
-      label: "Readable",
-      _id: "607f0594ab1bc1aecbe2ce4b"
+    label: 'Readable',
+    _id: '607f0594ab1bc1aecbe2ce4b',
   },
   {
-      label: "Unreadable",
-      _id: "607f0594ab1bc1aecbe2ce4c"
+    label: 'Unreadable',
+    _id: '607f0594ab1bc1aecbe2ce4c',
   },
   {
-      label: "Secure",
-      _id: "607f0594ab1bc1aecbe2ce4d"
+    label: 'Secure',
+    _id: '607f0594ab1bc1aecbe2ce4d',
   },
   {
-      label: "Not secure",
-      _id: "607f0594ab1bc1aecbe2ce4e"
+    label: 'Not secure',
+    _id: '607f0594ab1bc1aecbe2ce4e',
   },
   {
-      label: "Efficient",
-      _id: "607f0594ab1bc1aecbe2ce4f"
+    label: 'Efficient',
+    _id: '607f0594ab1bc1aecbe2ce4f',
   },
   {
-      label: "Inefficient",
-      _id: "607f0594ab1bc1aecbe2ce50"
+    label: 'Inefficient',
+    _id: '607f0594ab1bc1aecbe2ce50',
   },
   {
-      label: "Elegant",
-      _id: "607f0594ab1bc1aecbe2ce51"
+    label: 'Elegant',
+    _id: '607f0594ab1bc1aecbe2ce51',
   },
   {
-      label: "Inelegant",
-      _id: "607f0594ab1bc1aecbe2ce52"
+    label: 'Inelegant',
+    _id: '607f0594ab1bc1aecbe2ce52',
   },
   {
-      label: "Reusable",
-      _id: "607f0594ab1bc1aecbe2ce53"
+    label: 'Reusable',
+    _id: '607f0594ab1bc1aecbe2ce53',
   },
   {
-      label: "Not reusable",
-      _id: "607f0594ab1bc1aecbe2ce54"
+    label: 'Not reusable',
+    _id: '607f0594ab1bc1aecbe2ce54',
   },
   {
-      label: "Fault-tolerant",
-      _id: "607f0594ab1bc1aecbe2ce55"
+    label: 'Fault-tolerant',
+    _id: '607f0594ab1bc1aecbe2ce55',
   },
   {
-      label: "Brittle",
-      _id: "607f0594ab1bc1aecbe2ce56"
+    label: 'Brittle',
+    _id: '607f0594ab1bc1aecbe2ce56',
   },
   {
-      label: "Maintainable",
-      _id: "607f0594ab1bc1aecbe2ce57"
+    label: 'Maintainable',
+    _id: '607f0594ab1bc1aecbe2ce57',
   },
   {
-      label: "Not maintainable",
-      _id: "607f0594ab1bc1aecbe2ce58"
-  }
+    label: 'Not maintainable',
+    _id: '607f0594ab1bc1aecbe2ce58',
+  },
 ];
 
 export const EMOJIS = [
   {
-    _id: "607f0d1ed7f45b000ec2ed70",
+    _id: '607f0d1ed7f45b000ec2ed70',
     title: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
   },
   {
-    _id: "607f0d1ed7f45b000ec2ed71",
+    _id: '607f0d1ed7f45b000ec2ed71',
     title: 'Awesome',
     emoji: '🏆',
     github_emoji: ':trophy:',
   },
   {
-    _id: "607f0d1ed7f45b000ec2ed72",
+    _id: '607f0d1ed7f45b000ec2ed72',
     title: 'Looks good',
     emoji: '👌',
     github_emoji: ':ok_hand:',
   },
   {
-    _id: "607f0d1ed7f45b000ec2ed73",
+    _id: '607f0d1ed7f45b000ec2ed73',
     title: 'I have a question',
     emoji: '❓',
     github_emoji: ':question:',
   },
   {
-    _id: "607f0d1ed7f45b000ec2ed74",
+    _id: '607f0d1ed7f45b000ec2ed74',
     title: 'Fix',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
@@ -148,36 +148,36 @@ export const USER = {
   isVerified: false,
   isWaitlist: true,
   termsAccepted: true,
-  username: "dave@semasoftware.com",
+  username: 'dave@semasoftware.com',
   password: null,
-  firstName: "Dave",
-  lastName: "Mustaine",
-  jobTitle: "Engineer",
-  avatarUrl: "https://avatars.githubusercontent.com/u/82075558?v=4",
+  firstName: 'Dave',
+  lastName: 'Mustaine',
+  jobTitle: 'Engineer',
+  avatarUrl: 'https://avatars.githubusercontent.com/u/82075558?v=4',
   identities: [
     {
-      provider: "github",
-      id: "82075558",
-      username: "davemustaine",
-      email: "dave@semasoftware.com",
-      firstName: "Matt",
-      lastName: "Mustaine",
-      profileUrl: "https://api.github.com/users/davemustaine",
-      avatarUrl: "https://avatars.githubusercontent.com/u/82075558?v=4"
-    }
+      provider: 'github',
+      id: '82075558',
+      username: 'davemustaine',
+      email: 'dave@semasoftware.com',
+      firstName: 'Matt',
+      lastName: 'Mustaine',
+      profileUrl: 'https://api.github.com/users/davemustaine',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/82075558?v=4',
+    },
   ],
   verificationToken: null,
   verificationExpires: null,
-  termsAcceptedAt: "2020-05-12T13:53:10.734Z",
+  termsAcceptedAt: '2020-05-12T13:53:10.734Z',
   organizations: [
     {
       isActive: true,
       isAdmin: true,
-      id: "82075564",
-      orgName: "Sema"
-    }
+      id: '82075564',
+      orgName: 'Sema',
+    },
   ],
-  _id: "6076262a407c64f11499537a"
+  _id: '6076262a407c64f11499537a',
 };
 
 /* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.

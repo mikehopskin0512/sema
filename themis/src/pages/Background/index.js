@@ -6,10 +6,7 @@ import {
   SEMA_COOKIE_DOMAIN,
 } from '../../../src/pages/Content/constants';
 import jwt_decode from 'jwt-decode';
-import { dec } from 'ramda';
 
-var expirationTokenTime;
-var jwtToken;
 chrome.runtime.onMessageExternal.addListener(
   (message, sender, sendResponse) => {
     if (message === 'version') {
@@ -40,6 +37,7 @@ function JWT() {
         const newAccessTokenTime = Math.ceil(timeDifference / 2);
 
         timer = setTimeout(() => {
+          console.log('fetching token again');
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {
@@ -67,10 +65,12 @@ function JWT() {
 
 const jwtHandler = JWT();
 
-const getNewAuthToken = async ({ value }) => {
-  const res = await fetch(
-    `http://localhost:3001/v1/auth/refresh-token`,
-    {
+const getNewAuthToken = async (cookie) => {
+  const value = cookie?.value;
+  let token = null;
+
+  if (value) {
+    const res = await fetch(`${SEMA_URL}/v1/auth/refresh-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,28 +82,30 @@ const getNewAuthToken = async ({ value }) => {
       }),
 
       mode: 'cors',
-    }
-  );
-  const response = await res.text();
-
-  let token = response;
-  try {
+    });
+    const response = await res.text();
     token = JSON.parse(response);
-  } catch (err) {
-    console.error(token);
-    console.error(err);
   }
   return token;
 };
 
 async function getFinalState() {
+  const cookie = await getCookie();
+  const tokenResponse = await processCookie(cookie);
+  return tokenResponse;
+}
+
+async function getCookie() {
   const cookie = await chrome.cookies.get({
     url: SEMA_UI_URL,
     name: SEMA_COOKIE_NAME,
   });
+  return cookie;
+}
 
+async function processCookie(cookie) {
   const authToken = await getNewAuthToken(cookie);
-  const { jwtToken } = authToken;
+  const { jwtToken = null } = authToken || {};
   jwtHandler.setJwt(jwtToken);
   const tokenResponse = jwtHandler.getFinalToken();
   setRequestRule(tokenResponse.token);
@@ -126,17 +128,23 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
     cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === SEMA_COOKIE_NAME;
 
   if (isSemaCookie) {
-    getFinalState().then((tokenResponse) => {
+    console.log('cookie onchange-->', cause, removed, cookie);
+
+    const finalCookie = removed ? null : cookie;
+
+    processCookie(finalCookie).then((tokenResponse) => {
       chrome.tabs.query(
         { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
         function (tabs) {
-          chrome.tabs.sendMessage(
-            tabs[0].id,
-            tokenResponse,
-            function (response) {
-              console.log('tab response received');
-            }
-          );
+          if (tabs.length) {
+            chrome.tabs.sendMessage(
+              tabs[0].id,
+              tokenResponse,
+              function (response) {
+                console.log('tab response received');
+              }
+            );
+          }
         }
       );
     });
@@ -144,18 +152,24 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
 });
 
 const setRequestRule = (token) => {
-chrome.declarativeNetRequest.updateDynamicRules({
+  chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: [1],
-    addRules: [{
-      "id": 1,
-      "priority": 1,
-      "action": {
-        "type": "modifyHeaders",
-        "requestHeaders": [
-          { "header": "authorization", "operation": "set", "value": `Bearer ${token}` }
-        ]
+    addRules: [
+      {
+        id: 1,
+        priority: 1,
+        action: {
+          type: 'modifyHeaders',
+          requestHeaders: [
+            {
+              header: 'authorization',
+              operation: 'set',
+              value: `Bearer ${token}`,
+            },
+          ],
+        },
+        condition: { urlFilter: 'comments', domains: ['github.com'] },
       },
-      "condition": { "urlFilter": "comments", "domains" : ["github.com"] }
-    }]
+    ],
   });
 };
