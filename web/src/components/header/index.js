@@ -186,8 +186,15 @@ const Header = () => {
                 Logout
               </span>
             </div>
-            <div className="navbar-end is-hidden-mobile is-hidden-tablet-only">
+            <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
               {/* Right icon menu - desktop */}
+              <a
+                type="button"
+                className="button py-8 px-25 is-primary is-outlined mr-25"
+                href="mailto:support@semasoftware.com"
+              >
+                <span className="has-text-weight-semibold">Contact Support</span>
+              </a>
               <div className="navbar-item has-dropdown" ref={userMenu}>
                 <div className="navbar-dropdown is-right">
                   <div className="nested navbar-item dropdown is-hidden">
