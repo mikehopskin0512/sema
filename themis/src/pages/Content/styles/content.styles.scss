@@ -329,6 +329,8 @@ h6 {
 
 .tags-selection {
   border-color: var(--color-tags-border);
+  padding-top: 0;
+  margin-top: 4px;
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
   }
