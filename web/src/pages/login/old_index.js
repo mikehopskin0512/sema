@@ -102,7 +102,7 @@ const Login = () => {
                         </a>
                       </div>
                       <div className="field">
-                        <p className="has-text-centered is-size-7">
+                        <p className="has-text-centered is-size-8">
                           By signing in, you agree to our<br />terms and conditions
                         </p>
                       </div>
