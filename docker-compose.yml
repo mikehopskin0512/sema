@@ -20,6 +20,7 @@ services:
       dockerfile: ../.docker/apollo/Dockerfile.dev
     ports:
       - "3001:3001"
+      - "9229:9229"
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
