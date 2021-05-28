@@ -40,7 +40,7 @@
         "css/*",
         "webfonts/*"
       ],
-      "matches": ["*://github.com/*", "*://*.github.com/*"],
+      "matches": ["*://github.com/*", "*://*.github.com/*", "*://semasoftware.com/*", "*://*.semasoftware.com/*"],
       "extension_ids": []
     }
   ]
