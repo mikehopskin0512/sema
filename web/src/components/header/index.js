@@ -42,7 +42,7 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname === '/invite') {
+    if (window.location.pathname === '/dashboard') {
       setBgColor('has-background-white');
     }
   }, []);
