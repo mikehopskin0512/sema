@@ -86,6 +86,7 @@ export const updateTextareaState = (payload) => ({
 
 export const updateSemaUser = (payload) => ({
   type: UPDATE_SEMA_USER,
+  payload,
 });
 
 export const addSuggestedComments = (payload) => ({

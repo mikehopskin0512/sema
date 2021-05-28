@@ -52,6 +52,8 @@ function rootReducer(state = initialState, action) {
       activeElement
     );
 
+    newState.user = null;
+
     newState.github.isTyping = false;
 
     newState.observer = null;
@@ -213,7 +215,7 @@ function rootReducer(state = initialState, action) {
     newState.github.isTyping = isTyping;
   } else if (type === UPDATE_SEMA_USER) {
     // TODO: proper user object
-    newState.user = { ...payload };
+    newState.user = payload;
   } else if (type === ADD_SUGGESTED_COMMENTS) {
     const { id, suggestedComment } = payload;
     newState.semasearches[id].selectedSuggestedComments.push(suggestedComment);

@@ -69,7 +69,7 @@ const jwtHandler = JWT();
 
 const getNewAuthToken = async ({ value }) => {
   const res = await fetch(
-    `https://api-qa.semasoftware.com/v1/auth/refresh-token`,
+    `http://localhost:3001/v1/auth/refresh-token`,
     {
       method: 'POST',
       headers: {
@@ -106,6 +106,7 @@ async function getFinalState() {
   const { jwtToken } = authToken;
   jwtHandler.setJwt(jwtToken);
   const tokenResponse = jwtHandler.getFinalToken();
+  setRequestRule(tokenResponse.token);
   return tokenResponse;
 }
 
@@ -142,15 +143,19 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
   }
 });
 
-chrome.webRequest.onBeforeSendHeaders.addListener(
-  function (details) {
-    // TODO: confirm if adding/modifing auth headers actually work
-    details.requestHeaders.push({
-      name: 'Authorization',
-      value: `Bearer ${jwtHandler.getJwt()}`,
-    });
-    return { requestHeaders: details.requestHeaders };
-  },
-  { urls: ['*://semasoftware.com/*', 'https://*.semasoftware.com/*'] },
-  ['blocking', 'requestHeaders']
-);
+const setRequestRule = (token) => {
+chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [1],
+    addRules: [{
+      "id": 1,
+      "priority": 1,
+      "action": {
+        "type": "modifyHeaders",
+        "requestHeaders": [
+          { "header": "authorization", "operation": "set", "value": `Bearer ${token}` }
+        ]
+      },
+      "condition": { "urlFilter": "comments", "domains" : ["github.com"] }
+    }]
+  });
+};

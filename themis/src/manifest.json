@@ -6,9 +6,12 @@
   "background": { "service_worker": "background.bundle.js" },
   "host_permissions": [
     "*://semasoftware.com/*",
-    "https://*.semasoftware.com/*"
+    "https://*.semasoftware.com/*",
+    "http://localhost/*",
+    "*://github.com/*/pull/*",
+    "*://*.github.com/*/pull/*"
   ],
-  "permissions": ["cookies", "tabs", "webRequest", "declarativeNetRequest"],
+  "permissions": ["cookies", "tabs", "webRequest", "declarativeNetRequest", "declarativeNetRequestFeedback"],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
