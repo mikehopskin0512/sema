@@ -93,7 +93,7 @@ export default (app) => {
 
         // No need to send jwt. It will pick up the refresh token cookie on frontend
         // return res.redirect(`${orgDomain}/reports`);
-        return res.redirect(`${orgDomain}/invite`);
+        return res.redirect(`${orgDomain}/dashboard`);
         // return res.status(201).send({ jwtToken: await createAuthToken(user) });
       }
 
@@ -145,6 +145,6 @@ export default (app) => {
     } catch (error) {
       console.log("Error ", error);
     }
-    return res.redirect(`${orgDomain}/invite`);
+    return res.redirect(`${orgDomain}/dashboard`);
   });
 };

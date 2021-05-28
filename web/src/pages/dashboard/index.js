@@ -15,7 +15,7 @@ import Toaster from '../../components/toaster';
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
 
-import styles from './invite.module.scss';
+import styles from './dashboard.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 

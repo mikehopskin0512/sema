@@ -11,7 +11,7 @@ const withAdmin = (WrappedComponent) => {
       const isAdmin = () => !!(user && user.organizations && user.organizations.findIndex(org => org.isAdmin) > -1);
 
       if (!isAdmin()) {
-        Router.push('/invite');
+        Router.push('/dashboard');
         return null;
       }
 
