@@ -198,7 +198,7 @@ const Header = () => {
               <a
                 type="button"
                 className="button py-8 px-25 is-primary is-outlined mr-25"
-                href="mailto:support@semasoftware.com"
+                href="mailto:support@semasoftware.com?subject=Product Feedback"
               >
                 <span className="has-text-weight-semibold">Contact Support</span>
               </a>
