@@ -39,7 +39,7 @@ colQueries.aggregate(
     }else{
       var returnArray = [];
       const results = await docs.toArray();
-      for ( i in results ){
+      for (const i in results ){
         returnArray.push(flattenObject(results[i]));
       }
       console.log(JSON.stringify(returnArray, null, 2));

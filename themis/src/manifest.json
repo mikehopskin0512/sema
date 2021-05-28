@@ -27,7 +27,7 @@
     }
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*"]
+    "matches": ["*://localhost/*", "*://semasoftware.com/*", "*://*.semasoftware.com/*"]
   },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [

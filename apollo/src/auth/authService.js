@@ -57,7 +57,10 @@ export const setRefreshToken = async (response, user, token) => {
 
   await RefreshToken.findOneAndUpdate(filter, update, options);
 
-  await updateLastLogin(user);
+  // Won't record lastLogin if user is in the waitlist.
+  if (!user.isWaitlist) {
+    await updateLastLogin(user);
+  }
 
   response.cookie(refreshTokenName, token, cookieConfig);
 };

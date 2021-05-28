@@ -51,60 +51,60 @@ export const TAGS_INIT = [
 
 export const TAGS_ON_DB = [
   {
-      label: "Readable",
-      _id: "607f0594ab1bc1aecbe2ce4b"
+    label: "Readable",
+    _id: "607f0594ab1bc1aecbe2ce4b"
   },
   {
-      label: "Unreadable",
-      _id: "607f0594ab1bc1aecbe2ce4c"
+    label: "Unreadable",
+    _id: "607f0594ab1bc1aecbe2ce4c"
   },
   {
-      label: "Secure",
-      _id: "607f0594ab1bc1aecbe2ce4d"
+    label: "Secure",
+    _id: "607f0594ab1bc1aecbe2ce4d"
   },
   {
-      label: "Not secure",
-      _id: "607f0594ab1bc1aecbe2ce4e"
+    label: "Not secure",
+    _id: "607f0594ab1bc1aecbe2ce4e"
   },
   {
-      label: "Efficient",
-      _id: "607f0594ab1bc1aecbe2ce4f"
+    label: "Efficient",
+    _id: "607f0594ab1bc1aecbe2ce4f"
   },
   {
-      label: "Inefficient",
-      _id: "607f0594ab1bc1aecbe2ce50"
+    label: "Inefficient",
+    _id: "607f0594ab1bc1aecbe2ce50"
   },
   {
-      label: "Elegant",
-      _id: "607f0594ab1bc1aecbe2ce51"
+    label: "Elegant",
+    _id: "607f0594ab1bc1aecbe2ce51"
   },
   {
-      label: "Inelegant",
-      _id: "607f0594ab1bc1aecbe2ce52"
+    label: "Inelegant",
+    _id: "607f0594ab1bc1aecbe2ce52"
   },
   {
-      label: "Reusable",
-      _id: "607f0594ab1bc1aecbe2ce53"
+    label: "Reusable",
+    _id: "607f0594ab1bc1aecbe2ce53"
   },
   {
-      label: "Not reusable",
-      _id: "607f0594ab1bc1aecbe2ce54"
+    label: "Not reusable",
+    _id: "607f0594ab1bc1aecbe2ce54"
   },
   {
-      label: "Fault-tolerant",
-      _id: "607f0594ab1bc1aecbe2ce55"
+    label: "Fault-tolerant",
+    _id: "607f0594ab1bc1aecbe2ce55"
   },
   {
-      label: "Brittle",
-      _id: "607f0594ab1bc1aecbe2ce56"
+    label: "Brittle",
+    _id: "607f0594ab1bc1aecbe2ce56"
   },
   {
-      label: "Maintainable",
-      _id: "607f0594ab1bc1aecbe2ce57"
+    label: "Maintainable",
+    _id: "607f0594ab1bc1aecbe2ce57"
   },
   {
-      label: "Not maintainable",
-      _id: "607f0594ab1bc1aecbe2ce58"
+    label: "Not maintainable",
+    _id: "607f0594ab1bc1aecbe2ce58"
   }
 ];
 
@@ -185,12 +185,24 @@ export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tag
 export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
 export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
 
-export const SEMA_ICON_ANCHOR =
+export const SEMA_ICON_ANCHOR_LIGHT =
   "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
   "<a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
   "<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-  "<rect width='16' height='16' fill='white'/>" +
+  "<rect width='16' height='16' fill='#fff'/>" +
   "<path d='M14.9796 13H1.02037C0.453499 13 0 12.5315 0 11.9458V4.05417C0 3.46852 0.453499 3 1.02037 3H14.9796C15.5465 3 16 3.46852 16 4.05417V11.9458C16 12.5168 15.5323 13 14.9796 13Z' fill='#586069'/>" +
+  "<path d='M3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3Z' fill='#F4F4F4'/>" +
+  "<path d='M10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83516 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056V4.75Z' fill='#F4F4F4'/>" +
+  '</svg>' +
+  '</a>' +
+  '</span>';
+
+export const SEMA_ICON_ANCHOR_DARK =
+  "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
+  "<a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
+  "<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+  "<rect width='16' height='16' fill='#0d1117'/>" +
+  "<path d='M14.9796 13H1.02037C0.453499 13 0 12.5315 0 11.9458V4.05417C0 3.46852 0.453499 3 1.02037 3H14.9796C15.5465 3 16 3.46852 16 4.05417V11.9458C16 12.5168 15.5323 13 14.9796 13Z' fill='#8b949e'/>" +
   "<path d='M3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3Z' fill='#F4F4F4'/>" +
   "<path d='M10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83516 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056V4.75Z' fill='#F4F4F4'/>" +
   '</svg>' +
@@ -206,3 +218,5 @@ export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
 export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 
 export const SUGGESTED_TAG_LIMIT = 3;
+
+export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';

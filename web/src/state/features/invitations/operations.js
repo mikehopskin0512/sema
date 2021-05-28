@@ -7,7 +7,7 @@ const createInviteAndHydrateUser = (invitationData, token) => async (dispatch) =
   try {
     const response = await dispatch(actions.createInvite(invitationData, token)) || {};
     if (!response.user) {
-      throw new Error('No user returned!');
+      return response;
     }
     dispatch(hydrateUser(response.user));
   } catch (err) {
@@ -15,7 +15,7 @@ const createInviteAndHydrateUser = (invitationData, token) => async (dispatch) =
     return error;
   }
 
-  return true;
+  return { status: 201 };
 };
 
 const revokeInviteAndHydrateUser = (id, userId, token, recipient) => async (dispatch) => {
