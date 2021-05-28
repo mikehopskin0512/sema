@@ -79,14 +79,14 @@ const SearchBar = (props) => {
         <span className="sema-title sema-is-7 sema-is-block">We are working hard to find code examples for you...</span>
       </div>
     } else {
-      if (searchValue.length > 0 && searchResults.length === 0) {
+      if (props.searchValue.length > 0 && searchResults.length === 0) {
         // empty
         return <div className="sema-comment-placeholder"><img className="sema-mb-5" src={noResults} />
           <span className="sema-title sema-is-7 sema-is-block">No results :( We are still learning!</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Sorry, we don't have search result for this one. Try again soon - we've noted your query to improve our results.</span>
           <a className="sema-mt-2" href="#" onClick={() => window.open(`https://www.google.com/search?q=${searchValue}`, '_blank')}>Try this search on Google</a>
         </div>
-      } else if (searchValue.length === 0 && searchResults.length === 0) {
+      } else if (props.searchValue.length === 0 && searchResults.length === 0) {
         return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
           <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here.</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Type a few characters and we'll start searching right away.</span>
