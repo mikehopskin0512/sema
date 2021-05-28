@@ -57,9 +57,7 @@ checkLoggedIn();
 let stateCheck = setInterval(() => {
   if (document.readyState === 'complete') {
     clearInterval(stateCheck);
-    store.dispatch(
-      addGithubMetada(getGithubMetadata(document))
-    );
+    store.dispatch(addGithubMetada(getGithubMetadata(document)));
   }
 }, 100);
 

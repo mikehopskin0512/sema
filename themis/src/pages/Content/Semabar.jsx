@@ -14,7 +14,6 @@ import {
 import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
-  debugger;
   const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
   return {
@@ -73,8 +72,9 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${props.isTagModalVisible ? ' sema-is-active' : ''
-      }`;
+    let containerClasses = `sema-dropdown${
+      props.isTagModalVisible ? ' sema-is-active' : ''
+    }`;
 
     return (
       <div className={containerClasses}>
@@ -128,7 +128,6 @@ const Semabar = (props) => {
     );
   };
 
-  console.log('before if loggedIn_ store__', store, new Date())
   if (props.isLoggedIn) {
     return (
       <>
