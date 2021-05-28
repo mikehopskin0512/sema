@@ -84,7 +84,7 @@ const SearchBar = (props) => {
         return <div className="sema-comment-placeholder"><img className="sema-mb-5" src={noResults} />
           <span className="sema-title sema-is-7 sema-is-block">No results :( We are still learning!</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Sorry, we don't have search result for this one. Try again soon - we've noted your query to improve our results.</span>
-          <a className="sema-mt-2" href="#" onClick={() => window.open(`https://www.google.com/search?q=${searchValue}`, '_blank')}>Try this search on Google</a>
+          <a className="sema-mt-2" href={`https://www.google.com/search?q=${searchValue}`} target="_blank" rel="noopener noreferrer">Try this search on Google</a>
         </div>
       } else if (props.searchValue.length === 0 && searchResults.length === 0) {
         return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
