@@ -22,7 +22,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: {},
         error: action.errors,
       };
     case types.REQUEST_FETCH_INVITE:

@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
 import { SUGGESTION_URL } from './constants';
 
-import { toggleSearchModal, addSuggestedComments } from './modules/redux/action';
+import {
+  toggleSearchModal,
+  addSuggestedComments,
+  updatetSearchBarInputValue,
+} from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
   const { semasearches } = state;
@@ -11,6 +15,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
+    searchValue: semaSearchState.searchValue,
   };
 };
 
@@ -20,18 +25,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
     selectedSuggestedComments: (suggestedComment) =>
       dispatch(addSuggestedComments({ id, suggestedComment })),
+    handleChange: (searchValue) =>
+      dispatch(updatetSearchBarInputValue({ id, searchValue })),
   };
 };
 
 const SearchBar = (props) => {
-  const [searchValue, handleChange] = useState('');
   const [isLoading, toggleIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
   const onInputChanged = (event) => {
     event.preventDefault();
     const value = event.target.value;
-    handleChange(value);
+    props.handleChange(value);
   };
 
   const onCopyPressed = (id, suggestion) => {
@@ -47,14 +53,14 @@ const SearchBar = (props) => {
 
   const onCrossPressed = (event) => {
     event.preventDefault();
-    handleChange('');
+    props.handleChange('');
     setSearchResults([]);
     props.toggleSearchModal();
   };
 
   const getSemaSuggestions = () => {
     toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${searchValue}`;
+    const URL = `${SUGGESTION_URL}${props.searchValue}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -73,14 +79,14 @@ const SearchBar = (props) => {
         <span className="sema-title sema-is-7 sema-is-block">We are working hard to find code examples for you...</span>
       </div>
     } else {
-      if (searchValue.length > 0 && searchResults.length === 0) {
+      if (props.searchValue.length > 0 && searchResults.length === 0) {
         // empty
         return <div className="sema-comment-placeholder"><img className="sema-mb-5" src={noResults} />
           <span className="sema-title sema-is-7 sema-is-block">No results :( We are still learning!</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Sorry, we don't have search result for this one. Try again soon - we've noted your query to improve our results.</span>
           <a className="sema-mt-2" href={`https://www.google.com/search?q=${searchValue}`} target="_blank" rel="noopener noreferrer">Try this search on Google</a>
         </div>
-      } else if (searchValue.length === 0 && searchResults.length === 0) {
+      } else if (props.searchValue.length === 0 && searchResults.length === 0) {
         return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
           <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here.</span>
           <span className="sema-subtitle sema-is-7 sema-is-block">Type a few characters and we'll start searching right away.</span>
@@ -128,7 +134,7 @@ const SearchBar = (props) => {
               className="sema-input sema-is-small"
               type="text"
               placeholder="Search comment library"
-              value={searchValue}
+              value={props.searchValue}
               onChange={onInputChanged}
               onKeyDown={handleKeyPress}
             ></input>

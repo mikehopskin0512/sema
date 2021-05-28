@@ -70,6 +70,18 @@ class Mirror {
     this._render();
     // set inital text on the mirror div
     this._onInput();
+
+    /**
+     * TODO:
+     * each text element will have its own subscription
+     * performance degradation? Try to use single subscription, or perform side-effect
+     */
+    this._unsubscribe = this._store.subscribe(() => {
+      if (!this._elementToMimic.value.trim()) {
+        this._mirrorContent.textContent = '';
+        this._updateHighlights();
+      }
+    });
   }
 
   _render() {
@@ -312,6 +324,7 @@ class Mirror {
       this._elementToMimicResizeObserver &&
         this._elementToMimicResizeObserver.disconnect(),
       this._elementMeasurement.clearCache();
+    this._unsubscribe();
   }
 }
 
