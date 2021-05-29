@@ -1,7 +1,6 @@
 import $ from 'cash-dom';
 
 import {
-  USER,
   EMOJIS,
   TAGS_INIT,
   TAGS_ON_DB,
@@ -193,10 +192,11 @@ export function writeSemaToGithub(textarea) {
     );
 
     const githubMetadata = store.getState().githubMetadata;
+    const { _id: userId } = store.getState().user;
 
     smartComment = {
       githubMetadata: { ...githubMetadata, ...inLineMetada },
-      userId: USER._id,
+      userId,
       commentId: null,
       comment: textboxValue,
       type,

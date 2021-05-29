@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import jwt_decode from 'jwt-decode';
 
 import initialState from './initialState';
 import {
@@ -51,27 +52,6 @@ function rootReducer(state = initialState, action) {
     const { initialTags, initialReaction } = getInitialSemaValues(
       activeElement
     );
-
-    newState.user = null;
-
-    newState.github.isTyping = false;
-
-    newState.observer = null;
-
-    newState.smartComment = {};
-
-    newState.githubMetada = {
-      url: null,
-      repo: null,
-      pull_number: null,
-      head: null,
-      base: null,
-      user: { id: null, login: null },
-      requester: null,
-      filename: null,
-      file_extension: null,
-      line_numbers: [],
-    };
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
@@ -207,15 +187,20 @@ function rootReducer(state = initialState, action) {
     };
 
     // Reset to default Github Metadata
-    newState.githubMetada.filename = null;
-    newState.githubMetada.file_extension = null;
-    newState.githubMetada.ine_numbers = null;
+    newState.githubMetadata.filename = null;
+    newState.githubMetadata.file_extension = null;
+    newState.githubMetadata.ine_numbers = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
   } else if (type === UPDATE_SEMA_USER) {
-    // TODO: proper user object
-    newState.user = payload;
+    const { token, isLoggedIn } = payload;
+    if (token) {
+      const { user } = jwt_decode(token);
+      newState.user = { ...user, ...{ isLoggedIn} };
+    } else {
+      newState.user = { isLoggedIn };
+    }
   } else if (type === ADD_SUGGESTED_COMMENTS) {
     const { id, suggestedComment } = payload;
     newState.semasearches[id].selectedSuggestedComments.push(suggestedComment);

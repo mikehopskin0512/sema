@@ -4,6 +4,8 @@ import {
   WHOAMI,
   SEMA_COOKIE_NAME,
   SEMA_COOKIE_DOMAIN,
+  SEMA_CLIENT_ID,
+  SEMA_CLIENT_SECRET,
 } from '../../../src/pages/Content/constants';
 import jwt_decode from 'jwt-decode';
 
@@ -23,27 +25,22 @@ chrome.runtime.onMessageExternal.addListener(
 
 function JWT() {
   let token = null;
-  let timer = null;
+  let interval = null;
 
   function startCounter(jwt) {
-    if (timer) {
-      clearTimeout(timer);
+    if (interval) {
+      clearInterval(interval);
     }
-    // clear old values
+
     token = jwt;
-    timer = null;
+    
     if (token) {
       try {
-        const decodedToken = jwt_decode(token);
-
-        const expiration = decodedToken.exp * 1000;
         const currentTime = new Date().getTime();
-
-        const timeDifference = expiration - currentTime;
-        const newAccessTokenTime = Math.ceil(timeDifference / 2);
-
-        timer = setTimeout(() => {
-          console.log('fetching token again');
+        const decodedAccessToken = jwt_decode(token);
+        const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
+        const newAccessTokenTime = ((expirationTimeAccessToken - currentTime) - 60000);
+        interval = setInterval(() => {
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {
@@ -76,8 +73,7 @@ const getNewAuthToken = async (cookie) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // TODO: change to take from env? - do base64 programatically
-        Authorization: `Basic M2Y4ODM4NjAtODYyZS00YTQ5LWIxNDktZjU2MzcxZTg3ZTg4OmQ3ZjNiODI1LWJmOTctNGYyMS1iYWJjLWNmMDNhMWJhYmU5MQ=="`,
+        Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
       },
       body: JSON.stringify({
         refreshToken: value,
@@ -105,13 +101,45 @@ async function getCookie() {
   return cookie;
 }
 
-async function processCookie(cookie) {
+async function getNewAccessToken(cookie) {
   const authToken = await getNewAuthToken(cookie);
   const { jwtToken = null } = authToken || {};
   jwtHandler.setJwt(jwtToken);
   const tokenResponse = jwtHandler.getFinalToken();
-  setRequestRule(tokenResponse.token);
   return tokenResponse;
+}
+
+async function processCookie(cookie) {
+  const currentTime = new Date().getTime();
+
+  if (cookie) {
+    const decodedRefreshToken = jwt_decode(cookie.value);
+    const expirationTimeRefreshToken = decodedRefreshToken.exp * 1000;
+    if (expirationTimeRefreshToken > currentTime) {
+      const accessToken = jwtHandler.getJwt() || null;
+      if (accessToken) {
+        const decodedAccessToken = jwt_decode(accessToken);
+        const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
+        const deltaTimeAccessToken = (expirationTimeAccessToken - currentTime) * 60000;
+        if (deltaTimeAccessToken <= 1) {
+          const tokenResponse = getNewAccessToken(cookie)
+          setRequestRule(tokenResponse.token);
+          return tokenResponse;
+        } else {
+          setRequestRule(accessToken);
+          return { token: accessToken, isLoggedIn: true };
+        }
+      } else {
+        const tokenResponse = getNewAccessToken(cookie)
+        setRequestRule(tokenResponse.token);
+        return tokenResponse;
+      }
+    } else {
+      return { token: null, isLoggedIn: false };
+    }
+  } else {
+    return { token: null, isLoggedIn: false };
+  }
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -124,34 +152,35 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 chrome.cookies.onChanged.addListener(function (changeInfo) {
-  let { cause, cookie, removed } = changeInfo;
+  let { cookie, removed } = changeInfo;
 
-  const isSemaCookie =
-    cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === SEMA_COOKIE_NAME;
-
-  if (isSemaCookie) {
-    console.log('cookie onchange-->', cause, removed, cookie);
-
-    const finalCookie = removed ? null : cookie;
-
-    processCookie(finalCookie).then((tokenResponse) => {
-      chrome.tabs.query(
-        { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
-        function (tabs) {
-          if (tabs.length) {
-            chrome.tabs.sendMessage(
-              tabs[0].id,
-              tokenResponse,
-              function (response) {
-                console.log('tab response received');
-              }
-            );
-          }
-        }
-      );
-    });
-  }
+  if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
+    if (removed === false) {
+      processCookie(cookie).then((tokenResponse) => {
+        sendMessageToTab(tokenResponse);
+      });
+    } else if (removed === true) {
+      sendMessageToTab({ token: null, isLoggedIn: false });
+    }
+  } 
 });
+
+const sendMessageToTab = (message) => {
+  chrome.tabs.query(
+    { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
+    function (tabs) {
+      if (tabs.length) {
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          message,
+          function (response) {
+            console.log('tab response received');
+          }
+        );
+      }
+    }
+  );
+};
 
 const setRequestRule = (token) => {
   chrome.declarativeNetRequest.updateDynamicRules({

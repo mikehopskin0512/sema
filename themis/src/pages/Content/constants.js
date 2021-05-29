@@ -1,5 +1,7 @@
 export const SEMA_URL = process.env.SEMA_URL;
 export const SEMA_UI_URL = process.env.SEMA_UI_URL;
+export const SEMA_CLIENT_ID = process.env.SEMA_CLIENT_ID;
+export const SEMA_CLIENT_SECRET = process.env.SEMA_CLIENT_SECRET;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
