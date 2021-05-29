@@ -19,12 +19,13 @@ import {
 } from './modules/content-util';
 
 import {
-  SEMA_ICON_ANCHOR,
+  SEMA_ICON_ANCHOR_LIGHT,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
   ON_INPUT_DEBOUCE_INTERVAL_MS,
   CALCULATION_ANIMATION_DURATION_MS,
   WHOAMI,
+  SEMA_ICON_ANCHOR_DARK,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -109,6 +110,13 @@ document.addEventListener(
     const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
+      const colorMode = document.documentElement.getAttribute("data-color-mode");
+      let colorTheme = document.documentElement.getAttribute("data-light-theme");
+      let isDarkMode = false;
+      if (colorMode === "dark") {
+        colorTheme = document.documentElement.getAttribute("data-dark-theme");
+        isDarkMode = true;
+      }
       if (!semaElements[0]) {
         const githubTextareaId = $(activeElement).attr('id');
 
@@ -138,11 +146,11 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2'></div>`
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? "theme--dark" : ""}'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS}'></div>`
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? "theme--dark" : ""}'></div>`
         );
 
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
@@ -214,7 +222,8 @@ document.addEventListener(
         const markdownIcon = document.getElementsByClassName(
           'tooltipped tooltipped-nw'
         );
-        $(markdownIcon).after(SEMA_ICON_ANCHOR);
+
+        $(markdownIcon).after(isDarkMode ? SEMA_ICON_ANCHOR_DARK : SEMA_ICON_ANCHOR_LIGHT);
       }
     }
   },
