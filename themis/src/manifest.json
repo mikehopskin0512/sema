@@ -4,6 +4,14 @@
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
   "version": "0.52",
   "background": { "service_worker": "background.bundle.js" },
+  "host_permissions": [
+    "*://semasoftware.com/*",
+    "https://*.semasoftware.com/*",
+    "http://localhost/*",
+    "*://github.com/*/pull/*",
+    "*://*.github.com/*/pull/*"
+  ],
+  "permissions": ["cookies", "tabs", "webRequest", "declarativeNetRequest", "declarativeNetRequestFeedback"],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
@@ -20,7 +28,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://github.com/*/pull/*", "*://*.github.com/*/pull/*", "*://localhost/*"],
+      "matches": [
+        "*://github.com/*/pull/*",
+        "*://*.github.com/*/pull/*",
+        "*://localhost/*"
+      ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
       "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]

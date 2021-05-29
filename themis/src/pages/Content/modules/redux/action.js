@@ -12,6 +12,7 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -80,6 +81,11 @@ export const resetSemaStates = (payload) => ({
 
 export const updateTextareaState = (payload) => ({
   type: UPDATE_GITHUB_TEXTAREA,
+  payload,
+});
+
+export const updateSemaUser = (payload) => ({
+  type: UPDATE_SEMA_USER,
   payload,
 });
 

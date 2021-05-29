@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
-import { SUGGESTION_URL } from './constants';
+import { SUGGESTION_URL, SEMA_WEB_LOGIN } from './constants';
 
 import {
   toggleSearchModal,
@@ -10,12 +10,13 @@ import {
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
-  const { semasearches } = state;
+  const { semasearches, user } = state;
   const semaSearchState = semasearches[ownProps.id];
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
+    isLoggedIn: user?.isLoggedIn,
   };
 };
 
@@ -78,6 +79,11 @@ const SearchBar = (props) => {
       return <div className="sema-m-6 sema-comment-placeholder"><img src={loader} />
         <span className="sema-title sema-is-7 sema-is-block">We are working hard to find code examples for you...</span>
       </div>
+    } else if (!props.isLoggedIn) {
+      return (<div className="sema-comment-placeholder sema-mb-5"><img className="sema-mb-5" src={commentPlaceholder} />
+      <span className="sema-title sema-is-7 sema-is-block">Login to view smart comments</span>
+      <a className="sema-button" href={SEMA_WEB_LOGIN} target="_blank">Log in to Sema</a>
+    </div>)
     } else {
       if (props.searchValue.length > 0 && searchResults.length === 0) {
         // empty
@@ -155,17 +161,21 @@ const SearchBar = (props) => {
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
             {renderPlaceholder()}
+            {(props.isLoggedIn) &&
             <SuggestionModal
               key={isLoading}
               onCopyPressed={onCopyPressed}
               searchResults={searchResults}
             />
+            }
           </div>
+          {(props.isLoggedIn) &&
           <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
             <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
               <img className="sema-credit-img sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
             </span>
           </div>
+          }
         </div>
       </div>
 

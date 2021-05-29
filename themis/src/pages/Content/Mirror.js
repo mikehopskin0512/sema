@@ -81,6 +81,12 @@ class Mirror {
         this._mirrorContent.textContent = '';
         this._updateHighlights();
       }
+      const state = this._store.getState();
+      if (state.user.isLoggedIn) {
+        this._highlighter.style.display = 'block';
+      } else {
+        this._highlighter.style.display = 'none';
+      }
     });
   }
 
