@@ -10,6 +10,12 @@ export const getProfile = async (token) => {
   return user;
 };
 
+export const getUserEmails = async (token) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const { data: userEmails } = await octokit.users.listEmailsForAuthenticated();
+  return userEmails;
+};
+
 export const getAppRepos = async (token) => {
   const octokit = new Octokit({ auth: `token ${token}` });
   const { data: user } = await octokit.apps.listReposAccessibleToInstallation();

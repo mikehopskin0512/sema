@@ -9,7 +9,7 @@ const Carousel = () => {
   const [screens] = useState(['Reactions', 'Tags', 'Suggested Comments', 'Developer Insights', 'Social Graph']);
   const buttonProps = (index) => ({
     onClick: () => setCurrent(index),
-    className: clsx('button is-medium has-text-black', current === index ? 'is-text' : 'is-ghost'),
+    className: clsx('is-uppercase is-size-5 has-text-weight-semibold tab mx-25',current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
   });
 
   useEffect(() => {
@@ -22,29 +22,29 @@ const Carousel = () => {
       <div className="tabs is-centered">
         <ul>
           <li>
-            <button type="button" {...buttonProps(0)}>
+            <a {...buttonProps(0)}>
               Reactions
-            </button>
+            </a>
           </li>
           <li>
-            <button type="button" {...buttonProps(1)}>
+            <a {...buttonProps(1)}>
               Tags
-            </button>
+            </a>
           </li>
           <li>
-            <button type="button" {...buttonProps(2)}>
+            <a {...buttonProps(2)}>
               Suggested Comments
-            </button>
+            </a>
           </li>
           <li>
-            <button type="button" {...buttonProps(3)}>
+            <a {...buttonProps(3)}>
               Developer Insights
-            </button>
+            </a>
           </li>
           <li>
-            <button type="button" {...buttonProps(4)}>
+            <a {...buttonProps(4)}>
               Social Graph
-            </button>
+            </a>
           </li>
         </ul>
       </div>
