@@ -11,7 +11,7 @@
     "*://github.com/*/pull/*",
     "*://*.github.com/*/pull/*"
   ],
-  "permissions": ["cookies", "tabs", "webRequest", "declarativeNetRequest", "declarativeNetRequestFeedback"],
+  "permissions": ["cookies", "tabs", "declarativeNetRequest", "declarativeNetRequestFeedback"],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
