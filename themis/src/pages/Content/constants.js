@@ -1,5 +1,7 @@
 export const SEMA_URL = process.env.SEMA_URL;
 export const SEMA_UI_URL = process.env.SEMA_UI_URL;
+export const SEMA_COOKIE_NAME = process.env.SEMA_COOKIE_NAME;
+export const SEMA_COOKIE_DOMAIN = process.env.SEMA_COOKIE_DOMAIN;
 export const SEMA_CLIENT_ID = process.env.SEMA_CLIENT_ID;
 export const SEMA_CLIENT_SECRET = process.env.SEMA_CLIENT_SECRET;
 
@@ -224,6 +226,4 @@ export const CALCULATION_ANIMATION_DURATION_MS = 1000;
 export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
-export const SEMA_COOKIE_NAME = '_phoenix';
-export const SEMA_COOKIE_DOMAIN = '.semasoftware.com';
 export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
