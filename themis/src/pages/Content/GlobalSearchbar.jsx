@@ -43,7 +43,7 @@ const GlobalSearchbar = (props) => {
     props.onGlobalSearchInputChange(value);
   };
 
-  const onCopyPressed = (suggestion) => {
+  const onCopyPressed = (id, suggestion) => {
     let value = props.commentBox.value;
     props.commentBox.value = `${value}\n${suggestion}\n`;
     setSearchResults([]);

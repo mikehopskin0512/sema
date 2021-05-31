@@ -11,10 +11,10 @@ import {
   updateSelectedTagsWithSuggestion,
 } from './modules/redux/action';
 
-import { DELETE_OP, SELECTED, EMOJIS } from './constants';
+import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
-  const { semabars, github } = state;
+  const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
@@ -23,6 +23,7 @@ const mapStateToProps = (state, ownProps) => {
     suggestedTags: semabarState.suggestedTags,
     isTyping: github.isTyping,
     isReactionDirty: semabarState.isReactionDirty,
+    isLoggedIn: user?.isLoggedIn,
   };
 };
 
@@ -71,8 +72,9 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${props.isTagModalVisible ? ' sema-is-active' : ''
-      }`;
+    let containerClasses = `sema-dropdown${
+      props.isTagModalVisible ? ' sema-is-active' : ''
+    }`;
 
     return (
       <div className={containerClasses}>
@@ -126,26 +128,58 @@ const Semabar = (props) => {
     );
   };
 
-  return (
-    <>
-      <div className="sema-emoji-container">
-        <EmojiSelection
-          allEmojis={EMOJIS}
-          selectedReaction={props.selectedReaction}
-          onEmojiSelected={(emojiObj) => {
-            props.updateSelectedEmoji(emojiObj);
-          }}
-          isTyping={props.isTyping}
-          isReactionDirty={props.isReactionDirty}
-        />
-      </div>
-      <div className="sema-tag-container" id="scroll-style">
-        {createActiveTags()}
-        {createSuggestedTags()}
-      </div>
-      <div className="sema-dropdown-container">{createAddTags()}</div>
-    </>
-  );
+  if (props.isLoggedIn) {
+    return (
+      <>
+        <div className="sema-emoji-container">
+          <EmojiSelection
+            allEmojis={EMOJIS}
+            selectedReaction={props.selectedReaction}
+            onEmojiSelected={(emojiObj) => {
+              props.updateSelectedEmoji(emojiObj);
+            }}
+            isTyping={props.isTyping}
+            isReactionDirty={props.isReactionDirty}
+          />
+        </div>
+        <div className="sema-tag-container" id="scroll-style">
+          {createActiveTags()}
+          {createSuggestedTags()}
+        </div>
+        <div>{createAddTags()}</div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className="sema-emoji-container">
+          <span>
+            Please{' '}
+            <a href={SEMA_WEB_LOGIN} target="_blank">
+              Log In
+            </a>{' '}
+            to Sema to get the full code review experience.
+          </span>
+        </div>
+        <div className="sema-tag-container" id="scroll-style">
+          <button
+            disabled
+            className="sema-button sema-is-rounded sema-is-small sema-add-tags"
+            aria-haspopup="true"
+            onClick={(event) => {
+              event.preventDefault();
+              props.toggleTagModal();
+            }}
+          >
+            <span className="sema-icon sema-is-small">
+              <i className="fas fa-tag"></i>
+            </span>
+            <span>Add Tags</span>
+          </button>
+        </div>
+      </>
+    );
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Semabar);

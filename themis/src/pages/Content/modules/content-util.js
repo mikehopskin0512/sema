@@ -1,7 +1,6 @@
 import $ from 'cash-dom';
 
 import {
-  USER,
   EMOJIS,
   TAGS_INIT,
   TAGS_ON_DB,
@@ -74,7 +73,7 @@ export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
     semaString += ' | ';
   }
   if (selectedTagsString) {
-    semaString += `**Sema Tags:**${selectedTagsString}`;
+    semaString += `**Sema Tags:** ${selectedTagsString}`;
   }
   semaString += '\n';
 
@@ -164,7 +163,7 @@ export function writeSemaToGithub(textarea) {
     const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
     const selectedTags = Array.from(
       $(tagContainer)
-        .children('.sema-tag')
+        .children('.sema-is-dark')
         .map((index, tagElement) => tagElement?.textContent)
     );
 
@@ -193,10 +192,11 @@ export function writeSemaToGithub(textarea) {
     );
 
     const githubMetadata = store.getState().githubMetadata;
+    const { _id: userId } = store.getState().user;
 
     smartComment = {
       githubMetadata: { ...githubMetadata, ...inLineMetada },
-      userId: USER._id,
+      userId,
       commentId: null,
       comment: textboxValue,
       type,
@@ -412,10 +412,8 @@ export const getGithubInlineMetadata = (id) => {
 };
 
 const createSmartComment = (smartComment) => {
-  const token = '';
   fetch(CREATE_SMART_COMMENT_URL, {
     headers: { 'Content-Type': 'application/json' },
-    authorization: `Bearer ${token}`,
     method: 'POST',
     body: JSON.stringify(smartComment),
   });
@@ -473,7 +471,6 @@ export const setMutationObserverInLine = () => {
         const { id } = mutation.addedNodes[singleNode];
         smartComment.commentId = id;
       }
-
       createSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
