@@ -4,7 +4,7 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
-import { getProfile } from './utils';
+import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
@@ -48,6 +48,10 @@ export default (app) => {
         return res.status(401).end('Unable to retrieve Github profile for user.');
       }
 
+      // Get array of user Emails
+      const userEmails = await getUserEmails(token);
+      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true );
+
       // Create identity object
       const { name: fullName } = profile;
 
@@ -62,7 +66,7 @@ export default (app) => {
       const identity = {
         provider: 'github',
         id: profile.id,
-        username: profile.login,
+        username: githubPrimaryEmail,
         email,
         firstName,
         lastName,
