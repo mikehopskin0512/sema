@@ -198,3 +198,12 @@ document.addEventListener(
   },
   true
 );
+
+document.addEventListener('focusin', (event) => {
+  $('div.sema').addClass('sema-is-bordered');
+}, true);
+
+
+document.addEventListener('focusout', (event) => {
+  $('div.sema').removeClass('sema-is-bordered');
+}, true);

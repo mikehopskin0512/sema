@@ -190,20 +190,6 @@ export function writeSemaToGithub(textarea) {
 export function onDocumentClicked(event, store) {
   onCloseAllModalsClicked(event, store);
   onGithubSubmitClicked(event);
-  onFormClicked(event);
-
-}
-
-function onFormClicked(event) {
-  const activeElement = event.target;
-  console.log(activeElement)
-  if (isValidSemaTextBox(activeElement)) {
-    $('div.sema').addClass('sema-is-bordered');
-    // $('div.sema').classList.add('sema-is-bordered')
-
-  } else {
-    $('div.sema').removeClass('sema-is-bordered');
-  }
 }
 
 function onGithubSubmitClicked(event) {
