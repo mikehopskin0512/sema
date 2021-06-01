@@ -153,9 +153,9 @@ async function getMetricsForRange(startDate, endDate, timeframe) {
 
 async function getMetrics() {
   const metricsReport = JSON.stringify([
-    await getMetricsForRange(new Date(0), reportCreationTime, 'Total'),
     await getMetricsForRange(oneWeekAgo, reportCreationTime, '7 Day'),
     await getMetricsForRange(fourWeeksAgo, reportCreationTime, '28 Day'),
+    await getMetricsForRange(new Date(0), reportCreationTime, 'Total'),
   ], null, 2);
   return metricsReport;
 }
