@@ -46,7 +46,7 @@ async function getQueriesSummary(query, collectionName){
 };
 
 async function getMetric(query, collectionName){
-  console.log(query);
+  //console.log(query);
   return await getArray(await getQueriesSummary(query, collectionName))
 //  return JSON.stringify(await getQueriesSummary(query, collectionName));
 }
@@ -65,9 +65,9 @@ const searchtermSummaryQuery =   [{ $match: {createdAt: {$gt: new Date(Date.now(
 const stateCountQuery =   [
    { $group: {
      _id: {'isWaitlist':'$isWaitlist',
-           'isActive':'$isActive'},
-     userStateCount: {$sum: 1}}},
-  { "$sort": { "waitlistCount": 1 } },] ;
+           'isActive':'$isActive',
+          'origin':'$origin'},
+     userStateCount: {$sum: 1}}}] ;
 
 const invitationsQuery =   [
    { $group: {
@@ -79,32 +79,51 @@ const smartCommentsQuery =   [
    {$count: 'smartCommentCount'}] ;
 
 
-async function getMetricsForRange( startDate, endDate) {
-  var returnObject = {'startDate':startDate, 'endDate':endDate} ;
-  const dateRangeMatcher = { $match: {createdAt: {$gt: startDate, $lt: endDate}}};
-//  console.log(dateRangeMatcher);
-//  const dateRangeMatcher = {} ; // $match: {createdAt: {$gt: startDate, $lt: endDate}}};
+async function getMetricsForRange( startDate, endDate, timeframe) {
+  var returnObject = {'timeframe': timeframe,
+                      'startDate':startDate, 'endDate':endDate,
+                      'waitlistUserCount':0,
+                      'currentUserCount' :0, // users who have an account
+                      'blockedUserCount': 0,
+                      'disabledUserCount':0,
+                      'activeUserCount':0, // current users who have made a smartComment???
+                      'churnRate' : 0, // users who have accounts but have not made a smart comment = activeUserCount / currentUserCount
+                      'pendingInviteCount': 0,
+                      'inviteConversionRate': 0, // invites that are not pending / total invites
+                      'waitlistConversionRate':0, // where source is waitlist: active accounts / all accounts
+                      'smartCommentCount':0
+                     } ;
+ // const dateRangeMatcher = { $match: {createdAt: {$gt: startDate, $lt: endDate}}};
+   const dateRangeMatcher = [{ $match: {createdAt: {$gt: startDate}}}];
+  var totalWaitlistOrigin = 0;
+  for (const userState of await getMetric(dateRangeMatcher.concat(stateCountQuery), 'users')){
+//    console.log(userState);
 
-  for (const userState of await getMetric(stateCountQuery.concat(dateRangeMatcher), 'users')){
-    console.log(userState);
     if (userState['isWaitlist']===true && userState['isActive']===true){
-      returnObject['activeUserCount'] = userState['userStateCount'];
+      returnObject['waitlistUserCount'] += userState['userStateCount'];
     }else  if (userState['isWaitlist']===false && userState['isActive']===true){
-      returnObject['waitlistUserCount'] = userState['userStateCount'];
+      returnObject['currentUserCount'] += userState['userStateCount'];
     }else  if (userState['isWaitlist']===true && userState['isActive']===false){
-      returnObject['blockedUserCount'] = userState['userStateCount'];
+      returnObject['blockedUserCount'] += userState['userStateCount'];
     }else  if (userState['isWaitlist']===false && userState['isActive']===false){
-      returnObject['disabledUserCount'] = userState['userStateCount'];
+      returnObject['disabledUserCount'] += userState['userStateCount'];
+    }
+    if (userState['origin']==='waitlist'){
+      totalWaitlistOrigin += userState['userStateCount'];
     }
   };
-  for (const invitationState of await getMetric(invitationsQuery.concat(dateRangeMatcher), 'invitations')){
+  returnObject['waitlistConversionRate']= returnObject['waitlistUserCount'] / totalWaitlistOrigin;
+
+  for (const invitationState of await getMetric(dateRangeMatcher.concat(invitationsQuery), 'invitations')){
     if(invitationState['invitePending']===true){
       returnObject['pendingInviteCount']=invitationState['inviteCount'];
     }else     if(invitationState['invitePending']===false){
       returnObject['acceptedInviteCount']=invitationState['inviteCount'];
     };
   };
-  for (const smartCommentState of await getMetric(smartCommentsQuery.concat(dateRangeMatcher), 'smartComment')){
+  returnObject['inviteConversionRate'] = returnObject['acceptedInviteCount'] / (returnObject['acceptedInviteCount'] + returnObject['pendingInviteCount']);
+
+  for (const smartCommentState of await getMetric(dateRangeMatcher.concat(smartCommentsQuery), 'smartComments')){
     returnObject['smartCommentCount'] = smartCommentState['smartCommentCount'];
   }
 
@@ -117,12 +136,16 @@ async function getMetricsForRange( startDate, endDate) {
 
 async function getMetrics(){
   const metricsReport = JSON.stringify([
-    await getMetricsForRange( 0, reportCreationTime),
-    await getMetricsForRange( oneWeekAgo, reportCreationTime),
-    await getMetricsForRange(fourWeeksAgo, reportCreationTime)
-  ]);
-  console.log(metricsReport);
+    await getMetricsForRange(new Date(0), reportCreationTime, 'Total'),
+    await getMetricsForRange(oneWeekAgo, reportCreationTime, '7 Day'),
+    await getMetricsForRange(fourWeeksAgo, reportCreationTime, '28 Day')
+  ], null, 2);
+  return metricsReport;
+}
+
+async function printMetrics(){
+  console.log(await getMetrics());
   process.exit();
 }
 
-getMetrics();
+printMetrics();
