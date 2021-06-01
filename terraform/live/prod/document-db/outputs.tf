@@ -5,4 +5,4 @@ output "pw" {
 
 output "sg" {
   value = module.prod_document_db.sg
-}
+} 
