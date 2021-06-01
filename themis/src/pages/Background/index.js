@@ -122,7 +122,7 @@ async function processCookie(cookie) {
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const deltaTimeAccessToken = (expirationTimeAccessToken - currentTime) * 60000;
         if (deltaTimeAccessToken <= 1) {
-          const tokenResponse = getNewAccessToken(cookie)
+          const tokenResponse = await getNewAccessToken(cookie);
           setRequestRule(tokenResponse.token);
           return tokenResponse;
         } else {
@@ -130,7 +130,7 @@ async function processCookie(cookie) {
           return { token: accessToken, isLoggedIn: true };
         }
       } else {
-        const tokenResponse = getNewAccessToken(cookie)
+        const tokenResponse = await getNewAccessToken(cookie);
         setRequestRule(tokenResponse.token);
         return tokenResponse;
       }
