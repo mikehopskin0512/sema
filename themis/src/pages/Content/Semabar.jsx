@@ -16,6 +16,12 @@ import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
+
+  if (user && 'isWaitlist' in user) {
+    const { isWaitlist } = user;
+    user.isLoggedIn = (!isWaitlist) ? true : false;
+  }
+  
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
