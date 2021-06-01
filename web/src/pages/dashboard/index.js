@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import Loader from 'react-loader-spinner';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from "lodash";
@@ -16,7 +15,7 @@ import Toaster from '../../components/toaster';
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
 
-import styles from './invite.module.scss';
+import styles from './dashboard.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
@@ -51,7 +50,7 @@ const Invite = () => {
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    if (inviteCount > 0) {
+    if (inviteCount > 0 || user.isSemaAdmin) {
       const { email } = data;
       // Build invitation data
       const invitation = {
@@ -122,7 +121,7 @@ const Invite = () => {
     if (!isPluginInstalled) {
       return (
         <div className="mb-50">
-          <Loader type="Grid" color="#0081A7" height={40} width={40} />
+          <img src="/img/loader.gif" />
           <p>Searching for plugin...</p>
         </div>
       );
@@ -153,7 +152,7 @@ const Invite = () => {
   return (
     <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <section className={clsx("hero pb-50", styles.container)}>
+      <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
@@ -167,15 +166,9 @@ const Invite = () => {
               buttonAction={buttonAction}
               renderIcon={renderIcon}
             />
-          </div>
-        </div>
-      </section>
-      <section className="hero background-foggy-white pt-50">
-        <div className="hero-body">
-          <div className={clsx('container', styles['styled-container'])}>
             <p
               className={
-                'title has-text-centered has-text-weight-semibold is-size-4'
+                'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
               }
               dangerouslySetInnerHTML={{ __html: tableHeader }}
             />
@@ -184,7 +177,7 @@ const Invite = () => {
                 'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
               }
             >
-              <span className={clsx('tag is-success is-size-4 m-1r')}>{inviteCount}</span>
+              <span className={clsx('tag is-success is-size-4 m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -220,11 +213,11 @@ const Invite = () => {
                           </div>
                           <button
                             className={clsx(
-                              'button is-white',
+                              'button is-white-gray',
                               styles.formBtn
                             )}
                             type="submit"
-                            disabled={inviteCount <= 0}
+                            disabled={!user.isSemaAdmin && inviteCount <= 0}
                           >
                             Send Invite
                             </button>
@@ -261,9 +254,9 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx(!isCardVisible && "remove")}>
+    <div className={clsx(!isCardVisible && "is-hidden")}>
       <article
-        className={'notification has-background-white has-text-centered p-50 colored-shadow'}
+        className={'notification has-background-white shadow has-text-centered p-50'}
       >
         <p
           className={'title is-size-3 mt-15'}
@@ -290,7 +283,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
   const { token, user } = auth;
 
   return (
-    <table className={clsx('table is-fullwidth shadow', styles.table)}>
+    <table className={clsx('table is-fullwidth shadow has-background-white', styles.table)}>
       <thead>
         <tr>
           <th>User</th>
@@ -325,7 +318,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
             <td colSpan="3" >
               <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
                 <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-                <div className={"subtitle has-text-centered mt-50 has-text-grey-light is-size-5"}>
+                <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
                   You haven't invited anyone yet.
                     </div>
               </div>
@@ -363,10 +356,10 @@ const ContactUs = ({ userVoiceToken }) => {
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white has-text-primary is-medium is-fullwidth">Email</a>
+        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <a className="button is-white has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
+        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
       </div>
     </div>
   )

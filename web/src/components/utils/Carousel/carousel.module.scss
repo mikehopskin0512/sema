@@ -1,0 +1,30 @@
+.slide {
+    opacity: 0;
+    transition-duration: 3s;
+}
+
+.active {
+    opacity: 1;
+    transition: 3s ease;
+    transform: scale(1.08);
+}
+
+.slider {
+    height: 500px;
+}
+
+.tab {
+    letter-spacing: 0.04em;
+}
+
+.is-active {
+    background-color: transparent;
+    border-color: transparent;
+    border: none;
+    border-bottom: 5px solid #0081A7 !important;
+    padding: 5px 0 !important;
+}
+
+.is-inactive {
+    padding: 5px 0 9px 0 !important;
+}

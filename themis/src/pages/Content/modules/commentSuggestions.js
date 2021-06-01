@@ -1,4 +1,4 @@
-import { EMOJIS } from '../constants';
+import { NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS } from '../constants';
 
 function checkTerm(commentText, matchTerm, reactionBallot){
   var startIndex = 0 ;
@@ -101,26 +101,12 @@ function suggestReaction(originalCommentText) {
 
 function suggestTags(commentText) {
   const foundTags = [];
-  const tags = [
-    'Readable',
-    'Unreadable',
-    'Secure',
-    'Not secure',
-    'Efficient',
-    'Inefficient',
-    'Elegant',
-    'Inelegant',
-    'Reusable',
-    'Not reusable',
-    'Fault-tolerant',
-    'Brittle',
-    'Maintainable',
-    'Not maintainable',
-  ];
   const commentTextL = commentText.toLowerCase();
-  for (let i = 0; i < tags.length; i++) {
-    if (commentTextL.includes(tags[i].toLowerCase())) {
-      foundTags.push(tags[i]);
+  for (const tagPair of TAGS_INIT) {
+    if (commentTextL.includes(tagPair[NEGATIVE].toLowerCase())) {
+      foundTags.push(tagPair[NEGATIVE]);
+    } else if (commentTextL.includes(tagPair[POSITIVE].toLowerCase())) {
+      foundTags.push(tagPair[POSITIVE]);
     }
   }
   return foundTags;

@@ -240,7 +240,7 @@
   -webkit-appearance: none;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: none;
   display: inline-flex;
   font-size: 1rem;
@@ -3793,7 +3793,7 @@ fieldset[disabled] .sema-select select:-ms-input-placeholder,
 
 .sema-is-small.sema-input,
 .sema-is-small.sema-textarea {
-  border-radius: 2px;
+  border-radius: 6px;
   font-size: 0.75rem;
 }
 
@@ -12711,6 +12711,35 @@ a.sema-has-text-danger-dark:focus {
 .sema-footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
+}
+
+.sema-emoji-container {
+  margin: auto;
+}
+
+.sema-tag-container {
+  margin: auto;
+}
+
+.sema-dropdown-container {
+  margin: auto;
+}
+
+.sema-comment-placeholder {
+  text-align: center;
+}
+
+.sema-is-oblong {
+  border-radius: 25px;
+}
+
+.sema-dropdown-footer {
+  color: #4a4a4a;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.375rem 1rem;
+  position: relative;
 }
 
 .sema-is-bordered {

@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+import jwt_decode from 'jwt-decode';
 
 import initialState from './initialState';
 import {
@@ -15,6 +16,13 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
+  UPDATE_SEMA_USER,
+  ADD_SUGGESTED_COMMENTS,
+  ADD_GITHUB_METADATA,
+  ADD_SMART_COMMENT,
+  ADD_MUTATION_OBSERVER,
+  REMOVE_MUTATION_OBSERVER,
+  UPDATE_SEARCH_BAR_INPUT_VALUE,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -45,8 +53,6 @@ function rootReducer(state = initialState, action) {
       activeElement
     );
 
-    newState.github.isTyping = false;
-
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
       selectedTags: initialTags,
@@ -57,6 +63,8 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
+      selectedSuggestedComments: [],
+      searchValue: '',
     };
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
@@ -174,12 +182,43 @@ function rootReducer(state = initialState, action) {
 
     newState.semasearches[semaSearchContainerId] = {
       isSearchModalVisible: false,
+      selectedSuggestedComments: [],
+      searchValue: '',
     };
+
+    // Reset to default Github Metadata
+    newState.githubMetadata.filename = null;
+    newState.githubMetadata.file_extension = null;
+    newState.githubMetadata.ine_numbers = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
+  } else if (type === UPDATE_SEMA_USER) {
+    const { token, isLoggedIn } = payload;
+    if (token) {
+      const { user } = jwt_decode(token);
+      newState.user = { ...user, ...{ isLoggedIn} };
+    } else {
+      newState.user = { isLoggedIn };
+    }
+  } else if (type === ADD_SUGGESTED_COMMENTS) {
+    const { id, suggestedComment } = payload;
+    newState.semasearches[id].selectedSuggestedComments.push(suggestedComment);
+  } else if (type === ADD_GITHUB_METADATA) {
+    const metadata = payload;
+    newState.githubMetadata = metadata;
+  } else if (type === ADD_SMART_COMMENT) {
+    const comment = payload;
+    newState.smartComment = comment;
+  } else if (type === ADD_MUTATION_OBSERVER) {
+    const observer = payload;
+    newState.observer = observer;
+  } else if (type === REMOVE_MUTATION_OBSERVER) {
+    newState.observer.disconnect();
+  } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
+    const { id, searchValue } = payload;
+    newState.semasearches[id].searchValue = searchValue;
   }
-
   return newState;
 }
 

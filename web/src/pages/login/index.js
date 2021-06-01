@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp, faCommentAlt } from '@fortawesome/free-regular-svg-icons'
 import { isEmpty } from "lodash";
 
 import clsx from 'clsx';
@@ -81,22 +82,32 @@ const Login = () => {
           <div className="container">
             <div className="tile is-ancestor">
               <div className="tile is-vertical is-parent is-6">
-                <img src="/img/sema-logo.png" alt="sema-logo" width="200" />
-                <div className="title is-4 mt-20 mb-50">Your code review assistant</div>
-                <img src="/img/codelines.png" width="500"/>
-                <div className="feature-list mt-50 ml-20">
+                <img src="/img/codelines.png" width="430"/>
+                <div className="feature-list mt-50">
                   <ul>
-                    <li className="my-5">
-                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
-                      <span className="is-size-4"> Feature 1</span>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faThumbsUp} size="lg" />
+                        </div>
+                        <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
+                      </div>
                     </li>
-                    <li className="my-5">
-                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
-                      <span className="is-size-4"> Feature 2</span>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faTag} size="lg" />
+                        </div>
+                        <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
+                      </div>
                     </li>
-                    <li className="my-5">
-                      <FontAwesomeIcon className="mr-10" icon={faCheck} size="1x" />
-                      <span className="is-size-4"> Feature 3</span>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faCommentAlt} size="lg" />
+                        </div>
+                        <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>
+                      </div>
                     </li>
                   </ul>
                 </div>

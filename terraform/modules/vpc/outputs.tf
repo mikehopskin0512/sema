@@ -2,6 +2,10 @@ output "vpc_name" {
   value = "${aws_vpc.main.id}"
 }
 
+output "vpc_cidr" {
+  value = "${aws_vpc.main.cidr_block}"
+}
+
 output "private_subnet_ids" {
   value = "${aws_subnet.private.*.id}"
 }
@@ -15,15 +19,15 @@ output "gateway_id" {
 }
 
 output "nat_gateway_id" {
-  value = "${aws_nat_gateway.gw.*.id}"
+  value = "${aws_nat_gateway.gw.id}"
 }
 
 output "vpc_id" {
   value = aws_vpc.main.id
 }
 
-output "private_route_tables" {
-  value = aws_route_table.private.*.id
+output "private_route_table" {
+  value = aws_route_table.private.id
 }
 
 output "public_route_table" {

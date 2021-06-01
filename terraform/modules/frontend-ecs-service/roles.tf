@@ -49,6 +49,33 @@ resource "aws_iam_role_policy_attachment" "param_store_policy" {
   policy_arn = aws_iam_policy.param_store_policy.arn
 }
 
+#Grant role for exec
+data "aws_iam_policy_document" "exec_policy_document" {
+    version ="2012-10-17"
+    statement {
+       effect = "Allow"
+       actions = [
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+       ]
+
+      resources = [
+      "*",
+    ]
+    }
+}
+
+resource "aws_iam_policy" "exec_policy" {
+  name   = "${var.env}-${var.service_name}-exec-policy"
+  policy = data.aws_iam_policy_document.exec_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "exec_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.exec_policy.arn
+}
 # resource "aws_iam_role_policy" "sns_policy" {
 #   name   = "${var.env}-${var.service_name}-sns-policy"
 #   role   = aws_iam_role.ecs_task_execution_role.name
