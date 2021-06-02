@@ -111,6 +111,11 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
       const colorMode = document.documentElement.getAttribute("data-color-mode");
+
+      if (document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')) {
+        document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal').style.maxHeight = "580px";
+      }
+
       let colorTheme = document.documentElement.getAttribute("data-light-theme");
       let isDarkMode = false;
       if (colorMode === "dark") {
@@ -229,3 +234,12 @@ document.addEventListener(
   },
   true
 );
+
+document.addEventListener('focusin', (event) => {
+  $('div.sema').addClass('sema-is-bordered');
+}, true);
+
+
+document.addEventListener('focusout', (event) => {
+  $('div.sema').removeClass('sema-is-bordered');
+}, true);
