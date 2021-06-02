@@ -71,6 +71,6 @@ resource "aws_security_group_rule" "prod_doc_sg" {
   protocol          = "tcp"
   from_port         = 27017
   to_port           = 27017
-  cidr_blocks       = ["10.1.3.25/32"] # qa jumbox ip
+  cidr_blocks       = ["10.1.3.0/24"] # qa jumbox ip
   security_group_id = data.terraform_remote_state.prod_doc_db.outputs.sg
 }
