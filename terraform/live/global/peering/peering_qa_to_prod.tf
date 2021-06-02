@@ -56,7 +56,6 @@ resource "aws_route" "qa_public_rt" {
   route_table_id            = data.terraform_remote_state.qa_vpc.outputs.public_route_table
   destination_cidr_block    = data.terraform_remote_state.prod_vpc.outputs.vpc_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.qa_to_prod.id
-  depends_on                = [data.terraform_remote_state.qa_vpc.outputs.public_route_table]
 }
 
 resource "aws_route" "prod_public_rt" {
