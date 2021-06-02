@@ -134,6 +134,16 @@ export default (app) => {
         }
       }
 
+      // Send email if waitlisted
+      const { isWaitlist = false, username } = newUser;
+      if (isWaitlist) {
+        const message = {
+          recipient: username,
+          templateName: 'waitlisted',
+        };
+        await sendEmail(message);
+      }
+
       // Redeem Invite
       const { _id: userId, verificationToken } = newUser;
       await redeemInvite(inviteToken, userId);
