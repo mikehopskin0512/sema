@@ -72,11 +72,14 @@
 }
 
 .sema-tag-container {
+  height: 3em;
   display: flex;
   flex: 1;
   flex-direction: row-reverse;
-  overflow: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
   margin-left: 50px;
+  margin: auto;
 }
 
 /* ss */
@@ -245,10 +248,6 @@ h6 {
 .sema-emoji-container .reaction-selection {
   border: unset;
   background: transparent;
-}
-
-.sema-tag-container {
-  margin: auto;
 }
 
 .sema-dropdown-container {

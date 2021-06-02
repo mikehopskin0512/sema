@@ -57,6 +57,7 @@ const Semabar = (props) => {
           return (
             <span
               className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
+              style={{ height: '2.5em' }}
               key={tag}
             >
               {tag}
@@ -114,7 +115,7 @@ const Semabar = (props) => {
           return (
             <span
               className="sema-tag sema-is-rounded sema-mr-2"
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', height: '2.5em' }}
               key={tag}
               onClick={() => {
                 props.updateSelectedTagsWithSuggestion(tag);
@@ -161,7 +162,7 @@ const Semabar = (props) => {
             to Sema to get the full code review experience.
           </span>
         </div>
-        <div className="sema-tag-container" id="scroll-style">
+        <div className="sema-tag-container sema-tags" id="scroll-style">
           <button
             disabled
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
