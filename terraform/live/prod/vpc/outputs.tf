@@ -9,3 +9,7 @@ output "vpc_id" {
 output "public_route_table" {
   value = module.prod_vpc.public_route_table
 }
+
+output "private_route_table" {
+  value = module.prod_vpc.private_route_table
+}
