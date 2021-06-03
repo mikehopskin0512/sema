@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, useFieldArray } from 'react-hook-form';
 
+import { isEmpty } from 'lodash';
+
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import withAdmin from '../../components/auth/withAdmin';
@@ -39,7 +41,7 @@ const Admin = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
   const { _id: userId, firstName, lastName, organizations = [] } = user;
-  const fullName = `${firstName} ${lastName}`;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 

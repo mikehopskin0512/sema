@@ -45,7 +45,7 @@ const Invite = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
   const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
-  const fullName = `${firstName} ${lastName}`;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
