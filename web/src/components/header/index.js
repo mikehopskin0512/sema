@@ -33,8 +33,8 @@ const Header = () => {
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   // Use 1st org (for now) and get isAdmin
-  const [currentOrg = { isAdmin: false }] = organizations;
-  const isAdmin = currentOrg.isAdmin || isSemaAdmin;
+  // const [currentOrg = { isAdmin: false }] = organizations;
+  // const isAdmin = currentOrg.isAdmin || isSemaAdmin;
 
   const orgMenuList = organizations.map((org) => (
     <Link href="/">
@@ -178,7 +178,7 @@ const Header = () => {
                 </a>
               </Link>
               <hr className="navbar-divider" /> */}
-              {isAdmin && (
+              {isSemaAdmin && (
                 <Link href="/sema-admin/users">
                   <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Admin Panel
@@ -232,7 +232,7 @@ const Header = () => {
                       </a>
                     </Link>
                     <hr className="navbar-divider has-background-grey-lighter is-hidden" />
-                    {isAdmin && (
+                    {isSemaAdmin && (
                       <Link href="/sema-admin/users">
                         <a
                           type="button"
