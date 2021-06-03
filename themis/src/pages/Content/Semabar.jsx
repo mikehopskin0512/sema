@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import TagsModal from './TagsModal.jsx';
@@ -43,6 +43,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const Semabar = (props) => {
+  const [isHover, setHover] = useState(false);
+
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -147,7 +149,16 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
           />
         </div>
-        <div className="sema-tag-container" style={{ overflowX: 'auto' }}>
+        <div
+          className={
+            isHover
+              ? 'sema-tag-container'
+              : 'sema-tag-container hidden-scrollbar'
+          }
+          style={{ overflowX: 'auto' }}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
           <div className="sema-tags-content">
             {createActiveTags()}
             {createSuggestedTags()}

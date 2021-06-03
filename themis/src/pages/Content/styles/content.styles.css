@@ -87,6 +87,11 @@
 }
 
 /* ss */
+.sema-tag-container.hidden-scrollbar::-webkit-scrollbar {
+  height: 12px;
+  display: none;
+}
+
 .sema-tag-container::-webkit-scrollbar {
   height: 12px;
 }
