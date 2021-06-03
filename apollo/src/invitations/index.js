@@ -129,8 +129,7 @@ export default (app, passport) => {
 
   // Send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { recipient: recipientData } = req.body;
-
+    const { body: { recipient: recipientData } } = req;
     try {
       const userInvitation = await getInvitationByRecipient(recipientData);
       if (!userInvitation) {
@@ -142,8 +141,8 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName } = userInvitation;
-      const { username } = user;
+      const { recipient, token, orgName, senderName, sender } = userInvitation;
+      const { username } = await findUserById(sender);
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
