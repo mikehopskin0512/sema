@@ -327,4 +327,11 @@ h6 {
   color: var(--color-content);
 }
 
+.login-button {
+  background-color: #00779a;
+  border-color: transparent !important;
+  color: #fff !important;
+  box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
 /*# sourceMappingURL=content.styles.css.map */
