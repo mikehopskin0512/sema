@@ -73,12 +73,12 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${
+    let containerClasses = `sema-dropdown sema-is-right${
       props.isTagModalVisible ? ' sema-is-active' : ''
     }`;
 
     return (
-      <div className={containerClasses}>
+      <div className={containerClasses} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
@@ -94,7 +94,11 @@ const Semabar = (props) => {
             <span>Add Tags</span>
           </button>
         </div>
-        <div className="sema-dropdown-menu tags-selection" role="menu">
+        <div
+          className="sema-dropdown-menu tags-selection"
+          role="menu"
+          style={{ marginTop: '-3.5em' }}
+        >
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
@@ -143,11 +147,13 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
           />
         </div>
-        <div className="sema-tag-container" id="scroll-style">
-          {createActiveTags()}
-          {createSuggestedTags()}
+        <div className="sema-tag-container" style={{ overflowX: 'auto' }}>
+          <div className="sema-tags-content">
+            {createActiveTags()}
+            {createSuggestedTags()}
+          </div>
+          {createAddTags()}
         </div>
-        <div>{createAddTags()}</div>
       </>
     );
   } else {
@@ -162,7 +168,7 @@ const Semabar = (props) => {
             to Sema to get the full code review experience.
           </span>
         </div>
-        <div className="sema-tag-container sema-tags" id="scroll-style">
+        <div className="sema-tag-container sema-tags">
           <button
             disabled
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"

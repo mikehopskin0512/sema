@@ -72,14 +72,18 @@
 }
 
 .sema-tag-container {
-  height: 3em;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  margin-left: 50px;
+  margin: auto;
+}
+
+.sema-tags-content {
+  height: 2.8em;
   display: flex;
   flex: 1;
   flex-direction: row-reverse;
-  overflow-y: hidden;
-  overflow-x: auto;
-  margin-left: 50px;
-  margin: auto;
 }
 
 /* ss */
@@ -304,6 +308,7 @@ h6 {
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
+  width: 250px;
 }
 .tags-selection .sema-dropdown-content {
   background-color: var(--color-tags-background);
