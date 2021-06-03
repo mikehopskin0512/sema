@@ -39,8 +39,16 @@ async function getMetric(query, collectionName) {
 }
 
 const reportCreationTime = new Date(Date.now());
-const oneWeekAgo = new Date(reportCreationTime - 604800000);
-const fourWeeksAgo = new Date(reportCreationTime - (4 * 604800000));
+const oneDay = 60 * 60 * 24 * 1000;
+
+const oneDayAgo = new Date(reportCreationTime - oneDay);
+const twoDaysAgo = new Date(reportCreationTime - (2 * oneDay));
+
+const oneWeekAgo = new Date(reportCreationTime - (7 * oneDay));
+const twoWeeksAgo = new Date(reportCreationTime - (2 * 7 * oneDay));
+
+const thirtyDaysAgo = new Date(reportCreationTime - (30 * oneDay));
+const sixtyDaysAgo = new Date(reportCreationTime - (2 * 30 * oneDay));
 
 const stateCountQuery = [
   {
@@ -153,8 +161,12 @@ async function getMetricsForRange(startDate, endDate, timeframe) {
 
 async function getMetrics() {
   const metricsReport = JSON.stringify([
+    await getMetricsForRange(oneDayAgo, reportCreationTime, '1 Day'),
+    await getMetricsForRange(twoDaysAgo, oneDayAgo, '1 Day a day ago'),
     await getMetricsForRange(oneWeekAgo, reportCreationTime, '7 Day'),
-    await getMetricsForRange(fourWeeksAgo, reportCreationTime, '28 Day'),
+    await getMetricsForRange(twoWeeksAgo, oneWeekAgo, '7 Day 7 days ago'),
+    await getMetricsForRange(thirtyDaysAgo, reportCreationTime, '30 Day'),
+    await getMetricsForRange(sixtyDaysAgo, thirtyDaysAgo, '30 Day 30 days ago'),
     await getMetricsForRange(new Date(0), reportCreationTime, 'Total'),
   ], null, 2);
   return metricsReport;
