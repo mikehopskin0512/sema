@@ -7,6 +7,7 @@ import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
+  closeSearchModal,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -23,6 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
+    closeSearchModal: () => dispatch(closeSearchModal({ id })),
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
     selectedSuggestedComments: (suggestedComment) =>
       dispatch(addSuggestedComments({ id, suggestedComment })),
@@ -115,6 +117,8 @@ const SearchBar = (props) => {
       // esc is pressed
       // hide dropdown
       onCrossPressed(event);
+    } else {
+      props.closeSearchModal();
     }
   };
 

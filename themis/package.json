@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "node utils/build.js",
-    "start": "node utils/webserver.js",
+    "start": "node utils/webserver.js --port 3002",
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
     "build-css": "sass --watch src/pages/Content/styles/content.styles.scss:src/pages/Content/styles/content.styles.css src/pages/Content/styles/sema-custom.scss:src/pages/Content/styles/sema-custom.css"
   },
