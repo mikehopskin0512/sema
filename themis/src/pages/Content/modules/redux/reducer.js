@@ -23,6 +23,7 @@ import {
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
+  CLOSE_SEARCH_MODAL,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -96,6 +97,10 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+  } else if (type === CLOSE_SEARCH_MODAL) {
+    const { id } = payload;
+    const { semasearches } = newState;
+    semasearches[id].isSearchModalVisible = false;
   } else if (type === TOGGLE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
@@ -197,7 +202,7 @@ function rootReducer(state = initialState, action) {
     const { token, isLoggedIn } = payload;
     if (token) {
       const { user } = jwt_decode(token);
-      newState.user = { ...user, ...{ isLoggedIn} };
+      newState.user = { ...user, ...{ isLoggedIn } };
     } else {
       newState.user = { isLoggedIn };
     }

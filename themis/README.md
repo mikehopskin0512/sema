@@ -1,11 +1,27 @@
 <img src="src/assets/img/icon-128.png" width="64"/>
 
-# Using .env files to run application locally and in production
+# Using .env files to run application locally
 
 - Modify `.env`. 
-- Update `SEMA_URL` variable according to the appropriate development mode.
-- For production run `npm run build` to make the build. The bundle will be in the `build` folder.
-- For development run `npm start` to make the build. The bundle will be in the `build` folder.
+- Update `SEMA_URL` variable according to the appropriate development mode. ( see .env.localhost )
+- Run `npm start` to build the extension. This command will also start node which will watch for any file changes and rebuild. The rebuilt bundle will be in the `build` folder.
+
+# Production builds
+The `build.sh` script can be used to create a production-ready zip file suitable for upload to the chrome store. The extension will include the contents of `.env.prod`.
+
+Run the script like this:
+
+``` shell
+./build.sh prod
+
+## the cli output will show the env variables used....
+
+```
+
+The resulting zip file will be named:
+`Sema_Code_Review_Assistant_prod_<build date>_<gitcommit>.zip`
+
+You can also pass `local` or `qa` to the script to produce a build zip file for those environments. 
 
 # Chrome Extension Boilerplate with React 17 and Webpack 5
 

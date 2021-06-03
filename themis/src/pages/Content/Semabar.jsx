@@ -16,6 +16,7 @@ import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
+  
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
@@ -24,6 +25,7 @@ const mapStateToProps = (state, ownProps) => {
     isTyping: github.isTyping,
     isReactionDirty: semabarState.isReactionDirty,
     isLoggedIn: user?.isLoggedIn,
+    isWaitlist: user?.isWaitlist,
   };
 };
 
@@ -128,7 +130,7 @@ const Semabar = (props) => {
     );
   };
 
-  if (props.isLoggedIn) {
+  if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
