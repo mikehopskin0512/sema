@@ -23,6 +23,21 @@ chrome.runtime.onMessageExternal.addListener(
   }
 );
 
+chrome.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === "install") {
+    let queryOptions = { active: true, currentWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    const { id } = tab;
+    chrome.tabs.update(id, {
+      url: 'https://app.semasoftware.com/',
+      active: true
+    });
+  } else if (details.reason === "update") {
+    var thisVersion = chrome.runtime.getManifest().version;
+    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  }
+});
+
 function JWT() {
   let token = null;
   let interval = null;
@@ -33,7 +48,7 @@ function JWT() {
     }
 
     token = jwt;
-    
+
     if (token) {
       try {
         const currentTime = new Date().getTime();
@@ -162,7 +177,7 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
     } else if (removed === true) {
       sendMessageToTab({ token: null, isLoggedIn: false });
     }
-  } 
+  }
 });
 
 const sendMessageToTab = (message) => {
