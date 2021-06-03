@@ -22,3 +22,19 @@
 .is-whitespace-nowrap {
     white-space: nowrap;
 }
+
+.is-full-height {
+  height: 100%;
+}
+
+.outline-none {
+  &:hover, &:focus {
+    outline: none !important;;
+    box-shadow: none !important;
+    border-color: initial;
+  }
+}
+
+.has-background-purple {
+  background: $purple;
+}
