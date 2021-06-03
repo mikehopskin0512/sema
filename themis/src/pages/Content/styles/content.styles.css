@@ -87,16 +87,16 @@
 }
 
 /* ss */
-#scroll-style::-webkit-scrollbar {
+.sema-tag-container::-webkit-scrollbar {
   height: 12px;
 }
 
-#scroll-style::-webkit-scrollbar-track {
+.sema-tag-container::-webkit-scrollbar-track {
   background: #f5f5f5;
   width: 5px;
 }
 
-#scroll-style::-webkit-scrollbar-thumb {
+.sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
   background-color: #a8a8a8;
   border-radius: 50px;
