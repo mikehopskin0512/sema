@@ -243,6 +243,7 @@ h6 {
 
 .sema-emoji-container {
   margin: auto;
+  height: 2.8em;
 }
 .sema-emoji-container .sema-button {
   color: var(--color-title);
