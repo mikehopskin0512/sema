@@ -88,13 +88,11 @@ const GlobalSearchbar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${
-    props.isSearchModalVisible ? ' sema-is-active' : ''
-  }`;
+  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
+    }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${
-    props.isLoading ? ' sema-is-loading' : ''
-  }`;
+  const inputControlClasses = `sema-control sema-has-icons-left${props.isLoading ? ' sema-is-loading' : ''
+    }`;
 
   useEffect(() => {
     if (props.isLoading) {

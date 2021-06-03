@@ -4,6 +4,7 @@ import {
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
+  CLOSE_SEARCH_MODAL,
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
@@ -42,6 +43,11 @@ export const updateSelectedEmoji = (payload) => ({
 
 export const updateSelectedTags = (payload) => ({
   type: UPDATE_SELECTED_TAGS,
+  payload,
+});
+
+export const closeSearchModal = (payload) => ({
+  type: CLOSE_SEARCH_MODAL,
   payload,
 });
 
