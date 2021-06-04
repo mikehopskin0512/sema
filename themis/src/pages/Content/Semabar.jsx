@@ -16,7 +16,7 @@ import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
-  
+
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
@@ -181,7 +181,7 @@ const Semabar = (props) => {
             to Sema to get the full code review experience.
           </span>
         </div>
-        <div className="sema-tag-container sema-tags">
+        <div className="sema-tag-container sema-tags-content">
           <button
             disabled
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
