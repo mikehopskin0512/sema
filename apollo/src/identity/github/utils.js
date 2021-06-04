@@ -1,8 +1,9 @@
 import { Octokit } from '@octokit/rest';
 import { createAppAuth } from '@octokit/auth';
-import { github } from '../../config';
+import { github, orgDomain } from '../../config';
 
 import errors from '../../shared/errors';
+import { sendEmail } from '../../shared/emailService';
 
 export const getProfile = async (token) => {
   const octokit = new Octokit({ auth: `token ${token}` });
@@ -48,3 +49,18 @@ export const fetchGithubToken = async (externalSourceId) => {
     );
   }
 };
+
+export const checkAndSendEmail = async (user) => {
+  const { username, isWaitlist = true, lastLogin } = user;
+  const re = /\S+@\S+\.\S+/;
+  const isEmail = re.test(username);
+  if (isEmail) {
+    const message = {
+      recipient: username,
+      url: `${orgDomain}`,
+      templateName: !lastLogin && !isWaitlist ? 'accountCreated' : 'waitlisted',
+    };
+    await sendEmail(message);
+  }
+  return;
+}
