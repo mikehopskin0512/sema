@@ -177,7 +177,7 @@ document.addEventListener(
         // Render Semabar
         ReactDOM.render(
           <Provider store={store}>
-            <Semabar id={semabarContainerId} />
+            <Semabar id={semabarContainerId} style={{ position: 'relative' }} />
           </Provider>,
           $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
         );

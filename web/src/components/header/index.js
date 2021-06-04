@@ -26,14 +26,15 @@ const Header = () => {
     isVerified = false,
     organizations = [],
     isWaitlist = true,
+    isSemaAdmin = false,
   } = user;
   const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
   // Use 1st org (for now) and get isAdmin
-  const [currentOrg = {}] = organizations;
-  const { isAdmin = false } = currentOrg;
+  // const [currentOrg = { isAdmin: false }] = organizations;
+  // const isAdmin = currentOrg.isAdmin || isSemaAdmin;
 
   const orgMenuList = organizations.map((org) => (
     <Link href="/">
@@ -176,14 +177,14 @@ const Header = () => {
                   Reports
                 </a>
               </Link>
-              <hr className="navbar-divider" />
-              {isAdmin && (
-                <Link href="/admin">
+              <hr className="navbar-divider" /> */}
+              {isSemaAdmin && (
+                <Link href="/sema-admin/users">
                   <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Admin Panel
                   </a>
                 </Link>
-              )} */}
+              )}
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"
@@ -199,7 +200,7 @@ const Header = () => {
               <a
                 type="button"
                 className="button py-8 px-25 is-primary is-outlined mr-25"
-                href="mailto:support@semasoftware.com?subject=Product Feedback"
+                href="mailto:support@semasoftware.com?subject=Support"
               >
                 <span className="has-text-weight-semibold">Contact Support</span>
               </a>
@@ -214,12 +215,7 @@ const Header = () => {
                           aria-controls="dropdown-menu"
                         >
                           Switch Organization
-                        </a>
-                      </div>
-                      <div
-                        className="dropdown-menu"
-                        id="dropdown-menu"
-                        role="menu"
+                        </a>false
                       >
                         <div className="navbar-dropdown is-right">
                           {orgMenuList}
@@ -236,8 +232,8 @@ const Header = () => {
                       </a>
                     </Link>
                     <hr className="navbar-divider has-background-grey-lighter is-hidden" />
-                    {isAdmin && (
-                      <Link href="/admin">
+                    {isSemaAdmin && (
+                      <Link href="/sema-admin/users">
                         <a
                           type="button"
                           className="navbar-item"

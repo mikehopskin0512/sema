@@ -11,9 +11,23 @@ import RefreshToken from './refreshTokenModel';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
-const createUserVoiceIdentityToken = async ({ _id, username, firstName, lastName }) => (
-  sign({ guid: _id, email: username, display_name: `${firstName} ${lastName}`, exp: addMinutes(15) }, userVoiceKey)
-);
+const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', lastName = '' }) => {
+  let displayName = 'Sema User';
+
+  if (firstName !== '' || lastName !== '') {
+    displayName = `${firstName} ${lastName}`.trim();
+  }
+
+  return sign(
+    {
+      guid: _id,
+      email: username,
+      display_name: displayName,
+      trusted: true,
+      exp: addMinutes(15),
+    }, userVoiceKey,
+  );
+};
 
 export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user) }, jwtSecret, {
   expiresIn: '15m',

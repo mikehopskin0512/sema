@@ -15,7 +15,7 @@ elif [  "${ENV}" = "qa" ] ; then
 elif [  "${ENV}" = "prod" ] ; then
  cp .env.prod .env
 fi
-npm install
+npm ci
 npm run build
 zip -r build.zip build
 # or chrome.exe --pack-extension=build
