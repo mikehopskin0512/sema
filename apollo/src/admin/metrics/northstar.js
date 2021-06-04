@@ -50,6 +50,9 @@ const twoWeeksAgo = new Date(reportCreationTime - (2 * 7 * oneDay));
 const thirtyDaysAgo = new Date(reportCreationTime - (30 * oneDay));
 const sixtyDaysAgo = new Date(reportCreationTime - (2 * 30 * oneDay));
 
+const ninetyDaysAgo = new Date(reportCreationTime - (90 * oneDay));
+const oneeightyDaysAgo = new Date(reportCreationTime - (2 * 90 * oneDay));
+
 const stateCountQuery = [
   {
     $lookup: {
@@ -167,6 +170,8 @@ async function getMetrics() {
     await getMetricsForRange(twoWeeksAgo, oneWeekAgo, '7 Day 7 days ago'),
     await getMetricsForRange(thirtyDaysAgo, reportCreationTime, '30 Day'),
     await getMetricsForRange(sixtyDaysAgo, thirtyDaysAgo, '30 Day 30 days ago'),
+    await getMetricsForRange(ninetyDaysAgo, reportCreationTime, '90 Day'),
+    await getMetricsForRange(oneeightyDaysAgo, ninetyDaysAgo, '90 Day 90 days ago'),
     await getMetricsForRange(new Date(0), reportCreationTime, 'Total'),
   ], null, 2);
   return metricsReport;
