@@ -54,6 +54,7 @@ export default (app, passport) => {
         orgName,
         fullName: senderName,
         email: username,
+        sender: "invites@semasoftware.com",
       };
       await sendEmail(message);
       const updatedUser = await update({

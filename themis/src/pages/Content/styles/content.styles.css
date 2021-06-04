@@ -74,22 +74,34 @@
 .sema-tag-container {
   display: flex;
   flex: 1;
-  flex-direction: row-reverse;
-  overflow: auto;
+  flex-direction: row;
   margin-left: 50px;
+  margin: auto;
+}
+
+.sema-tags-content {
+  height: 2.8em;
+  display: flex;
+  flex: 1;
+  flex-direction: row-reverse;
 }
 
 /* ss */
-#scroll-style::-webkit-scrollbar {
+.sema-tag-container.hidden-scrollbar::-webkit-scrollbar {
+  height: 12px;
+  display: none;
+}
+
+.sema-tag-container::-webkit-scrollbar {
   height: 12px;
 }
 
-#scroll-style::-webkit-scrollbar-track {
+.sema-tag-container::-webkit-scrollbar-track {
   background: #f5f5f5;
   width: 5px;
 }
 
-#scroll-style::-webkit-scrollbar-thumb {
+.sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
   background-color: #a8a8a8;
   border-radius: 50px;
@@ -236,6 +248,8 @@ h6 {
 
 .sema-emoji-container {
   margin: auto;
+  height: 2.8em;
+  padding-right: 1em;
 }
 .sema-emoji-container .sema-button {
   color: var(--color-title);
@@ -245,10 +259,6 @@ h6 {
 .sema-emoji-container .reaction-selection {
   border: unset;
   background: transparent;
-}
-
-.sema-tag-container {
-  margin: auto;
 }
 
 .sema-dropdown-container {
@@ -305,6 +315,7 @@ h6 {
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
+  width: 250px;
 }
 .tags-selection .sema-dropdown-content {
   background-color: var(--color-tags-background);

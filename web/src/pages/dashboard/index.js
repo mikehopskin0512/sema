@@ -45,7 +45,7 @@ const Invite = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
   const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
-  const fullName = `${firstName} ${lastName}`;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
@@ -309,7 +309,8 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
+                  {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                  {' '}
                 </td>
               </tr>
             );

@@ -49,7 +49,7 @@ const requestRefreshToken = () => ({
   type: types.REQUEST_REFRESH_TOKEN,
 });
 
-const requestRefreshTokenSuccess = (token) => ({
+export const requestRefreshTokenSuccess = (token) => ({
   type: types.RECEIVE_REFRESH_TOKEN_SUCCESS,
   token,
 });
