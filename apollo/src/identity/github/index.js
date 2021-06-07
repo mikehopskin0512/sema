@@ -4,10 +4,11 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails, checkAndSendEmail } from './utils';
+import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
+import { checkAndSendEmail } from '../../shared/utils';
 
 const route = Router();
 
