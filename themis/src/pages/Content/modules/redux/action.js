@@ -20,6 +20,7 @@ import {
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
+  TOGGLE_IS_SELECTING_EMOJI,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -121,5 +122,10 @@ export const removeMutationObserver = () => ({
 
 export const updatetSearchBarInputValue = (payload) => ({
   type: UPDATE_SEARCH_BAR_INPUT_VALUE,
+  payload,
+});
+
+export const toggleIsSelectingEmoji = (payload) => ({
+  type: TOGGLE_IS_SELECTING_EMOJI,
   payload,
 });

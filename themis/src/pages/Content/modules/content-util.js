@@ -152,23 +152,23 @@ export function writeSemaToGithub(textarea) {
       inLineMetada = getGithubInlineMetadata(textarea.id);
     }
 
+    const state = store.getState();
+
     const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
 
     const semabar = $(textarea).siblings('div.sema')?.[0];
-    const semaChildren = $(semabar).children();
 
-    const emojiContainer = semaChildren?.[0];
-    const tagContainer = semaChildren?.[1];
+    const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
 
-    const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-    const selectedTags = Array.from(
-      $(tagContainer)
-        .children('.sema-is-dark')
-        .map((index, tagElement) => tagElement?.textContent)
-    );
-
-    const selectedEmojiObj = EMOJIS.find((emoji) =>
-      selectedReaction?.includes(emoji.title)
+    const selectedTags = state.semabars[semabar.id].selectedTags.reduce(
+      (acc, tagObj) => {
+        const { selected } = tagObj;
+        if (selected) {
+          acc.push(tagObj[selected]);
+        }
+        return acc;
+      },
+      []
     );
 
     const selectedEmojiString =

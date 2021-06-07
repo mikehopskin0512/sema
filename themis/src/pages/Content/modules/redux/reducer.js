@@ -24,6 +24,7 @@ import {
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
+  TOGGLE_IS_SELECTING_EMOJI,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -56,6 +57,7 @@ function rootReducer(state = initialState, action) {
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
+      isSelectingEmoji: false,
       selectedTags: initialTags,
       selectedReaction: initialReaction,
       isReactionDirty: false,
@@ -71,6 +73,10 @@ function rootReducer(state = initialState, action) {
     const { id } = payload;
     const { semabars } = newState;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
+  } else if (type === TOGGLE_IS_SELECTING_EMOJI) {
+    const { id } = payload;
+    const { semabars } = newState;
+    semabars[id].isSelectingEmoji = !semabars[id].isSelectingEmoji;
   } else if (type === CLOSE_ALL_MODALS) {
     const { semabars, semasearches } = newState;
     const semaIds = Object.keys(semabars);
@@ -179,6 +185,7 @@ function rootReducer(state = initialState, action) {
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
+      isSelectingEmoji: false,
       selectedTags: TAGS_INIT,
       selectedReaction: EMOJIS[0],
       isReactionDirty: false,
