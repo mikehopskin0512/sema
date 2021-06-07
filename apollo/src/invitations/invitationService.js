@@ -6,9 +6,9 @@ import { generateToken } from '../shared/utils';
 export const create = async (invitation) => {
   try {
     const {
-      recipient, 
+      recipient,
       // orgId, orgName,
-      sender, senderName,
+      sender, senderName, senderEmail,
     } = invitation;
 
     // Generate token and expiration data (2 weeks from now)
@@ -24,6 +24,7 @@ export const create = async (invitation) => {
       // orgName,
       sender,
       senderName,
+      senderEmail,
       token,
       tokenExpires,
     });
