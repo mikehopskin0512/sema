@@ -24,6 +24,7 @@ import {
   addSmartComment,
   addMutationObserver,
   removeMutationObserver,
+  closeAllEmojiSelection,
 } from './redux/action';
 import store from './redux/store';
 
@@ -233,7 +234,7 @@ export function writeSemaToGithub(textarea) {
 }
 
 export function onDocumentClicked(event, store) {
-  onCloseAllModalsClicked(event, store);
+  closeSemaOpenElements(event, store);
   onGithubSubmitClicked(event, store);
 }
 
@@ -256,13 +257,18 @@ function onGithubSubmitClicked(event, store) {
   }
 }
 
-function onCloseAllModalsClicked(event, store) {
+function closeSemaOpenElements(event, store) {
   const target = event.target;
-  const parents = $(target).parents('.sema-dropdown');
-  if (parents.length) {
-    // do nothing
-  } else {
+  const dropdownParents = $(target).parents('.sema-dropdown');
+  if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
+  }
+
+  const selectingEmojiParents = $(target).parents(
+    '.reaction-selection-wrapper'
+  );
+  if (!selectingEmojiParents.length) {
+    store.dispatch(closeAllEmojiSelection());
   }
 }
 

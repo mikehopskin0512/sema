@@ -25,6 +25,7 @@ import {
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
+  CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -87,6 +88,13 @@ function rootReducer(state = initialState, action) {
     });
     searchIds.forEach((id) => {
       semasearches[id].isSearchModalVisible = false;
+    });
+  } else if (type === CLOSE_ALL_SELECTING_EMOJI) {
+    const { semabars } = newState;
+    const semaIds = Object.keys(semabars);
+
+    semaIds.forEach((id) => {
+      semabars[id].isSelectingEmoji = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
     const { id, selectedReaction, isReactionDirty = true } = payload;

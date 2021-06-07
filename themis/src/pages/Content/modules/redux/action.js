@@ -21,6 +21,7 @@ import {
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   TOGGLE_IS_SELECTING_EMOJI,
+  CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -128,4 +129,8 @@ export const updatetSearchBarInputValue = (payload) => ({
 export const toggleIsSelectingEmoji = (payload) => ({
   type: TOGGLE_IS_SELECTING_EMOJI,
   payload,
+});
+
+export const closeAllEmojiSelection = () => ({
+  type: CLOSE_ALL_SELECTING_EMOJI,
 });
