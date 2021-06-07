@@ -114,8 +114,7 @@ const Invite = () => {
       toggleCard(false);
       return;
     }
-
-    window.open(EXTENSION_LINK, '_blank');
+    window.location.href = EXTENSION_LINK;
   };
 
   const renderIcon = () => {
