@@ -40,7 +40,7 @@ const Login = () => {
   }));
 
   const { user, isAuthenticated } = auth;
-
+  console.log(isAuthenticated)
   const { showAlert, alertType, alertLabel } = alerts;
 
   // Check for updated state in selectedTag
@@ -65,7 +65,7 @@ const Login = () => {
     if (user?.isWaitlist) {
       return <WaitlistCard />
     }
-    return <LoginCard />;
+    return <LoginCard isAuthenticated={isAuthenticated} />;
   }
 
   useEffect(() => {
