@@ -74,10 +74,8 @@ export default (app, passport) => {
 
   // Fetch all invitation by senderId
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { senderId } = req.query;
-
     try {
-      const invites = await getInvitationsBySender(senderId);
+      const invites = await getInvitationsBySender(req.query);
       if (invites.statusCode === 404) {
         if (invites.name === 'Not Found') {
           throw new errors.BadRequest('Invalid Sender ID');
@@ -178,7 +176,7 @@ export default (app, passport) => {
       if (invite.statusCode > 226) {
         return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
       }
-      if (!invite.sender.equals(user._id)) {
+      if (!invite.sender.equals(user._id) && !user.isSemaAdmin) {
         return res.status(405).send('Unable to delete invitation: Unauthorized.');
       }
 

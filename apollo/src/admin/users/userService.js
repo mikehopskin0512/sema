@@ -50,6 +50,12 @@ export const listUsers = async (params) => {
   return { users, totalCount };
 };
 
+export const findUser = async (userId) => {
+  const user = await User.findById(userId);
+
+  return user;
+};
+
 export const updateUserAvailableInvitesCount = async (id, params) => {
   const { amount } = params;
 
