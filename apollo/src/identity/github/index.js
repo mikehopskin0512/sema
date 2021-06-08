@@ -50,6 +50,7 @@ export default (app) => {
       // Get array of user Emails
       const userEmails = await getUserEmails(token);
       const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true);
+      const emails = userEmails.map(({ email }) => (email));
 
       // Create identity object
       const { name: fullName } = profile;
@@ -71,7 +72,7 @@ export default (app) => {
         lastName,
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
-        emails: userEmails
+        emails,
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
