@@ -50,11 +50,6 @@ const Sidebar = () => {
       pathName: '/sema-admin/invites',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
-    {
-      name: 'Settings',
-      pathName: '/sema-admin/settings',
-      icon: <FontAwesomeIcon icon='cog' size='lg' className="has-text-white" />,
-    },
   ];
   return (
     <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-fullheight`)}>
