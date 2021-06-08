@@ -4,7 +4,7 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { sendEmail } from '../../shared/emailService';
 
-import {listUsers, updateUserAvailableInvitesCount, updateUserStatus} from './userService';
+import { getAnalytics, listUsers, updateUserAvailableInvitesCount, updateUserStatus } from './userService';
 
 const route = Router();
 
@@ -29,6 +29,18 @@ export default (app, passport) => {
     }
   });
 
+  route.get('/analytic', async (req, res) => {
+    try {
+      const analyticData = await getAnalytics();
+
+      return res.status(200).json(analyticData);
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
   route.post('/:id/invitations', async (req, res) => {
     try {
       const { id } = req.params;
@@ -45,7 +57,7 @@ export default (app, passport) => {
 
   route.put('/:id/status', async (req, res) => {
     try {
-      const { 
+      const {
         params: { id },
         body
       } = req;

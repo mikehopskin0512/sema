@@ -70,3 +70,13 @@ export const updateUserStatus = async (id, params) => {
   await user.save();
   return { user };
 };
+
+export const getAnalytics = async () => {
+  const total = await User.countDocuments();
+  const active = await User.countDocuments({ isActive: true, isWaitlist: false });
+  const waitlist = await User.countDocuments({ isActive: true, isWaitlist: true });
+  const blocked = await User.countDocuments({ isActive: false, isWaitlist: true });
+  const disabled = await User.countDocuments({ isActive: false, isWaitlist: false });
+
+  return { total, active, waitlist, blocked, disabled };
+};

@@ -14,21 +14,23 @@ import StatusFilter from '../../components/admin/statusFilter';
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import styles from './users.module.scss';
+import Tabs from '@/components/tabs';
 
-const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, getAnalyticData } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.usersState);
+  const { users, analytic } = useSelector((state) => state.usersState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
-  const [statusFilters, setStatusFilters] = useState({
+  const initFilters = {
     Waitlisted: false,
     Active: false,
     Blocked: false,
     Disabled: false,
-  });
+  };
+  const [statusFilters, setStatusFilters] = useState(initFilters);
 
   useEffect(() => {
     const statusQuery = Object.entries(statusFilters)
@@ -37,6 +39,10 @@ const UsersPage = () => {
 
     dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
   }, [debounceSearchTerm, statusFilters]);
+
+  useEffect(() => {
+    dispatch(getAnalyticData());
+  }, []);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
@@ -202,7 +208,7 @@ const UsersPage = () => {
         Cell: ({ cell: { value } }) => renderActionCell(value),
       },
     ],
-    [debounceSearchTerm, handleUpdateUserInvitations],
+    [debounceSearchTerm, handleUpdateUserInvitations, statusFilters],
   );
 
   const getStatus = (user) => {
@@ -233,11 +239,61 @@ const UsersPage = () => {
     },
   }));
 
+  const tabOptions = useMemo(() => {
+    return [
+      {
+        label: `All (${analytic.total ? analytic.total : 0})`,
+        value: 'all',
+      },
+      {
+        label: `Active Users (${analytic.active ? analytic.active : 0})`,
+        value: 'active',
+      },
+      {
+        label: `On the waitlist (${analytic.waitlist ? analytic.waitlist : 0})`,
+        value: 'waitlist',
+      },
+      {
+        label: `Blocked (${analytic.blocked ? analytic.blocked : 0})`,
+        value: 'blocked',
+      },
+      {
+        label: `Disabled (${analytic.disabled ? analytic.disabled : 0})`,
+        value: 'disabled',
+      },
+    ]
+  }, [analytic]);
+
+  const [activeTab, setActiveTab] = useState('all');
+
+  const onChangeTab = (value) => {
+    setActiveTab(value);
+
+    switch (value) {
+      case 'waitlist':
+        setStatusFilters({ ...initFilters, Waitlisted: true });
+        break;
+      case 'active':
+        setStatusFilters({ ...initFilters, Active: true });
+        break;
+      case 'blocked':
+        setStatusFilters({ ...initFilters, Blocked: true });
+        break;
+      case 'disabled':
+        setStatusFilters({ ...initFilters, Disabled: true });
+        break;
+      default:
+        setStatusFilters(initFilters);
+        break;
+    }
+  };
+
   return (
     <div className={clsx(styles['users-page'], 'is-flex is-flex-direction-column')}>
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
       <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
-      <div className='p-20 is-flex-grow-1 is-background-white' style={{ borderRadius: 10 }}>
+      <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
+        <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
         <div className='is-flex is-justify-content-flex-end'>
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>

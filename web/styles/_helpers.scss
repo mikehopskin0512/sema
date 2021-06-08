@@ -22,3 +22,14 @@
 .is-whitespace-nowrap {
     white-space: nowrap;
 }
+
+.outline-none {
+  &:hover, &:focus {
+    outline: none !important;;
+    box-shadow: none !important;
+  }
+}
+
+.has-background-purple {
+  background: $purple;
+}
