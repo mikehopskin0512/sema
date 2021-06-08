@@ -1,4 +1,6 @@
 import crypto from 'crypto';
+import { orgDomain } from '../config';
+import { sendEmail } from './emailService';
 
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
@@ -24,3 +26,18 @@ export const generateToken = () => new Promise((resolve, reject) => {
 
 // add minutes - return in unix time
 export const addMinutes = (minutes = 0, date = new Date()) => (new Date(date).getTime() + minutes * 60000);
+
+export const checkAndSendEmail = async (user) => {
+  const { username, isWaitlist = true, lastLogin } = user;
+  const re = /\S+@\S+\.\S+/;
+  const isEmail = re.test(username);
+  if (isEmail) {
+    const message = {
+      recipient: username,
+      url: `${orgDomain}`,
+      templateName: !lastLogin && !isWaitlist ? 'accountCreated' : 'waitlisted',
+    };
+    await sendEmail(message);
+  }
+  return;
+}
