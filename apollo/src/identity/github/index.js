@@ -8,7 +8,7 @@ import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
-import { sendEmail } from '../../shared/emailService';
+import { checkAndSendEmail } from '../../shared/utils';
 
 const route = Router();
 
@@ -80,17 +80,7 @@ export default (app) => {
         await updateIdentity(user, identity);
 
         // Check if first login then send welcome email
-        const { username, isWaitlist, lastLogin } = user;
-        const re = /\S+@\S+\.\S+/;
-        const isEmail = re.test(username);
-        if (!lastLogin && !isWaitlist && isEmail) {
-          const message = {
-            recipient: username,
-            url: `${orgDomain}`,
-            templateName: 'accountCreated',
-          };
-          await sendEmail(message);
-        }
+        await checkAndSendEmail(user);
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
@@ -124,6 +114,8 @@ export default (app) => {
         if (!newUser) {
           return res.status(401).end('User create error.');
         }
+        // Send email if waitlisted
+        await checkAndSendEmail(newUser);
       } else {
         userBody.username = invitation.recipient;
         userBody.origin = 'invitation';
