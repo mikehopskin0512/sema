@@ -23,6 +23,9 @@ import {
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
+  CLOSE_SEARCH_MODAL,
+  TOGGLE_IS_SELECTING_EMOJI,
+  CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
 import {
   getInitialSemaValues,
@@ -55,6 +58,7 @@ function rootReducer(state = initialState, action) {
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
+      isSelectingEmoji: false,
       selectedTags: initialTags,
       selectedReaction: initialReaction,
       isReactionDirty: false,
@@ -70,6 +74,10 @@ function rootReducer(state = initialState, action) {
     const { id } = payload;
     const { semabars } = newState;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
+  } else if (type === TOGGLE_IS_SELECTING_EMOJI) {
+    const { id } = payload;
+    const { semabars } = newState;
+    semabars[id].isSelectingEmoji = !semabars[id].isSelectingEmoji;
   } else if (type === CLOSE_ALL_MODALS) {
     const { semabars, semasearches } = newState;
     const semaIds = Object.keys(semabars);
@@ -80,6 +88,13 @@ function rootReducer(state = initialState, action) {
     });
     searchIds.forEach((id) => {
       semasearches[id].isSearchModalVisible = false;
+    });
+  } else if (type === CLOSE_ALL_SELECTING_EMOJI) {
+    const { semabars } = newState;
+    const semaIds = Object.keys(semabars);
+
+    semaIds.forEach((id) => {
+      semabars[id].isSelectingEmoji = false;
     });
   } else if (type === UPDATE_SELECTED_EMOJI) {
     const { id, selectedReaction, isReactionDirty = true } = payload;
@@ -96,6 +111,10 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags);
     semabars[id].selectedTags = updatedTags;
+  } else if (type === CLOSE_SEARCH_MODAL) {
+    const { id } = payload;
+    const { semasearches } = newState;
+    semasearches[id].isSearchModalVisible = false;
   } else if (type === TOGGLE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
@@ -174,6 +193,7 @@ function rootReducer(state = initialState, action) {
 
     newState.semabars[semabarContainerId] = {
       isTagModalVisible: false,
+      isSelectingEmoji: false,
       selectedTags: TAGS_INIT,
       selectedReaction: EMOJIS[0],
       isReactionDirty: false,
@@ -197,7 +217,7 @@ function rootReducer(state = initialState, action) {
     const { token, isLoggedIn } = payload;
     if (token) {
       const { user } = jwt_decode(token);
-      newState.user = { ...user, ...{ isLoggedIn} };
+      newState.user = { ...user, ...{ isLoggedIn } };
     } else {
       newState.user = { isLoggedIn };
     }

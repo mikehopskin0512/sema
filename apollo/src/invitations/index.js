@@ -45,15 +45,15 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName } = newInvitation;
-      const { username } = userData;
+      const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: username,
+        email: senderEmail,
+        sender: "invites@semasoftware.com",
       };
       await sendEmail(message);
       const updatedUser = userData.isSemaAdmin ? userData : await update({
@@ -126,8 +126,7 @@ export default (app, passport) => {
 
   // Send email
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { recipient: recipientData } = req.body;
-
+    const { body: { recipient: recipientData } } = req;
     try {
       const userInvitation = await getInvitationByRecipient(recipientData);
       if (!userInvitation) {
@@ -139,14 +138,14 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName } = userInvitation;
+      const { recipient, token, orgName, senderName, senderEmail } = userInvitation;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: recipient,
+        email: senderEmail,
       };
       await sendEmail(message);
 

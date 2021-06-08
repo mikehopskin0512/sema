@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import TagsModal from './TagsModal.jsx';
@@ -9,6 +9,7 @@ import {
   updateSelectedEmoji,
   updateSelectedTags,
   updateSelectedTagsWithSuggestion,
+  toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
 import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
@@ -16,6 +17,7 @@ import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
   const semabarState = semabars[ownProps.id];
+
   return {
     isTagModalVisible: semabarState.isTagModalVisible,
     selectedTags: semabarState.selectedTags,
@@ -24,6 +26,8 @@ const mapStateToProps = (state, ownProps) => {
     isTyping: github.isTyping,
     isReactionDirty: semabarState.isReactionDirty,
     isLoggedIn: user?.isLoggedIn,
+    isWaitlist: user?.isWaitlist,
+    isSelectingEmoji: semabarState.isSelectingEmoji,
   };
 };
 
@@ -39,10 +43,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(updateSelectedTags({ id, operation, isDirty: true })),
     updateSelectedTagsWithSuggestion: (tag) =>
       dispatch(updateSelectedTagsWithSuggestion({ id, tag })),
+    toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
 };
 
 const Semabar = (props) => {
+  const [isHover, setHover] = useState(false);
+
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -57,6 +64,7 @@ const Semabar = (props) => {
           return (
             <span
               className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
+              style={{ height: '2.5em' }}
               key={tag}
             >
               {tag}
@@ -72,12 +80,12 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown${
+    let containerClasses = `sema-dropdown sema-is-right${
       props.isTagModalVisible ? ' sema-is-active' : ''
     }`;
 
     return (
-      <div className={containerClasses}>
+      <div className={containerClasses} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
@@ -93,7 +101,11 @@ const Semabar = (props) => {
             <span>Add Tags</span>
           </button>
         </div>
-        <div className="sema-dropdown-menu tags-selection" role="menu">
+        <div
+          className="sema-dropdown-menu tags-selection"
+          role="menu"
+          style={{ marginTop: '-3.5em' }}
+        >
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
@@ -114,7 +126,7 @@ const Semabar = (props) => {
           return (
             <span
               className="sema-tag sema-is-rounded sema-mr-2"
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', height: '2.5em' }}
               key={tag}
               onClick={() => {
                 props.updateSelectedTagsWithSuggestion(tag);
@@ -128,7 +140,7 @@ const Semabar = (props) => {
     );
   };
 
-  if (props.isLoggedIn) {
+  if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
@@ -140,13 +152,26 @@ const Semabar = (props) => {
             }}
             isTyping={props.isTyping}
             isReactionDirty={props.isReactionDirty}
+            isSelectingEmoji={props.isSelectingEmoji}
+            toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
           />
         </div>
-        <div className="sema-tag-container" id="scroll-style">
-          {createActiveTags()}
-          {createSuggestedTags()}
+        <div
+          className={
+            isHover
+              ? 'sema-tag-container'
+              : 'sema-tag-container hidden-scrollbar'
+          }
+          style={{ overflowX: 'auto' }}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          <div className="sema-tags-content">
+            {createActiveTags()}
+            {createSuggestedTags()}
+          </div>
+          {createAddTags()}
         </div>
-        <div>{createAddTags()}</div>
       </>
     );
   } else {
@@ -161,7 +186,7 @@ const Semabar = (props) => {
             to Sema to get the full code review experience.
           </span>
         </div>
-        <div className="sema-tag-container" id="scroll-style">
+        <div className="sema-tag-container sema-tags-content">
           <button
             disabled
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"

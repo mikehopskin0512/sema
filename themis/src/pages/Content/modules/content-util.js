@@ -24,6 +24,7 @@ import {
   addSmartComment,
   addMutationObserver,
   removeMutationObserver,
+  closeAllEmojiSelection,
 } from './redux/action';
 import store from './redux/store';
 
@@ -152,23 +153,23 @@ export function writeSemaToGithub(textarea) {
       inLineMetada = getGithubInlineMetadata(textarea.id);
     }
 
+    const state = store.getState();
+
     const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
 
     const semabar = $(textarea).siblings('div.sema')?.[0];
-    const semaChildren = $(semabar).children();
 
-    const emojiContainer = semaChildren?.[0];
-    const tagContainer = semaChildren?.[1];
+    const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
 
-    const selectedReaction = $(emojiContainer).children()?.[0]?.textContent;
-    const selectedTags = Array.from(
-      $(tagContainer)
-        .children('.sema-is-dark')
-        .map((index, tagElement) => tagElement?.textContent)
-    );
-
-    const selectedEmojiObj = EMOJIS.find((emoji) =>
-      selectedReaction?.includes(emoji.title)
+    const selectedTags = state.semabars[semabar.id].selectedTags.reduce(
+      (acc, tagObj) => {
+        const { selected } = tagObj;
+        if (selected) {
+          acc.push(tagObj[selected]);
+        }
+        return acc;
+      },
+      []
     );
 
     const selectedEmojiString =
@@ -233,7 +234,7 @@ export function writeSemaToGithub(textarea) {
 }
 
 export function onDocumentClicked(event, store) {
-  onCloseAllModalsClicked(event, store);
+  closeSemaOpenElements(event, store);
   onGithubSubmitClicked(event, store);
 }
 
@@ -256,13 +257,18 @@ function onGithubSubmitClicked(event, store) {
   }
 }
 
-function onCloseAllModalsClicked(event, store) {
+function closeSemaOpenElements(event, store) {
   const target = event.target;
-  const parents = $(target).parents('.sema-dropdown');
-  if (parents.length) {
-    // do nothing
-  } else {
+  const dropdownParents = $(target).parents('.sema-dropdown');
+  if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
+  }
+
+  const selectingEmojiParents = $(target).parents(
+    '.reaction-selection-wrapper'
+  );
+  if (!selectingEmojiParents.length) {
+    store.dispatch(closeAllEmojiSelection());
   }
 }
 

@@ -4,6 +4,7 @@ import {
   CLOSE_ALL_MODALS,
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
+  CLOSE_SEARCH_MODAL,
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
   UPDATE_SELECTED_TAG_WITH_SUGGESTION,
@@ -19,6 +20,8 @@ import {
   ADD_MUTATION_OBSERVER,
   REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
+  TOGGLE_IS_SELECTING_EMOJI,
+  CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -42,6 +45,11 @@ export const updateSelectedEmoji = (payload) => ({
 
 export const updateSelectedTags = (payload) => ({
   type: UPDATE_SELECTED_TAGS,
+  payload,
+});
+
+export const closeSearchModal = (payload) => ({
+  type: CLOSE_SEARCH_MODAL,
   payload,
 });
 
@@ -116,4 +124,13 @@ export const removeMutationObserver = () => ({
 export const updatetSearchBarInputValue = (payload) => ({
   type: UPDATE_SEARCH_BAR_INPUT_VALUE,
   payload,
+});
+
+export const toggleIsSelectingEmoji = (payload) => ({
+  type: TOGGLE_IS_SELECTING_EMOJI,
+  payload,
+});
+
+export const closeAllEmojiSelection = () => ({
+  type: CLOSE_ALL_SELECTING_EMOJI,
 });
