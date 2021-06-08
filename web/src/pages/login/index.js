@@ -40,7 +40,6 @@ const Login = () => {
   }));
 
   const { user, isAuthenticated } = auth;
-  console.log(isAuthenticated)
   const { showAlert, alertType, alertLabel } = alerts;
 
   // Check for updated state in selectedTag
