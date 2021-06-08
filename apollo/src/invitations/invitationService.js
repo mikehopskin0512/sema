@@ -93,13 +93,13 @@ export const getInvitationsBySender = async (params) => {
     }
 
     const invites = await query.lean().exec();
+    const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
 
     for (const invite of invites) {
       if (!invite.isPending) {
-        const user = await User.findOne({ username: invite.recipient });
-
+        const user = recipientUsers.find(user => user.username === invite.recipient);
         result.push({ ...invite, user });
       } else {
         result.push(invite);

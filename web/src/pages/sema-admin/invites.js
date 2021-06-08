@@ -10,7 +10,7 @@ import InviteForm from '@/components/inviteForm';
 import useDebounce from '../../hooks/useDebounce';
 import Toaster from '@/components/toaster';
 import { alertOperations } from '../../state/features/alerts';
-import Tabs from '@/components/tabs';
+import Tabs from '@/components/admin/tabs';
 
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
@@ -52,7 +52,7 @@ const InvitesPage = () => {
     }
   }, [showAlert, dispatch]);
 
-  const RESEND_INVITE = async (email) => {
+  const resentInvitation = async (email) => {
     await dispatch(resendInvite(email, token));
   };
 
@@ -87,7 +87,7 @@ const InvitesPage = () => {
             {
               el.isPending && (
                 <>
-                  <button className="button is-text outline-none has-no-border" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                  <button className="button is-text outline-none has-no-border" onClick={() => resentInvitation(el.recipient)}>Resend Invitation</button>
                   <button className="button is-text outline-none" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>
                 </>
               )
