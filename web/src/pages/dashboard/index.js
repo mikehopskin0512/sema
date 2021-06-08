@@ -44,7 +44,7 @@ const Invite = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
-  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
+  const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0} = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
@@ -59,6 +59,7 @@ const Invite = () => {
         orgName,
         sender: userId,
         senderName: fullName,
+        senderEmail,
         inviteCount
       };
       // Send invite & reset form
