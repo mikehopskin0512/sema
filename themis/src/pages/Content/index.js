@@ -110,17 +110,29 @@ document.addEventListener(
     const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
-      const colorMode = document.documentElement.getAttribute("data-color-mode");
+      const colorMode = document.documentElement.getAttribute(
+        'data-color-mode'
+      );
 
       if (document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')) {
-        document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal').style.maxHeight = "580px";
+        document.querySelector(
+          '.SelectMenu--hasFilter .SelectMenu-modal'
+        ).style.maxHeight = '580px';
       }
 
-      let colorTheme = document.documentElement.getAttribute("data-light-theme");
+      let colorTheme = document.documentElement.getAttribute(
+        'data-light-theme'
+      );
       let isDarkMode = false;
-      if (colorMode === "dark") {
-        colorTheme = document.documentElement.getAttribute("data-dark-theme");
+      if (colorMode === 'dark') {
+        colorTheme = document.documentElement.getAttribute('data-dark-theme');
         isDarkMode = true;
+      } else if (colorMode === "auto") {
+        const githubTheme = getComputedStyle($('[data-color-mode]'));
+        const githubBgColor = githubTheme.backgroundColor;
+        if (githubBgColor === "rgb(13, 17, 23)" || githubBgColor === "rgb(34, 39, 46)") {
+          isDarkMode = true;
+        }
       }
       if (!semaElements[0]) {
         const githubTextareaId = $(activeElement).attr('id');
@@ -151,11 +163,13 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? "theme--dark" : ""}'></div>`
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? 'theme--dark' : ''
+          }'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? "theme--dark" : ""}'></div>`
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? 'theme--dark' : ''
+          }'></div>`
         );
 
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
@@ -228,18 +242,27 @@ document.addEventListener(
           'tooltipped tooltipped-nw'
         );
 
-        $(markdownIcon).after(isDarkMode ? SEMA_ICON_ANCHOR_DARK : SEMA_ICON_ANCHOR_LIGHT);
+        $(markdownIcon).after(
+          isDarkMode ? SEMA_ICON_ANCHOR_DARK : SEMA_ICON_ANCHOR_LIGHT
+        );
       }
     }
   },
   true
 );
 
-document.addEventListener('focusin', (event) => {
-  $('div.sema').addClass('sema-is-bordered');
-}, true);
+document.addEventListener(
+  'focusin',
+  (event) => {
+    $('div.sema').addClass('sema-is-bordered');
+  },
+  true
+);
 
-
-document.addEventListener('focusout', (event) => {
-  $('div.sema').removeClass('sema-is-bordered');
-}, true);
+document.addEventListener(
+  'focusout',
+  (event) => {
+    $('div.sema').removeClass('sema-is-bordered');
+  },
+  true
+);

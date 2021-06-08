@@ -29,7 +29,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     let [tab] = await chrome.tabs.query(queryOptions);
     const { id } = tab;
     chrome.tabs.update(id, {
-      url: 'https://app.semasoftware.com/',
+      url: SEMA_UI_URL,
       active: true
     });
   } else if (details.reason === "update") {
