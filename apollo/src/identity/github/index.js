@@ -42,7 +42,6 @@ export default (app) => {
       if (!token) {
         return res.status(401).end('Github authentication failed.');
       }
-
       const profile = await getProfile(token);
       if (!profile) {
         return res.status(401).end('Unable to retrieve Github profile for user.');
@@ -50,7 +49,7 @@ export default (app) => {
 
       // Get array of user Emails
       const userEmails = await getUserEmails(token);
-      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true );
+      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true);
 
       // Create identity object
       const { name: fullName } = profile;
@@ -72,6 +71,7 @@ export default (app) => {
         lastName,
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
+        emails: userEmails
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -92,52 +92,12 @@ export default (app) => {
       }
 
       const identityToken = await createIdentityToken(identity);
+      // Build redirect based on inviteToken
+      const registerRedirect = (inviteToken)
+        ? `${orgDomain}/register/${inviteToken}?token=${identityToken}`
+        : `${orgDomain}/register?token=${identityToken}`;
 
-      const userBody = {
-        ...identity,
-        // username: invitation.recipient,
-        terms: true,
-        jobTitle: '',
-        identities: [
-          { ...identity },
-        ],
-      };
-      let newUser = '';
-
-      // Get invitation
-      const invitation = await findByToken(inviteToken);
-      if (!invitation) {
-        // create user but isWaitlist
-        userBody.isWaitlist = true;
-        userBody.origin = 'waitlist';
-        newUser = await create(userBody);
-        if (!newUser) {
-          return res.status(401).end('User create error.');
-        }
-        // Send email if waitlisted
-        await checkAndSendEmail(newUser);
-      } else {
-        userBody.username = invitation.recipient;
-        userBody.origin = 'invitation';
-        // Create user using invited email as username
-        newUser = await create(userBody);
-        if (!newUser) {
-          return res.status(401).end('User create error.');
-        }
-      }
-
-      // Redeem Invite
-      const { _id: userId, verificationToken } = newUser;
-      await redeemInvite(inviteToken, userId);
-
-      const verifiedUser = await verifyUser(verificationToken);
-
-      // Auth Sema
-      await setRefreshToken(res, newUser, await createRefreshToken(newUser));
-
-      if (!verifiedUser) {
-        return res.status(401).end('Verification error.');
-      }
+      return res.redirect(registerRedirect);
     } catch (error) {
       console.log("Error ", error);
     }
