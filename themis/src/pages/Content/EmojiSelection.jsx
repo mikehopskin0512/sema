@@ -18,8 +18,9 @@ const EmojiSelection = ({
   onEmojiSelected,
   isTyping,
   isReactionDirty,
+  toggleIsSelectingEmoji,
+  isSelectingEmoji,
 }) => {
-  const [isSelectingEmoji, toggleEmojiSelection] = useState(false);
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   return (
     <>
@@ -28,7 +29,7 @@ const EmojiSelection = ({
       isReactionDirty === false ? (
         <div
           onClick={() => {
-            toggleEmojiSelection(true);
+            toggleIsSelectingEmoji(true);
           }}
           style={{
             display: 'flex',
@@ -56,7 +57,7 @@ const EmojiSelection = ({
                     key={title}
                     onClick={() => {
                       onEmojiSelected(emojiObj);
-                      toggleEmojiSelection(!isSelectingEmoji);
+                      toggleIsSelectingEmoji();
                     }}
                   >
                     <Emoji symbol={emoji} />
@@ -69,7 +70,7 @@ const EmojiSelection = ({
               className="sema-button sema-is-small sema-is-squared"
               title={selectedTitle}
               onClick={() => {
-                toggleEmojiSelection(!isSelectingEmoji);
+                toggleIsSelectingEmoji();
               }}
             >
               <Emoji symbol={shownEmoji} />

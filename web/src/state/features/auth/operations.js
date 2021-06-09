@@ -1,4 +1,6 @@
+import Router from 'next/router';
 import * as actions from './actions';
+import jwtDecode from 'jwt-decode';
 import { organizationsOperations } from '../organizations';
 
 const { createOrg } = organizationsOperations;
@@ -24,4 +26,22 @@ const createAndJoinOrg = (userId, org, token) => async (dispatch) => {
   return true;
 };
 
-export default { ...actions, createAndJoinOrg };
+const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
+  try {
+
+    const payload = await dispatch(actions.registerUser(user, invitation));
+    const { data: { jwtToken } } = payload;
+    const { user: newUser } = jwtDecode(jwtToken) || {};
+    const { verificationToken } = newUser;
+    await dispatch(actions.activateUser(verificationToken));
+
+    Router.push('/dashboard');
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(triggerAlert(errMessage, 'error'));
+  }
+};
+
+export default { ...actions, createAndJoinOrg, registerAndAuthUser };
