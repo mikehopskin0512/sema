@@ -106,7 +106,7 @@ const Header = () => {
             <button
               onClick={toggleHamburger}
               type="button"
-              className="navbar-burger burger"
+              className="navbar-burger burger button is-white"
               aria-label="menu"
               aria-expanded="false"
               data-target="navbarBasicExample"

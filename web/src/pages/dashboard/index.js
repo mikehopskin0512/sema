@@ -154,7 +154,7 @@ const Invite = () => {
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
               Welcome to Sema!
-                  </p>
+            </p>
             <PluginStateCard
               title={title}
               buttonText={buttonText}
@@ -228,7 +228,7 @@ const Invite = () => {
                     </div>
                   </form>
                 </div>
-                <div className={'tile is-child'}>
+                <div className={'tile is-child is-hidden-mobile'}>
                   <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
@@ -251,7 +251,7 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx(!isCardVisible && "is-hidden")}>
+    <div className={clsx("is-hidden-mobile", !isCardVisible && "is-hidden")}>
       <article
         className={'notification has-background-white shadow has-text-centered p-50'}
       >

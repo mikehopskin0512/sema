@@ -1,5 +1,7 @@
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrophy, faTag, faCommentAlt, faUserTie, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { CSSTransition } from 'react-transition-group';
 import styles from './carousel.module.scss';
 import carouselData from './data';
@@ -9,7 +11,11 @@ const Carousel = () => {
   const [screens] = useState(['Reactions', 'Tags', 'Suggested Comments', 'Developer Insights', 'Social Graph']);
   const buttonProps = (index) => ({
     onClick: () => setCurrent(index),
-    className: clsx('is-uppercase is-size-5 has-text-weight-semibold tab mx-25',current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
+    className: clsx('is-uppercase is-size-5 has-text-weight-semibold tab mx-25', current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
+  });
+  const buttonPropsMobile = (index) => ({
+    onClick: () => setCurrent(index),
+    className: clsx('is-uppercase is-size-4 has-text-weight-semibold tab mx-10 is-flex is-flex-direction-column', current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
   });
 
   useEffect(() => {
@@ -20,7 +26,7 @@ const Carousel = () => {
   return (
     <>
       <div className="tabs is-centered">
-        <ul>
+        <ul className="is-hidden-mobile">
           <li>
             <a {...buttonProps(0)}>
               Reactions
@@ -33,7 +39,7 @@ const Carousel = () => {
           </li>
           <li>
             <a {...buttonProps(2)}>
-              Suggested Comments
+              Suggested<br />Comments
             </a>
           </li>
           <li>
@@ -47,6 +53,33 @@ const Carousel = () => {
             </a>
           </li>
         </ul>
+        <ul className="is-hidden-desktop">
+          <li>
+            <a {...buttonPropsMobile(0)}>
+              <FontAwesomeIcon icon={faTrophy} />
+            </a>
+          </li>
+          <li>
+            <a {...buttonPropsMobile(1)}>
+              <FontAwesomeIcon icon={faTag} />
+            </a>
+          </li>
+          <li>
+            <a {...buttonPropsMobile(2)}>
+              <FontAwesomeIcon icon={faCommentAlt} />
+            </a>
+          </li>
+          <li>
+            <a {...buttonPropsMobile(3)}>
+              <FontAwesomeIcon icon={faUserTie} />
+            </a>
+          </li>
+          <li>
+            <a {...buttonPropsMobile(4)}>
+              <FontAwesomeIcon icon={faUsers} />
+            </a>
+          </li>
+        </ul>
       </div>
       <div className={clsx(styles.slider)}>
         <Reactions current={current} />
@@ -54,32 +87,46 @@ const Carousel = () => {
         <SuggestedComments current={current} />
         <DeveloperInsights current={current} />
         <SocialGraph current={current} />
-        {/* {renderImage()} */}
       </div>
     </>
   );
 };
 
-const TileAncestor = ({ children, active }) => (
+const TileAncestor = ({ children, active, className }) => (
   <>
     {/* <div className={clsx('tile is-ancestor mt-50', active ? 'slid active' : 'slid')}> */}
-    <div className={`tile is-ancestor mt-50 ${active ? 'slide active' : 'slide'}`}>
+    {/* Desktop View */}
+    <div className={`tile is-ancestor mt-50 slide is-hidden-mobile ${active ? 'active' : ''}`}>
       {children}
     </div>
-
+    {/* Mobile View */}
+    <div className={`mt-50 slide is-hidden-desktop ${active ? 'active' : ''}`}>
+      {children}
+    </div>
   </>
 );
 
 const Reactions = ({ current }) => (
   <>
     <TileAncestor active={current === 0}>
-      <div className="tile is-1" />
-      <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
-        <p className="title">Reactions</p>
-        <p className="subtitle">Provide a simple, clear summary of the review -- if you want to.</p>
+      {/* Desktop View */}
+      <div className="tile is-horizontal is-12 is-hidden-mobile">
+        <div className="tile is-1" />
+        <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
+          <p className="title">Reactions</p>
+          <p className="subtitle">Provide a simple, clear summary of the review -- if you want to.</p>
+        </div>
+        <div className="tile is-7">
+          <img src={carouselData[0]} alt="reactions" />
+        </div>
       </div>
-      <div className="tile is-7">
-        <img src={carouselData[0]} alt="reactions" className="" />
+      {/* Mobile View */}
+      <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
+        <p className="is-size-5-mobile has-text-weight-semibold">Reactions</p>
+        <p className="is-size-6-mobile">Provide a simple, clear summary of the review -- if you want to.</p>
+        <figure className="image is-4by3 mt-20">
+          <img src={carouselData[0]} alt="reactions" className={styles['mobile-img']} />
+        </figure>
       </div>
     </TileAncestor>
   </>
@@ -88,13 +135,24 @@ const Reactions = ({ current }) => (
 const Tags = ({ current }) => (
   <>
     <TileAncestor active={current == 1}>
-      <div className="tile is-1" />
-      <div className="tile is-7">
-        <img src={carouselData[1]} alt="tags" className="" />
+      {/* Desktop View */}
+      <div className="tile is-horizontal is-12 is-hidden-mobile">
+        <div className="tile is-1" />
+        <div className="tile is-7">
+          <img src={carouselData[1]} alt="tags" className="" />
+        </div>
+        <div className="tile is-4 is-parent is-vertical mt-70">
+          <p className="title">Add Tags</p>
+          <p className="subtitle">Describe the code in positive or constructive coding characteristics -- so the team can learn and grow, and great code can be tagged for future training.</p>
+        </div>
       </div>
-      <div className="tile is-4 is-parent is-vertical mt-70">
-        <p className="title">Add Tags</p>
-        <p className="subtitle">Describe the code in positive or constructive coding characteristics -- so the team can learn and grow, and great code can be tagged for future training.</p>
+      {/* Mobile View */}
+      <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
+        <p className="is-size-5-mobile has-text-weight-semibold">Add Tags</p>
+        <p className="is-size-6-mobile">Describe the code in positive or constructive coding characteristics -- so the team can learn and grow, and great code can be tagged for future training.</p>
+        <figure className="image is-4by3 mt-20">
+          <img src={carouselData[1]} alt="tags" className={styles['mobile-img']} />
+        </figure>
       </div>
     </TileAncestor>
   </>
@@ -103,13 +161,24 @@ const Tags = ({ current }) => (
 const SuggestedComments = ({ current }) => (
   <>
     <TileAncestor active={current === 2}>
-      <div className="tile is-1" />
-      <div className="tile is-5 is-parent is-vertical mt-70 mr-20">
-        <p className="title">Suggested Comments</p>
-        <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
+      {/* Desktop View */}
+      <div className="tile is-horizontal is-12 is-hidden-mobile">
+        <div className="tile is-1" />
+        <div className="tile is-5 is-parent is-vertical mt-70 pr-20">
+          <p className="title">Suggested Comments</p>
+          <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
+        </div>
+        <div className="tile is-6">
+          <img src={carouselData[2]} alt="suggested-comments" className="" />
+        </div>
       </div>
-      <div className="tile is-6">
-        <img src={carouselData[2]} alt="suggested-comments" className="" />
+      {/* Mobile View */}
+      <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
+        <p className="is-size-5-mobile has-text-weight-semibold">Suggested Comments</p>
+        <p className="is-size-6-mobile">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity.</p>
+        <figure className="image is-4by3 mt-20">
+          <img src={carouselData[2]} alt="suggested-comments" className={styles['mobile-img']} />
+        </figure>
       </div>
     </TileAncestor>
   </>
@@ -118,13 +187,24 @@ const SuggestedComments = ({ current }) => (
 const DeveloperInsights = ({ current }) => (
   <>
     <TileAncestor active={current === 3}>
-      <div className="tile is-1" />
-      <div className="tile is-6">
-        <img src={carouselData[3]} alt="developer-insights" className="" />
+      {/* Desktop View */}
+      <div className="tile is-horizontal is-12 is-hidden-mobile">
+        <div className="tile is-1" />
+        <div className="tile is-6">
+          <img src={carouselData[3]} alt="developer-insights" className="" />
+        </div>
+        <div className="tile is-4 is-parent is-vertical mt-50">
+          <p className="title">Developer Insights</p>
+          <p className="subtitle">Each Engineer develops a lasting, shared record of their contributions and skill development in their Sema Profile</p>
+        </div>
       </div>
-      <div className="tile is-4 is-parent is-vertical mt-50">
-        <p className="title">Developer Insights</p>
-        <p className="subtitle">Each Engineer develops a lasting, shared record of their contributions and skill development in their Sema Profile</p>
+      {/* Mobile View */}
+      <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
+        <p className="is-size-5-mobile has-text-weight-semibold">Developer Insights</p>
+        <p className="is-size-6-mobile">Each Engineer develops a lasting, shared record of their contributions and skill development in their Sema Profile</p>
+        <figure className="image is-5by4 mt-20">
+          <img src={carouselData[3]} alt="developer-insights" className={styles['mobile-img']} />
+        </figure>
       </div>
     </TileAncestor>
   </>
@@ -133,13 +213,24 @@ const DeveloperInsights = ({ current }) => (
 const SocialGraph = ({ current }) => (
   <>
     <TileAncestor active={current === 4}>
-      <div className="tile is-1" />
-      <div className="tile is-4 is-parent is-vertical">
-        <p className="title mt-70">Social Graph</p>
-        <p className="subtitle">The Sema Review Graph drives skill discovery, continuous professional development, and greater social cohesion.</p>
+      {/* Desktop View */}
+      <div className="tile is-horizontal is-12 is-hidden-mobile">
+        <div className="tile is-1" />
+        <div className="tile is-4 is-parent is-vertical">
+          <p className="title mt-70">Social Graph</p>
+          <p className="subtitle">The Sema Review Graph drives skill discovery, continuous professional development, and greater social cohesion.</p>
+        </div>
+        <div className="tile is-7">
+          <img src={carouselData[4]} alt="social-graph" className="" />
+        </div>
       </div>
-      <div className="tile is-7">
-        <img src={carouselData[4]} alt="social-graph" className="" />
+      {/* Mobile View */}
+      <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
+        <p className="is-size-5-mobile has-text-weight-semibold">Social Graph</p>
+        <p className="is-size-6-mobile">The Sema Review Graph drives skill discovery, continuous professional development, and greater social cohesion.</p>
+        <figure className="image is-5by4 mt-20">
+          <img src={carouselData[4]} alt="social-graph" className={styles['mobile-img']} />
+        </figure>
       </div>
     </TileAncestor>
   </>

@@ -11,6 +11,9 @@
 
 .slider {
     height: 500px;
+    @media only screen and (max-width: 769px) {
+        overflow: hidden;
+    }
 }
 
 .tab {
@@ -27,4 +30,8 @@
 
 .is-inactive {
     padding: 5px 0 9px 0 !important;
+}
+
+.mobile-img {
+    object-fit: contain;
 }
