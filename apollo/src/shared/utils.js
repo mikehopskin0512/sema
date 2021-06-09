@@ -31,11 +31,11 @@ export const checkAndSendEmail = async (user) => {
   const { username, isWaitlist = true, lastLogin } = user;
   const re = /\S+@\S+\.\S+/;
   const isEmail = re.test(username);
-  if (isEmail) {
+  if (isEmail && !lastLogin) {
     const message = {
       recipient: username,
       url: `${orgDomain}`,
-      templateName: !lastLogin && !isWaitlist ? 'accountCreated' : 'waitlisted',
+      templateName: !isWaitlist ? 'accountCreated' : 'waitlisted',
     };
     await sendEmail(message);
   }
