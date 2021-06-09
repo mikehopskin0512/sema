@@ -105,13 +105,15 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
   try {
     const query = User.findOne({
       $or:
-      [
-        { username: username.toLowerCase() },
-        { $and: [
-          { 'identities.provider': identity.provider },
-          { 'identities.id': identity.id },
-        ] },
-      ],
+        [
+          { username: username.toLowerCase() },
+          {
+            $and: [
+              { 'identities.provider': identity.provider },
+              { 'identities.id': identity.id },
+            ]
+          },
+        ],
     });
     const user = await query.lean().exec();
 
@@ -334,10 +336,12 @@ export const validatePasswordReset = async (token) => {
 
 export const updateLastLogin = async (user) => {
   try {
-    await update({
-      ...user,
-      lastLogin: Date.now(),
-    });
+    const { _id } = user;
+    const query = User.findOneAndUpdate(
+      { _id: new ObjectId(_id) },
+      { lastLogin: Date.now() },
+    );
+    await query.exec();
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);

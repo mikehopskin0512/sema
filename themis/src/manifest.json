@@ -3,7 +3,9 @@
   "name": "Sema | Smart Code Reviews",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
   "version": "1.02",
-  "background": { "service_worker": "background.bundle.js" },
+  "background": {
+    "service_worker": "background.bundle.js"
+  },
   "host_permissions": [
     "*://semasoftware.com/*",
     "https://*.semasoftware.com/*",
@@ -11,7 +13,12 @@
     "*://github.com/*/pull/*",
     "*://*.github.com/*/pull/*"
   ],
-  "permissions": ["cookies", "tabs", "declarativeNetRequest", "declarativeNetRequestFeedback"],
+  "permissions": [
+    "cookies",
+    "tabs",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
+  ],
   "action": {
     "default_icon": {
       "16": "/img/sema16.png",
@@ -34,12 +41,22 @@
         "*://localhost/*"
       ],
       "run_at": "document_start",
-      "js": ["contentScript.bundle.js"],
-      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
+      "js": [
+        "contentScript.bundle.js"
+      ],
+      "css": [
+        "sema-custom.css",
+        "content.styles.css",
+        "css/all.min.css"
+      ]
     }
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*", "*://semasoftware.com/*", "*://*.semasoftware.com/*"]
+    "matches": [
+      "*://localhost/*",
+      "*://semasoftware.com/*",
+      "*://*.semasoftware.com/*"
+    ]
   },
   "devtools_page": "devtools.html",
   "web_accessible_resources": [
@@ -52,7 +69,12 @@
         "css/*",
         "webfonts/*"
       ],
-      "matches": ["*://github.com/*", "*://*.github.com/*", "*://semasoftware.com/*", "*://*.semasoftware.com/*"],
+      "matches": [
+        "*://github.com/*",
+        "*://*.github.com/*",
+        "*://semasoftware.com/*",
+        "*://*.semasoftware.com/*"
+      ],
       "extension_ids": []
     }
   ]
