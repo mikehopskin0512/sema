@@ -127,12 +127,6 @@ document.addEventListener(
       if (colorMode === 'dark') {
         colorTheme = document.documentElement.getAttribute('data-dark-theme');
         isDarkMode = true;
-      } else if (colorMode === "auto") {
-        const githubTheme = getComputedStyle($('[data-color-mode]'));
-        const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === "rgb(13, 17, 23)" || githubBgColor === "rgb(34, 39, 46)") {
-          isDarkMode = true;
-        }
       }
       if (!semaElements[0]) {
         const githubTextareaId = $(activeElement).attr('id');
@@ -163,12 +157,14 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? 'theme--dark' : ''
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${
+            isDarkMode ? 'theme--dark' : ''
           }'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? 'theme--dark' : ''
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${
+            isDarkMode ? 'theme--dark' : ''
           }'></div>`
         );
 
