@@ -410,11 +410,9 @@ const ContactUs = ({ userVoiceToken }) => {
         <ContactUsContent {...userVoiceToken} />
       </div>
       {/* Mobile View */}
-      { isMobile ? (
-        <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
-          <ContactUsContent {...userVoiceToken} />
-        </div>
-      ) : null }
+      <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
     </>
   )
 };
