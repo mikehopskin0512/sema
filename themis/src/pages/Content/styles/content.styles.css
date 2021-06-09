@@ -310,11 +310,6 @@ h6 {
   background-color: var(--color-tags-background);
 }
 
-.sema-tag {
-  background-color: var(--color-tag-bg) !important;
-  color: var(--color-tag-font) !important;
-}
-
 .sema-credit-img {
   filter: var(--color-credit-img);
 }
