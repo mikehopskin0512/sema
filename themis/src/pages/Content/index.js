@@ -45,12 +45,12 @@ import {
 import highlightPhrases from './modules/highlightPhrases';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  store.dispatch(updateSemaUser({ isLoggedIn: true }));
+  store.dispatch(updateSemaUser({ ...request }));
 });
 
 const checkLoggedIn = async () => {
   chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
-    store.dispatch(updateSemaUser({ isLoggedIn: true }));
+    store.dispatch(updateSemaUser({ ...request }));
   });
 };
 
@@ -236,8 +236,6 @@ document.addEventListener(
             store,
           }
         );
-
-        activeElement.dispatchEvent(new Event('change', { bubbles: true }));
 
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(
