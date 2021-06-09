@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo} from 'react';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
-import withSemaAdmin from '@/components/auth/withSemaAdmin';
-import withLayout from '@/components/layout/adminLayout';
+import withSemaAdmin from '../../../components/auth/withSemaAdmin';
+import withLayout from '../../../components/layout/adminLayout';
 import {useDispatch, useSelector} from 'react-redux';
 import { usersOperations } from '../../../state/features/users';
 import { fullName, getBadgeColor, getUserStatus } from '../../../utils';
-import Badge from '@/components/badge/badge';
-import Table from '@/components/table';
-import Toaster from '@/components/toaster';
+import Badge from '../../../components/badge/badge';
+import Table from '../../../components/table';
+import Toaster from '../../../components/toaster';
 import { invitationsOperations } from '../../../state/features/invitations';
 import { alertOperations } from '../../../state/features/alerts';
 
