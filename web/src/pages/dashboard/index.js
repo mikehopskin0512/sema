@@ -346,9 +346,9 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = ({ userVoiceToken }) => {
-  return (
-    <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
+const ContactUsContent = ({ userVoiceToken }) => {
+  return(
+    <>
       <div className="column is-6">
         <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
@@ -359,7 +359,22 @@ const ContactUs = ({ userVoiceToken }) => {
       <div className="column is-2-widescreen is-2-tablet">
         <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
       </div>
-    </div>
+    </>
+  )
+}
+
+const ContactUs = ({ userVoiceToken }) => {
+  return (
+    <>
+      {/* Desktop View */}
+      <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered is-hidden-mobile">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
+      {/* Mobile View */}
+      <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
+    </>
   )
 };
 
