@@ -1,4 +1,5 @@
 import Invitation from './invitationModel';
+import User from '../users/userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
@@ -78,12 +79,33 @@ export const redeemInvite = async (token, userId) => {
   }
 };
 
-export const getInvitationsBySender = async (senderId) => {
+export const getInvitationsBySender = async (params) => {
   try {
-    const query = Invitation.find({
-      sender: senderId,
-    });
-    const result = await query.lean().exec();
+    const { senderId, search } = params;
+
+    const query = Invitation.find();
+
+    if (senderId) {
+      query.where('sender', senderId);
+    }
+
+    if (search) {
+      query.where('recipient', new RegExp(search, 'gi'))
+    }
+
+    const invites = await query.lean().exec();
+    const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
+
+    const result = [];
+
+    for (const invite of invites) {
+      if (!invite.isPending) {
+        const user = recipientUsers.find(user => user.username === invite.recipient);
+        result.push({ ...invite, user });
+      } else {
+        result.push(invite);
+      }
+    }
 
     return result;
   } catch (err) {

@@ -22,3 +22,26 @@
 .is-whitespace-nowrap {
     white-space: nowrap;
 }
+
+.outline-none {
+  &:hover, &:focus {
+    outline: none !important;;
+    box-shadow: none !important;
+  }
+}
+
+.is-line-height-1 {
+  line-height: 1;
+}
+
+.is-height-auto {
+  height: auto;
+}
+
+.is-full-height {
+  height: 100%;
+}
+
+.has-background-purple {
+  background: $purple;
+}
