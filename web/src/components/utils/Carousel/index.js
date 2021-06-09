@@ -39,7 +39,7 @@ const Carousel = () => {
           </li>
           <li>
             <a {...buttonProps(2)}>
-              Suggested Comments
+              Suggested<br />Comments
             </a>
           </li>
           <li>

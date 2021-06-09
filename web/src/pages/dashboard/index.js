@@ -229,7 +229,7 @@ const Invite = () => {
                     </div>
                   </form>
                 </div>
-                <div className={'tile is-child'}>
+                <div className={'tile is-child is-hidden-mobile'}>
                   <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
