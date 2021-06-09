@@ -7,6 +7,7 @@ import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
+  closeSearchModal,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -23,6 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
+    closeSearchModal: () => dispatch(closeSearchModal({ id })),
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
     selectedSuggestedComments: (suggestedComment) =>
       dispatch(addSuggestedComments({ id, suggestedComment })),
@@ -81,9 +83,9 @@ const SearchBar = (props) => {
       </div>
     } else if (!props.isLoggedIn) {
       return (<div className="sema-comment-placeholder sema-mb-5"><img className="sema-mb-5" src={commentPlaceholder} />
-      <span className="sema-title sema-is-7 sema-is-block">Login to view smart comments</span>
-      <a className="sema-button" href={SEMA_WEB_LOGIN} target="_blank">Log in to Sema</a>
-    </div>)
+        <span className="sema-title sema-is-7 sema-is-block">Login to view smart comments</span>
+        <a className="sema-button login-button" href={SEMA_WEB_LOGIN} target="_blank">Log in to Sema</a>
+      </div>)
     } else {
       if (props.searchValue.length > 0 && searchResults.length === 0) {
         // empty
@@ -115,6 +117,8 @@ const SearchBar = (props) => {
       // esc is pressed
       // hide dropdown
       onCrossPressed(event);
+    } else {
+      props.closeSearchModal();
     }
   };
 
@@ -162,19 +166,19 @@ const SearchBar = (props) => {
           <div className="sema-dropdown-item">
             {renderPlaceholder()}
             {(props.isLoggedIn) &&
-            <SuggestionModal
-              key={isLoading}
-              onCopyPressed={onCopyPressed}
-              searchResults={searchResults}
-            />
+              <SuggestionModal
+                key={isLoading}
+                onCopyPressed={onCopyPressed}
+                searchResults={searchResults}
+              />
             }
           </div>
           {(props.isLoggedIn) &&
-          <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
-            <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
-              <img className="sema-credit-img sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
+            <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
+              <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
+                <img className="sema-credit-img sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
             </span>
-          </div>
+            </div>
           }
         </div>
       </div>

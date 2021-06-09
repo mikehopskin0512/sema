@@ -33,6 +33,15 @@ data "terraform_remote_state" "prod_doc_db" {
   }
 }
 
+data "aws_route_tables" "prod_main_rt" {
+  vpc_id = data.terraform_remote_state.prod_vpc.outputs.vpc_id
+
+  filter {
+    name   = "association.main"
+    values = [true]
+  }
+}
+
 resource "aws_vpc_peering_connection" "qa_to_prod" {
   peer_vpc_id = data.terraform_remote_state.prod_vpc.outputs.vpc_id
   vpc_id      = data.terraform_remote_state.qa_vpc.outputs.vpc_id
@@ -58,10 +67,13 @@ resource "aws_route" "qa_public_rt" {
   vpc_peering_connection_id = aws_vpc_peering_connection.qa_to_prod.id
 }
 
-resource "aws_route" "prod_private_rt" {
-  route_table_id            = data.terraform_remote_state.prod_vpc.outputs.private_route_table
+resource "aws_route" "prod_main_rt" {
+  route_table_id            = sort(data.aws_route_tables.prod_main_rt.ids)[0]
   destination_cidr_block    = data.terraform_remote_state.qa_vpc.outputs.vpc_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.qa_to_prod.id
+  depends_on = [
+    data.aws_route_tables.prod_main_rt
+  ]
 }
 
 resource "aws_security_group_rule" "prod_doc_sg" {
