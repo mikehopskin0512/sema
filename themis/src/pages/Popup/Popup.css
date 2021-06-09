@@ -7,6 +7,10 @@ button {
   display: flex;
   flex: 1;
   flex-direction: column;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position-x: 0px;
+  background-position-y: 266px;
 }
 
 .popup-header {
@@ -23,7 +27,7 @@ button {
   display: flex;
   flex: 1;
   flex-direction: column;
-  background-color: #f4f4f4;
+  background: rgba(244, 244, 244, 0.8);
   justify-content: center;
   align-items: center;
   border-radius: 8.35px;

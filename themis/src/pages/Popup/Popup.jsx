@@ -1,25 +1,31 @@
-import React from 'react';
-import codeIcon from '../../assets/img/codelines.png';
-import logo from '../../assets/img/sema-logo.png';
-import './Popup.css';
-
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import codeIcon from '../../assets/img/codelines.png';
+import logo from '../../assets/img/sema-logo.png';
+import lines from '../../assets/img/Lines.png';
+import './Popup.css';
 
 const semaUIUrl = process.env.SEMA_UI_URL;
 
-const isLoggedIn = true;
+const checkLoggedIn = (cb) => {
+  chrome.runtime.sendMessage({ ['WHOAMI']: 'WHOAMI' }, function (response) {
+    console.log('resp', response);
+    cb(response);
+  });
+};
 
 const openSema = () => {
   window.open(semaUIUrl, '_blank');
 };
 
-const loggedInElem = (
+const loggedOutElem = (
   <div
     className="popup-container"
     style={{
       width: '500px',
       height: '598px',
+      backgroundImage: `url(${lines})`,
     }}
   >
     <div className="popup-header">
@@ -49,12 +55,13 @@ const loggedInElem = (
   </div>
 );
 
-const loggedOutElem = (
+const loggedInElem = (
   <div
     className="popup-container"
     style={{
       width: '500px',
       height: '563px',
+      backgroundImage: `url(${lines})`,
     }}
   >
     <div className="popup-header">
@@ -95,6 +102,12 @@ const loggedOutElem = (
 );
 
 const Popup = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    checkLoggedIn(setLoggedIn);
+  });
+
   return isLoggedIn ? loggedInElem : loggedOutElem;
 };
 
