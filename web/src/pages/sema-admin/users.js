@@ -1,4 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import Router from 'next/router';
+import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -119,7 +121,7 @@ const UsersPage = () => {
         accessor: 'userInfo',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center'>
+          <div className='is-flex is-align-items-center is-cursor-pointer' onClick={() => Router.push(`/sema-admin/users/${value.id}`)}>
             <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
             { value.name }
           </div>
@@ -220,6 +222,7 @@ const UsersPage = () => {
   const dataSource = users.map((item) => ({
     ...item,
     userInfo: {
+      id: item._id,
       name: fullName(item),
       avatarUrl: item.avatarUrl,
     },
