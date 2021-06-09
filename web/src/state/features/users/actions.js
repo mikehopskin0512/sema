@@ -1,4 +1,4 @@
-import { getUser, getUsers, updateUserInvitations, updateUserStatus, getAnalytic } from './api';
+import { getUser, getUsers, updateUserInvitations, updateUserStatus } from './api';
 import * as types from './types';
 
 const requestUpdateUserAvailableInvitations = () => ({
@@ -19,9 +19,10 @@ const requestFetchUsers = () => ({
   type: types.REQUEST_FETCH_USERS,
 });
 
-const requestFetchUsersSuccess = (users) => ({
+const requestFetchUsersSuccess = (users, filters) => ({
   type: types.REQUEST_FETCH_USERS_SUCCESS,
   users,
+  filters
 });
 
 const requestFetchUsersError = (errors) => ({
@@ -57,27 +58,13 @@ const requestFetchUserError = (errors) => ({
   errors,
 });
 
-const requestFetchAnalyticData = () => ({
-  type: types.REQUEST_FETCH_ANALYTIC_DATA,
-});
-
-const requestFetchAnalyticDataSuccess = (data) => ({
-  type: types.REQUEST_FETCH_ANALYTIC_DATA_SUCCESS,
-  data,
-});
-
-const requestFetchAnalyticDataError = (errors) => ({
-  type: types.REQUEST_FETCH_ANALYTIC_DATA_ERROR,
-  errors,
-});
-
 export const fetchUsers = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUsers());
     const payload = await getUsers(params, token);
-    const { data: { users = [] } } = payload;
+    const { data: { users = [], filters = [] } } = payload;
 
-    dispatch(requestFetchUsersSuccess(users));
+    dispatch(requestFetchUsersSuccess(users, filters));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -129,21 +116,5 @@ export const fetchUser = (id, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchUserError(errMessage));
-  }
-};
-
-
-export const getAnalyticData = (params = {}, token) => async (dispatch) => {
-  try {
-    dispatch(requestFetchAnalyticData());
-    const payload = await getAnalytic(params, token);
-    const { data } = payload;
-
-    dispatch(requestFetchAnalyticDataSuccess(data));
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-
-    dispatch(requestFetchAnalyticDataError(errMessage));
   }
 };
