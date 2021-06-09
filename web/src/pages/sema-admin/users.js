@@ -16,7 +16,7 @@ import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import Tabs from '../../components/tabs';
 
-const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, getAnalyticData } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -39,10 +39,6 @@ const UsersPage = () => {
 
     dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
   }, [debounceSearchTerm, statusFilters]);
-
-  useEffect(() => {
-    dispatch(getAnalyticData());
-  }, []);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));

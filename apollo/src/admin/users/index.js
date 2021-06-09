@@ -4,7 +4,7 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { sendEmail } from '../../shared/emailService';
 
-import { listUsers, updateUserAvailableInvitesCount, updateUserStatus, getAnalytics, findUser } from './userService';
+import { listUsers, updateUserAvailableInvitesCount, updateUserStatus, getFilterMetrics, findUser } from './userService';
 
 const route = Router();
 
@@ -16,11 +16,13 @@ export default (app, passport) => {
       const { page, perPage = 10, search, status } = req.query;
 
       const { users, totalCount } = await listUsers({ page, perPage, search, status });
+      const filterData = await getFilterMetrics();
 
       return res.status(200).json({
         users,
         totalCount,
         page,
+        filters: filterData
       });
     } catch (err) {
       const error = new errors.InternalServer(err);
@@ -36,18 +38,6 @@ export default (app, passport) => {
       const user = await findUser(id);
 
       return res.status(200).json(user);
-    } catch (err) {
-      const error = new errors.InternalServer(err);
-      logger.error(error);
-      throw error;
-    }
-  });
-
-  route.get('/analytic', async (req, res) => {
-    try {
-      const analyticData = await getAnalytics();
-
-      return res.status(200).json(analyticData);
     } catch (err) {
       const error = new errors.InternalServer(err);
       logger.error(error);

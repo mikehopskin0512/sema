@@ -77,7 +77,7 @@ export const updateUserStatus = async (id, params) => {
   return { user };
 };
 
-export const getAnalytics = async () => {
+export const getFilterMetrics = async () => {
   const total = await User.countDocuments();
   const active = await User.countDocuments({ isActive: true, isWaitlist: false });
   const waitlist = await User.countDocuments({ isActive: true, isWaitlist: true });
