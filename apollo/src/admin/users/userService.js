@@ -2,7 +2,7 @@ import User from '../../users/userModel';
 import Invitation from '../../invitations/invitationModel';
 
 export const listUsers = async (params) => {
-  const { page, perPage = 10, search, status } = params;
+  const { page, perPage = 50, search, status } = params;
 
   const query = User.find(search ? {
     $or: [

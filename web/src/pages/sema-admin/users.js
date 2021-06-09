@@ -297,8 +297,8 @@ const UsersPage = () => {
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
       <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
-        <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
-        <div className='is-flex is-justify-content-flex-end'>
+        <div className='is-flex sema-is-justify-content-space-between'>
+          <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
         <Table columns={columns} data={dataSource} />
