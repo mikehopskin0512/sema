@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 const Badge = ({ color, label }) => (
   <div
-    className={`is-inline-block py-5 px-20 has-text-centered has-text-${color}-dark has-background-${color}-light`}
-    style={{ borderRadius: 20 }}
+    className={`py-5 px-20 has-text-centered has-text-${color}-dark has-background-${color}-light`}
+    style={{ display: 'inline-block', borderRadius: 20 }}
   >
     {label}
   </div>

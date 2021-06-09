@@ -15,6 +15,7 @@ const identitySchema = mongoose.Schema({
   id: String,
   username: String,
   email: String,
+  emails: [],
   firstName: String,
   lastName: String,
   profileUrl: String,

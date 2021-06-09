@@ -1,5 +1,4 @@
 import * as types from './types';
-import { upsert } from '../../../utils';
 
 const initialState = {
   users: [],

@@ -30,3 +30,22 @@
 .is-cursor-pointer {
   cursor: pointer;
 }
+
+.outline-none {
+  &:hover, &:focus {
+    outline: none !important;;
+    box-shadow: none !important;
+  }
+}
+
+.is-line-height-1 {
+  line-height: 1;
+}
+
+.is-height-auto {
+  height: auto;
+}
+
+.has-background-purple {
+  background: $purple;
+}
