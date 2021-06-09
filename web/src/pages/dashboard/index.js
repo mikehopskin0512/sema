@@ -129,11 +129,7 @@ const Invite = () => {
     return (
       <>
         <div className="mb-50">
-          <FontAwesomeIcon
-            icon={faCheckCircle}
-            size="4x"
-            className="has-text-primary"
-          />
+          <img src="/img/product-demo.gif" width="450px" className="colored-shadow"/>
         </div>
       </>
     );
