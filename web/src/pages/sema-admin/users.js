@@ -14,7 +14,7 @@ import StatusFilter from '../../components/admin/statusFilter';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import Tabs from '@/components/tabs';
+import Tabs from '../../components/tabs';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, getAnalyticData } = usersOperations;
 
