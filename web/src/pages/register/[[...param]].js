@@ -62,10 +62,10 @@ const RegistrationForm = (props) => {
 
   const renderEmailList = (emails) => {
     if (emails.length) {
-      emails = emails.sort(function (x, y) { return x.email === githubEmail ? -1 : y.email == githubEmail ? 1 : 0; });
+      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
       return emails
-        .filter((e) => e.email.search("users.noreply") === -1)
-        .map((e, i) => <option key={`${e.email}-${i}`} value={e.email}>{e.email}</option>)
+        .filter((e) => e.search("users.noreply") === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
     }
   }
 
