@@ -2,9 +2,11 @@ import React from 'react';
 import codeIcon from '../../assets/img/codelines.png';
 import logo from '../../assets/img/sema-logo.png';
 // TODO: should include it in the project directly or make sema-custom at a common place for all?
-import '../../assets/css/all.min.css';
 import '../Content/styles/sema-custom.css';
 import './Popup.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 const Popup = () => {
   return (
@@ -18,13 +20,19 @@ const Popup = () => {
         </p>
         <img src={codeIcon} />
         <button className="login-primary">
-          <i className="fas fa-tag"></i>
-          <span className="">Join our Waitlist with Github</span>
+          <FontAwesomeIcon icon={faGithub} className="github" />
+          <span className="login-primary-content">
+            Join our Waitlist with Github
+          </span>
         </button>
-        <p className="already-account">Already have an account?</p>
-        <button>
-          <span></span>
-          <span>Sign in with Github</span>
+        <div className="already-account">
+          <span className="divider"></span>
+          <p className="already-account-content">Already have an account?</p>
+          <span className="divider"></span>
+        </div>
+        <button className="login-secondary">
+          <FontAwesomeIcon icon={faGithub} className="github" />
+          <span className="login-secondary-content">Sign in with Github</span>
         </button>
       </div>
     </div>
