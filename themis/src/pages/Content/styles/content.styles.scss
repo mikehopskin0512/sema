@@ -26,6 +26,8 @@
   --color-credit-img: invert(0);
 
   --color-btn-border: #{v.$color-light-btn-border};
+
+  --color-form-border: #{v.$color-light-form-border};
 }
 
 .theme--dark {
@@ -54,6 +56,8 @@
   --color-credit-img: invert(1);
 
   --color-btn-border: #{v.$color-dark-btn-border};
+
+  --color-form-border: #{v.$color-dark-form-border};
 }
 
 .sema {
@@ -360,4 +364,8 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
+}
+
+.sema-is-form-bordered {
+  border-color: var(--color-form-border);
 }

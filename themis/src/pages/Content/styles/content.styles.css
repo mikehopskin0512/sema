@@ -17,6 +17,7 @@
   --color-suggestion-container: #fbfbfb;
   --color-credit-img: invert(0);
   --color-btn-border: #e1e4e8;
+  --color-form-border: #0366d6;
 }
 
 .theme--dark {
@@ -38,6 +39,7 @@
   --color-suggestion-container: #0e1218;
   --color-credit-img: invert(1);
   --color-btn-border: #0d1117;
+  --color-form-border: #388bfd;
 }
 
 .sema {
@@ -327,6 +329,10 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
+.sema-is-form-bordered {
+  border-color: var(--color-form-border);
 }
 
 /*# sourceMappingURL=content.styles.css.map */

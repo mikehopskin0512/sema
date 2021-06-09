@@ -254,7 +254,7 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    $('div.sema').addClass('sema-is-bordered');
+    $('div.sema').addClass('sema-is-form-bordered');
   },
   true
 );
@@ -262,7 +262,7 @@ document.addEventListener(
 document.addEventListener(
   'focusout',
   (event) => {
-    $('div.sema').removeClass('sema-is-bordered');
+    $('div.sema').removeClass('sema-is-form-bordered');
   },
   true
 );
