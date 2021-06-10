@@ -1,5 +1,3 @@
-import jwtDecode from 'jwt-decode';
-
 export const upsert = (arr, key, newval) => {
   const match = arr.find((item) => item._id === key);
   if (match) {
@@ -15,16 +13,25 @@ export const upsert = (arr, key, newval) => {
 export const fullName = (user) => {
   if (!user) return '';
 
-  const { firstName, lastName } = user;
+  const { firstName = '', lastName = '' } = user;
 
   return `${firstName} ${lastName}`;
 };
 
 export const dummy = () => {};
 
-export const isTokenExpired = (token) => {
-  const { exp } = jwtDecode(token);
-  const expirationTime = new Date(exp * 1000).getTime();
-  const currentTime = new Date().getTime();
-  return (currentTime > expirationTime) ? true : false;
+export const getUserStatus = (user) => {
+  if (user.isActive && user.isWaitlist) return 'Waitlisted';
+  if (user.isActive && !user.isWaitlist) return 'Active';
+  if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+  return 'Disabled';
+};
+
+export const getBadgeColor = (value) => {
+  if (value === 'Waitlisted') return 'primary';
+  if (value === 'Active') return 'success';
+  if (value === 'Blocked') return 'danger';
+
+  return 'dark';
 };

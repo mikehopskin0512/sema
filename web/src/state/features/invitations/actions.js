@@ -107,11 +107,12 @@ export const fetchInvite = (inviteToken) => async (dispatch) => {
   }
 };
 
-export const getInvitesBySender = (userId, token) => async (dispatch) => {
+export const getInvitesBySender = (userId, token, search) => async (dispatch) => {
   try {
     dispatch(requestGetInvitesBySender());
     const params = {
       senderId: userId,
+      search
     };
     const payload = await getInvitations(params, token);
     const { data: { data } } = payload;

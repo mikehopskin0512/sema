@@ -128,7 +128,8 @@ document.addEventListener(
         colorTheme = document.documentElement.getAttribute('data-dark-theme');
         isDarkMode = true;
       } else if (colorMode === "auto") {
-        const githubTheme = getComputedStyle($('[data-color-mode]'));
+        const html = document.querySelector('[data-color-mode]');
+        const githubTheme = getComputedStyle(html);
         const githubBgColor = githubTheme.backgroundColor;
         if (githubBgColor === "rgb(13, 17, 23)" || githubBgColor === "rgb(34, 39, 46)") {
           isDarkMode = true;
