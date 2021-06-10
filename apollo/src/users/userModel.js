@@ -46,7 +46,6 @@ const userSchema = mongoose.Schema({
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },
   lastLogin: { type: Date, default: null },
-  isSemaAdmin: { type: Boolean, default: false },
   origin: { type: String, enum: ['invitation', 'waitlist', 'signup'], default: 'signup' },
   isSemaAdmin: { type: Boolean, default: false },
 }, { timestamps: true });

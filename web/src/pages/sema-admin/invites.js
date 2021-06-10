@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import withLayout from '@/components/layout/adminLayout';
-import Table from '@/components/table';
-import Badge from '@/components/badge/badge';
+import withLayout from '../../components/layout/adminLayout';
+import Table from '../../components/table';
+import Badge from '../../components/badge/badge';
 import { invitationsOperations } from '../../state/features/invitations';
 import { fullName } from '../../utils';
-import SearchInput from '@/components/admin/searchInput';
-import InviteForm from '@/components/inviteForm';
+import SearchInput from '../../components/admin/searchInput';
+import InviteForm from '../../components/inviteForm';
 import useDebounce from '../../hooks/useDebounce';
-import Toaster from '@/components/toaster';
+import Toaster from '../../components/toaster';
 import { alertOperations } from '../../state/features/alerts';
-import Tabs from '@/components/admin/tabs';
+import Tabs from '../../components/admin/tabs';
 
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;

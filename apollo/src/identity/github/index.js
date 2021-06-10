@@ -66,8 +66,8 @@ export default (app) => {
       const identity = {
         provider: 'github',
         id: profile.id,
-        username: githubPrimaryEmail,
-        email,
+        username: profile.login,
+        email: githubPrimaryEmail,
         firstName,
         lastName,
         profileUrl: profile.url,
