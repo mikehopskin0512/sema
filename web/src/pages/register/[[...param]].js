@@ -57,6 +57,7 @@ const RegistrationForm = (props) => {
   const onSubmit = (data) => {
     const user = { ...data, avatarUrl };
     if (identity) { user.identities = [identity]; }
+    if (!inviteToken) { user.isWaitlist = true; }
     dispatch(registerAndAuthUser(user, invitation));
   };
 
