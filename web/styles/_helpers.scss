@@ -23,6 +23,14 @@
     white-space: nowrap;
 }
 
+.is-full-height {
+  height: 100%;
+}
+
+.is-cursor-pointer {
+  cursor: pointer;
+}
+
 .outline-none {
   &:hover, &:focus {
     outline: none !important;;
@@ -36,10 +44,6 @@
 
 .is-height-auto {
   height: auto;
-}
-
-.is-full-height {
-  height: 100%;
 }
 
 .has-background-purple {

@@ -62,10 +62,10 @@ const RegistrationForm = (props) => {
 
   const renderEmailList = (emails) => {
     if (emails.length) {
-      emails = emails.sort(function (x, y) { return x.email === githubEmail ? -1 : y.email == githubEmail ? 1 : 0; });
+      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
       return emails
-        .filter((e) => e.email.search("users.noreply") === -1)
-        .map((e, i) => <option key={`${e.email}-${i}`} value={e.email}>{e.email}</option>)
+        .filter((e) => e.search("users.noreply") === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
     }
   }
 
@@ -95,7 +95,7 @@ const RegistrationForm = (props) => {
         ) : (
           <div>
             <h1 className="title is-4 is-spaced">Complete your profile information</h1>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <p className="subtitle is-6">Please complete or verify your profile information below. We use this information to personalize your experience.</p>
           </div>
         )}
         <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
@@ -213,25 +213,7 @@ const RegistrationForm = (props) => {
               </div>
             )
           }
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="terms"
-                {
-                ...register('terms',
-                  {
-                    required: 'You must accept terms',
-                  })
-                }
-              />
-              <span className="is-size-6">
-                &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
-              </span>
-              <p className="help is-danger">{errors.terms && errors.terms.message}</p>
-            </label>
-          </div>
-          <div className="control">
+          <div className="control mt-20">
             <button
               type="submit"
               className="button is-black">Continue

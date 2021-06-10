@@ -2,7 +2,6 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import * as reducers from './features';
-import { apiMiddleware } from './middleware/api';
 
 const middleware = [thunk];
 
@@ -16,11 +15,12 @@ if (process.env.NODE_ENV === 'development') {
   middleware.push(logger);
 }
 
+
 export const initStore = (initialState = {}) => {
   const rootReducer = combineReducers(reducers);
   return createStore(
     rootReducer,
     initialState,
-    composeWithDevTools(applyMiddleware(...middleware, apiMiddleware)),
+    composeWithDevTools(applyMiddleware(...middleware)),
   );
 };
