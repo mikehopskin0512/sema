@@ -19,6 +19,7 @@
   --color-btn-border: #e1e4e8;
   --color-scroll-bg: #a8a8a8;
   --color-scroll-border: #f3f3f3;
+  --color-form-border: #0366d6;
 }
 
 .theme--dark {
@@ -42,6 +43,7 @@
   --color-btn-border: #0d1117;
   --color-scroll-bg: #363636;
   --color-scroll-border: #161b22;
+  --color-form-border: #388bfd;
 }
 
 .sema {
@@ -342,6 +344,10 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
+.sema-is-form-bordered {
+  border-color: var(--color-form-border);
 }
 
 /*# sourceMappingURL=content.styles.css.map */

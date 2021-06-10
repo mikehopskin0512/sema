@@ -29,6 +29,8 @@
 
   --color-scroll-bg: #{v.$color-light-scroll-bg};
   --color-scroll-border: #{v.$color-light-scroll-border};
+  
+  --color-form-border: #{v.$color-light-form-border};
 }
 
 .theme--dark {
@@ -60,6 +62,8 @@
 
   --color-scroll-bg: #{v.$color-dark-scroll-bg};
   --color-scroll-border: #{v.$color-dark-scroll-border};
+
+  --color-form-border: #{v.$color-dark-form-border};
 }
 
 .sema {
@@ -381,4 +385,8 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
+}
+
+.sema-is-form-bordered {
+  border-color: var(--color-form-border);
 }
