@@ -27,6 +27,9 @@
 
   --color-btn-border: #{v.$color-light-btn-border};
 
+  --color-scroll-bg: #{v.$color-light-scroll-bg};
+  --color-scroll-border: #{v.$color-light-scroll-border};
+  
   --color-form-border: #{v.$color-light-form-border};
 }
 
@@ -56,6 +59,9 @@
   --color-credit-img: invert(1);
 
   --color-btn-border: #{v.$color-dark-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-scroll-border};
 
   --color-form-border: #{v.$color-dark-form-border};
 }
@@ -122,15 +128,18 @@
 }
 
 .sema-tag-container::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  // background: #f5f5f5;
+  background: var(--color-scroll-border);
   width: 5px;
 }
 
 .sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
-  background-color: #a8a8a8;
+  // background-color: rgb(168, 168, 168);
+  background-color: var(--color-scroll-bg);
   border-radius: 50px;
-  border: 3px solid #f3f3f3;
+  border: 3px solid var(--color-scroll-border);
+  // border: 3px solid rgb(243, 243, 243);
 }
 
 .sema-add-tags {
