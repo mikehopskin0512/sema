@@ -201,15 +201,14 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
     const { data: { jwtToken } } = payload;
     const { user: newUser } = jwtDecode(jwtToken) || {};
     dispatch(registrationSuccess(jwtToken, newUser));
-
-    // Send user to /verify landing page while verification email is sent
-    Router.push('/register/verify');
+    return payload;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(registrationError(errMessage));
     dispatch(triggerAlert(errMessage, 'error'));
+    return error;
   }
 };
 

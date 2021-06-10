@@ -8,7 +8,7 @@ import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
-import { sendEmail } from '../../shared/emailService';
+import { checkAndSendEmail } from '../../shared/utils';
 
 const route = Router();
 
@@ -42,7 +42,6 @@ export default (app) => {
       if (!token) {
         return res.status(401).end('Github authentication failed.');
       }
-
       const profile = await getProfile(token);
       if (!profile) {
         return res.status(401).end('Unable to retrieve Github profile for user.');
@@ -50,7 +49,8 @@ export default (app) => {
 
       // Get array of user Emails
       const userEmails = await getUserEmails(token);
-      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true );
+      const { email: githubPrimaryEmail = '' } = userEmails.find((item) => item.primary === true);
+      const emails = userEmails.map(({ email }) => (email));
 
       // Create identity object
       const { name: fullName } = profile;
@@ -66,12 +66,13 @@ export default (app) => {
       const identity = {
         provider: 'github',
         id: profile.id,
-        username: githubPrimaryEmail,
-        email,
+        username: profile.login,
+        email: githubPrimaryEmail,
         firstName,
         lastName,
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
+        emails,
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -80,17 +81,7 @@ export default (app) => {
         await updateIdentity(user, identity);
 
         // Check if first login then send welcome email
-        const { username, isWaitlist, lastLogin } = user;
-        const re = /\S+@\S+\.\S+/;
-        const isEmail = re.test(username);
-        if (!lastLogin && !isWaitlist && isEmail) {
-          const message = {
-            recipient: username,
-            url: `${orgDomain}`,
-            templateName: 'accountCreated',
-          };
-          await sendEmail(message);
-        }
+        await checkAndSendEmail(user);
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
@@ -102,50 +93,12 @@ export default (app) => {
       }
 
       const identityToken = await createIdentityToken(identity);
+      // Build redirect based on inviteToken
+      const registerRedirect = (inviteToken)
+        ? `${orgDomain}/register/${inviteToken}?token=${identityToken}`
+        : `${orgDomain}/register?token=${identityToken}`;
 
-      const userBody = {
-        ...identity,
-        // username: invitation.recipient,
-        terms: true,
-        jobTitle: '',
-        identities: [
-          { ...identity },
-        ],
-      };
-      let newUser = '';
-
-      // Get invitation
-      const invitation = await findByToken(inviteToken);
-      if (!invitation) {
-        // create user but isWaitlist
-        userBody.isWaitlist = true;
-        userBody.origin = 'waitlist';
-        newUser = await create(userBody);
-        if (!newUser) {
-          return res.status(401).end('User create error.');
-        }
-      } else {
-        userBody.username = invitation.recipient;
-        userBody.origin = 'invitation';
-        // Create user using invited email as username
-        newUser = await create(userBody);
-        if (!newUser) {
-          return res.status(401).end('User create error.');
-        }
-      }
-
-      // Redeem Invite
-      const { _id: userId, verificationToken } = newUser;
-      await redeemInvite(inviteToken, userId);
-
-      const verifiedUser = await verifyUser(verificationToken);
-
-      // Auth Sema
-      await setRefreshToken(res, newUser, await createRefreshToken(newUser));
-
-      if (!verifiedUser) {
-        return res.status(401).end('Verification error.');
-      }
+      return res.redirect(registerRedirect);
     } catch (error) {
       console.log("Error ", error);
     }

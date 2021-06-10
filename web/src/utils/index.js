@@ -13,9 +13,25 @@ export const upsert = (arr, key, newval) => {
 export const fullName = (user) => {
   if (!user) return '';
 
-  const { firstName, lastName } = user;
+  const { firstName = '', lastName = '' } = user;
 
   return `${firstName} ${lastName}`;
 };
 
 export const dummy = () => {};
+
+export const getUserStatus = (user) => {
+  if (user.isActive && user.isWaitlist) return 'Waitlisted';
+  if (user.isActive && !user.isWaitlist) return 'Active';
+  if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+  return 'Disabled';
+};
+
+export const getBadgeColor = (value) => {
+  if (value === 'Waitlisted') return 'primary';
+  if (value === 'Active') return 'success';
+  if (value === 'Blocked') return 'danger';
+
+  return 'dark';
+};

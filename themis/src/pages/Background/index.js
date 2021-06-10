@@ -23,6 +23,21 @@ chrome.runtime.onMessageExternal.addListener(
   }
 );
 
+chrome.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === "install") {
+    let queryOptions = { active: true, currentWindow: true };
+    let [tab] = await chrome.tabs.query(queryOptions);
+    const { id } = tab;
+    chrome.tabs.update(id, {
+      url: SEMA_UI_URL,
+      active: true
+    });
+  } else if (details.reason === "update") {
+    var thisVersion = chrome.runtime.getManifest().version;
+    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  }
+});
+
 function JWT() {
   let token = null;
   let interval = null;
@@ -33,9 +48,10 @@ function JWT() {
     }
 
     token = jwt;
-    
+
     if (token) {
       try {
+        // Set an interval to fetch a new access token one minute before the current one expires
         const currentTime = new Date().getTime();
         const decodedAccessToken = jwt_decode(token);
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
@@ -112,17 +128,21 @@ async function getNewAccessToken(cookie) {
 async function processCookie(cookie) {
   const currentTime = new Date().getTime();
 
+  // Check if there is refresh token cookie set
   if (cookie) {
     const decodedRefreshToken = jwt_decode(cookie.value);
     const expirationTimeRefreshToken = decodedRefreshToken.exp * 1000;
+    // Evaluate if the refresh token has not expired
     if (expirationTimeRefreshToken > currentTime) {
       const accessToken = jwtHandler.getJwt() || null;
+      // Check if there is an access token already set
       if (accessToken) {
         const decodedAccessToken = jwt_decode(accessToken);
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const deltaTimeAccessToken = (expirationTimeAccessToken - currentTime) * 60000;
+        // Evaluate if the access token expiration time is less or equal to one minute
         if (deltaTimeAccessToken <= 1) {
-          const tokenResponse = getNewAccessToken(cookie)
+          const tokenResponse = await getNewAccessToken(cookie);
           setRequestRule(tokenResponse.token);
           return tokenResponse;
         } else {
@@ -130,7 +150,7 @@ async function processCookie(cookie) {
           return { token: accessToken, isLoggedIn: true };
         }
       } else {
-        const tokenResponse = getNewAccessToken(cookie)
+        const tokenResponse = await getNewAccessToken(cookie);
         setRequestRule(tokenResponse.token);
         return tokenResponse;
       }
@@ -162,7 +182,7 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
     } else if (removed === true) {
       sendMessageToTab({ token: null, isLoggedIn: false });
     }
-  } 
+  }
 });
 
 const sendMessageToTab = (message) => {
@@ -182,6 +202,7 @@ const sendMessageToTab = (message) => {
   );
 };
 
+// Dynamic rule to intercept requests to apollo and set the authorization header | Bearer token
 const setRequestRule = (token) => {
   chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: [1],

@@ -44,8 +44,8 @@ const Invite = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
-  const { _id: userId, firstName, lastName, organizations = [], inviteCount = 0} = user;
-  const fullName = `${firstName} ${lastName}`;
+  const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0} = user;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
@@ -59,6 +59,7 @@ const Invite = () => {
         orgName,
         sender: userId,
         senderName: fullName,
+        senderEmail,
         inviteCount
       };
       // Send invite & reset form
@@ -113,8 +114,7 @@ const Invite = () => {
       toggleCard(false);
       return;
     }
-
-    window.open(EXTENSION_LINK, '_blank');
+    window.location.href = EXTENSION_LINK;
   };
 
   const renderIcon = () => {
@@ -129,11 +129,8 @@ const Invite = () => {
     return (
       <>
         <div className="mb-50">
-          <FontAwesomeIcon
-            icon={faCheckCircle}
-            size="4x"
-            className="has-text-primary"
-          />
+          <p className={'subtitle px-120'}>Here's how to get started using the plugin in Github:</p>
+          <img src="/img/product-demo.gif" width="600px" className="colored-shadow"/>
         </div>
       </>
     );
@@ -310,7 +307,8 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </td>
                 <td>
                   <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>{' '}
+                  {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                  {' '}
                 </td>
               </tr>
             );
@@ -359,7 +357,7 @@ const ContactUs = ({ userVoiceToken }) => {
         <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</a>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
-        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a> 
+        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
       </div>
     </div>
   )
