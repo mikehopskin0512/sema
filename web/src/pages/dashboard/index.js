@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -171,10 +172,10 @@ const Invite = () => {
             />
             <p
               className={
-                'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
+                'subtitle has-text-centered has-text-weight-semibold is-size-4 is-size-5-mobile mb-20'
               }
             >
-              <span className={clsx('tag is-success is-size-4 m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+              <span className={clsx('tag is-success is-size-4 is-size-6-mobile m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -183,9 +184,9 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div className="field">
+                        <div className="field is-flex-mobile is-flex-direction-column">
                           <label className="label has-text-white">Username</label>
-                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
+                          <div className={clsx("control has-icons-right is-inline-block mr-25", styles['invite-input'])}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -204,13 +205,13 @@ const Invite = () => {
                                 })
                               }
                             />
-                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                            <span className="icon is-small is-right is-clickable has-text-dark is-4" onClick={reset}>
                               <FontAwesomeIcon icon={faTimes} size="sm" />
                             </span>
                           </div>
                           <button
                             className={clsx(
-                              'button is-white-gray',
+                              'button is-white-gray has-text-centered',
                               styles.formBtn
                             )}
                             type="submit"
@@ -218,7 +219,7 @@ const Invite = () => {
                           >
                             Send Invite
                             </button>
-                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden")} style={{ width: "80%" }}>
+                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden", styles['invite-input'])}>
                             <div className="message-body">
                               {renderErrorMessage()}
                             </div>
@@ -228,7 +229,7 @@ const Invite = () => {
                     </div>
                   </form>
                 </div>
-                <div className={'tile is-child is-hidden-mobile'}>
+                <div className={'tile is-child'}>
                   <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
@@ -279,8 +280,44 @@ const PluginStateCard = ({
 const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
   const { token, user } = auth;
 
+  if (isMobile) {
+    return(
+      <div className="p-10 shadow has-background-white is-hidden-desktop">
+        {invitations?.length > 0 ? invitations.map((el, i) => (
+          <div className={clsx('px-10 py-20', styles['invite-mobile'])}>
+            <div className='is-flex is-justify-content-space-between'>
+              <p>{el.recipient}</p>
+              {el.isPending ? (
+                <>
+                  <span className={clsx('tag is-primary', styles.tag)}>
+                    Pending
+                  </span>
+                </>
+              ) : (
+                <span className={clsx('tag is-success', styles.tag)}>
+                  Active
+                </span>
+              )}
+            </div>
+            <div className="mt-15">
+              <button className="button p-5 is-size-7 is-light" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                    {el.isPending ? (<button className="button is-danger ml-5 p-5 is-size-7" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+            </div>
+          </div>
+        )): 
+          <div className="p-20">
+            <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+            <p className={"has-text-centered mt-20 has-text-gray-dark is-size-5"}>
+              You haven't invited anyone yet.
+            </p>
+          </div>
+        }
+      </div>
+    )
+  }
+
   return (
-    <table className={clsx('table is-fullwidth shadow has-background-white', styles.table)}>
+    <table className={clsx('table is-fullwidth shadow has-background-white is-hidden-mobile', styles.table)}>
       <thead>
         <tr>
           <th>User</th>
@@ -296,9 +333,11 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 <td>{el.recipient}</td>
                 <td>
                   {el.isPending ? (
-                    <span className={clsx('tag is-primary', styles.tag)}>
-                      Pending Invite
-                    </span>
+                    <>
+                      <span className={clsx('tag is-primary', styles.tag)}>
+                        Pending Invite
+                      </span>
+                    </>
                   ) : (
                     <span className={clsx('tag is-success', styles.tag)}>
                       Active
@@ -371,9 +410,11 @@ const ContactUs = ({ userVoiceToken }) => {
         <ContactUsContent {...userVoiceToken} />
       </div>
       {/* Mobile View */}
-      <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
-        <ContactUsContent {...userVoiceToken} />
-      </div>
+      { isMobile ? (
+        <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
+          <ContactUsContent {...userVoiceToken} />
+        </div>
+      ) : null }
     </>
   )
 };

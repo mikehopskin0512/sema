@@ -102,7 +102,7 @@ const Header = () => {
               <img src="/img/sema-logo.png" alt="sema-logo" />
             </a>
           </Link>
-          {token && isVerified && (
+          {token && isVerified && !isWaitlist && (
             <button
               onClick={toggleHamburger}
               type="button"
