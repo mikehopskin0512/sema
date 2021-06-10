@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isMobile } from 'react-device-detect';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -280,8 +279,54 @@ const PluginStateCard = ({
 const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
   const { token, user } = auth;
 
-  if (isMobile) {
-    return(
+  return (
+    <>
+      <table className={clsx('table is-fullwidth shadow has-background-white is-hidden-mobile', styles.table)}>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invitations?.length ?
+            invitations.map((el, i) => {
+              return (
+                <tr key={`row-${i}`}>
+                  <td>{el.recipient}</td>
+                  <td>
+                    {el.isPending ? (
+                      <>
+                        <span className={clsx('tag is-primary', styles.tag)}>
+                          Pending Invite
+                        </span>
+                      </>
+                    ) : (
+                      <span className={clsx('tag is-success', styles.tag)}>
+                        Active
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                    {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                    {' '}
+                  </td>
+                </tr>
+              );
+            }) : <tr>
+              <td colSpan="3" >
+                <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
+                  <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+                  <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
+                    You haven't invited anyone yet.
+                      </div>
+                </div>
+              </td>
+            </tr>}
+        </tbody>
+      </table>
       <div className="p-10 shadow has-background-white is-hidden-desktop">
         {invitations?.length > 0 ? invitations.map((el, i) => (
           <div className={clsx('px-10 py-20', styles['invite-mobile'])}>
@@ -313,56 +358,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
           </div>
         }
       </div>
-    )
-  }
-
-  return (
-    <table className={clsx('table is-fullwidth shadow has-background-white is-hidden-mobile', styles.table)}>
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {invitations?.length ?
-          invitations.map((el, i) => {
-            return (
-              <tr key={`row-${i}`}>
-                <td>{el.recipient}</td>
-                <td>
-                  {el.isPending ? (
-                    <>
-                      <span className={clsx('tag is-primary', styles.tag)}>
-                        Pending Invite
-                      </span>
-                    </>
-                  ) : (
-                    <span className={clsx('tag is-success', styles.tag)}>
-                      Active
-                    </span>
-                  )}
-                </td>
-                <td>
-                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
-                  {' '}
-                </td>
-              </tr>
-            );
-          }) : <tr>
-            <td colSpan="3" >
-              <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-                <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-                <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
-                  You haven't invited anyone yet.
-                    </div>
-              </div>
-            </td>
-          </tr>}
-      </tbody>
-    </table>
+    </>
   );
 };
 
@@ -406,15 +402,13 @@ const ContactUs = ({ userVoiceToken }) => {
   return (
     <>
       {/* Desktop View */}
-      <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered is-hidden-mobile">
+      <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
         <ContactUsContent {...userVoiceToken} />
       </div>
       {/* Mobile View */}
-      { isMobile ? (
-        <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
-          <ContactUsContent {...userVoiceToken} />
-        </div>
-      ) : null }
+      <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
     </>
   )
 };
