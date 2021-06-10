@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import jwt_decode from 'jwt-decode';
+
 import codeIcon from '../../assets/img/codelines.png';
 import logo from '../../assets/img/sema-logo.png';
 import lines from '../../assets/img/Lines.png';
 import './Popup.css';
 // TODO: how common files be shared across?
 import { WHOAMI } from '../Content/constants';
-import jwt_decode from 'jwt-decode';
 
 const semaUIUrl = process.env.SEMA_UI_URL;
 
@@ -21,6 +23,8 @@ const openSema = () => {
   window.open(semaUIUrl, '_blank');
 };
 
+const onCrossClicked = () => window.close();
+
 const loggedOutElem = () => (
   <div
     className="popup-container"
@@ -32,6 +36,11 @@ const loggedOutElem = () => (
   >
     <div className="popup-header">
       <img className="popup-logo" src={logo} />
+      <FontAwesomeIcon
+        onClick={onCrossClicked}
+        icon={faTimes}
+        className="cross"
+      />
     </div>
     <div className="popup-hero">
       <p className="sema-login-details">
@@ -72,6 +81,11 @@ const loggedInElem = (userDetails) => {
     >
       <div className="popup-header">
         <img className="popup-logo" src={logo} />
+        <FontAwesomeIcon
+          onClick={onCrossClicked}
+          icon={faTimes}
+          className="cross"
+        />
       </div>
       <div
         className="popup-hero"

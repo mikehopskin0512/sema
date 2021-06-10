@@ -15,11 +15,20 @@ button {
 
 .popup-header {
   border-bottom: 1px solid #dee5ef;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 21px;
+}
+
+.cross {
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .popup-logo {
   width: 100px;
-  padding: 11px 0 11px 21px;
 }
 
 .popup-hero {
