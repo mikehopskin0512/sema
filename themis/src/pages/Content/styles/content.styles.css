@@ -74,34 +74,22 @@
 .sema-tag-container {
   display: flex;
   flex: 1;
-  flex-direction: row;
-  margin-left: 50px;
-  margin: auto;
-}
-
-.sema-tags-content {
-  height: 2.8em;
-  display: flex;
-  flex: 1;
   flex-direction: row-reverse;
+  overflow: auto;
+  margin-left: 50px;
 }
 
 /* ss */
-.sema-tag-container.hidden-scrollbar::-webkit-scrollbar {
-  height: 12px;
-  display: none;
-}
-
-.sema-tag-container::-webkit-scrollbar {
+#scroll-style::-webkit-scrollbar {
   height: 12px;
 }
 
-.sema-tag-container::-webkit-scrollbar-track {
+#scroll-style::-webkit-scrollbar-track {
   background: #f5f5f5;
   width: 5px;
 }
 
-.sema-tag-container::-webkit-scrollbar-thumb {
+#scroll-style::-webkit-scrollbar-thumb {
   height: 12px;
   background-color: #a8a8a8;
   border-radius: 50px;
@@ -248,8 +236,6 @@ h6 {
 
 .sema-emoji-container {
   margin: auto;
-  height: 2.8em;
-  padding-right: 1em;
 }
 .sema-emoji-container .sema-button {
   color: var(--color-title);
@@ -259,6 +245,10 @@ h6 {
 .sema-emoji-container .reaction-selection {
   border: unset;
   background: transparent;
+}
+
+.sema-tag-container {
+  margin: auto;
 }
 
 .sema-dropdown-container {
@@ -315,7 +305,6 @@ h6 {
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
-  width: 250px;
 }
 .tags-selection .sema-dropdown-content {
   background-color: var(--color-tags-background);
@@ -343,6 +332,36 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
+.suggestion-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-text-input-bg);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.suggestion-header .sema-button {
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
+}
+
+.sema-dropdown-menu.suggestion-modal {
+  margin-top: 4px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-content {
+  margin-top: 8px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-item {
+  margin-top: 6px;
+  padding-top: 0px;
 }
 
 /*# sourceMappingURL=content.styles.css.map */

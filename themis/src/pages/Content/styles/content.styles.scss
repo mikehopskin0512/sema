@@ -361,3 +361,33 @@ h6 {
   color: #fff !important;
   box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
 }
+
+.suggestion-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-text-input-bg);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .sema-button {
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+  }
+}
+
+.sema-dropdown-menu.suggestion-modal {
+  margin-top: 4px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-content {
+  margin-top: 8px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-item {
+  margin-top: 6px;
+  padding-top: 0px;
+}
