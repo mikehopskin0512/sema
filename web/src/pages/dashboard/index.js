@@ -229,7 +229,7 @@ const Invite = () => {
                     </div>
                   </form>
                 </div>
-                <div className={'tile is-child is-hidden-mobile'}>
+                <div className={'tile is-child'}>
                   <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
                 </div>
                 <PromotionBoard />
@@ -410,9 +410,11 @@ const ContactUs = ({ userVoiceToken }) => {
         <ContactUsContent {...userVoiceToken} />
       </div>
       {/* Mobile View */}
-      <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
-        <ContactUsContent {...userVoiceToken} />
-      </div>
+      { isMobile ? (
+        <div className="mt-20 p-25 columns has-background-primary is-centered is-vcentered is-hidden-desktop">
+          <ContactUsContent {...userVoiceToken} />
+        </div>
+      ) : null }
     </>
   )
 };
