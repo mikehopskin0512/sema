@@ -91,9 +91,6 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
   };
 
   const getCommentUI = () => {
-    // const suggestionDropdownMenu = document.querySelector('.sema-dropdown-menu.suggestion-modal').addClass('sema-mt-0');
-    // const suggestionDropdownContent = document.querySelector('div.sema-dropdown-content').addClass('sema-mt-0');
-    // const suggestionDropdownItem = document.querySelector('div.sema-dropdown-item').addClass('sema-mt-0');
     const { comment, sourceName, sourceUrl, title, id } = currentSuggestion;
     return (
       <>
@@ -123,21 +120,6 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
         </div>
         {getCommentTitleInterface(title, sourceName)}
         {getCommentInterface(comment, true)}
-        <div className="suggestion-buttons">
-          {/* <button
-            className="sema-button sema-is-inverted sema-is-small"
-            style={{ border: 'none' }}
-            onClick={(event) => {
-              event.preventDefault();
-              onCopyPressed(id, comment);
-            }}
-          >
-            <span className="sema-icon">
-              <i className="fas fa-copy"></i>
-            </span>
-            <span>Insert</span>
-          </button> */}
-        </div>
       </>
     );
   };
