@@ -45,19 +45,18 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName } = newInvitation;
-      const { username } = userData;
+      const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: username,
+        email: senderEmail,
         sender: "invites@semasoftware.com",
       };
       await sendEmail(message);
-      const updatedUser = await update({
+      const updatedUser = userData.isSemaAdmin ? userData : await update({
         ...userData,
         inviteCount: invitation.inviteCount - 1,
       });
@@ -74,10 +73,8 @@ export default (app, passport) => {
 
   // Fetch all invitation by senderId
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { senderId } = req.query;
-
     try {
-      const invites = await getInvitationsBySender(senderId);
+      const invites = await getInvitationsBySender(req.query);
       if (invites.statusCode === 404) {
         if (invites.name === 'Not Found') {
           throw new errors.BadRequest('Invalid Sender ID');
@@ -141,15 +138,14 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName, sender } = userInvitation;
-      const { username } = await findUserById(sender);
+      const { recipient, token, orgName, senderName, senderEmail } = userInvitation;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
         templateName: 'inviteUser',
         orgName,
         fullName: senderName,
-        email: username,
+        email: senderEmail,
       };
       await sendEmail(message);
 
@@ -178,7 +174,7 @@ export default (app, passport) => {
       if (invite.statusCode > 226) {
         return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
       }
-      if (!invite.sender.equals(user._id)) {
+      if (!invite.sender.equals(user._id) && !user.isSemaAdmin) {
         return res.status(405).send('Unable to delete invitation: Unauthorized.');
       }
 

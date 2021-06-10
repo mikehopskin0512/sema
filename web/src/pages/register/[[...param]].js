@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
-const { registerUser } = authOperations;
+const { registerUser, registerAndAuthUser } = authOperations;
 const { fetchInvite } = invitationsOperations;
 
 const InviteError = () => (
@@ -44,7 +44,7 @@ const RegistrationForm = (props) => {
   if (token) {
     ({ identity } = jwtDecode(token));
   }
-  const { email: githubEmail, firstName, lastName, avatarUrl } = identity;
+  const { email: githubEmail, firstName, lastName, avatarUrl, emails } = identity;
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -57,8 +57,17 @@ const RegistrationForm = (props) => {
   const onSubmit = (data) => {
     const user = { ...data, avatarUrl };
     if (identity) { user.identities = [identity]; }
-    dispatch(registerUser(user, invitation));
+    dispatch(registerAndAuthUser(user, invitation));
   };
+
+  const renderEmailList = (emails) => {
+    if (emails.length) {
+      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
+      return emails
+        .filter((e) => e.search("users.noreply") === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
+    }
+  }
 
   return (
     <div className="columns is-justify-content-center">
@@ -86,7 +95,7 @@ const RegistrationForm = (props) => {
         ) : (
           <div>
             <h1 className="title is-4 is-spaced">Complete your profile information</h1>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <p className="subtitle is-6">Please complete or verify your profile information below. We use this information to personalize your experience.</p>
           </div>
         )}
         <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
@@ -101,11 +110,11 @@ const RegistrationForm = (props) => {
                     placeholder="Tony"
                     defaultValue={firstName}
                     {
-                      ...register('firstName',
-                        {
-                          required: 'First name is required',
-                          maxLength: { value: 80, message: 'First name must be less than 80 characters' },
-                        })
+                    ...register('firstName',
+                      {
+                        required: 'First name is required',
+                        maxLength: { value: 80, message: 'First name must be less than 80 characters' },
+                      })
                     }
                   />
                 </div>
@@ -120,11 +129,11 @@ const RegistrationForm = (props) => {
                     placeholder="Stark"
                     defaultValue={lastName}
                     {
-                      ...register('lastName',
-                        {
-                          required: 'Last name is required',
-                          maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
-                        })
+                    ...register('lastName',
+                      {
+                        required: 'Last name is required',
+                        maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
+                      })
                     }
                   />
                 </div>
@@ -133,38 +142,24 @@ const RegistrationForm = (props) => {
             </div>
           </div>
           <div className="field">
-            <label className="label">Job title</label>
+            <label className="label">Email address</label>
             <div className="control">
-              <input
-                className={`input ${errors.jobTitle && 'is-danger'}`}
-                type="text"
-                placeholder="Job title"
-                {
-                  ...register('jobTitle',
-                    {
-                      required: 'Job title is required',
-                    })
-                }
-              />
-            </div>
-            <p className="help is-danger">{errors.jobTitle && errors.jobTitle.message}</p>
-          </div>
-          <div className="field">
-            <label className="label">Business email</label>
-            <div className="control">
-              <input
-                className={`input ${errors.username && 'is-danger'}`}
-                type="email"
-                placeholder="tony@starkindustries.com"
-                defaultValue={initialEmail}
-                {
+              <div className="select is-fullwidth">
+                <select
+                  className={`input ${errors.username && 'is-danger'}`}
+                  type="email"
+                  placeholder="tony@starkindustries.com"
+                  defaultValue={initialEmail}
+                  {
                   ...register('username',
                     {
                       required: 'Email is required',
-                      pattern: { value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, message: 'Invaild email format' },
                     })
-                }
-              />
+                  }
+                >
+                  {renderEmailList(emails)}
+                </select>
+              </div>
             </div>
             <p className="help is-danger">{errors.username && errors.username.message}</p>
           </div>
@@ -180,13 +175,13 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.password && 'is-danger'}`}
                           type="password"
                           {
-                            ...register('password',
-                              {
-                                required: 'Password is required',
-                                minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                                maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                                pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-                              })
+                          ...register('password',
+                            {
+                              required: 'Password is required',
+                              minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+                            })
                           }
                         />
                       </div>
@@ -199,15 +194,15 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.passwordConfirm && 'is-danger'}`}
                           type="password"
                           {
-                            ...register('passwordConfirm',
-                              {
-                                validate: (value) => {
-                                  if (value === watch('password')) {
-                                    return true;
-                                  }
-                                  return 'Passwords do not match';
-                                },
-                              })
+                          ...register('passwordConfirm',
+                            {
+                              validate: (value) => {
+                                if (value === watch('password')) {
+                                  return true;
+                                }
+                                return 'Passwords do not match';
+                              },
+                            })
                           }
                         />
                       </div>
@@ -218,25 +213,7 @@ const RegistrationForm = (props) => {
               </div>
             )
           }
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="terms"
-                {
-                  ...register('terms',
-                    {
-                      required: 'You must accept terms',
-                    })
-                }
-              />
-              <span className="is-size-6">
-                &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
-              </span>
-              <p className="help is-danger">{errors.terms && errors.terms.message}</p>
-            </label>
-          </div>
-          <div className="control">
+          <div className="control mt-20">
             <button
               type="submit"
               className="button is-black">Continue
@@ -285,7 +262,7 @@ const Register = () => {
   const validInvite =
     (param.length === 0) ||
     (invitation &&
-    Object.prototype.hasOwnProperty.call(invitation, '_id'));
+      Object.prototype.hasOwnProperty.call(invitation, '_id'));
 
   // Loading
   if (isFetching) {

@@ -44,7 +44,7 @@ export default (app, passport) => {
 
     try {
       const existingUser = await findByUsername(username);
-      if (existingUser) { throw new errors.BadRequest('User with this email already exisits. Please try again.'); }
+      if (existingUser) { throw new errors.BadRequest('User with this email already exists. Please try again.'); }
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -55,12 +55,12 @@ export default (app, passport) => {
       if (!newUser) {
         throw new errors.BadRequest('User create error');
       }
+      const { _id: userId } = newUser;
 
       // If invitation, call joinOrg function
       let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
         hasInvite = true;
-        const { _id: userId } = newUser;
         const { orgId, orgName, sender, token } = invitation;
         // const org = { id: orgId, orgName, invitedBy: sender };
         // const invitedUser = await joinOrg(userId, org);
@@ -76,13 +76,13 @@ export default (app, passport) => {
       }
 
       // Send verification email
-      const message = {
-        recipient: newUser.username,
-        url: `${orgDomain}/register/verify?token=${newUser.verificationToken}&invite=${hasInvite}`,
-        templateName: 'verifyUser',
-        firstName: newUser.firstName,
-      };
-      await sendEmail(message);
+      // const message = {
+      //   recipient: newUser.username,
+      //   url: `${orgDomain}/register/verify?token=${newUser.verificationToken}&invite=${hasInvite}`,
+      //   templateName: 'verifyUser',
+      //   firstName: newUser.firstName,
+      // };
+      // await sendEmail(message);
 
       delete newUser.password;
       return res.status(201).send({

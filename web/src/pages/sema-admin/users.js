@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import Router from 'next/router';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,22 +14,23 @@ import StatusFilter from '../../components/admin/statusFilter';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import styles from './users.module.scss';
+import Tabs from '../../components/tabs';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.usersState);
+  const { users, analytic, isFetching } = useSelector((state) => state.usersState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
-  const [statusFilters, setStatusFilters] = useState({
+  const initFilters = {
     Waitlisted: false,
     Active: false,
     Blocked: false,
     Disabled: false,
-  });
+  };
+  const [statusFilters, setStatusFilters] = useState(initFilters);
 
   useEffect(() => {
     const statusQuery = Object.entries(statusFilters)
@@ -80,27 +82,27 @@ const UsersPage = () => {
     switch (status) {
       case 'Active':
         return (
-          <div className={clsx(styles.actionsCell, 'is-flex')}>
-            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Disable</a>
+          <div className="is-flex">
+            <a onClick={() => handleBlockOrDisableUser(id)}>Disable</a>
           </div>
         );
       case 'Waitlisted':
         return (
-          <div className={clsx(styles.actionsCell, 'is-flex')}>
-            <a className={clsx(styles['flex-1'], 'mr-5')} onClick={(e) => handleAdmitUser(id)}>Admit</a>
-            <a className={clsx(styles['flex-1'])} onClick={(e) => handleBlockOrDisableUser(id)}>Block</a>
+          <div className="is-flex">
+            <a className="mr-5" onClick={() => handleAdmitUser(id)}>Admit</a>
+            <a onClick={() => handleBlockOrDisableUser(id)}>Block</a>
           </div>
         );
       case 'Disabled':
         return (
-          <div className={clsx(styles.actionsCell, 'is-flex')}>
-            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Enable</a>
+          <div className="is-flex">
+            <a onClick={() => handleEnableUser(id)}>Enable</a>
           </div>
         );
       case 'Blocked':
         return (
-          <div className={clsx(styles.actionsCell, 'is-flex')}>
-            <a className={clsx(styles['flex-1'])} onClick={(e) => handleEnableUser(id)}>Unblock</a>
+          <div className="is-flex">
+            <a onClick={() => handleEnableUser(id)}>Unblock</a>
           </div>
         );
       default:
@@ -115,7 +117,7 @@ const UsersPage = () => {
         accessor: 'userInfo',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center'>
+          <div className='is-flex is-align-items-center is-cursor-pointer' onClick={() => Router.push(`/sema-admin/users/${value.id}`)}>
             <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
             { value.name }
           </div>
@@ -178,14 +180,14 @@ const UsersPage = () => {
               { value.available }
               <button
                 type="button"
-                className={clsx("button is-small ml-5 mr-5", styles['increase-button'])}
+                className="button is-small ml-5 mr-5 is-size-8 is-line-height-1 is-height-auto px-10 py-5"
                 onClick={() => handleUpdateUserInvitations(value.id, 1)}
               >
                 +
               </button>
               <button
                 type="button"
-                className={clsx("button is-small", styles['increase-button'])}
+                className="button is-small ml-5 mr-5 is-size-8 is-line-height-1 is-height-auto px-10 py-5"
                 onClick={() => handleUpdateUserInvitations(value.id, -1)}
               >
                 -
@@ -202,7 +204,7 @@ const UsersPage = () => {
         Cell: ({ cell: { value } }) => renderActionCell(value),
       },
     ],
-    [debounceSearchTerm, handleUpdateUserInvitations],
+    [debounceSearchTerm, handleUpdateUserInvitations, statusFilters],
   );
 
   const getStatus = (user) => {
@@ -216,6 +218,7 @@ const UsersPage = () => {
   const dataSource = users.map((item) => ({
     ...item,
     userInfo: {
+      id: item._id,
       name: fullName(item),
       avatarUrl: item.avatarUrl,
     },
@@ -233,12 +236,68 @@ const UsersPage = () => {
     },
   }));
 
+  const tabOptions = useMemo(() => {
+    return [
+      {
+        label: `All (${analytic.total ? analytic.total : 0})`,
+        value: 'all',
+      },
+      {
+        label: `Active Users (${analytic.active ? analytic.active : 0})`,
+        value: 'active',
+      },
+      {
+        label: `On the waitlist (${analytic.waitlist ? analytic.waitlist : 0})`,
+        value: 'waitlist',
+      },
+      {
+        label: `Blocked (${analytic.blocked ? analytic.blocked : 0})`,
+        value: 'blocked',
+      },
+      {
+        label: `Disabled (${analytic.disabled ? analytic.disabled : 0})`,
+        value: 'disabled',
+      },
+    ]
+  }, [analytic]);
+
+  const [activeTab, setActiveTab] = useState('all');
+
+  const onChangeTab = (value) => {
+    setActiveTab(value);
+
+    switch (value) {
+      case 'waitlist':
+        setStatusFilters({ ...initFilters, Waitlisted: true });
+        break;
+      case 'active':
+        setStatusFilters({ ...initFilters, Active: true });
+        break;
+      case 'blocked':
+        setStatusFilters({ ...initFilters, Blocked: true });
+        break;
+      case 'disabled':
+        setStatusFilters({ ...initFilters, Disabled: true });
+        break;
+      default:
+        setStatusFilters(initFilters);
+        break;
+    }
+  };
+
+  if (isFetching) {
+    return (
+      <div className="loading" />
+    );
+  }
+
   return (
-    <div className={clsx(styles['users-page'], 'is-flex is-flex-direction-column')}>
+    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
       <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
-      <div className='p-20 is-flex-grow-1 is-background-white' style={{ borderRadius: 10 }}>
-        <div className='is-flex is-justify-content-flex-end'>
+      <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
+        <div className='is-flex sema-is-justify-content-space-between'>
+          <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
         <Table columns={columns} data={dataSource} />

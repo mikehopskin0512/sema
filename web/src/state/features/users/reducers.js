@@ -1,9 +1,9 @@
 import * as types from './types';
-import { upsert } from '../../../utils';
 
 const initialState = {
   users: [],
   isFetching: false,
+  analytic: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -35,6 +35,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       users: action.users,
+      analytic: action.filters,
       error: {},
     };
   case types.REQUEST_FETCH_USERS_ERROR:
@@ -59,6 +60,25 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
+      error: action.errors,
+    };
+  case types.REQUEST_FETCH_USER:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_USER_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
+  case types.REQUEST_FETCH_USER_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      users: [],
       error: action.errors,
     };
   default:

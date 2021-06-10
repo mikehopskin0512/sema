@@ -9,6 +9,7 @@ import {
   updateSelectedEmoji,
   updateSelectedTags,
   updateSelectedTagsWithSuggestion,
+  toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
 const DROP_POSITIONS = {
@@ -31,6 +32,7 @@ const mapStateToProps = (state, ownProps) => {
     isReactionDirty: semabarState.isReactionDirty,
     isLoggedIn: user?.isLoggedIn,
     isWaitlist: user?.isWaitlist,
+    isSelectingEmoji: semabarState.isSelectingEmoji,
   };
 };
 
@@ -46,6 +48,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(updateSelectedTags({ id, operation, isDirty: true })),
     updateSelectedTagsWithSuggestion: (tag) =>
       dispatch(updateSelectedTagsWithSuggestion({ id, tag })),
+    toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
 };
 
@@ -198,6 +201,8 @@ const Semabar = (props) => {
             }}
             isTyping={props.isTyping}
             isReactionDirty={props.isReactionDirty}
+            isSelectingEmoji={props.isSelectingEmoji}
+            toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
           />
         </div>
         <div

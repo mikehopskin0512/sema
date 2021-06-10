@@ -119,7 +119,7 @@ def parse_args(config=None):
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="Example of use: ./"
         + os.path.basename(__file__)
-        + " ~/source/phoenix/web/src/pages/sources/index.js",
+        + " ~/source/phoenix/web/src/pages/sources/tabs.js",
     )
 
     parser.add_argument(
