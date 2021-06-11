@@ -57,6 +57,7 @@ const RegistrationForm = (props) => {
   const onSubmit = (data) => {
     const user = { ...data, avatarUrl };
     if (identity) { user.identities = [identity]; }
+    if (!inviteToken) { user.isWaitlist = true; }
     dispatch(registerAndAuthUser(user, invitation));
   };
 
@@ -95,7 +96,7 @@ const RegistrationForm = (props) => {
         ) : (
           <div>
             <h1 className="title is-4 is-spaced">Complete your profile information</h1>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <p className="subtitle is-6">Please complete or verify your profile information below. We use this information to personalize your experience.</p>
           </div>
         )}
         <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
@@ -213,25 +214,7 @@ const RegistrationForm = (props) => {
               </div>
             )
           }
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="terms"
-                {
-                ...register('terms',
-                  {
-                    required: 'You must accept terms',
-                  })
-                }
-              />
-              <span className="is-size-6">
-                &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
-              </span>
-              <p className="help is-danger">{errors.terms && errors.terms.message}</p>
-            </label>
-          </div>
-          <div className="control">
+          <div className="control mt-20">
             <button
               type="submit"
               className="button is-black">Continue

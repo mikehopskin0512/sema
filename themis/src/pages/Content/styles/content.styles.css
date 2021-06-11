@@ -17,6 +17,9 @@
   --color-suggestion-container: #fbfbfb;
   --color-credit-img: invert(0);
   --color-btn-border: #e1e4e8;
+  --color-scroll-bg: #a8a8a8;
+  --color-scroll-border: #f3f3f3;
+  --color-form-border: #0366d6;
 }
 
 .theme--dark {
@@ -38,6 +41,9 @@
   --color-suggestion-container: #0e1218;
   --color-credit-img: invert(1);
   --color-btn-border: #0d1117;
+  --color-scroll-bg: #363636;
+  --color-scroll-border: #161b22;
+  --color-form-border: #388bfd;
 }
 
 .sema {
@@ -97,15 +103,15 @@
 }
 
 .sema-tag-container::-webkit-scrollbar-track {
-  background: #f5f5f5;
+  background: var(--color-scroll-border);
   width: 5px;
 }
 
 .sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
-  background-color: #a8a8a8;
+  background-color: var(--color-scroll-bg);
   border-radius: 50px;
-  border: 3px solid #f3f3f3;
+  border: 3px solid var(--color-scroll-border);
 }
 
 .sema-add-tags {
@@ -338,6 +344,10 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
+.sema-is-form-bordered {
+  border-color: var(--color-form-border);
 }
 
 /*# sourceMappingURL=content.styles.css.map */

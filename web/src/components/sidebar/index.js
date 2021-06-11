@@ -37,7 +37,7 @@ const Sidebar = () => {
   const menus = [
     {
       name: 'Dashboard',
-      pathName: '/sema-admin/dashboard',
+      pathName: '/dashboard',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
     {

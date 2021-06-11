@@ -127,6 +127,13 @@ document.addEventListener(
       if (colorMode === 'dark') {
         colorTheme = document.documentElement.getAttribute('data-dark-theme');
         isDarkMode = true;
+      } else if (colorMode === "auto") {
+        const html = document.querySelector('[data-color-mode]');
+        const githubTheme = getComputedStyle(html);
+        const githubBgColor = githubTheme.backgroundColor;
+        if (githubBgColor === "rgb(13, 17, 23)" || githubBgColor === "rgb(34, 39, 46)") {
+          isDarkMode = true;
+        }
       }
       if (!semaElements[0]) {
         const githubTextareaId = $(activeElement).attr('id');
@@ -157,14 +164,12 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${
-            isDarkMode ? 'theme--dark' : ''
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? 'theme--dark' : ''
           }'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${
-            isDarkMode ? 'theme--dark' : ''
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? 'theme--dark' : ''
           }'></div>`
         );
 
@@ -250,7 +255,7 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    $('div.sema').addClass('sema-is-bordered');
+    $('div.sema').addClass('sema-is-form-bordered');
   },
   true
 );
@@ -258,7 +263,7 @@ document.addEventListener(
 document.addEventListener(
   'focusout',
   (event) => {
-    $('div.sema').removeClass('sema-is-bordered');
+    $('div.sema').removeClass('sema-is-form-bordered');
   },
   true
 );

@@ -7,14 +7,15 @@ import { setAxiosInterceptor } from './utils/api';
 const middleware = [thunk];
 
 
-// if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require('redux-logger');
   const logger = createLogger({
     collapsed: true,
   });
 
   middleware.push(logger);
-// }
+}
+
 
 export const initStore = (initialState = {}) => {
   const rootReducer = combineReducers(reducers);
