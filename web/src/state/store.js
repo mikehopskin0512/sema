@@ -3,10 +3,12 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import * as reducers from './features';
 
+const ADD_REDUX_LOGGER = process.env.ADD_REDUX_LOGGER || false;
+
 const middleware = [thunk];
 
-
-if (process.env.NODE_ENV === 'development') {
+debugger;
+if (ADD_REDUX_LOGGER === true) {
   const { createLogger } = require('redux-logger');
   const logger = createLogger({
     collapsed: true,
