@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { checkAndSendEmail } from '../shared/utils';
 import {
   create, update, findByUsername, findById,
   verifyUser, resetVerification,
@@ -75,6 +76,9 @@ export default (app, passport) => {
         await redeemInvite(token, userId);
       }
 
+      // Check if first login then send welcome email
+      await checkAndSendEmail(newUser);
+
       // Send verification email
       // const message = {
       //   recipient: newUser.username,
@@ -147,12 +151,12 @@ export default (app, passport) => {
       await setRefreshToken(res, user, await createRefreshToken(user));
 
       // Send verification email
-      const message = {
-        recipient: user.username,
-        templateName: 'userConfirm',
-        firstName: user.firstName,
-      };
-      await sendEmail(message);
+      // const message = {
+      //   recipient: user.username,
+      //   templateName: 'userConfirm',
+      //   firstName: user.firstName,
+      // };
+      // await sendEmail(message);
 
       return res.status(200).send({
         response: 'User successfully verified',
