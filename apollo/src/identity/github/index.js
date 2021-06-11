@@ -8,7 +8,6 @@ import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
-import { checkAndSendEmail } from '../../shared/utils';
 
 const route = Router();
 
@@ -79,9 +78,6 @@ export default (app) => {
       if (user) {
         // Update user with identity
         await updateIdentity(user, identity);
-
-        // Check if first login then send welcome email
-        await checkAndSendEmail(user);
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
