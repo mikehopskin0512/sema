@@ -7,7 +7,6 @@ const ADD_REDUX_LOGGER = process.env.ADD_REDUX_LOGGER || false;
 
 const middleware = [thunk];
 
-debugger;
 if (ADD_REDUX_LOGGER === true) {
   const { createLogger } = require('redux-logger');
   const logger = createLogger({
