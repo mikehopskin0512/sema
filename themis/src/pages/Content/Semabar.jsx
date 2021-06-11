@@ -201,7 +201,7 @@ const Semabar = (props) => {
     );
   };
 
-  if (true) {
+  if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
