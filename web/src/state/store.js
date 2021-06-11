@@ -2,7 +2,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import * as reducers from './features';
-import { apiMiddleware } from './middleware/api';
+import { setAxiosInterceptor } from './utils/api';
 
 const middleware = [thunk];
 
@@ -18,9 +18,12 @@ const middleware = [thunk];
 
 export const initStore = (initialState = {}) => {
   const rootReducer = combineReducers(reducers);
-  return createStore(
+  const store = createStore(
     rootReducer,
     initialState,
-    composeWithDevTools(applyMiddleware(...middleware, apiMiddleware)),
+    composeWithDevTools(applyMiddleware(...middleware)),
   );
+  
+  setAxiosInterceptor(store);
+  return store;
 };
