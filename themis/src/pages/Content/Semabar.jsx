@@ -87,10 +87,10 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    const { x, y, height, width } = tagsButtonPositionValues;
+    const { x, y, height, width, offsetPos } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
-    const modalHeightWithOffset = 320;
-    const modalWidthWithOffset = 250;
+    const modalHeight = 300;
+    const modalWidth = 250;
 
     if (y && height) {
       const vh = Math.max(
@@ -99,9 +99,9 @@ const Semabar = (props) => {
       );
 
       const availableHeight = vh - (y + height);
-      console.log(modalHeightWithOffset, availableHeight);
+      console.log(modalHeight, availableHeight);
 
-      if (availableHeight > modalHeightWithOffset) {
+      if (availableHeight > modalHeight) {
         dropPosition = DROP_POSITIONS.DOWN;
       } else {
         dropPosition = DROP_POSITIONS.UP;
@@ -122,7 +122,10 @@ const Semabar = (props) => {
      */
     const dropdownStyle =
       dropPosition === DROP_POSITIONS.UP
-        ? { left: x - modalWidthWithOffset, top: '-11.8em' }
+        ? {
+            left: offsetPos.left + width - modalWidth,
+            top: offsetPos.top - modalHeight,
+          }
         : { marginTop: '-3.5em' };
 
     return (
@@ -138,8 +141,17 @@ const Semabar = (props) => {
                 y,
                 height,
                 width,
-              } = event.target.getBoundingClientRect();
-              setTagsButtonPositionValues({ x, y, height, width });
+              } = event.currentTarget.getBoundingClientRect();
+              setTagsButtonPositionValues({
+                x,
+                y,
+                height,
+                width,
+                offsetPos: {
+                  left: event.currentTarget.offsetLeft,
+                  top: event.currentTarget.offsetTop,
+                },
+              });
 
               props.toggleTagModal();
             }}
