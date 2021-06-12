@@ -15,9 +15,8 @@ const WaitlistCard = () => (
     </p>
     <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
       A few people have the ability to invite others.
-      <p>
-        Keep an eye out for our early testers.
-      </p>
+      <br />
+      Keep an eye out for our early testers.
     </p>
   </>
 );
