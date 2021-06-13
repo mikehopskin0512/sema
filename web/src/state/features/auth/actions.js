@@ -2,7 +2,7 @@ import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import {
-  auth, exchangeToken, createUser, putUser,
+  auth, exchangeToken, createUser, putUser, patchUser,
   postUserOrg, verifyUser, resetVerification,
 } from './api';
 
@@ -299,7 +299,21 @@ export const updateUser = (userItem = {}, token) => async (dispatch) => {
 
     dispatch(requestUpdateUserSuccess(user));
   } catch (error) {
-    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestUpdateUserError(errMessage));
+  }
+};
+
+export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdateUser());
+    const payload = await patchUser(userId, { fields }, token);
+    const { data: { user = {} } } = payload;
+
+    dispatch(requestUpdateUserSuccess(user));
+  } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
