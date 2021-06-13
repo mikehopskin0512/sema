@@ -16,8 +16,8 @@ import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
-const { registerUser, registerAndAuthUser } = authOperations;
-const { fetchInvite } = invitationsOperations;
+const { registerAndAuthUser, partialUpdateUser } = authOperations;
+const { fetchInvite, redeemInvite } = invitationsOperations;
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -40,6 +40,13 @@ const RegistrationForm = (props) => {
   const router = useRouter();
   const { token } = router.query;
 
+  // Import state vars
+  const { auth } = useSelector(
+    (state) => ({
+      auth: state.authState,
+    }),
+  );
+
   let identity = {};
   if (token) {
     ({ identity } = jwtDecode(token));
@@ -49,16 +56,27 @@ const RegistrationForm = (props) => {
 
   const { invitation = {} } = props;
   const { token: inviteToken, recipient } = invitation;
+  const { token: authToken, user } = auth;
+  const { _id: userId } = user;
 
   // If Github login, use that primarily. Fallback to invite recipient.
   // However normal reg will have neither
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
-    const user = { ...data, avatarUrl };
-    if (identity) { user.identities = [identity]; }
-    if (!inviteToken) { user.isWaitlist = true; }
-    dispatch(registerAndAuthUser(user, invitation));
+    if (inviteToken && authToken) {
+      // User is redeeming invite, but already exists (likely on waitlist)
+      dispatch(redeemInvite(inviteToken, userId, authToken));
+      dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
+      router.push('/dashboard');
+    } else {
+      // New user
+      // If no invite, set to waitlist
+      const isWaitlist = !inviteToken;
+      const newUser = { ...user, ...data, avatarUrl, isWaitlist };
+      if (identity) { newUser.identities = [identity]; }
+      dispatch(registerAndAuthUser(newUser, invitation));
+    }
   };
 
   const renderEmailList = (emails) => {
