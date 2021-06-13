@@ -16,7 +16,7 @@ const LoginCard = ({ isAuthenticated }) => {
       Sema is still a work in progress. Join the waitlist to be
       amongst the first to try it out.
     </p>
-    <span className="is-size-8 has-text-gray-dark">By joining the waitlist, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
+    <span className="is-size-8 has-text-gray-dark">By joining, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
     <button
       type="button"
       className="button is-black is-primary colored-shadow-small p-25 mt-15"
