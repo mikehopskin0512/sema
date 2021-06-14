@@ -121,7 +121,7 @@ const InvitesPage = () => {
   }
 
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
+    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
       <h1 className='has-text-black has-text-weight-bold is-size-3'>Invites</h1>
       <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Sema is better with friends. View your invites at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
