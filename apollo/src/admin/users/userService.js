@@ -86,3 +86,11 @@ export const getFilterMetrics = async () => {
 
   return { total, active, waitlist, blocked, disabled };
 };
+
+export const bulkAdmitUsers = async (bulkCount) => {
+  const users = await User.find({ isActive: true, isWaitlist: true }).select('_id').sort('createdAt').limit(parseInt(bulkCount, 10));
+
+  const userIds = users.map(item => item._id);
+
+  await User.updateMany({ _id: { $in: userIds } }, { $set: { isWaitlist: false } });
+};
