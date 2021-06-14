@@ -27,7 +27,10 @@ export const sendEmail = async (messageData) => {
 
   const msg = {
     templateId: templates[templateName],
-    from: sender,
+    from: {
+      name: `${fullName} via Sema`,
+      email: sender,
+    },
     to: recipient,
     dynamic_template_data: {
       firstName,
