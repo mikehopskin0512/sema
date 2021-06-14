@@ -10,6 +10,7 @@ import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
+import Helmet from '../../components/utils/Helmet';
 import Toaster from '../../components/toaster';
 
 import { invitationsOperations } from '../../state/features/invitations';
@@ -18,6 +19,7 @@ import { alertOperations } from '../../state/features/alerts';
 import styles from './dashboard.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
+const PAGE_TITLE = 'Dashboard';
 
 const { clearAlert } = alertOperations;
 const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
@@ -148,6 +150,7 @@ const Invite = () => {
 
   return (
     <>
+      <Helmet title={PAGE_TITLE} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
@@ -335,7 +338,7 @@ const PromotionBoard = () => {
       <p
         className={clsx(
           'title has-text-centered has-text-weight-semibold is-size-4 mt-120 mb-50'
-          // styles.tableHeader
+          // styles.tableHeaderrenderCard
         )}
         dangerouslySetInnerHTML={{
           __html: heading,
