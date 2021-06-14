@@ -121,7 +121,7 @@ const Invite = () => {
     if (!isPluginInstalled) {
       return (
         <div className="mb-50">
-          <img src="/img/loader.gif" />
+          <img src="/img/logo_loader.gif" />
           <p>Searching for plugin...</p>
         </div>
       );
