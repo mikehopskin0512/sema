@@ -297,11 +297,11 @@ const UsersPage = () => {
   }
 
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
+    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white" style={{ background: '#f7f8fa' }}>
       <div className='is-flex is-justify-content-space-between'>
         <div>
           <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
-          <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
+          <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
         </div>
         <BulkAdmitForm onSubmit={onBulkAdmitUsers} />
       </div>
