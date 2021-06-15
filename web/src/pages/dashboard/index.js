@@ -11,6 +11,7 @@ import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
 import Toaster from '../../components/toaster';
+import SupportForm from '../../components/supportForm';
 
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
@@ -41,6 +42,7 @@ const Invite = () => {
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
   const [recipient, setRecipient] = useState("");
+  const [supportForm, setSupportForm] = useState(false);
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
@@ -117,6 +119,9 @@ const Invite = () => {
     window.location.href = EXTENSION_LINK;
   };
 
+  const openSupportForm = () => setSupportForm(true);
+  const closeSupportForm = () => setSupportForm(false);
+
   const renderIcon = () => {
     if (!isPluginInstalled) {
       return (
@@ -149,6 +154,7 @@ const Invite = () => {
   return (
     <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
@@ -236,7 +242,7 @@ const Invite = () => {
             </div>
           </div>
         </div>
-        <ContactUs userVoiceToken={userVoiceToken}/>
+        <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>
       </section>
     </>
   );
@@ -346,7 +352,7 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = ({ userVoiceToken }) => {
+const ContactUs = ({ userVoiceToken, openSupportForm }) => {
   return (
     <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
       <div className="column is-6">
@@ -354,7 +360,7 @@ const ContactUs = ({ userVoiceToken }) => {
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</a>
+        <button onClick={openSupportForm} className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</button>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
         <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
