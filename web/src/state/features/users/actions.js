@@ -1,4 +1,4 @@
-import { getUsers, updateUserInvitations, updateUserStatus } from './api';
+import { getUser, getUsers, updateUserInvitations, updateUserStatus } from './api';
 import * as types from './types';
 
 const requestUpdateUserAvailableInvitations = () => ({
@@ -19,9 +19,10 @@ const requestFetchUsers = () => ({
   type: types.REQUEST_FETCH_USERS,
 });
 
-const requestFetchUsersSuccess = (users) => ({
+const requestFetchUsersSuccess = (users, filters) => ({
   type: types.REQUEST_FETCH_USERS_SUCCESS,
   users,
+  filters
 });
 
 const requestFetchUsersError = (errors) => ({
@@ -43,13 +44,27 @@ const requestUpdateUserStatusError = (errors) => ({
   errors,
 });
 
+const requestFetchUser = () => ({
+  type: types.REQUEST_FETCH_USER,
+});
+
+const requestFetchUserSuccess = (user) => ({
+  type: types.REQUEST_FETCH_USER_SUCCESS,
+  user,
+});
+
+const requestFetchUserError = (errors) => ({
+  type: types.REQUEST_FETCH_USER_ERROR,
+  errors,
+});
+
 export const fetchUsers = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUsers());
     const payload = await getUsers(params, token);
-    const { data: { users = [] } } = payload;
+    const { data: { users = [], filters = [] } } = payload;
 
-    dispatch(requestFetchUsersSuccess(users));
+    dispatch(requestFetchUsersSuccess(users, filters));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -86,5 +101,20 @@ export const updateStatus = (params = {}, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestUpdateUserStatusError(errMessage));
+  }
+};
+
+export const fetchUser = (id, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchUser());
+    const payload = await getUser(id, token);
+    const { data } = payload;
+
+    dispatch(requestFetchUserSuccess(data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFetchUserError(errMessage));
   }
 };

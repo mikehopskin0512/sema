@@ -1,6 +1,10 @@
 import { format } from 'date-fns';
 import * as types from './types';
-import { getInvite, postInvite, getInvitations, postResendInvite, deleteInvite, getInvitationsMetric, exportInvitationsMetric } from './api';
+import {
+  getInvite, postInvite, getInvitations,
+  patchRedeemInvite, postResendInvite, deleteInvite,
+  getInvitationsMetric, exportInvitationsMetric,
+} from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -74,6 +78,20 @@ const requestDeleteInviteError = (errors) => ({
   errors,
 });
 
+const requestRedeemInvite = () => ({
+  type: types.REQUEST_REDEEM_INVITE,
+});
+
+const requestRedeemInviteSuccess = (response) => ({
+  type: types.REQUEST_REDEEM_INVITE_SUCCESS,
+  response,
+});
+
+const requestRedeemInviteError = (errors) => ({
+  type: types.REQUEST_REDEEM_INVITE_ERROR,
+  errors,
+});
+
 const requestFetchInviteMetrics = () => ({
   type: types.REQUEST_FETCH_INVITE_METRICS,
 });
@@ -137,6 +155,20 @@ export const getInvitesBySender = (userId, token, search) => async (dispatch) =>
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestGetInvitesBySenderError(errMessage));
+  }
+};
+
+export const redeemInvite = (invitationToken, userId, token) => async (dispatch) => {
+  try {
+    dispatch(requestRedeemInvite());
+    const payload = await patchRedeemInvite(invitationToken, { userId }, token);
+    const { data: { response } } = payload;
+    dispatch(requestRedeemInviteSuccess(response));
+  } catch (error) {
+    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestRedeemInviteError(errMessage));
   }
 };
 

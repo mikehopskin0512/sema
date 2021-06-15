@@ -5,8 +5,9 @@ const Tabs = ({ tabs, value, onChange }) => {
   return (
     <div className="buttons has-addons mb-10">
       {
-        tabs.map(tab => (
+        tabs.map((tab, i) => (
           <button
+            key={i}
             className={`button outline-none ${value === tab.value && 'has-background-purple has-text-white'}`}
             onClick={() => onChange(tab.value)}
           >

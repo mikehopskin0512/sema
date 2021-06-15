@@ -16,8 +16,8 @@ import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
-const { registerUser, registerAndAuthUser } = authOperations;
-const { fetchInvite } = invitationsOperations;
+const { registerAndAuthUser, partialUpdateUser } = authOperations;
+const { fetchInvite, redeemInvite } = invitationsOperations;
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -40,6 +40,13 @@ const RegistrationForm = (props) => {
   const router = useRouter();
   const { token } = router.query;
 
+  // Import state vars
+  const { auth } = useSelector(
+    (state) => ({
+      auth: state.authState,
+    }),
+  );
+
   let identity = {};
   if (token) {
     ({ identity } = jwtDecode(token));
@@ -49,23 +56,35 @@ const RegistrationForm = (props) => {
 
   const { invitation = {} } = props;
   const { token: inviteToken, recipient } = invitation;
+  const { token: authToken, user } = auth;
+  const { _id: userId } = user;
 
   // If Github login, use that primarily. Fallback to invite recipient.
   // However normal reg will have neither
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
-    const user = { ...data, avatarUrl };
-    if (identity) { user.identities = [identity]; }
-    dispatch(registerAndAuthUser(user, invitation));
+    if (inviteToken && authToken) {
+      // User is redeeming invite, but already exists (likely on waitlist)
+      dispatch(redeemInvite(inviteToken, userId, authToken));
+      dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
+      router.push('/dashboard');
+    } else {
+      // New user
+      // If no invite, set to waitlist
+      const isWaitlist = !inviteToken;
+      const newUser = { ...user, ...data, avatarUrl, isWaitlist };
+      if (identity) { newUser.identities = [identity]; }
+      dispatch(registerAndAuthUser(newUser, invitation));
+    }
   };
 
   const renderEmailList = (emails) => {
     if (emails.length) {
-      emails = emails.sort(function (x, y) { return x.email === githubEmail ? -1 : y.email == githubEmail ? 1 : 0; });
+      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
       return emails
-        .filter((e) => e.email.search("users.noreply") === -1)
-        .map((e, i) => <option key={`${e.email}-${i}`} value={e.email}>{e.email}</option>)
+        .filter((e) => e.search("users.noreply") === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
     }
   }
 
@@ -95,7 +114,7 @@ const RegistrationForm = (props) => {
         ) : (
           <div>
             <h1 className="title is-4 is-spaced">Complete your profile information</h1>
-            <p className="subtitle is-6">Nulla tincidunt consequat tortor ultricies iaculis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <p className="subtitle is-6">Please complete or verify your profile information below. We use this information to personalize your experience.</p>
           </div>
         )}
         <form className="mt-20" onSubmit={handleSubmit(onSubmit)}>
@@ -213,25 +232,7 @@ const RegistrationForm = (props) => {
               </div>
             )
           }
-          <div className="field">
-            <label className="checkbox">
-              <input
-                type="checkbox"
-                name="terms"
-                {
-                ...register('terms',
-                  {
-                    required: 'You must accept terms',
-                  })
-                }
-              />
-              <span className="is-size-6">
-                &nbsp;&nbsp;By selecting the checkbox you agree to the <a href="#">terms & conditions</a>
-              </span>
-              <p className="help is-danger">{errors.terms && errors.terms.message}</p>
-            </label>
-          </div>
-          <div className="control">
+          <div className="control mt-20">
             <button
               type="submit"
               className="button is-black">Continue

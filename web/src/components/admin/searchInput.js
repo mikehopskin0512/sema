@@ -13,11 +13,11 @@ const SearchInput = ({ value, onChange }) => (
       onChange={(e) => onChange(e.target.value)}
     />
     </p>
-    <p className="control">
+    <div className="control">
       <div className="button is-static is-clickable">
         <FontAwesomeIcon icon='search' />
       </div>
-    </p>
+    </div>
   </div>
 );
 

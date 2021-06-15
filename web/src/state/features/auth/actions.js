@@ -2,7 +2,7 @@ import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import {
-  auth, exchangeToken, createUser,
+  auth, exchangeToken, createUser, putUser, patchUser,
   postUserOrg, verifyUser, resetVerification,
 } from './api';
 
@@ -49,7 +49,7 @@ const requestRefreshToken = () => ({
   type: types.REQUEST_REFRESH_TOKEN,
 });
 
-export const requestRefreshTokenSuccess = (token) => ({
+const requestRefreshTokenSuccess = (token) => ({
   type: types.RECEIVE_REFRESH_TOKEN_SUCCESS,
   token,
 });
@@ -194,6 +194,27 @@ const resetVerificationError = (errors) => ({
   errors,
 });
 
+const requestUpdateUser = () => ({
+  type: types.REQUEST_UPDATE_USER,
+});
+
+const requestUpdateUserSuccess = (user) => ({
+  type: types.REQUEST_UPDATE_USER_SUCCESS,
+  user,
+});
+
+const requestUpdateUserError = (errors) => ({
+  type: types.REQUEST_UPDATE_USER_ERROR,
+  errors,
+});
+
+export const setUser = function (user) {
+  return {
+    type: types.SET_USER,
+    user,
+  };
+};
+
 export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
@@ -269,9 +290,33 @@ export const resendVerification = (username) => async (dispatch) => {
   }
 };
 
-export const setUser = function (user) {
-  return {
-    type: types.SET_USER,
-    user,
-  };
+export const updateUser = (userItem = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdateUser());
+    const { _id: userId } = userItem;
+    const payload = await putUser(userId, { user: userItem }, token);
+    const { data: { user = {} } } = payload;
+
+    dispatch(requestUpdateUserSuccess(user));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestUpdateUserError(errMessage));
+  }
+};
+
+export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdateUser());
+    const payload = await patchUser(userId, { fields }, token);
+    const { data: { user = {} } } = payload;
+
+    dispatch(requestUpdateUserSuccess(user));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestUpdateUserError(errMessage));
+  }
 };

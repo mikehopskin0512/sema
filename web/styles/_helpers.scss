@@ -27,6 +27,10 @@
   height: 100%;
 }
 
+.is-cursor-pointer {
+  cursor: pointer;
+}
+
 .outline-none {
   &:hover, &:focus {
     outline: none !important;;
