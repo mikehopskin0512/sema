@@ -29,7 +29,8 @@ export default (app, passport) => {
     }
 
     const userRecipient = await findByUsername(invitation.recipient);
-    if (userRecipient) {
+    const { isWaitlist = false } = userRecipient;
+    if (userRecipient && !isWaitlist) {
       return res.status(401).send({ message: `${invitation.recipient} is already an active member.` });
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
