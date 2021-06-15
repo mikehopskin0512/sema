@@ -401,7 +401,7 @@ export const getGithubInlineMetadata = (id) => {
   const filename = document.querySelector(
     `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
-  const [, file_extension] = filename.split('.');
+  const [, file_extension] = filename?.split('.') || [];
   const line_numbers = [
     ...new Set(
       Array.from(
