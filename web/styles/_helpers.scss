@@ -14,6 +14,14 @@
     background-color: #FCFCFC;
 };
 
+.background-gray-white {
+  background-color: #E5E5E5;
+}
+
+.text-gray-light {
+  color: #7C8188;
+}
+
 // Minimum height of the object is the full height of the screen minus the height of the header and the footer
 .is-min-fullheight {
     min-height: calc(100vh - 152px);
