@@ -10,7 +10,7 @@ import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
-import Helmet from '../../components/utils/Helmet';
+import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
@@ -19,8 +19,6 @@ import { invitationsOperations } from '../../state/features/invitations';
 const { clearAlert } = alertOperations;
 const { registerUser, registerAndAuthUser } = authOperations;
 const { fetchInvite } = invitationsOperations;
-
-const PAGE_TITLE = 'Register';
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -77,7 +75,7 @@ const RegistrationForm = (props) => {
 
   return (
     <div className="columns is-justify-content-center">
-      <Helmet title={PAGE_TITLE} />
+      <Helmet {...RegisterHelmet} />
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (

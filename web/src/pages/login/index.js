@@ -13,7 +13,7 @@ import withLayout from '../../components/layout';
 import LoginCard from '../../components/auth/LoginCard';
 import InviteCard from '../../components/auth/InviteCard';
 import WaitlistCard from '../../components/auth/WaitlistCard';
-import Helmet from '../../components/utils/Helmet';
+import Helmet, { LoginHelmet } from '../../components/utils/Helmet';
 import styles from './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
@@ -23,9 +23,6 @@ import { invitationsOperations } from '../../state/features/invitations';
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
 const { fetchInvite } = invitationsOperations;
-
-const PAGE_TITLE = 'Login';
-
 
 const Login = () => {
   const router = useRouter();
@@ -72,13 +69,13 @@ const Login = () => {
 
   useEffect(() => {
     if (token) {
-      dispatch(fetchInvite(token));Helmet
+      dispatch(fetchInvite(token));
     }
   }, [])
 
   return (
     <div className={styles.container}>
-      <Helmet title={PAGE_TITLE} />
+      <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className="hero">
         <div className="hero-body">
