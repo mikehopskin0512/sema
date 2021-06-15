@@ -3,7 +3,9 @@ import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
-  create, deleteInvitation, findById, findByToken, getInvitationsBySender, getInvitationByRecipient,
+  create, deleteInvitation, findById, findByToken,
+  getInvitationsBySender, getInvitationByRecipient,
+  redeemInvite,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
@@ -27,7 +29,8 @@ export default (app, passport) => {
     }
 
     const userRecipient = await findByUsername(invitation.recipient);
-    if (userRecipient) {
+    const { isWaitlist = false } = userRecipient;
+    if (userRecipient && !isWaitlist) {
       return res.status(401).send({ message: `${invitation.recipient} is already an active member.` });
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
@@ -151,6 +154,27 @@ export default (app, passport) => {
 
       return res.status(201).send({
         response: 'Invitation sent successfully',
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // Redeem invitation
+  route.patch('/:token/redeem', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const {
+      params: { token },
+      body: { userId },
+    } = req;
+    try {
+      const userInvitation = await redeemInvite(token, userId);
+      if (!userInvitation) {
+        return res.status(401).send({ message: `Invitation redemption error` });
+      }
+
+      return res.status(201).send({
+        response: 'Invitation successfully redeemed',
       });
     } catch (error) {
       logger.error(error);

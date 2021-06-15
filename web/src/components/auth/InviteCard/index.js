@@ -13,7 +13,7 @@ const InviteCard = ({ invitation }) => {
         <strong>{isEmpty(senderName) ? 'Your colleague' : senderName }</strong> would love for you to join them.
       </p>
       <div>
-        <span className="is-size-8 has-text-gray-dark">By joining the waitlist, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
+        <span className="is-size-8 has-text-gray-dark">By joining, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
       </div>
       <a
         type="button"

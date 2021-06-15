@@ -18,7 +18,7 @@ const LoginCard = ({ isAuthenticated }) => {
       </p>
       <div className="mb-15">
         <span className="is-size-8 has-text-gray-dark">
-          By joining the waitlist, you are agreeing to Sema’s
+          By joining, you are agreeing to Sema’s
           <a href="https://semasoftware.com/terms-and-conditions/">
             Terms & Conditions
           </a>
@@ -26,7 +26,7 @@ const LoginCard = ({ isAuthenticated }) => {
       </div>
       <button
         type="button"
-        className="button is-black is-primary colored-shadow-small"
+        className="button is-black is-primary colored-shadow-small p-25 mt-15"
         onClick={githubLogin}
         disabled={isAuthenticated}
       >

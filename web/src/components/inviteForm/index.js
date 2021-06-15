@@ -21,7 +21,7 @@ const InviteForm = ({ onReload }) => {
 
   const { token, user } = auth;
   const [recipient, setRecipient] = useState("");
-  const { _id: userId, organizations = [], inviteCount = 0} = user;
+  const { _id: userId, username: senderEmail, organizations = [], inviteCount = 0} = user;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
 
@@ -47,6 +47,7 @@ const InviteForm = ({ onReload }) => {
       orgName,
       sender: userId,
       senderName: fullName(user),
+      senderEmail,
       inviteCount
     };
     // Send invite & reset form
