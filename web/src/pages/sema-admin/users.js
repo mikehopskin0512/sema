@@ -300,9 +300,9 @@ const UsersPage = () => {
   }, [setPage, setPerPage]);
 
   return (
-    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
+    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
-      <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
+      <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
         <div className='is-flex sema-is-justify-content-space-between'>
           <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
