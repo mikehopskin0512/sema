@@ -8,7 +8,6 @@ import { getProfile, getUserEmails } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
-import { checkAndSendEmail } from '../../shared/utils';
 
 const route = Router();
 
@@ -77,19 +76,21 @@ export default (app) => {
 
       const user = await findByUsernameOrIdentity(email, identity);
       if (user) {
+        const { isWaitlist = true } = user;
+
         // Update user with identity
         await updateIdentity(user, identity);
-
-        // Check if first login then send welcome email
-        await checkAndSendEmail(user);
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
 
-        // No need to send jwt. It will pick up the refresh token cookie on frontend
-        // return res.redirect(`${orgDomain}/reports`);
-        return res.redirect(`${orgDomain}/dashboard`);
-        // return res.status(201).send({ jwtToken: await createAuthToken(user) });
+        if (!isWaitlist) {
+          // If user is on waitlist, bypass and redirect to register page (below)
+          // No need to send jwt. It will pick up the refresh token cookie on frontend
+          // return res.redirect(`${orgDomain}/reports`);
+          return res.redirect(`${orgDomain}/dashboard`);
+          // return res.status(201).send({ jwtToken: await createAuthToken(user) });
+        }
       }
 
       const identityToken = await createIdentityToken(identity);
