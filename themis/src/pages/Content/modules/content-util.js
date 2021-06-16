@@ -61,6 +61,10 @@ export const isValidSemaTextBox = (element) => {
 };
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
+  selectedEmojiString = selectedEmojiString
+    .replaceAll('<b>', '')
+    .replaceAll('</b>', '');
+
   // If no reactions or tags selected, return blank string
   if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) {
     return '';

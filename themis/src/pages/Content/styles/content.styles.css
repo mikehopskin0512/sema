@@ -65,14 +65,6 @@
   font-size: 1rem;
 }
 
-.zoom {
-  transition: transform 0.2s;
-}
-
-.zoom:hover {
-  transform: scale(1.5);
-}
-
 .sema-dropdown-menu {
   border: 1px solid var(--color-border);
 }
@@ -128,16 +120,20 @@
 
 .reaction-selection-wrapper {
   background-color: var(--color-sema-bg);
-  border: 1px solid var(--color-btn-border);
-  border-radius: 34px;
-  border-width: 1px;
-  border-style: solid;
-  border-image: initial;
 }
 
 .reaction-selection {
   border: unset;
   background: transparent;
+  font-size: 16px !important;
+}
+
+.reaction-selection span {
+  padding-left: 12px;
+}
+
+.reaction-selection-wrapper .sema-dropdown-content button:hover {
+  background-color: rgba(0, 129, 167, 0.05);
 }
 
 .expandedEmojis {
