@@ -26,7 +26,8 @@ import {
   CALCULATION_ANIMATION_DURATION_MS,
   WHOAMI,
   SEMA_ICON_ANCHOR_DARK,
-  SEMA_ICON_ANCHOR_DARK_DIMMED
+  SEMA_ICON_ANCHOR_DARK_DIMMED,
+  LIGHT, DARK, DARK_DIMMED
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -111,7 +112,7 @@ document.addEventListener(
     const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
       const semaElements = $(activeElement).siblings('div.sema');
-      let githubTheme = "light";
+      let extensionTheme = LIGHT;
       let themeClass = '';
       let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
       const colorMode = document.documentElement.getAttribute(
@@ -127,31 +128,28 @@ document.addEventListener(
       let colorTheme = document.documentElement.getAttribute(
         'data-light-theme'
       );
-      let isDarkMode = false;
-      if (colorMode === 'dark') {
-        githubTheme = 'dark';
+      if (colorMode === DARK) {
+        extensionTheme = DARK;
         colorTheme = document.documentElement.getAttribute('data-dark-theme');
-        if (colorTheme === "dark_dimmed") {
-          githubTheme = 'dark_dimmed';
+        if (colorTheme === DARK_DIMMED) {
+          extensionTheme = DARK_DIMMED;
         }
-        isDarkMode = true;
       } else if (colorMode === "auto") {
         const html = document.querySelector('[data-color-mode]');
         const githubTheme = getComputedStyle(html);
         const githubBgColor = githubTheme.backgroundColor;
         if (githubBgColor === "rgb(13, 17, 23)") {
-          isDarkMode = true;
-          githubTheme = 'dark';
+          extensionTheme = DARK;
         } else if (githubBgColor === "rgb(34, 39, 46)") {
-          githubTheme = 'dark_dimmed';
+          extensionTheme = DARK_DIMMED;
         }
       }
-      switch (githubTheme) {
-        case 'dark':
+      switch (extensionTheme) {
+        case DARK:
           themeClass = 'theme--dark';
           SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
           break;
-        case 'dark_dimmed':
+        case DARK_DIMMED:
           themeClass = 'theme--dark-dimmed';
           SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
           break;

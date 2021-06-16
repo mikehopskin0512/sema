@@ -233,3 +233,7 @@ export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
 export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
+
+export const LIGHT = 'light';
+export const DARK = 'dark';
+export const DARK_DIMMED = 'dark_dimmed';
