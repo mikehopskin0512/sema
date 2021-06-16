@@ -2,8 +2,9 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { checkAndSendEmail } from '../shared/utils';
 import {
-  create, update, findByUsername, findById,
+  create, update, patch, findByUsername, findById,
   verifyUser, resetVerification,
   joinOrg,
   initiatePasswordReset, validatePasswordReset, resetPassword,
@@ -75,6 +76,9 @@ export default (app, passport) => {
         await redeemInvite(token, userId);
       }
 
+      // Check if first login then send welcome email
+      await checkAndSendEmail(newUser);
+
       // Send verification email
       // const message = {
       //   recipient: newUser.username,
@@ -95,11 +99,33 @@ export default (app, passport) => {
   });
 
   // Update user
-  route.put('/:id', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
+  route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const user = await update(req.body.user);
       if (!user) {
         throw new errors.BadRequest('User update error');
+      }
+
+      delete user.password;
+      return res.status(200).send({
+        user,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // Patch user
+  route.patch('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const {
+      params: { id },
+      body: { fields },
+    } = req;
+    try {
+      const user = await patch(id, fields);
+      if (!user) {
+        throw new errors.BadRequest('User patch error');
       }
 
       delete user.password;
@@ -147,12 +173,12 @@ export default (app, passport) => {
       await setRefreshToken(res, user, await createRefreshToken(user));
 
       // Send verification email
-      const message = {
-        recipient: user.username,
-        templateName: 'userConfirm',
-        firstName: user.firstName,
-      };
-      await sendEmail(message);
+      // const message = {
+      //   recipient: user.username,
+      //   templateName: 'userConfirm',
+      //   firstName: user.firstName,
+      // };
+      // await sendEmail(message);
 
       return res.status(200).send({
         response: 'User successfully verified',
