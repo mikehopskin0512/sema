@@ -69,7 +69,7 @@ const highlightWords = highlightPhrases.reduce((acc, curr) => {
 
 /**
  * Listening to click event for:
- * 1. if github button is pressed then put sems comments in the textarea
+ * 1. if github button is pressed then put sema comments in the textarea
  * 2. things like closing modals when clicked outside of the element
  */
 document.addEventListener(
@@ -109,6 +109,7 @@ document.addEventListener(
   (event) => {
     const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
+      checkLoggedIn();
       const semaElements = $(activeElement).siblings('div.sema');
       const colorMode = document.documentElement.getAttribute(
         'data-color-mode'
