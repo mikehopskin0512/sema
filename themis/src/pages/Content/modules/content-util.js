@@ -476,6 +476,8 @@ export const setMutationObserverInLine = () => {
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
         smartComment.commentId = id;
+      } else {
+        return;
       }
       createSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
