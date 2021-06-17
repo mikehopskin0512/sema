@@ -1,75 +1,152 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 
-const SupportForm = ({ active, closeForm }) => (
-  <div className={clsx('modal', active ? 'is-active' : '')}>
-    <div className="modal-background" />
-    <div className="modal-content p-50">
-      <div className="has-background-white p-50">
-        <button className="modal-close is-large" aria-label="close" type="button" onClick={closeForm} />
-        <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">Let us know what you think!</p>
-        <form>
-          <div className="field mt-20">
-            <label className="label" htmlFor="title">
-              <p className="is-size-7 is-size-5-mobile">Title</p>
-              <div className="control mt-10">
-                <input className="input is-size-7 is-size-5-mobile" type="text" id="title" />
+import { supportOperations } from '../../state/features/support';
+
+const { submitSupportEmail } = supportOperations;
+
+const SupportForm = ({ active, closeForm }) => {
+  const dispatch = useDispatch();
+  const { auth, support } = useSelector((state) => ({
+    auth: state.authState,
+    support: state.supportState,
+  }));
+
+  const { user: { username }, token } = auth;
+  const { isSending = false } = support;
+
+  const defaultValues = {
+    title: '',
+    type: 'Support',
+    message: '',
+    email: username,
+    receiveCopy: false,
+  };
+
+  const { register, handleSubmit, formState, reset } = useForm({ defaultValues });
+  const { errors } = formState;
+
+  const onSubmit = async (data) => {
+    const response = await dispatch(submitSupportEmail(data, token));
+    const { status } = response;
+    if (status === 201) {
+      reset();
+    }
+  };
+
+  return (
+    <>
+      <div className={clsx('modal', active ? 'is-active' : '')}>
+        <div className="modal-background" />
+        <div className="modal-content p-50">
+          <div className="has-background-white p-50">
+            <button className="modal-close is-large" aria-label="close" type="button" onClick={closeForm} />
+            <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">Let us know what you think!</p>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="field mt-20">
+                <label className="label" htmlFor="title">
+                  <p className="is-size-7 is-size-5-mobile">Title</p>
+                  <div className="control mt-10">
+                    <input
+                      className={`input is-size-7 is-size-5-mobile ${errors.title && 'is-danger'}`}
+                      type="text"
+                      id="title"
+                      {
+                        ...register('title',
+                          {
+                            required: 'Title is required',
+                            minLength: { value: 10, message: 'Title must be more than 10 characters' },
+                          })
+                      }
+                    />
+                    <p className="help is-danger">{errors.title && errors.title.message}</p>
+                  </div>
+                </label>
               </div>
-            </label>
-          </div>
-          <div className="field mt-20">
-            <label className="label" htmlFor="subject">
-              <p className="is-size-7 is-size-5-mobile">Type</p>
-              <div className="control mt-10">
-                <div className="select is-fullwidth is-size-7 is-size-5-mobile">
-                  <select>
-                    <option className="is-size-7 is-size-5-mobile" value="Support">Support</option>
-                    <option className="is-size-7 is-size-5-mobile" value="Feedback"> Feedback</option>
-                    <option className="is-size-7 is-size-5-mobile" value="Other">Other</option>
-                  </select>
+              <div className="field mt-20">
+                <label className="label" htmlFor="type">
+                  <p className="is-size-7 is-size-5-mobile">Type</p>
+                  <div className="control mt-10">
+                    <div className="select is-fullwidth is-size-7 is-size-5-mobile">
+                      <select
+                        {
+                          ...register('type',
+                            {
+                              required: 'Type is required',
+                            })
+                        }
+                      >
+                        <option className="is-size-7 is-size-5-mobile" value="Support">Support</option>
+                        <option className="is-size-7 is-size-5-mobile" value="Feedback"> Feedback</option>
+                        <option className="is-size-7 is-size-5-mobile" value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                </label>
+              </div>
+              <div className="field mt-20">
+                <label className="label" htmlFor="message">
+                  <p className="is-size-7 is-size-5-mobile">Additional Detail</p>
+                  <div className="control mt-10">
+                    <textarea
+                      className="textarea is-size-7 is-size-5-mobile"
+                      id="message"
+                      placeholder="Optional"
+                      {...register('message')}
+                    />
+                  </div>
+                </label>
+              </div>
+              <div className="field mt-20">
+                <label className="label" htmlFor="email">
+                  <p className="is-size-7 is-size-5-mobile">Email</p>
+                  <div className="control mt-10">
+                    <input
+                      className={`input is-size-7 is-size-5-mobile ${errors.email && 'is-danger'}`}
+                      id="email"
+                      type="email"
+                      {
+                        ...register('email',
+                          {
+                            required: 'Email is required',
+                            pattern: {
+                              value: /\S+@\S+\.\S+/,
+                              message: 'Entered value does not match email format',
+                            },
+                          })
+                      }
+                    />
+                    <p className="help is-danger">{errors.email && errors.email.message}</p>
+                  </div>
+                </label>
+              </div>
+              <div className="field mt-20">
+                <div className="control">
+                  <label className="checkbox" htmlFor="receiveCopy">
+                    <p className="is-size-7 is-size-5-mobile">
+                      <input type="checkbox" className="mr-8" id="receiveCopy" {...register('receiveCopy')} />Send yourself a copy of this message?
+                    </p>
+                  </label>
                 </div>
               </div>
-            </label>
-          </div>
-          <div className="field mt-20">
-            <label className="label" htmlFor="message">
-              <p className="is-size-7 is-size-5-mobile">Additional Detail</p>
-              <div className="control mt-10">
-                <textarea className="textarea is-size-7 is-size-5-mobile" id="message" placeholder="Optional" />
+              <div className="field is-grouped mt-25 is-flex is-justify-content-center">
+                <div className="control">
+                  <button className={`button is-link ${isSending ? 'is-loading' : ''}`} type="submit">Submit</button>
+                </div>
+                <div className="control">
+                  <button onClick={closeForm} className="button is-link is-light" type="button">Cancel</button>
+                </div>
               </div>
-            </label>
+            </form>
           </div>
-          <div className="field mt-20">
-            <label className="label" htmlFor="email">
-              <p className="is-size-7 is-size-5-mobile">Email</p>
-              <div className="control mt-10">
-                <input className="input is-size-7 is-size-5-mobile" id="email" type="email" />
-              </div>
-            </label>
-          </div>
-          <div className="field mt-20">
-            <div className="control">
-              <label className="checkbox" htmlFor="sendCopy">
-                <p className="is-size-7 is-size-5-mobile">
-                  <input type="checkbox" className="mr-8" id="sendCopy" />Send yourself a copy of this message?
-                </p>
-              </label>
-            </div>
-          </div>
-          <div className="field is-grouped mt-25 is-flex is-justify-content-center">
-            <div className="control">
-              <button className="button is-link" type="submit">Submit</button>
-            </div>
-            <div className="control">
-              <button onClick={closeForm} className="button is-link is-light" type="button">Cancel</button>
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
-    </div>
-  </div>
-);
+    </>
+  );
+};
 
 SupportForm.propTypes = {
   active: PropTypes.bool.isRequired,
