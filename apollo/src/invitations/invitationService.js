@@ -1,4 +1,3 @@
-import * as Json2CSV from 'json2csv';
 import Invitation from './invitationModel';
 import User from '../users/userModel';
 import logger from '../shared/logger';
@@ -142,73 +141,4 @@ export const deleteInvitation = async (_id) => {
     logger.error(error);
     throw (error);
   }
-};
-
-export const getInviteMetrics = async (type) => {
-  try {
-    const invites = await Invitation.aggregate([
-      { $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'sender',
-          foreignField: '_id',
-          as: 'senders',
-        },
-      },
-      { $unwind: { path: '$senders', preserveNullAndEmptyArrays: true } },
-      {
-        $addFields: {
-          domain: { $arrayElemAt: [{ $split: ['$senders.username', '@'] }, 1] },
-        },
-      },
-      {
-        $group: {
-          _id: {
-            'sender': type === 'domain' ? '$domain' : '$sender',
-          },
-          total: { $sum: 1 },
-          accepted: { $sum: { $cond: { if: { $and: [ { $eq: [ "$isPending", false ] }, { $gte: [ "$tokenExpires", new Date() ] } ]  }, then: 1, else: 0 } } },
-          pending: { $sum: { $cond: { if: { $and: [ { $eq: [ "$isPending", true ] }, { $gte: [ "$tokenExpires", new Date() ] } ]  }, then: 1, else: 0 } } },
-          expired: { $sum: { $cond: { if: { $lt: [ "$tokenExpires", new Date() ] }, then: 1, else: 0 } } },
-          sender: { $first: '$senders' },
-          domain: { $first: '$domain' },
-        },
-      },
-    ]);
-
-    return invites;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-};
-
-export const exportInviteMetrics = async (type) => {
-  const metricData = await getInviteMetrics(type);
-  const mappedMetricData = metricData.map(item => ({
-    Email: item.sender && (
-      type === 'person'
-        ? item.sender.username
-        : item.sender.username && item.sender.username.split('@')[1]
-    ),
-    Name: item.sender && (
-      type === 'person'
-        ? `${item.sender.firstName} ${item.sender.lastName}`
-        : item.sender.username && item.sender.username.split('@')[1]
-    ),
-    Total: item.total,
-    Pending: item.pending,
-    Accepted: item.accepted,
-    Expired: item.expired,
-  }));
-
-  const { Parser } = Json2CSV;
-  const fields = ['Email', 'Name', 'Total', 'Pending', 'Accepted', 'Expired'];
-
-  const json2csvParser = new Parser({ fields });
-  const csv = json2csvParser.parse(mappedMetricData);
-
-  return csv;
 };
