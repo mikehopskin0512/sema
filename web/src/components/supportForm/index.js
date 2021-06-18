@@ -52,7 +52,7 @@ const SupportForm = ({ active, closeForm }) => {
         <div className="modal-content p-50">
           <div className="has-background-white p-50">
             <button className="modal-close is-large" aria-label="close" type="button" onClick={closeForm} />
-            <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">Let us know what you think!</p>
+            <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">We’d love to hear from you!</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="field mt-20">
                 <label className="label" htmlFor="title">
