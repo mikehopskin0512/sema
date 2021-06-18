@@ -26,14 +26,22 @@ const SupportForm = ({ active, closeForm }) => {
     receiveCopy: false,
   };
 
-  const { register, handleSubmit, formState, reset } = useForm({ defaultValues });
+  const {
+    register, handleSubmit, formState, reset, watch,
+  } = useForm({ defaultValues });
   const { errors } = formState;
 
   const onSubmit = async (data) => {
-    const response = await dispatch(submitSupportEmail(data, token));
+    const { email = username } = data;
+    const params = {
+      ...data,
+      email,
+    };
+    const response = await dispatch(submitSupportEmail(params, token));
     const { status } = response;
     if (status === 201) {
       reset();
+      closeForm();
     }
   };
 
@@ -101,6 +109,15 @@ const SupportForm = ({ active, closeForm }) => {
                 </label>
               </div>
               <div className="field mt-20">
+                <div className="control">
+                  <label className="checkbox" htmlFor="receiveCopy">
+                    <p className="is-size-7 is-size-5-mobile">
+                      <input type="checkbox" className="mr-8" id="receiveCopy" {...register('receiveCopy')} />Send yourself a copy of this message?
+                    </p>
+                  </label>
+                </div>
+              </div>
+              <div className="field mt-5">
                 <label className="label" htmlFor="email">
                   <p className="is-size-7 is-size-5-mobile">Email</p>
                   <div className="control mt-10">
@@ -118,19 +135,11 @@ const SupportForm = ({ active, closeForm }) => {
                             },
                           })
                       }
+                      disabled={!watch('receiveCopy')}
                     />
                     <p className="help is-danger">{errors.email && errors.email.message}</p>
                   </div>
                 </label>
-              </div>
-              <div className="field mt-20">
-                <div className="control">
-                  <label className="checkbox" htmlFor="receiveCopy">
-                    <p className="is-size-7 is-size-5-mobile">
-                      <input type="checkbox" className="mr-8" id="receiveCopy" {...register('receiveCopy')} />Send yourself a copy of this message?
-                    </p>
-                  </label>
-                </div>
               </div>
               <div className="field is-grouped mt-25 is-flex is-justify-content-center">
                 <div className="control">

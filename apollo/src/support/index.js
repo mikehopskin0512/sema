@@ -12,7 +12,7 @@ export default (app, passport) => {
     const { email, title, type, message, receiveCopy = false } = req.body;
 
     try {
-        // Send to Admin"
+        // Send to Admin
         const recipient = 
             type === "Feedback" ? "feedback@semasoftware.com" : "support@semasoftware.com";
         const data = {
