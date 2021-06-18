@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
 const uri = process.env.MONGO_URI;
-const daysAgo = process.env.DAYS_AGO || 0;
+const daysAgo = parseInt(process.env.DAYS_AGO, 10) || 0;
 const googleSheetId = process.env.GOOGLE_SHEET_ID;
 const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY;
 const googleClientEmail = process.env.GOOGLE_CLIENT_EMAIL;
@@ -96,7 +96,15 @@ const execute = async () => {
     });
 
     await document.loadInfo();
-    [sheet] = document.sheetsByIndex;
+
+    if (daysAgo === 0) {
+      sheet = document.sheetsByTitle['24hrs'];
+    } else if (daysAgo === 7) {
+      sheet = document.sheetsByTitle['7days'];
+    } else if (daysAgo === 30) {
+      sheet = document.sheetsByTitle['30days'];
+    }
+
     await sheet.loadCells(loadCells);
     console.log('Connect to GSheet successfully');
   } catch (error) {
