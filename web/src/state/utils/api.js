@@ -88,3 +88,15 @@ export const deleteItem = (endpoint, id, token = '') => {
 
   return api.delete(`${endpoint}/${id}`, config);
 };
+
+export const exportItem = (endpoint, params, token = '') => {
+  const config = {};
+  config.responseType = 'blob';
+
+  if (token) {
+    config.headers = { Authorization: `Bearer ${token}` };
+  }
+
+  return api.post(endpoint, params, config);
+};
+
