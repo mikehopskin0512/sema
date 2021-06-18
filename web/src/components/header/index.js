@@ -5,11 +5,13 @@ import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
+import SupportForm from '../supportForm';
 
 const Header = () => {
   const dispatch = useDispatch();
   const { deauthenticate } = authOperations;
   const [bgColor, setBgColor] = useState('');
+  const [supportForm, setSupportForm] = useState(false);
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -35,6 +37,9 @@ const Header = () => {
   // Use 1st org (for now) and get isAdmin
   // const [currentOrg = { isAdmin: false }] = organizations;
   // const isAdmin = currentOrg.isAdmin || isSemaAdmin;
+
+  const openSupportForm = () => setSupportForm(true);
+  const closeSupportForm = () => setSupportForm(false);
 
   const orgMenuList = organizations.map((org) => (
     <Link href="/">
@@ -91,6 +96,7 @@ const Header = () => {
 
   return (
     <header className={bgColor}>
+      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <nav
         className="navbar is-transparent"
         role="navigation"
@@ -197,13 +203,13 @@ const Header = () => {
             </div>
             <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
               {/* Right icon menu - desktop */}
-              <a
+              <div
                 type="button"
                 className="button py-8 px-25 is-primary is-outlined mr-25"
-                href="mailto:support@semasoftware.com?subject=Support"
+                onClick={openSupportForm}
               >
                 <span className="has-text-weight-semibold">Contact Support</span>
-              </a>
+              </div>
               { !isWaitlist ? (
                 <div className="navbar-item has-dropdown" ref={userMenu}>
                   <div className="navbar-dropdown is-right">
