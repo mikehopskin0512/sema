@@ -5,8 +5,8 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import { invitationsOperations } from '../../state/features/invitations';
 import { fullName } from '../../utils';
-import Tabs from '@/components/tabs';
-import ExportButton from '@/components/admin/exportButton';
+import Tabs from '../../components/tabs';
+import ExportButton from '../../components/admin/exportButton';
 
 const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
 
