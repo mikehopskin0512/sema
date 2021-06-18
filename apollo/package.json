@@ -43,8 +43,7 @@
     "request": "^2.88.2",
     "text-clipper": "^2.1.0",
     "migrate": "^1.7.0",
-    "uuid": "^8.1.0",
-    "json2csv": "^4.5.4"
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

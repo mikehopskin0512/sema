@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Router from 'next/router';
+import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -19,7 +20,7 @@ const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersO
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { users, analytic, totalCount, isFetching } = useSelector((state) => state.usersState);
+  const { users, analytic, isFetching } = useSelector((state) => state.usersState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
@@ -30,53 +31,43 @@ const UsersPage = () => {
     Disabled: false,
   };
   const [statusFilters, setStatusFilters] = useState(initFilters);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(50);
 
   useEffect(() => {
-    setPage(1);
-  }, [debounceSearchTerm, statusFilters]);
-
-  const getUsers = useCallback(() => {
     const statusQuery = Object.entries(statusFilters)
       .filter((item) => item[1])
       .map((item) => item[0]);
 
-    dispatch(fetchUsers({ search: debounceSearchTerm, status: statusQuery, page, perPage }));
-  }, [dispatch, fetchUsers, debounceSearchTerm, statusFilters, page, perPage]);
-
-  useEffect(() => {
-    getUsers();
-  }, [debounceSearchTerm, statusFilters, page, perPage]);
+    dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
+  }, [debounceSearchTerm, statusFilters]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
-    getUsers();
-  }, [dispatch, updateUserAvailableInvitationsCount, getUsers]);
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
 
   const handleAdmitUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isWaitlist',
       value: false,
     }));
-    getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
 
   const handleBlockOrDisableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isActive',
       value: false,
     }));
-    getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
 
   const handleEnableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isActive',
       value: true,
     }));
-    getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+    dispatch(fetchUsers({ search: searchTerm }));
+  }, [dispatch, searchTerm]);
 
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'primary';
@@ -294,31 +285,22 @@ const UsersPage = () => {
     }
   };
 
-  const fetchData = useCallback(({ pageSize, pageIndex }) => {
-    setPage(pageIndex + 1);
-    setPerPage(pageSize);
-  }, [setPage, setPerPage]);
+  if (isFetching) {
+    return (
+      <div className="loading" />
+    );
+  }
 
   return (
-    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
-      <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
+      <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
         <div className='is-flex sema-is-justify-content-space-between'>
           <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
-        <Table
-          columns={columns}
-          data={dataSource}
-          pagination={{
-            page,
-            perPage,
-            totalCount,
-            fetchData,
-            loading: isFetching
-          }}
-        />
+        <Table columns={columns} data={dataSource} />
       </div>
     </div>
   );

@@ -79,25 +79,6 @@ const reducer = (state = initialState, action) => {
         data: {},
         error: action.errors,
       };
-    case types.REQUEST_FETCH_INVITE_METRICS:
-      return {
-        ...state,
-        isFetching: true,
-      };
-    case types.REQUEST_FETCH_INVITE_METRICS_SUCCESS:
-      return {
-        ...state,
-        isFetching: false,
-        inviteMetrics: action.invitations,
-        error: {},
-      };
-    case types.REQUEST_FETCH_INVITE_METRICS_ERROR:
-      return {
-        ...state,
-        isFetching: false,
-        inviteMetrics: {},
-        error: action.errors,
-      };
     default:
       return state;
   }
