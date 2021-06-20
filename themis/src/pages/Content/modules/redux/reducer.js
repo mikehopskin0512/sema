@@ -89,6 +89,8 @@ function rootReducer(state = initialState, action) {
     searchIds.forEach((id) => {
       semasearches[id].isSearchModalVisible = false;
     });
+
+    newState[GLOBAL_SEMA_SEARCH_ID].isOpen = false;
   } else if (type === CLOSE_ALL_SELECTING_EMOJI) {
     const { semabars } = newState;
     const semaIds = Object.keys(semabars);
