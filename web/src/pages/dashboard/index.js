@@ -154,7 +154,7 @@ const Invite = () => {
           <div className={clsx('container', styles['styled-container'])}>
             <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
               Welcome to Sema!
-                  </p>
+            </p>
             <PluginStateCard
               title={title}
               buttonText={buttonText}
@@ -171,10 +171,10 @@ const Invite = () => {
             />
             <p
               className={
-                'subtitle has-text-centered has-text-weight-semibold is-size-4 mb-20'
+                'subtitle has-text-centered has-text-weight-semibold is-size-4 is-size-5-mobile mb-20'
               }
             >
-              <span className={clsx('tag is-success is-size-4 m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+              <span className={clsx('tag is-success is-size-4 is-size-6-mobile m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
               Invites Available
             </p>
             <div className="tile is-ancestor">
@@ -183,9 +183,9 @@ const Invite = () => {
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.tableForm}>
                       <div className={`is-fullwidth px-20`}>
-                        <div className="field">
+                        <div className="field is-flex-mobile is-flex-direction-column">
                           <label className="label has-text-white">Username</label>
-                          <div className="control has-icons-right is-inline-block mr-25" style={{ width: '80%' }}>
+                          <div className={clsx("control has-icons-right is-inline-block mr-25", styles['invite-input'])}>
                             <input
                               className={clsx(
                                 `input mr-25`,
@@ -204,13 +204,13 @@ const Invite = () => {
                                 })
                               }
                             />
-                            <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+                            <span className="icon is-small is-right is-clickable has-text-dark is-4" onClick={reset}>
                               <FontAwesomeIcon icon={faTimes} size="sm" />
                             </span>
                           </div>
                           <button
                             className={clsx(
-                              'button is-white-gray',
+                              'button is-white-gray has-text-centered',
                               styles.formBtn
                             )}
                             type="submit"
@@ -218,7 +218,7 @@ const Invite = () => {
                           >
                             Send Invite
                             </button>
-                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden")} style={{ width: "80%" }}>
+                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden", styles['invite-input'])}>
                             <div className="message-body">
                               {renderErrorMessage()}
                             </div>
@@ -251,7 +251,7 @@ const PluginStateCard = ({
   renderIcon,
 }) => {
   return (
-    <div className={clsx(!isCardVisible && "is-hidden")}>
+    <div className={clsx("is-hidden-mobile", !isCardVisible && "is-hidden")}>
       <article
         className={'notification has-background-white shadow has-text-centered p-50'}
       >
@@ -280,50 +280,85 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
   const { token, user } = auth;
 
   return (
-    <table className={clsx('table is-fullwidth shadow has-background-white', styles.table)}>
-      <thead>
-        <tr>
-          <th>User</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {invitations?.length ?
-          invitations.map((el, i) => {
-            return (
-              <tr key={`row-${i}`}>
-                <td>{el.recipient}</td>
-                <td>
-                  {el.isPending ? (
-                    <span className={clsx('tag is-primary', styles.tag)}>
-                      Pending Invite
-                    </span>
-                  ) : (
-                    <span className={clsx('tag is-success', styles.tag)}>
-                      Active
-                    </span>
-                  )}
-                </td>
-                <td>
-                  <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
-                  {' '}
-                </td>
-              </tr>
-            );
-          }) : <tr>
-            <td colSpan="3" >
-              <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-                <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-                <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
-                  You haven't invited anyone yet.
-                    </div>
-              </div>
-            </td>
-          </tr>}
-      </tbody>
-    </table>
+    <>
+      <table className={clsx('table is-fullwidth shadow has-background-white is-hidden-mobile', styles.table)}>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invitations?.length ?
+            invitations.map((el, i) => {
+              return (
+                <tr key={`row-${i}`}>
+                  <td>{el.recipient}</td>
+                  <td>
+                    {el.isPending ? (
+                      <>
+                        <span className={clsx('tag is-primary', styles.tag)}>
+                          Pending Invite
+                        </span>
+                      </>
+                    ) : (
+                      <span className={clsx('tag is-success', styles.tag)}>
+                        Active
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                    {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                    {' '}
+                  </td>
+                </tr>
+              );
+            }) : <tr>
+              <td colSpan="3" >
+                <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
+                  <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+                  <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
+                    You haven't invited anyone yet.
+                      </div>
+                </div>
+              </td>
+            </tr>}
+        </tbody>
+      </table>
+      <div className="p-10 shadow has-background-white is-hidden-desktop">
+        {invitations?.length > 0 ? invitations.map((el, i) => (
+          <div className={clsx('px-10 py-20', styles['invite-mobile'])}>
+            <div className='is-flex is-justify-content-space-between'>
+              <p>{el.recipient}</p>
+              {el.isPending ? (
+                <>
+                  <span className={clsx('tag is-primary', styles.tag)}>
+                    Pending
+                  </span>
+                </>
+              ) : (
+                <span className={clsx('tag is-success', styles.tag)}>
+                  Active
+                </span>
+              )}
+            </div>
+            <div className="mt-15">
+              <button className="button p-5 is-size-7 is-light" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                    {el.isPending ? (<button className="button is-danger ml-5 p-5 is-size-7" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+            </div>
+          </div>
+        )): 
+          <div className="p-20">
+            <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+            <p className={"has-text-centered mt-20 has-text-gray-dark is-size-5"}>
+              You haven't invited anyone yet.
+            </p>
+          </div>
+        }
+      </div>
+    </>
   );
 };
 
@@ -346,9 +381,9 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUs = ({ userVoiceToken }) => {
-  return (
-    <div className="mt-20 py-50 px-120 columns has-background-primary is-centered is-vcentered">
+const ContactUsContent = ({ userVoiceToken }) => {
+  return(
+    <>
       <div className="column is-6">
         <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
@@ -359,7 +394,22 @@ const ContactUs = ({ userVoiceToken }) => {
       <div className="column is-2-widescreen is-2-tablet">
         <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
       </div>
-    </div>
+    </>
+  )
+}
+
+const ContactUs = ({ userVoiceToken }) => {
+  return (
+    <>
+      {/* Desktop View */}
+      <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
+      {/* Mobile View */}
+      <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
+        <ContactUsContent {...userVoiceToken} />
+      </div>
+    </>
   )
 };
 

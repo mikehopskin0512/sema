@@ -80,7 +80,7 @@ const Login = () => {
         <div className="hero-body">
           <div className="container">
             <div className="tile is-ancestor">
-              <div className="tile is-vertical is-parent is-6">
+              <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
                 <img src="/img/codelines.png" width="430"/>
                 <div className="feature-list mt-50">
                   <ul>
@@ -112,9 +112,19 @@ const Login = () => {
                 </div>
               </div>
               <div className="tile is-1"/>
+              {/** Show on Mobile */}
               <div
                 className={clsx(
-                  'colored-shadow tile is-child is-5 px-70 pb-50 pt-120 box has-text-centered',
+                  'colored-shadow tile is-child is-5 px-40 pb-50 pt-120 box has-text-centered is-hidden-desktop',
+                  styles['login-tile'],
+                )}
+              >
+                {renderCard()}
+              </div>
+              {/** Show on Desktop */}
+              <div
+                className={clsx(
+                  'colored-shadow tile is-child is-5 px-70 pb-50 pt-120 box has-text-centered is-hidden-mobile',
                   styles['login-tile'],
                 )}
               >
