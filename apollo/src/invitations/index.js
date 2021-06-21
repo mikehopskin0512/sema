@@ -64,7 +64,10 @@ export default (app, passport) => {
         orgName,
         fullName: senderName,
         email: senderEmail,
-        sender: "invites@semasoftware.com",
+        sender: {
+          name: `${senderName} via Sema`,
+          email: "invites@semasoftware.com",
+        }
       };
       await sendEmail(message);
       const updatedUser = userData.isSemaAdmin ? userData : await update({
@@ -189,6 +192,10 @@ export default (app, passport) => {
         orgName,
         fullName: senderName,
         email: senderEmail,
+        sender: {
+          name: `${senderName} via Sema`,
+          email: "invites@semasoftware.com",
+        }
       };
       await sendEmail(message);
 
