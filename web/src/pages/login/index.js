@@ -13,6 +13,7 @@ import withLayout from '../../components/layout';
 import LoginCard from '../../components/auth/LoginCard';
 import InviteCard from '../../components/auth/InviteCard';
 import WaitlistCard from '../../components/auth/WaitlistCard';
+import Helmet, { LoginHelmet } from '../../components/utils/Helmet';
 import styles from './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
@@ -22,7 +23,6 @@ import { invitationsOperations } from '../../state/features/invitations';
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
 const { fetchInvite } = invitationsOperations;
-
 
 const Login = () => {
   const router = useRouter();
@@ -75,6 +75,7 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className="hero">
         <div className="hero-body">

@@ -11,6 +11,7 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 import StatusFilter from '../../components/admin/statusFilter';
+import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
@@ -293,6 +294,7 @@ const UsersPage = () => {
 
   return (
     <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25" style={{ background: '#f7f8fa' }}>
+      <Helmet {...UserManagementHelmet} />
       <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
       <p className='mb-15 is-size-6' style={{ color: '#9198a4' }}>Manage your users at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>

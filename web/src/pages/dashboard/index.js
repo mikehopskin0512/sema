@@ -10,6 +10,7 @@ import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import Toaster from '../../components/toaster';
 
 import { invitationsOperations } from '../../state/features/invitations';
@@ -148,6 +149,7 @@ const Invite = () => {
 
   return (
     <>
+      <Helmet { ...DashboardHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
