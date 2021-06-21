@@ -1,6 +1,7 @@
 #!/usr/bin/node
 
 const mongoose = require('mongoose');
+const Query = require('../../comments/queryModel');
 
 const { mongooseUri } = require('../../config');
 
@@ -10,7 +11,6 @@ const options = {
 };
 
 mongoose.connect(mongooseUri, options);
-const colQueries = mongoose.connection.collection('queries');
 
 // https://stackoverflow.com/a/55251598/771112
 const flattenObject = (obj) => {
@@ -25,21 +25,27 @@ const flattenObject = (obj) => {
   return flattened;
 };
 
-colQueries.aggregate(
-  [{ $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
-    { $group: { _id: { searchTerm: '$searchTerm',
-      matchedCount: '$matchedCount' },
-    searchTermFrequencyCount: { $sum: 1 } } },
-    { $sort: { '_id.matchedCount': 1 } }],
-  async (err, docs) => {
-    if (err) {
-      console.log(err);
-    } else {
-      const returnArray = [];
-      const results = await docs.toArray();
-      results.forEach((aResult) => returnArray.push(flattenObject(aResult)));
-      console.log(JSON.stringify(returnArray, null, 2));
-    }
-    process.exit();
-  },
-);
+export const getColQueries = () => {
+  return Query.aggregate(
+    [
+      { $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
+      {
+        $group: {
+          _id: {
+            searchTerm: '$searchTerm',
+            matchedCount: '$matchedCount'
+          },
+          searchTermFrequencyCount: { $sum: 1 },
+        },
+      },
+      { $sort: { searchTermFrequencyCount: -1, '_id.matchedCount': 1 } }
+    ]
+  )
+};
+
+(async () => {
+  const docs = await getColQueries();
+  const returnArray = [];
+  docs.forEach((aResult) => returnArray.push(flattenObject(aResult)));
+  console.log(JSON.stringify(returnArray, null, 2));
+})();
