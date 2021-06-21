@@ -233,8 +233,6 @@ function rootReducer(state = initialState, action) {
   } else if (type === ADD_MUTATION_OBSERVER) {
     const observer = payload;
     newState.observer = observer;
-  } else if (type === REMOVE_MUTATION_OBSERVER) {
-    newState.observer.disconnect();
   } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
     const { id, searchValue } = payload;
     newState.semasearches[id].searchValue = searchValue;
