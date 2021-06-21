@@ -80,9 +80,8 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown sema-is-right${
-      props.isTagModalVisible ? ' sema-is-active' : ''
-    }`;
+    let containerClasses = `sema-dropdown sema-is-right${props.isTagModalVisible ? ' sema-is-active' : ''
+      }`;
 
     return (
       <div className={containerClasses} style={{ position: 'inherit' }}>
@@ -106,6 +105,9 @@ const Semabar = (props) => {
           role="menu"
           style={{ marginTop: '-3.5em' }}
         >
+          <div className="tags-selection-header">
+            All Tags
+          </div>
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal

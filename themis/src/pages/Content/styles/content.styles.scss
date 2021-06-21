@@ -12,9 +12,18 @@
 
   --color-tags-background: #{v.$color-light-tags-container-bg};
   --color-tags-border: #{v.$color-light-tags-container-border};
+  --color-tags-header-bg: #{v.$color-light-tags-header-bg};
+  --color-tags-header-font: #{v.$color-light-tags-header-font};
 
   --color-tag-font: #{v.$color-light-tag-font};
   --color-tag-bg: #{v.$color-light-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-light-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-light-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-light-add-tags-bg};
+  --color-add-tags-font: #{v.$color-light-add-tags-font};
+  --color-add-tags-border: #{v.$color-light-add-tags-border};
 
   --color-title: #{v.$color-light-title};
   --color-content: #{v.$color-light-content};
@@ -42,9 +51,18 @@
 
   --color-tags-border: #{v.$color-dark-tags-container-border};
   --color-tags-background: #{v.$color-dark-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-tag-font};
   --color-tag-bg: #{v.$color-dark-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-add-tags-border};
 
   --color-title: #{v.$color-dark-title};
   --color-content: #{v.$color-dark-content};
@@ -72,9 +90,18 @@
 
   --color-tags-border: #{v.$color-dark-dim-tags-container-border};
   --color-tags-background: #{v.$color-dark-dim-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-dim-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-dim-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-dim-tag-font};
   --color-tag-bg: #{v.$color-dark-dim-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-dim-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-dim-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-dim-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-dim-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-dim-add-tags-border};
 
   --color-title: #{v.$color-dark-dim-title};
   --color-content: #{v.$color-dark-dim-content};
@@ -165,7 +192,18 @@
 }
 
 .sema-add-tags {
-  border-style: dashed;
+  // border-style: dashed;
+  border: var(--color-add-tags-border);
+  background-color: var(--color-add-tags-bg);
+  color: var(--color-add-tags-font);
+}
+
+.sema-add-tags:hover {
+  color: var(--color-add-tags-font);
+}
+
+.sema-add-tags:focus {
+  color: var(--color-add-tags-font);
 }
 
 .tagsPositiveContainer > span {
@@ -383,10 +421,16 @@ h6 {
   width: 250px;
 }
 
-// .sema-tag {
-//   background-color: var(--color-tag-bg) !important;
-//   color: var(--color-tag-font) !important;
-// }
+.sema-tag {
+  background-color: var(--color-tag-bg) !important;
+  color: var(--color-tag-font) !important;
+}
+
+.sema-tag.sema-is-dark {
+  /* color when tag is selected */
+  background-color: var(--color-selected-tag-bg) !important;
+  color: var(--color-selected-tag-font) !important;
+}
 
 .sema-credit-img {
   filter: var(--color-credit-img);
@@ -411,4 +455,12 @@ h6 {
 
 .sema-is-form-bordered {
   border-color: var(--color-form-border);
+}
+
+.tags-selection-header {
+  display: flex;
+  background-color: var(--color-tags-header-bg);
+  color: var(--color-tags-header-font);
+  padding: 10px 20px;
+  font-weight: 600;
 }
