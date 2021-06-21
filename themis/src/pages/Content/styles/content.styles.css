@@ -241,12 +241,12 @@ h6 {
 }
 
 /* highlight end */
-@media screen and (max-width: 1010px) {
+/* @media screen and (max-width: 1010px) {
   .sema-dropdown-menu.tags-selection {
     left: -155px !important;
     max-width: 254px;
   }
-}
+} */
 .sema-footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
