@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Sema | Smart Code Reviews",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "1.02",
+  "version": "1.10.1",
   "background": {
     "service_worker": "background.bundle.js"
   },
@@ -20,6 +20,7 @@
     "declarativeNetRequestFeedback"
   ],
   "action": {
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "/img/sema16.png",
       "32": "/img/sema32.png",
@@ -41,14 +42,8 @@
         "*://localhost/*"
       ],
       "run_at": "document_start",
-      "js": [
-        "contentScript.bundle.js"
-      ],
-      "css": [
-        "sema-custom.css",
-        "content.styles.css",
-        "css/all.min.css"
-      ]
+      "js": ["contentScript.bundle.js"],
+      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
     }
   ],
   "externally_connectable": {

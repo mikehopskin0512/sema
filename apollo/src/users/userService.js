@@ -52,7 +52,23 @@ export const update = async (user) => {
       { $set: user },
       { new: true },
     );
-    const updatedUser = await query.exec();
+    const updatedUser = await query.lean().exec();
+    return updatedUser;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const patch = async (id, fields) => {
+  try {
+    const query = User.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: fields },
+      { new: true },
+    );
+    const updatedUser = await query.lean().exec();
     return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);

@@ -68,4 +68,3 @@ This updates the _image's_ `node_modules` as well as registers this change in th
 
    Solution: In this case remove the image build previously after you install the new module, run `docker images` to get the docker image id for the application and then run `docker rmi -f <image-id>` to remove the image and run `docker-compose up` again.
           
- 

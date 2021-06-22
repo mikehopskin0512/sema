@@ -21,7 +21,7 @@ export default (app, passport) => {
         search,
         status
       });
-      const filterData = await getFilterMetrics(search);
+      const filterData = await getFilterMetrics();
 
       return res.status(200).json({
         users,

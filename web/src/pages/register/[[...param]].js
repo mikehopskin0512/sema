@@ -10,14 +10,15 @@ import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
-const { registerUser, registerAndAuthUser } = authOperations;
-const { fetchInvite } = invitationsOperations;
+const { registerAndAuthUser, partialUpdateUser } = authOperations;
+const { fetchInvite, redeemInvite } = invitationsOperations;
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -40,38 +41,59 @@ const RegistrationForm = (props) => {
   const router = useRouter();
   const { token } = router.query;
 
+  // Import state vars
+  const { auth } = useSelector(
+    (state) => ({
+      auth: state.authState,
+    }),
+  );
+
   let identity = {};
   if (token) {
     ({ identity } = jwtDecode(token));
   }
-  const { email: githubEmail, firstName, lastName, avatarUrl, emails } = identity;
+  const {
+    email: githubEmail, firstName, lastName, avatarUrl, emails,
+  } = identity;
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
   const { token: inviteToken, recipient } = invitation;
+  const { token: authToken, user } = auth;
+  const { _id: userId } = user;
 
   // If Github login, use that primarily. Fallback to invite recipient.
   // However normal reg will have neither
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
-    const user = { ...data, avatarUrl };
-    if (identity) { user.identities = [identity]; }
-    if (!inviteToken) { user.isWaitlist = true; }
-    dispatch(registerAndAuthUser(user, invitation));
+    if (inviteToken && authToken) {
+      // User is redeeming invite, but already exists (likely on waitlist)
+      dispatch(redeemInvite(inviteToken, userId, authToken));
+      dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
+      router.push('/dashboard');
+    } else {
+      // New user
+      // If no invite, set to waitlist
+      const isWaitlist = !inviteToken;
+      const newUser = { ...user, ...data, avatarUrl, isWaitlist };
+      if (identity) { newUser.identities = [identity]; }
+      dispatch(registerAndAuthUser(newUser, invitation));
+    }
   };
 
   const renderEmailList = (emails) => {
     if (emails.length) {
-      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
+      emails = emails.sort((x, y) => (x === githubEmail ? -1 : y == githubEmail ? 1 : 0));
       return emails
-        .filter((e) => e.search("users.noreply") === -1)
-        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
+        .filter((e) => e.search('users.noreply') === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>);
     }
-  }
+  };
 
   return (
     <div className="columns is-justify-content-center">
+      <Helmet {...RegisterHelmet} />
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (
@@ -111,11 +133,11 @@ const RegistrationForm = (props) => {
                     placeholder="Tony"
                     defaultValue={firstName}
                     {
-                    ...register('firstName',
-                      {
-                        required: 'First name is required',
-                        maxLength: { value: 80, message: 'First name must be less than 80 characters' },
-                      })
+                      ...register('firstName',
+                        {
+                          required: 'First name is required',
+                          maxLength: { value: 80, message: 'First name must be less than 80 characters' },
+                        })
                     }
                   />
                 </div>
@@ -130,11 +152,11 @@ const RegistrationForm = (props) => {
                     placeholder="Stark"
                     defaultValue={lastName}
                     {
-                    ...register('lastName',
-                      {
-                        required: 'Last name is required',
-                        maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
-                      })
+                      ...register('lastName',
+                        {
+                          required: 'Last name is required',
+                          maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
+                        })
                     }
                   />
                 </div>
@@ -152,10 +174,10 @@ const RegistrationForm = (props) => {
                   placeholder="tony@starkindustries.com"
                   defaultValue={initialEmail}
                   {
-                  ...register('username',
-                    {
-                      required: 'Email is required',
-                    })
+                    ...register('username',
+                      {
+                        required: 'Email is required',
+                      })
                   }
                 >
                   {renderEmailList(emails)}
@@ -176,13 +198,13 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.password && 'is-danger'}`}
                           type="password"
                           {
-                          ...register('password',
-                            {
-                              required: 'Password is required',
-                              minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-                            })
+                            ...register('password',
+                              {
+                                required: 'Password is required',
+                                minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                                maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                                pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+                              })
                           }
                         />
                       </div>
@@ -195,15 +217,15 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.passwordConfirm && 'is-danger'}`}
                           type="password"
                           {
-                          ...register('passwordConfirm',
-                            {
-                              validate: (value) => {
-                                if (value === watch('password')) {
-                                  return true;
-                                }
-                                return 'Passwords do not match';
-                              },
-                            })
+                            ...register('passwordConfirm',
+                              {
+                                validate: (value) => {
+                                  if (value === watch('password')) {
+                                    return true;
+                                  }
+                                  return 'Passwords do not match';
+                                },
+                              })
                           }
                         />
                       </div>

@@ -1,5 +1,10 @@
+import { format } from 'date-fns';
 import * as types from './types';
-import { getInvite, postInvite, getInvitations, postResendInvite, deleteInvite } from './api';
+import {
+  getInvite, postInvite, getInvitations,
+  patchRedeemInvite, postResendInvite, deleteInvite,
+  getInvitationsMetric, exportInvitationsMetric,
+} from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -73,6 +78,33 @@ const requestDeleteInviteError = (errors) => ({
   errors,
 });
 
+const requestRedeemInvite = () => ({
+  type: types.REQUEST_REDEEM_INVITE,
+});
+
+const requestRedeemInviteSuccess = (response) => ({
+  type: types.REQUEST_REDEEM_INVITE_SUCCESS,
+  response,
+});
+
+const requestRedeemInviteError = (errors) => ({
+  type: types.REQUEST_REDEEM_INVITE_ERROR,
+  errors,
+});
+
+const requestFetchInviteMetrics = () => ({
+  type: types.REQUEST_FETCH_INVITE_METRICS,
+});
+
+const requestFetchInviteMetricsSuccess = (invitations) => ({
+  type: types.REQUEST_FETCH_INVITE_METRICS_SUCCESS,
+  invitations,
+});
+
+const requestFetchInviteMetricsError = (errors) => ({
+  type: types.REQUEST_FETCH_INVITE_METRICS_ERROR,
+  errors,
+});
 
 export const createInvite = (invitationData, token) => async (dispatch) => {
   const { recipient } = invitationData;
@@ -126,6 +158,20 @@ export const getInvitesBySender = (userId, token, search) => async (dispatch) =>
   }
 };
 
+export const redeemInvite = (invitationToken, userId, token) => async (dispatch) => {
+  try {
+    dispatch(requestRedeemInvite());
+    const payload = await patchRedeemInvite(invitationToken, { userId }, token);
+    const { data: { response } } = payload;
+    dispatch(requestRedeemInviteSuccess(response));
+  } catch (error) {
+    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestRedeemInviteError(errMessage));
+  }
+};
+
 export const resendInvite = (recipient, token) => async (dispatch) => {
   try {
     dispatch(requestResendInvite());
@@ -155,5 +201,37 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestDeleteInviteError(errMessage));
+  }
+};
+
+export const fetchInviteMetrics = (type) => async (dispatch) => {
+  try {
+    dispatch(requestFetchInviteMetrics());
+    const payload = await getInvitationsMetric({ type });
+    const { data: { invites = {} } } = payload;
+
+    dispatch(requestFetchInviteMetricsSuccess(invites));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchInviteMetricsError(errMessage));
+  }
+};
+
+export const exportInviteMetrics = async (type, token) => {
+  try {
+    const payload = await exportInvitationsMetric({ type }, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `metric_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
   }
 };

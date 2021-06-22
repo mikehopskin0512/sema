@@ -88,11 +88,13 @@ const GlobalSearchbar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
-    }`;
+  let containerClasses = `sema-dropdown${
+    props.isSearchModalVisible ? ' sema-is-active' : ''
+  }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${props.isLoading ? ' sema-is-loading' : ''
-    }`;
+  const inputControlClasses = `sema-control sema-has-icons-left${
+    props.isLoading ? ' sema-is-loading' : ''
+  }`;
 
   useEffect(() => {
     if (props.isLoading) {
@@ -138,28 +140,10 @@ const GlobalSearchbar = (props) => {
               </span>
             </div>
           </div>
-          {/*         <span
-            className="sema-icon sema-pb-3"
-            style={{ cursor: 'pointer' }}
-            onClick={onCrossPressed}
-          >
-            <i className="fas fa-times"></i>
-          </span> */}
         </div>
         <div className="sema-dropdown-menu suggestion-modal" role="menu">
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div></div>
-                <div
-                  className="sema-icon"
-                  style={{ cursor: 'pointer' }}
-                  onClick={onCrossPressed}
-                >
-                  <i className="fas fa-times"></i>
-                </div>
-              </div>
-
               <SuggestionModal
                 key={props.isLoading}
                 onCopyPressed={onCopyPressed}

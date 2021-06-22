@@ -12,7 +12,9 @@ const InviteCard = ({ invitation }) => {
       <p className="has-text-centered is-size-6 has-text-black mb-60 has-text-weight-medium">
         <strong>{isEmpty(senderName) ? 'Your colleague' : senderName }</strong> would love for you to join them.
       </p>
-      <span className="is-size-8 has-text-gray-dark">By joining the waitlist, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
+      <div>
+        <span className="is-size-8 has-text-gray-dark">By joining, you are agreeing to Sema’s <a href="https://semasoftware.com/terms-and-conditions/">Terms & Conditions</a></span>
+      </div>
       <a
         type="button"
         className="button p-25 is-primary is-outlined mt-15"

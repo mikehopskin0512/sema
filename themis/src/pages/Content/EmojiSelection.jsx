@@ -46,37 +46,61 @@ const EmojiSelection = ({
         </div>
       ) : (
         <div>
-          {isSelectingEmoji ? (
-            <div className="reaction-selection-wrapper">
-              {allEmojis.map((emojiObj) => {
-                const { title, emoji } = emojiObj;
-                return (
-                  <button
-                    className="zoom sema-button sema-is-small sema-is-ghost reaction-selection"
-                    title={title}
-                    key={title}
-                    onClick={() => {
-                      onEmojiSelected(emojiObj);
-                      toggleIsSelectingEmoji();
-                    }}
-                  >
-                    <Emoji symbol={emoji} />
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <button
-              className="sema-button sema-is-small sema-is-squared"
-              title={selectedTitle}
-              onClick={() => {
-                toggleIsSelectingEmoji();
-              }}
+          <div className="reaction-selection-wrapper">
+            <div
+              className={`sema-dropdown${
+                isSelectingEmoji ? ' sema-is-active' : ''
+              }`}
             >
-              <Emoji symbol={shownEmoji} />
-              <span className="sema-ml-2">{selectedTitle}</span>
-            </button>
-          )}
+              <div className="sema-dropdown-trigger">
+                <button
+                  className="sema-button sema-is-small sema-is-squared"
+                  title={selectedTitle}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    toggleIsSelectingEmoji();
+                  }}
+                >
+                  <Emoji symbol={shownEmoji} />
+                  <span
+                    className="sema-ml-2"
+                    dangerouslySetInnerHTML={{ __html: selectedTitle }}
+                  ></span>
+                </button>
+              </div>
+              <div
+                className="sema-dropdown-menu"
+                role="menu"
+                style={{ borderRadius: '10px' }}
+              >
+                <div
+                  className="sema-dropdown-content"
+                  style={{ borderRadius: '10px' }}
+                >
+                  {allEmojis.map((emojiObj) => {
+                    const { title, emoji } = emojiObj;
+                    return (
+                      <button
+                        className="sema-dropdown-item sema-button sema-is-small sema-is-ghost reaction-selection"
+                        title={title}
+                        key={title}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          onEmojiSelected(emojiObj);
+                          toggleIsSelectingEmoji();
+                        }}
+                      >
+                        <Emoji symbol={emoji} />
+                        <span
+                          dangerouslySetInnerHTML={{ __html: title }}
+                        ></span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>
