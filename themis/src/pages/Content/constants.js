@@ -123,25 +123,25 @@ export const EMOJIS = [
   },
   {
     _id: '607f0d1ed7f45b000ec2ed71',
-    title: 'Awesome',
+    title: 'This code is <b>awesome</b>',
     emoji: '🏆',
     github_emoji: ':trophy:',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed72',
-    title: 'Looks good',
+    title: 'This code <b>looks good</b>',
     emoji: '👌',
     github_emoji: ':ok_hand:',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed73',
-    title: 'I have a question',
+    title: 'I have a <b>question</b>',
     emoji: '❓',
     github_emoji: ':question:',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed74',
-    title: 'Fix',
+    title: 'This code <b>needs a fix</b>',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
   },
@@ -191,29 +191,35 @@ export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tag
 export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
 export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
 
-export const SEMA_ICON_ANCHOR_LIGHT =
-  "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
-  "<a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
-  "<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-  "<rect width='16' height='16' fill='#fff'/>" +
-  "<path d='M14.9796 13H1.02037C0.453499 13 0 12.5315 0 11.9458V4.05417C0 3.46852 0.453499 3 1.02037 3H14.9796C15.5465 3 16 3.46852 16 4.05417V11.9458C16 12.5168 15.5323 13 14.9796 13Z' fill='#586069'/>" +
-  "<path d='M3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3Z' fill='#F4F4F4'/>" +
-  "<path d='M10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83516 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056V4.75Z' fill='#F4F4F4'/>" +
-  '</svg>' +
-  '</a>' +
-  '</span>';
+export const SEMA_ICON_ANCHOR_LIGHT = `
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#586069"/>
+      </svg>
+    </a>
+  </span>  
+`;
 
-export const SEMA_ICON_ANCHOR_DARK =
-  "<span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>" +
-  "<a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>" +
-  "<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-  "<rect width='16' height='16' fill='#0d1117'/>" +
-  "<path d='M14.9796 13H1.02037C0.453499 13 0 12.5315 0 11.9458V4.05417C0 3.46852 0.453499 3 1.02037 3H14.9796C15.5465 3 16 3.46852 16 4.05417V11.9458C16 12.5168 15.5323 13 14.9796 13Z' fill='#8b949e'/>" +
-  "<path d='M3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3Z' fill='#F4F4F4'/>" +
-  "<path d='M10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83516 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056V4.75Z' fill='#F4F4F4'/>" +
-  '</svg>' +
-  '</a>' +
-  '</span>';
+export const SEMA_ICON_ANCHOR_DARK = `
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#8b949e"/>
+      </svg>
+    </a>
+  </span>
+`;
+
+export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#768390"/>
+      </svg>
+    </a>
+  </span>
+`;
 
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
@@ -227,3 +233,7 @@ export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
 export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
+
+export const LIGHT = 'light';
+export const DARK = 'dark';
+export const DARK_DIMMED = 'dark_dimmed';

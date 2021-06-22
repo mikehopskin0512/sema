@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+import { getCookie } from './cookie';
+import { requestRefreshTokenSuccess } from '../features/auth/actions.js'
+
+const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
+
 // Basic auth moved to api/proxy catch-all route
 // const isServer = () => typeof window === 'undefined';
 // const basicAuth = { username: process.env.NEXT_PUBLIC_APOLLO_CLIENT_ID, password: process.env.NEXT_PUBLIC_APOLLO_CLIENT_SECRET };
@@ -10,6 +15,26 @@ const api = axios.create({
   withCredentials: true,
   credentials: 'include',
 });
+
+
+export const setAxiosInterceptor = ({ dispatch }) => {
+  api.interceptors.response.use(null, async (error) => {
+    if (error.config && error.response && 'jwt expired' === error.response.data.message) {
+      const refreshToken = getCookie(refreshCookie);
+      if (refreshToken) {
+        try {
+          const { data: { jwtToken: newToken } } = await create('/api/proxy/auth/refresh-token', { refreshToken });
+          dispatch(requestRefreshTokenSuccess(newToken));
+          error.config.headers.Authorization = `Bearer ${newToken}`;
+          return axios.request(error.config);
+        } catch (err) {
+          window.location = '/login';
+        }
+      }
+    }
+    return Promise.reject(error);
+  });
+}
 
 export const get = (endpoint, id, token = '') => {
   const config = {};
@@ -88,3 +113,15 @@ export const deleteItem = (endpoint, id, token = '') => {
 
   return api.delete(`${endpoint}/${id}`, config);
 };
+
+export const exportItem = (endpoint, params, token = '') => {
+  const config = {};
+  config.responseType = 'blob';
+
+  if (token) {
+    config.headers = { Authorization: `Bearer ${token}` };
+  }
+
+  return api.post(endpoint, params, config);
+};
+

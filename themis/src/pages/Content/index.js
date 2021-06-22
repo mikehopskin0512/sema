@@ -26,6 +26,8 @@ import {
   CALCULATION_ANIMATION_DURATION_MS,
   WHOAMI,
   SEMA_ICON_ANCHOR_DARK,
+  SEMA_ICON_ANCHOR_DARK_DIMMED,
+  LIGHT, DARK, DARK_DIMMED
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -69,7 +71,7 @@ const highlightWords = highlightPhrases.reduce((acc, curr) => {
 
 /**
  * Listening to click event for:
- * 1. if github button is pressed then put sems comments in the textarea
+ * 1. if github button is pressed then put sema comments in the textarea
  * 2. things like closing modals when clicked outside of the element
  */
 document.addEventListener(
@@ -109,7 +111,11 @@ document.addEventListener(
   (event) => {
     const activeElement = event.target;
     if (isValidSemaTextBox(activeElement)) {
+      checkLoggedIn();
       const semaElements = $(activeElement).siblings('div.sema');
+      let extensionTheme = LIGHT;
+      let themeClass = '';
+      let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
       const colorMode = document.documentElement.getAttribute(
         'data-color-mode'
       );
@@ -123,17 +129,35 @@ document.addEventListener(
       let colorTheme = document.documentElement.getAttribute(
         'data-light-theme'
       );
-      let isDarkMode = false;
-      if (colorMode === 'dark') {
+      if (colorMode === DARK) {
+        extensionTheme = DARK;
         colorTheme = document.documentElement.getAttribute('data-dark-theme');
-        isDarkMode = true;
+        if (colorTheme === DARK_DIMMED) {
+          extensionTheme = DARK_DIMMED;
+        }
       } else if (colorMode === "auto") {
         const html = document.querySelector('[data-color-mode]');
         const githubTheme = getComputedStyle(html);
         const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === "rgb(13, 17, 23)" || githubBgColor === "rgb(34, 39, 46)") {
-          isDarkMode = true;
+        if (githubBgColor === "rgb(13, 17, 23)") {
+          extensionTheme = DARK;
+        } else if (githubBgColor === "rgb(34, 39, 46)") {
+          extensionTheme = DARK_DIMMED;
         }
+      }
+      switch (extensionTheme) {
+        case DARK:
+          themeClass = 'theme--dark';
+          SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
+          break;
+        case DARK_DIMMED:
+          themeClass = 'theme--dark-dimmed';
+          SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
+          break;
+        default:
+          themeClass = '';
+          SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
+          break;
       }
       if (!semaElements[0]) {
         const githubTextareaId = $(activeElement).attr('id');
@@ -164,13 +188,11 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${isDarkMode ? 'theme--dark' : ''
-          }'></div>`
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${isDarkMode ? 'theme--dark' : ''
-          }'></div>`
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`
         );
 
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
@@ -243,9 +265,7 @@ document.addEventListener(
           'tooltipped tooltipped-nw'
         );
 
-        $(markdownIcon).after(
-          isDarkMode ? SEMA_ICON_ANCHOR_DARK : SEMA_ICON_ANCHOR_LIGHT
-        );
+        $(markdownIcon).after(SEMA_ICON);
       }
     }
   },
@@ -255,7 +275,10 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    $('div.sema').addClass('sema-is-form-bordered');
+    const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field'
+    if (event.target === document.querySelector(githubCommentField)) {
+      $('div.sema').addClass('sema-is-form-bordered');
+    }
   },
   true
 );

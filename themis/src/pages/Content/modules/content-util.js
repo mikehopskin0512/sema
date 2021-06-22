@@ -61,6 +61,10 @@ export const isValidSemaTextBox = (element) => {
 };
 
 export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
+  selectedEmojiString = selectedEmojiString
+    .replaceAll('<b>', '')
+    .replaceAll('</b>', '');
+
   // If no reactions or tags selected, return blank string
   if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) {
     return '';
@@ -401,7 +405,7 @@ export const getGithubInlineMetadata = (id) => {
   const filename = document.querySelector(
     `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
-  const [, file_extension] = filename.split('.');
+  const [, file_extension] = filename?.split('.') || [];
   const line_numbers = [
     ...new Set(
       Array.from(
@@ -476,6 +480,8 @@ export const setMutationObserverInLine = () => {
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
         smartComment.commentId = id;
+      } else {
+        return;
       }
       createSmartComment(smartComment);
       store.dispatch(removeMutationObserver());

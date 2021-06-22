@@ -10,6 +10,7 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 import StatusFilter from '../../components/admin/statusFilter';
+import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
@@ -20,7 +21,7 @@ const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmit
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { users, analytic, isFetching } = useSelector((state) => state.usersState);
+  const { users, analytic, totalCount, isFetching } = useSelector((state) => state.usersState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
@@ -31,43 +32,53 @@ const UsersPage = () => {
     Disabled: false,
   };
   const [statusFilters, setStatusFilters] = useState(initFilters);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(50);
 
   useEffect(() => {
+    setPage(1);
+  }, [debounceSearchTerm, statusFilters]);
+
+  const getUsers = useCallback(() => {
     const statusQuery = Object.entries(statusFilters)
       .filter((item) => item[1])
       .map((item) => item[0]);
 
-    dispatch(fetchUsers({ search: searchTerm, status: statusQuery }));
-  }, [debounceSearchTerm, statusFilters]);
+    dispatch(fetchUsers({ search: debounceSearchTerm, status: statusQuery, page, perPage }));
+  }, [dispatch, fetchUsers, debounceSearchTerm, statusFilters, page, perPage]);
+
+  useEffect(() => {
+    getUsers();
+  }, [debounceSearchTerm, statusFilters, page, perPage]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [dispatch, searchTerm]);
+    getUsers();
+  }, [dispatch, updateUserAvailableInvitationsCount, getUsers]);
 
   const handleAdmitUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isWaitlist',
       value: false,
     }));
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [dispatch, searchTerm]);
+    getUsers();
+  }, [dispatch, updateStatus, getUsers]);
 
   const handleBlockOrDisableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isActive',
       value: false,
     }));
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [dispatch, searchTerm]);
+    getUsers();
+  }, [dispatch, updateStatus, getUsers]);
 
   const handleEnableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
       key: 'isActive',
       value: true,
     }));
-    dispatch(fetchUsers({ search: searchTerm }));
-  }, [dispatch, searchTerm]);
+    getUsers();
+  }, [dispatch, updateStatus, getUsers]);
 
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'primary';
@@ -285,19 +296,19 @@ const UsersPage = () => {
     }
   };
 
+  const fetchData = useCallback(({ pageSize, pageIndex }) => {
+    setPage(pageIndex + 1);
+    setPerPage(pageSize);
+  }, [setPage, setPerPage]);
+
   const onBulkAdmitUsers = async (bulkCount) => {
     await dispatch(bulkAdmitUsers(bulkCount));
     dispatch(fetchUsers({ search: searchTerm }));
   };
 
-  if (isFetching) {
-    return (
-      <div className="loading" />
-    );
-  }
-
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white" style={{ background: '#f7f8fa' }}>
+    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+      <Helmet {...UserManagementHelmet} />
       <div className='is-flex is-justify-content-space-between'>
         <div>
           <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
@@ -310,7 +321,17 @@ const UsersPage = () => {
           <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
-        <Table columns={columns} data={dataSource} />
+        <Table
+          columns={columns}
+          data={dataSource}
+          pagination={{
+            page,
+            perPage,
+            totalCount,
+            fetchData,
+            loading: isFetching
+          }}
+        />
       </div>
     </div>
   );

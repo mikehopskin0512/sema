@@ -1,10 +1,7 @@
 @use 'variables' as v;
 
 :root {
-  --color-page-background: #{v.$color-light};
-  --color-text: #{v.$color-dark};
   --color-border: #{v.$color-light-border};
-  --color-tags-container-bg: #{v.$color-light-1};
 
   --color-sema-bg: #{v.$color-light-bg};
   --color-sema-border: #{v.$color-light-border};
@@ -29,15 +26,12 @@
 
   --color-scroll-bg: #{v.$color-light-scroll-bg};
   --color-scroll-border: #{v.$color-light-scroll-border};
-  
+
   --color-form-border: #{v.$color-light-form-border};
 }
 
 .theme--dark {
-  --color-page-background: #{v.$color-dark};
-  --color-text: #{v.$color-light};
   --color-border: #{v.$color-light-1};
-  --color-tags-container-bg: #{v.$color-dark-3};
 
   --color-sema-bg: #{v.$color-dark-bg};
   --color-sema-border: #{v.$color-dark-border};
@@ -64,6 +58,36 @@
   --color-scroll-border: #{v.$color-dark-scroll-border};
 
   --color-form-border: #{v.$color-dark-form-border};
+}
+
+.theme--dark-dimmed {
+  --color-border: #{v.$color-light-1};
+
+  --color-sema-bg: #{v.$color-dark-dim-bg};
+  --color-sema-border: #{v.$color-dark-dim-border};
+
+  --color-text-input-bg: #{v.$color-dark-dim-bg};
+  --color-text-input-border: #{v.$color-dark-dim-border};
+  --color-text-input-font: #{v.$color-dark-dim-font};
+
+  --color-tags-border: #{v.$color-dark-dim-tags-container-border};
+  --color-tags-background: #{v.$color-dark-dim-tags-container-bg};
+
+  --color-tag-font: #{v.$color-dark-dim-tag-font};
+  --color-tag-bg: #{v.$color-dark-dim-tag-bg};
+
+  --color-title: #{v.$color-dark-dim-title};
+  --color-content: #{v.$color-dark-dim-content};
+
+  --color-suggestion-container: #{v.$color-dark-dim-btn-container};
+  --color-credit-img: invert(1);
+
+  --color-btn-border: #{v.$color-dark-dim-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-dim-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-dim-scroll-border};
+
+  --color-form-border: #{v.$color-dark-dim-form-border};
 }
 
 .sema {
@@ -97,9 +121,7 @@
 }
 
 .sema-dropdown-menu {
-  // border: 1px solid rgb(225, 228, 232);
   border: 1px solid var(--color-border);
-  // background-color: var(--color-tags-container-bg);
 }
 
 .sema-tag-container {
@@ -385,6 +407,36 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
+}
+
+.suggestion-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-text-input-bg);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .sema-button {
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+  }
+}
+
+.sema-dropdown-menu.suggestion-modal {
+  margin-top: 4px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-content {
+  margin-top: 8px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-item {
+  margin-top: 6px;
+  padding-top: 0px;
 }
 
 .sema-is-form-bordered {

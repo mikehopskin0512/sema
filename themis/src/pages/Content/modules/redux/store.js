@@ -1,6 +1,8 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware} from 'redux';
 import rootReducer from './reducer';
 
-const store = createStore(rootReducer);
+import { observerMiddleware } from './middleware/observer';
+
+const store = createStore(rootReducer, applyMiddleware(observerMiddleware));
 
 export default store;
