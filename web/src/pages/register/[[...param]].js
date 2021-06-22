@@ -10,6 +10,7 @@ import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
@@ -51,7 +52,9 @@ const RegistrationForm = (props) => {
   if (token) {
     ({ identity } = jwtDecode(token));
   }
-  const { email: githubEmail, firstName, lastName, avatarUrl, emails } = identity;
+  const {
+    email: githubEmail, firstName, lastName, avatarUrl, emails,
+  } = identity;
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
   const { invitation = {} } = props;
@@ -81,15 +84,16 @@ const RegistrationForm = (props) => {
 
   const renderEmailList = (emails) => {
     if (emails.length) {
-      emails = emails.sort(function (x, y) { return x === githubEmail ? -1 : y == githubEmail ? 1 : 0; });
+      emails = emails.sort((x, y) => (x === githubEmail ? -1 : y == githubEmail ? 1 : 0));
       return emails
-        .filter((e) => e.search("users.noreply") === -1)
-        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>)
+        .filter((e) => e.search('users.noreply') === -1)
+        .map((e, i) => <option key={`${e}-${i}`} value={e}>{e}</option>);
     }
-  }
+  };
 
   return (
     <div className="columns is-justify-content-center">
+      <Helmet {...RegisterHelmet} />
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />
         {(!hasIdentity) ? (
@@ -129,11 +133,11 @@ const RegistrationForm = (props) => {
                     placeholder="Tony"
                     defaultValue={firstName}
                     {
-                    ...register('firstName',
-                      {
-                        required: 'First name is required',
-                        maxLength: { value: 80, message: 'First name must be less than 80 characters' },
-                      })
+                      ...register('firstName',
+                        {
+                          required: 'First name is required',
+                          maxLength: { value: 80, message: 'First name must be less than 80 characters' },
+                        })
                     }
                   />
                 </div>
@@ -148,11 +152,11 @@ const RegistrationForm = (props) => {
                     placeholder="Stark"
                     defaultValue={lastName}
                     {
-                    ...register('lastName',
-                      {
-                        required: 'Last name is required',
-                        maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
-                      })
+                      ...register('lastName',
+                        {
+                          required: 'Last name is required',
+                          maxLength: { value: 100, message: 'Last name must be less than 80 characters' },
+                        })
                     }
                   />
                 </div>
@@ -170,10 +174,10 @@ const RegistrationForm = (props) => {
                   placeholder="tony@starkindustries.com"
                   defaultValue={initialEmail}
                   {
-                  ...register('username',
-                    {
-                      required: 'Email is required',
-                    })
+                    ...register('username',
+                      {
+                        required: 'Email is required',
+                      })
                   }
                 >
                   {renderEmailList(emails)}
@@ -194,13 +198,13 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.password && 'is-danger'}`}
                           type="password"
                           {
-                          ...register('password',
-                            {
-                              required: 'Password is required',
-                              minLength: { value: 8, message: 'Minimum of 8 characters required' },
-                              maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
-                              pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
-                            })
+                            ...register('password',
+                              {
+                                required: 'Password is required',
+                                minLength: { value: 8, message: 'Minimum of 8 characters required' },
+                                maxLength: { value: 20, message: 'Maximum of 20 characters allowed' },
+                                pattern: { value: /(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*[@$!%*#?&])/, message: 'Must contain 1 letter, 1 number, and 1 special character' },
+                              })
                           }
                         />
                       </div>
@@ -213,15 +217,15 @@ const RegistrationForm = (props) => {
                           className={`input ${errors.passwordConfirm && 'is-danger'}`}
                           type="password"
                           {
-                          ...register('passwordConfirm',
-                            {
-                              validate: (value) => {
-                                if (value === watch('password')) {
-                                  return true;
-                                }
-                                return 'Passwords do not match';
-                              },
-                            })
+                            ...register('passwordConfirm',
+                              {
+                                validate: (value) => {
+                                  if (value === watch('password')) {
+                                    return true;
+                                  }
+                                  return 'Passwords do not match';
+                                },
+                              })
                           }
                         />
                       </div>
