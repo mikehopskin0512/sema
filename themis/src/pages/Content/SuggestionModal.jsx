@@ -94,20 +94,18 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     const { comment, sourceName, sourceUrl, title, id } = currentSuggestion;
     return (
       <>
-        <button
-          className="sema-button sema-is-inverted sema-is-small"
-          style={{ border: 'none' }}
-          onClick={onCommentDetailBackPressed}
-        >
-          <span className="sema-icon">
-            <i className="fas fa-arrow-left"></i>
-          </span>
-        </button>
-        {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, true)}
-        <div className="suggestion-buttons">
+        <div className="suggestion-header">
           <button
-            className="sema-button sema-is-inverted sema-is-small"
+            className="sema-button sema-is-inverted"
+            style={{ border: 'none' }}
+            onClick={onCommentDetailBackPressed}
+          >
+            <span className="sema-icon">
+              <i className="fas fa-arrow-left"></i>
+            </span>
+          </button>
+          <button
+            className="sema-button sema-is-inverted sema-is-small sema-is-pulled-right"
             style={{ border: 'none' }}
             onClick={(event) => {
               event.preventDefault();
@@ -120,6 +118,8 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
             <span>Insert</span>
           </button>
         </div>
+        {getCommentTitleInterface(title, sourceName)}
+        {getCommentInterface(comment, true)}
       </>
     );
   };

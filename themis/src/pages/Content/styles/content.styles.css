@@ -241,12 +241,12 @@ h6 {
 }
 
 /* highlight end */
-@media screen and (max-width: 1010px) {
+/* @media screen and (max-width: 1010px) {
   .sema-dropdown-menu.tags-selection {
     left: -155px !important;
     max-width: 254px;
   }
-}
+} */
 .sema-footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
@@ -344,6 +344,36 @@ h6 {
   border-color: transparent !important;
   color: #fff !important;
   box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+}
+
+.suggestion-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: var(--color-text-input-bg);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.suggestion-header .sema-button {
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
+}
+
+.sema-dropdown-menu.suggestion-modal {
+  margin-top: 4px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-content {
+  margin-top: 8px;
+  padding-top: 0px;
+}
+
+.sema-dropdown-item {
+  margin-top: 6px;
+  padding-top: 0px;
 }
 
 .sema-is-form-bordered {
