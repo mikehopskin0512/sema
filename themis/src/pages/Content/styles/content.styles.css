@@ -1,8 +1,5 @@
 :root {
-  --color-page-background: #fafbfc;
-  --color-text: #3b434b;
   --color-border: #e1e4e8;
-  --color-tags-container-bg: #e1e4e8;
   --color-sema-bg: #fafbfc;
   --color-sema-border: #e1e4e8;
   --color-text-input-bg: #fafbfc;
@@ -23,10 +20,7 @@
 }
 
 .theme--dark {
-  --color-page-background: #3b434b;
-  --color-text: #fafbfc;
   --color-border: #e1e4e8;
-  --color-tags-container-bg: #0e1218;
   --color-sema-bg: #0d1117;
   --color-sema-border: #272e33;
   --color-text-input-bg: #0d1117;
@@ -44,6 +38,27 @@
   --color-scroll-bg: #363636;
   --color-scroll-border: #161b22;
   --color-form-border: #388bfd;
+}
+
+.theme--dark-dimmed {
+  --color-border: #e1e4e8;
+  --color-sema-bg: #22272e;
+  --color-sema-border: #373e47;
+  --color-text-input-bg: #22272e;
+  --color-text-input-border: #373e47;
+  --color-text-input-font: #adbac7;
+  --color-tags-border: #373e47;
+  --color-tags-background: #1f232b;
+  --color-tag-font: whitesmoke;
+  --color-tag-bg: #373e47;
+  --color-title: #a5a5a5;
+  --color-content: #626262;
+  --color-suggestion-container: #373e47;
+  --color-credit-img: invert(1);
+  --color-btn-border: #1f232b;
+  --color-scroll-bg: #161b22;
+  --color-scroll-border: #363636;
+  --color-form-border: #4184e4;
 }
 
 .sema {
