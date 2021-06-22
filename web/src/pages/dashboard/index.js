@@ -406,16 +406,16 @@ const ContactUsContent = ({ userVoiceToken, openSupportForm }) => {
   )
 }
 
-const ContactUs = ({ userVoiceToken }) => {
+const ContactUs = (props) => {
   return (
     <>
       {/* Desktop View */}
       <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
-        <ContactUsContent {...userVoiceToken} />
+        <ContactUsContent {...props} />
       </div>
       {/* Mobile View */}
       <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
-        <ContactUsContent {...userVoiceToken} />
+        <ContactUsContent {...props} />
       </div>
     </>
   )
