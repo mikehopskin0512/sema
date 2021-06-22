@@ -12,6 +12,11 @@ import {
   toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
+const DROP_POSITIONS = {
+  UP: 'sema-is-up',
+  DOWN: 'sema-is-right',
+};
+
 import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
@@ -49,6 +54,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const [isHover, setHover] = useState(false);
+  const [dropPosition, setDropPosition] = useState(DROP_POSITIONS.DOWN);
+  const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
 
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
@@ -80,8 +87,46 @@ const Semabar = (props) => {
   };
 
   const createAddTags = () => {
-    let containerClasses = `sema-dropdown sema-is-right${props.isTagModalVisible ? ' sema-is-active' : ''
-      }`;
+    const { x, y, height, width, offsetPos } = tagsButtonPositionValues;
+    let dropPosition = DROP_POSITIONS.DOWN;
+    const modalHeight = 300;
+    const modalWidth = 250;
+
+    if (y && height) {
+      const vh = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0
+      );
+
+      const availableHeight = vh - (y + height);
+      console.log(modalHeight, availableHeight);
+
+      if (availableHeight > modalHeight) {
+        dropPosition = DROP_POSITIONS.DOWN;
+      } else {
+        dropPosition = DROP_POSITIONS.UP;
+      }
+    }
+
+    let containerClasses = `sema-dropdown ${dropPosition}${
+      props.isTagModalVisible ? ' sema-is-active' : ''
+    }`;
+
+    /**
+     * having dropdown within overflow to have scroll
+     * and the changes to nearest "relative" positioned parents
+     * doesnot play well with bulma's default styles
+     * so custom styling is necessary.
+     * Prefer to not do it and work with
+     * base bulma styles only
+     */
+    const dropdownStyle =
+      dropPosition === DROP_POSITIONS.UP
+        ? {
+            left: offsetPos.left + width - modalWidth,
+            top: offsetPos.top - modalHeight,
+          }
+        : { marginTop: '-3.5em' };
 
     return (
       <div className={containerClasses} style={{ position: 'inherit' }}>
@@ -91,6 +136,23 @@ const Semabar = (props) => {
             aria-haspopup="true"
             onClick={(event) => {
               event.preventDefault();
+              const {
+                x,
+                y,
+                height,
+                width,
+              } = event.currentTarget.getBoundingClientRect();
+              setTagsButtonPositionValues({
+                x,
+                y,
+                height,
+                width,
+                offsetPos: {
+                  left: event.currentTarget.offsetLeft,
+                  top: event.currentTarget.offsetTop,
+                },
+              });
+
               props.toggleTagModal();
             }}
           >
@@ -103,7 +165,7 @@ const Semabar = (props) => {
         <div
           className="sema-dropdown-menu tags-selection"
           role="menu"
-          style={{ marginTop: '-3.5em' }}
+          style={dropdownStyle}
         >
           <div className="tags-selection-header">
             All Tags

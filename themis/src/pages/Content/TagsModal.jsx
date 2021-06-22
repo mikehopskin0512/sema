@@ -4,12 +4,12 @@ import { POSITIVE, NEGATIVE, SELECTED, TOGGLE_OP } from './constants';
 function TagsModal({ allTags, toggleTagSelection }) {
   const getTags = (isPositive) => {
     const label = isPositive ? POSITIVE : NEGATIVE;
-    return allTags.map((tagObj) => {
+    return allTags.map((tagObj, index) => {
       const tag = tagObj[label];
       const isSelected = tagObj[SELECTED] === label;
-      const classes = `sema-tag sema-is-rounded sema-mb-4 ${
-        isSelected ? 'sema-is-dark' : 'sema-is-light '
-      }`;
+      const classes = `sema-tag sema-is-rounded ${
+        index !== allTags.length - 1 ? 'sema-mb-4' : ''
+      } ${isSelected ? 'sema-is-dark' : 'sema-is-light '}`;
       return (
         <span
           key={tag}
