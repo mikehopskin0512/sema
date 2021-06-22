@@ -108,11 +108,11 @@ const Header = () => {
               <img src="/img/sema-logo.png" alt="sema-logo" />
             </a>
           </Link>
-          {token && isVerified && (
+          {token && isVerified && !isWaitlist && (
             <button
               onClick={toggleHamburger}
               type="button"
-              className="navbar-burger burger"
+              className="navbar-burger burger button is-white"
               aria-label="menu"
               aria-expanded="false"
               data-target="navbarBasicExample"
