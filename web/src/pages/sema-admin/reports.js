@@ -5,7 +5,7 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import { invitationsOperations } from '../../state/features/invitations';
 import { fullName } from '../../utils';
-import Tabs from '../../components/tabs';
+import FilterTabs from '../../components/admin/filterTabs';
 import ExportButton from '../../components/admin/exportButton';
 
 const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
@@ -87,7 +87,7 @@ const ReportsPage = () => {
         <div className='mb-40'>
           <h4 className="title is-4">Invitations Metrics</h4>
           <div className='is-flex is-justify-content-space-between'>
-            <Tabs value={inviteCategory} onChange={setInviteCategory} tabs={tabOptions}/>
+            <FilterTabs value={inviteCategory} onChange={setInviteCategory} tabs={tabOptions}/>
             <ExportButton onExport={() => exportInviteMetrics(inviteCategory, token)} />
           </div>
           <Table columns={columns} data={dataSource} />
