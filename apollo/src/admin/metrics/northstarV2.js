@@ -1,8 +1,8 @@
-#!/usr/bin/node
 /* eslint-disable quote-props */
 /* eslint-disable no-console */
 
-const moment = require('moment-timezone');
+const { startOfToday, endOfToday, subMinutes, subDays, isAfter, isBefore } = require('date-fns');
+const { format, zonedTimeToUtc } = require('date-fns-tz');
 const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 
@@ -19,6 +19,8 @@ const options = {
 
 const document = new GoogleSpreadsheet(googleSheetId);
 const loadCells = 'A1:L10';
+
+const timezone = 'America/New_York';
 
 // Queries
 const stateCountQuery = [
@@ -111,14 +113,13 @@ const execute = async () => {
     console.error('Error connecting to GSheet - Geckoboard', error);
   }
 
-  // EDT Timezone
-  const now = moment().tz('America/New_York');
-  const midnightPlusFive = moment().tz('America/New_York').hour(0).minute(5).second(59);
-  const startOfDay = moment().tz('America/New_York').subtract(daysAgo, 'days').startOf('day');
+  // UTC time
+  const now = new Date();
+  const startOfTodayUTC = subDays(zonedTimeToUtc(startOfToday(), timezone), daysAgo);
+  const endOfTodayUTC = zonedTimeToUtc(endOfToday(), timezone);
+  const endOfTodayMinusFive = subMinutes(endOfTodayUTC, 5);
 
-  // EDT Timezone | Start of day in EDT to UTC
-  const startOfDayUTC = new Date(startOfDay.clone().tz('utc').format());
-  const dateRange = [{ $match: { createdAt: { $gte: startOfDayUTC } } }];
+  const dateRange = [{ $match: { createdAt: { $gte: startOfTodayUTC } } }];
 
   let totalWaitlistOrigin = 0;
   let activeUserCount = 0;
@@ -146,7 +147,7 @@ const execute = async () => {
 
   data.waitlistConversionRate = data.waitlistUserCount / totalWaitlistOrigin || 0;
   data.activeUserCount = activeUserCount;
-  data.retentionRate = data.activeUserCount / data.currentUserCount;
+  data.retentionRate = data.activeUserCount / data.currentUserCount || 0;
 
   let invitationsResult = await mongoose.connection.collection('invitations').aggregate([...dateRange, ...invitationsQuery]).toArray();
   invitationsResult = invitationsResult.map(({ _id, inviteCount }) => ({ ..._id, inviteCount }));
@@ -164,18 +165,8 @@ const execute = async () => {
   const [{ smartCommentCount }] = await mongoose.connection.collection('smartComments').aggregate([...dateRange, ...smartCommentsQuery]).toArray();
   data.smartCommentCount = smartCommentCount;
 
-  if (now.isBetween(startOfDay, midnightPlusFive)) {
-    const [firstRow] = await sheet.getRows({ limit: 1 });
-    firstRow.delete();
-  }
-
-  if (now.isAfter(midnightPlusFive)) {
-    const [lastRow] = await sheet.getRows({ offset: 6 });
-    await lastRow.delete();
-  }
-
   const row = {
-    'Date': moment().format('MMM DD'),
+    'Date': format(new Date(), 'MM/dd/yyyy'),
     'Waitlist': data.waitlistUserCount,
     'Current Users': data.currentUserCount,
     'Blocked Users': data.blockedUserCount,
@@ -189,10 +180,18 @@ const execute = async () => {
     'Accepted Invites': data.acceptedInviteCount,
   };
 
-  await sheet.addRow(row);
-  console.log('Done!');
+  if (isAfter(now, endOfTodayMinusFive) && isBefore(now, endOfTodayUTC)) {
+    await sheet.addRow(row);
+  }
 
-  process.exit(1);
+  const [firstRow] = await sheet.getRows({ limit: 1 });
+  Object.keys(row).forEach((header) => { firstRow[header] = row[header]; });
+
+  await firstRow.save();
+
+  console.log(`Updated sheet: ${sheet.title} with values from ${startOfTodayUTC}`);
+
+  process.exit(0);
 };
 
 execute();
