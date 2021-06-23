@@ -19,9 +19,10 @@ const requestFetchUsers = () => ({
   type: types.REQUEST_FETCH_USERS,
 });
 
-const requestFetchUsersSuccess = (users, filters) => ({
+const requestFetchUsersSuccess = (users, totalCount, filters) => ({
   type: types.REQUEST_FETCH_USERS_SUCCESS,
   users,
+  totalCount,
   filters
 });
 
@@ -76,9 +77,9 @@ export const fetchUsers = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUsers());
     const payload = await getUsers(params, token);
-    const { data: { users = [], filters = [] } } = payload;
+    const { data: { users = [], totalCount, filters = [] } } = payload;
 
-    dispatch(requestFetchUsersSuccess(users, filters));
+    dispatch(requestFetchUsersSuccess(users, totalCount, filters));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
