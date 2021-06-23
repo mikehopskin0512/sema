@@ -15,7 +15,7 @@ import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import Tabs from '../../components/tabs';
-import BulkAdmitForm from '@/components/admin/bulkAdmitForm';
+import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers } = usersOperations;
 
