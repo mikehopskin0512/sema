@@ -3,8 +3,14 @@ import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
-  create, deleteInvitation, findById, findByToken,
-  getInvitationsBySender, getInvitationByRecipient,
+  create,
+  deleteInvitation,
+  findById,
+  findByToken,
+  getInvitationsBySender,
+  getInvitationByRecipient,
+  getInviteMetrics,
+  exportInviteMetrics,
   redeemInvite,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
@@ -58,7 +64,10 @@ export default (app, passport) => {
         orgName,
         fullName: senderName,
         email: senderEmail,
-        sender: "invites@semasoftware.com",
+        sender: {
+          name: `${senderName} via Sema`,
+          email: "invites@semasoftware.com",
+        }
       };
       await sendEmail(message);
       const updatedUser = userData.isSemaAdmin ? userData : await update({
@@ -90,6 +99,38 @@ export default (app, passport) => {
       return res.status(200).send({
         data: invites,
       });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/metric', async (req, res) => {
+    try {
+      const { type } = req.query;
+      const invites = await getInviteMetrics(type);
+
+      return res.status(200).send({
+        invites,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/metric/export', async (req, res) => {
+    try {
+      const { type } = req.body;
+
+      const packer = await exportInviteMetrics(type);
+
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=' + 'metric.csv',
+        'Content-Length': packer.length
+      });
+
+      res.end(packer);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -151,6 +192,10 @@ export default (app, passport) => {
         orgName,
         fullName: senderName,
         email: senderEmail,
+        sender: {
+          name: `${senderName} via Sema`,
+          email: "invites@semasoftware.com",
+        }
       };
       await sendEmail(message);
 

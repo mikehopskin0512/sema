@@ -2,7 +2,7 @@ import User from '../../users/userModel';
 import Invitation from '../../invitations/invitationModel';
 
 export const listUsers = async (params) => {
-  const { page, perPage = 50, search, status } = params;
+  const { page, perPage, search, status } = params;
 
   const query = User.find(search ? {
     $or: [
@@ -77,12 +77,29 @@ export const updateUserStatus = async (id, params) => {
   return { user };
 };
 
-export const getFilterMetrics = async () => {
-  const total = await User.countDocuments();
-  const active = await User.countDocuments({ isActive: true, isWaitlist: false });
-  const waitlist = await User.countDocuments({ isActive: true, isWaitlist: true });
-  const blocked = await User.countDocuments({ isActive: false, isWaitlist: true });
-  const disabled = await User.countDocuments({ isActive: false, isWaitlist: false });
+export const getFilterMetrics = async (search) => {
+  const query = search ? {
+    $or: [
+      { firstName: new RegExp(search, 'gi') },
+      { lastName: new RegExp(search, 'gi') },
+      { username: new RegExp(search, 'gi') },
+      { 'identities.email': new RegExp(search, 'gi') },
+    ],
+  } : {};
+
+  const total = await User.countDocuments(query);
+  const active = await User.countDocuments({ ...query, isActive: true, isWaitlist: false });
+  const waitlist = await User.countDocuments({ ...query, isActive: true, isWaitlist: true });
+  const blocked = await User.countDocuments({ ...query, isActive: false, isWaitlist: true });
+  const disabled = await User.countDocuments({ ...query, isActive: false, isWaitlist: false });
 
   return { total, active, waitlist, blocked, disabled };
+};
+
+export const bulkAdmitUsers = async (bulkCount) => {
+  const users = await User.find({ isActive: true, isWaitlist: true }).select('_id').sort('createdAt').limit(parseInt(bulkCount, 10));
+
+  const userIds = users.map(item => item._id);
+
+  await User.updateMany({ _id: { $in: userIds } }, { $set: { isWaitlist: false } });
 };
