@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Router from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatDistanceToNowStrict } from 'date-fns';
 import useDebounce from '../../hooks/useDebounce';
@@ -15,7 +14,7 @@ import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import Tabs from '../../components/tabs';
-import BulkAdmitForm from '@/components/admin/bulkAdmitForm';
+import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers } = usersOperations;
 
@@ -151,20 +150,8 @@ const UsersPage = () => {
         ),
       },
       {
-        Header: ({ isSorted, isSortedDesc }) => (
-          <div className='has-text-centered'>
-            <span className="mr-10">Active Date</span>
-            {
-              isSorted
-                ? (
-                  isSortedDesc
-                    ? <FontAwesomeIcon icon="chevron-down" />
-                    : <FontAwesomeIcon icon="chevron-up" />
-                )
-                : ''
-            }
-          </div>
-        ),
+        Header: 'Active Date',
+        className: 'has-text-centered mr-10',
         accessor: 'activeDate',
         Cell: ({ cell: { value } }) => <div className="has-text-centered">{value}</div>,
       },

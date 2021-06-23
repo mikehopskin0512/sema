@@ -51,15 +51,19 @@ const Table = ({
                     { className: column.className },
                   ],
                 )}>
-                  {column.render('Header')}
+                  <div className='is-flex is-align-items-center'>
+                    <div className='is-flex-grow-1'>
+                      {column.render('Header')}
+                    </div>
+                    <span>
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? ' 🔽'
+                          : ' 🔼'
+                        : ''}
+                    </span>
+                  </div>
                   {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
                 </th>
               ))}
             </tr>
