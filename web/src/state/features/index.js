@@ -7,3 +7,4 @@ export { default as repositoriesState } from './repositories';
 export { default as reportsState } from './reports';
 export { default as sourcesState } from './sources';
 export { default as usersState } from './users';
+export { default as suggestCommentsState } from './suggest-comments';
