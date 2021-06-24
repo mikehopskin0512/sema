@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const githubMetadataSchema = new Schema({
   url: String,
   pull_number: String,
+  repo_id: String,
   repo: String,
   head: String,
   base: String,

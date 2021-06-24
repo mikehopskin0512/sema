@@ -378,6 +378,7 @@ export function getSemaIds(idSuffix) {
 export const getGithubMetadata = (document, textarea) => {
   const url = document.querySelector('meta[property="og:url"]')?.content || '';
   const decoupleUrl = url.split('/');
+  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
   const [, , , , repo, , pull_number] = decoupleUrl;
   const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
   const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
@@ -389,6 +390,7 @@ export const getGithubMetadata = (document, textarea) => {
 
   const githubMetada = {
     url,
+    repo_id,
     repo,
     pull_number,
     head,
