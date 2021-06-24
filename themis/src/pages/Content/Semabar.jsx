@@ -167,6 +167,9 @@ const Semabar = (props) => {
           role="menu"
           style={dropdownStyle}
         >
+          <div className="tags-selection-header">
+            All Tags
+          </div>
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
