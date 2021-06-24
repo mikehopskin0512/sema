@@ -8,7 +8,7 @@ import { supportOperations } from '../../state/features/support';
 
 const { submitSupportEmail } = supportOperations;
 
-const SupportForm = ({ active, closeForm }) => {
+const SupportForm = ({ active, closeForm, type }) => {
   const dispatch = useDispatch();
   const { auth, support } = useSelector((state) => ({
     auth: state.authState,
@@ -19,8 +19,8 @@ const SupportForm = ({ active, closeForm }) => {
   const { isSending = false } = support;
 
   const defaultValues = {
+    type,
     title: '',
-    type: 'Support',
     message: '',
     email: username,
     receiveCopy: false,
@@ -157,9 +157,14 @@ const SupportForm = ({ active, closeForm }) => {
   );
 };
 
+SupportForm.defaultProps = {
+  type: 'Support',
+};
+
 SupportForm.propTypes = {
   active: PropTypes.bool.isRequired,
   closeForm: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
 export default SupportForm;
