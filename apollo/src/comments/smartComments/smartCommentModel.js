@@ -21,7 +21,7 @@ const smartCommentSchema = new Schema({
   commentId: { type: String, unique: true },
   comment: String,
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  type: { type: String, required: true, enum: ['comment', 'inline'] },
+  location: { type: String, enum: ['conversation', 'files changed'] },
   suggestedComments: [{ type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
