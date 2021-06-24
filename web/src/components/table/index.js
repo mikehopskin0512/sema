@@ -1,23 +1,43 @@
-import { useRowSelect, useSortBy, useTable } from 'react-table';
+import React, { useEffect } from 'react';
+import { useSortBy, useTable, usePagination } from 'react-table';
 
-const Table = ({ columns, data, auth }) => {
-  // Use the state and functions returned from useTable to build your UI
+const Table = ({
+  columns,
+  data,
+  pagination,
+}) => {
+  const { fetchData, loading, totalCount, page: currentPage, perPage } = pagination || {};
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       data,
       columns,
+      initialState: { pageIndex: currentPage - 1, pageSize: perPage },
+      manualPagination: true,
+      pageCount: Math.ceil(totalCount / perPage),
     },
     useSortBy,
-    useRowSelect,
+    usePagination,
   );
 
-  // Render the UI for your table
+  useEffect(() => {
+    if (fetchData) {
+      fetchData({ pageIndex: pageSize === perPage ? pageIndex : 0, pageSize });
+    }
+  }, [pageIndex, pageSize, fetchData]);
+
   return (
     <div className="table-container">
       <table {...getTableProps()} className="table is-striped" style={{ width: '100%' }}>
@@ -46,25 +66,64 @@ const Table = ({ columns, data, auth }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, i) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps([
-                      {
-                        className: cell.column.className,
-                        style: cell.column.style,
-                      }])}>{cell.render('Cell')}
-                    </td>
-                  ))}
-                </tr>
-              );
-            },
-          )}
+          {
+            loading ? (
+              <td colSpan={6}>
+                <div className='is-flex is-align-items-center is-justify-content-center' style={{ minHeight: 400 }}>Loading...</div>
+              </td>
+            ) : (
+              <>
+                {page.map(
+                  (row, i) => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps([
+                            {
+                              className: cell.column.className,
+                              style: cell.column.style,
+                            }])}>{cell.render('Cell')}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  },
+                )}
+              </>
+            )
+          }
         </tbody>
       </table>
+      {
+        !!pagination && (
+          <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
+            <div className='is-flex is-align-items-center'>
+              <div className='mr-10'>Total Count: {totalCount}</div>
+              <div>Show: {data.length}</div>
+            </div>
+            <div className='is-flex is-align-items-center'>
+              <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
+                <button className="pagination-previous" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
+                <button className="pagination-next" onClick={() => nextPage()} disabled={!canNextPage}>Next page</button>
+                <ul className="pagination-list">
+                  <li><a className="pagination-link is-current" aria-current="page">{pageIndex + 1}</a></li>
+                </ul>
+              </nav>
+
+              <div className="select">
+                <select value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
+                  {
+                    [10, 20, 50, 100].map(item => (
+                      <option key={item} value={item}>{item}</option>
+                    ))
+                  }
+                </select>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };
