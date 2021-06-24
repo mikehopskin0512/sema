@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faListAlt, faBook, faChartPie, faUserFriends, faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faListAlt, faChartPie, } from '@fortawesome/free-solid-svg-icons'
 
 import styles from "./sidebar.module.scss";
 
@@ -35,28 +35,13 @@ const Sidebar = ({ children }) => {
     },
     {
       name: 'Activity Logs',
-      pathName: '/logs',
+      pathName: '/activity',
       icon: faListAlt
-    },
-    {
-      name: 'Comment Library',
-      pathName: '/comment-library',
-      icon: faBook,
     },
     {
       name: 'Code Stats',
       pathName: '/stats',
       icon: faChartPie,
-    },
-    {
-      name: 'Invitations',
-      pathName: '/invitations',
-      icon: faUserFriends
-    },
-    {
-      name: 'Support',
-      pathName: '/support',
-      icon: faQuestionCircle
     },
   ]);
 
