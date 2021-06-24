@@ -17,12 +17,14 @@ const templates = {
   accountCreated: 'd-e04500d489e24b2e8b8a38cfafab87ab',
   userAdmitted: 'd-abd207a163c24162b23294f925c5f5cf',
   waitlisted: 'd-9154f0015308439fb7b996530edc355f',
+  feedbackSupportAdmin: 'd-28ac6f741ee2423489e633725ded543b',
+  feedbackSupportUser: 'd-785a1306aaa446f29518af0ff76a4644',
 };
 
 export const sendEmail = async (messageData) => {
   const {
     templateName, sender = defaultSender, recipient,
-    firstName = '', fullName = '', orgName = '', url = '', email = '',
+    firstName = '', fullName = '', orgName = '', url = '', email = '', title = '', type = '', message = ''
   } = messageData;
 
   const msg = {
@@ -36,6 +38,9 @@ export const sendEmail = async (messageData) => {
       orgName,
       recipient,
       url,
+      title,
+      type,
+      message,
     },
   };
 
