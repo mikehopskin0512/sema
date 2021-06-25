@@ -3,14 +3,14 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 import * as Json2CSV from 'json2csv';
-import User from '../../users/userModel';
-import SmartComment from '../../comments/smartComments/smartCommentModel';
-import Query from '../../comments/queryModel';
-import Reaction from '../../comments/reactionModel';
-import Tag from '../../comments/tagModel';
-import SuggestedComment from '../../comments/suggestedComments/suggestedCommentModel';
+import User from '../../src/users/userModel';
+import SmartComment from '../../src/comments/smartComments/smartCommentModel';
+import Query from '../../src/comments/queryModel';
+import Reaction from '../../src/comments/reactionModel';
+import Tag from '../../src/comments/tagModel';
+import SuggestedComment from '../../src/comments/suggestedComments/suggestedCommentModel';
 
-import { mongooseUri } from '../../config';
+import { mongooseUri } from '../../src/config';
 
 const options = {
   useUnifiedTopology: true,
