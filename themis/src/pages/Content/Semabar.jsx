@@ -8,7 +8,6 @@ import {
   toggleTagModal,
   updateSelectedEmoji,
   updateSelectedTags,
-  updateSelectedTagsWithSuggestion,
   toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
@@ -41,8 +40,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       ),
     updateSelectedTags: (operation) =>
       dispatch(updateSelectedTags({ id, operation, isDirty: true })),
-    updateSelectedTagsWithSuggestion: (tag) =>
-      dispatch(updateSelectedTagsWithSuggestion({ id, tag })),
+
     toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
 };
@@ -119,27 +117,6 @@ const Semabar = (props) => {
     );
   };
 
-  const createSuggestedTags = () => {
-    return (
-      <>
-        {props.suggestedTags.map((tag) => {
-          return (
-            <span
-              className="sema-tag sema-is-rounded sema-mr-2"
-              style={{ cursor: 'pointer', height: '2.5em' }}
-              key={tag}
-              onClick={() => {
-                props.updateSelectedTagsWithSuggestion(tag);
-              }}
-            >
-              {tag}
-            </span>
-          );
-        })}
-      </>
-    );
-  };
-
   if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
@@ -166,10 +143,7 @@ const Semabar = (props) => {
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
-          <div className="sema-tags-content">
-            {createActiveTags()}
-            {createSuggestedTags()}
-          </div>
+          <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
         </div>
       </>
