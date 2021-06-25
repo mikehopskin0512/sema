@@ -139,7 +139,6 @@ function rootReducer(state = initialState, action) {
       );
       if (tagObj) {
         const isSelected = !!tagObj[SELECTED];
-        // const isSelected = !!tagObj[selected];
         const { isDirty } = tagObj;
         if (!isSelected && !isDirty) {
           return true;
