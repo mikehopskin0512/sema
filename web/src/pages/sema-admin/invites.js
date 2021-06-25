@@ -77,7 +77,7 @@ const InvitesPage = () => {
         ),
         accessor: 'isPending',
         Cell: ({ cell: { value } }) => (
-          <Badge label={value ? 'Pending Invite' : 'Active'} color={value ? 'link' : 'success'} />
+          <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
         ),
       },
       {
