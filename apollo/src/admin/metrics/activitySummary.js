@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 import mongoose from 'mongoose';
 import fs from 'fs';
 import * as Json2CSV from 'json2csv';
