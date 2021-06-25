@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { format, zonedTimeToUtc } = require('date-fns-tz');
-const { startOfToday, endOfToday, subMinutes, subDays, isAfter, isBefore } = require('date-fns');
+const { startOfToday, subDays } = require('date-fns');
 
 const uri = process.env.MONGO_URI;
 const daysAgo = parseInt(process.env.DAYS_AGO, 10) || 0;
@@ -119,12 +119,16 @@ const execute = async () => {
     console.error('Error connecting to GSheet - Geckoboard', error);
   }
 
-  // UTC time
-  const now = new Date();
-  const startOfTodayUTC = subDays(zonedTimeToUtc(startOfToday(), timezone), daysAgo);
-  const endOfTodayUTC = zonedTimeToUtc(endOfToday(), timezone);
-  const endOfTodayMinusFive = subMinutes(endOfTodayUTC, 5);
+  // EDT time
+  const today = format(new Date(), 'MMM dd', timezone)
+  const [firstRow] = await sheet.getRows({ limit: 1 });
 
+  if (firstRow.Date === today) {
+    await sheet.addRow(firstRow);
+  }
+
+  // UTC time
+  const startOfTodayUTC = subDays(zonedTimeToUtc(startOfToday(), timezone), daysAgo);
   const dateRange = [{ $match: { createdAt: { $gte: cumulative ? startDate : startOfTodayUTC } } }];
 
   let totalWaitlistOrigin = 0;
@@ -172,7 +176,7 @@ const execute = async () => {
   data.smartCommentCount = smartCommentCount;
 
   const row = {
-    'Date': format(new Date(), 'MM/dd/yyyy'),
+    'Date': today,
     'Waitlist': data.waitlistUserCount,
     'Current Users': data.currentUserCount,
     'Blocked Users': data.blockedUserCount,
@@ -186,13 +190,7 @@ const execute = async () => {
     'Accepted Invites': data.acceptedInviteCount,
   };
 
-  if (isAfter(now, endOfTodayMinusFive) && isBefore(now, endOfTodayUTC)) {
-    await sheet.addRow(row);
-  }
-
-  const [firstRow] = await sheet.getRows({ limit: 1 });
   Object.keys(row).forEach((header) => { firstRow[header] = row[header]; });
-
   await firstRow.save();
 
   console.log(`Updated sheet: ${sheet.title} with values from ${cumulative ? startDate : startOfTodayUTC}`);
