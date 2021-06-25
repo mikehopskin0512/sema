@@ -266,6 +266,13 @@ function closeSemaOpenElements(event, store) {
   const dropdownParents = $(target).parents('.sema-dropdown');
   if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
+  } else {
+    // if any other dropdown is open other than this one, close it
+    const allDropdowns = $(document).find('.sema-dropdown');
+    const openDropdown = $(allDropdowns).filter('.sema-is-active');
+    if (openDropdown[0] !== dropdownParents[0]) {
+      store.dispatch(closeAllDropdowns());
+    }
   }
 
   const selectingEmojiParents = $(target).parents(
