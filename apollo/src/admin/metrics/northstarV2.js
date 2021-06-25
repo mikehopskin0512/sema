@@ -123,7 +123,7 @@ const execute = async () => {
   const today = format(new Date(), 'MMM dd', timezone)
   const [firstRow] = await sheet.getRows({ limit: 1 });
 
-  if (firstRow.Date === today) {
+  if (firstRow.Date !== today) {
     await sheet.addRow(firstRow);
   }
 
