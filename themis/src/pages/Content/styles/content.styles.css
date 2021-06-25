@@ -24,6 +24,7 @@
   --color-scroll-bg: #a8a8a8;
   --color-scroll-border: #f3f3f3;
   --color-form-border: #0366d6;
+  --color-highlight: rgba(0, 104, 255, 0.08);
 }
 
 .theme--dark {
@@ -52,6 +53,7 @@
   --color-scroll-bg: #424242;
   --color-scroll-border: #191a1c;
   --color-form-border: #388bfd;
+  --color-highlight: rgba(52, 60, 66, 0.6);
 }
 
 .theme--dark-dimmed {
@@ -80,6 +82,7 @@
   --color-scroll-bg: #424242;
   --color-scroll-border: #1f232b;
   --color-form-border: #4184e4;
+  --color-highlight: rgba(52, 60, 66, 0.6);
 }
 
 .sema {
@@ -166,20 +169,16 @@
 
 .reaction-selection-wrapper {
   background-color: var(--color-sema-bg);
+  border: 1px solid var(--color-btn-border);
+  border-radius: 34px;
+  border-width: 1px;
+  border-style: solid;
+  border-image: initial;
 }
 
 .reaction-selection {
   border: unset;
   background: transparent;
-  font-size: 16px !important;
-}
-
-.reaction-selection span {
-  padding-left: 12px;
-}
-
-.reaction-selection-wrapper .sema-dropdown-content button:hover {
-  background-color: rgba(0, 129, 167, 0.05);
 }
 
 .expandedEmojis {
@@ -279,16 +278,9 @@ h6 {
 .sema-highlighter-content {
   position: absolute !important;
   border-radius: 4px;
-  background: rgba(0, 104, 255, 0.08);
+  background: var(--color-highlight);
 }
 
-/* highlight end */
-/* @media screen and (max-width: 1010px) {
-  .sema-dropdown-menu.tags-selection {
-    left: -155px !important;
-    max-width: 254px;
-  }
-} */
 .sema-footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;

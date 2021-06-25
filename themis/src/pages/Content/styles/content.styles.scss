@@ -37,6 +37,8 @@
   --color-scroll-border: #{v.$color-light-scroll-border};
 
   --color-form-border: #{v.$color-light-form-border};
+
+  --color-highlight: #{v.$color-light-highlight};
 }
 
 .theme--dark {
@@ -76,6 +78,8 @@
   --color-scroll-border: #{v.$color-dark-scroll-border};
 
   --color-form-border: #{v.$color-dark-form-border};
+
+  --color-highlight: #{v.$color-dark-highlight};
 }
 
 .theme--dark-dimmed {
@@ -115,6 +119,8 @@
   --color-scroll-border: #{v.$color-dark-dim-scroll-border};
 
   --color-form-border: #{v.$color-dark-dim-form-border};
+
+  --color-highlight: #{v.$color-dark-dim-highlight};
 }
 
 .sema {
@@ -137,14 +143,6 @@
 
 .sema-emoji {
   font-size: 1rem;
-}
-
-.zoom {
-  transition: transform 0.2s;
-}
-
-.zoom:hover {
-  transform: scale(1.5);
 }
 
 .sema-dropdown-menu {
@@ -330,14 +328,7 @@ h6 {
 .sema-highlighter-content {
   position: absolute !important;
   border-radius: 4px;
-  background: rgba(0, 104, 255, 0.08);
-}
-/* highlight end */
-@media screen and (max-width: 1010px) {
-  .sema-dropdown-menu.tags-selection {
-    left: -155px !important;
-    max-width: 254px;
-  }
+  background: var(--color-highlight);
 }
 
 .sema-footer {
