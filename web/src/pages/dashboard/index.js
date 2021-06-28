@@ -339,7 +339,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
         {invitations?.length > 0 ? invitations.map((el, i) => (
           <div className={clsx('px-10 py-20', styles['invite-mobile'])}>
             <div className='is-flex is-justify-content-space-between'>
-              <p>{el.recipient}</p>
+              <p className={styles['invite-email-mobile']}>{el.recipient}</p>
               {el.isPending ? (
                 <>
                   <span className={clsx('tag is-primary', styles.tag)}>

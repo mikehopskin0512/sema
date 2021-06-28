@@ -76,3 +76,11 @@ $positions:
     #{$i}: 0;
   }
 }
+
+$radius: "0", "2px", "4px";
+
+@each $i in $radius{
+  .border-radius-#{$i} {
+    border-radius: #{$i} !important;
+  }
+}
