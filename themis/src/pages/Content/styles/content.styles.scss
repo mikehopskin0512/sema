@@ -266,6 +266,11 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
+
+  ul {
+    list-style-position: outside;
+    margin-left: 15px;
+  }
 }
 
 .suggestion-buttons {

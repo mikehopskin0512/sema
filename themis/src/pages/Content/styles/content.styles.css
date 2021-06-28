@@ -220,6 +220,10 @@
   font-size: 12px;
   line-height: 16px;
 }
+.suggestion-content-truncated ul {
+  list-style-position: outside;
+  margin-left: 15px;
+}
 
 .suggestion-buttons {
   display: flex;
