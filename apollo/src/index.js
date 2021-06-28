@@ -13,6 +13,7 @@ import sources from './sources';
 import users from './users';
 import adminUsers from './admin/users';
 import searchQueries from './admin/searchQueries';
+import support from './support';
 
 function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -30,6 +31,7 @@ function attachRoutes(app, passport) {
   users(app, passport);
   adminUsers(app, passport);
   searchQueries(app, passport);
+  support(app, passport);
 }
 
 module.exports.attachRoutes = attachRoutes;

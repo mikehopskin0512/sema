@@ -10,12 +10,14 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import SearchInput from '../../components/admin/searchInput';
 import StatusFilter from '../../components/admin/statusFilter';
+import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import Tabs from '../../components/tabs';
+import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 
-const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -299,10 +301,21 @@ const UsersPage = () => {
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
 
+  const onBulkAdmitUsers = async (bulkCount) => {
+    await dispatch(bulkAdmitUsers(bulkCount));
+    dispatch(fetchUsers({ search: searchTerm }));
+  };
+
   return (
     <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
-      <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
-      <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
+      <Helmet {...UserManagementHelmet} />
+      <div className='is-flex is-justify-content-space-between'>
+        <div>
+          <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
+          <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
+        </div>
+        <BulkAdmitForm onSubmit={onBulkAdmitUsers} />
+      </div>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
         <div className='is-flex sema-is-justify-content-space-between'>
           <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />

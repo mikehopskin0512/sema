@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const Query = require('../../comments/queryModel');
 
-const { mongooseUri } = require('../../config');
+const { mongooseUri } = require('../../src/config');
 
 const options = {
   useUnifiedTopology: true,

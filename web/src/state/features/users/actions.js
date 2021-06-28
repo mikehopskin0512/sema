@@ -1,4 +1,4 @@
-import { getUser, getUsers, updateUserInvitations, updateUserStatus } from './api';
+import { bulkAdmit, getUser, getUsers, updateUserInvitations, updateUserStatus } from './api';
 import * as types from './types';
 
 const requestUpdateUserAvailableInvitations = () => ({
@@ -19,9 +19,10 @@ const requestFetchUsers = () => ({
   type: types.REQUEST_FETCH_USERS,
 });
 
-const requestFetchUsersSuccess = (users, filters) => ({
+const requestFetchUsersSuccess = (users, totalCount, filters) => ({
   type: types.REQUEST_FETCH_USERS_SUCCESS,
   users,
+  totalCount,
   filters
 });
 
@@ -58,13 +59,27 @@ const requestFetchUserError = (errors) => ({
   errors,
 });
 
+
+const requestBulkAdmitUsers = () => ({
+  type: types.BULK_ADMIT_USERS,
+});
+
+const requestBulkAdmitUsersSuccess = () => ({
+  type: types.BULK_ADMIT_USERS_SUCCESS
+});
+
+const requestBulkAdmitUsersError = (errors) => ({
+  type: types.BULK_ADMIT_USERS_ERROR,
+  errors,
+});
+
 export const fetchUsers = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUsers());
     const payload = await getUsers(params, token);
-    const { data: { users = [], filters = [] } } = payload;
+    const { data: { users = [], totalCount, filters = [] } } = payload;
 
-    dispatch(requestFetchUsersSuccess(users, filters));
+    dispatch(requestFetchUsersSuccess(users, totalCount, filters));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -116,5 +131,19 @@ export const fetchUser = (id, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchUserError(errMessage));
+  }
+};
+
+
+export const bulkAdmitUsers = (bulkCount) => async (dispatch) => {
+  try {
+    dispatch(requestBulkAdmitUsers());
+    await bulkAdmit({ bulkCount });
+    dispatch(requestBulkAdmitUsersSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestBulkAdmitUsersError(errMessage));
   }
 };

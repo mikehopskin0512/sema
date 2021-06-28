@@ -6,5 +6,6 @@ export { default as passwordState } from './password-reset';
 export { default as repositoriesState } from './repositories';
 export { default as reportsState } from './reports';
 export { default as sourcesState } from './sources';
+export { default as supportState } from './support';
 export { default as usersState } from './users';
 export { default as searchQueriesState } from './search-queries';
