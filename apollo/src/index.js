@@ -12,6 +12,7 @@ import repositories from './repositories';
 import sources from './sources';
 import users from './users';
 import adminUsers from './admin/users';
+import searchQueries from './admin/searchQueries';
 import support from './support';
 
 function attachRoutes(app, passport) {
@@ -29,6 +30,7 @@ function attachRoutes(app, passport) {
   sources(app, passport);
   users(app, passport);
   adminUsers(app, passport);
+  searchQueries(app, passport);
   support(app, passport);
 }
 
