@@ -1,6 +1,6 @@
 import * as Json2CSV from 'json2csv';
 import Query from '../../comments/queryModel';
-import { getColQueries } from '../metrics/queries';
+import { getColQueries } from '../../../scripts/metrics/queries';
 
 export const getLastQueries = async ({ page, perPage }) => {
   const aggregate = getColQueries();
