@@ -10,7 +10,9 @@ import FilterTabs from '../../components/admin/filterTabs';
 import ExportButton from '../../components/admin/exportButton';
 
 const { fetchSearchQueries, exportSearchTerms } = searchQueriesOperations;
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
+const { fetchSuggestComments } = suggestCommentsOperations;
 
 const tabOptions = [
   {
@@ -26,19 +28,27 @@ const tabOptions = [
 const ReportsPage = () => {
   const dispatch = useDispatch();
   const { inviteMetrics } = useSelector(state => state.invitationsState);
-  const { searchQueries, totalCount, isFetching } = useSelector(state => state.searchQueriesState);
+  const { searchQueries, isFetching: isSearchQueriesLoading, totalCount: totalQueryItemsCount } = useSelector(state => state.searchQueriesState);
+  const { suggestedComments, isFetching: isSuggestedCommentsLoading, totalCount: totalCommentsItemsCount } = useSelector(state => state.suggestCommentsState);
   const { token } = useSelector(state => state.authState);
   const [inviteCategory, setInviteCategory] = useState('person');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
+  const [commentPage, setCommentPage] = useState(1);
+  const [commentPageSize, setCommentPageSize] = useState(50);
 
   useEffect(() => {
     dispatch(fetchInviteMetrics());
+    dispatch(fetchSuggestComments());
   }, []);
 
   useEffect(() => {
     dispatch(fetchInviteMetrics(inviteCategory.toLowerCase()))
   }, [inviteCategory]);
+
+  useEffect(() => {
+    dispatch(fetchSuggestComments({ page: commentPage, perPage: commentPageSize }));
+  }, [commentPage, commentPageSize]);
 
   useEffect(() => {
     dispatch(fetchSearchQueries({ page, perPage }));
@@ -100,6 +110,31 @@ const ReportsPage = () => {
     [],
   );
 
+
+  const suggestCommentColumns = useMemo(
+    () => [
+      {
+        Header: 'Title',
+        accessor: 'title',
+        className: 'p-10'
+      },
+      {
+        Header: 'Comment',
+        accessor: 'comment',
+        className: 'p-10',
+        Cell: ({ cell: { value } }) => (
+          <div dangerouslySetInnerHTML={{ __html: value }} style={{ maxHeight: 200, overflow: 'auto' }} />
+        )
+      },
+      {
+        Header: 'Insert Count',
+        accessor: 'insertCount',
+        className: 'py-10 px-20'
+      },
+    ],
+    [],
+  );
+
   const invitesData = inviteMetrics ? inviteMetrics.map(item => ({
     name: inviteCategory === 'domain' ? item.domain : fullName(item.sender),
     email: inviteCategory === 'domain' ? item.domain : item.sender && item.sender.username,
@@ -114,6 +149,17 @@ const ReportsPage = () => {
     matchedCount: item._id.matchedCount,
     frequency: item.searchTermFrequencyCount,
   })) : [];
+
+  const suggestCommentsData = suggestedComments ? suggestedComments.map(item => ({
+    title: item.title,
+    comment: item.comment,
+    insertCount: item.insertCount,
+  })) : [];
+
+  const fetchCommentsData = useCallback(({ pageSize, pageIndex }) => {
+    setCommentPage(pageIndex + 1);
+    setCommentPageSize(pageSize);
+  }, [setCommentPage, setCommentPageSize]);
 
   const fetchData = useCallback(({ pageSize, pageIndex }) => {
     setPage(pageIndex + 1);
@@ -146,8 +192,23 @@ const ReportsPage = () => {
               page: page,
               perPage: perPage,
               fetchData: fetchData,
-              totalCount,
-              loading: isFetching
+              totalCount: totalQueryItemsCount,
+              loading: isSearchQueriesLoading
+            }}
+          />
+        </div>
+
+        <div className='mb-50'>
+          <h4 className="title is-4">Suggested Comments</h4>
+          <Table
+            columns={suggestCommentColumns}
+            data={suggestCommentsData}
+            pagination={{
+              page: commentPage,
+              perPage: commentPageSize,
+              fetchData: fetchCommentsData,
+              totalCount: totalCommentsItemsCount,
+              loading: isSuggestedCommentsLoading
             }}
           />
         </div>
