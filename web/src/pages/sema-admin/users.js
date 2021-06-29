@@ -14,8 +14,8 @@ import Helmet, { UserManagementHelmet } from '../../components/utils/Helmet';
 
 import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
-import Tabs from '../../components/tabs';
-import BulkAdmitForm from '@/components/admin/bulkAdmitForm';
+import FilterTabs from '../../components/admin/filterTabs';
+import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 
 const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers } = usersOperations;
 
@@ -318,7 +318,7 @@ const UsersPage = () => {
       </div>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
         <div className='is-flex sema-is-justify-content-space-between'>
-          <Tabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
+          <FilterTabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
         <Table
