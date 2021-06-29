@@ -99,7 +99,6 @@ const Semabar = (props) => {
       );
 
       const availableHeight = vh - (y + height);
-      console.log(modalHeight, availableHeight);
 
       if (availableHeight > modalHeight) {
         dropPosition = DROP_POSITIONS.DOWN;
