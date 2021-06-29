@@ -79,7 +79,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href={userVoiceLink}>User Voice</a>
+        <a className="button is-ghost has-text-white has-text-weight-semibold" href={userVoiceLink}>Idea Board</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>
