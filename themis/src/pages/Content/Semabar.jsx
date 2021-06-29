@@ -97,7 +97,6 @@ const Semabar = (props) => {
       );
 
       const availableHeight = vh - (y + height);
-      console.log(modalHeight, availableHeight);
 
       if (availableHeight > modalHeight) {
         dropPosition = DROP_POSITIONS.DOWN;
@@ -165,9 +164,7 @@ const Semabar = (props) => {
           role="menu"
           style={dropdownStyle}
         >
-          <div className="tags-selection-header">
-            All Tags
-          </div>
+          <div className="tags-selection-header">All Tags</div>
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
