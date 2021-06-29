@@ -1,7 +1,7 @@
 #!/usr/bin/node
 
 const mongoose = require('mongoose');
-const Query = require('../../comments/queryModel');
+const Query = require('../../src/comments/queryModel');
 
 const { mongooseUri } = require('../../src/config');
 

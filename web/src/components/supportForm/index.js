@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
@@ -27,9 +27,14 @@ const SupportForm = ({ active, closeForm, type }) => {
   };
 
   const {
-    register, handleSubmit, formState, reset, watch,
+    register, handleSubmit, formState, reset, watch, setValue,
   } = useForm({ defaultValues });
   const { errors } = formState;
+
+  const close = () => {
+    reset();
+    closeForm();
+  };
 
   const onSubmit = async (data) => {
     const { email = username } = data;
@@ -40,10 +45,13 @@ const SupportForm = ({ active, closeForm, type }) => {
     const response = await dispatch(submitSupportEmail(params, token));
     const { status } = response;
     if (status === 201) {
-      reset();
-      closeForm();
+      close();
     }
   };
+
+  useEffect(() => {
+    setValue('type', type);
+  }, [type]);
 
   return (
     <>
@@ -51,7 +59,7 @@ const SupportForm = ({ active, closeForm, type }) => {
         <div className="modal-background" />
         <div className="modal-content p-50">
           <div className="has-background-white p-50">
-            <button className="modal-close is-large" aria-label="close" type="button" onClick={closeForm} />
+            <button className="modal-close is-large" aria-label="close" type="button" onClick={close} />
             <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">We’d love to hear from you!</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="field mt-20">
@@ -146,7 +154,7 @@ const SupportForm = ({ active, closeForm, type }) => {
                   <button className={`button is-link ${isSending ? 'is-loading' : ''}`} type="submit">Submit</button>
                 </div>
                 <div className="control">
-                  <button onClick={closeForm} className="button is-link is-light" type="button">Cancel</button>
+                  <button onClick={close} className="button is-link is-light" type="button">Cancel</button>
                 </div>
               </div>
             </form>
