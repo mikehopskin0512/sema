@@ -28,8 +28,8 @@ const tabOptions = [
 const ReportsPage = () => {
   const dispatch = useDispatch();
   const { inviteMetrics } = useSelector(state => state.invitationsState);
-  const { searchQueries, totalCount, isFetching } = useSelector(state => state.searchQueriesState);
-  const { suggestedComments, isFetching, totalCount } = useSelector(state => state.suggestCommentsState);
+  const { searchQueries, isFetching: isSearchQueriesLoading, totalCount: totalQueryItemsCount } = useSelector(state => state.searchQueriesState);
+  const { suggestedComments, isFetching: isSuggestedCommentsLoading, totalCount: totalCommentsItemsCount } = useSelector(state => state.suggestCommentsState);
   const { token } = useSelector(state => state.authState);
   const [inviteCategory, setInviteCategory] = useState('person');
   const [page, setPage] = useState(1);
@@ -192,8 +192,8 @@ const ReportsPage = () => {
               page: page,
               perPage: perPage,
               fetchData: fetchData,
-              totalCount,
-              loading: isFetching
+              totalCount: totalQueryItemsCount,
+              loading: isSearchQueriesLoading
             }}
           />
         </div>
@@ -207,8 +207,8 @@ const ReportsPage = () => {
               page: commentPage,
               perPage: commentPageSize,
               fetchData: fetchCommentsData,
-              totalCount,
-              loading: isFetching
+              totalCount: totalCommentsItemsCount,
+              loading: isSuggestedCommentsLoading
             }}
           />
         </div>
