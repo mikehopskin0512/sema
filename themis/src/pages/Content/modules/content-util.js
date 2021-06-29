@@ -13,6 +13,7 @@ import {
   SEMABAR_CLASS,
   ADD_OP,
   CREATE_SMART_COMMENT_URL,
+  IS_DIRTY,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
@@ -287,7 +288,11 @@ function closeSemaOpenElements(event, store) {
   }
 }
 
-export const toggleTagSelection = (operation, tags) => {
+export const toggleTagSelection = (
+  operation,
+  tags,
+  isUserOperation = false
+) => {
   /**
    * {
    * tag: string
@@ -302,6 +307,7 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -310,8 +316,10 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -325,14 +333,17 @@ export const toggleTagSelection = (operation, tags) => {
         (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
       ) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
         return modifiedObj;
       }
 
       // Otherwise, set positive or negative tag for selection
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -368,7 +379,8 @@ export function onSuggestion(event, store) {
         );
       }
     }
-    if (Array.isArray(suggestedTags) && suggestedTags.length) {
+    // allow to change state even when empty to remove existing tags if no suggestion
+    if (suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,
