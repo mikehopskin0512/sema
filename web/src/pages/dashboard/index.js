@@ -12,6 +12,7 @@ import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import Toaster from '../../components/toaster';
+import SupportForm from '../../components/supportForm';
 
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
@@ -42,6 +43,7 @@ const Invite = () => {
   const [loading, setLoading] = useState(false);
   const [isCardVisible, toggleCard] = useState(true);
   const [recipient, setRecipient] = useState("");
+  const [supportForm, setSupportForm] = useState(false);
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
@@ -118,6 +120,9 @@ const Invite = () => {
     window.location.href = EXTENSION_LINK;
   };
 
+  const openSupportForm = () => setSupportForm(true);
+  const closeSupportForm = () => setSupportForm(false);
+
   const renderIcon = () => {
     if (!isPluginInstalled) {
       return (
@@ -151,6 +156,7 @@ const Invite = () => {
     <>
       <Helmet { ...DashboardHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
@@ -238,7 +244,7 @@ const Invite = () => {
             </div>
           </div>
         </div>
-        <ContactUs userVoiceToken={userVoiceToken}/>
+        <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>
       </section>
     </>
   );
@@ -306,13 +312,17 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                       </>
                     ) : (
                       <span className={clsx('tag is-success', styles.tag)}>
-                        Active
+                        Accepted
                       </span>
                     )}
                   </td>
                   <td>
-                    <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                    {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                    {el.isPending && (
+                      <>
+                        <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                        <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>
+                      </>
+                    )}
                     {' '}
                   </td>
                 </tr>
@@ -342,7 +352,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </>
               ) : (
                 <span className={clsx('tag is-success', styles.tag)}>
-                  Active
+                  Accepted
                 </span>
               )}
             </div>
@@ -383,7 +393,7 @@ const PromotionBoard = () => {
   );
 };
 
-const ContactUsContent = ({ userVoiceToken }) => {
+const ContactUsContent = ({ userVoiceToken, openSupportForm }) => {
   return(
     <>
       <div className="column is-6">
@@ -391,7 +401,7 @@ const ContactUsContent = ({ userVoiceToken }) => {
         <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
       </div>
       <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <a href="mailto:feedback@semasoftware.com?subject=Product Feedback" className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</a>
+        <button onClick={openSupportForm} className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</button>
       </div>
       <div className="column is-2-widescreen is-2-tablet">
         <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
@@ -400,16 +410,16 @@ const ContactUsContent = ({ userVoiceToken }) => {
   )
 }
 
-const ContactUs = ({ userVoiceToken }) => {
+const ContactUs = (props) => {
   return (
     <>
       {/* Desktop View */}
       <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
-        <ContactUsContent {...userVoiceToken} />
+        <ContactUsContent {...props} />
       </div>
       {/* Mobile View */}
       <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
-        <ContactUsContent {...userVoiceToken} />
+        <ContactUsContent {...props} />
       </div>
     </>
   )

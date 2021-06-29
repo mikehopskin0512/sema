@@ -13,6 +13,7 @@ import {
   SEMABAR_CLASS,
   ADD_OP,
   CREATE_SMART_COMMENT_URL,
+  IS_DIRTY,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
@@ -145,15 +146,18 @@ export function writeSemaToGithub(textarea) {
     let smartComment = {};
     let inLineMetada = {};
 
-    const type =
-      textarea?.id && textarea.id.includes('new_comment_field')
-        ? 'comment'
-        : 'inline';
+    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const onFilesTab = document.URL.split('/').pop().includes('files');
 
-    if (type === 'comment') {
-      store.dispatch(addMutationObserver(setMutationObserver()));
+    const location =
+      onFilesTab 
+      ? 'files changed'
+      : 'conversation';
+
+    if (location === 'conversation') {
+      store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
     } else {
-      store.dispatch(addMutationObserver(setMutationObserverInLine()));
+      store.dispatch(addMutationObserver(setMutationObserverAtFilesChanged()));
       inLineMetada = getGithubInlineMetadata(textarea.id);
     }
 
@@ -204,13 +208,21 @@ export function writeSemaToGithub(textarea) {
       userId,
       commentId: null,
       comment: textboxValue,
-      type,
+      location,
       suggestedComments: selectedSuggestedComments,
       reaction: selectedEmojiObj._id,
       tags,
     };
 
-    store.dispatch(addSmartComment(smartComment));
+    if (isPullRequestReview) {
+      store.dispatch(removeMutationObserver());
+      const pullRequestReviewId = textarea?.id.split('_').pop();
+      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`)
+      smartComment.commentId = commentDiv?.id;
+      createSmartComment(smartComment);
+    } else {
+      store.dispatch(addSmartComment(smartComment));
+    }
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -266,6 +278,13 @@ function closeSemaOpenElements(event, store) {
   const dropdownParents = $(target).parents('.sema-dropdown');
   if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
+  } else {
+    // if any other dropdown is open other than this one, close it
+    const allDropdowns = $(document).find('.sema-dropdown');
+    const openDropdown = $(allDropdowns).filter('.sema-is-active');
+    if (openDropdown[0] !== dropdownParents[0]) {
+      store.dispatch(closeAllDropdowns());
+    }
   }
 
   const selectingEmojiParents = $(target).parents(
@@ -276,7 +295,11 @@ function closeSemaOpenElements(event, store) {
   }
 }
 
-export const toggleTagSelection = (operation, tags) => {
+export const toggleTagSelection = (
+  operation,
+  tags,
+  isUserOperation = false
+) => {
   /**
    * {
    * tag: string
@@ -291,6 +314,7 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -299,8 +323,10 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -314,14 +340,17 @@ export const toggleTagSelection = (operation, tags) => {
         (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
       ) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
         return modifiedObj;
       }
 
       // Otherwise, set positive or negative tag for selection
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -357,7 +386,8 @@ export function onSuggestion(event, store) {
         );
       }
     }
-    if (Array.isArray(suggestedTags) && suggestedTags.length) {
+    // allow to change state even when empty to remove existing tags if no suggestion
+    if (suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,
@@ -378,6 +408,7 @@ export function getSemaIds(idSuffix) {
 export const getGithubMetadata = (document, textarea) => {
   const url = document.querySelector('meta[property="og:url"]')?.content || '';
   const decoupleUrl = url.split('/');
+  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
   const [, , , , repo, , pull_number] = decoupleUrl;
   const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
   const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
@@ -389,6 +420,7 @@ export const getGithubMetadata = (document, textarea) => {
 
   const githubMetada = {
     url,
+    repo_id,
     repo,
     pull_number,
     head,
@@ -429,36 +461,47 @@ const createSmartComment = (smartComment) => {
   });
 };
 
-export const setMutationObserver = () => {
+export const setMutationObserverAtConversation = () => {
   const observer = new MutationObserver(([mutation]) => {
     if (mutation.addedNodes.length) {
       const node = [...mutation.addedNodes].findIndex(
         (node) =>
           'classList' in node && node.classList.contains('js-timeline-item')
       );
+
+      const singleNode = [...mutation.addedNodes].findIndex(
+        (node) =>
+          'classList' in node && node.classList.contains('review-comment')
+      );
+
+      let smartComment = store.getState().smartComment;
+
       if (node !== -1) {
         const newCommentDiv = mutation.addedNodes[node];
         const { id } = newCommentDiv.querySelector(
           'div.timeline-comment-group'
         );
-
-        let smartComment = store.getState().smartComment;
         smartComment.commentId = id;
-        createSmartComment(smartComment);
-        store.dispatch(removeMutationObserver());
+      } else if (singleNode !== -1) {
+        const { id } = mutation.addedNodes[singleNode];
+        smartComment.commentId = id;
+      } else {
+        return;
       }
+      createSmartComment(smartComment);
+      store.dispatch(removeMutationObserver());
     }
   });
 
   const commentsTimeline = document.querySelector(
     'div.pull-discussion-timeline .js-discussion'
   );
-  observer.observe(commentsTimeline, { childList: true });
+  observer.observe(commentsTimeline, { childList: true, subtree: true });
 
   return observer;
 };
 
-export const setMutationObserverInLine = () => {
+export const setMutationObserverAtFilesChanged = () => {
   const observer = new MutationObserver(([mutation]) => {
     if (mutation.addedNodes.length) {
       const threadNode = [...mutation.addedNodes].findIndex(

@@ -7,6 +7,7 @@ import { debounce, isEqual } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar.jsx';
+import { getActiveThemeClass } from '../../../utils/theme';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -121,7 +122,8 @@ class Mirror {
 
     if (!this._container) {
       this._container = document.createElement('div');
-      this._container.className = SHADOW_ROOT_CLASS;
+
+      this._container.className = `${SHADOW_ROOT_CLASS} ${getActiveThemeClass()}`;
 
       this._searchRoot = document.createElement('div');
       this._searchRoot.style.zIndex = 2147483647;
@@ -328,7 +330,7 @@ class Mirror {
     //   this._renderInterval && this._renderInterval.destroy(),
     this._container && this._container.remove(),
       this._elementToMimicResizeObserver &&
-        this._elementToMimicResizeObserver.disconnect(),
+      this._elementToMimicResizeObserver.disconnect(),
       this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
