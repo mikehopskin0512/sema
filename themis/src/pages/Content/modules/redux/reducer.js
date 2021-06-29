@@ -10,7 +10,6 @@ import {
   UPDATE_SELECTED_TAGS,
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
-  UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   TOGGLE_GLOBAL_SEARCH_MODAL,
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
@@ -40,6 +39,8 @@ import {
   GLOBAL_SEMA_SEARCH_ID,
   TAGS_INIT,
   EMOJIS,
+  POSITIVE,
+  NEGATIVE,
 } from '../../constants';
 
 function rootReducer(state = initialState, action) {
@@ -104,14 +105,14 @@ function rootReducer(state = initialState, action) {
     semabars[id].selectedReaction = selectedReaction;
     semabars[id].isReactionDirty = isReactionDirty;
   } else if (type === UPDATE_SELECTED_TAGS) {
-    const { id, operation, isDirty } = payload;
+    const { id, operation } = payload;
     const {
       semabars,
       semabars: {
         [id]: { selectedTags },
       },
     } = newState;
-    const updatedTags = toggleTagSelection(operation, selectedTags);
+    const updatedTags = toggleTagSelection(operation, selectedTags, true);
     semabars[id].selectedTags = updatedTags;
   } else if (type === CLOSE_SEARCH_MODAL) {
     const { id } = payload;
@@ -131,11 +132,34 @@ function rootReducer(state = initialState, action) {
       },
     } = newState;
 
-    const filteredSuggestions = suggestedTags.filter((suggestion) => {
-      const exists = !!selectedTags.find(
-        (tagObj) => tagObj[tagObj[SELECTED]] === suggestion
+    // suggestion=T, selected=F, isDirty=F, showTag=T
+    const suggestionsToShow = suggestedTags.filter((suggestion) => {
+      const tagObj = selectedTags.find(
+        (tagDetails) =>
+          tagDetails[POSITIVE] === suggestion ||
+          tagDetails[NEGATIVE] === suggestion
       );
-      return !exists;
+      if (tagObj) {
+        const isSelected = !!tagObj[SELECTED];
+        const { isDirty } = tagObj;
+        if (!isSelected && !isDirty) {
+          return true;
+        }
+      }
+    });
+
+    // suggestion=F, selected=T, isDirty=F, showTag=F
+    selectedTags.forEach((tagObj) => {
+      const isSelected = !!tagObj[SELECTED];
+      if (isSelected) {
+        const isSuggested = !!suggestedTags.find(
+          (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]
+        );
+        const { isDirty } = tagObj;
+        if (!isSuggested && !isDirty) {
+          tagObj[SELECTED] = null;
+        }
+      }
     });
 
     const selectedTagsLength = selectedTags.filter((tagObj) => tagObj[SELECTED])
@@ -145,29 +169,19 @@ function rootReducer(state = initialState, action) {
     numberOfAllowedSuggestions =
       numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
 
-    while (filteredSuggestions.length > numberOfAllowedSuggestions) {
-      filteredSuggestions.pop();
+    // reverse so that only new suggestions are removed
+    suggestionsToShow.reverse();
+
+    while (suggestionsToShow.length > numberOfAllowedSuggestions) {
+      suggestionsToShow.pop();
     }
 
-    semabars[id].suggestedTags = filteredSuggestions;
-  } else if (type === UPDATE_SELECTED_TAG_WITH_SUGGESTION) {
-    const { id, tag } = payload;
-    // add to selected
-    const {
-      semabars,
-      semabars: {
-        [id]: { selectedTags, suggestedTags },
-      },
-    } = newState;
-
-    // remove from suggestion
-    semabars[id].suggestedTags = suggestedTags.filter(
-      (suggestedTag) => suggestedTag !== tag
-    );
-
-    const operation = { tag, op: ADD_OP };
-    const updatedTags = toggleTagSelection(operation, selectedTags);
-    semabars[id].selectedTags = updatedTags;
+    let updatedTags = [...selectedTags];
+    suggestionsToShow.forEach((tag) => {
+      const operation = { tag, op: ADD_OP };
+      updatedTags = toggleTagSelection(operation, updatedTags);
+      semabars[id].selectedTags = updatedTags;
+    });
   } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
     const { data, position, isLoading = false, openFor } = payload;
     const obj = {};

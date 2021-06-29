@@ -7,7 +7,7 @@ import InviteForm from '../../components/inviteForm';
 import useDebounce from '../../hooks/useDebounce';
 import Toaster from '../../components/toaster';
 import { alertOperations } from '../../state/features/alerts';
-import Tabs from '../../components/admin/tabs';
+import FilterTabs from '../../components/admin/filterTabs';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import InvitationsGrid from '../../components/invitationsGrid';
 
@@ -23,7 +23,7 @@ const InvitesPage = () => {
   }));
 
   const { token, user } = auth;
-  const [category, setCategory] = useState('Your Invites');
+  const [category, setCategory] = useState('your_invites');
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
   const { showAlert, alertType, alertLabel } = alerts;
@@ -34,7 +34,7 @@ const InvitesPage = () => {
   }, []);
 
   const getInvites = () => {
-    if (category === 'Your Invites') {
+    if (category === 'your_invites') {
       dispatch(getInvitesBySender(user._id, token, debounceSearchTerm))
     } else {
       dispatch(getInvitesBySender(undefined, token, debounceSearchTerm))
@@ -75,7 +75,7 @@ const InvitesPage = () => {
           <InviteForm onReload={getInvites} />
         </div>
         <div className='is-flex is-justify-content-space-between mb-10'>
-          <Tabs tabs={['Your Invites', 'All Invites']} value={category} onChange={setCategory} />
+          <FilterTabs tabs={tabOptions} value={category} onChange={setCategory} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
         <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
