@@ -14,6 +14,17 @@ import InvitationsGrid from '../../components/invitationsGrid';
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
+const tabOptions = [
+  {
+    label: 'Your Invites',
+    value: 'your_invites'
+  },
+  {
+    label: 'All Invites',
+    value: 'all_invites',
+  },
+];
+
 const InvitesPage = () => {
   const dispatch = useDispatch();
   const { alerts, auth, invitations } = useSelector((state) => ({
