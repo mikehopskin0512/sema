@@ -87,7 +87,7 @@ const Login = () => {
                   <ul>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faThumbsUp} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
@@ -95,7 +95,7 @@ const Login = () => {
                     </li>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faTag} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
@@ -103,7 +103,7 @@ const Login = () => {
                     </li>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-fa-gray mr-15", styles['fa-container'])} >
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
                         <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>

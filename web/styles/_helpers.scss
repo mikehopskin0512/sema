@@ -35,6 +35,10 @@
   height: 100%;
 }
 
+.is-full-width {
+  width: 100%;
+};
+
 .is-cursor-pointer {
   cursor: pointer;
 }
@@ -74,5 +78,13 @@ $positions:
   .is-absolute-#{$i} {
     position: absolute;
     #{$i}: 0;
+  }
+}
+
+$radius: "0", "2px", "4px", "14px";
+
+@each $i in $radius{
+  .border-radius-#{$i} {
+    border-radius: #{$i} !important;
   }
 }

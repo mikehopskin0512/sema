@@ -1,0 +1,11 @@
+.no-margin {
+  margin: 0 !important;
+}
+
+.stat {
+  padding-right: 15px;
+}
+
+.stat:last-child {
+  padding-right: 0 !important;
+}
