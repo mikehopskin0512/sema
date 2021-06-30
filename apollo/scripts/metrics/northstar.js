@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const { mongooseUri } = require('../../config');
+const { mongooseUri } = require('../../src/config');
 
 const options = {
   useUnifiedTopology: true,

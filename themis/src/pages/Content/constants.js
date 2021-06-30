@@ -14,6 +14,7 @@ export const TOGGLE_OP = 'TOGGLE_OP';
 export const POSITIVE = 'positive';
 export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
+export const IS_DIRTY = 'isDirty';
 
 export const MAX_CHARACTER_LENGTH = 88;
 
@@ -22,36 +23,43 @@ export const TAGS_INIT = [
     [POSITIVE]: 'Readable',
     [NEGATIVE]: 'Unreadable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Secure',
     [NEGATIVE]: 'Not secure',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Efficient',
     [NEGATIVE]: 'Inefficient',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Elegant',
     [NEGATIVE]: 'Inelegant',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Reusable',
     [NEGATIVE]: 'Not reusable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Fault-tolerant',
     [NEGATIVE]: 'Brittle',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Maintainable',
     [NEGATIVE]: 'Not maintainable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
 ];
 
@@ -211,6 +219,16 @@ export const SEMA_ICON_ANCHOR_DARK = `
   </span>
 `;
 
+export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#768390"/>
+      </svg>
+    </a>
+  </span>
+`;
+
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
 
@@ -223,3 +241,7 @@ export const SUGGESTED_TAG_LIMIT = 3;
 
 export const WHOAMI = 'whoami';
 export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
+
+export const LIGHT = 'light';
+export const DARK = 'dark';
+export const DARK_DIMMED = 'dark_dimmed';

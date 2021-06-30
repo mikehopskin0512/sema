@@ -3,6 +3,8 @@ import * as types from './types';
 const initialState = {
   users: [],
   isFetching: false,
+  isUpdating: false,
+  totalCount: 0,
   analytic: {},
 };
 
@@ -11,18 +13,18 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_USER_AVAILABLE_INVITATIONS:
     return {
       ...state,
-      isFetching: true,
+      isUpdating: true,
     };
   case types.REQUEST_UPDATE_USER_AVAILABLE_INVITATIONS_SUCCESS:
     return {
       ...state,
-      isFetching: false,
+      isUpdating: false,
       error: {},
     };
   case types.REQUEST_UPDATE_USER_AVAILABLE_INVITATIONS_ERROR:
     return {
       ...state,
-      isFetching: false,
+      isUpdating: false,
       error: action.errors,
     };
   case types.REQUEST_FETCH_USERS:
@@ -35,6 +37,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       users: action.users,
+      totalCount: action.totalCount,
       analytic: action.filters,
       error: {},
     };
@@ -48,18 +51,18 @@ const reducer = (state = initialState, action) => {
   case types.UPDATE_USER_STATUS:
     return {
       ...state,
-      isFetching: true,
+      isUpdating: true,
     };
   case types.UPDATE_USER_STATUS_SUCCESS:
     return {
       ...state,
-      isFetching: false,
+      isUpdating: false,
       error: {},
     };
   case types.UPDATE_USER_STATUS_ERROR:
     return {
       ...state,
-      isFetching: false,
+      isUpdating: false,
       error: action.errors,
     };
   case types.REQUEST_FETCH_USER:

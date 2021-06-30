@@ -1,10 +1,7 @@
 @use 'variables' as v;
 
 :root {
-  --color-page-background: #{v.$color-light};
-  --color-text: #{v.$color-dark};
   --color-border: #{v.$color-light-border};
-  --color-tags-container-bg: #{v.$color-light-1};
 
   --color-sema-bg: #{v.$color-light-bg};
   --color-sema-border: #{v.$color-light-border};
@@ -15,9 +12,18 @@
 
   --color-tags-background: #{v.$color-light-tags-container-bg};
   --color-tags-border: #{v.$color-light-tags-container-border};
+  --color-tags-header-bg: #{v.$color-light-tags-header-bg};
+  --color-tags-header-font: #{v.$color-light-tags-header-font};
 
   --color-tag-font: #{v.$color-light-tag-font};
   --color-tag-bg: #{v.$color-light-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-light-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-light-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-light-add-tags-bg};
+  --color-add-tags-font: #{v.$color-light-add-tags-font};
+  --color-add-tags-border: #{v.$color-light-add-tags-border};
 
   --color-title: #{v.$color-light-title};
   --color-content: #{v.$color-light-content};
@@ -31,13 +37,12 @@
   --color-scroll-border: #{v.$color-light-scroll-border};
 
   --color-form-border: #{v.$color-light-form-border};
+
+  --color-highlight: #{v.$color-light-highlight};
 }
 
 .theme--dark {
-  --color-page-background: #{v.$color-dark};
-  --color-text: #{v.$color-light};
   --color-border: #{v.$color-light-1};
-  --color-tags-container-bg: #{v.$color-dark-3};
 
   --color-sema-bg: #{v.$color-dark-bg};
   --color-sema-border: #{v.$color-dark-border};
@@ -48,9 +53,18 @@
 
   --color-tags-border: #{v.$color-dark-tags-container-border};
   --color-tags-background: #{v.$color-dark-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-tag-font};
   --color-tag-bg: #{v.$color-dark-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-add-tags-border};
 
   --color-title: #{v.$color-dark-title};
   --color-content: #{v.$color-dark-content};
@@ -64,6 +78,49 @@
   --color-scroll-border: #{v.$color-dark-scroll-border};
 
   --color-form-border: #{v.$color-dark-form-border};
+
+  --color-highlight: #{v.$color-dark-highlight};
+}
+
+.theme--dark-dimmed {
+  --color-border: #{v.$color-light-1};
+
+  --color-sema-bg: #{v.$color-dark-dim-bg};
+  --color-sema-border: #{v.$color-dark-dim-border};
+
+  --color-text-input-bg: #{v.$color-dark-dim-bg};
+  --color-text-input-border: #{v.$color-dark-dim-border};
+  --color-text-input-font: #{v.$color-dark-dim-font};
+
+  --color-tags-border: #{v.$color-dark-dim-tags-container-border};
+  --color-tags-background: #{v.$color-dark-dim-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-dim-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-dim-tags-header-font};
+
+  --color-tag-font: #{v.$color-dark-dim-tag-font};
+  --color-tag-bg: #{v.$color-dark-dim-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-dim-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-dim-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-dim-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-dim-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-dim-add-tags-border};
+
+  --color-title: #{v.$color-dark-dim-title};
+  --color-content: #{v.$color-dark-dim-content};
+
+  --color-suggestion-container: #{v.$color-dark-dim-btn-container};
+  --color-credit-img: invert(1);
+
+  --color-btn-border: #{v.$color-dark-dim-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-dim-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-dim-scroll-border};
+
+  --color-form-border: #{v.$color-dark-dim-form-border};
+
+  --color-highlight: #{v.$color-dark-dim-highlight};
 }
 
 .sema {
@@ -88,18 +145,8 @@
   font-size: 1rem;
 }
 
-.zoom {
-  transition: transform 0.2s;
-}
-
-.zoom:hover {
-  transform: scale(1.5);
-}
-
 .sema-dropdown-menu {
-  // border: 1px solid rgb(225, 228, 232);
   border: 1px solid var(--color-border);
-  // background-color: var(--color-tags-container-bg);
 }
 
 .sema-tag-container {
@@ -143,7 +190,18 @@
 }
 
 .sema-add-tags {
-  border-style: dashed;
+  // border-style: dashed;
+  border: var(--color-add-tags-border);
+  background-color: var(--color-add-tags-bg);
+  color: var(--color-add-tags-font);
+}
+
+.sema-add-tags:hover {
+  color: var(--color-add-tags-font);
+}
+
+.sema-add-tags:focus {
+  color: var(--color-add-tags-font);
 }
 
 .tagsPositiveContainer > span {
@@ -208,6 +266,11 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
+
+  ul {
+    list-style-position: outside;
+    margin-left: 15px;
+  }
 }
 
 .suggestion-buttons {
@@ -270,14 +333,7 @@ h6 {
 .sema-highlighter-content {
   position: absolute !important;
   border-radius: 4px;
-  background: rgba(0, 104, 255, 0.08);
-}
-/* highlight end */
-@media screen and (max-width: 1010px) {
-  .sema-dropdown-menu.tags-selection {
-    left: -155px !important;
-    max-width: 254px;
-  }
+  background: var(--color-highlight);
 }
 
 .sema-footer {
@@ -361,10 +417,16 @@ h6 {
   width: 250px;
 }
 
-// .sema-tag {
-//   background-color: var(--color-tag-bg) !important;
-//   color: var(--color-tag-font) !important;
-// }
+.sema-tag {
+  background-color: var(--color-tag-bg) !important;
+  color: var(--color-tag-font) !important;
+}
+
+.sema-tag.sema-is-dark {
+  /* color when tag is selected */
+  background-color: var(--color-selected-tag-bg) !important;
+  color: var(--color-selected-tag-font) !important;
+}
 
 .sema-credit-img {
   filter: var(--color-credit-img);
@@ -419,4 +481,12 @@ h6 {
 
 .sema-is-form-bordered {
   border-color: var(--color-form-border);
+}
+
+.tags-selection-header {
+  display: flex;
+  background-color: var(--color-tags-header-bg);
+  color: var(--color-tags-header-font);
+  padding: 10px 20px;
+  font-weight: 600;
 }
