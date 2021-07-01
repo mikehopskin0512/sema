@@ -63,6 +63,15 @@ let stateCheck = setInterval(() => {
     store.dispatch(addGithubMetada(getGithubMetadata(document)));
   }
 }, 100);
+let initialCheck = false;
+const updateMetadata = setInterval(() => {
+  if (initialCheck) {
+    clearInterval(updateMetadata);
+  }
+  console.log('test')
+  store.dispatch(addGithubMetada(getGithubMetadata(document)));
+  initialCheck = true;
+}, 5000);
 
 const highlightWords = highlightPhrases.reduce((acc, curr) => {
   acc[curr] = true;
