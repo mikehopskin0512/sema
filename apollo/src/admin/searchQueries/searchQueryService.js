@@ -1,9 +1,9 @@
 import * as Json2CSV from 'json2csv';
 import Query from '../../comments/queryModel';
-import { getColQueries } from '../../../scripts/metrics/queries';
+import { getSearchTermQuery } from '../../comments/suggestedComments/searchTermQueries';
 
 export const getLastQueries = async ({ page, perPage }) => {
-  const aggregate = getColQueries();
+  const aggregate = getSearchTermQuery();
   const pipeline = aggregate.pipeline();
 
   const totalCount = await Query.aggregate([
@@ -23,7 +23,7 @@ export const getLastQueries = async ({ page, perPage }) => {
 };
 
 export const exportSearchQueries = async () => {
-  const searchQueries = await getColQueries();
+  const searchQueries = await getSearchTermQuery();
 
   const mappedData = searchQueries.map(item => ({
     'Search Term': item._id.searchTerm,
