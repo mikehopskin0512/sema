@@ -1,11 +1,29 @@
-.no-margin {
-  margin: 0 !important;
+.box-shadow {
+  box-shadow: 0px 1.80434px 9.02168px rgba(0, 0, 0, 0.07);
 }
 
-.stat {
-  padding-right: 15px;
+.card {
+  flex: 1;
+  @media only screen and (max-width: 769px) {
+    flex: 1 !important;
+  }
 }
 
-.stat:last-child {
-  padding-right: 0 !important;
+.stat-label {
+  min-height: 1.75rem;
+}
+
+.repo-info {
+  min-height: 120px;
+}
+
+.avatar {
+  border: 1px solid #D6D6D6;
+}
+
+.description {
+  height: 3rem;
+  @media only screen and (max-width: 769px) {
+    height: auto !important;
+  }
 }
