@@ -225,7 +225,7 @@ function rootReducer(state = initialState, action) {
     // Reset to default Github Metadata
     newState.githubMetadata.filename = null;
     newState.githubMetadata.file_extension = null;
-    newState.githubMetadata.ine_numbers = null;
+    newState.githubMetadata.line_numbers = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
