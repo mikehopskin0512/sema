@@ -312,13 +312,17 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                       </>
                     ) : (
                       <span className={clsx('tag is-success', styles.tag)}>
-                        Active
+                        Accepted
                       </span>
                     )}
                   </td>
                   <td>
-                    <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                    {el.isPending ? (<button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
+                    {el.isPending && (
+                      <>
+                        <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
+                        <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>
+                      </>
+                    )}
                     {' '}
                   </td>
                 </tr>
@@ -348,7 +352,7 @@ const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
                 </>
               ) : (
                 <span className={clsx('tag is-success', styles.tag)}>
-                  Active
+                  Accepted
                 </span>
               )}
             </div>

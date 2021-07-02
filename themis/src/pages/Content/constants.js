@@ -14,6 +14,7 @@ export const TOGGLE_OP = 'TOGGLE_OP';
 export const POSITIVE = 'positive';
 export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
+export const IS_DIRTY = 'isDirty';
 
 export const MAX_CHARACTER_LENGTH = 88;
 
@@ -22,36 +23,43 @@ export const TAGS_INIT = [
     [POSITIVE]: 'Readable',
     [NEGATIVE]: 'Unreadable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Secure',
     [NEGATIVE]: 'Not secure',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Efficient',
     [NEGATIVE]: 'Inefficient',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Elegant',
     [NEGATIVE]: 'Inelegant',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Reusable',
     [NEGATIVE]: 'Not reusable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Fault-tolerant',
     [NEGATIVE]: 'Brittle',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
   {
     [POSITIVE]: 'Maintainable',
     [NEGATIVE]: 'Not maintainable',
     [SELECTED]: null,
+    [IS_DIRTY]: false,
   },
 ];
 

@@ -13,6 +13,7 @@ import {
   SEMABAR_CLASS,
   ADD_OP,
   SMART_COMMENT_URL,
+  IS_DIRTY,
 } from '../constants';
 
 import { suggest } from './commentSuggestions';
@@ -277,6 +278,13 @@ function closeSemaOpenElements(event, store) {
   const dropdownParents = $(target).parents('.sema-dropdown');
   if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
+  } else {
+    // if any other dropdown is open other than this one, close it
+    const allDropdowns = $(document).find('.sema-dropdown');
+    const openDropdown = $(allDropdowns).filter('.sema-is-active');
+    if (openDropdown[0] !== dropdownParents[0]) {
+      store.dispatch(closeAllDropdowns());
+    }
   }
 
   const selectingEmojiParents = $(target).parents(
@@ -287,7 +295,11 @@ function closeSemaOpenElements(event, store) {
   }
 }
 
-export const toggleTagSelection = (operation, tags) => {
+export const toggleTagSelection = (
+  operation,
+  tags,
+  isUserOperation = false
+) => {
   /**
    * {
    * tag: string
@@ -302,6 +314,7 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -310,8 +323,10 @@ export const toggleTagSelection = (operation, tags) => {
       const modifiedObj = { ...tagObj };
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -325,14 +340,17 @@ export const toggleTagSelection = (operation, tags) => {
         (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
       ) {
         modifiedObj[SELECTED] = null;
+        modifiedObj[IS_DIRTY] = isUserOperation;
         return modifiedObj;
       }
 
       // Otherwise, set positive or negative tag for selection
       if (tag === tagObj[POSITIVE]) {
         modifiedObj[SELECTED] = POSITIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       } else if (tag === tagObj[NEGATIVE]) {
         modifiedObj[SELECTED] = NEGATIVE;
+        modifiedObj[IS_DIRTY] = isUserOperation;
       }
       return modifiedObj;
     });
@@ -368,7 +386,8 @@ export function onSuggestion(event, store) {
         );
       }
     }
-    if (Array.isArray(suggestedTags) && suggestedTags.length) {
+    // allow to change state even when empty to remove existing tags if no suggestion
+    if (suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,

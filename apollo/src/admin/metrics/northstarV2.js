@@ -1,16 +1,18 @@
 /* eslint-disable quote-props */
 /* eslint-disable no-console */
 
-const { startOfToday, endOfToday, subMinutes, subDays, isAfter, isBefore } = require('date-fns');
-const { format, zonedTimeToUtc } = require('date-fns-tz');
 const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { format, zonedTimeToUtc } = require('date-fns-tz');
+const { startOfToday, subDays } = require('date-fns');
 
 const uri = process.env.MONGO_URI;
 const daysAgo = parseInt(process.env.DAYS_AGO, 10) || 0;
 const googleSheetId = process.env.GOOGLE_SHEET_ID;
 const googlePrivateKey = process.env.GOOGLE_PRIVATE_KEY;
 const googleClientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+const cumulative = process.env.CUMULATIVE || false;
+const startDate = process.env.START_DATE ? new Date(process.env.START_DATE) : new Date('01 January 2021 00:00 EDT');
 
 const options = {
   useUnifiedTopology: true,
@@ -84,7 +86,7 @@ const execute = async () => {
   // Connect to DocumentDB
   try {
     await (mongoose.connect(uri, options));
-    console.log('Connect to DocumentDB successfully');
+    console.log('Connected to DocumentDB successfully');
   } catch (err) {
     console.log('Error while Connecting to Apollo - Document DB', err);
   }
@@ -99,27 +101,35 @@ const execute = async () => {
 
     await document.loadInfo();
 
-    if (daysAgo === 0) {
-      sheet = document.sheetsByTitle['24hrs'];
-    } else if (daysAgo === 7) {
-      sheet = document.sheetsByTitle['7days'];
-    } else if (daysAgo === 30) {
-      sheet = document.sheetsByTitle['30days'];
+    if (cumulative) {
+      sheet = document.sheetsByTitle['Cumulative'];
+    } else {
+      if (daysAgo === 0) {
+        sheet = document.sheetsByTitle['24hrs'];
+      } else if (daysAgo === 7) {
+        sheet = document.sheetsByTitle['7days'];
+      } else if (daysAgo === 30) {
+        sheet = document.sheetsByTitle['30days'];
+      }
     }
 
     await sheet.loadCells(loadCells);
-    console.log('Connect to GSheet successfully');
+    console.log('Connected to GSheet successfully');
   } catch (error) {
     console.error('Error connecting to GSheet - Geckoboard', error);
   }
 
-  // UTC time
-  const now = new Date();
-  const startOfTodayUTC = subDays(zonedTimeToUtc(startOfToday(), timezone), daysAgo);
-  const endOfTodayUTC = zonedTimeToUtc(endOfToday(), timezone);
-  const endOfTodayMinusFive = subMinutes(endOfTodayUTC, 5);
+  // EDT time
+  const today = format(new Date(), 'MMM d', timezone)
+  const [firstRow] = await sheet.getRows({ limit: 1 });
 
-  const dateRange = [{ $match: { createdAt: { $gte: startOfTodayUTC } } }];
+  if (firstRow.Date !== today) {
+    await sheet.addRow(firstRow);
+  }
+
+  // UTC time
+  const startOfTodayUTC = subDays(zonedTimeToUtc(startOfToday(), timezone), daysAgo);
+  const dateRange = [{ $match: { createdAt: { $gte: cumulative ? startDate : startOfTodayUTC } } }];
 
   let totalWaitlistOrigin = 0;
   let activeUserCount = 0;
@@ -166,7 +176,7 @@ const execute = async () => {
   data.smartCommentCount = smartCommentCount;
 
   const row = {
-    'Date': format(new Date(), 'MM/dd/yyyy'),
+    'Date': today,
     'Waitlist': data.waitlistUserCount,
     'Current Users': data.currentUserCount,
     'Blocked Users': data.blockedUserCount,
@@ -180,16 +190,10 @@ const execute = async () => {
     'Accepted Invites': data.acceptedInviteCount,
   };
 
-  if (isAfter(now, endOfTodayMinusFive) && isBefore(now, endOfTodayUTC)) {
-    await sheet.addRow(row);
-  }
-
-  const [firstRow] = await sheet.getRows({ limit: 1 });
   Object.keys(row).forEach((header) => { firstRow[header] = row[header]; });
-
   await firstRow.save();
 
-  console.log(`Updated sheet: ${sheet.title} with values from ${startOfTodayUTC}`);
+  console.log(`Updated sheet: ${sheet.title} with values from ${cumulative ? startDate : startOfTodayUTC}`);
 
   process.exit(0);
 };
