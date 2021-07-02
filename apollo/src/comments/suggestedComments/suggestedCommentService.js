@@ -69,7 +69,51 @@ const searchComments = async (searchQuery) => {
   };
 };
 
+const suggestCommentsInsertCount = async ({ page, perPage }) => {
+  const query = [
+    {
+      $lookup: {
+        from: 'smartComments',
+        localField: '_id',
+        foreignField: 'suggestedComments',
+        as: 'smartComments'
+      }
+    },
+    {
+      $addFields: {
+        insertCount: { $size: '$smartComments' }
+      }
+    },
+    {
+      $sort: { insertCount: -1 }
+    },
+  ];
+
+  const totalCount = await SuggestedComment.aggregate([
+    ...query,
+    {
+      $count: 'total'
+    }
+  ]);
+
+  const suggestedComments = await SuggestedComment.aggregate([
+    ...query,
+    {
+      $skip: (page - 1) * perPage
+    },
+    {
+      $limit: perPage,
+    }
+  ]);
+
+  return {
+    totalCount: totalCount[0]? totalCount[0].total : 0,
+    suggestedComments
+  };
+};
+
 module.exports = {
   buildSuggestedCommentsIndex,
   searchComments,
+  suggestCommentsInsertCount,
 };
