@@ -120,7 +120,7 @@ const execute = async () => {
   }
 
   // EDT time
-  const today = format(new Date(), 'MMM dd', timezone)
+  const today = format(new Date(), 'MMM d', timezone)
   const [firstRow] = await sheet.getRows({ limit: 1 });
 
   if (firstRow.Date !== today) {
