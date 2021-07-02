@@ -151,7 +151,6 @@ const UsersPage = () => {
       },
       {
         Header: 'Active Date',
-        className: 'has-text-centered mr-10',
         accessor: 'activeDate',
         Cell: ({ cell: { value } }) => <div className="has-text-centered">{value}</div>,
       },
@@ -172,6 +171,7 @@ const UsersPage = () => {
           </div>
         ),
         accessor: 'invites',
+        tooltip: 'Sort is based on total invites sent, pending and accepted',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex py-10'>
             <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>
