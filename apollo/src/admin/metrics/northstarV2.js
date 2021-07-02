@@ -68,16 +68,32 @@ const invitationsQuery = [
 
 const smartCommentsQuery = [{ $count: 'smartCommentCount' }];
 
+const invitationSendersCountQuery = [
+  {
+    $group: {
+      _id: { sender: '$sender' }, 
+      sender: { $sum: 1 }
+    }
+  }, {
+    $match: {
+      sender: { $gt: 0 }
+    }
+  }, {
+    $count: 'sendersCount'
+  }
+];
+
 const data = {
   waitlistUserCount: 0,
-  currentUserCount: 0, // users who have an account
+  registeredUserCount: 0, // users who have an account
   blockedUserCount: 0,
   disabledUserCount: 0,
   activeUserCount: 0, // current users who have made a smartComment?
-  retentionRate: 0, // users who have accounts but have not made a smart comment = activeUserCount / currentUserCount
+  reviewRate: 0, // users who have accounts but have not made a smart comment = activeUserCount / registeredUserCount
   pendingInviteCount: 0,
-  inviteConversionRate: 0, // invites that are not pending / total invites
-  waitlistConversionRate: 0, // where source is waitlist: active accounts / all accounts
+  inviteAcceptanceConversionRate: 0, // invites that are not pending / total invites
+  inviteSendingRate: 0, // ratio of users who sent at least one invite / all registered users 
+  waitlistAdminConversionRate: 0, // where source is waitlist: active accounts / all accounts
   smartCommentCount: 0,
   acceptedInviteCount: 0,
 };
@@ -141,7 +157,7 @@ const execute = async () => {
     if (isWaitlist === true && isActive === true) {
       data.waitlistUserCount += userStateCount;
     } else if (isWaitlist === false && isActive === true) {
-      data.currentUserCount += userStateCount;
+      data.registeredUserCount += userStateCount;
     } else if (isWaitlist === true && isActive === false) {
       data.blockedUserCount += userStateCount;
     } else if (isWaitlist === false && isActive === false) {
@@ -155,9 +171,9 @@ const execute = async () => {
     }
   });
 
-  data.waitlistConversionRate = data.waitlistUserCount / totalWaitlistOrigin || 0;
+  data.waitlistAdminConversionRate = data.waitlistUserCount / totalWaitlistOrigin || 0;
   data.activeUserCount = activeUserCount;
-  data.retentionRate = data.activeUserCount / data.currentUserCount || 0;
+  data.reviewRate = data.activeUserCount / data.registeredUserCount || 0;
 
   let invitationsResult = await mongoose.connection.collection('invitations').aggregate([...dateRange, ...invitationsQuery]).toArray();
   invitationsResult = invitationsResult.map(({ _id, inviteCount }) => ({ ..._id, inviteCount }));
@@ -170,7 +186,10 @@ const execute = async () => {
     }
   });
 
-  data.inviteConversionRate = data.acceptedInviteCount / (data.acceptedInviteCount + data.pendingInviteCount) || 0;
+  data.inviteAcceptanceConversionRate = data.acceptedInviteCount / (data.acceptedInviteCount + data.pendingInviteCount) || 0;
+
+  const [{ sendersCount }] = await mongoose.connection.collection('invitations').aggregate([...dateRange, ...invitationSendersCountQuery]).toArray();
+  data.inviteSendingRate = sendersCount / activeUserCount;
 
   const [{ smartCommentCount }] = await mongoose.connection.collection('smartComments').aggregate([...dateRange, ...smartCommentsQuery]).toArray();
   data.smartCommentCount = smartCommentCount;
@@ -178,16 +197,17 @@ const execute = async () => {
   const row = {
     'Date': today,
     'Waitlist': data.waitlistUserCount,
-    'Current Users': data.currentUserCount,
+    'Registered Users': data.registeredUserCount,
     'Blocked Users': data.blockedUserCount,
     'Disabled Users': data.disabledUserCount,
     'Active Users': data.activeUserCount,
-    'Retention Rate': data.retentionRate,
+    'Review Rate': data.reviewRate,
     'Pending Invites': data.pendingInviteCount,
-    'Invite Conversion Rate': data.inviteConversionRate,
-    'Waitlist Conversion Rate': data.waitlistConversionRate,
+    'Invite Acceptance Conversion Rate': data.inviteAcceptanceConversionRate,
+    'Waitlist Admin Conversion Rate': data.waitlistAdminConversionRate,
     'Smart Comments': data.smartCommentCount,
     'Accepted Invites': data.acceptedInviteCount,
+    'Invite Sending Rate': data.inviteSendingRate,
   };
 
   Object.keys(row).forEach((header) => { firstRow[header] = row[header]; });
