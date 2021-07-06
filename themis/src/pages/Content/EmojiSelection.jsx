@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Lottie from 'react-lottie';
 import Emoji from './modules/emoji.js';
 import * as animationData from './LoadingAnimation.json';
@@ -22,6 +22,9 @@ const EmojiSelection = ({
   isSelectingEmoji,
 }) => {
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
+  const isDefaultSelected = selectedTitle === 'No reaction'
+  const options = isDefaultSelected ? allEmojis : [selectedReaction, ...allEmojis]
+
   return (
     <>
       {isTyping === true &&
@@ -42,7 +45,7 @@ const EmojiSelection = ({
           <span style={{ paddingLeft: 8, paddingRight: 8 }}>
             Calculating...
           </span>
-          <i className="fas fa-caret-right"></i>
+          <i className="fas fa-caret-right"/>
         </div>
       ) : (
         <div>
@@ -63,27 +66,23 @@ const EmojiSelection = ({
                 >
                   <Emoji symbol={shownEmoji} />
                   <span
-                    className="sema-ml-2"
+                    className="sema-ml-1"
                     dangerouslySetInnerHTML={{ __html: selectedTitle }}
-                  ></span>
+                  />
                 </button>
               </div>
               <div
                 className="sema-dropdown-menu"
                 role="menu"
-                style={{ borderRadius: '10px' }}
               >
-                <div
-                  className="sema-dropdown-content"
-                  style={{ borderRadius: '10px' }}
-                >
-                  {allEmojis.map((emojiObj) => {
+                <div className="sema-dropdown-content">
+                  {options.map((emojiObj, index) => {
                     const { title, emoji } = emojiObj;
                     return (
                       <button
-                        className="sema-dropdown-item sema-button sema-is-small sema-is-ghost reaction-selection"
+                        className="sema-dropdown-item sema-button sema-is-small sema-reaction-selection"
                         title={title}
-                        key={title}
+                        key={index}
                         onClick={(event) => {
                           event.preventDefault();
                           onEmojiSelected(emojiObj);
@@ -92,8 +91,9 @@ const EmojiSelection = ({
                       >
                         <Emoji symbol={emoji} />
                         <span
+                          className='sema-ml-3'
                           dangerouslySetInnerHTML={{ __html: title }}
-                        ></span>
+                        />
                       </button>
                     );
                   })}
