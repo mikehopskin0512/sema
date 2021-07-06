@@ -4,7 +4,7 @@
 const mongoose = require('mongoose');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { format, zonedTimeToUtc } = require('date-fns-tz');
-const { startOfToday, subDays } = require('date-fns');
+const { startOfToday, subDays, differenceInHours } = require('date-fns');
 
 const uri = process.env.MONGO_URI;
 const daysAgo = parseInt(process.env.DAYS_AGO, 10) || 0;
@@ -41,6 +41,7 @@ const stateCountQuery = [
       isActive: '$isActive',
       isWaitlist: '$isWaitlist',
       origin: '$origin',
+      createdAt: '$createdAt',
     },
   }, {
     $group: {
@@ -48,6 +49,7 @@ const stateCountQuery = [
         isWaitlist: '$isWaitlist',
         isActive: '$isActive',
         origin: '$origin',
+        createdAt: '$createdAt',
         smartCommentsCount: '$smartCommentsCount',
       },
       userStateCount: {
@@ -89,6 +91,7 @@ const data = {
   blockedUserCount: 0,
   disabledUserCount: 0,
   activeUserCount: 0, // current users who have made a smartComment?
+  newActiveUserCount: 0, // current users who have made a smartComment in last 24 ?
   reviewRate: 0, // users who have accounts but have not made a smart comment = activeUserCount / registeredUserCount
   pendingInviteCount: 0,
   inviteAcceptanceConversionRate: 0, // invites that are not pending / total invites
@@ -153,7 +156,7 @@ const execute = async () => {
   let stateCountResult = await mongoose.connection.collection('users').aggregate([...dateRange, ...stateCountQuery]).toArray();
   stateCountResult = stateCountResult.map(({ _id, userStateCount }) => ({ ..._id, userStateCount }));
 
-  stateCountResult.forEach(({ isWaitlist, isActive, origin, userStateCount, smartCommentsCount }) => {
+  stateCountResult.forEach(({ isWaitlist, isActive, origin, createdAt, userStateCount, smartCommentsCount }) => {
     if (isWaitlist === true && isActive === true) {
       data.waitlistUserCount += userStateCount;
     } else if (isWaitlist === false && isActive === true) {
@@ -168,6 +171,10 @@ const execute = async () => {
     }
     if (smartCommentsCount > 0) {
       activeUserCount += 1;
+      // User creation Last 24 hours
+      if (differenceInHours(new Date(), createdAt) <= 23) {
+        newActiveUserCount += 1;
+      }
     }
   });
 
@@ -208,6 +215,7 @@ const execute = async () => {
     'Smart Comments': data.smartCommentCount,
     'Accepted Invites': data.acceptedInviteCount,
     'Invite Sending Rate': data.inviteSendingRate,
+    'New Active Users': data.newActiveUserCount,
   };
 
   Object.keys(row).forEach((header) => { firstRow[header] = row[header]; });
