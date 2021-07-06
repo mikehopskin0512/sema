@@ -93,7 +93,7 @@ const data = {
   pendingInviteCount: 0,
   inviteAcceptanceConversionRate: 0, // invites that are not pending / total invites
   inviteSendingRate: 0, // ratio of users who sent at least one invite / all registered users 
-  waitlistAdminConversionRate: 0, // where source is waitlist: active accounts / all accounts
+  waitlistAdmitConversionRate: 0, // where source is waitlist: active accounts / all accounts
   smartCommentCount: 0,
   acceptedInviteCount: 0,
 };
@@ -171,7 +171,7 @@ const execute = async () => {
     }
   });
 
-  data.waitlistAdminConversionRate = data.waitlistUserCount / totalWaitlistOrigin || 0;
+  data.waitlistAdmitConversionRate = data.waitlistUserCount / totalWaitlistOrigin || 0;
   data.activeUserCount = activeUserCount;
   data.reviewRate = data.activeUserCount / data.registeredUserCount || 0;
 
@@ -204,7 +204,7 @@ const execute = async () => {
     'Review Rate': data.reviewRate,
     'Pending Invites': data.pendingInviteCount,
     'Invite Acceptance Conversion Rate': data.inviteAcceptanceConversionRate,
-    'Waitlist Admin Conversion Rate': data.waitlistAdminConversionRate,
+    'Waitlist Admit Conversion Rate': data.waitlistAdmitConversionRate,
     'Smart Comments': data.smartCommentCount,
     'Accepted Invites': data.acceptedInviteCount,
     'Invite Sending Rate': data.inviteSendingRate,
