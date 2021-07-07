@@ -1,7 +1,6 @@
+@charset "UTF-8";
 /*! bulma.io v0.9.1 | MIT License | github.com/jgthms/bulma */
-
 /* Bulma Utilities */
-
 @-webkit-keyframes spinAround {
   from {
     transform: rotate(0deg);
@@ -10,7 +9,6 @@
     transform: rotate(359deg);
   }
 }
-
 @keyframes spinAround {
   from {
     transform: rotate(0deg);
@@ -19,7 +17,6 @@
     transform: rotate(359deg);
   }
 }
-
 .sema-delete,
 .sema-modal-close,
 .sema-button,
@@ -44,7 +41,7 @@
   border-radius: 2px;
   border-right: 0;
   border-top: 0;
-  content: ' ';
+  content: " ";
   display: block;
   height: 0.625em;
   margin-top: -0.4375em;
@@ -103,7 +100,7 @@
 .sema-delete::after,
 .sema-modal-close::after {
   background-color: white;
-  content: '';
+  content: "";
   display: block;
   left: 50%;
   position: absolute;
@@ -176,7 +173,7 @@
   border-radius: 290486px;
   border-right-color: transparent;
   border-top-color: transparent;
-  content: '';
+  content: "";
   display: block;
   height: 1em;
   position: relative;
@@ -323,7 +320,6 @@ fieldset[disabled] .sema-pagination-ellipsis {
 }
 
 /* Bulma Base */
-
 /*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
 /* 
 html, body, p, ol, ul, li, dl, dt, dd, blockquote, figure, fieldset, legend, textarea, pre, iframe, hr, h1, h2, h3, h4, h5, h6 {
@@ -496,14 +492,11 @@ table td:not([align]), table th:not([align]) {
 table th {
     color: #363636;
 } */
-
 /* Bulma Elements */
-
 .sema-box {
   background-color: white;
   border-radius: 6px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-    0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   display: block;
   padding: 1.25rem;
@@ -727,8 +720,7 @@ fieldset[disabled] .sema-button.sema-is-white.sema-is-outlined {
 }
 
 .sema-button.sema-is-white.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-white.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-white.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: #0a0a0a;
   box-shadow: none;
@@ -851,8 +843,7 @@ fieldset[disabled] .sema-button.sema-is-black.sema-is-outlined {
 }
 
 .sema-button.sema-is-black.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-black.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-black.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: white;
   box-shadow: none;
@@ -975,8 +966,7 @@ fieldset[disabled] .sema-button.sema-is-light.sema-is-outlined {
 }
 
 .sema-button.sema-is-light.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-light.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-light.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: rgba(0, 0, 0, 0.7);
   box-shadow: none;
@@ -1222,8 +1212,7 @@ fieldset[disabled] .sema-button.sema-is-primary.sema-is-outlined {
 }
 
 .sema-button.sema-is-primary.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-primary.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-primary.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: #fff;
   box-shadow: none;
@@ -1649,8 +1638,7 @@ fieldset[disabled] .sema-button.sema-is-success.sema-is-outlined {
 }
 
 .sema-button.sema-is-success.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-success.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-success.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: #fff;
   box-shadow: none;
@@ -1792,8 +1780,7 @@ fieldset[disabled] .sema-button.sema-is-warning.sema-is-outlined {
 }
 
 .sema-button.sema-is-warning.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-warning.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-warning.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: rgba(0, 0, 0, 0.7);
   box-shadow: none;
@@ -1935,8 +1922,7 @@ fieldset[disabled] .sema-button.sema-is-danger.sema-is-outlined {
 }
 
 .sema-button.sema-is-danger.sema-is-inverted.sema-is-outlined[disabled],
-fieldset[disabled]
-  .sema-button.sema-is-danger.sema-is-inverted.sema-is-outlined {
+fieldset[disabled] .sema-button.sema-is-danger.sema-is-inverted.sema-is-outlined {
   background-color: transparent;
   border-color: #fff;
   box-shadow: none;
@@ -2041,19 +2027,16 @@ fieldset[disabled] .sema-button {
   margin-bottom: 1rem;
 }
 
-.sema-buttons.sema-are-small
-  .sema-button:not(.sema-is-normal):not(.sema-is-medium):not(.sema-is-large) {
+.sema-buttons.sema-are-small .sema-button:not(.sema-is-normal):not(.sema-is-medium):not(.sema-is-large) {
   border-radius: 2px;
   font-size: 0.75rem;
 }
 
-.sema-buttons.sema-are-medium
-  .sema-button:not(.sema-is-small):not(.sema-is-normal):not(.sema-is-large) {
+.sema-buttons.sema-are-medium .sema-button:not(.sema-is-small):not(.sema-is-normal):not(.sema-is-large) {
   font-size: 1.25rem;
 }
 
-.sema-buttons.sema-are-large
-  .sema-button:not(.sema-is-small):not(.sema-is-normal):not(.sema-is-medium) {
+.sema-buttons.sema-are-large .sema-button:not(.sema-is-small):not(.sema-is-normal):not(.sema-is-medium) {
   font-size: 1.5rem;
 }
 
@@ -2102,8 +2085,7 @@ fieldset[disabled] .sema-button {
   justify-content: center;
 }
 
-.sema-buttons.sema-is-centered:not(.sema-has-addons)
-  .sema-button:not(.sema-is-fullwidth) {
+.sema-buttons.sema-is-centered:not(.sema-has-addons) .sema-button:not(.sema-is-fullwidth) {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
 }
@@ -2112,8 +2094,7 @@ fieldset[disabled] .sema-button {
   justify-content: flex-end;
 }
 
-.sema-buttons.sema-is-right:not(.sema-has-addons)
-  .sema-button:not(.sema-is-fullwidth) {
+.sema-buttons.sema-is-right:not(.sema-has-addons) .sema-button:not(.sema-is-fullwidth) {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
 }
@@ -2137,31 +2118,26 @@ fieldset[disabled] .sema-button {
     max-width: 960px;
   }
 }
-
 @media screen and (max-width: 1215px) {
   .sema-container.sema-is-widescreen:not(.sema-is-max-desktop) {
     max-width: 1152px;
   }
 }
-
 @media screen and (max-width: 1407px) {
   .sema-container.sema-is-fullhd:not(.sema-is-max-desktop):not(.sema-is-max-widescreen) {
     max-width: 1344px;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-container:not(.sema-is-max-desktop) {
     max-width: 1152px;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-container:not(.sema-is-max-desktop):not(.sema-is-max-widescreen) {
     max-width: 1344px;
   }
 }
-
 .sema-content li + li {
   margin-top: 0.25em;
 }
@@ -2896,7 +2872,6 @@ fieldset[disabled] .sema-button {
     background-position: -200% 0;
   }
 }
-
 @keyframes moveIndeterminate {
   from {
     background-position: 200% 0;
@@ -2905,7 +2880,6 @@ fieldset[disabled] .sema-button {
     background-position: -200% 0;
   }
 }
-
 .sema-table {
   background-color: white;
   color: #363636;
@@ -3084,15 +3058,11 @@ fieldset[disabled] .sema-button {
   background-color: #fafafa;
 }
 
-.sema-table.sema-is-hoverable.sema-is-striped
-  tbody
-  tr:not(.sema-is-selected):hover {
+.sema-table.sema-is-hoverable.sema-is-striped tbody tr:not(.sema-is-selected):hover {
   background-color: #fafafa;
 }
 
-.sema-table.sema-is-hoverable.sema-is-striped
-  tbody
-  tr:not(.sema-is-selected):hover:nth-child(even) {
+.sema-table.sema-is-hoverable.sema-is-striped tbody tr:not(.sema-is-selected):hover:nth-child(even) {
   background-color: whitesmoke;
 }
 
@@ -3316,7 +3286,7 @@ fieldset[disabled] .sema-button {
 .sema-tag:not(body).sema-is-delete::before,
 .sema-tag:not(body).sema-is-delete::after {
   background-color: currentColor;
-  content: '';
+  content: "";
   display: block;
   left: 50%;
   position: absolute;
@@ -3507,7 +3477,6 @@ a.sema-tag:hover {
 }
 
 /* Bulma Form */
-
 .sema-input,
 .sema-textarea,
 .sema-select select {
@@ -4731,141 +4700,62 @@ fieldset[disabled] .sema-select select:hover {
   margin-right: -1px;
 }
 
-.sema-field.sema-has-addons
-  .sema-control:not(:first-child):not(:last-child)
-  .sema-button,
-.sema-field.sema-has-addons
-  .sema-control:not(:first-child):not(:last-child)
-  .sema-input,
-.sema-field.sema-has-addons
-  .sema-control:not(:first-child):not(:last-child)
-  .sema-select
-  select {
+.sema-field.sema-has-addons .sema-control:not(:first-child):not(:last-child) .sema-button,
+.sema-field.sema-has-addons .sema-control:not(:first-child):not(:last-child) .sema-input,
+.sema-field.sema-has-addons .sema-control:not(:first-child):not(:last-child) .sema-select select {
   border-radius: 0;
 }
 
-.sema-field.sema-has-addons
-  .sema-control:first-child:not(:only-child)
-  .sema-button,
-.sema-field.sema-has-addons
-  .sema-control:first-child:not(:only-child)
-  .sema-input,
-.sema-field.sema-has-addons
-  .sema-control:first-child:not(:only-child)
-  .sema-select
-  select {
+.sema-field.sema-has-addons .sema-control:first-child:not(:only-child) .sema-button,
+.sema-field.sema-has-addons .sema-control:first-child:not(:only-child) .sema-input,
+.sema-field.sema-has-addons .sema-control:first-child:not(:only-child) .sema-select select {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
-.sema-field.sema-has-addons
-  .sema-control:last-child:not(:only-child)
-  .sema-button,
-.sema-field.sema-has-addons
-  .sema-control:last-child:not(:only-child)
-  .sema-input,
-.sema-field.sema-has-addons
-  .sema-control:last-child:not(:only-child)
-  .sema-select
-  select {
+.sema-field.sema-has-addons .sema-control:last-child:not(:only-child) .sema-button,
+.sema-field.sema-has-addons .sema-control:last-child:not(:only-child) .sema-input,
+.sema-field.sema-has-addons .sema-control:last-child:not(:only-child) .sema-select select {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
 
 .sema-field.sema-has-addons .sema-control .sema-button:not([disabled]):hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]).sema-is-hovered,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]).sema-is-hovered,
 .sema-field.sema-has-addons .sema-control .sema-input:not([disabled]):hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]).sema-is-hovered,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]):hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]).sema-is-hovered {
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]).sema-is-hovered,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]):hover,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]).sema-is-hovered {
   z-index: 2;
 }
 
 .sema-field.sema-has-addons .sema-control .sema-button:not([disabled]):focus,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]).sema-is-focused,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]).sema-is-focused,
 .sema-field.sema-has-addons .sema-control .sema-button:not([disabled]):active,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]).sema-is-active,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]).sema-is-active,
 .sema-field.sema-has-addons .sema-control .sema-input:not([disabled]):focus,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]).sema-is-focused,
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]).sema-is-focused,
 .sema-field.sema-has-addons .sema-control .sema-input:not([disabled]):active,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]).sema-is-active,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]):focus,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]).sema-is-focused,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]):active,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]).sema-is-active {
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]).sema-is-active,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]):focus,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]).sema-is-focused,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]):active,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]).sema-is-active {
   z-index: 3;
 }
 
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]):focus:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]).sema-is-focused:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]):active:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-button:not([disabled]).sema-is-active:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]):focus:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]).sema-is-focused:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]):active:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-input:not([disabled]).sema-is-active:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]):focus:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]).sema-is-focused:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]):active:hover,
-.sema-field.sema-has-addons
-  .sema-control
-  .sema-select
-  select:not([disabled]).sema-is-active:hover {
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]):focus:hover,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]).sema-is-focused:hover,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]):active:hover,
+.sema-field.sema-has-addons .sema-control .sema-button:not([disabled]).sema-is-active:hover,
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]):focus:hover,
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]).sema-is-focused:hover,
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]):active:hover,
+.sema-field.sema-has-addons .sema-control .sema-input:not([disabled]).sema-is-active:hover,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]):focus:hover,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]).sema-is-focused:hover,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]):active:hover,
+.sema-field.sema-has-addons .sema-control .sema-select select:not([disabled]).sema-is-active:hover {
   z-index: 4;
 }
 
@@ -4918,10 +4808,8 @@ fieldset[disabled] .sema-select select:hover {
   flex-wrap: wrap;
 }
 
-.sema-field.sema-is-grouped.sema-is-grouped-multiline
-  > .sema-control:last-child,
-.sema-field.sema-is-grouped.sema-is-grouped-multiline
-  > .sema-control:not(:last-child) {
+.sema-field.sema-is-grouped.sema-is-grouped-multiline > .sema-control:last-child,
+.sema-field.sema-is-grouped.sema-is-grouped-multiline > .sema-control:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 
@@ -4938,7 +4826,6 @@ fieldset[disabled] .sema-select select:hover {
     display: flex;
   }
 }
-
 .sema-field-label .sema-label {
   font-size: inherit;
 }
@@ -4948,7 +4835,6 @@ fieldset[disabled] .sema-select select:hover {
     margin-bottom: 0.5rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-field-label {
     flex-basis: 0;
@@ -4957,23 +4843,26 @@ fieldset[disabled] .sema-select select:hover {
     margin-right: 1.5rem;
     text-align: right;
   }
+
   .sema-field-label.sema-is-small {
     font-size: 0.75rem;
     padding-top: 0.375em;
   }
+
   .sema-field-label.sema-is-normal {
     padding-top: 0.375em;
   }
+
   .sema-field-label.sema-is-medium {
     font-size: 1.25rem;
     padding-top: 0.375em;
   }
+
   .sema-field-label.sema-is-large {
     font-size: 1.5rem;
     padding-top: 0.375em;
   }
 }
-
 .sema-field-body .sema-field .sema-field {
   margin-bottom: 0;
 }
@@ -4985,20 +4874,23 @@ fieldset[disabled] .sema-select select:hover {
     flex-grow: 5;
     flex-shrink: 1;
   }
+
   .sema-field-body .sema-field {
     margin-bottom: 0;
   }
+
   .sema-field-body > .sema-field {
     flex-shrink: 1;
   }
+
   .sema-field-body > .sema-field:not(.sema-is-narrow) {
     flex-grow: 1;
   }
+
   .sema-field-body > .sema-field:not(:last-child) {
     margin-right: 0.75rem;
   }
 }
-
 .sema-control {
   box-sizing: border-box;
   clear: both;
@@ -5084,7 +4976,6 @@ fieldset[disabled] .sema-select select:hover {
 }
 
 /* Bulma Components */
-
 .sema-breadcrumb {
   font-size: 1rem;
   white-space: nowrap;
@@ -5119,7 +5010,7 @@ fieldset[disabled] .sema-select select:hover {
 
 .sema-breadcrumb li + li::before {
   color: #b5b5b5;
-  content: '\0002f';
+  content: "/";
 }
 
 .sema-breadcrumb ul,
@@ -5161,26 +5052,25 @@ fieldset[disabled] .sema-select select:hover {
 }
 
 .sema-breadcrumb.sema-has-arrow-separator li + li::before {
-  content: '\02192';
+  content: "→";
 }
 
 .sema-breadcrumb.sema-has-bullet-separator li + li::before {
-  content: '\02022';
+  content: "•";
 }
 
 .sema-breadcrumb.sema-has-dot-separator li + li::before {
-  content: '\000b7';
+  content: "·";
 }
 
 .sema-breadcrumb.sema-has-succeeds-separator li + li::before {
-  content: '\0227B';
+  content: "≻";
 }
 
 .sema-card {
   background-color: white;
   border-radius: 0.25rem;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-    0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   max-width: 100%;
   overflow: hidden;
@@ -5286,8 +5176,7 @@ fieldset[disabled] .sema-select select:hover {
 .sema-dropdown-content {
   background-color: white;
   border-radius: 4px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-    0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
 }
@@ -5369,11 +5258,11 @@ button.sema-dropdown-item.sema-is-active {
   .sema-level {
     display: flex;
   }
+
   .sema-level > .sema-level-item:not(.sema-is-narrow) {
     flex-grow: 1;
   }
 }
-
 .sema-level-item {
   align-items: center;
   display: flex;
@@ -5393,7 +5282,6 @@ button.sema-dropdown-item.sema-is-active {
     margin-bottom: 0.75rem;
   }
 }
-
 .sema-level-left,
 .sema-level-right {
   flex-basis: auto;
@@ -5408,11 +5296,10 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 769px), print {
   .sema-level-left .sema-level-item:not(:last-child),
-  .sema-level-right .sema-level-item:not(:last-child) {
+.sema-level-right .sema-level-item:not(:last-child) {
     margin-right: 0.75rem;
   }
 }
-
 .sema-level-left {
   align-items: center;
   justify-content: flex-start;
@@ -5423,13 +5310,11 @@ button.sema-dropdown-item.sema-is-active {
     margin-top: 1.5rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-level-left {
     display: flex;
   }
 }
-
 .sema-level-right {
   align-items: center;
   justify-content: flex-end;
@@ -5440,7 +5325,6 @@ button.sema-dropdown-item.sema-is-active {
     display: flex;
   }
 }
-
 .sema-media {
   align-items: flex-start;
   display: flex;
@@ -5508,7 +5392,6 @@ button.sema-dropdown-item.sema-is-active {
     overflow-x: auto;
   }
 }
-
 .sema-menu {
   font-size: 1rem;
 }
@@ -5802,13 +5685,12 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 769px) {
   .sema-modal-content,
-  .sema-modal-card {
+.sema-modal-card {
     margin: 0 auto;
     max-height: calc(100vh - 40px);
     width: 640px;
   }
 }
-
 .sema-modal-close {
   background: none;
   height: 40px;
@@ -5889,9 +5771,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-white .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-white .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-white
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-white .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-white .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-white .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-white .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -5909,56 +5789,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-white .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-white .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-white .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link {
     color: #0a0a0a;
   }
+
   .sema-navbar.sema-is-white .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-white .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-white
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-white
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-white .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-white .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-white
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-white .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-white .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-white .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-white .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-white .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #f2f2f2;
     color: #0a0a0a;
   }
+
   .sema-navbar.sema-is-white .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-white .sema-navbar-end .sema-navbar-link::after {
     border-color: #0a0a0a;
   }
-  .sema-navbar.sema-is-white
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-white
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-white
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-white .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-white .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-white .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #f2f2f2;
     color: #0a0a0a;
   }
-  .sema-navbar.sema-is-white
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-white .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: white;
     color: #0a0a0a;
   }
 }
-
 .sema-navbar.sema-is-black {
   background-color: #0a0a0a;
   color: white;
@@ -5971,9 +5840,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-black .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-black .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-black
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-black .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-black .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-black .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-black .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -5991,56 +5858,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-black .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-black .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-black .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link {
     color: white;
   }
+
   .sema-navbar.sema-is-black .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-black .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-black
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-black
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-black .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-black .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-black
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-black .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-black .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-black .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-black .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-black .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: black;
     color: white;
   }
+
   .sema-navbar.sema-is-black .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-black .sema-navbar-end .sema-navbar-link::after {
     border-color: white;
   }
-  .sema-navbar.sema-is-black
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-black
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-black
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-black .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-black .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-black .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: black;
     color: white;
   }
-  .sema-navbar.sema-is-black
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-black .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #0a0a0a;
     color: white;
   }
 }
-
 .sema-navbar.sema-is-light {
   background-color: whitesmoke;
   color: rgba(0, 0, 0, 0.7);
@@ -6053,9 +5909,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-light .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-light .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-light
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-light .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-light .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-light .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-light .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -6073,56 +5927,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-light .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-light .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-light .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link {
     color: rgba(0, 0, 0, 0.7);
   }
+
   .sema-navbar.sema-is-light .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-light .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-light
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-light
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-light .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-light .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-light
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-light .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-light .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-light .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-light .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-light .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #e8e8e8;
     color: rgba(0, 0, 0, 0.7);
   }
+
   .sema-navbar.sema-is-light .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-light .sema-navbar-end .sema-navbar-link::after {
     border-color: rgba(0, 0, 0, 0.7);
   }
-  .sema-navbar.sema-is-light
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-light
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-light
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-light .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-light .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-light .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #e8e8e8;
     color: rgba(0, 0, 0, 0.7);
   }
-  .sema-navbar.sema-is-light
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-light .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: whitesmoke;
     color: rgba(0, 0, 0, 0.7);
   }
 }
-
 .sema-navbar.sema-is-dark {
   background-color: #363636;
   color: #fff;
@@ -6135,9 +5978,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-dark .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-dark .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-dark
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-dark .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-dark .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-dark .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-dark .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -6155,54 +5996,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-dark .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-dark .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-dark .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-dark .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-dark .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-dark
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-dark .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-dark .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-dark
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-dark .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-dark .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-dark .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-dark .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-dark .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #292929;
     color: #fff;
   }
+
   .sema-navbar.sema-is-dark .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-dark .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-dark
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-dark
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-dark
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-dark .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-dark .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-dark .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #292929;
     color: #fff;
   }
-  .sema-navbar.sema-is-dark
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-dark .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #363636;
     color: #fff;
   }
 }
-
 .sema-navbar.sema-is-primary {
   background-color: #00d1b2;
   color: #fff;
@@ -6215,14 +6047,10 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-primary .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-primary .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-primary
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-primary .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-primary .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-primary .sema-navbar-brand .sema-navbar-link:hover,
-.sema-navbar.sema-is-primary
-  .sema-navbar-brand
-  .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-primary .sema-navbar-brand .sema-navbar-link.sema-is-active {
   background-color: #00b89c;
   color: #fff;
 }
@@ -6237,58 +6065,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-primary .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-primary .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-primary .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-primary .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-primary .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-primary .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-primary .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-end
-    .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-primary .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-primary .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-primary .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-primary .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-primary .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #00b89c;
     color: #fff;
   }
+
   .sema-navbar.sema-is-primary .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-primary .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-primary
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-primary
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-primary .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-primary .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-primary .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #00b89c;
     color: #fff;
   }
-  .sema-navbar.sema-is-primary
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-primary .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #00d1b2;
     color: #fff;
   }
 }
-
 .sema-navbar.sema-is-link {
   background-color: #3273dc;
   color: #fff;
@@ -6301,9 +6116,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-link .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-link .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-link
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-link .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-link .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-link .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-link .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -6321,54 +6134,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-link .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-link .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-link .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-link .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-link .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-link
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-link .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-link .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-link
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-link .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-link .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-link .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-link .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-link .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #2366d1;
     color: #fff;
   }
+
   .sema-navbar.sema-is-link .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-link .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-link
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-link
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-link
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-link .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-link .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-link .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #2366d1;
     color: #fff;
   }
-  .sema-navbar.sema-is-link
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-link .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #3273dc;
     color: #fff;
   }
 }
-
 .sema-navbar.sema-is-info {
   background-color: #3298dc;
   color: #fff;
@@ -6381,9 +6185,7 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-info .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-info .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-info
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-info .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-info .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-info .sema-navbar-brand .sema-navbar-link:hover,
 .sema-navbar.sema-is-info .sema-navbar-brand .sema-navbar-link.sema-is-active {
@@ -6401,54 +6203,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-info .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-info .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-info .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-info .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-info .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-info
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-info .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-info .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-info
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-info .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-info .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-info .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-info .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-info .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #238cd1;
     color: #fff;
   }
+
   .sema-navbar.sema-is-info .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-info .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-info
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-info
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-info
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-info .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-info .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-info .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #238cd1;
     color: #fff;
   }
-  .sema-navbar.sema-is-info
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-info .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #3298dc;
     color: #fff;
   }
 }
-
 .sema-navbar.sema-is-success {
   background-color: #48c774;
   color: #fff;
@@ -6461,14 +6254,10 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-success .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-success .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-success
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-success .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-success .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-success .sema-navbar-brand .sema-navbar-link:hover,
-.sema-navbar.sema-is-success
-  .sema-navbar-brand
-  .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-success .sema-navbar-brand .sema-navbar-link.sema-is-active {
   background-color: #3abb67;
   color: #fff;
 }
@@ -6483,58 +6272,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-success .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-success .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-success .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-success .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-success .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-success
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-success
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-success .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-success .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-success
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-success
-    .sema-navbar-end
-    .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-success .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-success .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-success .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-success .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-success .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #3abb67;
     color: #fff;
   }
+
   .sema-navbar.sema-is-success .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-success .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-success
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-success
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-success
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-success .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-success .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-success .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #3abb67;
     color: #fff;
   }
-  .sema-navbar.sema-is-success
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-success .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #48c774;
     color: #fff;
   }
 }
-
 .sema-navbar.sema-is-warning {
   background-color: #ffdd57;
   color: rgba(0, 0, 0, 0.7);
@@ -6547,14 +6323,10 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-warning .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-warning .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-warning
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-warning .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-warning .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-warning .sema-navbar-brand .sema-navbar-link:hover,
-.sema-navbar.sema-is-warning
-  .sema-navbar-brand
-  .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-warning .sema-navbar-brand .sema-navbar-link.sema-is-active {
   background-color: #ffd83d;
   color: rgba(0, 0, 0, 0.7);
 }
@@ -6569,58 +6341,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-warning .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-warning .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-warning .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link {
     color: rgba(0, 0, 0, 0.7);
   }
+
   .sema-navbar.sema-is-warning .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-warning .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-warning .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-warning .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-end
-    .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-warning .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-warning .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-warning .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-warning .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-warning .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #ffd83d;
     color: rgba(0, 0, 0, 0.7);
   }
+
   .sema-navbar.sema-is-warning .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-warning .sema-navbar-end .sema-navbar-link::after {
     border-color: rgba(0, 0, 0, 0.7);
   }
-  .sema-navbar.sema-is-warning
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-warning
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-warning .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-warning .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-warning .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #ffd83d;
     color: rgba(0, 0, 0, 0.7);
   }
-  .sema-navbar.sema-is-warning
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-warning .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #ffdd57;
     color: rgba(0, 0, 0, 0.7);
   }
 }
-
 .sema-navbar.sema-is-danger {
   background-color: #f14668;
   color: #fff;
@@ -6633,14 +6392,10 @@ button.sema-dropdown-item.sema-is-active {
 
 .sema-navbar.sema-is-danger .sema-navbar-brand > a.sema-navbar-item:focus,
 .sema-navbar.sema-is-danger .sema-navbar-brand > a.sema-navbar-item:hover,
-.sema-navbar.sema-is-danger
-  .sema-navbar-brand
-  > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-danger .sema-navbar-brand > a.sema-navbar-item.sema-is-active,
 .sema-navbar.sema-is-danger .sema-navbar-brand .sema-navbar-link:focus,
 .sema-navbar.sema-is-danger .sema-navbar-brand .sema-navbar-link:hover,
-.sema-navbar.sema-is-danger
-  .sema-navbar-brand
-  .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-danger .sema-navbar-brand .sema-navbar-link.sema-is-active {
   background-color: #ef2e55;
   color: #fff;
 }
@@ -6655,58 +6410,45 @@ button.sema-dropdown-item.sema-is-active {
 
 @media screen and (min-width: 1024px) {
   .sema-navbar.sema-is-danger .sema-navbar-start > .sema-navbar-item,
-  .sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link,
-  .sema-navbar.sema-is-danger .sema-navbar-end > .sema-navbar-item,
-  .sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link {
+.sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link,
+.sema-navbar.sema-is-danger .sema-navbar-end > .sema-navbar-item,
+.sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link {
     color: #fff;
   }
+
   .sema-navbar.sema-is-danger .sema-navbar-start > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-danger .sema-navbar-start > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-start
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link:focus,
-  .sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link:hover,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-start
-    .sema-navbar-link.sema-is-active,
-  .sema-navbar.sema-is-danger .sema-navbar-end > a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-danger .sema-navbar-end > a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-end
-    > a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link:focus,
-  .sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link:hover,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-end
-    .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-danger .sema-navbar-start > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-danger .sema-navbar-start > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link:focus,
+.sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link:hover,
+.sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link.sema-is-active,
+.sema-navbar.sema-is-danger .sema-navbar-end > a.sema-navbar-item:focus,
+.sema-navbar.sema-is-danger .sema-navbar-end > a.sema-navbar-item:hover,
+.sema-navbar.sema-is-danger .sema-navbar-end > a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link:focus,
+.sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link:hover,
+.sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link.sema-is-active {
     background-color: #ef2e55;
     color: #fff;
   }
+
   .sema-navbar.sema-is-danger .sema-navbar-start .sema-navbar-link::after,
-  .sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link::after {
+.sema-navbar.sema-is-danger .sema-navbar-end .sema-navbar-link::after {
     border-color: #fff;
   }
-  .sema-navbar.sema-is-danger
-    .sema-navbar-item.sema-has-dropdown:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-item.sema-has-dropdown:hover
-    .sema-navbar-link,
-  .sema-navbar.sema-is-danger
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-danger .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
+.sema-navbar.sema-is-danger .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar.sema-is-danger .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #ef2e55;
     color: #fff;
   }
-  .sema-navbar.sema-is-danger
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-danger .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: #f14668;
     color: #fff;
   }
 }
-
 .sema-navbar > .sema-container {
   align-items: stretch;
   display: flex;
@@ -6932,127 +6674,136 @@ a.sema-navbar-item.sema-is-active,
   .sema-navbar > .sema-container {
     display: block;
   }
+
   .sema-navbar-brand .sema-navbar-item,
-  .sema-navbar-tabs .sema-navbar-item {
+.sema-navbar-tabs .sema-navbar-item {
     align-items: center;
     display: flex;
   }
+
   .sema-navbar-link::after {
     display: none;
   }
+
   .sema-navbar-menu {
     background-color: white;
     box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);
     padding: 0.5rem 0;
   }
+
   .sema-navbar-menu.sema-is-active {
     display: block;
   }
+
   .sema-navbar.sema-is-fixed-bottom-touch,
-  .sema-navbar.sema-is-fixed-top-touch {
+.sema-navbar.sema-is-fixed-top-touch {
     left: 0;
     position: fixed;
     right: 0;
     z-index: 30;
   }
+
   .sema-navbar.sema-is-fixed-bottom-touch {
     bottom: 0;
   }
+
   .sema-navbar.sema-is-fixed-bottom-touch.sema-has-shadow {
     box-shadow: 0 -2px 3px rgba(10, 10, 10, 0.1);
   }
+
   .sema-navbar.sema-is-fixed-top-touch {
     top: 0;
   }
+
   .sema-navbar.sema-is-fixed-top .sema-navbar-menu,
-  .sema-navbar.sema-is-fixed-top-touch .sema-navbar-menu {
+.sema-navbar.sema-is-fixed-top-touch .sema-navbar-menu {
     -webkit-overflow-scrolling: touch;
     max-height: calc(100vh - 3.25rem);
     overflow: auto;
   }
+
   html.sema-has-navbar-fixed-top-touch,
-  body.sema-has-navbar-fixed-top-touch {
+body.sema-has-navbar-fixed-top-touch {
     padding-top: 3.25rem;
   }
+
   html.sema-has-navbar-fixed-bottom-touch,
-  body.sema-has-navbar-fixed-bottom-touch {
+body.sema-has-navbar-fixed-bottom-touch {
     padding-bottom: 3.25rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-navbar,
-  .sema-navbar-menu,
-  .sema-navbar-start,
-  .sema-navbar-end {
+.sema-navbar-menu,
+.sema-navbar-start,
+.sema-navbar-end {
     align-items: stretch;
     display: flex;
   }
+
   .sema-navbar {
     min-height: 3.25rem;
   }
+
   .sema-navbar.sema-is-spaced {
     padding: 1rem 2rem;
   }
+
   .sema-navbar.sema-is-spaced .sema-navbar-start,
-  .sema-navbar.sema-is-spaced .sema-navbar-end {
+.sema-navbar.sema-is-spaced .sema-navbar-end {
     align-items: center;
   }
+
   .sema-navbar.sema-is-spaced a.sema-navbar-item,
-  .sema-navbar.sema-is-spaced .sema-navbar-link {
+.sema-navbar.sema-is-spaced .sema-navbar-link {
     border-radius: 4px;
   }
+
   .sema-navbar.sema-is-transparent a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-transparent a.sema-navbar-item:hover,
-  .sema-navbar.sema-is-transparent a.sema-navbar-item.sema-is-active,
-  .sema-navbar.sema-is-transparent .sema-navbar-link:focus,
-  .sema-navbar.sema-is-transparent .sema-navbar-link:hover,
-  .sema-navbar.sema-is-transparent .sema-navbar-link.sema-is-active {
+.sema-navbar.sema-is-transparent a.sema-navbar-item:hover,
+.sema-navbar.sema-is-transparent a.sema-navbar-item.sema-is-active,
+.sema-navbar.sema-is-transparent .sema-navbar-link:focus,
+.sema-navbar.sema-is-transparent .sema-navbar-link:hover,
+.sema-navbar.sema-is-transparent .sema-navbar-link.sema-is-active {
     background-color: transparent !important;
   }
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-item.sema-has-dropdown.sema-is-active
-    .sema-navbar-link,
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:focus
-    .sema-navbar-link,
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:focus-within
-    .sema-navbar-link,
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:hover
-    .sema-navbar-link {
+
+  .sema-navbar.sema-is-transparent .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link,
+.sema-navbar.sema-is-transparent .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:focus .sema-navbar-link,
+.sema-navbar.sema-is-transparent .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:focus-within .sema-navbar-link,
+.sema-navbar.sema-is-transparent .sema-navbar-item.sema-has-dropdown.sema-is-hoverable:hover .sema-navbar-link {
     background-color: transparent !important;
   }
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-dropdown
-    a.sema-navbar-item:focus,
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-dropdown
-    a.sema-navbar-item:hover {
+
+  .sema-navbar.sema-is-transparent .sema-navbar-dropdown a.sema-navbar-item:focus,
+.sema-navbar.sema-is-transparent .sema-navbar-dropdown a.sema-navbar-item:hover {
     background-color: whitesmoke;
     color: #0a0a0a;
   }
-  .sema-navbar.sema-is-transparent
-    .sema-navbar-dropdown
-    a.sema-navbar-item.sema-is-active {
+
+  .sema-navbar.sema-is-transparent .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: whitesmoke;
     color: #3273dc;
   }
+
   .sema-navbar-burger {
     display: none;
   }
+
   .sema-navbar-item,
-  .sema-navbar-link {
+.sema-navbar-link {
     align-items: center;
     display: flex;
   }
+
   .sema-navbar-item.sema-has-dropdown {
     align-items: stretch;
   }
+
   .sema-navbar-item.sema-has-dropdown-up .sema-navbar-link::after {
     transform: rotate(135deg) translate(0.25em, -0.25em);
   }
+
   .sema-navbar-item.sema-has-dropdown-up .sema-navbar-dropdown {
     border-bottom: 2px solid #dbdbdb;
     border-radius: 6px 6px 0 0;
@@ -7061,46 +6812,42 @@ a.sema-navbar-item.sema-is-active,
     box-shadow: 0 -8px 8px rgba(10, 10, 10, 0.1);
     top: auto;
   }
+
   .sema-navbar-item.sema-is-active .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:focus .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:focus-within .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:hover .sema-navbar-dropdown {
+.sema-navbar-item.sema-is-hoverable:focus .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-hoverable:focus-within .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-hoverable:hover .sema-navbar-dropdown {
     display: block;
   }
-  .sema-navbar.sema-is-spaced
-    .sema-navbar-item.sema-is-active
-    .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-active .sema-navbar-dropdown.sema-is-boxed,
-  .sema-navbar.sema-is-spaced
-    .sema-navbar-item.sema-is-hoverable:focus
-    .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:focus .sema-navbar-dropdown.sema-is-boxed,
-  .sema-navbar.sema-is-spaced
-    .sema-navbar-item.sema-is-hoverable:focus-within
-    .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:focus-within
-    .sema-navbar-dropdown.sema-is-boxed,
-  .sema-navbar.sema-is-spaced
-    .sema-navbar-item.sema-is-hoverable:hover
-    .sema-navbar-dropdown,
-  .sema-navbar-item.sema-is-hoverable:hover
-    .sema-navbar-dropdown.sema-is-boxed {
+
+  .sema-navbar.sema-is-spaced .sema-navbar-item.sema-is-active .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-active .sema-navbar-dropdown.sema-is-boxed,
+.sema-navbar.sema-is-spaced .sema-navbar-item.sema-is-hoverable:focus .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-hoverable:focus .sema-navbar-dropdown.sema-is-boxed,
+.sema-navbar.sema-is-spaced .sema-navbar-item.sema-is-hoverable:focus-within .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-hoverable:focus-within .sema-navbar-dropdown.sema-is-boxed,
+.sema-navbar.sema-is-spaced .sema-navbar-item.sema-is-hoverable:hover .sema-navbar-dropdown,
+.sema-navbar-item.sema-is-hoverable:hover .sema-navbar-dropdown.sema-is-boxed {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
   }
+
   .sema-navbar-menu {
     flex-grow: 1;
     flex-shrink: 0;
   }
+
   .sema-navbar-start {
     justify-content: flex-start;
     margin-right: auto;
   }
+
   .sema-navbar-end {
     justify-content: flex-end;
     margin-left: auto;
   }
+
   .sema-navbar-dropdown {
     background-color: white;
     border-bottom-left-radius: 6px;
@@ -7115,24 +6862,29 @@ a.sema-navbar-item.sema-is-active,
     top: 100%;
     z-index: 20;
   }
+
   .sema-navbar-dropdown .sema-navbar-item {
     padding: 0.375rem 1rem;
     white-space: nowrap;
   }
+
   .sema-navbar-dropdown a.sema-navbar-item {
     padding-right: 3rem;
   }
+
   .sema-navbar-dropdown a.sema-navbar-item:focus,
-  .sema-navbar-dropdown a.sema-navbar-item:hover {
+.sema-navbar-dropdown a.sema-navbar-item:hover {
     background-color: whitesmoke;
     color: #0a0a0a;
   }
+
   .sema-navbar-dropdown a.sema-navbar-item.sema-is-active {
     background-color: whitesmoke;
     color: #3273dc;
   }
+
   .sema-navbar.sema-is-spaced .sema-navbar-dropdown,
-  .sema-navbar-dropdown.sema-is-boxed {
+.sema-navbar-dropdown.sema-is-boxed {
     border-radius: 6px;
     border-top: none;
     box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
@@ -7144,68 +6896,82 @@ a.sema-navbar-item.sema-is-active,
     transition-duration: 86ms;
     transition-property: opacity, transform;
   }
+
   .sema-navbar-dropdown.sema-is-right {
     left: auto;
     right: 0;
   }
+
   .sema-navbar-divider {
     display: block;
   }
+
   .sema-navbar > .sema-container .sema-navbar-brand,
-  .sema-container > .sema-navbar .sema-navbar-brand {
+.sema-container > .sema-navbar .sema-navbar-brand {
     margin-left: -0.75rem;
   }
+
   .sema-navbar > .sema-container .sema-navbar-menu,
-  .sema-container > .sema-navbar .sema-navbar-menu {
+.sema-container > .sema-navbar .sema-navbar-menu {
     margin-right: -0.75rem;
   }
+
   .sema-navbar.sema-is-fixed-bottom-desktop,
-  .sema-navbar.sema-is-fixed-top-desktop {
+.sema-navbar.sema-is-fixed-top-desktop {
     left: 0;
     position: fixed;
     right: 0;
     z-index: 30;
   }
+
   .sema-navbar.sema-is-fixed-bottom-desktop {
     bottom: 0;
   }
+
   .sema-navbar.sema-is-fixed-bottom-desktop.sema-has-shadow {
     box-shadow: 0 -2px 3px rgba(10, 10, 10, 0.1);
   }
+
   .sema-navbar.sema-is-fixed-top-desktop {
     top: 0;
   }
+
   html.sema-has-navbar-fixed-top-desktop,
-  body.sema-has-navbar-fixed-top-desktop {
+body.sema-has-navbar-fixed-top-desktop {
     padding-top: 3.25rem;
   }
+
   html.sema-has-navbar-fixed-bottom-desktop,
-  body.sema-has-navbar-fixed-bottom-desktop {
+body.sema-has-navbar-fixed-bottom-desktop {
     padding-bottom: 3.25rem;
   }
+
   html.sema-has-spaced-navbar-fixed-top,
-  body.sema-has-spaced-navbar-fixed-top {
+body.sema-has-spaced-navbar-fixed-top {
     padding-top: 5.25rem;
   }
+
   html.sema-has-spaced-navbar-fixed-bottom,
-  body.sema-has-spaced-navbar-fixed-bottom {
+body.sema-has-spaced-navbar-fixed-bottom {
     padding-bottom: 5.25rem;
   }
+
   a.sema-navbar-item.sema-is-active,
-  .sema-navbar-link.sema-is-active {
+.sema-navbar-link.sema-is-active {
     color: #0a0a0a;
   }
+
   a.sema-navbar-item.sema-is-active:not(:focus):not(:hover),
-  .sema-navbar-link.sema-is-active:not(:focus):not(:hover) {
+.sema-navbar-link.sema-is-active:not(:focus):not(:hover) {
     background-color: transparent;
   }
+
   .sema-navbar-item.sema-has-dropdown:focus .sema-navbar-link,
-  .sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
-  .sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
+.sema-navbar-item.sema-has-dropdown:hover .sema-navbar-link,
+.sema-navbar-item.sema-has-dropdown.sema-is-active .sema-navbar-link {
     background-color: #fafafa;
   }
 }
-
 .sema-hero.sema-is-fullheight-with-navbar {
   min-height: calc(100vh - 3.25rem);
 }
@@ -7321,17 +7087,18 @@ a.sema-navbar-item.sema-is-active,
   .sema-pagination {
     flex-wrap: wrap;
   }
+
   .sema-pagination-previous,
-  .sema-pagination-next {
+.sema-pagination-next {
     flex-grow: 1;
     flex-shrink: 1;
   }
+
   .sema-pagination-list li {
     flex-grow: 1;
     flex-shrink: 1;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-pagination-list {
     flex-grow: 1;
@@ -7339,41 +7106,48 @@ a.sema-navbar-item.sema-is-active,
     justify-content: flex-start;
     order: 1;
   }
+
   .sema-pagination-previous {
     order: 2;
   }
+
   .sema-pagination-next {
     order: 3;
   }
+
   .sema-pagination {
     justify-content: space-between;
   }
+
   .sema-pagination.sema-is-centered .sema-pagination-previous {
     order: 1;
   }
+
   .sema-pagination.sema-is-centered .sema-pagination-list {
     justify-content: center;
     order: 2;
   }
+
   .sema-pagination.sema-is-centered .sema-pagination-next {
     order: 3;
   }
+
   .sema-pagination.sema-is-right .sema-pagination-previous {
     order: 1;
   }
+
   .sema-pagination.sema-is-right .sema-pagination-next {
     order: 2;
   }
+
   .sema-pagination.sema-is-right .sema-pagination-list {
     justify-content: flex-end;
     order: 3;
   }
 }
-
 .sema-panel {
   border-radius: 6px;
-  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-    0 0px 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   font-size: 1rem;
 }
 
@@ -7560,7 +7334,7 @@ a.sema-navbar-item.sema-is-active,
   padding: 0.5em 0.75em;
 }
 
-.sema-panel-block input[type='checkbox'] {
+.sema-panel-block input[type=checkbox] {
   margin-right: 0.75em;
 }
 
@@ -7781,7 +7555,6 @@ label.sema-panel-block:hover {
 }
 
 /* Bulma Grid */
-
 .sema-column {
   display: block;
   flex-basis: 0;
@@ -8001,1032 +7774,1296 @@ label.sema-panel-block:hover {
   .sema-column.sema-is-narrow-mobile {
     flex: none;
   }
+
   .sema-column.sema-is-full-mobile {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters-mobile {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds-mobile {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half-mobile {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third-mobile {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter-mobile {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth-mobile {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths-mobile {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths-mobile {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths-mobile {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters-mobile {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds-mobile {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half-mobile {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third-mobile {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter-mobile {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth-mobile {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths-mobile {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths-mobile {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths-mobile {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0-mobile {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0-mobile {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1-mobile {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1-mobile {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2-mobile {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2-mobile {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3-mobile {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3-mobile {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4-mobile {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4-mobile {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5-mobile {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5-mobile {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6-mobile {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6-mobile {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7-mobile {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7-mobile {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8-mobile {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8-mobile {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9-mobile {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9-mobile {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10-mobile {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10-mobile {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11-mobile {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11-mobile {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12-mobile {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12-mobile {
     margin-left: 100%;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-column.sema-is-narrow,
-  .sema-column.sema-is-narrow-tablet {
+.sema-column.sema-is-narrow-tablet {
     flex: none;
   }
+
   .sema-column.sema-is-full,
-  .sema-column.sema-is-full-tablet {
+.sema-column.sema-is-full-tablet {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters,
-  .sema-column.sema-is-three-quarters-tablet {
+.sema-column.sema-is-three-quarters-tablet {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds,
-  .sema-column.sema-is-two-thirds-tablet {
+.sema-column.sema-is-two-thirds-tablet {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half,
-  .sema-column.sema-is-half-tablet {
+.sema-column.sema-is-half-tablet {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third,
-  .sema-column.sema-is-one-third-tablet {
+.sema-column.sema-is-one-third-tablet {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter,
-  .sema-column.sema-is-one-quarter-tablet {
+.sema-column.sema-is-one-quarter-tablet {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth,
-  .sema-column.sema-is-one-fifth-tablet {
+.sema-column.sema-is-one-fifth-tablet {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths,
-  .sema-column.sema-is-two-fifths-tablet {
+.sema-column.sema-is-two-fifths-tablet {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths,
-  .sema-column.sema-is-three-fifths-tablet {
+.sema-column.sema-is-three-fifths-tablet {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths,
-  .sema-column.sema-is-four-fifths-tablet {
+.sema-column.sema-is-four-fifths-tablet {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters,
-  .sema-column.sema-is-offset-three-quarters-tablet {
+.sema-column.sema-is-offset-three-quarters-tablet {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds,
-  .sema-column.sema-is-offset-two-thirds-tablet {
+.sema-column.sema-is-offset-two-thirds-tablet {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half,
-  .sema-column.sema-is-offset-half-tablet {
+.sema-column.sema-is-offset-half-tablet {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third,
-  .sema-column.sema-is-offset-one-third-tablet {
+.sema-column.sema-is-offset-one-third-tablet {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter,
-  .sema-column.sema-is-offset-one-quarter-tablet {
+.sema-column.sema-is-offset-one-quarter-tablet {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth,
-  .sema-column.sema-is-offset-one-fifth-tablet {
+.sema-column.sema-is-offset-one-fifth-tablet {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths,
-  .sema-column.sema-is-offset-two-fifths-tablet {
+.sema-column.sema-is-offset-two-fifths-tablet {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths,
-  .sema-column.sema-is-offset-three-fifths-tablet {
+.sema-column.sema-is-offset-three-fifths-tablet {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths,
-  .sema-column.sema-is-offset-four-fifths-tablet {
+.sema-column.sema-is-offset-four-fifths-tablet {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0,
-  .sema-column.sema-is-0-tablet {
+.sema-column.sema-is-0-tablet {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0,
-  .sema-column.sema-is-offset-0-tablet {
+.sema-column.sema-is-offset-0-tablet {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1,
-  .sema-column.sema-is-1-tablet {
+.sema-column.sema-is-1-tablet {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1,
-  .sema-column.sema-is-offset-1-tablet {
+.sema-column.sema-is-offset-1-tablet {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2,
-  .sema-column.sema-is-2-tablet {
+.sema-column.sema-is-2-tablet {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2,
-  .sema-column.sema-is-offset-2-tablet {
+.sema-column.sema-is-offset-2-tablet {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3,
-  .sema-column.sema-is-3-tablet {
+.sema-column.sema-is-3-tablet {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3,
-  .sema-column.sema-is-offset-3-tablet {
+.sema-column.sema-is-offset-3-tablet {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4,
-  .sema-column.sema-is-4-tablet {
+.sema-column.sema-is-4-tablet {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4,
-  .sema-column.sema-is-offset-4-tablet {
+.sema-column.sema-is-offset-4-tablet {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5,
-  .sema-column.sema-is-5-tablet {
+.sema-column.sema-is-5-tablet {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5,
-  .sema-column.sema-is-offset-5-tablet {
+.sema-column.sema-is-offset-5-tablet {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6,
-  .sema-column.sema-is-6-tablet {
+.sema-column.sema-is-6-tablet {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6,
-  .sema-column.sema-is-offset-6-tablet {
+.sema-column.sema-is-offset-6-tablet {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7,
-  .sema-column.sema-is-7-tablet {
+.sema-column.sema-is-7-tablet {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7,
-  .sema-column.sema-is-offset-7-tablet {
+.sema-column.sema-is-offset-7-tablet {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8,
-  .sema-column.sema-is-8-tablet {
+.sema-column.sema-is-8-tablet {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8,
-  .sema-column.sema-is-offset-8-tablet {
+.sema-column.sema-is-offset-8-tablet {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9,
-  .sema-column.sema-is-9-tablet {
+.sema-column.sema-is-9-tablet {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9,
-  .sema-column.sema-is-offset-9-tablet {
+.sema-column.sema-is-offset-9-tablet {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10,
-  .sema-column.sema-is-10-tablet {
+.sema-column.sema-is-10-tablet {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10,
-  .sema-column.sema-is-offset-10-tablet {
+.sema-column.sema-is-offset-10-tablet {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11,
-  .sema-column.sema-is-11-tablet {
+.sema-column.sema-is-11-tablet {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11,
-  .sema-column.sema-is-offset-11-tablet {
+.sema-column.sema-is-offset-11-tablet {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12,
-  .sema-column.sema-is-12-tablet {
+.sema-column.sema-is-12-tablet {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12,
-  .sema-column.sema-is-offset-12-tablet {
+.sema-column.sema-is-offset-12-tablet {
     margin-left: 100%;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-column.sema-is-narrow-touch {
     flex: none;
   }
+
   .sema-column.sema-is-full-touch {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters-touch {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds-touch {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half-touch {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third-touch {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter-touch {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth-touch {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths-touch {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths-touch {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths-touch {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters-touch {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds-touch {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half-touch {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third-touch {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter-touch {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth-touch {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths-touch {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths-touch {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths-touch {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0-touch {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0-touch {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1-touch {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1-touch {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2-touch {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2-touch {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3-touch {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3-touch {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4-touch {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4-touch {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5-touch {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5-touch {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6-touch {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6-touch {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7-touch {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7-touch {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8-touch {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8-touch {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9-touch {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9-touch {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10-touch {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10-touch {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11-touch {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11-touch {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12-touch {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12-touch {
     margin-left: 100%;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-column.sema-is-narrow-desktop {
     flex: none;
   }
+
   .sema-column.sema-is-full-desktop {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters-desktop {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds-desktop {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half-desktop {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third-desktop {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter-desktop {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth-desktop {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths-desktop {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths-desktop {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths-desktop {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters-desktop {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds-desktop {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half-desktop {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third-desktop {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter-desktop {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth-desktop {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths-desktop {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths-desktop {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths-desktop {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0-desktop {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0-desktop {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1-desktop {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1-desktop {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2-desktop {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2-desktop {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3-desktop {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3-desktop {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4-desktop {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4-desktop {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5-desktop {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5-desktop {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6-desktop {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6-desktop {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7-desktop {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7-desktop {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8-desktop {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8-desktop {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9-desktop {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9-desktop {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10-desktop {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10-desktop {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11-desktop {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11-desktop {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12-desktop {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12-desktop {
     margin-left: 100%;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-column.sema-is-narrow-widescreen {
     flex: none;
   }
+
   .sema-column.sema-is-full-widescreen {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters-widescreen {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds-widescreen {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half-widescreen {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third-widescreen {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter-widescreen {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth-widescreen {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths-widescreen {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths-widescreen {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths-widescreen {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters-widescreen {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds-widescreen {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half-widescreen {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third-widescreen {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter-widescreen {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth-widescreen {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths-widescreen {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths-widescreen {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths-widescreen {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0-widescreen {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0-widescreen {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1-widescreen {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1-widescreen {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2-widescreen {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2-widescreen {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3-widescreen {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3-widescreen {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4-widescreen {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4-widescreen {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5-widescreen {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5-widescreen {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6-widescreen {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6-widescreen {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7-widescreen {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7-widescreen {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8-widescreen {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8-widescreen {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9-widescreen {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9-widescreen {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10-widescreen {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10-widescreen {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11-widescreen {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11-widescreen {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12-widescreen {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12-widescreen {
     margin-left: 100%;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-column.sema-is-narrow-fullhd {
     flex: none;
   }
+
   .sema-column.sema-is-full-fullhd {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-three-quarters-fullhd {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-two-thirds-fullhd {
     flex: none;
     width: 66.6666%;
   }
+
   .sema-column.sema-is-half-fullhd {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-one-third-fullhd {
     flex: none;
     width: 33.3333%;
   }
+
   .sema-column.sema-is-one-quarter-fullhd {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-one-fifth-fullhd {
     flex: none;
     width: 20%;
   }
+
   .sema-column.sema-is-two-fifths-fullhd {
     flex: none;
     width: 40%;
   }
+
   .sema-column.sema-is-three-fifths-fullhd {
     flex: none;
     width: 60%;
   }
+
   .sema-column.sema-is-four-fifths-fullhd {
     flex: none;
     width: 80%;
   }
+
   .sema-column.sema-is-offset-three-quarters-fullhd {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-offset-two-thirds-fullhd {
     margin-left: 66.6666%;
   }
+
   .sema-column.sema-is-offset-half-fullhd {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-offset-one-third-fullhd {
     margin-left: 33.3333%;
   }
+
   .sema-column.sema-is-offset-one-quarter-fullhd {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-offset-one-fifth-fullhd {
     margin-left: 20%;
   }
+
   .sema-column.sema-is-offset-two-fifths-fullhd {
     margin-left: 40%;
   }
+
   .sema-column.sema-is-offset-three-fifths-fullhd {
     margin-left: 60%;
   }
+
   .sema-column.sema-is-offset-four-fifths-fullhd {
     margin-left: 80%;
   }
+
   .sema-column.sema-is-0-fullhd {
     flex: none;
     width: 0%;
   }
+
   .sema-column.sema-is-offset-0-fullhd {
     margin-left: 0%;
   }
+
   .sema-column.sema-is-1-fullhd {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-column.sema-is-offset-1-fullhd {
     margin-left: 8.33333%;
   }
+
   .sema-column.sema-is-2-fullhd {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-column.sema-is-offset-2-fullhd {
     margin-left: 16.66667%;
   }
+
   .sema-column.sema-is-3-fullhd {
     flex: none;
     width: 25%;
   }
+
   .sema-column.sema-is-offset-3-fullhd {
     margin-left: 25%;
   }
+
   .sema-column.sema-is-4-fullhd {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-column.sema-is-offset-4-fullhd {
     margin-left: 33.33333%;
   }
+
   .sema-column.sema-is-5-fullhd {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-column.sema-is-offset-5-fullhd {
     margin-left: 41.66667%;
   }
+
   .sema-column.sema-is-6-fullhd {
     flex: none;
     width: 50%;
   }
+
   .sema-column.sema-is-offset-6-fullhd {
     margin-left: 50%;
   }
+
   .sema-column.sema-is-7-fullhd {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-column.sema-is-offset-7-fullhd {
     margin-left: 58.33333%;
   }
+
   .sema-column.sema-is-8-fullhd {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-column.sema-is-offset-8-fullhd {
     margin-left: 66.66667%;
   }
+
   .sema-column.sema-is-9-fullhd {
     flex: none;
     width: 75%;
   }
+
   .sema-column.sema-is-offset-9-fullhd {
     margin-left: 75%;
   }
+
   .sema-column.sema-is-10-fullhd {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-column.sema-is-offset-10-fullhd {
     margin-left: 83.33333%;
   }
+
   .sema-column.sema-is-11-fullhd {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-column.sema-is-offset-11-fullhd {
     margin-left: 91.66667%;
   }
+
   .sema-column.sema-is-12-fullhd {
     flex: none;
     width: 100%;
   }
+
   .sema-column.sema-is-offset-12-fullhd {
     margin-left: 100%;
   }
 }
-
 .sema-columns {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -9081,13 +9118,11 @@ label.sema-panel-block:hover {
     display: flex;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-desktop {
     display: flex;
   }
 }
-
 .sema-columns.sema-is-variable {
   --columnGap: 0.75rem;
   margin-left: calc(-1 * var(--columnGap));
@@ -9108,55 +9143,46 @@ label.sema-panel-block:hover {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-0-tablet {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-0-tablet-only {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-0-touch {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-0-desktop {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-0-desktop-only {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-0-widescreen {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-0-widescreen-only {
     --columnGap: 0rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-0-fullhd {
     --columnGap: 0rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-1 {
   --columnGap: 0.25rem;
 }
@@ -9166,55 +9192,46 @@ label.sema-panel-block:hover {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-1-tablet {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-1-tablet-only {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-1-touch {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-1-desktop {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-1-desktop-only {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-1-widescreen {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-1-widescreen-only {
     --columnGap: 0.25rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-1-fullhd {
     --columnGap: 0.25rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-2 {
   --columnGap: 0.5rem;
 }
@@ -9224,55 +9241,46 @@ label.sema-panel-block:hover {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-2-tablet {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-2-tablet-only {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-2-touch {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-2-desktop {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-2-desktop-only {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-2-widescreen {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-2-widescreen-only {
     --columnGap: 0.5rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-2-fullhd {
     --columnGap: 0.5rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-3 {
   --columnGap: 0.75rem;
 }
@@ -9282,55 +9290,46 @@ label.sema-panel-block:hover {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-3-tablet {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-3-tablet-only {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-3-touch {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-3-desktop {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-3-desktop-only {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-3-widescreen {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-3-widescreen-only {
     --columnGap: 0.75rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-3-fullhd {
     --columnGap: 0.75rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-4 {
   --columnGap: 1rem;
 }
@@ -9340,55 +9339,46 @@ label.sema-panel-block:hover {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-4-tablet {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-4-tablet-only {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-4-touch {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-4-desktop {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-4-desktop-only {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-4-widescreen {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-4-widescreen-only {
     --columnGap: 1rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-4-fullhd {
     --columnGap: 1rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-5 {
   --columnGap: 1.25rem;
 }
@@ -9398,55 +9388,46 @@ label.sema-panel-block:hover {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-5-tablet {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-5-tablet-only {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-5-touch {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-5-desktop {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-5-desktop-only {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-5-widescreen {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-5-widescreen-only {
     --columnGap: 1.25rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-5-fullhd {
     --columnGap: 1.25rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-6 {
   --columnGap: 1.5rem;
 }
@@ -9456,55 +9437,46 @@ label.sema-panel-block:hover {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-6-tablet {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-6-tablet-only {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-6-touch {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-6-desktop {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-6-desktop-only {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-6-widescreen {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-6-widescreen-only {
     --columnGap: 1.5rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-6-fullhd {
     --columnGap: 1.5rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-7 {
   --columnGap: 1.75rem;
 }
@@ -9514,55 +9486,46 @@ label.sema-panel-block:hover {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-7-tablet {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-7-tablet-only {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-7-touch {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-7-desktop {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-7-desktop-only {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-7-widescreen {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-7-widescreen-only {
     --columnGap: 1.75rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-7-fullhd {
     --columnGap: 1.75rem;
   }
 }
-
 .sema-columns.sema-is-variable.sema-is-8 {
   --columnGap: 2rem;
 }
@@ -9572,55 +9535,46 @@ label.sema-panel-block:hover {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-columns.sema-is-variable.sema-is-8-tablet {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-8-tablet-only {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-columns.sema-is-variable.sema-is-8-touch {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-columns.sema-is-variable.sema-is-8-desktop {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-columns.sema-is-variable.sema-is-8-desktop-only {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-columns.sema-is-variable.sema-is-8-widescreen {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-columns.sema-is-variable.sema-is-8-widescreen-only {
     --columnGap: 2rem;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-columns.sema-is-variable.sema-is-8-fullhd {
     --columnGap: 2rem;
   }
 }
-
 .sema-tile {
   align-items: stretch;
   display: block;
@@ -9666,58 +9620,68 @@ label.sema-panel-block:hover {
   .sema-tile:not(.sema-is-child) {
     display: flex;
   }
+
   .sema-tile.sema-is-1 {
     flex: none;
     width: 8.33333%;
   }
+
   .sema-tile.sema-is-2 {
     flex: none;
     width: 16.66667%;
   }
+
   .sema-tile.sema-is-3 {
     flex: none;
     width: 25%;
   }
+
   .sema-tile.sema-is-4 {
     flex: none;
     width: 33.33333%;
   }
+
   .sema-tile.sema-is-5 {
     flex: none;
     width: 41.66667%;
   }
+
   .sema-tile.sema-is-6 {
     flex: none;
     width: 50%;
   }
+
   .sema-tile.sema-is-7 {
     flex: none;
     width: 58.33333%;
   }
+
   .sema-tile.sema-is-8 {
     flex: none;
     width: 66.66667%;
   }
+
   .sema-tile.sema-is-9 {
     flex: none;
     width: 75%;
   }
+
   .sema-tile.sema-is-10 {
     flex: none;
     width: 83.33333%;
   }
+
   .sema-tile.sema-is-11 {
     flex: none;
     width: 91.66667%;
   }
+
   .sema-tile.sema-is-12 {
     flex: none;
     width: 100%;
   }
 }
-
 /* Bulma Helpers */
-
 .sema-has-text-white {
   color: white !important;
 }
@@ -10294,7 +10258,7 @@ a.sema-has-text-danger-dark:focus {
 
 .sema-is-clearfix::after {
   clear: both;
-  content: ' ';
+  content: " ";
   display: table;
 }
 
@@ -10786,146 +10750,176 @@ a.sema-has-text-danger-dark:focus {
   .sema-is-size-1-mobile {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-mobile {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-mobile {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-mobile {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-mobile {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-mobile {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-mobile {
     font-size: 0.75rem !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-size-1-tablet {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-tablet {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-tablet {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-tablet {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-tablet {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-tablet {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-tablet {
     font-size: 0.75rem !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-size-1-touch {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-touch {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-touch {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-touch {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-touch {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-touch {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-touch {
     font-size: 0.75rem !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-size-1-desktop {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-desktop {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-desktop {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-desktop {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-desktop {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-desktop {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-desktop {
     font-size: 0.75rem !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-size-1-widescreen {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-widescreen {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-widescreen {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-widescreen {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-widescreen {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-widescreen {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-widescreen {
     font-size: 0.75rem !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-size-1-fullhd {
     font-size: 3rem !important;
   }
+
   .sema-is-size-2-fullhd {
     font-size: 2.5rem !important;
   }
+
   .sema-is-size-3-fullhd {
     font-size: 2rem !important;
   }
+
   .sema-is-size-4-fullhd {
     font-size: 1.5rem !important;
   }
+
   .sema-is-size-5-fullhd {
     font-size: 1.25rem !important;
   }
+
   .sema-is-size-6-fullhd {
     font-size: 1rem !important;
   }
+
   .sema-is-size-7-fullhd {
     font-size: 0.75rem !important;
   }
 }
-
 .sema-has-text-centered {
   text-align: center !important;
 }
@@ -10947,217 +10941,181 @@ a.sema-has-text-danger-dark:focus {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-has-text-centered-tablet {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-has-text-centered-tablet-only {
     text-align: center !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-has-text-centered-touch {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-has-text-centered-desktop {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-has-text-centered-desktop-only {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-has-text-centered-widescreen {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-has-text-centered-widescreen-only {
     text-align: center !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-has-text-centered-fullhd {
     text-align: center !important;
   }
 }
-
 @media screen and (max-width: 768px) {
   .sema-has-text-justified-mobile {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-has-text-justified-tablet {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-has-text-justified-tablet-only {
     text-align: justify !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-has-text-justified-touch {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-has-text-justified-desktop {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-has-text-justified-desktop-only {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-has-text-justified-widescreen {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-has-text-justified-widescreen-only {
     text-align: justify !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-has-text-justified-fullhd {
     text-align: justify !important;
   }
 }
-
 @media screen and (max-width: 768px) {
   .sema-has-text-left-mobile {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-has-text-left-tablet {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-has-text-left-tablet-only {
     text-align: left !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-has-text-left-touch {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-has-text-left-desktop {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-has-text-left-desktop-only {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-has-text-left-widescreen {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-has-text-left-widescreen-only {
     text-align: left !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-has-text-left-fullhd {
     text-align: left !important;
   }
 }
-
 @media screen and (max-width: 768px) {
   .sema-has-text-right-mobile {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-has-text-right-tablet {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-has-text-right-tablet-only {
     text-align: right !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-has-text-right-touch {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-has-text-right-desktop {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-has-text-right-desktop-only {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-has-text-right-widescreen {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-has-text-right-widescreen-only {
     text-align: right !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-has-text-right-fullhd {
     text-align: right !important;
   }
 }
-
 .sema-is-capitalized {
   text-transform: capitalize !important;
 }
@@ -11195,21 +11153,15 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-is-family-primary {
-  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    'Helvetica', 'Arial', sans-serif !important;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
 }
 
 .sema-is-family-secondary {
-  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    'Helvetica', 'Arial', sans-serif !important;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
 }
 
 .sema-is-family-sans-serif {
-  font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    'Helvetica', 'Arial', sans-serif !important;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !important;
 }
 
 .sema-is-family-monospace {
@@ -11229,55 +11181,46 @@ a.sema-has-text-danger-dark:focus {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-block-tablet {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-block-tablet-only {
     display: block !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-block-touch {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-block-desktop {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-block-desktop-only {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-block-widescreen {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-block-widescreen-only {
     display: block !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-block-fullhd {
     display: block !important;
   }
 }
-
 .sema-is-flex {
   display: flex !important;
 }
@@ -11287,55 +11230,46 @@ a.sema-has-text-danger-dark:focus {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-flex-tablet {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-flex-tablet-only {
     display: flex !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-flex-touch {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-flex-desktop {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-flex-desktop-only {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-flex-widescreen {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-flex-widescreen-only {
     display: flex !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-flex-fullhd {
     display: flex !important;
   }
 }
-
 .sema-is-inline {
   display: inline !important;
 }
@@ -11345,55 +11279,46 @@ a.sema-has-text-danger-dark:focus {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-inline-tablet {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-inline-tablet-only {
     display: inline !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-inline-touch {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-inline-desktop {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-inline-desktop-only {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-inline-widescreen {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-inline-widescreen-only {
     display: inline !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-inline-fullhd {
     display: inline !important;
   }
 }
-
 .sema-is-inline-block {
   display: inline-block !important;
 }
@@ -11403,55 +11328,46 @@ a.sema-has-text-danger-dark:focus {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-inline-block-tablet {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-inline-block-tablet-only {
     display: inline-block !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-inline-block-touch {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-inline-block-desktop {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-inline-block-desktop-only {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-inline-block-widescreen {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-inline-block-widescreen-only {
     display: inline-block !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-inline-block-fullhd {
     display: inline-block !important;
   }
 }
-
 .sema-is-inline-flex {
   display: inline-flex !important;
 }
@@ -11461,55 +11377,46 @@ a.sema-has-text-danger-dark:focus {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-inline-flex-tablet {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-inline-flex-tablet-only {
     display: inline-flex !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-inline-flex-touch {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-inline-flex-desktop {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-inline-flex-desktop-only {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-inline-flex-widescreen {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-inline-flex-widescreen-only {
     display: inline-flex !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-inline-flex-fullhd {
     display: inline-flex !important;
   }
 }
-
 .sema-is-hidden {
   display: none !important;
 }
@@ -11530,55 +11437,46 @@ a.sema-has-text-danger-dark:focus {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-hidden-tablet {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-hidden-tablet-only {
     display: none !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-hidden-touch {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-hidden-desktop {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-hidden-desktop-only {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-hidden-widescreen {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-hidden-widescreen-only {
     display: none !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-hidden-fullhd {
     display: none !important;
   }
 }
-
 .sema-is-invisible {
   visibility: hidden !important;
 }
@@ -11588,57 +11486,47 @@ a.sema-has-text-danger-dark:focus {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-is-invisible-tablet {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 769px) and (max-width: 1023px) {
   .sema-is-invisible-tablet-only {
     visibility: hidden !important;
   }
 }
-
 @media screen and (max-width: 1023px) {
   .sema-is-invisible-touch {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 1024px) {
   .sema-is-invisible-desktop {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 1024px) and (max-width: 1215px) {
   .sema-is-invisible-desktop-only {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 1216px) {
   .sema-is-invisible-widescreen {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 1216px) and (max-width: 1407px) {
   .sema-is-invisible-widescreen-only {
     visibility: hidden !important;
   }
 }
-
 @media screen and (min-width: 1408px) {
   .sema-is-invisible-fullhd {
     visibility: hidden !important;
   }
 }
-
 /* Bulma Layout */
-
 .sema-hero {
   align-items: stretch;
   display: flex;
@@ -11659,8 +11547,7 @@ a.sema-has-text-danger-dark:focus {
   color: #0a0a0a;
 }
 
-.sema-hero.sema-is-white
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-white a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-white strong {
   color: inherit;
 }
@@ -11683,7 +11570,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: white;
   }
 }
-
 .sema-hero.sema-is-white .sema-navbar-item,
 .sema-hero.sema-is-white .sema-navbar-link {
   color: rgba(10, 10, 10, 0.7);
@@ -11735,22 +11621,15 @@ a.sema-has-text-danger-dark:focus {
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-white.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #e6e6e6 0%,
-      white 71%,
-      white 100%
-    );
+    background-image: linear-gradient(141deg, #e6e6e6 0%, white 71%, white 100%);
   }
 }
-
 .sema-hero.sema-is-black {
   background-color: #0a0a0a;
   color: white;
 }
 
-.sema-hero.sema-is-black
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-black a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-black strong {
   color: inherit;
 }
@@ -11773,7 +11652,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #0a0a0a;
   }
 }
-
 .sema-hero.sema-is-black .sema-navbar-item,
 .sema-hero.sema-is-black .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -11820,32 +11698,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-black.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    black 0%,
-    #0a0a0a 71%,
-    #181616 100%
-  );
+  background-image: linear-gradient(141deg, black 0%, #0a0a0a 71%, #181616 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-black.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      black 0%,
-      #0a0a0a 71%,
-      #181616 100%
-    );
+    background-image: linear-gradient(141deg, black 0%, #0a0a0a 71%, #181616 100%);
   }
 }
-
 .sema-hero.sema-is-light {
   background-color: whitesmoke;
   color: rgba(0, 0, 0, 0.7);
 }
 
-.sema-hero.sema-is-light
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-light a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-light strong {
   color: inherit;
 }
@@ -11868,7 +11734,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: whitesmoke;
   }
 }
-
 .sema-hero.sema-is-light .sema-navbar-item,
 .sema-hero.sema-is-light .sema-navbar-link {
   color: rgba(0, 0, 0, 0.7);
@@ -11915,32 +11780,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-light.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #dfd8d9 0%,
-    whitesmoke 71%,
-    white 100%
-  );
+  background-image: linear-gradient(141deg, #dfd8d9 0%, whitesmoke 71%, white 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-light.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #dfd8d9 0%,
-      whitesmoke 71%,
-      white 100%
-    );
+    background-image: linear-gradient(141deg, #dfd8d9 0%, whitesmoke 71%, white 100%);
   }
 }
-
 .sema-hero.sema-is-dark {
   background-color: #363636;
   color: #fff;
 }
 
-.sema-hero.sema-is-dark
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-dark a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-dark strong {
   color: inherit;
 }
@@ -11963,7 +11816,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #363636;
   }
 }
-
 .sema-hero.sema-is-dark .sema-navbar-item,
 .sema-hero.sema-is-dark .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12010,32 +11862,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-dark.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #1f191a 0%,
-    #363636 71%,
-    #46403f 100%
-  );
+  background-image: linear-gradient(141deg, #1f191a 0%, #363636 71%, #46403f 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-dark.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #1f191a 0%,
-      #363636 71%,
-      #46403f 100%
-    );
+    background-image: linear-gradient(141deg, #1f191a 0%, #363636 71%, #46403f 100%);
   }
 }
-
 .sema-hero.sema-is-primary {
   background-color: #00d1b2;
   color: #fff;
 }
 
-.sema-hero.sema-is-primary
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-primary a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-primary strong {
   color: inherit;
 }
@@ -12058,7 +11898,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #00d1b2;
   }
 }
-
 .sema-hero.sema-is-primary .sema-navbar-item,
 .sema-hero.sema-is-primary .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12105,32 +11944,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-primary.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #009e6c 0%,
-    #00d1b2 71%,
-    #00e7eb 100%
-  );
+  background-image: linear-gradient(141deg, #009e6c 0%, #00d1b2 71%, #00e7eb 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-primary.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #009e6c 0%,
-      #00d1b2 71%,
-      #00e7eb 100%
-    );
+    background-image: linear-gradient(141deg, #009e6c 0%, #00d1b2 71%, #00e7eb 100%);
   }
 }
-
 .sema-hero.sema-is-link {
   background-color: #3273dc;
   color: #fff;
 }
 
-.sema-hero.sema-is-link
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-link a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-link strong {
   color: inherit;
 }
@@ -12153,7 +11980,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #3273dc;
   }
 }
-
 .sema-hero.sema-is-link .sema-navbar-item,
 .sema-hero.sema-is-link .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12200,32 +12026,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-link.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #1577c6 0%,
-    #3273dc 71%,
-    #4366e5 100%
-  );
+  background-image: linear-gradient(141deg, #1577c6 0%, #3273dc 71%, #4366e5 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-link.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #1577c6 0%,
-      #3273dc 71%,
-      #4366e5 100%
-    );
+    background-image: linear-gradient(141deg, #1577c6 0%, #3273dc 71%, #4366e5 100%);
   }
 }
-
 .sema-hero.sema-is-info {
   background-color: #3298dc;
   color: #fff;
 }
 
-.sema-hero.sema-is-info
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-info a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-info strong {
   color: inherit;
 }
@@ -12248,7 +12062,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #3298dc;
   }
 }
-
 .sema-hero.sema-is-info .sema-navbar-item,
 .sema-hero.sema-is-info .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12295,32 +12108,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-info.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #159dc6 0%,
-    #3298dc 71%,
-    #4389e5 100%
-  );
+  background-image: linear-gradient(141deg, #159dc6 0%, #3298dc 71%, #4389e5 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-info.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #159dc6 0%,
-      #3298dc 71%,
-      #4389e5 100%
-    );
+    background-image: linear-gradient(141deg, #159dc6 0%, #3298dc 71%, #4389e5 100%);
   }
 }
-
 .sema-hero.sema-is-success {
   background-color: #48c774;
   color: #fff;
 }
 
-.sema-hero.sema-is-success
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-success a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-success strong {
   color: inherit;
 }
@@ -12343,7 +12144,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #48c774;
   }
 }
-
 .sema-hero.sema-is-success .sema-navbar-item,
 .sema-hero.sema-is-success .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12390,32 +12190,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-success.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #29b342 0%,
-    #48c774 71%,
-    #56d296 100%
-  );
+  background-image: linear-gradient(141deg, #29b342 0%, #48c774 71%, #56d296 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-success.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #29b342 0%,
-      #48c774 71%,
-      #56d296 100%
-    );
+    background-image: linear-gradient(141deg, #29b342 0%, #48c774 71%, #56d296 100%);
   }
 }
-
 .sema-hero.sema-is-warning {
   background-color: #ffdd57;
   color: rgba(0, 0, 0, 0.7);
 }
 
-.sema-hero.sema-is-warning
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-warning a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-warning strong {
   color: inherit;
 }
@@ -12438,7 +12226,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #ffdd57;
   }
 }
-
 .sema-hero.sema-is-warning .sema-navbar-item,
 .sema-hero.sema-is-warning .sema-navbar-link {
   color: rgba(0, 0, 0, 0.7);
@@ -12485,32 +12272,20 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-warning.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #ffaf24 0%,
-    #ffdd57 71%,
-    #fffa70 100%
-  );
+  background-image: linear-gradient(141deg, #ffaf24 0%, #ffdd57 71%, #fffa70 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-warning.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #ffaf24 0%,
-      #ffdd57 71%,
-      #fffa70 100%
-    );
+    background-image: linear-gradient(141deg, #ffaf24 0%, #ffdd57 71%, #fffa70 100%);
   }
 }
-
 .sema-hero.sema-is-danger {
   background-color: #f14668;
   color: #fff;
 }
 
-.sema-hero.sema-is-danger
-  a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
+.sema-hero.sema-is-danger a:not(.sema-button):not(.sema-dropdown-item):not(.sema-tag):not(.sema-pagination-link.sema-is-current),
 .sema-hero.sema-is-danger strong {
   color: inherit;
 }
@@ -12533,7 +12308,6 @@ a.sema-has-text-danger-dark:focus {
     background-color: #f14668;
   }
 }
-
 .sema-hero.sema-is-danger .sema-navbar-item,
 .sema-hero.sema-is-danger .sema-navbar-link {
   color: rgba(255, 255, 255, 0.7);
@@ -12580,25 +12354,14 @@ a.sema-has-text-danger-dark:focus {
 }
 
 .sema-hero.sema-is-danger.sema-is-bold {
-  background-image: linear-gradient(
-    141deg,
-    #fa0a62 0%,
-    #f14668 71%,
-    #f7595f 100%
-  );
+  background-image: linear-gradient(141deg, #fa0a62 0%, #f14668 71%, #f7595f 100%);
 }
 
 @media screen and (max-width: 768px) {
   .sema-hero.sema-is-danger.sema-is-bold .sema-navbar-menu {
-    background-image: linear-gradient(
-      141deg,
-      #fa0a62 0%,
-      #f14668 71%,
-      #f7595f 100%
-    );
+    background-image: linear-gradient(141deg, #fa0a62 0%, #f14668 71%, #f7595f 100%);
   }
 }
-
 .sema-hero.sema-is-small .sema-hero-body {
   padding: 1.5rem;
 }
@@ -12608,13 +12371,11 @@ a.sema-has-text-danger-dark:focus {
     padding: 9rem 1.5rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-hero.sema-is-large .sema-hero-body {
     padding: 18rem 1.5rem;
   }
 }
-
 .sema-hero.sema-is-halfheight .sema-hero-body,
 .sema-hero.sema-is-fullheight .sema-hero-body,
 .sema-hero.sema-is-fullheight-with-navbar .sema-hero-body {
@@ -12659,7 +12420,6 @@ a.sema-has-text-danger-dark:focus {
     display: none;
   }
 }
-
 .sema-hero-buttons {
   margin-top: 1.5rem;
 }
@@ -12668,21 +12428,21 @@ a.sema-has-text-danger-dark:focus {
   .sema-hero-buttons .sema-button {
     display: flex;
   }
+
   .sema-hero-buttons .sema-button:not(:last-child) {
     margin-bottom: 0.75rem;
   }
 }
-
 @media screen and (min-width: 769px), print {
   .sema-hero-buttons {
     display: flex;
     justify-content: center;
   }
+
   .sema-hero-buttons .sema-button:not(:last-child) {
     margin-right: 1.5rem;
   }
 }
-
 .sema-hero-head,
 .sema-hero-foot {
   flex-grow: 0;
@@ -12703,11 +12463,11 @@ a.sema-has-text-danger-dark:focus {
   .sema-section.sema-is-medium {
     padding: 9rem 1.5rem;
   }
+
   .sema-section.sema-is-large {
     padding: 18rem 1.5rem;
   }
 }
-
 .sema-footer {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
@@ -12742,7 +12502,4 @@ a.sema-has-text-danger-dark:focus {
   position: relative;
 }
 
-.sema-is-bordered {
-  border-left: 1px solid #0366d6 !important;
-  border-right: 1px solid #0366d6 !important;
-}
+/*# sourceMappingURL=sema-custom.css.map */
