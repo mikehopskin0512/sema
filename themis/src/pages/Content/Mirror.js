@@ -39,7 +39,8 @@ class Mirror {
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onScroll = this._onScroll.bind(this);
-    // this._onClick = this._onClick.bind(this);
+    this._getHighlightByPosition = this._getHighlightByPosition.bind(this);
+    this._onClick = this._onClick.bind(this);
     this._onHover = this._onHover.bind(this);
     this._onMousePartial = this._onMousePartial.bind(this);
 
@@ -110,7 +111,7 @@ class Mirror {
         <textarea>
             it si something
         </textarea>
-      
+
       */
     const {
       height,
@@ -172,10 +173,10 @@ class Mirror {
   _addHandlers() {
     $(this._elementToMimic).on('scroll', this._onScroll);
     // TODO: have a dedicated click event once this is confirmed from business
-    $(this._elementToMimic).on('click', this._onHover);
+    $(this._elementToMimic).on('click', this._onClick);
     $(this._elementToMimic).on('input', this._onInput);
     $(this._elementToMimic).on('change', this._onInput);
-    // $(this._elementToMimic).on('mousemove', this._onHover);
+    $(this._elementToMimic).on('mousemove', this._onHover);
     $(this._elementToMimic).on('mouseup mousedown', this._onMousePartial);
 
     if (window.ResizeObserver) {
@@ -208,21 +209,28 @@ class Mirror {
     }
   }
 
+  _getHighlightByPosition(offsetX, offsetY) {
+    return this._highlights.find((highlight) => {
+      const { top, left, width, height } = highlight;
+      return (
+        offsetX >= left &&
+        offsetX <= left + width &&
+        offsetY >= top &&
+        offsetY <= top + height
+      )
+    });
+  }
+
   _onHover(event) {
+    const { offsetX, offsetY } = event;
+    const isHighlight = this._getHighlightByPosition(offsetX, offsetY)
+    this._elementToMimic.style.cursor = isHighlight ? 'pointer' : 'text'
+  }
+
+  _onClick(event) {
     if (!this._isMouseDown) {
       const { offsetX, offsetY } = event;
-
-      const highlight = this._highlights.find((highlight) => {
-        const { top, left, width, height } = highlight;
-        if (
-          offsetX >= left &&
-          offsetX <= left + width &&
-          offsetY >= top &&
-          offsetY <= top + height
-        ) {
-          return highlight;
-        }
-      });
+      const highlight = this._getHighlightByPosition(offsetX, offsetY)
 
       if (highlight) {
         const { top, left, height, id } = highlight;
