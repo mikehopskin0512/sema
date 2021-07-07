@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
@@ -23,13 +23,17 @@ const SupportForm = ({ active, closeForm, type }) => {
     title: '',
     message: '',
     email: username,
-    receiveCopy: false,
   };
 
   const {
-    register, handleSubmit, formState, reset, watch,
+    register, handleSubmit, formState, reset, setValue,
   } = useForm({ defaultValues });
   const { errors } = formState;
+
+  const close = () => {
+    reset();
+    closeForm();
+  };
 
   const onSubmit = async (data) => {
     const { email = username } = data;
@@ -40,10 +44,13 @@ const SupportForm = ({ active, closeForm, type }) => {
     const response = await dispatch(submitSupportEmail(params, token));
     const { status } = response;
     if (status === 201) {
-      reset();
-      closeForm();
+      close();
     }
   };
+
+  useEffect(() => {
+    setValue('type', type);
+  }, [setValue, type]);
 
   return (
     <>
@@ -51,7 +58,7 @@ const SupportForm = ({ active, closeForm, type }) => {
         <div className="modal-background" />
         <div className="modal-content p-50">
           <div className="has-background-white p-50">
-            <button className="modal-close is-large" aria-label="close" type="button" onClick={closeForm} />
+            <button className="modal-close is-large" aria-label="close" type="button" onClick={close} />
             <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">We’d love to hear from you!</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="field mt-20">
@@ -108,15 +115,6 @@ const SupportForm = ({ active, closeForm, type }) => {
                   </div>
                 </label>
               </div>
-              <div className="field mt-20">
-                <div className="control">
-                  <label className="checkbox" htmlFor="receiveCopy">
-                    <p className="is-size-7 is-size-5-mobile">
-                      <input type="checkbox" className="mr-8" id="receiveCopy" {...register('receiveCopy')} />Send yourself a copy of this message?
-                    </p>
-                  </label>
-                </div>
-              </div>
               <div className="field mt-5">
                 <label className="label" htmlFor="email">
                   <p className="is-size-7 is-size-5-mobile">Email</p>
@@ -135,7 +133,6 @@ const SupportForm = ({ active, closeForm, type }) => {
                             },
                           })
                       }
-                      disabled={!watch('receiveCopy')}
                     />
                     <p className="help is-danger">{errors.email && errors.email.message}</p>
                   </div>
@@ -146,7 +143,7 @@ const SupportForm = ({ active, closeForm, type }) => {
                   <button className={`button is-link ${isSending ? 'is-loading' : ''}`} type="submit">Submit</button>
                 </div>
                 <div className="control">
-                  <button onClick={closeForm} className="button is-link is-light" type="button">Cancel</button>
+                  <button onClick={close} className="button is-link is-light" type="button">Cancel</button>
                 </div>
               </div>
             </form>

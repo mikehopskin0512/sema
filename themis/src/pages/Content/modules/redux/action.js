@@ -63,11 +63,6 @@ export const addSuggestedTags = (payload) => ({
   payload,
 });
 
-export const updateSelectedTagsWithSuggestion = (payload) => ({
-  type: UPDATE_SELECTED_TAG_WITH_SUGGESTION,
-  payload,
-});
-
 export const toggleGlobalSearchModal = (payload) => ({
   type: TOGGLE_GLOBAL_SEARCH_MODAL,
   payload,
