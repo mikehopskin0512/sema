@@ -51,15 +51,20 @@ const Table = ({
                     { className: column.className },
                   ],
                 )}>
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
+                  <div className='is-flex is-align-items-center'>
+                    {column.render('Header')}
+                    {/* Add a sort direction indicator */}
+                  <span
+                    className={column.tooltip ? 'tooltip is-multiline is-tooltip-left is-tooltip-multiline' : ''}
+                    data-tooltip={column.tooltip}
+                  >
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? ' 🔽'
+                          : ' 🔼'
+                        : ''}
+                    </span>
+                </div>
                 </th>
               ))}
             </tr>

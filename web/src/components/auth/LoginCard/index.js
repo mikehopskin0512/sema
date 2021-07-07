@@ -28,7 +28,6 @@ const LoginCard = ({ isAuthenticated }) => {
         type="button"
         className="button is-black is-primary colored-shadow-small p-25 mt-15"
         onClick={githubLogin}
-        disabled={isAuthenticated}
       >
         <span className="icon is-large mr-16 ml-0 is-hidden-mobile">
           <FontAwesomeIcon
@@ -51,7 +50,6 @@ const LoginCard = ({ isAuthenticated }) => {
         type="button"
         className="button p-25 is-primary is-outlined colored-shadow-small"
         onClick={githubLogin}
-        disabled={isAuthenticated}
       >
         <span className="icon is-large mr-20">
           <FontAwesomeIcon
