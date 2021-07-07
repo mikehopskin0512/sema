@@ -24,11 +24,8 @@ const ActivityLogs = () => {
 
   const getUserRepos = async (user) => {
     const { identities } = user;
-    const [githubUser] = identities;
-    console.log(githubUser.repositories)
-    await dispatch(
-      getUserRepositories(githubUser.repositories, token)
-    );
+    const githubUser = identities?.[0];
+    await dispatch(getUserRepositories(githubUser?.repositories, token));
   };
 
   useEffect(() => {
