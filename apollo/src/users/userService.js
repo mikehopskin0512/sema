@@ -365,3 +365,19 @@ export const updateLastLogin = async (user) => {
     throw (error);
   }
 };
+
+export const updateUserRepositoryList = async (user, repository, identity) => {
+  try {
+    const repositories = repository.map((el) => {
+      const { name, id, full_name: fullName, html_url: githubUrl } = el;
+      return { name, id, fullName, githubUrl };
+    });
+
+    identity = Object.assign(identity, { repositories });
+    await updateIdentity(user, identity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
