@@ -28,7 +28,7 @@ export const favorites = [
     id: '1234',
     name: 'Repo 1',
     language: 'Java',
-    description: 'Bavarian bergkase emmental stinking bishop. Macaroni cheese roquefort airedale taleggio fondue port-salut everyone loves gouda.',
+    description: 'Bavarian bergkase emmental stinking bishop. Macaroni cheese roquefort airedale taleggio fondue port-salut everyone loves gouda. Bavarian bergkase emmental stinking bishop. Macaroni cheese roquefort airedale taleggio fondue port-salut everyone loves gouda.',
     stats: {
       codeReview: 4,
       comments: 29,

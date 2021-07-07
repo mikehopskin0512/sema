@@ -16,7 +16,7 @@ const RepoList = ({ title, repos }) => {
     <div className="mb-50">
       <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{title}</p>
       {list.map((item) => (
-        <div className="is-flex-wrap-wrap is-flex">
+        <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
           {item.map((child) => (
             <RepoCard {...child} />
           ))}

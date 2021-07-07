@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 export const RepoType = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  language: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   stats: PropTypes.exact({
     codeReview: PropTypes.number.isRequired,
