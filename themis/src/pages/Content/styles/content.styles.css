@@ -255,6 +255,7 @@ h6 {
 .sema-shadow-root {
   display: inline !important;
   position: relative !important;
+  pointer-events: none;
 }
 
 .sema-mirror {
@@ -271,6 +272,7 @@ h6 {
   white-space: pre-wrap !important;
   border-color: transparent !important;
   overflow: auto !important;
+  overflow-y: hidden !important;
 }
 
 .sema-highlighter {

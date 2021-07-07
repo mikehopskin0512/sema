@@ -27,7 +27,9 @@ import {
   WHOAMI,
   SEMA_ICON_ANCHOR_DARK,
   SEMA_ICON_ANCHOR_DARK_DIMMED,
-  LIGHT, DARK, DARK_DIMMED
+  LIGHT,
+  DARK,
+  DARK_DIMMED,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -47,12 +49,12 @@ import {
 import highlightPhrases from './modules/highlightPhrases';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  store.dispatch(updateSemaUser({ ...request }));
+  store.dispatch(updateSemaUser({ ...request, isLoggedIn: true }));
 });
 
 const checkLoggedIn = async () => {
   chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
-    store.dispatch(updateSemaUser({ ...response }));
+    store.dispatch(updateSemaUser({ ...response, isLoggedIn: true }));
   });
 };
 
@@ -136,13 +138,13 @@ document.addEventListener(
         if (colorTheme === DARK_DIMMED) {
           extensionTheme = DARK_DIMMED;
         }
-      } else if (colorMode === "auto") {
+      } else if (colorMode === 'auto') {
         const html = document.querySelector('[data-color-mode]');
         const githubTheme = getComputedStyle(html);
         const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === "rgb(13, 17, 23)") {
+        if (githubBgColor === 'rgb(13, 17, 23)') {
           extensionTheme = DARK;
-        } else if (githubBgColor === "rgb(34, 39, 46)") {
+        } else if (githubBgColor === 'rgb(34, 39, 46)') {
           extensionTheme = DARK_DIMMED;
         }
       }
@@ -277,7 +279,8 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field'
+    const githubCommentField =
+      'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
     if (event.target === document.querySelector(githubCommentField)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
