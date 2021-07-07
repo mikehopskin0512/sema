@@ -1,9 +1,9 @@
 #!/usr/bin/node
 
-const mongoose = require('mongoose');
-const Query = require('../../src/comments/queryModel');
+import mongoose from 'mongoose';
+import Query from '../queryModel';
 
-const { mongooseUri } = require('../../src/config');
+const { mongooseUri } = require('../../config');
 
 const options = {
   useUnifiedTopology: true,
@@ -25,7 +25,7 @@ const flattenObject = (obj) => {
   return flattened;
 };
 
-export const getColQueries = () => {
+export const getSearchTermQuery = () => {
   return Query.aggregate(
     [
       { $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
@@ -44,7 +44,7 @@ export const getColQueries = () => {
 };
 
 (async () => {
-  const docs = await getColQueries();
+  const docs = await getSearchTermQuery();
   const returnArray = [];
   docs.forEach((aResult) => returnArray.push(flattenObject(aResult)));
   console.log(JSON.stringify(returnArray, null, 2));

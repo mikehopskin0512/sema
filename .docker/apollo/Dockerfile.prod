@@ -30,6 +30,7 @@ COPY --chown=node:node --from=builder /usr/app/dist ./dist
 COPY --chown=node:node --from=builder /usr/app/logs ./logs
 COPY --chown=node:node --from=builder /usr/app/data ./data
 COPY --chown=node:node --from=builder /usr/app/migrations ./migrations
+COPY --chown=node:node --from=builder /usr/app/scripts ./scripts
 RUN npm install -g pm2
 
 RUN ln -s dist src
