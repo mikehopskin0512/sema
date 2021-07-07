@@ -59,7 +59,19 @@ const ShareOfWalletPage = () => {
         Header: 'All(%)',
         accessor: 'sow',
       },
-    ]), [getGroupLabel],
+      {
+        Header: '% of Searched Comments',
+        accessor: 'searchedComments',
+      },
+      {
+        Header: 'Avg # of tags per smart comment',
+        accessor: 'averageTags',
+      },
+      ...tab !== 'comments_range' ? [{
+        Header: '# of smart comments',
+        accessor: 'total',
+      }] : [],
+    ]), [getGroupLabel, tab],
   );
 
   const dataSource = useMemo(() => smartCommentMetrics.map((item) => ({
@@ -67,7 +79,10 @@ const ShareOfWalletPage = () => {
     reactions: item.total ? Math.round((item.reactions / item.total) * 100) : 0,
     tags: item.total ? Math.round((item.tags / item.total) * 100) : 0,
     suggestedComments: item.total ? Math.round((item.suggestedComments / item.total) * 100) : 0,
+    searchedComments: item.total ? Math.round((item.suggestedComments / item.total) * 100) : 0,
     sow: item.total ? Math.round((item.sow / item.total) * 100) : 0,
+    averageTags: item.total ? (item.totalTags / item.total).toFixed(2) : 0,
+    total: item.total,
   })), [tab, smartCommentMetrics]);
 
   return (

@@ -49,12 +49,14 @@ export const getSOWMetrics = async (params) => {
         const sow = comments.filter((comment) => !!comment.reaction
           && comment.tags && comment.tags.length
           && comment.suggestedComments && comment.suggestedComments.length).length;
+        const totalTags = comments.reduce((sum, comment) => (sum + comment.tags.length), 0);
 
         metricResult.push({
           _id: `${10 * index}-${10 * (index + 1) < totalCount ? 10 * (index + 1) : totalCount}`,
           index,
           reactions,
           tags,
+          totalTags,
           suggestedComments,
           sow,
           total: 10 * (index + 1) < totalCount ? 10 : totalCount - 10 * index,
@@ -103,6 +105,9 @@ export const getSOWMetrics = async (params) => {
                 if: { $ne: [{ $size: { $ifNull: ['$tags', []] } }, 0] }, then: 1, else: 0,
               },
             },
+          },
+          totalTags: {
+            $sum: { $size: { $ifNull: ['$tags', []] } },
           },
           suggestedComments: {
             $sum: {
@@ -166,10 +171,19 @@ export const exportSowMetrics = async (params) => {
     'Tags(%)': item.total ? Math.round((item.tags / item.total) * 100) : 0,
     'Suggested Comments(%)': item.total ? Math.round((item.suggestedComments / item.total) * 100) : 0,
     'All(%)': item.total ? Math.round((item.sow / item.total) * 100) : 0,
+    '% of Searched Comments': item.total ? Math.round((item.suggestedComments / item.total) * 100) : 0,
+    'Avg # of tags per smart comment': item.total ? (item.totalTags / item.total).toFixed(2) : 0,
+    ...category !== 'comments_range' ? {
+      '# of smart comments': item.total,
+    } : {},
   }));
 
   const { Parser } = Json2CSV;
-  const fields = [groupLabel, 'Reactions(%)', 'Tags(%)', 'Suggested Comments(%)', 'All(%)'];
+  const fields = [groupLabel, 'No reaction', 'Tags(%)', 'Suggested Comments(%)', 'All(%)', '% of Searched Comments', 'Avg # of tags per smart comment'];
+
+  if (category !== 'comments_range') {
+    fields.push('# of smart comments');
+  }
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
