@@ -75,6 +75,7 @@ export default (app) => {
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
         emails,
+        repositories
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -85,6 +86,8 @@ export default (app) => {
         await updateIdentity(user, identity);
 
         await updateUserRepositoryList(user, repositories, identity);
+
+        delete user.identities[0].repositories
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
