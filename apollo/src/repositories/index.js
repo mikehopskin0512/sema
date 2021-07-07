@@ -48,8 +48,9 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/sema-repositories', async (req, res) => {
-    const { externalIds } = req.body;
+  route.get('/sema-repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { externalIds } = req.query;
+
     try {
       const repositories = await findByExternalId(externalIds);
       return res.status(201).send({
