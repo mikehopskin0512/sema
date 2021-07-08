@@ -29,6 +29,8 @@ import {
 } from './redux/action';
 import store from './redux/store';
 
+import phrases from '../modules/highlightPhrases';
+
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;
@@ -146,13 +148,11 @@ export function writeSemaToGithub(textarea) {
     let smartComment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview =
+      textarea?.id && textarea.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
-    const location =
-      onFilesTab 
-      ? 'files changed'
-      : 'conversation';
+    const location = onFilesTab ? 'files changed' : 'conversation';
 
     if (location === 'conversation') {
       store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
@@ -217,7 +217,9 @@ export function writeSemaToGithub(textarea) {
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
-      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`)
+      const commentDiv = document.querySelector(
+        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
+      );
       smartComment.commentId = commentDiv?.id;
       createSmartComment(smartComment);
     } else {
@@ -535,4 +537,65 @@ export const setMutationObserverAtFilesChanged = () => {
   observer.observe(inLineFiles, { childList: true, subtree: true });
 
   return observer;
+};
+
+export const getHighlights = (text) => {
+  const alerts = [];
+  let id = 0;
+
+  const isOverlap = (existingTokenData, newTokenData) => {
+    const { startOffset, endOffset } = existingTokenData;
+    const { start, end } = newTokenData;
+    let isOverlap = false;
+    if (
+      (start >= startOffset && start <= endOffset) ||
+      (end >= startOffset && end <= endOffset)
+    ) {
+      isOverlap = true;
+    }
+    return isOverlap;
+  };
+
+  const insertIfValid = ({ start, end, phrase }) => {
+    let isOverlapping = false;
+    let overlappingAlert;
+    let overlappingIndex;
+    alerts.forEach((existingAlert, index) => {
+      const overlapping = isOverlap(existingAlert, { start, end, phrase });
+      if (overlapping) {
+        isOverlapping = true;
+        overlappingAlert = existingAlert;
+        overlappingIndex = index;
+      }
+    });
+
+    if (isOverlapping) {
+      if (phrase.length >= overlappingAlert.token.length) {
+        // replace
+        alerts[overlappingIndex] = {
+          id: overlappingAlert.id,
+          startOffset: start,
+          endOffset: end,
+          token: phrase,
+        };
+      }
+    } else {
+      id = ++id;
+      alerts.push({
+        id: id.toString(),
+        startOffset: start,
+        endOffset: end,
+        token: phrase,
+      });
+    }
+  };
+
+  phrases.forEach((phrase) => {
+    const matchIndexStart = text.indexOf(phrase);
+    if (matchIndexStart !== -1) {
+      const matchIndexEnd = matchIndexStart + phrase.length - 1;
+      insertIfValid({ start: matchIndexStart, end: matchIndexEnd, phrase });
+    }
+  });
+  return alerts;
 };

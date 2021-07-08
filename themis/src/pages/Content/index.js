@@ -16,6 +16,7 @@ import {
   getSemaIds,
   writeSemaToGithub,
   getGithubMetadata,
+  getHighlights,
 } from './modules/content-util';
 
 import {
@@ -27,7 +28,9 @@ import {
   WHOAMI,
   SEMA_ICON_ANCHOR_DARK,
   SEMA_ICON_ANCHOR_DARK_DIMMED,
-  LIGHT, DARK, DARK_DIMMED
+  LIGHT,
+  DARK,
+  DARK_DIMMED,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -43,8 +46,6 @@ import {
   updateSemaUser,
   addGithubMetada,
 } from './modules/redux/action';
-
-import highlightPhrases from './modules/highlightPhrases';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   store.dispatch(updateSemaUser({ ...request }));
@@ -63,12 +64,6 @@ let stateCheck = setInterval(() => {
     store.dispatch(addGithubMetada(getGithubMetadata(document)));
   }
 }, 100);
-
-const highlightWords = highlightPhrases.reduce((acc, curr) => {
-  const lowerCased = curr.toLowerCase();
-  acc[lowerCased] = true;
-  return acc;
-}, {});
 
 /**
  * Listening to click event for:
@@ -136,13 +131,13 @@ document.addEventListener(
         if (colorTheme === DARK_DIMMED) {
           extensionTheme = DARK_DIMMED;
         }
-      } else if (colorMode === "auto") {
+      } else if (colorMode === 'auto') {
         const html = document.querySelector('[data-color-mode]');
         const githubTheme = getComputedStyle(html);
         const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === "rgb(13, 17, 23)") {
+        if (githubBgColor === 'rgb(13, 17, 23)') {
           extensionTheme = DARK;
-        } else if (githubBgColor === "rgb(34, 39, 46)") {
+        } else if (githubBgColor === 'rgb(34, 39, 46)') {
           extensionTheme = DARK_DIMMED;
         }
       }
@@ -222,45 +217,20 @@ document.addEventListener(
 
         /** RENDER MIRROR*/
         // TODO: try to make it into React component for consistency and not to have to pass store
-        new Mirror(
-          activeElement,
-          (text) => {
-            const tokens = text.split(/([\s,.!?]+)/g);
-            const alerts = [];
-            let curPos = 0;
-            let id = 0;
-
-            tokens.forEach((t, i) => {
-              const lowerCaseToken = t.toLowerCase();
-              if (highlightWords[lowerCaseToken]) {
-                alerts.push({
-                  id: (id++).toString(),
-                  startOffset: curPos,
-                  endOffset: curPos + t.length,
-                  token: t,
-                });
-              }
-
-              curPos += t.length;
-            });
-
-            return alerts;
+        new Mirror(activeElement, getHighlights, {
+          onMouseoverHighlight: (payload) => {
+            // close existing
+            store.dispatch(toggleGlobalSearchModal());
+            store.dispatch(
+              toggleGlobalSearchModal({
+                ...payload,
+                isLoading: true,
+                openFor: $(activeElement).attr('id'),
+              })
+            );
           },
-          {
-            onMouseoverHighlight: (payload) => {
-              // close existing
-              store.dispatch(toggleGlobalSearchModal());
-              store.dispatch(
-                toggleGlobalSearchModal({
-                  ...payload,
-                  isLoading: true,
-                  openFor: $(activeElement).attr('id'),
-                })
-              );
-            },
-            store,
-          }
-        );
+          store,
+        });
 
         // Add Sema icon before Markdown icon
         const markdownIcon = document.getElementsByClassName(
@@ -277,7 +247,8 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field'
+    const githubCommentField =
+      'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
     if (event.target === document.querySelector(githubCommentField)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
