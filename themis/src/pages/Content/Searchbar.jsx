@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
 import { SUGGESTION_URL, SEMA_WEB_LOGIN } from './constants';
@@ -37,6 +37,8 @@ const SearchBar = (props) => {
   const [isLoading, toggleIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
+  const suggestionModalDropdownRef = useRef(null);
+
   const onInputChanged = (event) => {
     event.preventDefault();
     const value = event.target.value;
@@ -74,33 +76,73 @@ const SearchBar = (props) => {
   };
 
   const renderPlaceholder = () => {
-    const commentPlaceholder = chrome.runtime.getURL("img/comment-placeholder.png");
-    const noResults = chrome.runtime.getURL("img/no-results.png");
-    const loader = chrome.runtime.getURL("img/loader.png");
+    const commentPlaceholder = chrome.runtime.getURL(
+      'img/comment-placeholder.png'
+    );
+    const noResults = chrome.runtime.getURL('img/no-results.png');
+    const loader = chrome.runtime.getURL('img/loader.png');
     if (isLoading) {
-      return <div className="sema-m-6 sema-comment-placeholder"><img src={loader} />
-        <span className="sema-title sema-is-7 sema-is-block">We are working hard to find code examples for you...</span>
-      </div>
+      return (
+        <div className="sema-m-6 sema-comment-placeholder">
+          <img src={loader} />
+          <span className="sema-title sema-is-7 sema-is-block">
+            We are working hard to find code examples for you...
+          </span>
+        </div>
+      );
     } else if (!props.isLoggedIn) {
-      return (<div className="sema-comment-placeholder sema-mb-5"><img className="sema-mb-5" src={commentPlaceholder} />
-        <span className="sema-title sema-is-7 sema-is-block">Login to view smart comments</span>
-        <a className="sema-button login-button" href={SEMA_WEB_LOGIN} target="_blank">Log in to Sema</a>
-      </div>)
+      return (
+        <div className="sema-comment-placeholder sema-mb-5">
+          <img className="sema-mb-5" src={commentPlaceholder} />
+          <span className="sema-title sema-is-7 sema-is-block">
+            Login to view smart comments
+          </span>
+          <a
+            className="sema-button login-button"
+            href={SEMA_WEB_LOGIN}
+            target="_blank"
+          >
+            Log in to Sema
+          </a>
+        </div>
+      );
     } else {
       if (props.searchValue.length > 0 && searchResults.length === 0) {
         // empty
-        return <div className="sema-comment-placeholder"><img className="sema-mb-5" src={noResults} />
-          <span className="sema-title sema-is-7 sema-is-block">No results :( We are still learning!</span>
-          <span className="sema-subtitle sema-is-7 sema-is-block">Sorry, we don't have search result for this one. Try again soon - we've noted your query to improve our results.</span>
-          <a className="sema-mt-2" href={`https://www.google.com/search?q=${props.searchValue}`} target="_blank" rel="noopener noreferrer">Try this search on Google</a>
-        </div>
+        return (
+          <div className="sema-comment-placeholder">
+            <img className="sema-mb-5" src={noResults} />
+            <span className="sema-title sema-is-7 sema-is-block">
+              No results :( We are still learning!
+            </span>
+            <span className="sema-subtitle sema-is-7 sema-is-block">
+              Sorry, we don't have search result for this one. Try again soon -
+              we've noted your query to improve our results.
+            </span>
+            <a
+              className="sema-mt-2"
+              href={`https://www.google.com/search?q=${props.searchValue}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Try this search on Google
+            </a>
+          </div>
+        );
       } else if (props.searchValue.length === 0 && searchResults.length === 0) {
-        return (<div className="sema-comment-placeholder"><img className="sema-mb-5" src={commentPlaceholder} />
-          <span className="sema-title sema-is-7 sema-is-block">Suggested comments will appear here.</span>
-          <span className="sema-subtitle sema-is-7 sema-is-block">Type a few characters and we'll start searching right away.</span>
-        </div>)
+        return (
+          <div className="sema-comment-placeholder">
+            <img className="sema-mb-5" src={commentPlaceholder} />
+            <span className="sema-title sema-is-7 sema-is-block">
+              Suggested comments will appear here.
+            </span>
+            <span className="sema-subtitle sema-is-7 sema-is-block">
+              Type a few characters and we'll start searching right away.
+            </span>
+          </div>
+        );
       } else {
-        return ""
+        return '';
       }
     }
   };
@@ -122,9 +164,19 @@ const SearchBar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''}`;
+  let containerClasses = `sema-dropdown${
+    props.isSearchModalVisible ? ' sema-is-active' : ''
+  }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''}`;
+  const inputControlClasses = `sema-control sema-has-icons-left${
+    isLoading ? ' sema-is-loading' : ''
+  }`;
+
+  useEffect(() => {
+    if (suggestionModalDropdownRef) {
+      suggestionModalDropdownRef.current.scrollTop = 0;
+    }
+  }, [props.isSearchModalVisible]);
 
   return (
     <div className={containerClasses} style={{ width: '100%' }}>
@@ -153,36 +205,36 @@ const SearchBar = (props) => {
             </span>
           </div>
         </div>
-        {/*         <span
-          className="sema-icon sema-pb-3"
-          style={{ cursor: 'pointer' }}
-          onClick={onCrossPressed}
-        >
-          <i className="fas fa-times"></i>
-        </span> */}
       </div>
-      <div className="sema-dropdown-menu suggestion-modal" role="menu">
+      <div
+        ref={suggestionModalDropdownRef}
+        className="sema-dropdown-menu suggestion-modal"
+        role="menu"
+      >
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
             {renderPlaceholder()}
-            {(props.isLoggedIn) &&
+            {props.isLoggedIn && (
               <SuggestionModal
-                key={isLoading}
+                key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
                 onCopyPressed={onCopyPressed}
                 searchResults={searchResults}
               />
-            }
+            )}
           </div>
-          {(props.isLoggedIn) &&
+          {props.isLoggedIn && (
             <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
               <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
-                <img className="sema-credit-img sema-mr-1" src={chrome.runtime.getURL("img/sema16.png")} /> Powered by Sema
-            </span>
+                <img
+                  className="sema-credit-img sema-mr-1"
+                  src={chrome.runtime.getURL('img/sema16.png')}
+                />{' '}
+                Powered by Sema
+              </span>
             </div>
-          }
+          )}
         </div>
       </div>
-
     </div>
   );
 };

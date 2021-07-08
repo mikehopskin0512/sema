@@ -6,6 +6,7 @@ const Table = ({
   data,
   pagination,
   loading,
+  empty,
 }) => {
   const { fetchData, totalCount, page: currentPage, perPage } = pagination || {};
 
@@ -52,15 +53,20 @@ const Table = ({
                     { className: column.className },
                   ],
                 )}>
-                  {column.render('Header')}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? ' 🔽'
-                        : ' 🔼'
-                      : ''}
-                  </span>
+                  <div className='is-flex is-align-items-center'>
+                    {column.render('Header')}
+                    {/* Add a sort direction indicator */}
+                  <span
+                    className={column.tooltip ? 'tooltip is-multiline is-tooltip-left is-tooltip-multiline' : ''}
+                    data-tooltip={column.tooltip}
+                  >
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? ' 🔽'
+                          : ' 🔼'
+                        : ''}
+                    </span>
+                </div>
                 </th>
               ))}
             </tr>
@@ -69,29 +75,35 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {
             loading ? (
-              <td colSpan={6}>
+              <td colSpan={columns.length}>
                 <div className='is-flex is-align-items-center is-justify-content-center' style={{ minHeight: 400 }}>Loading...</div>
               </td>
             ) : (
-              <>
-                {page.map(
-                  (row, i) => {
-                    prepareRow(row);
-                    return (
-                      <tr {...row.getRowProps()}>
-                        {row.cells.map((cell) => (
-                          <td {...cell.getCellProps([
-                            {
-                              className: cell.column.className,
-                              style: cell.column.style,
-                            }])}>{cell.render('Cell')}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  },
-                )}
-              </>
+              data.length ? (
+                <>
+                  {page.map(
+                    (row, i) => {
+                      prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps([
+                              {
+                                className: cell.column.className,
+                                style: cell.column.style,
+                              }])}>{cell.render('Cell')}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    },
+                  )}
+                </>
+              ) : (
+                <td colSpan={columns.length}>
+                  {empty}
+                </td>
+              )
             )
           }
         </tbody>
