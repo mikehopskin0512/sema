@@ -37,8 +37,7 @@ export default (app, passport) => {
     try {
       const packer = await exportSowMetrics(req.body);
       res.writeHead(200, {
-        'Content-disposition': 'attachment;filename=wallet.csv',
-        'Content-Length': packer.length,
+        'Content-disposition': 'attachment;filename=share_of_wallet.csv',
       });
 
       res.end(packer);
