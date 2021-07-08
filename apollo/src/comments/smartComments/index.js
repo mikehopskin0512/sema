@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, getSOWMetrics, exportSowMetrics } from './smartCommentService';
+import { create, getSowMetrics, exportSowMetrics } from './smartCommentService';
 
 const route = Router();
 
@@ -25,7 +25,7 @@ export default (app, passport) => {
 
   route.get('/metric', async (req, res) => {
     try {
-      const comments = await getSOWMetrics(req.query);
+      const comments = await getSowMetrics(req.query);
       return res.json({ comments });
     } catch (error) {
       logger(error);

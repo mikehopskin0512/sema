@@ -39,5 +39,12 @@ export const checkAndSendEmail = async (user) => {
     };
     await sendEmail(message);
   }
-  return;
-}
+};
+
+export const fullName = (user) => {
+  if (!user) return '';
+
+  const { firstName = '', lastName = '' } = user;
+
+  return `${firstName} ${lastName}`;
+};

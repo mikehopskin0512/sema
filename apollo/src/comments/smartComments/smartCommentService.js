@@ -3,6 +3,8 @@ import * as Json2CSV from 'json2csv';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
+import Reaction from '../reactionModel';
+import { fullName } from '../../shared/utils';
 
 export const create = async ({
   commentId = null,
@@ -34,19 +36,27 @@ export const create = async ({
   }
 };
 
-export const getSOWMetrics = async (params) => {
+export const getSowMetrics = async (params) => {
   try {
     const { category } = params;
+    const reactionIds = await Reaction.distinct('_id', { title: { $ne: 'No reaction' } });
+
     if (category === 'comments_range') {
       const query = { createdAt: { $gte: subMonths(new Date(), 1) } };
       const totalCount = await SmartComment.countDocuments(query);
       const metricResult = [];
+
       await Promise.all(Array(Math.ceil(totalCount / 10)).fill(0).map(async (_, index) => {
-        const comments = await SmartComment.find(query).sort({ createdAt: -1 }).skip(10 * index).limit(10);
-        const reactions = comments.filter((comment) => !!comment.reaction).length;
+        const comments = await SmartComment.find(query)
+          .sort({ createdAt: -1 })
+          .skip(10 * index)
+          .limit(10);
+        const reactions = comments.filter((comment) => !!comment.reaction
+          && reactionIds.map((id) => id.toString()).indexOf(comment.reaction.toString()) !== -1).length;
         const tags = comments.filter((comment) => comment.tags && comment.tags.length).length;
         const suggestedComments = comments.filter((comment) => comment.suggestedComments && comment.suggestedComments.length).length;
         const sow = comments.filter((comment) => !!comment.reaction
+          && reactionIds.map((id) => id.toString()).indexOf(comment.reaction.toString()) !== -1
           && comment.tags && comment.tags.length
           && comment.suggestedComments && comment.suggestedComments.length).length;
         const totalTags = comments.reduce((sum, comment) => (sum + comment.tags.length), 0);
@@ -95,7 +105,14 @@ export const getSOWMetrics = async (params) => {
           reactions: {
             $sum: {
               $cond: {
-                if: { $ne: [{ $ifNull: ['$reaction', 0] }, 0] }, then: 1, else: 0,
+                if: {
+                  $and: [
+                    { $ne: [{ $ifNull: ['$reaction', 0] }, 0] },
+                    { $in: ['$reaction', reactionIds] },
+                  ],
+                },
+                then: 1,
+                else: 0,
               },
             },
           },
@@ -122,6 +139,7 @@ export const getSOWMetrics = async (params) => {
                 if: {
                   $and: [
                     { $ne: [{ $ifNull: ['$reaction', 0] }, 0] },
+                    { $in: ['$reaction', reactionIds] },
                     { $ne: [{ $size: { $ifNull: ['$tags', []] } }, 0] },
                     { $ne: [{ $size: { $ifNull: ['$suggestedComments', []] } }, 0] },
                   ],
@@ -135,7 +153,7 @@ export const getSOWMetrics = async (params) => {
           user: { $first: '$user' },
         },
       },
-      ...(category === 'day' ? [{ $sort: { _id: -1 } }] : []),
+      { $sort: category === 'day' ? { _id: -1 } : { total: -1 } },
     ]);
 
     return comments;
@@ -146,16 +164,8 @@ export const getSOWMetrics = async (params) => {
   }
 };
 
-const fullName = (user) => {
-  if (!user) return '';
-
-  const { firstName = '', lastName = '' } = user;
-
-  return `${firstName} ${lastName}`;
-};
-
 export const exportSowMetrics = async (params) => {
-  const comments = await getSOWMetrics(params);
+  const comments = await getSowMetrics(params);
   const { category } = params;
 
   const getGroupLabel = () => {
@@ -179,7 +189,15 @@ export const exportSowMetrics = async (params) => {
   }));
 
   const { Parser } = Json2CSV;
-  const fields = [groupLabel, 'No reaction', 'Tags(%)', 'Suggested Comments(%)', 'All(%)', '% of Searched Comments', 'Avg # of tags per smart comment'];
+  const fields = [
+    groupLabel,
+    'Reactions(%)',
+    'Tags(%)',
+    'Suggested Comments(%)',
+    'All(%)',
+    '% of Searched Comments',
+    'Avg # of tags per smart comment',
+  ];
 
   if (category !== 'comments_range') {
     fields.push('# of smart comments');
@@ -187,6 +205,5 @@ export const exportSowMetrics = async (params) => {
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
-
   return csv;
 };
