@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import intercom from '../shared/apiIntercom';
 import { checkAndSendEmail } from '../shared/utils';
 import {
   create, update, patch, findByUsername, findById,
@@ -74,6 +75,17 @@ export default (app, passport) => {
 
         // Redeem invite
         await redeemInvite(token, userId);
+
+        // Add user to Intercom
+        const { firstName, lastName, avatarUrl } = newUser;
+        await intercom.create('contacts', {
+          role: 'user',
+          external_id: userId,
+          name: `${firstName} ${lastName}`.trim(),
+          email: username,
+          avatar: avatarUrl,
+          signed_up_at: new Date(),
+        });
       }
 
       // Check if first login then send welcome email

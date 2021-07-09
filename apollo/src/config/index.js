@@ -35,4 +35,5 @@ module.exports = {
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
   userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
+  intercomToken: process.env.INTERCOM_TOKEN,
 };
