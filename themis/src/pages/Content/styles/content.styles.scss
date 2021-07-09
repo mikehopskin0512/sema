@@ -374,18 +374,12 @@ h6 {
   }
 
   .sema-dropdown-item {
-    margin: 0;
+    margin-bottom: 4px;
+    margin-top: 0;
 
     &:hover {
       background: rgba(0, 129, 167, 0.05);
     }
-  }
-
-  .sema-dropdown-item:nth-of-type(1) {
-    margin-top: 0;
-    background-color: whitesmoke;
-    padding-top: 14px;
-    pointer-events: none;
   }
 
   .sema-dropdown-menu {
@@ -396,7 +390,10 @@ h6 {
   }
 
   .sema-dropdown-content {
+    position: relative;
+    top: -4px;
     border-radius: 10px;
+    padding-top: 12px;
     overflow: hidden;
     margin: 0;
   }

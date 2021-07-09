@@ -321,16 +321,11 @@ h6 {
   font-size: 14px;
 }
 .sema-emoji-container .sema-dropdown-item {
-  margin: 0;
+  margin-bottom: 4px;
+  margin-top: 0;
 }
 .sema-emoji-container .sema-dropdown-item:hover {
   background: rgba(0, 129, 167, 0.05);
-}
-.sema-emoji-container .sema-dropdown-item:nth-of-type(1) {
-  margin-top: 0;
-  background-color: whitesmoke;
-  padding-top: 14px;
-  pointer-events: none;
 }
 .sema-emoji-container .sema-dropdown-menu {
   border: none;
@@ -339,7 +334,10 @@ h6 {
   top: -8px;
 }
 .sema-emoji-container .sema-dropdown-content {
+  position: relative;
+  top: -4px;
   border-radius: 10px;
+  padding-top: 12px;
   overflow: hidden;
   margin: 0;
 }
