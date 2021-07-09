@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Router from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import { formatDistanceToNowStrict } from 'date-fns';
 import useDebounce from '../../hooks/useDebounce';
@@ -151,20 +150,7 @@ const UsersPage = () => {
         ),
       },
       {
-        Header: ({ isSorted, isSortedDesc }) => (
-          <div className='has-text-centered'>
-            <span className="mr-10">Active Date</span>
-            {
-              isSorted
-                ? (
-                  isSortedDesc
-                    ? <FontAwesomeIcon icon="chevron-down" />
-                    : <FontAwesomeIcon icon="chevron-up" />
-                )
-                : ''
-            }
-          </div>
-        ),
+        Header: 'Active Date',
         accessor: 'activeDate',
         Cell: ({ cell: { value } }) => <div className="has-text-centered">{value}</div>,
       },
@@ -185,6 +171,7 @@ const UsersPage = () => {
           </div>
         ),
         accessor: 'invites',
+        tooltip: 'Sort is based on total invites sent, pending and accepted',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex py-10'>
             <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>

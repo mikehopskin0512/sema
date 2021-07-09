@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from "lodash";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import Toaster from '../../components/toaster';
 import SupportForm from '../../components/supportForm';
+import InvitationsGrid from '../../components/invitationsGrid';
 
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
@@ -108,8 +108,12 @@ const Invite = () => {
     }
   }, [showAlert, dispatch]);
 
-  const RESEND_INVITE = async (email) => {
+  const resendInvitation = async (email) => {
     await dispatch(resendInvite(email, token));
+  };
+
+  const revokeInvitation = (invitationId, recipient) => {
+    dispatch(revokeInviteAndHydrateUser(invitationId, user._id, token, recipient))
   };
 
   const buttonAction = () => {
@@ -235,9 +239,7 @@ const Invite = () => {
                       </div>
                     </div>
                   </form>
-                </div>
-                <div className={'tile is-child'}>
-                  <InvitationTable invitations={invitations.data} RESEND_INVITE={RESEND_INVITE} dispatch={dispatch} auth={auth} />
+                  <InvitationsGrid type='dashboard' invites={invitations.data} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
                 </div>
                 <PromotionBoard />
               </div>
@@ -281,96 +283,6 @@ const PluginStateCard = ({
         </button>
       </article>
     </div>
-  );
-};
-
-const InvitationTable = ({ invitations, RESEND_INVITE, dispatch, auth }) => {
-  const { token, user } = auth;
-
-  return (
-    <>
-      <table className={clsx('table is-fullwidth shadow has-background-white is-hidden-mobile', styles.table)}>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {invitations?.length ?
-            invitations.map((el, i) => {
-              return (
-                <tr key={`row-${i}`}>
-                  <td>{el.recipient}</td>
-                  <td>
-                    {el.isPending ? (
-                      <>
-                        <span className={clsx('tag is-primary', styles.tag)}>
-                          Pending Invite
-                        </span>
-                      </>
-                    ) : (
-                      <span className={clsx('tag is-success', styles.tag)}>
-                        Accepted
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    {el.isPending && (
-                      <>
-                        <button className="button is-text" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                        <button className="button is-text" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>
-                      </>
-                    )}
-                    {' '}
-                  </td>
-                </tr>
-              );
-            }) : <tr>
-              <td colSpan="3" >
-                <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-                  <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-                  <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
-                    You haven't invited anyone yet.
-                      </div>
-                </div>
-              </td>
-            </tr>}
-        </tbody>
-      </table>
-      <div className="p-10 shadow has-background-white is-hidden-desktop">
-        {invitations?.length > 0 ? invitations.map((el, i) => (
-          <div className={clsx('px-10 py-20', styles['invite-mobile'])}>
-            <div className='is-flex is-justify-content-space-between'>
-              <p>{el.recipient}</p>
-              {el.isPending ? (
-                <>
-                  <span className={clsx('tag is-primary', styles.tag)}>
-                    Pending
-                  </span>
-                </>
-              ) : (
-                <span className={clsx('tag is-success', styles.tag)}>
-                  Accepted
-                </span>
-              )}
-            </div>
-            <div className="mt-15">
-              <button className="button p-5 is-size-7 is-light" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                    {el.isPending ? (<button className="button is-danger ml-5 p-5 is-size-7" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>) : null}
-            </div>
-          </div>
-        )): 
-          <div className="p-20">
-            <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-            <p className={"has-text-centered mt-20 has-text-gray-dark is-size-5"}>
-              You haven't invited anyone yet.
-            </p>
-          </div>
-        }
-      </div>
-    </>
   );
 };
 

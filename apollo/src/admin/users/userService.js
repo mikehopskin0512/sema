@@ -4,14 +4,19 @@ import Invitation from '../../invitations/invitationModel';
 export const listUsers = async (params) => {
   const { page, perPage, search, status } = params;
 
-  const query = User.find(search ? {
-    $or: [
-      { firstName: new RegExp(search, 'gi') },
-      { lastName: new RegExp(search, 'gi') },
-      { username: new RegExp(search, 'gi') },
-      { 'identities.email': new RegExp(search, 'gi') },
-    ],
-  } : {});
+  const pipeline = [];
+  if (search) {
+    pipeline.push({
+      $match: {
+        $or: [
+          { firstName: new RegExp(search, 'gi') },
+          { lastName: new RegExp(search, 'gi') },
+          { username: new RegExp(search, 'gi') },
+          { 'identities.email': new RegExp(search, 'gi') },
+        ],
+      },
+    })
+  }
 
   if (status) {
     const statusQuery = [];
@@ -28,26 +33,60 @@ export const listUsers = async (params) => {
       }
     });
 
-    query.and({ $or: statusQuery });
+    pipeline.push({
+      $match: {
+        $or: statusQuery,
+      },
+    });
   }
 
-  const totalCount = await User.countDocuments(query);
-  if (page) {
-    query.skip(page > 0 ? ((page - 1) * perPage) : 0);
-  }
+  pipeline.push({
+    $lookup: {
+      from: 'invitations',
+      localField: '_id',
+      foreignField: 'sender',
+      as: 'invitations',
+    }
+  });
+  const totalCount = await User.aggregate([
+    ...pipeline,
+    { $count: 'total' }
+  ]);
 
-  query.limit(perPage);
+  const users = await User.aggregate([
+    ...pipeline,
+    {
+      $addFields: {
+        invitedCount: { $size: '$invitations' },
+        pendingCount: {
+          $size: {
+            $filter: {
+              input: '$invitations',
+              as: 'item',
+              cond: { $eq: [ '$$item.isPending', true ] }
+            }
+          }
+        },
+        acceptCount: {
+          $size: {
+            $filter: {
+              input: '$invitations',
+              as: 'item',
+              cond: { $eq: [ '$$item.isPending', false ] }
+            }
+          }
+        }
+      }
+    },
+    { $sort: { invitedCount: -1 } },
+    { $skip: (page - 1) * perPage },
+    { $limit: perPage }
+  ]);
 
-  let users = await query.exec();
-
-  users = await Promise.all(users.map(async (user) => {
-    const pendingCount = await Invitation.countDocuments({ sender: user._id, isPending: true });
-    const acceptCount = await Invitation.countDocuments({ sender: user._id, isPending: false });
-
-    return { ...user.toJSON(), pendingCount, acceptCount };
-  }));
-
-  return { users, totalCount };
+  return {
+    users,
+    totalCount: totalCount[0]? totalCount[0].total : 0,
+  };
 };
 
 export const findUser = async (userId) => {

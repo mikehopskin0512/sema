@@ -23,11 +23,10 @@ const SupportForm = ({ active, closeForm, type }) => {
     title: '',
     message: '',
     email: username,
-    receiveCopy: false,
   };
 
   const {
-    register, handleSubmit, formState, reset, watch, setValue,
+    register, handleSubmit, formState, reset, setValue,
   } = useForm({ defaultValues });
   const { errors } = formState;
 
@@ -51,7 +50,7 @@ const SupportForm = ({ active, closeForm, type }) => {
 
   useEffect(() => {
     setValue('type', type);
-  }, [type]);
+  }, [setValue, type]);
 
   return (
     <>
@@ -116,15 +115,6 @@ const SupportForm = ({ active, closeForm, type }) => {
                   </div>
                 </label>
               </div>
-              <div className="field mt-20">
-                <div className="control">
-                  <label className="checkbox" htmlFor="receiveCopy">
-                    <p className="is-size-7 is-size-5-mobile">
-                      <input type="checkbox" className="mr-8" id="receiveCopy" {...register('receiveCopy')} />Send yourself a copy of this message?
-                    </p>
-                  </label>
-                </div>
-              </div>
               <div className="field mt-5">
                 <label className="label" htmlFor="email">
                   <p className="is-size-7 is-size-5-mobile">Email</p>
@@ -143,7 +133,6 @@ const SupportForm = ({ active, closeForm, type }) => {
                             },
                           })
                       }
-                      disabled={!watch('receiveCopy')}
                     />
                     <p className="help is-danger">{errors.email && errors.email.message}</p>
                   </div>
