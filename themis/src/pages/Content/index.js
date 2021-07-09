@@ -65,7 +65,8 @@ let stateCheck = setInterval(() => {
 }, 100);
 
 const highlightWords = highlightPhrases.reduce((acc, curr) => {
-  acc[curr] = true;
+  const lowerCased = curr.toLowerCase();
+  acc[lowerCased] = true;
   return acc;
 }, {});
 
@@ -230,7 +231,8 @@ document.addEventListener(
             let id = 0;
 
             tokens.forEach((t, i) => {
-              if (highlightWords[t]) {
+              const lowerCaseToken = t.toLowerCase();
+              if (highlightWords[lowerCaseToken]) {
                 alerts.push({
                   id: (id++).toString(),
                   startOffset: curPos,

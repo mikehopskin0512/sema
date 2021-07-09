@@ -49,6 +49,13 @@ const Login = () => {
     }
   }, [showAlert, dispatch]);
 
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (isAuthenticated && !user.isWaitlist) {
+      router.replace('/');
+    }
+  }, [isAuthenticated]);
+
   const onSubmit = (data) => {
     const { email, password } = data;
     dispatch(authenticate(email, password));
