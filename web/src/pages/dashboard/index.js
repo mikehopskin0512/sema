@@ -164,7 +164,7 @@ const Invite = () => {
       <section className={clsx("hero", styles.container)}>
         <div className="hero-body">
           <div className={clsx('container', styles['styled-container'])}>
-            <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
+            {/* <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
               Welcome to Sema!
             </p>
             <PluginStateCard
@@ -174,7 +174,7 @@ const Invite = () => {
               isCardVisible={isCardVisible}
               buttonAction={buttonAction}
               renderIcon={renderIcon}
-            />
+            /> */}
             <p
               className={
                 'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
@@ -241,7 +241,7 @@ const Invite = () => {
                   </form>
                   <InvitationsGrid type='dashboard' invites={invitations.data} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
                 </div>
-                <PromotionBoard />
+                {/* <PromotionBoard /> */}
               </div>
             </div>
           </div>
