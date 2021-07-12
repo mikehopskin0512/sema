@@ -1,12 +1,16 @@
 import { subMonths } from 'date-fns';
 import * as Json2CSV from 'json2csv';
+import mongoose from 'mongoose';
+
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reactionModel';
 import { fullName } from '../../shared/utils';
 
-export const create = async ({
+const { Types: { ObjectId } } = mongoose;
+
+const create = async ({
   commentId = null,
   comment = null,
   userId = null,
@@ -36,7 +40,21 @@ export const create = async ({
   }
 };
 
-export const getSowMetrics = async (params) => {
+const update = async (
+  id,
+  smartComment,
+) => {
+  try {
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment)
+    return updatedSmartComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+const getSowMetrics = async (params) => {
   try {
     const { category } = params;
     const reactionIds = await Reaction.distinct('_id', { title: { $ne: 'No reaction' } });
@@ -164,7 +182,7 @@ export const getSowMetrics = async (params) => {
   }
 };
 
-export const exportSowMetrics = async (params) => {
+const exportSowMetrics = async (params) => {
   const comments = await getSowMetrics(params);
   const { category } = params;
 
@@ -207,4 +225,11 @@ export const exportSowMetrics = async (params) => {
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
   return csv;
+};
+
+module.exports = {
+  create,
+  update,
+  getSowMetrics,
+  exportSowMetrics
 };

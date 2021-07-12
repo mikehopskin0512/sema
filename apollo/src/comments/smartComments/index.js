@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, getSowMetrics, exportSowMetrics } from './smartCommentService';
+import { create, getSowMetrics, exportSowMetrics, update } from './smartCommentService';
 
 const route = Router();
 
@@ -17,6 +17,22 @@ export default (app, passport) => {
         throw new errors.BadRequest('Smart Comment create error');
       }
       return res.status(201).json({ smartComment: newSmartComment });
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const smartComment = req.body;
+      const updatedSmartComment = await update (id, smartComment);
+      if (!updatedSmartComment) {
+        throw new errors.BadRequest('Smart Comment update error');
+      }
+      return res.status(204).json({ smartComment: updatedSmartComment });
+      return updateSmartComment;
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);
