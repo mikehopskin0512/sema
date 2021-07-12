@@ -5,6 +5,7 @@ import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
 import { smartCommentsOperations } from '../../state/features/smart-comments';
 import ExportButton from '../../components/admin/exportButton';
+import {fullName} from "../../utils";
 
 const { fetchUserActivityMetrics, exportUserActivityMetrics } = smartCommentsOperations;
 
@@ -23,8 +24,15 @@ const UserActivityMetricPage = () => {
       className: 'p-10',
     },
     {
-      Header: 'User Id',
-      accessor: 'userId',
+      Header: 'Name',
+      accessor: 'userInfo',
+      sorted: false,
+      Cell: ({ cell: { value } }) => (
+        <div className='is-flex is-align-items-center is-cursor-pointer' onClick={() => Router.push(`/sema-admin/users/${value.id}`)}>
+          <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+          { value.name }
+        </div>
+      ),
       className: 'p-10',
     },
     {
@@ -46,6 +54,11 @@ const UserActivityMetricPage = () => {
 
   const dataSource = useMemo(() => userActivityMetrics.map((item, index) => ({
     no: index + 1,
+    userInfo: {
+      id: item.user._id,
+      name: fullName(item.user),
+      avatarUrl: item.user.avatarUrl,
+    },
     userId: item._id,
     userEmail: item.user.username,
     activityTwoWeeksAgo: item.activityTwoWeeksAgo,
