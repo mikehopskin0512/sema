@@ -43,7 +43,7 @@
       ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
-      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
+      "css": ["sema-custom.css", "content.styles.css", "overwritten-github.styles.css", "css/all.min.css"]
     }
   ],
   "externally_connectable": {
