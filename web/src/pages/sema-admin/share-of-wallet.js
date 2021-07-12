@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Router from 'next/router';
 import Table from '../../components/table';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
@@ -26,7 +27,7 @@ const tabOptions = [
 ];
 
 const ShareOfWalletPage = () => {
-  const [tab, setTab] = useState('day');
+  const [tab, setTab] = useState('user');
   const dispatch = useDispatch();
   const { smartCommentMetrics, isFetching } = useSelector((state) => state.smartCommentsState);
 
@@ -43,33 +44,50 @@ const ShareOfWalletPage = () => {
         accessor: 'group',
         className: 'p-10',
       },
+      ...tab === 'user' ? [{
+        Header: 'Email',
+        accessor: 'email',
+        className: 'p-10',
+        Cell: ({ cell: { value } }) => (
+          <div className="is-cursor-pointer" onClick={() => Router.push(`/sema-admin/users/${value.userId}`)}>
+            { value.email }
+          </div>
+        ),
+      }] : [],
       {
         Header: 'Reactions(%)',
         accessor: 'reactions',
+        className: 'p-10',
       },
       {
         Header: 'Tags(%)',
         accessor: 'tags',
+        className: 'p-10',
       },
       {
         Header: 'Suggested Comments(%)',
         accessor: 'suggestedComments',
+        className: 'p-10',
       },
       {
         Header: 'All(%)',
         accessor: 'sow',
+        className: 'p-10',
       },
       {
         Header: '% of Searched Comments',
         accessor: 'searchedComments',
+        className: 'p-10',
       },
       {
         Header: 'Avg # of tags per smart comment',
         accessor: 'averageTags',
+        className: 'p-10',
       },
       ...tab !== 'comments_range' ? [{
         Header: '# of smart comments',
         accessor: 'total',
+        className: 'p-10',
       }] : [],
     ]), [getGroupLabel, tab],
   );
@@ -83,6 +101,10 @@ const ShareOfWalletPage = () => {
     sow: item.total ? Math.round((item.sow / item.total) * 100) : 0,
     averageTags: item.total ? (item.totalTags / item.total).toFixed(2) : 0,
     total: item.total,
+    email: tab === 'user' ? {
+      email: item.user ? item.user.username : '',
+      userId: item.user ? item.user._id : '',
+    } : '',
   })), [tab, smartCommentMetrics]);
 
   return (

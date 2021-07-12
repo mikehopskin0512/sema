@@ -177,6 +177,9 @@ export const exportSowMetrics = async (params) => {
   const groupLabel = getGroupLabel();
   const mappedData = comments.map((item) => ({
     [groupLabel]: category === 'user' ? fullName(item.user) : item._id,
+    ...category === 'user' ? {
+      Email: item.user ? item.user.username : '',
+    } : {},
     'Reactions(%)': item.total ? Math.round((item.reactions / item.total) * 100) : 0,
     'Tags(%)': item.total ? Math.round((item.tags / item.total) * 100) : 0,
     'Suggested Comments(%)': item.total ? Math.round((item.suggestedComments / item.total) * 100) : 0,
@@ -191,17 +194,15 @@ export const exportSowMetrics = async (params) => {
   const { Parser } = Json2CSV;
   const fields = [
     groupLabel,
+    ...category === 'user' ? ['Email'] : [],
     'Reactions(%)',
     'Tags(%)',
     'Suggested Comments(%)',
     'All(%)',
     '% of Searched Comments',
     'Avg # of tags per smart comment',
+    ...category !== 'comments_range' ? ['# of smart comments'] : [],
   ];
-
-  if (category !== 'comments_range') {
-    fields.push('# of smart comments');
-  }
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
