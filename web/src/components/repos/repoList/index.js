@@ -1,37 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { chunk } from 'lodash';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { RepoType } from './types';
 import RepoCard from '../repoCard';
 
-const RepoList = ({ title, repos }) => {
-  const [list, setList] = useState([]);
+const LIST_TYPE = {
+  FAVORITES: 'Favorite Repos',
+  OTHERS: 'Other Repos',
+};
 
-  useEffect(() => {
-    const repoChunk = chunk(repos, 3);
-    setList(repoChunk);
-  }, [repos]);
-
-  return (
-    <div className="mb-50">
-      <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{title}</p>
-      {list.map((item) => (
-        <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
-          {item.map((child) => (
-            <RepoCard {...child} />
-          ))}
-        </div>
+const RepoList = ({ type, repos }) => (
+  <div className="mb-50">
+    <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
+    <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
+      {repos.map((child) => (
+        <RepoCard {...child} isFavorite={type === 'FAVORITES'} />
       ))}
     </div>
-  );
-};
+  </div>
+);
 
 RepoList.defaultProps = {
   repos: [],
 };
 
 RepoList.propTypes = {
-  title: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   repos: PropTypes.arrayOf(
     PropTypes.exact(RepoType),
   ),

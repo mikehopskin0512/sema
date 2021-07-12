@@ -1,14 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { remove } from 'lodash';
 import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
+// import { repositoriesOperations } from '../../state/features/repositories';
 
-import { favorites, repos } from './data';
+import { repositories } from './data';
+
+// const { filterSemaRepositories } = repositoriesOperations;
+
+// UNCOMMENT API CALLS WHEN API IS FIXED
 
 const Dashboard = () => {
+  const [repos, setRepos] = useState({
+    favorites: [],
+    other: [],
+  });
+
+  // const dispatch = useDispatch();
+  const { auth } = useSelector((state) => ({
+    auth: state.authState,
+    repositories: state.repositoriesState,
+  }));
+  // const { token } = auth;
+
+  // const getUserRepos = (user) => {
+  //   const { identities } = user;
+  //   if (identities && identities.length) {
+  //     const githubUser = identities[0];
+  //     const externalIds = githubUser.repositories.map((repo) => repo.id);
+  //     dispatch(filterSemaRepositories(externalIds, token));
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // getUserRepos(auth.user);
+  // }, [auth, getUserRepos]);
+
+  useEffect(() => {
+    const { user: { identities } } = auth;
+    if (identities && identities.length) {
+      const githubUser = identities[0];
+      const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
+      const otherRepos = [...repositories];
+      const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
+      setRepos({
+        favorites: favoriteRepos,
+        other: otherRepos,
+      });
+    }
+  }, [auth]);
+
   const renderRepos = () => (
     <>
-      <RepoList title="Favorite Repos" repos={favorites} />
-      <RepoList title="Other Repos" repos={repos} />
+      <RepoList type="FAVORITES" repos={repos.favorites} />
+      <RepoList type="OTHERS" repos={repos.other} />
     </>
   );
 

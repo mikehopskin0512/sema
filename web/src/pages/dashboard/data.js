@@ -69,3 +69,40 @@ export const repos = [
   ...favorites,
   ...favorites,
 ];
+
+export const repositories = [
+  {
+    externalId: '265159550',
+    __v: 0,
+    cloneUrl: 'https://github.com/xandyreyes/e-learning-koa.git',
+    createdAt: {
+      $date: '2021-07-08T13:25:24.698Z',
+    },
+    description: 'Bavarian bergkase emmental stinking bishop. Macaroni cheese roquefort airedale taleggio fondue port-salut everyone loves gouda. Bavarian bergkase emmental stinking bishop. Macaroni cheese roquefort airedale taleggio fondue port-salut everyone loves gouda.',
+    language: '',
+    name: 'e-learning-koa',
+    repositoryCreatedAt: null,
+    repositoryUpdatedAt: null,
+    type: 'github',
+    updatedAt: {
+      $date: '2021-07-08T13:25:24.698Z',
+    },
+  },
+  {
+    externalId: '293553582',
+    __v: 0,
+    cloneUrl: null,
+    createdAt: {
+      $date: '2021-07-08T12:59:09.110Z',
+    },
+    description: '',
+    language: '',
+    name: 'snugg-mobile',
+    repositoryCreatedAt: null,
+    repositoryUpdatedAt: null,
+    type: 'github',
+    updatedAt: {
+      $date: '2021-07-08T12:59:09.110Z',
+    },
+  },
+];

@@ -7,7 +7,6 @@ export const getUserRepositories = (repositories, token) => async (dispatch) => 
     const externalIds = repositories.map(repo => repo.id);
     
     const response = await dispatch(actions.filterSemaRepositories(externalIds, token));
-    // console.log(response)
     if (!response) {
       dispatch(actions.requestGetUserReposSuccess(repositories));
       return;

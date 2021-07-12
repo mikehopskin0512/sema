@@ -127,11 +127,10 @@ export const addAnalysis = (repository, token) => async (dispatch) => {
   }
 };
 
-export const filterSemaRepositories = (externalId, token) => async (dispatch) => {
+export const filterSemaRepositories = (externalIds, token) => async (dispatch) => {
   try {
-    console.log(externalId);
     dispatch(requestFilterSemaRepos());
-    const payload = await filterSemaRepos({ externalId }, token);
+    const payload = await filterSemaRepos({ externalIds: JSON.stringify(externalIds) }, token);
     const { data: { repositories = [] } } = payload;
     dispatch(requestFilterSemaReposSuccess(repositories));
     return repositories;
@@ -142,4 +141,4 @@ export const filterSemaRepositories = (externalId, token) => async (dispatch) =>
 
     dispatch(requestFilterSemaReposError(errMessage));
   }
-}
+};
