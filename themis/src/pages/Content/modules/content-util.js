@@ -12,7 +12,7 @@ import {
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
   ADD_OP,
-  CREATE_SMART_COMMENT_URL,
+  SMART_COMMENT_URL,
   IS_DIRTY,
 } from '../constants';
 
@@ -141,9 +141,9 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-export function writeSemaToGithub(textarea) {
+export async function writeSemaToGithub(textarea) {
   if (textarea) {
-    let smartComment = {};
+    let comment = {};
     let inLineMetada = {};
 
     const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
@@ -203,10 +203,9 @@ export function writeSemaToGithub(textarea) {
     const githubMetadata = store.getState().githubMetadata;
     const { _id: userId } = store.getState().user;
 
-    smartComment = {
+    comment = {
       githubMetadata: { ...githubMetadata, ...inLineMetada },
       userId,
-      commentId: null,
       comment: textboxValue,
       location,
       suggestedComments: selectedSuggestedComments,
@@ -217,12 +216,13 @@ export function writeSemaToGithub(textarea) {
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
-      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`)
-      smartComment.commentId = commentDiv?.id;
-      createSmartComment(smartComment);
-    } else {
-      store.dispatch(addSmartComment(smartComment));
-    }
+      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`);
+      comment.githubMetadata.commentId = commentDiv?.id;
+      createSmartComment(comment);
+    } 
+
+    const smartComment = await createSmartComment(comment);
+    store.dispatch(addSmartComment(smartComment));
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -419,7 +419,7 @@ export const getGithubMetadata = (document, textarea) => {
   const requester = document.querySelector('a[class*="author"]')?.textContent;
   const clone_url = document.querySelector("#clone-help-git-url")?.value;
 
-  const githubMetada = {
+  const githubMetadata = {
     url,
     repo_id,
     repo,
@@ -428,10 +428,11 @@ export const getGithubMetadata = (document, textarea) => {
     base,
     user: { id, login },
     requester,
-    clone_url
+    clone_url,
+    commentId: null,
   };
 
-  return githubMetada;
+  return githubMetadata;
 };
 
 export const getGithubInlineMetadata = (id) => {
@@ -455,12 +456,27 @@ export const getGithubInlineMetadata = (id) => {
   return inlineMetada;
 };
 
-const createSmartComment = (smartComment) => {
-  fetch(CREATE_SMART_COMMENT_URL, {
+const createSmartComment = async (comment) => {
+  const res = await fetch(SMART_COMMENT_URL, {
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
-    body: JSON.stringify(smartComment),
+    body: JSON.stringify(comment),
   });
+  const response = await res.text();
+  const { smartComment } = JSON.parse(response);
+  return smartComment;
+};
+
+const updateSmartComment = async (comment) => {
+  const { _id: id } = comment;
+  const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'PUT',
+    body: JSON.stringify(comment),
+  });
+  const response = await res.text();
+  const { smartComment } = JSON.parse(response);
+  return smartComment;
 };
 
 export const setMutationObserverAtConversation = () => {
@@ -483,14 +499,14 @@ export const setMutationObserverAtConversation = () => {
         const { id } = newCommentDiv.querySelector(
           'div.timeline-comment-group'
         );
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else {
         return;
       }
-      createSmartComment(smartComment);
+      updateSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
   });
@@ -521,14 +537,14 @@ export const setMutationObserverAtFilesChanged = () => {
       if (threadNode !== -1) {
         const newCommentDiv = mutation.addedNodes[threadNode];
         const { id } = newCommentDiv.querySelector('div.review-comment');
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else {
         return;
       }
-      createSmartComment(smartComment);
+      updateSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
   });
