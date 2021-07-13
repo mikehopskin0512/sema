@@ -32,6 +32,20 @@ const create = async ({
   }
 };
 
+const getSmartComments = async ({ repo }) => {
+  try {
+    const query = SmartComment.find();
+    query.where('githubMetadata.repo_id', repo);
+    const smartComments = await query.lean().exec();
+    return smartComments;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 module.exports = {
   create,
+  getSmartComments,
 };

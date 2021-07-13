@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../components/activity/item';
 import CustomSelect from '../../components/activity/select';
 import Sidebar from '../../components/sidebar';
 import withLayout from '../../components/layout';
+import { commentsOperations } from '../../state/features/comments';
 
 import { ReactionList, TagList, UserList } from './data';
 
+const { fetchSmartComments } = commentsOperations;
+
 const ActivityLogs = () => {
+  const dispatch = useDispatch();
+  const { comments } = useSelector((state) => ({
+    comments: state.commentsState,
+  }));
+
+  useEffect(() => {
+    dispatch(fetchSmartComments('293553582'));
+  }, []);
+
   const [filter, setFilter] = useState({
     from: [],
     to: [],
@@ -91,9 +104,11 @@ const ActivityLogs = () => {
             </div>
           </div>
         </div>
-        <div className="my-10">
-          <ActivityItem />
-        </div>
+        {comments.smartComments.map((item) => (
+          <div className="my-10">
+            <ActivityItem {...item} />
+          </div>
+        ))}
       </Sidebar>
     </div>
   );
