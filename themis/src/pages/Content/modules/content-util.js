@@ -417,6 +417,7 @@ export const getGithubMetadata = (document, textarea) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const title = document.querySelector('span[data-snek-id="issue-title"]')?.innerText;
 
   const githubMetada = {
     url,
@@ -427,6 +428,7 @@ export const getGithubMetadata = (document, textarea) => {
     base,
     user: { id, login },
     requester,
+    title,
   };
 
   return githubMetada;

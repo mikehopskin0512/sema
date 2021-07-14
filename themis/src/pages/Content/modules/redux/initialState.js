@@ -12,6 +12,7 @@ const initialState = {
     filename: null,
     file_extension: null,
     line_numbers: [],
+    title: null,
   },
   github: {
     isTyping: false,

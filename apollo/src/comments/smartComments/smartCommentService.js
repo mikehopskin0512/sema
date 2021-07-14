@@ -36,6 +36,7 @@ const getSmartComments = async ({ repo }) => {
   try {
     const query = SmartComment.find();
     query.where('githubMetadata.repo_id', repo);
+    query.populate('userId');
     const smartComments = await query.lean().exec();
     return smartComments;
   } catch (err) {
