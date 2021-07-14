@@ -100,3 +100,17 @@ export const createOrUpdate = async (repository) => {
     return error;
   }
 };
+
+export const findByExternalId = async (externalId) => {
+  // externalId is github id
+  try {
+    const query = Repositories.findOne({ externalId });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
