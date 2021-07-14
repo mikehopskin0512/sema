@@ -19,11 +19,6 @@ const UserActivityMetricPage = () => {
 
   const columns = [
     {
-      Header: 'No',
-      accessor: 'no',
-      className: 'p-10',
-    },
-    {
       Header: 'Name',
       accessor: 'userInfo',
       sorted: false,
@@ -53,7 +48,6 @@ const UserActivityMetricPage = () => {
   ];
 
   const dataSource = useMemo(() => userActivityMetrics.map((item, index) => ({
-    no: index + 1,
     userInfo: {
       id: item.user._id,
       name: fullName(item.user),

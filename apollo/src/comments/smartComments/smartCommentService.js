@@ -79,15 +79,14 @@ export const getUserActivityChangeMetrics = async () => {
 export const exportUserActivityChangeMetrics = async () => {
   const userActivities = await getUserActivityChangeMetrics();
   const mappedData = userActivities.map((item, index) => ({
-    No: index + 1,
-    'User Id': item._id,
-    'User Email': item.user.username,
+    'User ID': item._id,
+    'Email': item.user.username,
     'Activity 2 weeks ago': item.activityTwoWeeksAgo,
     'Activity 1 week ago': item.activityOneWeekAgo,
   }));
 
   const { Parser } = Json2CSV;
-  const fields = ['No', 'User Id', 'User Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
+  const fields = ['User ID', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
