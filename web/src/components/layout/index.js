@@ -2,6 +2,7 @@
 import Head from 'next/head';
 import Header from '../header';
 import Footer from '../footer';
+import ExtensionStatus from '../extensionStatus';
 
 const withLayout = (Page) => () => (
   <div className="Layout background-foggy-white">
@@ -41,7 +42,9 @@ const withLayout = (Page) => () => (
       catch(e){window.attachEvent("onload", $buo_f)}
       ` }} />
     </Head>
+    <ExtensionStatus />
     <Header />
+
     <Page style={{ backgroundColor: '#FCFCFC' }} />
     <Footer />
   </div>
