@@ -13,6 +13,8 @@ const CustomSelect = (props) => {
     label, selectProps, filter, showCheckbox,
   } = props;
 
+  const { value } = selectProps;
+
   const node = useRef();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -98,7 +100,19 @@ const CustomSelect = (props) => {
           'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15',
           styles.select,
         )}>
-        <span className={clsx('has-text-weight-semibold is-size-6 ', styles.placeholder)}>{label}</span>
+        <div className="is-flex is-align-items-center">
+          <span className={clsx('has-text-weight-semibold is-size-6 mr-10', styles.placeholder)}>{label}</span>
+          {value && value.length > 0 && (
+            <span className={
+              clsx(
+                'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center',
+                styles.badge,
+              )
+            }>
+              {value.length}
+            </span>
+          )}
+        </div>
         <span className="icon is-small pb-5">
           <FontAwesomeIcon icon={faSortDown} color="#394A64" />
         </span>

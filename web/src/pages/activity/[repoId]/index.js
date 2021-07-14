@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { uniqBy } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import ActivityItem from '../../components/activity/item';
-import CustomSelect from '../../components/activity/select';
-import Sidebar from '../../components/sidebar';
-import withLayout from '../../components/layout';
-import { commentsOperations } from '../../state/features/comments';
+import ActivityItem from '../../../components/activity/item';
+import CustomSelect from '../../../components/activity/select';
+import Sidebar from '../../../components/sidebar';
+import withLayout from '../../../components/layout';
+import { commentsOperations } from '../../../state/features/comments';
 
-import { ReactionList, TagList, UserList } from './data';
+import { ReactionList, TagList, UserList } from '../data';
 
 const { fetchSmartComments } = commentsOperations;
 
@@ -18,9 +20,9 @@ const ActivityLogs = () => {
     comments: state.commentsState,
   }));
 
-  useEffect(() => {
-    dispatch(fetchSmartComments('293553582'));
-  }, []);
+  const {
+    query: { repoId },
+  } = useRouter();
 
   const [filter, setFilter] = useState({
     from: [],
@@ -28,6 +30,25 @@ const ActivityLogs = () => {
     reactions: [],
     tags: [],
   });
+  const [filterUserList, setFilterUserList] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchSmartComments(repoId));
+  }, [dispatch, repoId]);
+
+  console.log({ comments });
+
+  useEffect(() => {
+    const users = comments.smartComments.map((item) => {
+      const { userId: { firstName, lastName, _id, avatarUrl } } = item;
+      return {
+        label: `${firstName} ${lastName}`,
+        value: _id,
+        img: avatarUrl,
+      };
+    });
+    setFilterUserList(uniqBy(users, 'value'));
+  }, [comments]);
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -52,7 +73,7 @@ const ActivityLogs = () => {
             <div className="is-flex-grow-1 px-5 my-5">
               <CustomSelect
                 selectProps={{
-                  options: UserList,
+                  options: filterUserList,
                   placeholder: '',
                   isMulti: true,
                   onChange: ((value) => onChangeFilter('from', value)),

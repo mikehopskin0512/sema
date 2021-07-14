@@ -10,7 +10,7 @@ import styles from "./sidebar.module.scss";
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
 
-  const isActiveRoute = () => router.asPath === pathName;
+  const isActiveRoute = () => router.asPath.includes(pathName);
 
   return (
     <Link href={pathName}>
