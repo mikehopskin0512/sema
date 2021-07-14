@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { uniqBy } from 'lodash';
+import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../../components/activity/item';
@@ -10,7 +10,7 @@ import Sidebar from '../../../components/sidebar';
 import withLayout from '../../../components/layout';
 import { commentsOperations } from '../../../state/features/comments';
 
-import { ReactionList, TagList, UserList } from '../data';
+import { ReactionList, TagList } from '../data';
 
 const { fetchSmartComments } = commentsOperations;
 
@@ -31,12 +31,12 @@ const ActivityLogs = () => {
     tags: [],
   });
   const [filterUserList, setFilterUserList] = useState([]);
+  const [filterPRList, setFilterPRList] = useState([]);
+  const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
     dispatch(fetchSmartComments(repoId));
   }, [dispatch, repoId]);
-
-  console.log({ comments });
 
   useEffect(() => {
     const users = comments.smartComments.map((item) => {
@@ -47,8 +47,35 @@ const ActivityLogs = () => {
         img: avatarUrl,
       };
     });
+    const prs = comments.smartComments.map((item) => {
+      const { githubMetadata: { title, pull_number: pullNum } } = item;
+      return {
+        label: `${title || 'PR'} #${pullNum}`,
+        value: pullNum,
+      };
+    });
     setFilterUserList(uniqBy(users, 'value'));
+    setFilterPRList(uniqBy(prs, 'value'));
   }, [comments]);
+
+  useEffect(() => {
+    let filtered = comments.smartComments;
+    if (
+      !isEmpty(filter.from) ||
+      !isEmpty(filter.to) ||
+      !isEmpty(filter.reactions) ||
+      !isEmpty(filter.tags)
+    ) {
+      filtered = comments.smartComments.filter((item) => {
+        const fromIndex = findIndex(filter.from, { value: item.userId._id });
+        const toIndex = findIndex(filter.to, { value: item.githubMetadata.pull_number });
+        const reactionIndex = findIndex(filter.reactions, { value: item.reaction });
+        const tagsIndex = findIndex(filter.tags, (tag) => item.tags.includes(tag.value));
+        return fromIndex !== -1 || toIndex !== -1 || reactionIndex !== -1 || tagsIndex !== -1;
+      });
+    }
+    setFilteredComments(filtered);
+  }, [comments.smartComments, filter]);
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -85,7 +112,7 @@ const ActivityLogs = () => {
             <div className="is-flex-grow-1 px-5 my-5">
               <CustomSelect
                 selectProps={{
-                  options: UserList,
+                  options: filterPRList,
                   placeholder: '',
                   isMulti: true,
                   onChange: ((value) => onChangeFilter('to', value)),
@@ -125,7 +152,7 @@ const ActivityLogs = () => {
             </div>
           </div>
         </div>
-        {comments.smartComments.map((item) => (
+        {filteredComments.map((item) => (
           <div className="my-10">
             <ActivityItem {...item} />
           </div>

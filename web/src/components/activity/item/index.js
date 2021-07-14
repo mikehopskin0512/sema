@@ -20,8 +20,17 @@ const ActivityItem = (props) => {
 
   const { title, url, user: { login } } = githubMetadata;
 
-  const [emojiReaction] = useState(find(EMOJIS, { _id: reaction }));
   const [dateCreated] = useState(format(new Date(createdAt), 'dd MMM, yyyy'));
+
+  const renderEmoji = () => {
+    const { emoji, title: emojiTitle } = find(EMOJIS, { _id: reaction });
+    return (
+      <>
+        <span className="mr-8">{emoji}</span>
+        <div dangerouslySetInnerHTML={{ __html: emojiTitle }} />
+      </>
+    );
+  };
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
@@ -42,8 +51,7 @@ const ActivityItem = (props) => {
         </div>
         <div className="is-flex is-align-items-center is-flex-wrap-wrap">
           <div className="has-text-deep-black has-text-weight-semibold is-size-5 is-size-7-mobile is-flex">
-            <span className="mr-8">{emojiReaction.emoji}</span>
-            <div dangerouslySetInnerHTML={{ __html: emojiReaction.title }} />
+            {renderEmoji()}
           </div>
           { tags.length > 0 ? (
             <>
