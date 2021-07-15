@@ -59,7 +59,7 @@ const Sidebar = () => {
       name: 'Share of Wallet',
       pathName: '/sema-admin/share-of-wallet',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
-    }
+    },
     {
       name: 'User Activity',
       pathName: '/sema-admin/user-activity',
