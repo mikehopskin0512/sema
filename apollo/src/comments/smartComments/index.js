@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, update } from './smartCommentService';
+import { create, getSowMetrics, exportSowMetrics, update } from './smartCommentService';
 
 const route = Router();
 
@@ -33,6 +33,30 @@ export default (app, passport) => {
       }
       return res.status(204).json({ smartComment: updatedSmartComment });
       return updateSmartComment;
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/metric', async (req, res) => {
+    try {
+      const comments = await getSowMetrics(req.query);
+      return res.json({ comments });
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/metric/export', async (req, res) => {
+    try {
+      const packer = await exportSowMetrics(req.body);
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=share_of_wallet.csv',
+      });
+
+      res.end(packer);
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);

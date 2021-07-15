@@ -55,6 +55,11 @@ const Sidebar = () => {
       pathName: '/sema-admin/reports',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
+    {
+      name: 'Share of Wallet',
+      pathName: '/sema-admin/share-of-wallet',
+      icon: <img src="/img/icons/dashboard.png" alt="" />,
+    }
   ];
   return (
     <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-fullheight`)}>

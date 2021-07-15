@@ -8,9 +8,9 @@ import { searchQueriesOperations } from '../../state/features/search-queries';
 import { fullName } from '../../utils';
 import FilterTabs from '../../components/admin/filterTabs';
 import ExportButton from '../../components/admin/exportButton';
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 
 const { fetchSearchQueries, exportSearchTerms } = searchQueriesOperations;
-import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
 const { fetchSuggestComments } = suggestCommentsOperations;
 
@@ -183,7 +183,7 @@ const ReportsPage = () => {
         <div className='mb-50'>
           <div className='is-flex is-justify-content-space-between'>
             <h4 className="title is-4">Queries Metrics</h4>
-            <ExportButton onExport={() => exportSearchTerms({}, token)} />
+            <ExportButton onExport={() => exportSearchTerms({ category: tab }, token)} />
           </div>
           <Table
             columns={queryColumns}
