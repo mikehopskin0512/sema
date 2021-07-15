@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification,
+  createMany, findByOrg, getRepository, sendNotification,
 } from './repositoryService';
 
 const route = Router();
@@ -32,6 +32,22 @@ export default (app, passport) => {
     }
   });
 
+  route.get('/search/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id: repoId } = req.params;
+    console.log('THIS', repoId)
+    try {
+      const repository = await getRepository(repoId);
+      if (!repository) { throw new errors.NotFound('No repository found'); }
+
+      return res.status(201).send({
+        repository,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { orgId } = req.query;
 
@@ -47,4 +63,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  
 };

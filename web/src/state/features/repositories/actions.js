@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import * as types from './types';
-import { getRepos, postRepositories, postAnalysis } from './api';
+import { getRepos, postRepositories, postAnalysis, getRepo } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -44,6 +44,20 @@ const requestCreateAnalysisSuccess = (source) => ({
 
 const requestCreateAnalysisError = (errors) => ({
   type: types.REQUEST_CREATE_ANALYSIS_ERROR,
+  errors,
+});
+
+const requestFetchRepo = () => ({
+  type: types.REQUEST_FETCH_REPO,
+});
+
+const requestFetchRepoSuccess = (repository) => ({
+  type: types.REQUEST_FETCH_REPO_SUCCESS,
+  repository,
+});
+
+const requestFetchRepoError = (errors) => ({
+  type: types.REQUEST_FETCH_REPO_ERROR,
   errors,
 });
 
@@ -95,6 +109,22 @@ export const addAnalysis = (repository, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestCreateAnalysisError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
+  }
+};
+
+export const fetchRepo = (repositoryId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchRepo());
+    const payload = await getRepo(repositoryId, token);
+    const { data: { repository = [] } } = payload;
+
+    dispatch(requestFetchRepoSuccess(repository));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFetchRepoError(errMessage));
     dispatch(triggerAlert(errMessage, 'error'));
   }
 };

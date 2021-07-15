@@ -114,3 +114,16 @@ export const findByExternalId = async (externalId) => {
     return error;
   }
 }
+
+export const getRepository = async (_id) => {
+  try {
+    const query = Repositories.findOne({ _id });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
