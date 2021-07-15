@@ -4,8 +4,8 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
-import { getProfile, getUserEmails } from './utils';
-import { create, findByUsernameOrIdentity, updateIdentity, verifyUser } from '../../users/userService';
+import { getProfile, getUserEmails, getRepositoryList } from './utils';
+import { create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
 
@@ -41,6 +41,9 @@ export default (app) => {
       if (!token) {
         return res.status(401).end('Github authentication failed.');
       }
+
+      const repositories = await getRepositoryList(token);
+
       const profile = await getProfile(token);
       if (!profile) {
         return res.status(401).end('Unable to retrieve Github profile for user.');
@@ -80,6 +83,8 @@ export default (app) => {
 
         // Update user with identity
         await updateIdentity(user, identity);
+
+        await updateUserRepositoryList(user, repositories, identity);
 
         // Auth Sema
         await setRefreshToken(res, user, await createRefreshToken(user));
