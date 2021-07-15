@@ -425,6 +425,29 @@ h6 {
   color: var(--color-content);
 }
 
+.sema-login-bar {
+  display: flex;
+  height: auto;
+  align-items: center;
+}
+.sema-login-bar .sema-offline-badge {
+  display: flex;
+  align-items: center;
+  background: #f6e0e0;
+  padding: 3px 4px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+.sema-login-bar .sema-offline-label {
+  color: #de3617;
+  margin-left: 3px;
+  font-size: 12px;
+}
+.sema-login-bar .sema-login-link {
+  text-decoration: underline;
+  font-size: 10px;
+}
+
 .login-button {
   background-color: #00779a;
   border-color: transparent !important;

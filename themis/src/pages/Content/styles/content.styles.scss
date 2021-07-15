@@ -482,6 +482,32 @@ h6 {
   color: var(--color-content);
 }
 
+.sema-login-bar {
+  display: flex;
+  height: auto;
+  align-items: center;
+
+  .sema-offline-badge {
+    display: flex;
+    align-items: center;
+    background: rgba(246, 224, 224, 1);
+    padding: 3px 4px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+
+  .sema-offline-label {
+    color: rgba(222, 54, 23, 1);
+    margin-left: 3px;
+    font-size: 12px;
+  }
+
+  .sema-login-link {
+    text-decoration: underline;
+    font-size: 10px;
+  }
+}
+
 .login-button {
   // background-color: var(--color-text-input-bg);
   // color: var(--color-text-input-font);

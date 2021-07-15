@@ -17,6 +17,7 @@ const DROP_POSITIONS = {
 };
 
 import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
+import LoginBar from "./LoginBar";
 
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
@@ -54,7 +55,6 @@ const Semabar = (props) => {
   const [isHover, setHover] = useState(false);
   const [dropPosition, setDropPosition] = useState(DROP_POSITIONS.DOWN);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
-
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -83,7 +83,6 @@ const Semabar = (props) => {
       </>
     );
   };
-
   const createAddTags = () => {
     const { x, y, height, width, offsetPos } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
@@ -212,15 +211,7 @@ const Semabar = (props) => {
   } else {
     return (
       <>
-        <div className="sema-emoji-container">
-          <span>
-            Please{' '}
-            <a href={SEMA_WEB_LOGIN} target="_blank">
-              Log In
-            </a>{' '}
-            to Sema to get the full code review experience.
-          </span>
-        </div>
+        <LoginBar/>
         <div className="sema-tag-container sema-tags-content">
           <button
             disabled
