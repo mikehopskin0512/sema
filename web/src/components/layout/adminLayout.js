@@ -5,14 +5,14 @@ const withLayout = (Page) => () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const isMenuOpen = localStorage.getItem('semo_menu_open');
+    const isMenuOpen = localStorage.getItem('sema_menu_open');
     if (isMenuOpen) {
       setOpen(JSON.parse(isMenuOpen));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('semo_menu_open', JSON.stringify(open));
+    localStorage.setItem('sema_menu_open', JSON.stringify(open));
   }, [open]);
 
   return (
