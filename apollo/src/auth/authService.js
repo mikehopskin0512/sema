@@ -38,7 +38,7 @@ export const createIdentityToken = async (identity) => sign({ identity }, jwtSec
 });
 
 export const createRefreshToken = async (user) => sign({ user }, refreshSecret, {
-  expiresIn: '1d',
+  expiresIn: '30d',
 });
 
 export const validateRefreshToken = async (token) => {

@@ -9,7 +9,7 @@ export default (app, passport) => {
   app.use(`/${version}/support`, route);
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { email, title, type, message, receiveCopy = false } = req.body;
+    const { email, title, type, message } = req.body;
 
     try {
         // Send to Admin
@@ -30,23 +30,21 @@ export default (app, passport) => {
         await sendEmail(data);
 
         // Send to user
-        if (receiveCopy) {
-            const senderEmail = 
-                type === "Feedback" ? "feedback@semasoftware.com" : "support@semasoftware.com";
-            const data = {
-                recipient: email,
-                templateName: 'feedbackSupportUser',
-                sender: {
-                    name: `Sema Software Support`,
-                    email: senderEmail
-                },
-                email,
-                title,
-                type,
-                message
-            };
-            await sendEmail(data);
-        }
+        const senderEmail = 
+            type === "Feedback" ? "feedback@semasoftware.com" : "support@semasoftware.com";
+        const userData = {
+            recipient: email,
+            templateName: 'feedbackSupportUser',
+            sender: {
+                name: `Sema Software Support`,
+                email: senderEmail
+            },
+            email,
+            title,
+            type,
+            message
+        };
+        await sendEmail(userData);
 
         return res.status(201).send(data);
     } catch (error) {
