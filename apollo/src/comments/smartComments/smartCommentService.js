@@ -1,16 +1,13 @@
 import { subMonths } from 'date-fns';
+import { subWeeks } from 'date-fns';
 import * as Json2CSV from 'json2csv';
-import mongoose from 'mongoose';
-
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reactionModel';
 import { fullName } from '../../shared/utils';
 
-const { Types: { ObjectId } } = mongoose;
-
-const create = async ({
+export const create = async ({
   commentId = null,
   comment = null,
   userId = null,
@@ -227,9 +224,72 @@ const exportSowMetrics = async (params) => {
   return csv;
 };
 
+const getUserActivityChangeMetrics = async () => {
+  try {
+    const userActivities = await SmartComment.aggregate([
+      { $match: { createdAt: { $gt: subWeeks(new Date(), 2) } } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $group: {
+          _id: '$userId',
+          activityTwoWeeksAgo: {
+            $sum: {
+              $cond: {
+                if: { $lt: ['$createdAt', subWeeks(new Date(), 1)] }, then: 1, else: 0,
+              },
+            },
+          },
+          activityOneWeekAgo: {
+            $sum: {
+              $cond: {
+                if: { $gte: ['$createdAt', subWeeks(new Date(), 1)] }, then: 1, else: 0,
+              },
+            },
+          },
+          user: { $first: '$user' },
+        },
+      },
+    ]);
+    return userActivities;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+const exportUserActivityChangeMetrics = async () => {
+  const userActivities = await getUserActivityChangeMetrics();
+  const mappedData = userActivities.map((item, index) => ({
+    'User ID': item._id,
+    'Email': item.user.username,
+    'Activity 2 weeks ago': item.activityTwoWeeksAgo,
+    'Activity 1 week ago': item.activityOneWeekAgo,
+  }));
+
+  const { Parser } = Json2CSV;
+  const fields = ['User ID', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+
+  return csv;
+};
+
+
 module.exports = {
   create,
   update,
   getSowMetrics,
-  exportSowMetrics
+  exportSowMetrics,
+  getUserActivityChangeMetrics,
+  exportUserActivityChangeMetrics
 };
