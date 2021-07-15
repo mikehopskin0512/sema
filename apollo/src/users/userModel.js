@@ -10,6 +10,14 @@ const userOrgSchema = mongoose.Schema({
   invitedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { _id: false, timestamps: true });
 
+const repositoryScheme = mongoose.Schema({
+  id: String,
+  name: String,
+  fullName: String,
+  githubUrl: String,
+  isFavorite: Boolean
+}, { _id: false });
+
 const identitySchema = mongoose.Schema({
   provider: String,
   id: String,
@@ -20,6 +28,7 @@ const identitySchema = mongoose.Schema({
   lastName: String,
   profileUrl: String,
   avatarUrl: String,
+  repositories: [repositoryScheme]
 }, { _id: false });
 
 const userSchema = mongoose.Schema({

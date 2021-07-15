@@ -6,6 +6,7 @@ import { isEmpty } from "lodash";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import ContactUs from '../../components/contactUs';
 import withLayout from '../../components/layout';
 import { isExtensionInstalled } from '../../utils/extension';
 import Carousel from '../../components/utils/Carousel';
@@ -303,38 +304,6 @@ const PromotionBoard = () => {
       <Carousel />
     </>
   );
-};
-
-const ContactUsContent = ({ userVoiceToken, openSupportForm }) => {
-  return(
-    <>
-      <div className="column is-6">
-        <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
-        <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
-      </div>
-      <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <button onClick={openSupportForm} className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</button>
-      </div>
-      <div className="column is-2-widescreen is-2-tablet">
-        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
-      </div>
-    </>
-  )
-}
-
-const ContactUs = (props) => {
-  return (
-    <>
-      {/* Desktop View */}
-      <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
-        <ContactUsContent {...props} />
-      </div>
-      {/* Mobile View */}
-      <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
-        <ContactUsContent {...props} />
-      </div>
-    </>
-  )
 };
 
 export default withLayout(Invite);
