@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import styles from './sidebar.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
@@ -17,23 +17,16 @@ const MenuItem = ({ pathName, icon, name }) => {
         <span className={clsx(styles['label-menu'], 'has-text-white ml-15')}>{ name }</span>
       </a>
     </Link>
-  )
+  );
 };
 
-const Sidebar = () => {
-  const [open, setOpen] = useState(true);
+MenuItem.propTypes = {
+  pathName: PropTypes.string.isRequired,
+  icon: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-  useEffect(() => {
-    const isMenuOpen = localStorage.getItem('semo_menu_open');
-    if (isMenuOpen) {
-      setOpen(JSON.parse(isMenuOpen));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('semo_menu_open', JSON.stringify(open));
-  }, [open]);
-
+const Sidebar = ({ open, setOpen }) => {
   const menus = [
     {
       name: 'Dashboard',
@@ -62,7 +55,7 @@ const Sidebar = () => {
     }
   ];
   return (
-    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-fullheight`)}>
+    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], 'p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
       <div className={`is-flex is-align-items-center is-clickable ${open ? 'p-10' : 'px-5 py-10'}`} onClick={() => setOpen(!open)}>
         <img src="/img/logo_short.png" alt="logo" />
         {
@@ -71,13 +64,18 @@ const Sidebar = () => {
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
         {
-          menus.map(item => (
+          menus.map((item) => (
             <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
           ))
         }
       </div>
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

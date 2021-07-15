@@ -110,7 +110,6 @@ const ReportsPage = () => {
     [],
   );
 
-
   const suggestCommentColumns = useMemo(
     () => [
       {
@@ -167,7 +166,7 @@ const ReportsPage = () => {
   }, [setPage, setPerPage]);
 
   return (
-    <div className="hero is-full-height is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <>
       <h1 className='has-text-black has-text-weight-bold is-size-3'>Reports</h1>
       <p className='mb-15 is-size-6  text-gray-light'>Manage your reports at a glance</p>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
@@ -189,16 +188,16 @@ const ReportsPage = () => {
             columns={queryColumns}
             data={queryData}
             pagination={{
-              page: page,
-              perPage: perPage,
-              fetchData: fetchData,
+              page,
+              perPage,
+              fetchData,
               totalCount: totalQueryItemsCount,
               loading: isSearchQueriesLoading
             }}
           />
         </div>
 
-        <div className='mb-50'>
+        <div>
           <h4 className="title is-4">Suggested Comments</h4>
           <Table
             columns={suggestCommentColumns}
@@ -213,7 +212,7 @@ const ReportsPage = () => {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
