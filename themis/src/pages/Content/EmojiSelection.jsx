@@ -22,8 +22,9 @@ const EmojiSelection = ({
   isSelectingEmoji,
 }) => {
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
-  const isDefaultSelected = selectedTitle === 'No reaction'
-  const options = isDefaultSelected ? allEmojis : [selectedReaction, ...allEmojis]
+  const selectedReactionPosition = allEmojis.findIndex(e => e.title === selectedTitle)
+  // depends on actual layout
+  const ITEM_HEIGHT = 44
 
   return (
     <>
@@ -74,15 +75,16 @@ const EmojiSelection = ({
               <div
                 className="sema-dropdown-menu"
                 role="menu"
+                style={{top: selectedReactionPosition * -ITEM_HEIGHT}}
               >
                 <div className="sema-dropdown-content">
-                  {options.map((emojiObj, index) => {
+                  {allEmojis.map((emojiObj) => {
                     const { title, emoji } = emojiObj;
                     return (
                       <button
                         className="sema-dropdown-item sema-button sema-is-small sema-reaction-selection"
                         title={title}
-                        key={index}
+                        key={title}
                         onClick={(event) => {
                           event.preventDefault();
                           onEmojiSelected(emojiObj);

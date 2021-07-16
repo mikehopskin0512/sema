@@ -5,8 +5,10 @@ const Table = ({
   columns,
   data,
   pagination,
+  loading,
+  empty,
 }) => {
-  const { fetchData, loading, totalCount, page: currentPage, perPage } = pagination || {};
+  const { fetchData, totalCount, page: currentPage, perPage } = pagination || {};
 
   const {
     getTableProps,
@@ -73,29 +75,35 @@ const Table = ({
         <tbody {...getTableBodyProps()}>
           {
             loading ? (
-              <td colSpan={6}>
+              <td colSpan={columns.length}>
                 <div className='is-flex is-align-items-center is-justify-content-center' style={{ minHeight: 400 }}>Loading...</div>
               </td>
             ) : (
-              <>
-                {page.map(
-                  (row, i) => {
-                    prepareRow(row);
-                    return (
-                      <tr {...row.getRowProps()}>
-                        {row.cells.map((cell) => (
-                          <td {...cell.getCellProps([
-                            {
-                              className: cell.column.className,
-                              style: cell.column.style,
-                            }])}>{cell.render('Cell')}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  },
-                )}
-              </>
+              data.length ? (
+                <>
+                  {page.map(
+                    (row, i) => {
+                      prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps([
+                              {
+                                className: cell.column.className,
+                                style: cell.column.style,
+                              }])}>{cell.render('Cell')}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    },
+                  )}
+                </>
+              ) : (
+                <td colSpan={columns.length}>
+                  {empty}
+                </td>
+              )
             )
           }
         </tbody>

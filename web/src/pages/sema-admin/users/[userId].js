@@ -7,10 +7,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import { usersOperations } from '../../../state/features/users';
 import { fullName, getBadgeColor, getUserStatus } from '../../../utils';
 import Badge from '../../../components/badge/badge';
-import Table from '../../../components/table';
 import Toaster from '../../../components/toaster';
 import { invitationsOperations } from '../../../state/features/invitations';
 import { alertOperations } from '../../../state/features/alerts';
+import InvitationsGrid from '../../../components/invitationsGrid';
 
 const { clearAlert } = alertOperations;
 const { fetchUser } = usersOperations;
@@ -40,8 +40,12 @@ const UserDetailPage = () => {
   const userStatus = useMemo(() => user ? getUserStatus(user) : '', [user]);
   const badgeColor = useMemo(() => getBadgeColor(userStatus), [userStatus]);
 
-  const RESEND_INVITE = async (email) => {
+  const resendInvitation = async (email) => {
     await dispatch(resendInvite(email, token));
+  };
+
+  const revokeInvitation = async (invitationId, recipient) => {
+    await dispatch(revokeInviteAndHydrateUser(invitationId, userId, token, recipient));
   };
 
   useEffect(() => {
@@ -50,66 +54,8 @@ const UserDetailPage = () => {
     }
   }, [showAlert, dispatch]);
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'User',
-        accessor: 'recipient',
-        className: 'p-10',
-        Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center'>
-            { value }
-          </div>
-        ),
-      },
-      {
-        Header: () => (
-          <div className='is-flex'>
-            <div className='mr-2'>Status</div>
-          </div>
-        ),
-        accessor: 'isPending',
-        Cell: ({ cell: { value } }) => (
-          <Badge label={value ? 'Pending Invite' : 'Active'} color={value ? 'link' : 'success'} />
-        ),
-      },
-      {
-        Header: 'Actions',
-        accessor: 'actions',
-        Cell: ({ cell: { value: el } }) => (
-          <div className='is-flex is-align-items-center py-10'>
-            {
-              el.isPending && (
-                <>
-                  <button className="button is-text outline-none has-no-border" onClick={() => RESEND_INVITE(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text outline-none" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, userId, token, el.recipient))}>Revoke</button>
-                </>
-              )
-            }
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
-
-  const dataSource = useMemo(() => {
-    return Array.isArray(invites) ? invites.map(item => ({
-      recipient: item.isPending
-        ? item.recipient
-        : (
-          <>
-            <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-20' style={{ borderRadius: '100%' }}/>
-            {fullName(item.user)}
-          </>
-        ),
-      isPending: item.isPending,
-      actions: item,
-    })) : [];
-  }, [invites]);
-
   return (
-    <div className="is-full-height is-flex is-flex-direction-column p-25" style={{ background: '#f7f8fa' }}>
+    <>
       {
         isUserLoading || isInvitesLoading ? (
           <div className='loading' />
@@ -162,13 +108,13 @@ const UserDetailPage = () => {
               </div>
             </div>
             <div className='column is-8 p-0'>
-              <Table columns={columns} data={dataSource} className='column is-6 has-background-white p-0' />
+              <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
             </div>
           </>
         )
       }
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-    </div>
+    </>
   )
 };
 
