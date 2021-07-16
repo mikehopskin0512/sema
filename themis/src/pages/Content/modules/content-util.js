@@ -216,13 +216,15 @@ export async function writeSemaToGithub(textarea) {
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
-      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`);
+      const commentDiv = document.querySelector(
+        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
+      );
       comment.githubMetadata.commentId = commentDiv?.id;
-      createSmartComment(comment);
     } 
 
-    const smartComment = await createSmartComment(comment);
+    createSmartComment(comment).then((smartComment) => {
     store.dispatch(addSmartComment(smartComment));
+    });
 
     if (
       textboxValue.includes('Sema Reaction') ||
