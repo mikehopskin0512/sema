@@ -150,9 +150,9 @@ export function writeSemaToGithub(textarea) {
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location =
-      onFilesTab 
-      ? 'files changed'
-      : 'conversation';
+      onFilesTab
+        ? 'files changed'
+        : 'conversation';
 
     if (location === 'conversation') {
       store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
@@ -418,6 +418,7 @@ export const getGithubMetadata = (document, textarea) => {
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
   const title = document.querySelector('span[data-snek-id="issue-title"]')?.innerText;
+  const clone_url = document.querySelector("#clone-help-git-url")?.value;
 
   const githubMetada = {
     url,
@@ -429,6 +430,7 @@ export const getGithubMetadata = (document, textarea) => {
     user: { id, login },
     requester,
     title,
+    clone_url
   };
 
   return githubMetada;

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import { createOrUpdate } from "../../repositories/repositoryService";
 const { Schema } = mongoose;
 
 const githubMetadataSchema = new Schema({
@@ -11,6 +11,7 @@ const githubMetadataSchema = new Schema({
   base: String,
   requester: String,
   commentId: String,
+  clone_url: String,
   user: { id: String, login: String },
   filename: { type: String, default: null },
   file_extension: { type: String, default: null },
@@ -29,5 +30,24 @@ const smartCommentSchema = new Schema({
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
   githubMetadata: githubMetadataSchema,
 }, { collection: 'smartComments', timestamps: true });
+
+smartCommentSchema.post('save', async function(doc, next) {
+  try {
+    const repository = {
+      externalId: doc.githubMetadata.repo_id, 
+      name: doc.githubMetadata.repo, 
+      language: "", 
+      description: "",
+      type: "github",
+      cloneUrl: doc.githubMetadata.clone_url, 
+      repositoryCreatedAt: "", 
+      repositoryUpdatedAt: ""
+    }
+    const newRepository = await createOrUpdate(repository);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
 
 module.exports = mongoose.model('SmartComment', smartCommentSchema);
