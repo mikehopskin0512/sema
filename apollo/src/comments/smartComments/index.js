@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { findByExternalId } from '../../repositories/repositoryService';
+import { get } from '../../repositories/repositoryService';
 import { create, getSmartComments } from './smartCommentService';
 
 const route = Router();
@@ -27,11 +27,12 @@ export default (app, passport) => {
   route.get('/:repo', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { repo } = req.params;
     try {
-      const repository = await findByExternalId(repo);
-      if (!repository) {
+      const repository = await get(repo);
+      if (!repository || repository?.statusCode === 404 ) {
         return res.status(404).send({ message: 'Repository does not exist.' });
       }
-      const smartComments = await getSmartComments({ repo });
+      const { externalId } = repository[0];
+      const smartComments = await getSmartComments({ repo: parseInt(externalId) });
       return res.status(201).send(smartComments);
     } catch (error) {
       logger(error);

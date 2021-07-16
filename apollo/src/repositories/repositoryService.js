@@ -63,18 +63,6 @@ export const get = async (_id) => {
   }
 };
 
-export const findByExternalId = async (externalId) => {
-  try {
-    const query = Repositories.findOne({ externalId });
-    const repository = await query.lean().exec();
-    return repository;
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
-  }
-};
-
 export const findByOrg = async (orgId) => {
   try {
     const query = Repositories.find({ orgId });
