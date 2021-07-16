@@ -263,7 +263,7 @@ const Header = () => {
                         round
                         textSizeRatio={2.5}
                       />
-                      <FontAwesomeIcon icon={faSortDown} size="lg" className="mt--8 ml-8"/>
+                      <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8"/>
                     </div>
                   </a>
                   {/* <button
