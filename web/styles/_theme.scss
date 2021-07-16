@@ -10,7 +10,6 @@ $neon-blue: #75F4F4;
 $lint-green: #A9DB5F;
 $pink: #E93B89;
 $purple: #2A113F;
-$deep-black: #000000;
 
 // Update Bulma global variables
 // Override colors
@@ -32,7 +31,8 @@ $custom-colors: (
     "white-gray": $white-gray,
     "gray-dark": $gray-dark,
     "fa-gray": #F2F2F2,
-    "deep-black": $deep-black,
+    "gray-9": #F9F9F9,
+    "deep-black": #000000,
     "sky-light": #F0F7FA,
 );
 
