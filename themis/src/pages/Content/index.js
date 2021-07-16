@@ -49,12 +49,12 @@ import {
 import highlightPhrases from './modules/highlightPhrases';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  store.dispatch(updateSemaUser({ ...request, isLoggedIn: true }));
+  store.dispatch(updateSemaUser({ ...request }));
 });
 
 const checkLoggedIn = async () => {
   chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
-    store.dispatch(updateSemaUser({ ...response, isLoggedIn: true }));
+    store.dispatch(updateSemaUser({ ...response }));
   });
 };
 
