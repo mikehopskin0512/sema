@@ -119,10 +119,7 @@ const Semabar = (props) => {
      */
     const dropdownStyle =
       dropPosition === DROP_POSITIONS.UP
-        ? {
-            left: offsetPos.left + width - modalWidth,
-            top: offsetPos.top - modalHeight,
-          }
+        ? { top: offsetPos.top - modalHeight }
         : { marginTop: '-3.5em' };
 
     return (
