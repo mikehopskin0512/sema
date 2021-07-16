@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { remove } from 'lodash';
 import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
-// import { repositoriesOperations } from '../../state/features/repositories';
+import { repositoriesOperations } from '../../state/features/repositories';
 
 import { repositories } from './data';
 
-// const { filterSemaRepositories } = repositoriesOperations;
+const { filterSemaRepositories } = repositoriesOperations;
 
 // UNCOMMENT API CALLS WHEN API IS FIXED
 
@@ -17,25 +17,27 @@ const Dashboard = () => {
     other: [],
   });
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
-    repositories: state.repositoriesState,
+    // repositories: state.repositoriesState,
   }));
-  // const { token } = auth;
+  const { token } = auth;
 
-  // const getUserRepos = (user) => {
-  //   const { identities } = user;
-  //   if (identities && identities.length) {
-  //     const githubUser = identities[0];
-  //     const externalIds = githubUser.repositories.map((repo) => repo.id);
-  //     dispatch(filterSemaRepositories(externalIds, token));
-  //   }
-  // };
+  console.log({ auth });
 
-  // useEffect(() => {
-  //   // getUserRepos(auth.user);
-  // }, [auth, getUserRepos]);
+  const getUserRepos = useCallback((user) => {
+    const { identities } = user;
+    if (identities && identities.length) {
+      const githubUser = identities[0];
+      const externalIds = githubUser?.repositories?.map((repo) => repo.id);
+      dispatch(filterSemaRepositories(externalIds, token));
+    }
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    getUserRepos(auth.user);
+  }, [auth, getUserRepos]);
 
   useEffect(() => {
     const { user: { identities } } = auth;
@@ -43,18 +45,19 @@ const Dashboard = () => {
       const githubUser = identities[0];
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
       const otherRepos = [...repositories];
+      console.log({ favoriteRepoIds, otherRepos });
       const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
       setRepos({
         favorites: favoriteRepos,
         other: otherRepos,
       });
     }
-  }, [auth]);
+  }, [auth, repositories]);
 
   const renderRepos = () => (
     <>
-      <RepoList type="FAVORITES" repos={repos.favorites} />
-      <RepoList type="OTHERS" repos={repos.other} />
+      <RepoList type="FAVORITES" repos={repos.favorites || []} />
+      <RepoList type="OTHERS" repos={repos.other || []} />
     </>
   );
 
