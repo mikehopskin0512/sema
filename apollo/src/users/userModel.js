@@ -15,7 +15,7 @@ const repositoryScheme = mongoose.Schema({
   name: String,
   fullName: String,
   githubUrl: String,
-  isFavorite: Boolean
+  isFavorite: { type: Boolean, default: false },
 }, { _id: false });
 
 const identitySchema = mongoose.Schema({

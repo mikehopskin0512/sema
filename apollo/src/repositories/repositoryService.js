@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Repositories from './repositoryModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -95,6 +96,17 @@ export const createOrUpdate = async (repository) => {
     const query = await Repositories.update({ externalId: repository.externalId }, repository, { upsert: true, setDefaultsOnInsert: true } );
     return true;
   } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByExternalId = async (externalIds) => {
+  try {
+    const repositories = await Repositories.find({ 'externalId' : { $in: externalIds } } );
+    return repositories;
+  } catch (err) { 
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
