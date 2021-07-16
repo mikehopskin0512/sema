@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification,
+  createMany, findByOrg, sendNotification, findByExternalId
 } from './repositoryService';
 
 const route = Router();
@@ -39,6 +39,19 @@ export default (app, passport) => {
       const repositories = await findByOrg(orgId);
       if (!repositories) { throw new errors.NotFound('No repositories found for this organization'); }
 
+      return res.status(201).send({
+        repositories,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/sema-repositories', async (req, res) => {
+    const { externalIds } = req.query;
+    try {
+      const repositories = await findByExternalId(JSON.parse(externalIds));
       return res.status(201).send({
         repositories,
       });

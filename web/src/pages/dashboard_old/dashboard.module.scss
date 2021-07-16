@@ -97,9 +97,14 @@
 
 .invite-mobile {
   border-bottom: 1px solid #AFADAA;
-
 }
 
 .invite-mobile:last-child {
   border-bottom: none;
+}
+
+.invite-email-mobile {
+  overflow: hidden;
+  white-space: nowrap; /* Don't forget this one */
+  text-overflow: ellipsis;
 }

@@ -150,9 +150,9 @@ export function writeSemaToGithub(textarea) {
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location =
-      onFilesTab 
-      ? 'files changed'
-      : 'conversation';
+      onFilesTab
+        ? 'files changed'
+        : 'conversation';
 
     if (location === 'conversation') {
       store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
@@ -417,6 +417,7 @@ export const getGithubMetadata = (document, textarea) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const clone_url = document.querySelector("#clone-help-git-url")?.value;
 
   const githubMetada = {
     url,
@@ -427,6 +428,7 @@ export const getGithubMetadata = (document, textarea) => {
     base,
     user: { id, login },
     requester,
+    clone_url
   };
 
   return githubMetada;
