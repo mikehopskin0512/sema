@@ -6,6 +6,8 @@ import Sidebar from '../../components/sidebar'
 import withLayout from '../../components/layout';
 import { repositoriesOperations } from '../../state/features/repositories';
 import styles from "./stats.module.scss";
+import NivoBarChart from '../../components/BarChart';
+import CircularPacking from '../../components/CircularPackingChart';
 
 
 const { fetchRepo, filterSemaRepositories } = repositoriesOperations;
@@ -18,7 +20,7 @@ const Stats = () => {
 
   }));
   const { token } = auth;
-  const [selectedRepo, setSelectedRepo] = useState({}); 
+  const [selectedRepo, setSelectedRepo] = useState({});
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -54,7 +56,7 @@ const Stats = () => {
 
   return (
     <>
-    <div style={{width: 400}}>
+      <div style={{ width: 400 }}>
         <Select onChange={(obj) => setSelectedRepo(obj)} options={formatOptions(repositories.data?.repositories)} className="pl-120 ml-20 mb-70" placeholder={'Select a repository'} />
       </div>
       <div className={clsx("columns px-120", styles["card-container"])}>
@@ -76,7 +78,18 @@ const Stats = () => {
         </div>
       </div>
       <Sidebar>
-        Test
+        <div class="columns">
+          <div className="column">
+            <div className={clsx("column mx-20", styles["card"],  styles['chart'])}>
+              <NivoBarChart data={[repositories?.data?.repository?.repoStats?.reactions]} />
+            </div>
+          </div>
+          <div className="column">
+            <div className={clsx("column mx-20", styles["card"], styles['chart'])}>
+                <CircularPacking data={repositories?.data?.repository?.repoStats?.tags} />
+            </div>
+          </div>
+        </div>
       </Sidebar>
     </>
   )
