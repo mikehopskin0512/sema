@@ -438,16 +438,26 @@ export const getGithubInlineMetadata = (id) => {
   const filename = document.querySelector(
     `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
-  const [, file_extension] = filename?.split('.') || [];
-  const line_numbers = [
-    ...new Set(
-      Array.from(
+
+  const splittedFilenameArray = filename?.split('.');
+  const splitLength = splittedFilenameArray.length;
+
+  // filenames can also be xyz.controller.js
+  const file_extension = splittedFilenameArray[splitLength - 1];
+
+  const allElements = Array.from(
         document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
-      )
-        .filter((e) => e.getAttribute('data-line-number'))
-        .map((e) => e.getAttribute('data-line-number'))
-    ),
-  ];
+  );
+
+  const allLineNos = allElements.reduce((acc, curr) => {
+    const value = curr.getAttribute('data-line-number');
+    if (value) {
+      acc[value] = true;
+    }
+    return acc;
+  }, {});
+
+  const line_numbers = Object.keys(allLineNos);
 
   const inlineMetada = { filename, file_extension, line_numbers };
 
