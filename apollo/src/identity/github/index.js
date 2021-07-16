@@ -87,10 +87,10 @@ export default (app) => {
 
         await updateUserRepositoryList(user, repositories, identity);
 
-        delete user.identities[0].repositories
+        const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
 
         // Auth Sema
-        await setRefreshToken(res, user, await createRefreshToken(user));
+        await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)

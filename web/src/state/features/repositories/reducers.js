@@ -91,6 +91,25 @@ const reducer = (state = initialState, action) => {
       // data: [],
       error: action.errors,
     };
+  case types.REQUEST_FILTER_SEMA_REPOS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FILTER_SEMA_REPOS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: action.repositories,
+      error: {},
+    };
+  case types.REQUEST_FILTER_SEMA_REPOS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      // data: [],
+      error: action.errors,
+    };
   default:
     return state;
   }
