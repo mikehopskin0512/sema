@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, getRepository, sendNotification, findByExternalIds
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId
 } from './repositoryService';
 
 const route = Router();
@@ -34,9 +34,8 @@ export default (app, passport) => {
 
   route.get('/search/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id: repoId } = req.params;
-    console.log('THIS', repoId)
     try {
-      const repository = await getRepository(repoId);
+      const repository = await findByExternalId(repoId);
       if (!repository) { throw new errors.NotFound('No repository found'); }
 
       return res.status(201).send({

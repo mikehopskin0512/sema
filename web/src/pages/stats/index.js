@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import clsx from 'clsx';
@@ -8,22 +8,27 @@ import { repositoriesOperations } from '../../state/features/repositories';
 import styles from "./stats.module.scss";
 
 
-const { fetchRepo, getUserRepositories } = repositoriesOperations;
+const { fetchRepo, filterSemaRepositories } = repositoriesOperations;
 
 const Stats = () => {
   const dispatch = useDispatch();
-
   const { auth, repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
     auth: state.authState,
 
   }));
   const { token } = auth;
+  const [selectedRepo, setSelectedRepo] = useState({}); 
 
   const getUserRepos = async (user) => {
     const { identities } = user;
     const githubUser = identities?.[0];
-    await dispatch(getUserRepositories(githubUser?.repositories, token));
+    const externalIds = githubUser.repositories.map((repository) => repository.id);
+    await dispatch(filterSemaRepositories(externalIds, token));
+  };
+
+  const getRepo = async (id) => {
+    await dispatch(fetchRepo(id, token));
   };
 
   useEffect(() => {
@@ -31,16 +36,17 @@ const Stats = () => {
   }, [auth]);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(fetchRepo('60ef2137075eb50855548b39', token));
-    })();
-  }, []);
+    if (selectedRepo.value) {
+      getRepo(selectedRepo.value);
+    }
+  }, [selectedRepo]);
+
   console.log(repositories);
 
   const formatOptions = (repositories) => {
     if (repositories) {
       return repositories.map((repository) => {
-        return { label: repository.name, value: repository.id }
+        return { label: repository.name, value: repository.externalId }
       });
     }
     return [];
