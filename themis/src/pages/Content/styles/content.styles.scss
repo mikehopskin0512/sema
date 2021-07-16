@@ -213,19 +213,14 @@
 }
 
 .reaction-selection-wrapper {
-  // background-color: white;
-  // border: 1px solid rgb(225, 228, 232);
   background-color: var(--color-sema-bg);
-  border: 1px solid var(--color-btn-border);
-  border-radius: 34px;
-  border-width: 1px;
-  border-style: solid;
-  border-image: initial;
 }
 
-.reaction-selection {
+button.sema-reaction-selection {
   border: unset;
   background: transparent;
+  height: auto;
+  padding-top: 6px;
 }
 
 .expandedEmojis {
@@ -348,14 +343,61 @@ h6 {
   height: 2.8em;
   padding-right: 1em;
 
-  .sema-button {
-    color: var(--color-title);
-    background-color: var(--color-sema-bg);
-    border-color: var(--color-btn-border);
+  .sema-dropdown-trigger .sema-button {
+    padding-right: 20px;
+
+    :after {
+      content: '';
+      position: absolute;
+      right: 4px;
+      top: 11px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      background: transparent;
+      border-left: 4px solid #000000;
+      border-bottom: 4px solid transparent;
+    }
   }
-  .reaction-selection {
+
+  .sema-button {
+    position: relative;
+    background: none;
+    border: 0;
+
+    &:active {
+      background: rgba(0, 129, 167, 0.05);
+    }
+  }
+  .sema-reaction-selection {
     border: unset;
     background: transparent;
+    font-size: 14px;
+  }
+
+  .sema-dropdown-item {
+    margin-bottom: 4px;
+    margin-top: 0;
+
+    &:hover {
+      background: rgba(0, 129, 167, 0.05);
+    }
+  }
+
+  .sema-dropdown-menu {
+    border: none;
+    padding: 0;
+    left: -8px;
+    top: -8px;
+  }
+
+  .sema-dropdown-content {
+    position: relative;
+    top: -4px;
+    border-radius: 10px;
+    padding-top: 12px;
+    overflow: hidden;
+    margin: 0;
   }
 }
 
@@ -448,7 +490,7 @@ h6 {
   background-color: #00779a;
   border-color: transparent !important;
   color: #fff !important;
-  box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
+  box-shadow: 4px 4px 0 rgb(229 42 145 / 10%);
 }
 
 .suggestion-header {
@@ -468,17 +510,17 @@ h6 {
 
 .sema-dropdown-menu.suggestion-modal {
   margin-top: 4px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .sema-dropdown-content {
   margin-top: 8px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .sema-dropdown-item {
   margin-top: 6px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .sema-is-form-bordered {

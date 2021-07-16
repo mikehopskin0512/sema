@@ -1,10 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import withLayout from '../../components/layout/adminLayout';
-import Table from '../../components/table';
-import Badge from '../../components/badge/badge';
 import { invitationsOperations } from '../../state/features/invitations';
-import { fullName } from '../../utils';
 import SearchInput from '../../components/admin/searchInput';
 import InviteForm from '../../components/inviteForm';
 import useDebounce from '../../hooks/useDebounce';
@@ -12,6 +9,7 @@ import Toaster from '../../components/toaster';
 import { alertOperations } from '../../state/features/alerts';
 import FilterTabs from '../../components/admin/filterTabs';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
+import InvitationsGrid from '../../components/invitationsGrid';
 
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
@@ -64,67 +62,13 @@ const InvitesPage = () => {
     }
   }, [showAlert, dispatch]);
 
-  const resentInvitation = async (email) => {
+  const resendInvitation = async (email) => {
     await dispatch(resendInvite(email, token));
   };
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'User',
-        accessor: 'recipient',
-        className: 'p-10',
-        Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center'>
-            { value }
-          </div>
-        ),
-      },
-      {
-        Header: () => (
-          <div className='is-flex'>
-            <div className='mr-2'>Status</div>
-          </div>
-        ),
-        accessor: 'isPending',
-        Cell: ({ cell: { value } }) => (
-          <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
-        ),
-      },
-      {
-        Header: 'Actions',
-        accessor: 'actions',
-        Cell: ({ cell: { value: el } }) => (
-          <div className='is-flex is-align-items-center py-10'>
-            {
-              el.isPending && (
-                <>
-                  <button className="button is-text outline-none has-no-border" onClick={() => resentInvitation(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text outline-none" onClick={() => dispatch(revokeInviteAndHydrateUser(el._id, user._id, token, el.recipient))}>Revoke</button>
-                </>
-              )
-            }
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
-
-  const dataSource = useMemo(() => {
-    return Array.isArray(invites) ? invites.map(item => ({
-      recipient: item.isPending
-        ? item.recipient
-        : (
-          <>
-            <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
-            {fullName(item.user)}
-          </>
-        ),
-      isPending: item.isPending,
-      actions: item,
-    })) : [];
-  }, [invites]);
+  const revokeInvitation = async (invitationId, recipient) => {
+    await dispatch(revokeInviteAndHydrateUser(invitationId, user._id, token, recipient));
+  };
 
   if (isFetching) {
     return (
@@ -133,7 +77,7 @@ const InvitesPage = () => {
   }
 
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <>
       <Helmet {...InvitesHelmet} />
       <h1 className='has-text-black has-text-weight-bold is-size-3'>Invites</h1>
       <p className='mb-15 is-size-6 text-gray-light'>Sema is better with friends. View your invites at a glance</p>
@@ -145,10 +89,10 @@ const InvitesPage = () => {
           <FilterTabs tabs={tabOptions} value={category} onChange={setCategory} />
           <SearchInput value={searchTerm} onChange={setSearchTerm} />
         </div>
-        <Table columns={columns} data={dataSource} />
+        <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
       </div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-    </div>
+    </>
   );
 };
 

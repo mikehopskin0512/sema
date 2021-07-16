@@ -71,3 +71,11 @@ Footer {
   border-top: 0.5rem solid $primary;
   width: 8.5rem;
 }
+.content-wrapper {
+  width: 100%;
+  margin-left: 200px;
+
+  &.close {
+    margin-left: 65px;
+  }
+}
