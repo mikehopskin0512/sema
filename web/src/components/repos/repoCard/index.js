@@ -76,13 +76,13 @@ const RepoCard = (props) => {
   const renderUsers = () => (
     <div className="is-flex">
       {(users.length > 4 ? users.slice(0, 3) : users.slice(0, 4)).map((item) => (
-        <figure className="image is-32x32 ml--8">
+        <figure className="image is-32x32 ml-neg8">
           <img src={item.imgUrl} alt="user" className={clsx('is-rounded', styles.avatar)} />
         </figure>
       ))}
       {users.length > 4 && (
         <div className={clsx(
-          'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml--8',
+          'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
           styles['user-count'],
         )}>
           <p className="is-size-8 has-text-weight-semibold">+{users.length - 3}</p>
