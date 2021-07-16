@@ -18,7 +18,7 @@ const ActivityItem = (props) => {
     avatarUrl,
   } = userId;
 
-  const { title, url, user: { login } } = githubMetadata;
+  const { title, url, user: { login = '' } } = githubMetadata;
 
   const [dateCreated] = useState(format(new Date(createdAt), 'dd MMM, yyyy'));
 

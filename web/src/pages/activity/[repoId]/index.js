@@ -29,6 +29,7 @@ const ActivityLogs = () => {
     to: [],
     reactions: [],
     tags: [],
+    search: '',
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
@@ -64,14 +65,32 @@ const ActivityLogs = () => {
       !isEmpty(filter.from) ||
       !isEmpty(filter.to) ||
       !isEmpty(filter.reactions) ||
-      !isEmpty(filter.tags)
+      !isEmpty(filter.tags) ||
+      !isEmpty(filter.search)
     ) {
       filtered = comments.smartComments.filter((item) => {
         const fromIndex = findIndex(filter.from, { value: item.userId._id });
         const toIndex = findIndex(filter.to, { value: item.githubMetadata.pull_number });
         const reactionIndex = findIndex(filter.reactions, { value: item.reaction });
         const tagsIndex = findIndex(filter.tags, (tag) => item.tags.includes(tag.value));
-        return fromIndex !== -1 || toIndex !== -1 || reactionIndex !== -1 || tagsIndex !== -1;
+        const searchBool = item.comment.toLowerCase().includes(filter.search.toLowerCase());
+        let filterBool = true;
+        if (!isEmpty(filter.from)) {
+          filterBool = filterBool && fromIndex !== -1;
+        }
+        if (!isEmpty(filter.to)) {
+          filterBool = filterBool && toIndex !== -1;
+        }
+        if (!isEmpty(filter.reactions)) {
+          filterBool = filterBool && reactionIndex !== -1;
+        }
+        if (!isEmpty(filter.tags)) {
+          filterBool = filterBool && tagsIndex !== -1;
+        }
+        if (!isEmpty(filter.search)) {
+          filterBool = filterBool && searchBool;
+        }
+        return filterBool;
       });
     }
     setFilteredComments(filtered);
@@ -90,7 +109,13 @@ const ActivityLogs = () => {
         <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
           <div className="field is-flex-grow-1 px-5 my-5">
             <p className="control has-icons-left">
-              <input className="input has-background-white" type="text" placeholder="Search" />
+              <input
+                className="input has-background-white"
+                type="text"
+                placeholder="Search"
+                onChange={(e) => onChangeFilter('search', e.target.value)}
+                value={filter.search}
+              />
               <span className="icon is-small is-left">
                 <FontAwesomeIcon icon={faSearch} />
               </span>
@@ -152,11 +177,15 @@ const ActivityLogs = () => {
             </div>
           </div>
         </div>
-        {filteredComments.map((item) => (
+        {filteredComments.length > 0 ? filteredComments.map((item) => (
           <div className="my-10">
             <ActivityItem {...item} />
           </div>
-        ))}
+        )) : (
+          <div className="my-10 p-20 has-background-white">
+            <p>No activity found!</p>
+          </div>
+        )}
       </Sidebar>
     </div>
   );
