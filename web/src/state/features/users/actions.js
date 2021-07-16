@@ -126,6 +126,7 @@ export const fetchUser = (id, token) => async (dispatch) => {
     const { data } = payload;
 
     dispatch(requestFetchUserSuccess(data));
+    return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

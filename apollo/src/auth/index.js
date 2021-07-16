@@ -57,10 +57,11 @@ export default (app, passport) => {
       if (!user) {
         throw new errors.NotFound('No user found');
       }
+      const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
 
-      await setRefreshToken(res, user, await createRefreshToken(user));
+      await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
-      return res.status(201).send({ jwtToken: await createAuthToken(user) });
+      return res.status(201).send({ jwtToken: await createAuthToken(tokenData) });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
