@@ -3,6 +3,8 @@ process.env.BABEL_ENV = 'production';
 process.env.NODE_ENV = 'production';
 process.env.ASSET_PATH = '/';
 
+const { exec } = require('child_process');
+
 var webpack = require('webpack'),
   config = require('../webpack.config');
 
@@ -10,6 +12,22 @@ delete config.chromeExtensionBoilerplate;
 
 config.mode = 'production';
 
-webpack(config, function (err) {
+const compiler = webpack(config, function (err) {
   if (err) throw err;
+});
+
+compiler.hooks.afterEmit.intercept({
+  call: (...args) => {
+    exec('npm run compile-scss', (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log('SCSS compiled');
+    });
+  },
 });
