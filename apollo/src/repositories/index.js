@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, getRepository, sendNotification,
+  createMany, findByOrg, getRepository, sendNotification, findByExternalIds
 } from './repositoryService';
 
 const route = Router();
@@ -64,5 +64,16 @@ export default (app, passport) => {
     }
   });
 
-  
+  route.get('/sema-repositories', async (req, res) => {
+    const { externalIds } = req.query;
+    try {
+      const repositories = await findByExternalIds(JSON.parse(externalIds));
+      return res.status(201).send({
+        repositories,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
 };

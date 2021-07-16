@@ -374,7 +374,6 @@ export const updateUserRepositoryList = async (user, repository, identity) => {
     });
 
     identity = Object.assign(identity, { repositories });
-    console.log(identity);
     await updateIdentity(user, identity);
   } catch (err) {
     const error = new errors.BadRequest(err);

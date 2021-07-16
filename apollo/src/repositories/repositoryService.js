@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Repositories from './repositoryModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -126,4 +127,15 @@ export const getRepository = async (_id) => {
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
+
+export const findByExternalIds = async (externalIds) => {
+  try {
+    const repositories = await Repositories.find({ 'externalId' : { $in: externalIds } } );
+    return repositories;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
