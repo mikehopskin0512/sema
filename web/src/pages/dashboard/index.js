@@ -7,11 +7,14 @@ import { repositoriesOperations } from '../../state/features/repositories';
 
 const { filterSemaRepositories } = repositoriesOperations;
 
+const NUM_PER_PAGE = 9;
+
 const Dashboard = () => {
   const [repos, setRepos] = useState({
     favorites: [],
     other: [],
   });
+  const [page, setPage] = useState(1);
 
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
@@ -48,10 +51,14 @@ const Dashboard = () => {
     }
   }, [auth, repositories]);
 
+  const viewMore = () => {
+    setPage(page + 1);
+  }
+
   const renderRepos = () => (
     <>
       <RepoList type="FAVORITES" repos={repos.favorites || []} />
-      <RepoList type="OTHERS" repos={repos.other || []} />
+      <RepoList type="OTHERS" repos={repos.other.slice(0, NUM_PER_PAGE * page) || []} />
     </>
   );
 
@@ -64,7 +71,9 @@ const Dashboard = () => {
         {renderRepos()}
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mb-80">
-        <button className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6" type="button">View More</button>
+        {repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length && (
+          <button onClick={viewMore} className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6" type="button">View More</button>
+        )}
         <p className="has-text-weight-semibold has-text-gray-dark mt-25">30 other repos with no smart comments yet</p>
       </div>
     </div>
