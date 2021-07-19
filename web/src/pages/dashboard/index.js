@@ -5,11 +5,7 @@ import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
 import { repositoriesOperations } from '../../state/features/repositories';
 
-import { repositories } from './data';
-
 const { filterSemaRepositories } = repositoriesOperations;
-
-// UNCOMMENT API CALLS WHEN API IS FIXED
 
 const Dashboard = () => {
   const [repos, setRepos] = useState({
@@ -18,13 +14,12 @@ const Dashboard = () => {
   });
 
   const dispatch = useDispatch();
-  const { auth } = useSelector((state) => ({
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
-    // repositories: state.repositoriesState,
+    repositories: state.repositoriesState,
   }));
   const { token } = auth;
-
-  console.log({ auth });
+  const { data } = repositories;
 
   const getUserRepos = useCallback((user) => {
     const { identities } = user;
@@ -44,8 +39,7 @@ const Dashboard = () => {
     if (identities && identities.length) {
       const githubUser = identities[0];
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
-      const otherRepos = [...repositories];
-      console.log({ favoriteRepoIds, otherRepos });
+      const otherRepos = [...data];
       const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
       setRepos({
         favorites: favoriteRepos,
