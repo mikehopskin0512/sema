@@ -16,7 +16,7 @@ const months = [
   'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-const Calendar = ({ dateRange, setDates }) => {
+const Calendar = ({ dateRange, setDates, selectedRange }) => {
   const getNextMonth = () => {
     const d = new Date();
     return new Date(d.setMonth(d.getMonth() + 1));
@@ -35,26 +35,15 @@ const Calendar = ({ dateRange, setDates }) => {
   });
 
   useEffect(() => {
-    setStartDate(dateRange.startDate);
-    setEndDate(dateRange.endDate);
-    setCurrentDate1({
-      month: getMonth(new Date(dateRange.startDate)),
-      year: getYear(new Date(dateRange.startDate)),
-    });
-    if (
-      !(getMonth(new Date(dateRange.endDate)) === getMonth(new Date(dateRange.startDate)) && getYear(new Date(dateRange.startDate)) === getYear(new Date(dateRange.endDate)))
-    ) {
-      setCurrentDate2({
-        month: getMonth(new Date()),
-        year: getYear(new Date()),
+    if (selectedRange !== 'custom') {
+      setStartDate(dateRange.startDate);
+      setEndDate(dateRange.endDate);
+      setCurrentDate1({
+        month: getMonth(new Date(dateRange.startDate)),
+        year: getYear(new Date(dateRange.startDate)),
       });
     }
-  }, [dateRange]);
-
-  useEffect(() => {
-    setDates({ startDate, endDate });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
+  }, [dateRange, selectedRange]);
 
   const handleChange = (date) => {
     if (selecting === 'start') {
@@ -72,6 +61,7 @@ const Calendar = ({ dateRange, setDates }) => {
       }
       setEndDate(date);
       setSelecting('start');
+      setDates({ startDate, endDate: date });
     }
   };
 
@@ -94,83 +84,45 @@ const Calendar = ({ dateRange, setDates }) => {
     return { month, year };
   };
 
-  const renderCustomHeader1 = ({
-    date,
-    decreaseMonth,
-    increaseMonth,
-  }) => {
-    const prevMonth = () => {
-      setCurrentDate1(switchMonth(currentDate1, 'dec'));
-      decreaseMonth();
-    };
+  const renderCustomHeader1 = (props) => (
+    <CustomHeader
+      {...props}
+      switchMonth={switchMonth}
+      currentDate={currentDate1}
+      setCurrentDate={(d) => setCurrentDate1(d)}
+      disabledPrev={false}
+      disabledNext={(
+        currentDate1.month + 1 === currentDate2.month &&
+        currentDate1.year === currentDate2.year
+      ) ||
+      (
+        currentDate1.year + 1 === currentDate2.year &&
+        currentDate2.month === 0 &&
+        currentDate1.month === 11
+      )}
+    />
+  );
 
-    const nextMonth = () => {
-      setCurrentDate1(switchMonth(currentDate1, 'inc'));
-      increaseMonth();
-    };
-    return (
-      <div className="has-background-white is-flex is-justify-content-space-between is-align-items-center">
-        <button className="button is-white" type="button" onClick={prevMonth}>
-          <FontAwesomeIcon icon={faChevronLeft} color="#19181A" size="xs" />
-        </button>
-        <div className="has-text-weight-semibold has-text-deep-black">{months[getMonth(date)]} {getYear(date)}</div>
-        <button
-          className="button is-white"
-          type="button"
-          onClick={nextMonth}
-          disabled={
-            currentDate1.month + 1 === currentDate2.month ||
-            (
-              currentDate1.year + 1 === currentDate2.year &&
-              currentDate2.month === 0 &&
-              currentDate1.month === 11
-            )
-          }
-        >
-          <FontAwesomeIcon icon={faChevronRight} color="#19181A" size="xs" />
-        </button>
-      </div>
-    );
-  };
-
-  const renderCustomHeader2 = ({
-    date,
-    decreaseMonth,
-    increaseMonth,
-  }) => {
-    const prevMonth = () => {
-      setCurrentDate2(switchMonth(currentDate2, 'dec'));
-      decreaseMonth();
-    };
-
-    const nextMonth = () => {
-      setCurrentDate2(switchMonth(currentDate2, 'inc'));
-      increaseMonth();
-    };
-    return (
-      <div className="has-background-white is-flex is-justify-content-space-between is-align-items-center">
-        <button
-          className="button is-white"
-          type="button"
-          onClick={prevMonth}
-          disabled={
-            currentDate2.month - 1 === currentDate1.month ||
-            (
-              currentDate1.year + 1 === currentDate2.year &&
-              currentDate2.month === 0 &&
-              currentDate1.month === 11
-            )
-          }
-        >
-          <FontAwesomeIcon icon={faChevronLeft} color="#19181A" size="xs" />
-        </button>
-        <div className="has-text-weight-semibold has-text-deep-black">{months[getMonth(date)]} {getYear(date)}</div>
-        <button className="button is-white" type="button" onClick={nextMonth}>
-          <FontAwesomeIcon icon={faChevronRight} color="#19181A" size="xs" />
-        </button>
-      </div>
-    );
-  };
+  const renderCustomHeader2 = (props) => (
+    <CustomHeader
+      {...props}
+      switchMonth={switchMonth}
+      currentDate={currentDate2}
+      setCurrentDate={(d) => setCurrentDate2(d)}
+      disabledPrev={
+        (
+          currentDate2.month - 1 === currentDate1.month &&
+          currentDate1.year === currentDate2.year
+        ) ||
+        (
+          currentDate1.year + 1 === currentDate2.year &&
+          currentDate2.month === 0 &&
+          currentDate1.month === 11
+        )
+      }
+      disabledNext={false}
+    />
+  );
 
   const calendarContainer = ({ children }) => (
     <div className="has-background-white">
@@ -207,7 +159,6 @@ const Calendar = ({ dateRange, setDates }) => {
           selected={currentDate2.month === getMonth(startDate) ? startDate : undefined}
           startDate={startDate}
           endDate={endDate}
-          openToDate={getNextMonth()}
           selectsRange
           inline />
       </div>
@@ -215,9 +166,69 @@ const Calendar = ({ dateRange, setDates }) => {
   );
 };
 
+const CustomHeader = ({
+  date,
+  changeYear,
+  changeMonth,
+  switchMonth,
+  currentDate,
+  disabledPrev,
+  setCurrentDate,
+  disabledNext,
+}) => {
+  useEffect(() => {
+    changeYear(currentDate.year);
+    changeMonth(currentDate.month);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const prevMonth = () => {
+    const { month, year } = switchMonth(currentDate, 'dec');
+    setCurrentDate({ month, year });
+    changeYear(year);
+    changeMonth(month);
+  };
+
+  const nextMonth = () => {
+    const { month, year } = switchMonth(currentDate, 'inc');
+    setCurrentDate({ month, year });
+    changeYear(year);
+    changeMonth(month);
+  };
+
+  return (
+    <div className="has-background-white is-flex is-justify-content-space-between is-align-items-center">
+      <button
+        className="button is-white"
+        type="button"
+        onClick={prevMonth}
+        disabled={disabledPrev}
+      >
+        <FontAwesomeIcon icon={faChevronLeft} color="#19181A" size="xs" />
+      </button>
+      <div className="has-text-weight-semibold has-text-deep-black">{months[getMonth(date)]} {getYear(date)}</div>
+      <button disabled={disabledNext} className="button is-white" type="button" onClick={nextMonth}>
+        <FontAwesomeIcon icon={faChevronRight} color="#19181A" size="xs" />
+      </button>
+    </div>
+  );
+};
+
+CustomHeader.propTypes = {
+  date: PropTypes.string.isRequired,
+  changeYear: PropTypes.func.isRequired,
+  changeMonth: PropTypes.func.isRequired,
+  switchMonth: PropTypes.func.isRequired,
+  currentDate: PropTypes.object.isRequired,
+  disabledPrev: PropTypes.bool.isRequired,
+  disabledNext: PropTypes.bool.isRequired,
+  setCurrentDate: PropTypes.func.isRequired,
+};
+
 Calendar.propTypes = {
   setDates: PropTypes.func.isRequired,
   dateRange: PropTypes.object.isRequired,
+  selectedRange: PropTypes.string.isRequired,
 };
 
 export default Calendar;

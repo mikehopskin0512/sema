@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import { format, subWeeks, subMonths } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faCalendarAlt, faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -11,34 +12,46 @@ import styles from './calendarPopover.module.scss';
 
 const DATE_RANGES = {
   last7Days: {
+    name: 'Last 7 Days',
     startDate: subWeeks(new Date(), 1),
     endDate: new Date(),
   },
   last14Days: {
+    name: 'Last 14 Days',
     startDate: subWeeks(new Date(), 2),
     endDate: new Date(),
   },
   last30Days: {
+    name: 'Last 30 Days',
     startDate: subMonths(new Date(), 1),
     endDate: new Date(),
   },
   last3Months: {
+    name: 'Last 3 Months',
     startDate: subMonths(new Date(), 3),
     endDate: new Date(),
   },
   last12Months: {
+    name: 'Last 12 Months',
     startDate: subMonths(new Date(), 12),
     endDate: new Date(),
   },
+  allTime: {
+    name: 'All Time',
+  },
+  custom: {
+    name: 'Custom',
+  },
 };
 
-const CalendarPopover = () => {
+const CalendarPopover = ({ setDate }) => {
   const [dateRange, setDateRange] = useState({
     startDate: null,
     endDate: null,
   });
   const [isActive, setIsActive] = useState(false);
   const [selectedRange, setSelectedRange] = useState('last7Days');
+  const [title, setTitle] = useState('Last 7 Days');
 
   useEffect(() => {
     if (selectedRange !== 'custom' && selectedRange !== 'allTime') {
@@ -56,10 +69,10 @@ const CalendarPopover = () => {
   };
 
   const setDates = () => {
-    alert('Set Dates!');
+    setTitle(DATE_RANGES[selectedRange].name);
+    setDate(dateRange);
+    setIsActive(false);
   };
-
-  // TODO: When a date range is selected, 2nd calendar change to end Date
 
   return (
     <div className={clsx('dropdown is-right', isActive ? 'is-active' : '')}>
@@ -68,7 +81,7 @@ const CalendarPopover = () => {
           <span className="icon">
             <FontAwesomeIcon icon={faCalendarAlt} />
           </span>
-          <span>Last 7 days</span>
+          <span>{title}</span>
           <span className="icon">
             <FontAwesomeIcon icon={faSortDown} className="mt-neg5" />
           </span>
@@ -173,7 +186,7 @@ const CalendarPopover = () => {
               </ul>
             </div>
             <div>
-              <Calendar setDates={selectDates} dateRange={dateRange} />
+              <Calendar setDates={selectDates} dateRange={dateRange} selectedRange={selectedRange} />
               <div className="is-flex is-justify-content-space-between is-align-items-center">
                 <div className="is-flex py-15 px-25 is-align-items-center">
                   <input
@@ -201,6 +214,10 @@ const CalendarPopover = () => {
       </div>
     </div>
   );
+};
+
+CalendarPopover.propTypes = {
+  setDate: PropTypes.func.isRequired,
 };
 
 export default CalendarPopover;
