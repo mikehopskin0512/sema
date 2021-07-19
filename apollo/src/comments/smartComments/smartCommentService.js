@@ -1,5 +1,7 @@
-import { subMonths } from 'date-fns';
-import { subWeeks } from 'date-fns';
+import {
+  subMonths, subWeeks, subDays, isAfter, format,
+} from 'date-fns';
+import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -7,7 +9,10 @@ import SmartComment from './smartCommentModel';
 import Reaction from '../reactionModel';
 import { fullName } from '../../shared/utils';
 
-export const create = async ({
+const { Types: { ObjectId } } = mongoose;
+const { Parser } = Json2CSV;
+
+const create = async ({
   commentId = null,
   comment = null,
   userId = null,
@@ -42,7 +47,7 @@ const update = async (
   smartComment,
 ) => {
   try {
-    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment)
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment);
     return updatedSmartComment;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -206,7 +211,6 @@ const exportSowMetrics = async (params) => {
     } : {},
   }));
 
-  const { Parser } = Json2CSV;
   const fields = [
     groupLabel,
     ...category === 'user' ? ['Email'] : [],
@@ -268,15 +272,14 @@ const getUserActivityChangeMetrics = async () => {
 
 const exportUserActivityChangeMetrics = async () => {
   const userActivities = await getUserActivityChangeMetrics();
-  const mappedData = userActivities.map((item, index) => ({
-    'User ID': item._id,
-    'Email': item.user.username,
+  const mappedData = userActivities.map((item) => ({
+    User: fullName(item.user),
+    Email: item.user.username,
     'Activity 2 weeks ago': item.activityTwoWeeksAgo,
     'Activity 1 week ago': item.activityOneWeekAgo,
   }));
 
-  const { Parser } = Json2CSV;
-  const fields = ['User ID', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
+  const fields = ['User', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
@@ -284,6 +287,59 @@ const exportUserActivityChangeMetrics = async () => {
   return csv;
 };
 
+const getGrowthRepositoryMetrics = async () => {
+  const metrics = [];
+
+  await Promise.all(Array(10).fill(0).map(async (_, index) => {
+    const date = subDays(new Date(), index);
+    const oneDaySmartCounts = await SmartComment.countDocuments({
+      $and: [
+        { createdAt: { $gt: subDays(date, 1) } },
+        { createdAt: { $lte: date } },
+      ],
+    });
+    const oneWeekSmartCounts = await SmartComment.countDocuments({
+      $and: [
+        { createdAt: { $gt: subWeeks(date, 1) } },
+        { createdAt: { $lte: date } },
+      ],
+    });
+    const oneMonthSmartCounts = await SmartComment.countDocuments({
+      $and: [
+        { createdAt: { $gt: subMonths(date, 1) } },
+        { createdAt: { $lte: date } },
+      ],
+    });
+
+    metrics.push({
+      date,
+      oneDaySmartCounts,
+      oneWeekSmartCounts,
+      oneMonthSmartCounts,
+    });
+  }));
+
+  metrics.sort((a, b) => (isAfter(a.date, b.date) ? -1 : 1));
+  return metrics;
+};
+
+const exportGrowthRepositoryMetrics = async () => {
+  const metrics = await getGrowthRepositoryMetrics();
+
+  const mappedData = metrics.map((item) => ({
+    Date: format(new Date(item.date), 'yyyy-MM-dd'),
+    'Day 1': item.oneDaySmartCounts,
+    'Day 7': item.oneWeekSmartCounts,
+    'Day 30': item.oneMonthSmartCounts,
+  }));
+
+  const fields = ['Date', 'Day 1', 'Day 7', 'Day 30'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+
+  return csv;
+};
 
 module.exports = {
   create,
@@ -291,5 +347,7 @@ module.exports = {
   getSowMetrics,
   exportSowMetrics,
   getUserActivityChangeMetrics,
-  exportUserActivityChangeMetrics
+  exportUserActivityChangeMetrics,
+  getGrowthRepositoryMetrics,
+  exportGrowthRepositoryMetrics,
 };

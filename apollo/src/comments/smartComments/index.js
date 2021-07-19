@@ -2,7 +2,16 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, exportUserActivityChangeMetrics, getUserActivityChangeMetrics, getSowMetrics, exportSowMetrics, update } from './smartCommentService';
+import {
+  create,
+  exportUserActivityChangeMetrics,
+  getUserActivityChangeMetrics,
+  getSowMetrics,
+  exportSowMetrics,
+  update,
+  getGrowthRepositoryMetrics,
+  exportGrowthRepositoryMetrics,
+} from './smartCommentService';
 
 const route = Router();
 
@@ -80,7 +89,32 @@ export default (app, passport) => {
         'Content-disposition': 'attachment;filename=share_of_wallet.csv',
       });
 
-      res.end(packer);
+      return res.end(packer);
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/growth-repository', async (req, res) => {
+    try {
+      const growthOfRepository = await getGrowthRepositoryMetrics();
+
+      return res.json({ growthOfRepository });
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/growth-repository/export', async (req, res) => {
+    try {
+      const packer = await exportGrowthRepositoryMetrics(req.body);
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=share_of_wallet.csv',
+      });
+
+      return res.end(packer);
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);

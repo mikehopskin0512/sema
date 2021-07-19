@@ -3,6 +3,7 @@ import * as types from './types';
 const initialState = {
   userActivityMetrics: [],
   smartCommentMetrics: [],
+  growthOfRepository: [],
   isFetching: false,
 };
 
@@ -44,6 +45,25 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       smartCommentMetrics: [],
+      error: action.errors,
+    };
+  case types.REQUEST_GROWTH_OF_REPOSITORY_METRICS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_GROWTH_OF_REPOSITORY_METRICS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      growthOfRepository: action.growthOfRepository,
+      error: {},
+    };
+  case types.REQUEST_GROWTH_OF_REPOSITORY_METRICS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      growthOfRepository: [],
       error: action.errors,
     };
   default:
