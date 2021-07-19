@@ -152,9 +152,11 @@ const SearchBar = (props) => {
       typeof event.which == 'number' ? event.which : event.keyCode;
     if (charCode === 13) {
       // enter is pressed
-      // show dropdown
       event.preventDefault();
-      getSemaSuggestions();
+      if (props.searchValue) {
+        // show dropdown
+        getSemaSuggestions();
+      }
     } else if (charCode === 27) {
       // esc is pressed
       // hide dropdown

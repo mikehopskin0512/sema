@@ -182,15 +182,12 @@
 
 .sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
-  // background-color: rgb(168, 168, 168);
   background-color: var(--color-scroll-bg);
   border-radius: 50px;
   border: 3px solid var(--color-scroll-border);
-  // border: 3px solid rgb(243, 243, 243);
 }
 
 .sema-add-tags {
-  // border-style: dashed;
   border: var(--color-add-tags-border);
   background-color: var(--color-add-tags-bg);
   color: var(--color-add-tags-font);
@@ -204,12 +201,13 @@
   color: var(--color-add-tags-font);
 }
 
-.tagsPositiveContainer > span {
-  cursor: pointer;
-}
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
 
-.tagsNegativeContainer > span {
-  cursor: pointer;
+  span {
+    cursor: pointer;
+  }
 }
 
 .reaction-selection-wrapper {
@@ -301,6 +299,7 @@ h6 {
 .sema-shadow-root {
   display: inline !important;
   position: relative !important;
+  pointer-events: none;
 }
 
 .sema-mirror {
@@ -317,6 +316,7 @@ h6 {
   white-space: pre-wrap !important;
   border-color: transparent !important;
   overflow: auto !important;
+  overflow-y: hidden !important;
 }
 
 .sema-highlighter {
@@ -450,18 +450,21 @@ h6 {
 }
 
 .tags-selection {
+  width: auto;
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
+  right: 0;
+  left: auto;
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
   }
-  width: 250px;
 }
 
 .sema-tag {
   background-color: var(--color-tag-bg) !important;
   color: var(--color-tag-font) !important;
+  width: fit-content;
 }
 
 .sema-tag.sema-is-dark {
