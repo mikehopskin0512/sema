@@ -29,6 +29,8 @@ import {
 } from './redux/action';
 import store from './redux/store';
 
+import phrases from '../modules/highlightPhrases';
+
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;
@@ -146,13 +148,11 @@ export async function writeSemaToGithub(textarea) {
     let comment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview =
+      textarea?.id && textarea.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
-    const location =
-      onFilesTab
-      ? 'files changed'
-      : 'conversation';
+    const location = onFilesTab ? 'files changed' : 'conversation';
 
     if (location === 'conversation') {
       store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
@@ -216,7 +216,9 @@ export async function writeSemaToGithub(textarea) {
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
-      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`);
+      const commentDiv = document.querySelector(
+        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
+      );
       comment.githubMetadata.commentId = commentDiv?.id;
       createSmartComment(comment);
     }
@@ -256,11 +258,11 @@ export function onDocumentClicked(event, store) {
 }
 
 function onReviewChangesClicked(event) {
-  const isReviewOption = event.target.name === 'pull_request_review[event]'
+  const isReviewOption = event.target.name === 'pull_request_review[event]';
   if (isReviewOption) {
     const formParent = $(event.target).parents('form')?.[0];
     const textarea = $(formParent).find('textarea')?.[0];
-    textarea.focus()
+    textarea.focus();
   }
 }
 
@@ -456,7 +458,7 @@ export const getGithubInlineMetadata = (id) => {
   const file_extension = splittedFilenameArray[splitLength - 1];
 
   const allElements = Array.from(
-        document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
+    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
   );
 
   const allLineNos = allElements.reduce((acc, curr) => {
@@ -571,4 +573,65 @@ export const setMutationObserverAtFilesChanged = () => {
   observer.observe(inLineFiles, { childList: true, subtree: true });
 
   return observer;
+};
+
+export const getHighlights = (text) => {
+  const alerts = [];
+  let id = 0;
+
+  const isOverlap = (existingTokenData, newTokenData) => {
+    const { startOffset, endOffset } = existingTokenData;
+    const { start, end } = newTokenData;
+    let isOverlap = false;
+    if (
+      (start >= startOffset && start <= endOffset) ||
+      (end >= startOffset && end <= endOffset)
+    ) {
+      isOverlap = true;
+    }
+    return isOverlap;
+  };
+
+  const insertIfValid = ({ start, end, phrase }) => {
+    let isOverlapping = false;
+    let overlappingAlert;
+    let overlappingIndex;
+    alerts.forEach((existingAlert, index) => {
+      const overlapping = isOverlap(existingAlert, { start, end, phrase });
+      if (overlapping) {
+        isOverlapping = true;
+        overlappingAlert = existingAlert;
+        overlappingIndex = index;
+      }
+    });
+
+    if (isOverlapping) {
+      if (phrase.length >= overlappingAlert.token.length) {
+        // replace
+        alerts[overlappingIndex] = {
+          id: overlappingAlert.id,
+          startOffset: start,
+          endOffset: end,
+          token: phrase,
+        };
+      }
+    } else {
+      id = ++id;
+      alerts.push({
+        id: id.toString(),
+        startOffset: start,
+        endOffset: end,
+        token: phrase,
+      });
+    }
+  };
+
+  phrases.forEach((phrase) => {
+    const matchIndexStart = text.indexOf(phrase);
+    if (matchIndexStart !== -1) {
+      const matchIndexEnd = matchIndexStart + phrase.length - 1;
+      insertIfValid({ start: matchIndexStart, end: matchIndexEnd, phrase });
+    }
+  });
+  return alerts;
 };
