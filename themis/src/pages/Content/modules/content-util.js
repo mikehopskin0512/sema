@@ -150,7 +150,7 @@ export async function writeSemaToGithub(textarea) {
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location =
-      onFilesTab 
+      onFilesTab
       ? 'files changed'
       : 'conversation';
 
@@ -219,7 +219,7 @@ export async function writeSemaToGithub(textarea) {
       const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`);
       comment.githubMetadata.commentId = commentDiv?.id;
       createSmartComment(comment);
-    } 
+    }
 
     const smartComment = await createSmartComment(comment);
     store.dispatch(addSmartComment(smartComment));
@@ -252,6 +252,16 @@ export async function writeSemaToGithub(textarea) {
 export function onDocumentClicked(event, store) {
   closeSemaOpenElements(event, store);
   onGithubSubmitClicked(event, store);
+  onReviewChangesClicked(event);
+}
+
+function onReviewChangesClicked(event) {
+  const isReviewOption = event.target.name === 'pull_request_review[event]'
+  if (isReviewOption) {
+    const formParent = $(event.target).parents('form')?.[0];
+    const textarea = $(formParent).find('textarea')?.[0];
+    textarea.focus()
+  }
 }
 
 function onGithubSubmitClicked(event, store) {
