@@ -9,7 +9,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/comments/smart`, route);
 
-  route.post('/', async (req, res) => {
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const smartComment = req.body;
     try {
       const newSmartComment = await create(smartComment);
@@ -23,7 +23,7 @@ export default (app, passport) => {
     }
   });
   
-  route.get('/', async (req, res) => {
+  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
 
     try {
