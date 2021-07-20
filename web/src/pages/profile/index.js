@@ -19,6 +19,9 @@ const Profile = () => {
     lastName,
     username,
     avatarUrl,
+    identities = [{
+      username: '',
+    }],
   } } = auth;
 
   const onClickRefresh = () => {
@@ -56,11 +59,11 @@ const Profile = () => {
               <div className="is-flex is-align-items-center">
                 <img src="/img/github.png" alt="github" className={clsx('mr-10', styles['social-icon'])} />
                 <p className="has-text-weight-bold is-size-6 has-text-deep-black mr-15">Github</p>
-                <p className="is-size-6 has-text-black">xandyreyes</p>
+                <p className="is-size-6 has-text-black">{identities[0].username}</p>
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
                 <FontAwesomeIcon icon={faSyncAlt} size="md" className="mr-5" color="#000000" />
-                Refresh
+                Refreshidentities
               </button>
             </div>
             <div>
