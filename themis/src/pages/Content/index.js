@@ -16,6 +16,7 @@ import {
   getSemaIds,
   writeSemaToGithub,
   getGithubMetadata,
+  getHighlights,
 } from './modules/content-util';
 
 import {
@@ -30,6 +31,7 @@ import {
   LIGHT,
   DARK,
   DARK_DIMMED,
+  EMOJIS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -44,9 +46,8 @@ import {
   updateTextareaState,
   updateSemaUser,
   addGithubMetada,
+  updateSelectedEmoji,
 } from './modules/redux/action';
-
-import highlightPhrases from './modules/highlightPhrases';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   store.dispatch(updateSemaUser({ ...request }));
@@ -65,12 +66,6 @@ let stateCheck = setInterval(() => {
     store.dispatch(addGithubMetada(getGithubMetadata(document)));
   }
 }, 100);
-
-const highlightWords = highlightPhrases.reduce((acc, curr) => {
-  const lowerCased = curr.toLowerCase();
-  acc[lowerCased] = true;
-  return acc;
-}, {});
 
 /**
  * Listening to click event for:
@@ -162,13 +157,12 @@ document.addEventListener(
           SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
           break;
       }
+
+      const githubTextareaId = $(activeElement).attr('id');
+      const { semabarContainerId, semaSearchContainerId } = getSemaIds(
+        githubTextareaId
+      );
       if (!semaElements[0]) {
-        const githubTextareaId = $(activeElement).attr('id');
-
-        const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          githubTextareaId
-        );
-
         $(activeElement).on(
           'input',
           debounce((event) => {
@@ -224,45 +218,21 @@ document.addEventListener(
 
         /** RENDER MIRROR*/
         // TODO: try to make it into React component for consistency and not to have to pass store
-        new Mirror(
-          activeElement,
-          (text) => {
-            const tokens = text.split(/([\s,.!?]+)/g);
-            const alerts = [];
-            let curPos = 0;
-            let id = 0;
-
-            tokens.forEach((t, i) => {
-              const lowerCaseToken = t.toLowerCase();
-              if (highlightWords[lowerCaseToken]) {
-                alerts.push({
-                  id: (id++).toString(),
-                  startOffset: curPos,
-                  endOffset: curPos + t.length,
-                  token: t,
-                });
-              }
-
-              curPos += t.length;
-            });
-
-            return alerts;
+        new Mirror(activeElement, getHighlights, {
+          onMouseoverHighlight: (payload) => {
+            // close existing
+            store.dispatch(toggleGlobalSearchModal());
+            store.dispatch(
+              toggleGlobalSearchModal({
+                ...payload,
+                isLoading: true,
+                openFor: $(activeElement).attr('id'),
+              })
+            );
           },
-          {
-            onMouseoverHighlight: (payload) => {
-              // close existing
-              store.dispatch(toggleGlobalSearchModal());
-              store.dispatch(
-                toggleGlobalSearchModal({
-                  ...payload,
-                  isLoading: true,
-                  openFor: $(activeElement).attr('id'),
-                })
-              );
-            },
-            store,
-          }
-        );
+          store,
+          semaBarContainerId: semabarContainerId,
+        });
 
         // Add Sema icon before Markdown icon
         const markdownIcon = $(activeElement)
@@ -271,6 +241,28 @@ document.addEventListener(
           .children('.tooltipped.tooltipped-nw');
 
         $(markdownIcon).after(SEMA_ICON);
+      }
+
+      //add default reaction for approval comment
+      const isReviewChanges =
+        semabarContainerId === 'semabar_pull_request_review_body';
+      if (isReviewChanges) {
+        const form = $(activeElement).parents('form')?.[0];
+        const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
+          .checked;
+        if (isApprovedOption) {
+          const looksGoodEmojiId = '607f0d1ed7f45b000ec2ed72';
+          const selectedReaction = EMOJIS.find(
+            (e) => e._id === looksGoodEmojiId
+          );
+          store.dispatch(
+            updateSelectedEmoji({
+              id: semabarContainerId,
+              selectedReaction,
+              isReactionDirty: true,
+            })
+          );
+        }
       }
     }
   },
