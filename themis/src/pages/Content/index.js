@@ -259,6 +259,7 @@ document.addEventListener(
               );
             },
             store,
+            semaBarContainerId: semabarContainerId
           }
         );
 
