@@ -77,7 +77,7 @@ const InvitesPage = () => {
   }
 
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <>
       <Helmet {...InvitesHelmet} />
       <h1 className='has-text-black has-text-weight-bold is-size-3'>Invites</h1>
       <p className='mb-15 is-size-6 text-gray-light'>Sema is better with friends. View your invites at a glance</p>
@@ -92,7 +92,7 @@ const InvitesPage = () => {
         <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
       </div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-    </div>
+    </>
   );
 };
 

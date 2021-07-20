@@ -31,6 +31,7 @@ import {
   LIGHT,
   DARK,
   DARK_DIMMED,
+  EMOJIS,
 } from './constants';
 
 import Semabar from './Semabar.jsx';
@@ -45,6 +46,7 @@ import {
   updateTextareaState,
   updateSemaUser,
   addGithubMetada,
+  updateSelectedEmoji,
 } from './modules/redux/action';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -155,13 +157,12 @@ document.addEventListener(
           SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
           break;
       }
+
+      const githubTextareaId = $(activeElement).attr('id');
+      const { semabarContainerId, semaSearchContainerId } = getSemaIds(
+        githubTextareaId
+      );
       if (!semaElements[0]) {
-        const githubTextareaId = $(activeElement).attr('id');
-
-        const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          githubTextareaId
-        );
-
         $(activeElement).on(
           'input',
           debounce((event) => {
@@ -230,6 +231,7 @@ document.addEventListener(
             );
           },
           store,
+          semaBarContainerId: semabarContainerId,
         });
 
         // Add Sema icon before Markdown icon
@@ -238,6 +240,28 @@ document.addEventListener(
         );
 
         $(markdownIcon).after(SEMA_ICON);
+      }
+
+      //add default reaction for approval comment
+      const isReviewChanges =
+        semabarContainerId === 'semabar_pull_request_review_body';
+      if (isReviewChanges) {
+        const form = $(activeElement).parents('form')?.[0];
+        const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
+          .checked;
+        if (isApprovedOption) {
+          const looksGoodEmojiId = '607f0d1ed7f45b000ec2ed72';
+          const selectedReaction = EMOJIS.find(
+            (e) => e._id === looksGoodEmojiId
+          );
+          store.dispatch(
+            updateSelectedEmoji({
+              id: semabarContainerId,
+              selectedReaction,
+              isReactionDirty: true,
+            })
+          );
+        }
       }
     }
   },
