@@ -117,7 +117,6 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     const { data: { jwtToken } } = res;
     const { user: { _id }, userVoiceToken } = jwtDecode(jwtToken) || {};
     const user = await dispatch(fetchUser(_id, jwtToken));
-
     const { isVerified } = user;
 
     // Send token to state and hydrate user
