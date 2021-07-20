@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import Table from '../table';
 import Badge from '../badge/badge';
 import {fullName} from '../../utils';
-import styles from '../../pages/dashboard/dashboard.module.scss';
+import styles from '../../pages/dashboard_old/dashboard.module.scss';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
   const columns = useMemo(

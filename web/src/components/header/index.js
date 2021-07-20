@@ -196,7 +196,7 @@ const Header = () => {
                 onClick={handleLogout}
                 tabIndex={0}
               >
-                Logout
+                Sign out
               </span>
             </div>
             <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
@@ -240,15 +240,24 @@ const Header = () => {
                         </a>
                       </Link>
                     )}
+                    <Link href="/profile">
+                      <a
+                        type="button"
+                        className="navbar-item"
+                        onClick={toggleUserMenu}
+                      >
+                        Profile
+                      </a>
+                    </Link>
                     <span
                       role="button"
-                      className="navbar-item"
+                      className="navbar-item has-text-red"
                       style={{ cursor: 'pointer' }}
                       onClick={handleLogout}
                       tabIndex={0}
                       aria-hidden="true"
                     >
-                      Logout
+                      Sign out
                     </span>
                   </div>
                   {/* User menu */}

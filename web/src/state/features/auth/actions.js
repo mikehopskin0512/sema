@@ -298,6 +298,7 @@ export const updateUser = (userItem = {}, token) => async (dispatch) => {
     const { data: { user = {} } } = payload;
 
     dispatch(requestUpdateUserSuccess(user));
+    return user;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
