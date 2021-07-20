@@ -123,6 +123,7 @@ class Mirror {
       padding,
       borderWidth,
       lineHeight,
+      scrollYHeight,
     } = this._elementMeasurement.getMirrorDimensions();
 
     if (!this._container) {
@@ -162,7 +163,9 @@ class Mirror {
       $(this._elementToMimic).before(this._container);
     }
 
-    this._mirrorContent.style.height = height;
+    this._mirror.style.height = height;
+
+    this._mirrorContent.style.height = scrollYHeight;
     this._mirrorContent.style.width = width;
     this._mirrorContent.style.padding = padding;
     this._mirrorContent.style.borderWidth = borderWidth;
@@ -170,8 +173,6 @@ class Mirror {
 
     this._highlighter.style.height = height;
     this._highlighter.style.width = width;
-    this._highlighter.style.padding = padding;
-    this._highlighter.style.borderWidth = borderWidth;
   }
 
   _addHandlers() {
@@ -212,6 +213,7 @@ class Mirror {
   }
 
   _onInput() {
+    this._render();
     const value = this._elementToMimic.value;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
@@ -237,20 +239,20 @@ class Mirror {
         offsetX <= left + width &&
         offsetY >= top &&
         offsetY <= top + height
-      )
+      );
     });
   }
 
   _onHover(event) {
     const { offsetX, offsetY } = event;
-    const isHighlight = this._getHighlightByPosition(offsetX, offsetY)
-    this._elementToMimic.style.cursor = isHighlight ? 'pointer' : 'text'
+    const isHighlight = this._getHighlightByPosition(offsetX, offsetY);
+    this._elementToMimic.style.cursor = isHighlight ? 'pointer' : 'text';
   }
 
   _onClick(event) {
     if (!this._isMouseDown) {
       const { offsetX, offsetY } = event;
-      const highlight = this._getHighlightByPosition(offsetX, offsetY)
+      const highlight = this._getHighlightByPosition(offsetX, offsetY);
 
       if (highlight) {
         const { top, left, height, id } = highlight;
@@ -283,7 +285,8 @@ class Mirror {
       target: { scrollTop },
     } = event;
 
-    this._mirrorContent.scrollTop = scrollTop;
+    // this._mirrorContent.scrollTop = scrollTop;
+    this._mirror.scrollTop = scrollTop;
     this._updateHighlights();
   }
 
@@ -353,10 +356,10 @@ class Mirror {
     $(this._elementToMimic).off('mousemove', this._hover);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
     //   this._renderInterval && this._renderInterval.destroy(),
-    this._container && this._container.remove();
-    this._elementToMimicResizeObserver &&
-    this._elementToMimicResizeObserver.disconnect();
-    this._elementMeasurement.clearCache();
+    this._container && this._container.remove(),
+      this._elementToMimicResizeObserver &&
+        this._elementToMimicResizeObserver.disconnect(),
+      this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }
