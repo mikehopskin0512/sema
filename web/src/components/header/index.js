@@ -189,6 +189,15 @@ const Header = () => {
                   </a>
                 </Link>
               )}
+              <Link href="/profile">
+                <a
+                  type="button"
+                  className="navbar-item has-text-weight-semibold is-uppercase"
+                  onClick={toggleUserMenu}
+                >
+                  Your Profile
+                </a>
+              </Link>
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"
@@ -246,7 +255,7 @@ const Header = () => {
                         className="navbar-item"
                         onClick={toggleUserMenu}
                       >
-                        Profile
+                        Your Profile
                       </a>
                     </Link>
                     <span
