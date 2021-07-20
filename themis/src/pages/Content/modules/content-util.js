@@ -223,8 +223,9 @@ export async function writeSemaToGithub(textarea) {
       createSmartComment(comment);
     }
 
-    const smartComment = await createSmartComment(comment);
-    store.dispatch(addSmartComment(smartComment));
+    createSmartComment(comment).then((smartComment) => {
+      store.dispatch(addSmartComment(smartComment));
+    });
 
     if (
       textboxValue.includes('Sema Reaction') ||
