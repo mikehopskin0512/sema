@@ -235,9 +235,10 @@ document.addEventListener(
         });
 
         // Add Sema icon before Markdown icon
-        const markdownIcon = document.getElementsByClassName(
-          'tooltipped tooltipped-nw'
-        );
+        const markdownIcon = $(activeElement)
+          .parent()
+          .siblings('label')
+          .children('.tooltipped.tooltipped-nw');
 
         $(markdownIcon).after(SEMA_ICON);
       }
