@@ -9,12 +9,14 @@ import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
+import SignOutModal from '../signOutModal';
 
 const Header = () => {
   const dispatch = useDispatch();
   const { deauthenticate } = authOperations;
   const [bgColor, setBgColor] = useState('');
   const [supportForm, setSupportForm] = useState(false);
+  const [signOutModal, setSignOutModal] = useState(false);
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -89,8 +91,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    toggleUserMenu();
-    dispatch(deauthenticate());
+    setSignOutModal(true);
   };
 
   const onClickOutside = () => {
@@ -100,9 +101,12 @@ const Header = () => {
   // Check for clicks outside of userMenu
   useOutsideClick(userMenu, onClickOutside);
 
+  const onCloseSignOutModal = () => setSignOutModal(false);
+
   return (
     <header className={bgColor}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
+      <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
         className="navbar is-transparent"
         role="navigation"
