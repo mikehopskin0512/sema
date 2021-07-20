@@ -114,6 +114,15 @@
       }, {
         "name": "USER_VOICE_SECRET_KEY",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/uservoice/secretkey"
+      }, {
+        "name": "MAILCHIMP_SERVER_PREFIX",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mailchimp/serverprefix"
+      }, {
+        "name": "MAILCHIMP_TOKEN",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mailchimp/token"
+      }, {
+        "name": "MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
       }],
     "portMappings": [
       {
