@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/tags');
 
+// Note this is mostly the same script as 1618495619497-add-tags.js
+// except we switched the up and down methods.
+// When you call this script migrate up -> it will remove the old tags
+
 const { mongooseUri } = require('../src/config');
 
 const { Types: { ObjectId } } = mongoose;
@@ -23,19 +27,19 @@ const options = {
   useNewUrlParser: true,
 };
 
-exports.up = async (next) => {
+exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     const colTags = mongoose.connection.db.collection('tags');
     const tags = await colTags.insertMany(tagsData);
-    fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
+//    fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
   } catch (error) {
     next(error);
   }
   mongoose.connection.close();
 };
 
-exports.down = async (next) => {
+exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     const colTags = mongoose.connection.db.collection('tags');
