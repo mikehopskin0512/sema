@@ -1,3 +1,9 @@
+
+// Note: This is a copy of 1618332104857-add-suggested-comments.js with down and up methods reversed. 
+// It basically rolls back the old suggested comments by removing all comments referenced in apollo/data/commentBank.json
+
+// when you call migrate up on this script it will remove old suggested comments
+
 const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/commentBank');

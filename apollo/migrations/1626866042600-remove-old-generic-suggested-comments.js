@@ -1,3 +1,9 @@
+
+// Note: This is a copy of 1619543471441-add-suggested-comments-generic.js with down and up methods reversed. 
+// It basically rolls back the old generic suggested comments by removing all comments referenced in apollo/data/commentBankGeneric.json
+
+// when you call migrate up on this script it will remove the old generic suggested comments set
+
 const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/commentBankGeneric');
