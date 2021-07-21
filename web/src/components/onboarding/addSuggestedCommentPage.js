@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { commentCollection } from './content';
 
 const AddSuggestedCommentPage = ({ page, nextPage, previousPage }) => {
-
   return (
     <>
       <div className="m-20">
         <p className="title is-4">Create your first custom suggested comment</p>
         <p className="subtitle is-6">Have a code review comment you frequently reuse? Add it here and it will be ready for your next review. <strong>Fill out at least one of these fields and we'll do the rest.</strong></p>
-        
         {
           page !== 1 && (
             <button
@@ -38,7 +37,13 @@ const AddSuggestedCommentPage = ({ page, nextPage, previousPage }) => {
         </button>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AddSuggestedCommentPage
+AddSuggestedCommentPage.propTypes = {
+  page: PropTypes.number.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
+};
+
+export default AddSuggestedCommentPage;

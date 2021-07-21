@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './onboarding.module.scss';
 import withLayout from '../../components/layout';
 import ContentPage from '../../components/onboarding/contentPage';
 import SmartBankCommentsPage from '../../components/onboarding/smartBankCommentsPage';
 import AddSuggestedCommentPage from '../../components/onboarding/addSuggestedCommentPage';
+import { commentCollection } from '../../components/onboarding/content';
 
 const Onboarding = () => {
+  const [collectionState, setCollection] = useState({});
   const [isModalActive, toggleModalActive] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -18,6 +20,12 @@ const Onboarding = () => {
     setPage(currentPage - 1);
   };
 
+  const toggleCollection = (field) => {
+    const newCollection = { ...collectionState };
+    newCollection[field] = !newCollection[field];
+    setCollection(newCollection);
+  };
+
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
     case 1:
@@ -25,13 +33,36 @@ const Onboarding = () => {
     case 3:
       return <ContentPage page={page} nextPage={() => nextPage(currentPage)} previousPage={() => previousPage(currentPage)} />;
     case 4:
-      return <SmartBankCommentsPage page={page} nextPage={() => nextPage(currentPage)} previousPage={() => previousPage(currentPage)} />;
+      return (
+        <SmartBankCommentsPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+          collectionState={collectionState}
+          toggleCollection={toggleCollection}
+        />
+      );
     case 5:
-      return <AddSuggestedCommentPage page={page} nextPage={() => nextPage(currentPage)} previousPage={() => previousPage(currentPage)} />;
+      return (
+        <AddSuggestedCommentPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+        />
+      );
     default:
       return '';
     }
   };
+
+  useEffect(() => {
+    const collection = {};
+    for (const [key, value] of Object.entries(commentCollection)) {
+      const field = value.field;
+      collection[field] = true;
+    }
+    setCollection(collection);
+  }, []);
 
   return (
     <div className={clsx(styles['onboarding-container'])}>
@@ -78,7 +109,7 @@ const Onboarding = () => {
       <div className={clsx('modal', isModalActive && 'is-active')}>
         <div className="modal-background"></div>
         <div className={clsx('modal-card', styles['modal'])}>
-          <header className="modal-card-head has-background-white">
+          {/* <header className="modal-card-head has-background-white">
             <p className="modal-card-title"></p>
             <button
               type="button"
@@ -86,7 +117,7 @@ const Onboarding = () => {
               aria-label="close"
               onClick={() => toggleModalActive(false)}
             />
-          </header>
+          </header> */}
           <section className={clsx('modal-card-body')}>
             {renderModalContent(page)}
           </section>

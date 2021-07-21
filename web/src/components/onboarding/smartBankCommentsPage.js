@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { commentCollection } from './content';
 
-const SmartBankCommentsPage = ({ page, nextPage, previousPage }) => {
-
+const SmartBankCommentsPage = ({
+  page, nextPage, previousPage, collectionState, toggleCollection,
+}) => {
   return (
     <>
       <div className="m-20">
         <p className="title is-4">Please choose some comment collections</p>
         <p className="subtitle is-6">You can now activate groups of comments that suit your style and work environment. Choose the ones you want, or add your own to My Comments.</p>
         {
-          commentCollection.map((collection) => {
+          commentCollection.map((collection, i) => {
             return (
               <>
                 <div className="columns">
@@ -20,25 +22,24 @@ const SmartBankCommentsPage = ({ page, nextPage, previousPage }) => {
                     <div className="subtitle is-6">{collection.subtitle}</div>
                   </div>
                   <div className="column">
-                    <input type="checkbox" size="large" />
+                    <div className="field">
+                      <input
+                        id={`switch-${i}`}
+                        type="checkbox"
+                        name={`switch-${i}`}
+                        className="switch is-rounded"
+                        checked={collectionState[collection.field]}
+                        onClick={() => toggleCollection(collection.field)}
+                      />
+                      <label htmlFor={`switch-${i}`} />
+                    </div>
                   </div>
                 </div>
-                <div className="is-divider my-20"/>
-                {/* <hr /> */}
+                <div className="is-divider my-20" />
               </>
-            )
+            );
           })
         }
-        {/* <div className="columns">
-          <div className="column is-11">
-            <div className="title is-6">Common Comments</div>
-            <div className="subtitle is-6">Frequently used statements and questions when conducting code reviews</div>
-          </div>
-          <div className="column">
-            <input type="checkbox" size="large" />
-          </div>
-        </div>
-        <hr /> */}
         {
           page !== 1 && (
             <button
@@ -57,16 +58,24 @@ const SmartBankCommentsPage = ({ page, nextPage, previousPage }) => {
         >
           Next
         </button>
-        <button
+        {/* <button
           type="button"
           className="button is-text has-text-primary my-20 is-pulled-right"
           onClick={nextPage}
         >
           Skip this step
-        </button>
+        </button> */}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SmartBankCommentsPage
+SmartBankCommentsPage.propTypes = {
+  page: PropTypes.number.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
+  collectionState: PropTypes.object.isRequired,
+  toggleCollection: PropTypes.func.isRequired,
+};
+
+export default SmartBankCommentsPage;

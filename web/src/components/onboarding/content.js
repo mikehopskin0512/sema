@@ -17,41 +17,41 @@ export const commentCollection = [
   {
     title: 'Common Comments',
     subtitle: 'Frequently used statements and questions when conducting code reviews',
-    field: '',
+    field: 'commonComments',
   },
   {
     title: 'Philosophies',
     subtitle: 'General statements about coding best practices.',
-    field: '',
+    field: 'philosophies',
   },
   {
     title: 'Security',
     subtitle: 'Mitre’s Common Weakness Enumeration (CWE): a community-developed list of software and hardware weakness types.',
-    field: '',
+    field: 'security',
   },
   {
     title: 'Functional review',
     subtitle: 'Formal categorization of where the code as written does or does not meet the provided product requirements',
-    field: '',
+    field: 'functionalReview',
   },
   {
     title: 'AirBnB Style Guide for JavaScript',
     subtitle: 'Frequently used statements and questions when conducting code reviews',
-    field: '',
+    field: 'airbnbJs',
   },
   {
     title: 'AirBnB Style Guide for React / JSX',
     subtitle: 'Add on style guide from AirBnB for React and JSX. ',
-    field: '',
+    field: 'airbnbReact',
   },
   {
     title: 'Famous quotes',
     subtitle: 'Quotes from famous people, real or pretend, that we think have something to say about code reviews ;0',
-    field: '',
+    field: 'famousQuotes',
   },
   {
     title: 'My Comments',
     subtitle: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
-    field: '',
+    field: 'personalComments',
   },
 ];
