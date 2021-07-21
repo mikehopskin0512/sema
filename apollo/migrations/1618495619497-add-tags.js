@@ -9,9 +9,9 @@ const { Types: { ObjectId } } = mongoose;
 const tagsIds = data.map(({ _id }) => new ObjectId(_id));
 
 const tagsData = data.map(({
-  _id, type, label, sentiment, isActive,
+  _id, label, sentiment, isActive,
 }) => {
-  const tag = { type, label, sentiment, isActive };
+  const tag = { label, sentiment, isActive };
   if (_id) {
     tag._id = new ObjectId(_id);
   }
