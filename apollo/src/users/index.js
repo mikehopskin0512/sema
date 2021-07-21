@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { version, orgDomain } from '../config';
+import { mailchimpAudiences } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import mailchimp from '../shared/apiMailchimp';
 import { checkAndSendEmail } from '../shared/utils';
 import {
   create, update, patch, findByUsername, findById,
@@ -75,6 +77,18 @@ export default (app, passport) => {
         // Redeem invite
         await redeemInvite(token, userId);
       }
+
+      // Add user to Mailchimp and suscribe it to Sema - Newsletters
+      const listId = mailchimpAudiences.registeredAndWaitlistUsers;
+      const { firstName, lastName } = newUser;
+      await mailchimp.create(`lists/${listId}/members`, {
+        list_id: listId,
+        merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
+        status: 'subscribed',
+        email_type: 'html',
+        email_address: username,
+        tags: ['Registered and Waitlist Users'],
+      });
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);

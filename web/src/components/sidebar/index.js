@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faListAlt, faChartPie, } from '@fortawesome/free-solid-svg-icons'
+import { faHome, faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
-import styles from "./sidebar.module.scss";
+import styles from './sidebar.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
@@ -16,27 +17,32 @@ const MenuItem = ({ pathName, icon, name }) => {
     <Link href={pathName}>
       <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-flex is-align-items-center mb-10 is-clickable')}>
         <FontAwesomeIcon
-          className='is-clickable'
+          className="is-clickable"
           icon={icon}
         />
         <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
       </a>
     </Link>
-  )
+  );
+};
+
+MenuItem.propTypes = {
+  pathName: PropTypes.string.isRequired,
+  icon: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 const Sidebar = ({ children }) => {
-
   const [menus] = useState([
     {
       name: 'Overview',
       pathName: '/overview',
-      icon: faHome
+      icon: faHome,
     },
     {
       name: 'Activity Logs',
       pathName: '/activity',
-      icon: faListAlt
+      icon: faListAlt,
     },
     {
       name: 'Code Stats',
@@ -49,10 +55,10 @@ const Sidebar = ({ children }) => {
     <div className={clsx(styles['layout-container'])}>
       <div className="columns">
         <div className="column is-one-fifth">
-          <div className={clsx(styles.sidebar, "ml-90 p-10 is-flex is-flex-direction-column is-relative is-fullheight")}>
+          <div className={clsx(styles.sidebar, 'ml-90 p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
             <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
               {
-                menus.map(item => (
+                menus.map((item) => (
                   <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
                 ))
               }
@@ -64,7 +70,11 @@ const Sidebar = ({ children }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+Sidebar.propTypes = {
+  children: PropTypes.element.isRequired,
+};
+
+export default Sidebar;

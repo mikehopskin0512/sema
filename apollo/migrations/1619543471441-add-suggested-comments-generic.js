@@ -47,32 +47,6 @@ const options = {
 };
 
 exports.up = async (next) => {
-  await mongoose.connect(mongooseUri, options);
-  try {
-    // migrate comment sources
-    const colSources = mongoose.connection.db.collection('commentSources');
-    const commentSources = await colSources.insertMany(commentSourceData);
-
-    // migrate suggested comments
-    const colComments = mongoose.connection.db.collection('suggestedComments');
-    const suggestedComments = await colComments.insertMany(suggestedCommentsData);
-
-    // produce output data
-    const outputData = suggestedComments.ops.map((suggestedComment) => {
-      const commentSource = commentSources.ops.find((item) => item._id === suggestedComment.source);
-      return {
-        _id: suggestedComment._id,
-        title: suggestedComment.title,
-        comment: suggestedComment.comment,
-        sourceName: commentSource.name,
-        sourceUrl: commentSource.url,
-      };
-    });
-    fs.writeFileSync(`${process.cwd()}/data/commentBankGeneric.json`, JSON.stringify(outputData));
-  } catch (error) {
-    next(error);
-  }
-  mongoose.connection.close();
 };
 
 exports.down = async (next) => {
