@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { format } from 'date-fns';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -111,7 +112,7 @@ export default (app, passport) => {
     try {
       const packer = await exportGrowthRepositoryMetrics(req.body);
       res.writeHead(200, {
-        'Content-disposition': 'attachment;filename=share_of_wallet.csv',
+        'Content-disposition': `attachment;filename=growth_repository_${format(new Date(), 'yyyyMMddhhmmss')}.csv`,
       });
 
       return res.end(packer);

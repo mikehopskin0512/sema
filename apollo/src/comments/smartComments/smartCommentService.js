@@ -7,6 +7,7 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reactionModel';
+import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 
 const { Types: { ObjectId } } = mongoose;
@@ -289,6 +290,7 @@ const exportUserActivityChangeMetrics = async () => {
 
 const getGrowthRepositoryMetrics = async () => {
   const metrics = [];
+  const usersCount = await User.countDocuments();
 
   await Promise.all(Array(10).fill(0).map(async (_, index) => {
     const date = subDays(new Date(), index);
@@ -313,9 +315,9 @@ const getGrowthRepositoryMetrics = async () => {
 
     metrics.push({
       date,
-      oneDaySmartCounts,
-      oneWeekSmartCounts,
-      oneMonthSmartCounts,
+      oneDaySmartCounts: (oneDaySmartCounts / usersCount).toFixed(2),
+      oneWeekSmartCounts: (oneWeekSmartCounts / usersCount).toFixed(2),
+      oneMonthSmartCounts: (oneMonthSmartCounts / usersCount).toFixed(2),
     });
   }));
 

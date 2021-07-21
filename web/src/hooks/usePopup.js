@@ -4,7 +4,8 @@ function usePopup(ref) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClickOutSideOfMenu = useCallback((e) => {
-    if (!e.path.includes(ref.current) && isOpen) {
+    const path = e.path || (e.composedPath && e.composedPath());
+    if (path && !path.includes(ref.current) && isOpen) {
       setIsOpen(false);
     }
   }, [ref, isOpen]);
