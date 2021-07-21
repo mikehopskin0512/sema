@@ -1,6 +1,12 @@
+
+// Note: This is a copy of 1618332104857-add-suggested-comments.js with down and up methods reversed. 
+// It basically rolls back the old suggested comments by removing all comments referenced in apollo/data/commentBank.json
+
+// when you call migrate up on this script it will remove old suggested comments
+
 const mongoose = require('mongoose');
 const fs = require('fs');
-const data = require('../data/commentBankGeneric');
+const data = require('../data/commentBank');
 
 const { mongooseUri } = require('../src/config');
 
@@ -46,14 +52,13 @@ const options = {
   useNewUrlParser: true,
 };
 
-exports.up = async (next) => {
+exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     // migrate comment sources
     const colSources = mongoose.connection.db.collection('commentSources');
     const commentSources = await colSources.insertMany(commentSourceData);
 
-    // migrate suggested comments
     const colComments = mongoose.connection.db.collection('suggestedComments');
     const suggestedComments = await colComments.insertMany(suggestedCommentsData);
 
@@ -68,14 +73,15 @@ exports.up = async (next) => {
         sourceUrl: commentSource.url,
       };
     });
-    fs.writeFileSync(`${process.cwd()}/data/commentBankGeneric.json`, JSON.stringify(outputData));
+
+    //fs.writeFileSync(`${process.cwd()}/data/commentBank.json`, JSON.stringify(outputData));
   } catch (error) {
     next(error);
   }
   mongoose.connection.close();
 };
 
-exports.down = async (next) => {
+exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     const colComments = mongoose.connection.db.collection('suggestedComments');
