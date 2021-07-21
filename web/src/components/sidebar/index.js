@@ -22,12 +22,17 @@ const MenuItem = ({ pathName, icon, name }) => {
         <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
       </a>
     </Link>
-  )
+  );
 };
 
-const Sidebar = ({ children }) => {
+MenuItem.propTypes = {
+  pathName: PropTypes.string.isRequired,
+  icon: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-  const [menus] = useState([
+const Sidebar = ({ open, setOpen }) => {
+  const menus = [
     {
       name: 'Overview',
       pathName: '/overview',

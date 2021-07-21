@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Sema | Smart Code Reviews",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "1.12.0",
+  "version": "1.14.1",
   "background": {
     "service_worker": "background.bundle.js"
   },
@@ -43,7 +43,12 @@
       ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
-      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
+      "css": [
+        "css/all.min.css",
+        "css/sema-custom.css",
+        "css/content.styles.css",
+        "css/overwritten-github.styles.css"
+      ]
     }
   ],
   "externally_connectable": {

@@ -3,7 +3,7 @@ import { autoIndex } from '../../config';
 
 const { Schema } = mongoose;
 
-const suggestedCommentSchema = new Schema({
+const engGuideSchema = new Schema({
   displayId: {
     type: String,
   },
@@ -11,7 +11,7 @@ const suggestedCommentSchema = new Schema({
     type: String,
     required: true,
   },
-  comment: {
+  body: {
     type: String,
     required: true,
   },
@@ -20,10 +20,7 @@ const suggestedCommentSchema = new Schema({
     required: true,
   },
   source: { name: String, url: String },
-  engGuides: [{
-    engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
-    name: String,
-  }],
+  collections: [{ type: Schema.Types.ObjectId, ref: 'Collection' }],
   tags: [{
     tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
     type: String,
@@ -35,10 +32,10 @@ const suggestedCommentSchema = new Schema({
   },
 }, {
   timestamps: true,
-  collection: 'suggestedComments',
+  collection: 'engGuides',
 });
 
-suggestedCommentSchema.set('autoIndex', autoIndex);
-suggestedCommentSchema.index({ title: 1 });
+engGuideSchema.set('autoIndex', autoIndex);
+engGuideSchema.index({ title: 1 });
 
-module.exports = mongoose.model('SuggestedComment', suggestedCommentSchema);
+module.exports = mongoose.model('EngGuide', engGuideSchema);

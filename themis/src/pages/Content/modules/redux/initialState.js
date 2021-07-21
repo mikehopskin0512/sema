@@ -9,6 +9,7 @@ const initialState = {
     base: null,
     user: { id: null, login: null },
     requester: null,
+    commentId: null,
     filename: null,
     file_extension: null,
     line_numbers: [],
