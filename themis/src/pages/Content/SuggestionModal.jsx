@@ -14,9 +14,9 @@ const truncate = (content) => {
 
 const getCommentTitleInterface = (title, sourceName) => {
   return (
-    <div>
-      <span className="suggestion-title">{title}</span>{' '}
-      <span className="suggestion-via">via {sourceName}</span>
+    <div className="suggestion-title">
+      <span className="suggestion-name">{title}</span>{' '}
+      <span className="suggestion-source">{sourceName}</span>
     </div>
   );
 };
