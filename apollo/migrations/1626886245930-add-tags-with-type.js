@@ -28,7 +28,7 @@ exports.up = async (next) => {
   try {
     const colTags = mongoose.connection.db.collection('tags');
     const tags = await colTags.insertMany(tagsData);
-    fs.writeFileSync(`${process.cwd()}/data/tagsWithTypes`, JSON.stringify(tags.ops));
+    fs.writeFileSync(`${process.cwd()}/data/tagsWithTypes.json`, JSON.stringify(tags.ops));
   } catch (error) {
     next(error);
   }
