@@ -1,0 +1,16 @@
+.card {
+  max-width: calc(100%/3);
+  min-height: 280px;
+  @media only screen and (max-width: 769px) {
+    max-width: 100% !important;
+    min-height: auto !important;
+  }
+}
+
+.stat {
+  width: calc(95%/4);
+  @media only screen and (max-width: 769px) {
+    width: calc(100%/2);
+    padding-right: 12px;
+  }
+}
