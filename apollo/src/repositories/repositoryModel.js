@@ -1,9 +1,25 @@
 import mongoose from 'mongoose';
+import { buildReactionsSchema } from '../comments/reaction/reactionService';
+import { getAllTagIds } from '../comments/tags/tagService';
 import { autoIndex } from '../config';
 
+const tagsScheme = new mongoose.Schema({
+  tagsId: [String],
+  smartCommentId: { type: mongoose.Schema.Types.ObjectId, ref: 'SmartComment', required: true },
+  createdAt: { type: Date, default: Date.now },
+}, {} );
+
+const reactionsScheme = new mongoose.Schema({
+  reactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Reaction', required: true },
+  smartCommentId: { type: mongoose.Schema.Types.ObjectId, ref: 'SmartComment', required: true },
+  createdAt: { type: Date, default: Date.now },
+}, {} );
+
 const repoStatsSchema = new mongoose.Schema({
-  commentCount: Number
-});
+  reactions: [reactionsScheme],
+  tags: [tagsScheme],
+  userIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+}, { _id: false });
 
 const repositoriesSchema = new mongoose.Schema({
   orgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },

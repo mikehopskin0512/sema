@@ -3,19 +3,20 @@ import Repositories from './repositoryModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
+import e from "express";
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
 export const create = async (repository) => {
   try {
-    const { 
+    const {
       id: externalId, name, language, description, type,
-      cloneUrl, 
+      cloneUrl,
       created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt
     } = repository;
-     const newRepository = new Repositories({
+    const newRepository = new Repositories({
       externalId,
-      name, 
+      name,
       description,
       type,
       language,
@@ -93,7 +94,7 @@ export const sendNotification = async (msg) => {
 export const createOrUpdate = async (repository) => {
   if (!repository.externalId) return false;
   try {
-    const query = await Repositories.update({ externalId: repository.externalId }, repository, { upsert: true, setDefaultsOnInsert: true } );
+    const query = await Repositories.update({ externalId: repository.externalId }, repository, { upsert: true, setDefaultsOnInsert: true });
     return true;
   } catch (err) {
     logger.error(err);
@@ -102,11 +103,155 @@ export const createOrUpdate = async (repository) => {
   }
 };
 
-export const findByExternalId = async (externalIds) => {
+export const findByExternalId = async (externalId) => {
+  // externalId is github id
   try {
-    const repositories = await Repositories.find({ 'externalId' : { $in: externalIds } } );
+    const query = Repositories.findOne({ externalId });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
+export const getRepository = async (_id) => {
+  try {
+    const query = Repositories.findOne({ _id });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByExternalIds = async (externalIds) => {
+  try {
+    const repositories = await Repositories.find({ 'externalId': { $in: externalIds } });
     return repositories;
-  } catch (err) { 
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
+  try {
+    let condition = {
+      "$and": []
+    };
+    if (dateFrom) {
+      const from = new Date(dateFrom);
+      condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
+    }
+    if (dateTo) {
+      const to = new Date(dateTo);
+      condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
+    }
+    const repositories = await Repositories.aggregate([
+      { $match: { externalId, } },
+      {
+        "$project": {
+          "externalId": 1, "name": 1,
+          "repoStats": {
+            "$map": {
+              "input": {
+                "$filter": {
+                  "input": "$repoStats.reactions",
+                  "as": "el",
+                  // "cond": { 
+                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ] 
+                  // },
+                  "cond": condition
+                }
+              },
+              "as": "item",
+              "in": "$$item"
+            }
+          }
+        }
+      },
+    ]);
+    let reactions = {
+
+    };
+    const repo = repositories[0];
+    repo.repoStats.map((stat) => {
+      const reaction = stat.reactionId
+      if (reactions?.[reaction]) {
+        reactions[reaction] += 1;
+      } else {
+        reactions[reaction] = 1
+      }
+    });
+    return reactions;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+
+export const aggregateTags = async (externalId, dateFrom, dateTo) => {
+  try {
+    let condition = {
+      "$and": []
+    };
+    if (dateFrom) {
+      const from = new Date(dateFrom);
+      condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
+    }
+    if (dateTo) {
+      const to = new Date(dateTo);
+      condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
+    }
+    const repositories = await Repositories.aggregate([
+      { $match: { externalId, } },
+      {
+        "$project": {
+          "externalId": 1, "name": 1,
+          "repoStats": {
+            "$map": {
+              "input": {
+                "$filter": {
+                  "input": "$repoStats.tags",
+                  "as": "el",
+                  // "cond": { 
+                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ] 
+                  // },
+                  "cond": condition
+                }
+              },
+              "as": "item",
+              "in": "$$item"
+            }
+          }
+        }
+      },
+    ]);
+    let tags = {
+
+    };
+    const repo = repositories[0];
+    repo.repoStats.map((stat) => {
+      const tagsId = stat.tagsId;
+      tagsId?.map((tag) => {
+        if (tags?.[tag]) {
+          tags[tag] += 1;
+        } else {
+          tags[tag] = 1
+        }
+      })
+    });
+    return tags;
+  } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
