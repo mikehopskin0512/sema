@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import * as types from './types';
-import { getRepos, postRepositories, postAnalysis } from './api';
+import { getRepos, postRepositories, postAnalysis, filterSemaRepos } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -44,6 +44,34 @@ const requestCreateAnalysisSuccess = (source) => ({
 
 const requestCreateAnalysisError = (errors) => ({
   type: types.REQUEST_CREATE_ANALYSIS_ERROR,
+  errors,
+});
+
+const requestFilterSemaRepos = () => ({
+  type: types.REQUEST_FILTER_SEMA_REPOS,
+});
+
+const requestFilterSemaReposSuccess = (repositories) => ({
+  type: types.REQUEST_FILTER_SEMA_REPOS_SUCCESS,
+  repositories,
+});
+
+const requestFilterSemaReposError = (errors) => ({
+  type: types.REQUEST_FILTER_SEMA_REPOS_ERROR,
+  errors,
+});
+
+export const requestGetUserRepos = () => ({
+  type: types.REQUEST_GET_USER_REPOS,
+});
+
+export const requestGetUserReposSuccess = (repositories) => ({
+  type: types.REQUEST_GET_USER_REPOS_SUCCESS,
+  repositories,
+});
+
+export const requestGetUserReposError = (errors) => ({
+  type: types.REQUEST_GET_USER_REPOS_ERROR,
   errors,
 });
 
@@ -96,5 +124,21 @@ export const addAnalysis = (repository, token) => async (dispatch) => {
 
     dispatch(requestCreateAnalysisError(errMessage));
     dispatch(triggerAlert(errMessage, 'error'));
+  }
+};
+
+export const filterSemaRepositories = (externalIds, token) => async (dispatch) => {
+  try {
+    dispatch(requestFilterSemaRepos());
+    const payload = await filterSemaRepos({ externalIds: JSON.stringify(externalIds) }, token);
+    const { data: { repositories = [] } } = payload;
+    dispatch(requestFilterSemaReposSuccess(repositories));
+    return repositories;
+  } catch (error) {
+    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFilterSemaReposError(errMessage));
   }
 };

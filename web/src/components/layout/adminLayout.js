@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../sidebar';
+import Sidebar from '../adminSidebar';
 
 const withLayout = (Page) => () => {
   const [open, setOpen] = useState(false);
