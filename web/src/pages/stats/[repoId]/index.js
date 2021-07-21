@@ -4,6 +4,7 @@ import styles from './stats.module.scss';
 import CalendarPopover from '../../../components/calendarPopover';
 import Sidebar from '../../../components/sidebar';
 import withLayout from '../../../components/layout';
+import Helmet, { RepoStatsHelmet } from '../../../components/utils/Helmet';
 
 const Stats = () => {
   const setDate = (dates) => {
@@ -16,6 +17,7 @@ const Stats = () => {
   return (
     <Sidebar>
       <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap px-10">
+        <Helmet {...RepoStatsHelmet} />
         <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
         <CalendarPopover setDate={setDate} />
       </div>
