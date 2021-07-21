@@ -1,86 +1,667 @@
 [
   {
+    "type": "smartComment",
     "label": "Readable",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce4b"
   },
   {
+    "type": "smartComment",
     "label": "Unreadable",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce4c"
   },
   {
+    "type": "smartComment",
     "label": "Secure",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce4d"
   },
   {
+    "type": "smartComment",
     "label": "Not secure",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce4e"
   },
   {
+    "type": "smartComment",
     "label": "Efficient",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce4f"
   },
   {
+    "type": "smartComment",
     "label": "Inefficient",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce50"
   },
   {
+    "type": "smartComment",
     "label": "Elegant",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce51"
   },
   {
+    "type": "smartComment",
     "label": "Inelegant",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce52"
   },
   {
+    "type": "smartComment",
     "label": "Reusable",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce53"
   },
   {
+    "type": "smartComment",
     "label": "Not reusable",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce54"
   },
   {
+    "type": "smartComment",
     "label": "Fault-tolerant",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce55"
   },
   {
+    "type": "smartComment",
     "label": "Brittle",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce56"
   },
   {
+    "type": "smartComment",
     "label": "Maintainable",
     "sentiment": "positive",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce57"
   },
   {
+    "type": "smartComment",
     "label": "Not maintainable",
     "sentiment": "negative",
     "isActive": true,
     "_id": "607f0594ab1bc1aecbe2ce58"
+  },
+  {
+    "type": "language",
+    "label": "All",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e20b01f4665089c1d971"
+  },
+  {
+    "type": "language",
+    "label": "React",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e20b01f4665089c1d972"
+  },
+  {
+    "type": "language",
+    "label": "JSX",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e20b01f4665089c1d973"
+  },
+  {
+    "type": "language",
+    "label": "JavaScript",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e20b01f4665089c1d974"
+  },
+  {
+    "type": "guide",
+    "label": "General coding guidance",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e75"
+  },
+  {
+    "type": "guide",
+    "label": "Style Guides",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e76"
+  },
+  {
+    "type": "guide",
+    "label": "Class vs React.createClass vs stateless",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e77"
+  },
+  {
+    "type": "guide",
+    "label": "Mixins",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e78"
+  },
+  {
+    "type": "guide",
+    "label": "Naming",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e79"
+  },
+  {
+    "type": "guide",
+    "label": "Props",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7a"
+  },
+  {
+    "type": "guide",
+    "label": "Declaration",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7b"
+  },
+  {
+    "type": "guide",
+    "label": "Alignment",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7c"
+  },
+  {
+    "type": "guide",
+    "label": "Syntax",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7d"
+  },
+  {
+    "type": "guide",
+    "label": "Quotes",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7e"
+  },
+  {
+    "type": "guide",
+    "label": "Spacing",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e7f"
+  },
+  {
+    "type": "guide",
+    "label": "Refs",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e80"
+  },
+  {
+    "type": "guide",
+    "label": "Parentheses",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e81"
+  },
+  {
+    "type": "guide",
+    "label": "Tags",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e82"
+  },
+  {
+    "type": "guide",
+    "label": "Methods",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e83"
+  },
+  {
+    "type": "guide",
+    "label": "Ordering",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e84"
+  },
+  {
+    "type": "guide",
+    "label": "IsMounted",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e85"
+  },
+  {
+    "type": "guide",
+    "label": "Style",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e86"
+  },
+  {
+    "type": "guide",
+    "label": "Practices",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e87"
+  },
+  {
+    "type": "guide",
+    "label": "Individual",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e88"
+  },
+  {
+    "type": "guide",
+    "label": "Medium",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e89"
+  },
+  {
+    "type": "guide",
+    "label": "Full-stack",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8a"
+  },
+  {
+    "type": "guide",
+    "label": "Process",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8b"
+  },
+  {
+    "type": "guide",
+    "label": "Strategic",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8c"
+  },
+  {
+    "type": "guide",
+    "label": "Team",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8d"
+  },
+  {
+    "type": "guide",
+    "label": "Logic",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8e"
+  },
+  {
+    "type": "guide",
+    "label": "Code",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e8f"
+  },
+  {
+    "type": "guide",
+    "label": "Solid",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e90"
+  },
+  {
+    "type": "guide",
+    "label": "Pratices",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e91"
+  },
+  {
+    "type": "guide",
+    "label": "Organization",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e92"
+  },
+  {
+    "type": "guide",
+    "label": "Documentation",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e93"
+  },
+  {
+    "type": "guide",
+    "label": "Bug / debugging",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e94"
+  },
+  {
+    "type": "guide",
+    "label": "Data",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e95"
+  },
+  {
+    "type": "guide",
+    "label": "Pde",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e96"
+  },
+  {
+    "type": "guide",
+    "label": "Leadership",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e97"
+  },
+  {
+    "type": "guide",
+    "label": "Epic",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e98"
+  },
+  {
+    "type": "guide",
+    "label": "Errors",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e99"
+  },
+  {
+    "type": "guide",
+    "label": "Logs",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9a"
+  },
+  {
+    "type": "guide",
+    "label": "Environment setup",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9b"
+  },
+  {
+    "type": "guide",
+    "label": "Language choice",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9c"
+  },
+  {
+    "type": "guide",
+    "label": "Productivity",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9d"
+  },
+  {
+    "type": "guide",
+    "label": "Architecture",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9e"
+  },
+  {
+    "type": "guide",
+    "label": "Kudos",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469e9f"
+  },
+  {
+    "type": "guide",
+    "label": "Teaching",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea0"
+  },
+  {
+    "type": "guide",
+    "label": "Resuability",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea1"
+  },
+  {
+    "type": "guide",
+    "label": "Different approach",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea2"
+  },
+  {
+    "type": "guide",
+    "label": "Question",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea3"
+  },
+  {
+    "type": "guide",
+    "label": "Types",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea4"
+  },
+  {
+    "type": "guide",
+    "label": "References",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea5"
+  },
+  {
+    "type": "guide",
+    "label": "Objects",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea6"
+  },
+  {
+    "type": "guide",
+    "label": "Arrays",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea7"
+  },
+  {
+    "type": "guide",
+    "label": "Destructuring",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea8"
+  },
+  {
+    "type": "guide",
+    "label": "Values",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ea9"
+  },
+  {
+    "type": "guide",
+    "label": "Strings",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eaa"
+  },
+  {
+    "type": "guide",
+    "label": "Lines",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eab"
+  },
+  {
+    "type": "guide",
+    "label": "Characters",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eac"
+  },
+  {
+    "type": "guide",
+    "label": "Functions",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ead"
+  },
+  {
+    "type": "guide",
+    "label": "Arrow Functions",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eae"
+  },
+  {
+    "type": "guide",
+    "label": "Classes",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eaf"
+  },
+  {
+    "type": "guide",
+    "label": "Constructors",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb0"
+  },
+  {
+    "type": "guide",
+    "label": "Functional reviews",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb1"
+  },
+  {
+    "type": "guide",
+    "label": "Modules",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb2"
+  },
+  {
+    "type": "guide",
+    "label": "Iterators",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb3"
+  },
+  {
+    "type": "guide",
+    "label": "Generators",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb4"
+  },
+  {
+    "type": "guide",
+    "label": "Properties",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb5"
+  },
+  {
+    "type": "guide",
+    "label": "Variables",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb6"
+  },
+  {
+    "type": "guide",
+    "label": "Hoisting",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb7"
+  },
+  {
+    "type": "guide",
+    "label": "Typeof",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb8"
+  },
+  {
+    "type": "guide",
+    "label": "Temporal Dead Zone (TDZ)",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eb9"
+  },
+  {
+    "type": "guide",
+    "label": "Comparison Operators & Equality",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469eba"
+  },
+  {
+    "type": "guide",
+    "label": "Blocks",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ebb"
+  },
+  {
+    "type": "guide",
+    "label": "Control Statements",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ebc"
+  },
+  {
+    "type": "guide",
+    "label": "Comments",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ebd"
+  },
+  {
+    "type": "guide",
+    "label": "Whitespace",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f5e2a3cd37055105469ebe"
+  },
+  {
+    "type": "guide",
+    "label": "Object-Oriented",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f75c8cdb1b8c13aa3572ec"
+  },
+  {
+    "type": "guide",
+    "label": "Bug free",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f75d0d927aa01461b657df"
+  },
+  {
+    "type": "guide",
+    "label": "Debugging",
+    "sentiment": null,
+    "isActive": true,
+    "_id": "60f75d4ca0fc63154e2bb0c0"
   }
 ]

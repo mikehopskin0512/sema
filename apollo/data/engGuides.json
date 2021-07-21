@@ -1,0 +1,1226 @@
+[
+  {
+    "displayId": "Document-001",
+    "title": "Brevity",
+    "body": "Introduction\n\nThe simplest / shortest code may not always be the best code. Coders need to consider readability and maintainability.\n\nRationale\n\nIn many situations it is helpful to make code a little bit less clever in order to make it easier to read. You can think of giving your code a stronger “narrative structure.” This also includes making function names clear to understand. You should also give the reader a general idea of what's happening in the code. \n\nSo if you're functioning and if your functions are not well named, then that's an impediment to readability. And if your functions are too clever and too dense so that a person can't immediately apprehend their purpose, that's also a barrier to readability. \n\nAnything that's a barrier to readability is a barrier to maintainability-- remember that we maintain software for a lot longer than we spend writing it the first time. \n\n\nOn the other hand, in some situations you should be as clever and dense and parsimonious with your programing as you possibly can.\n\nExamples\n\nConsiderations\n\nThe more likely it is that this code will be used for a long time, the less concise and the more explicit you should make the code-- to make maintainability easier.\n\nLinks to learn more",
+    "author": "gtruitt",
+    "source": { "name": "Sema Community", "url": "" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e75",
+        "type": "guide",
+        "label": "General coding guidance"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b293"
+  },
+  {
+    "displayId": "Document-002",
+    "title": "Style Guides",
+    "body": "Introduction\n\nStyle guides are more important the larger the team gets, to make it easier to work together effectively. Here's AirBnB's explanation of why they use their JavaScript style guide.\n\nRationale\n\nWhy does JavaScript need a style guide?\nLet's say you start an e-commerce site.\n\nYour first engineer is Picasso during his blue period. Your codebase quickly becomes filled with Picasso blue period javascript files. He paints you a javascript shopping cart without a problem. He's done it a million times before. But this is his best one. It's his masterpiece. And very blue.\n\nYour second engineer is Salvador Dali. He shows up on his first day with a camera, a single paintbrush, a silly mustache, and starts contributing some crazy surrealist javascript files.\n\nThis influences Picasso as they work together and Picasso starts switching things up and begins adding cubism files to the codebase. The codebase is so new that Picasso and Dali can continue adding new files at any time with no harm, because there is no maintenance when it's just two engineers adding new functionality. No one is stepping on each other's toes. There's enough paint for everyone.\n\nThen you hire Monet and he comes in and leaves his impression on everything.\n\nNow you have a blue period shopping cart, impressionist image lazy loading, surrealist photo slide show, and cubism style event tracking in /app/assets/javascripts. The javascripts folder becomes a museum.\n\nLet's jump to the future 4 years later. Lots of major functionality has already been built. Picasso has left the company to pursue a company built on a guernica style. Your business focus has shifted a bit and you need someone to extend Picasso's blue period shopping cart to support collaborative shopping (lots of people sharing the same cart in realtime).\n\nLuckily you just hired a rising star in javascript land that likes to spray paint things on the wall, his name is Banksy. So you tell Banksy, \"Hey for your first job we need you to modify our shopping cart so it supports collaboration. Timing is really important for the big relaunch, fortunately this should be really easy because we already have Picasso's shopping cart and it's already a masterpiece. Just reuse that.\"\n\nSo Banksy goes in and spray paints over your Picasso shopping cart and makes it collaborative and you have a big successful relaunch.\n\nA month later a bug report comes in about removing items from the shopping cart. Banksy is busy on another project, so you get Monet to go in and fix it.\n\nMonet doesn't know how to use spray paint cans. So his attempts to fix it are sloppy. He breaks the build. He switches back to the brush and just paints over it, but it took a lot longer than it should have because of the time to understand and adopt an unfamiliar style.\n\nWhen you have over 80 engineers contributing to one codebase, you quickly learn your usual ways of doing things don't work. So we try to turn everyone into Picasso. No matter where you jump in to the codebase, all the files are familiar and look like they were painted by you.\n\nThe most important thing, no matter what your preferred javascript style is, is to be consistent when working with a team or a large codebase that will have to be maintained in the future.\n\nThe style that works best for our team is our Picasso style since that's how it all started.\n\nWe open sourced our style guide so other teams could fork it and turn it into a Monet style guide or a Banksy style guide. Which is lots of fun to watch.\n\nAs an individual painter/engineer working on side projects and exploring all the wonderful things you can do with javascript, please throw conventions away and ignore everything anyone has ever said.\n\nIt's the only way the world will enjoy the next Picasso.\n\nExamples\n\nConsiderations \n\nA style guide is highly recommended for companies with at least 100 developers, or when in-house and third-party teams are working together on a project.\n\nLinks to learn more",
+    "author": "Harrison Shoff",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://airbnb.io/projects/javascript/"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e75",
+        "type": "guide",
+        "label": "General coding guidance"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b294"
+  },
+  {
+    "displayId": "Document-003",
+    "title": "Class vs React.createClass vs stateless",
+    "body": "Introduction\n\nIf you have internal state and/or refs, prefer class extends React.Component over React.createClass. eslint: react/prefer-es6-class react/prefer-stateless-function\n\nRationale\n\nExamples\n\n// bad\nconst Listing = React.createClass({\n  // ...\n  render() {\n    return <div>{this.state.hello}</div>;\n  }\n});\n\n// good\nclass Listing extends React.Component {\n  // ...\n  render() {\n    return <div>{this.state.hello}</div>;\n  }\n}\nAnd if you don’t have state or refs, prefer normal functions (not arrow functions) over classes:\n\n// bad\nclass Listing extends React.Component {\n  render() {\n    return <div>{this.props.hello}</div>;\n  }\n}\n\n// bad (relying on function name inference is discouraged)\nconst Listing = ({ hello }) => (\n  <div>{hello}</div>\n);\n\n// good\nfunction Listing({ hello }) {\n  return <div>{hello}</div>;\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e77",
+        "type": "guide",
+        "label": "Class vs React.createClass vs stateless"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b295"
+  },
+  {
+    "displayId": "Document-004",
+    "title": "Referencing naming",
+    "body": "Introduction\n\nUse PascalCase for React components and camelCase for their instances. eslint: react/jsx-pascal-case\n\nRationale\n\nExamples\n\n// bad\nimport reservationCard from './ReservationCard';\n\n// good\nimport ReservationCard from './ReservationCard';\n\n// bad\nconst ReservationItem = <ReservationCard />;\n\n// good\nconst reservationItem = <ReservationCard />;\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e79", "type": "guide", "label": "Naming" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b296"
+  },
+  {
+    "displayId": "Document-005",
+    "title": "Component naming",
+    "body": "Introduction\n\nUse the filename as the component name. For example, ReservationCard.jsx should have a reference name of ReservationCard. \n\nHowever, for root components of a directory, use index.jsx as the filename and use the directory name as the component name:\n\nRationale\n\nExamples\n\n// bad\nimport Footer from './Footer/Footer';\n\n// bad\nimport Footer from './Footer/index';\n\n// good\nimport Footer from './Footer';\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e79", "type": "guide", "label": "Naming" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b297"
+  },
+  {
+    "displayId": "Document-006",
+    "title": "Higher-Order Component Naming",
+    "body": "Introduction\n\nUse a composite of the higher-order component’s name and the passed-in component’s name as the displayName on the generated component. For example, the higher-order component withFoo(), when passed a component Bar should produce a component with a displayName of withFoo(Bar).\n\nRationale\n\nA component’s displayName may be used by developer tools or in error messages, and having a value that clearly expresses this relationship helps people understand what is happening.\n\nExamples\n\n// bad\nexport default function withFoo(WrappedComponent) {\n  return function WithFoo(props) {\n    return <WrappedComponent {...props} foo />;\n  }\n}\n\n// good\nexport default function withFoo(WrappedComponent) {\n  function WithFoo(props) {\n    return <WrappedComponent {...props} foo />;\n  }\n\n  const wrappedComponentName = WrappedComponent.displayName\n    || WrappedComponent.name\n    || 'Component';\n\n  WithFoo.displayName = `withFoo(${wrappedComponentName})`;\n  return WithFoo;\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e79", "type": "guide", "label": "Naming" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b298"
+  },
+  {
+    "displayId": "Document-007",
+    "title": "Props Naming",
+    "body": "Introduction\n\nProps Naming: Avoid using DOM component prop names for different purposes.\n\nRationale\n\nPeople expect props like style and className to mean one specific thing. Varying this API for a subset of your app makes the code less readable and less maintainable, and may cause bugs.\n\nExamples\n\n// bad\n<MyComponent style=\"fancy\" />\n\n// bad\n<MyComponent className=\"fancy\" />\n\n// good\n<MyComponent variant=\"fancy\" />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e79", "type": "guide", "label": "Naming" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b299"
+  },
+  {
+    "displayId": "Document-008",
+    "title": "Declaration",
+    "body": "Introduction\n\nDo not use displayName for naming components. Instead, name the component by reference.\n\nRationale\n\nExamples\n\n// bad\nexport default React.createClass({\n  displayName: 'ReservationCard',\n  // stuff goes here\n});\n\n// good\nexport default class ReservationCard extends React.Component {\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e7b",
+        "type": "guide",
+        "label": "Declaration"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29a"
+  },
+  {
+    "displayId": "Document-009",
+    "title": "Alignment",
+    "body": "Introduction\n\nFollow these alignment styles for JSX syntax. eslint: react/jsx-closing-bracket-location react/jsx-closing-tag-location\n\nRationale\n\nExamples\n\n// bad\n<Foo superLongParam=\"bar\"\n     anotherSuperLongParam=\"baz\" />\n\n// good\n<Foo\n  superLongParam=\"bar\"\n  anotherSuperLongParam=\"baz\"\n/>\n\n// if props fit in one line then keep it on the same line\n<Foo bar=\"bar\" />\n\n// children get indented normally\n<Foo\n  superLongParam=\"bar\"\n  anotherSuperLongParam=\"baz\"\n>\n  <Quux />\n</Foo>\n\n// bad\n{showButton &&\n  <Button />\n}\n\n// bad\n{\n  showButton &&\n    <Button />\n}\n\n// good\n{showButton && (\n  <Button />\n)}\n\n// good\n{showButton && <Button />}\n\n// good\n{someReallyLongConditional\n  && anotherLongConditional\n  && (\n    <Foo\n      superLongParam=\"bar\"\n      anotherSuperLongParam=\"baz\"\n    />\n  )\n}\n\n// good\n{someConditional ? (\n  <Foo />\n) : (\n  <Foo\n    superLongParam=\"bar\"\n    anotherSuperLongParam=\"baz\"\n  />\n)}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e7c",
+        "type": "guide",
+        "label": "Alignment"
+      },
+      { "tag": "60f5e2a3cd37055105469e7d", "type": "guide", "label": "Syntax" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29b"
+  },
+  {
+    "displayId": "Document-010",
+    "title": "Quotes",
+    "body": "Introduction\n\nAlways use double quotes (\") for JSX attributes, but single quotes (') for all other JS. eslint: jsx-quotes\n\nRationale\n\nRegular HTML attributes also typically use double quotes instead of single, so JSX attributes mirror this convention.\n\nExamples\n\n// bad\n<Foo bar='bar' />\n\n// good\n<Foo bar=\"bar\" />\n\n// bad\n<Foo style={{ left: \"20px\" }} />\n\n// good\n<Foo style={{ left: '20px' }} />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7e", "type": "guide", "label": "Quotes" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29c"
+  },
+  {
+    "displayId": "Document-011",
+    "title": "Spacing",
+    "body": "Introduction\n\nAlways include a single space in your self-closing tag. eslint: no-multi-spaces, react/jsx-tag-spacing\n\nRationale\n\nExamples\n\n// bad\n<Foo/>\n\n// very bad\n<Foo                 />\n\n// bad\n<Foo\n />\n\n// good\n<Foo />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7f", "type": "guide", "label": "Spacing" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29d"
+  },
+  {
+    "displayId": "Document-012",
+    "title": "Spacing for self-closing tag",
+    "body": "Introduction\n\nDo not pad JSX curly braces with spaces. eslint: react/jsx-curly-spacing\n\nRationale\n\nExamples\n\n// bad\n<Foo bar={ baz } />\n\n// good\n<Foo bar={baz} />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7f", "type": "guide", "label": "Spacing" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29e"
+  },
+  {
+    "displayId": "Document-013",
+    "title": "camelCase for prop names",
+    "body": "Introduction\n\nAlways use camelCase for prop names, or PascalCase if the prop value is a React component.\n\nRationale\n\nExamples\n\n// bad\n<Foo\n  UserName=\"hello\"\n  phone_number={12345678}\n/>\n\n// good\n<Foo\n  userName=\"hello\"\n  phoneNumber={12345678}\n  Component={SomeComponent}\n/>\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b29f"
+  },
+  {
+    "displayId": "Document-014",
+    "title": "Omit value of prop when explicitly true",
+    "body": "Introduction\n\nOmit the value of the prop when it is explicitly true. eslint: react/jsx-boolean-value\n\nRationale\n\nExamples\n\n// bad\n<Foo\n  hidden={true}\n/>\n\n// good\n<Foo\n  hidden\n/>\n\n// good\n<Foo hidden />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a0"
+  },
+  {
+    "displayId": "Document-015",
+    "title": "Alt prop on <img> tags",
+    "body": "Introduction\n\nAlways include an alt prop on <img> tags. If the image is presentational, alt can be an empty string or the <img> must have role=\"presentation\". eslint: jsx-a11y/alt-text\n\nRationale\n\nExamples\n\n// bad\n<img src=\"hello.jpg\" />\n\n// good\n<img src=\"hello.jpg\" alt=\"Me waving hello\" />\n\n// good\n<img src=\"hello.jpg\" alt=\"\" />\n\n// good\n<img src=\"hello.jpg\" role=\"presentation\" />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a1"
+  },
+  {
+    "displayId": "Document-016",
+    "title": "Avoid unecessary words in <img> alt props",
+    "body": "Introduction\n\nDo not use words like \"image\", \"photo\", or \"picture\" in <img> alt props. eslint: jsx-a11y/img-redundant-alt\n\nRationale\n\nScreenreaders already announce img elements as images, so there is no need to include this information in the alt text.\n\nExamples\n\n// bad\n<img src=\"hello.jpg\" alt=\"Picture of me waving hello\" />\n\n// good\n<img src=\"hello.jpg\" alt=\"Me waving hello\" />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a2"
+  },
+  {
+    "displayId": "Document-017",
+    "title": "Use only valid, non-abstract ARIA roles",
+    "body": "Introduction\n\nUse only valid, non-abstract ARIA roles. eslint: jsx-a11y/aria-role\n\nRationale\n\nExamples\n\n// bad - not an ARIA role\n<div role=\"datepicker\" />\n\n// bad - abstract ARIA role\n<div role=\"range\" />\n\n// good\n<div role=\"button\" />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a3"
+  },
+  {
+    "displayId": "Document-018",
+    "title": "Do not use accessKey on elements",
+    "body": "Introduction\n\nDo not use accessKey on elements. eslint: jsx-a11y/no-access-key\n\nRationale\n\nInconsistencies between keyboard shortcuts and keyboard commands used by people using screenreaders and keyboards complicate accessibility.\n\nExamples\n\n// bad\n<div accessKey=\"h\" />\n\n// good\n<div />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a4"
+  },
+  {
+    "displayId": "Document-019",
+    "title": "Avoid using an array index as key prop",
+    "body": "Introduction\n\nAvoid using an array index as key prop, prefer a stable ID. eslint: react/no-array-index-key\n\nRationale\n\nNot using a stable ID is an anti-pattern because it can negatively impact performance and cause issues with component state.\n\nExamples\n\n// bad\n{todos.map((todo, index) =>\n  <Todo\n    {...todo}\n    key={index}\n  />\n)}\n\n// good\n{todos.map(todo => (\n  <Todo\n    {...todo}\n    key={todo.id}\n  />\n))}\n\nConsiderations\n\nWe don’t recommend using indexes for keys if the order of items may change.\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a5"
+  },
+  {
+    "displayId": "Document-020",
+    "title": "define explicit defaultProps",
+    "body": "Introduction\n\nAlways define explicit defaultProps for all non-required props.\n\nRationale\n\npropTypes are a form of documentation, and providing defaultProps means the reader of your code doesn’t have to assume as much. In addition, it can mean that your code can omit certain type checks.\n\nExamples\n\n// bad\nfunction SFC({ foo, bar, children }) {\n  return <div>{foo}{bar}{children}</div>;\n}\nSFC.propTypes = {\n  foo: PropTypes.number.isRequired,\n  bar: PropTypes.string,\n  children: PropTypes.node,\n};\n\n// good\nfunction SFC({ foo, bar, children }) {\n  return <div>{foo}{bar}{children}</div>;\n}\nSFC.propTypes = {\n  foo: PropTypes.number.isRequired,\n  bar: PropTypes.string,\n  children: PropTypes.node,\n};\nSFC.defaultProps = {\n  bar: '',\n  children: null,\n};\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a6"
+  },
+  {
+    "displayId": "Document-021",
+    "title": "Spread props",
+    "body": "Introduction\n\nUse spread props sparingly.\n\nRationale\n\nOtherwise you’re more likely to pass unnecessary props down to components. \n\nAnd for React v15.6.1 and older, you could pass invalid HTML attributes to the DOM.\n\nExamples\n\nConsiderations\n\nException 1: HOCs that proxy down props and hoist propTypes\n\nfunction HOC(WrappedComponent) {\n  return class Proxy extends React.Component {\n    Proxy.propTypes = {\n      text: PropTypes.string,\n      isLoading: PropTypes.bool\n    };\n\n    render() {\n      return <WrappedComponent {...this.props} />\n    }\n  }\n}\n\nException 2: Spreading objects with known, explicit props. This can be particularly useful when testing React components with Mocha’s beforeEach construct.\n\nexport default function Foo {\n  const props = {\n    text: '',\n    isPublished: false\n  }\n\n  return (<div {...props} />);\n}\n\nNotes for use: Filter out unnecessary props when possible. Also, use prop-types-exact to help prevent bugs.\n\n// bad\nrender() {\n  const { irrelevantProp, ...relevantProps } = this.props;\n  return <WrappedComponent {...this.props} />\n}\n\n// good\nrender() {\n  const { irrelevantProp, ...relevantProps } = this.props;\n  return <WrappedComponent {...relevantProps} />\n}\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e7a", "type": "guide", "label": "Props" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a7"
+  },
+  {
+    "displayId": "Document-022",
+    "title": "Refs",
+    "body": "Introduction\n\nAlways use ref callbacks. eslint: react/no-string-refs\n\nRationale\n\nExamples\n\n// bad\n<Foo\n  ref=\"myRef\"\n/>\n\n// good\n<Foo\n  ref={(ref) => { this.myRef = ref; }}\n/>\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e80", "type": "guide", "label": "Refs" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a8"
+  },
+  {
+    "displayId": "Document-023",
+    "title": "Parentheses",
+    "body": "Introduction\n\nWrap JSX tags in parentheses when they span more than one line. eslint: react/jsx-wrap-multilines\n\nRationale\n\nExamples\n\n// bad\nrender() {\n  return <MyComponent variant=\"long body\" foo=\"bar\">\n           <MyChild />\n         </MyComponent>;\n}\n\n// good\nrender() {\n  return (\n    <MyComponent variant=\"long body\" foo=\"bar\">\n      <MyChild />\n    </MyComponent>\n  );\n}\n\n// good, when single line\nrender() {\n  const body = <div>hello</div>;\n  return <MyComponent>{body}</MyComponent>;\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e81",
+        "type": "guide",
+        "label": "Parentheses"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2a9"
+  },
+  {
+    "displayId": "Document-024",
+    "title": "Self-close tags",
+    "body": "Introduction\n\nAlways self-close tags that have no children. eslint: react/self-closing-comp\n\nRationale\n\nExamples\n\n// bad\n<Foo variant=\"stuff\"></Foo>\n\n// good\n<Foo variant=\"stuff\" />\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e82", "type": "guide", "label": "Tags" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2aa"
+  },
+  {
+    "displayId": "Document-025",
+    "title": "Tags for multi-line components",
+    "body": "Introduction\n\nIf your component has multiline properties, close its tag on a new line. eslint: react/jsx-closing-bracket-location\n\nRationale\n\nExamples\n\n// bad\n<Foo\n  bar=\"bar\"\n  baz=\"baz\" />\n\n// good\n<Foo\n  bar=\"bar\"\n  baz=\"baz\"\n/>\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e82", "type": "guide", "label": "Tags" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2ab"
+  },
+  {
+    "displayId": "Document-026",
+    "title": "Arrow functions in methods",
+    "body": "Introduction\n\nUse arrow functions to close over local variables. It is handy when you need to pass additional data to an event handler. \n\nRationale\n\nExamples\n\nfunction ItemList(props) {\n  return (\n    <ul>\n      {props.items.map((item, index) => (\n        <Item\n          key={item.key}\n          onClick={(event) => { doSomethingWith(event, item.name, index); }}\n        />\n      ))}\n    </ul>\n  );\n}\n\nConsiderations\n\nAlthough, make sure they do not massively hurt performance, in particular when passed to custom components that might be PureComponents, because they will trigger a possibly needless rerender every time.\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e83", "type": "guide", "label": "Methods" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2ac"
+  },
+  {
+    "displayId": "Document-027",
+    "title": "Event handlers for the render method",
+    "body": "Introduction\n\nBind event handlers for the render method in the constructor. eslint: react/jsx-no-bind\n\nRationale\n\nA bind call in the render path creates a brand new function on every single render. Do not use arrow functions in class fields, because it makes them challenging to test and debug, and can negatively impact performance, and because conceptually, class fields are for data, not logic.\n\nExamples\n\n// bad\nclass extends React.Component {\n  onClickDiv() {\n    // do stuff\n  }\n\n  render() {\n    return <div onClick={this.onClickDiv.bind(this)} />;\n  }\n}\n\n// very bad\nclass extends React.Component {\n  onClickDiv = () => {\n    // do stuff\n  }\n\n  render() {\n    return <div onClick={this.onClickDiv} />\n  }\n}\n\n// good\nclass extends React.Component {\n  constructor(props) {\n    super(props);\n\n    this.onClickDiv = this.onClickDiv.bind(this);\n  }\n\n  onClickDiv() {\n    // do stuff\n  }\n\n  render() {\n    return <div onClick={this.onClickDiv} />;\n  }\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e83", "type": "guide", "label": "Methods" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2ad"
+  },
+  {
+    "displayId": "Document-028",
+    "title": "Underscore prefix for internal methods",
+    "body": "Introduction\n\nDo not use underscore prefix for internal methods of a React component.\n\nRationale\n\nWhy? Underscore prefixes are sometimes used as a convention in other languages to denote privacy. But, unlike those languages, there is no native support for privacy in JavaScript, everything is public. Regardless of your intentions, adding underscore prefixes to your properties does not actually make them private, and any property (underscore-prefixed or not) should be treated as being public. See issues #1024, and #490 for a more in-depth discussion.\n\nExamples\n\n// bad\nReact.createClass({\n  _onClickSubmit() {\n    // do stuff\n  },\n\n  // other stuff\n});\n\n// good\nclass extends React.Component {\n  onClickSubmit() {\n    // do stuff\n  }\n\n  // other stuff\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e83", "type": "guide", "label": "Methods" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2ae"
+  },
+  {
+    "displayId": "Document-029",
+    "title": "Value in render methods",
+    "body": "Introduction\n\nBe sure to return a value in your render methods. eslint: react/require-render-return\n\nRationale\n\nExamples\n\n// bad\nrender() {\n  (<div />);\n}\n\n// good\nrender() {\n  return (<div />);\n}\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e83", "type": "guide", "label": "Methods" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2af"
+  },
+  {
+    "displayId": "Document-030",
+    "title": "Follow consistent ordering for class extends",
+    "body": "Introduction\n\nRationale\n\nExamples\n\nOrdering for class extends React.Component:\noptional static methods\nconstructor\ngetChildContext\ncomponentWillMount\ncomponentDidMount\ncomponentWillReceiveProps\nshouldComponentUpdate\ncomponentWillUpdate\ncomponentDidUpdate\ncomponentWillUnmount\nevent handlers starting with 'handle' like handleSubmit() or handleChangeDescription()\nevent handlers starting with 'on' like onClickSubmit() or onChangeDescription()\ngetter methods for render like getSelectReason() or getFooterContent()\noptional render methods like renderNavigation() or renderProfilePicture()\nrender\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e84",
+        "type": "guide",
+        "label": "Ordering"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b0"
+  },
+  {
+    "displayId": "Document-031",
+    "title": "Follow consistent definitions",
+    "body": "Introduction\n\nRationale\n\nExamples\n\nimport React from 'react';\nimport PropTypes from 'prop-types';\n\nconst propTypes = {\n  id: PropTypes.number.isRequired,\n  url: PropTypes.string.isRequired,\n  text: PropTypes.string,\n};\n\nconst defaultProps = {\n  text: 'Hello World',\n};\n\nclass Link extends React.Component {\n  static methodsAreOk() {\n    return true;\n  }\n\n  render() {\n    return <a href={this.props.url} data-id={this.props.id}>{this.props.text}</a>;\n  }\n}\n\nLink.propTypes = propTypes;\nLink.defaultProps = defaultProps;\n\nexport default Link;\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      { "tag": "60f5e2a3cd37055105469e79", "type": "guide", "label": "Naming" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b1"
+  },
+  {
+    "displayId": "Document-032",
+    "title": "Follow consistent ordering for React.createClass",
+    "body": "Introduction\n\nFollow consistent ordering for React.createClass\n\nRationale\n\nExamples\n\ndisplayName\npropTypes\ncontextTypes\nchildContextTypes\nmixins\nstatics\ndefaultProps\ngetDefaultProps\ngetInitialState\ngetChildContext\ncomponentWillMount\ncomponentDidMount\ncomponentWillReceiveProps\nshouldComponentUpdate\ncomponentWillUpdate\ncomponentDidUpdate\ncomponentWillUnmount\nclickHandlers or eventHandlers like onClickSubmit() or onChangeDescription()\ngetter methods for render like getSelectReason() or getFooterContent()\noptional render methods like renderNavigation() or renderProfilePicture()\nrender\n\nConsiderations\n\nLinks to learn more",
+    "author": "",
+    "source": {
+      "name": "AirBnB",
+      "url": "https://github.com/airbnb/javascript/tree/master/react"
+    },
+    "collections": ["60f74df6b83864106f28bb12"],
+    "tags": [
+      {
+        "tag": "60f5e20b01f4665089c1d972",
+        "type": "language",
+        "label": "React"
+      },
+      { "tag": "60f5e20b01f4665089c1d973", "type": "language", "label": "JSX" },
+      {
+        "tag": "60f5e2a3cd37055105469e76",
+        "type": "guide",
+        "label": "Style Guides"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e84",
+        "type": "guide",
+        "label": "Ordering"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b2"
+  },
+  {
+    "displayId": "Document-033",
+    "title": "Logic should be in the positive",
+    "body": "Introduction\n\nLogic should in general be asking the question \"Is this true?\" instead of \"Is this not true?\"\n\nRationale\n\nLogic written in the positive can be comprehended more quickly. This is especially true when there are multiple negative statements.\n\nExamples\n\nThe first statement written in the negative:\n\nisBlackOrWhite(black, white) => {\n    if (!black && !white) {\n        return false;\n    }\n    return true;\n}\n\nThen written in the positive:\n\nisBlackOrWhite(black, white) => {\n    if (black || white) {\n        return true;\n    }\n    return false;\n}\n\nConsiderations\n\nThere are cases in which writing logic in the positive will make the code more difficult to understand. Especially logic that works by exclusion such as the below:\n\n// Return items that aren't trees\n[\"tree\", \"cat\", \"dog\"].filter((item) => item !== \"tree\");\n// prints: ['cat','dog']\n\nLinks to learn more",
+    "author": "",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469e86", "type": "guide", "label": "Style" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b3"
+  },
+  {
+    "displayId": "Document-034",
+    "title": "Iterate in Thens",
+    "body": "Introduction\n\nYou should iterate sequentially on a focused chunk of work at a time. Once that chunk has been completed THEN start on the next chunk of work. This is opposed to doing multiple chunks of different of work in parallel.\n\nRationale\n\nBenefits include:\n\nNo context switching. Sequential working increases the chance that all relevant context associated with a chunk of work be kept in mind.\n\nReduced possible errors. Focusing on one change at a time, means the possible outcomes (e.g. bugs, regressions) from that change are much smaller than if many changes are made at the same time.\n\nExamples\n\nHow to do it: Define tasks in a sequential way. Then, when working, focus on a single task and capture additional tasks as a separate items.\n\nA example task is to upgrade 3 cores libraries that 10 applications use. Here are 3 approaches below:\n\nIterating with an \"ANDs\" approach (not recommended):\nGo to the first application\nupdate library 1 AND 2 AND 3 at the same time\nTHEN move on to the next application\nThe complexity arises through having to work with lots of different changes which can look like as follows:\n\nSteps required to update 3 libraries.\nBugs arising from changing 3 libraries.\nThe complex interactions that may arise from changing 3 libraries at the same time.\nIdentifying which library a bug came from.\nThere is much to keep in mind with this approach.\n\nIterating in \"THENs\" approach:\nGo to the first application\nupdate library 1\nTHEN move onto to the next application\nThis approach greatly focuses the context on an individual library and all the associated bugs or changes required.\n\nThe complexity is reduced to:\n\nsteps required to update a single library.\nbugs arising from changing a library.\nIterating in \"THENs\" in parallel:\nIterating in thens also allows working in parallel. The parallel task should done sequentially with the task being mostly the same for each.\n\nWith all the 10 applications search for the old library version\nTHEN replace with the new version\nsearch for the old library method that is deprecated\nTHEN replace with the new supported method.\netc..\n\nConsiderations\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e88",
+        "type": "guide",
+        "label": "Individual"
+      },
+      { "tag": "60f5e2a3cd37055105469e89", "type": "guide", "label": "Medium" },
+      {
+        "tag": "60f5e2a3cd37055105469e8a",
+        "type": "guide",
+        "label": "Full-stack"
+      },
+      { "tag": "60f5e2a3cd37055105469e8b", "type": "guide", "label": "Process" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b4"
+  },
+  {
+    "displayId": "Document-035",
+    "title": "Avoid double negative logic",
+    "body": "Introduction\n\nConditional logic should avoid double negatives. e.g., \"Is this not not true?\"\n\nRationale\n\nWrite logic that asks: Is this true. Instead of: Is this not not true?\n\nExamples\n\nA double negative conditional, which is hard to understand:\n\nif (!isNotSelected) {\n    ...\nThen written in the positive:\n\nif (isSelected) {\n   ...\n\nConsiderations\n\nLinks to learn more\n\nhttps://derickbailey.com/2014/03/27/double-negatives-in-code-dont-not-avoid-double-negative-boolean-logic/\nhttps://refactoring.com/catalog/removeDoubleNegative.html",
+    "author": "",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469e8e", "type": "guide", "label": "Logic" },
+      { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b5"
+  },
+  {
+    "displayId": "Document-036",
+    "title": "Open–closed principle",
+    "body": "Introduction\n\nIn object-oriented programming, the open–closed principle states \"software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification\"; that is, such an entity can allow its behavior to be extended without modifying its source code.\n\nRationale\n\nThe benefit to this is that it creates a layer of abstraction so implementations don't have to share the same code and encourages loose coupling.\n\nExamples\n\nConsiderations\n\nLinks to learn more\n\nMeyer's open–closed principle\nBertrand Meyer is generally credited for having originated the term open–closed principle, which appeared in his 1988 book Object Oriented Software Construction.\n\nA module will be said to be open if it is still available for extension. For example, it should be possible to add fields to the data structures it contains, or new elements to the set of functions it performs. A module will be said to be closed if it is available for use by other modules. This assumes that the module has been given a well-defined, stable description (the interface in the sense of information hiding).\n\nAt the time Meyer was writing, adding fields or functions to a library inevitably required changes to any programs depending on that library. Meyer's proposed solution to this dilemma relied on the notion of object-oriented inheritance (specifically implementation inheritance):\n\nA class is closed, since it may be compiled, stored in a library, baselined, and used by client classes. But it is also open, since any new class may use it as parent, adding new features. When a descendant class is defined, there is no need to change the original or to disturb its clients.\n\nPolymorphic open–closed principle\nDuring the 1990s, the open–closed principle became popularly redefined to refer to the use of abstracted interfaces, where the implementations can be changed and multiple implementations could be created and polymorphically substituted for each other.\n\nIn contrast to Meyer's usage, this definition advocates inheritance from abstract base classes. Interface specifications can be reused through inheritance but implementation need not be. The existing interface is closed to modifications and new implementations must, at a minimum, implement that interface.\n\nRobert C. Martin's 1996 article \"The Open-Closed Principle\" was one of the seminal writings to take this approach. In 2001 Craig Larman related the open–closed principle to the pattern by Alistair Cockburn called Protected Variations, and to the David Parnas discussion of information hiding.",
+    "author": "",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      {
+        "tag": "60f75c8cdb1b8c13aa3572ec",
+        "type": "guide",
+        "label": "Object-Oriented"
+      },
+      { "tag": "60f5e2a3cd37055105469e90", "type": "guide", "label": "Solid" },
+      { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
+      {
+        "tag": "60f5e2a3cd37055105469e91",
+        "type": "guide",
+        "label": "Pratices"
+      },
+      { "tag": "60f5e2a3cd37055105469e8d", "type": "guide", "label": "Team" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b6"
+  },
+  {
+    "displayId": "Document-037",
+    "title": "Single-Responsibility Principle",
+    "body": "Introduction\n\nThe single-responsibility principle is a computer-programming principle that states that every module, class or function in a computer program should have responsibility over a single part of that program's functionality, and it should encapsulate that part. All of that module, class or function's services should be narrowly aligned with that responsibility.\n\nRationale\n\nExamples\n\nMartin defines a responsibility as a reason to change, and concludes that a class or module should have one, and only one, reason to be changed (e.g. rewritten).\n\nAs an example, consider a module that compiles and prints a report. Imagine such a module can be changed for two reasons. First, the content of the report could change. Second, the format of the report could change. These two things change for different causes. The single-responsibility principle says that these two aspects of the problem are really two separate responsibilities, and should, therefore, be in separate classes or modules. It would be a bad design to couple two things that change for different reasons at different times.\n\nThe reason it is important to keep a class focused on a single concern is that it makes the class more robust. Continuing with the foregoing example, if there is a change to the report compilation process, there is a greater danger that the printing code will break if it is part of the same class.\n\nConsiderations\n\nLinks to learn more\n\nRobert C. Martin, the originator of the term, expresses the principle as, \"A class should have only one reason to change,\" although, because of confusion around the word \"reason\" he also stated \"This principle is about people.\"\n\nIn some of his talks, he also argues that the principle is, in particular, about roles or actors. For example, while they might be the same person, the role of an accountant is different from a database administrator. Hence, each module should be responsible for each role.\n\nThe term was introduced by Robert C. Martin in an article by the same name as part of his \"Principles of Object Oriented Design\" made popular by his 2003 book \"Agile Software Development, Principles, Patterns, and Practices\". Martin described it as being based on the principle of cohesion, as described by Tom DeMarco in his book \"Structured Analysis and System Specification\" and Meilir Page-Jones in \"The Practical Guide to Structured Systems Design\" In 2014 Martin wrote a blog post entitled The Single Responsibility Principle with a goal to clarify what was meant by the phrase \"reason for change.\"\n\nhttps://blog.cleancoder.com/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html",
+    "author": "Robert C. Martin",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
+      {
+        "tag": "60f5e2a3cd37055105469e92",
+        "type": "guide",
+        "label": "Organization"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      { "tag": "60f5e2a3cd37055105469e8d", "type": "guide", "label": "Team" },
+      { "tag": "60f5e2a3cd37055105469e90", "type": "guide", "label": "Solid" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b7"
+  },
+  {
+    "displayId": "Document-038",
+    "title": "Reduce a problem to its lowest sensible abstraction",
+    "body": "Introduction\n\nStating a problem in its lowest sensible abstraction helps you understand and develop accurate solutions to a problem.\n\nRationale\n\nExamples\n\nWhen working on building a performance-critical web scraper, the problem in my mind was, \"I need to click buttons on this website and fill out forms fast.\"\n\nTo solve that problem, I decided that the best way to solve that problem was using an automated headless browser, controlled by Puppeteer.\n\nHowever, I soon found out it wasn't fast enough, and scaling would require a lot of computational resources.\n\nBecause I thought of the problem in terms of clicking buttons, I became stuck. My thought process revolved around solving the problem I thought I had. \"What is faster than headless chrome?\" \"Years of development had gone into it. How could I possibly make it run faster?\"\n\nAfter a while, I realized the problem was not clicking buttons on a website; it was: \"I just need to parse HTML forms and submit them via post requests.\". It over-simplified the problem. But I'd found the lowest sensible abstraction.\n\nAfter I'd stated the problem correctly, I realized I didn't need to use a browser at all. I re-built the scraper in Go, then parsed the HTML and submitted the forms via post requests. Without the complexity of the browser, I moved page processing down from around 50ms to 0.5ms - A 100x improvement.\n\nIf I'd stated the problem at the correct abstraction initially, I would have saved myself weeks of work.\n\nThroughout my career, I've seen large projects based upon the wrong framing of a problem.\n\nIf someone at the beginning had sat down and stated the problem more accurately, the project would have developed in a completely different and more successful direction. It's also why having many experts with diverse backgrounds will often provide better results with this principle.\n\nConsiderations\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469e8b", "type": "guide", "label": "Process" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b8"
+  },
+  {
+    "displayId": "Document-039",
+    "title": "Documentation should be close to the code",
+    "body": "Introduction\n\nDocumentation, in all forms, should be as close as it can be to the code.\n\nRationale\n\nBenefits include:\n- More productive teams. The further away documentation is from code, the more friction is created in understanding the code.\n- Documentation will have a higher chance of being accurate and up to date. As it is readily accessible by developers to read write to.\n- Documentation will be accurate to the version being used. Documentation checked into source control (e.g. git) with the code, will be in sync with the version currently checked out.\n\nExamples\n\nBelow are specific examples of how this can be achieved, starting close to the code and getting further away.\n\nEditor\nUse IDE features\n\nBy using an editor with code completion, parameter info, quick info and member lists. It provides the closest documentation by assisting a developer during the writing of code. Using an IDE with the ability to do that and also using a language which makes that functionality easier (such as a static language) can both be helpful.\n\nAn example of Visual Studio Code's Intellisense: (https://code.visualstudio.com/docs/editor/intellisense)\n\n\nComments\nExplains purpose of the code and can be used for generated documentation\n\nCommented code, that explains the purpose of the code, is a natural application of this principle and what developers will naturally do.\n\nThe commented code can also be used to generate accurate documentation. This prevents the need for a separate file to document the API. Additionally, because it is next to the code it will more often be seen, referred to and monitored (e.g. a code review). Which increases the chance it will be kept up to date.\n\nUnit tests\nShould be next to the files being tested\n\nUnit tests act as examples of how the code being tested can be used. These examples act as some of the best documentation available. The test should be next to the file being tested. It also provides additional benefit of being able to see which files have already got tests.\n\nScaffold components\nSit next to the component\n\nScaffolded components, are components which are loaded separately from an application. They act as examples of how the component can be used. As with unit tests, they act as some of the best documentation available. It explicitly shows the dependencies, how the component works and what options are available for configuring the component.\n\nIntegration tests\nSit within the module or application\n\nIntegration tests (http://softwaretestingfundamentals.com/integration-testing/), test the interaction of more than one module often using a tool such as selenium or cypress. Integration tests that relate to a single module, should exist next to that module if the module can be run standalone. Integration tests more commonly test the interaction of multiple modules interacting together and should be grouped with the application itself.\n\nGeneral documentation\nBe within the codebase\n\nGeneral documentation, should be next to the code. A common implementation is README.md files in markdown format. They should exist within the applicable logical grouping within a code base (e.g. a module or app folder that it is most relevant to). It is common to see README.md files at the top level of a project, but they can exist at any level. The top level README.md can act as an index which references or links to other README.md files within folders below.\n\nExternal documentation\nShould be generated from the project.\n\nExternal documentation, used for communicating to people external of your team, should exist within the applicable logical grouping within a code base (e.g. a module or app folder that it is most relevant to) and can be exported to an external wiki, rather than an external wiki edited away from the code base.\n\nConsiderations\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
+      {
+        "tag": "60f5e2a3cd37055105469e93",
+        "type": "guide",
+        "label": "Documentation"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2b9"
+  },
+  {
+    "displayId": "Document-040",
+    "title": "Compute properties when possible",
+    "body": "Introduction\n\nComputed (or Derived) properties are properties that don't store values in memory, but return values when they are called by reading values from other properties or functions.\n\nRationale\n\nThere are several benefits:\n- Computed properties are easy to reason about. The relationships between properties are explicit and the ‘recipe’ for creating the property can be seen in the code where its method exists.\n- There are less properties to set, so no bugs are created as a consequence of forgetting to do that.\n- Computed properties lend themselves well to unit testing by having pre-defined inputs, which increases confidence in the code.\n- When upstream data changes, dependent downstream computed data will automatically be set into the correct state.\n\nExamples\n\nThe following properties can be converted to computed properties:\n\nProperties that rely on bringing together more than one property to return a value.\nIn this example, the 'fullName' property relies on firstName and lastName to return a value.\n\nclass User {\n  constructor(firstName, lastName) {\n    this.firstName = firstName;\n    this.lastName = lastName;\n    this.fullName = `${firstName} ${lastName}`;\n  }\n}\nWhich should be computed to produce an output:\n\nclass User {\n  constructor(firstName, lastName) {\n    this.firstName = firstName;\n    this.lastName = lastName;\n  }\n  get fullName() {\n    // Computed property\n    return `${this.firstname} ${this.lastName}`;\n  }\n}\nProperties that are transformed before they are saved\nProperties that are adjusted before they are saved on a write:\n\nclass Product {\n  setWeight(weightInGrams) {\n    this.weightInGrams = weightInGrams;\n    this.weightInKg = convertToKg(weightInGrams);\n    this.weightInPounds = convertToPounds(weightInGrams);\n  }\n}\nShould instead become properties that are computed on read:\n\nclass Product {\n  setWeight(weightInGrams) {\n    this.weightInGrams = weightInGrams;\n  }\n  get weightInKg() {\n    return convertToKg(this.weightInGrams);\n  }\n  get weightInPounds() {\n    return convertToPounds(this.weightInGrams);\n  }\n}\n\nConsiderations\n\nDo not use when performance is critical. Computed properties are slower to access than values directly stored in memory.\n\nLinks to learn more\n\nSwift implementation of computed properties: https://docs.swift.org/swift-book/LanguageGuide/Properties.html#ID259\nVueJS explanation https://vuejs.org/v2/guide/computed.html",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f75d0d927aa01461b657df",
+        "type": "guide",
+        "label": "Bug free"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2ba"
+  },
+  {
+    "displayId": "Document-041",
+    "title": "One single source of truth",
+    "body": "Introduction\n\nData should be held in one location, duplicates of that data should be by reference only.\n\nRationale\n\nChanges to data are always propagated to the rest of the system.\nMutations to the data need only happen in one place.\nSingle source of truth means no data will be out of sync or fail to be updated.\n\nExamples\n\nOnly allow data writes to happen in one location. Whether that be a call to a rest API, system call or other write actions.\n\nDon't allow data to be stored anywhere but the single source of truth.\n\nConsiderations\n\nBe careful about following this philosophy in highly distributed systems. Some systems rely on data consistency to be reached eventually or may never need to have accurate data.\n\nLinks to learn more\n\n https://en.wikipedia.org/wiki/Single_source_of_truth",
+    "author": "",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      { "tag": "60f5e2a3cd37055105469e8d", "type": "guide", "label": "Team" },
+      {
+        "tag": "60f5e2a3cd37055105469e8a",
+        "type": "guide",
+        "label": "Full-stack"
+      },
+      { "tag": "60f5e2a3cd37055105469e89", "type": "guide", "label": "Medium" },
+      { "tag": "60f5e2a3cd37055105469e95", "type": "guide", "label": "Data" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2bb"
+  },
+  {
+    "displayId": "Document-042",
+    "title": "Make the invisible, visible",
+    "body": "Introduction\n\nReveal relevant information that is hidden so it can be understood. By making hidden principles, ideas, and behaviors that make up a technology organization understood and explicit.\n\nRationale\n\nUnderstanding allows better outcomes. It improves productivity. Without understanding, chaos reigns supreme, and the systems and organizations that are based upon that reflect that, whether it be not understanding the business case or not understanding the software.\n\nThe greater the shared understanding in the team, the better the communication, efficiency, and effectiveness of the team members\n\nExamples\n\nA few examples:\n\nData\n\nCreate visualizations that create insight.\nConvert data into visualizations that are easier to understand. (e.g., grafana, splunk)\nRun calculations on the data to understand the content (e.g., average price, top sales)\nUse analytics within a system to increase feedback cycles.\nData mining a dataset to reveal hidden patterns.\nCode\n\nUse diagrams. Represent code in less abstract ways, such as drawing diagrams of a system using pen and paper or graphics design programs. This helps transmit mental models.\nLog and visualize the results of a system.\nUse debuggers to be able to peer inside a system to see changes that are happening over time, rather than an input-output black-box.\nUse performance tools like flame-graphs to visualize where the program is spending it's time.\nTeams\n\nUse principles to communicate and build mental models that everyone can share in the team.\nAsk questions that seek to understand and illuminate.\nUse Principle-Driven Engineering as a guide to help make the invisible, visible.\nIndividuals\n\nUnderstand what you know, codifying your habits into understood actions and principles.\nBe intellectually honest and unafraid of being wrong. If you realize you are wrong, it allows you to learn rapidly.\nHistory\nMaking the invisible, visible is the principle that founded this project—the desire to share mental models and build capability for myself and my teams.\n\nIn many ways, all principles inherit from it. The result of that is that all principles implicitly:\n\nIncrease understanding.\nImprove productivity.\nShare knowledge.\nConstrain behavior / action.\nIncrease capability.\nImprove behavior / action.\n\nConsiderations\n\nLinks to learn more\nhttps://principles.dev/p/make-the-invisible-visible/",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469e96", "type": "guide", "label": "Pde" },
+      {
+        "tag": "60f5e2a3cd37055105469e97",
+        "type": "guide",
+        "label": "Leadership"
+      },
+      { "tag": "60f5e2a3cd37055105469e98", "type": "guide", "label": "Epic" },
+      {
+        "tag": "60f5e2a3cd37055105469e88",
+        "type": "guide",
+        "label": "Individual"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e92",
+        "type": "guide",
+        "label": "Organization"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e8c",
+        "type": "guide",
+        "label": "Strategic"
+      },
+      { "tag": "60f5e2a3cd37055105469e8d", "type": "guide", "label": "Team" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2bc"
+  },
+  {
+    "displayId": "Document-043",
+    "title": "Ensure documentation is easy to amend",
+    "body": "Introduction\n\nWhen encountering or creating documentation, it should be easy to make changes.\n\nPrioritize write access to the code base for all members, especially new members of the team. It's often the time they are most likely to find errors and update, but usually have the least access to do so.\n\nEncourage developers to update any inaccurate documentation.\n\nRationale\n\nIncreases the chances that the documentation will be correct.\nIncrease productivity through accurate documentation.\n\nExamples\n\nConsiderations\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
+      {
+        "tag": "60f5e2a3cd37055105469e93",
+        "type": "guide",
+        "label": "Documentation"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2bd"
+  },
+  {
+    "displayId": "Document-044",
+    "title": "Software should be easy to debug",
+    "body": "Introduction\n\nWhen software behaves unexpectedly, it should be easy to understand what is causing the problem.\n\nRationale\n\nTime is reduced in fixing a problem. A problem that can be understood without difficulty allows the developer to fix it rapidly, which increases developer productivity.\nFrustration is reduced. Friction caused by not understanding a problem leads to frustration for the developer.\n\nExamples\n\nSpecific ideas on how to implement this principle:\n\nStacks traces\nShould: Be accurate and detailed\nShould: Work across asyncronous, parallel and concurrent code.\nShould: Error reporting of line numbers should be accurate (e.g. when using sourcemaps)\nDebugger - Easy to use.\nShould: Be attachable to a live runtime\nShould: Be able to be stepped through\nShould: show real-time states of properties and values.\nErrors messages - Be clear and concise\nShould Not: Be swallowed or hidden\nShould Not: Be generic or un-descriptive\nLogs\nShould: All key interactions of a system should be recorded, especially user interactions.\nShould: Be captured by an external system that is easily searchable.\n\nConsiderations\n\nNot all langauges have all of this functionality.\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      { "tag": "60f5e2a3cd37055105469e89", "type": "guide", "label": "Medium" },
+      { "tag": "60f5e2a3cd37055105469e99", "type": "guide", "label": "Errors" },
+      {
+        "tag": "60f75d4ca0fc63154e2bb0c0",
+        "type": "guide",
+        "label": "Debugging"
+      },
+      { "tag": "60f5e2a3cd37055105469e9a", "type": "guide", "label": "Logs" },
+      {
+        "tag": "60f5e2a3cd37055105469e9b",
+        "type": "guide",
+        "label": "Environment setup"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e9c",
+        "type": "guide",
+        "label": "Language choice"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e9d",
+        "type": "guide",
+        "label": "Productivity"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2be"
+  },
+  {
+    "displayId": "Document-045",
+    "title": "Separate core logic from the framework",
+    "body": "Introduction\n\nCore logic that is related to solving a business or domain problem should exist outside of a framework.\n\nRationale\n\nCore logic is the most valuable asset of the business. A framework change with the core logic integrated results in a loss of that asset. Separation from the framework keeps the asset whilst allowing the framework to change.\nSeparating core logic lets you use your own principles instead of the frameworks. Frameworks provide structure and useful abstractions that make engineering easier. Yet, using a framework often means using its principles at the expense of your own.\nYou can solve your business problem better. Because a framework is not created to solve your particular problem, it cannot know the best way to solve it.\nCode is easier to read. You only need to understand the programming language, not the framework.\nCode is easier to test. It is not wrapped in a framework's abstractions.\n\nExamples\n\nAbstract code that is wrapped inside the framework to separate files\nUse software engineering concepts such as domain-driven design to structure code based on business requirements.\nUse principles to give the team confidence and create autonomy to design a system.\nUse design patterns and principles when designing a system. e.g. repository pattern, inversion of control, solid principles, etc.\n\nThe below example is from a redux framework in which a reducer - a redux concept - adds a todo item into the application:\n\nfunction nextTodoId(todos) {\n  const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1);\n  return maxId + 1;\n}\n\nfunction todosReducer(state = initialState, action) {\n  switch (action.type) {\n    case \"todos/todoAdded\": {\n      return [\n        ...state,\n        // Core logic start\n        {\n          id: nextTodoId(state),\n          text: action.payload,\n          completed: false,\n        },\n        // Core logic end\n      ];\n    }\n  }\n}\nExtracting the core logic, the framework code now looks like this:\n\nimport { todoAdd } from \"./todo\";\n\nfunction todosReducer(state = initialState, action) {\n  switch (action.type) {\n    case \"todos/todoAdded\": {\n      return todoAdd(state, action.payload);\n    }\n  }\n}\nCore logic is then moved into a new file. Separate from the framework.\n\nfunction nextTodoId(todos) {\n  const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1);\n  return maxId + 1;\n}\n\nfunction todoAdd(todos, text) {\n  const nextId = nextTodoId(todos);\n  const newToDoEntry = {\n    id: nextId,\n    text: text,\n    completed: false,\n  };\n  return { ...todos, newToDoEntry };\n}\n\nConsiderations\n\nIf your core logic is trivial or has limited business value\n\nLinks to learn more",
+    "author": "Adam Craven",
+    "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      {
+        "tag": "60f5e2a3cd37055105469e87",
+        "type": "guide",
+        "label": "Practices"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e8c",
+        "type": "guide",
+        "label": "Strategic"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e8a",
+        "type": "guide",
+        "label": "Full-stack"
+      },
+      {
+        "tag": "60f5e2a3cd37055105469e9e",
+        "type": "guide",
+        "label": "Architecture"
+      }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2bf"
+  },
+  {
+    "displayId": "Document-046",
+    "title": "Sema Values",
+    "body": "Introduction\n\nValues are the “rules” on how teams and companies really work. \nSema takes our company values very seriously. We write them down, we live them every day, and we give each other feedback on when we meet them and when we fall short.\nWe have found these values to be effective across all of our teams.  Here are our five values explained in the Engineering context.\n\nRationale\nValues help people understand what to do when there’s a tricky situation.\nThey also help colleagues know what they can expect from each other.\n\nExamples\n\n1. Competence. \nMeeting this value means code was delivered on time, or the developer acknowledged it was not going to be delivered on time.\nAn example of not meeting this value is “finessing” the assignment – such as knowing that the scope was unreasonable but not saying anything during sprint planning. We tell each other the truth, no matter what.\n\n2. Scrappiness\nMeeting this value means code was build solving for both quality and speed. Usually that means creating a basic version first, allowing the team to you feedback and not waste developer time.\nAn example of not meeting this value is working too long on an problem without asking for help or feedback. The most important thing we have on the Engineering team is our time, and we don’t want to waste it. \n\n3. Excellence. \nMeeting this value means delivering code with the highest level of quality.\nSometimes scrappiness is called for, and sometimes excellence is. If we’re not sure which situation we’re in, we ask.\n\n4. Growth. \nDevelopers meet this value when they figured out something new, or asked for help, or raised a concern. \nAn example of not meeting this value is keeping bad news to oneself. At Sema we want to hear bad news quickly, because then we can work together to solve it. \n\n5. Owner.\nMeeting this value means doing what needs to be done to make sure the right code was built. \nAn example of not meeting this value is ignoring problems, or saying it’s not my job. When someone else could do it better, we suggest another person to help, or we ask for more help.\n\nConsiderations\n\nWe love hearing about values that other Engineering teams use. Please drop us a line with yours – info@semasoftware.com.\n\nLinks to learn more",
+    "author": "Sema Engineering",
+    "source": { "name": "Sema", "url": "" },
+    "collections": ["60f74df6b83864106f28bb0e"],
+    "tags": [
+      { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
+      { "tag": "60f5e2a3cd37055105469ea9", "type": "guide", "label": "Values" }
+    ],
+    "isActive": true,
+    "_id": "60f79106b6aa6d1ebb73b2c0"
+  }
+]
