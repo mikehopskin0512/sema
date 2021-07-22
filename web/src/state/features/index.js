@@ -11,3 +11,4 @@ export { default as supportState } from './support';
 export { default as usersState } from './users';
 export { default as searchQueriesState } from './search-queries';
 export { default as suggestCommentsState } from './suggest-comments';
+export { default as smartCommentsState } from './smart-comments';

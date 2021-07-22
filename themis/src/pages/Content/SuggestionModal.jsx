@@ -33,13 +33,25 @@ const getCommentInterface = (comment, isDetailed) => {
   );
 };
 
-function SuggestionModal({ onCopyPressed, searchResults }) {
+function SuggestionModal({ onInsertPressed, searchResults }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
 
   const onViewPressed = (suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
+  };
+
+  const onCopyPressed = (id, suggestion) => {
+    navigator.clipboard.writeText(suggestion).then(
+      function () {
+        setCopiedId(id);
+      },
+      function () {
+        console.error('Could not copy to clipboard');
+      }
+    );
   };
 
   const onCommentDetailBackPressed = () => {
@@ -51,6 +63,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
     const resultsLength = searchResults.length;
     return searchResults.map((searchResult, i) => {
       const { comment, sourceName, sourceUrl, title, id } = searchResult;
+      const isCopied = copiedId === id;
 
       return (
         <div key={id}>
@@ -62,13 +75,26 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
               style={{ border: 'none' }}
               onClick={(event) => {
                 event.preventDefault();
+                onInsertPressed(id, comment);
+              }}
+            >
+              <span className="sema-icon">
+                <i className="fas fa-file-import"></i>
+              </span>
+              <span>Insert</span>
+            </button>
+            <button
+              className="sema-button sema-is-inverted sema-is-small"
+              style={{ border: 'none' }}
+              onClick={(event) => {
+                event.preventDefault();
                 onCopyPressed(id, comment);
               }}
             >
               <span className="sema-icon">
                 <i className="fas fa-copy"></i>
               </span>
-              <span>Insert</span>
+              <span>{isCopied ? 'Copied!' : 'Copy'}</span>
             </button>
             <button
               className="sema-button sema-is-inverted sema-is-small"
@@ -92,6 +118,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
 
   const getCommentUI = () => {
     const { comment, sourceName, sourceUrl, title, id } = currentSuggestion;
+    const isCopied = copiedId === id;
     return (
       <>
         <div className="suggestion-header">
@@ -105,7 +132,7 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
             </span>
           </button>
           <button
-            className="sema-button sema-is-inverted sema-is-small sema-is-pulled-right"
+            className="sema-button sema-is-inverted sema-is-small"
             style={{ border: 'none' }}
             onClick={(event) => {
               event.preventDefault();
@@ -114,6 +141,19 @@ function SuggestionModal({ onCopyPressed, searchResults }) {
           >
             <span className="sema-icon">
               <i className="fas fa-copy"></i>
+            </span>
+            <span>{isCopied ? 'Copied!' : 'Copy'}</span>
+          </button>
+          <button
+            className="sema-button sema-is-inverted sema-is-small sema-is-pulled-right"
+            style={{ border: 'none' }}
+            onClick={(event) => {
+              event.preventDefault();
+              onInsertPressed(id, comment);
+            }}
+          >
+            <span className="sema-icon">
+              <i className="fas fa-file-import"></i>
             </span>
             <span>Insert</span>
           </button>
