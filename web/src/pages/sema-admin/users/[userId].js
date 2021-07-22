@@ -55,7 +55,7 @@ const UserDetailPage = () => {
   }, [showAlert, dispatch]);
 
   return (
-    <div className="is-full-height is-flex is-flex-direction-column p-25" style={{ background: '#f7f8fa' }}>
+    <>
       {
         isUserLoading || isInvitesLoading ? (
           <div className='loading' />
@@ -114,7 +114,7 @@ const UserDetailPage = () => {
         )
       }
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-    </div>
+    </>
   )
 };
 

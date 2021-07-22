@@ -9,8 +9,19 @@ var WebpackDevServer = require('webpack-dev-server'),
   env = require('./env'),
   path = require('path');
 
+const fs = require('fs');
+
+const { exec } = require('child_process');
+
 var options = config.chromeExtensionBoilerplate || {};
 var excludeEntriesToHotReload = options.notHotReload || [];
+
+const scssDirPath = path.resolve('src/pages/Content/styles');
+const scssFiles = fs
+  .readdirSync(scssDirPath)
+  .map((fileName) => `${scssDirPath}/${fileName}`);
+
+config.entry.scss = scssFiles;
 
 for (var entryName in config.entry) {
   if (excludeEntriesToHotReload.indexOf(entryName) === -1) {
@@ -28,6 +39,21 @@ config.plugins = [new webpack.HotModuleReplacementPlugin()].concat(
 delete config.chromeExtensionBoilerplate;
 
 var compiler = webpack(config);
+compiler.hooks.afterEmit.intercept({
+  call: (...args) => {
+    exec('npm run compile-scss', (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log('SCSS compiled');
+    });
+  },
+});
 
 var server = new WebpackDevServer(compiler, {
   https: false,
