@@ -5,9 +5,10 @@ const Table = ({
   columns,
   data,
   pagination,
+  loading,
   empty,
 }) => {
-  const { fetchData, loading, totalCount, page: currentPage, perPage } = pagination || {};
+  const { fetchData, totalCount, page: currentPage, perPage } = pagination || {};
 
   const {
     getTableProps,

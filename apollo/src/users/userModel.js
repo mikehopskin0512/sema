@@ -57,6 +57,10 @@ const userSchema = mongoose.Schema({
   lastLogin: { type: Date, default: null },
   origin: { type: String, enum: ['invitation', 'waitlist', 'signup'], default: 'signup' },
   isSemaAdmin: { type: Boolean, default: false },
+  collections: [{
+    collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
+    isActive: { type: Boolean, default: true },
+  }],
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;
