@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
   name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
   type  = "String"
-  value = "0dd1ba689e"
+  value = "3b4eff2591"
 }
 resource "aws_ssm_parameter" "apollo_mailchimp_token" {
   name  = "/${var.env}/apollo/mailchimp/token"
