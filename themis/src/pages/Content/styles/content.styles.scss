@@ -273,6 +273,7 @@ button.sema-reaction-selection {
 }
 
 .suggestion-content-truncated-container {
+  padding: 10px;
   background: #fbfbfb;
   border: 0.5px solid #c4c4c4;
   margin-top: 7px;
@@ -281,7 +282,7 @@ button.sema-reaction-selection {
 }
 
 .suggestion-content-truncated {
-  margin: 8px 14px 23px 7px;
+  margin-bottom: 16px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -551,6 +552,21 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.suggestion-guide-link {
+  display: block;
+  color: #192129;
+  cursor: pointer;
+}
+
+.suggestion-guide-link-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-left: 6px;
+  text-decoration-line: underline;
+  color: #626262;
 }
 
 .sema-dropdown-content {

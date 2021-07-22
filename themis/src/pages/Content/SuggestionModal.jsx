@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MAX_CHARACTER_LENGTH } from './constants';
+import GuideLink from "./GuideLink";
 
 const truncate = (content) => {
   const contentLength = content.length;
@@ -28,6 +29,14 @@ const getCommentInterface = (comment, isDetailed) => {
       <div
         className="suggestion-content-truncated"
         dangerouslySetInnerHTML={{ __html: finalComment }}
+      />
+      <GuideLink
+        title="Maslows rules about clever vs better in engineering"
+        link="http://somelink.com"
+      />
+      <GuideLink
+        title="Maslows rules about clever vs better in engineering"
+        link="http://somelink.com"
       />
     </div>
   );

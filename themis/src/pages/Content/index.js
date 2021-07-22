@@ -71,7 +71,6 @@ const updateMetadata = setInterval(() => {
   if (initialCheck) {
     clearInterval(updateMetadata);
   }
-  console.log('test')
   store.dispatch(addGithubMetada(getGithubMetadata(document)));
   initialCheck = true;
 }, 5000);
