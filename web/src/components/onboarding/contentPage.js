@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { content } from './content';
 
@@ -41,7 +42,13 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ContentPage
+ContentPage.propTypes = {
+  page: PropTypes.number.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
+};
+
+export default ContentPage;

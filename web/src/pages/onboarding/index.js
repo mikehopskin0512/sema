@@ -6,11 +6,13 @@ import ContentPage from '../../components/onboarding/contentPage';
 import SmartBankCommentsPage from '../../components/onboarding/smartBankCommentsPage';
 import AddSuggestedCommentPage from '../../components/onboarding/addSuggestedCommentPage';
 import { commentCollection } from '../../components/onboarding/content';
+import ExtensionPage from '../../components/onboarding/extensionPage';
 
 const Onboarding = () => {
   const [collectionState, setCollection] = useState({});
-  const [isModalActive, toggleModalActive] = useState(false);
+  const [isModalActive, toggleModalActive] = useState(true);
   const [page, setPage] = useState(1);
+  const [comment, setComment] = useState({});
 
   const nextPage = (currentPage) => {
     setPage(currentPage + 1);
@@ -24,6 +26,10 @@ const Onboarding = () => {
     const newCollection = { ...collectionState };
     newCollection[field] = !newCollection[field];
     setCollection(newCollection);
+  };
+
+  const handleCommentFields = (e) => {
+    setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
   const renderModalContent = (currentPage) => {
@@ -48,6 +54,17 @@ const Onboarding = () => {
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          comment={comment}
+          handleCommentFields={(e) => handleCommentFields(e)}
+        />
+      );
+    case 6:
+      return (
+        <ExtensionPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+          closeModal={() => toggleModalActive(false)}
         />
       );
     default:
@@ -129,6 +146,6 @@ const Onboarding = () => {
       </div>
     </div>
   )
-}
+};
 
 export default withLayout(Onboarding);
