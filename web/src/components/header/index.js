@@ -141,9 +141,9 @@ const Header = () => {
                   Repos
                 </a>
               </Link>
-              <Link href="/comments">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/comments' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
-                  Comment Library
+              <Link href="/collections">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/collections' || pathname === '/comments' ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  Suggested Comments
                 </a>
               </Link>
               <Link href="/invitations">
@@ -165,9 +165,9 @@ const Header = () => {
                   Repos
                 </a>
               </Link>
-              <Link href="/comments">
+              <Link href="/collections">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Comment Library
+                  Suggested Comments
                 </a>
               </Link>
               <Link href="/invitations">

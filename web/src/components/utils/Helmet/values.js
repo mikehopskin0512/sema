@@ -23,3 +23,8 @@ export const UserManagementHelmet = {
   title: 'User Management',
   description: null,
 };
+
+export const SuggestedCommentsHelmet = {
+  title: 'Suggested Comments',
+  description: null,
+};
