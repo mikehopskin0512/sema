@@ -9,13 +9,16 @@ import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar.jsx';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
-import { EMOJIS } from "./constants";
+import { EMOJIS } from './constants';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
 const MIRROR_CONTENT_CLASS = 'sema-mirror-content';
+
 const HIGHLIGHTER_CLASS = 'sema-highlighter';
-const HIGHLIGHTER_CONTENT_CLASS = 'sema-highlighter-content';
+const HIGHLIGHTER_INTERMEDIATE = 'sema-highlighter-intermediate';
+const HIGHLIGHTER_CONTAINER = 'sema-highlighter-container';
+const HIGHLIGHTER_CONTENT = 'sema-highlighter-content';
 
 const UPDATE_HIGHLIGHT_INTERVAL_MS = 250;
 
@@ -97,26 +100,6 @@ class Mirror {
   }
 
   _render() {
-    /*
-        <div class="sema-shadow-root">
-          <div>
-            <ReactDOM/>
-          </div>
-          <div class="sema-mirror">
-              <div class="sema-mirror-content">
-                  it si something
-              </div>
-          </div>
-          <div class="sema-highlight">
-            <div class="sema-highlighter-content"></div>
-            <div class="sema-highlighter-content"></div>
-          </div>
-        </div>
-        <textarea>
-            it si something
-        </textarea>
-
-      */
     const {
       height,
       width,
@@ -151,6 +134,12 @@ class Mirror {
       this._highlighter = document.createElement('div');
       this._highlighter.className = HIGHLIGHTER_CLASS;
 
+      this._highlighterIntermediate = document.createElement('div');
+      this._highlighterIntermediate.className = HIGHLIGHTER_INTERMEDIATE;
+
+      this._highlighterContainer = document.createElement('div');
+      this._highlighterContainer.className = HIGHLIGHTER_CONTAINER;
+
       this._mirrorContent = document.createElement('div');
       this._mirrorContent.className = MIRROR_CONTENT_CLASS;
 
@@ -159,6 +148,9 @@ class Mirror {
       this._container.appendChild(this._mirror);
 
       this._mirror.appendChild(this._mirrorContent);
+
+      this._highlighter.appendChild(this._highlighterIntermediate);
+      this._highlighterIntermediate.appendChild(this._highlighterContainer);
 
       $(this._elementToMimic).before(this._container);
     }
@@ -171,8 +163,12 @@ class Mirror {
     this._mirrorContent.style.borderWidth = borderWidth;
     this._mirrorContent.style.lineHeight = lineHeight;
 
-    this._highlighter.style.height = height;
-    this._highlighter.style.width = width;
+    this._highlighterIntermediate.style.height = height;
+    this._highlighterIntermediate.style.width = width;
+
+    // TODO: should this be equal to scroll height?
+    this._highlighterContainer.style.height = height;
+    this._highlighterContainer.style.width = width;
   }
 
   _addHandlers() {
@@ -198,18 +194,21 @@ class Mirror {
   }
 
   _onTextPaste() {
-    const state = this._store.getState()
-    const isReactionDirty = state.semabars[this._semaBarContainerId].isReactionDirty;
+    const state = this._store.getState();
+    const isReactionDirty =
+      state.semabars[this._semaBarContainerId].isReactionDirty;
     if (isReactionDirty) {
-      return
+      return;
     }
-    const fixEmojiId = '607f0d1ed7f45b000ec2ed74'
-    const selectedReaction = EMOJIS.find(e => e._id === fixEmojiId)
-    this._store.dispatch(updateSelectedEmoji({
-      id: this._semaBarContainerId,
-      selectedReaction,
-      isReactionDirty: true,
-    }))
+    const fixEmojiId = '607f0d1ed7f45b000ec2ed74';
+    const selectedReaction = EMOJIS.find((e) => e._id === fixEmojiId);
+    this._store.dispatch(
+      updateSelectedEmoji({
+        id: this._semaBarContainerId,
+        selectedReaction,
+        isReactionDirty: true,
+      })
+    );
   }
 
   _onInput() {
@@ -287,7 +286,8 @@ class Mirror {
 
     // this._mirrorContent.scrollTop = scrollTop;
     this._mirror.scrollTop = scrollTop;
-    this._updateHighlights();
+    this._highlighterContainer.style.top = `-${scrollTop}px`;
+    // this._updateHighlights();
   }
 
   _updateHighlights() {
@@ -335,16 +335,16 @@ class Mirror {
     const { top, left, width, height } = highlight;
 
     const highlighterContent = document.createElement('div');
-    highlighterContent.className = HIGHLIGHTER_CONTENT_CLASS;
+    highlighterContent.className = HIGHLIGHTER_CONTENT;
     highlighterContent.style.top = `${top}px`;
     highlighterContent.style.left = `${left}px`;
     highlighterContent.style.width = `${width}px`;
     highlighterContent.style.height = `${height}px`;
-    this._highlighter.appendChild(highlighterContent);
+    this._highlighterContainer.appendChild(highlighterContent);
   }
 
   _removeExistingHighlights() {
-    $(this._highlighter).children(`.${HIGHLIGHTER_CONTENT_CLASS}`).remove();
+    $(this._highlighterContainer).children(`.${HIGHLIGHTER_CONTENT}`).remove();
   }
 
   // TODO: implement this
