@@ -75,7 +75,6 @@ export default (app) => {
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
         emails,
-        repositories
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -87,10 +86,10 @@ export default (app) => {
 
         await updateUserRepositoryList(user, repositories, identity);
 
-        delete user.identities[0].repositories
+        const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
 
         // Auth Sema
-        await setRefreshToken(res, user, await createRefreshToken(user));
+        await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
@@ -100,7 +99,6 @@ export default (app) => {
           // return res.status(201).send({ jwtToken: await createAuthToken(user) });
         }
       }
-
       const identityToken = await createIdentityToken(identity);
       // Build redirect based on inviteToken
       const registerRedirect = (inviteToken)
