@@ -1,9 +1,36 @@
+import mongoose from "mongoose";
 import Repositories from './repositoryModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
+
+export const create = async (repository) => {
+  try {
+    const { 
+      id: externalId, name, language, description, type,
+      cloneUrl, 
+      created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt
+    } = repository;
+     const newRepository = new Repositories({
+      externalId,
+      name, 
+      description,
+      type,
+      language,
+      cloneUrl,
+      repositoryCreatedAt,
+      repositoryUpdatedAt
+    })
+    const savedRepository = await newRepository.save();
+    return savedRepository;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
 
 export const createMany = async (repositories) => {
   try {
@@ -61,4 +88,27 @@ export const sendNotification = async (msg) => {
 
   const result = await publish(snsTopic, { repos: msg }, snsFilter);
   return result;
+};
+
+export const createOrUpdate = async (repository) => {
+  if (!repository.externalId) return false;
+  try {
+    const query = await Repositories.update({ externalId: repository.externalId }, repository, { upsert: true, setDefaultsOnInsert: true } );
+    return true;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByExternalId = async (externalIds) => {
+  try {
+    const repositories = await Repositories.find({ 'externalId' : { $in: externalIds } } );
+    return repositories;
+  } catch (err) { 
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
 };
