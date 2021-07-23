@@ -47,6 +47,28 @@ const reducer = (state = initialState, action) => {
       data: {},
       error: action.errors,
     };
+  case types.REQUEST_FETCH_REPO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_REPO_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: action.repositories,
+        repository: action.repository,
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_REPO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {},
+      error: action.errors,
+    };
   case types.REQUEST_GET_USER_REPOS:
     return {
       ...state,
@@ -56,7 +78,10 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: action.repositories,
+      data: {
+        repositories: action.repositories,
+        repository: action.repository,
+      },
       error: {},
     };
   case types.REQUEST_GET_USER_REPOS_ERROR:

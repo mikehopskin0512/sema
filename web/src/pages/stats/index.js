@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
-import Sidebar from "../../components/sidebar";
-import withLayout from "../../components/layout";
-import styles from "./activity.module.scss";
-import { repositoriesOperations } from "../../state/features/repositories";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Select from 'react-select'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
+import clsx from 'clsx';
+import Sidebar from '../../components/sidebar'
+import withLayout from '../../components/layout';
+import { repositoriesOperations } from '../../state/features/repositories';
+import styles from "./stats.module.scss";
 
 
-const { getUserRepositories } = repositoriesOperations;
+const { fetchRepo, getUserRepositories } = repositoriesOperations;
 
-const ActivityLogs = () => {
+const Stats = () => {
   const dispatch = useDispatch();
+
   const { auth, repositories } = useSelector((state) => ({
-    auth: state.authState,
     repositories: state.repositoriesState,
+    auth: state.authState,
+
   }));
-  const { token, user, userVoiceToken } = auth;
-  const [selectedRepo, setSelectedRepo] = useState({}); 
-  console.log(auth, repositories);
+  const { token } = auth;
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -31,6 +30,13 @@ const ActivityLogs = () => {
     getUserRepos(auth.user);
   }, [auth]);
 
+  useEffect(() => {
+    (async () => {
+      await dispatch(fetchRepo('60ef2137075eb50855548b39', token));
+    })();
+  }, []);
+  console.log(repositories);
+
   const formatOptions = (repositories) => {
     if (repositories) {
       return repositories.map((repository) => {
@@ -41,8 +47,8 @@ const ActivityLogs = () => {
   };
 
   return (
-    <div>
-      <div style={{width: 400}}>
+    <>
+    <div style={{width: 400}}>
         <Select onChange={(obj) => setSelectedRepo(obj)} options={formatOptions(repositories.data?.repositories)} className="pl-120 ml-20 mb-70" placeholder={'Select a repository'} />
       </div>
       <div className={clsx("columns px-120", styles["card-container"])}>
@@ -63,9 +69,12 @@ const ActivityLogs = () => {
           <div className="is-size-3 has-text-weight-semibold">23</div>
         </div>
       </div>
-      <Sidebar>Content</Sidebar>
-    </div>
-  );
-};
+      <Sidebar>
+        Test
+      </Sidebar>
+    </>
+  )
+}
 
-export default withLayout(ActivityLogs);
+export default withLayout(Stats);
+
