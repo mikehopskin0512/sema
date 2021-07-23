@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import clsx from 'clsx';
@@ -6,24 +6,31 @@ import Sidebar from '../../components/sidebar'
 import withLayout from '../../components/layout';
 import { repositoriesOperations } from '../../state/features/repositories';
 import styles from "./stats.module.scss";
+import NivoBarChart from '../../components/BarChart';
+import CircularPacking from '../../components/CircularPackingChart';
 
 
-const { fetchRepo, getUserRepositories } = repositoriesOperations;
+const { fetchRepo, filterSemaRepositories } = repositoriesOperations;
 
 const Stats = () => {
   const dispatch = useDispatch();
-
   const { auth, repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
     auth: state.authState,
 
   }));
   const { token } = auth;
+  const [selectedRepo, setSelectedRepo] = useState({});
 
   const getUserRepos = async (user) => {
     const { identities } = user;
     const githubUser = identities?.[0];
-    await dispatch(getUserRepositories(githubUser?.repositories, token));
+    const externalIds = githubUser.repositories.map((repository) => repository.id);
+    await dispatch(filterSemaRepositories(externalIds, token));
+  };
+
+  const getRepo = async (id) => {
+    await dispatch(fetchRepo(id, token));
   };
 
   useEffect(() => {
@@ -31,16 +38,17 @@ const Stats = () => {
   }, [auth]);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(fetchRepo('60ef2137075eb50855548b39', token));
-    })();
-  }, []);
+    if (selectedRepo.value) {
+      getRepo(selectedRepo.value);
+    }
+  }, [selectedRepo]);
+
   console.log(repositories);
 
   const formatOptions = (repositories) => {
     if (repositories) {
       return repositories.map((repository) => {
-        return { label: repository.name, value: repository.id }
+        return { label: repository.name, value: repository.externalId }
       });
     }
     return [];
@@ -48,7 +56,7 @@ const Stats = () => {
 
   return (
     <>
-    <div style={{width: 400}}>
+      <div style={{ width: 400 }}>
         <Select onChange={(obj) => setSelectedRepo(obj)} options={formatOptions(repositories.data?.repositories)} className="pl-120 ml-20 mb-70" placeholder={'Select a repository'} />
       </div>
       <div className={clsx("columns px-120", styles["card-container"])}>
@@ -70,7 +78,18 @@ const Stats = () => {
         </div>
       </div>
       <Sidebar>
-        Test
+        <div class="columns">
+          <div className="column">
+            <div className={clsx("column mx-20", styles["card"],  styles['chart'])}>
+              <NivoBarChart data={[repositories?.data?.repository?.repoStats?.reactions]} />
+            </div>
+          </div>
+          <div className="column">
+            <div className={clsx("column mx-20", styles["card"], styles['chart'])}>
+                <CircularPacking data={repositories?.data?.repository?.repoStats?.tags} />
+            </div>
+          </div>
+        </div>
       </Sidebar>
     </>
   )
