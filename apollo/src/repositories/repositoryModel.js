@@ -22,6 +22,7 @@ const repoStatsSchema = new mongoose.Schema({
   tags: aggregationSchema,
   rawReactions: [reactionsScheme],
   rawTags: [tagsScheme],
+  userIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { _id: false });
 
 const repositoriesSchema = new mongoose.Schema({
