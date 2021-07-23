@@ -99,7 +99,6 @@ export default (app) => {
           // return res.status(201).send({ jwtToken: await createAuthToken(user) });
         }
       }
-
       const identityToken = await createIdentityToken(identity);
       // Build redirect based on inviteToken
       const registerRedirect = (inviteToken)

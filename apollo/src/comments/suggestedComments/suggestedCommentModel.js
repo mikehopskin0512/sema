@@ -17,12 +17,12 @@ const suggestedCommentSchema = new Schema({
   },
   author: {
     type: String,
-    required: true,
   },
   source: { name: String, url: String },
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
+    url: String,
   }],
   tags: [{
     tag: { type: Schema.Types.ObjectId, ref: 'Tag' },

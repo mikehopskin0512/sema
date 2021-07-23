@@ -13,6 +13,11 @@ export const RegisterHelmet = {
   description: null,
 };
 
+export const SuggestedCommentsHelmet = {
+  title: 'Comment Collections',
+  description: null,
+};
+
 // ADMIN PAGES
 export const InvitesHelmet = {
   title: 'Invites',
