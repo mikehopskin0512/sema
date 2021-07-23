@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
-import { createOrUpdate } from "../../repositories/repositoryService";
+import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
+import { buildReactionsEmptyObject, incrementReactions } from '../reaction/reactionService';
+import { buildTagsEmptyObject, incrementTags } from '../tags/tagService';
 const { Schema } = mongoose;
 
 const githubMetadataSchema = new Schema({
@@ -30,19 +32,65 @@ const smartCommentSchema = new Schema({
   githubMetadata: githubMetadataSchema,
 }, { collection: 'smartComments', timestamps: true });
 
-smartCommentSchema.post('save', async function(doc, next) {
+smartCommentSchema.post('save', async function (doc, next) {
   try {
-    const repository = {
-      externalId: doc.githubMetadata.repo_id, 
-      name: doc.githubMetadata.repo, 
-      language: "", 
-      description: "",
-      type: "github",
-      cloneUrl: doc.githubMetadata.clone_url, 
-      repositoryCreatedAt: "", 
-      repositoryUpdatedAt: ""
+    const { githubMetadata: { repo_id: externalId }, _id, reaction: reactionId, tags: tagsIds } = doc;
+
+    if (externalId) {
+      let repository = await findByExternalId(externalId);
+      const reaction = {
+        smartCommentId: mongoose.Types.ObjectId(_id),
+        reactionId: mongoose.Types.ObjectId(reactionId)
+      };
+
+      const tags = {
+        smartCommentId: mongoose.Types.ObjectId(_id),
+        tagsId: tagsIds
+      }
+
+      if (repository) {
+        // It already exists in the database, use the object for this one and upsert the reactions
+        const repoReactions = repository.repoStats.rawReactions;
+        const repoTags = repository.repoStats.rawTags;
+        repoReactions.push(reaction);
+        repoTags.push(tags);
+        const aggregatedTags = incrementTags(repository.repoStats.tags, tagsIds)
+        repository.repoStats.tags = aggregatedTags;
+        repository.repoStats.reactions = incrementReactions(repository.repoStats.reactions, reactionId);
+      } else {
+        const reactionObj = await buildReactionsEmptyObject();
+        const tagsObj = await buildTagsEmptyObject();
+        const aggregatedTags = incrementTags(tagsObj, tagsIds)
+        const aggregatedReactions = incrementReactions(reactionObj, reactionId);
+
+        repository = {
+          externalId,
+          name: doc.githubMetadata.repo,
+          language: "",
+          description: "",
+          type: "github",
+          cloneUrl: doc.githubMetadata.clone_url,
+          repositoryCreatedAt: "",
+          repositoryUpdatedAt: "",
+          repoStats: {
+            tags: {
+              ...aggregatedTags
+            },
+            reactions: {
+              ...aggregatedReactions
+            },
+            rawReactions: [
+              reaction
+            ],
+            rawTags: [
+              tags
+            ],
+          }
+        }
+      }
+
+      const newRepository = await createOrUpdate(repository);
     }
-    const newRepository = await createOrUpdate(repository);
     return next();
   } catch (err) {
     return next(err);

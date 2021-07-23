@@ -47,6 +47,7 @@ export const get = (endpoint, id, token = '') => {
 
 export const getAll = (endpoint, { params = {} }, token = '') => {
   const config = {};
+  console.log({ token });
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
   }
