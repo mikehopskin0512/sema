@@ -37,7 +37,7 @@ smartCommentSchema.post('save', async function (doc, next) {
   const GITHUB_URL = 'https://github.com';
   try {
     const { githubMetadata: { repo_id: externalId, url }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
-    console.log(doc);
+
     if (externalId) {
       const user = await findById(userId);
       let repository = await findByExternalId(externalId);
@@ -100,7 +100,7 @@ smartCommentSchema.post('save', async function (doc, next) {
           }
         }
       }
-      
+
       const newRepository = await createOrUpdate(repository);
       const repoData = { name: repo, id: externalId, fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')), githubUrl: url.slice(0, url.search('/pull/')) }
       await addRepositoryToIdentity(user, repoData);
