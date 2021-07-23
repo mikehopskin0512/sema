@@ -9,11 +9,11 @@ const suggestedCommentSchema = new Schema({
   },
   title: {
     type: String,
-    required: true,
+    // required: true,
   },
   comment: {
     type: String,
-    required: true,
+    // required: true,
   },
   author: {
     type: String,
