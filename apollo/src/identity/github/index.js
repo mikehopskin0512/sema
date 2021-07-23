@@ -75,7 +75,6 @@ export default (app) => {
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
         emails,
-        repositories
       };
 
       const user = await findByUsernameOrIdentity(email, identity);

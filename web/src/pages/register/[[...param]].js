@@ -92,8 +92,6 @@ const RegistrationForm = (props) => {
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
-    console.log(data, collectionState, comment);
-    return;
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
