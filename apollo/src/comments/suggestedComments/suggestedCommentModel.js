@@ -4,6 +4,9 @@ import { autoIndex } from '../../config';
 const { Schema } = mongoose;
 
 const suggestedCommentSchema = new Schema({
+  displayId: {
+    type: String,
+  },
   title: {
     type: String,
     required: true,
@@ -12,10 +15,20 @@ const suggestedCommentSchema = new Schema({
     type: String,
     required: true,
   },
-  source: {
+  author: {
     type: String,
-    ref: 'CommentSource',
+    required: true,
   },
+  source: { name: String, url: String },
+  engGuides: [{
+    engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
+    name: String,
+  }],
+  tags: [{
+    tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
+    type: String,
+    label: String,
+  }],
   isActive: {
     type: Boolean,
     default: true,

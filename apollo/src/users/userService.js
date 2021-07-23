@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import _ from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -359,6 +360,31 @@ export const updateLastLogin = async (user) => {
     );
     await query.exec();
     return true;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const updateUserRepositoryList = async (user, repository, identity) => {
+  try {
+    const identityRepo = user.identities?.[0].repositories;
+
+    const repositories = repository
+    .map((el) => {
+      const { name, id, full_name: fullName, html_url: githubUrl } = el;
+      const index = _.findIndex(identityRepo, function(o) {
+        return o.id.toString() === el.id.toString();
+      } );
+      if (index === -1) {
+        return { name, id, fullName, githubUrl };
+      }
+      const repo = identityRepo[index];
+      return { name, id, fullName, githubUrl, ...repo };
+    });
+    identity = Object.assign(identity, { repositories });
+    await updateIdentity(user, identity);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

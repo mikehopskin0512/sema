@@ -1,8 +1,11 @@
-import React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
+
 import styles from './sidebar.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
@@ -13,8 +16,11 @@ const MenuItem = ({ pathName, icon, name }) => {
   return (
     <Link href={pathName}>
       <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-flex is-align-items-center mb-10 is-clickable')}>
-        { icon }
-        <span className={clsx(styles['label-menu'], 'has-text-white ml-15')}>{ name }</span>
+        <FontAwesomeIcon
+          className="is-clickable"
+          icon={icon}
+        />
+        <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
       </a>
     </Link>
   );
@@ -26,51 +32,49 @@ MenuItem.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-const Sidebar = ({ open, setOpen }) => {
-  const menus = [
+const Sidebar = ({ children }) => {
+  const [menus] = useState([
     {
-      name: 'Dashboard',
-      pathName: '/dashboard',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      name: 'Overview',
+      pathName: '/overview',
+      icon: faHome,
     },
     {
-      name: 'User Management',
-      pathName: '/sema-admin/users',
-      icon: <img src="/img/icons/users.png" alt="" />,
+      name: 'Activity Logs',
+      pathName: '/activity',
+      icon: faListAlt,
     },
     {
-      name: 'Invites',
-      pathName: '/sema-admin/invites',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      name: 'Code Stats',
+      pathName: '/stats',
+      icon: faChartPie,
     },
-    {
-      name: 'Reports',
-      pathName: '/sema-admin/reports',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-  ];
+  ]);
+
   return (
-    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], 'p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
-      <div className={`is-flex is-align-items-center is-clickable ${open ? 'p-10' : 'px-5 py-10'}`} onClick={() => setOpen(!open)}>
-        <img src="/img/logo_short.png" alt="logo" />
-        {
-          open && <span className="has-text-white is-size-4 ml-10">sema</span>
-        }
-      </div>
-      <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
-        {
-          menus.map((item) => (
-            <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
-          ))
-        }
+    <div className={clsx(styles['layout-container'])}>
+      <div className="columns">
+        <div className="column is-one-fifth">
+          <div className={clsx(styles.sidebar, 'ml-90 p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
+            <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
+              {
+                menus.map((item) => (
+                  <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        <div className="column m-50">
+          {children}
+        </div>
       </div>
     </div>
   );
 };
 
 Sidebar.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default Sidebar;

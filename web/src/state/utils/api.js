@@ -50,7 +50,6 @@ export const getAll = (endpoint, { params = {} }, token = '') => {
   if (token) {
     config.headers = { Authorization: `Bearer ${token}` };
   }
-
   return api.get(endpoint, { params, ...config });
 };
 

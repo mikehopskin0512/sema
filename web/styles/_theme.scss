@@ -28,10 +28,20 @@ $gray-dark: #AFADAA;
 
 // Set custom colors
 $custom-colors: (
+    "black-2": #222222,
     "white-gray": $white-gray,
     "gray-dark": $gray-dark,
-    "fa-gray": #F2F2F2,
+    "gray-2": #F2F2F2,
+    "gray-3": #F3F3F3,
+    "gray-4": #F4F4F4,
+    "gray-9": #F9F9F9,
+    "gray-b": #FBFBFB,
+    "tag-blue": #EEF1FB,
+    "tag-text": #1F44CC,
+    "stat": #73839C,
+    "deep-black": #000000,
     "sky-light": #F0F7FA,
+    "gray-300": #E3E9EE,
 );
 
 // Set custom shades
@@ -48,12 +58,17 @@ $size-5: 1.25rem;
 $size-6: 1rem;
 $size-7: 0.875rem;
 $size-8: 0.75rem;
+$size-9: 0.5625rem;
 
-$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7 $size-8;
-$spacing-values: ("auto": auto, "0": 0, "1r": 1rem, "2r": 2rem, "5": 5px, "8": 8px, "10": 10px, "15": 15px, "16": 16px, "20": 20px, "25": 25px, "50": 50px, "60": 60px, "70": 70px, "80": 80px, "90": 90px, "120": 120px, "150": 150px);
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7 $size-8 $size-9;
+$spacing-values: ("auto": auto, "0": 0, "1r": 1rem, "2r": 2rem, "neg8": -8px, "5": 5px, "8": 8px, "10": 10px, "12": 12px, "15": 15px, "16": 16px, "20": 20px, "25": 25px, "30": 30px, "50": 50px, "60": 60px, "70": 70px, "80": 80px, "90": 90px, "120": 120px, "150": 150px);
 $input-background-color: #E7E8EA;
 $family-sans-serif: "Inter", "Montserrat", sans-serif;
 $family-monospace: sans-serif;
+
+// Badge
+$badge-font-size: 20px;
+$badge-height: 30px;
 
 @import "../node_modules/bulma/bulma.sass";
 // Sample of individual module import - in case we want to optimize modules
@@ -67,6 +82,8 @@ $family-monospace: sans-serif;
 
 // React date-picker styles
 @import '../node_modules/react-datepicker/dist/react-datepicker.css';
+
+@import '@creativebulma/bulma-badge';
 
 // Additional SCSS files
 @import "./fonts";

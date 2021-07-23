@@ -46,7 +46,8 @@
       "css": [
         "css/all.min.css",
         "css/sema-custom.css",
-        "css/content.styles.css"
+        "css/content.styles.css",
+        "css/overwritten-github.styles.css"
       ]
     }
   ],
