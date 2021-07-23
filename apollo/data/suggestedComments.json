@@ -5,7 +5,13 @@
     "comment": "Make the code a little bit less clever in order to make it easier to read. Give it a stronger narrative structure so that you can more easily understand the code.",
     "author": "gtruitt",
     "source": { "name": "Sema Community", "url": "none" },
-    "engGuides": ["60f79106b6aa6d1ebb73b293"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b293",
+        "name": "Brevity",
+        "slug": "brevity"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -150,7 +156,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b295"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b295",
+        "name": "Class vs React.createClass vs stateless",
+        "slug": "class-vs-react-createclass-vs-stateless"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -262,7 +274,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b296"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b296",
+        "name": "Referencing naming",
+        "slug": "referencing-naming"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -289,7 +307,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b297"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b297",
+        "name": "Component naming",
+        "slug": "component-naming"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -316,7 +340,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b298"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b298",
+        "name": "Higher-Order Component Naming",
+        "slug": "higher-order-component-naming"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -343,7 +373,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b299"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b299",
+        "name": "Props Naming",
+        "slug": "props-naming"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -371,7 +407,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29a"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29a",
+        "name": "Declaration",
+        "slug": "declaration"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -402,7 +444,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29b"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29b",
+        "name": "Alignment",
+        "slug": "alignment"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -434,7 +482,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29c"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29c",
+        "name": "Quotes",
+        "slug": "quotes"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -461,7 +515,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29d"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29d",
+        "name": "Spacing",
+        "slug": "spacing"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -488,7 +548,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29e"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29e",
+        "name": "Spacing for self-closing tag",
+        "slug": "spacing-for-self-closing-tag"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -515,7 +581,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b29f"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b29f",
+        "name": "camelCase for prop names",
+        "slug": "camelcase-for-prop-names"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -542,7 +614,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a0"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a0",
+        "name": "Omit value of prop when explicitly true",
+        "slug": "omit-value-of-prop-when-explicitly-true"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -569,7 +647,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a1"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a1",
+        "name": "Alt prop on <img> tags",
+        "slug": "alt-prop-on-img-tags"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -596,7 +680,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a2"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a2",
+        "name": "Avoid unecessary words in <img> alt props",
+        "slug": "avoid-unecessary-words-in-img-alt-props"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -623,7 +713,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a3"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a3",
+        "name": "Use only valid, non-abstract ARIA roles",
+        "slug": "use-only-valid-non-abstract-aria-roles"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -650,7 +746,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a4"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a4",
+        "name": "Do not use accessKey on elements",
+        "slug": "do-not-use-accesskey-on-elements"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -677,7 +779,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a5"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a5",
+        "name": "Avoid using an array index as key prop",
+        "slug": "avoid-using-an-array-index-as-key-prop"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -731,7 +839,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a6"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a6",
+        "name": "define explicit defaultProps",
+        "slug": "define-explicit-defaultprops"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -758,7 +872,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a7"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a7",
+        "name": "Spread props",
+        "slug": "spread-props"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -785,7 +905,9 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a8"],
+    "engGuides": [
+      { "engGuide": "60f79106b6aa6d1ebb73b2a8", "name": "Refs", "slug": "refs" }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -812,7 +934,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2a9"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2a9",
+        "name": "Parentheses",
+        "slug": "parentheses"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -843,7 +971,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2aa"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2aa",
+        "name": "Self-close tags",
+        "slug": "self-close-tags"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -870,7 +1004,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2ab"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2ab",
+        "name": "Tags for multi-line components",
+        "slug": "tags-for-multi-line-components"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -897,7 +1037,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2ac"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2ac",
+        "name": "Arrow functions in methods",
+        "slug": "arrow-functions-in-methods"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -924,7 +1070,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2ad"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2ad",
+        "name": "Event handlers for the render method",
+        "slug": "event-handlers-for-the-render-method"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -951,7 +1103,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2ae"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2ae",
+        "name": "Underscore prefix for internal methods",
+        "slug": "underscore-prefix-for-internal-methods"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -978,7 +1136,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2af"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2af",
+        "name": "Value in render methods",
+        "slug": "value-in-render-methods"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -1005,7 +1169,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b0"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b0",
+        "name": "Follow consistent ordering for class extends",
+        "slug": "follow-consistent-ordering-for-class-extends"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -1036,7 +1206,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b1"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b1",
+        "name": "Follow consistent definitions",
+        "slug": "follow-consistent-definitions"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -1063,7 +1239,13 @@
       "name": "AirBnB",
       "url": "https://github.com/airbnb/javascript/tree/master/react"
     },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b2"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b2",
+        "name": "Follow consistent ordering for React.createClass",
+        "slug": "follow-consistent-ordering-for-react-createclass"
+      }
+    ],
     "tags": [
       {
         "tag": "60f5e20b01f4665089c1d972",
@@ -1122,7 +1304,13 @@
     "comment": "Logic should in general be asking the question \"Is this true?\" instead of \"Is this not true?\"",
     "author": "",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b3"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b3",
+        "name": "Logic should be in the positive",
+        "slug": "logic-should-be-in-the-positive"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e86", "type": "guide", "label": "Style" },
@@ -1141,7 +1329,13 @@
     "comment": "You should iterate sequentially on a focused chunk of work at a time.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b4"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b4",
+        "name": "Iterate in Thens",
+        "slug": "iterate-in-thens"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1195,7 +1389,13 @@
     "comment": "Conditional logic should avoid double negatives.",
     "author": "",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b5"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b5",
+        "name": "Avoid double negative logic",
+        "slug": "avoid-double-negative-logic"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e8e", "type": "guide", "label": "Logic" },
@@ -1215,7 +1415,13 @@
     "comment": "Software entities should be open for extension, but closed for modification.",
     "author": "",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b6"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b6",
+        "name": "Open–closed principle",
+        "slug": "open-closed-principle"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e90", "type": "guide", "label": "Solid" },
@@ -1236,7 +1442,13 @@
     "comment": "Every module, class or function in a computer program should have responsibility over a single part of that program's functionality, and it should encapsulate that part",
     "author": "Robert C. Martin",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b7"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b7",
+        "name": "Single-Responsibility Principle",
+        "slug": "single-responsibility-principle"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e8f", "type": "guide", "label": "Code" },
@@ -1262,7 +1474,13 @@
     "comment": "Stating a problem in its lowest sensible abstraction helps you understand and develop accurate solutions to a problem.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b8"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b8",
+        "name": "Reduce a problem to its lowest sensible abstraction",
+        "slug": "reduce-a-problem-to-its-lowest-sensible-abstraction"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e8b", "type": "guide", "label": "Process" }
@@ -1276,7 +1494,13 @@
     "comment": "Documentation, in all forms, should be as close as it can be to the code.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2b9"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2b9",
+        "name": "Documentation should be close to the code",
+        "slug": "documentation-should-be-close-to-the-code"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1300,7 +1524,13 @@
     "comment": "Compute properties when possible",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2ba"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2ba",
+        "name": "Compute properties when possible",
+        "slug": "compute-properties-when-possible"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1323,7 +1553,13 @@
     "comment": "Data should be held in one location, duplicates of that data should be by reference only.",
     "author": "",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2bb"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2bb",
+        "name": "One single source of truth",
+        "slug": "one-single-source-of-truth"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1349,7 +1585,13 @@
     "comment": "Make the hidden principles, ideas and behaviors which make up a technology organization understood and explicit",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2bc"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2bc",
+        "name": "Make the invisible, visible",
+        "slug": "make-the-invisible-visible"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469e96", "type": "guide", "label": "Pde" },
@@ -1385,7 +1627,13 @@
     "comment": "When encountering documentation, it should be easy to make changes.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2bd"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2bd",
+        "name": "Ensure documentation is easy to amend",
+        "slug": "ensure-documentation-is-easy-to-amend"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1409,7 +1657,13 @@
     "comment": "When software behaves unexpectedly, it should be easy to understand what is causing the problem.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2be"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2be",
+        "name": "Software should be easy to debug",
+        "slug": "software-should-be-easy-to-debug"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -1450,7 +1704,13 @@
     "comment": "Core logic that is related to solving a business or domain problem should exist outside of a framework.",
     "author": "Adam Craven",
     "source": { "name": "Principles.dev", "url": "https://principles.dev/p/" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2bf"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2bf",
+        "name": "Separate core logic from the framework",
+        "slug": "separate-core-logic-from-the-framework"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       {
@@ -15256,7 +15516,13 @@
     "comment": "This code is in keeping with our value of competence: it was delivered on time, or you acknowledged it was not going to be delivered on time.",
     "author": "Sema Engineering",
     "source": { "name": "Sema", "url": "" },
-    "engGuides": ["60f79106b6aa6d1ebb73b2c0"],
+    "engGuides": [
+      {
+        "engGuide": "60f79106b6aa6d1ebb73b2c0",
+        "name": "Sema Values",
+        "slug": "sema-values"
+      }
+    ],
     "tags": [
       { "tag": "60f5e20b01f4665089c1d971", "type": "language", "label": "All" },
       { "tag": "60f5e2a3cd37055105469ea9", "type": "guide", "label": "Values" }

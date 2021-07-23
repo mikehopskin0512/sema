@@ -22,7 +22,7 @@ const suggestedCommentSchema = new Schema({
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
-    url: String,
+    slug: String,
   }],
   tags: [{
     tag: { type: Schema.Types.ObjectId, ref: 'Tag' },

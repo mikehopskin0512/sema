@@ -17,7 +17,7 @@ const suggestedCommentsData = data.map(({
   }
 
   suggestedComment.tags = tags.map(({ tag, type, label }) => ({ tag: new ObjectId(tag), type, label }));
-  suggestedComment.engGuides = engGuides.map((engGuide) => new ObjectId(engGuide));
+  suggestedComment.engGuides = engGuides.map(({ engGuide, name, slug }) => ({ engGuide: new ObjectId(engGuide), name, slug }));
   return suggestedComment;
 });
 
