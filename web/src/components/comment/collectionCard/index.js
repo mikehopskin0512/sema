@@ -1,10 +1,25 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './collectionCard.module.scss';
 
+import { authOperations } from '../../../state/features/auth';
+
+const { setCollectionIsActive } = authOperations;
+
 const CollectionCard = ({ isActive, collectionData }) => {
-  const { name, description, comments = [] } = collectionData;
+  const { token } = useSelector((state) => state.authState);
+  const dispatch = useDispatch();
+
+  const [active, setActive] = useState(isActive ? 'checked' : false);
+  const { _id, name, description, comments = [] } = collectionData;
+
+  const onChangeToggle = (cb) => {
+    setActive(cb.checked);
+    dispatch(setCollectionIsActive(_id, token));
+  };
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -14,8 +29,6 @@ const CollectionCard = ({ isActive, collectionData }) => {
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
     </div>
   );
-
-  // TODO: isActive toggle
   // TODO: Favorited
 
   return (
@@ -23,7 +36,10 @@ const CollectionCard = ({ isActive, collectionData }) => {
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>
-          {/* SWITCH */}
+          <div className="field">
+            <input id={`activeSwitch-${_id}`} type="checkbox" onClick={onChangeToggle} name={`activeSwitch-${_id}`} className="switch is-rounded" checked={active} />
+            <label htmlFor={`activeSwitch-${_id}`} />
+          </div>
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>

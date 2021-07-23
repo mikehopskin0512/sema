@@ -12,7 +12,8 @@ import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
 const NUM_PER_PAGE = 9;
 
 const CommentCollections = () => {
-  const { user: { collections: collectionsState } } = useSelector((state) => state.authState);
+  const { user } = useSelector((state) => state.authState);
+  const { collections: collectionsState } = user;
 
   const [collections, setCollections] = useState(collectionsState);
   const [collectionsArrs, setCollectionsArrs] = useState({
@@ -23,6 +24,10 @@ const CommentCollections = () => {
   const {
     register, handleSubmit, reset, getValues,
   } = useForm();
+
+  useEffect(() => {
+    setCollections(collectionsState);
+  }, [collectionsState]);
 
   useEffect(() => {
     if (collections && collections.length) {
