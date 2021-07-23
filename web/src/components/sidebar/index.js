@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
-import PropTypes from 'prop-types';
 
 import styles from './sidebar.module.scss';
 
