@@ -13,6 +13,9 @@ const mapStateToProps = (state, ownProps) => {
   const { isOpen, openFor, data, position, isLoading } = state[
     GLOBAL_SEMA_SEARCH_ID
   ];
+
+  const { user } = state;
+  
   return {
     isSearchModalVisible:
       isOpen && (openFor ? openFor === ownProps.activeElementId : true),
@@ -21,6 +24,7 @@ const mapStateToProps = (state, ownProps) => {
     isLoading,
     commentBox: ownProps.commentBox,
     mirror: ownProps.mirror,
+    userId: user?._id,
   };
 };
 
@@ -61,7 +65,7 @@ const GlobalSearchbar = (props) => {
 
   const getSemaSuggestions = () => {
     !props.isLoading && props.toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${props.data}`;
+    const URL = `${SUGGESTION_URL}${props.data}&user=${props.userId}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
