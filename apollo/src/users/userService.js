@@ -367,12 +367,11 @@ export const updateLastLogin = async (user) => {
   }
 };
 
-export const updateUserRepositoryList = async (user, repository, identity) => {
+export const updateUserRepositoryList = async (user, repos, identity) => {
   try {
     const identityRepo = user.identities?.[0].repositories;
 
-    const repositories = repository
-    .map((el) => {
+    const repositories = repos.map((el) => {
       const { name, id, full_name: fullName, html_url: githubUrl } = el;
       const index = _.findIndex(identityRepo, function(o) {
         return o.id.toString() === el.id.toString();
@@ -385,6 +384,23 @@ export const updateUserRepositoryList = async (user, repository, identity) => {
     });
     identity = Object.assign(identity, { repositories });
     await updateIdentity(user, identity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const addRepositoryToIdentity = async (user, repository) => {
+  try {
+    const identityRepo = user.identities?.[0].repositories;
+    if (_.findIndex(identityRepo, { 'id': repository.id }) !== -1) {
+      return true;
+    }
+    let identity = user.identities?.[0];
+    identity = Object.assign(identity, { repositories: [ ...identityRepo, repository ] });
+    await updateIdentity(user, identity);
+    return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

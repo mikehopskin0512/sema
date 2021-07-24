@@ -9,14 +9,16 @@ const LIST_TYPE = {
 };
 
 const RepoList = ({ type, repos }) => (
-  <div className="mb-50">
-    <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
-    <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
-      {repos.map((child) => (
-        <RepoCard {...child} isFavorite={type === 'FAVORITES'} />
-      ))}
+  repos.length > 0 ? (
+    <div className="mb-50">
+      <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
+      <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
+        {repos.map((child) => (
+          <RepoCard {...child} isFavorite={type === 'FAVORITES'} />
+        ))}
+      </div>
     </div>
-  </div>
+  ) : null
 );
 
 RepoList.defaultProps = {
