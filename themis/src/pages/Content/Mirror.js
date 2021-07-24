@@ -166,9 +166,12 @@ class Mirror {
     this._highlighterIntermediate.style.height = height;
     this._highlighterIntermediate.style.width = width;
 
-    // TODO: should this be equal to scroll height?
-    this._highlighterContainer.style.height = height;
+    this._highlighterContainer.style.height = scrollYHeight;
     this._highlighterContainer.style.width = width;
+
+    const scrollTop = this._elementToMimic.scrollTop;
+    this._mirror.scrollTop = scrollTop;
+    this._highlighterContainer.style.top = `-${scrollTop}px`;
   }
 
   _addHandlers() {
@@ -212,7 +215,6 @@ class Mirror {
   }
 
   _onInput() {
-    this._render();
     const value = this._elementToMimic.value;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
@@ -278,16 +280,7 @@ class Mirror {
 
   // TODO: do things to make re-render of highlights faster onchange
   _onScroll(event) {
-    // scroll mirror too
-    // update highlights
-    const {
-      target: { scrollTop },
-    } = event;
-
-    // this._mirrorContent.scrollTop = scrollTop;
-    this._mirror.scrollTop = scrollTop;
-    this._highlighterContainer.style.top = `-${scrollTop}px`;
-    // this._updateHighlights();
+    this._render();
   }
 
   _updateHighlights() {
@@ -316,14 +309,15 @@ class Mirror {
         left: baseElementLeft,
       } = this._elementMeasurement.getElementViewportPosition();
 
-      const extraWidth = 4;
+      const extraLeft = 2;
       const extraTop = 2;
+      const goodWidth = 14;
 
       this._highlights.push({
         id: alert.id,
         top: top - baseElementTop + extraTop,
-        left: left - baseElementLeft - extraWidth / 2,
-        width: width + 6,
+        left: left - baseElementLeft - extraLeft / 2,
+        width: width + goodWidth,
         height,
       });
     });
