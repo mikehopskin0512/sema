@@ -287,6 +287,8 @@ class Mirror {
     const value = this._mirrorContent.textContent;
     const alerts = this._getTokenAlerts(value);
 
+    const scrolled = this._elementToMimic.scrollTop;
+
     Object.keys(this._ranges).forEach((k) => this._ranges[k].detach());
     this._ranges = {};
     this._highlights = [];
@@ -304,6 +306,9 @@ class Mirror {
 
       const { top, left, height, width } = range.getClientRects()[0];
 
+      // The amount of scrolling that has been done of the viewport area (or any other scrollable element) is taken into account when computing the rectangles.
+      const disregardScrollTop = top + scrolled;
+
       const {
         top: baseElementTop,
         left: baseElementLeft,
@@ -311,11 +316,11 @@ class Mirror {
 
       const extraLeft = 2;
       const extraTop = 2;
-      const goodWidth = 14;
+      const goodWidth = 10;
 
       this._highlights.push({
         id: alert.id,
-        top: top - baseElementTop + extraTop,
+        top: disregardScrollTop - baseElementTop + extraTop,
         left: left - baseElementLeft - extraLeft / 2,
         width: width + goodWidth,
         height,
