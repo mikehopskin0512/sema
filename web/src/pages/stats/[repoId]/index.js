@@ -3,9 +3,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { BarData } from './data';
+import { BarData, CircularData } from './data';
 import styles from './stats.module.scss';
 import BarChart from '../../../components/BarChart';
+import CircularPacking from '../../../components/CircularPackingChart';
 import Sidebar from '../../../components/sidebar';
 import withLayout from '../../../components/layout';
 import Helmet, { RepoStatsHelmet } from '../../../components/utils/Helmet';
@@ -60,7 +61,7 @@ const Stats = () => {
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
             <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
-            {/* <BarChart data={BarData} /> */}
+            <CircularPacking data={CircularData} />
           </div>
         </div>
       </div>

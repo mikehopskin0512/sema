@@ -5,8 +5,8 @@ import { ResponsiveBar } from '@nivo/bar';
 import clsx from 'clsx';
 import { find, round } from 'lodash';
 import PropTypes from 'prop-types';
-import { EMOJIS } from './data';
 import styles from './barChart.module.scss';
+import { EMOJIS } from '../../utils/constants';
 
 const NivoBarChart = ({ data = [] }) => {
   const parseData = (rawData) => {
