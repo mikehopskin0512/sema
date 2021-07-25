@@ -53,7 +53,10 @@ export const update = async (user) => {
       { $set: user },
       { new: true },
     );
-    const updatedUser = await query.lean().exec();
+    const updatedUser = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+    }).exec();
     return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -145,7 +148,15 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
 export const findById = async (id) => {
   try {
     const query = User.findOne({ _id: id });
-    const user = await query.lean().exec();
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      select: {
+        _id: 1,
+        isActive: 1,
+        name: 1,
+      }
+    }).exec();
 
     return user;
   } catch (err) {
