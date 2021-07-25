@@ -294,7 +294,7 @@ const UsersPage = () => {
   };
 
   return (
-    <div className="hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <>
       <Helmet {...UserManagementHelmet} />
       <div className='is-flex is-justify-content-space-between'>
         <div>
@@ -320,7 +320,7 @@ const UsersPage = () => {
           }}
         />
       </div>
-    </div>
+    </>
   );
 };
 

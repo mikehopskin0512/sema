@@ -45,7 +45,7 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onCopyPressed = (id, suggestion) => {
+  const onInsertPressed = (id, suggestion) => {
     let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
     props.commentBox.value = `${value}${suggestion}`;
@@ -152,9 +152,11 @@ const SearchBar = (props) => {
       typeof event.which == 'number' ? event.which : event.keyCode;
     if (charCode === 13) {
       // enter is pressed
-      // show dropdown
       event.preventDefault();
-      getSemaSuggestions();
+      if (props.searchValue) {
+        // show dropdown
+        getSemaSuggestions();
+      }
     } else if (charCode === 27) {
       // esc is pressed
       // hide dropdown
@@ -217,7 +219,7 @@ const SearchBar = (props) => {
             {props.isLoggedIn && (
               <SuggestionModal
                 key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
-                onCopyPressed={onCopyPressed}
+                onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
               />
             )}
