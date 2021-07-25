@@ -22,7 +22,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token } = auth;
-  const { data } = repositories;
+  const { data: { repositories: repoArray} } = repositories;
 
   const getUserRepos = useCallback((user) => {
     const { identities } = user;
@@ -42,7 +42,7 @@ const Dashboard = () => {
     if (identities && identities.length) {
       const githubUser = identities[0];
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
-      const otherRepos = [...data];
+      const otherRepos = [...repoArray];
       const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
       setRepos({
         favorites: favoriteRepos,
