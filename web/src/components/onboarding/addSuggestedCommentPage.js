@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { commentCollection } from './content';
 
-const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handleCommentFields }) => {
+const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handleCommentFields, setComment }) => {
   return (
     <>
       <div className="m-20">
@@ -42,8 +42,8 @@ const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handle
                 className={`input`}
                 type="text"
                 placeholder="www.example.com"
-                name="reference_url"
-                value={comment?.reference_url}
+                name="source"
+                value={comment?.source}
                 onChange={(e) => handleCommentFields(e)}
               />
             </div>
@@ -71,7 +71,10 @@ const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handle
         <button
           type="button"
           className="button is-text has-text-primary my-20 is-pulled-right"
-          onClick={nextPage}
+          onClick={() => {
+            nextPage()
+            setComment({});
+          }}
         >
           Skip this step
         </button>
@@ -84,6 +87,7 @@ AddSuggestedCommentPage.propTypes = {
   page: PropTypes.number.isRequired,
   nextPage: PropTypes.func.isRequired,
   previousPage: PropTypes.func.isRequired,
+  setComment: PropTypes.func.isRequired,
 };
 
 export default AddSuggestedCommentPage;

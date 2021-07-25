@@ -38,7 +38,7 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
             Next
           </button>
         </div>
-        <div class="column" style={{ backgroundColor: "#E4E4E4" }}>
+        <div className="column" style={{ backgroundColor: "#E4E4E4" }}>
         </div>
       </div>
     </>
