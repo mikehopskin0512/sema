@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { createMany, findById, toggleActiveCollection } from './collectionService';
+import { createMany, findByAuthor, findById, toggleActiveCollection } from './collectionService';
 
 const route = Router();
 
@@ -42,6 +42,23 @@ export default (app, passport) => {
 
       return res.status(201).send({
         collections: newCollections
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/author/:author', async (req, res) => {
+    const { author } = req.params;
+    try {
+      const collections = await findByAuthor(author);
+      if (!collections) {
+        throw new errors.BadRequest('Collections find by author error');
+      }
+
+      return res.status(201).send({
+        collections
       });
     } catch (error) {
       logger.error(error);

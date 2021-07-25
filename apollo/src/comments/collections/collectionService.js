@@ -113,3 +113,14 @@ export const toggleActiveCollection = async (userId, collectionId) => {
     return error;
   }
 }
+
+export const findByAuthor = async (author) => {
+  try {
+    const collections = Collection.find({ author });
+    return collections;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
