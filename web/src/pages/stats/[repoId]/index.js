@@ -7,8 +7,7 @@ import { BarData, CircularData } from './data';
 import styles from './stats.module.scss';
 import BarChart from '../../../components/BarChart';
 import CircularPacking from '../../../components/CircularPackingChart';
-import Sidebar from '../../../components/sidebar';
-import withLayout from '../../../components/layout';
+import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import Helmet, { RepoStatsHelmet } from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
 
@@ -45,7 +44,7 @@ const Stats = () => {
   }, []);
 
   return (
-    <Sidebar>
+    <RepoPageLayout>
       <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap px-10">
         <Helmet {...RepoStatsHelmet} />
         <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
@@ -65,8 +64,8 @@ const Stats = () => {
           </div>
         </div>
       </div>
-    </Sidebar>
+    </RepoPageLayout>
   );
 };
 
-export default withLayout(Stats);
+export default Stats;
