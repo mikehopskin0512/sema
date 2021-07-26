@@ -6,6 +6,7 @@ import withLayout from "../../components/layout";
 import styles from "./activity.module.scss";
 import { repositoriesOperations } from "../../state/features/repositories";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Select from 'react-select'
 
 
 const { getUserRepositories } = repositoriesOperations;
@@ -17,9 +18,7 @@ const ActivityLogs = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user, userVoiceToken } = auth;
-  const [isDropdownOpen, toggleDropdownOpen] = useState(false);
-  const [selectedRepository, setSelectedRepository] = useState({name: "Select a repository"});
-
+  const [selectedRepo, setSelectedRepo] = useState({}); 
   console.log(auth, repositories);
 
   const getUserRepos = async (user) => {
@@ -32,72 +31,19 @@ const ActivityLogs = () => {
     getUserRepos(auth.user);
   }, [auth]);
 
-  const handleButtonClick = (e) => {
-    toggleDropdownOpen(!isDropdownOpen)
-    e.stopPropagation();
+  const formatOptions = (repositories) => {
+    if (repositories) {
+      return repositories.map((repository) => {
+        return { label: repository.name, value: repository.id }
+      });
+    }
+    return [];
   };
-
-
 
   return (
     <div>
-      <div className={`dropdown ${isDropdownOpen && 'is-active'} pl-120 ml-20 mb-70`}>
-        <div className="dropdown-trigger" >
-          <div className="is-clickable mt-50" onClick={handleButtonClick}>
-            <span className="is-size-5">
-              {selectedRepository.name}
-              <FontAwesomeIcon
-                className='is-clickable ml-10'
-                icon={!isDropdownOpen ? 'caret-down' : 'caret-up'}
-                size="lg"
-              />
-            </span>
-          </div>
-
-          {/* <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={handleButtonClick}>
-            <span>
-              {selectedRepository} 
-              <FontAwesomeIcon
-                className='is-clickable ml-10'
-                icon={!isDropdownOpen ? 'caret-down' : 'caret-up'}
-                size="lg"
-              />
-            </span>
-          </button> */}
-        </div>
-        <div className="dropdown-menu" id="dropdown-menu" role="menu">
-          <div className="dropdown-content">
-            {
-              repositories.data?.map(repo => {
-                return (<a href="#" className="dropdown-item" 
-                onClick={
-                  () => {
-                    setSelectedRepository(repo);
-                    toggleDropdownOpen(false);
-                  }
-                }
-                >
-                  {repo.name}
-                </a>)
-              })
-            }
-            {/* <a href="#" className="dropdown-item">
-              Dropdown item
-            </a>
-            <a className="dropdown-item">
-              Other dropdown item
-            </a>
-            <a href="#" className="dropdown-item is-active">
-              Active dropdown item
-            </a>
-            <a href="#" className="dropdown-item">
-              Other dropdown item
-            </a>
-            <a href="#" className="dropdown-item">
-              With a divider
-            </a> */}
-          </div>
-        </div>
+      <div style={{width: 400}}>
+        <Select onChange={(obj) => setSelectedRepo(obj)} options={formatOptions(repositories.data?.repositories)} className="pl-120 ml-20 mb-70" placeholder={'Select a repository'} />
       </div>
       <div className={clsx("columns px-120", styles["card-container"])}>
         <div className={clsx("column mx-20 p-20", styles["card"])}>

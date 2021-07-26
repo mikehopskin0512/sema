@@ -1,3 +1,18 @@
+resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
+  name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
+  type  = "String"
+  value = "3b4eff2591"
+}
+resource "aws_ssm_parameter" "apollo_mailchimp_token" {
+  name  = "/${var.env}/apollo/mailchimp/token"
+  type  = "SecureString"
+  value = "94eeb0c32194ee7a4cf7d3bb6a72192e-us6"
+}
+resource "aws_ssm_parameter" "apollo_mailchimp_server_prefix" {
+  name  = "/${var.env}/apollo/mailchimp/serverprefix"
+  type  = "String"
+  value = "us6"
+}
 resource "aws_ssm_parameter" "apollo_user_voice_secret_key" {
   name  = "/${var.env}/apollo/uservoice/secretkey"
   type  = "SecureString"
