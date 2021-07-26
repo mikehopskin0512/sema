@@ -17,6 +17,7 @@ const mapStateToProps = (state, ownProps) => {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
+    userId: user?._id,
     isLoggedIn: user?.isLoggedIn,
   };
 };
@@ -65,7 +66,7 @@ const SearchBar = (props) => {
 
   const getSemaSuggestions = () => {
     toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${props.searchValue}`;
+    const URL = `${SUGGESTION_URL}${props.searchValue}&user=${props.userId}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
