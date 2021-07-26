@@ -4,7 +4,7 @@ import * as Json2CSV from 'json2csv';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
-import Reaction from '../reactionModel';
+import Reaction from '../reaction/reactionModel';
 import { fullName } from '../../shared/utils';
 
 export const create = async ({
