@@ -102,11 +102,38 @@ export const createOrUpdate = async (repository) => {
   }
 };
 
-export const findByExternalId = async (externalIds) => {
+export const findByExternalId = async (externalId) => {
+  // externalId is github id
+  try {
+    const query = Repositories.findOne({ externalId });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
+export const getRepository = async (_id) => {
+  try {
+    const query = Repositories.findOne({ _id });
+    const repository = await query.lean().exec();
+
+    return repository;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByExternalIds = async (externalIds) => {
   try {
     const repositories = await Repositories.find({ 'externalId' : { $in: externalIds } } );
     return repositories;
-  } catch (err) { 
+  } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;

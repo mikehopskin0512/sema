@@ -1,9 +1,13 @@
+import mongoose from 'mongoose';
 import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
-import CommentSource from './commentSourceModel';
+import User from '../../users/userModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
+
+const { Types: { ObjectId } } = mongoose;
+const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
 
 const index = new FlexSearch({
   encode: 'balance',
@@ -35,25 +39,92 @@ const buildSuggestedCommentsIndex = async () => {
   }
 };
 
-const searchComments = async (searchQuery) => {
-  const searchResults = await index.search(searchQuery);
-  const returnResults = [];
-  for (let i = 0; i < 5 && i < searchResults.length; i++) {
-    const commentItem = await SuggestedComment.findById(searchResults[i]).populate({
-      path: 'source',
-      model: 'CommentSource',
-    });
+const getUserSuggestedComments = async (userId, searchResults = []) => {
+  const userActiveCommentsQuery = [
+    {
+      $match: { _id: new ObjectId(userId) },
+    },
+    {
+      $project: {
+        collections: {
+          $filter: {
+            input: '$collections',
+            as: 'collection',
+            cond: { $eq: ['$$collection.isActive', true] },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'collections',
+        localField: 'collections.collectionData',
+        foreignField: '_id',
+        as: 'collections',
+      },
+    },
+    {
+      $project: {
+        collections: {
+          $filter: {
+            input: '$collections',
+            as: 'collection',
+            cond: { $eq: ['$$collection.isActive', true] },
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: { $setUnion: ['$$value', '$$this'] },
+                },
+              },
+            },
+            in: { $setIntersection: ['$$userComments', searchResults] },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'comments',
+      },
+    },
+  ];
 
-    returnResults.push({
-      id: commentItem._id,
-      comment: commentItem.comment,
-      title: commentItem.title,
-      sourceUrl: commentItem.source ? commentItem.source.url : '',
-      sourceName: commentItem.source ? commentItem.source.name : '',
-    });
-  }
+  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
+  return comments;
+};
 
-  // store the search case to database
+const searchComments = async (user, searchQuery) => {
+  let searchResults = await index.search(searchQuery);
+
+  // The number of suggested comments to list
+  searchResults = searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
+
+  const comments = await getUserSuggestedComments(user, searchResults);
+  const returnResults = comments.map(
+    ({
+      _id: id,
+      title,
+      comment,
+      source: { name: sourceName } = '',
+      source: { url: sourceUrl } = '',
+    }) => ({ id, title, comment, sourceName, sourceUrl }),
+  );
+
+  // Store the search case to database
   const newQuery = new Query({
     searchTerm: searchQuery,
     matchedCount: searchResults.length,

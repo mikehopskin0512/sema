@@ -3,7 +3,7 @@ import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { get } from '../../repositories/repositoryService';
-import { create, getSmartComments, exportUserActivityChangeMetrics, getUserActivityChangeMetrics, getSowMetrics, exportSowMetrics, update } from './smartCommentService';
+import { create, filterSmartComments, getSmartComments, exportUserActivityChangeMetrics, getUserActivityChangeMetrics, getSowMetrics, exportSowMetrics, update } from './smartCommentService';
 
 const route = Router();
 
@@ -34,6 +34,20 @@ export default (app, passport) => {
       const { externalId } = repository[0];
       const smartComments = await getSmartComments({ repo: parseInt(externalId) });
       return res.status(201).send(smartComments);
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
+
+    try {
+      const comments = await filterSmartComments({author, reviewer, repoId});
+      return res.status(201).send({
+        comments,
+      });
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);
