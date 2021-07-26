@@ -28,10 +28,13 @@ const SuggestedCommentCard = ({ data }) => {
       </div>
       <div className="is-flex is-justify-content-space-between is-align-items-center my-10 is-flex-wrap-wrap">
         <div className="is-flex is-align-items-center">
-          <img src="/android-chrome-192x192.png" alt="user avatar" className={styles.avatar} />
-          <p className="is-size-6 mx-10 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
-          <div className={styles.vl} />
-          <p className="has-text-deep-black is-size-6 mx-10"><b>Source: </b> {source.name}</p>
+          { isEmpty(author) ? null : (
+            <>
+              <p className="is-size-6 mr-10 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
+              <div className={clsx('mr-10', styles.vl)} />
+            </>
+          )}
+          <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
         </div>
         <a href={source.url} target="_blank" rel="noreferrer">
           <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
@@ -40,9 +43,10 @@ const SuggestedCommentCard = ({ data }) => {
       <p className="has-text-deep-black is-size-6 my-20">
         {comment}
       </p>
-      {/* Needs data for supporting documents and date created */}
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
-        <p className="has-text-deep-black is-size-6"><b>Supporting Documents:</b> Document-007-Props Naming</p>
+        {/* No data for supporting documents yet */}
+        {/* <p className="has-text-deep-black is-size-6"><b>Supporting Documents:</b> Document-007-Props Naming</p> */}
+        <span />
         <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>
     </div>
