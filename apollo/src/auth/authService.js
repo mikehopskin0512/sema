@@ -56,7 +56,6 @@ export const setRefreshToken = async (response, user, token) => {
     // httpOnly: true
     path: '/',
   };
-
   const { _id: userId } = user;
   const filter = { userId };
   const update = { token };

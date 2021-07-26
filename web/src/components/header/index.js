@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router'
 import Link from 'next/link';
 import Avatar from 'react-avatar';
 import './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
+import SignOutModal from '../signOutModal';
 
 const Header = () => {
   const dispatch = useDispatch();
   const { deauthenticate } = authOperations;
   const [bgColor, setBgColor] = useState('');
   const [supportForm, setSupportForm] = useState(false);
+  const [signOutModal, setSignOutModal] = useState(false);
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -29,6 +34,7 @@ const Header = () => {
     organizations = [],
     isWaitlist = true,
     isSemaAdmin = false,
+    inviteCount = 0,
   } = user;
   const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
@@ -40,6 +46,8 @@ const Header = () => {
 
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
+
+  const { pathname } = useRouter();
 
   const orgMenuList = organizations.map((org) => (
     <Link href="/">
@@ -83,8 +91,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    toggleUserMenu();
-    dispatch(deauthenticate());
+    setSignOutModal(true);
   };
 
   const onClickOutside = () => {
@@ -94,9 +101,12 @@ const Header = () => {
   // Check for clicks outside of userMenu
   useOutsideClick(userMenu, onClickOutside);
 
+  const onCloseSignOutModal = () => setSignOutModal(false);
+
   return (
     <header className={bgColor}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
+      <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
         className="navbar is-transparent"
         role="navigation"
@@ -105,7 +115,7 @@ const Header = () => {
         <div className="navbar-brand">
           <Link href="/">
             <a>
-              <img src="/img/sema-logo.png" alt="sema-logo" />
+              <img src="/img/sema-logo.png" alt="sema-logo" width="110" className="mt-10" />
             </a>
           </Link>
           {token && isVerified && !isWaitlist && (
@@ -127,63 +137,55 @@ const Header = () => {
         {token && isVerified && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
-            {/* <div
+            <div
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
-              <Link href="/dashboard">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Dashboard
-                </a>
-              </Link>
               <Link href="/">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Projects
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  Repos
                 </a>
               </Link>
-              <Link href="/repositories">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Repositories
+              <Link href="/comments">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/comments' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  Comment Library
                 </a>
               </Link>
-              <Link href="/">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Teams
+              <Link href="/invitations">
+                <a className={`navbar-item has-text-deep-black mx-25 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  Invitations
+                  <span className="badge is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? "ꝏ" : inviteCount}</span>
                 </a>
               </Link>
-              <Link href="/reports">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Reports
+              <div onClick={openSupportForm} className="is-flex is-align-items-center">
+                <a className="navbar-item has-text-deep-black mx-25" onClick={toggleHamburger}>
+                  Support
                 </a>
-              </Link>
-            </div> */}
+              </div>
+            </div>
             {/* Hamburger menu (mobile & tablet) */}
             <div className="navbar-start is-hidden-desktop">
-              {/* <Link href="/dashboard">
-                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Dashboard
-                </a>
-              </Link>
               <Link href="/">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Projects
+                  Repos
                 </a>
               </Link>
-              <Link href="/repositories">
+              <Link href="/comments">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Repositories
+                  Comment Library
                 </a>
               </Link>
-              <Link href="/">
+              <Link href="/invitations">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Teams
+                  Invitations
+                  <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? "ꝏ" : inviteCount}</span>
                 </a>
               </Link>
-              <Link href="/reports">
+              <div onClick={openSupportForm} className="is-flex is-align-items-center">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Reports
+                  Support
                 </a>
-              </Link>
-              <hr className="navbar-divider" /> */}
+              </div>
+              <hr className="navbar-divider" />
               {isSemaAdmin && (
                 <Link href="/sema-admin/users">
                   <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
@@ -191,6 +193,15 @@ const Header = () => {
                   </a>
                 </Link>
               )}
+              <Link href="/profile">
+                <a
+                  type="button"
+                  className="navbar-item has-text-weight-semibold is-uppercase"
+                  onClick={toggleUserMenu}
+                >
+                  Your Profile
+                </a>
+              </Link>
               <span
                 role="button"
                 className="navbar-item is-hidden-desktop"
@@ -198,18 +209,11 @@ const Header = () => {
                 onClick={handleLogout}
                 tabIndex={0}
               >
-                Logout
+                Sign out
               </span>
             </div>
             <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
               {/* Right icon menu - desktop */}
-              <div
-                type="button"
-                className="button py-8 px-25 is-primary is-outlined mr-25"
-                onClick={openSupportForm}
-              >
-                <span className="has-text-weight-semibold">Contact Support</span>
-              </div>
               { !isWaitlist ? (
                 <div className="navbar-item has-dropdown" ref={userMenu}>
                   <div className="navbar-dropdown is-right">
@@ -249,29 +253,40 @@ const Header = () => {
                         </a>
                       </Link>
                     )}
+                    <Link href="/profile">
+                      <a
+                        type="button"
+                        className="navbar-item"
+                        onClick={toggleUserMenu}
+                      >
+                        Your Profile
+                      </a>
+                    </Link>
                     <span
                       role="button"
-                      className="navbar-item"
+                      className="navbar-item has-text-red"
                       style={{ cursor: 'pointer' }}
                       onClick={handleLogout}
                       tabIndex={0}
                       aria-hidden="true"
                     >
-                      Logout
+                      Sign out
                     </span>
                   </div>
                   {/* User menu */}
-                  <a className="navbar-link " onClick={toggleUserMenu} ref={userMenu}>
-                    <span className="mr-10">{firstName}</span>
-                    <Avatar
-                      className="mr-10"
-                      name={fullName}
-                      src={avatarUrl || null}
-                      // githubHandle={githubHandle || null}
-                      size="30"
-                      round
-                      textSizeRatio={2.5}
-                    />
+                  <a className="navbar-link is-arrowless mx-20" onClick={toggleUserMenu} ref={userMenu}>
+                    {/* <span className="mr-10">{firstName}</span> */}
+                    <div className="is-flex is-align-items-center">
+                      <Avatar
+                        name={fullName}
+                        src={avatarUrl || null}
+                        // githubHandle={githubHandle || null}
+                        size="30"
+                        round
+                        textSizeRatio={2.5}
+                      />
+                      <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8"/>
+                    </div>
                   </a>
                   {/* <button
                   type="button"

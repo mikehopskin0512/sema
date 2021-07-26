@@ -3,7 +3,10 @@ import { upsert } from '../../../utils';
 
 const initialState = {
   isFetching: false,
-  data: [],
+  data: {
+    repository: {},
+    repositories: [],
+  },
 
 };
 
@@ -37,7 +40,10 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: action.repositories,
+      data: {
+        repositories: action.repositories,
+        repository: state.data.repository,
+      },
       error: {},
     };
   case types.REQUEST_FETCH_REPOS_ERROR:
@@ -45,6 +51,81 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {},
+      error: action.errors,
+    };
+  case types.REQUEST_FETCH_REPO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_REPO_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: state.data.repositories,
+        repository: action.repository,
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_REPO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: state.data.repositories,
+        repository: action.repository,
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_GET_USER_REPOS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_GET_USER_REPOS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: action.repositories,
+        repository: state.data.repository,
+      },
+      error: {},
+    };
+  case types.REQUEST_GET_USER_REPOS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: action.repositories,
+        repository: state.data.repository,
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_FILTER_SEMA_REPOS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FILTER_SEMA_REPOS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: action.repositories,
+        repository: state.data.repository,
+      },
+      error: {},
+    };
+  case types.REQUEST_FILTER_SEMA_REPOS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        repositories: action.repositories,
+        repository: state.data.repository,
+      },
       error: action.errors,
     };
   default:

@@ -1,6 +1,7 @@
 import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
+import { fetchUser } from '../users/actions';
 import {
   auth, exchangeToken, createUser, putUser, patchUser,
   postUserOrg, verifyUser, resetVerification,
@@ -114,7 +115,8 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
-    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const { user: { _id }, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const user = await dispatch(fetchUser(_id, jwtToken));
     const { isVerified } = user;
 
     // Send token to state and hydrate user
@@ -298,6 +300,7 @@ export const updateUser = (userItem = {}, token) => async (dispatch) => {
     const { data: { user = {} } } = payload;
 
     dispatch(requestUpdateUserSuccess(user));
+    return user;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

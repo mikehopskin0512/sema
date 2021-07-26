@@ -430,6 +430,7 @@ export const getGithubMetadata = (document, textarea) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const clone_url = document.querySelector("#clone-help-git-url")?.value;
 
   const githubMetadata = {
     url,
@@ -440,6 +441,7 @@ export const getGithubMetadata = (document, textarea) => {
     base,
     user: { id, login },
     requester,
+    clone_url,
     commentId: null,
   };
 
