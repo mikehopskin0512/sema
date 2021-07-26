@@ -46,10 +46,12 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onInsertPressed = (id, suggestion) => {
+  const onInsertPressed = (id, suggestion, sourceName, sourceUrl) => {
+    const isGuideLink = sourceName && sourceUrl;
+    const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : ''
     let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
-    props.commentBox.value = `${value}${suggestion}`;
+    props.commentBox.value = `${value}${suggestion}${guideLink}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
