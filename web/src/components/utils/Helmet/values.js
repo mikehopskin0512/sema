@@ -13,7 +13,7 @@ export const RegisterHelmet = {
   description: null,
 };
 
-export const SuggestedCommentsHelmet = {
+export const CommentCollectionsHelmet = {
   title: 'Comment Collections',
   description: null,
 };

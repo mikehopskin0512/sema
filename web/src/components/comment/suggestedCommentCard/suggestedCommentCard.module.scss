@@ -7,6 +7,15 @@
   color: #0081A7 !important;
 }
 
+.language {
+  @media only screen and (max-width: 768px) {
+    max-width: 250px;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
 .avatar {
   height: 30px;
   width: 30px;
@@ -17,4 +26,10 @@
 .vl {
   border-left: 1px solid #9B9B9B;
   height: 20px;
+}
+
+.title {
+  @media only screen and (max-width: 768px) {
+    flex-wrap: wrap !important;
+  }
 }

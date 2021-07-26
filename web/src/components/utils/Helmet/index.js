@@ -9,6 +9,7 @@ export {
   InvitesHelmet,
   UserManagementHelmet,
   SuggestedCommentsHelmet,
+  CommentCollectionsHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description }) => (

@@ -1,7 +1,8 @@
-import { find } from 'lodash';
+import { flatten } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import User from '../../users/userModel';
 import { findById as findUserById, update as updateUser } from '../../users/userService';
 
 export const findById = async (id, select) => {
@@ -10,8 +11,38 @@ export const findById = async (id, select) => {
     if (select) {
       query.select(select)
     }
-    const collection = await query.lean().exec();
+    const collection = await query.lean().populate({
+      path: 'comments',
+      model: 'SuggestedComment'
+    }).exec();
     return collection;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getUserCollectionsById = async (userId) => {
+  try {
+    const query = User.findOne({ _id: userId });
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      populate: {
+        path: 'comments',
+        model: 'SuggestedComment',
+      },
+    }).exec();
+    if (user) {
+      const { collections } = user;
+      const comments = flatten(collections.map((item) => item.collectionData.comments));
+      return comments;
+    }
+    return {
+      statusCode: 400,
+      message: 'Unable to process request',
+    };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

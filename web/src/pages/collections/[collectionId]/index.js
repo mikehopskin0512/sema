@@ -1,32 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { findIndex, flatten, isEmpty, uniqBy } from 'lodash';
-import CommentFilter from '../../components/comment/commentFilter';
-import CommentsViewButtons from '../../components/comment/commentsViewButtons';
-import SuggestedCommentCard from '../../components/comment/suggestedCommentCard';
-import ContactUs from '../../components/contactUs';
-import withLayout from '../../components/layout';
-import SupportForm from '../../components/supportForm';
-import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
+import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { commentsOperations } from '../../state/features/comments';
+import CommentFilter from '../../../components/comment/commentFilter';
+import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
+import ContactUs from '../../../components/contactUs';
+import withLayout from '../../../components/layout';
+import SupportForm from '../../../components/supportForm';
+import Helmet from '../../../components/utils/Helmet';
 
-const { getUserSuggestedComments } = commentsOperations;
+import { commentsOperations } from '../../../state/features/comments';
+
+const { getCollectionById } = commentsOperations;
 
 const NUM_PER_PAGE = 10;
 
-const SuggestedComments = () => {
+const CollectionComments = () => {
   const dispatch = useDispatch();
-  const { auth, commentsState } = useSelector((state) => ({
+  const router = useRouter();
+  const { auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
-    commentsState: state.commentsState,
+    collectionState: state.commentsState,
   }));
-  const { token, userVoiceToken } = auth;
-  const { comments = [] } = commentsState;
 
-  useEffect(() => {
-    dispatch(getUserSuggestedComments(token));
-  }, [dispatch, token]);
+  const { collectionId } = router.query;
+  const { token, userVoiceToken } = auth;
+  const { collection: { name, comments = [], _id } } = collectionState;
 
   const [supportForm, setSupportForm] = useState(false);
   const [page, setPage] = useState(1);
@@ -34,8 +36,9 @@ const SuggestedComments = () => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
 
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
+  useEffect(() => {
+    dispatch(getCollectionById(collectionId, token));
+  }, [collectionId, dispatch, token]);
 
   useEffect(() => {
     setCommentsFiltered(comments);
@@ -53,6 +56,9 @@ const SuggestedComments = () => {
     setTagFilters(tags);
     setLanguageFilters(languages);
   }, [comments]);
+
+  const openSupportForm = () => setSupportForm(true);
+  const closeSupportForm = () => setSupportForm(false);
 
   const viewMore = () => {
     setPage(page + 1);
@@ -83,14 +89,27 @@ const SuggestedComments = () => {
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet {...SuggestedCommentsHelmet} />
+      <Helmet title={`Collection - ${name}`} />
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="hero-body">
-        <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4">
-            Suggested Comments
+        <div className="is-flex is-align-items-center px-10 mb-15">
+          <a href="/collections" className="is-hidden-mobile">
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+          </a>
+          <nav className="breadcrumb" aria-label="breadcrumbs">
+            <ul>
+              <li><a href="/collections" className="has-text-grey">Comment Library</a></li>
+              <li className="is-active has-text-weight-semibold"><a href={`/collections/${_id}`}>{name}</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div className="is-flex is-flex-wrap-wrap p-10 is-align-items-center">
+          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+            {name}
           </p>
-          <CommentsViewButtons />
+          <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
+            {comments.length} suggested comments
+          </span>
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
@@ -112,4 +131,4 @@ const SuggestedComments = () => {
   );
 };
 
-export default withLayout(SuggestedComments);
+export default withLayout(CollectionComments);
