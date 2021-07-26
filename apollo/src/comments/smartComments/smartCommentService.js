@@ -81,9 +81,9 @@ export const findByAuthor = async (author, repoId) => {
     logger.error(error);
     throw (error);
   }
-};
+}
 
-const update = async (
+export const update = async (
   id,
   smartComment,
 ) => {
@@ -97,7 +97,7 @@ const update = async (
   }
 };
 
-const getSowMetrics = async (params) => {
+export const getSowMetrics = async (params) => {
   try {
     const { category } = params;
     const reactionIds = await Reaction.distinct('_id', { title: { $ne: 'No reaction' } });
@@ -225,7 +225,7 @@ const getSowMetrics = async (params) => {
   }
 };
 
-const exportSowMetrics = async (params) => {
+export const exportSowMetrics = async (params) => {
   const comments = await getSowMetrics(params);
   const { category } = params;
 
@@ -270,7 +270,7 @@ const exportSowMetrics = async (params) => {
   return csv;
 };
 
-const getUserActivityChangeMetrics = async () => {
+export const getUserActivityChangeMetrics = async () => {
   try {
     const userActivities = await SmartComment.aggregate([
       { $match: { createdAt: { $gt: subWeeks(new Date(), 2) } } },
@@ -312,7 +312,7 @@ const getUserActivityChangeMetrics = async () => {
   }
 };
 
-const exportUserActivityChangeMetrics = async () => {
+export const exportUserActivityChangeMetrics = async () => {
   const userActivities = await getUserActivityChangeMetrics();
   const mappedData = userActivities.map((item, index) => ({
     'User ID': item._id,
@@ -328,16 +328,6 @@ const exportUserActivityChangeMetrics = async () => {
   const csv = json2csvParser.parse(mappedData);
 
   return csv;
-};
-
-
-module.exports = {
-  create,
-  update,
-  getSowMetrics,
-  exportSowMetrics,
-  getUserActivityChangeMetrics,
-  exportUserActivityChangeMetrics
 };
 
 export const findByExternalId = async (repoId) => {

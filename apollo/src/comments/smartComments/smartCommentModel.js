@@ -86,7 +86,7 @@ smartCommentSchema.post('save', async function (doc, next) {
           }
         }
       }
-      
+
       const newRepository = await createOrUpdate(repository);
       const repoData = { name: repo, id: externalId, fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')), githubUrl: url.slice(0, url.search('/pull/')) }
       await addRepositoryToIdentity(user, repoData);
