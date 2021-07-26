@@ -33,3 +33,8 @@ export const SuggestedCommentsHelmet = {
   title: 'Suggested Comments',
   description: null,
 };
+
+export const ProfileHelmet = {
+  title: 'Profile',
+  description: null,
+};
