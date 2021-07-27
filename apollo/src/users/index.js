@@ -44,7 +44,6 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { user, invitation } = req.body;
     const { username } = user;
-
     try {
       const existingUser = await findByUsername(username);
       if (existingUser) { throw new errors.BadRequest('User with this email already exists. Please try again.'); }
@@ -59,7 +58,6 @@ export default (app, passport) => {
         throw new errors.BadRequest('User create error');
       }
       const { _id: userId } = newUser;
-
       // If invitation, call joinOrg function
       let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
@@ -103,12 +101,14 @@ export default (app, passport) => {
       // await sendEmail(message);
 
       delete newUser.password;
+      delete newUser.collections;
+      console.log(createAuthToken(newUser))
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
       });
     } catch (error) {
       logger.error(error);
-      return res.status(error.statusCode).send(error);
+      return res.status(400).send(error);
     }
   });
 
