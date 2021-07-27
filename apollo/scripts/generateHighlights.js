@@ -17,11 +17,12 @@ const allNgramsDupes = [];
 // split each comment title into ngrams of variable length
 data.forEach((comment, i) => {
   const commentParts = comment.title.trim().split(' ');
-  const commentTitleWithoutStop = sw.removeStopwords(commentParts);
-  if (commentTitleWithoutStop.length === commentParts.length) {
-    for (let j = 0; j < commentParts.length; j++) {
-      for (let k = 0; k < commentParts.length; k++) {
-        allNgramsDupes.push(commentParts.slice(j, j + k + 1).join(' ').trim());
+  for (let j = 0; j < commentParts.length; j++) {
+    for (let k = 0; k < commentParts.length; k++) {
+      const newNgram = commentParts.slice(j, j + k + 1);
+      const commentTitleWithoutStop = sw.removeStopwords(newNgram);
+      if (commentTitleWithoutStop.length === newNgram.length) {
+        allNgramsDupes.push(newNgram.join(' ').trim());
       }
     }
   }
@@ -58,19 +59,36 @@ for (const k in ngramCounts) {
     ngramsInfreq.push(k);
   }
 }
+console.log(`${ngramsInfreq.length} infrequently found terms (<5)`);
 
+/**/
 // find comments that have no highlighted text
+console.log(`\nMissing highlight terms for comments   >>> `);
+const commentsWithoutHighlights = [];
 data.forEach((comment) => {
+  // almost every single one
   const ngramsInComment = [];
   ngramsInfreq.forEach((ngram) => {
     if (comment.title.includes(ngram)) {
       ngramsInComment.push(ngram);
     }
-    if (ngramsInComment.length === 0) {
-      console.log(comment);
+  });
+  if (ngramsInComment.length < 1) {
+      console.log('    ' + comment.title);
+      commentsWithoutHighlights.push(comment);
+  }
+});
+console.log(`Missing highlight terms for ${commentsWithoutHighlights.length} comments ^^^ `);
+
+
+// Find the best highlight term for each comment
+data.forEach((comment) => {
+  const highlightsForComment = [];
+  console.log(`\n${comment.title}`);
+  allNgrams.forEach((ngram) => {
+    if(comment.title.includes(ngram)){
+      highlightsForComment.push(ngram);
+      console.log(`    ${ngram}`);
     }
   });
 });
-
-// console.log(ngramCounts);
-console.log('done');
