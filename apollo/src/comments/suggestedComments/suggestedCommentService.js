@@ -183,8 +183,25 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
   };
 };
 
+export const create = async (suggestedComment) => {
+  try {
+    const { title, comment, source } = suggestedComment;
+     const newSuggestedComment = new SuggestedComment({
+      title,
+      comment,
+      source
+    })
+    const savedSuggestedComment = await newSuggestedComment.save();
+    return savedSuggestedComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
 module.exports = {
   buildSuggestedCommentsIndex,
   searchComments,
   suggestCommentsInsertCount,
+  create,
 };

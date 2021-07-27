@@ -1,51 +1,46 @@
 import * as types from './types';
 
 const initialState = {
-  suggestedComments: [],
-  totalCount: 0,
   isFetching: false,
+  data: [],
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-  case types.REQUEST_FETCH_SUGGEST_COMMENTS:
+  case types.REQUEST_CREATE_COLLECTIONS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_FETCH_SUGGEST_COMMENTS_SUCCESS:
+  case types.REQUEST_CREATE_COLLECTIONS_SUCCESS:
     return {
       ...state,
       isFetching: false,
-      suggestedComments: action.suggestedComments,
-      totalCount: action.totalCount,
+      data: action.collections,
       error: {},
     };
-  case types.REQUEST_FETCH_SUGGEST_COMMENTS_ERROR:
+  case types.REQUEST_CREATE_COLLECTIONS_ERROR:
     return {
       ...state,
       isFetching: false,
-      suggestedComments: [],
       error: action.errors,
     };
-  case types.REQUEST_CREATE_SUGGEST_COMMENT:
+  case types.REQUEST_FIND_COLLECTIONS_BY_AUTHOR:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS:
+  case types.REQUEST_FIND_COLLECTIONS_BY_AUTHOR_SUCCESS:
     return {
       ...state,
       isFetching: false,
-      suggestedComments: action.suggestedComments,
-      totalCount: action.totalCount,
+      data: action.collections,
       error: {},
     };
-  case types.REQUEST_CREATE_SUGGEST_COMMENT_ERROR:
+  case types.REQUEST_FIND_COLLECTIONS_BY_AUTHOR_ERROR:
     return {
       ...state,
       isFetching: false,
-      suggestedComments: [],
       error: action.errors,
     };
   default:
