@@ -92,7 +92,7 @@ export const listUsers = async (params) => {
 export const findUser = async (userId) => {
   const user = await User.findById(userId).populate({
     path: 'collections.collectionData',
-    model: 'Collection'
+    model: 'Collection',
   });
 
   return user;

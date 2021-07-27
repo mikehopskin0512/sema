@@ -8,6 +8,8 @@ export {
   RegisterHelmet,
   InvitesHelmet,
   UserManagementHelmet,
+  SuggestedCommentsHelmet,
+  CommentCollectionsHelmet,
   ProfileHelmet,
   SuggestedCommentsHelmet,
 } from './values';

@@ -17,6 +17,7 @@ const CollectionCard = ({ isActive, collectionData }) => {
   const { _id, name, description, comments = [] } = collectionData;
 
   const onChangeToggle = (cb) => {
+    cb.stopPropagation();
     setActive(cb.checked);
     dispatch(setCollectionIsActive(_id, token));
   };
@@ -31,12 +32,20 @@ const CollectionCard = ({ isActive, collectionData }) => {
   );
   // TODO: Favorited
 
+  const clickOnCard = () => {
+    window.location = `/collections/${_id}`;
+  };
+
+  const onClickChild = (e) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className={clsx('p-10 is-flex is-flex-grow-1', styles.card)}>
+    <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={clickOnCard} aria-hidden="true">
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>
-          <div className="field">
+          <div className="field" onClick={onClickChild} aria-hidden>
             <input id={`activeSwitch-${_id}`} type="checkbox" onClick={onChangeToggle} name={`activeSwitch-${_id}`} className="switch is-rounded" checked={active} />
             <label htmlFor={`activeSwitch-${_id}`} />
           </div>
