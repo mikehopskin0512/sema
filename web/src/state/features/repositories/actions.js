@@ -1,6 +1,8 @@
 import Router from 'next/router';
 import * as types from './types';
-import { getRepos, postRepositories, postAnalysis, filterSemaRepos } from './api';
+import { 
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats,
+} from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -47,6 +49,20 @@ const requestCreateAnalysisError = (errors) => ({
   errors,
 });
 
+const requestFetchRepo = () => ({
+  type: types.REQUEST_FETCH_REPO,
+});
+
+const requestFetchRepoSuccess = (repository) => ({
+  type: types.REQUEST_FETCH_REPO_SUCCESS,
+  repository,
+});
+
+const requestFetchRepoError = (errors) => ({
+  type: types.REQUEST_FETCH_REPO_ERROR,
+  errors,
+});
+
 const requestFilterSemaRepos = () => ({
   type: types.REQUEST_FILTER_SEMA_REPOS,
 });
@@ -72,6 +88,20 @@ export const requestGetUserReposSuccess = (repositories) => ({
 
 export const requestGetUserReposError = (errors) => ({
   type: types.REQUEST_GET_USER_REPOS_ERROR,
+  errors,
+});
+
+export const requestGetRepoReactions = () => ({
+  type: types.REQUEST_GET_REPO_REACTIONS,
+});
+
+export const requestGetRepoReactionsSuccess = (repositories) => ({
+  type: types.REQUEST_GET_REPO_REACTIONS_SUCCESS,
+  repositories,
+});
+
+export const requestGetReposReactionsError = (errors) => ({
+  type: types.REQUEST_GET_REPO_REACTIONS_ERROR,
   errors,
 });
 
@@ -127,6 +157,22 @@ export const addAnalysis = (repository, token) => async (dispatch) => {
   }
 };
 
+export const fetchRepo = (repositoryId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchRepo());
+    const payload = await getRepo(repositoryId, token);
+    const { data: { repository = [] } } = payload;
+
+    dispatch(requestFetchRepoSuccess(repository));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFetchRepoError(errMessage));
+    dispatch(triggerAlert(errMessage, 'error'));
+  }
+};
+
 export const filterSemaRepositories = (externalIds, token) => async (dispatch) => {
   try {
     dispatch(requestFilterSemaRepos());
@@ -140,5 +186,20 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFilterSemaReposError(errMessage));
+  }
+};
+
+export const fetchRepoStats = (filters, token) => async (dispatch) => {
+  try {
+    dispatch(requestGetRepoReactions());
+    const payload = await getReactionsStats(filters, token);
+    console.log({ payload });
+    // dispatch(requestGetRepoReactionsSuccess());
+  } catch (error) {
+    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestGetReposReactionsError(errMessage));
   }
 };

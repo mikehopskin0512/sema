@@ -124,7 +124,6 @@ export const fetchUser = (id, token) => async (dispatch) => {
     dispatch(requestFetchUser());
     const payload = await getUser(id, token);
     const { data } = payload;
-
     dispatch(requestFetchUserSuccess(data));
     return data;
   } catch (error) {

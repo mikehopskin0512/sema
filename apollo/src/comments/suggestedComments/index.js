@@ -9,9 +9,9 @@ export default (app, passport) => {
   app.use(`/${version}/comments/suggested`, route);
 
   route.get('/', async (req, res) => {
-    const searchQuery = req.query.q;
+    const { user = null, q: searchQuery } = req.query;
     try {
-      const topResult = await searchComments(searchQuery);
+      const topResult = await searchComments(user, searchQuery);
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
       logger.error(error);

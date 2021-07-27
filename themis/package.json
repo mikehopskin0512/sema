@@ -11,7 +11,7 @@
     "build": "node utils/build.js",
     "start": "node utils/webserver.js --port 3002",
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
-    "build-css": "sass --watch src/pages/Content/styles/content.styles.scss:src/pages/Content/styles/content.styles.css src/pages/Content/styles/sema-custom.scss:src/pages/Content/styles/sema-custom.css"
+    "compile-scss": "sass src/pages/Content/styles/content.styles.scss:build/css/content.styles.css"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -33,8 +33,7 @@
     "react-hot-loader": "^4.13.0",
     "react-lottie": "^1.2.3",
     "react-redux": "^7.2.2",
-    "redux": "^4.0.5",
-    "sass": "^1.34.0"
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
@@ -60,6 +59,7 @@
     "html-webpack-plugin": "^5.2.0",
     "node-sass": "^4.14.1",
     "prettier": "^2.2.1",
+    "sass": "^1.35.1",
     "sass-loader": "^11.0.1",
     "source-map-loader": "^2.0.1",
     "style-loader": "^2.0.0",

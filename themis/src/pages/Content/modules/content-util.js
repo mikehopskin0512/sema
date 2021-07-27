@@ -12,7 +12,7 @@ import {
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
   ADD_OP,
-  CREATE_SMART_COMMENT_URL,
+  SMART_COMMENT_URL,
   IS_DIRTY,
 } from '../constants';
 
@@ -28,6 +28,8 @@ import {
   closeAllEmojiSelection,
 } from './redux/action';
 import store from './redux/store';
+
+import phrases from '../modules/highlightPhrases';
 
 export const isTextBox = (element) => {
   var tagName = element.tagName.toLowerCase();
@@ -141,18 +143,16 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-export function writeSemaToGithub(textarea) {
+export async function writeSemaToGithub(textarea) {
   if (textarea) {
-    let smartComment = {};
+    let comment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview =
+      textarea?.id && textarea.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
-    const location =
-      onFilesTab
-        ? 'files changed'
-        : 'conversation';
+    const location = onFilesTab ? 'files changed' : 'conversation';
 
     if (location === 'conversation') {
       store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
@@ -203,10 +203,9 @@ export function writeSemaToGithub(textarea) {
     const githubMetadata = store.getState().githubMetadata;
     const { _id: userId } = store.getState().user;
 
-    smartComment = {
+    comment = {
       githubMetadata: { ...githubMetadata, ...inLineMetada },
       userId,
-      commentId: null,
       comment: textboxValue,
       location,
       suggestedComments: selectedSuggestedComments,
@@ -217,12 +216,16 @@ export function writeSemaToGithub(textarea) {
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
-      const commentDiv = document.querySelector(`div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`)
-      smartComment.commentId = commentDiv?.id;
-      createSmartComment(smartComment);
-    } else {
-      store.dispatch(addSmartComment(smartComment));
+      const commentDiv = document.querySelector(
+        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
+      );
+      comment.githubMetadata.commentId = commentDiv?.id;
+      createSmartComment(comment);
     }
+
+    createSmartComment(comment).then((smartComment) => {
+      store.dispatch(addSmartComment(smartComment));
+    });
 
     if (
       textboxValue.includes('Sema Reaction') ||
@@ -252,6 +255,16 @@ export function writeSemaToGithub(textarea) {
 export function onDocumentClicked(event, store) {
   closeSemaOpenElements(event, store);
   onGithubSubmitClicked(event, store);
+  onReviewChangesClicked(event);
+}
+
+function onReviewChangesClicked(event) {
+  const isReviewOption = event.target.name === 'pull_request_review[event]';
+  if (isReviewOption) {
+    const formParent = $(event.target).parents('form')?.[0];
+    const textarea = $(formParent).find('textarea')?.[0];
+    textarea.focus();
+  }
 }
 
 function onGithubSubmitClicked(event, store) {
@@ -417,9 +430,10 @@ export const getGithubMetadata = (document, textarea) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const title = document.querySelector('span[data-snek-id="issue-title"]')?.innerText;
   const clone_url = document.querySelector("#clone-help-git-url")?.value;
 
-  const githubMetada = {
+  const githubMetadata = {
     url,
     repo_id,
     repo,
@@ -428,10 +442,12 @@ export const getGithubMetadata = (document, textarea) => {
     base,
     user: { id, login },
     requester,
-    clone_url
+    title,
+    clone_url,
+    commentId: null,
   };
 
-  return githubMetada;
+  return githubMetadata;
 };
 
 export const getGithubInlineMetadata = (id) => {
@@ -439,28 +455,53 @@ export const getGithubInlineMetadata = (id) => {
   const filename = document.querySelector(
     `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
-  const [, file_extension] = filename?.split('.') || [];
-  const line_numbers = [
-    ...new Set(
-      Array.from(
-        document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
-      )
-        .filter((e) => e.getAttribute('data-line-number'))
-        .map((e) => e.getAttribute('data-line-number'))
-    ),
-  ];
+
+  const splittedFilenameArray = filename?.split('.');
+  const splitLength = splittedFilenameArray.length;
+
+  // filenames can also be xyz.controller.js
+  const file_extension = splittedFilenameArray[splitLength - 1];
+
+  const allElements = Array.from(
+    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
+  );
+
+  const allLineNos = allElements.reduce((acc, curr) => {
+    const value = curr.getAttribute('data-line-number');
+    if (value) {
+      acc[value] = true;
+    }
+    return acc;
+  }, {});
+
+  const line_numbers = Object.keys(allLineNos);
 
   const inlineMetada = { filename, file_extension, line_numbers };
 
   return inlineMetada;
 };
 
-const createSmartComment = (smartComment) => {
-  fetch(CREATE_SMART_COMMENT_URL, {
+const createSmartComment = async (comment) => {
+  const res = await fetch(SMART_COMMENT_URL, {
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
-    body: JSON.stringify(smartComment),
+    body: JSON.stringify(comment),
   });
+  const response = await res.text();
+  const { smartComment } = JSON.parse(response);
+  return smartComment;
+};
+
+const updateSmartComment = async (comment) => {
+  const { _id: id } = comment;
+  const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'PUT',
+    body: JSON.stringify(comment),
+  });
+  const response = await res.text();
+  const { smartComment } = JSON.parse(response);
+  return smartComment;
 };
 
 export const setMutationObserverAtConversation = () => {
@@ -483,14 +524,14 @@ export const setMutationObserverAtConversation = () => {
         const { id } = newCommentDiv.querySelector(
           'div.timeline-comment-group'
         );
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else {
         return;
       }
-      createSmartComment(smartComment);
+      updateSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
   });
@@ -521,14 +562,14 @@ export const setMutationObserverAtFilesChanged = () => {
       if (threadNode !== -1) {
         const newCommentDiv = mutation.addedNodes[threadNode];
         const { id } = newCommentDiv.querySelector('div.review-comment');
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else if (singleNode !== -1) {
         const { id } = mutation.addedNodes[singleNode];
-        smartComment.commentId = id;
+        smartComment.githubMetadata.commentId = id;
       } else {
         return;
       }
-      createSmartComment(smartComment);
+      updateSmartComment(smartComment);
       store.dispatch(removeMutationObserver());
     }
   });
@@ -537,4 +578,65 @@ export const setMutationObserverAtFilesChanged = () => {
   observer.observe(inLineFiles, { childList: true, subtree: true });
 
   return observer;
+};
+
+export const getHighlights = (text) => {
+  const alerts = [];
+  let id = 0;
+
+  const isOverlap = (existingTokenData, newTokenData) => {
+    const { startOffset, endOffset } = existingTokenData;
+    const { start, end } = newTokenData;
+    let isOverlap = false;
+    if (
+      (start >= startOffset && start <= endOffset) ||
+      (end >= startOffset && end <= endOffset)
+    ) {
+      isOverlap = true;
+    }
+    return isOverlap;
+  };
+
+  const insertIfValid = ({ start, end, phrase }) => {
+    let isOverlapping = false;
+    let overlappingAlert;
+    let overlappingIndex;
+    alerts.forEach((existingAlert, index) => {
+      const overlapping = isOverlap(existingAlert, { start, end, phrase });
+      if (overlapping) {
+        isOverlapping = true;
+        overlappingAlert = existingAlert;
+        overlappingIndex = index;
+      }
+    });
+
+    if (isOverlapping) {
+      if (phrase.length >= overlappingAlert.token.length) {
+        // replace
+        alerts[overlappingIndex] = {
+          id: overlappingAlert.id,
+          startOffset: start,
+          endOffset: end,
+          token: phrase,
+        };
+      }
+    } else {
+      id = ++id;
+      alerts.push({
+        id: id.toString(),
+        startOffset: start,
+        endOffset: end,
+        token: phrase,
+      });
+    }
+  };
+
+  phrases.forEach((phrase) => {
+    const matchIndexStart = text.indexOf(phrase);
+    if (matchIndexStart !== -1) {
+      const matchIndexEnd = matchIndexStart + phrase.length - 1;
+      insertIfValid({ start: matchIndexStart, end: matchIndexEnd, phrase });
+    }
+  });
+  return alerts;
 };

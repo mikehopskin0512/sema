@@ -17,6 +17,7 @@ const mapStateToProps = (state, ownProps) => {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
+    userId: user?._id,
     isLoggedIn: user?.isLoggedIn,
   };
 };
@@ -45,7 +46,7 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onCopyPressed = (id, suggestion) => {
+  const onInsertPressed = (id, suggestion) => {
     let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
     props.commentBox.value = `${value}${suggestion}`;
@@ -65,7 +66,7 @@ const SearchBar = (props) => {
 
   const getSemaSuggestions = () => {
     toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${props.searchValue}`;
+    const URL = `${SUGGESTION_URL}${props.searchValue}&user=${props.userId}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
@@ -152,9 +153,11 @@ const SearchBar = (props) => {
       typeof event.which == 'number' ? event.which : event.keyCode;
     if (charCode === 13) {
       // enter is pressed
-      // show dropdown
       event.preventDefault();
-      getSemaSuggestions();
+      if (props.searchValue) {
+        // show dropdown
+        getSemaSuggestions();
+      }
     } else if (charCode === 27) {
       // esc is pressed
       // hide dropdown
@@ -217,7 +220,7 @@ const SearchBar = (props) => {
             {props.isLoggedIn && (
               <SuggestionModal
                 key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
-                onCopyPressed={onCopyPressed}
+                onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
               />
             )}
