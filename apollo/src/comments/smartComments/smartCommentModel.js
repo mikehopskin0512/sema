@@ -19,6 +19,7 @@ const githubMetadataSchema = new Schema({
   filename: { type: String, default: null },
   file_extension: { type: String, default: null },
   line_numbers: { type: Array, default: [] },
+  title: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 });
