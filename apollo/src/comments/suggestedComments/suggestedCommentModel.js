@@ -9,20 +9,20 @@ const suggestedCommentSchema = new Schema({
   },
   title: {
     type: String,
-    required: true,
+    // required: true,
   },
   comment: {
     type: String,
-    required: true,
+    // required: true,
   },
   author: {
     type: String,
-    required: true,
   },
   source: { name: String, url: String },
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
+    url: String,
   }],
   tags: [{
     tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
