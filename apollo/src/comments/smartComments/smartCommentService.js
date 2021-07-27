@@ -37,6 +37,20 @@ export const create = async ({
   }
 };
 
+export const getSmartComments = async ({ repo }) => {
+  try {
+    const query = SmartComment.find();
+    query.where('githubMetadata.repo_id', repo);
+    query.populate('userId', 'firstName lastName avatarUrl');
+    const smartComments = await query.lean().exec();
+    return smartComments;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const filterSmartComments = async ({ reviewer, author, repoId }) => {
   try {
     let filter = {}
