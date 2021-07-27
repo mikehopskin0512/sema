@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const data = require('../data/tags');
+const data = require('../data/tagsWithTypes');
 
 const { mongooseUri } = require('../src/config');
 
@@ -28,7 +28,7 @@ exports.up = async (next) => {
   try {
     const colTags = mongoose.connection.db.collection('tags');
     const tags = await colTags.insertMany(tagsData);
-    fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
+    fs.writeFileSync(`${process.cwd()}/data/tagsWithTypes.json`, JSON.stringify(tags.ops));
   } catch (error) {
     next(error);
   }

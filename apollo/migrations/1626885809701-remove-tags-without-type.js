@@ -1,3 +1,9 @@
+// Note: This is a copy of 1618495619497-add-tags.js with down and up methods reversed. 
+// It basically rolls back the old tags by removing all comments referenced in apollo/data/tags.json
+// The intention is that the 1626886245930-add-tags-with-type.js will load the old and new tags, both with type fields
+
+// When you call this script migrate up -> it will remove the old tags
+
 const mongoose = require('mongoose');
 const fs = require('fs');
 const data = require('../data/tags');
@@ -23,19 +29,19 @@ const options = {
   useNewUrlParser: true,
 };
 
-exports.up = async (next) => {
+exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     const colTags = mongoose.connection.db.collection('tags');
     const tags = await colTags.insertMany(tagsData);
-    fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
+//    fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
   } catch (error) {
     next(error);
   }
   mongoose.connection.close();
 };
 
-exports.down = async (next) => {
+exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
     const colTags = mongoose.connection.db.collection('tags');

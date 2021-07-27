@@ -12,7 +12,7 @@ const collectionSchema = new Schema({
     label: String,
   }],
   comments: [{ type: Schema.Types.ObjectId, ref: 'suggestedComment' }],
-  author: { type: String, required: true },
+  author: { type: String },
   isActive: { type: Boolean, default: true },
 }, { timestamps: true, collection: 'Collection' });
 
