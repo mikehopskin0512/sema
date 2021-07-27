@@ -75,7 +75,6 @@ export default (app) => {
         profileUrl: profile.url,
         avatarUrl: profile.avatar_url,
         emails,
-        repositories
       };
 
       const user = await findByUsernameOrIdentity(email, identity);
@@ -100,7 +99,6 @@ export default (app) => {
           // return res.status(201).send({ jwtToken: await createAuthToken(user) });
         }
       }
-
       const identityToken = await createIdentityToken(identity);
       // Build redirect based on inviteToken
       const registerRedirect = (inviteToken)

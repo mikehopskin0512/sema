@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags
 } from './repositoryService';
 
 const route = Router();
@@ -63,12 +63,38 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/sema-repositories', async (req, res) => {
+  route.get('/sema-repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalIds } = req.query;
     try {
       const repositories = await findByExternalIds(JSON.parse(externalIds));
       return res.status(201).send({
         repositories,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/reactions', async (req, res) => {
+    const { externalId, dateFrom, dateTo } = req.query;
+    try {
+      const reactions = await aggregateReactions(externalId, dateFrom, dateTo);
+      return res.status(201).send({
+        reactions,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/tags', async (req, res) => {
+    const { externalId, dateFrom, dateTo } = req.query;
+    try {
+      const tags = await aggregateTags(externalId, dateFrom, dateTo);
+      return res.status(201).send({
+        tags,
       });
     } catch (error) {
       logger.error(error);
