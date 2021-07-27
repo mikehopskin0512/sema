@@ -65,8 +65,11 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId });
     }
 
-    const comments = await SmartComment.find(filter);
-    return comments;
+    const query = await SmartComment.find(filter);
+    query.populate('userId', 'firstName lastName avatarUrl');
+    const smartComments = await query.lean().exec();
+
+    return smartComments;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

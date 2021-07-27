@@ -24,7 +24,7 @@ export const fetchSmartComments = (repo) => async (dispatch) => {
     dispatch(requestGetSmartCommentsByRepo());
     const payload = await getSmartComments(repo);
     const { data } = payload;
-    dispatch(requestGetSmartCommentsByRepoSuccess(data));
+    dispatch(requestGetSmartCommentsByRepoSuccess(data.comments));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
