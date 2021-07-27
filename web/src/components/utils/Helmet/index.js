@@ -8,6 +8,7 @@ export {
   RegisterHelmet,
   InvitesHelmet,
   UserManagementHelmet,
+  RepoStatsHelmet,
   ProfileHelmet,
 } from './values';
 

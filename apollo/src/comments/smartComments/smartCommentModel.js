@@ -54,13 +54,10 @@ smartCommentSchema.post('save', async function (doc, next) {
 
       if (repository) {
         // It already exists in the database, use the object for this one and upsert the reactions
-        const repoReactions = repository.repoStats.rawReactions;
-        const repoTags = repository.repoStats.rawTags;
+        const repoReactions = repository.repoStats.reactions;
+        const repoTags = repository.repoStats.tags;
         repoReactions.push(reaction);
         repoTags.push(tags);
-        const aggregatedTags = incrementTags(repository.repoStats.tags, tagsIds)
-        repository.repoStats.tags = aggregatedTags;
-        repository.repoStats.reactions = incrementReactions(repository.repoStats.reactions, reactionId);
         const idExists = repository.repoStats.userIds.some(function (id) {
           return id.equals(userId);
         });
@@ -68,11 +65,6 @@ smartCommentSchema.post('save', async function (doc, next) {
           repository.repoStats.userIds.push(userId);
         }
       } else {
-        const reactionObj = await buildReactionsEmptyObject();
-        const tagsObj = await buildTagsEmptyObject();
-        const aggregatedTags = incrementTags(tagsObj, tagsIds)
-        const aggregatedReactions = incrementReactions(reactionObj, reactionId);
-
         repository = {
           externalId,
           name: doc.githubMetadata.repo,
@@ -83,16 +75,10 @@ smartCommentSchema.post('save', async function (doc, next) {
           repositoryCreatedAt: "",
           repositoryUpdatedAt: "",
           repoStats: {
-            tags: {
-              ...aggregatedTags
-            },
-            reactions: {
-              ...aggregatedReactions
-            },
-            rawReactions: [
+            reactions: [
               reaction
             ],
-            rawTags: [
+            tags: [
               tags
             ],
             userIds: [
