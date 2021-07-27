@@ -24,17 +24,17 @@ const GrowthRepositoryMetric = () => {
     },
     {
       Header: 'Day 1',
-      accessor: 'oneDaySmartCounts',
+      accessor: 'oneDayRepos',
       className: 'p-10',
     },
     {
       Header: 'Day 7',
-      accessor: 'oneWeekSmartCounts',
+      accessor: 'oneWeekRepos',
       className: 'p-10',
     },
     {
       Header: 'Day 30',
-      accessor: 'oneMonthSmartCounts',
+      accessor: 'oneMonthRepos',
       className: 'p-10',
     },
   ];

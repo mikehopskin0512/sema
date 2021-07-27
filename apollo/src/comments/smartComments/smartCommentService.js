@@ -6,7 +6,7 @@ import * as Json2CSV from 'json2csv';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
-import Reaction from '../reactionModel';
+import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 
@@ -340,30 +340,54 @@ export const getGrowthRepositoryMetrics = async () => {
 
   await Promise.all(Array(10).fill(0).map(async (_, index) => {
     const date = subDays(new Date(), index);
-    const oneDaySmartCounts = await SmartComment.countDocuments({
-      $and: [
-        { createdAt: { $gt: subDays(date, 1) } },
-        { createdAt: { $lte: date } },
-      ],
-    });
-    const oneWeekSmartCounts = await SmartComment.countDocuments({
-      $and: [
-        { createdAt: { $gt: subWeeks(date, 1) } },
-        { createdAt: { $lte: date } },
-      ],
-    });
-    const oneMonthSmartCounts = await SmartComment.countDocuments({
-      $and: [
-        { createdAt: { $gt: subMonths(date, 1) } },
-        { createdAt: { $lte: date } },
-      ],
-    });
+    const groupQuery = [{
+      $group: {
+        _id: '$githubMetadata.repo',
+        count: { $sum: 1 },
+      },
+    }];
+
+    const oneDayRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subDays(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
+
+    const oneWeekRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subWeeks(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
+
+    const oneMonthRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subMonths(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
 
     metrics.push({
       date,
-      oneDaySmartCounts: (oneDaySmartCounts / usersCount).toFixed(2),
-      oneWeekSmartCounts: (oneWeekSmartCounts / usersCount).toFixed(2),
-      oneMonthSmartCounts: (oneMonthSmartCounts / usersCount).toFixed(2),
+      oneDayRepos: (oneDayRepos.length / usersCount).toFixed(2),
+      oneWeekRepos: (oneWeekRepos.length / usersCount).toFixed(2),
+      oneMonthRepos: (oneMonthRepos.length / usersCount).toFixed(2),
     });
   }));
 
@@ -376,9 +400,9 @@ export const exportGrowthRepositoryMetrics = async () => {
 
   const mappedData = metrics.map((item) => ({
     Date: format(new Date(item.date), 'yyyy-MM-dd'),
-    'Day 1': item.oneDaySmartCounts,
-    'Day 7': item.oneWeekSmartCounts,
-    'Day 30': item.oneMonthSmartCounts,
+    'Day 1': item.oneDayRepos,
+    'Day 7': item.oneWeekRepos,
+    'Day 30': item.oneMonthRepos,
   }));
 
   const fields = ['Date', 'Day 1', 'Day 7', 'Day 30'];
