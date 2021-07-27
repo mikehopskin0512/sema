@@ -76,7 +76,7 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/reactions', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/reactions', async (req, res) => {
     const { externalId, dateFrom, dateTo } = req.query;
     try {
       const reactions = await aggregateReactions(externalId, dateFrom, dateTo);
@@ -89,7 +89,7 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/tags', async (req, res) => {
     const { externalId, dateFrom, dateTo } = req.query;
     try {
       const tags = await aggregateTags(externalId, dateFrom, dateTo);

@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
+import _ from "lodash";
+import { differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
+import { getReactionIdKeys } from "../comments/reaction/reactionService";
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
-import e from "express";
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
@@ -146,12 +148,14 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
     let condition = {
       "$and": []
     };
+    const from = new Date(dateFrom);
+    const to = new Date(dateTo);
+
+    let dateDuration = differenceInCalendarDays(to, from);
     if (dateFrom) {
-      const from = new Date(dateFrom);
       condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
     }
     if (dateTo) {
-      const to = new Date(dateTo);
       condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
     }
     const repositories = await Repositories.aggregate([
@@ -178,19 +182,37 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
         }
       },
     ]);
-    let reactions = {
-
-    };
     const repo = repositories[0];
-    repo.repoStats.map((stat) => {
-      const reaction = stat.reactionId
-      if (reactions?.[reaction]) {
-        reactions[reaction] += 1;
-      } else {
-        reactions[reaction] = 1
-      }
+    let reactions = await getReactionIdKeys();
+
+    if (dateDuration > 7) {
+      dateDuration = 7;
+    } else {
+      dateDuration += 1;
+    }
+    const duration = [...Array(dateDuration).keys()];
+
+    const parsedReactions = duration.map((d) => {
+      const localReactions = { ...reactions };
+      const parsedDateTo = sub(to, { days: d });
+      const formattedToDate = format(parsedDateTo, 'MM/dd/yyyy');
+      const date = format(parsedDateTo, 'MM/dd');
+      localReactions.date = date;
+      repo.repoStats.map((stat) => {
+        const reaction = stat.reactionId
+        const dataDate = new Date(stat.createdAt);
+        const formattedDataDate = format(dataDate, 'MM/dd/yyyy');
+        if (formattedDataDate === formattedToDate) { 
+          if (localReactions?.[reaction]) {
+            localReactions[reaction] += 1;
+          } else {
+            localReactions[reaction] = 1
+          }
+        }
+      });
+      return localReactions;
     });
-    return reactions;
+    return parsedReactions;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -204,12 +226,13 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
     let condition = {
       "$and": []
     };
+    const from = new Date(dateFrom);
+    const to = new Date(dateTo);
+
     if (dateFrom) {
-      const from = new Date(dateFrom);
       condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
     }
     if (dateTo) {
-      const to = new Date(dateTo);
       condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
     }
     const repositories = await Repositories.aggregate([
@@ -236,17 +259,40 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
         }
       },
     ]);
-    let tags = {
-
-    };
     const repo = repositories[0];
+    const tags = {
+
+    }
+
     repo.repoStats.map((stat) => {
       const tagsId = stat.tagsId;
+      const dataDate = new Date(stat.createdAt);
+      const formattedDataDate = format(dataDate, 'MM/dd/yy');
       tagsId?.map((tag) => {
         if (tags?.[tag]) {
-          tags[tag] += 1;
+          tags[tag].total += 1;
+          const index = _.findIndex(tags[tag].tally, function (o) {
+            console.log(o.date, formattedDataDate);
+            return o.date === formattedDataDate
+          });
+          if (index === -1) {
+            tags[tag].tally.push({
+              date: formattedDataDate,
+              tags: 1,
+            });
+          } else {
+            tags[tag].tally[index].tags++;
+          }
         } else {
-          tags[tag] = 1
+          tags[tag] = {
+            total: 1,
+            tally: [
+              {
+                date: formattedDataDate,
+                tags: 1,
+              }
+            ],
+          };
         }
       })
     });
