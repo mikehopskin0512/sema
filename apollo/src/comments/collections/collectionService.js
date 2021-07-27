@@ -1,4 +1,4 @@
-import { find } from 'lodash';
+import { find, flatten } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
