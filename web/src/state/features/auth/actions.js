@@ -1,7 +1,9 @@
+/* eslint-disable import/no-cycle */
 import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import { fetchUser } from '../users/actions';
+import { toggleActiveCollection } from '../comments/api';
 import {
   auth, exchangeToken, createUser, putUser, patchUser,
   postUserOrg, verifyUser, resetVerification,
@@ -65,7 +67,21 @@ const userNotVerifiedError = (user) => ({
   user,
 });
 
-/*const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
+const toggleUserCollectionActive = () => ({
+  type: types.TOGGLE_USER_COLLECTION_ACTIVE,
+});
+
+const toggleUserCollectionActiveSuccess = (user) => ({
+  type: types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS,
+  user,
+});
+
+const toggleUserCollectionActiveError = (errors) => ({
+  type: types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS,
+  errors,
+});
+
+/* const logHeapAnalytics = (userId, orgId) => async (dispatch) => {
   // Pass custom id and organization_id to Heap
   if (typeof window !== 'undefined') {
     if (userId) {
@@ -76,7 +92,7 @@ const userNotVerifiedError = (user) => ({
     //   window.heap.addUserProperties({ organization_id });
     // }
   }
-};*/
+}; */
 
 export const authenticate = (username, password) => async (dispatch) => {
   dispatch(authenticateRequest());
@@ -300,6 +316,7 @@ export const updateUser = (userItem = {}, token) => async (dispatch) => {
     const { data: { user = {} } } = payload;
 
     dispatch(requestUpdateUserSuccess(user));
+    return user;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -320,5 +337,18 @@ export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestUpdateUserError(errMessage));
+  }
+};
+
+export const setCollectionIsActive = (id, token) => async (dispatch) => {
+  try {
+    dispatch(toggleUserCollectionActive());
+    const response = await toggleActiveCollection(id, token);
+    const { data: { user } } = response;
+    dispatch(toggleUserCollectionActiveSuccess(user));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(toggleUserCollectionActiveError(errMessage));
   }
 };

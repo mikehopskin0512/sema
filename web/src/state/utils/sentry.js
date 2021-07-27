@@ -36,6 +36,7 @@ const initialize = async (ctx) => {
   // Redirects w/ exclusions
   if (
     !(ctx.pathname).includes('/login') &&
+    !(ctx.pathname).includes('/onboarding') &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset')
   ) {

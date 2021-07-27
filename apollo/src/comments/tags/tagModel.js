@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const tagSchema = new Schema({
-  type: { type: String, enum: ['language', 'smartComment', 'other'] },
+  type: { type: String, enum: ['language', 'guide', 'smartComment', 'other'] },
   label: String,
   sentiment: { type: String, enum: ['positive', 'negative'] },
   isActive: { type: Boolean, default: true },

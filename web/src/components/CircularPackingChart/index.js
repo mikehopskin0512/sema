@@ -1,14 +1,23 @@
-import React from 'react'
-import { ResponsiveCirclePacking } from '@nivo/circle-packing'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { find } from 'lodash';
+import { ResponsiveCirclePacking } from '@nivo/circle-packing';
+import { TAGS } from '../../utils/constants';
 
-const CircularPacking = ({data}) => {
-
+const CircularPacking = ({ data }) => {
   const parseData = (rawData) => {
-    const children = [];
+    let children = [];
     if (rawData) {
-      for (const [key, value] of Object.entries(data)) {
-        children.push({ name: key, value });
-      }
+      const keys = Object.keys(rawData);
+      children = keys.map((_id) => {
+        const tag = find(TAGS, { _id });
+        return {
+          name: tag.label,
+          id: _id,
+          color: tag.isPositive ? '#A4E799' : '#E79999',
+          value: rawData[_id],
+        };
+      });
     }
     const chartData = {
       name: 'Tags',
@@ -18,6 +27,10 @@ const CircularPacking = ({data}) => {
     return chartData;
   };
 
+  // TODO: Tooltip - needs data for the line chart
+  // Y - # of Reactions
+  // X - Date
+
   return (
     <>
       <ResponsiveCirclePacking
@@ -25,30 +38,28 @@ const CircularPacking = ({data}) => {
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         id="name"
         value="value"
-        colors={{ scheme: 'nivo' }}
+        colors={(item) => item.data.color}
         childColor={{ from: 'color', modifiers: [['brighter', 0.4]] }}
         padding={4}
-        enableLabels={true}
-        labelsFilter={function (e) { return 2 === e.node.depth }}
+        enableLabels
+        leavesOnly
         labelsSkipRadius={10}
         labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
         borderWidth={1}
         borderColor={{ from: 'color', modifiers: [['darker', 0.5]] }}
-        // defs={[
-        //   {
-        //     id: 'lines',
-        //     type: 'patternLines',
-        //     background: 'none',
-        //     color: 'inherit',
-        //     rotation: -45,
-        //     lineWidth: 5,
-        //     spacing: 8,
-        //   },
-        // ]}
         fill={[{ match: { depth: 1 }, id: 'lines' }]}
+        // tooltip={({ id, value, color }) => (
+        //   <strong style={{ color }}>
+        //     {id}: {value}
+        //   </strong>
+        // )}
       />
     </>
-  )
-}
+  );
+};
+
+CircularPacking.propTypes = {
+  data: PropTypes.object.isRequired,
+};
 
 export default CircularPacking;

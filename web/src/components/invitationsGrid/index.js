@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Table from '../table';
 import Badge from '../badge/badge';
-import {fullName} from '../../utils';
+import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
@@ -32,11 +32,11 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         Header: 'Status',
         accessor: 'isPending',
         className: type === 'dashboard' ? 'has-background-sky-light' : '',
-        Cell: ({ cell: { value } }) => type === 'admin' ? (
+        Cell: ({ cell: { value } }) => (type === 'admin' ? (
           <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
         ) : (
-          <div className='py-15'><span className={`tag is-rounded ${value ? 'is-primary' : 'is-success'}`}>{ value ? 'Pending Invite' : 'Accepted' }</span></div>
-        ),
+          <div className="py-15"><span className={`tag is-rounded ${value ? 'is-primary' : 'is-success'}`}>{ value ? 'Pending Invite' : 'Accepted' }</span></div>
+        )),
       },
       {
         Header: 'Actions',
