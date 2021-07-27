@@ -33,3 +33,16 @@ export  const incrementReactions = (reactionsObject = {}, reaction) => {
   reactionsObject[reaction] += 1;
   return reactionsObject;
 };
+
+export const getReactionIdKeys = async () => {
+  try {
+    const reactions = await getAllReactions();
+    const reactionKeys = reactions.map((r) => r._id);
+    const keys = reactionKeys.reduce((a,b) => (a[b] = 0, a), {});
+    return keys;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};

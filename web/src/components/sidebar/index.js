@@ -11,7 +11,7 @@ import styles from './sidebar.module.scss';
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
 
-  const isActiveRoute = () => router.asPath === pathName;
+  const isActiveRoute = () => router.asPath.includes(pathName);
 
   return (
     <Link href={pathName}>
@@ -53,7 +53,7 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className={clsx(styles['layout-container'])}>
-      <div className="columns">
+      <div className="columns m-0">
         <div className="column is-one-fifth">
           <div className={clsx(styles.sidebar, 'ml-90 p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
             <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">

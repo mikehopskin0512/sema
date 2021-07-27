@@ -6,11 +6,14 @@ import { useForm } from 'react-hook-form';
 import jwtDecode from 'jwt-decode';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
+import OnboardingModal from '../../components/onboarding/onboardingModal';
+import styles from './register.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
@@ -37,6 +40,28 @@ const RegistrationForm = (props) => {
   const dispatch = useDispatch();
   const { register, watch, handleSubmit, formState } = useForm();
   const { errors } = formState;
+  const [collectionState, setCollection] = useState({});
+  const [isModalActive, toggleModalActive] = useState(false);
+  const [page, setPage] = useState(1);
+  const [comment, setComment] = useState({});
+
+  const nextPage = (currentPage) => {
+    setPage(currentPage + 1);
+  };
+
+  const previousPage = (currentPage) => {
+    setPage(currentPage - 1);
+  };
+
+  const toggleCollection = (field) => {
+    const newCollection = { ...collectionState };
+    newCollection[field] = !newCollection[field];
+    setCollection(newCollection);
+  };
+
+  const handleCommentFields = (e) => {
+    setComment({ ...comment, [e.target.name]: e.target.value });
+  };
 
   const router = useRouter();
   const { token } = router.query;
@@ -67,6 +92,8 @@ const RegistrationForm = (props) => {
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
+    console.log(data, collectionState, comment);
+    return;
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
@@ -238,10 +265,25 @@ const RegistrationForm = (props) => {
           }
           <div className="control mt-20">
             <button
-              type="submit"
-              className="button is-black">Continue
+              type="button"
+              className="button is-black"
+              onClick={() => toggleModalActive(true)}
+            >
+              Continue
             </button>
           </div>
+          <OnboardingModal
+            isModalActive={isModalActive}
+            page={page}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            collectionState={collectionState}
+            setCollection={setCollection}
+            toggleCollection={toggleCollection}
+            handleCommentFields={handleCommentFields}
+            comment={comment}
+            toggleModalActive={toggleModalActive}
+          />
         </form>
       </div>
     </div>

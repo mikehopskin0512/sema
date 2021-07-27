@@ -2,6 +2,10 @@
     box-shadow: 0 0em 1em #0a0a0a1a, 0 0px 0 1px #0a0a0a05;
 }
 
+.border-none {
+  border: none !important;
+}
+
 .colored-shadow {
     box-shadow: 8px 8px 0px rgba(229, 42, 145, 0.1);
 }
@@ -80,7 +84,7 @@ $positions:
   }
 }
 
-$radius: "0", "2px", "4px", "8px", "14px", "16px";
+$radius: "0", "2px", "4px", "8px", "14px", "16px", "24px";
 
 @each $i in $radius{
   .border-radius-#{$i} {
@@ -90,4 +94,9 @@ $radius: "0", "2px", "4px", "8px", "14px", "16px";
 
 .has-no-border {
   border: none;
+}
+
+// remove after bulma update
+.is-underlined {
+  text-decoration: underline;
 }
