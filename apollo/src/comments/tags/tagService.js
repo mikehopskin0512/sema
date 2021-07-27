@@ -15,6 +15,17 @@ export const getAllTags = async () => {
   }
 };
 
+export const getTagsByType = async (type) => {
+  try {
+    const tags = await Tag.find({ type }).exec();
+    return tags;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
 export const getAllTagIds = async () => {
   try {
     const tags = await getAllTags();

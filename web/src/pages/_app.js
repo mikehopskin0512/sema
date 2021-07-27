@@ -15,6 +15,7 @@ import { initStore } from '../state/store';
 import * as ga from '../utils/analytics';
 
 import '../../styles/_theme.scss';
+import '../../styles/_calendar.scss';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,

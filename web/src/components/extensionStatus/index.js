@@ -16,13 +16,13 @@ const ExtensionStatus = () => {
 
   const isHidden = () => {
     const enabledPaths = ['/stats', '/overview', '/activity'];
-    if (enabledPaths.indexOf(route) === -1) {
-      return true;
-    }
-    if (!extensionStatus) {
-      return false;
-    }
-    return true
+    let hidden = true;
+    enabledPaths.forEach((item) => {
+      if (route.includes(item)) {
+        hidden = false;
+      }
+    });
+    return hidden;
   };
 
   useEffect(() => {

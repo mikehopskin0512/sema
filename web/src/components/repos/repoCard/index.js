@@ -50,7 +50,7 @@ const stats = {
 
 const RepoCard = (props) => {
   const {
-    name, description, isFavorite,
+    name, description, isFavorite, _id,
   } = props;
 
   const truncateText = (text) => {
@@ -62,6 +62,11 @@ const RepoCard = (props) => {
       truncated = `${text.substr(0, descriptionMaxLength)}...`;
     }
     return truncated;
+  };
+
+  const onClickRepo = () => {
+    // Change Redirect link when overview is done!
+    window.location = `/stats/${_id}`;
   };
 
   const renderStats = (label, value) => (
@@ -92,7 +97,7 @@ const RepoCard = (props) => {
   );
 
   return (
-    <div className={clsx('p-10 is-flex is-flex-grow-1', styles.card)}>
+    <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={onClickRepo} aria-hidden>
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>

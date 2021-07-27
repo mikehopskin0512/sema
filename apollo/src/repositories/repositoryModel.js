@@ -6,22 +6,18 @@ import { autoIndex } from '../config';
 const tagsScheme = new mongoose.Schema({
   tagsId: [String],
   smartCommentId: { type: mongoose.Schema.Types.ObjectId, ref: 'SmartComment', required: true },
-}, { _id: false });
+  createdAt: { type: Date, default: Date.now },
+}, {} );
 
 const reactionsScheme = new mongoose.Schema({
   reactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Reaction', required: true },
   smartCommentId: { type: mongoose.Schema.Types.ObjectId, ref: 'SmartComment', required: true },
-}, { _id: false });
-
-const aggregationSchema = new mongoose.Schema({
-
-}, { _id: false, strict: false });
+  createdAt: { type: Date, default: Date.now },
+}, {} );
 
 const repoStatsSchema = new mongoose.Schema({
-  reactions: aggregationSchema,
-  tags: aggregationSchema,
-  rawReactions: [reactionsScheme],
-  rawTags: [tagsScheme],
+  reactions: [reactionsScheme],
+  tags: [tagsScheme],
   userIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, { _id: false });
 

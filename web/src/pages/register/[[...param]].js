@@ -6,19 +6,26 @@ import { useForm } from 'react-hook-form';
 import jwtDecode from 'jwt-decode';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import clsx from 'clsx';
 import _ from 'lodash';
 
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
+import OnboardingModal from '../../components/onboarding/onboardingModal';
+import styles from './register.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
+import { collectionsOperations } from '../../state/features/collections';
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 
 const { clearAlert } = alertOperations;
 const { registerAndAuthUser, partialUpdateUser } = authOperations;
 const { fetchInvite, redeemInvite } = invitationsOperations;
+const { findCollectionsByAuthor, createCollections } = collectionsOperations;
+const { createSuggestComment } = suggestCommentsOperations;
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -37,6 +44,29 @@ const RegistrationForm = (props) => {
   const dispatch = useDispatch();
   const { register, watch, handleSubmit, formState } = useForm();
   const { errors } = formState;
+  const [semaCollections, setSemaCollections] = useState([]);
+  const [collectionState, setCollection] = useState({ personalComments: true });
+  const [isModalActive, toggleModalActive] = useState(false);
+  const [page, setPage] = useState(1);
+  const [comment, setComment] = useState({});
+
+  const nextPage = (currentPage) => {
+    setPage(currentPage + 1);
+  };
+
+  const previousPage = (currentPage) => {
+    setPage(currentPage - 1);
+  };
+
+  const toggleCollection = (field) => {
+    const newCollection = { ...collectionState };
+    newCollection[field] = !newCollection[field];
+    setCollection(newCollection);
+  };
+
+  const handleCommentFields = (e) => {
+    setComment({ ...comment, [e.target.name]: e.target.value });
+  };
 
   const router = useRouter();
   const { token } = router.query;
@@ -53,7 +83,7 @@ const RegistrationForm = (props) => {
     ({ identity } = jwtDecode(token));
   }
   const {
-    email: githubEmail, firstName, lastName, avatarUrl, emails,
+    email: githubEmail, firstName, lastName, avatarUrl, emails, username,
   } = identity;
   const hasIdentity = Object.prototype.hasOwnProperty.call(identity, 'id') || false;
 
@@ -62,21 +92,67 @@ const RegistrationForm = (props) => {
   const { token: authToken, user } = auth;
   const { _id: userId } = user;
 
+  const getCollectionsByAuthor = async (author) => {
+    const defaultCollections = await dispatch(findCollectionsByAuthor(author, authToken));
+    setSemaCollections(defaultCollections);
+  };
+
+  const createUserCollection = async () => {
+    const userCollection = {
+      name: 'My Comments',
+      description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
+      author: username,
+      isActive: collectionState.personalComments,
+      comments: [],
+    }
+    if (collectionState.personalComments) {
+      if (!_.isEmpty(comment)) {
+        const suggestedComment = await dispatch(createSuggestComment({ ...comment }, authToken));
+        userCollection.comments.push(suggestedComment._id);
+      }
+    }
+    const personalCollection = await dispatch(createCollections({ collections: [userCollection] }, authToken));
+    return personalCollection;
+  };
+
+  const getActiveCollections = async () => {
+    const userCollections = [];
+    for (const [key, val] of Object.entries(collectionState)) {
+      if (key === 'personalComments') {
+        const [userCollection] = await createUserCollection();
+        if (userCollection._id) {
+          userCollections.push({ collectionData: userCollection._id, isActive: val })
+        }
+      } else {
+        userCollections.push({ collectionData: key, isActive: val })
+      }
+    }
+    return userCollections;
+  };
+
+  useEffect(() => {
+    getCollectionsByAuthor('sema');
+  }, []);
+
   // If Github login, use that primarily. Fallback to invite recipient.
   // However normal reg will have neither
   const initialEmail = githubEmail || recipient;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    // const userCollections = [];
+    const userCollections = await getActiveCollections();
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
-      dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
+      dispatch(partialUpdateUser(userId, { isWaitlist: false, collections: [...userCollections] }, authToken));
       router.push('/dashboard');
     } else {
       // New user
       // If no invite, set to waitlist
       const isWaitlist = !inviteToken;
-      const newUser = { ...user, ...data, avatarUrl, isWaitlist };
+      const newUser = {
+        ...user, ...data, avatarUrl, isWaitlist, collections: [...userCollections],
+      };
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));
     }
@@ -238,10 +314,27 @@ const RegistrationForm = (props) => {
           }
           <div className="control mt-20">
             <button
-              type="submit"
-              className="button is-black">Continue
+              type="button"
+              className="button is-black"
+              onClick={() => toggleModalActive(true)}
+            >
+              Continue
             </button>
           </div>
+          <OnboardingModal
+            isModalActive={isModalActive}
+            page={page}
+            nextPage={nextPage}
+            previousPage={previousPage}
+            collectionState={collectionState}
+            setCollection={setCollection}
+            toggleCollection={toggleCollection}
+            handleCommentFields={handleCommentFields}
+            comment={comment}
+            setComment={setComment}
+            toggleModalActive={toggleModalActive}
+            semaCollections={semaCollections}
+          />
         </form>
       </div>
     </div>
