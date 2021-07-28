@@ -94,7 +94,7 @@ export const getInvitationsBySender = async (params) => {
       query.where('recipient', new RegExp(search, 'gi'))
     }
 
-    const invites = await query.lean().exec();
+    const invites = await query.populate('sender').lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];

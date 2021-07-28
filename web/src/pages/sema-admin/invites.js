@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import withLayout from '../../components/layout/adminLayout';
 import { invitationsOperations } from '../../state/features/invitations';
@@ -42,19 +42,19 @@ const InvitesPage = () => {
 
   useEffect(() => {
     dispatch(getInvitesBySender(user._id, token))
-  }, []);
+  }, [dispatch, token, user._id]);
 
-  const getInvites = () => {
+  const getInvites = useCallback(() => {
     if (category === 'your_invites') {
-      dispatch(getInvitesBySender(user._id, token, debounceSearchTerm))
+      dispatch(getInvitesBySender(user._id, token, debounceSearchTerm));
     } else {
-      dispatch(getInvitesBySender(undefined, token, debounceSearchTerm))
+      dispatch(getInvitesBySender(undefined, token, debounceSearchTerm));
     }
-  };
+  }, [category, debounceSearchTerm, dispatch, token, user._id]);
 
   useEffect(() => {
     getInvites();
-  }, [category, debounceSearchTerm]);
+  }, [category, debounceSearchTerm, getInvites]);
 
   useEffect(() => {
     if (showAlert === true) {
