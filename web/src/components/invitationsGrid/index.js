@@ -43,7 +43,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         accessor: 'actions',
         className: type === 'dashboard' ? 'pl-50 has-background-sky-light' : '',
         Cell: ({ cell: { value: el } }) => (
-          <div className="is-flex is-align-items-center py-10">
+          <div className='is-flex is-align-items-center py-10'>
             {
               el.isPending && (
                 <>

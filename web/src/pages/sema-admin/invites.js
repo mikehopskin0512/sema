@@ -10,9 +10,10 @@ import { alertOperations } from '../../state/features/alerts';
 import FilterTabs from '../../components/admin/filterTabs';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import InvitationsGrid from '../../components/invitationsGrid';
+import ExportButton from '../../components/admin/exportButton';
 
 const { clearAlert } = alertOperations;
-const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
+const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser, exportInvites } = invitationsOperations;
 
 const tabOptions = [
   {
@@ -70,6 +71,13 @@ const InvitesPage = () => {
     await dispatch(revokeInviteAndHydrateUser(invitationId, user._id, token, recipient));
   };
 
+  const handleExport = () => {
+    exportInvites({
+      senderId: category === 'your_invites' ? user._id : undefined,
+      search: debounceSearchTerm,
+    });
+  };
+
   if (isFetching) {
     return (
       <div className='loading' />
@@ -87,7 +95,12 @@ const InvitesPage = () => {
         </div>
         <div className='is-flex is-justify-content-space-between mb-10'>
           <FilterTabs tabs={tabOptions} value={category} onChange={setCategory} />
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          <div className="is-flex">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+            <div className="ml-10">
+              <ExportButton onExport={handleExport} />
+            </div>
+          </div>
         </div>
         <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
       </div>
