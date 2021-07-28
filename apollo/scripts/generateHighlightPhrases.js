@@ -24,7 +24,7 @@ function splitByStopWord(text, stopwords) {
   let returnTerms = [];
   let splitFound = false;
   for (let i = 0; i < stopwords.length && !splitFound; i += 1) {
-    const splitText = text.split(` ${stopwords[i]} `);
+    const splitText = text.split(`${stopwords[i]}`);
     if (splitText.length > 1) {
       splitText.forEach((term) => {
         returnTerms = returnTerms.concat(splitByStopWord(term, stopwords.slice(i)));
@@ -40,7 +40,19 @@ function splitByStopWord(text, stopwords) {
 
 data.forEach((comment) => {
   // lets try splitting titles by stopwords
-  comment.ngrams = splitByStopWord(comment.title.replace(/[^\w\s]/gi, ' ').replace(/\s\s+/g, ' ').trim(), sw.en.concat(['-', '(', ')', '//']));
+  const stopwordsWithSpaces = sw.en.map(s => ' '+s+' ');
+  comment.ngrams = splitByStopWord(comment.title.trim(), stopwordsWithSpaces.concat([
+    ':',
+    '-',
+    '(',
+    ')',
+    '/',
+    '\'',
+    '.',
+    '+',
+    '=',
+    '>',
+    '<']));
   allNgramsDupes = allNgramsDupes.concat(comment.ngrams.slice());
 });
 const allNgrams = [...new Set(allNgramsDupes)];
@@ -74,7 +86,9 @@ data.forEach((comment) => {
       foundNgram = { ngram, ngramCount: ngramCounts[ngram] };
     }
   });
-  highlightTerms.push(foundNgram.ngram);
+  highlightTerms.push(foundNgram.ngram.trim());
   // console.log(comment.title + '\n   '+foundNgram['ngram']+' '+foundNgram.ngramCount);
 });
-console.log(JSON.stringify([...new Set(highlightTerms)]));
+process.stdout.write('const phrases = ');
+console.dir([...new Set(highlightTerms)].sort(), {'maxArrayLength': null});
+console.log('export default phrases;');
