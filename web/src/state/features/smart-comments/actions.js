@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { exportUserActivityChangeMetrics, getUserActivityChangeMetrics, exportShareOfWalletMetrics, getShareOfWalletMetrics } from './api';
+import { exportUserActivityChangeMetrics, getUserActivityChangeMetrics, exportShareOfWalletMetrics, getShareOfWalletMetrics, getSuggestedMetrics, exportSuggestedMetrics } from './api';
 import * as types from './types';
 
 const requestUserActivityChangeMetrics = () => ({
@@ -97,3 +97,51 @@ export const exportSmartCommentsMetrics = async (params = {}, token) => {
     console.error(error);
   }
 }
+
+const requestFetchSuggestedMetrics = () => ({
+  type: types.REQUEST_FETCH_SUGGESTED_METRICS,
+});
+
+const requestFetchSuggestedMetricsSuccess = (suggestedMetrics, totalSuggestedCount) => ({
+  type: types.REQUEST_FETCH_SUGGESTED_METRICS_SUCCESS,
+  suggestedMetrics,
+  totalSuggestedCount,
+});
+
+const requestFetchSuggestedMetricsError = (errors) => ({
+  type: types.REQUEST_FETCH_SUGGESTED_METRICS_ERROR,
+  errors,
+});
+
+export const fetchSuggestedMetrics = (params = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSuggestedMetrics());
+    const payload = await getSuggestedMetrics(params, token);
+    const { data: { comments = [], totalCount } } = payload;
+
+    dispatch(requestFetchSuggestedMetricsSuccess(comments, totalCount));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestFetchSuggestedMetricsError(errMessage));
+  }
+};
+
+export const exportSuggestedCommentsMetrics = async (params = {}, token) => {
+  try {
+    const payload = await exportSuggestedMetrics(params, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
