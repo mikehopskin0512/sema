@@ -3,11 +3,12 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
+import { uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
-import User from '../../users/userModel';
+
 import { fullName } from '../../shared/utils';
 
 const { Types: { ObjectId } } = mongoose;
@@ -350,14 +351,13 @@ export const exportUserActivityChangeMetrics = async () => {
 
 export const getGrowthRepositoryMetrics = async () => {
   const metrics = [];
-  const usersCount = await User.countDocuments();
 
   await Promise.all(Array(10).fill(0).map(async (_, index) => {
     const date = subDays(new Date(), index);
     const groupQuery = [{
       $group: {
-        _id: '$githubMetadata.repo',
-        count: { $sum: 1 },
+        _id: '$userId',
+        repos: { $push: '$githubMetadata.repo' },
       },
     }];
 
@@ -397,11 +397,15 @@ export const getGrowthRepositoryMetrics = async () => {
       ...groupQuery,
     ]);
 
+    const totalDayRepos = oneDayRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+    const totalWeekRepos = oneWeekRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+    const totalMonthRepos = oneMonthRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+
     metrics.push({
       date,
-      oneDayRepos: (oneDayRepos.length / usersCount).toFixed(2),
-      oneWeekRepos: (oneWeekRepos.length / usersCount).toFixed(2),
-      oneMonthRepos: (oneMonthRepos.length / usersCount).toFixed(2),
+      oneDayRepos: oneDayRepos.length ? (totalDayRepos / oneDayRepos.length).toFixed(2) : 0,
+      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / oneWeekRepos.length).toFixed(2) : 0,
+      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / oneMonthRepos.length).toFixed(2) : 0,
     });
   }));
 
