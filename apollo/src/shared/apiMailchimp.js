@@ -18,9 +18,11 @@ const api = axios.create({
 const get = (endpoint, { id }) => api.get(`${endpoint}/${id}`, config);
 const getAll = (endpoint, { params } = {}) => api.get(endpoint, { params, ...config });
 const create = (endpoint, item) => api.post(endpoint, item, config);
+const update = (endpoint, item) => api.put(endpoint, item, config);
 
 module.exports = {
   get,
   getAll,
   create,
+  update,
 };
