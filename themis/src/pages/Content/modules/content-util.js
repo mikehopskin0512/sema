@@ -430,8 +430,9 @@ export const getGithubMetadata = (document, textarea) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
-  const title = document.querySelector('span[data-snek-id="issue-title"]')?.innerText;
-  const clone_url = document.querySelector("#clone-help-git-url")?.value;
+  const title = document.querySelector('span[data-snek-id="issue-title"]')
+    ?.innerText;
+  const clone_url = document.querySelector('#clone-help-git-url')?.value;
 
   const githubMetadata = {
     url,
@@ -631,12 +632,33 @@ export const getHighlights = (text) => {
     }
   };
 
-  phrases.forEach((phrase) => {
-    const matchIndexStart = text.indexOf(phrase);
-    if (matchIndexStart !== -1) {
-      const matchIndexEnd = matchIndexStart + phrase.length - 1;
-      insertIfValid({ start: matchIndexStart, end: matchIndexEnd, phrase });
+  const getIndicesOf = (searchStr, str, caseSensitive) => {
+    var searchStrLen = searchStr.length;
+    if (searchStrLen == 0) {
+      return [];
     }
+    var startIndex = 0,
+      index,
+      indices = [];
+    if (!caseSensitive) {
+      str = str.toLowerCase();
+      searchStr = searchStr.toLowerCase();
+    }
+    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+      indices.push(index);
+      startIndex = index + searchStrLen;
+    }
+    return indices;
+  };
+
+  phrases.forEach((phrase) => {
+    const startIndices = getIndicesOf(phrase, text, false);
+    startIndices.forEach((matchIndexStart) => {
+      if (matchIndexStart !== -1) {
+        const matchIndexEnd = matchIndexStart + phrase.length - 1;
+        insertIfValid({ start: matchIndexStart, end: matchIndexEnd, phrase });
+      }
+    });
   });
   return alerts;
 };
