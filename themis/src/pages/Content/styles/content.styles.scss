@@ -124,6 +124,47 @@
   --color-highlight: #{v.$color-dark-dim-highlight};
 }
 
+.theme--dark-high-contrast {
+  --color-border: #{v.$color-light-1};
+
+  --color-sema-bg: #{v.$color-dark-high-contrast-bg};
+  --color-sema-border: #{v.$color-dark-high-contrast-border};
+
+  --color-text-input-bg: #{v.$color-dark-high-contrast-bg};
+  --color-text-input-border: #{v.$color-dark-high-contrast-border};
+  --color-text-input-font: #{v.$color-dark-high-contrast-font};
+
+  --color-tags-border: #{v.$color-dark-high-contrast-tags-container-border};
+  --color-tags-background: #{v.$color-dark-high-contrast-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-high-contrast-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-high-contrast-tags-header-font};
+
+  --color-tag-font: #{v.$color-dark-high-contrast-tag-font};
+  --color-tag-bg: #{v.$color-dark-high-contrast-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-high-contrast-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-high-contrast-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-high-contrast-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-high-contrast-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-high-contrast-add-tags-border};
+
+  --color-title: #{v.$color-dark-high-contrast-title};
+  --color-content: #{v.$color-dark-high-contrast-content};
+
+  --color-suggestion-container: #{v.$color-dark-high-contrast-btn-container};
+  --color-credit-img: invert(1);
+
+  --color-btn-border: #{v.$color-dark-high-contrast-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-high-contrast-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-high-contrast-scroll-border};
+
+  --color-form-border: #{v.$color-dark-high-contrast-form-border};
+
+  --color-highlight: #{v.$color-dark-high-contrast-highlight};
+}
+
 .sema {
   display: flex;
   flex-direction: row;
@@ -232,14 +273,17 @@ button.sema-reaction-selection {
   overflow: auto;
   border: none;
   margin-top: 2px;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   color: var(--color-text-input-font);
-
+  border-color: var(--color-text-input-border);
+  // background-color: var(--color-text-input-bg);
 
   .sema-dropdown-content {
-    background: #ffffff;
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+    // background: #ffffff;
     box-shadow: none;
   }
 
@@ -381,6 +425,7 @@ h6 {
 
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
+    color: var(--color-title);
 
     :after {
       content: '';

@@ -48,6 +48,7 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
 } from './modules/redux/action';
+import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   store.dispatch(updateSemaUser({ ...request }));
@@ -119,51 +120,13 @@ document.addEventListener(
     if (isValidSemaTextBox(activeElement)) {
       checkLoggedIn();
       const semaElements = $(activeElement).siblings('div.sema');
-      let extensionTheme = LIGHT;
-      let themeClass = '';
       let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-      const colorMode = document.documentElement.getAttribute(
-        'data-color-mode'
-      );
+      SEMA_ICON = getSemaIconTheme(getActiveTheme());
 
       if (document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')) {
         document.querySelector(
           '.SelectMenu--hasFilter .SelectMenu-modal'
         ).style.maxHeight = '580px';
-      }
-
-      let colorTheme = document.documentElement.getAttribute(
-        'data-light-theme'
-      );
-      if (colorMode === DARK) {
-        extensionTheme = DARK;
-        colorTheme = document.documentElement.getAttribute('data-dark-theme');
-        if (colorTheme === DARK_DIMMED) {
-          extensionTheme = DARK_DIMMED;
-        }
-      } else if (colorMode === 'auto') {
-        const html = document.querySelector('[data-color-mode]');
-        const githubTheme = getComputedStyle(html);
-        const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === 'rgb(13, 17, 23)') {
-          extensionTheme = DARK;
-        } else if (githubBgColor === 'rgb(34, 39, 46)') {
-          extensionTheme = DARK_DIMMED;
-        }
-      }
-      switch (extensionTheme) {
-        case DARK:
-          themeClass = 'theme--dark';
-          SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
-          break;
-        case DARK_DIMMED:
-          themeClass = 'theme--dark-dimmed';
-          SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
-          break;
-        default:
-          themeClass = '';
-          SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-          break;
       }
 
       const githubTextareaId = $(activeElement).attr('id');
@@ -193,11 +156,11 @@ document.addEventListener(
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
         $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`
+          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${getActiveThemeClass()}'></div>`
         );
         // semabar container
         $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`
+          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${getActiveThemeClass()}'></div>`
         );
 
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
