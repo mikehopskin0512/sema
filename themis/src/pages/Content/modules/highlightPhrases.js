@@ -521,7 +521,6 @@ const phrases = [
   'input validation framework',
   'pragma pack',
   'import static',
-  'lock lock',
   'excessively large',
   'software stores sensitive information',
   'signed primitive',

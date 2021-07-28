@@ -3,7 +3,7 @@ import Invitation from './invitationModel';
 import User from '../users/userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { generateToken } from '../shared/utils';
+import { fullName, generateToken } from '../shared/utils';
 
 export const create = async (invitation) => {
   try {
@@ -94,7 +94,7 @@ export const getInvitationsBySender = async (params) => {
       query.where('recipient', new RegExp(search, 'gi'))
     }
 
-    const invites = await query.lean().exec();
+    const invites = await query.populate('sender').lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
@@ -209,6 +209,23 @@ export const exportInviteMetrics = async (type) => {
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedMetricData);
+
+  return csv;
+};
+
+export const exportInvitations = async (params) => {
+  const invites = await getInvitationsBySender(params);
+  const mappedData = invites.map((item) => ({
+    Sender: fullName(item.sender),
+    Recipient: item.isPending ? item.recipient : fullName(item.user),
+    Status: item.isPending ? 'Pending Invite' : 'Accepted',
+  }));
+
+  const { Parser } = Json2CSV;
+  const fields = ['Sender', 'Recipient', 'Status'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
 
   return csv;
 };

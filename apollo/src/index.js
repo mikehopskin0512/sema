@@ -1,5 +1,6 @@
 import analysis from './analysis';
 import auth from './auth';
+import collections from './comments/collections';
 import smartComments from './comments/smartComments';
 import suggestedComments from './comments/suggestedComments';
 import credentials from './credentials';
@@ -18,6 +19,7 @@ import support from './support';
 function attachRoutes(app, passport) {
   analysis(app, passport);
   auth(app, passport);
+  collections(app, passport);
   smartComments(app, passport);
   suggestedComments(app, passport);
   credentials(app, passport);

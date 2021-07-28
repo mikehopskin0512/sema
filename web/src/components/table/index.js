@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useSortBy, useTable, usePagination } from 'react-table';
 
 const Table = ({
@@ -41,6 +42,7 @@ const Table = ({
   }, [pageIndex, pageSize, fetchData]);
 
   return (
+    <>
     <div className="table-container">
       <table {...getTableProps()} className="table is-striped" style={{ width: '100%' }}>
         <thead>
@@ -108,6 +110,7 @@ const Table = ({
           }
         </tbody>
       </table>
+    </div>
       {
         !!pagination && (
           <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
@@ -137,8 +140,22 @@ const Table = ({
           </div>
         )
       }
-    </div>
+    </>
   );
+};
+
+Table.propTypes = {
+  columns: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  pagination: PropTypes.object,
+  loading: PropTypes.bool,
+  empty: PropTypes.any,
+};
+
+Table.defaultProps = {
+  pagination: {},
+  loading: false,
+  empty: null,
 };
 
 export default Table;

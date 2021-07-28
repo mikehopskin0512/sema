@@ -36,22 +36,6 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/:repo', passport.authenticate(['basic'], { session: false }), async (req, res) => {
-    const { repo } = req.params;
-    try {
-      const repository = await get(repo);
-      if (!repository || repository?.statusCode === 404 ) {
-        return res.status(404).send({ message: 'Repository does not exist.' });
-      }
-      const { externalId } = repository[0];
-      const smartComments = await getSmartComments({ repo: parseInt(externalId) });
-      return res.status(201).send(smartComments);
-    } catch (error) {
-      logger(error);
-      return res.status(error.statusCode).send(error);
-    }
-  });
-
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
 
@@ -151,6 +135,37 @@ export default (app, passport) => {
       return res.end(packer);
     } catch (error) {
       logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/suggested', async (req, res) => {
+    try {
+      const { page = 1, perPage = 50, search } = req.query;
+
+      const { comments, totalCount } = await getSuggestedMetrics({
+        page: parseInt(page, 10),
+        perPage: parseInt(perPage, 10),
+        search,
+      });
+      return res.json({ comments, totalCount });
+    } catch (error) {
+      logger(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/suggested/export', async (req, res) => {
+    try {
+      const { search } = req.body;
+      const packer = await exportSuggestedMetrics({ search });
+      res.writeHead(200, {
+        'Content-disposition': `attachment;filename=suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`,
+      });
+
+      return res.end(packer);
+    } catch (error) {
+      console.log(error);
       return res.status(error.statusCode).send(error);
     }
   });

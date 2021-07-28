@@ -117,6 +117,25 @@ const reducer = (state = initialState, action) => {
       user: {},
       error: action.errors,
     };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      users: [],
+      error: action.errors,
+    };
   default:
     return state;
   }

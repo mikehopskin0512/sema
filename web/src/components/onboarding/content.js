@@ -1,15 +1,18 @@
 export const content = [
   {
     title: 'Smart Comments',
-    subtitle: 'Provide more actionable feedback with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.'
+    subtitle: 'Provide more actionable feedback with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.',
+    img: '/img/reactions.png',
   },
   {
     title: 'Smart Tags',
-    subtitle: 'Quickly summarize your feedback with a carefully selected set of mutually exclusive tags. As you type, Sema will calculate the right tags for you or explore your own.'
+    subtitle: 'Quickly summarize your feedback with a carefully selected set of mutually exclusive tags. As you type, Sema will calculate the right tags for you or explore your own.',
+    img: '/img/tags.png',
   },
   {
     title: 'Suggested Comments',
-    subtitle: 'Write great comments faster by quickly search for and insert pre-written comments from some of the best knowledge bases in the world, and add your own!'
+    subtitle: 'Write great comments faster by quickly search for and insert pre-written comments from some of the best knowledge bases in the world, and add your own!',
+    img: '/img/suggested-comments.png',
   },
 ];
 
