@@ -53,8 +53,6 @@ In order to follow [best practices](https://12factor.net/) to maintain local env
 For example, if you wanted to add a new package `migrate` to `apollo`, you would run:
 
 ```sh
-
-# remove all docker images (
 $ docker-compose run apollo npm install migrate
 ```
 
