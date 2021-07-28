@@ -41,6 +41,8 @@ const buildSuggestedCommentsIndex = async () => {
     logger.error(error);
     throw error;
   }
+
+  return index;
 };
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
