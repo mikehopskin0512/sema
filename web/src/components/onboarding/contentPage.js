@@ -7,16 +7,18 @@ import { content } from './content';
 const ContentPage = ({ page, nextPage, previousPage }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
+  const [img, setImg] = useState('');
 
   useEffect(() => {
     setTitle(content[page - 1].title);
     setSubtitle(content[page - 1].subtitle);
+    setImg(content[page - 1].img);
   }, [page]);
 
   return (
     <>
-      <div className="columns">
-        <div className="column">
+      <div className="columns" style={{}}>
+        <div className="column is-5">
           <p className="mt-200 mb-20 title">{title}</p>
           <p className="mt-20 mb-200 subtitle">{subtitle}</p>
           {
@@ -38,7 +40,10 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
             Next
           </button>
         </div>
-        <div class="column" style={{ backgroundColor: "#E4E4E4" }}>
+        <div className="column is-flex is-justify-content-center is-7" style={{ backgroundColor: '#FFF' }}>
+          <div className="is-flex is-justify-content-center is-align-items-center">
+            <img src={img} alt="gif" />
+          </div>
         </div>
       </div>
     </>

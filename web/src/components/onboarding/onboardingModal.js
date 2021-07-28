@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import _ from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import AddSuggestedCommentPage from './addSuggestedCommentPage';
@@ -6,7 +7,6 @@ import SmartBankCommentsPage from './smartBankCommentsPage';
 import ContentPage from './contentPage';
 import ExtensionPage from './extensionPage';
 import styles from './onboarding.module.scss';
-import { commentCollection } from './content';
 
 const OnboardingModal = ({
   isModalActive,
@@ -19,6 +19,8 @@ const OnboardingModal = ({
   handleCommentFields,
   comment,
   toggleModalActive,
+  semaCollections,
+  setComment,
 }) => {
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
@@ -34,6 +36,7 @@ const OnboardingModal = ({
           previousPage={() => previousPage(currentPage)}
           collectionState={collectionState}
           toggleCollection={toggleCollection}
+          semaCollections={semaCollections}
         />
       );
     case 5:
@@ -44,6 +47,7 @@ const OnboardingModal = ({
           previousPage={() => previousPage(currentPage)}
           comment={comment}
           handleCommentFields={(e) => handleCommentFields(e)}
+          setComment={setComment}
         />
       );
     case 6:
@@ -61,13 +65,13 @@ const OnboardingModal = ({
   };
 
   useEffect(() => {
-    const collection = {};
-    for (const [key, value] of Object.entries(commentCollection)) {
-      const field = value.field;
+    const collection = {...collectionState};
+    for (const [key, value] of Object.entries(semaCollections)) {
+      const field = value._id;
       collection[field] = true;
     }
     setCollection(collection);
-  }, []);
+  }, [semaCollections]);
 
   return (
     <div className={clsx('modal', isModalActive && 'is-active')}>
@@ -103,8 +107,10 @@ OnboardingModal.propTypes = {
   setCollection: PropTypes.func.isRequired,
   toggleCollection: PropTypes.func.isRequired,
   handleCommentFields: PropTypes.func.isRequired,
-  comment: PropTypes.string.isRequired,
+  comment: PropTypes.object.isRequired,
   toggleModalActive: PropTypes.func.isRequired,
+  semaCollections: PropTypes.array.isRequired,
+  setComment: PropTypes.func.isRequired,
 };
 
 export default OnboardingModal;

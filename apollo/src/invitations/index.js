@@ -12,6 +12,7 @@ import {
   getInviteMetrics,
   exportInviteMetrics,
   redeemInvite,
+  exportInvitations,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
@@ -99,6 +100,21 @@ export default (app, passport) => {
       return res.status(200).send({
         data: invites,
       });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/export', async (req, res) => {
+    try {
+      const packer = await exportInvitations(req.body);
+
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=' + 'invites.csv',
+      });
+
+      res.end(packer);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

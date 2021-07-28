@@ -66,6 +66,11 @@ const AdminSidebar = ({ open, setOpen }) => {
       pathName: '/sema-admin/user-activity',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
+    {
+      name: 'Smart Comments',
+      pathName: '/sema-admin/smart-comments',
+      icon: <img src="/img/icons/dashboard.png" alt="" />,
+    },
   ];
   return (
     <div
