@@ -457,11 +457,10 @@ export const getGithubInlineMetadata = (id) => {
     `div[id=${fileDivId}] div[class^="file-header"] a`
   )?.title;
 
-  const splittedFilenameArray = filename?.split('.');
-  const splitLength = splittedFilenameArray.length;
-
-  // filenames can also be xyz.controller.js
-  const file_extension = splittedFilenameArray[splitLength - 1];
+  let file_extension = '';
+  if (filename) {
+    file_extension = filename.split('.').reverse[0];
+  }
 
   const allElements = Array.from(
     document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
