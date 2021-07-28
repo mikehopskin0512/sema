@@ -3,7 +3,7 @@ import * as types from './types';
 import {
   getInvite, postInvite, getInvitations,
   patchRedeemInvite, postResendInvite, deleteInvite,
-  getInvitationsMetric, exportInvitationsMetric,
+  getInvitationsMetric, exportInvitationsMetric, exportInvitations,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -228,6 +228,24 @@ export const exportInviteMetrics = async (type, token) => {
 
     link.href = url;
     link.setAttribute('download', `metric_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const exportInvites = async (params, token) => {
+  try {
+    const payload = await exportInvitations(params, token);
+    const {data} = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `invites_${format(new Date(), 'yyyyMMdd')}.csv`);
 
     document.body.appendChild(link);
     link.click();

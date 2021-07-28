@@ -347,13 +347,25 @@ h6 {
 }
 
 .sema-highlighter {
-  position: absolute;
+  display: inline;
   overflow: hidden;
-  pointer-events: none;
+  position: absolute;
+}
+
+.sema-highlighter-intermediate {
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.sema-highlighter-container {
+  display: block;
+  position: absolute;
 }
 
 .sema-highlighter-content {
   position: absolute !important;
+  display: block;
   border-radius: 4px;
   background: var(--color-highlight);
 }

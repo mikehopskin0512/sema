@@ -31,8 +31,8 @@ import {
   LIGHT,
   DARK,
   DARK_DIMMED,
-  EMOJIS,
-} from './constants';
+  EMOJIS, EMOJIS_ID
+} from "./constants";
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
@@ -252,30 +252,36 @@ document.addEventListener(
       }
 
       //add default reaction for approval comment
-      const isReviewChanges =
-        semabarContainerId === 'semabar_pull_request_review_body';
-      if (isReviewChanges) {
-        const form = $(activeElement).parents('form')?.[0];
-        const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
-          .checked;
-        if (isApprovedOption) {
-          const looksGoodEmojiId = '607f0d1ed7f45b000ec2ed72';
-          const selectedReaction = EMOJIS.find(
-            (e) => e._id === looksGoodEmojiId
-          );
-          store.dispatch(
-            updateSelectedEmoji({
-              id: semabarContainerId,
-              selectedReaction,
-              isReactionDirty: true,
-            })
-          );
+      const isReviewChangesContainer = semabarContainerId === 'semabar_pull_request_review_body';
+      if (isReviewChangesContainer) {
+        const barState = store.getState().semabars[semabarContainerId];
+        const isReactionDirty = barState.isReactionDirty;
+        const selectedReactionId = barState.selectedReaction._id
+        if (!isReactionDirty) {
+          handleReviewChangesClick(semabarContainerId, activeElement, selectedReactionId)
         }
       }
     }
   },
   true
 );
+
+function handleReviewChangesClick(semabarContainerId, activeElement, selectedReactionId) {
+  const looksGoodEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.GOOD);
+  const noReactionEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.NO_REACTION);
+  const form = $(activeElement).parents('form')?.[0];
+  const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
+    .checked;
+  const isEmptyComment = !activeElement.value
+  let reaction = isApprovedOption && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD) ? looksGoodEmoji : noReactionEmoji;
+  store.dispatch(
+    updateSelectedEmoji({
+      id: semabarContainerId,
+      selectedReaction: reaction,
+      isReactionDirty: false,
+    })
+  );
+}
 
 document.addEventListener(
   'focusin',

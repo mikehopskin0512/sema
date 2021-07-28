@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
-import { searchComments, suggestCommentsInsertCount } from './suggestedCommentService';
+import { create, searchComments, suggestCommentsInsertCount } from './suggestedCommentService';
 
 const route = Router();
 
@@ -28,6 +28,22 @@ export default (app, passport) => {
         perPage: parseInt(perPage, 10),
       });
       return res.status(200).send(result);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/', async (req, res) => {
+    const { title, comment, source } = req.body;
+    try {
+      const newSuggestedComment = await create( { title, comment, source: { name: "", url: source } } );
+      if (!newSuggestedComment) {
+        throw new errors.BadRequest('Suggested Comment create error');
+      }
+      return res.status(201).send({
+        suggestedComment: newSuggestedComment
+      });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
