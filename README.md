@@ -53,7 +53,9 @@ In order to follow [best practices](https://12factor.net/) to maintain local env
 For example, if you wanted to add a new package `migrate` to `apollo`, you would run:
 
 ```sh
-docker-compose run apollo npm install migrate
+
+# remove all docker images (
+$ docker-compose run apollo npm install migrate
 ```
 
 This updates the _image's_ `node_modules` as well as registers this change in the `package.json` and `package-lock.json` for committing. You should avoid running `npm install` directly, since it will install to the host's `node_modules` and override the `node_modules` on the container, thereby causing the container to have an outdated `node_modules`. See more [here](https://www.digitalocean.com/community/tutorials/containerizing-a-node-js-application-for-development-with-docker-compose).
@@ -67,4 +69,18 @@ This updates the _image's_ `node_modules` as well as registers this change in th
 2. Newly installed node modules not getting reflected on running the conatiner
 
    Solution: In this case remove the image build previously after you install the new module, run `docker images` to get the docker image id for the application and then run `docker rmi -f <image-id>` to remove the image and run `docker-compose up` again.
+   
+3. When adding new npm modules, the docker layers need to be rebuilt. 
+
+   Solution:
+   a. delete all docker layers (this is system-wide for all docker projects on your machine)
+   b. rebuild them from scratch
+   
+```sh
+# remove all layers
+sudo docker system prune
+
+# rebuild
+docker-compose build --no-cache
+```
           
