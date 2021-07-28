@@ -68,7 +68,7 @@ This updates the _image's_ `node_modules` as well as registers this change in th
 
    Solution: In this case remove the image build previously after you install the new module, run `docker images` to get the docker image id for the application and then run `docker rmi -f <image-id>` to remove the image and run `docker-compose up` again.
    
-3. When adding new npm modules, the docker layers need to be rebuilt. 
+3. After adding new npm modules, docker-compose up shows `Error: Cannot find module`
 
    Solution:
    a. delete all docker layers (this is system-wide for all docker projects on your machine)
