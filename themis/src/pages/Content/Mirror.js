@@ -256,6 +256,7 @@ class Mirror {
 
   _onClick(event) {
     if (!this._isMouseDown) {
+      const { scrollTop } = this._elementToMimic;
       const { offsetX, offsetY } = event;
       const highlight = this._getHighlightByPosition(offsetX, offsetY);
 
@@ -271,7 +272,7 @@ class Mirror {
           this._onMouseoverHighlight({
             data: this._ranges[id].token,
             position: {
-              top: top + height,
+              top: top + height - scrollTop,
               left: left,
             },
           });
