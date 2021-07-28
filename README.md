@@ -71,7 +71,9 @@ This updates the _image's_ `node_modules` as well as registers this change in th
 3. After adding new npm modules, docker-compose up shows `Error: Cannot find module`
 
    Solution:
+   
    a. delete all docker layers (this is system-wide for all docker projects on your machine)
+   
    b. rebuild them from scratch
    
 ```sh
