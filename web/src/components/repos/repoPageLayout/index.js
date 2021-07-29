@@ -22,7 +22,7 @@ const RepoPageLayout = ({ children }) => {
     repositories: state.repositoriesState,
   }));
   const { query: { repoId }, pathName } = router;
-  const { token, user, userVoiceToken } = auth;
+  const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
   const [supportForm, setSupportForm] = useState(false);
 
@@ -40,11 +40,11 @@ const RepoPageLayout = ({ children }) => {
   }, [auth]);
 
   useEffect(() => {
-    const selectedRepo = find(repositories.data.repositories, { externalId: repoId });
-    if (selectedRepo) {
+    const selected = find(repositories.data.repositories, { externalId: repoId });
+    if (selected) {
       setSelectedRepo({
-        label: selectedRepo.name,
-        value: selectedRepo.externalId
+        label: selected.name,
+        value: selected.externalId
       });
     }
   }, [repositories, pathName]);
