@@ -47,8 +47,7 @@ const RepoPageLayout = ({ children }) => {
         value: selectedRepo.externalId
       });
     }
-    
-  }, [repositories]);
+  }, [repositories, pathName]);
 
   const formatOptions = (repositories) => {
     if (repositories) {
