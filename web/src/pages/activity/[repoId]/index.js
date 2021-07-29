@@ -10,7 +10,7 @@ import Sidebar from '../../../components/sidebar';
 import withLayout from '../../../components/layout';
 import { commentsOperations } from '../../../state/features/comments';
 
-import { ReactionList, TagList } from '../../data/activity';
+import { ReactionList, TagList } from '../../../data/activity';
 
 const { fetchSmartComments } = commentsOperations;
 
