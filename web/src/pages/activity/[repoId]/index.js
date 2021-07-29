@@ -42,7 +42,7 @@ const ActivityLogs = () => {
   }, [dispatch, repoId]);
 
   useEffect(() => {
-    const users = compact(comments.smartComments.map((item) => {
+    const users = comments.smartComments.map((item) => {
       const { userId } = item;
       if (userId) {
         const { firstName, lastName, _id, avatarUrl } = item;
@@ -52,7 +52,7 @@ const ActivityLogs = () => {
           img: avatarUrl,
         };
       }
-    }));
+    });
     const prs = comments.smartComments.map((item) => {
       const { githubMetadata: { title, pull_number: pullNum } } = item;
       return {
