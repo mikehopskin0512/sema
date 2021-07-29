@@ -55,9 +55,6 @@ const Footer = () => {
         &copy; {new Date().getFullYear()} Sema
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href="/">Dashboard</a>
-      </div>
-      <div className="has-text-centered">
         <a className="button is-ghost has-text-white has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
       </div>
       <div className="has-text-centered">
