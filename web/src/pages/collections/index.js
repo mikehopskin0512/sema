@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import CardList from '../../components/comment/cardList';
 import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import withLayout from '../../components/layout';
-import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
+import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 
 const NUM_PER_PAGE = 9;
 
@@ -61,7 +61,7 @@ const CommentCollections = () => {
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet {...SuggestedCommentsHelmet} />
+      <Helmet {...CommentCollectionsHelmet} />
       <div className="hero-body">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4">

@@ -8,10 +8,11 @@ export {
   RegisterHelmet,
   InvitesHelmet,
   UserManagementHelmet,
-  RepoStatsHelmet,
-  ProfileHelmet,
   SuggestedCommentsHelmet,
   ActivityLogHelmet,
+  CommentCollectionsHelmet,
+  ProfileHelmet,
+  RepoStatsHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description }) => (

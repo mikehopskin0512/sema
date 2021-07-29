@@ -14,6 +14,7 @@ const collectionSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: 'suggestedComment' }],
   author: { type: String },
   isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now },
 }, { timestamps: true, collection: 'collections' });
 
 collectionSchema.set('autoIndex', autoIndex);
