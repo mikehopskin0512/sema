@@ -1,3 +1,4 @@
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import {
   SEMA_URL,
@@ -9,34 +10,29 @@ import {
   SEMA_CLIENT_SECRET,
 } from '../Content/constants';
 
-chrome.runtime.onMessageExternal.addListener(
-  (message, sender, sendResponse) => {
-    if (message === 'version') {
-      const manifest = chrome.runtime.getManifest();
-      sendResponse({
-        type: 'success',
-        version: manifest.version,
-      });
-      return true;
-    }
-    return true;
-  },
-);
-
-chrome.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === 'install') {
-    const queryOptions = { active: true, currentWindow: true };
-    const [tab] = await chrome.tabs.query(queryOptions);
-    const { id } = tab;
-    chrome.tabs.update(id, {
-      url: SEMA_UI_URL,
-      active: true,
-    });
-  } else if (details.reason === 'update') {
-    const thisVersion = chrome.runtime.getManifest().version;
-    console.log(`Updated from ${details.previousVersion} to ${thisVersion}!`);
-  }
-});
+// Dynamic rule to intercept requests to apollo and set the authorization header | Bearer token
+const setRequestRule = (token) => {
+  chrome.declarativeNetRequest.updateDynamicRules({
+    removeRuleIds: [1],
+    addRules: [
+      {
+        id: 1,
+        priority: 1,
+        action: {
+          type: 'modifyHeaders',
+          requestHeaders: [
+            {
+              header: 'authorization',
+              operation: 'set',
+              value: `Bearer ${token}`,
+            },
+          ],
+        },
+        condition: { urlFilter: 'comments', domains: ['github.com'] },
+      },
+    ],
+  });
+};
 
 function JWT() {
   let token = null;
@@ -57,10 +53,12 @@ function JWT() {
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const newAccessTokenTime = ((expirationTimeAccessToken - currentTime) - 60000);
         interval = setInterval(() => {
+          // eslint-disable-next-line no-use-before-define
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {
-        console.log(err);
+        // eslint-disable-next-line no-console
+        console.error(err);
       }
     }
   }
@@ -79,7 +77,6 @@ function JWT() {
 }
 
 const jwtHandler = JWT();
-
 const getNewAuthToken = async (cookie) => {
   const value = cookie?.value;
   let token = null;
@@ -102,12 +99,6 @@ const getNewAuthToken = async (cookie) => {
   }
   return token;
 };
-
-async function getFinalState() {
-  const cookie = await getCookie();
-  const tokenResponse = await processCookie(cookie);
-  return tokenResponse;
-}
 
 async function getCookie() {
   const cookie = await chrome.cookies.get({
@@ -158,6 +149,43 @@ async function processCookie(cookie) {
   return { token: null, isLoggedIn: false };
 }
 
+async function getFinalState() {
+  const cookie = await getCookie();
+  const tokenResponse = await processCookie(cookie);
+  return tokenResponse;
+}
+
+chrome.runtime.onMessageExternal.addListener(
+  (message, sender, sendResponse) => {
+    if (message === 'version') {
+      const manifest = chrome.runtime.getManifest();
+      sendResponse({
+        type: 'success',
+        version: manifest.version,
+      });
+      return true;
+    }
+    return true;
+  },
+);
+
+chrome.runtime.onInstalled.addListener(async (details) => {
+  if (details.reason === 'install') {
+    const queryOptions = { active: true, currentWindow: true };
+    const [tab] = await chrome.tabs.query(queryOptions);
+    const { id } = tab;
+    chrome.tabs.update(id, {
+      url: SEMA_UI_URL,
+      active: true,
+    });
+  } else if (details.reason === 'update') {
+    const thisVersion = chrome.runtime.getManifest().version;
+    // eslint-disable-next-line no-console
+    console.log(`Updated from ${details.previousVersion} to ${thisVersion}!`);
+  }
+});
+
+// eslint-disable-next-line consistent-return
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request[WHOAMI]) {
     getFinalState().then((tokenResponse) => {
@@ -166,6 +194,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
+
+const sendMessageToTab = (message) => {
+  chrome.tabs.query(
+    { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
+    (tabs) => {
+      if (tabs.length) {
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          message,
+          () => {
+            // eslint-disable-next-line no-console
+            console.log('tab response received');
+          },
+        );
+      }
+    },
+  );
+};
 
 chrome.cookies.onChanged.addListener((changeInfo) => {
   const { cookie, removed } = changeInfo;
@@ -180,44 +226,3 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
     }
   }
 });
-
-const sendMessageToTab = (message) => {
-  chrome.tabs.query(
-    { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
-    (tabs) => {
-      if (tabs.length) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          message,
-          (response) => {
-            console.log('tab response received');
-          },
-        );
-      }
-    },
-  );
-};
-
-// Dynamic rule to intercept requests to apollo and set the authorization header | Bearer token
-const setRequestRule = (token) => {
-  chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: [1],
-    addRules: [
-      {
-        id: 1,
-        priority: 1,
-        action: {
-          type: 'modifyHeaders',
-          requestHeaders: [
-            {
-              header: 'authorization',
-              operation: 'set',
-              value: `Bearer ${token}`,
-            },
-          ],
-        },
-        condition: { urlFilter: 'comments', domains: ['github.com'] },
-      },
-    ],
-  });
-};
