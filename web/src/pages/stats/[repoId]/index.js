@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { BarData, CircularData } from './data';
+import { BarData, CircularData } from '../../../data/stats-repoId';
 import styles from './stats.module.scss';
 import BarChart from '../../../components/BarChart';
 import CircularPacking from '../../../components/CircularPackingChart';
