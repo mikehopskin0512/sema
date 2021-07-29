@@ -41,8 +41,7 @@ export const getSmartComments = async ({ repo }) => {
   try {
     const query = SmartComment.find();
     query.where('githubMetadata.repo_id', repo);
-    query.populate('userId', 'firstName lastName avatarUrl');
-    const smartComments = await query.lean().exec();
+    const smartComments = await query.lean().populate('userId', 'firstName lastName avatarUrl').exec();
     return smartComments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -62,12 +61,11 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
       filter = Object.assign(filter, { "githubMetadata.requester": author });
     }
     if (repoId) {
-      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId });
+      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
     }
 
-    const query = await SmartComment.find(filter);
-    query.populate('userId', 'firstName lastName avatarUrl');
-    const smartComments = await query.lean().exec();
+    const query = SmartComment.find(filter);
+    const smartComments = await query.lean().populate('userId', 'firstName lastName avatarUrl').exec();
 
     return smartComments;
   } catch (err) {

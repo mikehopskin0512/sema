@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { findIndex, uniqBy, isEmpty } from 'lodash';
+import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../../components/activity/item';
@@ -16,9 +16,11 @@ const { fetchSmartComments } = commentsOperations;
 
 const ActivityLogs = () => {
   const dispatch = useDispatch();
-  const { comments } = useSelector((state) => ({
+  const { comments, auth } = useSelector((state) => ({
     comments: state.commentsState,
+    auth: state.authState,
   }));
+  const { token } = auth;
 
   const {
     query: { repoId },
@@ -36,18 +38,21 @@ const ActivityLogs = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchSmartComments(repoId));
+    dispatch(fetchSmartComments(repoId, token));
   }, [dispatch, repoId]);
 
   useEffect(() => {
-    const users = comments.smartComments.map((item) => {
-      const { userId: { firstName, lastName, _id, avatarUrl } } = item;
-      return {
-        label: `${firstName} ${lastName}`,
-        value: _id,
-        img: avatarUrl,
-      };
-    });
+    const users = compact(comments.smartComments.map((item) => {
+      const { userId } = item;
+      if (userId) {
+        const { firstName, lastName, _id, avatarUrl } = item;
+        return {
+          label: `${firstName} ${lastName}`,
+          value: _id,
+          img: avatarUrl,
+        };
+      }
+    }));
     const prs = comments.smartComments.map((item) => {
       const { githubMetadata: { title, pull_number: pullNum } } = item;
       return {
