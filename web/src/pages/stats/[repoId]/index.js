@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/named */
 import React, { useEffect } from 'react';
+import { format, subWeeks, subYears } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { BarData, CircularData } from './data';
 import styles from './stats.module.scss';
 import BarChart from '../../../components/BarChart';
 import CircularPacking from '../../../components/CircularPackingChart';
@@ -13,30 +13,31 @@ import { repositoriesOperations } from '../../../state/features/repositories';
 
 // import CalendarPopover from '../../../components/calendarPopover';
 
-const { fetchRepoStats } = repositoriesOperations;
+const { fetchReactionStats, fetchTagStats } = repositoriesOperations;
 
 const Stats = () => {
   const dispatch = useDispatch();
 
-  const { auth } = useSelector((state) => ({
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
 
-  // const setDate = (dates) => {
-  //   alert(`
-  //     start: ${dates.startDate.toString()}
-  //     end: ${dates.endDate.toString()}
-  //   `);
-  // };
+  const { data: { reactions, tags } } = repositories;
 
   const getReactions = async () => {
-    const filter = {
+    const reactionFilter = {
       externalId: '293553582',
-      dateTo: '2021-07-22 00:00:00',
-      dateFrom: '2021-07-10 00:00:00',
+      dateTo: format(new Date(), 'dd MMM, yyyy'),
+      dateFrom: format(subWeeks(new Date(), 1), 'dd MMM yyyy'),
     };
-    await dispatch(fetchRepoStats(filter, auth.token));
+    const tagFilter = {
+      externalId: '293553582',
+      dateTo: format(new Date(), 'dd MMM, yyyy'),
+      dateFrom: format(subYears(new Date(), 10), 'dd MMM yyyy'),
+    };
+    await dispatch(fetchReactionStats(reactionFilter, auth.token));
+    await dispatch(fetchTagStats(tagFilter, auth.token));
   };
 
   useEffect(() => {
@@ -53,14 +54,14 @@ const Stats = () => {
       <div className="is-flex is-flex-wrap-wrap mt-20">
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
-            <BarChart data={BarData} />
+            <p className="has-text-deep-black has-text-weight-semibold">Reactions (Last 7 Days)</p>
+            <BarChart data={reactions || []} />
           </div>
         </div>
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
-            <CircularPacking data={CircularData} />
+            <p className="has-text-deep-black has-text-weight-semibold">Tags (All Time)</p>
+            <CircularPacking data={tags || []} />
           </div>
         </div>
       </div>

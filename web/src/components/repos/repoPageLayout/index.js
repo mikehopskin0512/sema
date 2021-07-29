@@ -87,13 +87,13 @@ const RepoPageLayout = ({ children }) => {
       </div>
       <div className={styles["card-container"]}>
         <div className="hero">
-          <div className="hero-body columns">
+          <div className="hero-body columns m-0">
             <div className={clsx("column mx-20 m-5 p-20", styles["card"])}>
               <div className="is-size-6">SMART CODE REVIEWS</div>
               <div className="is-size-3 has-text-weight-semibold">23</div>
             </div>
             <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SMART CODE</div>
+              <div className="is-size-6">SMART COMMENTS</div>
               <div className="is-size-3 has-text-weight-semibold">23</div>
             </div>
             <div className={clsx("column mx-20 m-5", styles["card"])}>

@@ -78,7 +78,7 @@ const ActivityLogs = () => {
         const fromIndex = findIndex(filter.from, { value: item.userId._id });
         const toIndex = findIndex(filter.to, { value: item.githubMetadata.pull_number });
         const reactionIndex = findIndex(filter.reactions, { value: item.reaction });
-        const tagsIndex = findIndex(filter.tags, (tag) => item.tags.includes(tag.value));
+        const tagsIndex = findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1);
         const searchBool = item.comment.toLowerCase().includes(filter.search.toLowerCase());
         let filterBool = true;
         if (!isEmpty(filter.from)) {

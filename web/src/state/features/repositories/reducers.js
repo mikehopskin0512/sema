@@ -1,11 +1,12 @@
 import * as types from './types';
-import { upsert } from '../../../utils';
 
 const initialState = {
   isFetching: false,
   data: {
     repository: {},
     repositories: [],
+    reactions: [],
+    tags: [],
   },
 
 };
@@ -125,6 +126,56 @@ const reducer = (state = initialState, action) => {
       data: {
         repositories: action.repositories,
         repository: state.data.repository,
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_GET_REPO_REACTIONS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_GET_REPO_REACTIONS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        reactions: action.reactions,
+      },
+      error: {},
+    };
+  case types.REQUEST_GET_REPO_REACTIONS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        reactions: [],
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_GET_REPO_TAGS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_GET_REPO_TAGS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        tags: action.tags,
+      },
+      error: {},
+    };
+  case types.REQUEST_GET_REPO_TAGS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        tags: [],
       },
       error: action.errors,
     };
