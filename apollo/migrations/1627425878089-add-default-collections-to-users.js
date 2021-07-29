@@ -26,7 +26,7 @@ exports.up = async (next) => {
             'Create your own personal library of frequently used comments that only you will see',
           tags: [],
           comments: [],
-          author: `${user?.firstName || ''} ${user?.lastName || ''}`.trim(),
+          author: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
           isActive: true,
         });
         return { userId: user._id, collections: [...collections, { collectionData: myCollection._id, isActive: true }], myCollection: myCollection._id };
@@ -47,7 +47,7 @@ exports.up = async (next) => {
         }
      }),
     );
-    
+
     fs.writeFileSync(`${process.cwd()}/data/removeUsersCollection.json`, JSON.stringify(data));
   } catch (error) {
     next(error);
