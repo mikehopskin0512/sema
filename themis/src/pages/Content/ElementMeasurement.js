@@ -37,7 +37,7 @@ class ElementMeasurement {
     const borderWidth = elementBorderWidth;
 
     if (scrollbarWidth > 5) {
-      width = width - scrollbarWidth;
+      width -= scrollbarWidth;
     }
 
     return {
@@ -51,7 +51,9 @@ class ElementMeasurement {
   }
 
   getElementViewportPosition() {
-    const { top, bottom, right, left } = this._element.getBoundingClientRect();
+    const {
+      top, bottom, right, left,
+    } = this._element.getBoundingClientRect();
     return {
       top,
       bottom,

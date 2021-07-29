@@ -29,10 +29,10 @@ import {
 } from './redux/action';
 import store from './redux/store';
 
-import phrases from '../modules/highlightPhrases';
+import phrases from './highlightPhrases';
 
 export const isTextBox = (element) => {
-  var tagName = element.tagName.toLowerCase();
+  const tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;
   // if (tagName !== 'input') return false;
   // var type = element.getAttribute('type').toLowerCase(),
@@ -58,8 +58,7 @@ export const isTextBox = (element) => {
 
 export const isValidSemaTextBox = (element) => {
   const parent = $(element).parents('file-attachment');
-  const fileHeaderSibling =
-    parent.length && $(parent).siblings('.comment-form-head');
+  const fileHeaderSibling = parent.length && $(parent).siblings('.comment-form-head');
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
@@ -89,17 +88,17 @@ export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
 };
 
 export const getInitialSemaValues = (textbox) => {
-  const value = textbox.value;
+  const { value } = textbox;
   let initialReaction = EMOJIS[0];
   let initialTags = TAGS_INIT;
-  let githubEmoji, selectedTags;
+  let githubEmoji; let
+    selectedTags;
   if (value.includes('Sema Reaction')) {
     const reaction = '**Sema Reaction:** ';
     const reactionStart = value.indexOf(reaction) + reaction.length;
-    const reactionEnd =
-      value.indexOf('|') > 0
-        ? value.indexOf('|') - 1
-        : value.lastIndexOf(':') + 1;
+    const reactionEnd = value.indexOf('|') > 0
+      ? value.indexOf('|') - 1
+      : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
   }
@@ -115,7 +114,7 @@ export const getInitialSemaValues = (textbox) => {
 
   if (githubEmoji?.trim()) {
     const emojiObj = EMOJIS.find(
-      (emoji) => emoji.github_emoji === `:${githubEmoji}:`
+      (emoji) => emoji.github_emoji === `:${githubEmoji}:`,
     );
     if (emojiObj) {
       initialReaction = emojiObj;
@@ -128,7 +127,7 @@ export const getInitialSemaValues = (textbox) => {
       let selected = tagObj[SELECTED];
 
       const selectedTag = selectedTags.find(
-        (tag) => tag === positiveTag || tag === negativeTag
+        (tag) => tag === positiveTag || tag === negativeTag,
       );
       if (selectedTag) {
         selected = selectedTag === positiveTag ? POSITIVE : NEGATIVE;
@@ -148,8 +147,7 @@ export async function writeSemaToGithub(textarea) {
     let comment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview =
-      textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location = onFilesTab ? 'files changed' : 'conversation';
@@ -177,17 +175,16 @@ export async function writeSemaToGithub(textarea) {
         }
         return acc;
       },
-      []
+      [],
     );
 
-    const selectedEmojiString =
-      selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
-        ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
-        : '';
+    const selectedEmojiString = selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
+      ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+      : '';
 
-    let selectedTagsString = selectedTags.join(', ');
+    const selectedTagsString = selectedTags.join(', ');
 
-    let semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
+    const semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
 
     let textboxValue = textarea.value;
 
@@ -197,10 +194,10 @@ export async function writeSemaToGithub(textarea) {
 
     // TODO: Momentary implementation, for Tags retrieved from MongoDB
     const tags = selectedTags.map(
-      (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id
+      (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
     );
 
-    const githubMetadata = store.getState().githubMetadata;
+    const { githubMetadata } = store.getState();
     const { _id: userId } = store.getState().user;
 
     comment = {
@@ -217,7 +214,7 @@ export async function writeSemaToGithub(textarea) {
       store.dispatch(removeMutationObserver());
       const pullRequestReviewId = textarea?.id.split('_').pop();
       const commentDiv = document.querySelector(
-        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`
+        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
       );
       comment.githubMetadata.commentId = commentDiv?.id;
       createSmartComment(comment);
@@ -228,8 +225,8 @@ export async function writeSemaToGithub(textarea) {
     });
 
     if (
-      textboxValue.includes('Sema Reaction') ||
-      textboxValue.includes('Sema Tags')
+      textboxValue.includes('Sema Reaction')
+      || textboxValue.includes('Sema Tags')
     ) {
       // this textbox already has sema text
       // this is an edit
@@ -268,18 +265,17 @@ function onReviewChangesClicked(event) {
 }
 
 function onGithubSubmitClicked(event, store) {
-  const target = event.target;
+  const { target } = event;
   const parentButton = $(target).parents('button')?.[0];
   const isButton = $(target).is('button') || $(parentButton).is('button');
-  const isSubmitButton =
-    isButton &&
-    ($(target).attr('type') === 'submit' ||
-      $(parentButton).attr('type') === 'submit');
+  const isSubmitButton = isButton
+    && ($(target).attr('type') === 'submit'
+      || $(parentButton).attr('type') === 'submit');
 
   if (isSubmitButton) {
     const formParent = $(target).parents('form')?.[0];
     const textarea = $(formParent).find(
-      'file-attachment div text-expander textarea'
+      'file-attachment div text-expander textarea',
     )?.[0];
 
     writeSemaToGithub(textarea);
@@ -287,7 +283,7 @@ function onGithubSubmitClicked(event, store) {
 }
 
 function closeSemaOpenElements(event, store) {
-  const target = event.target;
+  const { target } = event;
   const dropdownParents = $(target).parents('.sema-dropdown');
   if (!dropdownParents.length) {
     store.dispatch(closeAllDropdowns());
@@ -301,7 +297,7 @@ function closeSemaOpenElements(event, store) {
   }
 
   const selectingEmojiParents = $(target).parents(
-    '.reaction-selection-wrapper'
+    '.reaction-selection-wrapper',
   );
   if (!selectingEmojiParents.length) {
     store.dispatch(closeAllEmojiSelection());
@@ -311,7 +307,7 @@ function closeSemaOpenElements(event, store) {
 export const toggleTagSelection = (
   operation,
   tags,
-  isUserOperation = false
+  isUserOperation = false,
 ) => {
   /**
    * {
@@ -349,8 +345,8 @@ export const toggleTagSelection = (
 
       // If tag is already selected, set selection to null on toggle
       if (
-        isSelected &&
-        (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
+        isSelected
+        && (tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE])
       ) {
         modifiedObj[SELECTED] = null;
         modifiedObj[IS_DIRTY] = isUserOperation;
@@ -372,11 +368,11 @@ export const toggleTagSelection = (
 };
 
 export function onSuggestion(event, store) {
-  const activeElement = document.activeElement;
+  const { activeElement } = document;
   const isValid = isValidSemaTextBox(activeElement);
   if (isValid) {
     const semabarContainer = $(activeElement).siblings(
-      `div.${SEMABAR_CLASS}`
+      `div.${SEMABAR_CLASS}`,
     )[0];
 
     const semabarId = $(semabarContainer).attr('id');
@@ -387,7 +383,7 @@ export function onSuggestion(event, store) {
 
     const { suggestedReaction, suggestedTags } = payload;
     if (suggestedReaction) {
-      const isReactionDirty = state.semabars[semabarId].isReactionDirty;
+      const { isReactionDirty } = state.semabars[semabarId];
       // isReactionDirty is true when reaction is manually selected from UI
       if (!isReactionDirty) {
         store.dispatch(
@@ -395,7 +391,7 @@ export function onSuggestion(event, store) {
             id: semabarId,
             selectedReaction: suggestedReaction,
             isReactionDirty: false,
-          })
+          }),
         );
       }
     }
@@ -405,7 +401,7 @@ export function onSuggestion(event, store) {
         addSuggestedTags({
           id: semabarId,
           suggestedTags,
-        })
+        }),
       );
     }
   }
@@ -454,7 +450,7 @@ export const getGithubMetadata = (document, textarea) => {
 export const getGithubInlineMetadata = (id) => {
   const [fileDivId] = id.split('new_inline_comment_diff_').pop().split('_');
   const filename = document.querySelector(
-    `div[id=${fileDivId}] div[class^="file-header"] a`
+    `div[id=${fileDivId}] div[class^="file-header"] a`,
   )?.title;
 
   let file_extension = '';
@@ -463,7 +459,7 @@ export const getGithubInlineMetadata = (id) => {
   }
 
   const allElements = Array.from(
-    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`)
+    document.querySelectorAll(`div[id=${fileDivId}] table tbody tr td`),
   );
 
   const allLineNos = allElements.reduce((acc, curr) => {
@@ -508,21 +504,19 @@ export const setMutationObserverAtConversation = () => {
   const observer = new MutationObserver(([mutation]) => {
     if (mutation.addedNodes.length) {
       const node = [...mutation.addedNodes].findIndex(
-        (node) =>
-          'classList' in node && node.classList.contains('js-timeline-item')
+        (node) => 'classList' in node && node.classList.contains('js-timeline-item'),
       );
 
       const singleNode = [...mutation.addedNodes].findIndex(
-        (node) =>
-          'classList' in node && node.classList.contains('review-comment')
+        (node) => 'classList' in node && node.classList.contains('review-comment'),
       );
 
-      let smartComment = store.getState().smartComment;
+      const { smartComment } = store.getState();
 
       if (node !== -1) {
         const newCommentDiv = mutation.addedNodes[node];
         const { id } = newCommentDiv.querySelector(
-          'div.timeline-comment-group'
+          'div.timeline-comment-group',
         );
         smartComment.githubMetadata.commentId = id;
       } else if (singleNode !== -1) {
@@ -537,7 +531,7 @@ export const setMutationObserverAtConversation = () => {
   });
 
   const commentsTimeline = document.querySelector(
-    'div.pull-discussion-timeline .js-discussion'
+    'div.pull-discussion-timeline .js-discussion',
   );
   observer.observe(commentsTimeline, { childList: true, subtree: true });
 
@@ -548,16 +542,14 @@ export const setMutationObserverAtFilesChanged = () => {
   const observer = new MutationObserver(([mutation]) => {
     if (mutation.addedNodes.length) {
       const threadNode = [...mutation.addedNodes].findIndex(
-        (node) =>
-          'classList' in node &&
-          node.classList.contains('js-resolvable-timeline-thread-container')
+        (node) => 'classList' in node
+          && node.classList.contains('js-resolvable-timeline-thread-container'),
       );
       const singleNode = [...mutation.addedNodes].findIndex(
-        (node) =>
-          'classList' in node && node.classList.contains('review-comment')
+        (node) => 'classList' in node && node.classList.contains('review-comment'),
       );
 
-      let smartComment = store.getState().smartComment;
+      const { smartComment } = store.getState();
 
       if (threadNode !== -1) {
         const newCommentDiv = mutation.addedNodes[threadNode];
@@ -589,8 +581,8 @@ export const getHighlights = (text) => {
     const { start, end } = newTokenData;
     let isOverlap = false;
     if (
-      (start >= startOffset && start <= endOffset) ||
-      (end >= startOffset && end <= endOffset)
+      (start >= startOffset && start <= endOffset)
+      || (end >= startOffset && end <= endOffset)
     ) {
       isOverlap = true;
     }
@@ -632,13 +624,13 @@ export const getHighlights = (text) => {
   };
 
   const getIndicesOf = (searchStr, str, caseSensitive) => {
-    var searchStrLen = searchStr.length;
+    const searchStrLen = searchStr.length;
     if (searchStrLen == 0) {
       return [];
     }
-    var startIndex = 0,
-      index,
-      indices = [];
+    let startIndex = 0;
+    let index;
+    const indices = [];
     if (!caseSensitive) {
       str = str.toLowerCase();
       searchStr = searchStr.toLowerCase();

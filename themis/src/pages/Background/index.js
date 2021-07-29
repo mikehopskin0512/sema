@@ -1,3 +1,4 @@
+import jwt_decode from 'jwt-decode';
 import {
   SEMA_URL,
   SEMA_UI_URL,
@@ -6,8 +7,7 @@ import {
   SEMA_COOKIE_DOMAIN,
   SEMA_CLIENT_ID,
   SEMA_CLIENT_SECRET,
-} from '../../../src/pages/Content/constants';
-import jwt_decode from 'jwt-decode';
+} from '../Content/constants';
 
 chrome.runtime.onMessageExternal.addListener(
   (message, sender, sendResponse) => {
@@ -20,21 +20,21 @@ chrome.runtime.onMessageExternal.addListener(
       return true;
     }
     return true;
-  }
+  },
 );
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-  if (details.reason === "install") {
-    let queryOptions = { active: true, currentWindow: true };
-    let [tab] = await chrome.tabs.query(queryOptions);
+  if (details.reason === 'install') {
+    const queryOptions = { active: true, currentWindow: true };
+    const [tab] = await chrome.tabs.query(queryOptions);
     const { id } = tab;
     chrome.tabs.update(id, {
       url: SEMA_UI_URL,
-      active: true
+      active: true,
     });
-  } else if (details.reason === "update") {
-    var thisVersion = chrome.runtime.getManifest().version;
-    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+  } else if (details.reason === 'update') {
+    const thisVersion = chrome.runtime.getManifest().version;
+    console.log(`Updated from ${details.previousVersion} to ${thisVersion}!`);
   }
 });
 
@@ -66,13 +66,13 @@ function JWT() {
   }
 
   return {
-    setJwt: function (jwt) {
+    setJwt(jwt) {
       startCounter(jwt);
     },
-    getJwt: function () {
+    getJwt() {
       return token;
     },
-    getFinalToken: function () {
+    getFinalToken() {
       return { token, isLoggedIn: !!token };
     },
   };
@@ -145,24 +145,20 @@ async function processCookie(cookie) {
           const tokenResponse = await getNewAccessToken(cookie);
           setRequestRule(tokenResponse.token);
           return tokenResponse;
-        } else {
-          setRequestRule(accessToken);
-          return { token: accessToken, isLoggedIn: true };
         }
-      } else {
-        const tokenResponse = await getNewAccessToken(cookie);
-        setRequestRule(tokenResponse.token);
-        return tokenResponse;
+        setRequestRule(accessToken);
+        return { token: accessToken, isLoggedIn: true };
       }
-    } else {
-      return { token: null, isLoggedIn: false };
+      const tokenResponse = await getNewAccessToken(cookie);
+      setRequestRule(tokenResponse.token);
+      return tokenResponse;
     }
-  } else {
     return { token: null, isLoggedIn: false };
   }
+  return { token: null, isLoggedIn: false };
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request[WHOAMI]) {
     getFinalState().then((tokenResponse) => {
       sendResponse(tokenResponse);
@@ -171,8 +167,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-chrome.cookies.onChanged.addListener(function (changeInfo) {
-  let { cookie, removed } = changeInfo;
+chrome.cookies.onChanged.addListener((changeInfo) => {
+  const { cookie, removed } = changeInfo;
 
   if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
     if (removed === false) {
@@ -188,17 +184,17 @@ chrome.cookies.onChanged.addListener(function (changeInfo) {
 const sendMessageToTab = (message) => {
   chrome.tabs.query(
     { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
-    function (tabs) {
+    (tabs) => {
       if (tabs.length) {
         chrome.tabs.sendMessage(
           tabs[0].id,
           message,
-          function (response) {
+          (response) => {
             console.log('tab response received');
-          }
+          },
         );
       }
-    }
+    },
   );
 };
 

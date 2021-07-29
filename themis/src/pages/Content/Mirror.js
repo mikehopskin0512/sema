@@ -53,7 +53,7 @@ class Mirror {
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
-      UPDATE_HIGHLIGHT_INTERVAL_MS
+      UPDATE_HIGHLIGHT_INTERVAL_MS,
     );
 
     // making sure to have raw DOM element
@@ -125,7 +125,7 @@ class Mirror {
             activeElementId={$(this._elementToMimic).attr('id')}
           />
         </Provider>,
-        this._searchRoot
+        this._searchRoot,
       );
 
       this._mirror = document.createElement('div');
@@ -169,7 +169,7 @@ class Mirror {
     this._highlighterContainer.style.height = scrollYHeight;
     this._highlighterContainer.style.width = width;
 
-    const scrollTop = this._elementToMimic.scrollTop;
+    const { scrollTop } = this._elementToMimic;
     this._mirror.scrollTop = scrollTop;
     this._highlighterContainer.style.top = `-${scrollTop}px`;
   }
@@ -186,7 +186,7 @@ class Mirror {
 
     if (window.ResizeObserver) {
       this._elementToMimicResizeObserver = new window.ResizeObserver(
-        this._render
+        this._render,
       );
       this._elementToMimicResizeObserver.observe(this._elementToMimic);
     }
@@ -198,8 +198,7 @@ class Mirror {
 
   _onTextPaste() {
     const state = this._store.getState();
-    const isReactionDirty =
-      state.semabars[this._semaBarContainerId].isReactionDirty;
+    const { isReactionDirty } = state.semabars[this._semaBarContainerId];
     if (isReactionDirty) {
       return;
     }
@@ -210,12 +209,12 @@ class Mirror {
         id: this._semaBarContainerId,
         selectedReaction,
         isReactionDirty: true,
-      })
+      }),
     );
   }
 
   _onInput() {
-    const value = this._elementToMimic.value;
+    const { value } = this._elementToMimic;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
   }
@@ -235,15 +234,17 @@ class Mirror {
   _getHighlightByPosition(offsetX, offsetY) {
     const { scrollTop } = this._elementToMimic;
     return this._highlights.find((highlight) => {
-      const { top, left, width, height } = highlight;
+      const {
+        top, left, width, height,
+      } = highlight;
 
       const actualY = offsetY + scrollTop;
 
       return (
-        offsetX >= left &&
-        offsetX <= left + width &&
-        actualY >= top &&
-        actualY <= top + height
+        offsetX >= left
+        && offsetX <= left + width
+        && actualY >= top
+        && actualY <= top + height
       );
     });
   }
@@ -261,7 +262,9 @@ class Mirror {
       const highlight = this._getHighlightByPosition(offsetX, offsetY);
 
       if (highlight) {
-        const { top, left, height, id } = highlight;
+        const {
+          top, left, height, id,
+        } = highlight;
         const store = this._store.getState();
         const isModalOpen = store.globalSemaSearch.isOpen;
         if (!isModalOpen && this._currentShownHighlight) {
@@ -273,7 +276,7 @@ class Mirror {
             data: this._ranges[id].token,
             position: {
               top: top + height - scrollTop,
-              left: left,
+              left,
             },
           });
         }
@@ -309,7 +312,9 @@ class Mirror {
       this._ranges[alert.id] = range;
       this._ranges[alert.id].token = alert.token;
 
-      const { top, left, height, width } = range.getClientRects()[0];
+      const {
+        top, left, height, width,
+      } = range.getClientRects()[0];
 
       // The amount of scrolling that has been done of the viewport area (or any other scrollable element) is taken into account when computing the rectangles.
       const disregardScrollTop = top + scrolled;
@@ -336,7 +341,9 @@ class Mirror {
   }
 
   _createHighlights(highlight) {
-    const { top, left, width, height } = highlight;
+    const {
+      top, left, width, height,
+    } = highlight;
 
     const highlighterContent = document.createElement('div');
     highlighterContent.className = HIGHLIGHTER_CONTENT;
@@ -361,9 +368,9 @@ class Mirror {
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
     //   this._renderInterval && this._renderInterval.destroy(),
     this._container && this._container.remove(),
-      this._elementToMimicResizeObserver &&
-        this._elementToMimicResizeObserver.disconnect(),
-      this._elementMeasurement.clearCache();
+    this._elementToMimicResizeObserver
+        && this._elementToMimicResizeObserver.disconnect(),
+    this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }

@@ -54,7 +54,7 @@ function rootReducer(state = initialState, action) {
     const { semabarContainerId, semaSearchContainerId } = getSemaIds(seedId);
 
     const { initialTags, initialReaction } = getInitialSemaValues(
-      activeElement
+      activeElement,
     );
 
     newState.semabars[semabarContainerId] = {
@@ -135,9 +135,8 @@ function rootReducer(state = initialState, action) {
     // suggestion=T, selected=F, isDirty=F, showTag=T
     const suggestionsToShow = suggestedTags.filter((suggestion) => {
       const tagObj = selectedTags.find(
-        (tagDetails) =>
-          tagDetails[POSITIVE] === suggestion ||
-          tagDetails[NEGATIVE] === suggestion
+        (tagDetails) => tagDetails[POSITIVE] === suggestion
+          || tagDetails[NEGATIVE] === suggestion,
       );
       if (tagObj) {
         const isSelected = !!tagObj[SELECTED];
@@ -153,7 +152,7 @@ function rootReducer(state = initialState, action) {
       const isSelected = !!tagObj[SELECTED];
       if (isSelected) {
         const isSuggested = !!suggestedTags.find(
-          (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]
+          (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE],
         );
         const { isDirty } = tagObj;
         if (!isSuggested && !isDirty) {
@@ -166,8 +165,7 @@ function rootReducer(state = initialState, action) {
       .length;
 
     let numberOfAllowedSuggestions = SUGGESTED_TAG_LIMIT - selectedTagsLength;
-    numberOfAllowedSuggestions =
-      numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
+    numberOfAllowedSuggestions = numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
 
     // reverse so that only new suggestions are removed
     suggestionsToShow.reverse();
@@ -183,10 +181,12 @@ function rootReducer(state = initialState, action) {
       semabars[id].selectedTags = updatedTags;
     });
   } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
-    const { data, position, isLoading = false, openFor } = payload;
+    const {
+      data, position, isLoading = false, openFor,
+    } = payload;
     const obj = {};
     if (data) {
-      //open with data
+      // open with data
       obj.data = data;
       obj.position = position;
       obj.isOpen = true;

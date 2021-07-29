@@ -27,10 +27,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     closeSearchModal: () => dispatch(closeSearchModal({ id })),
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
-    selectedSuggestedComments: (suggestedComment) =>
-      dispatch(addSuggestedComments({ id, suggestedComment })),
-    handleChange: (searchValue) =>
-      dispatch(updatetSearchBarInputValue({ id, searchValue })),
+    selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
+    handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
   };
 };
 
@@ -42,14 +40,14 @@ const SearchBar = (props) => {
 
   const onInputChanged = (event) => {
     event.preventDefault();
-    const value = event.target.value;
+    const { value } = event.target;
     props.handleChange(value);
   };
 
   const onInsertPressed = (id, suggestion, sourceName, sourceUrl) => {
     const isGuideLink = sourceName && sourceUrl;
-    const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : ''
-    let value = props.commentBox.value;
+    const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : '';
+    let { value } = props.commentBox;
     value = value ? `${value}\n` : '';
     props.commentBox.value = `${value}${suggestion}${guideLink}`;
     props.selectedSuggestedComments(id);
@@ -80,7 +78,7 @@ const SearchBar = (props) => {
 
   const renderPlaceholder = () => {
     const commentPlaceholder = chrome.runtime.getURL(
-      'img/comment-placeholder.png'
+      'img/comment-placeholder.png',
     );
     const noResults = chrome.runtime.getURL('img/no-results.png');
     const loader = chrome.runtime.getURL('img/loader.png');
@@ -93,7 +91,7 @@ const SearchBar = (props) => {
           </span>
         </div>
       );
-    } else if (!props.isLoggedIn) {
+    } if (!props.isLoggedIn) {
       return (
         <div className="sema-comment-placeholder sema-mb-5">
           <img className="sema-mb-5" src={commentPlaceholder} />
@@ -104,55 +102,53 @@ const SearchBar = (props) => {
             className="sema-button login-button"
             href={SEMA_WEB_LOGIN}
             target="_blank"
+            rel="noreferrer"
           >
             Log in to Sema
           </a>
         </div>
       );
-    } else {
-      if (props.searchValue.length > 0 && searchResults.length === 0) {
-        // empty
-        return (
-          <div className="sema-comment-placeholder">
-            <img className="sema-mb-5" src={noResults} />
-            <span className="sema-title sema-is-7 sema-is-block">
-              No results :( We are still learning!
-            </span>
-            <span className="sema-subtitle sema-is-7 sema-is-block">
-              Sorry, we don't have search result for this one. Try again soon -
-              we've noted your query to improve our results.
-            </span>
-            <a
-              className="sema-mt-2"
-              href={`https://www.google.com/search?q=${props.searchValue}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Try this search on Google
-            </a>
-          </div>
-        );
-      } else if (props.searchValue.length === 0 && searchResults.length === 0) {
-        return (
-          <div className="sema-comment-placeholder">
-            <img className="sema-mb-5" src={commentPlaceholder} />
-            <span className="sema-title sema-is-7 sema-is-block">
-              Suggested comments will appear here.
-            </span>
-            <span className="sema-subtitle sema-is-7 sema-is-block">
-              Type a few characters and we'll start searching right away.
-            </span>
-          </div>
-        );
-      } else {
-        return '';
-      }
     }
+    if (props.searchValue.length > 0 && searchResults.length === 0) {
+      // empty
+      return (
+        <div className="sema-comment-placeholder">
+          <img className="sema-mb-5" src={noResults} />
+          <span className="sema-title sema-is-7 sema-is-block">
+            No results :( We are still learning!
+          </span>
+          <span className="sema-subtitle sema-is-7 sema-is-block">
+            Sorry, we don't have search result for this one. Try again soon -
+            we've noted your query to improve our results.
+          </span>
+          <a
+            className="sema-mt-2"
+            href={`https://www.google.com/search?q=${props.searchValue}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Try this search on Google
+          </a>
+        </div>
+      );
+    } if (props.searchValue.length === 0 && searchResults.length === 0) {
+      return (
+        <div className="sema-comment-placeholder">
+          <img className="sema-mb-5" src={commentPlaceholder} />
+          <span className="sema-title sema-is-7 sema-is-block">
+            Suggested comments will appear here.
+          </span>
+          <span className="sema-subtitle sema-is-7 sema-is-block">
+            Type a few characters and we'll start searching right away.
+          </span>
+        </div>
+      );
+    }
+    return '';
   };
 
   const handleKeyPress = (event) => {
-    const charCode =
-      typeof event.which == 'number' ? event.which : event.keyCode;
+    const charCode = typeof event.which === 'number' ? event.which : event.keyCode;
     if (charCode === 13) {
       // enter is pressed
       event.preventDefault();
@@ -169,7 +165,7 @@ const SearchBar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${
+  const containerClasses = `sema-dropdown${
     props.isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
@@ -204,9 +200,9 @@ const SearchBar = (props) => {
               value={props.searchValue}
               onChange={onInputChanged}
               onKeyDown={handleKeyPress}
-            ></input>
+            />
             <span className="sema-icon sema-is-small sema-is-left">
-              <i className="fas fa-search"></i>
+              <i className="fas fa-search" />
             </span>
           </div>
         </div>
@@ -230,7 +226,8 @@ const SearchBar = (props) => {
                   <img
                     className="sema-mr-1"
                     src={chrome.runtime.getURL('img/sema-logo.svg')}
-                  />{' '}
+                  />
+                  {' '}
                   Powered by Sema
                 </div>
               </>

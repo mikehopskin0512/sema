@@ -14,7 +14,7 @@ import { WHOAMI } from '../Content/constants';
 const semaUIUrl = process.env.SEMA_UI_URL;
 
 const checkLoggedIn = (cb) => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
+  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
     cb(response);
   });
 };
@@ -54,9 +54,9 @@ const loggedOutElem = () => (
         </span>
       </button>
       <div className="already-account">
-        <span className="divider"></span>
+        <span className="divider" />
         <p className="already-account-content">Already have an account?</p>
-        <span className="divider"></span>
+        <span className="divider" />
       </div>
       <button className="login-secondary" onClick={openSema}>
         <FontAwesomeIcon icon={faGithub} className="github" />
@@ -99,7 +99,10 @@ const loggedInElem = (userDetails) => {
           className="sema-login-details"
           style={{ alignSelf: 'start', margin: '32px 0px 60px 34px' }}
         >
-          Hi {firstName},
+          Hi
+          {' '}
+          {firstName}
+          ,
         </p>
         <img src={codeIcon} style={{ marginBottom: '47px' }} />
         <button className="login-primary" onClick={openSema}>

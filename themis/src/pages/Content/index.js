@@ -31,8 +31,9 @@ import {
   LIGHT,
   DARK,
   DARK_DIMMED,
-  EMOJIS, EMOJIS_ID
-} from "./constants";
+  EMOJIS,
+  EMOJIS_ID,
+} from './constants';
 
 import Semabar from './Semabar.jsx';
 import Searchbar from './Searchbar.jsx';
@@ -50,18 +51,18 @@ import {
 } from './modules/redux/action';
 
 (() => {
-  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     store.dispatch(updateSemaUser({ ...request }));
   });
-  
+
   const checkLoggedIn = async () => {
-    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
       store.dispatch(updateSemaUser({ ...response }));
     });
   };
-  
+
   checkLoggedIn();
-  let stateCheck = setInterval(() => {
+  const stateCheck = setInterval(() => {
     if (document.readyState === 'complete') {
       clearInterval(stateCheck);
       store.dispatch(addGithubMetada(getGithubMetadata(document)));
@@ -75,7 +76,7 @@ import {
     store.dispatch(addGithubMetada(getGithubMetadata(document)));
     initialCheck = true;
   }, 5000);
-  
+
   /**
    * Listening to click event for:
    * 1. if github button is pressed then put sema comments in the textarea
@@ -87,9 +88,9 @@ import {
       onDocumentClicked(event, store);
     },
     // adding listener in the "capturing" phase
-    true
+    true,
   );
-  
+
   /**
    * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
    * also triggers text submission
@@ -99,15 +100,15 @@ import {
     (event) => {
       const { code, ctrlKey, metaKey } = event;
       if ((ctrlKey || metaKey) && code === 'Enter') {
-        const activeElement = document.activeElement;
+        const { activeElement } = document;
         if ($(activeElement).is('textarea')) {
           writeSemaToGithub(activeElement);
         }
       }
     },
-    true
+    true,
   );
-  
+
   /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -124,17 +125,19 @@ import {
         let themeClass = '';
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
         const colorMode = document.documentElement.getAttribute(
-          'data-color-mode'
+          'data-color-mode',
         );
-  
-        if (document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')) {
+
+        if (
+          document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')
+        ) {
           document.querySelector(
-            '.SelectMenu--hasFilter .SelectMenu-modal'
+            '.SelectMenu--hasFilter .SelectMenu-modal',
           ).style.maxHeight = '580px';
         }
-  
+
         let colorTheme = document.documentElement.getAttribute(
-          'data-light-theme'
+          'data-light-theme',
         );
         if (colorMode === DARK) {
           extensionTheme = DARK;
@@ -166,10 +169,10 @@ import {
             SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
             break;
         }
-  
+
         const githubTextareaId = $(activeElement).attr('id');
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          githubTextareaId
+          githubTextareaId,
         );
         if (!semaElements[0]) {
           $(activeElement).on(
@@ -178,54 +181,60 @@ import {
               store.dispatch(
                 updateTextareaState({
                   isTyping: true,
-                })
+                }),
               );
               setTimeout(() => {
                 store.dispatch(
                   updateTextareaState({
                     isTyping: false,
-                  })
+                  }),
                 );
               }, CALCULATION_ANIMATION_DURATION_MS);
-  
+
               onSuggestion(event, store);
-            }, ON_INPUT_DEBOUCE_INTERVAL_MS)
+            }, ON_INPUT_DEBOUCE_INTERVAL_MS),
           );
           /** ADD ROOTS FOR REACT COMPONENTS */
           // search bar container
           $(activeElement).before(
-            `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`
+            `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`,
           );
           // semabar container
           $(activeElement).after(
-            `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`
+            `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`,
           );
-  
+
           /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
           store.dispatch(
             addSemaComponents({
               seedId: githubTextareaId,
               activeElement,
-            })
+            }),
           );
-  
+
           /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
           // Render searchbar
           ReactDOM.render(
             <Provider store={store}>
-              <Searchbar id={semaSearchContainerId} commentBox={activeElement} />
+              <Searchbar
+                id={semaSearchContainerId}
+                commentBox={activeElement}
+              />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0]
+            $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0],
           );
           // Render Semabar
           ReactDOM.render(
             <Provider store={store}>
-              <Semabar id={semabarContainerId} style={{ position: 'relative' }} />
+              <Semabar
+                id={semabarContainerId}
+                style={{ position: 'relative' }}
+              />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
+            $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0],
           );
-  
-          /** RENDER MIRROR*/
+
+          /** RENDER MIRROR */
           // TODO: try to make it into React component for consistency and not to have to pass store
           new Mirror(activeElement, getHighlights, {
             onMouseoverHighlight: (payload) => {
@@ -236,77 +245,87 @@ import {
                   ...payload,
                   isLoading: true,
                   openFor: $(activeElement).attr('id'),
-                })
+                }),
               );
             },
             store,
             semaBarContainerId: semabarContainerId,
           });
-  
+
           // Add Sema icon before Markdown icon
           const markdownIcon = $(activeElement)
             .parent()
             .siblings('label')
             .children('.tooltipped.tooltipped-nw');
-  
+
           $(markdownIcon).after(SEMA_ICON);
         }
-  
-        //add default reaction for approval comment
+
+        // add default reaction for approval comment
         const isReviewChangesContainer = semabarContainerId === 'semabar_pull_request_review_body';
         if (isReviewChangesContainer) {
           const barState = store.getState().semabars[semabarContainerId];
-          const isReactionDirty = barState.isReactionDirty;
-          const selectedReactionId = barState.selectedReaction._id
+          const { isReactionDirty } = barState;
+          const selectedReactionId = barState.selectedReaction._id;
           if (!isReactionDirty) {
-            handleReviewChangesClick(semabarContainerId, activeElement, selectedReactionId)
+            handleReviewChangesClick(
+              semabarContainerId,
+              activeElement,
+              selectedReactionId,
+            );
           }
         }
       }
     },
-    true
+    true,
   );
-  
-  function handleReviewChangesClick(semabarContainerId, activeElement, selectedReactionId) {
+
+  function handleReviewChangesClick(
+    semabarContainerId,
+    activeElement,
+    selectedReactionId,
+  ) {
     const looksGoodEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.GOOD);
     const noReactionEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.NO_REACTION);
     const form = $(activeElement).parents('form')?.[0];
     const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
       .checked;
-    const isEmptyComment = !activeElement.value
-    let reaction = isApprovedOption && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD) ? looksGoodEmoji : noReactionEmoji;
+    const isEmptyComment = !activeElement.value;
+    const reaction = isApprovedOption
+      && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
+      ? looksGoodEmoji
+      : noReactionEmoji;
     store.dispatch(
       updateSelectedEmoji({
         id: semabarContainerId,
         selectedReaction: reaction,
         isReactionDirty: false,
-      })
+      }),
     );
   }
-  
+
   document.addEventListener(
     'focusin',
     (event) => {
-      const githubCommentField =
-        'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
+      const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
       if (event.target === document.querySelector(githubCommentField)) {
         $('div.sema').addClass('sema-is-form-bordered');
       }
     },
-    true
+    true,
   );
-  
+
   document.addEventListener(
     'focusout',
     (event) => {
       $('div.sema').removeClass('sema-is-form-bordered');
     },
-    true
+    true,
   );
 
-  const destructor = () => (document.removeEventListener(destructionEvent, destructor));
-  
-  const destructionEvent = 'destructmyextension_' + chrome.runtime.id;
+  const destructor = () => document.removeEventListener(destructionEvent, destructor);
+
+  const destructionEvent = `destructmyextension_${chrome.runtime.id}`;
   // Unload previous content script if needed
   document.dispatchEvent(new CustomEvent(destructionEvent));
   document.addEventListener(destructionEvent, destructor);
