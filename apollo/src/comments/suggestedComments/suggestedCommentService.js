@@ -25,13 +25,14 @@ const buildSuggestedCommentsIndex = async () => {
     const dbComments = await SuggestedComment.find().lean().exec();
     const reportEvery = Math.floor(dbComments.length / 10);
 
+    // TODO: We will need to add tags and comment title to the index
     dbComments.forEach((comment, i) => {
       // index by MongoDB ID
       index.add(comment._id, comment.comment);
-      index.add(comment._id, comment.title);
-      comment.tags.forEach((tag, ti) => {
-        index.add(comment._id, tag.label);
-      });
+      // index.add(comment._id, comment.title);
+      // comment.tags.forEach((tag, ti) => {
+      //   index.add(comment._id, tag.label);
+      // });
       if (i % reportEvery === 0) {
         logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
       }
@@ -41,6 +42,8 @@ const buildSuggestedCommentsIndex = async () => {
     logger.error(error);
     throw error;
   }
+
+  return index;
 };
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {

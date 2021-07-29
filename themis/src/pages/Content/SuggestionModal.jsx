@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MAX_CHARACTER_LENGTH } from './constants';
+import GuideLink from "./GuideLink";
 
 const truncate = (content) => {
   const contentLength = content.length;
@@ -21,13 +22,17 @@ const getCommentTitleInterface = (title, sourceName) => {
   );
 };
 
-const getCommentInterface = (comment, isDetailed) => {
+const getCommentInterface = (comment, isDetailed, sourceName, sourceUrl) => {
   const finalComment = isDetailed ? comment : truncate(comment);
   return (
     <div className="suggestion-content-truncated-container">
       <div
         className="suggestion-content-truncated"
         dangerouslySetInnerHTML={{ __html: finalComment }}
+      />
+      <GuideLink
+        title={sourceName}
+        link={sourceUrl}
       />
     </div>
   );
@@ -81,12 +86,12 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
       return (
         <div key={id} className="sema-mb-5">
           {getCommentTitleInterface(title, sourceName)}
-          {getCommentInterface(comment, false)}
+          {getCommentInterface(comment, false, sourceName, sourceUrl)}
           <div className="suggestion-buttons">
             <Button
               icon="fa-file-import"
               title="Insert"
-              onClick={() => onInsertPressed(id, comment)}
+              onClick={() => onInsertPressed(id, comment, sourceName, sourceUrl)}
             />
             <Button
               icon="fa-copy"
@@ -118,7 +123,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           <Button
             title="Insert"
             icon="fa-file-import"
-            onClick={() => onInsertPressed(id, comment)}
+            onClick={() => onInsertPressed(id, comment, sourceName, sourceUrl)}
           />
           <Button
             title={isCopied ? 'Copied!' : 'Copy'}
@@ -127,7 +132,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           />
         </div>
         {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, true)}
+        {getCommentInterface(comment, true, sourceName, sourceUrl)}
       </>
     );
   };

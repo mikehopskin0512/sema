@@ -1,3 +1,4 @@
+import md5 from 'md5';
 import { Router } from 'express';
 import { version, orgDomain } from '../config';
 import { mailchimpAudiences } from '../config';
@@ -79,14 +80,20 @@ export default (app, passport) => {
       // Add user to Mailchimp and suscribe it to Sema - Newsletters
       const listId = mailchimpAudiences.registeredAndWaitlistUsers;
       const { firstName, lastName } = newUser;
-      await mailchimp.create(`lists/${listId}/members`, {
-        list_id: listId,
-        merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
-        status: 'subscribed',
-        email_type: 'html',
-        email_address: username,
-        tags: ['Registered and Waitlist Users'],
-      });
+
+      try {
+        await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
+          list_id: listId,
+          merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
+          status: 'subscribed',
+          email_type: 'html',
+          email_address: username,
+          tags: ['Registered and Waitlist Users'],
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
+      }
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);

@@ -11,7 +11,7 @@ import Sidebar from '../../../components/sidebar';
 import Helmet, { ActivityLogHelmet } from '../../../components/utils/Helmet';
 import { commentsOperations } from '../../../state/features/comments';
 
-import { ReactionList, TagList } from '../data';
+import { ReactionList, TagList } from '../../../data/activity';
 
 const { fetchSmartComments } = commentsOperations;
 
