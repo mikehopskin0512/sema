@@ -122,33 +122,41 @@ export const TAGS_ON_DB = [
   },
 ];
 
+export const EMOJIS_ID = {
+  NO_REACTION: '607f0d1ed7f45b000ec2ed70',
+  AWESOME: '607f0d1ed7f45b000ec2ed71',
+  GOOD: '607f0d1ed7f45b000ec2ed72',
+  QUESTION: '607f0d1ed7f45b000ec2ed73',
+  FIX: '607f0d1ed7f45b000ec2ed74'
+}
+
 export const EMOJIS = [
   {
-    _id: '607f0d1ed7f45b000ec2ed70',
+    _id: EMOJIS_ID.NO_REACTION,
     title: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
   },
   {
-    _id: '607f0d1ed7f45b000ec2ed71',
+    _id: EMOJIS_ID.AWESOME,
     title: 'This code is <b>awesome</b>',
     emoji: '🏆',
     github_emoji: ':trophy:',
   },
   {
-    _id: '607f0d1ed7f45b000ec2ed72',
+    _id: EMOJIS_ID.GOOD,
     title: 'This code <b>looks good</b>',
     emoji: '👌',
     github_emoji: ':ok_hand:',
   },
   {
-    _id: '607f0d1ed7f45b000ec2ed73',
+    _id: EMOJIS_ID.QUESTION,
     title: 'I have a <b>question</b>',
     emoji: '❓',
     github_emoji: ':question:',
   },
   {
-    _id: '607f0d1ed7f45b000ec2ed74',
+    _id: EMOJIS_ID.FIX,
     title: 'This code <b>needs a fix</b>',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',

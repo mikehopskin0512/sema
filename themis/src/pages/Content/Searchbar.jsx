@@ -46,10 +46,12 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onInsertPressed = (id, suggestion) => {
+  const onInsertPressed = (id, suggestion, sourceName, sourceUrl) => {
+    const isGuideLink = sourceName && sourceUrl;
+    const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : ''
     let value = props.commentBox.value;
     value = value ? `${value}\n` : '';
-    props.commentBox.value = `${value}${suggestion}`;
+    props.commentBox.value = `${value}${suggestion}${guideLink}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
@@ -218,24 +220,22 @@ const SearchBar = (props) => {
           <div className="sema-dropdown-item">
             {renderPlaceholder()}
             {props.isLoggedIn && (
-              <SuggestionModal
-                key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
-                onInsertPressed={onInsertPressed}
-                searchResults={searchResults}
-              />
+              <>
+                <SuggestionModal
+                  key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
+                  onInsertPressed={onInsertPressed}
+                  searchResults={searchResults}
+                />
+                <div className="sema-dropdown-footer">
+                  <img
+                    className="sema-mr-1"
+                    src={chrome.runtime.getURL('img/sema-logo.svg')}
+                  />{' '}
+                  Powered by Sema
+                </div>
+              </>
             )}
           </div>
-          {props.isLoggedIn && (
-            <div className="sema-dropdown-footer sema-is-flex sema-is-justify-content-flex-end sema-is-align-items-center sema-mt-2">
-              <span className="sema-is-pulled-right sema-is-flex sema-is-justify-content-center sema-is-align-items-center">
-                <img
-                  className="sema-credit-img sema-mr-1"
-                  src={chrome.runtime.getURL('img/sema16.png')}
-                />{' '}
-                Powered by Sema
-              </span>
-            </div>
-          )}
         </div>
       </div>
     </div>

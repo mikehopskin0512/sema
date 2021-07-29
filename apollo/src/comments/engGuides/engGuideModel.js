@@ -11,6 +11,9 @@ const engGuideSchema = new Schema({
     type: String,
     required: true,
   },
+  slug: {
+    type: String,
+  },
   body: {
     type: String,
     required: true,

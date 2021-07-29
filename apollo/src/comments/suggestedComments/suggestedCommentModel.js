@@ -9,11 +9,11 @@ const suggestedCommentSchema = new Schema({
   },
   title: {
     type: String,
-    required: true,
+    // required: true,
   },
   comment: {
     type: String,
-    required: true,
+    // required: true,
   },
   author: {
     type: String,
@@ -22,7 +22,7 @@ const suggestedCommentSchema = new Schema({
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
-    url: String,
+    slug: String,
   }],
   tags: [{
     tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
@@ -40,5 +40,11 @@ const suggestedCommentSchema = new Schema({
 
 suggestedCommentSchema.set('autoIndex', autoIndex);
 suggestedCommentSchema.index({ title: 1 });
+
+suggestedCommentSchema.post('save', function (doc, next) {
+  commentLibraryIndex.add(this._id, this.title);
+  commentLibraryIndex.add(this._id, this.comment);
+  next();
+});
 
 module.exports = mongoose.model('SuggestedComment', suggestedCommentSchema);

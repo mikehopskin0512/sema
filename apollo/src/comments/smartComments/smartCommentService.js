@@ -1,10 +1,10 @@
-import { subMonths } from 'date-fns';
-import { subWeeks } from 'date-fns';
+import { format, subMonths, subWeeks } from 'date-fns';
 import * as Json2CSV from 'json2csv';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
+import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 
 export const create = async ({
@@ -37,6 +37,20 @@ export const create = async ({
   }
 };
 
+export const getSmartComments = async ({ repo }) => {
+  try {
+    const query = SmartComment.find();
+    query.where('githubMetadata.repo_id', repo);
+    query.populate('userId', 'firstName lastName avatarUrl');
+    const smartComments = await query.lean().exec();
+    return smartComments;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const filterSmartComments = async ({ reviewer, author, repoId }) => {
   try {
     let filter = {}
@@ -51,8 +65,11 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId });
     }
 
-    const comments = await SmartComment.find(filter);
-    return comments;
+    const query = await SmartComment.find(filter);
+    query.populate('userId', 'firstName lastName avatarUrl');
+    const smartComments = await query.lean().exec();
+
+    return smartComments;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -339,4 +356,62 @@ export const findByExternalId = async (repoId) => {
     logger.error(error);
     throw (error);
   }
+};
+
+export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = false) => {
+  const userIds = search ? (await User.distinct('_id', {
+    $or: [
+      { username: RegExp(search, 'gi') },
+      { firstName: RegExp(search, 'gi') },
+      { lastName: RegExp(search, 'gi') },
+    ],
+  })) : [];
+  const reactionIds = search ? (await Reaction.distinct('_id', {
+    title: RegExp(search, 'gi'),
+  })) : [];
+
+  const query = SmartComment.find(search ? {
+    $or: [
+      { comment: new RegExp(search, 'gi') },
+      { 'githubMetadata.url': new RegExp(search, 'gi') },
+      { 'githubMetadata.requester': new RegExp(search, 'gi') },
+      { userId: { $in: userIds } },
+      { reaction: { $in: reactionIds } },
+    ],
+  } : {})
+    .populate('userId')
+    .populate('reaction');
+
+  const totalCount = await SmartComment.countDocuments(query);
+
+  if (!isExport) {
+    query.skip((page - 1) * perPage).limit(perPage);
+  }
+
+  const smartComments = await query.exec();
+  return { comments: smartComments, totalCount };
+};
+
+export const exportSuggestedMetrics = async ({ search }) => {
+  const { comments } = await getSuggestedMetrics({ search }, true);
+  const mappedData = comments.map((item) => ({
+    Comment: item.comment,
+    Reaction: item.reaction && item.reaction.title,
+    Tags: item.tags.length,
+    'Suggested Comments': item.suggestedComments.length,
+    Date: item.createdAt ? format(new Date(item.createdAt), 'yyyy-MM-dd hh:mm:ss') : '',
+    Repo: item.githubMetadata && item.githubMetadata.url,
+    Email: item.userId && item.userId.username,
+    Author: item.githubMetadata && item.githubMetadata.requester,
+    'Reviewer Email': item.userId && item.userId.username,
+    'Reviewer Name': item.userId && fullName(item.userId),
+  }));
+
+  const { Parser } = Json2CSV;
+  const fields = ['Comment', 'Reaction', 'Tags', 'Suggested Comments', 'Date', 'Repo', 'Email', 'Author', 'Reviewer Email', 'Reviewer Name'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+
+  return csv;
 };

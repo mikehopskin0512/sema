@@ -13,6 +13,7 @@ export const create = async (user) => {
     jobTitle = '', avatarUrl = '',
     identities, terms,
     isWaitlist, origin,
+    collections,
   } = user;
 
   // Verify token expires 24 hours from now
@@ -35,6 +36,7 @@ export const create = async (user) => {
       verificationExpires,
       termsAccepted: terms,
       termsAcceptedAt: new Date(),
+      collections,
     });
     const savedUser = await newUser.save();
     return savedUser;

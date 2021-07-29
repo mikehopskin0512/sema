@@ -51,10 +51,9 @@ app.use((error, req, res, next) => {
   });
 });
 
-// search indexing for suggested comments on service booting
-buildSuggestedCommentsIndex();
-
-app.listen(port, () => {
+app.listen(port, async () => {
+  // search indexing for suggested comments on service booting
+  global.commentLibraryIndex = await buildSuggestedCommentsIndex();
   logger.info('Server listening on port %d', port);
 });
 

@@ -5,6 +5,48 @@ import errors from '../../shared/errors';
 import User from '../../users/userModel';
 import { findById as findUserById, update as updateUser } from '../../users/userService';
 
+export const create = async ({
+  name,
+  description,
+  tags,
+  comments,
+  author,
+}) => {
+  try {
+    const newCollection = new Collection({
+      name,
+      description,
+      tags,
+      comments,
+      author
+    })
+    const savedCollection = await newCollection.save();
+    return savedCollection;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const createMany = async (collections) => {
+  try {
+    const newCollections = await Collection.insertMany(collections, { ordered: false });
+    return newCollections;
+  } catch (err) {
+    // When using "unordered" insertMany, Mongo will ignore dup key errors and only insert new records
+    // However it will throw an error, so data needs to be conditionally returned via catch block
+    const { name, insertedDocs = [] } = err;
+    if (name === 'BulkWriteError' && insertedDocs.length > 0) {
+      return insertedDocs;
+    }
+
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
 export const findById = async (id, select) => {
   try {
     const query = Collection.findOne({ _id: id});
@@ -102,3 +144,14 @@ export const toggleActiveCollection = async (userId, collectionId) => {
     return error;
   }
 }
+
+export const findByAuthor = async (author) => {
+  try {
+    const collections = Collection.find({ author });
+    return collections;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
