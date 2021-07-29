@@ -11,6 +11,7 @@ export {
   RepoStatsHelmet,
   ProfileHelmet,
   SuggestedCommentsHelmet,
+  ActivityLogHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description }) => (

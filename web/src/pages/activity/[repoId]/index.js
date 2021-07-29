@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
+import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../../components/activity/item';
 import CustomSelect from '../../../components/activity/select';
 import Sidebar from '../../../components/sidebar';
 import withLayout from '../../../components/layout';
+import Helmet, { ActivityLogHelmet } from '../../../components/utils/Helmet';
 import { commentsOperations } from '../../../state/features/comments';
 
 import { ReactionList, TagList } from '../data';
@@ -39,7 +40,7 @@ const ActivityLogs = () => {
 
   useEffect(() => {
     dispatch(fetchSmartComments(repoId, token));
-  }, [dispatch, repoId]);
+  }, [dispatch, repoId, token]);
 
   useEffect(() => {
     const users = comments.smartComments.map((item) => {
@@ -110,6 +111,7 @@ const ActivityLogs = () => {
 
   return (
     <div>
+      <Helmet {...ActivityLogHelmet} />
       <Sidebar>
         <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
           <div className="field is-flex-grow-1 px-5 my-5">

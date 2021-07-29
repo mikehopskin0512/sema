@@ -65,7 +65,10 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
     }
 
     const query = SmartComment.find(filter);
-    const smartComments = await query.lean().populate('userId', 'firstName lastName avatarUrl').exec();
+    const smartComments = await query.lean()
+      .populate('userId', 'firstName lastName avatarUrl')
+      .populate('tags')
+      .exec();
 
     return smartComments;
   } catch (err) {
