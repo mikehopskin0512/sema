@@ -26,6 +26,7 @@ const mapStateToProps = (state, ownProps) => {
     isLoading,
     commentBox: ownProps.commentBox,
     mirror: ownProps.mirror,
+    // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
   };
 };
@@ -62,7 +63,9 @@ const GlobalSearchbar = (props) => {
   };
 
   const getSemaSuggestions = () => {
-    !props.isLoading && props.toggleIsLoading(true);
+    if (!props.isLoading) {
+      props.toggleIsLoading(true);
+    }
     const URL = `${SUGGESTION_URL}${props.data}&user=${props.userId}`;
     fetch(URL)
       .then((response) => response.json())

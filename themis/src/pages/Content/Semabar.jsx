@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import TagsModal from './TagsModal.jsx';
-import EmojiSelection from './EmojiSelection.jsx';
+import TagsModal from './TagsModal';
+import EmojiSelection from './EmojiSelection';
 
 import {
   toggleTagModal,
@@ -12,7 +12,7 @@ import {
 } from './modules/redux/action';
 
 import {
-  DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN,
+  DELETE_OP, SELECTED, EMOJIS,
 } from './constants';
 import LoginBar from './LoginBar';
 
@@ -45,6 +45,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     updateSelectedEmoji: (emojiObj) => dispatch(
       updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true }),
     ),
+    // eslint-disable-next-line max-len
     updateSelectedTags: (operation) => dispatch(updateSelectedTags({ id, operation, isDirty: true })),
 
     toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
@@ -53,7 +54,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const [isHover, setHover] = useState(false);
-  const [dropPosition, setDropPosition] = useState(DROP_POSITIONS.DOWN);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
@@ -83,11 +83,10 @@ const Semabar = (props) => {
   };
   const createAddTags = () => {
     const {
-      x, y, height, width, offsetPos,
+      y, height, offsetPos,
     } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
     const modalHeight = 300;
-    const modalWidth = 250;
 
     if (y && height) {
       const vh = Math.max(

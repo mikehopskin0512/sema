@@ -17,6 +17,7 @@ const mapStateToProps = (state, ownProps) => {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
+    // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
     isLoggedIn: user?.isLoggedIn,
   };
@@ -27,6 +28,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     closeSearchModal: () => dispatch(closeSearchModal({ id })),
     toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
+    // eslint-disable-next-line max-len
     selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
     handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
   };
@@ -85,7 +87,7 @@ const SearchBar = (props) => {
     if (isLoading) {
       return (
         <div className="sema-m-6 sema-comment-placeholder">
-          <img src={loader} />
+          <img src={loader} alt="loader" />
           <span className="sema-title sema-is-7 sema-is-block">
             We are working hard to find code examples for you...
           </span>
@@ -94,7 +96,7 @@ const SearchBar = (props) => {
     } if (!props.isLoggedIn) {
       return (
         <div className="sema-comment-placeholder sema-mb-5">
-          <img className="sema-mb-5" src={commentPlaceholder} />
+          <img className="sema-mb-5" src={commentPlaceholder} alt="comment placeholder" />
           <span className="sema-title sema-is-7 sema-is-block">
             Login to view smart comments
           </span>
@@ -113,7 +115,7 @@ const SearchBar = (props) => {
       // empty
       return (
         <div className="sema-comment-placeholder">
-          <img className="sema-mb-5" src={noResults} />
+          <img className="sema-mb-5" src={noResults} alt="no results" />
           <span className="sema-title sema-is-7 sema-is-block">
             No results :( We are still learning!
           </span>
@@ -134,7 +136,7 @@ const SearchBar = (props) => {
     } if (props.searchValue.length === 0 && searchResults.length === 0) {
       return (
         <div className="sema-comment-placeholder">
-          <img className="sema-mb-5" src={commentPlaceholder} />
+          <img className="sema-mb-5" src={commentPlaceholder} alt="comment placeholder" />
           <span className="sema-title sema-is-7 sema-is-block">
             Suggested comments will appear here.
           </span>
@@ -165,8 +167,10 @@ const SearchBar = (props) => {
     }
   };
 
+  const { isSearchModalVisible, searchValue, isLoggedIn } = props;
+
   const containerClasses = `sema-dropdown${
-    props.isSearchModalVisible ? ' sema-is-active' : ''
+    isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
   const inputControlClasses = `sema-control sema-has-icons-left${
@@ -197,7 +201,7 @@ const SearchBar = (props) => {
               className="sema-input sema-is-small"
               type="text"
               placeholder="Search comment library"
-              value={props.searchValue}
+              value={searchValue}
               onChange={onInputChanged}
               onKeyDown={handleKeyPress}
             />
@@ -215,10 +219,10 @@ const SearchBar = (props) => {
         <div className="sema-dropdown-content">
           <div className="sema-dropdown-item">
             {renderPlaceholder()}
-            {props.isLoggedIn && (
+            {isLoggedIn && (
               <>
                 <SuggestionModal
-                  key={`${props.isSearchModalVisible}${isLoading}${props.searchValue}`}
+                  key={`${isSearchModalVisible}${isLoading}${searchValue}`}
                   onInsertPressed={onInsertPressed}
                   searchResults={searchResults}
                 />
@@ -226,6 +230,7 @@ const SearchBar = (props) => {
                   <img
                     className="sema-mr-1"
                     src={chrome.runtime.getURL('img/sema-logo.svg')}
+                    alt="sema logo"
                   />
                   {' '}
                   Powered by Sema

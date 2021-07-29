@@ -5,11 +5,8 @@ import GuideLink from './GuideLink';
 const truncate = (content) => {
   const contentLength = content.length;
   const shouldTruncate = contentLength > MAX_CHARACTER_LENGTH;
-  if (shouldTruncate) {
-    content = `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
-    }...`;
-  }
-  return content;
+  return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
+  }...` : content;
 };
 
 const getCommentTitleInterface = (title, sourceName) => (

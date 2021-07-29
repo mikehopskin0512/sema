@@ -1,6 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
-import Emoji from './modules/emoji.js';
+import Emoji from './modules/emoji';
 import * as animationData from './LoadingAnimation.json';
 
 const animationOptions = {

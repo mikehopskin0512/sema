@@ -35,8 +35,8 @@ import {
   EMOJIS_ID,
 } from './constants';
 
-import Semabar from './Semabar.jsx';
-import Searchbar from './Searchbar.jsx';
+import Semabar from './Semabar';
+import Searchbar from './Searchbar';
 import Mirror from './Mirror';
 
 import store from './modules/redux/store';
@@ -51,7 +51,7 @@ import {
 } from './modules/redux/action';
 
 (() => {
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((request) => {
     store.dispatch(updateSemaUser({ ...request }));
   });
 
@@ -85,7 +85,7 @@ import {
   document.addEventListener(
     'click',
     (event) => {
-      onDocumentClicked(event, store);
+      onDocumentClicked(event);
     },
     // adding listener in the "capturing" phase
     true,
@@ -177,7 +177,7 @@ import {
         if (!semaElements[0]) {
           $(activeElement).on(
             'input',
-            debounce((event) => {
+            debounce(() => {
               store.dispatch(
                 updateTextareaState({
                   isTyping: true,
@@ -191,7 +191,7 @@ import {
                 );
               }, CALCULATION_ANIMATION_DURATION_MS);
 
-              onSuggestion(event, store);
+              onSuggestion();
             }, ON_INPUT_DEBOUCE_INTERVAL_MS),
           );
           /** ADD ROOTS FOR REACT COMPONENTS */
@@ -215,6 +215,7 @@ import {
           /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
           // Render searchbar
           ReactDOM.render(
+            // eslint-disable-next-line react/jsx-filename-extension
             <Provider store={store}>
               <Searchbar
                 id={semaSearchContainerId}
@@ -266,6 +267,7 @@ import {
         if (isReviewChangesContainer) {
           const barState = store.getState().semabars[semabarContainerId];
           const { isReactionDirty } = barState;
+          // eslint-disable-next-line no-underscore-dangle
           const selectedReactionId = barState.selectedReaction._id;
           if (!isReactionDirty) {
             handleReviewChangesClick(

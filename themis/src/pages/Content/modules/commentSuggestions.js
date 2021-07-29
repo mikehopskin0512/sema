@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
 import {
   NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS,
 } from '../constants';
@@ -18,6 +20,7 @@ function checkTerm(commentText, matchTerm, reactionBallot) {
 }
 
 function checkTerms(commentText, matchTerms, reactionBallot) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const matchTerm of matchTerms) {
     checkTerm(commentText, matchTerm, reactionBallot);
   }
@@ -43,7 +46,7 @@ function suggestReaction(originalCommentText) {
    */
 
   const reactionBallots = [];
-  for (let i = 0; i < EMOJIS.length; i++) {
+  for (let i = 0; i < EMOJIS.length; i += 1) {
     // we will find how many occurances of each keyword there are
     // and the location where each keyword was found furthest into the comment ( closest to the end of the comment )
     // in the event of a tie, the keyword found closest to the end of the comment will win
@@ -78,7 +81,7 @@ function suggestReaction(originalCommentText) {
   checkTerms(commentText, fixWords, reactionBallots[4]);
 
   let reactionWinners = [0];
-  for (let i = 0, highestCount = 0; i < reactionBallots.length; i++) {
+  for (let i = 0, highestCount = 0; i < reactionBallots.length; i += 1) {
     // if there are no occurances, then stay on the first null state, if there are tied counts above 0, then pick the last found
     if (reactionBallots[i].count > highestCount) {
       reactionWinners = [i];
@@ -92,6 +95,7 @@ function suggestReaction(originalCommentText) {
   let winnerIndex = 0;
   let latestFoundIndex = 0;
   // go through the winners, pick the winner found closest to the end of the comment
+  // eslint-disable-next-line no-restricted-syntax
   for (const reactionIndex of reactionWinners) {
     if (reactionBallots[reactionIndex].lastFoundIndex >= latestFoundIndex) {
       winnerIndex = reactionIndex;
@@ -104,6 +108,7 @@ function suggestReaction(originalCommentText) {
 function suggestTags(commentText) {
   const foundTags = [];
   const commentTextL = commentText.toLowerCase();
+  // eslint-disable-next-line no-restricted-syntax
   for (const tagPair of TAGS_INIT) {
     if (commentTextL.includes(tagPair[NEGATIVE].toLowerCase())) {
       foundTags.push(tagPair[NEGATIVE]);
@@ -114,7 +119,7 @@ function suggestTags(commentText) {
   return foundTags;
 }
 
-export function suggest(commentText) {
+export default function suggest(commentText) {
   const suggestedReaction = suggestReaction(commentText);
   const suggestedTags = suggestTags(commentText);
   return { suggestedReaction, suggestedTags };

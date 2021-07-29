@@ -200,6 +200,7 @@ export const USER = {
   _id: '6076262a407c64f11499537a',
 };
 
+// eslint-disable-next-line max-len
 /* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
  * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
  */
