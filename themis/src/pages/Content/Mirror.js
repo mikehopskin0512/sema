@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -6,7 +7,7 @@ import $ from 'cash-dom';
 import { debounce, isEqual } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
-import GlobalSearchBar from './GlobalSearchbar.jsx';
+import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
 import { EMOJIS } from './constants';
@@ -32,10 +33,12 @@ class Mirror {
   constructor(textAreaElement, getTokenAlerts, options) {
     const id = $(textAreaElement).attr('id');
     if (!id) {
+      // eslint-disable-next-line no-console
       console.error('Element doesnot have any ID attribute');
       return;
     }
     if (typeof getTokenAlerts !== 'function') {
+      // eslint-disable-next-line no-console
       console.error('valid getTokenAlerts function not provided');
       return;
     }
@@ -118,6 +121,7 @@ class Mirror {
       this._searchRoot.style.zIndex = 2147483647;
       // Render global searchbar
       ReactDOM.render(
+        // eslint-disable-next-line react/jsx-filename-extension
         <Provider store={this._store}>
           <GlobalSearchBar
             mirror={this}
@@ -228,6 +232,8 @@ class Mirror {
       case 'mouseup':
         this._isMouseDown = false;
         break;
+      default:
+        this._isMouseDown = false;
     }
   }
 
@@ -287,7 +293,7 @@ class Mirror {
   }
 
   // TODO: do things to make re-render of highlights faster onchange
-  _onScroll(event) {
+  _onScroll() {
     this._render();
   }
 
@@ -316,7 +322,10 @@ class Mirror {
         top, left, height, width,
       } = range.getClientRects()[0];
 
-      // The amount of scrolling that has been done of the viewport area (or any other scrollable element) is taken into account when computing the rectangles.
+      /**
+       * The amount of scrolling that has been done of the viewport area
+       * (or any other scrollable element) is taken into account when computing the rectangles.
+       */
       const disregardScrollTop = top + scrolled;
 
       const {
@@ -367,9 +376,14 @@ class Mirror {
     $(this._elementToMimic).off('mousemove', this._hover);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
     //   this._renderInterval && this._renderInterval.destroy(),
-    this._container && this._container.remove(),
-    this._elementToMimicResizeObserver
-        && this._elementToMimicResizeObserver.disconnect(),
+    if (this._container) {
+      this._container.remove();
+    }
+
+    if (this._elementToMimicResizeObserver) {
+      this._elementToMimicResizeObserver.disconnect();
+    }
+
     this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
