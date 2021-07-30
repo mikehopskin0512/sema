@@ -1,15 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Router from 'next/router';
-import Table from '../../components/table';
-import withLayout from '../../components/layout/adminLayout';
-import withSemaAdmin from '../../components/auth/withSemaAdmin';
-import FilterTabs from '../../components/admin/filterTabs';
-import ExportButton from '../../components/admin/exportButton';
-import { smartCommentsOperations } from '../../state/features/smart-comments';
-import { fullName } from '../../utils';
-
-const { fetchSmartCommentsMetrics, exportSmartCommentsMetrics } = smartCommentsOperations;
+import { useDispatch, useSelector } from 'react-redux';
+import FilterTabs from '../filterTabs';
+import ExportButton from '../exportButton';
+import Table from '../../table';
+import { fullName } from '../../../utils';
+import { smartCommentsOperations } from '../../../state/features/smart-comments';
 
 const tabOptions = [
   {
@@ -26,7 +22,9 @@ const tabOptions = [
   },
 ];
 
-const ShareOfWalletPage = () => {
+const { fetchSmartCommentsMetrics, exportSmartCommentsMetrics } = smartCommentsOperations;
+
+const ShareOfWalletMetric = () => {
   const [tab, setTab] = useState('user');
   const dispatch = useDispatch();
   const { smartCommentMetrics, isFetching } = useSelector((state) => state.smartCommentsState);
@@ -108,20 +106,14 @@ const ShareOfWalletPage = () => {
   })), [tab, smartCommentMetrics]);
 
   return (
-    <div className="hero is-full-height is-flex is-flex-direction-column px-25 py-25 background-gray-white">
-      <h1 className="has-text-black has-text-weight-bold is-size-3">Share Of Wallet Metrics</h1>
-      <p className="mb-15 is-size-6  text-gray-light">Manage your share of wallet metrics at a glance</p>
-      <div className="p-20 is-flex-grow-1 has-background-white" style={{ borderRadius: 10 }}>
-        <div className="mb-50">
-          <div className="is-flex is-justify-content-space-between">
-            <FilterTabs value={tab} onChange={setTab} tabs={tabOptions} />
-            <ExportButton onExport={() => exportSmartCommentsMetrics({ category: tab })} />
-          </div>
-          <Table columns={columns} data={dataSource} loading={isFetching} />
-        </div>
+    <div className="mb-50">
+      <div className="is-flex is-justify-content-space-between">
+        <FilterTabs value={tab} onChange={setTab} tabs={tabOptions} />
+        <ExportButton onExport={() => exportSmartCommentsMetrics({ category: tab })} />
       </div>
+      <Table columns={columns} data={dataSource} loading={isFetching} />
     </div>
   );
 };
 
-export default withSemaAdmin(withLayout(ShareOfWalletPage));
+export default ShareOfWalletMetric;
