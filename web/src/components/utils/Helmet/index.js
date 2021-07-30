@@ -9,6 +9,7 @@ export {
   InvitesHelmet,
   UserManagementHelmet,
   SuggestedCommentsHelmet,
+  ActivityLogHelmet,
   CommentCollectionsHelmet,
   ProfileHelmet,
   RepoStatsHelmet,

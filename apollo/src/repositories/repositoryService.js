@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import _ from "lodash";
 import { differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
+import Users from './../users/userModel';
 import { getReactionIdKeys } from "../comments/reaction/reactionService";
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -202,7 +203,7 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
         const reaction = stat.reactionId
         const dataDate = new Date(stat.createdAt);
         const formattedDataDate = format(dataDate, 'MM/dd/yyyy');
-        if (formattedDataDate === formattedToDate) { 
+        if (formattedDataDate === formattedToDate) {
           if (localReactions?.[reaction]) {
             localReactions[reaction] += 1;
           } else {
@@ -297,6 +298,17 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
       })
     });
     return tags;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getSemaUsersOfRepo = async (externalId) => {
+  try {
+    const users = await Users.find({ 'identities.repositories': { $elemMatch: { id: externalId } } }).exec();
+    return users;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

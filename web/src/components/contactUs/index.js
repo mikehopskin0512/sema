@@ -30,11 +30,11 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
   return (
     <>
       {/* Desktop View */}
-      <div className="mt-20 py-50 px-120 has-background-primary is-justify-content-space-evenly is-align-items-center is-flex is-hidden-mobile">
+      <div className="py-50 px-120 has-background-primary is-justify-content-space-evenly is-align-items-center is-flex is-hidden-mobile">
         {renderContent()}
       </div>
       {/* Mobile View */}
-      <div className="mt-20 p-25 has-background-primary is-justify-content-space-evenly is-align-items-center is-hidden-desktop">
+      <div className="p-25 has-background-primary is-justify-content-space-evenly is-align-items-center is-hidden-desktop">
         {renderContent()}
       </div>
     </>
