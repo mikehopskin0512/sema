@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -91,6 +91,20 @@ export const requestGetUserReposError = (errors) => ({
   errors,
 });
 
+export const requestGetRepoReactions = () => ({
+  type: types.REQUEST_GET_REPO_REACTIONS,
+});
+
+export const requestGetRepoReactionsSuccess = (repositories) => ({
+  type: types.REQUEST_GET_REPO_REACTIONS_SUCCESS,
+  repositories,
+});
+
+export const requestGetReposReactionsError = (errors) => ({
+  type: types.REQUEST_GET_REPO_REACTIONS_ERROR,
+  errors,
+});
+
 export const addRepositories = (repositoriesData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateRepo());
@@ -172,5 +186,20 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFilterSemaReposError(errMessage));
+  }
+};
+
+export const fetchRepoStats = (filters, token) => async (dispatch) => {
+  try {
+    dispatch(requestGetRepoReactions());
+    const payload = await getReactionsStats(filters, token);
+    console.log({ payload });
+    // dispatch(requestGetRepoReactionsSuccess());
+  } catch (error) {
+    console.log(error);
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestGetReposReactionsError(errMessage));
   }
 };

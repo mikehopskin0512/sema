@@ -74,6 +74,8 @@ Footer {
 .content-wrapper {
   width: 100%;
   margin-left: 200px;
+  max-width: calc(100vw - 200px);
+  overflow-x: hidden;
 
   &.close {
     margin-left: 65px;

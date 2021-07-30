@@ -23,12 +23,17 @@ const index = new FlexSearch({
 
 const buildSuggestedCommentsIndex = async () => {
   try {
-    const dbComments = await SuggestedComment.find({});
+    const dbComments = await SuggestedComment.find().lean().exec();
     const reportEvery = Math.floor(dbComments.length / 10);
 
+    // TODO: We will need to add tags and comment title to the index
     dbComments.forEach((comment, i) => {
       // index by MongoDB ID
       index.add(comment._id, comment.comment);
+      // index.add(comment._id, comment.title);
+      // comment.tags.forEach((tag, ti) => {
+      //   index.add(comment._id, tag.label);
+      // });
       if (i % reportEvery === 0) {
         logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
       }
@@ -38,6 +43,8 @@ const buildSuggestedCommentsIndex = async () => {
     logger.error(error);
     throw error;
   }
+
+  return index;
 };
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
@@ -148,39 +155,39 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
         from: 'smartComments',
         localField: '_id',
         foreignField: 'suggestedComments',
-        as: 'smartComments'
-      }
+        as: 'smartComments',
+      },
     },
     {
       $addFields: {
-        insertCount: { $size: '$smartComments' }
-      }
+        insertCount: { $size: '$smartComments' },
+      },
     },
     {
-      $sort: { insertCount: -1 }
+      $sort: { insertCount: -1 },
     },
   ];
 
   const totalCount = await SuggestedComment.aggregate([
     ...query,
     {
-      $count: 'total'
-    }
+      $count: 'total',
+    },
   ]);
 
   const suggestedComments = await SuggestedComment.aggregate([
     ...query,
     {
-      $skip: (page - 1) * perPage
+      $skip: (page - 1) * perPage,
     },
     {
       $limit: perPage,
-    }
+    },
   ]);
 
   return {
-    totalCount: totalCount[0]? totalCount[0].total : 0,
-    suggestedComments
+    totalCount: totalCount[0] ? totalCount[0].total : 0,
+    suggestedComments,
   };
 };
 

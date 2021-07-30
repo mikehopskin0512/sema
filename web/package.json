@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production next start --max-http-header-size=16384"
+    "start": "NODE_ENV=production next start"
   },
   "dependencies": {
     "@creativebulma/bulma-badge": "^1.0.1",

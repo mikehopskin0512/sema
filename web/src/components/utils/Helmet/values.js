@@ -34,6 +34,11 @@ export const SuggestedCommentsHelmet = {
   description: null,
 };
 
+export const RepoStatsHelmet = {
+  title: 'Repo Stats',
+  description: null,
+};
+
 export const ProfileHelmet = {
   title: 'Profile',
   description: null,

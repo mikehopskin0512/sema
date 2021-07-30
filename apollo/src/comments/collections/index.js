@@ -76,4 +76,39 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  route.post('/', async (req, res) => {
+    const { collections } = req.body;
+
+    try {
+      const newCollections = await createMany(collections);
+      if (!newCollections) {
+        throw new errors.BadRequest('Collections create error');
+      }
+
+      return res.status(201).send({
+        collections: newCollections
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/author/:author', async (req, res) => {
+    const { author } = req.params;
+    try {
+      const collections = await findByAuthor(author);
+      if (!collections) {
+        throw new errors.BadRequest('Collections find by author error');
+      }
+
+      return res.status(201).send({
+        collections
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { chunk } from 'lodash';
-import { articles } from './data';
+import { articles } from '../../data/help';
 import styles from './help.module.scss';
 import ContactUs from '../../components/contactUs';
 import withLayout from '../../components/layout';

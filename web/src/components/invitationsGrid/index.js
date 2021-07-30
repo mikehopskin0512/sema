@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import Table from '../table';
 import Badge from '../badge/badge';
 import { fullName } from '../../utils';
@@ -7,12 +8,22 @@ import styles from './invitationsGrid.module.scss';
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
   const columns = useMemo(
     () => [
+      ...type === 'admin' ? [{
+        Header: 'Sender',
+        accessor: 'sender',
+        className: 'p-10',
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            { value }
+          </div>
+        ),
+      }] : [],
       {
         Header: 'User',
         accessor: 'recipient',
         className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
         Cell: ({ cell: { value } }) => (
-          <div className="is-flex is-align-items-center">
+          <div className='is-flex is-align-items-center'>
             { value }
           </div>
         ),
@@ -32,7 +43,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         accessor: 'actions',
         className: type === 'dashboard' ? 'pl-50 has-background-sky-light' : '',
         Cell: ({ cell: { value: el } }) => (
-          <div className="is-flex is-align-items-center py-10">
+          <div className='is-flex is-align-items-center py-10'>
             {
               el.isPending && (
                 <>
@@ -48,18 +59,32 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
     [resendInvitation, revokeInvitation, type],
   );
 
-  const dataSource = useMemo(() => (Array.isArray(invites) ? invites.map((item) => ({
-    recipient: item.isPending
-      ? item.recipient
-      : (
+  const dataSource = useMemo(() => {
+    return Array.isArray(invites) ? invites.map(item => ({
+      recipient: item.isPending
+        ? item.recipient
+        : (
+          <>
+            <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+            {fullName(item.user)}
+          </>
+        ),
+      sender: (
         <>
-          <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
-          {fullName(item.user)}
+          <img
+            src={item.sender && item.sender.avatarUrl}
+            alt="avatar"
+            width={32}
+            height={32}
+            className="mr-10 is-radius-full"
+          />
+          {fullName(item.sender)}
         </>
       ),
-    isPending: item.isPending,
-    actions: item,
-  })) : []), [invites]);
+      isPending: item.isPending,
+      actions: item,
+    })) : [];
+  }, [invites]);
 
   return (
     <div>
@@ -69,7 +94,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         empty={(
           <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
             <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
-            <div className="subtitle has-text-centered mt-50 has-text-gray-dark is-size-5">
+            <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
               You haven't invited anyone yet.
             </div>
           </div>
@@ -77,6 +102,13 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
       />
     </div>
   );
+};
+
+InvitationsGrid.propTypes = {
+  type: PropTypes.string.isRequired,
+  invites: PropTypes.array.isRequired,
+  resendInvitation: PropTypes.func.isRequired,
+  revokeInvitation: PropTypes.func.isRequired,
 };
 
 export default InvitationsGrid;
