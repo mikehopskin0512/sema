@@ -416,3 +416,36 @@ export const exportSuggestedMetrics = async ({ search }) => {
 
   return csv;
 };
+
+export const getSmartCommentsByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getPullRequestsByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.url' ).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getSmartCommentersByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
