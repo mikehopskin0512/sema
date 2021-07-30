@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 
@@ -71,6 +72,11 @@ const SelectTags = ({ modalRef, setTags }) => {
       newValue.forEach((item) => {
         const { __isNew__, label, value } = item;
         if (__isNew__) {
+          const isTagAlreadyExists = find(tags, ((tag) => tag.label.toLowerCase() === label.toLowerCase()));
+          if (isTagAlreadyExists) {
+            existingTags.push(isTagAlreadyExists._id);
+            return;
+          }
           newTags.push({
             label,
             isActive: true,
