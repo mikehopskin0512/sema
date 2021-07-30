@@ -4,7 +4,7 @@ import { remove } from 'lodash';
 import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
 import { repositoriesOperations } from '../../state/features/repositories';
-import EmptyRepo from '@/components/repos/emptyRepo';
+import EmptyRepo from '../../components/repos/emptyRepo';
 
 const { filterSemaRepositories } = repositoriesOperations;
 
