@@ -71,10 +71,10 @@ export const getUserSuggestedComments = (token) => async (dispatch) => {
   }
 };
 
-export const fetchSmartComments = (repo) => async (dispatch) => {
+export const fetchSmartComments = (repo, token) => async (dispatch) => {
   try {
     dispatch(requestGetSmartCommentsByRepo());
-    const payload = await getSmartComments(repo);
+    const payload = await getSmartComments(repo, token);
     const { data } = payload;
     dispatch(requestGetSmartCommentsByRepoSuccess(data.comments));
   } catch (error) {

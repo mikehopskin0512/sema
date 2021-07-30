@@ -4,18 +4,20 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './sidebar.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
 
-  const isActiveRoute = () => router.asPath.includes(pathName);
+  const { asPath, query: { repoId } } = router;
+
+  const isActiveRoute = () => asPath.includes(pathName);
 
   return (
-    <Link href={pathName}>
-      <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-flex is-align-items-center mb-10 is-clickable')}>
+    <Link href={`${pathName}/${repoId}`}>
+      <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-size-6 has-text-weight-semibold is-flex is-align-items-center mb-10 is-clickable')}>
         <FontAwesomeIcon
           className="is-clickable"
           icon={icon}
@@ -34,11 +36,11 @@ MenuItem.propTypes = {
 
 const Sidebar = ({ children }) => {
   const [menus] = useState([
-    {
-      name: 'Overview',
-      pathName: '/overview',
-      icon: faHome,
-    },
+    // {
+    //   name: 'Overview',
+    //   pathName: '/overview',
+    //   icon: faHome,
+    // },
     {
       name: 'Activity Logs',
       pathName: '/activity',

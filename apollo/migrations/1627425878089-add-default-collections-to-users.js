@@ -38,9 +38,9 @@ exports.up = async (next) => {
         try {
           await mongoose.connection
            .collection('users')
-           .updateOne({ _id: new ObjectId(userId) }, [
-             { $set: { collections } },
-           ]);
+           .updateOne({ _id: new ObjectId(userId) },
+             { $set: { collections } }
+           );
            return { userId, myCollection }
         } catch (error) {
          next(error);

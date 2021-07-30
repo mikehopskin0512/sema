@@ -1,5 +1,14 @@
 import { format } from 'date-fns';
-import { exportUserActivityChangeMetrics, getUserActivityChangeMetrics, exportShareOfWalletMetrics, getShareOfWalletMetrics, getSuggestedMetrics, exportSuggestedMetrics } from './api';
+import {
+  exportUserActivityChangeMetrics,
+  getUserActivityChangeMetrics,
+  exportShareOfWalletMetrics,
+  getShareOfWalletMetrics,
+  getGrowthOfRepositoryMetrics,
+  exportGrowthOfRepositoryMetrics,
+  getSuggestedMetrics,
+  exportSuggestedMetrics
+} from './api';
 import * as types from './types';
 
 const requestUserActivityChangeMetrics = () => ({
@@ -138,6 +147,54 @@ export const exportSuggestedCommentsMetrics = async (params = {}, token) => {
 
     link.href = url;
     link.setAttribute('download', `suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+const requestGrowthOfRepositoryMetrics = () => ({
+  type: types.REQUEST_GROWTH_OF_REPOSITORY_METRICS,
+});
+
+const requestGrowthOfRepositoryMetricsSuccess = (growthOfRepository) => ({
+  type: types.REQUEST_GROWTH_OF_REPOSITORY_METRICS_SUCCESS,
+  growthOfRepository,
+});
+
+const requestGrowthOfRepositoryMetricsError = (errors) => ({
+  type: types.REQUEST_GROWTH_OF_REPOSITORY_METRICS_ERROR,
+  errors,
+});
+
+export const fetchGrowthOfRepositoryMetrics = (params = {}, token) => async (dispatch) => {
+  try {
+    dispatch(requestGrowthOfRepositoryMetrics());
+    const payload = await getGrowthOfRepositoryMetrics(params, token);
+    const { data: { growthOfRepository = [] } } = payload;
+
+    dispatch(requestGrowthOfRepositoryMetricsSuccess(growthOfRepository));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestGrowthOfRepositoryMetricsError(errMessage));
+  }
+};
+
+export const exportGrowthOfRepository = async (params = {}, token) => {
+  try {
+    const payload = await exportGrowthOfRepositoryMetrics(params, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `growth_of_repository_${format(new Date(), 'yyyyMMdd')}.csv`);
 
     document.body.appendChild(link);
     link.click();

@@ -50,7 +50,7 @@ const stats = {
 
 const RepoCard = (props) => {
   const {
-    name, description, isFavorite, _id,
+    name, description, isFavorite, externalId,
   } = props;
 
   const truncateText = (text) => {
@@ -66,7 +66,7 @@ const RepoCard = (props) => {
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
-    window.location = `/stats/${_id}`;
+    window.location = `/activity/${externalId}`;
   };
 
   const renderStats = (label, value) => (

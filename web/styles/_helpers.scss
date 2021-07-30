@@ -92,6 +92,10 @@ $radius: "0", "2px", "4px", "8px", "14px", "16px", "24px";
   }
 }
 
+.has-no-border {
+  border: none;
+}
+
 // remove after bulma update
 .is-underlined {
   text-decoration: underline;

@@ -15,7 +15,7 @@ const CircularPacking = ({ data }) => {
           name: tag.label,
           id: _id,
           color: tag.isPositive ? '#A4E799' : '#E79999',
-          value: rawData[_id],
+          value: rawData[_id].total,
         };
       });
     }
