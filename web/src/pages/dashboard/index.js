@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { remove } from 'lodash';
 import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import { repositoriesOperations } from '../../state/features/repositories';
 
 const { filterSemaRepositories } = repositoriesOperations;
@@ -64,6 +65,7 @@ const Dashboard = () => {
 
   return (
     <div className="has-background-gray-9 ">
+      <Helmet { ...DashboardHelmet } />
       <div className="py-30 px-80 is-hidden-mobile">
         {renderRepos()}
       </div>

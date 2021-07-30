@@ -3,6 +3,7 @@ import auth from './auth';
 import collections from './comments/collections';
 import smartComments from './comments/smartComments';
 import suggestedComments from './comments/suggestedComments';
+import tags from './comments/tags';
 import credentials from './credentials';
 import github from './identity/github';
 import health from './shared/health';
@@ -22,6 +23,7 @@ function attachRoutes(app, passport) {
   collections(app, passport);
   smartComments(app, passport);
   suggestedComments(app, passport);
+  tags(app, passport);
   credentials(app, passport);
   github(app);
   health(app);

@@ -1,7 +1,11 @@
+import mongoose from 'mongoose';
 import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import { create, searchComments, suggestCommentsInsertCount } from './suggestedCommentService';
+import { pushCollectionComment } from '../collections/collectionService';
+
+const { Types: { ObjectId } } = mongoose;
 
 const route = Router();
 
@@ -35,11 +39,18 @@ export default (app, passport) => {
   });
 
   route.post('/', async (req, res) => {
-    const { title, comment, source } = req.body;
+    const { title, comment, source, tags, collectionId } = req.body;
     try {
-      const newSuggestedComment = await create( { title, comment, source: { name: "", url: source } } );
+      const newSuggestedComment = await create( { title, comment, source: { name: "", url: source }, tags } );
       if (!newSuggestedComment) {
         throw new errors.BadRequest('Suggested Comment create error');
+      }
+      if (collectionId) {
+        const collection = await pushCollectionComment(collectionId, newSuggestedComment._id);
+        return res.status(201).send({
+          suggestedComment: newSuggestedComment,
+          collection: collection._id,
+        });
       }
       return res.status(201).send({
         suggestedComment: newSuggestedComment

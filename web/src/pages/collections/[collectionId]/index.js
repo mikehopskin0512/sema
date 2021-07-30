@@ -1,44 +1,61 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { findIndex, flatten, isEmpty, uniqBy } from 'lodash';
+import {
+  findIndex, flatten, isEmpty, reverse, uniqBy,
+} from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import styles from '../collection.module.scss';
 
+import AddSuggestedCommentModal from '../../../components/comment/addSuggestedCommentModal';
 import CommentFilter from '../../../components/comment/commentFilter';
 import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
 import ContactUs from '../../../components/contactUs';
 import withLayout from '../../../components/layout';
 import SupportForm from '../../../components/supportForm';
 import Helmet from '../../../components/utils/Helmet';
+import Toaster from '../../../components/toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
+import { alertOperations } from '../../../state/features/alerts';
 
 const { getCollectionById } = commentsOperations;
+const { clearAlert } = alertOperations;
 
 const NUM_PER_PAGE = 10;
 
 const CollectionComments = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { auth, collectionState } = useSelector((state) => ({
+  const { alerts, auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
+    alerts: state.alertsState,
   }));
 
   const { collectionId } = router.query;
   const { token, userVoiceToken } = auth;
   const { collection: { name, comments = [], _id } } = collectionState;
+  const { showAlert, alertType, alertLabel } = alerts;
 
   const [supportForm, setSupportForm] = useState(false);
   const [page, setPage] = useState(1);
   const [commentsFiltered, setCommentsFiltered] = useState(comments);
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
+  const [newCommentModalOpen, setNewCommentModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getCollectionById(collectionId, token));
   }, [collectionId, dispatch, token]);
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   useEffect(() => {
     setCommentsFiltered(comments);
@@ -49,7 +66,7 @@ const CollectionComments = () => {
       if (item.type === 'language') {
         languages.push(item);
       }
-      if (item.type === 'guide') {
+      if (item.type === 'guide' || item.type === 'custom') {
         tags.push(item);
       }
     });
@@ -60,6 +77,9 @@ const CollectionComments = () => {
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
 
+  const openNewSuggestedCommentModal = () => setNewCommentModalOpen(true);
+  const closeNewSuggestedCommentModal = () => setNewCommentModalOpen(false);
+
   const viewMore = () => {
     setPage(page + 1);
   };
@@ -68,7 +88,6 @@ const CollectionComments = () => {
     const filtered = comments.filter((item) => {
       const isMatchSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.comment.toLowerCase().includes(search.toLowerCase()) ||
-      item.author.toLowerCase().includes(search.toLowerCase()) ||
       item.source.name.toLowerCase().includes(search.toLowerCase());
       const tagIndex = findIndex(item.tags, { label: tag });
       const languageIndex = findIndex(item.tags, { label: language });
@@ -88,9 +107,11 @@ const CollectionComments = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet title={`Collection - ${name}`} />
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
+      <AddSuggestedCommentModal active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
       <div className="hero-body">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/collections" className="is-hidden-mobile">
@@ -103,18 +124,26 @@ const CollectionComments = () => {
             </ul>
           </nav>
         </div>
-        <div className="is-flex is-flex-wrap-wrap p-10 is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            {name}
-          </p>
-          <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-            {comments.length} suggested comments
-          </span>
+        <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-space-between">
+          <div className="is-flex is-align-items-center p-10">
+            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+              {name}
+            </p>
+            <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
+              {comments.length} suggested comments
+            </span>
+          </div>
+          <button
+            className="button is-small is-primary border-radius-4px"
+            type="button"
+            onClick={openNewSuggestedCommentModal}>
+            Add New Comment
+          </button>
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
           <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div> :
-          commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
+          reverse(commentsFiltered).slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-30">
             <button

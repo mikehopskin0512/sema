@@ -3,6 +3,12 @@ import { autoIndex } from '../../config';
 
 const { Schema } = mongoose;
 
+const commentTagsSchema = new mongoose.Schema({
+  tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
+  type: String,
+  label: String,
+}, { _id: false });
+
 const suggestedCommentSchema = new Schema({
   displayId: {
     type: String,
@@ -24,11 +30,7 @@ const suggestedCommentSchema = new Schema({
     name: String,
     url: String,
   }],
-  tags: [{
-    tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
-    type: String,
-    label: String,
-  }],
+  tags: [commentTagsSchema],
   isActive: {
     type: Boolean,
     default: true,
