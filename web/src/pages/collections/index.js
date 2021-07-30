@@ -64,10 +64,10 @@ const CommentCollections = () => {
       <Helmet {...CommentCollectionsHelmet} />
       <div className="hero-body">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4">
-            Active Comment Collections
+          <p className="has-text-weight-semibold has-text-deep-black is-size-3">
+            Suggested Comments
           </p>
-          <div className="is-flex is-flex-wrap-wrap">
+          <div className="is-hidden is-flex is-flex-wrap-wrap">
             <form className="mr-25 my-5" onSubmit={handleSubmit(onSearch)}>
               <div className="control has-icons-left has-icons-right">
                 <input
@@ -95,11 +95,12 @@ const CommentCollections = () => {
             <CommentsViewButtons />
           </div>
         </div>
+        <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">
-          These are the Comments that will be suggested as you create code reviews. Turn off to move them to other collections.
+          Comments from these collections will be suggested as you create code reviews
         </p>
         <CardList collections={collectionsArrs.activeCollections || []} />
-        <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Comment Collections</p>
+        <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Collections</p>
         <CardList collections={collectionsArrs.otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
           {collectionsArrs.otherCollections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < collectionsArrs.otherCollections.length && (
