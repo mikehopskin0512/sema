@@ -86,7 +86,7 @@ const OnboardingModal = ({
               onClick={() => toggleModalActive(false)}
             />
           </header> */}
-        <section className={clsx('modal-card-body')}>
+        <section className={clsx('modal-card-body p-0')}>
           {renderModalContent(page)}
         </section>
         {/* <footer className="modal-card-foot">

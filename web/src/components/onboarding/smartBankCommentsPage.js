@@ -8,7 +8,7 @@ const SmartBankCommentsPage = ({
 }) => {
   return (
     <>
-      <div className="m-20">
+      <div className="m-20 p-20">
         <p className="title is-4">Please choose some comment collections</p>
         <p className="subtitle is-6">You can now activate groups of comments that suit your style and work environment. Choose the ones you want, or add your own to My Comments.</p>
         {
