@@ -13,6 +13,8 @@ const initialState = {
     filename: null,
     file_extension: null,
     line_numbers: [],
+    title: null,
+    clone_url: null,
   },
   github: {
     isTyping: false,

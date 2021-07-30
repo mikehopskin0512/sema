@@ -1,12 +1,23 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
 import Table from '../table';
 import Badge from '../badge/badge';
-import {fullName} from '../../utils';
-import styles from '../../pages/dashboard/dashboard.module.scss';
+import { fullName } from '../../utils';
+import styles from './invitationsGrid.module.scss';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
   const columns = useMemo(
     () => [
+      ...type === 'admin' ? [{
+        Header: 'Sender',
+        accessor: 'sender',
+        className: 'p-10',
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            { value }
+          </div>
+        ),
+      }] : [],
       {
         Header: 'User',
         accessor: 'recipient',
@@ -21,11 +32,11 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         Header: 'Status',
         accessor: 'isPending',
         className: type === 'dashboard' ? 'has-background-sky-light' : '',
-        Cell: ({ cell: { value } }) => type === 'admin' ? (
+        Cell: ({ cell: { value } }) => (type === 'admin' ? (
           <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
         ) : (
-          <div className='py-15'><span className={`tag is-rounded ${value ? 'is-primary' : 'is-success'}`}>{ value ? 'Pending Invite' : 'Accepted' }</span></div>
-        ),
+          <div className="py-15"><span className={`tag is-rounded ${value ? 'is-primary' : 'is-success'}`}>{ value ? 'Pending Invite' : 'Accepted' }</span></div>
+        )),
       },
       {
         Header: 'Actions',
@@ -45,7 +56,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         ),
       },
     ],
-    [],
+    [resendInvitation, revokeInvitation, type],
   );
 
   const dataSource = useMemo(() => {
@@ -58,6 +69,18 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
             {fullName(item.user)}
           </>
         ),
+      sender: (
+        <>
+          <img
+            src={item.sender && item.sender.avatarUrl}
+            alt="avatar"
+            width={32}
+            height={32}
+            className="mr-10 is-radius-full"
+          />
+          {fullName(item.sender)}
+        </>
+      ),
       isPending: item.isPending,
       actions: item,
     })) : [];
@@ -79,6 +102,13 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
       />
     </div>
   );
+};
+
+InvitationsGrid.propTypes = {
+  type: PropTypes.string.isRequired,
+  invites: PropTypes.array.isRequired,
+  resendInvitation: PropTypes.func.isRequired,
+  revokeInvitation: PropTypes.func.isRequired,
 };
 
 export default InvitationsGrid;

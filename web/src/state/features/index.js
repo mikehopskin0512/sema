@@ -1,5 +1,6 @@
 export { default as alertsState } from './alerts';
 export { default as authState } from './auth';
+export { default as commentsState } from './comments';
 export { default as invitationsState } from './invitations';
 export { default as organizationsState } from './organizations';
 export { default as passwordState } from './password-reset';
@@ -10,3 +11,4 @@ export { default as supportState } from './support';
 export { default as usersState } from './users';
 export { default as searchQueriesState } from './search-queries';
 export { default as suggestCommentsState } from './suggest-comments';
+export { default as smartCommentsState } from './smart-comments';

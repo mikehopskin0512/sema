@@ -2,8 +2,9 @@
 import Head from 'next/head';
 import Header from '../header';
 import Footer from '../footer';
+import ExtensionStatus from '../extensionStatus';
 
-const withLayout = (Page) => () => (
+const withLayout = (Page) => (props) => (
   <div className="Layout background-foggy-white">
     {/* Styling for full height width */}
     <style global jsx>{`
@@ -41,8 +42,10 @@ const withLayout = (Page) => () => (
       catch(e){window.attachEvent("onload", $buo_f)}
       ` }} />
     </Head>
+    <ExtensionStatus />
     <Header />
-    <Page style={{ backgroundColor: '#FCFCFC' }} />
+
+    <Page style={{ backgroundColor: '#FCFCFC' }} {...props} />
     <Footer />
   </div>
 );

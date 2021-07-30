@@ -26,6 +26,7 @@
   --color-add-tags-border: #{v.$color-light-add-tags-border};
 
   --color-title: #{v.$color-light-title};
+  --color-source-name: #{v.$color-font-dark-1};
   --color-content: #{v.$color-light-content};
 
   --color-suggestion-container: #{v.$color-light-btn-container};
@@ -182,15 +183,12 @@
 
 .sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
-  // background-color: rgb(168, 168, 168);
   background-color: var(--color-scroll-bg);
   border-radius: 50px;
   border: 3px solid var(--color-scroll-border);
-  // border: 3px solid rgb(243, 243, 243);
 }
 
 .sema-add-tags {
-  // border-style: dashed;
   border: var(--color-add-tags-border);
   background-color: var(--color-add-tags-bg);
   color: var(--color-add-tags-font);
@@ -204,12 +202,13 @@
   color: var(--color-add-tags-font);
 }
 
-.tagsPositiveContainer > span {
-  cursor: pointer;
-}
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
 
-.tagsNegativeContainer > span {
-  cursor: pointer;
+  span {
+    cursor: pointer;
+  }
 }
 
 .reaction-selection-wrapper {
@@ -231,33 +230,59 @@ button.sema-reaction-selection {
   width: 384px;
   max-height: 462px;
   overflow: auto;
+  border: none;
+  margin-top: 2px;
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  color: var(--color-text-input-font);
+
+
+  .sema-dropdown-content {
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  .sema-dropdown-item {
+    margin-top: 10px;
+    border: none;
+    box-shadow: none;
+  }
 }
 
 .suggestion-title {
-  font-weight: 600;
-  font-style: normal;
-  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
   line-height: 16px;
+  letter-spacing: -0.15 px;
   color: var(--color-title);
 }
 
-.suggestion-via {
+.suggestion-name {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.suggestion-source {
   font-weight: 400;
-  font-style: normal;
   font-size: 9px;
-  line-height: 16px;
-  color: var(--color-content);
+  line-height: 10px;
+  white-space: nowrap;
+  color: var(--color-source-name);
 }
 
 .suggestion-content-truncated-container {
+  padding: 10px;
   background: #fbfbfb;
   border: 0.5px solid #c4c4c4;
+  margin-top: 7px;
   box-sizing: border-box;
   border-radius: 4px;
 }
 
 .suggestion-content-truncated {
-  margin: 8px 14px 23px 7px;
+  margin-bottom: 16px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -301,6 +326,7 @@ h6 {
 .sema-shadow-root {
   display: inline !important;
   position: relative !important;
+  pointer-events: none;
 }
 
 .sema-mirror {
@@ -317,16 +343,29 @@ h6 {
   white-space: pre-wrap !important;
   border-color: transparent !important;
   overflow: auto !important;
+  overflow-y: hidden !important;
 }
 
 .sema-highlighter {
-  position: absolute;
+  display: inline;
   overflow: hidden;
-  pointer-events: none;
+  position: absolute;
+}
+
+.sema-highlighter-intermediate {
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.sema-highlighter-container {
+  display: block;
+  position: absolute;
 }
 
 .sema-highlighter-content {
   position: absolute !important;
+  display: block;
   border-radius: 4px;
   background: var(--color-highlight);
 }
@@ -418,12 +457,16 @@ h6 {
 }
 
 .sema-dropdown-footer {
-  color: #4a4a4a;
-  display: block;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 0.375rem 1rem;
   position: relative;
+  margin-left: auto;
+  margin-top: 60px;
+  display: flex;
+  padding: 4px 8px;
+  width: fit-content;
+  color: #4a4a4a;
+  font-size: 10px;
+  border-radius: 21px;
+  background: rgba(183, 183, 183, 0.1);
 }
 
 .sema-input {
@@ -435,14 +478,6 @@ h6 {
   color: var(--color-content);
 }
 
-.suggestion-modal {
-  border-color: var(--color-text-input-border);
-  .sema-dropdown-content {
-    background-color: var(--color-text-input-bg);
-    color: var(--color-text-input-font);
-  }
-}
-
 .suggestion-content-truncated-container {
   background-color: var(--color-text-input-bg);
   color: var(--color-content);
@@ -450,18 +485,21 @@ h6 {
 }
 
 .tags-selection {
+  width: auto;
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
+  right: 0;
+  left: auto;
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
   }
-  width: 250px;
 }
 
 .sema-tag {
   background-color: var(--color-tag-bg) !important;
   color: var(--color-tag-font) !important;
+  width: fit-content;
 }
 
 .sema-tag.sema-is-dark {
@@ -482,6 +520,32 @@ h6 {
   color: var(--color-content);
 }
 
+.sema-login-bar {
+  display: flex;
+  height: auto;
+  align-items: center;
+
+  .sema-offline-badge {
+    display: flex;
+    align-items: center;
+    background: rgba(246, 224, 224, 1);
+    padding: 3px 4px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+
+  .sema-offline-label {
+    color: rgba(222, 54, 23, 1);
+    margin-left: 3px;
+    font-size: 12px;
+  }
+
+  .sema-login-link {
+    text-decoration: underline;
+    font-size: 12px;
+  }
+}
+
 .login-button {
   // background-color: var(--color-text-input-bg);
   // color: var(--color-text-input-font);
@@ -494,21 +558,27 @@ h6 {
 .suggestion-header {
   position: sticky;
   top: 0;
+  background-color: #fff;
   width: 100%;
-  background-color: var(--color-text-input-bg);
-  margin-bottom: 5px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  .sema-button {
-    background-color: var(--color-text-input-bg);
-    color: var(--color-text-input-font);
-  }
+  justify-content: flex-end;
 }
 
-.sema-dropdown-menu.suggestion-modal {
-  margin-top: 4px;
-  padding-top: 0;
+.suggestion-guide-link {
+  display: block;
+  color: #192129;
+  cursor: pointer;
+}
+
+.suggestion-guide-link-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-left: 6px;
+  text-decoration-line: underline;
+  color: #626262;
 }
 
 .sema-dropdown-content {

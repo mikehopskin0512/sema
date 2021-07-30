@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import _ from 'lodash';
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -12,6 +13,7 @@ export const create = async (user) => {
     jobTitle = '', avatarUrl = '',
     identities, terms,
     isWaitlist, origin,
+    collections,
   } = user;
 
   // Verify token expires 24 hours from now
@@ -34,6 +36,7 @@ export const create = async (user) => {
       verificationExpires,
       termsAccepted: terms,
       termsAcceptedAt: new Date(),
+      collections,
     });
     const savedUser = await newUser.save();
     return savedUser;
@@ -52,7 +55,10 @@ export const update = async (user) => {
       { $set: user },
       { new: true },
     );
-    const updatedUser = await query.lean().exec();
+    const updatedUser = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+    }).exec();
     return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -144,7 +150,15 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
 export const findById = async (id) => {
   try {
     const query = User.findOne({ _id: id });
-    const user = await query.lean().exec();
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      select: {
+        _id: 1,
+        isActive: 1,
+        name: 1,
+      }
+    }).exec();
 
     return user;
   } catch (err) {
@@ -358,6 +372,47 @@ export const updateLastLogin = async (user) => {
       { lastLogin: Date.now() },
     );
     await query.exec();
+    return true;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const updateUserRepositoryList = async (user, repos, identity) => {
+  try {
+    const identityRepo = user.identities?.[0].repositories;
+
+    const repositories = repos.map((el) => {
+      const { name, id, full_name: fullName, html_url: githubUrl } = el;
+      const index = _.findIndex(identityRepo, function(o) {
+        return o.id.toString() === el.id.toString();
+      } );
+      if (index === -1) {
+        return { name, id, fullName, githubUrl };
+      }
+      const repo = identityRepo[index];
+      return { name, id, fullName, githubUrl, ...repo };
+    });
+    identity = Object.assign(identity, { repositories });
+    await updateIdentity(user, identity);
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const addRepositoryToIdentity = async (user, repository) => {
+  try {
+    const identityRepo = user.identities?.[0].repositories;
+    if (_.findIndex(identityRepo, { 'id': repository.id }) !== -1) {
+      return true;
+    }
+    let identity = user.identities?.[0];
+    identity = Object.assign(identity, { repositories: [ ...identityRepo, repository ] });
+    await updateIdentity(user, identity);
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);

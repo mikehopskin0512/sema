@@ -7,7 +7,7 @@
     "npm": "6.13.4"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js",
+    "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "build": "npm run clean && babel src --out-dir dist",
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist"
@@ -36,6 +36,8 @@
     "json2csv": "^4.5.4",
     "jsonwebtoken": "^8.5.1",
     "lang": "^0.1.1",
+    "lodash": "^4.17.21",
+    "md5": "^2.3.0",
     "method-override": "^3.0.0",
     "migrate": "^1.7.0",
     "mongoose": "^5.9.15",

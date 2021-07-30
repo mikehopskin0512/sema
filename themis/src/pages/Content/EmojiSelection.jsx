@@ -66,10 +66,8 @@ const EmojiSelection = ({
                   }}
                 >
                   <Emoji symbol={shownEmoji} />
-                  <span
-                    className="sema-ml-1"
-                    dangerouslySetInnerHTML={{ __html: selectedTitle }}
-                  />
+                  &nbsp;&nbsp;
+                  <span dangerouslySetInnerHTML={{ __html: selectedTitle }} />
                 </button>
               </div>
               <div

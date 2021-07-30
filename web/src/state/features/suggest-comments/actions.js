@@ -1,4 +1,4 @@
-import { getSuggestComments } from './api';
+import { getSuggestComments, postSuggestComment } from './api';
 import * as types from './types';
 
 const requestFetchSuggestComments = () => ({
@@ -16,6 +16,20 @@ const requestFetchSuggestCommentsError = (errors) => ({
   errors,
 });
 
+const requestCreateSuggestComment = () => ({
+  type: types.REQUEST_CREATE_SUGGEST_COMMENT,
+});
+
+const requestCreateSuggestCommentSuccess = (suggestedComment) => ({
+  type: types.REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS,
+  suggestedComment,
+});
+
+const requestCreateSuggestCommentError = (errors) => ({
+  type: types.REQUEST_CREATE_SUGGEST_COMMENT_ERROR,
+  errors,
+});
+
 export const fetchSuggestComments = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchSuggestComments());
@@ -28,5 +42,20 @@ export const fetchSuggestComments = (params = {}, token) => async (dispatch) => 
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchSuggestCommentsError(errMessage));
+  }
+};
+
+export const createSuggestComment = (body, token) => async (dispatch) => {
+  try {
+    dispatch(requestCreateSuggestComment());
+    const { data: { suggestedComment } } = await postSuggestComment(body, token);
+    dispatch(requestCreateSuggestCommentSuccess(suggestedComment));
+    return suggestedComment;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestCreateSuggestCommentError(errMessage));
+    return error;
   }
 };

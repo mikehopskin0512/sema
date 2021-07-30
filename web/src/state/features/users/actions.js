@@ -1,4 +1,7 @@
-import { bulkAdmit, getUser, getUsers, updateUserInvitations, updateUserStatus } from './api';
+/* eslint-disable import/no-cycle */
+import {
+  bulkAdmit, getUser, getUsers, updateUserInvitations, updateUserStatus,
+} from './api';
 import * as types from './types';
 
 const requestUpdateUserAvailableInvitations = () => ({
@@ -23,7 +26,7 @@ const requestFetchUsersSuccess = (users, totalCount, filters) => ({
   type: types.REQUEST_FETCH_USERS_SUCCESS,
   users,
   totalCount,
-  filters
+  filters,
 });
 
 const requestFetchUsersError = (errors) => ({
@@ -59,13 +62,12 @@ const requestFetchUserError = (errors) => ({
   errors,
 });
 
-
 const requestBulkAdmitUsers = () => ({
   type: types.BULK_ADMIT_USERS,
 });
 
 const requestBulkAdmitUsersSuccess = () => ({
-  type: types.BULK_ADMIT_USERS_SUCCESS
+  type: types.BULK_ADMIT_USERS_SUCCESS,
 });
 
 const requestBulkAdmitUsersError = (errors) => ({
@@ -88,7 +90,7 @@ export const fetchUsers = (params = {}, token) => async (dispatch) => {
   }
 };
 
-export const updateUserAvailableInvitationsCount = (userId, amount, search) => async (dispatch) => {
+export const updateUserAvailableInvitationsCount = (userId, amount) => async (dispatch) => {
   try {
     dispatch(requestUpdateUserAvailableInvitations());
     await updateUserInvitations(userId, { amount });
@@ -114,7 +116,6 @@ export const updateStatus = (params = {}, token) => async (dispatch) => {
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
     dispatch(requestUpdateUserStatusError(errMessage));
   }
 };
@@ -124,8 +125,8 @@ export const fetchUser = (id, token) => async (dispatch) => {
     dispatch(requestFetchUser());
     const payload = await getUser(id, token);
     const { data } = payload;
-
     dispatch(requestFetchUserSuccess(data));
+    return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -133,7 +134,6 @@ export const fetchUser = (id, token) => async (dispatch) => {
     dispatch(requestFetchUserError(errMessage));
   }
 };
-
 
 export const bulkAdmitUsers = (bulkCount) => async (dispatch) => {
   try {
