@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { content } from './content';
+import styles from './onboarding.module.scss';
 
 const ContentPage = ({ page, nextPage, previousPage }) => {
   const [title, setTitle] = useState('');
@@ -17,10 +19,10 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
 
   return (
     <>
-      <div className="columns" style={{}}>
-        <div className="column is-5">
-          <p className="mt-200 mb-20 title">{title}</p>
-          <p className="mt-20 mb-200 subtitle">{subtitle}</p>
+      <div className="columns m-0" style={{}}>
+        <div className="column is-6 p-20 px-40">
+          <p className={clsx('mt-250 mb-20 title', styles.title)}>{title}</p>
+          <p className={clsx('mt-20 mb-200 subtitle', styles.subtitle)}>{subtitle}</p>
           {
             page !== 1 && (
               <button
@@ -40,9 +42,9 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
             Next
           </button>
         </div>
-        <div className="column is-flex is-justify-content-center is-7" style={{ backgroundColor: '#FFF' }}>
+        <div className="column is-flex is-justify-content-center is-6 p-20" style={{ backgroundColor: '#F9F9F9' }}>
           <div className="is-flex is-justify-content-center is-align-items-center">
-            <img src={img} alt="gif" />
+            <img src={img} alt="sema-img" className="is-full-width" />
           </div>
         </div>
       </div>
