@@ -20,30 +20,29 @@ const EngineeringGuides = () => {
   const { engGuides } = engGuidesState;
 
   const [page, setPage] = useState(1);
-  const [collections, setCollections] = useState([]);
 
   useEffect(() => {
     dispatch(getEngGuides(token));
   }, [dispatch, token]);
 
-  useEffect(() => {
-    if (engGuides.length > 0) {
-      const engGuideCollections = uniqBy(flatten(engGuides.map((item) => item.collections)), '_id');
-      const collectionsWithCommentCount = engGuideCollections.map((item) => {
-        const { _id } = item;
-        const commentCount = engGuides.filter((guide) => {
-          return size(find(guide.collections, { _id })) > 0;
-        });
-        return {
-          collectionData: {
-            ...item,
-            comments: commentCount
-          }
-        }
-      });
-      setCollections(collectionsWithCommentCount)
-    }
-  }, [engGuides]);
+  // useEffect(() => {
+  //   if (engGuides.length > 0) {
+  //     const engGuideCollections = uniqBy(flatten(engGuides.map((item) => item.collections)), '_id');
+  //     const collectionsWithCommentCount = engGuideCollections.map((item) => {
+  //       const { _id } = item;
+  //       const commentCount = engGuides.filter((guide) => {
+  //         return size(find(guide.collections, { _id })) > 0;
+  //       });
+  //       return {
+  //         collectionData: {
+  //           ...item,
+  //           comments: commentCount
+  //         }
+  //       }
+  //     });
+  //     setCollections(collectionsWithCommentCount)
+  //   }
+  // }, [engGuides]);
 
   const viewMore = () => {
     setPage(page + 1);
@@ -61,9 +60,9 @@ const EngineeringGuides = () => {
         <p className="is-size-6 has-text-deep-black px-10 mb-40">
           Explore detail of best practise coding techniques from world recongized experts.
         </p>
-        <CardList collections={collections?.slice(0, NUM_PER_PAGE * page) || []} />
+        <CardList collections={engGuides?.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
-          {collections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < collections.length && (
+          {engGuides.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides.length && (
             <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6" type="button">
               View More
             </button>

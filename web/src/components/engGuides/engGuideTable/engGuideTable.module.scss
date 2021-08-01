@@ -1,0 +1,19 @@
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  border: none !important;
+  border-top: none !important;
+}
+
+.thead {
+  background: none !important;
+  border: none !important;
+  tr {
+    border: none !important;
+    th {
+      border: none !important;
+    }
+  }
+}

@@ -2,7 +2,7 @@ import * as types from './types';
 
 const initialState = {
   isFetching: false,
-  engGuides: {},
+  engGuides: [],
 };
 
 const reducer = (state = initialState, action) => {
