@@ -12,7 +12,7 @@ import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
 
 
-const { getUserRepositories } = repositoriesOperations;
+const { getUserRepositories, fetchRepositoryOverview } = repositoriesOperations;
 
 const RepoPageLayout = ({ children }) => {
   const router = useRouter();
@@ -25,6 +25,7 @@ const RepoPageLayout = ({ children }) => {
   const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
   const [supportForm, setSupportForm] = useState(false);
+  const [stats, setStats] = useState({});
 
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
@@ -47,7 +48,12 @@ const RepoPageLayout = ({ children }) => {
         value: selected.externalId
       });
     }
+    setStats(repositories?.data?.overview);
   }, [repositories, pathName]);
+
+  useEffect(() => {
+    dispatch(fetchRepositoryOverview(repoId, token));
+  }, [repoId]);
 
   const formatOptions = (repositories) => {
     if (repositories) {
@@ -90,19 +96,19 @@ const RepoPageLayout = ({ children }) => {
           <div className="hero-body columns m-0">
             <div className={clsx("column mx-20 m-5 p-20", styles["card"])}>
               <div className="is-size-6">SMART CODE REVIEWS</div>
-              <div className="is-size-3 has-text-weight-semibold">23</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.codeReview || 0}</div>
             </div>
             <div className={clsx("column mx-20 m-5", styles["card"])}>
               <div className="is-size-6">SMART COMMENTS</div>
-              <div className="is-size-3 has-text-weight-semibold">23</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.smartComments || 0}</div>
             </div>
             <div className={clsx("column mx-20 m-5", styles["card"])}>
               <div className="is-size-6">SMART COMMENTERS</div>
-              <div className="is-size-3 has-text-weight-semibold">23</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.smartCommenters || 0}</div>
             </div>
             <div className={clsx("column mx-20 m-5", styles["card"])}>
               <div className="is-size-6">SEMA USERS</div>
-              <div className="is-size-3 has-text-weight-semibold">23</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.semaUsers || 0}</div>
             </div>
             </div>
           </div>

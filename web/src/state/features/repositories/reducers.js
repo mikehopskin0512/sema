@@ -7,6 +7,7 @@ const initialState = {
     repositories: [],
     reactions: [],
     tags: [],
+    overview: {},
   },
 
 };
@@ -176,6 +177,31 @@ const reducer = (state = initialState, action) => {
       data: {
         ...state.data,
         tags: [],
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_FETCH_REPOSITORY_OVERVIEW:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_REPOSITORY_OVERVIEW_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        overview: action.overview,
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_REPOSITORY_OVERVIEW_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        overview: action.overview,
       },
       error: action.errors,
     };

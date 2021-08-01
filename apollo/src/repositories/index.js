@@ -105,6 +105,7 @@ export default (app, passport) => {
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId } = req.query;
+
     try {
       const smartCommenters = await getSmartCommentersByExternalId(externalId);
       const smartComments = await getSmartCommentsByExternalId(externalId);
@@ -113,8 +114,8 @@ export default (app, passport) => {
       return res.status(201).send({
         smartCommenters: smartCommenters.length,
         smartComments: smartComments.length,
-        pullRequests: pullRequests.length,
-        users: users.length,
+        codeReview: pullRequests.length,
+        semaUsers: users.length,
       });
     } catch (error) {
       logger.error(error);

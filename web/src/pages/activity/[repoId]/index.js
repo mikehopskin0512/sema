@@ -43,26 +43,28 @@ const ActivityLogs = () => {
   }, [dispatch, repoId, token]);
 
   useEffect(() => {
-    const users = comments.smartComments.map((item) => {
-      const { userId } = item;
-      if (userId) {
-        const { firstName, lastName, _id, avatarUrl } = item;
+    if (comments.smartComments.length) {
+      const users = comments.smartComments.map((item) => {
+        const { userId } = item;
+        if (userId) {
+          const { firstName, lastName, _id, avatarUrl } = item;
+          return {
+            label: `${firstName} ${lastName}`,
+            value: _id,
+            img: avatarUrl,
+          };
+        }
+      });
+      const prs = comments.smartComments.map((item) => {
+        const { githubMetadata: { title, pull_number: pullNum } } = item;
         return {
-          label: `${firstName} ${lastName}`,
-          value: _id,
-          img: avatarUrl,
+          label: `${title || 'PR'} #${pullNum}`,
+          value: pullNum,
         };
-      }
-    });
-    const prs = comments.smartComments.map((item) => {
-      const { githubMetadata: { title, pull_number: pullNum } } = item;
-      return {
-        label: `${title || 'PR'} #${pullNum}`,
-        value: pullNum,
-      };
-    });
-    setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(uniqBy(prs, 'value'));
+      });
+      setFilterUserList(uniqBy(users, 'value'));
+      setFilterPRList(uniqBy(prs, 'value'));
+    }
   }, [comments]);
 
   useEffect(() => {
@@ -183,7 +185,7 @@ const ActivityLogs = () => {
           </div>
         </div>
       </div>
-      {filteredComments.length > 0 ? filteredComments.map((item) => (
+      {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10">
           <ActivityItem {...item} />
         </div>
