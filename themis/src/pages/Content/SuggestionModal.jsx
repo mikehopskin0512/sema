@@ -59,6 +59,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
 
   const Button = ({ onClick, title, icon }) => (
     <button
+      type="button"
       className="sema-button sema-is-inverted sema-is-small"
       style={{ border: 'none' }}
       onClick={(event) => {
@@ -73,7 +74,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     </button>
   );
 
-  const getAllCommentsUI = () => searchResults.map((searchResult, i) => {
+  const getAllCommentsUI = () => searchResults.map((searchResult) => {
     const {
       comment, sourceName, sourceUrl, title, id,
     } = searchResult;
