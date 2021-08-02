@@ -5,6 +5,7 @@ import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
 import { repositoriesOperations } from '../../state/features/repositories';
 import EmptyRepo from '../../components/repos/emptyRepo';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 
 const { filterSemaRepositories } = repositoriesOperations;
 
@@ -65,6 +66,7 @@ const Dashboard = () => {
 
   return (
     <div className="has-background-gray-9 ">
+      <Helmet {...DashboardHelmet} />
       {
         repos.favorites.length === 0 && repos.other.length === 0 ? (
           <EmptyRepo />
