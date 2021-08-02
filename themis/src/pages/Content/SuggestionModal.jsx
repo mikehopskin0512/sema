@@ -23,6 +23,7 @@ const getCommentInterface = (comment, isDetailed, sourceName, sourceUrl) => {
     <div className="suggestion-content-truncated-container">
       <div
         className="suggestion-content-truncated"
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
       <GuideLink
@@ -48,6 +49,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
         setCopiedId(id);
       },
       () => {
+        // eslint-disable-next-line no-console
         console.error('Could not copy to clipboard');
       },
     );
