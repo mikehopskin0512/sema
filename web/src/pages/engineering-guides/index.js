@@ -25,25 +25,6 @@ const EngineeringGuides = () => {
     dispatch(getEngGuides(token));
   }, [dispatch, token]);
 
-  // useEffect(() => {
-  //   if (engGuides.length > 0) {
-  //     const engGuideCollections = uniqBy(flatten(engGuides.map((item) => item.collections)), '_id');
-  //     const collectionsWithCommentCount = engGuideCollections.map((item) => {
-  //       const { _id } = item;
-  //       const commentCount = engGuides.filter((guide) => {
-  //         return size(find(guide.collections, { _id })) > 0;
-  //       });
-  //       return {
-  //         collectionData: {
-  //           ...item,
-  //           comments: commentCount
-  //         }
-  //       }
-  //     });
-  //     setCollections(collectionsWithCommentCount)
-  //   }
-  // }, [engGuides]);
-
   const viewMore = () => {
     setPage(page + 1);
   };

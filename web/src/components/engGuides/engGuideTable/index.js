@@ -1,9 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import EngGuideRow from '../engGuideRow';
 import styles from './engGuideTable.module.scss';
 
-const EngGuideTable = () => (
+const EngGuideTable = ({ data }) => (
   <div className={clsx('table-container', styles['table-wrapper'])}>
     <table className={clsx('table is-fullwidth my-25', styles.table)}>
       <thead className={clsx('is-fullwidth', styles.thead)}>
@@ -17,11 +18,18 @@ const EngGuideTable = () => (
         </tr>
       </thead>
       <tbody className="is-fullwidth">
-        <EngGuideRow />
-        <EngGuideRow />
+        {data.map((item) => (<EngGuideRow {...item} key={`guide-${item._id}`} />))}
       </tbody>
     </table>
   </div>
 );
+
+EngGuideTable.defaultProps = {
+  data: [],
+};
+
+EngGuideTable.propTypes = {
+  data: PropTypes.array,
+};
 
 export default EngGuideTable;
