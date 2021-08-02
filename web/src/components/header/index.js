@@ -141,7 +141,7 @@ const Header = () => {
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
               <Link href="/">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
                   Repos
                 </a>
               </Link>
