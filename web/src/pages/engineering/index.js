@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { find, flatten, size, uniqBy } from 'lodash';
 import CardList from '../../components/comment/cardList';
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
@@ -41,7 +40,7 @@ const EngineeringGuides = () => {
         <p className="is-size-6 has-text-deep-black px-10 mb-40">
           Explore detail of best practise coding techniques from world recongized experts.
         </p>
-        <CardList collections={engGuides?.slice(0, NUM_PER_PAGE * page) || []} />
+        <CardList collections={engGuides.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
           {engGuides.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides.length && (
             <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6" type="button">

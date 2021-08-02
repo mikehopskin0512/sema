@@ -27,8 +27,12 @@ const EngGuideRow = (props) => {
     return 'No Tags';
   };
 
+  const onClickRow = () => {
+    window.location = `/engineering/guide/${_id}`;
+  };
+
   return (
-    <tr className="has-background-white my-10">
+    <tr className="has-background-white my-10 is-clickable" onClick={onClickRow}>
       <td className={clsx('py-15 has-background-white px-10', styles.document)}>
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="has-text-weight-semibold is-size-5">{title}</p>

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { find, findIndex, flatten, isEmpty, uniqBy } from 'lodash';
+import {
+  find, findIndex, flatten, isEmpty, uniqBy,
+} from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -113,7 +115,7 @@ const CollectionEngGuides = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/engineering-guides" className="has-text-grey">Community Eng Guides</a></li>
+              <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
               <li className="is-active has-text-weight-semibold"><a href={`/engineering-guidelines/${engGuideId}`}>{engGuide.name}</a></li>
             </ul>
           </nav>

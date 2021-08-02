@@ -150,8 +150,8 @@ const Header = () => {
                   Suggested Comments
                 </a>
               </Link>
-              <Link href="/engineering-guides">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering-guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+              <Link href="/engineering">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                   Community Eng Guides
                 </a>
               </Link>
@@ -179,7 +179,7 @@ const Header = () => {
                   Suggested Comments
                 </a>
               </Link>
-              <Link href="/engineering-guides">
+              <Link href="/engineering">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Community Engineering Guides
                 </a>

@@ -40,8 +40,8 @@ const Card = ({ isActive, collectionData }) => {
     if (asPath === '/collections') {
       window.location = `/collections/${_id}`;
     }
-    if (asPath === '/engineering-guides') {
-      window.location = `/engineering-guides/${_id}`;
+    if (asPath === '/engineering') {
+      window.location = `/engineering/${_id}`;
     }
   };
 
