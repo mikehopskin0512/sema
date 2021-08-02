@@ -67,7 +67,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal }) => {
 
   return (
     <>
-      <div className="mt-90">
+      <div className="mt-90 p-20">
         <p className="title is-4 has-text-centered">Install the Sema Extension</p>
         <p className="subtitle is-5 has-text-centered">It's easy</p>
         <p className="subtitle is-6 has-text-centered px-250">The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.</p>

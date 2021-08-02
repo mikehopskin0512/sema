@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { find } from "lodash";
+import { useRouter } from 'next/router';
 import clsx from "clsx";
 import ContactUs from '../../contactUs';
 import Sidebar from "../../sidebar";
@@ -7,20 +9,23 @@ import SupportForm from "../../supportForm";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
 import { repositoriesOperations } from "../../../state/features/repositories";
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 
 
-const { getUserRepositories } = repositoriesOperations;
+const { getUserRepositories, fetchRepositoryOverview } = repositoriesOperations;
 
 const RepoPageLayout = ({ children }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { token, user, userVoiceToken } = auth;
+  const { query: { repoId }, pathName } = router;
+  const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
   const [supportForm, setSupportForm] = useState(false);
+  const [stats, setStats] = useState({});
 
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
@@ -35,38 +40,78 @@ const RepoPageLayout = ({ children }) => {
     getUserRepos(auth.user);
   }, [auth]);
 
+  useEffect(() => {
+    const selected = find(repositories.data.repositories, { externalId: repoId });
+    if (selected) {
+      setSelectedRepo({
+        label: selected.name,
+        value: selected.externalId
+      });
+    }
+    setStats(repositories?.data?.overview);
+  }, [repositories, pathName]);
+
+  useEffect(() => {
+    dispatch(fetchRepositoryOverview(repoId, token));
+  }, [repoId]);
+
   const formatOptions = (repositories) => {
     if (repositories) {
       return repositories.map((repository) => {
-        return { label: repository.name, value: repository.id }
+        return { label: repository.name, value: repository.id, disabled: !repository.externalId }
       });
     }
     return [];
   };
 
+  const Control = (props) => {
+    return <components.Control
+      {...props}
+      className={clsx("has-background-white has-text-weight-semibold has-text-primary is-size-3 is-size-5-mobile p-0", styles['select-container'])}
+    />
+  }
+
+  const IndicatorSeparator = () => null;
+
+  const onChangeSelect = (obj) => {
+    setSelectedRepo(obj);
+    window.location = pathName.replace('[repoId]', obj.value);
+  }
+
   return (
-    <div>
+    <div className="has-background-white">
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
-      <div style={{width: 400}}>
-        <Select onChange={(obj) => setSelectedRepo(obj)} options={formatOptions(repositories.data?.repositories)} className="pl-120 ml-20 mb-70" placeholder={'Select a repository'} />
+      <div className={clsx("mt-10", styles['repo-select-container'])}>
+        <Select 
+          onChange={onChangeSelect}
+          value={selectedRepo}
+          options={formatOptions(repositories.data?.repositories)}
+          className="px-50"
+          components={{ Control, IndicatorSeparator }}
+          isOptionDisabled={(option) => option.disabled}
+          placeholder={''} />
       </div>
-      <div className={clsx("columns px-120", styles["card-container"])}>
-        <div className={clsx("column mx-20 p-20", styles["card"])}>
-          <div className="is-size-6">SMART CODE REVIEWS</div>
-          <div className="is-size-3 has-text-weight-semibold">23</div>
-        </div>
-        <div className={clsx("column mx-20", styles["card"])}>
-          <div className="is-size-6">SMART CODE</div>
-          <div className="is-size-3 has-text-weight-semibold">23</div>
-        </div>
-        <div className={clsx("column mx-20", styles["card"])}>
-          <div className="is-size-6">SMART COMMENTERS</div>
-          <div className="is-size-3 has-text-weight-semibold">23</div>
-        </div>
-        <div className={clsx("column mx-20", styles["card"])}>
-          <div className="is-size-6">SEMA USERS</div>
-          <div className="is-size-3 has-text-weight-semibold">23</div>
-        </div>
+      <div className={styles["card-container"]}>
+        <div className="hero">
+          <div className="hero-body columns m-0">
+            <div className={clsx("column mx-20 m-5 p-20", styles["card"])}>
+              <div className="is-size-6">SMART CODE REVIEWS</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.codeReview || 0}</div>
+            </div>
+            <div className={clsx("column mx-20 m-5", styles["card"])}>
+              <div className="is-size-6">SMART COMMENTS</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.smartComments || 0}</div>
+            </div>
+            <div className={clsx("column mx-20 m-5", styles["card"])}>
+              <div className="is-size-6">SMART COMMENTERS</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.smartCommenters || 0}</div>
+            </div>
+            <div className={clsx("column mx-20 m-5", styles["card"])}>
+              <div className="is-size-6">SEMA USERS</div>
+              <div className="is-size-3 has-text-weight-semibold">{stats?.semaUsers || 0}</div>
+            </div>
+            </div>
+          </div>
       </div>
       <Sidebar>{children}</Sidebar>
       <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>

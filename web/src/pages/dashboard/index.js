@@ -5,6 +5,8 @@ import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import { repositoriesOperations } from '../../state/features/repositories';
+import EmptyRepo from '../../components/repos/emptyRepo';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 
 const { filterSemaRepositories } = repositoriesOperations;
 
@@ -65,19 +67,27 @@ const Dashboard = () => {
 
   return (
     <div className="has-background-gray-9 ">
-      <Helmet { ...DashboardHelmet } />
-      <div className="py-30 px-80 is-hidden-mobile">
-        {renderRepos()}
-      </div>
-      <div className="p-25 is-hidden-desktop">
-        {renderRepos()}
-      </div>
-      <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mb-80">
-        {repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length && (
-          <button onClick={viewMore} className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6" type="button">View More</button>
-        )}
-        <p className="has-text-weight-semibold has-text-gray-dark mt-25">30 other repos with no smart comments yet</p>
-      </div>
+      <Helmet {...DashboardHelmet} />
+      {
+        repos.favorites.length === 0 && repos.other.length === 0 ? (
+          <EmptyRepo />
+        ) : (
+          <>
+            <div className="py-30 px-80 is-hidden-mobile">
+              {renderRepos()}
+            </div>
+            <div className="p-25 is-hidden-desktop">
+              {renderRepos()}
+            </div>
+            <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mb-80">
+              {repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length && (
+                <button onClick={viewMore} className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6" type="button">View More</button>
+              )}
+              <p className="has-text-weight-semibold has-text-gray-dark mt-25">30 other repos with no smart comments yet</p>
+            </div>
+          </>
+        )
+      }
     </div>
   );
 };

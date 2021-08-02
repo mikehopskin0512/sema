@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats,
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getRepositoryOverview,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -95,13 +95,41 @@ export const requestGetRepoReactions = () => ({
   type: types.REQUEST_GET_REPO_REACTIONS,
 });
 
-export const requestGetRepoReactionsSuccess = (repositories) => ({
+export const requestGetRepoReactionsSuccess = (reactions) => ({
   type: types.REQUEST_GET_REPO_REACTIONS_SUCCESS,
-  repositories,
+  reactions,
 });
 
 export const requestGetReposReactionsError = (errors) => ({
   type: types.REQUEST_GET_REPO_REACTIONS_ERROR,
+  errors,
+});
+
+export const requestGetRepoTags = () => ({
+  type: types.REQUEST_GET_REPO_TAGS,
+});
+
+export const requestGetRepoTagsSuccess = (tags) => ({
+  type: types.REQUEST_GET_REPO_TAGS_SUCCESS,
+  tags,
+});
+
+export const requestGetRepoTagsError = (errors) => ({
+  type: types.REQUEST_GET_REPO_TAGS_ERROR,
+  errors,
+});
+
+const requestFetchRepositoryOverview = () => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW,
+});
+
+const requestFetchRepositoryOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW_SUCCESS,
+  overview,
+});
+
+const requestFetchRepositoryOverviewError = (errors) => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW_ERROR,
   errors,
 });
 
@@ -181,7 +209,6 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
     dispatch(requestFilterSemaReposSuccess(repositories));
     return repositories;
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
@@ -189,17 +216,38 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
   }
 };
 
-export const fetchRepoStats = (filters, token) => async (dispatch) => {
+export const fetchReactionStats = (filters, token) => async (dispatch) => {
   try {
     dispatch(requestGetRepoReactions());
     const payload = await getReactionsStats(filters, token);
-    console.log({ payload });
-    // dispatch(requestGetRepoReactionsSuccess());
+    dispatch(requestGetRepoReactionsSuccess(payload.data.reactions));
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
     dispatch(requestGetReposReactionsError(errMessage));
+  }
+};
+
+export const fetchTagStats = (filters, token) => async (dispatch) => {
+  try {
+    dispatch(requestGetRepoTags());
+    const payload = await getTagsStats(filters, token);
+    dispatch(requestGetRepoTagsSuccess(payload.data.tags));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestGetRepoTagsError(errMessage));
+  }
+};
+
+export const fetchRepositoryOverview = (externalId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchRepositoryOverview());
+    const { data: overviewData } = await getRepositoryOverview({ externalId }, token);
+    dispatch(requestFetchRepositoryOverviewSuccess(overviewData));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchRepositoryOverviewError(errMessage));
   }
 };

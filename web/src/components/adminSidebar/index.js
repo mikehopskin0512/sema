@@ -52,18 +52,8 @@ const AdminSidebar = ({ open, setOpen }) => {
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
     {
-      name: 'Report',
+      name: 'Reports',
       pathName: '/sema-admin/reports',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'Share of Wallet',
-      pathName: '/sema-admin/share-of-wallet',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'User Activity',
-      pathName: '/sema-admin/user-activity',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
     {
