@@ -73,6 +73,8 @@ const Semabar = (props) => {
           >
             {tag}
             <button
+              aria-label={tag}
+              type="button"
               className="sema-delete sema-is-small"
               onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
             />
@@ -123,20 +125,21 @@ const Semabar = (props) => {
       <div className={containerClasses} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
+            type="button"
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
             aria-haspopup="true"
             onClick={(event) => {
               event.preventDefault();
               const {
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
               } = event.currentTarget.getBoundingClientRect();
               setTagsButtonPositionValues({
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
                 offsetPos: {
                   left: event.currentTarget.offsetLeft,
@@ -172,6 +175,7 @@ const Semabar = (props) => {
     );
   };
 
+  // eslint-disable-next-line react/destructuring-assignment
   if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
@@ -209,6 +213,7 @@ const Semabar = (props) => {
       <LoginBar />
       <div className="sema-tag-container sema-tags-content">
         <button
+          type="button"
           disabled
           className="sema-button sema-is-rounded sema-is-small sema-add-tags"
           aria-haspopup="true"
