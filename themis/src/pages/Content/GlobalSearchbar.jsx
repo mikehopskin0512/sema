@@ -48,6 +48,7 @@ const GlobalSearchbar = (props) => {
 
   const onCopyPressed = (id, suggestion) => {
     const { value } = props.commentBox;
+    // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}\n${suggestion}\n`;
     setSearchResults([]);
     props.toggleSearchModal();

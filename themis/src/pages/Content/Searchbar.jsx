@@ -51,6 +51,7 @@ const SearchBar = (props) => {
     const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : '';
     let { value } = props.commentBox;
     value = value ? `${value}\n` : '';
+    // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}${suggestion}${guideLink}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
@@ -120,8 +121,8 @@ const SearchBar = (props) => {
             No results :( We are still learning!
           </span>
           <span className="sema-subtitle sema-is-7 sema-is-block">
-            Sorry, we don't have search result for this one. Try again soon -
-            we've noted your query to improve our results.
+            Sorry, we don&apos;t have search result for this one. Try again soon -
+            we&apos;ve noted your query to improve our results.
           </span>
           <a
             className="sema-mt-2"
@@ -141,7 +142,7 @@ const SearchBar = (props) => {
             Suggested comments will appear here.
           </span>
           <span className="sema-subtitle sema-is-7 sema-is-block">
-            Type a few characters and we'll start searching right away.
+            Type a few characters and we&apos;ll start searching right away.
           </span>
         </div>
       );
@@ -181,6 +182,7 @@ const SearchBar = (props) => {
     if (suggestionModalDropdownRef) {
       suggestionModalDropdownRef.current.scrollTop = 0;
     }
+  // eslint-disable-next-line react/destructuring-assignment
   }, [props.isSearchModalVisible]);
 
   return (
