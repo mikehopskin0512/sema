@@ -141,13 +141,18 @@ const Header = () => {
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
               <Link href="/">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
                   Repos
                 </a>
               </Link>
               <Link href="/collections">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/collections' || pathname === '/comments' ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/collections') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                   Suggested Comments
+                </a>
+              </Link>
+              <Link href="/engineering">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  Community Eng Guides
                 </a>
               </Link>
               <Link href="/invitations">
@@ -172,6 +177,11 @@ const Header = () => {
               <Link href="/collections">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Suggested Comments
+                </a>
+              </Link>
+              <Link href="/engineering">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                  Community Engineering Guides
                 </a>
               </Link>
               <Link href="/invitations">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { findIndex, uniqBy, isEmpty } from 'lodash';
+import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../../components/activity/item';
@@ -43,11 +43,11 @@ const ActivityLogs = () => {
   }, [dispatch, repoId, token]);
 
   useEffect(() => {
-    if (comments.smartComments.length) {
+    if (comments?.smartComments?.length) {
       const users = comments.smartComments.map((item) => {
         const { userId } = item;
         if (userId) {
-          const { firstName, lastName, _id, avatarUrl } = item;
+          const { firstName, lastName, _id, avatarUrl } = userId;
           return {
             label: `${firstName} ${lastName}`,
             value: _id,
@@ -56,14 +56,17 @@ const ActivityLogs = () => {
         }
       });
       const prs = comments.smartComments.map((item) => {
-        const { githubMetadata: { title, pull_number: pullNum } } = item;
-        return {
-          label: `${title || 'PR'} #${pullNum}`,
-          value: pullNum,
-        };
+        if (item && item.githubMetadata) {
+          const { githubMetadata: { title, pull_number: pullNum } } = item;
+          return {
+            label: `${title || 'PR'} #${pullNum}`,
+            value: pullNum,
+          };
+        }
+        return null;
       });
       setFilterUserList(uniqBy(users, 'value'));
-      setFilterPRList(uniqBy(prs, 'value'));
+      setFilterPRList(uniqBy(compact(prs), 'value'));
     }
   }, [comments]);
 
