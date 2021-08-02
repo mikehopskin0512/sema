@@ -6,7 +6,6 @@ import RepoList from '../../components/repos/repoList';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import { repositoriesOperations } from '../../state/features/repositories';
 import EmptyRepo from '../../components/repos/emptyRepo';
-import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 
 const { filterSemaRepositories } = repositoriesOperations;
 
