@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 // eslint-disable-next-line import/no-cycle
 import rootReducer from './reducer';
 
-import { observerMiddleware } from './middleware/observer';
+import observerMiddleware from './middleware/observer';
 
 const store = createStore(rootReducer, applyMiddleware(observerMiddleware));
 
