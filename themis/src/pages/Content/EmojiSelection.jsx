@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React from 'react';
 import Lottie from 'react-lottie';
 import Emoji from './modules/emoji';
@@ -59,6 +60,7 @@ const EmojiSelection = ({
               >
                 <div className="sema-dropdown-trigger">
                   <button
+                    type="button"
                     className="sema-button sema-is-small sema-is-squared"
                     title={selectedTitle}
                     onClick={(event) => {
@@ -81,6 +83,7 @@ const EmojiSelection = ({
                       const { title, emoji } = emojiObj;
                       return (
                         <button
+                          type="button"
                           className="sema-dropdown-item sema-button sema-is-small sema-reaction-selection"
                           title={title}
                           key={title}

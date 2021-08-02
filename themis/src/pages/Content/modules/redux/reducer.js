@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 
 import initialState from './initialState';
@@ -20,12 +21,14 @@ import {
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
   ADD_MUTATION_OBSERVER,
-  REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
+
+// TODO: good if we can break cyclic dependencies
+// eslint-disable-next-line import/no-cycle
 import {
   getInitialSemaValues,
   toggleTagSelection,
@@ -145,6 +148,7 @@ function rootReducer(state = initialState, action) {
           return true;
         }
       }
+      return false;
     });
 
     // suggestion=F, selected=T, isDirty=F, showTag=F
@@ -156,6 +160,7 @@ function rootReducer(state = initialState, action) {
         );
         const { isDirty } = tagObj;
         if (!isSuggested && !isDirty) {
+          // eslint-disable-next-line no-param-reassign
           tagObj[SELECTED] = null;
         }
       }

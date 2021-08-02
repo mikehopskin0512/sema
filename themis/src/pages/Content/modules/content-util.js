@@ -27,6 +27,8 @@ import {
   removeMutationObserver,
   closeAllEmojiSelection,
 } from './redux/action';
+// TODO: good if we can break cyclic dependencies
+// eslint-disable-next-line import/no-cycle
 import store from './redux/store';
 
 import phrases from './highlightPhrases';
@@ -309,6 +311,7 @@ export async function writeSemaToGithub(textarea) {
 
     // TODO: Momentary implementation, for Tags retrieved from MongoDB
     const tags = selectedTags.map(
+      // eslint-disable-next-line no-underscore-dangle
       (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
     );
 
@@ -321,6 +324,7 @@ export async function writeSemaToGithub(textarea) {
       comment: textboxValue,
       location,
       suggestedComments: selectedSuggestedComments,
+      // eslint-disable-next-line no-underscore-dangle
       reaction: selectedEmojiObj._id,
       tags,
     };
@@ -354,9 +358,11 @@ export async function writeSemaToGithub(textarea) {
       textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
 
       // On edit, do not add extra line breaks
+      // eslint-disable-next-line no-param-reassign
       textarea.value = `${textboxValue}${semaString}`;
     } else {
       // On initial submit, 2 line breaks break up the markdown correctly
+      // eslint-disable-next-line no-param-reassign
       textarea.value = `${textboxValue}\n\n${semaString}`;
     }
     const semaIds = getSemaIds($(textarea).attr('id'));
@@ -565,14 +571,14 @@ export const getHighlights = (text) => {
   const isOverlap = (existingTokenData, newTokenData) => {
     const { startOffset, endOffset } = existingTokenData;
     const { start, end } = newTokenData;
-    let isOverlap = false;
+    let isOverlapped = false;
     if (
       (start >= startOffset && start <= endOffset)
       || (end >= startOffset && end <= endOffset)
     ) {
-      isOverlap = true;
+      isOverlapped = true;
     }
-    return isOverlap;
+    return isOverlapped;
   };
 
   const insertIfValid = ({ start, end, phrase }) => {
@@ -599,7 +605,7 @@ export const getHighlights = (text) => {
         };
       }
     } else {
-      id = ++id;
+      id += 1;
       alerts.push({
         id: id.toString(),
         startOffset: start,
@@ -618,7 +624,9 @@ export const getHighlights = (text) => {
     let index;
     const indices = [];
     if (!caseSensitive) {
+      // eslint-disable-next-line no-param-reassign
       str = str.toLowerCase();
+      // eslint-disable-next-line no-param-reassign
       searchStr = searchStr.toLowerCase();
     }
     // eslint-disable-next-line no-cond-assign
