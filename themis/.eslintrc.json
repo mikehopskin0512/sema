@@ -28,6 +28,10 @@
     "ignorePatterns": [
         "src/pages/**/*.html",
         "src/pages/**/*.css",
-        "src/pages/**/*.scss"
+        "src/pages/**/*.scss",
+        "src/pages/**/*.map",
+        "src/pages/Content/LoadingAnimation.json",
+        "src/pages/Options/**",
+        "src/pages/Panel/**"
     ]
 }
