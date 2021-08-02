@@ -12,7 +12,8 @@
     "start": "node utils/webserver.js --port 3002",
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
     "compile-scss": "sass src/pages/Content/styles/content.styles.scss:build/css/content.styles.css",
-    "lint": "eslint 'src/pages/**/*' --ext .jsx,.js --fix"
+    "lint": "eslint 'src/pages/**/*' --ext .jsx,.js --fix",
+    "prepare": "cd .. && husky install themis/.husky"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
@@ -59,6 +60,7 @@
     "fs-extra": "^9.1.0",
     "html-loader": "^2.1.0",
     "html-webpack-plugin": "^5.2.0",
+    "husky": "^7.0.1",
     "node-sass": "^4.14.1",
     "prettier": "^2.2.1",
     "sass": "^1.35.1",
