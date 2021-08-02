@@ -12,7 +12,7 @@
     "start": "node utils/webserver.js --port 3002",
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
     "compile-scss": "sass src/pages/Content/styles/content.styles.scss:build/css/content.styles.css",
-    "lint": "eslint 'src/pages/**/*' --ext .jsx,.js,.json --fix"
+    "lint": "eslint 'src/pages/**/*' --ext .jsx,.js --fix"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
