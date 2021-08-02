@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import Lottie from 'react-lottie';
-import Emoji from './modules/emoji';
+import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
 
 const animationOptions = {
