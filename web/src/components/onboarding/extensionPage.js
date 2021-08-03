@@ -7,7 +7,7 @@ import { isExtensionInstalled } from '../../utils/extension';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
-const ExtensionPage = ({ page, nextPage, previousPage, closeModal }) => {
+const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) => {
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [isQueryFinished, setQueryFinished] = useState(false);
 
@@ -92,9 +92,12 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal }) => {
           Done
         </button>
         <button
-          type="submit"
+          type="button"
           className="button is-text has-text-primary my-20 is-pulled-right"
-          onClick={closeModal}
+          onClick={async () => {
+            await onSubmit();
+            closeModal();
+          }}
         >
           Skip for now
         </button>
@@ -108,6 +111,7 @@ ExtensionPage.propTypes = {
   nextPage: PropTypes.func.isRequired,
   previousPage: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ExtensionPage;
