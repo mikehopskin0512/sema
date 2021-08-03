@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSortBy, useTable, usePagination } from 'react-table';
+import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
 
 const Table = ({
   columns,
@@ -31,6 +31,7 @@ const Table = ({
       manualPagination: true,
       pageCount: Math.ceil(totalCount / perPage),
     },
+    useGroupBy,
     useSortBy,
     usePagination,
   );

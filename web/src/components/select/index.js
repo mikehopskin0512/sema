@@ -13,6 +13,7 @@ const Select = ({
   searchPlaceholder,
   searchValue,
   onChangeSearchValue,
+  search,
 }) => {
   const debouncedSearchTerm = useDebounce(searchValue, 300);
   const popupRef = useRef(null);
@@ -51,15 +52,22 @@ const Select = ({
       </div>
       <div className="dropdown-menu" ref={popupRef} role="menu">
         <div className="dropdown-content">
-          <div className="dropdown-item">
-            <input
-              className="input has-background-white is-size-6 px-15 py-10"
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchValue}
-              onChange={(e) => onChangeSearchValue(e.target.value)}
-            />
-          </div>
+          {
+            search && (
+              <>
+                <div className="dropdown-item">
+                  <input
+                    className="input has-background-white is-size-6 px-15 py-10"
+                    type="text"
+                    placeholder={searchPlaceholder}
+                    value={searchValue}
+                    onChange={(e) => onChangeSearchValue(e.target.value)}
+                  />
+                </div>
+                <hr className="dropdown-divider" />
+              </>
+            )
+          }
           <hr className="dropdown-divider" />
           {
             suggestOptions.map((option, index) => (
@@ -91,9 +99,18 @@ Select.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
-  searchPlaceholder: PropTypes.string.isRequired,
-  searchValue: PropTypes.string.isRequired,
-  onChangeSearchValue: PropTypes.func.isRequired,
+  searchPlaceholder: PropTypes.string,
+  searchValue: PropTypes.string,
+  onChangeSearchValue: PropTypes.func,
+  search: PropTypes.bool,
 };
+
+Select.defaultProps = {
+  search: true,
+  searchValue: '',
+  searchPlaceholder: '',
+  onChangeSearchValue: () => {},
+};
+
 
 export default Select;
