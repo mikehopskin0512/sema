@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { isExtensionInstalled } from '../../utils/extension';
+import styles from "./onboarding.module.scss";
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
@@ -67,7 +69,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
 
   return (
     <>
-      <div className="mt-90 p-20">
+      <div className={clsx("mt-90 p-60 is-relative", styles['extension-modal'])}>
         <p className="title is-4 has-text-centered">Install the Sema Extension</p>
         <p className="subtitle is-5 has-text-centered">It's easy</p>
         <p className="subtitle is-6 has-text-centered px-250">The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.</p>
@@ -76,7 +78,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
           page !== 1 && (
             <button
               type="button"
-              className="button is-primary my-20 is-outlined"
+              className={clsx("button is-primary my-20 is-outlined", styles.prev)}
               onClick={previousPage}
             >
               <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
@@ -85,7 +87,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
         }
         <button
           type="submit"
-          className="button is-primary my-20 is-pulled-right"
+          className={clsx("button is-primary my-20", styles.next)}
           // onClick={nextPage}
           disabled={!isPluginInstalled}
         >
@@ -93,7 +95,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
         </button>
         <button
           type="button"
-          className="button is-text has-text-primary my-20 is-pulled-right"
+          className={clsx("button is-text has-text-primary my-20", styles.skip)}
           onClick={async () => {
             await onSubmit();
             closeModal();
