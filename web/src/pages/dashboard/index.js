@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { remove } from 'lodash';
 import withLayout from '../../components/layout';
 import RepoList from '../../components/repos/repoList';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import { repositoriesOperations } from '../../state/features/repositories';
 import EmptyRepo from '../../components/repos/emptyRepo';
 
@@ -65,6 +66,7 @@ const Dashboard = () => {
 
   return (
     <div className="has-background-gray-9 ">
+      <Helmet {...DashboardHelmet} />
       {
         repos.favorites.length === 0 && repos.other.length === 0 ? (
           <EmptyRepo />

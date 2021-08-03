@@ -37,6 +37,37 @@ export const getAllTagIds = async () => {
   }
 };
 
+export const findTagsByType = async () => {
+  try {
+    const tags = await Tag.find({
+      "type": {
+        $in: ["language", "guide", "custom"],
+      }
+    }).exec();
+    return tags;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findTags = async (tagsArr) => {
+  try {
+    const tags = await Tag.find({
+      "_id": {
+        $in: tagsArr,
+      }
+    }).exec();
+    return tags;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+
 export const buildTagsEmptyObject = async () => {
   try {
     const schema = {};
@@ -61,4 +92,15 @@ export  const incrementTags = (tagsObject = {}, tagsArray) => {
   }
   const aggregatedTags = _.mergeWith({}, tagsObject, tagsObject2, _.add);
   return aggregatedTags;
+};
+
+export const create = async (tags) => {
+  try {
+    const response = await Tag.insertMany(tags);
+    return response;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
 };
