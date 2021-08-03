@@ -70,9 +70,9 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
   return (
     <>
       <div className={clsx("mt-90 p-60 is-relative", styles['extension-modal'])}>
-        <p className="title is-4 has-text-centered">Install the Sema Extension</p>
-        <p className="subtitle is-5 has-text-centered">It's easy</p>
-        <p className="subtitle is-6 has-text-centered px-250">The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.</p>
+        <p className="title is-4 has-text-centered">Install the Sema Chrome Extension</p>
+        <p className="subtitle is-5 has-text-centered">It&apos;s easy</p>
+        <p className="subtitle is-6 has-text-centered px-250">The Sema Chrome Extension makes Smart Comments possible! please install it next.</p>
         {renderExtensionState()}
         {
           page !== 1 && (
