@@ -84,12 +84,16 @@ $positions:
   }
 }
 
-$radius: "0", "2px", "4px", "8px", "14px", "16px", "24px";
+$radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px";
 
 @each $i in $radius{
   .border-radius-#{$i} {
     border-radius: #{$i} !important;
   }
+}
+
+.has-no-border {
+  border: none;
 }
 
 // remove after bulma update

@@ -1,0 +1,13 @@
+.tag {
+  background: #d7ebf1 !important;
+}
+
+.document {
+  max-width: 500px;
+}
+
+.body {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

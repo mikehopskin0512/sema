@@ -1,17 +1,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import styles from './collectionCard.module.scss';
+import styles from './card.module.scss';
 
 import { authOperations } from '../../../state/features/auth';
 
 const { setCollectionIsActive } = authOperations;
 
-const CollectionCard = ({ isActive, collectionData }) => {
+const Card = ({ isActive, collectionData }) => {
+  const router = useRouter();
   const { token } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
+
+  const { asPath } = router;
 
   const [active, setActive] = useState(isActive ? 'checked' : false);
   const { _id, name, description, comments = [] } = collectionData;
@@ -33,7 +37,12 @@ const CollectionCard = ({ isActive, collectionData }) => {
   // TODO: Favorited
 
   const clickOnCard = () => {
-    window.location = `/collections/${_id}`;
+    if (asPath === '/collections') {
+      window.location = `/collections/${_id}`;
+    }
+    if (asPath === '/engineering') {
+      window.location = `/engineering/${_id}`;
+    }
   };
 
   const onClickChild = (e) => {
@@ -44,11 +53,13 @@ const CollectionCard = ({ isActive, collectionData }) => {
     <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={clickOnCard} aria-hidden="true">
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
-          <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>
-          <div className="field" onClick={onClickChild} aria-hidden>
-            <input id={`activeSwitch-${_id}`} type="checkbox" onClick={onChangeToggle} name={`activeSwitch-${_id}`} className="switch is-rounded" checked={active} />
-            <label htmlFor={`activeSwitch-${_id}`} />
-          </div>
+          <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
+          { asPath === '/collections' && (
+            <div className="field" onClick={onClickChild} aria-hidden>
+              <input id={`activeSwitch-${_id}`} type="checkbox" onClick={onChangeToggle} name={`activeSwitch-${_id}`} className="switch is-rounded" checked={active} />
+              <label htmlFor={`activeSwitch-${_id}`} />
+            </div>
+          ) }
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>
@@ -66,9 +77,9 @@ const CollectionCard = ({ isActive, collectionData }) => {
   );
 };
 
-CollectionCard.propTypes = {
+Card.propTypes = {
   isActive: PropTypes.bool.isRequired,
   collectionData: PropTypes.object.isRequired,
 };
 
-export default CollectionCard;
+export default Card;

@@ -1,5 +1,8 @@
 import { getSuggestComments, postSuggestComment } from './api';
 import * as types from './types';
+import { alertOperations } from '../alerts';
+
+const { triggerAlert } = alertOperations;
 
 const requestFetchSuggestComments = () => ({
   type: types.REQUEST_FETCH_SUGGEST_COMMENTS,
@@ -49,12 +52,13 @@ export const createSuggestComment = (body, token) => async (dispatch) => {
   try {
     dispatch(requestCreateSuggestComment());
     const { data: { suggestedComment } } = await postSuggestComment(body, token);
+    dispatch(triggerAlert('Suggested comment has been added', 'success'));
     dispatch(requestCreateSuggestCommentSuccess(suggestedComment));
     return suggestedComment;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-
+    dispatch(triggerAlert('Error saving suggested comment', 'error'));
     dispatch(requestCreateSuggestCommentError(errMessage));
     return error;
   }

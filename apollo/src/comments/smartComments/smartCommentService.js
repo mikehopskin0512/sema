@@ -1,11 +1,19 @@
-import { format, subMonths, subWeeks } from 'date-fns';
+import {
+  subMonths, subWeeks, subDays, isAfter, format,
+} from 'date-fns';
+import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
+import { uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
+
 import { fullName } from '../../shared/utils';
+
+const { Types: { ObjectId } } = mongoose;
+const { Parser } = Json2CSV;
 
 export const create = async ({
   commentId = null,
@@ -41,8 +49,7 @@ export const getSmartComments = async ({ repo }) => {
   try {
     const query = SmartComment.find();
     query.where('githubMetadata.repo_id', repo);
-    query.populate('userId', 'firstName lastName avatarUrl');
-    const smartComments = await query.lean().exec();
+    const smartComments = await query.lean().populate('userId', 'firstName lastName avatarUrl').exec();
     return smartComments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -62,12 +69,14 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
       filter = Object.assign(filter, { "githubMetadata.requester": author });
     }
     if (repoId) {
-      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId });
+      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
     }
 
-    const query = await SmartComment.find(filter);
-    query.populate('userId', 'firstName lastName avatarUrl');
-    const smartComments = await query.lean().exec();
+    const query = SmartComment.find(filter);
+    const smartComments = await query.lean()
+      .populate('userId', 'firstName lastName avatarUrl')
+      .populate('tags')
+      .exec();
 
     return smartComments;
   } catch (err) {
@@ -105,7 +114,7 @@ export const update = async (
   smartComment,
 ) => {
   try {
-    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment)
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment);
     return updatedSmartComment;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -269,7 +278,6 @@ export const exportSowMetrics = async (params) => {
     } : {},
   }));
 
-  const { Parser } = Json2CSV;
   const fields = [
     groupLabel,
     ...category === 'user' ? ['Email'] : [],
@@ -331,15 +339,96 @@ export const getUserActivityChangeMetrics = async () => {
 
 export const exportUserActivityChangeMetrics = async () => {
   const userActivities = await getUserActivityChangeMetrics();
-  const mappedData = userActivities.map((item, index) => ({
-    'User ID': item._id,
-    'Email': item.user.username,
+  const mappedData = userActivities.map((item) => ({
+    User: fullName(item.user),
+    Email: item.user.username,
     'Activity 2 weeks ago': item.activityTwoWeeksAgo,
     'Activity 1 week ago': item.activityOneWeekAgo,
   }));
 
-  const { Parser } = Json2CSV;
-  const fields = ['User ID', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
+  const fields = ['User', 'Email', 'Activity 2 weeks ago', 'Activity 1 week ago'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+
+  return csv;
+};
+
+export const getGrowthRepositoryMetrics = async () => {
+  const metrics = [];
+
+  await Promise.all(Array(10).fill(0).map(async (_, index) => {
+    const date = subDays(new Date(), index);
+    const groupQuery = [{
+      $group: {
+        _id: '$userId',
+        repos: { $push: '$githubMetadata.repo' },
+      },
+    }];
+
+    const oneDayRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subDays(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
+
+    const oneWeekRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subWeeks(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
+
+    const oneMonthRepos = await SmartComment.aggregate([
+      {
+        $match: {
+          $and: [
+            { createdAt: { $gt: subMonths(date, 1) } },
+            { createdAt: { $lte: date } },
+          ],
+        },
+      },
+      ...groupQuery,
+    ]);
+
+    const totalDayRepos = oneDayRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+    const totalWeekRepos = oneWeekRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+    const totalMonthRepos = oneMonthRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
+
+    metrics.push({
+      date,
+      oneDayRepos: oneDayRepos.length ? (totalDayRepos / oneDayRepos.length).toFixed(2) : 0,
+      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / oneWeekRepos.length).toFixed(2) : 0,
+      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / oneMonthRepos.length).toFixed(2) : 0,
+    });
+  }));
+
+  metrics.sort((a, b) => (isAfter(a.date, b.date) ? -1 : 1));
+  return metrics;
+};
+
+export const exportGrowthRepositoryMetrics = async () => {
+  const metrics = await getGrowthRepositoryMetrics();
+
+  const mappedData = metrics.map((item) => ({
+    Date: format(new Date(item.date), 'yyyy-MM-dd'),
+    'Day 1': item.oneDayRepos,
+    'Day 7': item.oneWeekRepos,
+    'Day 30': item.oneMonthRepos,
+  }));
+
+  const fields = ['Date', 'Day 1', 'Day 7', 'Day 30'];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
@@ -414,4 +503,37 @@ export const exportSuggestedMetrics = async ({ search }) => {
   const csv = json2csvParser.parse(mappedData);
 
   return csv;
+};
+
+export const getSmartCommentsByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getPullRequestsByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.url' ).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getSmartCommentersByExternalId = async (externalId) => {
+  try {
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
+    return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
 };

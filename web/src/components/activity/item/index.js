@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
-import { EMOJIS, TAGS } from './constants';
+import { EMOJIS } from './constants';
 import styles from './item.module.scss';
 
 const ActivityItem = (props) => {
@@ -57,8 +57,8 @@ const ActivityItem = (props) => {
             <>
               <div className="is-divider-vertical" />
               <div className="is-flex is-flex-wrap-wrap">
-                {tags.map((_id) => (
-                  <span className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{find(TAGS, { _id }).label}</span>
+                {tags.map(({ label }) => (
+                  <span key={`tag-${label}`} className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{label}</span>
                 ))}
               </div>
             </>

@@ -19,12 +19,15 @@ const NivoBarChart = ({ data = [] }) => {
           }
           return acc + item[val];
         }, 0);
-        return keys.reduce((acc, curr) => {
-          if (curr === 'date') {
-            return acc[curr] = item[curr], acc;
-          }
-          return acc[curr] = round((item[curr] * 100) / total, 2), acc;
-        }, {});
+        if (total > 0) {
+          return keys.reduce((acc, curr) => {
+            if (curr === 'date') {
+              return acc[curr] = item[curr], acc;
+            }
+            return acc[curr] = round((item[curr] * 100) / total, 2), acc;
+          }, {});
+        }
+        return {};
       });
     }
     return [];

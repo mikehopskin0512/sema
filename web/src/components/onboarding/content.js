@@ -1,8 +1,8 @@
 export const content = [
   {
-    title: 'Smart Comments',
+    title: 'Smart Reactions',
     subtitle: 'Provide more actionable feedback with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.',
-    img: '/img/reactions.png',
+    img: '/img/onboarding-reactions.png',
   },
   {
     title: 'Smart Tags',

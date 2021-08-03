@@ -7,7 +7,7 @@ import { commentCollection } from './content';
 const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handleCommentFields, setComment }) => {
   return (
     <>
-      <div className="m-20">
+      <div className="m-20 p-20">
         <p className="title is-4">Create your first custom suggested comment</p>
         <p className="subtitle is-6">Have a code review comment you frequently reuse? Add it here and it will be ready for your next review. <strong>Fill out at least one of these fields and we'll do the rest.</strong></p>
         <div className="mb-50">

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,52 +7,61 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import styles from './repoCard.module.scss';
 import { RepoType } from '../repoList/types';
+import { repositoriesOperations } from '../../../state/features/repositories';
+
+const { fetchRepositoryOverview } = repositoriesOperations;
 
 const statLabels = {
   codeReview: 'Smart Code Reviews',
-  comments: 'Smart Comments',
-  commenters: 'Smart Commenters',
+  smartComments: 'Smart Comments',
+  smartCommenters: 'Smart Commenters',
   semaUsers: 'Sema User',
 };
 
 const descriptionMaxLength = 170;
 
 // WILL DELETE TEST DATA WHEN API IS COMPLETED
-const users = [
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/men/34.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/women/29.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-  },
-  {
-    imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-  },
-];
-
-const stats = {
-  codeReview: 4,
-  comments: 29,
-  commenters: 3,
-  semaUsers: 3,
-};
+// const users = [
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/men/34.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/women/29.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
+// },
+// {
+//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
+// },
+// ];
 
 const RepoCard = (props) => {
   const {
-    name, description, isFavorite, _id,
+    name, description, isFavorite, externalId,
   } = props;
+
+  const dispatch = useDispatch();
+  const { auth, repositories } = useSelector(
+    (state) => ({
+      alerts: state.alertsState,
+      auth: state.authState,
+      repositories: state.repositoriesState,
+    }),
+  );
+  const { token } = auth;
+
+  const [stats, setStats] = useState({});
+  const [users] = useState([]);
 
   const truncateText = (text) => {
     if (isEmpty(text)) {
@@ -66,7 +76,7 @@ const RepoCard = (props) => {
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
-    window.location = `/stats/${_id}`;
+    window.location = `/activity/${externalId}`;
   };
 
   const renderStats = (label, value) => (
@@ -79,22 +89,34 @@ const RepoCard = (props) => {
   );
 
   const renderUsers = () => (
-    <div className="is-flex">
-      {(users.length > 4 ? users.slice(0, 3) : users.slice(0, 4)).map((item) => (
-        <figure className="image is-32x32 ml-neg8">
-          <img src={item.imgUrl} alt="user" className={clsx('is-rounded', styles.avatar)} />
-        </figure>
-      ))}
-      {users.length > 4 && (
-        <div className={clsx(
-          'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
-          styles['user-count'],
-        )}>
-          <p className="is-size-8 has-text-weight-semibold">+{users.length - 3}</p>
+    users.length ? (
+      <>
+        <div className="is-flex">
+          {(users.length > 4 ? users.slice(0, 3) : users.slice(0, 4)).map((item) => (
+            <figure className="image is-32x32 ml-neg8">
+              <img src={item.imgUrl} alt="user" className={clsx('is-rounded', styles.avatar)} />
+            </figure>
+          ))}
+          {users.length > 4 && (
+            <div className={clsx(
+              'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
+              styles['user-count'],
+            )}>
+              <p className="is-size-8 has-text-weight-semibold">+{users.length - 3}</p>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </>
+    ) : ""
   );
+
+  useEffect(() => {
+    dispatch(fetchRepositoryOverview(externalId, token));
+  }, []);
+
+  useEffect(() => {
+    setStats(repositories?.data?.overview);
+  }, [repositories]);
 
   return (
     <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={onClickRepo} aria-hidden>
@@ -109,9 +131,9 @@ const RepoCard = (props) => {
             {renderUsers()}
           </div>
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
-            {Object.keys(stats).map((item) => (
+            {Object.keys(statLabels).map((item) => (
               <div className={clsx('my-12 is-flex', styles.stat)}>
-                {renderStats(statLabels[item], stats[item])}
+                {renderStats(statLabels[item], stats?.[item])}
               </div>
             ))}
           </div>
