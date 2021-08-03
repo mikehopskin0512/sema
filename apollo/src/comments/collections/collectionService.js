@@ -1,9 +1,12 @@
-import { flatten } from 'lodash';
+import mongoose from 'mongoose';
+import { find, flatten } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import User from '../../users/userModel';
 import { findById as findUserById, update as updateUser } from '../../users/userService';
+
+const { Types: { ObjectId } } = mongoose;
 
 export const create = async ({
   name,
@@ -99,6 +102,21 @@ export const update = async (collection) => {
       { _id: new ObjectId(_id) },
       { $set: collection },
       { new: true },
+    );
+    const updatedCollection = await query.lean().exec();
+    return updatedCollection;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const pushCollectionComment = async (collectionId, suggestedCommentId) => {
+  try {
+    const query = Collection.findOneAndUpdate(
+      { _id: new ObjectId(collectionId) },
+      { $push: { comments: ObjectId(suggestedCommentId) }}
     );
     const updatedCollection = await query.lean().exec();
     return updatedCollection;

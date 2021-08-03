@@ -84,7 +84,7 @@ export default (app) => {
         // Update user with identity
         await updateIdentity(user, identity);
 
-        await updateUserRepositoryList(user, repositories, identity);
+        // await updateUserRepositoryList(user, repositories, identity);
 
         const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
 

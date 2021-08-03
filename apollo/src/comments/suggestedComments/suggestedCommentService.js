@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
+import { create as createTags, findTags } from '../tags/tagService';
 import User from '../../users/userModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
@@ -195,11 +196,28 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
 
 export const create = async (suggestedComment) => {
   try {
-    const { title, comment, source } = suggestedComment;
-     const newSuggestedComment = new SuggestedComment({
+    const { title, comment, source, tags } = suggestedComment;
+    let suggestedCommentTags = [];
+    if (tags) {
+      const { existingTags, newTags } = tags;
+      let savedTags = []
+      if (newTags.length > 0) {
+        savedTags = await createTags(newTags);
+      }
+      const existingTagsArr = await findTags(existingTags.map(id => ObjectId(id)));
+      const savedTagObjects = [...existingTagsArr, ...savedTags].map((item) => {
+      return{
+        label: item.label,
+        type: item.type,
+        tag: ObjectId(item._id)
+      }});
+      suggestedCommentTags = savedTagObjects;
+    }
+    const newSuggestedComment = new SuggestedComment({
       title,
       comment,
-      source
+      source,
+      tags: suggestedCommentTags,
     })
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
