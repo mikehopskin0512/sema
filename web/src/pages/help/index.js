@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { chunk } from 'lodash';
 import { articles } from '../../data/help';
 import styles from './help.module.scss';
-import ContactUs from '../../components/contactUs';
 import withLayout from '../../components/layout';
-import SupportForm from '../../components/supportForm';
 
 const FAQLink = 'https://semasoftware.com/faq';
 
 const HelpAndSupport = () => {
-  const [supportForm, setSupportForm] = useState(false);
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
-
   const renderArticle = ({
     author, id, title, date, mins, link,
   }) => (
@@ -42,7 +35,6 @@ const HelpAndSupport = () => {
 
   return (
     <div>
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="my-50 has-text-centered">
         <p className="has-text-weight-semibold has-text-black is-size-2 is-size-4-mobile px-20">Help and Support</p>
       </div>
@@ -79,7 +71,6 @@ const HelpAndSupport = () => {
           </div>
         </div>
       </div>
-      <ContactUs openSupportForm={openSupportForm} />
     </div>
   );
 };

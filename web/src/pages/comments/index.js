@@ -4,9 +4,7 @@ import { findIndex, flatten, isEmpty, uniqBy } from 'lodash';
 import CommentFilter from '../../components/comment/commentFilter';
 import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import SuggestedCommentCard from '../../components/comment/suggestedCommentCard';
-import ContactUs from '../../components/contactUs';
 import withLayout from '../../components/layout';
-import SupportForm from '../../components/supportForm';
 import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
 
 import { commentsOperations } from '../../state/features/comments';
@@ -21,21 +19,17 @@ const SuggestedComments = () => {
     auth: state.authState,
     commentsState: state.commentsState,
   }));
-  const { token, userVoiceToken } = auth;
+  const { token } = auth;
   const { comments = [] } = commentsState;
 
   useEffect(() => {
     dispatch(getUserSuggestedComments(token));
   }, [dispatch, token]);
 
-  const [supportForm, setSupportForm] = useState(false);
   const [page, setPage] = useState(1);
   const [commentsFiltered, setCommentsFiltered] = useState(comments);
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   useEffect(() => {
     setCommentsFiltered(comments);
@@ -83,7 +77,6 @@ const SuggestedComments = () => {
   return (
     <div className="has-background-gray-9 hero">
       <Helmet {...SuggestedCommentsHelmet} />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="hero-body">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4">
@@ -106,7 +99,6 @@ const SuggestedComments = () => {
           </div>
         ) }
       </div>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
     </div>
   );
 };

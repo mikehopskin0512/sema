@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { find } from "lodash";
 import { useRouter } from 'next/router';
 import clsx from "clsx";
-import ContactUs from '../../contactUs';
 import Sidebar from "../../sidebar";
-import SupportForm from "../../supportForm";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
 import { repositoriesOperations } from "../../../state/features/repositories";
@@ -24,11 +22,7 @@ const RepoPageLayout = ({ children }) => {
   const { query: { repoId }, pathName } = router;
   const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
-  const [supportForm, setSupportForm] = useState(false);
   const [stats, setStats] = useState({});
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -80,7 +74,6 @@ const RepoPageLayout = ({ children }) => {
 
   return (
     <div className="has-background-white">
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className={clsx("mt-10", styles['repo-select-container'])}>
         <Select 
           onChange={onChangeSelect}
@@ -114,7 +107,6 @@ const RepoPageLayout = ({ children }) => {
           </div>
       </div>
       <Sidebar>{children}</Sidebar>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>
     </div>
   );
 };
