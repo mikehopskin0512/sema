@@ -19,15 +19,15 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
 
   return (
     <>
-      <div className="columns m-0" style={{}}>
-        <div className="column is-6 p-20 px-40">
+      <div className="columns m-0 is-full-height" style={{}}>
+        <div className="column is-6 p-20 px-40 is-relative">
           <p className={clsx('mt-250 mb-20 title', styles.title)}>{title}</p>
           <p className={clsx('mt-20 mb-200 subtitle', styles.subtitle)}>{subtitle}</p>
           {
             page !== 1 && (
               <button
                 type="button"
-                className="button is-primary my-20 is-outlined"
+                className={clsx("button is-primary my-20 is-outlined", styles.prev)}
                 onClick={previousPage}
               >
                 <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
@@ -36,7 +36,7 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
           }
           <button
             type="button"
-            className="button is-primary my-20 is-pulled-right"
+            className={clsx("button is-primary my-20", styles.next)}
             onClick={nextPage}
           >
             Next

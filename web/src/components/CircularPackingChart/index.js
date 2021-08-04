@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { find } from 'lodash';
+import { find, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { TAGS } from '../../utils/constants';
 
@@ -12,9 +12,10 @@ const CircularPacking = ({ data }) => {
       children = keys.map((_id) => {
         const tag = find(TAGS, { _id });
         return {
+          isPositive: tag.isPositive,
           name: tag.label,
           id: _id,
-          color: tag.isPositive ? '#A4E799' : '#E79999',
+          color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
           value: rawData[_id].total,
         };
       });
@@ -27,9 +28,11 @@ const CircularPacking = ({ data }) => {
     return chartData;
   };
 
-  // TODO: Tooltip - needs data for the line chart
-  // Y - # of Reactions
-  // X - Date
+  const renderTooltip = ({ percentage }) => (
+    <div className="box has-background-white px-20 py-5 border-radius-4px">
+      <p className="has-text-weight-semibold">{round(percentage)}%</p>
+    </div>
+  );
 
   return (
     <>
@@ -39,20 +42,15 @@ const CircularPacking = ({ data }) => {
         id="name"
         value="value"
         colors={(item) => item.data.color}
-        childColor={{ from: 'color', modifiers: [['brighter', 0.4]] }}
         padding={4}
         enableLabels
         leavesOnly
         labelsSkipRadius={10}
-        labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+        labelTextColor={{ from: 'color', modifiers: [['darker', 5]] }}
         borderWidth={1}
-        borderColor={{ from: 'color', modifiers: [['darker', 0.5]] }}
+        borderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
         fill={[{ match: { depth: 1 }, id: 'lines' }]}
-        // tooltip={({ id, value, color }) => (
-        //   <strong style={{ color }}>
-        //     {id}: {value}
-        //   </strong>
-        // )}
+        tooltip={renderTooltip}
       />
     </>
   );
