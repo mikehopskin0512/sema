@@ -20,8 +20,8 @@ const EmptyRepo = () => {
       <div className="hero-body px-50">
         <div className="tile is-ancestor">
           <div className="is-parent is-full-width">
-            <div className="tile is-child box pt-70 has-text-centered">
-              <h1 className="has-text-weight-semibold is-size-3">{title1}</h1>
+            <div className="tile is-child py-30 box has-text-centered">
+              <h1 className="has-text-weight-semibold is-size-3 mt-15">{title1}</h1>
               <h2 className={clsx('is-size-5 pb-20', styles.subtitle)}>{subtitle1}</h2>
               <div className="columns">
                 {
