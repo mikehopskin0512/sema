@@ -1,4 +1,4 @@
-export const SEMA_URL = process.env;
+export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
 export const { SEMA_COOKIE_DOMAIN } = process.env;
