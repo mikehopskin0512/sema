@@ -10,7 +10,7 @@ import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
-import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from "./constants";
+import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from './constants';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -301,7 +301,7 @@ class Mirror {
 
   _updateHighlights() {
     if (!IS_HIGHLIGHTS_ACTIVE) {
-      return
+      return;
     }
     const value = this._mirrorContent.textContent;
     const alerts = this._getTokenAlerts(value);

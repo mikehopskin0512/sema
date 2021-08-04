@@ -78,12 +78,11 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     </button>
   );
 
-  const getAllCommentsUI = () => {
-    return searchResults.map((searchResult, i) => {
-      const {
-        comment, sourceName, title, id, engGuides
-      } = searchResult;
-      const isCopied = copiedId === id;
+  const getAllCommentsUI = () => searchResults.map((searchResult) => {
+    const {
+      comment, sourceName, title, id, engGuides,
+    } = searchResult;
+    const isCopied = copiedId === id;
 
     return (
       <div key={id} className="sema-mb-5">

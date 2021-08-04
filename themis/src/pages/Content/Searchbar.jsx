@@ -48,11 +48,11 @@ const SearchBar = (props) => {
 
   const onInsertPressed = (id, suggestion, engGuides) => {
     const engGuideLinks = engGuides?.map(({ engGuide }) => {
-      const {name, url} = engGuide.source
-      return `\n\n📄 [${name}](${url})`
-    }).join(' ')
+      const { name, url } = engGuide.source;
+      return `\n\n📄 [${name}](${url})`;
+    }).join(' ');
+    const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
-    let value = props.commentBox.value ? props.commentBox.value+'\n' : '';
     props.commentBox.value = `${value}${suggestion}${engGuideLinks}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
