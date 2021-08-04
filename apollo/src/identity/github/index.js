@@ -80,7 +80,7 @@ export default (app) => {
       const user = await findByUsernameOrIdentity(email, identity);
       if (user) {
         const { isWaitlist = true } = user;
-
+        identity.repositories = user.identities[0].repositories;
         // Update user with identity
         await updateIdentity(user, identity);
 
