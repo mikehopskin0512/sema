@@ -18,22 +18,22 @@ Previous approaches that didn't show good results:
 */
 
 data.map((comment) => {
-  comment.lowerTitle = comment.title.toLowerCase().trim();
+  comment.lowerText = comment.title.toLowerCase().trim();
 });
 
 let allNgramsDupes = [];
 
-function splitByStopWord(text, stopwords) {
+function splitByRegex(text, splitRegexes) {
   // take a string, try to split by stopword
   // if split found, recurse down into each part to see if we can split further with the rest of the stop words
   // if we can't split the string, then we return it
   let returnTerms = [];
   let splitFound = false;
-  for (let i = 0; i < stopwords.length && !splitFound; i += 1) {
-    const splitText = text.split(`${stopwords[i]}`);
+  for (let i = 0; i < splitRegexes.length && !splitFound; i += 1) {
+    const splitText = text.split(splitRegexes[i]);
     if (splitText.length > 1) {
       splitText.forEach((term) => {
-        returnTerms = returnTerms.concat(splitByStopWord(term, stopwords.slice(i)));
+        returnTerms = returnTerms.concat(splitByRegex(term, splitRegexes.slice(i)));
       });
       splitFound = true;
     }
@@ -47,27 +47,35 @@ function splitByStopWord(text, stopwords) {
 data.forEach((comment) => {
   // lets try splitting titles by stopwords
   const stopwordsWithSpaces = sw.en.map(s => ' '+s+' ');
-  comment.ngrams = splitByStopWord(comment.lowerTitle.trim(), stopwordsWithSpaces.concat([
+  comment.ngrams = splitByRegex(comment.lowerText, stopwordsWithSpaces.concat([
     ':',
     '-',
     '(',
     ')',
+    '[',
+    ']',
     '/',
     ',',
-    '(^|\s)\'(^|\s)', // this splits things like don't
+    '(^|\ +)\'($|\s)', // this splits things like don't
     '.',
     '+',
     '=',
     '>',
     '<',
-    '(^|\s)are(^|\s)',
-    '(^|\s)your(^|\s)',
-    '(^|\s)you(^|\s)',
-    '(^|\s)their(^|\s)',
-    '(^|\s)the(^|\s)',
-    '(^|\s)him(^|\s)',
-    '(^|\s)a(^|\s)',
-    '(^|\s)is(^|\s)']));
+    /(^|\ +)are($|\ +)/,
+    /(^|\ +)your($|\ +)/,
+    /(^|\ +)you($|\ +)/,
+    /(^|\ +)their($|\ +)/,
+    /(^|\ +)this($|\ +)/,
+    /(^|\ +)the($|\ +)/,
+    /(^|\ +)him($|\ +)/,
+    new RegExp('(^|\ +)a($|\ +)', 'g'),
+//    'a ',
+    /(^|\ +)an($|\ +)/,
+    /(^|\ +)to($|\ +)/,
+    /(^|\ +)as($|\ +)/,
+    /(^|\ +)at($|\ +)/,
+    /(^|\ +)is($|\ +)/]));
   allNgramsDupes = allNgramsDupes.concat(comment.ngrams.slice());
 });
 const allNgrams = [...new Set(allNgramsDupes)];
@@ -76,7 +84,7 @@ const allNgrams = [...new Set(allNgramsDupes)];
 const ngramCounts = {};
 allNgrams.forEach((anNgram) => {
   data.forEach((comment) => {
-    if (comment.lowerTitle.includes(anNgram)) {
+    if (comment.lowerText.includes(anNgram)) {
       ngramCounts[anNgram] = (ngramCounts[anNgram] || 0) + 1;
     }
   });
@@ -117,7 +125,7 @@ data.forEach((comment) => {
     }
   });
   highlightTerms.push(foundNgram.ngram.trim().replace(/^'|'$/g, '').trim());
-  // console.log(comment.lowerTitle + '\n   '+foundNgram['ngram']+' '+foundNgram.ngramCount);
+  // console.log(comment.lowerText + '\n   '+foundNgram['ngram']+' '+foundNgram.ngramCount);
 });
 
 process.stdout.write('const phrases = ');
