@@ -1091,6 +1091,6 @@ const phrases = [
   'wisdom, not',
   'wrap multiple line expressions',
   'you need them',
-  'your lets'
-]
+  'your lets',
+];
 export default phrases;

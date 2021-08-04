@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -6,7 +7,7 @@ import $ from 'cash-dom';
 import { debounce, isEqual } from 'lodash';
 
 import ElementMeasurement from './ElementMeasurement';
-import GlobalSearchBar from './GlobalSearchbar.jsx';
+import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
 import { EMOJIS } from './constants';
@@ -32,10 +33,12 @@ class Mirror {
   constructor(textAreaElement, getTokenAlerts, options) {
     const id = $(textAreaElement).attr('id');
     if (!id) {
+      // eslint-disable-next-line no-console
       console.error('Element doesnot have any ID attribute');
       return;
     }
     if (typeof getTokenAlerts !== 'function') {
+      // eslint-disable-next-line no-console
       console.error('valid getTokenAlerts function not provided');
       return;
     }
@@ -53,7 +56,7 @@ class Mirror {
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
-      UPDATE_HIGHLIGHT_INTERVAL_MS
+      UPDATE_HIGHLIGHT_INTERVAL_MS,
     );
 
     // making sure to have raw DOM element
@@ -118,6 +121,7 @@ class Mirror {
       this._searchRoot.style.zIndex = 2147483647;
       // Render global searchbar
       ReactDOM.render(
+        // eslint-disable-next-line react/jsx-filename-extension
         <Provider store={this._store}>
           <GlobalSearchBar
             mirror={this}
@@ -125,7 +129,7 @@ class Mirror {
             activeElementId={$(this._elementToMimic).attr('id')}
           />
         </Provider>,
-        this._searchRoot
+        this._searchRoot,
       );
 
       this._mirror = document.createElement('div');
@@ -169,7 +173,7 @@ class Mirror {
     this._highlighterContainer.style.height = scrollYHeight;
     this._highlighterContainer.style.width = width;
 
-    const scrollTop = this._elementToMimic.scrollTop;
+    const { scrollTop } = this._elementToMimic;
     this._mirror.scrollTop = scrollTop;
     this._highlighterContainer.style.top = `-${scrollTop}px`;
   }
@@ -186,7 +190,7 @@ class Mirror {
 
     if (window.ResizeObserver) {
       this._elementToMimicResizeObserver = new window.ResizeObserver(
-        this._render
+        this._render,
       );
       this._elementToMimicResizeObserver.observe(this._elementToMimic);
     }
@@ -198,8 +202,7 @@ class Mirror {
 
   _onTextPaste() {
     const state = this._store.getState();
-    const isReactionDirty =
-      state.semabars[this._semaBarContainerId].isReactionDirty;
+    const { isReactionDirty } = state.semabars[this._semaBarContainerId];
     if (isReactionDirty) {
       return;
     }
@@ -210,12 +213,12 @@ class Mirror {
         id: this._semaBarContainerId,
         selectedReaction,
         isReactionDirty: true,
-      })
+      }),
     );
   }
 
   _onInput() {
-    const value = this._elementToMimic.value;
+    const { value } = this._elementToMimic;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
   }
@@ -229,21 +232,25 @@ class Mirror {
       case 'mouseup':
         this._isMouseDown = false;
         break;
+      default:
+        this._isMouseDown = false;
     }
   }
 
   _getHighlightByPosition(offsetX, offsetY) {
     const { scrollTop } = this._elementToMimic;
     return this._highlights.find((highlight) => {
-      const { top, left, width, height } = highlight;
+      const {
+        top, left, width, height,
+      } = highlight;
 
       const actualY = offsetY + scrollTop;
 
       return (
-        offsetX >= left &&
-        offsetX <= left + width &&
-        actualY >= top &&
-        actualY <= top + height
+        offsetX >= left
+        && offsetX <= left + width
+        && actualY >= top
+        && actualY <= top + height
       );
     });
   }
@@ -261,7 +268,9 @@ class Mirror {
       const highlight = this._getHighlightByPosition(offsetX, offsetY);
 
       if (highlight) {
-        const { top, left, height, id } = highlight;
+        const {
+          top, left, height, id,
+        } = highlight;
         const store = this._store.getState();
         const isModalOpen = store.globalSemaSearch.isOpen;
         if (!isModalOpen && this._currentShownHighlight) {
@@ -273,7 +282,7 @@ class Mirror {
             data: this._ranges[id].token,
             position: {
               top: top + height - scrollTop,
-              left: left,
+              left,
             },
           });
         }
@@ -284,7 +293,7 @@ class Mirror {
   }
 
   // TODO: do things to make re-render of highlights faster onchange
-  _onScroll(event) {
+  _onScroll() {
     this._render();
   }
 
@@ -309,9 +318,14 @@ class Mirror {
       this._ranges[alert.id] = range;
       this._ranges[alert.id].token = alert.token;
 
-      const { top, left, height, width } = range.getClientRects()[0];
+      const {
+        top, left, height, width,
+      } = range.getClientRects()[0];
 
-      // The amount of scrolling that has been done of the viewport area (or any other scrollable element) is taken into account when computing the rectangles.
+      /**
+       * The amount of scrolling that has been done of the viewport area
+       * (or any other scrollable element) is taken into account when computing the rectangles.
+       */
       const disregardScrollTop = top + scrolled;
 
       const {
@@ -336,7 +350,9 @@ class Mirror {
   }
 
   _createHighlights(highlight) {
-    const { top, left, width, height } = highlight;
+    const {
+      top, left, width, height,
+    } = highlight;
 
     const highlighterContent = document.createElement('div');
     highlighterContent.className = HIGHLIGHTER_CONTENT;
@@ -360,10 +376,15 @@ class Mirror {
     $(this._elementToMimic).off('mousemove', this._hover);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
     //   this._renderInterval && this._renderInterval.destroy(),
-    this._container && this._container.remove(),
-      this._elementToMimicResizeObserver &&
-        this._elementToMimicResizeObserver.disconnect(),
-      this._elementMeasurement.clearCache();
+    if (this._container) {
+      this._container.remove();
+    }
+
+    if (this._elementToMimicResizeObserver) {
+      this._elementToMimicResizeObserver.disconnect();
+    }
+
+    this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }
