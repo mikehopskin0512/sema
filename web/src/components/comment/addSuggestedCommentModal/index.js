@@ -12,7 +12,7 @@ import { suggestCommentsOperations } from '../../../state/features/suggest-comme
 const { getCollectionById } = commentsOperations;
 const { createSuggestComment } = suggestCommentsOperations;
 
-const AddSuggestedCommentModal = ({ active, onClose }) => {
+const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
   const dispatch = useDispatch();
   const {
     register, handleSubmit, reset, formState,
@@ -25,7 +25,7 @@ const AddSuggestedCommentModal = ({ active, onClose }) => {
     }),
   );
   const {
-    query: { collectionId },
+    query: { collectionId = _id },
   } = useRouter();
 
   const { token } = auth;
@@ -124,6 +124,7 @@ const AddSuggestedCommentModal = ({ active, onClose }) => {
 AddSuggestedCommentModal.propTypes = {
   active: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  _id: PropTypes.string.isRequired,
 };
 
 export default AddSuggestedCommentModal;

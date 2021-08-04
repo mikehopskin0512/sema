@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 class ElementMeasurement {
   constructor(elem) {
     this._element = elem;
@@ -19,7 +20,7 @@ class ElementMeasurement {
   }
 
   getMirrorDimensions() {
-    let {
+    const {
       elementHeight,
       elementWidth,
       elementPadding,
@@ -28,16 +29,14 @@ class ElementMeasurement {
       scrollYHeight,
       scrollbarWidth,
     } = this._getElementDimensions();
-    elementPadding = parseFloat(elementPadding);
-    elementBorderWidth = parseFloat(elementBorderWidth);
 
     let width = elementWidth;
     const height = elementHeight;
-    const padding = elementPadding;
-    const borderWidth = elementBorderWidth;
+    const padding = parseFloat(elementPadding);
+    const borderWidth = parseFloat(elementBorderWidth);
 
     if (scrollbarWidth > 5) {
-      width = width - scrollbarWidth;
+      width -= scrollbarWidth;
     }
 
     return {
@@ -51,7 +50,9 @@ class ElementMeasurement {
   }
 
   getElementViewportPosition() {
-    const { top, bottom, right, left } = this._element.getBoundingClientRect();
+    const {
+      top, bottom, right, left,
+    } = this._element.getBoundingClientRect();
     return {
       top,
       bottom,

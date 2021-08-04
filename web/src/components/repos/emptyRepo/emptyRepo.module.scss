@@ -1,14 +1,20 @@
 .subtitle {
-    padding: 0px 450px;
 }
 
 .tile {
     background-color: #F4F4F4;
     height: 690px;
     margin: 0 0 50px 0 !important;
+    @media only screen and (max-width: 769px) {
+        height: auto !important;
+    }
 }
 
 .img {
     max-height: 350px;
     height: 350px;
+    @media only screen and (max-width: 769px) {
+        height: 180px !important;
+        max-width: 300px;
+    }
 }
