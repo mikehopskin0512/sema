@@ -9,7 +9,7 @@ import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar.jsx';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
-import { EMOJIS } from './constants';
+import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from "./constants";
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -177,10 +177,12 @@ class Mirror {
   _addHandlers() {
     $(this._elementToMimic).on('scroll', this._onScroll);
     // TODO: have a dedicated click event once this is confirmed from business
-    $(this._elementToMimic).on('click', this._onClick);
     $(this._elementToMimic).on('input', this._onInput);
     $(this._elementToMimic).on('change', this._onInput);
-    $(this._elementToMimic).on('mousemove', this._onHover);
+    if (IS_HIGHLIGHTS_ACTIVE) {
+      $(this._elementToMimic).on('mousemove', this._onHover);
+      $(this._elementToMimic).on('click', this._onClick);
+    }
     $(this._elementToMimic).on('mouseup mousedown', this._onMousePartial);
     $(this._elementToMimic).on('paste', this._onTextPaste);
 
@@ -289,6 +291,9 @@ class Mirror {
   }
 
   _updateHighlights() {
+    if (!IS_HIGHLIGHTS_ACTIVE) {
+      return
+    }
     const value = this._mirrorContent.textContent;
     const alerts = this._getTokenAlerts(value);
 
