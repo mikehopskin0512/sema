@@ -58,16 +58,20 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
           <div className="is-flex-grow-1 p-5">
             <div className={clsx('select is-small', styles.select)}>
               <select className={clsx('has-background-white', styles.select)} {...register('tag')} onChange={onChangeTag}>
-                <option value="">Tags</option>
-                {tags.map((item) => <option value={item.label} key={`tag-${item.label}`}>{item.label}</option>)}
+                <option value="" selected>Tag</option>
+                {tags.length > 0 ?
+                  tags.map((item) => <option value={item.label} key={`tag-${item.label}`}>{item.label}</option>) :
+                  <option value="_" disabled>No options</option> }
               </select>
             </div>
           </div>
           <div className="is-flex-grow-1 p-5">
             <div className={clsx('select is-small', styles.select)}>
               <select className={clsx('has-background-white', styles.select)} {...register('language')} onChange={onChangeLanguage}>
-                <option value="">Language</option>
-                {languages.map((item) => <option value={item.label} key={`lang-${item.label}`}>{item.label}</option>)}
+                <option value="" selected>Language</option>
+                {languages.length > 0 ?
+                  languages.map((item) => <option value={item.label} key={`lang-${item.label}`}>{item.label}</option>) :
+                  <option value="_" disabled>No options</option>}
               </select>
             </div>
           </div>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
-import TagsModal from './TagsModal.jsx';
-import EmojiSelection from './EmojiSelection.jsx';
+import TagsModal from './TagsModal';
+import EmojiSelection from './EmojiSelection';
 
 import {
   toggleTagModal,
@@ -11,13 +11,15 @@ import {
   toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
+import {
+  DELETE_OP, SELECTED, EMOJIS,
+} from './constants';
+import LoginBar from './LoginBar';
+
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
   DOWN: 'sema-is-right',
 };
-
-import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
-import LoginBar from "./LoginBar";
 
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
@@ -40,12 +42,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
     toggleTagModal: () => dispatch(toggleTagModal({ id })),
-    updateSelectedEmoji: (emojiObj) =>
-      dispatch(
-        updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true })
-      ),
-    updateSelectedTags: (operation) =>
-      dispatch(updateSelectedTags({ id, operation, isDirty: true })),
+    updateSelectedEmoji: (emojiObj) => dispatch(
+      updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true }),
+    ),
+    // eslint-disable-next-line max-len
+    updateSelectedTags: (operation) => dispatch(updateSelectedTags({ id, operation, isDirty: true })),
 
     toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
@@ -53,7 +54,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const [isHover, setHover] = useState(false);
-  const [dropPosition, setDropPosition] = useState(DROP_POSITIONS.DOWN);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
@@ -65,34 +65,35 @@ const Semabar = (props) => {
     }, []);
     return (
       <>
-        {activeTags.map((tag) => {
-          return (
-            <span
-              className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
-              style={{ height: '2.5em' }}
-              key={tag}
-            >
-              {tag}
-              <button
-                className="sema-delete sema-is-small"
-                onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
-              ></button>
-            </span>
-          );
-        })}
+        {activeTags.map((tag) => (
+          <span
+            className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
+            style={{ height: '2.5em' }}
+            key={tag}
+          >
+            {tag}
+            <button
+              aria-label={tag}
+              type="button"
+              className="sema-delete sema-is-small"
+              onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
+            />
+          </span>
+        ))}
       </>
     );
   };
   const createAddTags = () => {
-    const { x, y, height, width, offsetPos } = tagsButtonPositionValues;
+    const {
+      y, height, offsetPos,
+    } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
     const modalHeight = 300;
-    const modalWidth = 250;
 
     if (y && height) {
       const vh = Math.max(
         document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
+        window.innerHeight || 0,
       );
 
       const availableHeight = vh - (y + height);
@@ -104,7 +105,7 @@ const Semabar = (props) => {
       }
     }
 
-    let containerClasses = `sema-dropdown ${dropPosition}${
+    const containerClasses = `sema-dropdown ${dropPosition}${
       props.isTagModalVisible ? ' sema-is-active' : ''
     }`;
 
@@ -116,29 +117,29 @@ const Semabar = (props) => {
      * Prefer to not do it and work with
      * base bulma styles only
      */
-    const dropdownStyle =
-      dropPosition === DROP_POSITIONS.UP
-        ? { top: offsetPos.top - modalHeight }
-        : { marginTop: '-3.5em' };
+    const dropdownStyle = dropPosition === DROP_POSITIONS.UP
+      ? { top: offsetPos.top - modalHeight }
+      : { marginTop: '-3.5em' };
 
     return (
       <div className={containerClasses} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
+            type="button"
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
             aria-haspopup="true"
             onClick={(event) => {
               event.preventDefault();
               const {
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
               } = event.currentTarget.getBoundingClientRect();
               setTagsButtonPositionValues({
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
                 offsetPos: {
                   left: event.currentTarget.offsetLeft,
@@ -150,7 +151,7 @@ const Semabar = (props) => {
             }}
           >
             <span className="sema-icon sema-is-small">
-              <i className="fas fa-tag"></i>
+              <i className="fas fa-tag" />
             </span>
             <span>Add Tags</span>
           </button>
@@ -174,6 +175,7 @@ const Semabar = (props) => {
     );
   };
 
+  // eslint-disable-next-line react/destructuring-assignment
   if (props.isLoggedIn && !props.isWaitlist) {
     return (
       <>
@@ -205,29 +207,29 @@ const Semabar = (props) => {
         </div>
       </>
     );
-  } else {
-    return (
-      <>
-        <LoginBar/>
-        <div className="sema-tag-container sema-tags-content">
-          <button
-            disabled
-            className="sema-button sema-is-rounded sema-is-small sema-add-tags"
-            aria-haspopup="true"
-            onClick={(event) => {
-              event.preventDefault();
-              props.toggleTagModal();
-            }}
-          >
-            <span className="sema-icon sema-is-small">
-              <i className="fas fa-tag"></i>
-            </span>
-            <span>Add Tags</span>
-          </button>
-        </div>
-      </>
-    );
   }
+  return (
+    <>
+      <LoginBar />
+      <div className="sema-tag-container sema-tags-content">
+        <button
+          type="button"
+          disabled
+          className="sema-button sema-is-rounded sema-is-small sema-add-tags"
+          aria-haspopup="true"
+          onClick={(event) => {
+            event.preventDefault();
+            props.toggleTagModal();
+          }}
+        >
+          <span className="sema-icon sema-is-small">
+            <i className="fas fa-tag" />
+          </span>
+          <span>Add Tags</span>
+        </button>
+      </div>
+    </>
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Semabar);

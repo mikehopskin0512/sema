@@ -8,8 +8,6 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 import styles from '../../engineering.module.scss';
 
-import ContactUs from '../../../../components/contactUs';
-import SupportForm from '../../../../components/supportForm';
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 
@@ -20,23 +18,19 @@ const { getEngGuides } = engGuidesOperations;
 const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [supportForm, setSupportForm] = useState(false);
   const [engGuideData, setEngGuideData] = useState();
   const { auth, engGuideState } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
   }));
 
-  const { token, userVoiceToken } = auth;
+  const { token } = auth;
   const { engGuideId } = router.query;
-  const { engGuides, isFetching } = engGuideState;
+  const { engGuides } = engGuideState;
 
   useEffect(() => {
     dispatch(getEngGuides(token));
   }, [dispatch, token]);
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
@@ -94,7 +88,6 @@ const EngineeringGuidePage = () => {
   return (
     <div className="hero">
       <Helmet title="Engineering Guide" />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="hero-body">
         { engGuideData ? (
           <>
@@ -133,7 +126,6 @@ const EngineeringGuidePage = () => {
           </>
         ) : 'Not found' }
       </div>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
     </div>
   );
 };
