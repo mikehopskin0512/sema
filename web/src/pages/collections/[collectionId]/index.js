@@ -34,7 +34,7 @@ const CollectionComments = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token, userVoiceToken } = auth;
+  const { token } = auth;
   const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
