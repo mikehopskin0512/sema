@@ -46,16 +46,16 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onInsertPressed = (id, suggestion, sourceName, sourceUrl) => {
-    const isGuideLink = sourceName && sourceUrl;
-    const guideLink = isGuideLink ? `\n\n📄 [${sourceName}](${sourceUrl})` : ''
-    let value = props.commentBox.value;
-    value = value ? `${value}\n` : '';
-    props.commentBox.value = `${value}${suggestion}${guideLink}`;
+  const onInsertPressed = (id, suggestion, engGuides) => {
+    const engGuideLinks = engGuides?.map(({ engGuide }) => {
+      const {name, url} = engGuide.source
+      return `\n\n📄 [${name}](${url})`
+    }).join(' ')
+    let value = props.commentBox.value ? props.commentBox.value+'\n' : '';
+    props.commentBox.value = `${value}${suggestion}${engGuideLinks}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
-
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
