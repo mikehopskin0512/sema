@@ -20,31 +20,6 @@ const statLabels = {
 
 const descriptionMaxLength = 170;
 
-// WILL DELETE TEST DATA WHEN API IS COMPLETED
-// const users = [
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/34.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/women/29.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// ];
-
 const RepoCard = (props) => {
   const {
     name, description, isFavorite, externalId,

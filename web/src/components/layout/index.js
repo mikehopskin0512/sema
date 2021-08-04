@@ -1,5 +1,7 @@
 /* eslint react/no-danger: 0, max-len: 0 */
+import React from 'react';
 import Head from 'next/head';
+import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
@@ -44,8 +46,7 @@ const withLayout = (Page) => (props) => (
     </Head>
     <ExtensionStatus />
     <Header />
-
-    <Page style={{ backgroundColor: '#FCFCFC' }} {...props} />
+    <Page className={styles.content} {...props} />
     <Footer />
   </div>
 );
