@@ -799,7 +799,7 @@ const phrases = [
   'redundant code',
   'reference naming',
   'references',
-  'reflection attack in',
+  'reflection attack',
   'refs',
   'registry',
   'regular expression without anchors',

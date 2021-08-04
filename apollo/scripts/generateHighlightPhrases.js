@@ -75,7 +75,9 @@ data.forEach((comment) => {
     /(^|\ +)to($|\ +)/,
     /(^|\ +)as($|\ +)/,
     /(^|\ +)at($|\ +)/,
-    /(^|\ +)is($|\ +)/]));
+    /(^|\ +)is($|\ +)/,
+    /(^|\ +)in($|\ +)/,
+  ]));
   allNgramsDupes = allNgramsDupes.concat(comment.ngrams.slice());
 });
 const allNgrams = [...new Set(allNgramsDupes)];
