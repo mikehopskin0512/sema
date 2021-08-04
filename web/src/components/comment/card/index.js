@@ -4,13 +4,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 
 import { authOperations } from '../../../state/features/auth';
 
 const { setCollectionIsActive } = authOperations;
 
-const Card = ({ isActive, collectionData }) => {
+const Card = ({ isActive, collectionData, addNewComment }) => {
   const router = useRouter();
   const { token } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
@@ -24,6 +26,12 @@ const Card = ({ isActive, collectionData }) => {
     cb.stopPropagation();
     setActive(cb.checked);
     dispatch(setCollectionIsActive(_id, token));
+  };
+
+  const onClickAddComment = () => {
+    if (addNewComment) {
+      addNewComment(_id);
+    }
   };
 
   const renderStats = (label, value) => (
@@ -64,12 +72,25 @@ const Card = ({ isActive, collectionData }) => {
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>
           <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-            <div className={clsx('my-12 is-flex pl-12', styles.stat)}>
+            <div className={clsx('py-12 is-flex pl-12', styles.stat)}>
               {renderStats('Suggested Comments', comments.length)}
             </div>
-            <div className={clsx('my-12 is-flex pl-12', styles.stat)}>
+            <div className={clsx('py-12 is-flex pl-12', styles.stat)}>
               {renderStats('Favorited', 0)}
             </div>
+            {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+              <div className={clsx('py-12 is-flex pl-12 is-flex-grow-2 pr-12')} onClick={onClickChild} aria-hidden>
+                <div
+                  className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
+                    styles['add-button'])}
+                  onClick={onClickAddComment}
+                  aria-hidden
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                  Add a comment
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -80,6 +101,7 @@ const Card = ({ isActive, collectionData }) => {
 Card.propTypes = {
   isActive: PropTypes.bool.isRequired,
   collectionData: PropTypes.object.isRequired,
+  addNewComment: PropTypes.func.isRequired,
 };
 
 export default Card;

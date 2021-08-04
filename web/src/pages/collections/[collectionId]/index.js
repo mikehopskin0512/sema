@@ -34,8 +34,8 @@ const CollectionComments = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token } = auth;
-  const { collection: { name, comments = [], _id } } = collectionState;
+  const { token, userVoiceToken } = auth;
+  const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
   const [page, setPage] = useState(1);
@@ -126,12 +126,14 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={openNewSuggestedCommentModal}>
-            Add New Comment
-          </button>
+          {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={openNewSuggestedCommentModal}>
+              Add New Comment
+            </button>
+          ) : null}
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
