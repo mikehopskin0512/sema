@@ -1,4 +1,5 @@
 .card {
+  width: calc(100%/3);
   max-width: calc(100%/3);
   min-height: 280px;
   @media only screen and (max-width: 769px) {
