@@ -10,8 +10,8 @@
     "*://semasoftware.com/*",
     "https://*.semasoftware.com/*",
     "http://localhost/*",
-    "*://github.com/*/pull/*",
-    "*://*.github.com/*/pull/*"
+    "*://github.com/*",
+    "*://*.github.com/*/"
   ],
   "permissions": [
     "cookies",
@@ -37,8 +37,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://github.com/*/pull/*",
-        "*://*.github.com/*/pull/*",
+        "*://github.com/*",
+        "*://*.github.com/*",
         "*://localhost/*"
       ],
       "run_at": "document_start",
