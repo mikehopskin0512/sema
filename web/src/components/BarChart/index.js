@@ -2,7 +2,7 @@
 /* eslint-disable no-return-assign */
 import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
-import { compact, find, round } from 'lodash';
+import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from '../../utils/constants';
 
@@ -25,7 +25,9 @@ const NivoBarChart = ({ data = [] }) => {
             return acc[curr] = round((item[curr] * 100) / total, 2), acc;
           }, {});
         }
-        return null;
+        return {
+          date: item.date,
+        };
       });
     }
     return [];
@@ -49,7 +51,7 @@ const NivoBarChart = ({ data = [] }) => {
   return (
     <>
       <ResponsiveBar
-        data={compact(parseData(data))}
+        data={reverse(parseData(data))}
         keys={EMOJIS.map((item) => item._id)}
         indexBy="date"
         margin={{ top: 50, right: 50, bottom: 120, left: 60 }}
