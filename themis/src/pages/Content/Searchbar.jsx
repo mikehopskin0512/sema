@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './SuggestionModal';
-import { SUGGESTION_URL, SEMA_WEB_LOGIN } from './constants';
+import { SUGGESTION_URL, SEMA_WEB_LOGIN, SEMA_WEB_COLLECTIONS } from './constants';
 
 import {
   toggleSearchModal,
@@ -116,16 +116,20 @@ const SearchBar = (props) => {
       // empty
       return (
         <div className="sema-comment-placeholder">
-          <img className="sema-mb-5" src={noResults} alt="no results" />
-          <span className="sema-title sema-is-7 sema-is-block">
-            No results :( We are still learning!
-          </span>
-          <span className="sema-subtitle sema-is-7 sema-is-block">
-            Sorry, we don&apos;t have search result for this one. Try again soon -
-            we&apos;ve noted your query to improve our results.
+          <img className="sema-comment-placeholder--img" src={noResults} alt="no results" />
+          <span className="sema-comment-placeholder--title">
+            No Suggested Comments found :(
           </span>
           <a
-            className="sema-mt-2"
+            className="sema-comment-placeholder--link"
+            href={SEMA_WEB_COLLECTIONS}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Manage your collections
+          </a>
+          <a
+            className="sema-comment-placeholder--link"
             href={`https://www.google.com/search?q=${props.searchValue}`}
             target="_blank"
             rel="noopener noreferrer"

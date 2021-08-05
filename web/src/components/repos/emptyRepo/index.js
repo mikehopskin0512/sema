@@ -17,7 +17,7 @@ const EmptyRepo = () => {
 
   return (
     <div className="hero">
-      <div className="hero-body px-50">
+      <div className="hero-body m-50 p-50">
         <div className="tile is-ancestor">
           <div className="is-parent is-full-width">
             <div className="tile is-child py-30 box has-text-centered">

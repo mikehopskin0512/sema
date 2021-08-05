@@ -232,15 +232,15 @@ button.sema-reaction-selection {
   overflow: auto;
   border: none;
   margin-top: 2px;
-  background-color: #ffffff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   color: var(--color-text-input-font);
+  border-color: var(--color-text-input-border);
   pointer-events: all;
 
-
   .sema-dropdown-content {
-    background: #ffffff;
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
     box-shadow: none;
   }
 
@@ -383,19 +383,7 @@ h6 {
 
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
-
-    :after {
-      content: '';
-      position: absolute;
-      right: 4px;
-      top: 11px;
-      width: 0;
-      height: 0;
-      border-top: 4px solid transparent;
-      background: transparent;
-      border-left: 4px solid #000000;
-      border-bottom: 4px solid transparent;
-    }
+    color: var(--color-title);
   }
 
   .sema-button {
@@ -450,7 +438,30 @@ h6 {
 }
 
 .sema-comment-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+
+  &--img {
+    width: 160px;
+    margin-top: 40px;
+  }
+
+  &--title {
+    margin-top: 32px;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19px;
+  }
+
+  &--link {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 19px;
+    color: #508BFF;
+  }
 }
 
 .sema-is-oblong {

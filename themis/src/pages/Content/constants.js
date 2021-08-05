@@ -1,4 +1,4 @@
-export const SEMA_URL = process.env;
+export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
 export const { SEMA_COOKIE_DOMAIN } = process.env;
@@ -7,6 +7,7 @@ export const { SEMA_CLIENT_SECRET } = process.env;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
+export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
