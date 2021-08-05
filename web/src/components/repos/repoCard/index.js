@@ -22,7 +22,7 @@ const descriptionMaxLength = 170;
 
 const RepoCard = (props) => {
   const {
-    name, description, isFavorite, externalId,
+    name, description, externalId,
   } = props;
 
   const dispatch = useDispatch();
@@ -98,7 +98,7 @@ const RepoCard = (props) => {
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>
-          <FontAwesomeIcon icon={isFavorite ? faStarSolid : faStar} size="lg" color={isFavorite ? '#FFA20F' : '#192129'} />
+          {/* <FontAwesomeIcon icon={isFavorite ? faStarSolid : faStar} size="lg" color={isFavorite ? '#FFA20F' : '#192129'} /> */}
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="px-12 py-15 is-flex is-justify-content-space-between is-align-items-center">
