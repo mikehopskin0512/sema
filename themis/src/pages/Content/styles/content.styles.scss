@@ -232,13 +232,14 @@ button.sema-reaction-selection {
   overflow: auto;
   border: none;
   margin-top: 2px;
-  background-color: #ffffff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   color: var(--color-text-input-font);
+  border-color: var(--color-text-input-border);
 
   .sema-dropdown-content {
-    background: #ffffff;
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
     box-shadow: none;
   }
 
