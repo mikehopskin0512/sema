@@ -14,7 +14,7 @@ import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
 
 import styles from './invitations.module.scss';
-import InvitationsGrid from '@/components/invitationsGrid';
+import InvitationsGrid from '../../components/invitationsGrid';
 
 
 const { clearAlert } = alertOperations;
