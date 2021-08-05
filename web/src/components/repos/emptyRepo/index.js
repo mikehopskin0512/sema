@@ -16,38 +16,51 @@ const EmptyRepo = () => {
   };
 
   return (
-    <>
-      <div className="tile is-ancestor m-90 ">
-        <div className="is-parent is-full-width">
-
-          <div className="tile is-child box p-50 pt-70 has-text-centered">
-            <h1 className="title">{title1}</h1>
-            <h2 className={clsx('subtitle pb-20', styles.subtitle)}>{subtitle1}</h2>
-            <div className="columns">
-              {
-                content.map((d) => {
-                  const { img, title, subtitle } = d;
-                  const sub = formatSubtitle(subtitle);
-                  return (
-                    <div className={clsx('column p-25 mb-25')}>
-                      <div className={clsx(styles.tile, 'tile is-child colored-shadow box')}>
-                        <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}>
-                          <img src={img} alt="gif" className="is-full-width" />
+    <div className="hero">
+      <div className="hero-body m-50 p-50">
+        <div className="tile is-ancestor">
+          <div className="is-parent is-full-width">
+            <div className="tile is-child py-30 box has-text-centered">
+              <h1 className="has-text-weight-semibold is-size-3 mt-15">{title1}</h1>
+              <h2 className={clsx('is-size-5 pb-20', styles.subtitle)}>{subtitle1}</h2>
+              <div className="columns">
+                {
+                  content.map((d) => {
+                    const { img, title, subtitle } = d;
+                    const sub = formatSubtitle(subtitle);
+                    return (
+                      <>
+                        <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
+                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
+                            <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}>
+                              <img src={img} alt="gif" className="is-full-width" />
+                            </div>
+                            <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
+                            <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
+                          </div>
                         </div>
-                        <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
-                        <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
-                      </div>
-                    </div>
-                  );
-                })
-              }
+                        <div className={clsx('column p-2 mb-10 is-hidden-desktop')}>
+                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-align-items-center')}>
+                            <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mt-25')}>
+                              <img src={img} alt="gif" />
+                            </div>
+                            <h1 className="title has-text-primary has-text-left is-size-4 mt-30">{title}</h1>
+                            <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })
+                }
+              </div>
+              <a href="https://github.com">
+                <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Go to Github</button>
+              </a>
             </div>
-            <button type="button" className="button is-primary">Go to Github</button>
           </div>
-
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -73,16 +73,16 @@ const smartCommentsQuery = [{ $count: 'smartCommentCount' }];
 const invitationSendersCountQuery = [
   {
     $group: {
-      _id: { sender: '$sender' }, 
-      sender: { $sum: 1 }
-    }
+      _id: { sender: '$sender' },
+      sender: { $sum: 1 },
+    },
   }, {
     $match: {
-      sender: { $gt: 0 }
-    }
+      sender: { $gt: 0 },
+    },
   }, {
-    $count: 'sendersCount'
-  }
+    $count: 'sendersCount',
+  },
 ];
 
 const data = {
@@ -173,7 +173,7 @@ const execute = async () => {
       activeUserCount += 1;
       // User creation Last 24 hours
       if (differenceInHours(new Date(), createdAt) <= 23) {
-        newActiveUserCount += 1;
+        data.newActiveUserCount += 1;
       }
     }
   });

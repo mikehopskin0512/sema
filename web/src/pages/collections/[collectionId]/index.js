@@ -12,9 +12,7 @@ import styles from '../collection.module.scss';
 import AddSuggestedCommentModal from '../../../components/comment/addSuggestedCommentModal';
 import CommentFilter from '../../../components/comment/commentFilter';
 import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
-import ContactUs from '../../../components/contactUs';
 import withLayout from '../../../components/layout';
-import SupportForm from '../../../components/supportForm';
 import Helmet from '../../../components/utils/Helmet';
 import Toaster from '../../../components/toaster';
 
@@ -36,11 +34,10 @@ const CollectionComments = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token, userVoiceToken } = auth;
-  const { collection: { name, comments = [], _id } } = collectionState;
+  const { token } = auth;
+  const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
-  const [supportForm, setSupportForm] = useState(false);
   const [page, setPage] = useState(1);
   const [commentsFiltered, setCommentsFiltered] = useState(comments);
   const [tagFilters, setTagFilters] = useState([]);
@@ -73,9 +70,6 @@ const CollectionComments = () => {
     setTagFilters(tags);
     setLanguageFilters(languages);
   }, [comments]);
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   const openNewSuggestedCommentModal = () => setNewCommentModalOpen(true);
   const closeNewSuggestedCommentModal = () => setNewCommentModalOpen(false);
@@ -110,7 +104,6 @@ const CollectionComments = () => {
     <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet title={`Collection - ${name}`} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <AddSuggestedCommentModal active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
       <div className="hero-body">
         <div className="is-flex is-align-items-center px-10 mb-15">
@@ -133,12 +126,14 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={openNewSuggestedCommentModal}>
-            Add New Comment
-          </button>
+          {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={openNewSuggestedCommentModal}>
+              Add New Comment
+            </button>
+          ) : null}
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
@@ -155,7 +150,6 @@ const CollectionComments = () => {
           </div>
         ) }
       </div>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
     </div>
   );
 };

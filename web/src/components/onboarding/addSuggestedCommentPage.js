@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { commentCollection } from './content';
+import styles from "./onboarding.module.scss";
 
 const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handleCommentFields, setComment }) => {
   return (
     <>
-      <div className="m-20 p-20">
+      <div className={clsx("m-20 p-40 is-relative", styles['comment-modal'])}>
         <p className="title is-4">Create your first custom suggested comment</p>
         <p className="subtitle is-6">Have a code review comment you frequently reuse? Add it here and it will be ready for your next review. <strong>Fill out at least one of these fields and we'll do the rest.</strong></p>
         <div className="mb-50">
@@ -54,7 +56,7 @@ const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handle
           page !== 1 && (
             <button
               type="button"
-              className="button is-primary my-20 is-outlined"
+              className={clsx("button is-primary my-20 is-outlined", styles.prev)}
               onClick={previousPage}
             >
               <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
@@ -63,14 +65,14 @@ const AddSuggestedCommentPage = ({ page, nextPage, previousPage, comment, handle
         }
         <button
           type="button"
-          className="button is-primary my-20 is-pulled-right"
+          className={clsx("button is-primary my-20", styles.next)}
           onClick={nextPage}
         >
           Next
         </button>
         <button
           type="button"
-          className="button is-text has-text-primary my-20 is-pulled-right"
+          className={clsx("button is-text has-text-primary my-20", styles.skip)}
           onClick={() => {
             nextPage()
             setComment({});

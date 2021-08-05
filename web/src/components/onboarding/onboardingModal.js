@@ -21,6 +21,7 @@ const OnboardingModal = ({
   toggleModalActive,
   semaCollections,
   setComment,
+  onSubmit
 }) => {
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
@@ -57,6 +58,7 @@ const OnboardingModal = ({
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
           closeModal={() => toggleModalActive(false)}
+          onSubmit={onSubmit}
         />
       );
     default:
@@ -86,7 +88,7 @@ const OnboardingModal = ({
               onClick={() => toggleModalActive(false)}
             />
           </header> */}
-        <section className={clsx('modal-card-body p-0')}>
+        <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
           {renderModalContent(page)}
         </section>
         {/* <footer className="modal-card-foot">
@@ -111,6 +113,7 @@ OnboardingModal.propTypes = {
   toggleModalActive: PropTypes.func.isRequired,
   semaCollections: PropTypes.array.isRequired,
   setComment: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default OnboardingModal;
