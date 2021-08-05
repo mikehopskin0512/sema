@@ -236,6 +236,7 @@ button.sema-reaction-selection {
   border-radius: 4px;
   color: var(--color-text-input-font);
   border-color: var(--color-text-input-border);
+  pointer-events: all;
 
   .sema-dropdown-content {
     background-color: var(--color-text-input-bg);

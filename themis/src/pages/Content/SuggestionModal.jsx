@@ -17,7 +17,7 @@ const getCommentTitleInterface = (title, sourceName) => (
   </div>
 );
 
-const getCommentInterface = (comment, isDetailed, sourceName, sourceUrl) => {
+const getCommentInterface = (comment, isDetailed, engGuides) => {
   const finalComment = isDetailed ? comment : truncate(comment);
   return (
     <div className="suggestion-content-truncated-container">
@@ -26,10 +26,12 @@ const getCommentInterface = (comment, isDetailed, sourceName, sourceUrl) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
-      <GuideLink
-        title={sourceName}
-        link={sourceUrl}
-      />
+      {engGuides?.map(({ engGuide }) => (
+        <GuideLink
+          title={engGuide.source?.name}
+          link={engGuide.source?.url}
+        />
+      ))}
     </div>
   );
 };
@@ -78,19 +80,19 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
 
   const getAllCommentsUI = () => searchResults.map((searchResult) => {
     const {
-      comment, sourceName, sourceUrl, title, id,
+      comment, sourceName, title, id, engGuides,
     } = searchResult;
     const isCopied = copiedId === id;
 
     return (
       <div key={id} className="sema-mb-5">
         {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, false, sourceName, sourceUrl)}
+        {getCommentInterface(comment, false, engGuides)}
         <div className="suggestion-buttons">
           <Button
             icon="fa-file-import"
             title="Insert"
-            onClick={() => onInsertPressed(id, comment, sourceName, sourceUrl)}
+            onClick={() => onInsertPressed(id, comment, engGuides)}
           />
           <Button
             icon="fa-copy"
@@ -108,7 +110,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
   });
   const getCommentUI = () => {
     const {
-      comment, sourceName, sourceUrl, title, id,
+      comment, sourceName, engGuides, title, id,
     } = currentSuggestion;
     const isCopied = copiedId === id;
     return (
@@ -123,7 +125,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           <Button
             title="Insert"
             icon="fa-file-import"
-            onClick={() => onInsertPressed(id, comment, sourceName, sourceUrl)}
+            onClick={() => onInsertPressed(id, comment, engGuides)}
           />
           <Button
             title={isCopied ? 'Copied!' : 'Copy'}
@@ -132,7 +134,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           />
         </div>
         {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, true, sourceName, sourceUrl)}
+        {getCommentInterface(comment, true, engGuides)}
       </>
     );
   };
