@@ -237,7 +237,6 @@ button.sema-reaction-selection {
   border-radius: 4px;
   color: var(--color-text-input-font);
 
-
   .sema-dropdown-content {
     background: #ffffff;
     box-shadow: none;
@@ -382,6 +381,7 @@ h6 {
 
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
+    color: var(--color-title);
   }
 
   .sema-button {
