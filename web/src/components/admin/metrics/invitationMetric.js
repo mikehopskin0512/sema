@@ -6,6 +6,7 @@ import Table from '../../table';
 
 import { fullName } from '../../../utils';
 import { invitationsOperations } from '../../../state/features/invitations';
+import Select from '../../select';
 
 const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
 
@@ -20,15 +21,31 @@ const tabOptions = [
   },
 ];
 
+const timeRangeOptions = [
+  {
+    label: '1 day',
+    value: '1',
+  },
+  {
+    label: '7 days',
+    value: '7',
+  },
+  {
+    label: '30 days',
+    value: '30',
+  },
+];
+
 const InvitationMetric = () => {
   const [inviteCategory, setInviteCategory] = useState('person');
-  const { inviteMetrics } = useSelector((state) => state.invitationsState);
+  const { inviteMetrics, isFetching } = useSelector((state) => state.invitationsState);
   const { token } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
+  const [timeRange, setTimeRange] = useState('1');
 
   useEffect(() => {
-    dispatch(fetchInviteMetrics());
-  }, [dispatch]);
+    dispatch(fetchInviteMetrics(inviteCategory, timeRange));
+  }, [dispatch, inviteCategory, timeRange]);
 
   const inviteColumns = useMemo(
     () => [
@@ -77,10 +94,22 @@ const InvitationMetric = () => {
   return (
     <div className="mb-50">
       <div className="is-flex is-justify-content-space-between">
-        <FilterTabs value={inviteCategory} onChange={setInviteCategory} tabs={tabOptions} />
-        <ExportButton onExport={() => exportInviteMetrics(inviteCategory, token)} />
+        <div className="is-flex is-align-content-flex-start">
+          <FilterTabs value={inviteCategory} onChange={setInviteCategory} tabs={tabOptions} />
+          <div className="ml-20">
+            <Select
+              onChange={setTimeRange}
+              value={timeRange}
+              placeholder="Select Time Range"
+              options={timeRangeOptions}
+              search={false}
+              size="sm"
+            />
+          </div>
+        </div>
+        <ExportButton onExport={() => exportInviteMetrics(inviteCategory, timeRange, token)} />
       </div>
-      <Table columns={inviteColumns} data={invitesData} />
+      <Table columns={inviteColumns} data={invitesData} loading={isFetching} />
     </div>
   );
 };
