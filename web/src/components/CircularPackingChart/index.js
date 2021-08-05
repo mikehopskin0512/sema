@@ -11,12 +11,21 @@ const CircularPacking = ({ data }) => {
       const keys = Object.keys(rawData);
       children = keys.map((_id) => {
         const tag = find(TAGS, { _id });
+        if (tag) {
+          return {
+            isPositive: tag.isPositive,
+            name: tag.label,
+            id: _id,
+            color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
+            value: rawData[_id].total,
+          };
+        }
         return {
-          isPositive: tag.isPositive,
-          name: tag.label,
+          isPositive: false,
+          name: '',
           id: _id,
-          color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
-          value: rawData[_id].total,
+          color: '#AFADAA',
+          value: 0,
         };
       });
     }
@@ -45,7 +54,7 @@ const CircularPacking = ({ data }) => {
         padding={4}
         enableLabels
         leavesOnly
-        labelsSkipRadius={10}
+        labelsSkipRadius={3}
         labelTextColor={{ from: 'color', modifiers: [['darker', 5]] }}
         borderWidth={1}
         borderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
