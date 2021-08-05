@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
+import { sortBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import styles from './commentFilter.module.scss';
@@ -60,7 +61,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
               <select className={clsx('has-background-white', styles.select)} {...register('tag')} onChange={onChangeTag}>
                 <option value="" selected>Tag</option>
                 {tags.length > 0 ?
-                  tags.map((item) => <option value={item.label} key={`tag-${item.label}`}>{item.label}</option>) :
+                  sortBy(tags, 'label').map((item) => <option value={item.label} key={`tag-${item.label}`}>{item.label}</option>) :
                   <option value="_" disabled>No options</option> }
               </select>
             </div>
@@ -70,7 +71,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
               <select className={clsx('has-background-white', styles.select)} {...register('language')} onChange={onChangeLanguage}>
                 <option value="" selected>Language</option>
                 {languages.length > 0 ?
-                  languages.map((item) => <option value={item.label} key={`lang-${item.label}`}>{item.label}</option>) :
+                  sortBy(languages, 'label').map((item) => <option value={item.label} key={`lang-${item.label}`}>{item.label}</option>) :
                   <option value="_" disabled>No options</option>}
               </select>
             </div>
