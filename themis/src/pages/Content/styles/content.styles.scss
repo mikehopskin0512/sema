@@ -382,6 +382,7 @@ h6 {
 
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
+    color: var(--color-title);
   }
 
   .sema-button {
@@ -436,7 +437,30 @@ h6 {
 }
 
 .sema-comment-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+
+  &--img {
+    width: 160px;
+    margin-top: 40px;
+  }
+
+  &--title {
+    margin-top: 32px;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19px;
+  }
+
+  &--link {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 19px;
+    color: #508BFF;
+  }
 }
 
 .sema-is-oblong {

@@ -45,3 +45,15 @@ export const fullName = (user) => {
   if (!user) return '';
   return `${user.firstName || ''} ${user.lastName || ''}`;
 };
+
+export const getTokenData = (user) => {
+  const tokenData = {
+    _id: user._id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    isVerified: user.isVerified,
+    isWaitlist: user.isWaitlist,
+  }
+  return tokenData;
+}
