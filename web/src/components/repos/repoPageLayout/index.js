@@ -19,7 +19,7 @@ const RepoPageLayout = ({ children }) => {
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { query: { repoId }, pathName } = router;
+  const { query: { repoId }, pathname = '' } = router;
   const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
   const [stats, setStats] = useState({});
@@ -43,7 +43,7 @@ const RepoPageLayout = ({ children }) => {
       });
     }
     setStats(repositories?.data?.overview);
-  }, [repositories, pathName]);
+  }, [repositories, pathname]);
 
   useEffect(() => {
     dispatch(fetchRepositoryOverview(repoId, token));
@@ -69,7 +69,7 @@ const RepoPageLayout = ({ children }) => {
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);
-    window.location = pathName.replace('[repoId]', obj.value);
+    window.location = pathname.replace('[repoId]', obj.value);
   }
 
   return (
@@ -106,7 +106,11 @@ const RepoPageLayout = ({ children }) => {
             </div>
           </div>
       </div>
-      <Sidebar>{children}</Sidebar>
+      <Sidebar>
+        <>
+          {children}
+        </>
+      </Sidebar>
     </div>
   );
 };

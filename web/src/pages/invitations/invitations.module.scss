@@ -108,3 +108,19 @@
   white-space: nowrap; /* Don't forget this one */
   text-overflow: ellipsis;
 }
+
+.sema-tile {
+  -moz-box-align: stretch;
+  align-items: stretch;
+  display: block;
+  flex-basis: 0;
+  -moz-box-flex: 1;
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+  .sema-is-child {
+    margin: 0 !important;
+  }
+}

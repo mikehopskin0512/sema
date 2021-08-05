@@ -27,6 +27,7 @@ const EmojiSelection = ({
   // depends on actual layout
   const ITEM_HEIGHT = 44;
 
+  // TODO: needs to be refactored to one good-looking button
   return (
     <>
       {isTyping === true
@@ -41,14 +42,16 @@ const EmojiSelection = ({
             flexDirection: 'row',
             alignItems: 'center',
             cursor: 'pointer',
+            paddingTop: 3,
           }}
         >
-          <Lottie options={animationOptions} height={20} width={20} />
-          {' '}
-          <span style={{ paddingLeft: 8, paddingRight: 8 }}>
+          <div style={{ padding: '3px 8px 5px 12px' }}>
+            <Lottie options={animationOptions} height={14} width={14} />
+          </div>
+          <span style={{ fontSize: '12px' }}>
             Calculating...
           </span>
-          <i className="fas fa-caret-right" />
+          <i className="sema-ml-2 fas fa-caret-right" />
         </div>
         ) : (
           <div>
@@ -71,6 +74,7 @@ const EmojiSelection = ({
                     <Emoji symbol={shownEmoji} />
                   &nbsp;&nbsp;
                     <span dangerouslySetInnerHTML={{ __html: selectedTitle }} />
+                    <i className="sema-ml-2 fas fa-caret-right" />
                   </button>
                 </div>
                 <div
