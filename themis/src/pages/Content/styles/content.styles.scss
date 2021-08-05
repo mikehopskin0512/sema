@@ -382,19 +382,6 @@ h6 {
 
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
-
-    :after {
-      content: '';
-      position: absolute;
-      right: 4px;
-      top: 11px;
-      width: 0;
-      height: 0;
-      border-top: 4px solid transparent;
-      background: transparent;
-      border-left: 4px solid #000000;
-      border-bottom: 4px solid transparent;
-    }
   }
 
   .sema-button {

@@ -63,7 +63,7 @@ const Profile = () => {
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
                 <FontAwesomeIcon icon={faSyncAlt} size="md" className="mr-5" color="#000000" />
-                Refreshidentities
+                Refresh
               </button>
             </div>
             <div>

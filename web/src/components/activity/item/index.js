@@ -2,25 +2,34 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { find } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
 
 const ActivityItem = (props) => {
   const {
-    comment, reaction, tags, createdAt, userId, githubMetadata,
+    comment = '',
+    reaction = '',
+    tags = [],
+    createdAt = '',
+    userId = {
+      firstName: '',
+      avatarUrl: '',
+      lastName: '',
+    },
+    githubMetadata = {
+      title: '',
+      url: '#',
+      user: {
+        login: '',
+      },
+    },
   } = props;
-
-  const {
-    firstName,
-    lastName,
-    avatarUrl,
-  } = userId;
 
   const { title, url, user: { login = '' } } = githubMetadata;
 
-  const [dateCreated] = useState(format(new Date(createdAt), 'dd MMM, yyyy'));
+  const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'dd MMM, yyyy') : '');
 
   const renderEmoji = () => {
     const { emoji, title: emojiTitle } = find(EMOJIS, { _id: reaction });
@@ -34,15 +43,19 @@ const ActivityItem = (props) => {
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
-      <figure className="image is-64x64 mr-20 is-hidden-mobile">
-        <img className="is-rounded" src={avatarUrl} alt="user_icon" />
-      </figure>
+      {userId ? (
+        <figure className="image is-64x64 mr-20 is-hidden-mobile">
+          <img className="is-rounded" src={userId.avatarUrl} alt="user_icon" />
+        </figure>
+      ) : null }
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
-            <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
+            { userId ? (<img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={userId.avatarUrl} alt="user_icon" />) : null }
             <p className="is-size-7 has-text-deep-black">
-              <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a>
+              { userId ?
+                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{userId.firstName} {userId.lastName}</a> :
+                <p className="has-text-deep-black is-underlined">user</p>}
               {' reviewed '}
               <a href={url} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{title || 'a pull request'}</a>
             </p>

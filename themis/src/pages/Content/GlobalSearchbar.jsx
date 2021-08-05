@@ -10,12 +10,14 @@ import {
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
-  const { isOpen, openFor, data, position, isLoading } = state[
+  const {
+    isOpen, openFor, data, position, isLoading,
+  } = state[
     GLOBAL_SEMA_SEARCH_ID
   ];
 
   const { user } = state;
-  
+
   return {
     isSearchModalVisible:
       isOpen && (openFor ? openFor === ownProps.activeElementId : true),
@@ -24,31 +26,29 @@ const mapStateToProps = (state, ownProps) => {
     isLoading,
     commentBox: ownProps.commentBox,
     mirror: ownProps.mirror,
+    // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    toggleSearchModal: () => dispatch(toggleGlobalSearchModal()),
-    toggleIsLoading: (isLoading) =>
-      dispatch(toggleGlobalSearchLoading({ isLoading })),
-    onGlobalSearchInputChange: (value) =>
-      dispatch(onGlobalSearchInputChange({ data: value })),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  toggleSearchModal: () => dispatch(toggleGlobalSearchModal()),
+  toggleIsLoading: (isLoading) => dispatch(toggleGlobalSearchLoading({ isLoading })),
+  onGlobalSearchInputChange: (value) => dispatch(onGlobalSearchInputChange({ data: value })),
+});
 
 const GlobalSearchbar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
 
   const onInputChanged = (event) => {
     event.preventDefault();
-    const value = event.target.value;
+    const { value } = event.target;
     props.onGlobalSearchInputChange(value);
   };
 
   const onCopyPressed = (id, suggestion) => {
-    let value = props.commentBox.value;
+    const { value } = props.commentBox;
+    // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}\n${suggestion}\n`;
     setSearchResults([]);
     props.toggleSearchModal();
@@ -64,7 +64,9 @@ const GlobalSearchbar = (props) => {
   };
 
   const getSemaSuggestions = () => {
-    !props.isLoading && props.toggleIsLoading(true);
+    if (!props.isLoading) {
+      props.toggleIsLoading(true);
+    }
     const URL = `${SUGGESTION_URL}${props.data}&user=${props.userId}`;
     fetch(URL)
       .then((response) => response.json())
@@ -78,8 +80,7 @@ const GlobalSearchbar = (props) => {
   };
 
   const handleKeyPress = (event) => {
-    const charCode =
-      typeof event.which == 'number' ? event.which : event.keyCode;
+    const charCode = typeof event.which === 'number' ? event.which : event.keyCode;
     if (charCode === 13) {
       // enter is pressed
       // show dropdown
@@ -92,7 +93,7 @@ const GlobalSearchbar = (props) => {
     }
   };
 
-  let containerClasses = `sema-dropdown${
+  const containerClasses = `sema-dropdown${
     props.isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
@@ -138,9 +139,9 @@ const GlobalSearchbar = (props) => {
                 value={props.data}
                 onChange={onInputChanged}
                 onKeyDown={handleKeyPress}
-              ></input>
+              />
               <span className="sema-icon sema-is-small sema-is-left">
-                <i className="fas fa-search"></i>
+                <i className="fas fa-search" />
               </span>
             </div>
           </div>
