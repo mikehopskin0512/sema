@@ -8,6 +8,7 @@ import { getProfile, getUserEmails, getRepositoryList } from './utils';
 import { create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
 import { findByToken, redeemInvite } from '../../invitations/invitationService';
+import { getTokenData } from '../../shared/utils';
 
 const route = Router();
 
@@ -86,7 +87,7 @@ export default (app) => {
 
         // await updateUserRepositoryList(user, repositories, identity);
 
-        const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
+        const tokenData = getTokenData(user);
 
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));

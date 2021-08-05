@@ -21,7 +21,6 @@ const Footer = () => {
   });
   const [supportForm, setSupportForm] = useState(false);
   const [formType, setFormType] = useState(null);
-  const { userVoiceToken } = useSelector((state) => state.authState);
 
   const openSupportForm = (type) => {
     setSupportForm(true);
