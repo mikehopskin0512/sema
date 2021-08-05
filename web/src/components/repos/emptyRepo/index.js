@@ -17,7 +17,7 @@ const EmptyRepo = () => {
 
   return (
     <>
-      <div className="tile is-ancestor mt-120 m-90 ">
+      <div className="tile is-ancestor m-90 ">
         <div className="is-parent is-full-width">
 
           <div className="tile is-child box p-50 pt-70 has-text-centered">
