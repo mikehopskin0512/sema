@@ -21,6 +21,7 @@ const Footer = () => {
   });
   const [supportForm, setSupportForm] = useState(false);
   const [formType, setFormType] = useState(null);
+  const { userVoiceToken } = useSelector((state) => state.authState);
 
   const openSupportForm = (type) => {
     setSupportForm(true);
@@ -80,7 +81,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href={userVoiceLink}>Idea Board</a>
+        <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>

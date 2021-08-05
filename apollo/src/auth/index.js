@@ -57,7 +57,15 @@ export default (app, passport) => {
       if (!user) {
         throw new errors.NotFound('No user found');
       }
-      const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
+
+      const tokenData = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        isVerified: user.isVerified,
+        isWaitlist: user.isWaitlist,
+      };
 
       await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
