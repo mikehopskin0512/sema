@@ -87,21 +87,21 @@ const RepoPageLayout = ({ children }) => {
       <div className={clsx(styles["card-container"], 'px-20')}>
         <div className="hero">
           <div className="hero-body columns m-0">
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
               <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
-              <div className={clsx("is-size-3 has-text-weight-semibold", styles['card-subtitle'])}>{stats?.codeReview || 0}</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.codeReview || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
               <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTS</div>
-              <div className={clsx("is-size-3 has-text-weight-semibold", styles['card-subtitle'])}>{stats?.smartComments || 0}</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.smartComments || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
               <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTERS</div>
-              <div className={clsx('is-size-3 has-text-weight-semibold', styles['card-subtitle'])}>{stats?.smartCommenters || 0}</div>
+              <div className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{stats?.smartCommenters || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
               <div className={clsx("is-size-7", styles['card-title'])}>SEMA USERS</div>
-              <div className={clsx("is-size-3 has-text-weight-semibold", styles['card-subtitle'])}>{stats?.semaUsers || 0}</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.semaUsers || 0}</div>
             </div>
             </div>
           </div>
