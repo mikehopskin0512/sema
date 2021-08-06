@@ -74,34 +74,34 @@ const RepoPageLayout = ({ children }) => {
 
   return (
     <div className="has-background-white">
-      <div className={clsx("mt-10", styles['repo-select-container'])}>
+      <div className={clsx("mt-10 pl-50", styles['repo-select-container'])}>
         <Select 
           onChange={onChangeSelect}
           value={selectedRepo}
           options={formatOptions(repositories.data?.repositories)}
-          className="px-50"
+          className="pl-30"
           components={{ Control, IndicatorSeparator }}
           isOptionDisabled={(option) => option.disabled}
           placeholder={''} />
       </div>
-      <div className={styles["card-container"]}>
+      <div className={clsx(styles["card-container"], 'px-20')}>
         <div className="hero">
           <div className="hero-body columns m-0">
-            <div className={clsx("column mx-20 m-5 p-20", styles["card"])}>
-              <div className="is-size-6">SMART CODE REVIEWS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.codeReview || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.codeReview || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SMART COMMENTS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.smartComments || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.smartComments || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SMART COMMENTERS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.smartCommenters || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTERS</div>
+              <div className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{stats?.smartCommenters || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SEMA USERS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.semaUsers || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SEMA USERS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.semaUsers || 0}</div>
             </div>
             </div>
           </div>
