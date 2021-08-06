@@ -145,170 +145,170 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (prPage.test(document.URL) && isValidSemaTextBox(activeElement)) {
-      checkLoggedIn();
-      const semaElements = $(activeElement).siblings('div.sema');
-      let extensionTheme = LIGHT;
-      let themeClass = '';
-      let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-      const colorMode = document.documentElement.getAttribute(
-        'data-color-mode',
-      );
+    if (prPage.test(document.URL)) {
+      if (isValidSemaTextBox(activeElement)) {
+        checkLoggedIn();
+        const semaElements = $(activeElement).siblings('div.sema');
+        let extensionTheme = LIGHT;
+        let themeClass = '';
+        let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
+        const colorMode = document.documentElement.getAttribute(
+          'data-color-mode',
+        );
 
-      if (
-        document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')
-      ) {
-        document.querySelector(
-          '.SelectMenu--hasFilter .SelectMenu-modal',
-        ).style.maxHeight = '580px';
-      }
-
-      let colorTheme = document.documentElement.getAttribute(
-        'data-light-theme',
-      );
-      if (colorMode === DARK) {
-        extensionTheme = DARK;
-        colorTheme = document.documentElement.getAttribute('data-dark-theme');
-        if (colorTheme === DARK_DIMMED) {
-          extensionTheme = DARK_DIMMED;
+        if (
+          document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')
+        ) {
+          document.querySelector(
+            '.SelectMenu--hasFilter .SelectMenu-modal',
+          ).style.maxHeight = '580px';
         }
-      } else if (colorMode === 'auto') {
-        const html = document.querySelector('[data-color-mode]');
-        const githubTheme = getComputedStyle(html);
-        const githubBgColor = githubTheme.backgroundColor;
-        if (githubBgColor === 'rgb(13, 17, 23)') {
+
+        let colorTheme = document.documentElement.getAttribute(
+          'data-light-theme',
+        );
+        if (colorMode === DARK) {
           extensionTheme = DARK;
-        } else if (githubBgColor === 'rgb(34, 39, 46)') {
-          extensionTheme = DARK_DIMMED;
+          colorTheme = document.documentElement.getAttribute('data-dark-theme');
+          if (colorTheme === DARK_DIMMED) {
+            extensionTheme = DARK_DIMMED;
+          }
+        } else if (colorMode === 'auto') {
+          const html = document.querySelector('[data-color-mode]');
+          const githubTheme = getComputedStyle(html);
+          const githubBgColor = githubTheme.backgroundColor;
+          if (githubBgColor === 'rgb(13, 17, 23)') {
+            extensionTheme = DARK;
+          } else if (githubBgColor === 'rgb(34, 39, 46)') {
+            extensionTheme = DARK_DIMMED;
+          }
         }
-      }
-      switch (extensionTheme) {
-        case DARK:
-          themeClass = 'theme--dark';
-          SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
-          break;
-        case DARK_DIMMED:
-          themeClass = 'theme--dark-dimmed';
-          SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
-          break;
-        default:
-          themeClass = '';
-          SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-          break;
-      }
+        switch (extensionTheme) {
+          case DARK:
+            themeClass = 'theme--dark';
+            SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
+            break;
+          case DARK_DIMMED:
+            themeClass = 'theme--dark-dimmed';
+            SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
+            break;
+          default:
+            themeClass = '';
+            SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
+            break;
+        }
 
-      const githubTextareaId = $(activeElement).attr('id');
-      const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-        githubTextareaId,
-      );
-      if (!semaElements[0]) {
-        $(activeElement).on(
-          'input',
-          debounce(() => {
-            store.dispatch(
-              updateTextareaState({
-                isTyping: true,
-              }),
-            );
-            setTimeout(() => {
+        const githubTextareaId = $(activeElement).attr('id');
+        const { semabarContainerId, semaSearchContainerId } = getSemaIds(
+          githubTextareaId,
+        );
+        if (!semaElements[0]) {
+          $(activeElement).on(
+            'input',
+            debounce(() => {
               store.dispatch(
                 updateTextareaState({
-                  isTyping: false,
+                  isTyping: true,
                 }),
               );
-            }, CALCULATION_ANIMATION_DURATION_MS);
+              setTimeout(() => {
+                store.dispatch(
+                  updateTextareaState({
+                    isTyping: false,
+                  }),
+                );
+              }, CALCULATION_ANIMATION_DURATION_MS);
 
-            onSuggestion();
-          }, ON_INPUT_DEBOUCE_INTERVAL_MS),
-        );
-        /** ADD ROOTS FOR REACT COMPONENTS */
-        // search bar container
-        $(activeElement).before(
-          `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`,
-        );
-        // semabar container
-        $(activeElement).after(
-          `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`,
-        );
-
-        /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
-        store.dispatch(
-          addSemaComponents({
-            seedId: githubTextareaId,
-            activeElement,
-          }),
-        );
-
-        /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
-        // Render searchbar
-        ReactDOM.render(
-          // eslint-disable-next-line react/jsx-filename-extension
-          <Provider store={store}>
-            <Searchbar
-              id={semaSearchContainerId}
-              commentBox={activeElement}
-            />
-          </Provider>,
-          $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0],
-        );
-        // Render Semabar
-        ReactDOM.render(
-          <Provider store={store}>
-            <Semabar
-              id={semabarContainerId}
-              style={{ position: 'relative' }}
-            />
-          </Provider>,
-          $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0],
-        );
-
-        /** RENDER MIRROR */
-        // TODO: try to make it into React component for consistency and not to have to pass store
-        // eslint-disable-next-line no-new
-        new Mirror(activeElement, getHighlights, {
-          onMouseoverHighlight: (payload) => {
-            // close existing
-            store.dispatch(toggleGlobalSearchModal());
-            store.dispatch(
-              toggleGlobalSearchModal({
-                ...payload,
-                isLoading: true,
-                openFor: $(activeElement).attr('id'),
-              }),
-            );
-          },
-          store,
-          semaBarContainerId: semabarContainerId,
-        });
-
-        // Add Sema icon before Markdown icon
-        const markdownIcon = $(activeElement)
-          .parent()
-          .siblings('label')
-          .children('.tooltipped.tooltipped-nw');
-
-        $(markdownIcon).after(SEMA_ICON);
-      }
-
-      // add default reaction for approval comment
-      const isReviewChangesContainer = semabarContainerId === 'semabar_pull_request_review_body';
-      if (isReviewChangesContainer) {
-        const barState = store.getState().semabars[semabarContainerId];
-        const { isReactionDirty } = barState;
-        // eslint-disable-next-line no-underscore-dangle
-        const selectedReactionId = barState.selectedReaction._id;
-        if (!isReactionDirty) {
-          handleReviewChangesClick(
-            semabarContainerId,
-            activeElement,
-            selectedReactionId,
+              onSuggestion();
+            }, ON_INPUT_DEBOUCE_INTERVAL_MS),
           );
+          /** ADD ROOTS FOR REACT COMPONENTS */
+          // search bar container
+          $(activeElement).before(
+            `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`,
+          );
+          // semabar container
+          $(activeElement).after(
+            `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`,
+          );
+
+          /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
+          store.dispatch(
+            addSemaComponents({
+              seedId: githubTextareaId,
+              activeElement,
+            }),
+          );
+
+          /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
+          // Render searchbar
+          ReactDOM.render(
+            // eslint-disable-next-line react/jsx-filename-extension
+            <Provider store={store}>
+              <Searchbar
+                id={semaSearchContainerId}
+                commentBox={activeElement}
+              />
+            </Provider>,
+            $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0],
+          );
+          // Render Semabar
+          ReactDOM.render(
+            <Provider store={store}>
+              <Semabar
+                id={semabarContainerId}
+                style={{ position: 'relative' }}
+              />
+            </Provider>,
+            $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0],
+          );
+
+          /** RENDER MIRROR */
+          // TODO: try to make it into React component for consistency and not to have to pass store
+          // eslint-disable-next-line no-new
+          new Mirror(activeElement, getHighlights, {
+            onMouseoverHighlight: (payload) => {
+              // close existing
+              store.dispatch(toggleGlobalSearchModal());
+              store.dispatch(
+                toggleGlobalSearchModal({
+                  ...payload,
+                  isLoading: true,
+                  openFor: $(activeElement).attr('id'),
+                }),
+              );
+            },
+            store,
+            semaBarContainerId: semabarContainerId,
+          });
+
+          // Add Sema icon before Markdown icon
+          const markdownIcon = $(activeElement)
+            .parent()
+            .siblings('label')
+            .children('.tooltipped.tooltipped-nw');
+
+          $(markdownIcon).after(SEMA_ICON);
+        }
+
+        // add default reaction for approval comment
+        const isReviewChangesContainer = semabarContainerId === 'semabar_pull_request_review_body';
+        if (isReviewChangesContainer) {
+          const barState = store.getState().semabars[semabarContainerId];
+          const { isReactionDirty } = barState;
+          // eslint-disable-next-line no-underscore-dangle
+          const selectedReactionId = barState.selectedReaction._id;
+          if (!isReactionDirty) {
+            handleReviewChangesClick(
+              semabarContainerId,
+              activeElement,
+              selectedReactionId,
+            );
+          }
         }
       }
     } else {
-      if (!activeElement.classList.contains('sema-input')) {
-        activeElement?.blur();
-      }
+      activeElement?.blur();
     } 
   },
   true,
