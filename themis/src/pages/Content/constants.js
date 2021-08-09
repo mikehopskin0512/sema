@@ -7,6 +7,7 @@ export const { SEMA_CLIENT_SECRET } = process.env;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
+export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
@@ -255,4 +256,4 @@ export const LIGHT = 'light';
 export const DARK = 'dark';
 export const DARK_DIMMED = 'dark_dimmed';
 
-export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true'
+export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';

@@ -114,7 +114,9 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
   const [{ collections }] = await User.aggregate(userActiveCommentsQuery);
   const userComments = [...new Set(collections.map(({ comments }) => (comments)).join('').split(','))];
   const commentsId = searchResults.filter((comment) => userComments.includes(comment.toString()));
-  const comments = await SuggestedComment.find({ _id: { $in: commentsId } });
+  const comments = await SuggestedComment
+    .find({ _id: { $in: commentsId } })
+    .populate({ path: 'engGuides.engGuide', model: 'EngGuide' });
   return comments;
 };
 
@@ -130,9 +132,17 @@ const searchComments = async (user, searchQuery) => {
       _id: id,
       title,
       comment,
+      engGuides,
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
-    }) => ({ id, title, comment, sourceName, sourceUrl }),
+    }) => ({
+      id,
+      title,
+      comment,
+      sourceName,
+      sourceUrl,
+      engGuides,
+    }),
   );
 
   // Store the search case to database
