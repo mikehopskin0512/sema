@@ -57,12 +57,12 @@ const TimeToValueMetric = () => {
           className: 'p-10',
         },
         {
-          Header: 'Manually change reaction**',
+          Header: 'Manually change reaction',
           accessor: 'changeReaction',
           className: 'p-10',
         },
         {
-          Header: 'Manually Change tag**',
+          Header: 'Manually Change tag',
           accessor: 'changeTags',
           className: 'p-10',
         },
@@ -76,14 +76,14 @@ const TimeToValueMetric = () => {
   ];
 
   const dataSource = useMemo(() => timeToValueMetric.map((item) => ({
-    ...item,
-    leaveWaitlist: item.leaveWaitlist ? 'YES' : 'NO',
-    acceptInvite: item.acceptInvite ? 'YES' : 'NO',
+    name: item.name,
+    leaveWaitlist: item.leaveWaitlist ? 'Yes' : 'No',
+    acceptInvite: item.acceptInvite ? 'Yes' : 'No',
     lastLogin: item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
     saveCommentAt: item.saveCommentAt ? format(new Date(item.saveCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
     insertSuggestedCommentAt: item.insertSuggestedCommentAt ? format(new Date(item.insertSuggestedCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
-    changeReaction: item.changeReaction ? format(new Date(item.changeReaction), 'yyyy-MM-dd hh:mm:ss') : '',
-    changeTags: item.changeTags ? 'YES' : 'NO',
+    changeReaction: item.changeReaction ? 'Yes' : 'No',
+    changeTags: item.changeTags ? 'Yes' : 'No',
   })), [timeToValueMetric]);
 
   const options = [

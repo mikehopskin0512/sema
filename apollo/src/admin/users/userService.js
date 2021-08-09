@@ -218,15 +218,15 @@ export const getTimeToValueMetric = async (params, isExport = false) => {
       : date),
       minDate);
 
-    let changeReaction;
-    let changeTags;
+    let changeReaction = false;
+    let changeTags = false;
 
     await Promise.all(user.smartComments.map(async (smartComment) => {
       const { suggestReaction, suggestedTags } = suggest(smartComment.comment);
       if (suggestReaction && suggestReaction._id.toString() !== smartComment.reaction.toString()) {
         const reaction = await Reaction.findById(suggestReaction._id);
         if (!changeReaction || isBefore(changeReaction, reaction.createdAt)) {
-          changeReaction = reaction.createdAt;
+          changeReaction = true;
         }
       }
       if (suggestedTags && suggestedTags.sort().join('') !== smartComment.tags.map((item) => item.label).sort().join('')) {
@@ -235,7 +235,6 @@ export const getTimeToValueMetric = async (params, isExport = false) => {
     }));
 
     metricData.push({
-      ...user,
       id: user._id,
       name: fullName(user),
       leaveWaitlist: user.isWaitlist,
@@ -258,13 +257,13 @@ export const exportTimeToValueMetric = async (params) => {
 
     const mappedData = metric.map((item) => ({
       Name: item.name,
-      'Leave waitlist': item.leaveWaitlist ? 'YES' : 'NO',
-      'Accept invite': item.acceptInvite ? 'YES' : 'NO',
+      'Leave waitlist': item.leaveWaitlist ? 'Yes' : 'No',
+      'Accept invite': item.acceptInvite ? 'Yes' : 'No',
       'Last login': item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
       'Save smartComment': isDate(item.saveCommentAt) ? format(new Date(item.saveCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
       'Insert suggested comment': isDate(item.insertSuggestedCommentAt) ? format(new Date(item.insertSuggestedCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
-      'Manually change reaction**': item.changeReaction ? 'YES' : 'NO',
-      'Manually Change tag**': item.changeTags ? 'YES' : 'NO',
+      'Manually change reaction': item.changeReaction ? 'Yes' : 'No',
+      'Manually Change tag': item.changeTags ? 'Yes' : 'No',
       '# of smart comments': item.countOfSmartComments,
     }));
 
@@ -276,8 +275,8 @@ export const exportTimeToValueMetric = async (params) => {
       'Last login',
       'Save smartComment',
       'Insert suggested comment',
-      'Manually change reaction**',
-      'Manually Change tag**',
+      'Manually change reaction',
+      'Manually Change tag',
       '# of smart comments'
     ];
 
