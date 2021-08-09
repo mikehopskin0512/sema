@@ -151,7 +151,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="has-background-gray-9 pb-250">
+      <div className="has-background-gray-9 pb-180">
         <Helmet {...DashboardHelmet} />
         {
           repos.favorites.length === 0 && repos.other.length === 0 ? (

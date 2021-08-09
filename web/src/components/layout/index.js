@@ -1,5 +1,6 @@
 /* eslint react/no-danger: 0, max-len: 0 */
 import React from 'react';
+import clsx from 'clsx';
 import Head from 'next/head';
 import styles from './layout.module.scss';
 import Header from '../header';
@@ -46,7 +47,7 @@ const withLayout = (Page) => (props) => (
     </Head>
     <ExtensionStatus />
     <Header />
-    <div className={styles.content}>
+    <div className={clsx(styles.content, 'pb-70')}>
       <Page {...props} />
     </div>
     <div className={styles.footer}>
