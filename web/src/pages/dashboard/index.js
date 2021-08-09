@@ -133,7 +133,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (user.collections.length === 0) {
+    if (user?.collections?.length === 0) {
       toggleOnboardingModalActive(true);
     }
   }, [user]);
