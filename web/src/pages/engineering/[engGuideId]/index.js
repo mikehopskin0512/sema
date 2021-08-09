@@ -101,7 +101,7 @@ const CollectionEngGuides = () => {
   return (
     <div className="has-background-gray-9 hero">
       <Helmet title="Engineering Guide" />
-      <div className="hero-body">
+      <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/collections" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />

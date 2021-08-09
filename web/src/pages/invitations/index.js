@@ -100,7 +100,7 @@ const Invite = () => {
     <>
       <Helmet {...InvitesHelmet} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <section className={clsx("hero mb-40", styles.container)}>
+      <section className={clsx("hero mb-40 pb-300", styles.container)}>
         {/* <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Invites

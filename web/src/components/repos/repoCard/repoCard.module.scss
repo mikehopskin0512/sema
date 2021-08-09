@@ -1,6 +1,5 @@
 .card {
   max-width: calc(100%/3);
-  min-height: 280px;
   @media only screen and (max-width: 769px) {
     max-width: 100% !important;
     flex: 1;
