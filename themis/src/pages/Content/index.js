@@ -50,6 +50,8 @@ import {
   updateSelectedEmoji,
 } from './modules/redux/action';
 
+const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
@@ -143,7 +145,7 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (isValidSemaTextBox(activeElement)) {
+    if (prPage.test(document.URL) && isValidSemaTextBox(activeElement)) {
       checkLoggedIn();
       const semaElements = $(activeElement).siblings('div.sema');
       let extensionTheme = LIGHT;
@@ -303,7 +305,11 @@ document.addEventListener(
           );
         }
       }
-    }
+    } else {
+      if (!activeElement.classList.contains('sema-input')) {
+        activeElement?.blur();
+      }
+    } 
   },
   true,
 );

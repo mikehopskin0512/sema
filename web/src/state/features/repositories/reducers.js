@@ -6,7 +6,7 @@ const initialState = {
     repository: {},
     repositories: [],
     reactions: [],
-    tags: [],
+    tags: {},
     overview: {},
   },
 
