@@ -16,7 +16,7 @@ const EngineeringGuides = () => {
     engGuidesState: state.engGuidesState,
   }));
   const { token } = auth;
-  const { engGuides } = engGuidesState;
+  const { engGuides = [] } = engGuidesState;
 
   const [page, setPage] = useState(1);
 
@@ -31,7 +31,7 @@ const EngineeringGuides = () => {
   return (
     <div className="has-background-gray-9 hero">
       <Helmet {...CommentCollectionsHelmet} />
-      <div className="hero-body">
+      <div className="hero-body pb-250">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Community Engineering Guides
@@ -40,9 +40,9 @@ const EngineeringGuides = () => {
         <p className="is-size-6 has-text-deep-black px-10 mb-40">
           Explore detail of best practise coding techniques from world recongized experts.
         </p>
-        <CardList collections={engGuides.slice(0, NUM_PER_PAGE * page) || []} />
+        <CardList collections={engGuides?.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
-          {engGuides.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides.length && (
+          {engGuides?.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides?.length && (
             <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6" type="button">
               View More
             </button>

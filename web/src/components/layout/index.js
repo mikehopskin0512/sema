@@ -46,8 +46,12 @@ const withLayout = (Page) => (props) => (
     </Head>
     <ExtensionStatus />
     <Header />
-    <Page className={styles.content} {...props} />
-    <Footer />
+    <div className={styles.content}>
+      <Page {...props} />
+    </div>
+    <div className={styles.footer}>
+      <Footer />
+    </div>
   </div>
 );
 
