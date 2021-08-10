@@ -37,7 +37,7 @@ const ExtensionStatus = () => {
   }, [extensionStatus]);
 
   return (
-    <div className={clsx(styles['status-container'], isHidden() && 'is-hidden')}>
+    <div className={clsx(styles['status-container'], isHidden() && 'is-hidden', extensionStatus && 'is-hidden')}>
       <div className="hero">
         <div className="hero-body py-15">
           <div className="is-flex m-0 is-align-items-center is-flex-wrap-wrap is-justify-content-space-between">
