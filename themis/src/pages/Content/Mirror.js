@@ -11,6 +11,7 @@ import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { updateSelectedEmoji } from './modules/redux/action';
 import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from './constants';
+import { checkSubmitButton, getSemaIds } from './modules/content-util';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -223,6 +224,17 @@ class Mirror {
     const { value } = this._elementToMimic;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
+
+    const textareaId = this._elementToMimic.id;
+    const { semabarContainerId } = getSemaIds(textareaId);
+    /**
+     * check for the button's behaviour
+     * after github's own validation
+     * has taken place for the textarea
+     */
+    setTimeout(() => {
+      checkSubmitButton(semabarContainerId);
+    }, 0);
   }
 
   _onMousePartial(event) {
