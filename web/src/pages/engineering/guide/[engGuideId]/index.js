@@ -15,10 +15,29 @@ import { engGuidesOperations } from '../../../../state/features/engGuides';
 
 const { getEngGuides } = engGuidesOperations;
 
+const initialEngGuideData = {
+  name: '',
+  _id: '',
+  data: {
+    author: '',
+    body: '',
+    collections: [],
+    displayId: '',
+    isActive: true,
+    source: {
+      name: '',
+      url: '',
+    },
+    tags: [],
+    title: '',
+    _id: '',
+  },
+};
+
 const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [engGuideData, setEngGuideData] = useState();
+  const [engGuideData, setEngGuideData] = useState(initialEngGuideData);
   const { auth, engGuideState } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
@@ -49,13 +68,13 @@ const EngineeringGuidePage = () => {
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
       return tagsArr.map(
-        (tag) => (
+        (tag) => (tag.label && tag.type ? (
           <div
             key={`tag-${tag._id}`}
-            className={clsx('tag is-uppercase is-rounded is-size-7 has-text-weight-semibold', tag.type === 'language' ? 'has-text-primary is-primary' : 'is-light')}>
-            {tag.title}
+            className={clsx('tag is-uppercase is-rounded is-size-8 has-text-weight-semibold mr-5', tag.type === 'language' ? 'is-primary' : 'is-light')}>
+            {tag.label}
           </div>
-        ),
+        ) : null),
       );
     }
   };
@@ -103,25 +122,37 @@ const EngineeringGuidePage = () => {
               </nav>
             </div>
             <div className="px-30 my-20">
-              <div className="is-flex">
-                <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{engGuideData.data.title}</p>
-                <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-                  {renderTags(engGuideData.data.tags)}
-                </div>
-              </div>
-              <div className="is-flex my-10 is-align-items-center">
-                <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(engGuideData.data.author) ? 'user' : engGuideData.data.author}</p>
-                {/* <p className="is-size-7 has-text-grey">Jan 10, 2021</p> */}
-              </div>
-              <div className="is-flex my-10 is-align-items-center">
-                <p className="is-size-5 has-text-deep-black"><b>Source:</b> {engGuideData.data.source.name}</p>
-                <div className="is-divider-vertical" />
-                <p className="is-size-5 mr-15 has-text-deep-black"><b>Collection:</b> {engGuideData.name}</p>
-              </div>
-              <div
-                className={clsx('has-background-white has-border-10px p-25 is-size-6', styles['body-container'])}>
-                {formatText(engGuideData.data.body)}
-              </div>
+              { engGuideData.data && (
+                <>
+                  <div className="is-flex is-flex-wrap-wrap">
+                    <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{engGuideData.data.title || ''}</p>
+                    <div className="is-flex is-flex-wrap-wrap is-align-items-center">
+                      {renderTags(engGuideData.data.tags || [])}
+                    </div>
+                  </div>
+                  <div className="is-flex my-10 is-align-items-center">
+                    <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(engGuideData.data.author) ? 'user' : engGuideData.data.author}</p>
+                    {/* <p className="is-size-7 has-text-grey">Jan 10, 2021</p> */}
+                  </div>
+                  <div className="is-flex my-10 is-align-items-center is-flex-wrap-wrap">
+                    <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {engGuideData.data.source.name || 'sema'}</p>
+                    <div className="is-divider-vertical" />
+                    <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {engGuideData.name}</p>
+                  </div>
+                  <div
+                    className={clsx('has-background-white has-border-10px p-25 is-size-6', styles['body-container'])}>
+                    {formatText(engGuideData.data.body || '')}
+                  </div>
+                  <div className="is-flex mt-25 is-align-items-center">
+                    <p className="is-size-6 has-text-deep-black">
+                      <b className="mr-5">Related Suggested Comments Collection:</b>
+                      <a href={`/collections/${engGuideData._id}`}>
+                        <span className="is-underlined has-text-deep-black">{engGuideData.name}</span>
+                      </a>
+                    </p>
+                  </div>
+                </>
+              ) }
             </div>
           </>
         ) : 'Not found' }
