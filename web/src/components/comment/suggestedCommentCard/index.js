@@ -9,7 +9,13 @@ const defaultDate = '07/01/2021';
 
 const SuggestedCommentCard = ({ data }) => {
   const {
-    author, comment, tags, source, title, createdAt = defaultDate,
+    author = '',
+    comment = '',
+    tags = [],
+    source,
+    title = '',
+    createdAt = defaultDate,
+    engGuides,
   } = data;
 
   return (
@@ -26,26 +32,39 @@ const SuggestedCommentCard = ({ data }) => {
           ))}
         </div>
       </div>
-      <div className="is-flex is-justify-content-space-between is-align-items-center my-10 is-flex-wrap-wrap">
-        <div className="is-flex is-align-items-center">
-          { isEmpty(author) ? null : (
-            <>
-              <p className="is-size-6 mr-10 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
-              <div className={clsx('mr-10', styles.vl)} />
-            </>
+      { isEmpty(author) && isEmpty(source.name) ? null : (
+        <div className="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
+          <div className="is-flex is-align-items-center">
+            { isEmpty(author) ? null : (
+              <>
+                <p className="is-size-6 mr-10 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
+                <div className={clsx('mr-10', styles.vl)} />
+              </>
+            )}
+            { isEmpty(source.name) ? null : (
+              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
+            ) }
+          </div>
+          { isEmpty(source.name) ? null : (
+            <a href={source.url} target="_blank" rel="noreferrer">
+              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
+            </a>
           )}
-          <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
         </div>
-        <a href={source.url} target="_blank" rel="noreferrer">
-          <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
-        </a>
-      </div>
+      ) }
       <p className="has-text-deep-black is-size-6 my-20">
         {comment}
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
-        {/* <p className="has-text-deep-black is-size-6"><b>Supporting Documents:</b> Document-007-Props Naming</p> */}
+        { engGuides ? (
+          <p className="is-size-6 has-text-deep-black">
+            <b className="mr-5">Related Eng. Guides:</b>
+            <a href={`/engineering/guide/${engGuides._id}`}>
+              <span className="is-underlined has-text-deep-black">{engGuides.title}</span>
+            </a>
+          </p>
+        ) : null }
         <span />
         <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>

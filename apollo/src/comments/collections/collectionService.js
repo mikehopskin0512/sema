@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { find, flatten } from 'lodash';
+import { uniqBy } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -50,17 +50,58 @@ export const createMany = async (collections) => {
   }
 };
 
-export const findById = async (id, select) => {
+export const findById = async (id) => {
   try {
-    const query = Collection.findOne({ _id: id});
-    if (select) {
-      query.select(select)
+    const collections = await Collection.aggregate([
+      {
+        $match: { _id: new ObjectId(id)}
+      },
+      {
+        $lookup: {
+          from: 'suggestedComments',
+          as: 'comments',
+          pipeline: [
+            {
+              $lookup: {
+                from: 'engGuides',
+                localField: 'engGuides',
+                foreignField: '_id',
+                as: 'engGuides'
+              }
+            },
+            {
+              $lookup: {
+                from: 'collections',
+                localField: '_id',
+                foreignField: 'comments',
+                as: 'collection'
+              }
+            },
+            {
+              $unwind: '$collection'
+            },
+            {
+              $unwind: {
+                path: '$engGuides',
+                preserveNullAndEmptyArrays: true,
+              }
+            },
+            {
+              $match: {
+                'collection._id': new ObjectId(id),
+              }
+            },
+          ]
+        }
+      },
+    ]);
+    if (collections.length > 0) {
+      return collections[0];
     }
-    const collection = await query.lean().populate({
-      path: 'comments',
-      model: 'SuggestedComment'
-    }).exec();
-    return collection;
+    return {
+      statusCode: 400,
+      message: 'Unable to process request',
+    };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -68,20 +109,31 @@ export const findById = async (id, select) => {
   }
 };
 
-export const getUserCollectionsById = async (userId) => {
+export const getUserCollectionsById = async (userData) => {
   try {
-    const query = User.findOne({ _id: userId });
-    const user = await query.lean().populate({
-      path: 'collections.collectionData',
-      model: 'Collection',
-      populate: {
-        path: 'comments',
-        model: 'SuggestedComment',
+    const user = await User.aggregate([
+      {
+        $match: { _id: new ObjectId(userData._id) },
       },
-    }).exec();
-    if (user) {
-      const { collections } = user;
-      const comments = flatten(collections.map((item) => item.collectionData.comments));
+      {
+        $lookup: {
+          from: 'collections',
+          localField: 'collections.collectionData',
+          foreignField: '_id',
+          as: 'collections'
+        }
+      },
+      {
+        $lookup: {
+          from: 'suggestedComments',
+          localField: 'collections.comments',
+          foreignField: '_id',
+          as: 'comments'
+        }
+      }
+    ]);
+    if (user.length > 0) {
+      const { comments } = user[0];
       return comments;
     }
     return {
