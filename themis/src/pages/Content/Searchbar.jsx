@@ -46,14 +46,10 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onInsertPressed = (id, suggestion, engGuides) => {
-    const engGuideLinks = engGuides?.map(({ engGuide }) => {
-      const { name, url } = engGuide.source;
-      return `\n\n📄 [${name}](${url})`;
-    }).join(' ');
+  const onInsertPressed = (id, suggestion) => {
     const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
-    props.commentBox.value = `${value}${suggestion}${engGuideLinks}`;
+    props.commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
