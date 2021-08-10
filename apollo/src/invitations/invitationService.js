@@ -1,3 +1,4 @@
+import { subDays } from 'date-fns';
 import * as Json2CSV from 'json2csv';
 import Invitation from './invitationModel';
 import User from '../users/userModel';
@@ -144,10 +145,11 @@ export const deleteInvitation = async (_id) => {
   }
 };
 
-export const getInviteMetrics = async (type) => {
+export const getInviteMetrics = async (type, timeRange) => {
   try {
+    const startDate = subDays(new Date(), parseInt(timeRange, 10));
     const invites = await Invitation.aggregate([
-      { $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
+      { $match: { createdAt: { $gt: startDate } } },
       {
         $lookup: {
           from: 'users',
@@ -185,8 +187,8 @@ export const getInviteMetrics = async (type) => {
   }
 };
 
-export const exportInviteMetrics = async (type) => {
-  const metricData = await getInviteMetrics(type);
+export const exportInviteMetrics = async (type, timeRange) => {
+  const metricData = await getInviteMetrics(type, timeRange);
   const mappedMetricData = metricData.map(item => ({
     Email: item.sender && (
       type === 'person'
