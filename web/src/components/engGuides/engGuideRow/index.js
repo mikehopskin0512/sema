@@ -10,18 +10,18 @@ const EngGuideRow = (props) => {
   } = props;
 
   const renderLanguages = (languagesArr) => {
-    const languages = languagesArr.filter((item) => item.language === 'language');
+    const languages = languagesArr.filter((item) => item.type === 'language');
     if (languages.length > 0) {
-      return languages.map((language) => (<div key={`${_id}-language-${language._id}`} className={clsx('tag is-primary is-uppercase is-rounded has-text-primary is-size-7 has-text-weight-semibold', styles.tag)}>{language.title}</div>
+      return languages.map((language) => (<div key={`${_id}-language-${language._id}`} className={clsx('is-size-8 mr-5 tag is-primary is-uppercase is-rounded has-text-primary is-size-7 has-text-weight-semibold', styles.tag)}>{language.label}</div>
       ));
     }
     return 'No languages';
   };
 
   const renderTags = (tagsArr) => {
-    const filteredTags = tagsArr.filter((item) => item.language === 'language');
+    const filteredTags = tagsArr.filter((item) => item.type === 'guide');
     if (filteredTags.length > 0) {
-      return filteredTags.map((language) => (<div key={`${_id}-tag-${language._id}`} className={clsx('tag is-primary is-uppercase is-rounded has-text-primary is-size-7 has-text-weight-semibold', styles.tag)}>{language.title}</div>
+      return filteredTags.map((guide) => (<div key={`${_id}-tag-${guide._id}`} className={clsx('is-size-8 mr-5 mb-5 tag is-light is-uppercase is-rounded is-size-7 has-text-weight-semibold')}>{guide.label}</div>
       ));
     }
     return 'No Tags';
@@ -44,12 +44,12 @@ const EngGuideRow = (props) => {
           <p className="is-size-6">{collections.length > 0 ? collections[0].name : ''}</p>
         </div>
       </td>
-      <td className="py-15 has-background-white px-10">
+      <td className={clsx('py-15 has-background-white px-10', styles['tag-col'])}>
         <div className="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-flex-star is-flex-wrap-wrap">
           {renderLanguages(tags)}
         </div>
       </td>
-      <td className="py-15 has-background-white px-10">
+      <td className={clsx('py-15 has-background-white px-10', styles['tag-col'])}>
         <div className="is-flex is-flex-direction-row is-justify-content-flex-start is-align-items-flex-start is-flex-wrap-wrap">
           {renderTags(tags)}
         </div>
