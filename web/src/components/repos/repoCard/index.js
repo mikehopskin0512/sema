@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
@@ -17,8 +16,6 @@ const statLabels = {
   smartCommenters: 'Smart Commenters',
   semaUsers: 'Sema User',
 };
-
-const descriptionMaxLength = 170;
 
 const RepoCard = (props) => {
   const {
@@ -37,17 +34,6 @@ const RepoCard = (props) => {
 
   const [stats, setStats] = useState({});
   const [users] = useState([]);
-
-  const truncateText = (text) => {
-    if (isEmpty(text)) {
-      return 'No description';
-    }
-    let truncated = text;
-    if (text.length > descriptionMaxLength) {
-      truncated = `${text.substr(0, descriptionMaxLength)}...`;
-    }
-    return truncated;
-  };
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
@@ -101,10 +87,6 @@ const RepoCard = (props) => {
           {/* <FontAwesomeIcon icon={isFavorite ? faStarSolid : faStar} size="lg" color={isFavorite ? '#FFA20F' : '#192129'} /> */}
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
-          <div className="px-12 py-15 is-flex is-justify-content-space-between is-align-items-center">
-            <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20')}>{truncateText(description)}</p>
-            {renderUsers()}
-          </div>
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
             {Object.keys(statLabels).map((item) => (
               <div className={clsx('my-12 is-flex', styles.stat)}>

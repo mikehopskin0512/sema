@@ -46,14 +46,10 @@ const SearchBar = (props) => {
     props.handleChange(value);
   };
 
-  const onInsertPressed = (id, suggestion, engGuides) => {
-    const engGuideLinks = engGuides?.map(({ engGuide }) => {
-      const { name, url } = engGuide.source;
-      return `\n\n📄 [${name}](${url})`;
-    }).join(' ');
+  const onInsertPressed = (id, suggestion) => {
     const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
-    props.commentBox.value = `${value}${suggestion}${engGuideLinks}`;
+    props.commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
@@ -234,8 +230,9 @@ const SearchBar = (props) => {
                 />
                 <div className="sema-dropdown-footer">
                   <img
+                    width={18}
                     className="sema-mr-1"
-                    src={chrome.runtime.getURL('img/sema-logo.svg')}
+                    src={chrome.runtime.getURL('img/tray-logo.svg')}
                     alt="sema logo"
                   />
                   {' '}

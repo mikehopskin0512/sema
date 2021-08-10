@@ -648,3 +648,24 @@ export const getHighlights = (text) => {
   });
   return alerts;
 };
+
+export const checkSubmitButton = (semabarId, data) => {
+  const semabarData = data || store.getState().semabars[semabarId];
+  const { selectedReaction, selectedTags } = semabarData;
+  const textareaId = semabarId.replace('semabar_', '');
+  const textareaValue = document.getElementById(textareaId).value.trim();
+
+  const parents = $(`#${semabarId}`).parentsUntil('form');
+  const lastParent = parents[parents.length - 1];
+  const formButtons = $(lastParent).next();
+  const primaryButton = $(formButtons).contents().find('button.btn.btn-primary');
+  // eslint-disable-next-line max-len
+  const shouldShowButton = selectedReaction.title !== EMOJIS[0].title || (selectedTags.find((tag) => tag.selected));
+  if (!textareaValue) {
+    if (shouldShowButton) {
+      $(primaryButton).removeAttr('disabled');
+    } else {
+      $(primaryButton).attr('disabled', true);
+    }
+  }
+};

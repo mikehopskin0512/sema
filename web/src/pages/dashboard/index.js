@@ -133,7 +133,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (user.collections.length === 0) {
+    if (user?.collections?.length === 0) {
       toggleOnboardingModalActive(true);
     }
   }, [user]);
@@ -151,7 +151,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="has-background-gray-9 ">
+      <div className="has-background-gray-9 pb-180">
         <Helmet {...DashboardHelmet} />
         {
           repos.favorites.length === 0 && repos.other.length === 0 ? (
