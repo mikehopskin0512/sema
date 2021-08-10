@@ -29,7 +29,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="has-background-white-gray">
+    <div className="has-background-white-gray pb-300">
       <Helmet {...ProfileHelmet} />
       <EditModal onClose={onClose} isActive={editModalIsOpen} />
       <div className="container py-80 px-20">

@@ -73,7 +73,7 @@ const RepoPageLayout = ({ children }) => {
   }
 
   return (
-    <div className="has-background-white">
+    <div className="has-background-white pb-250">
       <div className={clsx("mt-10 pl-50", styles['repo-select-container'])}>
         <Select 
           onChange={onChangeSelect}

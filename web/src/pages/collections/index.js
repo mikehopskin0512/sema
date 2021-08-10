@@ -82,7 +82,7 @@ const CommentCollections = () => {
     <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet {...CommentCollectionsHelmet} />
       <AddSuggestedCommentModal _id={collectionId} active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
-      <div id="collectionBody" className={clsx('hero-body', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
+      <div id="collectionBody" className={clsx('hero-body pb-250', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Suggested Comments

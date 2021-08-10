@@ -85,7 +85,7 @@ const Login = () => {
       <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className="hero">
-        <div className="hero-body">
+        <div className="hero-body pb-300">
           <div className="container">
             <div className="tile is-ancestor">
               <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">

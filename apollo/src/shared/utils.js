@@ -54,6 +54,7 @@ export const getTokenData = (user) => {
     username: user.username,
     isVerified: user.isVerified,
     isWaitlist: user.isWaitlist,
-  }
+    isSemaAdmin: user.isSemaAdmin,
+  };
   return tokenData;
-}
+};
