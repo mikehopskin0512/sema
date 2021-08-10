@@ -40,7 +40,13 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
-
+  const engGuidesToStr = (engGuides) => {
+    const links = engGuides?.map(({ engGuide }) => {
+      const { name, url } = engGuide.source;
+      return `\n\n📄 [${name}](${url})`;
+    }).join(' ');
+    return links || '';
+  };
   const onViewPressed = (suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
@@ -92,12 +98,12 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           <Button
             icon="fa-file-import"
             title="Insert"
-            onClick={() => onInsertPressed(id, comment, engGuides)}
+            onClick={() => onInsertPressed(id, comment + engGuidesToStr(engGuides))}
           />
           <Button
             icon="fa-copy"
             title={isCopied ? 'Copied!' : 'Copy'}
-            onClick={() => onCopyPressed(id, comment)}
+            onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
           />
           <Button
             icon="fa-eye"
@@ -125,12 +131,12 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
           <Button
             title="Insert"
             icon="fa-file-import"
-            onClick={() => onInsertPressed(id, comment, engGuides)}
+            onClick={() => onInsertPressed(id, comment + engGuidesToStr(engGuides))}
           />
           <Button
             title={isCopied ? 'Copied!' : 'Copy'}
             icon="fa-copy"
-            onClick={() => onCopyPressed(id, comment)}
+            onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
           />
         </div>
         {getCommentTitleInterface(title, sourceName)}
