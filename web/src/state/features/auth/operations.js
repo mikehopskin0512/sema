@@ -1,7 +1,8 @@
 import Router from 'next/router';
-import * as actions from './actions';
 import jwtDecode from 'jwt-decode';
+import * as actions from './actions';
 import { organizationsOperations } from '../organizations';
+import { triggerAlert } from '../alerts/actions';
 
 const { createOrg } = organizationsOperations;
 
@@ -37,7 +38,7 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
 
     Router.push('/dashboard');
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const { response: { data: { message } = {}, status, statusText } = {} } = error || '';
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(triggerAlert(errMessage, 'error'));
