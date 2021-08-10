@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { find, round } from 'lodash';
+import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { TAGS } from '../../utils/constants';
 
 const CircularPacking = ({ data }) => {
+  const [circlePackingData, setCirclePackingData] = useState({
+    children: [],
+  });
   const parseData = (rawData) => {
     let children = [];
     if (rawData) {
@@ -37,24 +40,35 @@ const CircularPacking = ({ data }) => {
     return chartData;
   };
 
+  useEffect(() => {
+    if (!isEmpty(data)) {
+      const parsedData = parseData(data);
+      setCirclePackingData(parsedData);
+    }
+  }, [data]);
+
   const renderTooltip = ({ percentage }) => (
     <div className="box has-background-white px-20 py-5 border-radius-4px">
       <p className="has-text-weight-semibold">{round(percentage)}%</p>
     </div>
   );
 
+  if (circlePackingData.children.length === 0) {
+    return <div className="is-flex is-justify-content-center">No data</div>;
+  }
+
   return (
     <>
       <ResponsiveCirclePacking
-        data={parseData(data)}
-        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+        data={circlePackingData}
+        margin={{ top: -20, right: 20, bottom: 20, left: 20 }}
         id="name"
         value="value"
         colors={(item) => item.data.color}
         padding={4}
         enableLabels
         leavesOnly
-        labelsSkipRadius={3}
+        labelsSkipRadius={10}
         labelTextColor={{ from: 'color', modifiers: [['darker', 5]] }}
         borderWidth={1}
         borderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}

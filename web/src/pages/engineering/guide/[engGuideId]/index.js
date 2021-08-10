@@ -88,7 +88,7 @@ const EngineeringGuidePage = () => {
   return (
     <div className="hero">
       <Helmet title="Engineering Guide" />
-      <div className="hero-body">
+      <div className="hero-body pb-300">
         { engGuideData ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">

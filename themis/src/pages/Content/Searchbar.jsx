@@ -230,8 +230,9 @@ const SearchBar = (props) => {
                 />
                 <div className="sema-dropdown-footer">
                   <img
+                    width={18}
                     className="sema-mr-1"
-                    src={chrome.runtime.getURL('img/sema-logo.svg')}
+                    src={chrome.runtime.getURL('img/tray-logo.svg')}
                     alt="sema logo"
                   />
                   {' '}

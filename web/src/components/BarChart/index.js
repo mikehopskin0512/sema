@@ -1,12 +1,13 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from '../../utils/constants';
 
 const NivoBarChart = ({ data = [] }) => {
+  const [barChartData, setBarChartData] = useState([]);
   const parseData = (rawData) => {
     if (rawData.length) {
       return rawData.map((item) => {
@@ -33,6 +34,13 @@ const NivoBarChart = ({ data = [] }) => {
     return [];
   };
 
+  useEffect(() => {
+    if (data.length > 0) {
+      const parsedData = parseData(data);
+      setBarChartData(reverse(parsedData));
+    }
+  }, [data]);
+
   const getDataColor = ({ id }) => {
     const emoji = find(EMOJIS, { _id: id });
     return emoji.color;
@@ -48,10 +56,14 @@ const NivoBarChart = ({ data = [] }) => {
     );
   };
 
+  if (data.length === 0) {
+    return <div className="is-flex is-justify-content-center">No data</div>;
+  }
+
   return (
     <>
       <ResponsiveBar
-        data={reverse(parseData(data))}
+        data={barChartData}
         keys={EMOJIS.map((item) => item._id)}
         indexBy="date"
         margin={{ top: 50, right: 50, bottom: 120, left: 60 }}
