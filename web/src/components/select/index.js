@@ -13,6 +13,8 @@ const Select = ({
   searchPlaceholder,
   searchValue,
   onChangeSearchValue,
+  search,
+  size,
 }) => {
   const debouncedSearchTerm = useDebounce(searchValue, 300);
   const popupRef = useRef(null);
@@ -33,37 +35,56 @@ const Select = ({
     .toLowerCase()
     .indexOf(debouncedSearchTerm.toLowerCase()) !== -1), [options, debouncedSearchTerm]);
 
+  const getSize = () => {
+    switch (size) {
+      case 'lg':
+        return 'is-size-4';
+      case 'md':
+        return 'is-size-5';
+      case 'sm':
+        return 'is-size-6';
+      default:
+        return 'is-size-6';
+    }
+  };
+
   return (
     <div className={`dropdown ${isOpen && 'is-active'}`}>
       <div className="dropdown-trigger">
         <button
           type="button"
-          className="has-no-border has-background-white is-clickable outline-none p-5 is-size-4 has-text-weight-bold"
+          className={`has-no-border has-background-white is-clickable outline-none p-5 has-text-weight-bold ${getSize()}`}
           aria-haspopup="true"
           aria-controls="dropdown-menu"
           onClick={toggleMenu}
         >
           <span>{ value ? getLabel(value) : placeholder }</span>
-          <span className="icon is-small is-size-5 ml-15">
+          <span className="icon is-small is-size-6 ml-15">
             <FontAwesomeIcon icon={faCaretDown} />
           </span>
         </button>
       </div>
       <div className="dropdown-menu" ref={popupRef} role="menu">
         <div className="dropdown-content">
-          <div className="dropdown-item">
-            <input
-              className="input has-background-white is-size-6 px-15 py-10"
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchValue}
-              onChange={(e) => onChangeSearchValue(e.target.value)}
-            />
-          </div>
-          <hr className="dropdown-divider" />
+          {
+            search && (
+              <>
+                <div className="dropdown-item">
+                  <input
+                    className="input has-background-white is-size-6 px-15 py-10"
+                    type="text"
+                    placeholder={searchPlaceholder}
+                    value={searchValue}
+                    onChange={(e) => onChangeSearchValue(e.target.value)}
+                  />
+                </div>
+                <hr className="dropdown-divider" />
+              </>
+            )
+          }
           {
             suggestOptions.map((option, index) => (
-              <>
+              <div key={option.value}>
                 <button
                   type="button"
                   key={option.value}
@@ -77,7 +98,7 @@ const Select = ({
                     <hr className="dropdown-divider m-0" />
                   )
                 }
-              </>
+              </div>
             ))
           }
         </div>
@@ -91,9 +112,19 @@ Select.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
-  searchPlaceholder: PropTypes.string.isRequired,
-  searchValue: PropTypes.string.isRequired,
-  onChangeSearchValue: PropTypes.func.isRequired,
+  searchPlaceholder: PropTypes.string,
+  searchValue: PropTypes.string,
+  onChangeSearchValue: PropTypes.func,
+  search: PropTypes.bool,
+  size: PropTypes.string,
+};
+
+Select.defaultProps = {
+  search: true,
+  searchValue: '',
+  searchPlaceholder: '',
+  size: 'lg',
+  onChangeSearchValue: () => {},
 };
 
 export default Select;

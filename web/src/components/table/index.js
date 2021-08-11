@@ -108,16 +108,16 @@ const Table = ({
               )
             )
           }
-        </tbody>
-      </table>
-    </div>
-      {
-        !!pagination && (
-          <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
-            <div className='is-flex is-align-items-center'>
-              <div className='mr-10'>Total Count: {totalCount}</div>
-              <div>Show: {data.length}</div>
-            </div>
+          </tbody>
+        </table>
+      </div>
+      <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
+        <div className='is-flex is-align-items-center'>
+          <div className='mr-10'>Total Count: {totalCount || data.length}</div>
+          <div>Show: {data.length}</div>
+        </div>
+        {
+          !!pagination && (
             <div className='is-flex is-align-items-center'>
               <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
                 <button className="pagination-previous" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
@@ -137,9 +137,9 @@ const Table = ({
                 </select>
               </div>
             </div>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </>
   );
 };
@@ -153,7 +153,7 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
-  pagination: {},
+  pagination: null,
   loading: false,
   empty: null,
 };

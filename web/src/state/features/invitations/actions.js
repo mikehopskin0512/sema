@@ -204,10 +204,10 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
   }
 };
 
-export const fetchInviteMetrics = (type) => async (dispatch) => {
+export const fetchInviteMetrics = (type, timeRange) => async (dispatch) => {
   try {
     dispatch(requestFetchInviteMetrics());
-    const payload = await getInvitationsMetric({ type });
+    const payload = await getInvitationsMetric({ type, timeRange });
     const { data: { invites = {} } } = payload;
 
     dispatch(requestFetchInviteMetricsSuccess(invites));
@@ -218,9 +218,9 @@ export const fetchInviteMetrics = (type) => async (dispatch) => {
   }
 };
 
-export const exportInviteMetrics = async (type, token) => {
+export const exportInviteMetrics = async (type, timeRange, token) => {
   try {
-    const payload = await exportInvitationsMetric({ type }, token);
+    const payload = await exportInvitationsMetric({ type, timeRange }, token);
     const { data } = payload;
 
     const url = window.URL.createObjectURL(new Blob([data]));
