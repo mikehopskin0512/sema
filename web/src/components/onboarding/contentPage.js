@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Lottie from 'react-lottie-player';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,11 +11,13 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [img, setImg] = useState('');
+  const [animationData, setAnimationData] = useState('');
 
   useEffect(() => {
     setTitle(content[page - 1].title);
     setSubtitle(content[page - 1].subtitle);
     setImg(content[page - 1].img);
+    setAnimationData(content[page - 1].animationData);
   }, [page]);
 
   return (
@@ -44,7 +47,17 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
         </div>
         <div className="column is-flex is-justify-content-center is-6 p-20" style={{ backgroundColor: '#F9F9F9' }}>
           <div className="is-flex is-justify-content-center is-align-items-center">
-            <img src={img} alt="sema-img" className="is-full-width" />
+            {/* <img src={img} alt="sema-img" className="is-full-width" /> */}
+            {animationData ? (
+              <Lottie
+                play
+                loop
+                animationData={animationData}
+                style={{ marginBottom: 10 }}
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
         </div>
       </div>
