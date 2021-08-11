@@ -165,7 +165,6 @@ export const redeemInvite = (invitationToken, userId, token) => async (dispatch)
     const { data: { response } } = payload;
     dispatch(requestRedeemInviteSuccess(response));
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestRedeemInviteError(errMessage));
