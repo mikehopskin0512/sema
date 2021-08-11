@@ -317,8 +317,8 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    const isCommentFieldClassName = 'comment-form-textarea';
-    if (event.target.classList.contains(isCommentFieldClassName)) {
+    const commentFieldClassName = 'comment-form-textarea';
+    if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
   },
