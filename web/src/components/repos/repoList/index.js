@@ -13,8 +13,8 @@ const RepoList = ({ type, repos }) => (
     <div className="mb-50">
       <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
       <div className="is-flex-wrap-wrap is-flex is-align-content-stretch">
-        {repos.map((child) => (
-          <RepoCard {...child} isFavorite={type === 'FAVORITES'} />
+        {repos.map((child, i) => (
+          <RepoCard {...child} isFavorite={type === 'FAVORITES'} key={i} />
         ))}
       </div>
     </div>
@@ -27,9 +27,10 @@ RepoList.defaultProps = {
 
 RepoList.propTypes = {
   type: PropTypes.string.isRequired,
-  repos: PropTypes.arrayOf(
-    PropTypes.exact(RepoType),
-  ),
+  // Repos model isn't currently updated in RepoType
+  // repos: PropTypes.arrayOf(
+  //  PropTypes.exact(RepoType),
+  //),
 };
 
 export default RepoList;
