@@ -4,11 +4,11 @@ import thunk from 'redux-thunk';
 import * as reducers from './features';
 import { setAxiosInterceptor } from './utils/api';
 
-const ADD_REDUX_LOGGER = process.env.ADD_REDUX_LOGGER || false;
+const reduxLogger = (process.env.NEXT_PUBLIC_ADD_REDUX_LOGGER === 'true') || false;
 
 const middleware = [thunk];
 
-if (ADD_REDUX_LOGGER === true) {
+if (reduxLogger === true) {
   const { createLogger } = require('redux-logger');
   const logger = createLogger({
     collapsed: true,
@@ -25,7 +25,7 @@ export const initStore = (initialState = {}) => {
     initialState,
     composeWithDevTools(applyMiddleware(...middleware)),
   );
-  
+
   setAxiosInterceptor(store);
   return store;
 };

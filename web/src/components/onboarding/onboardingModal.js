@@ -28,7 +28,13 @@ const OnboardingModal = ({
     case 1:
     case 2:
     case 3:
-      return <ContentPage page={page} nextPage={() => nextPage(currentPage)} previousPage={() => previousPage(currentPage)} />;
+      return (
+        <ContentPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+        />
+      );
     case 4:
       return (
         <SmartBankCommentsPage

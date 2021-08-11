@@ -88,8 +88,8 @@ const RepoCard = (props) => {
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
-            {Object.keys(statLabels).map((item) => (
-              <div className={clsx('my-12 is-flex', styles.stat)}>
+            {Object.keys(statLabels).map((item, i) => (
+              <div className={clsx('my-12 is-flex', styles.stat)} key={i}>
                 {renderStats(statLabels[item], stats?.[item])}
               </div>
             ))}
@@ -100,6 +100,7 @@ const RepoCard = (props) => {
   );
 };
 
-RepoCard.propTypes = RepoType;
+// Repos model isn't currently updated in RepoType
+// RepoCard.propTypes = RepoType;
 
 export default RepoCard;
