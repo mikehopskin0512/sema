@@ -1,4 +1,4 @@
-import { LIGHT, DARK, DARK_DIMMED, DARK_HIGH_CONTRAST, SEMA_ICON_ANCHOR_LIGHT, SEMA_ICON_ANCHOR_DARK, SEMA_ICON_ANCHOR_DARK_DIMMED } from "../src/pages/Content/constants";
+import { LIGHT, DARK, DARK_DIMMED, DARK_HIGH_CONTRAST, SEMA_ICON_ANCHOR_LIGHT, SEMA_ICON_ANCHOR_DARK, SEMA_ICON_ANCHOR_DARK_DIMMED, SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST } from "../src/pages/Content/constants";
 
 export const getActiveTheme = () => {
   let extensionTheme = LIGHT;
@@ -66,6 +66,9 @@ export const getSemaIconTheme = (extensionTheme) => {
       break;
     case DARK_DIMMED:
       SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
+      break;
+    case DARK_HIGH_CONTRAST:
+      SEMA_ICON = SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST;
       break;
     default:
       SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
