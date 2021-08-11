@@ -72,7 +72,11 @@ const RepoCard = (props) => {
   );
 
   useEffect(() => {
-    dispatch(fetchRepositoryOverview(externalId, token));
+    if (!repositories?.data?.overview) {
+      // TODO: it's a problem because it will rewrite all previous repoCards data
+      // it needs a separate store for all the repoCards or local data in every repoCard
+      dispatch(fetchRepositoryOverview(externalId, token));
+    }
   }, []);
 
   useEffect(() => {
