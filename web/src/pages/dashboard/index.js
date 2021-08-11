@@ -168,7 +168,6 @@ const Dashboard = () => {
                 {repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length && (
                   <button onClick={viewMore} className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6" type="button">View More</button>
                 )}
-                <p className="has-text-weight-semibold has-text-gray-dark mt-25">30 other repos with no smart comments yet</p>
               </div>
             </>
           )
