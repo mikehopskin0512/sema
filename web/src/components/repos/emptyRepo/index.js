@@ -25,11 +25,11 @@ const EmptyRepo = () => {
               <h2 className={clsx('is-size-5 pb-20', styles.subtitle)}>{subtitle1}</h2>
               <div className="columns">
                 {
-                  content.map((d) => {
+                  content.map((d, i) => {
                     const { img, title, subtitle } = d;
                     const sub = formatSubtitle(subtitle);
                     return (
-                      <>
+                      <React.Fragment key={i}>
                         <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
                           <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
                             <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}>
@@ -48,7 +48,7 @@ const EmptyRepo = () => {
                             <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
                           </div>
                         </div>
-                      </>
+                      </React.Fragment>
                     );
                   })
                 }
