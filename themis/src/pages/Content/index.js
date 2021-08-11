@@ -317,8 +317,8 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
-    if (event.target === document.querySelector(githubCommentField)) {
+    const isCommentFieldClassName = 'comment-form-textarea';
+    if (event.target.classList.contains(isCommentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
   },
