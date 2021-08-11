@@ -39,6 +39,7 @@ const Dashboard = () => {
   const { token, user } = auth;
   const { identities } = user;
   const { data: { repositories: repoArray } } = repositories;
+  const isEmptyRepo = !repoArray.length
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
@@ -149,12 +150,16 @@ const Dashboard = () => {
     </>
   );
 
+  if (isEmptyRepo && repositories.isFetching) {
+    //TODO: would be great to add some spinner here
+    return null
+  }
+
   return (
     <>
       <div className="has-background-gray-9 pb-180">
         <Helmet {...DashboardHelmet} />
-        {
-          repos.favorites.length === 0 && repos.other.length === 0 ? (
+        {isEmptyRepo ? (
             <EmptyRepo />
           ) : (
             <>
