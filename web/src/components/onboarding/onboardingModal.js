@@ -46,18 +46,18 @@ const OnboardingModal = ({
           semaCollections={semaCollections}
         />
       );
+    // case 5:
+    //   return (
+    //     <AddSuggestedCommentPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       comment={comment}
+    //       handleCommentFields={(e) => handleCommentFields(e)}
+    //       setComment={setComment}
+    //     />
+    //   );
     case 5:
-      return (
-        <AddSuggestedCommentPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          comment={comment}
-          handleCommentFields={(e) => handleCommentFields(e)}
-          setComment={setComment}
-        />
-      );
-    case 6:
       return (
         <ExtensionPage
           page={page}
