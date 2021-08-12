@@ -16,10 +16,12 @@ const tabTitle = {
 
 const ActivityLogs = () => {
   const dispatch = useDispatch();
-  const { auth } = useSelector((state) => ({
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
+    repositories: state.repositoriesState,
   }));
   const { token } = auth;
+  const { data: { overview: { name = 'Repository' } } } = repositories;
 
   const {
     query: { repoId },
@@ -36,7 +38,7 @@ const ActivityLogs = () => {
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
-      <Helmet title={`Repository - ${tabTitle[selectedTab]}`} />
+      <Helmet title={`${tabTitle[selectedTab]} - ${name}`} />
       { selectedTab === 'activity' && <ActivityPage /> }
       { selectedTab === 'stats' && <StatsPage /> }
     </RepoPageLayout>
