@@ -205,6 +205,31 @@ const reducer = (state = initialState, action) => {
       },
       error: action.errors,
     };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        repositories: action.repositories,
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        repositories: [],
+      },
+      error: action.errors,
+    };
   default:
     return state;
   }

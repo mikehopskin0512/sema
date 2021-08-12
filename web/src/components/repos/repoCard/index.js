@@ -1,38 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import styles from './repoCard.module.scss';
-import { RepoType } from '../repoList/types';
-import { repositoriesOperations } from '../../../state/features/repositories';
-
-const { fetchRepositoryOverview } = repositoriesOperations;
 
 const statLabels = {
-  codeReview: 'Smart Code Reviews',
-  smartComments: 'Smart Comments',
-  smartCommenters: 'Smart Commenters',
-  semaUsers: 'Sema User',
+  totalPullRequests: 'Smart Code Reviews',
+  totalSmartComments: 'Smart Comments',
+  totalSmartCommenters: 'Smart Commenters',
+  totalSemaUsers: 'Sema User',
 };
 
 const RepoCard = (props) => {
   const {
-    name, description, externalId,
+    name, externalId, stats
   } = props;
 
-  const dispatch = useDispatch();
-  const { auth, repositories } = useSelector(
-    (state) => ({
-      alerts: state.alertsState,
-      auth: state.authState,
-      repositories: state.repositoriesState,
-    }),
-  );
-  const { token } = auth;
-
-  const [stats, setStats] = useState({});
   const [users] = useState([]);
 
   const onClickRepo = () => {
@@ -71,14 +55,6 @@ const RepoCard = (props) => {
     ) : ""
   );
 
-  useEffect(() => {
-    dispatch(fetchRepositoryOverview(externalId, token));
-  }, []);
-
-  useEffect(() => {
-    setStats(repositories?.data?.overview);
-  }, [repositories]);
-
   return (
     <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={onClickRepo} aria-hidden>
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
@@ -88,8 +64,8 @@ const RepoCard = (props) => {
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
-            {Object.keys(statLabels).map((item) => (
-              <div className={clsx('my-12 is-flex', styles.stat)}>
+            {Object.keys(statLabels).map((item, i) => (
+              <div className={clsx('my-12 is-flex', styles.stat)} key={i}>
                 {renderStats(statLabels[item], stats?.[item])}
               </div>
             ))}
@@ -100,6 +76,7 @@ const RepoCard = (props) => {
   );
 };
 
-RepoCard.propTypes = RepoType;
+// Repos model isn't currently updated in RepoType
+// RepoCard.propTypes = RepoType;
 
 export default RepoCard;
