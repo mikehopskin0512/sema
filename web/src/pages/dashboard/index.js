@@ -11,7 +11,7 @@ import { authOperations } from '../../state/features/auth';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import EmptyRepo from '../../components/repos/emptyRepo';
 
-const { filterSemaRepositories } = repositoriesOperations;
+const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
 const { createSuggestComment } = suggestCommentsOperations;
 const { updateUser } = authOperations;
@@ -62,7 +62,7 @@ const Dashboard = () => {
     if (identities && identities.length) {
       const githubUser = identities[0];
       const externalIds = githubUser?.repositories?.map((repo) => repo.id);
-      dispatch(filterSemaRepositories(externalIds, token));
+      dispatch(fetchRepoDashboard(externalIds, token));
     }
   }, [dispatch, token]);
 
