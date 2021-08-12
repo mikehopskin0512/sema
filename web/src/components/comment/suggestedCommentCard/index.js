@@ -15,7 +15,7 @@ const SuggestedCommentCard = ({ data }) => {
     source,
     title = '',
     createdAt = defaultDate,
-    engGuides,
+    engGuides = [],
   } = data;
 
   return (
@@ -57,11 +57,11 @@ const SuggestedCommentCard = ({ data }) => {
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
-        { engGuides ? (
+        { engGuides.length > 0 ? (
           <p className="is-size-6 has-text-deep-black">
             <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/engineering/guide/${engGuides._id}`}>
-              <span className="is-underlined has-text-deep-black">{engGuides.title}</span>
+            <a href={`/engineering/guide/${engGuides[0].engGuide?._id}`}>
+              <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
             </a>
           </p>
         ) : null }

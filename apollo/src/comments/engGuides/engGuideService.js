@@ -4,6 +4,13 @@ import errors from '../../shared/errors';
 
 export const getAllEngGuides = async () => {
   try {
+    // const engGuides = await EngGuide.find()
+    //   .populate('collections', '_id name description')
+    //   .populate({
+    //     path: 'tags.tag',
+    //     model: 'Tag'
+    //   })
+    //   .exec();
     const engGuides = await EngGuide.aggregate([
       {
         $lookup: {

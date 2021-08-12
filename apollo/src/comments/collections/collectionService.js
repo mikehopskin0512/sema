@@ -52,56 +52,16 @@ export const createMany = async (collections) => {
 
 export const findById = async (id) => {
   try {
-    const collections = await Collection.aggregate([
-      {
-        $match: { _id: new ObjectId(id)}
-      },
-      {
-        $lookup: {
-          from: 'suggestedComments',
-          as: 'comments',
-          pipeline: [
-            {
-              $lookup: {
-                from: 'engGuides',
-                localField: 'engGuides',
-                foreignField: '_id',
-                as: 'engGuides'
-              }
-            },
-            {
-              $lookup: {
-                from: 'collections',
-                localField: '_id',
-                foreignField: 'comments',
-                as: 'collection'
-              }
-            },
-            {
-              $unwind: '$collection'
-            },
-            {
-              $unwind: {
-                path: '$engGuides',
-                preserveNullAndEmptyArrays: true,
-              }
-            },
-            {
-              $match: {
-                'collection._id': new ObjectId(id),
-              }
-            },
-          ]
-        }
-      },
-    ]);
-    if (collections.length > 0) {
-      return collections[0];
-    }
-    return {
-      statusCode: 400,
-      message: 'Unable to process request',
-    };
+    const query = Collection.findOne({ _id: id});
+    const collection = await query.lean().populate({
+      path: 'comments',
+      model: 'SuggestedComment',
+      populate: {
+        path: 'engGuides.engGuide',
+        model: 'EngGuide'
+      }
+    }).exec();
+    return collection;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -111,29 +71,18 @@ export const findById = async (id) => {
 
 export const getUserCollectionsById = async (userData) => {
   try {
-    const user = await User.aggregate([
-      {
-        $match: { _id: new ObjectId(userData._id) },
-      },
-      {
-        $lookup: {
-          from: 'collections',
-          localField: 'collections.collectionData',
-          foreignField: '_id',
-          as: 'collections'
-        }
-      },
-      {
-        $lookup: {
-          from: 'suggestedComments',
-          localField: 'collections.comments',
-          foreignField: '_id',
-          as: 'comments'
-        }
+    const query = User.findOne({ _id: userData._id });
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      populate: {
+        path: 'comments',
+        model: 'SuggestedComment',
       }
-    ]);
-    if (user.length > 0) {
-      const { comments } = user[0];
+      }).exec();
+      if (user) {
+        const { collections } = user;
+        const comments = flatten(collections.map((item) => item.collectionData.comments));
       return comments;
     }
     return {
