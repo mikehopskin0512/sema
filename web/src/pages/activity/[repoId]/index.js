@@ -44,22 +44,19 @@ const ActivityLogs = () => {
 
   useEffect(() => {
     if (comments?.smartComments?.length) {
-      const users = comments.smartComments.map((item) => {
-        const { userId } = item;
-        if (userId) {
-          const { firstName, lastName, _id, avatarUrl } = userId;
-          return {
-            label: `${firstName} ${lastName}`,
-            value: _id,
-            img: avatarUrl,
-          };
-        }
+      const users = comments.smartComments.filter((item) => item.userId).map((item) => {
+        const { firstName, lastName, _id, avatarUrl } = item.userId;
+        return {
+          label: `${firstName} ${lastName}`,
+          value: _id,
+          img: avatarUrl,
+        };
       });
       const prs = comments.smartComments.map((item) => {
         if (item && item.githubMetadata) {
           const { githubMetadata: { title, pull_number: pullNum } } = item;
           return {
-            label: `${title || 'PR'} #${pullNum}`,
+            label: `${title || 'PR'} #${pullNum || ''}`,
             value: pullNum,
           };
         }
@@ -117,7 +114,7 @@ const ActivityLogs = () => {
   return (
     <RepoPageLayout>
       <Helmet {...ActivityLogHelmet} />
-      <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
+      <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap ">
         <div className="field is-flex-grow-1 px-5 my-5">
           <p className="control has-icons-left">
             <input
@@ -132,7 +129,10 @@ const ActivityLogs = () => {
             </span>
           </p>
         </div>
-        <div className="is-flex-grow-1 is-flex is-flex-wrap-wrap">
+        <div
+          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          style={{zIndex: 2}}
+        >
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{
