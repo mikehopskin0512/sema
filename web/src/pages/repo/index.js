@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const Activity = () => {
+const Repo = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -13,4 +13,4 @@ const Activity = () => {
   );
 };
 
-export default Activity;
+export default Repo;

@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getRepositoryOverview, getDashboardRepositories,
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getDashboardRepositories, getRepositoryOverview
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -257,8 +257,8 @@ export const fetchTagStats = (filters, token) => async (dispatch) => {
 export const fetchRepositoryOverview = (externalId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchRepositoryOverview());
-    const { data: overviewData } = await getRepositoryOverview({ externalId }, token);
-    dispatch(requestFetchRepositoryOverviewSuccess(overviewData));
+    const { data } = await getRepositoryOverview({ externalId }, token);
+    dispatch(requestFetchRepositoryOverviewSuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

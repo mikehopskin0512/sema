@@ -118,17 +118,13 @@ export default (app, passport) => {
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId } = req.query;
-
     try {
-      const smartCommenters = await getSmartCommentersByExternalId(externalId);
-      const smartComments = await getSmartCommentsByExternalId(externalId);
-      const pullRequests = await getPullRequestsByExternalId(externalId);
-      const users = await getSemaUsersOfRepo(externalId);
-      return res.status(201).send({
-        smartCommenters: smartCommenters.length,
-        smartComments: smartComments.length,
-        codeReview: pullRequests.length,
-        semaUsers: users.length,
+      const repositories = await aggregateRepositories([externalId], true);
+      if (repositories.length > 0) {
+        return res.status(201).send(repositories[0]);
+      }
+      return res.status(404).send({
+        message: 'Not found',
       });
     } catch (error) {
       logger.error(error);

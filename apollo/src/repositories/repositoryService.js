@@ -144,7 +144,7 @@ export const findByExternalIds = async (externalIds) => {
   }
 };
 
-export const aggregateRepositories = async (externalIds) => {
+export const aggregateRepositories = async (externalIds, includeSmartComments) => {
   try {
     const repoRaw = await Repositories.aggregate([
       {
@@ -166,6 +166,31 @@ export const aggregateRepositories = async (externalIds) => {
                   $eq: [ '$githubMetadata.repo_id', '$$externalId' ]
                 }
               }
+            },
+            {
+              $lookup: {
+                from: 'users',
+                as: 'user',
+                localField: 'userId',
+                foreignField: '_id'
+              }
+            },
+            {
+              $lookup: {
+                from: 'tags',
+                as: 'tags',
+                localField: 'tags',
+                foreignField: '_id'
+              }
+            },
+            {
+              $unwind: '$user', 
+            },
+            {
+              $project: {
+                'user.collections': 0,
+                'user.identities': 0,
+              }, 
             },
           ]
         }
@@ -189,6 +214,9 @@ export const aggregateRepositories = async (externalIds) => {
         name,
         createdAt,
       };
+      if (includeSmartComments) {
+        data.smartcomments = smartComments;
+      }
       return data;
     })
     return repositories;
