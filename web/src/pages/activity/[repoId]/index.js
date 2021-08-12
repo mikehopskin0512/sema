@@ -52,15 +52,13 @@ const ActivityLogs = () => {
           img: avatarUrl,
         };
       });
-      const prs = comments.smartComments.map((item) => {
-        if (item && item.githubMetadata) {
-          const { githubMetadata: { title, pull_number: pullNum } } = item;
-          return {
-            label: `${title || 'PR'} #${pullNum || ''}`,
-            value: pullNum,
-          };
-        }
-        return null;
+      const prs = comments.smartComments.filter((item) => item.githubMetadata).map((item) => {
+        const { githubMetadata: { head, title, pull_number: pullNum } } = item;
+        const prName = title || head || 'PR'
+        return {
+          label: `${prName} #${pullNum || ''}`,
+          value: pullNum,
+        };
       });
       setFilterUserList(uniqBy(users, 'value'));
       setFilterPRList(uniqBy(compact(prs), 'value'));
