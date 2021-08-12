@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getRepositoryOverview,
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getRepositoryOverview, getDashboardRepositories,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -133,6 +133,20 @@ const requestFetchRepositoryOverviewError = (errors) => ({
   errors,
 });
 
+const requestFetchDashboardRepos = () => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES,
+});
+
+const requestFetchDashboardReposSuccess = (repositories) => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_SUCCESS,
+  repositories,
+});
+
+const requestFetchDashboardReposError = (errors) => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_ERROR,
+  errors,
+});
+
 export const addRepositories = (repositoriesData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateRepo());
@@ -249,5 +263,17 @@ export const fetchRepositoryOverview = (externalId, token) => async (dispatch) =
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestFetchRepositoryOverviewError(errMessage));
+  }
+};
+
+export const fetchRepoDashboard = (externalIds, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchDashboardRepos());
+    const { data: { repositories = [] } } = await getDashboardRepositories({ externalIds: JSON.stringify(externalIds) }, token);
+    dispatch(requestFetchDashboardReposSuccess(repositories));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchDashboardReposError(errMessage));
   }
 };
