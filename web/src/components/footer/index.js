@@ -93,7 +93,7 @@ const Footer = () => {
 
   return (
     <>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
+      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
       <footer className={clsx(styles.footer, 'px-50')}>
         <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
         <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
