@@ -32,6 +32,7 @@ const SupportForm = ({ active, closeForm, type = 'Support' }) => {
 
   const close = () => {
     reset();
+    setValue('type', type);
     closeForm();
   };
 
