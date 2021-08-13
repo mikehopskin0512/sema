@@ -42,7 +42,7 @@ const ActivityPage = () => {
         if (item && item.githubMetadata) {
           const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
           return {
-            label: `${title || 'PR'} #${pullNum}`,
+            label: `${title || 'PR'} #${pullNum || ''}`,
             value: pullNum,
           };
         }
@@ -116,7 +116,10 @@ const ActivityPage = () => {
             </span>
           </p>
         </div>
-        <div className="is-flex-grow-1 is-flex is-flex-wrap-wrap">
+        <div
+          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          style={{zIndex: 2}}
+        >
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{

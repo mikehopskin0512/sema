@@ -5,11 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { isExtensionInstalled } from '../../utils/extension';
-import styles from "./onboarding.module.scss";
+import styles from './onboarding.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
-const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) => {
+const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [isQueryFinished, setQueryFinished] = useState(false);
 
@@ -69,7 +69,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
 
   return (
     <>
-      <div className={clsx("mt-90 p-60 is-relative", styles['extension-modal'])}>
+      <div className={clsx('mt-90 p-60 is-relative', styles['extension-modal'])}>
         <p className="title is-4 has-text-centered">Install the Sema Chrome Extension</p>
         <p className="subtitle is-5 has-text-centered">It&apos;s easy</p>
         <p className="subtitle is-6 has-text-centered px-200">The Sema Chrome Extension makes Smart Comments possible! Please install it next.</p>
@@ -78,7 +78,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
           page !== 1 && (
             <button
               type="button"
-              className={clsx("button is-primary my-20 is-outlined", styles.prev)}
+              className={clsx('button is-primary my-20 is-outlined', styles.prev)}
               onClick={previousPage}
             >
               <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
@@ -87,7 +87,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
         }
         <button
           type="submit"
-          className={clsx("button is-primary my-20", styles.next)}
+          className={clsx('button is-primary my-20', styles.next)}
           // onClick={nextPage}
           disabled={!isPluginInstalled}
         >
@@ -95,7 +95,7 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
         </button>
         <button
           type="button"
-          className={clsx("button is-text has-text-primary my-20", styles.skip)}
+          className={clsx('button is-text has-text-primary my-20', styles.skip)}
           onClick={async () => {
             await onSubmit();
             closeModal();
@@ -110,7 +110,6 @@ const ExtensionPage = ({ page, nextPage, previousPage, closeModal, onSubmit }) =
 
 ExtensionPage.propTypes = {
   page: PropTypes.number.isRequired,
-  nextPage: PropTypes.func.isRequired,
   previousPage: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
