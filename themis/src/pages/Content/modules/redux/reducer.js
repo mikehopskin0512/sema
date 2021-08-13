@@ -33,7 +33,6 @@ import {
   getInitialSemaValues,
   toggleTagSelection,
   getSemaIds,
-  checkSubmitButton,
 } from '../content-util';
 
 import {
@@ -108,8 +107,6 @@ function rootReducer(state = initialState, action) {
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
     semabars[id].isReactionDirty = isReactionDirty;
-    // TODO: perform side-effects properly
-    checkSubmitButton(id, semabars[id]);
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation } = payload;
     const {
@@ -120,8 +117,6 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags, true);
     semabars[id].selectedTags = updatedTags;
-    // TODO: perform side-effects properly
-    checkSubmitButton(id, semabars[id]);
   } else if (type === CLOSE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
