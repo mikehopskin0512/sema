@@ -21,7 +21,7 @@ const ActivityLogs = () => {
     repositories: state.repositoriesState,
   }));
   const { token } = auth;
-  const { data: { overview: { name = 'Repository' } } } = repositories;
+  const { data: { overview } } = repositories;
 
   const {
     query: { repoId },
@@ -38,9 +38,13 @@ const ActivityLogs = () => {
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
-      <Helmet title={`${tabTitle[selectedTab]} - ${name}`} />
-      { selectedTab === 'activity' && <ActivityPage /> }
-      { selectedTab === 'stats' && <StatsPage /> }
+      { overview ? (
+        <>
+          <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+          { selectedTab === 'activity' && <ActivityPage /> }
+          { selectedTab === 'stats' && <StatsPage /> }
+        </>
+      ) : null }
     </RepoPageLayout>
   );
 };
