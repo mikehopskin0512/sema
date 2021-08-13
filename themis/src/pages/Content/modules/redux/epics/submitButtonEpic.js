@@ -2,8 +2,8 @@ import {
   filter, ignoreElements, map, withLatestFrom,
 } from 'rxjs/operators';
 // eslint-disable-next-line import/no-cycle
-import { checkSubmitButton } from '../content-util';
-import { UPDATE_SELECTED_EMOJI, UPDATE_SELECTED_TAGS } from '../redux/actionConstants';
+import { checkSubmitButton } from '../../content-util';
+import { UPDATE_SELECTED_EMOJI, UPDATE_SELECTED_TAGS } from '../actionConstants';
 
 const submitButtonEpic = (action$, state$) => action$.pipe(
   filter((action) => {
