@@ -100,3 +100,11 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px";
 .is-underlined {
   text-decoration: underline;
 }
+
+.has-no-horizontal-scroll {
+  overflow-y: hidden;
+}
+
+.has-horizontal-scroll {
+  overflow-y: scroll;
+}
