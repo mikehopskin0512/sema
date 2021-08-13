@@ -8,7 +8,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/support`, route);
 
-  route.post('/', async (req, res) => {
+  route.post('/', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
     const { email, title, type, message } = req.body;
 
     try {
