@@ -35,17 +35,17 @@ const OnboardingModal = ({
           previousPage={() => previousPage(currentPage)}
         />
       );
-    case 4:
-      return (
-        <SmartBankCommentsPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          collectionState={collectionState}
-          toggleCollection={toggleCollection}
-          semaCollections={semaCollections}
-        />
-      );
+    // case 4:
+    //   return (
+    //     <SmartBankCommentsPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       collectionState={collectionState}
+    //       toggleCollection={toggleCollection}
+    //       semaCollections={semaCollections}
+    //     />
+    //   );
     // case 5:
     //   return (
     //     <AddSuggestedCommentPage
@@ -57,7 +57,7 @@ const OnboardingModal = ({
     //       setComment={setComment}
     //     />
     //   );
-    case 5:
+    case 4:
       return (
         <ExtensionPage
           page={page}

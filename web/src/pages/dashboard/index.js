@@ -74,7 +74,8 @@ const Dashboard = () => {
       name: 'My Comments',
       description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
       author: username,
-      isActive: collectionState.personalComments,
+      // isActive: collectionState.personalComments,
+      isActive: true,
       comments: [],
     };
     if (collectionState.personalComments) {
@@ -89,14 +90,18 @@ const Dashboard = () => {
 
   const getActiveCollections = async () => {
     const userCollections = [];
+    const defaultSemaCollections = ['Philosophies', 'Famous Quotes'];
+    const activeSemaCollectionIds = semaCollections.filter((s) => defaultSemaCollections.includes(s.name)).map((s) => s._id);
     for (const [key, val] of Object.entries(collectionState)) {
       if (key === 'personalComments') {
         const [userCollection] = await createUserCollection();
         if (userCollection._id) {
           userCollections.push({ collectionData: userCollection._id, isActive: val });
         }
+      } else if (activeSemaCollectionIds.includes(key)) {
+        userCollections.push({ collectionData: key, isActive: true })
       } else {
-        userCollections.push({ collectionData: key, isActive: val });
+        userCollections.push({ collectionData: key, isActive: false })
       }
     }
     return userCollections;
