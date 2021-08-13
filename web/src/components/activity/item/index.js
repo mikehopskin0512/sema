@@ -88,7 +88,7 @@ const ActivityItem = (props) => {
 
 ActivityItem.defaultProps = {
   tags: [],
-  userId: {
+  user: {
     firstName: '',
     lastName: '',
     avatarUrl: '',
@@ -104,7 +104,7 @@ ActivityItem.propTypes = {
   reaction: PropTypes.string.isRequired,
   tags: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
-  userId: PropTypes.object,
+  user: PropTypes.object,
   githubMetadata: PropTypes.object,
 };
 
