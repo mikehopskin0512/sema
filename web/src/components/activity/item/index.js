@@ -13,7 +13,7 @@ const ActivityItem = (props) => {
     reaction = '',
     tags = [],
     createdAt = '',
-    user = {
+    userId = {
       firstName: '',
       avatarUrl: '',
       lastName: '',
@@ -43,18 +43,18 @@ const ActivityItem = (props) => {
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
-      {user ? (
+      {userId ? (
         <figure className="image is-64x64 mr-20 is-hidden-mobile">
-          <img className="is-rounded" src={user.avatarUrl} alt="user_icon" />
+          <img className="is-rounded" src={userId.avatarUrl} alt="user_icon" />
         </figure>
       ) : null }
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
-            { user ? (<img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={user.avatarUrl} alt="user_icon" />) : null }
+            { userId ? (<img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={userId.avatarUrl} alt="user_icon" />) : null }
             <p className="is-size-7 has-text-deep-black">
-              { user ?
-                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{user.firstName} {user.lastName}</a> :
+              { userId ?
+                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{userId.firstName} {userId.lastName}</a> :
                 <p className="has-text-deep-black is-underlined">user</p>}
               {' reviewed '}
               <a href={url} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{title || 'a pull request'}</a>
@@ -88,7 +88,7 @@ const ActivityItem = (props) => {
 
 ActivityItem.defaultProps = {
   tags: [],
-  user: {
+  userId: {
     firstName: '',
     lastName: '',
     avatarUrl: '',
