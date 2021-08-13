@@ -213,9 +213,9 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
       const repositories = repoRaw.map((repo) => {
         const { _id, externalId = '', name = '', createdAt, smartComments = [], repoStats = { userIds: [] } } = repo;
         const totalSmartComments = smartComments.length || 0;
-        const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId.toString()).length || 0;
+        const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId?.valueOf() || 0).length || 0;
         const totalPullRequests = _.uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
-        const totalSemaUsers = repoStats.userIds.length || 0;
+        const totalSemaUsers = _.get(repoStats, 'userIds', []).length || 0;
         const data = {
           stats: {
             totalSmartComments,
