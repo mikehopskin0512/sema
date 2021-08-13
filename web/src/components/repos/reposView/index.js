@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import EmptyRepo from '@/components/repos/emptyRepo';
-import RepoList from '@/components/repos/repoList';
+import EmptyRepo from '../../../components/repos/emptyRepo';
+import RepoList from '../../../components/repos/repoList';
 import { remove } from 'lodash';
 import { useSelector } from 'react-redux';
 

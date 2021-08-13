@@ -7,8 +7,8 @@ import { collectionsOperations } from '../../state/features/collections';
 import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 import { authOperations } from '../../state/features/auth';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
-import ReposView from '@/components/repos/reposView';
-import Loader from '@/components/Loader';
+import ReposView from '../../components/repos/reposView';
+import Loader from '../../components/Loader';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
