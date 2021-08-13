@@ -100,6 +100,15 @@ const CollectionComments = () => {
     setCommentsFiltered([...filtered]);
   };
 
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if (newCommentModalOpen) {
+      body.classList.add('has-no-horizontal-scroll');
+    } else {
+      body.classList.remove('has-no-horizontal-scroll');
+    }
+  }, [newCommentModalOpen]);
+
   return (
     <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet title={`Collection - ${name}`} />
