@@ -8,6 +8,7 @@ import Select from '../../components/select';
 import SuggestedCommentsMetric from '../../components/admin/metrics/suggestedCommentsMetric';
 import ShareOfWalletMetric from '../../components/admin/metrics/shareOfWalletMetric';
 import UserActivityMetric from '../../components/admin/metrics/userActivityMetric';
+import TimeToValueMetric from '../../components/admin/metrics/timeToValueMetric';
 
 const reportTypes = [
   {
@@ -34,6 +35,10 @@ const reportTypes = [
     label: 'Growth in repository usage',
     value: 'growthRepository',
   },
+  {
+    label: 'Time to value',
+    value: 'timeToValue',
+  },
 ];
 
 const ReportsPage = () => {
@@ -54,6 +59,8 @@ const ReportsPage = () => {
         return <UserActivityMetric />;
       case 'growthRepository':
         return <GrowthRepositoryMetric />;
+      case 'timeToValue':
+        return <TimeToValueMetric />;
       default:
         return <div />;
     }

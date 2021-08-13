@@ -82,6 +82,7 @@ const Select = ({
               </>
             )
           }
+          <hr className="dropdown-divider" />
           {
             suggestOptions.map((option, index) => (
               <div key={option.value}>
