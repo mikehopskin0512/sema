@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { find, flatten } from 'lodash';
+import { uniqBy } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -50,15 +50,16 @@ export const createMany = async (collections) => {
   }
 };
 
-export const findById = async (id, select) => {
+export const findById = async (id) => {
   try {
     const query = Collection.findOne({ _id: id});
-    if (select) {
-      query.select(select)
-    }
     const collection = await query.lean().populate({
       path: 'comments',
-      model: 'SuggestedComment'
+      model: 'SuggestedComment',
+      populate: {
+        path: 'engGuides.engGuide',
+        model: 'EngGuide'
+      }
     }).exec();
     return collection;
   } catch (err) {
@@ -68,20 +69,20 @@ export const findById = async (id, select) => {
   }
 };
 
-export const getUserCollectionsById = async (userId) => {
+export const getUserCollectionsById = async (userData) => {
   try {
-    const query = User.findOne({ _id: userId });
+    const query = User.findOne({ _id: userData._id });
     const user = await query.lean().populate({
       path: 'collections.collectionData',
       model: 'Collection',
       populate: {
         path: 'comments',
         model: 'SuggestedComment',
-      },
-    }).exec();
-    if (user) {
-      const { collections } = user;
-      const comments = flatten(collections.map((item) => item.collectionData.comments));
+      }
+      }).exec();
+      if (user) {
+        const { collections } = user;
+        const comments = flatten(collections.map((item) => item.collectionData.comments));
       return comments;
     }
     return {

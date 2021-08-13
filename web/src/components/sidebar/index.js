@@ -8,23 +8,22 @@ import { faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './sidebar.module.scss';
 
-const MenuItem = ({ pathName, icon, name }) => {
-  const router = useRouter();
-
-  const { asPath, query: { repoId } } = router;
-
-  const isActiveRoute = () => asPath.includes(pathName);
-
+const MenuItem = ({ pathName, icon, name, selectedTab, setSelectedTab }) => {
   return (
-    <Link href={`${pathName}/${repoId}`}>
-      <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-size-6 has-text-weight-semibold is-flex is-align-items-center mb-10 is-clickable')}>
-        <FontAwesomeIcon
-          className="is-clickable"
-          icon={icon}
-        />
-        <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
-      </a>
-    </Link>
+    <div
+      className={clsx(
+        styles['menu-item'],
+        selectedTab === pathName && styles.active,
+        'is-size-6 has-text-weight-semibold is-flex is-align-items-center is-justify-content-flex-start mb-10 is-clickable'
+      )}
+      onClick={() => setSelectedTab(pathName)}
+    >
+      <FontAwesomeIcon
+        className="is-clickable"
+        icon={icon}
+      />
+      <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
+    </div>
   );
 };
 
@@ -34,7 +33,7 @@ MenuItem.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-const Sidebar = ({ children }) => {
+const Sidebar = ({ children, ...menuItemProps }) => {
   const [menus] = useState([
     // {
     //   name: 'Overview',
@@ -43,12 +42,12 @@ const Sidebar = ({ children }) => {
     // },
     {
       name: 'Activity Logs',
-      pathName: '/activity',
+      pathName: 'activity',
       icon: faListAlt,
     },
     {
       name: 'Code Stats',
-      pathName: '/stats',
+      pathName: 'stats',
       icon: faChartPie,
     },
   ]);
@@ -58,10 +57,10 @@ const Sidebar = ({ children }) => {
       <div className="columns m-0">
         <div className="column is-one-fifth">
           <div className={clsx(styles.sidebar, 'ml-90 p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
-            <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
+            <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25 is-flex-wrap-wrap">
               {
                 menus.map((item) => (
-                  <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
+                  <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} {...menuItemProps}/>
                 ))
               }
             </div>

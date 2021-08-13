@@ -9,7 +9,7 @@ import SupportForm from '../supportForm';
 
 const Footer = () => {
   const auth = useSelector((state) => state.authState);
-  const { userVoiceToken } = auth;
+  const { userVoiceToken, isAuthenticated } = auth;
   const [dashboardLink] = useState('https://app.semasoftware.com');
   const [termsAndConditionsLink] = useState('https://semasoftware.com/terms-and-conditions');
   const [userVoiceLink] = useState('https://sema.uservoice.com/forums/934797-sema ');
@@ -79,9 +79,11 @@ const Footer = () => {
           Feedback
         </div>
       </div>
-      <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
-      </div>
+      {isAuthenticated && (
+        <div className="has-text-centered">
+          <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
+        </div>
+      )}
       <div className="has-text-centered">
         <a className="button is-ghost has-text-white has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>

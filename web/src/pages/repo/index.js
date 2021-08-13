@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const Stats = () => {
+const Repo = () => {
   const router = useRouter();
 
   useEffect(() => {
@@ -13,4 +13,4 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default Repo;

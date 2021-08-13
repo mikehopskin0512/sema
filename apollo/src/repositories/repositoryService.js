@@ -144,6 +144,89 @@ export const findByExternalIds = async (externalIds) => {
   }
 };
 
+export const aggregateRepositories = async (externalIds, includeSmartComments) => {
+  try {
+    const repoRaw = await Repositories.aggregate([
+      {
+        $match: {
+          externalId: {
+            $in: externalIds
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'smartComments',
+          as: 'smartComments',
+          let: { externalId: '$externalId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: [ '$githubMetadata.repo_id', '$$externalId' ]
+                }
+              }
+            },
+            {
+              $lookup: {
+                from: 'users',
+                as: 'user',
+                localField: 'userId',
+                foreignField: '_id'
+              }
+            },
+            {
+              $lookup: {
+                from: 'tags',
+                as: 'tags',
+                localField: 'tags',
+                foreignField: '_id'
+              }
+            },
+            {
+              $unwind: '$user', 
+            },
+            {
+              $project: {
+                'user.collections': 0,
+                'user.identities': 0,
+              }, 
+            },
+          ]
+        }
+      },
+    ]);
+    const repositories = repoRaw.map((repo) => {
+      const { _id, externalId = '', name = '', createdAt, smartComments = [], repoStats = { userIds: [] } } = repo;
+      const totalSmartComments = smartComments.length || 0;
+      const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId.toString()).length || 0;
+      const totalPullRequests = _.uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
+      const totalSemaUsers = repoStats.userIds.length || 0;
+      const data = {
+        stats: {
+          totalSmartComments,
+          totalSmartCommenters,
+          totalPullRequests,
+          totalSemaUsers,
+        },
+        _id,
+        externalId,
+        name,
+        createdAt,
+      };
+      if (includeSmartComments) {
+        data.smartcomments = smartComments;
+      }
+      return data;
+    })
+    return repositories;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
   try {
     let condition = {

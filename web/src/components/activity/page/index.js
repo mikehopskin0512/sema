@@ -1,31 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import ActivityItem from '../../../components/activity/item';
-import CustomSelect from '../../../components/activity/select';
-import RepoPageLayout from '../../../components/repos/repoPageLayout';
-import Helmet, { ActivityLogHelmet } from '../../../components/utils/Helmet';
-import { commentsOperations } from '../../../state/features/comments';
+import ActivityItem from '../item';
+import CustomSelect from '../select';
 
 import { ReactionList, TagList } from '../../../data/activity';
 
-const { fetchSmartComments } = commentsOperations;
-
-const ActivityLogs = () => {
-  const dispatch = useDispatch();
-  const { comments, auth } = useSelector((state) => ({
-    comments: state.commentsState,
-    auth: state.authState,
+const ActivityPage = () => {
+  const { repositories } = useSelector((state) => ({
+    repositories: state.repositoriesState,
   }));
-  const { token } = auth;
-  const { smartComments = [] } = comments;
-
-  const {
-    query: { repoId },
-  } = useRouter();
+  const { data: { overview } } = repositories;
 
   const [filter, setFilter] = useState({
     from: [],
@@ -39,15 +26,11 @@ const ActivityLogs = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchSmartComments(repoId, token));
-  }, [dispatch, repoId, token]);
-
-  useEffect(() => {
-    if (comments?.smartComments?.length) {
-      const users = comments.smartComments.map((item) => {
-        const { userId } = item;
-        if (userId) {
-          const { firstName, lastName, _id, avatarUrl } = userId;
+    if (overview?.smartcomments?.length) {
+      const users = overview.smartcomments.map((item) => {
+        const { user } = item;
+        if (user) {
+          const { firstName = '', lastName = '', _id = '', avatarUrl = '' } = user;
           return {
             label: `${firstName} ${lastName}`,
             value: _id,
@@ -55,11 +38,11 @@ const ActivityLogs = () => {
           };
         }
       });
-      const prs = comments.smartComments.map((item) => {
+      const prs = overview.smartcomments.map((item) => {
         if (item && item.githubMetadata) {
-          const { githubMetadata: { title, pull_number: pullNum } } = item;
+          const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
           return {
-            label: `${title || 'PR'} #${pullNum}`,
+            label: `${title || 'PR'} #${pullNum || ''}`,
             value: pullNum,
           };
         }
@@ -68,44 +51,46 @@ const ActivityLogs = () => {
       setFilterUserList(uniqBy(users, 'value'));
       setFilterPRList(uniqBy(compact(prs), 'value'));
     }
-  }, [comments]);
+  }, [repositories]);
 
   useEffect(() => {
-    let filtered = comments?.smartComments || [];
-    if (
-      !isEmpty(filter.from) ||
-      !isEmpty(filter.to) ||
-      !isEmpty(filter.reactions) ||
-      !isEmpty(filter.tags) ||
-      !isEmpty(filter.search)
-    ) {
-      filtered = comments.smartComments.filter((item) => {
-        const fromIndex = item.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-        const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item.githubMetadata.pull_number }) : -1;
-        const reactionIndex = findIndex(filter.reactions, { value: item.reaction });
-        const tagsIndex = item.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
-        const searchBool = item.comment.toLowerCase().includes(filter.search.toLowerCase());
-        let filterBool = true;
-        if (!isEmpty(filter.from)) {
-          filterBool = filterBool && fromIndex !== -1;
-        }
-        if (!isEmpty(filter.to)) {
-          filterBool = filterBool && toIndex !== -1;
-        }
-        if (!isEmpty(filter.reactions)) {
-          filterBool = filterBool && reactionIndex !== -1;
-        }
-        if (!isEmpty(filter.tags)) {
-          filterBool = filterBool && tagsIndex !== -1;
-        }
-        if (!isEmpty(filter.search)) {
-          filterBool = filterBool && searchBool;
-        }
-        return filterBool;
-      });
+    if (overview && overview.smartcomments) {
+      let filtered = overview.smartcomments || [];
+      if (
+        !isEmpty(filter.from) ||
+        !isEmpty(filter.to) ||
+        !isEmpty(filter.reactions) ||
+        !isEmpty(filter.tags) ||
+        !isEmpty(filter.search)
+      ) {
+        filtered = overview.smartcomments.filter((item) => {
+          const fromIndex = item?.user ? findIndex(filter.from, { value: item.user._id }) : -1;
+          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.pull_number }) : -1;
+          const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
+          const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
+          const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
+          let filterBool = true;
+          if (!isEmpty(filter.from)) {
+            filterBool = filterBool && fromIndex !== -1;
+          }
+          if (!isEmpty(filter.to)) {
+            filterBool = filterBool && toIndex !== -1;
+          }
+          if (!isEmpty(filter.reactions)) {
+            filterBool = filterBool && reactionIndex !== -1;
+          }
+          if (!isEmpty(filter.tags)) {
+            filterBool = filterBool && tagsIndex !== -1;
+          }
+          if (!isEmpty(filter.search)) {
+            filterBool = filterBool && searchBool;
+          }
+          return filterBool;
+        });
+      }
+      setFilteredComments(filtered);
     }
-    setFilteredComments(filtered);
-  }, [smartComments, filter]);
+  }, [overview, filter]);
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -114,9 +99,8 @@ const ActivityLogs = () => {
     });
   };
 
-  return (
-    <RepoPageLayout>
-      <Helmet {...ActivityLogHelmet} />
+  return(
+    <>
       <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
         <div className="field is-flex-grow-1 px-5 my-5">
           <p className="control has-icons-left">
@@ -132,7 +116,10 @@ const ActivityLogs = () => {
             </span>
           </p>
         </div>
-        <div className="is-flex-grow-1 is-flex is-flex-wrap-wrap">
+        <div
+          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          style={{zIndex: 2}}
+        >
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{
@@ -189,7 +176,7 @@ const ActivityLogs = () => {
         </div>
       </div>
       {filteredComments.length ? filteredComments.map((item) => (
-        <div className="my-10">
+        <div className="my-10" key={`activity-${item._id}`} >
           <ActivityItem {...item} />
         </div>
       )) : (
@@ -197,8 +184,8 @@ const ActivityLogs = () => {
           <p>No activity found!</p>
         </div>
       )}
-    </RepoPageLayout>
-  );
-};
+    </>
+  )
+}
 
-export default ActivityLogs;
+export default ActivityPage;
