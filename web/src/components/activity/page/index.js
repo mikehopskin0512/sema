@@ -177,7 +177,7 @@ const ActivityPage = () => {
       </div>
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`} >
-          <ActivityItem {...item} />
+          <ActivityItem {...item} user={item.userId} />
         </div>
       )) : (
         <div className="my-10 p-20 has-background-white">
