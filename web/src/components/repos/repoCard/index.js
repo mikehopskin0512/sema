@@ -1,78 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import clsx from 'clsx';
-import { isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import styles from './repoCard.module.scss';
-import { RepoType } from '../repoList/types';
-import { repositoriesOperations } from '../../../state/features/repositories';
-
-const { fetchRepositoryOverview } = repositoriesOperations;
 
 const statLabels = {
-  codeReview: 'Smart Code Reviews',
-  smartComments: 'Smart Comments',
-  smartCommenters: 'Smart Commenters',
-  semaUsers: 'Sema User',
+  totalPullRequests: 'Smart Code Reviews',
+  totalSmartComments: 'Smart Comments',
+  totalSmartCommenters: 'Smart Commenters',
+  totalSemaUsers: 'Sema User',
 };
-
-const descriptionMaxLength = 170;
-
-// WILL DELETE TEST DATA WHEN API IS COMPLETED
-// const users = [
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/34.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/women/29.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// {
-//   imgUrl: 'https://randomuser.me/api/portraits/men/90.jpg',
-// },
-// ];
 
 const RepoCard = (props) => {
   const {
-    name, description, isFavorite, externalId,
+    name, externalId, stats
   } = props;
 
-  const dispatch = useDispatch();
-  const { auth, repositories } = useSelector(
-    (state) => ({
-      alerts: state.alertsState,
-      auth: state.authState,
-      repositories: state.repositoriesState,
-    }),
-  );
-  const { token } = auth;
-
-  const [stats, setStats] = useState({});
   const [users] = useState([]);
-
-  const truncateText = (text) => {
-    if (isEmpty(text)) {
-      return 'No description';
-    }
-    let truncated = text;
-    if (text.length > descriptionMaxLength) {
-      truncated = `${text.substr(0, descriptionMaxLength)}...`;
-    }
-    return truncated;
-  };
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
@@ -110,29 +55,17 @@ const RepoCard = (props) => {
     ) : ""
   );
 
-  useEffect(() => {
-    dispatch(fetchRepositoryOverview(externalId, token));
-  }, []);
-
-  useEffect(() => {
-    setStats(repositories?.data?.overview);
-  }, [repositories]);
-
   return (
     <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} onClick={onClickRepo} aria-hidden>
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
         <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-2 has-text-weight-semibold is-size-5">{name}</p>
-          <FontAwesomeIcon icon={isFavorite ? faStarSolid : faStar} size="lg" color={isFavorite ? '#FFA20F' : '#192129'} />
+          {/* <FontAwesomeIcon icon={isFavorite ? faStarSolid : faStar} size="lg" color={isFavorite ? '#FFA20F' : '#192129'} /> */}
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
-          <div className="px-12 py-15 is-flex is-justify-content-space-between is-align-items-center">
-            <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20')}>{truncateText(description)}</p>
-            {renderUsers()}
-          </div>
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
-            {Object.keys(statLabels).map((item) => (
-              <div className={clsx('my-12 is-flex', styles.stat)}>
+            {Object.keys(statLabels).map((item, i) => (
+              <div className={clsx('my-12 is-flex', styles.stat)} key={i}>
                 {renderStats(statLabels[item], stats?.[item])}
               </div>
             ))}
@@ -143,6 +76,7 @@ const RepoCard = (props) => {
   );
 };
 
-RepoCard.propTypes = RepoType;
+// Repos model isn't currently updated in RepoType
+// RepoCard.propTypes = RepoType;
 
 export default RepoCard;

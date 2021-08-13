@@ -1,4 +1,5 @@
 import { cloneDeep } from 'lodash';
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 
 import initialState from './initialState';
@@ -20,16 +21,19 @@ import {
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
   ADD_MUTATION_OBSERVER,
-  REMOVE_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
 } from './actionConstants';
+
+// TODO: good if we can break cyclic dependencies
+// eslint-disable-next-line import/no-cycle
 import {
   getInitialSemaValues,
   toggleTagSelection,
   getSemaIds,
+  checkSubmitButton,
 } from '../content-util';
 
 import {
@@ -54,7 +58,7 @@ function rootReducer(state = initialState, action) {
     const { semabarContainerId, semaSearchContainerId } = getSemaIds(seedId);
 
     const { initialTags, initialReaction } = getInitialSemaValues(
-      activeElement
+      activeElement,
     );
 
     newState.semabars[semabarContainerId] = {
@@ -104,6 +108,8 @@ function rootReducer(state = initialState, action) {
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
     semabars[id].isReactionDirty = isReactionDirty;
+    // TODO: perform side-effects properly
+    checkSubmitButton(id, semabars[id]);
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation } = payload;
     const {
@@ -114,6 +120,8 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags, true);
     semabars[id].selectedTags = updatedTags;
+    // TODO: perform side-effects properly
+    checkSubmitButton(id, semabars[id]);
   } else if (type === CLOSE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
@@ -135,9 +143,8 @@ function rootReducer(state = initialState, action) {
     // suggestion=T, selected=F, isDirty=F, showTag=T
     const suggestionsToShow = suggestedTags.filter((suggestion) => {
       const tagObj = selectedTags.find(
-        (tagDetails) =>
-          tagDetails[POSITIVE] === suggestion ||
-          tagDetails[NEGATIVE] === suggestion
+        (tagDetails) => tagDetails[POSITIVE] === suggestion
+          || tagDetails[NEGATIVE] === suggestion,
       );
       if (tagObj) {
         const isSelected = !!tagObj[SELECTED];
@@ -146,6 +153,7 @@ function rootReducer(state = initialState, action) {
           return true;
         }
       }
+      return false;
     });
 
     // suggestion=F, selected=T, isDirty=F, showTag=F
@@ -153,10 +161,11 @@ function rootReducer(state = initialState, action) {
       const isSelected = !!tagObj[SELECTED];
       if (isSelected) {
         const isSuggested = !!suggestedTags.find(
-          (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE]
+          (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE],
         );
         const { isDirty } = tagObj;
         if (!isSuggested && !isDirty) {
+          // eslint-disable-next-line no-param-reassign
           tagObj[SELECTED] = null;
         }
       }
@@ -166,8 +175,7 @@ function rootReducer(state = initialState, action) {
       .length;
 
     let numberOfAllowedSuggestions = SUGGESTED_TAG_LIMIT - selectedTagsLength;
-    numberOfAllowedSuggestions =
-      numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
+    numberOfAllowedSuggestions = numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
 
     // reverse so that only new suggestions are removed
     suggestionsToShow.reverse();
@@ -183,10 +191,12 @@ function rootReducer(state = initialState, action) {
       semabars[id].selectedTags = updatedTags;
     });
   } else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
-    const { data, position, isLoading = false, openFor } = payload;
+    const {
+      data, position, isLoading = false, openFor,
+    } = payload;
     const obj = {};
     if (data) {
-      //open with data
+      // open with data
       obj.data = data;
       obj.position = position;
       obj.isOpen = true;

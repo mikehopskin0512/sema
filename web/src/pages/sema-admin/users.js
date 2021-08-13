@@ -26,7 +26,7 @@ const UsersPage = () => {
   const debounceSearchTerm = useDebounce(searchTerm);
   const initFilters = {
     Waitlisted: false,
-    Active: false,
+    Registered: false,
     Blocked: false,
     Disabled: false,
   };
@@ -81,7 +81,7 @@ const UsersPage = () => {
 
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'primary';
-    if (value === 'Active') return 'success';
+    if (value === 'Registered') return 'success';
     if (value === 'Blocked') return 'danger';
 
     return 'dark';
@@ -90,7 +90,7 @@ const UsersPage = () => {
   const renderActionCell = (userStatus) => {
     const { id, status } = userStatus;
     switch (status) {
-      case 'Active':
+      case 'Registered':
         return (
           <div className="is-flex">
             <a onClick={() => handleBlockOrDisableUser(id)}>Disable</a>
@@ -207,7 +207,7 @@ const UsersPage = () => {
 
   const getStatus = (user) => {
     if (user.isActive && user.isWaitlist) return 'Waitlisted';
-    if (user.isActive && !user.isWaitlist) return 'Active';
+    if (user.isActive && !user.isWaitlist) return 'Registered';
     if (!user.isActive && user.isWaitlist) return 'Blocked';
 
     return 'Disabled';
@@ -241,8 +241,8 @@ const UsersPage = () => {
         value: 'all',
       },
       {
-        label: `Active Users (${analytic.active ? analytic.active : 0})`,
-        value: 'active',
+        label: `Registered Users (${analytic.active ? analytic.active : 0})`,
+        value: 'registered',
       },
       {
         label: `On the waitlist (${analytic.waitlist ? analytic.waitlist : 0})`,
@@ -268,8 +268,8 @@ const UsersPage = () => {
       case 'waitlist':
         setStatusFilters({ ...initFilters, Waitlisted: true });
         break;
-      case 'active':
-        setStatusFilters({ ...initFilters, Active: true });
+      case 'registered':
+        setStatusFilters({ ...initFilters, Registered: true });
         break;
       case 'blocked':
         setStatusFilters({ ...initFilters, Blocked: true });

@@ -1,5 +1,8 @@
 /* eslint react/no-danger: 0, max-len: 0 */
+import React from 'react';
+import clsx from 'clsx';
 import Head from 'next/head';
+import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
@@ -44,9 +47,12 @@ const withLayout = (Page) => (props) => (
     </Head>
     <ExtensionStatus />
     <Header />
-
-    <Page style={{ backgroundColor: '#FCFCFC' }} {...props} />
-    <Footer />
+    <div className={clsx(styles.content, 'pb-70')}>
+      <Page {...props} />
+    </div>
+    <div className={styles.footer}>
+      <Footer />
+    </div>
   </div>
 );
 

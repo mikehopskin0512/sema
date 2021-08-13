@@ -134,7 +134,7 @@ const Header = () => {
             </button>
           )}
         </div>
-        {token && isVerified && (
+        {token && isVerified && !isWaitlist && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
             <div

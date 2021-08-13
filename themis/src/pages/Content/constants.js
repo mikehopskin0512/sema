@@ -1,12 +1,13 @@
-export const SEMA_URL = process.env.SEMA_URL;
-export const SEMA_UI_URL = process.env.SEMA_UI_URL;
-export const SEMA_COOKIE_NAME = process.env.SEMA_COOKIE_NAME;
-export const SEMA_COOKIE_DOMAIN = process.env.SEMA_COOKIE_DOMAIN;
-export const SEMA_CLIENT_ID = process.env.SEMA_CLIENT_ID;
-export const SEMA_CLIENT_SECRET = process.env.SEMA_CLIENT_SECRET;
+export const { SEMA_URL } = process.env;
+export const { SEMA_UI_URL } = process.env;
+export const { SEMA_COOKIE_NAME } = process.env;
+export const { SEMA_COOKIE_DOMAIN } = process.env;
+export const { SEMA_CLIENT_ID } = process.env;
+export const { SEMA_CLIENT_SECRET } = process.env;
 
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
+export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
@@ -127,8 +128,8 @@ export const EMOJIS_ID = {
   AWESOME: '607f0d1ed7f45b000ec2ed71',
   GOOD: '607f0d1ed7f45b000ec2ed72',
   QUESTION: '607f0d1ed7f45b000ec2ed73',
-  FIX: '607f0d1ed7f45b000ec2ed74'
-}
+  FIX: '607f0d1ed7f45b000ec2ed74',
+};
 
 export const EMOJIS = [
   {
@@ -200,6 +201,7 @@ export const USER = {
   _id: '6076262a407c64f11499537a',
 };
 
+// eslint-disable-next-line max-len
 /* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
  * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
  */
@@ -240,7 +242,7 @@ export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
 
-//TODO: this will need to change. modal is not global
+// TODO: this will need to change. modal is not global
 export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';
 export const ON_INPUT_DEBOUCE_INTERVAL_MS = 250;
 export const CALCULATION_ANIMATION_DURATION_MS = 1000;
@@ -253,3 +255,5 @@ export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
 export const LIGHT = 'light';
 export const DARK = 'dark';
 export const DARK_DIMMED = 'dark_dimmed';
+
+export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';

@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
@@ -74,7 +75,7 @@ const AdminSidebar = ({ open, setOpen }) => {
         className={`is-flex is-align-items-center is-clickable ${
           open ? 'p-10' : 'px-5 py-10'
         }`}
-        onClick={() => setOpen(!open)}
+        onClick={() => Router.push('/dashboard')}
         aria-hidden="true"
       >
         <img src="/img/logo_short.png" alt="logo" />

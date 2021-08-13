@@ -8,7 +8,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/comments/eng-guides`, route);
 
-  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/', passport.authenticate('basic', { session: false }), async (req, res) => {
     try {
       const engGuides = await getAllEngGuides();
       return res.status(200).send(engGuides);

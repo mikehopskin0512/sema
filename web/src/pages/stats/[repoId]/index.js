@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/named */
 import React, { useEffect } from 'react';
-import { format, subWeeks, subYears } from 'date-fns';
+import { format, subDays, subYears } from 'date-fns';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import styles from './stats.module.scss';
@@ -16,6 +17,7 @@ import { repositoriesOperations } from '../../../state/features/repositories';
 const { fetchReactionStats, fetchTagStats } = repositoriesOperations;
 
 const Stats = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const { auth, repositories } = useSelector((state) => ({
@@ -24,15 +26,16 @@ const Stats = () => {
   }));
 
   const { data: { reactions, tags } } = repositories;
+  const { query: { repoId } } = router;
 
   const getReactions = async () => {
     const reactionFilter = {
-      externalId: '293553582',
+      externalId: repoId,
       dateTo: format(new Date(), 'dd MMM, yyyy'),
-      dateFrom: format(subWeeks(new Date(), 1), 'dd MMM yyyy'),
+      dateFrom: format(subDays(new Date(), 8), 'dd MMM yyyy'),
     };
     const tagFilter = {
-      externalId: '293553582',
+      externalId: repoId,
       dateTo: format(new Date(), 'dd MMM, yyyy'),
       dateFrom: format(subYears(new Date(), 10), 'dd MMM yyyy'),
     };
@@ -61,7 +64,7 @@ const Stats = () => {
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
             <p className="has-text-deep-black has-text-weight-semibold">Tags (All Time)</p>
-            <CircularPacking data={tags || []} />
+            <CircularPacking data={tags || {}} />
           </div>
         </div>
       </div>

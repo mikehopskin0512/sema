@@ -7,7 +7,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../../../components/activity/item';
 import CustomSelect from '../../../components/activity/select';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
-import Sidebar from '../../../components/sidebar';
 import Helmet, { ActivityLogHelmet } from '../../../components/utils/Helmet';
 import { commentsOperations } from '../../../state/features/comments';
 
@@ -22,6 +21,7 @@ const ActivityLogs = () => {
     auth: state.authState,
   }));
   const { token } = auth;
+  const { smartComments = [] } = comments;
 
   const {
     query: { repoId },
@@ -44,22 +44,19 @@ const ActivityLogs = () => {
 
   useEffect(() => {
     if (comments?.smartComments?.length) {
-      const users = comments.smartComments.map((item) => {
-        const { userId } = item;
-        if (userId) {
-          const { firstName, lastName, _id, avatarUrl } = userId;
-          return {
-            label: `${firstName} ${lastName}`,
-            value: _id,
-            img: avatarUrl,
-          };
-        }
+      const users = comments.smartComments.filter((item) => item.userId).map((item) => {
+        const { firstName, lastName, _id, avatarUrl } = item.userId;
+        return {
+          label: `${firstName} ${lastName}`,
+          value: _id,
+          img: avatarUrl,
+        };
       });
       const prs = comments.smartComments.map((item) => {
         if (item && item.githubMetadata) {
           const { githubMetadata: { title, pull_number: pullNum } } = item;
           return {
-            label: `${title || 'PR'} #${pullNum}`,
+            label: `${title || 'PR'} #${pullNum || ''}`,
             value: pullNum,
           };
         }
@@ -71,7 +68,7 @@ const ActivityLogs = () => {
   }, [comments]);
 
   useEffect(() => {
-    let filtered = comments.smartComments;
+    let filtered = comments?.smartComments || [];
     if (
       !isEmpty(filter.from) ||
       !isEmpty(filter.to) ||
@@ -80,10 +77,10 @@ const ActivityLogs = () => {
       !isEmpty(filter.search)
     ) {
       filtered = comments.smartComments.filter((item) => {
-        const fromIndex = findIndex(filter.from, { value: item.userId._id });
-        const toIndex = findIndex(filter.to, { value: item.githubMetadata.pull_number });
+        const fromIndex = item.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
+        const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item.githubMetadata.pull_number }) : -1;
         const reactionIndex = findIndex(filter.reactions, { value: item.reaction });
-        const tagsIndex = findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1);
+        const tagsIndex = item.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
         const searchBool = item.comment.toLowerCase().includes(filter.search.toLowerCase());
         let filterBool = true;
         if (!isEmpty(filter.from)) {
@@ -105,7 +102,7 @@ const ActivityLogs = () => {
       });
     }
     setFilteredComments(filtered);
-  }, [comments.smartComments, filter]);
+  }, [smartComments, filter]);
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -117,7 +114,7 @@ const ActivityLogs = () => {
   return (
     <RepoPageLayout>
       <Helmet {...ActivityLogHelmet} />
-      <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
+      <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap ">
         <div className="field is-flex-grow-1 px-5 my-5">
           <p className="control has-icons-left">
             <input
@@ -132,7 +129,10 @@ const ActivityLogs = () => {
             </span>
           </p>
         </div>
-        <div className="is-flex-grow-1 is-flex is-flex-wrap-wrap">
+        <div
+          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          style={{zIndex: 2}}
+        >
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{

@@ -7,11 +7,9 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-import ContactUs from '../../../components/contactUs';
 import CommentFilter from '../../../components/comment/commentFilter';
 import EngGuideTable from '../../../components/engGuides/engGuideTable';
 import withLayout from '../../../components/layout';
-import SupportForm from '../../../components/supportForm';
 import Helmet from '../../../components/utils/Helmet';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
@@ -23,7 +21,6 @@ const { getEngGuides } = engGuidesOperations;
 const CollectionEngGuides = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [supportForm, setSupportForm] = useState(false);
   const [engGuide, setEngGuide] = useState({
     name: '',
     _id: '',
@@ -38,11 +35,8 @@ const CollectionEngGuides = () => {
   }));
 
   const { engGuideId } = router.query;
-  const { token, userVoiceToken } = auth;
+  const { token } = auth;
   const { engGuides, isFetching } = engGuideState;
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   const onSearch = ({ search, tag, language }) => {
     const { comments = [] } = engGuide;
@@ -107,8 +101,7 @@ const CollectionEngGuides = () => {
   return (
     <div className="has-background-gray-9 hero">
       <Helmet title="Engineering Guide" />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
-      <div className="hero-body">
+      <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/collections" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
@@ -131,7 +124,6 @@ const CollectionEngGuides = () => {
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         <EngGuideTable data={engGuideFilter} />
       </div>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
     </div>
   );
 };

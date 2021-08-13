@@ -123,8 +123,8 @@ export default (app, passport) => {
 
   route.get('/metric', async (req, res) => {
     try {
-      const { type } = req.query;
-      const invites = await getInviteMetrics(type);
+      const { type, timeRange } = req.query;
+      const invites = await getInviteMetrics(type, timeRange);
 
       return res.status(200).send({
         invites,
@@ -137,9 +137,9 @@ export default (app, passport) => {
 
   route.post('/metric/export', async (req, res) => {
     try {
-      const { type } = req.body;
+      const { type, timeRange } = req.body;
 
-      const packer = await exportInviteMetrics(type);
+      const packer = await exportInviteMetrics(type, timeRange);
 
       res.writeHead(200, {
         'Content-disposition': 'attachment;filename=' + 'metric.csv',

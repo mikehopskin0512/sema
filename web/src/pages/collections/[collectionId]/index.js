@@ -12,9 +12,7 @@ import styles from '../collection.module.scss';
 import AddSuggestedCommentModal from '../../../components/comment/addSuggestedCommentModal';
 import CommentFilter from '../../../components/comment/commentFilter';
 import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
-import ContactUs from '../../../components/contactUs';
 import withLayout from '../../../components/layout';
-import SupportForm from '../../../components/supportForm';
 import Helmet from '../../../components/utils/Helmet';
 import Toaster from '../../../components/toaster';
 
@@ -36,11 +34,10 @@ const CollectionComments = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token, userVoiceToken } = auth;
-  const { collection: { name, comments = [], _id } } = collectionState;
+  const { token } = auth;
+  const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
-  const [supportForm, setSupportForm] = useState(false);
   const [page, setPage] = useState(1);
   const [commentsFiltered, setCommentsFiltered] = useState(comments);
   const [tagFilters, setTagFilters] = useState([]);
@@ -74,9 +71,6 @@ const CollectionComments = () => {
     setLanguageFilters(languages);
   }, [comments]);
 
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
-
   const openNewSuggestedCommentModal = () => setNewCommentModalOpen(true);
   const closeNewSuggestedCommentModal = () => setNewCommentModalOpen(false);
 
@@ -106,13 +100,21 @@ const CollectionComments = () => {
     setCommentsFiltered([...filtered]);
   };
 
+  useEffect(() => {
+    const body = document.querySelector('body');
+    if (newCommentModalOpen) {
+      body.classList.add('has-no-horizontal-scroll');
+    } else {
+      body.classList.remove('has-no-horizontal-scroll');
+    }
+  }, [newCommentModalOpen]);
+
   return (
     <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet title={`Collection - ${name}`} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <AddSuggestedCommentModal active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
-      <div className="hero-body">
+      <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/collections" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
@@ -133,19 +135,21 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={openNewSuggestedCommentModal}>
-            Add New Comment
-          </button>
+          {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={openNewSuggestedCommentModal}>
+              Add New Comment
+            </button>
+          ) : null}
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
           <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div> :
           reverse(commentsFiltered).slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
-          <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-30">
+          <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-70">
             <button
               onClick={viewMore}
               className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary"
@@ -155,7 +159,6 @@ const CollectionComments = () => {
           </div>
         ) }
       </div>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
     </div>
   );
 };

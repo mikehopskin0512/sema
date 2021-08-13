@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { find } from "lodash";
 import { useRouter } from 'next/router';
 import clsx from "clsx";
-import ContactUs from '../../contactUs';
 import Sidebar from "../../sidebar";
-import SupportForm from "../../supportForm";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
 import { repositoriesOperations } from "../../../state/features/repositories";
@@ -21,14 +19,10 @@ const RepoPageLayout = ({ children }) => {
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { query: { repoId }, pathName } = router;
+  const { query: { repoId }, pathname = '' } = router;
   const { token, userVoiceToken } = auth;
   const [selectedRepo, setSelectedRepo] = useState({}); 
-  const [supportForm, setSupportForm] = useState(false);
   const [stats, setStats] = useState({});
-
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -49,7 +43,7 @@ const RepoPageLayout = ({ children }) => {
       });
     }
     setStats(repositories?.data?.overview);
-  }, [repositories, pathName]);
+  }, [repositories, pathname]);
 
   useEffect(() => {
     dispatch(fetchRepositoryOverview(repoId, token));
@@ -75,46 +69,48 @@ const RepoPageLayout = ({ children }) => {
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);
-    window.location = pathName.replace('[repoId]', obj.value);
+    window.location = pathname.replace('[repoId]', obj.value);
   }
 
   return (
-    <div className="has-background-white">
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
-      <div className={clsx("mt-10", styles['repo-select-container'])}>
+    <div className="has-background-white pb-250">
+      <div className={clsx("mt-10 pl-50", styles['repo-select-container'])}>
         <Select 
           onChange={onChangeSelect}
           value={selectedRepo}
           options={formatOptions(repositories.data?.repositories)}
-          className="px-50"
+          className="pl-30"
           components={{ Control, IndicatorSeparator }}
           isOptionDisabled={(option) => option.disabled}
           placeholder={''} />
       </div>
-      <div className={styles["card-container"]}>
+      <div className={clsx(styles["card-container"], 'px-20')}>
         <div className="hero">
           <div className="hero-body columns m-0">
-            <div className={clsx("column mx-20 m-5 p-20", styles["card"])}>
-              <div className="is-size-6">SMART CODE REVIEWS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.codeReview || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.codeReview || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SMART COMMENTS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.smartComments || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.smartComments || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SMART COMMENTERS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.smartCommenters || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTERS</div>
+              <div className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{stats?.smartCommenters || 0}</div>
             </div>
-            <div className={clsx("column mx-20 m-5", styles["card"])}>
-              <div className="is-size-6">SEMA USERS</div>
-              <div className="is-size-3 has-text-weight-semibold">{stats?.semaUsers || 0}</div>
+            <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+              <div className={clsx("is-size-7", styles['card-title'])}>SEMA USERS</div>
+              <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{stats?.semaUsers || 0}</div>
             </div>
             </div>
           </div>
       </div>
-      <Sidebar>{children}</Sidebar>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>
+      <Sidebar>
+        <>
+          {children}
+        </>
+      </Sidebar>
     </div>
   );
 };

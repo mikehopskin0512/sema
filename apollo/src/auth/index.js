@@ -5,6 +5,7 @@ import errors from '../shared/errors';
 
 import { findById, validateLogin } from '../users/userService';
 import { validateRefreshToken, setRefreshToken, createRefreshToken, createAuthToken } from './authService';
+import { getTokenData } from '../shared/utils';
 
 const route = Router();
 
@@ -57,7 +58,8 @@ export default (app, passport) => {
       if (!user) {
         throw new errors.NotFound('No user found');
       }
-      const tokenData = { _id: user._id, isVerified: user.isVerified, isWaitlist: user.isWaitlist };
+
+      const tokenData = getTokenData(user);
 
       await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 

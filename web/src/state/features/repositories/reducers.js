@@ -6,7 +6,7 @@ const initialState = {
     repository: {},
     repositories: [],
     reactions: [],
-    tags: [],
+    tags: {},
     overview: {},
   },
 
@@ -65,6 +65,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: state.data.repositories,
         repository: action.repository,
       },
@@ -115,6 +116,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },
@@ -202,6 +204,31 @@ const reducer = (state = initialState, action) => {
       data: {
         ...state.data,
         overview: action.overview,
+      },
+      error: action.errors,
+    };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        repositories: action.repositories,
+      },
+      error: {},
+    };
+  case types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        repositories: [],
       },
       error: action.errors,
     };

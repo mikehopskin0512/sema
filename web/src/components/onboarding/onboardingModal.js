@@ -21,42 +21,50 @@ const OnboardingModal = ({
   toggleModalActive,
   semaCollections,
   setComment,
+  onSubmit
 }) => {
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
     case 1:
     case 2:
     case 3:
-      return <ContentPage page={page} nextPage={() => nextPage(currentPage)} previousPage={() => previousPage(currentPage)} />;
+      return (
+        <ContentPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+        />
+      );
+    // case 4:
+    //   return (
+    //     <SmartBankCommentsPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       collectionState={collectionState}
+    //       toggleCollection={toggleCollection}
+    //       semaCollections={semaCollections}
+    //     />
+    //   );
+    // case 5:
+    //   return (
+    //     <AddSuggestedCommentPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       comment={comment}
+    //       handleCommentFields={(e) => handleCommentFields(e)}
+    //       setComment={setComment}
+    //     />
+    //   );
     case 4:
-      return (
-        <SmartBankCommentsPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          collectionState={collectionState}
-          toggleCollection={toggleCollection}
-          semaCollections={semaCollections}
-        />
-      );
-    case 5:
-      return (
-        <AddSuggestedCommentPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          comment={comment}
-          handleCommentFields={(e) => handleCommentFields(e)}
-          setComment={setComment}
-        />
-      );
-    case 6:
       return (
         <ExtensionPage
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
           closeModal={() => toggleModalActive(false)}
+          onSubmit={onSubmit}
         />
       );
     default:
@@ -86,7 +94,7 @@ const OnboardingModal = ({
               onClick={() => toggleModalActive(false)}
             />
           </header> */}
-        <section className={clsx('modal-card-body p-0')}>
+        <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
           {renderModalContent(page)}
         </section>
         {/* <footer className="modal-card-foot">
@@ -111,6 +119,7 @@ OnboardingModal.propTypes = {
   toggleModalActive: PropTypes.func.isRequired,
   semaCollections: PropTypes.array.isRequired,
   setComment: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default OnboardingModal;

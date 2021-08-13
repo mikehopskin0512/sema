@@ -28,7 +28,7 @@ export const listUsers = async (params) => {
     status.forEach((item) => {
       if (item === 'Waitlisted') {
         statusQuery.push({ isActive: true, isWaitlist: true });
-      } else if (item === 'Active') {
+      } else if (item === 'Registered') {
         statusQuery.push({ isActive: true, isWaitlist: false });
       } else if (item === 'Blocked') {
         statusQuery.push({ isActive: false, isWaitlist: true });
