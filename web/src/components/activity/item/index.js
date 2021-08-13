@@ -13,7 +13,7 @@ const ActivityItem = (props) => {
     reaction = '',
     tags = [],
     createdAt = '',
-    user = {
+    userId: user = {
       firstName: '',
       avatarUrl: '',
       lastName: '',
