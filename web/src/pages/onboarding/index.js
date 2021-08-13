@@ -48,17 +48,17 @@ const Onboarding = () => {
           toggleCollection={toggleCollection}
         />
       );
+    // case 5:
+    //   return (
+    //     <AddSuggestedCommentPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       comment={comment}
+    //       handleCommentFields={(e) => handleCommentFields(e)}
+    //     />
+    //   );
     case 5:
-      return (
-        <AddSuggestedCommentPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          comment={comment}
-          handleCommentFields={(e) => handleCommentFields(e)}
-        />
-      );
-    case 6:
       return (
         <ExtensionPage
           page={page}

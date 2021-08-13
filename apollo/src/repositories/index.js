@@ -4,7 +4,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, getSemaUsersOfRepo
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, getSemaUsersOfRepo, aggregateRepositories
 } from './repositoryService';
 import { getPullRequestsByExternalId, getSmartCommentersByExternalId, getSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 
@@ -68,6 +68,19 @@ export default (app, passport) => {
     const { externalIds } = req.query;
     try {
       const repositories = await findByExternalIds(JSON.parse(externalIds));
+      return res.status(201).send({
+        repositories,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/dashboard', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { externalIds } = req.query;
+    try {
+      const repositories = await aggregateRepositories(JSON.parse(externalIds));
       return res.status(201).send({
         repositories,
       });
