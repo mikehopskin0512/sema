@@ -21,7 +21,7 @@ const EngineeringGuides = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getEngGuides(token));
+    dispatch(getEngGuides());
   }, [dispatch, token]);
 
   const viewMore = () => {
