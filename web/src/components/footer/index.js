@@ -95,12 +95,12 @@ const Footer = () => {
     <>
       <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
       <footer className={clsx(styles.footer, 'px-50')}>
-        <div>
+        <div className='content-container'>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
           <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
             {renderAppLinks()}
           </div>
-          <div className="is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-center is-align-items-center is-hidden-mobile">
+          <div className="is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-center is-align-items-center is-hidden-mobile">
             <div className="is-flex is-align-items-center">
               {renderAppLinks()}
             </div>
