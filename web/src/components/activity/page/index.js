@@ -26,32 +26,27 @@ const ActivityPage = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
-    if (overview?.smartcomments?.length) {
-      const users = overview.smartcomments.map((item) => {
-        const { user } = item;
-        if (user) {
-          const { firstName = '', lastName = '', _id = '', avatarUrl = '' } = user;
-          return {
-            label: `${firstName} ${lastName}`,
-            value: _id,
-            img: avatarUrl,
-          };
-        }
-      });
-      const prs = overview.smartcomments.map((item) => {
-        if (item && item.githubMetadata) {
-          const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
-          return {
-            label: `${title || 'PR'} #${pullNum || ''}`,
-            value: pullNum,
-          };
-        }
-        return null;
-      });
-      setFilterUserList(uniqBy(users, 'value'));
-      setFilterPRList(uniqBy(compact(prs), 'value'));
+    if (!overview?.smartcomments?.length) {
+      return;
     }
-  }, [repositories]);
+    const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
+      const { firstName, lastName, _id, avatarUrl } = item.userId;
+      return {
+        label: `${firstName} ${lastName}`,
+        value: _id,
+        img: avatarUrl,
+      };
+    });
+    const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
+      const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
+      return {
+        label: `${title || 'PR'} #${pullNum || ''}`,
+        value: pullNum,
+      };
+    });
+    setFilterUserList(uniqBy(users, 'value'));
+    setFilterPRList(uniqBy(compact(prs), 'value'));
+  }, [overview]);
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
