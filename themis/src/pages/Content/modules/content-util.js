@@ -260,11 +260,11 @@ export async function writeSemaToGithub(textarea) {
         onMutationEvent: onConversationMutationObserver,
       }));
     } else {
-      store.dispatch({
+      store.dispatch(addMutationObserver({
         selector: 'div#files',
         config: { childList: true, subtree: true },
         onMutationEvent: onFilesChangedMutationObserver,
-      });
+      }));
       inLineMetada = getGithubInlineMetadata(textarea.id);
     }
 
