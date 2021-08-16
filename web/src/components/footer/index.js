@@ -95,7 +95,7 @@ const Footer = () => {
     <>
       <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
       <footer className={clsx(styles.footer, 'px-50')}>
-        <div className="content-container">
+        <div>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
           <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
             {renderAppLinks()}
