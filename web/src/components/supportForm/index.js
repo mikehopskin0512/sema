@@ -8,7 +8,7 @@ import { supportOperations } from '../../state/features/support';
 
 const { submitSupportEmail } = supportOperations;
 
-const SupportForm = ({ active, closeForm, type }) => {
+const SupportForm = ({ active, closeForm, type = 'Support' }) => {
   const dispatch = useDispatch();
   const { auth, support } = useSelector((state) => ({
     auth: state.authState,
@@ -32,6 +32,7 @@ const SupportForm = ({ active, closeForm, type }) => {
 
   const close = () => {
     reset();
+    setValue('type', type);
     closeForm();
   };
 
@@ -73,7 +74,6 @@ const SupportForm = ({ active, closeForm, type }) => {
                         ...register('title',
                           {
                             required: 'Title is required',
-                            minLength: { value: 10, message: 'Title must be more than 10 characters' },
                           })
                       }
                     />

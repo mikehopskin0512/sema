@@ -21,7 +21,7 @@ const RepoCard = (props) => {
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
-    window.location = `/activity/${externalId}`;
+    window.location = `/repo/${externalId}`;
   };
 
   const renderStats = (label, value) => (

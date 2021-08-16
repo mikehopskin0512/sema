@@ -14,6 +14,8 @@ import {
   exportGrowthRepositoryMetrics,
   getSmartComments,
   filterSmartComments,
+  getSuggestedMetrics,
+  exportSuggestedMetrics,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
 
