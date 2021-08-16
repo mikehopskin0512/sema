@@ -108,3 +108,8 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 .has-horizontal-scroll {
   overflow-y: scroll;
 }
+
+.content-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}

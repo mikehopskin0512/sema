@@ -123,7 +123,7 @@ const Dashboard = () => {
     <>
       <div className='has-background-gray-9 pb-180'>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching ? (
+        {repositories.isFetching || auth.isFetching ? (
           <div style={{ height: '400px', display: 'flex' }}>
             <Loader/>
           </div>

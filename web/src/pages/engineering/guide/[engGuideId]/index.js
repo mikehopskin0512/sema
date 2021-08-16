@@ -48,7 +48,7 @@ const EngineeringGuidePage = () => {
   const { engGuides } = engGuideState;
 
   useEffect(() => {
-    dispatch(getEngGuides(token));
+    dispatch(getEngGuides());
   }, [dispatch, token]);
 
   useEffect(() => {
