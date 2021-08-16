@@ -5,7 +5,7 @@ import RepoCard from '../repoCard';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
-  OTHERS: 'Other Repos',
+  MY_REPOS: 'My Repos',
 };
 
 const RepoList = ({ type, repos }) => (
