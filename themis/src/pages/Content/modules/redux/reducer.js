@@ -20,7 +20,6 @@ import {
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
-  ADD_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
@@ -251,9 +250,6 @@ function rootReducer(state = initialState, action) {
   } else if (type === ADD_SMART_COMMENT) {
     const comment = payload;
     newState.smartComment = comment;
-  } else if (type === ADD_MUTATION_OBSERVER) {
-    const observer = payload;
-    newState.observer = observer;
   } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
     const { id, searchValue } = payload;
     newState.semasearches[id].searchValue = searchValue;
