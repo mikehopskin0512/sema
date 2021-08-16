@@ -52,7 +52,7 @@ export default (app, passport) => {
     }
   });
 
-  route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.put('/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const smartComment = req.body;
@@ -61,7 +61,6 @@ export default (app, passport) => {
         throw new errors.BadRequest('Smart Comment update error');
       }
       return res.status(204).json({ smartComment: updatedSmartComment });
-      return updateSmartComment;
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);
