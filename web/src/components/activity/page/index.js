@@ -26,19 +26,18 @@ const ActivityPage = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
-    if (overview?.smartcomments?.length) {
-      const users = overview.smartcomments.map((item) => {
-        const { user } = item;
-        if (user) {
-          const { firstName = '', lastName = '', _id = '', avatarUrl = '' } = user;
-          return {
-            label: `${firstName} ${lastName}`,
-            value: _id,
-            img: avatarUrl,
-          };
-        }
-      });
-      const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
+    if (!overview?.smartcomments?.length) {
+      return;
+    }
+    const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
+      const { firstName, lastName, _id, avatarUrl } = item.userId;
+      return {
+        label: `${firstName} ${lastName}`,
+        value: _id,
+        img: avatarUrl,
+      };
+    });
+    const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
         const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
         const prName = title || head || 'PR'
         return {
@@ -46,10 +45,9 @@ const ActivityPage = () => {
           value: pullNum,
         };
       });
-      setFilterUserList(uniqBy(users, 'value'));
-      setFilterPRList(uniqBy(compact(prs), 'value'));
-    }
-  }, [repositories]);
+    setFilterUserList(uniqBy(users, 'value'));
+    setFilterPRList(uniqBy(compact(prs), 'value'));
+  }, [overview]);
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
