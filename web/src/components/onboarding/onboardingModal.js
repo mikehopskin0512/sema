@@ -35,29 +35,29 @@ const OnboardingModal = ({
           previousPage={() => previousPage(currentPage)}
         />
       );
+    // case 4:
+    //   return (
+    //     <SmartBankCommentsPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       collectionState={collectionState}
+    //       toggleCollection={toggleCollection}
+    //       semaCollections={semaCollections}
+    //     />
+    //   );
+    // case 5:
+    //   return (
+    //     <AddSuggestedCommentPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       comment={comment}
+    //       handleCommentFields={(e) => handleCommentFields(e)}
+    //       setComment={setComment}
+    //     />
+    //   );
     case 4:
-      return (
-        <SmartBankCommentsPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          collectionState={collectionState}
-          toggleCollection={toggleCollection}
-          semaCollections={semaCollections}
-        />
-      );
-    case 5:
-      return (
-        <AddSuggestedCommentPage
-          page={page}
-          nextPage={() => nextPage(currentPage)}
-          previousPage={() => previousPage(currentPage)}
-          comment={comment}
-          handleCommentFields={(e) => handleCommentFields(e)}
-          setComment={setComment}
-        />
-      );
-    case 6:
       return (
         <ExtensionPage
           page={page}

@@ -65,6 +65,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: state.data.repositories,
         repository: action.repository,
       },
@@ -115,6 +116,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },
