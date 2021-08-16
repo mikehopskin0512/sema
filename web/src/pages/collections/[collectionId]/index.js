@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  findIndex, flatten, isEmpty, reverse, uniqBy,
+  findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import styles from '../collection.module.scss';
-
-import AddSuggestedCommentModal from '../../../components/comment/addSuggestedCommentModal';
+import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 import CommentFilter from '../../../components/comment/commentFilter';
 import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
 import withLayout from '../../../components/layout';
@@ -18,6 +15,7 @@ import Toaster from '../../../components/toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
+import ActionGroup from '../../../components/comment/actionGroup';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -42,7 +40,7 @@ const CollectionComments = () => {
   const [commentsFiltered, setCommentsFiltered] = useState(comments);
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
-  const [newCommentModalOpen, setNewCommentModalOpen] = useState(false);
+  const [selectedComments, setSelectedComments] = useState([]);
 
   useEffect(() => {
     dispatch(getCollectionById(collectionId, token));
@@ -71,11 +69,12 @@ const CollectionComments = () => {
     setLanguageFilters(languages);
   }, [comments]);
 
-  const openNewSuggestedCommentModal = () => setNewCommentModalOpen(true);
-  const closeNewSuggestedCommentModal = () => setNewCommentModalOpen(false);
-
   const viewMore = () => {
     setPage(page + 1);
+  };
+
+  const goToAddPage = async () => {
+    await router.push(`/collections/${_id}/add`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -100,20 +99,28 @@ const CollectionComments = () => {
     setCommentsFiltered([...filtered]);
   };
 
-  useEffect(() => {
-    const body = document.querySelector('body');
-    if (newCommentModalOpen) {
-      body.classList.add('has-no-horizontal-scroll');
+  const handleSelectChange = (commentId, value) => {
+    if (value) {
+      setSelectedComments([...selectedComments, commentId]);
     } else {
-      body.classList.remove('has-no-horizontal-scroll');
+      setSelectedComments(selectedComments.filter((item) => item !== commentId));
     }
-  }, [newCommentModalOpen]);
+  };
+
+  const handleSelectAllChange = (value) => {
+    setSelectedComments(value ? commentsFiltered.map((c) => c._id) : []);
+  };
+
+  const archiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
+    .indexOf(item._id) !== -1 && !item.isActive), [selectedComments, commentsFiltered]);
+
+  const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
+    .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
   return (
-    <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
+    <div className={clsx('has-background-gray-9 hero')}>
       <Helmet title={`Collection - ${name}`} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <AddSuggestedCommentModal active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/collections" className="is-hidden-mobile">
@@ -139,15 +146,38 @@ const CollectionComments = () => {
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
-              onClick={openNewSuggestedCommentModal}>
+              onClick={goToAddPage}>
+              <FontAwesomeIcon icon={faPlus} className="mr-10" />
               Add New Comment
             </button>
           ) : null}
         </div>
-        <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
-        { isEmpty(commentsFiltered) ?
-          <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div> :
-          reverse(commentsFiltered).slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
+        {
+          selectedComments.length ? (
+            <ActionGroup
+              selectedComments={selectedComments}
+              handleSelectAllChange={handleSelectAllChange}
+              archiveComments={archiveComments}
+              unarchiveComments={unarchiveComments}
+            />
+          ) : (
+            <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
+          )
+        }
+        {
+          isEmpty(commentsFiltered) ? (
+            <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div>
+          ) : (
+            commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item, index) => (
+              <SuggestedCommentCard
+                data={item}
+                key={item._id || index}
+                selected={!!selectedComments.find((g) => g === item._id)}
+                onSelectChange={handleSelectChange}
+              />
+            ))
+          )
+        }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-70">
             <button

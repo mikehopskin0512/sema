@@ -3,10 +3,11 @@ import { isEmpty } from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './engGuideRow.module.scss';
+import Checkbox from '../../checkbox';
 
 const EngGuideRow = (props) => {
   const {
-    author, body, collections, source, title, _id, tags,
+    author, body, collections, source, title, _id, tags, selected, handleSelectChange,
   } = props;
 
   const renderLanguages = (languagesArr) => {
@@ -33,10 +34,15 @@ const EngGuideRow = (props) => {
 
   return (
     <tr className="has-background-white my-10 is-clickable" onClick={onClickRow}>
-      <td className={clsx('py-15 has-background-white px-10', styles.document)}>
-        <div className="is-flex is-flex-direction-column is-justify-content-center">
+      <td className={clsx('py-15 has-background-white px-10')}>
+        <div className="is-flex is-align-items-center">
+          <div className="mr-10">
+            <Checkbox value={selected} onChange={(value) => handleSelectChange(_id, value)} />
+          </div>
+          <div className={clsx('is-flex is-flex-direction-column is-justify-content-center', styles.document)}>
           <p className="has-text-weight-semibold is-size-5">{title}</p>
           <p className={clsx('is-size-6', styles.body)}>{body}</p>
+        </div>
         </div>
       </td>
       <td className="py-15 has-background-white px-10">
@@ -77,6 +83,8 @@ EngGuideRow.defaultProps = {
   title: '',
   _id: '',
   tags: [],
+  selected: false,
+  handleSelectChange: () => {},
 };
 
 EngGuideRow.propTypes = {
@@ -87,6 +95,8 @@ EngGuideRow.propTypes = {
   title: PropTypes.string,
   _id: PropTypes.string,
   tags: PropTypes.array,
+  selected: PropTypes.bool,
+  handleSelectChange: PropTypes.func,
 };
 
 export default EngGuideRow;
