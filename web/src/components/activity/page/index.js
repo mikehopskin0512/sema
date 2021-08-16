@@ -28,7 +28,7 @@ const ActivityPage = () => {
   useEffect(() => {
     if (overview?.smartcomments?.length) {
       const users = overview.smartcomments.map((item) => {
-        const { user } = item;
+        const { userId: user } = item;
         if (user) {
           const { firstName = '', lastName = '', _id = '', avatarUrl = '' } = user;
           return {
