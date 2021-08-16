@@ -8,6 +8,8 @@ import CustomSelect from '../select';
 
 import { ReactionList, TagList } from '../../../data/activity';
 
+const defaultAvatar = 'https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255710-stock-illustration-avatar-vector-male-profile-gray.jpg';
+
 const ActivityPage = () => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
@@ -30,11 +32,11 @@ const ActivityPage = () => {
       const users = overview.smartcomments.map((item) => {
         const { userId: user } = item;
         if (user) {
-          const { firstName = '', lastName = '', _id = '', avatarUrl = '' } = user;
+          const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = user;
           return {
-            label: `${firstName} ${lastName}`,
+            label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
             value: _id,
-            img: avatarUrl,
+            img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
           };
         }
       });
@@ -64,7 +66,7 @@ const ActivityPage = () => {
         !isEmpty(filter.search)
       ) {
         filtered = overview.smartcomments.filter((item) => {
-          const fromIndex = item?.user ? findIndex(filter.from, { value: item.user._id }) : -1;
+          const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
           const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
           const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;

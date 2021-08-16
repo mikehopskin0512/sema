@@ -19,6 +19,7 @@ const ActivityItem = (props) => {
       firstName: '',
       avatarUrl: '',
       lastName: '',
+      username: 'User@email.com'
     },
     githubMetadata = {
       title: '',
@@ -79,7 +80,7 @@ const ActivityItem = (props) => {
             <p className="is-size-7 has-text-deep-black">
               { user && !isEmpty(user.firstName) ?
                 <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{user.firstName} {user.lastName}</a> :
-                <span className="has-text-deep-black is-underlined">User</span>}
+                <span className="has-text-deep-black is-underlined">{user ? user.username.split('@')[0] : 'User'}</span>}
               {' reviewed '}
               <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
                 {getPRName(pull_number, title)}
