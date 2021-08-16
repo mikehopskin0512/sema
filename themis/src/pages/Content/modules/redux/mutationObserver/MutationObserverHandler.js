@@ -9,8 +9,6 @@ export default class MutationObserverHandler {
     } = payload;
 
     if (!this.observer) {
-      this.observer = {};
-
       this.observer = new MutationObserver((mutations) => {
         onObserverEvent({ mutations, onMutationEvent });
       });
