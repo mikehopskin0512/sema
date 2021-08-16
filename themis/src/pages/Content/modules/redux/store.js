@@ -3,12 +3,11 @@ import { createStore, applyMiddleware } from 'redux';
 // eslint-disable-next-line import/no-cycle
 import rootReducer from './reducer';
 
-import observerMiddleware from './middleware/observer';
 import epicMiddleware from './middleware/epicMiddleware';
 // eslint-disable-next-line import/no-cycle
 import { rootEpic } from './root';
 
-const middlewares = [observerMiddleware, epicMiddleware];
+const middlewares = [epicMiddleware];
 
 const store = createStore(rootReducer, applyMiddleware(...middlewares));
 
