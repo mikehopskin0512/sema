@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { find, isEmpty } from 'lodash';
+import { get, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
+
+const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityItem = (props) => {
   const {
@@ -17,6 +19,7 @@ const ActivityItem = (props) => {
       firstName: '',
       avatarUrl: '',
       lastName: '',
+      username: 'User@email.com'
     },
     githubMetadata = {
       title: '',
@@ -24,12 +27,36 @@ const ActivityItem = (props) => {
       user: {
         login: '',
       },
+      pull_number: '',
+      commentId: '',
     },
   } = props;
 
-  const { title, url, user: { login = '' } } = githubMetadata;
+  const { title, url, user: { login = '' }, pull_number, commentId, } = githubMetadata;
 
   const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'dd MMM, yyyy') : '');
+
+  const getPRName = (pull_num, pr_name) => {
+    let prName = '';
+    if (!isEmpty(pull_num)) {
+      prName = `PR #${pull_num} `;
+    }
+    if (!isEmpty(pr_name)) {
+      prName += pr_name;
+    }
+    if (isEmpty(prName)) {
+      return 'a pull request';
+    }
+    return prName;
+  }
+
+  const getPRUrl = () => {
+    let prUrl = url;
+    if (!isEmpty(commentId)) {
+      prUrl += `#${commentId}`
+    }
+    return prUrl;
+  }
 
   const renderEmoji = () => {
     const { emoji, title: emojiTitle } = find(EMOJIS, { _id: reaction });
@@ -44,20 +71,20 @@ const ActivityItem = (props) => {
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
       {user ? (
-        <figure className="image is-64x64 mr-20 is-hidden-mobile">
-          <img className="is-rounded" src={user.avatarUrl} alt="user_icon" />
-        </figure>
+        <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-mobile", styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />
       ) : null }
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
-            { user ? (<img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={user.avatarUrl} alt="user_icon" />) : null }
+            <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />
             <p className="is-size-7 has-text-deep-black">
-              { user ?
+              { user && !isEmpty(user.firstName) ?
                 <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{user.firstName} {user.lastName}</a> :
-                <p className="has-text-deep-black is-underlined">user</p>}
+                <span className="has-text-deep-black is-underlined">{user ? user.username.split('@')[0] : 'User'}</span>}
               {' reviewed '}
-              <a href={url} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{title || 'a pull request'}</a>
+              <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
+                {getPRName(pull_number, title)}
+              </a>
             </p>
           </div>
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>

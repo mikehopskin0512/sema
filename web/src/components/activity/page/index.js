@@ -8,6 +8,8 @@ import CustomSelect from '../select';
 
 import { ReactionList, TagList } from '../../../data/activity';
 
+const defaultAvatar = '/img/default-avatar.jpg';
+
 const ActivityPage = () => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
@@ -36,14 +38,15 @@ const ActivityPage = () => {
       .filter((item) => item.githubMetadata.requester)
       .map((({ githubMetadata }) => ({
         label: githubMetadata.requester,
-        value: githubMetadata.requester
+        value: githubMetadata.requester,
+        img: defaultAvatar,
       })))
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
-      const { firstName, lastName, _id, avatarUrl } = item.userId;
+      const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
       return {
-        label: `${firstName} ${lastName}`,
+        label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
         value: _id,
-        img: avatarUrl,
+        img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
       };
     });
     const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
@@ -72,7 +75,7 @@ const ActivityPage = () => {
         !isEmpty(filter.pr)
       ) {
         filtered = overview.smartcomments.filter((item) => {
-          const fromIndex = item?.user ? findIndex(filter.from, { value: item.user._id }) : -1;
+          const fromIndex = item?.user ? findIndex(filter.from, { value: item.userId._id }) : -1;
           const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
           const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
