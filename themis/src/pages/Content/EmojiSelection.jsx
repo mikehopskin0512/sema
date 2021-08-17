@@ -1,17 +1,8 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import Lottie from 'react-lottie';
+import Lottie from 'react-lottie-player';
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
-
-const animationOptions = {
-  loop: true,
-  autoplay: true,
-  animationData,
-  rendererSettings: {
-    preserveAspectRatio: 'xMidYMid slice',
-  },
-};
 
 const EmojiSelection = ({
   allEmojis,
@@ -45,8 +36,8 @@ const EmojiSelection = ({
             paddingTop: 3,
           }}
         >
-          <div style={{ padding: '3px 8px 5px 12px' }}>
-            <Lottie options={animationOptions} height={14} width={14} />
+          <div style={{ margin: '0 8px 6px', height: '13px', width: '13px' }}>
+            <Lottie play loop animationData={animationData} />
           </div>
           <span style={{ fontSize: '12px' }}>
             Calculating...
