@@ -15,7 +15,7 @@ const ExtensionStatus = () => {
   };
 
   const isHidden = () => {
-    const enabledPaths = ['/overview', '/repo', '/dashboard'];
+    const enabledPaths = ['/overview', '/repo', '/dashboard', '/collections', '/engineering', '/support', '/profile'];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {
