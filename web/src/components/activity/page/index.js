@@ -8,7 +8,7 @@ import CustomSelect from '../select';
 
 import { ReactionList, TagList } from '../../../data/activity';
 
-const defaultAvatar = 'https://st3.depositphotos.com/4111759/13425/v/600/depositphotos_134255710-stock-illustration-avatar-vector-male-profile-gray.jpg';
+const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityPage = () => {
   const { repositories } = useSelector((state) => ({
