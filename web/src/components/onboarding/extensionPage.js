@@ -88,7 +88,10 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
         <button
           type="submit"
           className={clsx('button is-primary my-20', styles.next)}
-          // onClick={nextPage}
+          onClick={async () => {
+            await onSubmit();
+            closeModal();
+          }}
           disabled={!isPluginInstalled}
         >
           Done

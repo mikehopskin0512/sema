@@ -8,14 +8,14 @@ const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const ExtensionStatus = () => {
   const { route } = useRouter();
-  const [extensionStatus, setExtensionInstalled] = useState(false);
+  const [extensionStatus, setExtensionInstalled] = useState(true);
 
   const buttonAction = () => {
     window.location.href = EXTENSION_LINK;
   };
 
   const isHidden = () => {
-    const enabledPaths = ['/overview', '/repo'];
+    const enabledPaths = ['/overview', '/repo', '/dashboard', '/collections', '/engineering', '/support', '/profile'];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {
@@ -35,6 +35,13 @@ const ExtensionStatus = () => {
       setExtensionInstalled(result);
     }, 5000);
   }, [extensionStatus]);
+
+  useEffect(() => {
+    (async () => {
+      const result = await isExtensionInstalled();
+      setExtensionInstalled(result);
+    })();
+  }, []);
 
   return (
     <div className={clsx(styles['status-container'], isHidden() && 'is-hidden', extensionStatus && 'is-hidden')}>
