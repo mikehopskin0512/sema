@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import withLayout from '../../components/layout';
-import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
+import _ from 'lodash';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
-import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 import { authOperations } from '../../state/features/auth';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import withLayout from '../../components/layout';
+import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
@@ -16,6 +18,7 @@ const { createSuggestComment } = suggestCommentsOperations;
 const { updateUser } = authOperations;
 
 const Dashboard = () => {
+  const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
   const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
@@ -31,10 +34,12 @@ const Dashboard = () => {
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
+    setOnboardingProgress({...onboardingProgress, page: currentPage + 1});
   };
 
   const previousOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage - 1);
+    setOnboardingProgress({...onboardingProgress, page: currentPage -1});
   };
 
   const toggleCollection = (field) => {
@@ -67,6 +72,12 @@ const Dashboard = () => {
     const defaultCollections = await dispatch(findCollectionsByAuthor(author, token));
     setSemaCollections(defaultCollections);
   };
+
+  useEffect(() => {
+    if (!_.isEmpty(onboardingProgress)) {
+      setOnboardingPage(onboardingProgress.page || 1);
+    }
+  }, [onboardingProgress]);
 
   const createUserCollection = async () => {
     const { username } = identities[0];
@@ -110,6 +121,7 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     const userCollections = await getActiveCollections();
     const updatedUser = { ...user, collections: [...userCollections] };
+    setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
   };
 
@@ -123,7 +135,7 @@ const Dashboard = () => {
     <>
       <div className='has-background-gray-9 pb-180'>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching ? (
+        {repositories.isFetching || auth.isFetching ? (
           <div style={{ height: '400px', display: 'flex' }}>
             <Loader/>
           </div>

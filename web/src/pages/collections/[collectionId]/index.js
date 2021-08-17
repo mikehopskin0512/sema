@@ -128,7 +128,7 @@ const CollectionComments = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/collections" className="has-text-grey">Comment Library</a></li>
+              <li><a href="/collections" className="has-text-grey">Suggested Comments</a></li>
               <li className="is-active has-text-weight-semibold"><a href={`/collections/${_id}`}>{name}</a></li>
             </ul>
           </nav>
