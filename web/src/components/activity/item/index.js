@@ -15,24 +15,24 @@ const ActivityItem = (props) => {
     reaction = '',
     tags = [],
     createdAt = '',
-    userId: user = {
-      firstName: '',
-      avatarUrl: '',
-      lastName: '',
-      username: 'User@email.com'
-    },
-    githubMetadata = {
-      title: '',
-      url: '#',
+    userId: user,
+    githubMetadata: {
+      title = '',
+      url = '#',
       user: {
-        login: '',
+        login = '',
       },
-      pull_number: '',
-      commentId: '',
+      pull_number = '',
+      commentId = '',
     },
   } = props;
 
-  const { title, url, user: { login = '' }, pull_number, commentId, } = githubMetadata;
+  const {
+    username = 'User@email.com',
+    firstName = '',
+    lastName = '',
+    avatarUrl = defaultAvatar,
+  } = user || {};
 
   const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'dd MMM, yyyy') : '');
 
@@ -70,17 +70,15 @@ const ActivityItem = (props) => {
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
-      {user ? (
-        <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-mobile", styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />
-      ) : null }
+      <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-mobile", styles.avatar)} src={avatarUrl} alt="user_icon" />
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
-            <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />
+            <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
             <p className="is-size-7 has-text-deep-black">
-              { user && !isEmpty(user.firstName) ?
-                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{user.firstName} {user.lastName}</a> :
-                <span className="has-text-deep-black is-underlined">{user ? user.username.split('@')[0] : 'User'}</span>}
+              { !isEmpty(firstName) ?
+                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
+                <span className="has-text-deep-black is-underlined">{username.split('@')[0] || 'User'}</span>}
               {' reviewed '}
               <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
                 {getPRName(pull_number, title)}
