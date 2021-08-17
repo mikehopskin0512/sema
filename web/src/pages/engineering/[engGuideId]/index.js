@@ -63,7 +63,7 @@ const CollectionEngGuides = () => {
   };
 
   useEffect(() => {
-    dispatch(getEngGuides(token));
+    dispatch(getEngGuides());
   }, [dispatch, token]);
 
   useEffect(() => {
