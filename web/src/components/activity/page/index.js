@@ -28,32 +28,33 @@ const ActivityPage = () => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   useEffect(() => {
-    if (overview?.smartcomments?.length) {
-      const users = overview.smartcomments.map((item) => {
-        const { userId: user } = item;
-        if (user) {
-          const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = user;
-          return {
-            label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
-            value: _id,
-            img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
-          };
-        }
-      });
-      const prs = overview.smartcomments.map((item) => {
-        if (item && item.githubMetadata) {
-          const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
-          return {
-            label: `${title || 'PR'} #${pullNum || ''}`,
-            value: pullNum,
-          };
-        }
-        return null;
-      });
-      setFilterUserList(uniqBy(users, 'value'));
-      setFilterPRList(uniqBy(compact(prs), 'value'));
+    if (!overview?.smartcomments?.length) {
+      return;
     }
-  }, [repositories]);
+    const users = overview.smartcomments.map((item) => {
+      const { userId: user } = item;
+      if (user) {
+        const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = user;
+        return {
+          label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
+          value: _id,
+          img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
+        };
+      }
+    });
+    const prs = overview.smartcomments.map((item) => {
+      if (item && item.githubMetadata) {
+        const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
+        return {
+          label: `${title || 'PR'} #${pullNum || ''}`,
+          value: pullNum,
+        };
+      }
+      return null;
+    });
+    setFilterUserList(uniqBy(users, 'value'));
+    setFilterPRList(uniqBy(compact(prs), 'value'));
+  }, [overview]);
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
