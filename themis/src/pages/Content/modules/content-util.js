@@ -8,6 +8,8 @@ import {
   NEGATIVE,
   SELECTED,
   DELETE_OP,
+  SEMA_CLIENT_ID,
+  SEMA_CLIENT_SECRET,
   SEMA_REACTION_REGEX,
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
@@ -129,7 +131,10 @@ export const getInitialSemaValues = (textbox) => {
 const updateSmartComment = async (comment) => {
   const { _id: id } = comment;
   const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
+    },
     method: 'PUT',
     body: JSON.stringify(comment),
   });
@@ -243,7 +248,10 @@ export const getGithubInlineMetadata = (id) => {
 
 const createSmartComment = async (comment) => {
   const res = await fetch(SMART_COMMENT_URL, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
+    },
     method: 'POST',
     body: JSON.stringify(comment),
   });
