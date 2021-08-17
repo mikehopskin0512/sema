@@ -15,24 +15,24 @@ const ActivityItem = (props) => {
     reaction = '',
     tags = [],
     createdAt = '',
-    userId: user = {
-      firstName: '',
-      avatarUrl: '',
-      lastName: '',
-      username: 'User@email.com'
-    },
-    githubMetadata = {
-      title: '',
-      url: '#',
+    userId: user,
+    githubMetadata: {
+      title = '',
+      url = '#',
       user: {
-        login: '',
+        login = '',
       },
-      pull_number: '',
-      commentId: '',
+      pull_number = '',
+      commentId = '',
     },
   } = props;
 
-  const { title, url, user: { login = '' }, pull_number, commentId, } = githubMetadata;
+  const {
+    username = 'User@email.com',
+    firstName = '',
+    lastName = '',
+    avatarUrl = defaultAvatar,
+  } = user || {};
 
   const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'dd MMM, yyyy') : '');
 
