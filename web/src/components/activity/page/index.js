@@ -22,6 +22,7 @@ const ActivityPage = () => {
     search: '',
     pr: [],
   });
+  // TODO: it will be better to use useReducer here
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
@@ -37,7 +38,6 @@ const ActivityPage = () => {
         label: githubMetadata.requester,
         value: githubMetadata.requester
       })))
-
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
       const { firstName, lastName, _id, avatarUrl } = item.userId;
       return {
@@ -54,6 +54,7 @@ const ActivityPage = () => {
           value: pullNum,
         };
       });
+
     setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
     setFilterPRList(uniqBy(compact(prs), 'value'));
