@@ -93,7 +93,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
         >
           Done
         </button>
-        <button
+        {/* <button
           type="button"
           className={clsx('button is-text has-text-primary my-20', styles.skip)}
           onClick={async () => {
@@ -102,7 +102,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
           }}
         >
           Skip for now
-        </button>
+        </button> */}
       </div>
     </>
   );
