@@ -257,3 +257,5 @@ export const DARK = 'dark';
 export const DARK_DIMMED = 'dark_dimmed';
 
 export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
+
+export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';

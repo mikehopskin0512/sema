@@ -33,6 +33,7 @@ import {
   DARK_DIMMED,
   EMOJIS,
   EMOJIS_ID,
+  SEMA_REMINDER_ROOT_ID,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -49,6 +50,7 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
 } from './modules/redux/action';
+import Reminder from './Reminder';
 
 const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
 
@@ -77,6 +79,22 @@ const updateMetadata = setInterval(() => {
   store.dispatch(addGithubMetada(getGithubMetadata(document)));
   initialCheck = true;
 }, 5000);
+
+$(() => {
+  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+  if (!reminderRoot) {
+    const node = document.createElement('div');
+    node.id = SEMA_REMINDER_ROOT_ID;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Provider store={store}>
+        <Reminder />
+      </Provider>,
+      node,
+    );
+  }
+});
 
 /**
    * Listening to click event for:
