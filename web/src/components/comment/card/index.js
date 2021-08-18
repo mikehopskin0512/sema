@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -16,10 +16,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   const router = useRouter();
   const { token } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
-
   const { asPath } = router;
-
-  const [active, setActive] = useState(isActive ? 'checked' : false);
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -36,13 +33,12 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
 
   if (collectionData) {
     const { _id = '', name = '', description = '', comments = [] } = collectionData;
-
-    const onChangeToggle = (cb) => {
-      cb.stopPropagation();
-      setActive(cb.checked);
+    const onChangeToggle = (e) => {
+      e.stopPropagation();
+      // TODO: would be great to add error handling here in case of network error
       dispatch(setCollectionIsActive(_id, token));
     };
-  
+
     const onClickAddComment = () => {
       if (addNewComment) {
         addNewComment(_id);
@@ -65,7 +61,14 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
             <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
             { asPath === '/collections' && (
               <div className="field" onClick={onClickChild} aria-hidden>
-                <input id={`activeSwitch-${_id}`} type="checkbox" onClick={onChangeToggle} name={`activeSwitch-${_id}`} className="switch is-rounded" checked={active} />
+                <input
+                  id={`activeSwitch-${_id}`}
+                  type="checkbox"
+                  onClick={onChangeToggle}
+                  name={`activeSwitch-${_id}`}
+                  className="switch is-rounded"
+                  checked={isActive}
+                />
                 <label htmlFor={`activeSwitch-${_id}`} />
               </div>
             ) }
