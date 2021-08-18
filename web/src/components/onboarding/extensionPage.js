@@ -88,12 +88,15 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
         <button
           type="submit"
           className={clsx('button is-primary my-20', styles.next)}
-          // onClick={nextPage}
+          onClick={async () => {
+            await onSubmit();
+            closeModal();
+          }}
           disabled={!isPluginInstalled}
         >
           Done
         </button>
-        <button
+        {/* <button
           type="button"
           className={clsx('button is-text has-text-primary my-20', styles.skip)}
           onClick={async () => {
@@ -102,7 +105,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
           }}
         >
           Skip for now
-        </button>
+        </button> */}
       </div>
     </>
   );

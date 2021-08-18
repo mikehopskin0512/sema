@@ -21,7 +21,7 @@ const ReposView = () => {
   const renderRepos = () => (
     <>
       <RepoList type="FAVORITES" repos={repos.favorites} />
-      <RepoList type="OTHERS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
+      <RepoList type="MY_REPOS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
     </>
   );
 
