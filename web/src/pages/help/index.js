@@ -5,6 +5,7 @@ import Lottie from 'react-lottie-player';
 import animationReactions from '../../components/onboarding/animationReactions.json';
 import animationTags from '../../components/onboarding/animationTags.json';
 import animationComments from '../../components/onboarding/animationComments.json';
+import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import { articles } from '../../data/help';
 import styles from './help.module.scss';
 import withLayout from '../../components/layout';
@@ -49,6 +50,7 @@ const HelpAndSupport = () => {
 
   return (
     <div className="pb-150">
+      <Helmet {...HelpSupportHelmet} />
       <div className="my-50 has-text-centered">
         <p className="has-text-weight-semibold has-text-black is-size-2 is-size-4-mobile px-20">Help and Support</p>
       </div>

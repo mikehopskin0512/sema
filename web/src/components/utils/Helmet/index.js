@@ -13,6 +13,7 @@ export {
   CommentCollectionsHelmet,
   ProfileHelmet,
   RepoStatsHelmet,
+  HelpSupportHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description }) => (
