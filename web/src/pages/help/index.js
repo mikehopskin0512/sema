@@ -55,11 +55,11 @@ const HelpAndSupport = () => {
         <p className="has-text-weight-semibold has-text-black is-size-2 is-size-4-mobile px-20">Help and Support</p>
       </div>
       <div className={clsx(
-        'is-flex py-60 px-120 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap',
+        'is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap',
         styles['animation-container'],
       )}>
         <div
-          className={clsx("has-background-white p-30", styles.lottie)}
+          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
           onMouseEnter={() => onHover('reactions')}
           onMouseLeave={() => onRemoveHover()}
         >
@@ -71,7 +71,7 @@ const HelpAndSupport = () => {
           />
         </div>
         <div
-          className={clsx("has-background-white p-30", styles.lottie)}
+          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
           onMouseEnter={() => onHover('tags')}
           onMouseLeave={() => onRemoveHover()}
         >
@@ -83,7 +83,7 @@ const HelpAndSupport = () => {
           />
         </div>
         <div
-          className={clsx("has-background-white p-30", styles.lottie)}
+          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
           onMouseEnter={() => onHover('comments')}
           onMouseLeave={() => onRemoveHover()}
         >
