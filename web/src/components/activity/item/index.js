@@ -76,7 +76,9 @@ const ActivityItem = (props) => {
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
-            <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />
+            { user ? (<img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={isEmpty(user.avatarUrl) ? defaultAvatar : user.avatarUrl} alt="user_icon" />) : (
+              <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={defaultAvatar} alt="user_icon" />
+            ) }
             <p className="is-size-7 has-text-deep-black">
               { user && !isEmpty(user.firstName) ?
                 <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{user.firstName} {user.lastName}</a> :

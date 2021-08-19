@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { compact, findIndex, reverse, uniqBy, isEmpty } from 'lodash';
+import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
@@ -91,7 +91,7 @@ const ActivityPage = () => {
           return filterBool;
         });
       }
-      setFilteredComments(reverse(filtered));
+      setFilteredComments(filtered);
     }
   }, [overview, filter]);
 
