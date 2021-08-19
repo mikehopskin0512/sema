@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  findIndex, flatten, isEmpty, reverse, uniqBy,
+  findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -97,7 +97,7 @@ const CollectionComments = () => {
       }
       return filterBool;
     });
-    setCommentsFiltered(reverse([...filtered]));
+    setCommentsFiltered([...filtered]);
   };
 
   useEffect(() => {
