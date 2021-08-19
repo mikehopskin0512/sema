@@ -1,6 +1,7 @@
 import { GLOBAL_SEMA_SEARCH_ID } from '../../constants';
 
 const initialState = {
+  isReminderClosed: false,
   githubMetadata: {
     url: null,
     repo: null,

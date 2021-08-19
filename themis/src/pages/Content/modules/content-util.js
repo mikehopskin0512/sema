@@ -669,3 +669,8 @@ export const checkSubmitButton = (semabarId, data) => {
     }
   }
 };
+
+export const isPRPage = () => {
+  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+  return prPage.test(document.URL);
+}

@@ -17,6 +17,7 @@ import {
   writeSemaToGithub,
   getGithubMetadata,
   getHighlights,
+  isPRPage,
 } from './modules/content-util';
 
 import {
@@ -52,8 +53,6 @@ import {
 } from './modules/redux/action';
 import Reminder from './Reminder';
 
-const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
@@ -82,7 +81,7 @@ const updateMetadata = setInterval(() => {
 
 $(() => {
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
-  if (!reminderRoot) {
+  if (!reminderRoot && isPRPage()) {
     const node = document.createElement('div');
     node.id = SEMA_REMINDER_ROOT_ID;
     document.body.appendChild(node);
@@ -163,7 +162,7 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (prPage.test(document.URL)) {
+    if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
         const semaElements = $(activeElement).siblings('div.sema');
