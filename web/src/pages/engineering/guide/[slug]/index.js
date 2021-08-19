@@ -5,11 +5,15 @@ import { flatten, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { alertOperations } from '../../../../state/features/alerts';
+
+const { triggerAlert, clearAlert } = alertOperations;
 
 import styles from '../../engineering.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
+import Toaster from '../../../../components/toaster';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 
@@ -38,18 +42,33 @@ const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [engGuideData, setEngGuideData] = useState(initialEngGuideData);
-  const { auth, engGuideState } = useSelector((state) => ({
+  const { auth, engGuideState, alerts } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
+    alerts: state.alertsState,
   }));
 
   const { token } = auth;
   const { slug } = router.query;
   const { engGuides } = engGuideState;
+  const { showAlert, alertType, alertLabel } = alerts;
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   useEffect(() => {
     dispatch(getEngGuides());
   }, [dispatch, token]);
+
+  useEffect(() => {
+    if (!slug || slug === "undefined") {
+      dispatch(triggerAlert('Sorry! This page doesn\'t have a slug. You\'ll be redirected to the previous page.', 'error'));
+      setTimeout(() => router.back(), 1000);
+    }
+  }, []);
 
   useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
@@ -107,6 +126,11 @@ const EngineeringGuidePage = () => {
   return (
     <div className="hero">
       <Helmet title="Engineering Guide" />
+      <Toaster
+        type={alertType}
+        message={alertLabel}
+        showAlert={showAlert}
+      />
       <div className="hero-body pb-300">
         { engGuideData ? (
           <>
