@@ -60,7 +60,7 @@ const SuggestedCommentCard = ({ data }) => {
         { engGuides.length > 0 ? (
           <p className="is-size-6 has-text-deep-black">
             <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/engineering/guide/${engGuides[0].engGuide?._id}`}>
+            <a href={`/engineering/guide/${engGuides[0].engGuide?.slug}`}>
               <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
             </a>
           </p>

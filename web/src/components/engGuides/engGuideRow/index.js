@@ -6,7 +6,7 @@ import styles from './engGuideRow.module.scss';
 
 const EngGuideRow = (props) => {
   const {
-    author, body, collections, source, title, _id, tags,
+    author, body, collections, source, title, _id, tags, slug,
   } = props;
 
   const renderLanguages = (languagesArr) => {
@@ -28,7 +28,7 @@ const EngGuideRow = (props) => {
   };
 
   const onClickRow = () => {
-    window.location = `/engineering/guide/${_id}`;
+    window.location = `/engineering/guide/${slug}`;
   };
 
   return (

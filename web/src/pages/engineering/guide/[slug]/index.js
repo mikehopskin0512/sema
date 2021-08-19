@@ -44,7 +44,7 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { engGuideId } = router.query;
+  const { slug } = router.query;
   const { engGuides } = engGuideState;
 
   useEffect(() => {
@@ -57,13 +57,13 @@ const EngineeringGuidePage = () => {
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment._id === engGuideId)[0],
+        data: comments.filter((comment) => comment.slug === slug)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [engGuideId, engGuides]);
+  }, [slug, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
@@ -117,7 +117,7 @@ const EngineeringGuidePage = () => {
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
                   <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${engGuideData._id}`}>{engGuideData.name}</a></li>
+                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${engGuideData?.slug}`}>{engGuideData.name}</a></li>
                 </ul>
               </nav>
             </div>
