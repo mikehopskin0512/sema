@@ -40,6 +40,11 @@
   --color-form-border: #{v.$color-light-form-border};
 
   --color-highlight: #{v.$color-light-highlight};
+
+  --color-emoji-bg: #{v.$color-light-emoji-bg};
+  --color-emoji-font: #{v.$color-light-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-light-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-light-emoji-font-hover};
 }
 
 .theme--dark {
@@ -81,6 +86,11 @@
   --color-form-border: #{v.$color-dark-form-border};
 
   --color-highlight: #{v.$color-dark-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-emoji-font-hover};
 }
 
 .theme--dark-dimmed {
@@ -122,6 +132,11 @@
   --color-form-border: #{v.$color-dark-dim-form-border};
 
   --color-highlight: #{v.$color-dark-dim-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-dim-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-dim-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-dim-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-dim-emoji-font-hover};
 }
 
 .sema {
@@ -404,9 +419,12 @@ h6 {
   .sema-dropdown-item {
     margin-bottom: 4px;
     margin-top: 0;
+    color: var(--color-emoji-font);
 
     &:hover {
-      background: rgba(0, 129, 167, 0.05);
+      // background: #0081a70d;
+      color: var(--color-emoji-font-hover);
+      background-color: var(--color-emoji-bg-hover);
     }
   }
 
@@ -424,6 +442,7 @@ h6 {
     padding-top: 12px;
     overflow: hidden;
     margin: 0;
+    background: var(--color-emoji-bg);
   }
 }
 
@@ -460,7 +479,7 @@ h6 {
     margin-top: 18px;
     font-size: 16px;
     line-height: 19px;
-    color: #508BFF;
+    color: #508bff;
   }
 }
 
