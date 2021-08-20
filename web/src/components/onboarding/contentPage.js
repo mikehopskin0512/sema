@@ -3,11 +3,11 @@ import Lottie from 'react-lottie-player';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { content } from './content';
 import styles from './onboarding.module.scss';
 
-const ContentPage = ({ page, nextPage, previousPage }) => {
+const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [img, setImg] = useState('');
@@ -23,41 +23,67 @@ const ContentPage = ({ page, nextPage, previousPage }) => {
   return (
     <>
       <div className="columns m-0 is-full-height" style={{}}>
-        <div className="column is-6 p-20 px-40 is-relative">
-          <p className={clsx('mt-250 mb-20 title', styles.title)}>{title}</p>
-          <p className={clsx('mt-20 mb-200 subtitle', styles.subtitle)}>{subtitle}</p>
-          {
-            page !== 1 && (
-              <button
-                type="button"
-                className={clsx("button is-primary my-20 is-outlined", styles.prev)}
-                onClick={previousPage}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
-              </button>
-            )
-          }
-          <button
-            type="button"
-            className={clsx("button is-primary my-20", styles.next)}
-            onClick={nextPage}
-          >
-            Next
+        <div className="is-flex is-justify-content-space-between is-align-items-center p-15 is-hidden-desktop">
+          <p className="has-text-primary has-text-weight-semibold is-size-4 p-5">Here's how it works</p>
+          <button className="button is-white" onClick={closeModal}>
+            <FontAwesomeIcon className="is-clickable" icon={faTimes} size="lg" />
           </button>
         </div>
-        <div className="column is-flex is-justify-content-center is-6 p-20" style={{ backgroundColor: '#F9F9F9' }}>
-          <div className="is-flex is-justify-content-center is-align-items-center">
+        <div className={clsx("column is-flex is-justify-content-center is-6 p-25", styles['animation-container'])}>
+          <div className={clsx("is-flex is-justify-content-center is-align-items-center")}>
             {/* <img src={img} alt="sema-img" className="is-full-width" /> */}
-            {animationData ? (
-              <Lottie
-                play
-                loop
-                animationData={animationData}
-                style={{ marginBottom: 10 }}
-              />
-            ) : (
-              <div>Loading...</div>
-            )}
+            <div className={styles.relative}>
+              {animationData ? (
+                <>
+                  <div className={styles['animation-gradient']} />
+                  <Lottie
+                    play
+                    loop
+                    animationData={animationData}
+                  />
+                </>
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
+          <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-mobile">
+            <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">Here's how it works</p>
+            <button className="button is-white" onClick={closeModal}>
+              <FontAwesomeIcon className="is-clickable" icon={faTimes} />
+            </button>
+          </div>
+          <div className={styles.info}>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-deep-black ')}>{title}</p>
+            <p className={clsx('mt-20')}>{subtitle}</p>
+          </div>
+          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center mb-10", styles.footer)}>
+            {
+              page !== 1 ? (
+                <button
+                  type="button"
+                  className={clsx("button is-primary is-outlined")}
+                  onClick={previousPage}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
+                </button>
+              ) : <div className={styles.space}></div>
+            }
+            <ul className={styles.ul}>
+              <li className={page === 1 ? styles.active : null}></li>
+              <li className={page === 2 ? styles.active : null}></li>
+              <li className={page === 3 ? styles.active : null}></li>
+              <li className={page === 4 ? styles.active : null}></li>
+            </ul>
+            <button
+              type="button"
+              className={clsx("button is-primary")}
+              onClick={nextPage}
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
@@ -69,6 +95,7 @@ ContentPage.propTypes = {
   page: PropTypes.number.isRequired,
   nextPage: PropTypes.func.isRequired,
   previousPage: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default ContentPage;
