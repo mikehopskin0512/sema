@@ -4,32 +4,75 @@ import {
 } from './constants';
 
 function TagsModal({ allTags, toggleTagSelection }) {
-  const getTags = (isPositive) => {
-    const label = isPositive ? POSITIVE : NEGATIVE;
-    return allTags.map((tagObj, index) => {
-      const tag = tagObj[label];
-      const isSelected = tagObj[SELECTED] === label;
-      const classes = `sema-tag sema-is-rounded ${
-        index !== allTags.length - 1 ? 'sema-mb-4' : ''
-      } ${isSelected ? 'sema-is-dark' : 'sema-is-light '}`;
-      return (
-        <span
-          key={tag}
-          className={classes}
-          onClick={() => {
-            toggleTagSelection({ tag, isSelected, op: TOGGLE_OP });
-          }}
-        >
-          {tag}
-        </span>
-      );
-    });
-  };
+  const allTagsLength = allTags.length;
+  const numRows = (allTagsLength);
+  const rowsArray = Array.from(Array(numRows));
 
   return (
-    <div className="sema-columns sema-is-mobile">
-      <div className="sema-column tagsContainer">{getTags(true)}</div>
-      <div className="sema-column tagsContainer">{getTags(false)}</div>
+    <div className="sema-is-mobile">
+      {
+        rowsArray.map((_, index) => {
+          const tagObj = allTags[index];
+          const positiveTag = tagObj[POSITIVE];
+          const negativeTag = tagObj[NEGATIVE];
+          const selectedLabel = tagObj[SELECTED];
+          const baseTagClasses = 'sema-tag sema-is-rounded';
+          let positiveClasses = baseTagClasses;
+          let negativeClasses = baseTagClasses;
+          if (selectedLabel === POSITIVE) {
+            positiveClasses += ' sema-is-dark';
+            negativeClasses += ' sema-is-light';
+          } else if (selectedLabel === NEGATIVE) {
+            negativeClasses += ' sema-is-dark';
+            positiveClasses += ' sema-is-light';
+          } else {
+            positiveClasses += ' sema-is-light';
+            negativeClasses += ' sema-is-light';
+          }
+
+          const isLastRow = index === rowsArray.length - 1;
+
+          const tagRowContainerStyle = !isLastRow ? 'sema-mb-3' : '';
+
+          return (
+            <div className={tagRowContainerStyle} key={`${positiveTag}${negativeTag}`}>
+              <div className="sema-columns sema-pt-2 sema-pb-2 sema-mb-0">
+                <div className="sema-column sema-pt-0 sema-pb-0">
+                  <span
+                    className={positiveClasses}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      toggleTagSelection({
+                        tag: positiveTag,
+                        isSelected: selectedLabel === POSITIVE,
+                        op: TOGGLE_OP,
+                      });
+                    }}
+                  >
+                    {positiveTag}
+                  </span>
+                </div>
+                <div className="sema-column sema-pt-0 sema-pb-0">
+                  <span
+                    className={negativeClasses}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      toggleTagSelection({
+                        tag: negativeTag,
+                        isSelected: selectedLabel === NEGATIVE,
+                        op: TOGGLE_OP,
+                      });
+                    }}
+                  >
+                    {negativeTag}
+                  </span>
+                </div>
+              </div>
+              {!isLastRow && <hr className="sema-mt-0 sema-mb-0" />}
+            </div>
+          );
+        })
+      }
     </div>
   );
 }
