@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { flatten, isEmpty } from 'lodash';
+import { flatten, get, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faLinkedinIn, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 import styles from '../../engineering.module.scss';
 
@@ -44,8 +46,10 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { engGuideId } = router.query;
+  const { query: { engGuideId }, asPath } = router;
   const { engGuides } = engGuideState;
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}${asPath}`;
 
   useEffect(() => {
     dispatch(getEngGuides());
@@ -106,9 +110,15 @@ const EngineeringGuidePage = () => {
 
   return (
     <div className="hero">
-      <Helmet title="Engineering Guide" />
+      <Helmet title="Engineering Guide">
+        <meta property='og:title' content={`Sema Software | Engineering Guide`}/>
+        <meta property='og:image' content='/img/logo_white.png'/>
+        <meta property='og:description' content={`Engineering Guide - ${engGuideData.name}: ${get(engGuideData, 'data.title', 'Guide')} by ${get(engGuideData, 'data.author', 'Sema User')}`}/>
+        <meta property='og:url' content={url} />
+        <meta property='og:type' content='website' />
+      </Helmet>
       <div className="hero-body pb-300">
-        { engGuideData ? (
+        { engGuideData && engGuideData.data ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">
               <a href="/engineering" className="is-hidden-mobile">
@@ -122,8 +132,8 @@ const EngineeringGuidePage = () => {
               </nav>
             </div>
             <div className="px-30 my-20">
-              { engGuideData.data && (
-                <>
+              <div className="is-flex is-justify-content-space-between">
+                <div>
                   <div className="is-flex is-flex-wrap-wrap">
                     <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{engGuideData.data.title || ''}</p>
                     <div className="is-flex is-flex-wrap-wrap is-align-items-center">
@@ -132,27 +142,64 @@ const EngineeringGuidePage = () => {
                   </div>
                   <div className="is-flex my-10 is-align-items-center">
                     <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(engGuideData.data.author) ? 'user' : engGuideData.data.author}</p>
-                    {/* <p className="is-size-7 has-text-grey">Jan 10, 2021</p> */}
                   </div>
-                  <div className="is-flex my-10 is-align-items-center is-flex-wrap-wrap">
-                    <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {engGuideData.data.source.name || 'sema'}</p>
-                    <div className="is-divider-vertical" />
-                    <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {engGuideData.name}</p>
+                </div>
+                <div className="is-flex is-flex-direction-column is-hidden-mobile">
+                  <p className="has-text-gray-700 has-text-weight-semibold">
+                    Share this Community Guide
+                  </p>
+                  <div className="is-flex is-justify-content-flex-end mt-15">
+                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`} target="_blank" rel="noreferrer">
+                      <FontAwesomeIcon icon={faLinkedinIn} size="lg" color="#0081A7" />
+                    </a>
+                    <a href={`https://www.facebook.com/sharer.php?u=${url}`} target="_blank" rel="noreferrer" className="ml-20">
+                      <FontAwesomeIcon icon={faFacebook} size="lg" color="#0081A7"  />
+                    </a>
+                    <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
+                      <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
+                    </a>
+                    <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                      <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
+                    </a>
                   </div>
-                  <div
-                    className={clsx('has-background-white has-border-10px p-25 is-size-6', styles['body-container'])}>
-                    {formatText(engGuideData.data.body || '')}
-                  </div>
-                  <div className="is-flex mt-25 is-align-items-center">
-                    <p className="is-size-6 has-text-deep-black">
-                      <b className="mr-5">Related Suggested Comments Collection:</b>
-                      <a href={`/collections/${engGuideData._id}`}>
-                        <span className="is-underlined has-text-deep-black">{engGuideData.name}</span>
-                      </a>
-                    </p>
-                  </div>
-                </>
-              ) }
+                </div>
+              </div>
+              <div className="is-flex my-10 is-align-items-center is-flex-wrap-wrap">
+                <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {engGuideData.data.source.name || 'sema'}</p>
+                <div className="is-divider-vertical is-hidden-mobile" />
+                <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {engGuideData.name}</p>
+              </div>
+              <div className="is-hidden-desktop mb-20">
+                <p className="has-text-gray-700 has-text-weight-semibold mt-15">
+                  Share this Community Guide
+                </p>
+                <div className="is-flex mt-5">
+                  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`} target="_blank" rel="noreferrer">
+                    <FontAwesomeIcon icon={faLinkedinIn} size="lg" color="#0081A7" />
+                  </a>
+                  <a href={`https://www.facebook.com/sharer.php?u=${url}`} target="_blank" rel="noreferrer" className="ml-20">
+                    <FontAwesomeIcon icon={faFacebook} size="lg" color="#0081A7"  />
+                  </a>
+                  <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
+                    <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
+                  </a>
+                  <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                    <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
+                  </a>
+                </div>
+              </div>
+              <div
+                className={clsx('has-background-white has-border-10px p-25 is-size-6', styles['body-container'])}>
+                {formatText(engGuideData.data.body || '')}
+              </div>
+              <div className="is-flex mt-25 is-align-items-center">
+                <p className="is-size-6 has-text-deep-black">
+                  <b className="mr-5">Related Suggested Comments Collection:</b>
+                  <a href={`/collections/${engGuideData._id}`}>
+                    <span className="is-underlined has-text-deep-black">{engGuideData.name}</span>
+                  </a>
+                </p>
+              </div>
             </div>
           </>
         ) : 'Not found' }
