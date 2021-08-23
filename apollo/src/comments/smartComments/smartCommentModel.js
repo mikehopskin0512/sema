@@ -59,7 +59,9 @@ smartCommentSchema.post('save', async function (doc, next) {
         repoReactions.push(reaction);
         repoTags.push(tags);
         const idExists = repository.repoStats.userIds.some(function (id) {
-          return id.equals(userId);
+          if (id) {
+            return id.equals(userId);
+          }
         });
         if (!idExists) {
           repository.repoStats.userIds.push(userId);

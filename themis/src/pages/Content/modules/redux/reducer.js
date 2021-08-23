@@ -20,7 +20,6 @@ import {
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
-  ADD_MUTATION_OBSERVER,
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
@@ -34,7 +33,6 @@ import {
   getInitialSemaValues,
   toggleTagSelection,
   getSemaIds,
-  checkSubmitButton,
 } from '../content-util';
 
 import {
@@ -109,8 +107,6 @@ function rootReducer(state = initialState, action) {
     const { semabars } = newState;
     semabars[id].selectedReaction = selectedReaction;
     semabars[id].isReactionDirty = isReactionDirty;
-    // TODO: perform side-effects properly
-    checkSubmitButton(id, semabars[id]);
   } else if (type === UPDATE_SELECTED_TAGS) {
     const { id, operation } = payload;
     const {
@@ -121,8 +117,6 @@ function rootReducer(state = initialState, action) {
     } = newState;
     const updatedTags = toggleTagSelection(operation, selectedTags, true);
     semabars[id].selectedTags = updatedTags;
-    // TODO: perform side-effects properly
-    checkSubmitButton(id, semabars[id]);
   } else if (type === CLOSE_SEARCH_MODAL) {
     const { id } = payload;
     const { semasearches } = newState;
@@ -257,9 +251,6 @@ function rootReducer(state = initialState, action) {
   } else if (type === ADD_SMART_COMMENT) {
     const comment = payload;
     newState.smartComment = comment;
-  } else if (type === ADD_MUTATION_OBSERVER) {
-    const observer = payload;
-    newState.observer = observer;
   } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
     const { id, searchValue } = payload;
     newState.semasearches[id].searchValue = searchValue;
