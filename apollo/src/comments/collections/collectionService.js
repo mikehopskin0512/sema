@@ -60,7 +60,7 @@ export const findById = async (id) => {
         path: 'engGuides.engGuide',
         model: 'EngGuide'
       }
-    }).exec();
+    }).sort({ createdAt: -1 }).exec();
     return collection;
   } catch (err) {
     logger.error(err);
