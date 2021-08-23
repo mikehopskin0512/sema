@@ -66,7 +66,7 @@ resource "aws_ssm_parameter" "apollo_mongo_cert-path" {
 resource "aws_ssm_parameter" "apollo_mongo_uri" {
   name  = "/${var.env}/apollo/mongo/uri"
   type  = "SecureString"
-  value = "mongodb+srv://phoenix_admin:0yvYDIsrxraKsKkQ@sema-cluster.tpplx.mongodb.net/phoenix_qa?retryWrites=true&w=majority"
+  value = "mongodb://phoenix_admin:0yvYDIsrxraKsKkQ@phoenix-qa.cluster-c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
 }
 resource "aws_ssm_parameter" "apollo_port" {
   name  = "/${var.env}/apollo/port"
