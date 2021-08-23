@@ -37,7 +37,6 @@ const mapDispatchToProps = (dispatch) => ({
 
 const Reminder = (props) => {
   const { isLoggedIn, isReminderClosed, closeReminder } = props;
-  // TODO: sessionstorage as sideeffect
   const display = (isReminderClosed === true || isLoggedIn) ? 'none' : 'block';
   return (
     <div className="reminder-container" style={{ display }}>
