@@ -131,10 +131,7 @@ export const getInitialSemaValues = (textbox) => {
 const updateSmartComment = async (comment) => {
   const { _id: id } = comment;
   const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     method: 'PUT',
     body: JSON.stringify(comment),
   });
@@ -248,10 +245,7 @@ export const getGithubInlineMetadata = (id) => {
 
 const createSmartComment = async (comment) => {
   const res = await fetch(SMART_COMMENT_URL, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     method: 'POST',
     body: JSON.stringify(comment),
   });
