@@ -307,6 +307,29 @@ export async function writeSemaToGithub(textarea) {
       (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
     );
 
+    if (
+      textboxValue.includes('Sema Reaction')
+      || textboxValue.includes('Sema Tags')
+    ) {
+      // this textbox already has sema text
+      // this is an edit
+
+      // Use individual REGEX's for reactions and tags
+      // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
+      textboxValue = textboxValue.replace('\n---\n', '');
+      textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
+      textboxValue = textboxValue.replace(' | ', '');
+      textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
+
+      // On edit, do not add extra line breaks
+      // eslint-disable-next-line no-param-reassign
+      textarea.value = `${textboxValue}${semaString}`;
+    } else {
+      // On initial submit, 2 line breaks break up the markdown correctly
+      // eslint-disable-next-line no-param-reassign
+      textarea.value = `${textboxValue}\n\n${semaString}`;
+    }
+
     const { githubMetadata } = store.getState();
     const { _id: userId } = store.getState().user;
 
@@ -334,29 +357,7 @@ export async function writeSemaToGithub(textarea) {
     createSmartComment(comment).then((smartComment) => {
       store.dispatch(addSmartComment(smartComment));
     });
-
-    if (
-      textboxValue.includes('Sema Reaction')
-      || textboxValue.includes('Sema Tags')
-    ) {
-      // this textbox already has sema text
-      // this is an edit
-
-      // Use individual REGEX's for reactions and tags
-      // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-      textboxValue = textboxValue.replace('\n---\n', '');
-      textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
-      textboxValue = textboxValue.replace(' | ', '');
-      textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
-
-      // On edit, do not add extra line breaks
-      // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}${semaString}`;
-    } else {
-      // On initial submit, 2 line breaks break up the markdown correctly
-      // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}\n\n${semaString}`;
-    }
+    
     const semaIds = getSemaIds($(textarea).attr('id'));
     store.dispatch(resetSemaStates(semaIds));
   }
