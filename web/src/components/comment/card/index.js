@@ -53,8 +53,8 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       if (asPath === '/collections') {
         window.location = `/collections/${_id}`;
       }
-      if (asPath === '/engineering') {
-        window.location = `/engineering/${_id}`;
+      if (asPath === '/guides') {
+        window.location = `/guides/${_id}`;
       }
     };
 

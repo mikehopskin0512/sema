@@ -9,7 +9,7 @@ import { alertOperations } from '../../../../state/features/alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
 
-import styles from '../../engineering.module.scss';
+import styles from '../../guide.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -49,7 +49,7 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { slug } = router.query;
+  const { slug, collectionId } = router.query;
   const { engGuides } = engGuideState;
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -135,13 +135,13 @@ const EngineeringGuidePage = () => {
         { engGuideData ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">
-              <a href="/engineering" className="is-hidden-mobile">
+              <a href={`/guides/${collectionId}`} className="is-hidden-mobile">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
-                  <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${engGuideData?.slug}`}>{engGuideData.name}</a></li>
+                  <li><a href={`/guides/${collectionId}`} className="has-text-grey">Community Eng Guides</a></li>
+                  <li className="is-active has-text-weight-semibold"><a href={`/guides/${collectionId}`}>{engGuideData.name}</a></li>
                 </ul>
               </nav>
             </div>

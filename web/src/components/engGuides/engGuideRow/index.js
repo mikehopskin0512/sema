@@ -6,9 +6,9 @@ import styles from './engGuideRow.module.scss';
 
 const EngGuideRow = (props) => {
   const {
-    author, body, collections, source, title, _id, tags, slug,
+    author, body, collections, source, title, _id, tags, slug, collectionId,
   } = props;
-
+  console.log(collectionId, slug)
   const renderLanguages = (languagesArr) => {
     const languages = languagesArr.filter((item) => item.type === 'language');
     if (languages.length > 0) {
@@ -28,7 +28,7 @@ const EngGuideRow = (props) => {
   };
 
   const onClickRow = () => {
-    window.location = `/engineering/guide/${slug}`;
+    window.location = `/guides/${collectionId}/${slug}`;
   };
 
   return (
@@ -77,6 +77,8 @@ EngGuideRow.defaultProps = {
   title: '',
   _id: '',
   tags: [],
+  slug: '',
+  collectionId: '',
 };
 
 EngGuideRow.propTypes = {
@@ -87,6 +89,8 @@ EngGuideRow.propTypes = {
   title: PropTypes.string,
   _id: PropTypes.string,
   tags: PropTypes.array,
+  slug: PropTypes.string,
+  collectionId: PropTypes.string,
 };
 
 export default EngGuideRow;
