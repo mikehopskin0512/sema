@@ -48,6 +48,18 @@ const EngineeringGuidePage = () => {
   const { token } = auth;
   const { query: { engGuideId }, asPath } = router;
   const { engGuides } = engGuideState;
+  const {
+    name,
+    data,
+    _id
+  } = engGuideData;
+  const {
+    title = 'Guide',
+    author = 'Sema User',
+    tags,
+    source,
+    body
+  } = data;
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}${asPath}`;
 
@@ -113,12 +125,12 @@ const EngineeringGuidePage = () => {
       <Helmet title="Engineering Guide">
         <meta property='og:title' content={`Sema Software | Engineering Guide`}/>
         <meta property='og:image' content='/img/logo_white.png'/>
-        <meta property='og:description' content={`Engineering Guide - ${engGuideData.name}: ${get(engGuideData, 'data.title', 'Guide')} by ${get(engGuideData, 'data.author', 'Sema User')}`}/>
+        <meta property='og:description' content={`Engineering Guide - ${name}: ${title} by ${author}`}/>
         <meta property='og:url' content={url} />
         <meta property='og:type' content='website' />
       </Helmet>
       <div className="hero-body pb-300">
-        { engGuideData && engGuideData.data ? (
+        { data ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">
               <a href="/engineering" className="is-hidden-mobile">
@@ -127,7 +139,7 @@ const EngineeringGuidePage = () => {
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
                   <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${engGuideData._id}`}>{engGuideData.name}</a></li>
+                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${_id}`}>{name}</a></li>
                 </ul>
               </nav>
             </div>
@@ -135,13 +147,13 @@ const EngineeringGuidePage = () => {
               <div className="is-flex is-justify-content-space-between">
                 <div>
                   <div className="is-flex is-flex-wrap-wrap">
-                    <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{engGuideData.data.title || ''}</p>
+                    <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{title || ''}</p>
                     <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-                      {renderTags(engGuideData.data.tags || [])}
+                      {renderTags(tags || [])}
                     </div>
                   </div>
                   <div className="is-flex my-10 is-align-items-center">
-                    <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(engGuideData.data.author) ? 'user' : engGuideData.data.author}</p>
+                    <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
                   </div>
                 </div>
                 <div className="is-flex is-flex-direction-column is-hidden-mobile">
@@ -165,9 +177,9 @@ const EngineeringGuidePage = () => {
                 </div>
               </div>
               <div className="is-flex my-10 is-align-items-center is-flex-wrap-wrap">
-                <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {engGuideData.data.source.name || 'sema'}</p>
+                <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {source?.name || 'sema'}</p>
                 <div className="is-divider-vertical is-hidden-mobile" />
-                <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {engGuideData.name}</p>
+                <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {name}</p>
               </div>
               <div className="is-hidden-desktop mb-20">
                 <p className="has-text-gray-700 has-text-weight-semibold mt-15">
@@ -190,13 +202,13 @@ const EngineeringGuidePage = () => {
               </div>
               <div
                 className={clsx('has-background-white has-border-10px p-25 is-size-6', styles['body-container'])}>
-                {formatText(engGuideData.data.body || '')}
+                {formatText(body || '')}
               </div>
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-deep-black">
                   <b className="mr-5">Related Suggested Comments Collection:</b>
-                  <a href={`/collections/${engGuideData._id}`}>
-                    <span className="is-underlined has-text-deep-black">{engGuideData.name}</span>
+                  <a href={`/collections/${_id}`}>
+                    <span className="is-underlined has-text-deep-black">{name}</span>
                   </a>
                 </p>
               </div>
