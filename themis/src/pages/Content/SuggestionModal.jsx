@@ -41,11 +41,11 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
-    const links = engGuides?.map((link) => {
-      const title = link.title || link.engGuide.source.name;
-      const id = link.engGuide.collections[0];
-      const { slug } = link;
-      return `\n\n📄 [${title}](${SEMA_ENG_GUIDE_UI_URL}/${id}/${slug})`;
+    const links = engGuides?.map(({ title, engGuide, slug }) => {
+      const caption = title || engGuide.source?.name;
+      // eslint-disable-next-line no-underscore-dangle
+      const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+      return `\n\n📄 [${caption}](${url})`;
     }).join(' ');
     return links || '';
   };
