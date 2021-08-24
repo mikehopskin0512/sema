@@ -21,6 +21,7 @@ import {
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
+  CLOSE_LOGIN_REMINDER,
   MUTATION_OBSERVER_EVENT,
 } from './actionConstants';
 
@@ -133,4 +134,8 @@ export const toggleIsSelectingEmoji = (payload) => ({
 
 export const closeAllEmojiSelection = () => ({
   type: CLOSE_ALL_SELECTING_EMOJI,
+});
+
+export const closeLoginReminder = () => ({
+  type: CLOSE_LOGIN_REMINDER,
 });

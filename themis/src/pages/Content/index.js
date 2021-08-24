@@ -17,7 +17,10 @@ import {
   writeSemaToGithub,
   getGithubMetadata,
   getHighlights,
+  isPRPage,
 } from './modules/content-util';
+
+import Reminder from './Reminder';
 
 import {
   SEMA_ICON_ANCHOR_LIGHT,
@@ -28,6 +31,7 @@ import {
   WHOAMI,
   EMOJIS,
   EMOJIS_ID,
+  SEMA_REMINDER_ROOT_ID,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -73,6 +77,22 @@ const updateMetadata = setInterval(() => {
   store.dispatch(addGithubMetada(getGithubMetadata(document)));
   initialCheck = true;
 }, 5000);
+
+$(() => {
+  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+  if (!reminderRoot && isPRPage()) {
+    const node = document.createElement('div');
+    node.id = SEMA_REMINDER_ROOT_ID;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Provider store={store}>
+        <Reminder />
+      </Provider>,
+      node,
+    );
+  }
+});
 
 /**
    * Listening to click event for:
@@ -141,7 +161,7 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (prPage.test(document.URL)) {
+    if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
         const semaElements = $(activeElement).siblings('div.sema');
