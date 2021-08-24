@@ -24,6 +24,7 @@ import {
   CLOSE_SEARCH_MODAL,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
+  CLOSE_LOGIN_REMINDER,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -253,6 +254,8 @@ function rootReducer(state = initialState, action) {
   } else if (type === UPDATE_SEARCH_BAR_INPUT_VALUE) {
     const { id, searchValue } = payload;
     newState.semasearches[id].searchValue = searchValue;
+  } else if (type === CLOSE_LOGIN_REMINDER) {
+    newState.isReminderClosed = true;
   }
   return newState;
 }

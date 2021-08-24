@@ -4,6 +4,7 @@ import { combineEpics } from 'redux-observable';
 import submitButtonEpic from './epics/submitButtonEpic';
 // eslint-disable-next-line import/no-cycle
 import { addMutationObserverEpic, removeMutationObserverEpic, mutationObserverEventEpic } from './epics/mutationObserEpic';
+import setsessionStorageEpic from './epics/sessionStorageEpic';
 
 // eslint-disable-next-line import/prefer-default-export
 export const rootEpic = combineEpics(
@@ -11,4 +12,5 @@ export const rootEpic = combineEpics(
   addMutationObserverEpic,
   removeMutationObserverEpic,
   mutationObserverEventEpic,
+  setsessionStorageEpic,
 );

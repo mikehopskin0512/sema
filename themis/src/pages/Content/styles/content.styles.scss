@@ -615,3 +615,96 @@ h6 {
   padding: 10px 20px;
   font-weight: 600;
 }
+
+#sema-reminder-root{
+  background: inherit;
+  z-index: 2147483647;
+  position:fixed;
+  left: calc(95vw - #{v.$reminder-width});
+  top: calc(98vh - #{v.$reminder-height});
+}
+
+.reminder-container{
+  width: v.$reminder-width;
+  height: v.$reminder-height;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.reminder-header{
+  display: flex; 
+  flex: 1; 
+  flex-direction: row; 
+  justify-content: space-between; 
+  margin-bottom: 20px;
+}
+
+.reminder-header > img{
+  width: 66px;
+}
+
+.reminder-close{
+  width: 12px;
+  cursor: pointer;
+}
+
+.reminder-hero{
+  display: flex; 
+  flex: 1; 
+  flex-direction: column; 
+  align-items: center;
+}
+
+.reminder-screenshots-container{
+  position: relative; 
+  width: 100%; 
+  height: 200px; 
+  margin-bottom: 22px;
+}
+
+.reminder-screenshot1{
+  position: absolute;
+  width: 158px;
+  height: 177px;
+}
+
+.reminder-screenshot2{
+  position: absolute;
+  width: 214px;
+  height: 162px;
+  left: 128px;
+  top: 30px;
+}
+
+.reminder-hero > p {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 19.36px;
+  vertical-align: top;
+  color: #394A64;
+  text-align: center;
+}
+
+.reminder-hero > button {
+  margin: 22px 0px;
+  height: 45px;
+  width: 225px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  color: v.$color-github-button-blue;
+  border: 2px solid v.$color-github-button-blue;
+  border-radius: 4px;
+}
+
+.reminder-hero > button > span{
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.reminder-hero > a{
+  color: v.$color-github-button-blue;
+  text-decoration: underline;
+}

@@ -8,8 +8,6 @@ import {
   NEGATIVE,
   SELECTED,
   DELETE_OP,
-  SEMA_CLIENT_ID,
-  SEMA_CLIENT_SECRET,
   SEMA_REACTION_REGEX,
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
@@ -662,4 +660,9 @@ export const checkSubmitButton = (semabarId, data) => {
       $(primaryButton).attr('disabled', true);
     }
   }
+};
+
+export const isPRPage = () => {
+  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+  return prPage.test(document.URL);
 };

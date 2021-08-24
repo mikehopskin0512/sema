@@ -17,6 +17,7 @@ import {
   writeSemaToGithub,
   getGithubMetadata,
   getHighlights,
+  isPRPage,
 } from './modules/content-util';
 
 import {
@@ -33,6 +34,7 @@ import {
   DARK_DIMMED,
   EMOJIS,
   EMOJIS_ID,
+  SEMA_REMINDER_ROOT_ID,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -49,8 +51,7 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
 } from './modules/redux/action';
-
-const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+import Reminder from './Reminder';
 
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
@@ -77,6 +78,22 @@ const updateMetadata = setInterval(() => {
   store.dispatch(addGithubMetada(getGithubMetadata(document)));
   initialCheck = true;
 }, 5000);
+
+$(() => {
+  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+  if (!reminderRoot && isPRPage()) {
+    const node = document.createElement('div');
+    node.id = SEMA_REMINDER_ROOT_ID;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Provider store={store}>
+        <Reminder />
+      </Provider>,
+      node,
+    );
+  }
+});
 
 /**
    * Listening to click event for:
@@ -145,7 +162,7 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (prPage.test(document.URL)) {
+    if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
         const semaElements = $(activeElement).siblings('div.sema');
