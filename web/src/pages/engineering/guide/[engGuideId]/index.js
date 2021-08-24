@@ -53,7 +53,7 @@ const EngineeringGuidePage = () => {
 
   useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
-      const { collectionData: { comments, name, _id } } = item;
+      const { collectionData: { comments = [], name = '', _id = '' } } = item;
       return {
         name,
         _id,

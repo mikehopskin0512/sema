@@ -1,6 +1,13 @@
 /* eslint-disable import/no-cycle */
 import {
-  bulkAdmit, getTimeToValueMetric, getUser, getUsers, updateUserInvitations, updateUserStatus, exportTimeToValue
+  bulkAdmit,
+  getTimeToValueMetric,
+  getUser,
+  getUsers,
+  updateUserInvitations,
+  updateUserStatus,
+  exportTimeToValue,
+  exportUsersApi,
 } from './api';
 import * as types from './types';
 import { format } from 'date-fns';
@@ -188,6 +195,24 @@ export const exportTimeToValueMetric = async (params = {}, token) => {
 
     link.href = url;
     link.setAttribute('download', `time_to_value_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const exportUsers = async (params = {}, token) => {
+  try {
+    const payload = await exportUsersApi(params, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `users_${format(new Date(), 'yyyyMMdd')}.csv`);
 
     document.body.appendChild(link);
     link.click();

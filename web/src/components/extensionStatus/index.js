@@ -8,14 +8,14 @@ const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const ExtensionStatus = () => {
   const { route } = useRouter();
-  const [extensionStatus, setExtensionInstalled] = useState(false);
+  const [extensionStatus, setExtensionInstalled] = useState(true);
 
   const buttonAction = () => {
     window.location.href = EXTENSION_LINK;
   };
 
   const isHidden = () => {
-    const enabledPaths = ['/overview', '/repo'];
+    const enabledPaths = ['/overview', '/repo', '/dashboard', '/collections', '/engineering', '/support', '/profile', '/invitations'];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {
@@ -36,6 +36,13 @@ const ExtensionStatus = () => {
     }, 5000);
   }, [extensionStatus]);
 
+  useEffect(() => {
+    (async () => {
+      const result = await isExtensionInstalled();
+      setExtensionInstalled(result);
+    })();
+  }, []);
+
   return (
     <div className={clsx(styles['status-container'], isHidden() && 'is-hidden', extensionStatus && 'is-hidden')}>
       <div className="hero content-container">
@@ -47,10 +54,10 @@ const ExtensionStatus = () => {
               </div>
               <div className="my-10">
                 <div className="has-text-weight-semibold">
-                  Install Chrome Plugin
+                  Activate Chrome Plugin
                 </div>
                 <div>
-                  The Sema Chrome Plugin allows us to modify the Github commenting UI and supercharge you code review workflow.
+                  The Sema Chrome Plugin allows us to modify the Github commenting UI and supercharge your code review workflow.
                 </div>
               </div>
             </div>
@@ -60,7 +67,7 @@ const ExtensionStatus = () => {
                 className="button is-primary is-pulled-right"
                 onClick={buttonAction}
               >
-                Install Chrome Plugin
+                Activate Chrome Plugin
               </button>
             </div>
           </div>
