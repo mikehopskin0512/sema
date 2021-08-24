@@ -6,6 +6,7 @@ export const EMOJIS = [
     label: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
+    color: '#f4f4f4',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed71',
@@ -13,6 +14,7 @@ export const EMOJIS = [
     label: 'Awesome',
     emoji: '🏆',
     github_emoji: ':trophy:',
+    color: '#a9db5f',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed72',
@@ -20,6 +22,7 @@ export const EMOJIS = [
     label: 'Looks good',
     emoji: '👌',
     github_emoji: ':ok_hand:',
+    color: '#bbc5aa',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed73',
@@ -27,6 +30,7 @@ export const EMOJIS = [
     label: 'Question',
     emoji: '❓',
     github_emoji: ':question:',
+    color: '#e4e4e4',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed74',
@@ -34,6 +38,7 @@ export const EMOJIS = [
     label: 'Fix',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
+    color: '#afadaa',
   },
 ];
 

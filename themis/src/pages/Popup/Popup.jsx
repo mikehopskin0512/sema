@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 
 import codeIcon from '../../assets/img/codelines.png';
@@ -14,7 +15,7 @@ import { WHOAMI } from '../Content/constants';
 const semaUIUrl = process.env.SEMA_UI_URL;
 
 const checkLoggedIn = (cb) => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, function (response) {
+  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
     cb(response);
   });
 };
@@ -35,7 +36,7 @@ const loggedOutElem = () => (
     }}
   >
     <div className="popup-header">
-      <img className="popup-logo" src={logo} />
+      <img className="popup-logo" src={logo} alt="logo" />
       <FontAwesomeIcon
         onClick={onCrossClicked}
         icon={faTimes}
@@ -46,19 +47,19 @@ const loggedOutElem = () => (
       <p className="sema-login-details">
         Login required to activate the Sema Chrome Extension
       </p>
-      <img src={codeIcon} />
-      <button className="login-primary" onClick={openSema}>
+      <img src={codeIcon} alt="code lines" />
+      <button className="login-primary" onClick={openSema} type="button">
         <FontAwesomeIcon icon={faGithub} className="github" />
         <span className="login-primary-content">
           Join our Waitlist with Github
         </span>
       </button>
       <div className="already-account">
-        <span className="divider"></span>
+        <span className="divider" />
         <p className="already-account-content">Already have an account?</p>
-        <span className="divider"></span>
+        <span className="divider" />
       </div>
-      <button className="login-secondary" onClick={openSema}>
+      <button className="login-secondary" onClick={openSema} type="button">
         <FontAwesomeIcon icon={faGithub} className="github" />
         <span className="login-secondary-content">Sign in with Github</span>
       </button>
@@ -80,7 +81,7 @@ const loggedInElem = (userDetails) => {
       }}
     >
       <div className="popup-header">
-        <img className="popup-logo" src={logo} />
+        <img className="popup-logo" src={logo} alt="popup logo" />
         <FontAwesomeIcon
           onClick={onCrossClicked}
           icon={faTimes}
@@ -99,10 +100,13 @@ const loggedInElem = (userDetails) => {
           className="sema-login-details"
           style={{ alignSelf: 'start', margin: '32px 0px 60px 34px' }}
         >
-          Hi {firstName},
+          Hi
+          {' '}
+          {firstName}
+          ,
         </p>
-        <img src={codeIcon} style={{ marginBottom: '47px' }} />
-        <button className="login-primary" onClick={openSema}>
+        <img src={codeIcon} style={{ marginBottom: '47px' }} alt="code lines" />
+        <button className="login-primary" onClick={openSema} type="button">
           <svg
             width="30"
             height="29"

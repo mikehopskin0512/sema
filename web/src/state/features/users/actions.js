@@ -1,8 +1,9 @@
 /* eslint-disable import/no-cycle */
 import {
-  bulkAdmit, getUser, getUsers, updateUserInvitations, updateUserStatus,
+  bulkAdmit, getTimeToValueMetric, getUser, getUsers, updateUserInvitations, updateUserStatus, exportTimeToValue
 } from './api';
 import * as types from './types';
+import { format } from 'date-fns';
 
 const requestUpdateUserAvailableInvitations = () => ({
   type: types.REQUEST_UPDATE_USER_AVAILABLE_INVITATIONS,
@@ -145,5 +146,52 @@ export const bulkAdmitUsers = (bulkCount) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestBulkAdmitUsersError(errMessage));
+  }
+};
+
+const requestTimeToValueMetric = () => ({
+  type: types.REQUEST_TIME_TO_VALUE_METRIC,
+});
+
+const requestTimeToValueMetricSuccess = (metric, totalCount) => ({
+  type: types.REQUEST_TIME_TO_VALUE_METRIC_SUCCESS,
+  metric,
+  totalCount,
+});
+
+const requestTimeToValueMetricError = (errors) => ({
+  type: types.REQUEST_TIME_TO_VALUE_METRIC_ERROR,
+  errors,
+});
+
+export const fetchTimeToValueMetric = (params) => async (dispatch) => {
+  try {
+    dispatch(requestTimeToValueMetric());
+    const payload = await getTimeToValueMetric(params);
+    const { data: { metric = [], totalCount = 0 } } = payload;
+    dispatch(requestTimeToValueMetricSuccess(metric, totalCount));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+
+    dispatch(requestTimeToValueMetricError(errMessage));
+  }
+};
+
+export const exportTimeToValueMetric = async (params = {}, token) => {
+  try {
+    const payload = await exportTimeToValue(params, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `time_to_value_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
   }
 };

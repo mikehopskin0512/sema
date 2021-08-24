@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { find } from 'lodash';
+import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import { TAGS } from '../../utils/constants';
 
 const CircularPacking = ({ data }) => {
+  const [circlePackingData, setCirclePackingData] = useState({
+    children: [],
+  });
   const parseData = (rawData) => {
     let children = [];
     if (rawData) {
       const keys = Object.keys(rawData);
       children = keys.map((_id) => {
         const tag = find(TAGS, { _id });
+        if (tag) {
+          return {
+            isPositive: tag.isPositive,
+            name: tag.label,
+            id: _id,
+            color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
+            value: rawData[_id].total,
+          };
+        }
         return {
-          name: tag.label,
+          isPositive: false,
+          name: '',
           id: _id,
-          color: tag.isPositive ? '#A4E799' : '#E79999',
-          value: rawData[_id],
+          color: '#AFADAA',
+          value: 0,
         };
       });
     }
@@ -27,32 +40,40 @@ const CircularPacking = ({ data }) => {
     return chartData;
   };
 
-  // TODO: Tooltip - needs data for the line chart
-  // Y - # of Reactions
-  // X - Date
+  useEffect(() => {
+    if (!isEmpty(data)) {
+      const parsedData = parseData(data);
+      setCirclePackingData(parsedData);
+    }
+  }, [data]);
+
+  const renderTooltip = ({ percentage }) => (
+    <div className="box has-background-white px-20 py-5 border-radius-4px">
+      <p className="has-text-weight-semibold">{round(percentage)}%</p>
+    </div>
+  );
+
+  if (circlePackingData.children.length === 0) {
+    return <div className="is-flex is-justify-content-center">No data</div>;
+  }
 
   return (
     <>
       <ResponsiveCirclePacking
-        data={parseData(data)}
-        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+        data={circlePackingData}
+        margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
         id="name"
         value="value"
         colors={(item) => item.data.color}
-        childColor={{ from: 'color', modifiers: [['brighter', 0.4]] }}
         padding={4}
         enableLabels
         leavesOnly
         labelsSkipRadius={10}
-        labelTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
+        labelTextColor={{ from: 'color', modifiers: [['darker', 5]] }}
         borderWidth={1}
-        borderColor={{ from: 'color', modifiers: [['darker', 0.5]] }}
+        borderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
         fill={[{ match: { depth: 1 }, id: 'lines' }]}
-        // tooltip={({ id, value, color }) => (
-        //   <strong style={{ color }}>
-        //     {id}: {value}
-        //   </strong>
-        // )}
+        tooltip={renderTooltip}
       />
     </>
   );

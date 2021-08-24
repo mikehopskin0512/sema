@@ -1,4 +1,5 @@
 import React from 'react';
+import Router from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
@@ -52,18 +53,8 @@ const AdminSidebar = ({ open, setOpen }) => {
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
     {
-      name: 'Report',
+      name: 'Reports',
       pathName: '/sema-admin/reports',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'Share of Wallet',
-      pathName: '/sema-admin/share-of-wallet',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'User Activity',
-      pathName: '/sema-admin/user-activity',
       icon: <img src="/img/icons/dashboard.png" alt="" />,
     },
     {
@@ -84,7 +75,7 @@ const AdminSidebar = ({ open, setOpen }) => {
         className={`is-flex is-align-items-center is-clickable ${
           open ? 'p-10' : 'px-5 py-10'
         }`}
-        onClick={() => setOpen(!open)}
+        onClick={() => Router.push('/dashboard')}
         aria-hidden="true"
       >
         <img src="/img/logo_short.png" alt="logo" />

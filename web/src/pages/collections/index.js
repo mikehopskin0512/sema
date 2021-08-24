@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
+import styles from './collection.module.scss';
+import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
 import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import withLayout from '../../components/layout';
-import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
+import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 
 const NUM_PER_PAGE = 9;
 
@@ -21,9 +24,25 @@ const CommentCollections = () => {
     otherCollections: [],
   });
   const [page, setPage] = useState(1);
+  const [newCommentModalOpen, setNewCommentModalOpen] = useState(false);
+  const [collectionId, setCollectionId] = useState(null);
   const {
     register, handleSubmit, reset, getValues,
   } = useForm();
+
+  const openNewSuggestedCommentModal = (_id) => {
+    const element = document.getElementById('#collectionBody');
+    setNewCommentModalOpen(true);
+    setCollectionId(_id);
+    window.scrollTo({
+      behavior: element ? 'smooth' : 'auto',
+      top: element ? element.offsetTop : 0,
+    });
+  };
+  const closeNewSuggestedCommentModal = () => {
+    setNewCommentModalOpen(false);
+    setCollectionId(null);
+  };
 
   useEffect(() => {
     setCollections(collectionsState);
@@ -50,7 +69,7 @@ const CommentCollections = () => {
   };
 
   const onSearch = ({ search }) => {
-    const filtered = collectionsState.filter((item) => item.collectionData.name.toLowerCase().includes(search.toLowerCase()));
+    const filtered = collectionsState.filter((item) => item.collectionData?.name.toLowerCase().includes(search.toLowerCase()) || false);
     setCollections([...filtered]);
   };
 
@@ -60,14 +79,15 @@ const CommentCollections = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
-      <Helmet {...SuggestedCommentsHelmet} />
-      <div className="hero-body">
+    <div className={clsx('has-background-gray-9 hero', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
+      <Helmet {...CommentCollectionsHelmet} />
+      <AddSuggestedCommentModal _id={collectionId} active={newCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
+      <div id="collectionBody" className={clsx('hero-body pb-250', newCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4">
-            Active Comment Collections
+          <p className="has-text-weight-semibold has-text-deep-black is-size-3">
+            Suggested Comments
           </p>
-          <div className="is-flex is-flex-wrap-wrap">
+          <div className="is-hidden is-flex is-flex-wrap-wrap">
             <form className="mr-25 my-5" onSubmit={handleSubmit(onSearch)}>
               <div className="control has-icons-left has-icons-right">
                 <input
@@ -95,12 +115,13 @@ const CommentCollections = () => {
             <CommentsViewButtons />
           </div>
         </div>
+        <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">
-          These are the Comments that will be suggested as you create code reviews. Turn off to move them to other collections.
+          Comments from these collections will be suggested as you create code reviews
         </p>
-        <CardList collections={collectionsArrs.activeCollections || []} />
-        <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Comment Collections</p>
-        <CardList collections={collectionsArrs.otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
+        <CardList addNewComment={openNewSuggestedCommentModal} collections={collectionsArrs.activeCollections || []} />
+        <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Collections</p>
+        <CardList addNewComment={openNewSuggestedCommentModal} collections={collectionsArrs.otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
           {collectionsArrs.otherCollections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < collectionsArrs.otherCollections.length && (
             <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6" type="button">

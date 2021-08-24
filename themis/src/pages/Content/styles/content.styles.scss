@@ -273,17 +273,15 @@ button.sema-reaction-selection {
   overflow: auto;
   border: none;
   margin-top: 2px;
-  // background-color: #ffffff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
   border-radius: 4px;
   color: var(--color-text-input-font);
   border-color: var(--color-text-input-border);
-  // background-color: var(--color-text-input-bg);
+  pointer-events: all;
 
   .sema-dropdown-content {
     background-color: var(--color-text-input-bg);
     color: var(--color-text-input-font);
-    // background: #ffffff;
     box-shadow: none;
   }
 
@@ -317,6 +315,7 @@ button.sema-reaction-selection {
 }
 
 .suggestion-content-truncated-container {
+  padding: 10px;
   background: #fbfbfb;
   border: 0.5px solid #c4c4c4;
   margin-top: 7px;
@@ -325,7 +324,7 @@ button.sema-reaction-selection {
 }
 
 .suggestion-content-truncated {
-  margin: 8px 14px 23px 7px;
+  margin-bottom: 16px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -493,7 +492,30 @@ h6 {
 }
 
 .sema-comment-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+
+  &--img {
+    width: 160px;
+    margin-top: 40px;
+  }
+
+  &--title {
+    margin-top: 32px;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19px;
+  }
+
+  &--link {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 19px;
+    color: #508bff;
+  }
 }
 
 .sema-is-oblong {
@@ -508,6 +530,7 @@ h6 {
   padding: 4px 8px;
   width: fit-content;
   color: #4a4a4a;
+  line-height: 18px;
   font-size: 10px;
   border-radius: 21px;
   background: rgba(183, 183, 183, 0.1);
@@ -608,6 +631,21 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+
+.suggestion-guide-link {
+  display: block;
+  color: #192129;
+  cursor: pointer;
+}
+
+.suggestion-guide-link-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-left: 6px;
+  text-decoration-line: underline;
+  color: #626262;
 }
 
 .sema-dropdown-content {

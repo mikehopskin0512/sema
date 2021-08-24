@@ -1,11 +1,15 @@
-import { NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS } from '../constants';
+/* eslint-disable max-len */
+/* eslint-disable no-param-reassign */
+import {
+  NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS,
+} from '../constants';
 
-function checkTerm(commentText, matchTerm, reactionBallot){
-  var startIndex = 0 ;
-  var foundIndex = commentText.indexOf(matchTerm); // find first occurance
-  while (foundIndex >= startIndex){
+function checkTerm(commentText, matchTerm, reactionBallot) {
+  let startIndex = 0;
+  let foundIndex = commentText.indexOf(matchTerm); // find first occurance
+  while (foundIndex >= startIndex) {
     reactionBallot.count += 1; // we have found an occurance which counts as a vote
-    if(foundIndex >= reactionBallot.lastFoundIndex){ // if we found an occurance further along in the string, then record its location
+    if (foundIndex >= reactionBallot.lastFoundIndex) { // if we found an occurance further along in the string, then record its location
       reactionBallot.lastFoundIndex = foundIndex;
     }
     // we now want to search the rest of the string, starting from after the occurance
@@ -15,8 +19,9 @@ function checkTerm(commentText, matchTerm, reactionBallot){
   }
 }
 
-function checkTerms(commentText, matchTerms, reactionBallot){
-  for (var matchTerm of matchTerms){
+function checkTerms(commentText, matchTerms, reactionBallot) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const matchTerm of matchTerms) {
     checkTerm(commentText, matchTerm, reactionBallot);
   }
 }
@@ -40,20 +45,20 @@ function suggestReaction(originalCommentText) {
    *    return a reaction for the first found instance of one of our keywords, any subsequent matching keywords are not checked
    */
 
-  var reactionBallots = [ ];
-  for (var i=0 ; i< EMOJIS.length; i++){
+  const reactionBallots = [];
+  for (let i = 0; i < EMOJIS.length; i += 1) {
     // we will find how many occurances of each keyword there are
     // and the location where each keyword was found furthest into the comment ( closest to the end of the comment )
     // in the event of a tie, the keyword found closest to the end of the comment will win
-    reactionBallots.push({count:0, lastFoundIndex:0});
+    reactionBallots.push({ count: 0, lastFoundIndex: 0 });
   }
 
   // excellent, great, brilliant, exemplary, awesome → 🏆
-  const trophyWords = ['excellent','great','brilliant', 'exemplary','awesome'];
+  const trophyWords = ['excellent', 'great', 'brilliant', 'exemplary', 'awesome'];
   checkTerms(commentText, trophyWords, reactionBallots[1]);
 
   // good, ok, works, enough → 👌
-  const okWords = [ 'good', 'ok', 'works','enough'];
+  const okWords = ['good', 'ok', 'works', 'enough'];
   checkTerms(commentText, okWords, reactionBallots[2]);
 
   // question mark, why → ❓
@@ -71,27 +76,28 @@ function suggestReaction(originalCommentText) {
     'not maintainable',
     'change',
     'bug',
-    'fix'
+    'fix',
   ];
   checkTerms(commentText, fixWords, reactionBallots[4]);
 
-  var reactionWinners = [0];
-  for (let i = 0, highestCount = 0 ; i < reactionBallots.length; i++ ){
+  let reactionWinners = [0];
+  for (let i = 0, highestCount = 0; i < reactionBallots.length; i += 1) {
     // if there are no occurances, then stay on the first null state, if there are tied counts above 0, then pick the last found
-    if(reactionBallots[i].count > highestCount){
-      reactionWinners = [i] ;
+    if (reactionBallots[i].count > highestCount) {
+      reactionWinners = [i];
       highestCount = reactionBallots[i].count;
-    }else if(reactionBallots[i].count > 0 && reactionBallots[i].count === highestCount ){
+    } else if (reactionBallots[i].count > 0 && reactionBallots[i].count === highestCount) {
       // we might have a draw, add it to list of winners
       reactionWinners.push(i);
     }
   }
 
-  var winnerIndex = 0;
-  var latestFoundIndex=0;
+  let winnerIndex = 0;
+  let latestFoundIndex = 0;
   // go through the winners, pick the winner found closest to the end of the comment
-  for (var reactionIndex of reactionWinners){
-    if(reactionBallots[reactionIndex].lastFoundIndex >= latestFoundIndex){
+  // eslint-disable-next-line no-restricted-syntax
+  for (const reactionIndex of reactionWinners) {
+    if (reactionBallots[reactionIndex].lastFoundIndex >= latestFoundIndex) {
       winnerIndex = reactionIndex;
       latestFoundIndex = reactionBallots[reactionIndex].lastFoundIndex; // someone help :(
     }
@@ -102,6 +108,7 @@ function suggestReaction(originalCommentText) {
 function suggestTags(commentText) {
   const foundTags = [];
   const commentTextL = commentText.toLowerCase();
+  // eslint-disable-next-line no-restricted-syntax
   for (const tagPair of TAGS_INIT) {
     if (commentTextL.includes(tagPair[NEGATIVE].toLowerCase())) {
       foundTags.push(tagPair[NEGATIVE]);
@@ -112,7 +119,7 @@ function suggestTags(commentText) {
   return foundTags;
 }
 
-export function suggest(commentText) {
+export default function suggest(commentText) {
   const suggestedReaction = suggestReaction(commentText);
   const suggestedTags = suggestTags(commentText);
   return { suggestedReaction, suggestedTags };

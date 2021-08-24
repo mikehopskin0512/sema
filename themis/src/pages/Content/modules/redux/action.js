@@ -7,7 +7,6 @@ import {
   CLOSE_SEARCH_MODAL,
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
-  UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   TOGGLE_GLOBAL_SEARCH_MODAL,
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
@@ -22,6 +21,7 @@ import {
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
+  MUTATION_OBSERVER_EVENT,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -114,6 +114,11 @@ export const addMutationObserver = (payload) => ({
 
 export const removeMutationObserver = () => ({
   type: REMOVE_MUTATION_OBSERVER,
+});
+
+export const mutationObserverEvent = (payload) => ({
+  type: MUTATION_OBSERVER_EVENT,
+  payload,
 });
 
 export const updatetSearchBarInputValue = (payload) => ({

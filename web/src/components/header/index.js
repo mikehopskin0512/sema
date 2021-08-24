@@ -10,6 +10,7 @@ import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
+import clsx from "clsx";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -104,7 +105,7 @@ const Header = () => {
   const onCloseSignOutModal = () => setSignOutModal(false);
 
   return (
-    <header className={bgColor}>
+    <header className={clsx(bgColor, 'content-container')}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
@@ -134,20 +135,25 @@ const Header = () => {
             </button>
           )}
         </div>
-        {token && isVerified && (
+        {token && isVerified && !isWaitlist && (
           <div className="navbar-menu" ref={menu}>
             {/* Desktop menu */}
             <div
               className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 is-justify-content-flex-end"
             >
               <Link href="/">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
                   Repos
                 </a>
               </Link>
-              <Link href="/comments">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname === '/comments' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
-                  Comment Library
+              <Link href="/collections">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/collections') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  Suggested Comments
+                </a>
+              </Link>
+              <Link href="/engineering">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  Community Eng Guides
                 </a>
               </Link>
               <Link href="/invitations">
@@ -169,9 +175,14 @@ const Header = () => {
                   Repos
                 </a>
               </Link>
-              <Link href="/comments">
+              <Link href="/collections">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                  Comment Library
+                  Suggested Comments
+                </a>
+              </Link>
+              <Link href="/engineering">
+                <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                  Community Engineering Guides
                 </a>
               </Link>
               <Link href="/invitations">

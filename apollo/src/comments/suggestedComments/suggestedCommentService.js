@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
+import { create as createTags, findTags } from '../tags/tagService';
 import User from '../../users/userModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
@@ -25,13 +26,11 @@ const buildSuggestedCommentsIndex = async () => {
     const dbComments = await SuggestedComment.find().lean().exec();
     const reportEvery = Math.floor(dbComments.length / 10);
 
-    dbComments.forEach((comment, i) => {
+    dbComments.forEach(({ _id: commentId, title, comment, tags }, i) => {
       // index by MongoDB ID
-      index.add(comment._id, comment.comment);
-      index.add(comment._id, comment.title);
-      comment.tags.forEach((tag, ti) => {
-        index.add(comment._id, tag.label);
-      });
+      const allTags = tags.map(({ label }) => (label)).join(' ');
+      const commentIndex = `${title} ${comment} ${allTags}`;
+      index.add(commentId, commentIndex);
       if (i % reportEvery === 0) {
         logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
       }
@@ -41,6 +40,8 @@ const buildSuggestedCommentsIndex = async () => {
     logger.error(error);
     throw error;
   }
+
+  return index;
 };
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
@@ -78,36 +79,41 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
         },
       },
     },
-    {
-      $project: {
-        _id: 0,
-        comments: {
-          $let: {
-            vars: {
-              userComments: {
-                $reduce: {
-                  input: '$collections.comments',
-                  initialValue: [],
-                  in: { $setUnion: ['$$value', '$$this'] },
-                },
-              },
-            },
-            in: { $setIntersection: ['$$userComments', searchResults] },
-          },
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: 'suggestedComments',
-        localField: 'comments',
-        foreignField: '_id',
-        as: 'comments',
-      },
-    },
+    // {
+    //   $project: {
+    //     _id: 0,
+    //     comments: {
+    //       $let: {
+    //         vars: {
+    //           userComments: {
+    //             $reduce: {
+    //               input: '$collections.comments',
+    //               initialValue: [],
+    //               in: { $setUnion: ['$$value', '$$this'] },
+    //             },
+    //           },
+    //         },
+    //         in: { $setIntersection: ['$$userComments', searchResults] },
+    //       },
+    //     },
+    //   },
+    // },
+    // {
+    //   $lookup: {
+    //     from: 'suggestedComments',
+    //     localField: 'comments',
+    //     foreignField: '_id',
+    //     as: 'comments',
+    //   },
+    // },
   ];
 
-  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
+  const [{ collections }] = await User.aggregate(userActiveCommentsQuery);
+  const userComments = [...new Set(collections.map(({ comments }) => (comments)).join('').split(','))];
+  const commentsId = searchResults.filter((comment) => userComments.includes(comment.toString()));
+  const comments = await SuggestedComment
+    .find({ _id: { $in: commentsId } })
+    .populate({ path: 'engGuides.engGuide', model: 'EngGuide' });
   return comments;
 };
 
@@ -123,9 +129,17 @@ const searchComments = async (user, searchQuery) => {
       _id: id,
       title,
       comment,
+      engGuides,
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
-    }) => ({ id, title, comment, sourceName, sourceUrl }),
+    }) => ({
+      id,
+      title,
+      comment,
+      sourceName,
+      sourceUrl,
+      engGuides,
+    }),
   );
 
   // Store the search case to database
@@ -189,11 +203,28 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
 
 export const create = async (suggestedComment) => {
   try {
-    const { title, comment, source } = suggestedComment;
-     const newSuggestedComment = new SuggestedComment({
+    const { title, comment, source, tags } = suggestedComment;
+    let suggestedCommentTags = [];
+    if (tags) {
+      const { existingTags, newTags } = tags;
+      let savedTags = []
+      if (newTags.length > 0) {
+        savedTags = await createTags(newTags);
+      }
+      const existingTagsArr = await findTags(existingTags.map(id => ObjectId(id)));
+      const savedTagObjects = [...existingTagsArr, ...savedTags].map((item) => {
+      return{
+        label: item.label,
+        type: item.type,
+        tag: ObjectId(item._id)
+      }});
+      suggestedCommentTags = savedTagObjects;
+    }
+    const newSuggestedComment = new SuggestedComment({
       title,
       comment,
-      source
+      source,
+      tags: suggestedCommentTags,
     })
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;

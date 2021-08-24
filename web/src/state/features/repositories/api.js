@@ -10,3 +10,10 @@ export const getReactionsStats = (filter, token) => getAll(
   {},
   token,
 );
+export const getTagsStats = (filter, token) => getAll(
+  `/api/proxy/repositories/tags?externalId=${filter.externalId}&dateTo=${filter.dateTo}&dateFrom=${filter.dateFrom}`,
+  {},
+  token,
+);
+export const getRepositoryOverview = (params, token) => getAll('/api/proxy/repositories/overview', { params }, token);
+export const getDashboardRepositories = (params, token) => getAll('/api/proxy/repositories/dashboard', { params }, token);

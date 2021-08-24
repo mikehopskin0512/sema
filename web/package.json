@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production next start --max-http-header-size=16384"
+    "start": "NODE_ENV=production next start"
   },
   "dependencies": {
     "@creativebulma/bulma-badge": "^1.0.1",
@@ -46,6 +46,7 @@
     "react-dom": "16.12.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.5.2",
+    "react-lottie-player": "^1.3.3",
     "react-redux": "^7.1.3",
     "react-select": "^3.0.8",
     "react-spring": "^8.0.27",

@@ -1,216 +1,93 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Table from '../../components/table';
+import React, { useCallback, useState } from 'react';
+import GrowthRepositoryMetric from '../../components/admin/metrics/growthRepositoryMetric';
+import InvitationMetric from '../../components/admin/metrics/invitationMetric';
+import SearchQueryMetric from '../../components/admin/metrics/searchQueryMetric';
 import withLayout from '../../components/layout/adminLayout';
 import withSemaAdmin from '../../components/auth/withSemaAdmin';
-import { invitationsOperations } from '../../state/features/invitations';
-import { searchQueriesOperations } from '../../state/features/search-queries';
-import { fullName } from '../../utils';
-import FilterTabs from '../../components/admin/filterTabs';
-import ExportButton from '../../components/admin/exportButton';
-import { suggestCommentsOperations } from '../../state/features/suggest-comments';
+import Select from '../../components/select';
+import SuggestedCommentsMetric from '../../components/admin/metrics/suggestedCommentsMetric';
+import ShareOfWalletMetric from '../../components/admin/metrics/shareOfWalletMetric';
+import UserActivityMetric from '../../components/admin/metrics/userActivityMetric';
+import TimeToValueMetric from '../../components/admin/metrics/timeToValueMetric';
 
-const { fetchSearchQueries, exportSearchTerms } = searchQueriesOperations;
-const { fetchInviteMetrics, exportInviteMetrics } = invitationsOperations;
-const { fetchSuggestComments } = suggestCommentsOperations;
-
-const tabOptions = [
+const reportTypes = [
   {
-    label: 'Person',
-    value: 'person'
+    label: 'Invitation Metrics',
+    value: 'invitation',
   },
   {
-    label: 'Domain',
-    value: 'domain',
+    label: 'Search Query Metrics',
+    value: 'searchTerms',
+  },
+  {
+    label: 'Suggest Comments Metrics',
+    value: 'suggestComments',
+  },
+  {
+    label: 'Share Of Wallet',
+    value: 'sow',
+  },
+  {
+    label: 'User Activity Change Metrics',
+    value: 'userActivity',
+  },
+  {
+    label: 'Growth in repository usage',
+    value: 'growthRepository',
+  },
+  {
+    label: 'Time to value',
+    value: 'timeToValue',
   },
 ];
 
 const ReportsPage = () => {
-  const dispatch = useDispatch();
-  const { inviteMetrics } = useSelector(state => state.invitationsState);
-  const { searchQueries, isFetching: isSearchQueriesLoading, totalCount: totalQueryItemsCount } = useSelector(state => state.searchQueriesState);
-  const { suggestedComments, isFetching: isSuggestedCommentsLoading, totalCount: totalCommentsItemsCount } = useSelector(state => state.suggestCommentsState);
-  const { token } = useSelector(state => state.authState);
-  const [inviteCategory, setInviteCategory] = useState('person');
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(50);
-  const [commentPage, setCommentPage] = useState(1);
-  const [commentPageSize, setCommentPageSize] = useState(50);
+  const [report, setReport] = useState('invitation');
+  const [searchValue, setSearchValue] = useState('');
 
-  useEffect(() => {
-    dispatch(fetchInviteMetrics());
-    dispatch(fetchSuggestComments());
-  }, []);
+  const renderContent = () => {
+    switch(report) {
+      case 'invitation':
+        return <InvitationMetric />;
+      case 'searchTerms':
+        return <SearchQueryMetric />;
+      case 'suggestComments':
+        return <SuggestedCommentsMetric />;
+      case 'sow':
+        return <ShareOfWalletMetric />;
+      case 'userActivity':
+        return <UserActivityMetric />;
+      case 'growthRepository':
+        return <GrowthRepositoryMetric />;
+      case 'timeToValue':
+        return <TimeToValueMetric />;
+      default:
+        return <div />;
+    }
+  };
 
-  useEffect(() => {
-    dispatch(fetchInviteMetrics(inviteCategory.toLowerCase()))
-  }, [inviteCategory]);
-
-  useEffect(() => {
-    dispatch(fetchSuggestComments({ page: commentPage, perPage: commentPageSize }));
-  }, [commentPage, commentPageSize]);
-
-  useEffect(() => {
-    dispatch(fetchSearchQueries({ page, perPage }));
-  }, [page, perPage]);
-
-  const inviteColumns = useMemo(
-    () => [
-      {
-        Header: 'Email',
-        accessor: 'email',
-        className: 'p-10'
-      },
-      {
-        Header: 'Name',
-        accessor: 'name',
-      },
-      {
-        Header: 'Total',
-        accessor: 'total',
-        className: 'has-text-centered',
-      },
-      {
-        Header: 'Pending',
-        accessor: 'pending',
-        className: 'has-text-centered',
-      },
-      {
-        Header: 'Accepted',
-        accessor: 'accepted',
-        className: 'has-text-centered',
-      },
-      {
-        Header: 'Expired',
-        accessor: 'expired',
-        className: 'has-text-centered',
-      },
-    ],
-    [],
-  );
-
-  const queryColumns = useMemo(
-    () => [
-      {
-        Header: 'Search Term',
-        accessor: 'searchTerm',
-        className: 'p-10'
-      },
-      {
-        Header: 'Frequency',
-        accessor: 'frequency',
-        className: 'has-text-centered',
-      },
-      {
-        Header: 'Matched Count',
-        accessor: 'matchedCount',
-        className: 'has-text-centered',
-      },
-    ],
-    [],
-  );
-
-  const suggestCommentColumns = useMemo(
-    () => [
-      {
-        Header: 'Title',
-        accessor: 'title',
-        className: 'p-10'
-      },
-      {
-        Header: 'Comment',
-        accessor: 'comment',
-        className: 'p-10',
-        Cell: ({ cell: { value } }) => (
-          <div dangerouslySetInnerHTML={{ __html: value }} style={{ maxHeight: 200, overflow: 'auto' }} />
-        )
-      },
-      {
-        Header: 'Insert Count',
-        accessor: 'insertCount',
-        className: 'py-10 px-20'
-      },
-    ],
-    [],
-  );
-
-  const invitesData = inviteMetrics ? inviteMetrics.map(item => ({
-    name: inviteCategory === 'domain' ? item.domain : fullName(item.sender),
-    email: inviteCategory === 'domain' ? item.domain : item.sender && item.sender.username,
-    total: item.total,
-    accepted: item.accepted,
-    pending: item.pending,
-    expired: item.expired,
-  })) : [];
-
-  const queryData = searchQueries ? searchQueries.map(item => ({
-    searchTerm: item._id.searchTerm,
-    matchedCount: item._id.matchedCount,
-    frequency: item.searchTermFrequencyCount,
-  })) : [];
-
-  const suggestCommentsData = suggestedComments ? suggestedComments.map(item => ({
-    title: item.title,
-    comment: item.comment,
-    insertCount: item.insertCount,
-  })) : [];
-
-  const fetchCommentsData = useCallback(({ pageSize, pageIndex }) => {
-    setCommentPage(pageIndex + 1);
-    setCommentPageSize(pageSize);
-  }, [setCommentPage, setCommentPageSize]);
-
-  const fetchData = useCallback(({ pageSize, pageIndex }) => {
-    setPage(pageIndex + 1);
-    setPerPage(pageSize);
-  }, [setPage, setPerPage]);
+  const getLabel = useCallback(() => {
+    const option = reportTypes.find((o) => o.value === report);
+    return option ? option.label : '';
+  }, [report]);
 
   return (
     <>
-      <h1 className='has-text-black has-text-weight-bold is-size-3'>Reports</h1>
-      <p className='mb-15 is-size-6  text-gray-light'>Manage your reports at a glance</p>
-      <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
-        <div className='mb-50'>
-          <h4 className="title is-4">Invitations Metrics</h4>
-          <div className='is-flex is-justify-content-space-between'>
-            <FilterTabs value={inviteCategory} onChange={setInviteCategory} tabs={tabOptions}/>
-            <ExportButton onExport={() => exportInviteMetrics(inviteCategory, token)} />
-          </div>
-          <Table columns={inviteColumns} data={invitesData} />
-        </div>
-
-        <div className='mb-50'>
-          <div className='is-flex is-justify-content-space-between'>
-            <h4 className="title is-4">Queries Metrics</h4>
-            <ExportButton onExport={() => exportSearchTerms({ category: tab }, token)} />
-          </div>
-          <Table
-            columns={queryColumns}
-            data={queryData}
-            pagination={{
-              page,
-              perPage,
-              fetchData,
-              totalCount: totalQueryItemsCount,
-              loading: isSearchQueriesLoading
-            }}
+      <h1 className="has-text-black has-text-weight-bold is-size-3">{getLabel()}</h1>
+      <p className="mb-15 is-size-6 text-gray-light">Manage your {getLabel().toLowerCase()} at a glance</p>
+      <div className="p-20 is-flex-grow-1 has-background-white" style={{ borderRadius: 10 }}>
+        <div className="mb-15">
+          <Select
+            options={reportTypes}
+            placeholder="Select Report"
+            value={report}
+            onChange={setReport}
+            searchPlaceholder="Search Metrics"
+            searchValue={searchValue}
+            onChangeSearchValue={setSearchValue}
           />
         </div>
-
-        <div>
-          <h4 className="title is-4">Suggested Comments</h4>
-          <Table
-            columns={suggestCommentColumns}
-            data={suggestCommentsData}
-            pagination={{
-              page: commentPage,
-              perPage: commentPageSize,
-              fetchData: fetchCommentsData,
-              totalCount: totalCommentsItemsCount,
-              loading: isSuggestedCommentsLoading
-            }}
-          />
-        </div>
+        { renderContent() }
       </div>
     </>
   );

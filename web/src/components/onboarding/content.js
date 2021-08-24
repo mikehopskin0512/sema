@@ -1,18 +1,25 @@
+import animationReactions from './animationReactions.json';
+import animationTags from './animationTags.json';
+import animationComments from './animationComments.json';
+
 export const content = [
   {
-    title: 'Smart Comments',
+    title: 'Smart Reactions',
     subtitle: 'Provide more actionable feedback with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.',
-    img: '/img/reactions.png',
+    img: '/img/onboarding-reactions.png',
+    animationData: animationReactions,
   },
   {
     title: 'Smart Tags',
     subtitle: 'Quickly summarize your feedback with a carefully selected set of mutually exclusive tags. As you type, Sema will calculate the right tags for you or explore your own.',
     img: '/img/tags.png',
+    animationData: animationTags,
   },
   {
     title: 'Suggested Comments',
     subtitle: 'Write great comments faster by quickly search for and insert pre-written comments from some of the best knowledge bases in the world, and add your own!',
     img: '/img/suggested-comments.png',
+    animationData: animationComments,
   },
 ];
 

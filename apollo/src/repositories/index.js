@@ -4,8 +4,9 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, getSemaUsersOfRepo, aggregateRepositories
 } from './repositoryService';
+import { getPullRequestsByExternalId, getSmartCommentersByExternalId, getSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 
 const route = Router();
 
@@ -76,7 +77,20 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/reactions', async (req, res) => {
+  route.get('/dashboard', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { externalIds } = req.query;
+    try {
+      const repositories = await aggregateRepositories(JSON.parse(externalIds));
+      return res.status(201).send({
+        repositories,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/reactions', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId, dateFrom, dateTo } = req.query;
     try {
       const reactions = await aggregateReactions(externalId, dateFrom, dateTo);
@@ -89,12 +103,28 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/tags', async (req, res) => {
+  route.get('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalId, dateFrom, dateTo } = req.query;
     try {
       const tags = await aggregateTags(externalId, dateFrom, dateTo);
       return res.status(201).send({
         tags,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { externalId } = req.query;
+    try {
+      const repositories = await aggregateRepositories([externalId], true);
+      if (repositories.length > 0) {
+        return res.status(201).send(repositories[0]);
+      }
+      return res.status(404).send({
+        message: 'Not found',
       });
     } catch (error) {
       logger.error(error);

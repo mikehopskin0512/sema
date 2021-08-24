@@ -1,8 +1,12 @@
-import { find } from 'lodash';
+import mongoose from 'mongoose';
+import { uniqBy } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import User from '../../users/userModel';
 import { findById as findUserById, update as updateUser } from '../../users/userService';
+
+const { Types: { ObjectId } } = mongoose;
 
 export const create = async ({
   name,
@@ -46,14 +50,45 @@ export const createMany = async (collections) => {
   }
 };
 
-export const findById = async (id, select) => {
+export const findById = async (id) => {
   try {
     const query = Collection.findOne({ _id: id});
-    if (select) {
-      query.select(select)
-    }
-    const collection = await query.lean().exec();
+    const collection = await query.lean().populate({
+      path: 'comments',
+      model: 'SuggestedComment',
+      populate: {
+        path: 'engGuides.engGuide',
+        model: 'EngGuide'
+      }
+    }).sort({ createdAt: -1 }).exec();
     return collection;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getUserCollectionsById = async (userData) => {
+  try {
+    const query = User.findOne({ _id: userData._id });
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      populate: {
+        path: 'comments',
+        model: 'SuggestedComment',
+      }
+      }).exec();
+      if (user) {
+        const { collections } = user;
+        const comments = flatten(collections.map((item) => item.collectionData.comments));
+      return comments;
+    }
+    return {
+      statusCode: 400,
+      message: 'Unable to process request',
+    };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -68,6 +103,21 @@ export const update = async (collection) => {
       { _id: new ObjectId(_id) },
       { $set: collection },
       { new: true },
+    );
+    const updatedCollection = await query.lean().exec();
+    return updatedCollection;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+export const pushCollectionComment = async (collectionId, suggestedCommentId) => {
+  try {
+    const query = Collection.findOneAndUpdate(
+      { _id: new ObjectId(collectionId) },
+      { $push: { comments: ObjectId(suggestedCommentId) }}
     );
     const updatedCollection = await query.lean().exec();
     return updatedCollection;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSortBy, useTable, usePagination } from 'react-table';
+import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
 
 const Table = ({
   columns,
@@ -31,6 +31,7 @@ const Table = ({
       manualPagination: true,
       pageCount: Math.ceil(totalCount / perPage),
     },
+    useGroupBy,
     useSortBy,
     usePagination,
   );
@@ -55,13 +56,13 @@ const Table = ({
                     { className: column.className },
                   ],
                 )}>
-                  <div className='is-flex is-align-items-center'>
+                  <div className={column.isSorted && 'is-flex is-align-items-center'}>
                     {column.render('Header')}
                     {/* Add a sort direction indicator */}
-                  <span
-                    className={column.tooltip ? 'tooltip is-multiline is-tooltip-left is-tooltip-multiline' : ''}
-                    data-tooltip={column.tooltip}
-                  >
+                    <span
+                      className={column.tooltip ? 'tooltip is-multiline is-tooltip-left is-tooltip-multiline' : ''}
+                      data-tooltip={column.tooltip}
+                    >
                       {column.isSorted
                         ? column.isSortedDesc
                           ? ' 🔽'
@@ -108,16 +109,16 @@ const Table = ({
               )
             )
           }
-        </tbody>
-      </table>
-    </div>
-      {
-        !!pagination && (
-          <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
-            <div className='is-flex is-align-items-center'>
-              <div className='mr-10'>Total Count: {totalCount}</div>
-              <div>Show: {data.length}</div>
-            </div>
+          </tbody>
+        </table>
+      </div>
+      <div className='is-flex mb-20 is-justify-content-space-between is-align-items-center'>
+        <div className='is-flex is-align-items-center'>
+          <div className='mr-10'>Total Count: {totalCount || data.length}</div>
+          <div>Show: {data.length}</div>
+        </div>
+        {
+          !!pagination && (
             <div className='is-flex is-align-items-center'>
               <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
                 <button className="pagination-previous" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
@@ -137,9 +138,9 @@ const Table = ({
                 </select>
               </div>
             </div>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </>
   );
 };
@@ -153,7 +154,7 @@ Table.propTypes = {
 };
 
 Table.defaultProps = {
-  pagination: {},
+  pagination: null,
   loading: false,
   empty: null,
 };

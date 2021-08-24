@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats,
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getDashboardRepositories, getRepositoryOverview
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -95,13 +95,55 @@ export const requestGetRepoReactions = () => ({
   type: types.REQUEST_GET_REPO_REACTIONS,
 });
 
-export const requestGetRepoReactionsSuccess = (repositories) => ({
+export const requestGetRepoReactionsSuccess = (reactions) => ({
   type: types.REQUEST_GET_REPO_REACTIONS_SUCCESS,
-  repositories,
+  reactions,
 });
 
 export const requestGetReposReactionsError = (errors) => ({
   type: types.REQUEST_GET_REPO_REACTIONS_ERROR,
+  errors,
+});
+
+export const requestGetRepoTags = () => ({
+  type: types.REQUEST_GET_REPO_TAGS,
+});
+
+export const requestGetRepoTagsSuccess = (tags) => ({
+  type: types.REQUEST_GET_REPO_TAGS_SUCCESS,
+  tags,
+});
+
+export const requestGetRepoTagsError = (errors) => ({
+  type: types.REQUEST_GET_REPO_TAGS_ERROR,
+  errors,
+});
+
+const requestFetchRepositoryOverview = () => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW,
+});
+
+const requestFetchRepositoryOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW_SUCCESS,
+  overview,
+});
+
+const requestFetchRepositoryOverviewError = (errors) => ({
+  type: types.REQUEST_FETCH_REPOSITORY_OVERVIEW_ERROR,
+  errors,
+});
+
+const requestFetchDashboardRepos = () => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES,
+});
+
+const requestFetchDashboardReposSuccess = (repositories) => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_SUCCESS,
+  repositories,
+});
+
+const requestFetchDashboardReposError = (errors) => ({
+  type: types.REQUEST_FETCH_DASHBOARD_REPOSITORIES_ERROR,
   errors,
 });
 
@@ -181,7 +223,6 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
     dispatch(requestFilterSemaReposSuccess(repositories));
     return repositories;
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
@@ -189,17 +230,30 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
   }
 };
 
-export const fetchRepoStats = (filters, token) => async (dispatch) => {
+export const fetchRepositoryOverview = (externalId, token) => async (dispatch) => {
   try {
-    dispatch(requestGetRepoReactions());
-    const payload = await getReactionsStats(filters, token);
-    console.log({ payload });
-    // dispatch(requestGetRepoReactionsSuccess());
+    dispatch(requestFetchRepositoryOverview());
+    const { data } = await getRepositoryOverview({ externalId }, token);
+    if (data._id) {
+      dispatch(requestFetchRepositoryOverviewSuccess(data));
+    }
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchRepositoryOverviewError(errMessage));
+  }
+};
 
-    dispatch(requestGetReposReactionsError(errMessage));
+export const fetchRepoDashboard = (externalIds, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchDashboardRepos());
+    const { data: { repositories = [] } } = await getDashboardRepositories({ externalIds: JSON.stringify(externalIds) }, token);
+    if (Array.isArray(repositories)) {
+      dispatch(requestFetchDashboardReposSuccess(repositories));
+    }
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchDashboardReposError(errMessage));
   }
 };

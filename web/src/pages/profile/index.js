@@ -29,7 +29,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="has-background-white-gray">
+    <div className="has-background-white-gray pb-300">
       <Helmet {...ProfileHelmet} />
       <EditModal onClose={onClose} isActive={editModalIsOpen} />
       <div className="container py-80 px-20">
@@ -63,7 +63,7 @@ const Profile = () => {
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
                 <FontAwesomeIcon icon={faSyncAlt} size="md" className="mr-5" color="#000000" />
-                Refreshidentities
+                Refresh
               </button>
             </div>
             <div>

@@ -2,25 +2,61 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { find } from 'lodash';
+import { get, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import { EMOJIS, TAGS } from './constants';
+import { EMOJIS } from './constants';
 import styles from './item.module.scss';
+
+const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityItem = (props) => {
   const {
-    comment, reaction, tags, createdAt, userId, githubMetadata,
+    comment = '',
+    reaction = '',
+    tags = [],
+    createdAt = '',
+    userId: user,
+    githubMetadata: {
+      title = '',
+      url = '#',
+      user: {
+        login = '',
+      },
+      pull_number = '',
+      commentId = '',
+    },
   } = props;
 
   const {
-    firstName,
-    lastName,
-    avatarUrl,
-  } = userId;
+    username = 'User@email.com',
+    firstName = '',
+    lastName = '',
+    avatarUrl = defaultAvatar,
+  } = user || {};
 
-  const { title, url, user: { login = '' } } = githubMetadata;
+  const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'dd MMM, yyyy') : '');
 
-  const [dateCreated] = useState(format(new Date(createdAt), 'dd MMM, yyyy'));
+  const getPRName = (pull_num, pr_name) => {
+    let prName = '';
+    if (!isEmpty(pull_num)) {
+      prName = `PR #${pull_num} `;
+    }
+    if (!isEmpty(pr_name)) {
+      prName += pr_name;
+    }
+    if (isEmpty(prName)) {
+      return 'a pull request';
+    }
+    return prName;
+  }
+
+  const getPRUrl = () => {
+    let prUrl = url;
+    if (!isEmpty(commentId)) {
+      prUrl += `#${commentId}`
+    }
+    return prUrl;
+  }
 
   const renderEmoji = () => {
     const { emoji, title: emojiTitle } = find(EMOJIS, { _id: reaction });
@@ -34,17 +70,19 @@ const ActivityItem = (props) => {
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
-      <figure className="image is-64x64 mr-20 is-hidden-mobile">
-        <img className="is-rounded" src={avatarUrl} alt="user_icon" />
-      </figure>
+      <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-mobile", styles.avatar)} src={avatarUrl} alt="user_icon" />
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
             <p className="is-size-7 has-text-deep-black">
-              <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a>
+              { !isEmpty(firstName) ?
+                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
+                <span className="has-text-deep-black is-underlined">{username.split('@')[0] || 'User'}</span>}
               {' reviewed '}
-              <a href={url} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{title || 'a pull request'}</a>
+              <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
+                {getPRName(pull_number, title)}
+              </a>
             </p>
           </div>
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
@@ -57,15 +95,15 @@ const ActivityItem = (props) => {
             <>
               <div className="is-divider-vertical" />
               <div className="is-flex is-flex-wrap-wrap">
-                {tags.map((_id) => (
-                  <span className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{find(TAGS, { _id }).label}</span>
+                {tags.map(({ label }) => (
+                  <span key={`tag-${label}`} className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{label}</span>
                 ))}
               </div>
             </>
           ) : <div className="py-25" />}
         </div>
         <div className="my-10">
-          <p className="is-size-7 has-text-deep-black">{comment}</p>
+          <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-deep-black" />
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
       </div>
@@ -75,7 +113,7 @@ const ActivityItem = (props) => {
 
 ActivityItem.defaultProps = {
   tags: [],
-  userId: {
+  user: {
     firstName: '',
     lastName: '',
     avatarUrl: '',
@@ -91,7 +129,7 @@ ActivityItem.propTypes = {
   reaction: PropTypes.string.isRequired,
   tags: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
-  userId: PropTypes.object,
+  user: PropTypes.object,
   githubMetadata: PropTypes.object,
 };
 

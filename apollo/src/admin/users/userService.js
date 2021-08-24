@@ -1,5 +1,9 @@
+import { addHours, addDays, addWeeks, isBefore, subYears, isAfter, isEqual, format, isDate } from 'date-fns';
+import * as Json2CSV from 'json2csv';
 import User from '../../users/userModel';
-import Invitation from '../../invitations/invitationModel';
+import { fullName } from '../../shared/utils';
+import { suggest } from '../../comments/suggestedComments/commentSuggestions';
+import Reaction from '../../comments/reaction/reactionModel';
 
 export const listUsers = async (params) => {
   const { page, perPage, search, status } = params;
@@ -24,7 +28,7 @@ export const listUsers = async (params) => {
     status.forEach((item) => {
       if (item === 'Waitlisted') {
         statusQuery.push({ isActive: true, isWaitlist: true });
-      } else if (item === 'Active') {
+      } else if (item === 'Registered') {
         statusQuery.push({ isActive: true, isWaitlist: false });
       } else if (item === 'Blocked') {
         statusQuery.push({ isActive: false, isWaitlist: true });
@@ -92,7 +96,7 @@ export const listUsers = async (params) => {
 export const findUser = async (userId) => {
   const user = await User.findById(userId).populate({
     path: 'collections.collectionData',
-    model: 'Collection'
+    model: 'Collection',
   });
 
   return user;
@@ -144,4 +148,142 @@ export const bulkAdmitUsers = async (bulkCount) => {
   const userIds = users.map(item => item._id);
 
   await User.updateMany({ _id: { $in: userIds } }, { $set: { isWaitlist: false } });
+};
+
+export const getTimeToValueMetric = async (params, isExport = false) => {
+  const { page, perPage, range = 'first_hour' } = params;
+
+  const getLimitDate = (date) => {
+    switch (range) {
+      case 'first_hour':
+        return addHours(new Date(date), 1);
+      case 'first_day':
+        return addDays(new Date(date), 1);
+      case 'first_week':
+        return addWeeks(new Date(date), 1);
+      default:
+        return date;
+    }
+  };
+
+  const totalCount = await User.countDocuments();
+  const results = await User.aggregate([
+    {
+      $lookup: {
+        from: 'smartComments',
+        let: { userId: '$_id' },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$userId', '$$userId'] } } },
+          {
+            $lookup: {
+              from: 'tags',
+              let: { tags: '$tags' },
+              pipeline: [
+                { $match: { $expr: { $eq: ['$_id', '$$tags'] } } },
+              ],
+              as: 'tags',
+            }
+          }
+        ],
+        as: 'smartComments',
+      },
+    },
+    {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'smartComments.suggestedComments',
+        foreignField: '_id',
+        as: 'suggestedComments',
+      },
+    },
+    { $sort: { createdAt: -1 } },
+    ...!isExport ? [
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ] : [],
+  ]);
+
+  const metricData = [];
+  await Promise.all(results.map(async (user) => {
+    const limitDate = getLimitDate(user.createdAt);
+    const minDate = subYears(user.createdAt, 1);
+    const saveCommentAt = user.smartComments.reduce((date, comment) => (isBefore(date, comment.createdAt)
+      && isBefore(comment.createdAt, limitDate) && isAfter(comment.createdAt, user.createdAt)
+      ? comment.createdAt
+      : date),
+      minDate);
+    const insertSuggestedCommentAt = user.suggestedComments.reduce((date, comment) => (isBefore(date, comment.createdAt)
+      && isBefore(comment.createdAt, limitDate) && isAfter(comment.createdAt, user.createdAt)
+      ? comment.createdAt
+      : date),
+      minDate);
+
+    let changeReaction = false;
+    let changeTags = false;
+
+    await Promise.all(user.smartComments.map(async (smartComment) => {
+      const { suggestReaction, suggestedTags } = suggest(smartComment.comment);
+      if (suggestReaction && suggestReaction._id.toString() !== smartComment.reaction.toString()) {
+        const reaction = await Reaction.findById(suggestReaction._id);
+        if (!changeReaction || isBefore(changeReaction, reaction.createdAt)) {
+          changeReaction = true;
+        }
+      }
+      if (suggestedTags && suggestedTags.sort().join('') !== smartComment.tags.map((item) => item.label).sort().join('')) {
+        changeTags = true;
+      }
+    }));
+
+    metricData.push({
+      id: user._id,
+      name: fullName(user),
+      leaveWaitlist: user.isWaitlist,
+      acceptInvite: user.isActive,
+      lastLogin: user.lastLogin,
+      saveCommentAt: isEqual(saveCommentAt, minDate) ? undefined : saveCommentAt,
+      insertSuggestedCommentAt: isEqual(insertSuggestedCommentAt, minDate) ? undefined : insertSuggestedCommentAt,
+      changeReaction,
+      changeTags,
+      countOfSmartComments: user.smartComments.length,
+    });
+  }));
+
+  return { metric: metricData, totalCount };
+};
+
+export const exportTimeToValueMetric = async (params) => {
+  try {
+    const { metric } = await getTimeToValueMetric(params, true);
+
+    const mappedData = metric.map((item) => ({
+      Name: item.name,
+      'Leave waitlist': item.leaveWaitlist ? 'Yes' : 'No',
+      'Accept invite': item.acceptInvite ? 'Yes' : 'No',
+      'Last login': item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
+      'Save smartComment': isDate(item.saveCommentAt) ? format(new Date(item.saveCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
+      'Insert suggested comment': isDate(item.insertSuggestedCommentAt) ? format(new Date(item.insertSuggestedCommentAt), 'yyyy-MM-dd hh:mm:ss') : '',
+      'Manually change reaction': item.changeReaction ? 'Yes' : 'No',
+      'Manually Change tag': item.changeTags ? 'Yes' : 'No',
+      '# of smart comments': item.countOfSmartComments,
+    }));
+
+    const { Parser } = Json2CSV;
+    const fields = [
+      'Name',
+      'Leave waitlist',
+      'Accept invite',
+      'Last login',
+      'Save smartComment',
+      'Insert suggested comment',
+      'Manually change reaction',
+      'Manually Change tag',
+      '# of smart comments'
+    ];
+
+    const json2csvParser = new Parser({ fields });
+    const csv = json2csvParser.parse(mappedData);
+    return csv;
+  } catch (err) {
+    console.error(err);
+  }
 };

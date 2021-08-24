@@ -13,7 +13,7 @@ export const RegisterHelmet = {
   description: null,
 };
 
-export const SuggestedCommentsHelmet = {
+export const CommentCollectionsHelmet = {
   title: 'Comment Collections',
   description: null,
 };
@@ -29,6 +29,11 @@ export const UserManagementHelmet = {
   description: null,
 };
 
+export const SuggestedCommentsHelmet = {
+  title: 'Suggested Comments',
+  description: null,
+};
+
 export const RepoStatsHelmet = {
   title: 'Repo Stats',
   description: null,
@@ -36,5 +41,15 @@ export const RepoStatsHelmet = {
 
 export const ProfileHelmet = {
   title: 'Profile',
+  description: null,
+};
+
+export const ActivityLogHelmet = {
+  title: 'Activity Log',
+  description: null,
+};
+
+export const HelpSupportHelmet = {
+  title: 'Help and Support',
   description: null,
 };
