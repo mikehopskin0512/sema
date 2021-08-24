@@ -15,7 +15,7 @@ const ExtensionStatus = () => {
   };
 
   const isHidden = () => {
-    const enabledPaths = ['/overview', '/repo', '/dashboard', '/collections', '/engineering', '/support', '/profile'];
+    const enabledPaths = ['/overview', '/repo', '/dashboard', '/collections', '/engineering', '/support', '/profile', '/invitations'];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {
@@ -54,10 +54,10 @@ const ExtensionStatus = () => {
               </div>
               <div className="my-10">
                 <div className="has-text-weight-semibold">
-                  Install Chrome Plugin
+                  Activate Chrome Plugin
                 </div>
                 <div>
-                  The Sema Chrome Plugin allows us to modify the Github commenting UI and supercharge you code review workflow.
+                  The Sema Chrome Plugin allows us to modify the Github commenting UI and supercharge your code review workflow.
                 </div>
               </div>
             </div>
@@ -67,7 +67,7 @@ const ExtensionStatus = () => {
                 className="button is-primary is-pulled-right"
                 onClick={buttonAction}
               >
-                Install Chrome Plugin
+                Activate Chrome Plugin
               </button>
             </div>
           </div>

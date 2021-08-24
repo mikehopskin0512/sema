@@ -22,8 +22,11 @@ const ActivityPage = () => {
     reactions: [],
     tags: [],
     search: '',
+    pr: [],
   });
+  // TODO: it will be better to use useReducer here
   const [filterUserList, setFilterUserList] = useState([]);
+  const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
 
@@ -31,27 +34,31 @@ const ActivityPage = () => {
     if (!overview?.smartcomments?.length) {
       return;
     }
-    const users = overview.smartcomments.map((item) => {
-      const { userId: user } = item;
-      if (user) {
-        const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = user;
-        return {
-          label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
-          value: _id,
-          img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
-        };
-      }
+    const requesters = overview.smartcomments
+      .filter((item) => item.githubMetadata.requester)
+      .map((({ githubMetadata }) => ({
+        label: githubMetadata.requester,
+        value: githubMetadata.requester,
+        img: defaultAvatar,
+      })))
+    const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
+      const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
+      return {
+        label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
+        value: _id,
+        img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
+      };
     });
-    const prs = overview.smartcomments.map((item) => {
-      if (item && item.githubMetadata) {
-        const { githubMetadata: { title = '', pull_number: pullNum = '' } } = item;
+    const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
+        const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
+        const prName = title || head || 'PR'
         return {
-          label: `${title || 'PR'} #${pullNum || ''}`,
+          label: `${prName} #${pullNum || ''}`,
           value: pullNum,
         };
-      }
-      return null;
-    });
+      });
+
+    setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
     setFilterPRList(uniqBy(compact(prs), 'value'));
   }, [overview]);
@@ -64,11 +71,13 @@ const ActivityPage = () => {
         !isEmpty(filter.to) ||
         !isEmpty(filter.reactions) ||
         !isEmpty(filter.tags) ||
-        !isEmpty(filter.search)
+        !isEmpty(filter.search) ||
+        !isEmpty(filter.pr)
       ) {
         filtered = overview.smartcomments.filter((item) => {
           const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.pull_number }) : -1;
+          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
+          const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
           const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
           const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
@@ -87,6 +96,9 @@ const ActivityPage = () => {
           }
           if (!isEmpty(filter.search)) {
             filterBool = filterBool && searchBool;
+          }
+          if (!isEmpty(filter.pr)) {
+            filterBool = filterBool && prIndex !== -1;
           }
           return filterBool;
         });
@@ -138,7 +150,7 @@ const ActivityPage = () => {
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{
-                options: filterPRList,
+                options: filterRequesterList,
                 placeholder: '',
                 isMulti: true,
                 onChange: ((value) => onChangeFilter('to', value)),
@@ -174,6 +186,18 @@ const ActivityPage = () => {
               }}
               label="Tags"
               showCheckbox
+            />
+          </div>
+          <div  className="is-flex-grow-1 px-5 my-5">
+            <CustomSelect
+              selectProps={{
+                options: filterPRList,
+                placeholder: '',
+                isMulti: true,
+                onChange: ((value) => onChangeFilter('pr', value)),
+                value: filter.pr,
+              }}
+              label="Pull requests"
             />
           </div>
         </div>

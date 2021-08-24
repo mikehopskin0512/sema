@@ -8,8 +8,6 @@ import {
   NEGATIVE,
   SELECTED,
   DELETE_OP,
-  SEMA_CLIENT_ID,
-  SEMA_CLIENT_SECRET,
   SEMA_REACTION_REGEX,
   SEMA_TAGS_REGEX,
   SEMABAR_CLASS,
@@ -131,10 +129,7 @@ export const getInitialSemaValues = (textbox) => {
 const updateSmartComment = async (comment) => {
   const { _id: id } = comment;
   const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     method: 'PUT',
     body: JSON.stringify(comment),
   });
@@ -143,76 +138,60 @@ const updateSmartComment = async (comment) => {
   return smartComment;
 };
 
-export const setMutationObserverAtConversation = () => {
-  const observer = new MutationObserver(([mutation]) => {
-    if (mutation.addedNodes.length) {
-      const nodeIndex = [...mutation.addedNodes].findIndex(
-        (node) => 'classList' in node && node.classList.contains('js-timeline-item'),
+export const onConversationMutationObserver = ([mutation]) => {
+  if (mutation.addedNodes.length) {
+    const nodeIndex = [...mutation.addedNodes].findIndex(
+      (node) => 'classList' in node && node.classList.contains('js-timeline-item'),
+    );
+
+    const singleNode = [...mutation.addedNodes].findIndex(
+      (node) => 'classList' in node && node.classList.contains('review-comment'),
+    );
+
+    const { smartComment } = store.getState();
+
+    if (nodeIndex !== -1) {
+      const newCommentDiv = mutation.addedNodes[nodeIndex];
+      const { id } = newCommentDiv.querySelector(
+        'div.timeline-comment-group',
       );
-
-      const singleNode = [...mutation.addedNodes].findIndex(
-        (node) => 'classList' in node && node.classList.contains('review-comment'),
-      );
-
-      const { smartComment } = store.getState();
-
-      if (nodeIndex !== -1) {
-        const newCommentDiv = mutation.addedNodes[nodeIndex];
-        const { id } = newCommentDiv.querySelector(
-          'div.timeline-comment-group',
-        );
-        smartComment.githubMetadata.commentId = id;
-      } else if (singleNode !== -1) {
-        const { id } = mutation.addedNodes[singleNode];
-        smartComment.githubMetadata.commentId = id;
-      } else {
-        return;
-      }
-      updateSmartComment(smartComment);
-      store.dispatch(removeMutationObserver());
+      smartComment.githubMetadata.commentId = id;
+    } else if (singleNode !== -1) {
+      const { id } = mutation.addedNodes[singleNode];
+      smartComment.githubMetadata.commentId = id;
+    } else {
+      return;
     }
-  });
-
-  const commentsTimeline = document.querySelector(
-    'div.pull-discussion-timeline .js-discussion',
-  );
-  observer.observe(commentsTimeline, { childList: true, subtree: true });
-
-  return observer;
+    updateSmartComment(smartComment);
+    store.dispatch(removeMutationObserver());
+  }
 };
 
-export const setMutationObserverAtFilesChanged = () => {
-  const observer = new MutationObserver(([mutation]) => {
-    if (mutation.addedNodes.length) {
-      const threadNode = [...mutation.addedNodes].findIndex(
-        (node) => 'classList' in node
-          && node.classList.contains('js-resolvable-timeline-thread-container'),
-      );
-      const singleNode = [...mutation.addedNodes].findIndex(
-        (node) => 'classList' in node && node.classList.contains('review-comment'),
-      );
+export const onFilesChangedMutationObserver = ([mutation]) => {
+  if (mutation.addedNodes.length) {
+    const threadNode = [...mutation.addedNodes].findIndex(
+      (node) => 'classList' in node
+        && node.classList.contains('js-resolvable-timeline-thread-container'),
+    );
+    const singleNode = [...mutation.addedNodes].findIndex(
+      (node) => 'classList' in node && node.classList.contains('review-comment'),
+    );
 
-      const { smartComment } = store.getState();
+    const { smartComment } = store.getState();
 
-      if (threadNode !== -1) {
-        const newCommentDiv = mutation.addedNodes[threadNode];
-        const { id } = newCommentDiv.querySelector('div.review-comment');
-        smartComment.githubMetadata.commentId = id;
-      } else if (singleNode !== -1) {
-        const { id } = mutation.addedNodes[singleNode];
-        smartComment.githubMetadata.commentId = id;
-      } else {
-        return;
-      }
-      updateSmartComment(smartComment);
-      store.dispatch(removeMutationObserver());
+    if (threadNode !== -1) {
+      const newCommentDiv = mutation.addedNodes[threadNode];
+      const { id } = newCommentDiv.querySelector('div.review-comment');
+      smartComment.githubMetadata.commentId = id;
+    } else if (singleNode !== -1) {
+      const { id } = mutation.addedNodes[singleNode];
+      smartComment.githubMetadata.commentId = id;
+    } else {
+      return;
     }
-  });
-
-  const inLineFiles = document.querySelector('div#files');
-  observer.observe(inLineFiles, { childList: true, subtree: true });
-
-  return observer;
+    updateSmartComment(smartComment);
+    store.dispatch(removeMutationObserver());
+  }
 };
 
 export const getGithubInlineMetadata = (id) => {
@@ -248,10 +227,7 @@ export const getGithubInlineMetadata = (id) => {
 
 const createSmartComment = async (comment) => {
   const res = await fetch(SMART_COMMENT_URL, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${btoa(`${SEMA_CLIENT_ID}:${SEMA_CLIENT_SECRET}`)}`,
-    },
+    headers: { 'Content-Type': 'application/json' },
     method: 'POST',
     body: JSON.stringify(comment),
   });
@@ -278,9 +254,17 @@ export async function writeSemaToGithub(textarea) {
     const location = onFilesTab ? 'files changed' : 'conversation';
 
     if (location === 'conversation') {
-      store.dispatch(addMutationObserver(setMutationObserverAtConversation()));
+      store.dispatch(addMutationObserver({
+        selector: 'div.pull-discussion-timeline .js-discussion',
+        config: { childList: true, subtree: true },
+        onMutationEvent: onConversationMutationObserver,
+      }));
     } else {
-      store.dispatch(addMutationObserver(setMutationObserverAtFilesChanged()));
+      store.dispatch(addMutationObserver({
+        selector: 'div#files',
+        config: { childList: true, subtree: true },
+        onMutationEvent: onFilesChangedMutationObserver,
+      }));
       inLineMetada = getGithubInlineMetadata(textarea.id);
     }
 
@@ -676,4 +660,9 @@ export const checkSubmitButton = (semabarId, data) => {
       $(primaryButton).attr('disabled', true);
     }
   }
+};
+
+export const isPRPage = () => {
+  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+  return prPage.test(document.URL);
 };
