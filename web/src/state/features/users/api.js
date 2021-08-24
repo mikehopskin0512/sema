@@ -8,3 +8,4 @@ export const bulkAdmit = (params) => create('/api/proxy/admin/users/bulk-admit',
 export const updateUser = (userId, params) => update(`/api/proxy/admin/users/${userId}`, params);
 export const getTimeToValueMetric = (params) => getAll('/api/proxy/admin/users/time-to-value', { params });
 export const exportTimeToValue = (params, token) => exportItem('/api/proxy/admin/users/time-to-value/export', params, token);
+export const exportUsersApi = (params, token) => exportItem('/api/proxy/admin/users/export', params, token);

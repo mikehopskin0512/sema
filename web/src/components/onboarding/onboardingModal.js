@@ -33,6 +33,7 @@ const OnboardingModal = ({
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          closeModal={() => toggleModalActive(false)}
         />
       );
     // case 4:
