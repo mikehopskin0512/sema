@@ -92,7 +92,7 @@ const RegistrationForm = (props) => {
   };
 
   return (
-    <div className="columns is-justify-content-center">
+    <div className="columns is-justify-content-center pb-250">
       <Helmet {...RegisterHelmet} />
       <div className="column is-9">
         <div className="title-topper mt-70 mb-20" />

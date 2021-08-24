@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { format, formatDistanceToNowStrict } from 'date-fns';
 import useDebounce from '../../hooks/useDebounce';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
@@ -15,8 +15,9 @@ import { usersOperations } from '../../state/features/users';
 import { fullName } from '../../utils';
 import FilterTabs from '../../components/admin/filterTabs';
 import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
+import ExportButton from '../../components/admin/exportButton';
 
-const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers } = usersOperations;
+const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers, exportUsers } = usersOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,13 @@ const UsersPage = () => {
 
     dispatch(fetchUsers({ search: debounceSearchTerm, status: statusQuery, page, perPage }));
   }, [dispatch, fetchUsers, debounceSearchTerm, statusFilters, page, perPage]);
+
+  const onExport = useCallback(async () => {
+    const statusQuery = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
+    await exportUsers({ search: debounceSearchTerm, status: statusQuery });
+  }, [debounceSearchTerm, statusFilters]);
 
   useEffect(() => {
     getUsers();
@@ -160,6 +168,11 @@ const UsersPage = () => {
         sorted: false,
       },
       {
+        Header: 'Last Login',
+        accessor: 'lastLogin',
+        sorted: false,
+      },
+      {
         Header: () => (
           <div className='has-text-centered pt-10' style={{ background: '#E9E1F0' }}>
             <div>Invite</div>
@@ -228,6 +241,7 @@ const UsersPage = () => {
       accepted: item.acceptCount,
       id: item._id,
     },
+    lastLogin: item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
     actionStatus: {
       id: item._id,
       status: getStatus(item),
@@ -304,9 +318,14 @@ const UsersPage = () => {
         <BulkAdmitForm onSubmit={onBulkAdmitUsers} />
       </div>
       <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
-        <div className='is-flex sema-is-justify-content-space-between'>
+        <div className='is-flex is-justify-content-space-between'>
           <FilterTabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          <div className="is-flex">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+            <div className="ml-10">
+              <ExportButton onExport={onExport} />
+            </div>
+          </div>
         </div>
         <Table
           columns={columns}

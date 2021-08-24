@@ -48,3 +48,8 @@ export const ActivityLogHelmet = {
   title: 'Activity Log',
   description: null,
 };
+
+export const HelpSupportHelmet = {
+  title: 'Help and Support',
+  description: null,
+};

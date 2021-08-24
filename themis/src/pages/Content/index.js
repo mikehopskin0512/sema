@@ -17,7 +17,10 @@ import {
   writeSemaToGithub,
   getGithubMetadata,
   getHighlights,
+  isPRPage,
 } from './modules/content-util';
+
+import Reminder from './Reminder';
 
 import {
   SEMA_ICON_ANCHOR_LIGHT,
@@ -26,13 +29,9 @@ import {
   ON_INPUT_DEBOUCE_INTERVAL_MS,
   CALCULATION_ANIMATION_DURATION_MS,
   WHOAMI,
-  SEMA_ICON_ANCHOR_DARK,
-  SEMA_ICON_ANCHOR_DARK_DIMMED,
-  LIGHT,
-  DARK,
-  DARK_DIMMED,
   EMOJIS,
   EMOJIS_ID,
+  SEMA_REMINDER_ROOT_ID,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -49,8 +48,9 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
 } from './modules/redux/action';
+import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
-const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+// const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
 
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
@@ -77,6 +77,22 @@ const updateMetadata = setInterval(() => {
   store.dispatch(addGithubMetada(getGithubMetadata(document)));
   initialCheck = true;
 }, 5000);
+
+$(() => {
+  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+  if (!reminderRoot && isPRPage()) {
+    const node = document.createElement('div');
+    node.id = SEMA_REMINDER_ROOT_ID;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Provider store={store}>
+        <Reminder />
+      </Provider>,
+      node,
+    );
+  }
+});
 
 /**
    * Listening to click event for:
@@ -124,7 +140,7 @@ function handleReviewChangesClick(
     .checked;
   const isEmptyComment = !activeElement.value;
   const reaction = isApprovedOption
-      && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
+    && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
     ? looksGoodEmoji
     : noReactionEmoji;
   store.dispatch(
@@ -145,16 +161,12 @@ document.addEventListener(
   'focus',
   (event) => {
     const activeElement = event.target;
-    if (prPage.test(document.URL)) {
+    if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
         const semaElements = $(activeElement).siblings('div.sema');
-        let extensionTheme = LIGHT;
-        let themeClass = '';
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-        const colorMode = document.documentElement.getAttribute(
-          'data-color-mode',
-        );
+        SEMA_ICON = getSemaIconTheme(getActiveTheme());
 
         if (
           document.querySelector('.SelectMenu--hasFilter .SelectMenu-modal')
@@ -162,40 +174,6 @@ document.addEventListener(
           document.querySelector(
             '.SelectMenu--hasFilter .SelectMenu-modal',
           ).style.maxHeight = '580px';
-        }
-
-        let colorTheme = document.documentElement.getAttribute(
-          'data-light-theme',
-        );
-        if (colorMode === DARK) {
-          extensionTheme = DARK;
-          colorTheme = document.documentElement.getAttribute('data-dark-theme');
-          if (colorTheme === DARK_DIMMED) {
-            extensionTheme = DARK_DIMMED;
-          }
-        } else if (colorMode === 'auto') {
-          const html = document.querySelector('[data-color-mode]');
-          const githubTheme = getComputedStyle(html);
-          const githubBgColor = githubTheme.backgroundColor;
-          if (githubBgColor === 'rgb(13, 17, 23)') {
-            extensionTheme = DARK;
-          } else if (githubBgColor === 'rgb(34, 39, 46)') {
-            extensionTheme = DARK_DIMMED;
-          }
-        }
-        switch (extensionTheme) {
-          case DARK:
-            themeClass = 'theme--dark';
-            SEMA_ICON = SEMA_ICON_ANCHOR_DARK;
-            break;
-          case DARK_DIMMED:
-            themeClass = 'theme--dark-dimmed';
-            SEMA_ICON = SEMA_ICON_ANCHOR_DARK_DIMMED;
-            break;
-          default:
-            themeClass = '';
-            SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
-            break;
         }
 
         const githubTextareaId = $(activeElement).attr('id');
@@ -225,11 +203,11 @@ document.addEventListener(
           /** ADD ROOTS FOR REACT COMPONENTS */
           // search bar container
           $(activeElement).before(
-            `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${themeClass}'></div>`,
+            `<div id=${semaSearchContainerId} class='${SEMA_SEARCH_CLASS} sema-mt-2 sema-mb-2 ${getActiveThemeClass()}'></div>`,
           );
           // semabar container
           $(activeElement).after(
-            `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${themeClass}'></div>`,
+            `<div id=${semabarContainerId} class='${SEMABAR_CLASS} ${getActiveThemeClass()}'></div>`,
           );
 
           /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
@@ -317,8 +295,8 @@ document.addEventListener(
 document.addEventListener(
   'focusin',
   (event) => {
-    const githubCommentField = 'textarea#new_comment_field.form-control.input-contrast.comment-form-textarea.js-comment-field.js-paste-markdown.js-task-list-field.js-quick-submit.js-size-to-fit.js-session-resumable.js-saved-reply-shortcut-comment-field';
-    if (event.target === document.querySelector(githubCommentField)) {
+    const commentFieldClassName = 'comment-form-textarea';
+    if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
   },
