@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './onboarding.module.scss';
 
@@ -69,43 +69,67 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
 
   return (
     <>
-      <div className={clsx('mt-90 p-60 is-relative', styles['extension-modal'])}>
-        <p className="title is-4 has-text-centered">Install the Sema Chrome Extension</p>
-        <p className="subtitle is-5 has-text-centered">It&apos;s easy</p>
-        <p className="subtitle is-6 has-text-centered px-200">The Sema Chrome Extension makes Smart Comments possible! Please install it next.</p>
-        {renderExtensionState()}
-        {
-          page !== 1 && (
+      <div className="columns m-0 is-full-height" style={{}}>
+        <div className="is-flex is-justify-content-space-between is-align-items-center p-15 is-hidden-desktop">
+          <p className="has-text-primary has-text-weight-semibold is-size-4 p-5">One last step</p>
+          <button className="button is-white" onClick={closeModal}>
+            <FontAwesomeIcon className="is-clickable" icon={faTimes} size="lg" />
+          </button>
+        </div>
+        <div className={clsx("column is-flex is-justify-content-center is-6 p-25", styles['animation-container'])}>
+          <div className={clsx("is-flex is-justify-content-center is-align-items-center py-30")}>
+            <img src="/img/logo_high_res.png" className={styles['install-logo-img']} />
+            <img src="/img/center.png" className={clsx("mx-50", styles['install-cross-img'])} />
+            <img src="/img/chrome_logo.png" className={styles['install-logo-img']} />
+          </div>
+        </div>
+        <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
+          <div className="is-flex is-justify-content-space-between is-align-items-center">
+            <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">One last step</p>
+            <button className="button is-white" onClick={closeModal}>
+              <FontAwesomeIcon className="is-clickable" icon={faTimes} />
+            </button>
+          </div>
+          <div className={styles.info}>
+            <p className="has-text-deep-black is-size-7 mb-5">One last step</p>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-deep-black')}>Install the Sema Extension!</p>
+            <p className={clsx('mt-20')}>
+              The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.
+            </p>
+            <a href={EXTENSION_LINK} target="_blank" rel="noreferrer">
+              <img src="/img/chrome_ext_button.png" alt="install" className={clsx('mt-20', styles['chrome-button'])} />
+            </a>
+          </div>
+          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center mb-10", styles.footer)}>
+            {
+              page !== 1 ? (
+                <button
+                  type="button"
+                  className={clsx("button is-primary is-outlined")}
+                  onClick={previousPage}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
+                </button>
+              ) : <div className={styles.space}></div>
+            }
+            <ul className={styles.ul}>
+              <li className={page === 1 ? styles.active : null}></li>
+              <li className={page === 2 ? styles.active : null}></li>
+              <li className={page === 3 ? styles.active : null}></li>
+              <li className={page === 4 ? styles.active : null}></li>
+            </ul>
             <button
               type="button"
-              className={clsx('button is-primary my-20 is-outlined', styles.prev)}
-              onClick={previousPage}
+              className={clsx("button is-primary")}
+              onClick={async () => {
+                await onSubmit();
+                closeModal();
+              }}
             >
-              <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
+              Done
             </button>
-          )
-        }
-        <button
-          type="submit"
-          className={clsx('button is-primary my-20', styles.next)}
-          onClick={async () => {
-            await onSubmit();
-            closeModal();
-          }}
-          disabled={!isPluginInstalled}
-        >
-          Done
-        </button>
-        {/* <button
-          type="button"
-          className={clsx('button is-text has-text-primary my-20', styles.skip)}
-          onClick={async () => {
-            await onSubmit();
-            closeModal();
-          }}
-        >
-          Skip for now
-        </button> */}
+          </div>
+        </div>
       </div>
     </>
   );

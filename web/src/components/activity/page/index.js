@@ -75,7 +75,7 @@ const ActivityPage = () => {
         !isEmpty(filter.pr)
       ) {
         filtered = overview.smartcomments.filter((item) => {
-          const fromIndex = item?.user ? findIndex(filter.from, { value: item.userId._id }) : -1;
+          const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
           const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
           const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
