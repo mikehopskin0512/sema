@@ -472,6 +472,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
+    .sort('-createdAt')
     .populate('userId')
     .populate('reaction');
 
