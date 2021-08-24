@@ -124,6 +124,47 @@
   --color-highlight: #{v.$color-dark-dim-highlight};
 }
 
+.theme--dark-high-contrast {
+  --color-border: #{v.$color-light-1};
+
+  --color-sema-bg: #{v.$color-dark-high-contrast-bg};
+  --color-sema-border: #{v.$color-dark-high-contrast-border};
+
+  --color-text-input-bg: #{v.$color-dark-high-contrast-bg};
+  --color-text-input-border: #{v.$color-dark-high-contrast-border};
+  --color-text-input-font: #{v.$color-dark-high-contrast-font};
+
+  --color-tags-border: #{v.$color-dark-high-contrast-tags-container-border};
+  --color-tags-background: #{v.$color-dark-high-contrast-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-high-contrast-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-high-contrast-tags-header-font};
+
+  --color-tag-font: #{v.$color-dark-high-contrast-tag-font};
+  --color-tag-bg: #{v.$color-dark-high-contrast-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-high-contrast-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-high-contrast-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-high-contrast-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-high-contrast-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-high-contrast-add-tags-border};
+
+  --color-title: #{v.$color-dark-high-contrast-title};
+  --color-content: #{v.$color-dark-high-contrast-content};
+
+  --color-suggestion-container: #{v.$color-dark-high-contrast-btn-container};
+  --color-credit-img: invert(1);
+
+  --color-btn-border: #{v.$color-dark-high-contrast-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-high-contrast-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-high-contrast-scroll-border};
+
+  --color-form-border: #{v.$color-dark-high-contrast-form-border};
+
+  --color-highlight: #{v.$color-dark-high-contrast-highlight};
+}
+
 .sema {
   display: flex;
   flex-direction: row;
@@ -384,6 +425,19 @@ h6 {
   .sema-dropdown-trigger .sema-button {
     padding-right: 20px;
     color: var(--color-title);
+
+    :after {
+      content: '';
+      position: absolute;
+      right: 4px;
+      top: 11px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      background: transparent;
+      border-left: 4px solid #000000;
+      border-bottom: 4px solid transparent;
+    }
   }
 
   .sema-button {
@@ -460,7 +514,7 @@ h6 {
     margin-top: 18px;
     font-size: 16px;
     line-height: 19px;
-    color: #508BFF;
+    color: #508bff;
   }
 }
 
