@@ -1,25 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Sidebar from '../adminSidebar';
 
 const withLayout = (Page) => () => {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const isMenuOpen = localStorage.getItem('sema_menu_open');
-    if (isMenuOpen) {
-      setOpen(JSON.parse(isMenuOpen));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('sema_menu_open', JSON.stringify(open));
-  }, [open]);
-
   return (
     <div className="is-flex hero is-flex-direction-row is-fullheight">
-      <Sidebar open={open} setOpen={setOpen} />
+      <Sidebar />
       <div
-        className={`content-wrapper hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white ${open ? 'open' : 'close'}`}
+        className="content-wrapper hero is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white"
       >
         <Page />
       </div>

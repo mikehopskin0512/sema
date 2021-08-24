@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  findIndex, flatten, isEmpty, reverse, uniqBy,
+  findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -147,12 +147,12 @@ const CollectionComments = () => {
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
           <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div> :
-          reverse(commentsFiltered).slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard collectionId={collectionId} data={item} key={item.displayId} />)) }
+          commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard collectionId={collectionId} data={item} key={item.displayId} />)) }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-70">
             <button
               onClick={viewMore}
-              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary"
+              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
               type="button">
               View More
             </button>

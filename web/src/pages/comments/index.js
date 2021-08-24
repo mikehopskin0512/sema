@@ -92,7 +92,7 @@ const SuggestedComments = () => {
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-30">
             <button
               onClick={viewMore}
-              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary"
+              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
               type="button">
               View More
             </button>

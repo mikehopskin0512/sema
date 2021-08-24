@@ -1,9 +1,10 @@
 import React from 'react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThLarge, faUserFriends, faPaperPlane, faFileContract, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import styles from './adminSidebar.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
@@ -35,51 +36,47 @@ MenuItem.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-const AdminSidebar = ({ open, setOpen }) => {
+const AdminSidebar = () => {
   const menus = [
     {
-      name: 'Dashboard',
+      name: 'Dashboard (coming)',
       pathName: '/dashboard',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      icon: <FontAwesomeIcon icon={faThLarge} color="#ffffff" size="lg" />,
     },
     {
       name: 'User Management',
       pathName: '/sema-admin/users',
-      icon: <img src="/img/icons/users.png" alt="" />,
+      icon: <FontAwesomeIcon icon={faUserFriends} color="#ffffff" size="lg" />,
     },
     {
       name: 'Invites',
       pathName: '/sema-admin/invites',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      icon: <FontAwesomeIcon icon={faPaperPlane} color="#ffffff" size="lg" />,
     },
     {
       name: 'Reports',
       pathName: '/sema-admin/reports',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      icon: <FontAwesomeIcon icon={faFileContract} color="#ffffff" size="lg" />,
     },
     {
-      name: 'Smart Comments',
+      name: 'Smart Comment Metrics',
       pathName: '/sema-admin/smart-comments',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
+      icon: <FontAwesomeIcon icon={faFileSignature} color="#ffffff" size="lg" />,
     },
   ];
   return (
     <div
       className={clsx(
         styles.sidebar,
-        styles[open ? 'open' : 'close'],
         'p-10 is-flex is-flex-direction-column is-relative is-fullheight',
       )}
     >
       <div
-        className={`is-flex is-align-items-center is-clickable ${
-          open ? 'p-10' : 'px-5 py-10'
-        }`}
+        className="is-flex is-align-items-center is-clickable p-10"
         onClick={() => Router.push('/dashboard')}
         aria-hidden="true"
       >
-        <img src="/img/logo_short.png" alt="logo" />
-        {open && <span className="has-text-white is-size-4 ml-10">sema</span>}
+        <img src="/img/logo_white.png" alt="logo" />
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
         {menus.map((item) => (
@@ -93,11 +90,6 @@ const AdminSidebar = ({ open, setOpen }) => {
       </div>
     </div>
   );
-};
-
-AdminSidebar.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
 };
 
 export default AdminSidebar;

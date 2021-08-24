@@ -21,15 +21,6 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
 
   const [active, setActive] = useState(isActive ? 'checked' : false);
 
-  const renderStats = (label, value) => (
-    <div className={clsx(
-      'has-background-gray-4 border-radius-8px p-10 is-full-width is-flex is-flex-direction-column is-justify-content-space-between',
-    )}>
-      <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>{label}</p>
-      <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
-    </div>
-  );
-
   const onClickChild = (e) => {
     e.stopPropagation();
   };
@@ -73,16 +64,18 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
             <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>
             <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-              <div className={clsx('py-12 is-flex pl-12', styles.stat)}>
-                {renderStats('Suggested Comments', comments.length)}
-              </div>
-              <div className={clsx('py-12 is-flex pl-12', styles.stat)}>
-                {renderStats('Favorited', 0)}
+              <div className="p-12 is-flex-grow-2 is-flex-flex-wrap is-flex is-align-items-flex-end">
+                <div className={clsx(
+                  'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
+                )}>
+                  <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{comments.length}</p>
+                  <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
+                </div>
               </div>
               {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
-                <div className={clsx('py-12 is-flex pl-12 is-flex-grow-2 pr-12')} onClick={onClickChild} aria-hidden>
+                <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                   <div
-                    className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
+                    className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold py-20',
                       styles['add-button'])}
                     onClick={onClickAddComment}
                     aria-hidden
