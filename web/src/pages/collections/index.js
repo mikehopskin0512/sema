@@ -69,7 +69,7 @@ const CommentCollections = () => {
   };
 
   const onSearch = ({ search }) => {
-    const filtered = collectionsState.filter((item) => item.collectionData.name.toLowerCase().includes(search.toLowerCase()));
+    const filtered = collectionsState.filter((item) => item.collectionData?.name.toLowerCase().includes(search.toLowerCase()) || false);
     setCollections([...filtered]);
   };
 

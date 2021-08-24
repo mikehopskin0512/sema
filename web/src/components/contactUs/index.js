@@ -6,7 +6,7 @@ import styles from './contactUs.module.scss';
 const ContactUs = ({ userVoiceToken, openSupportForm }) => {
   const renderContent = () => (
     <div
-      className='is-flex is-align-content-center is-justify-content-space-between is-full-width px-50 is-align-items-center'
+      className='is-flex is-align-content-center is-justify-content-space-between is-flex-wrap-wrap is-full-width px-50 is-align-items-center'
       style={{maxWidth: '1540px', minHeight: '100px'}}
     >
       <div>
@@ -16,11 +16,24 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
         </div>
       </div>
 
-      <div className="ml-30 is-flex is-flex-direction-row is-justify-content-center is-align-content-center">
+      <div className="ml-30 is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile">
         <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)} type="button">Contact Us</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)}
+            href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
+            target="_blank"
+            rel="noreferrer">
+            Idea Board
+          </a>
+        ) }
+      </div>
+
+      <div className="is-hidden-desktop mt-10">
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)} type="button">Contact Us</button>
+        { userVoiceToken && (
+          <a
+            className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)}
             href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
             target="_blank"
             rel="noreferrer">
