@@ -8,7 +8,7 @@ const EngGuideRow = (props) => {
   const {
     author, body, collections, source, title, _id, tags, slug, collectionId,
   } = props;
-  console.log(collectionId, slug)
+
   const renderLanguages = (languagesArr) => {
     const languages = languagesArr.filter((item) => item.type === 'language');
     if (languages.length > 0) {
