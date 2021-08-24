@@ -16,103 +16,129 @@ $color-light-1: rgb(225, 228, 232);
 $color-light-font: rgb(54, 54, 54);
 $color-dark-font: #c9d1d9;
 $color-dark-dim-font: #adbac7;
+$color-dark-high-contrast-font: #f0f3f6;
 
 $color-light-bg: #fafbfc;
 $color-dark-bg: #0d1117;
 $color-dark-dim-bg: #22272e;
+$color-dark-high-contrast-bg: #010409;
 
 $color-light-border: rgb(225, 228, 232);
 $color-dark-border: #272e33;
 $color-dark-dim-border: #373e47;
+$color-dark-high-contrast-border: #7a828e;
 
 $color-light-tags-container-bg: #fff;
 $color-dark-tags-container-bg: #191a1c;
 $color-dark-dim-tags-container-bg: #1f232b;
+$color-dark-high-contrast-tags-container-bg: #010409;
 
 $color-light-tags-container-border: #d5d8db;
 $color-dark-tags-container-border: #272e33;
 $color-dark-dim-tags-container-border: #373e47;
+$color-dark-high-contrast-tags-container-border: #7a828e;
 
 $color-light-tags-header-bg: #fbfbfb;
 $color-dark-tags-header-bg: #22282c;
 $color-dark-dim-tags-header-bg: #22282c;
+$color-dark-high-contrast-tags-header-bg: #272b33;
 
 $color-light-tags-header-font: #000;
 $color-dark-tags-header-font: #fff;
 $color-dark-dim-tags-header-font: #fff;
+$color-dark-high-contrast-tags-header-font: #fff;
 
 $color-light-tag-bg: whitesmoke;
 $color-dark-tag-bg: #272e33;
 $color-dark-dim-tag-bg: #272e33;
+$color-dark-high-contrast-tag-bg: #272b33;
 
 $color-light-tag-font: rgba(0, 0, 0, 0.7);
 $color-dark-tag-font: #a5a5a5;
 $color-dark-dim-tag-font: #a5a5a5;
+$color-dark-high-contrast-tag-font: #a5a5a5;
 
 $color-light-selected-tag-bg: rgb(54, 54, 54);
 $color-dark-selected-tag-bg: #343c42;
 $color-dark-dim-selected-tag-bg: #343c42;
+$color-dark-high-contrast-selected-tag-bg: #343c42;
 
 $color-light-selected-tag-font: rgb(255, 255, 255);
 $color-dark-selected-tag-font: #d0d0d0;
 $color-dark-dim-selected-tag-font: #d0d0d0;
+$color-dark-high-contrast-selected-tag-font: #d0d0d0;
 
 $color-light-title: #4a4a4a;
 $color-dark-title: #a5a5a5;
 $color-dark-dim-title: #a5a5a5;
+$color-dark-high-contrast-title: #f0f3f6;
 
 $color-light-content: #4a4a4a;
 $color-dark-content: #626262;
 $color-dark-dim-content: #626262;
+$color-dark-high-contrast-content: #d6d9db;
 
 $color-light-btn-container: #fbfbfb;
 $color-dark-btn-container: #0e1218;
 $color-dark-dim-btn-container: #373e47;
+$color-dark-high-contrast-btn-container: #7a828e;
 
 $color-light-btn-border: rgb(225, 228, 232);
 $color-dark-btn-border: #0d1117;
 $color-dark-dim-btn-border: #1f232b;
+$color-dark-high-contrast-btn-border: #010409;
 
 $color-light-scroll-bg: #a8a8a8;
 $color-dark-scroll-bg: #424242;
 $color-dark-dim-scroll-bg: #424242;
+$color-dark-high-contrast-scroll-bg: #424242;
 
 $color-light-scroll-border: #f3f3f3;
 $color-dark-scroll-border: #191a1c;
 $color-dark-dim-scroll-border: #1f232b;
+$color-dark-high-contrast-scroll-border: #010409;
 
 $color-light-form-border: #0366d6;
 $color-dark-form-border: #388bfd;
 $color-dark-dim-form-border: #4184e4;
+$color-dark-high-contrast-form-border: #409eff;
 
 $color-light-add-tags-bg: white;
 $color-dark-add-tags-bg: #272e33;
 $color-dark-dim-add-tags-bg: #272e33;
+$color-dark-high-contrast-add-tags-bg: #272b33;
 
 $color-light-add-tags-font: rgb(54, 54, 54);
 $color-dark-add-tags-font: #d0d0d0;
 $color-dark-dim-add-tags-font: #d0d0d0;
+$color-dark-high-contrast-add-tags-font: #d0d0d0;
 
 $color-light-add-tags-border: 1px dashed rgb(219, 219, 219);
 $color-dark-add-tags-border: 0.75px dashed #a5a5a5;
 $color-dark-dim-add-tags-border: 0.75px dashed #a5a5a5;
+$color-dark-high-contrast-add-tags-border: 0.75px dashed #7a828e;
 
 $color-light-highlight: rgba(0, 104, 255, 0.08);
 $color-dark-highlight: rgba(52, 60, 66, 0.6);
 $color-dark-dim-highlight: rgba(52, 60, 66, 0.6);
+$color-dark-high-contrast-highlight: rgba(52, 60, 66, 0.6);
 
 $color-light-emoji-bg: #fff;
 $color-dark-emoji-bg: #22282c;
 $color-dark-dim-emoji-bg: #22282c;
+$color-dark-high-contrast-emoji-bg: #22282c;
 
 $color-light-emoji-font: #0a0a0a;
 $color-dark-emoji-font: #f0f2f4;
 $color-dark-dim-emoji-font: #f0f2f4;
+$color-dark-high-contrast-emoji-font: #f0f2f4;
 
 $color-light-emoji-bg-hover: #0a0a0a;
 $color-dark-emoji-bg-hover: #343c42;
 $color-dark-dim-emoji-bg-hover: #343c42;
+$color-dark-high-contrast-emoji-bg-hover: #343c42;
 
 $color-light-emoji-font-hover: #000;
 $color-dark-emoji-font-hover: #fff;
 $color-dark-dim-emoji-font-hover: #fff;
+$color-dark-high-contrast-emoji-font-hover: #fff;
