@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  findIndex, flatten, isEmpty, reverse, uniqBy,
+  findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -79,7 +79,7 @@ const CollectionComments = () => {
   };
 
   const onSearch = ({ search, tag, language }) => {
-    const filtered = reverse(comments).filter((item) => {
+    const filtered = comments.filter((item) => {
       const isMatchSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.comment.toLowerCase().includes(search.toLowerCase()) ||
       item.source.name.toLowerCase().includes(search.toLowerCase());
