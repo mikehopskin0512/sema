@@ -43,8 +43,9 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
   const engGuidesToStr = (engGuides) => {
     const links = engGuides?.map((link) => {
       const title = link.title || link.engGuide.source.name;
-      const collectionId = link.engGuide.collections[0];
-      return `\n\n📄 [${title}](${SEMA_ENG_GUIDE_UI_URL}/${collectionId})`;
+      const id = link.engGuide.collections[0];
+      const { slug } = link;
+      return `\n\n📄 [${title}](${SEMA_ENG_GUIDE_UI_URL}/${id}/${slug})`;
     }).join(' ');
     return links || '';
   };
