@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import Router from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDistanceToNowStrict } from 'date-fns';
+import { format, formatDistanceToNowStrict } from 'date-fns';
 import useDebounce from '../../hooks/useDebounce';
 import Badge from '../../components/badge/badge';
 import Table from '../../components/table';
@@ -160,6 +160,11 @@ const UsersPage = () => {
         sorted: false,
       },
       {
+        Header: 'Last Login',
+        accessor: 'lastLogin',
+        sorted: false,
+      },
+      {
         Header: () => (
           <div className='has-text-centered pt-10' style={{ background: '#E9E1F0' }}>
             <div>Invite</div>
@@ -228,6 +233,7 @@ const UsersPage = () => {
       accepted: item.acceptCount,
       id: item._id,
     },
+    lastLogin: item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
     actionStatus: {
       id: item._id,
       status: getStatus(item),
