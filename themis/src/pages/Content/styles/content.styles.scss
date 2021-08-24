@@ -40,6 +40,11 @@
   --color-form-border: #{v.$color-light-form-border};
 
   --color-highlight: #{v.$color-light-highlight};
+
+  --color-emoji-bg: #{v.$color-light-emoji-bg};
+  --color-emoji-font: #{v.$color-light-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-light-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-light-emoji-font-hover};
 }
 
 .theme--dark {
@@ -81,6 +86,11 @@
   --color-form-border: #{v.$color-dark-form-border};
 
   --color-highlight: #{v.$color-dark-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-emoji-font-hover};
 }
 
 .theme--dark-dimmed {
@@ -122,6 +132,11 @@
   --color-form-border: #{v.$color-dark-dim-form-border};
 
   --color-highlight: #{v.$color-dark-dim-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-dim-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-dim-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-dim-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-dim-emoji-font-hover};
 }
 
 .theme--dark-high-contrast {
@@ -163,6 +178,11 @@
   --color-form-border: #{v.$color-dark-high-contrast-form-border};
 
   --color-highlight: #{v.$color-dark-high-contrast-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-high-contrast-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-high-contrast-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-high-contrast-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-high-contrast-emoji-font-hover};
 }
 
 .sema {
@@ -458,9 +478,12 @@ h6 {
   .sema-dropdown-item {
     margin-bottom: 4px;
     margin-top: 0;
+    color: var(--color-emoji-font);
 
     &:hover {
-      background: rgba(0, 129, 167, 0.05);
+      // background: #0081a70d;
+      color: var(--color-emoji-font-hover);
+      background-color: var(--color-emoji-bg-hover);
     }
   }
 
@@ -478,6 +501,7 @@ h6 {
     padding-top: 12px;
     overflow: hidden;
     margin: 0;
+    background: var(--color-emoji-bg);
   }
 }
 
@@ -670,59 +694,59 @@ h6 {
   font-weight: 600;
 }
 
-#sema-reminder-root{
+#sema-reminder-root {
   background: inherit;
   z-index: 2147483647;
-  position:fixed;
+  position: fixed;
   left: calc(95vw - #{v.$reminder-width});
   top: calc(98vh - #{v.$reminder-height});
 }
 
-.reminder-container{
+.reminder-container {
   width: v.$reminder-width;
   height: v.$reminder-height;
   padding: 20px;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 }
 
-.reminder-header{
-  display: flex; 
-  flex: 1; 
-  flex-direction: row; 
-  justify-content: space-between; 
+.reminder-header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.reminder-header > img{
+.reminder-header > img {
   width: 66px;
 }
 
-.reminder-close{
+.reminder-close {
   width: 12px;
   cursor: pointer;
 }
 
-.reminder-hero{
-  display: flex; 
-  flex: 1; 
-  flex-direction: column; 
+.reminder-hero {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   align-items: center;
 }
 
-.reminder-screenshots-container{
-  position: relative; 
-  width: 100%; 
-  height: 200px; 
+.reminder-screenshots-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
   margin-bottom: 22px;
 }
 
-.reminder-screenshot1{
+.reminder-screenshot1 {
   position: absolute;
   width: 158px;
   height: 177px;
 }
 
-.reminder-screenshot2{
+.reminder-screenshot2 {
   position: absolute;
   width: 214px;
   height: 162px;
@@ -735,7 +759,7 @@ h6 {
   font-size: 15px;
   line-height: 19.36px;
   vertical-align: top;
-  color: #394A64;
+  color: #394a64;
   text-align: center;
 }
 
@@ -752,13 +776,13 @@ h6 {
   border-radius: 4px;
 }
 
-.reminder-hero > button > span{
+.reminder-hero > button > span {
   font-weight: 600;
   font-size: 16px;
   line-height: 20px;
 }
 
-.reminder-hero > a{
+.reminder-hero > a {
   color: v.$color-github-button-blue;
   text-decoration: underline;
 }
