@@ -32,7 +32,7 @@ const CollectionComments = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token } = auth;
+  const { token, user } = auth;
   const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -142,7 +142,7 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+          {user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
