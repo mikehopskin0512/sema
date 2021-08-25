@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
+  const [isUserReposLoaded, setUserReposLoaded] = useState(false)
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
@@ -52,11 +53,12 @@ const Dashboard = () => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
-  const getUserRepos = useCallback(() => {
+  const getUserRepos = useCallback(async () => {
     if (identities && identities.length) {
       const githubUser = identities[0];
       const externalIds = githubUser?.repositories?.map((repo) => repo.id);
-      dispatch(fetchRepoDashboard(externalIds, token));
+      await dispatch(fetchRepoDashboard(externalIds, token));
+      setUserReposLoaded(true)
     }
   }, [dispatch, token]);
 
@@ -135,7 +137,7 @@ const Dashboard = () => {
     <>
       <div className='has-background-gray-9 pb-180'>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching || auth.isFetching ? (
+        {repositories.isFetching || !isUserReposLoaded ? (
           <div style={{ height: '400px', display: 'flex' }}>
             <Loader/>
           </div>
