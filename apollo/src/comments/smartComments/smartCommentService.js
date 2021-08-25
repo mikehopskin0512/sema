@@ -442,7 +442,7 @@ export const findByExternalId = async (repoId, populate) => {
     if (populate) {
       query.populate('userId').populate('tags');
     }
-    const comments = await query.exec();
+    const comments = await query.sort({ createdAt: -1 }).exec();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -472,6 +472,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
+    .sort('-createdAt')
     .populate('userId')
     .populate('reaction');
 

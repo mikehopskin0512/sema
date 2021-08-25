@@ -8,43 +8,45 @@ import clsx from "clsx";
 import styles from './globalSearch.module.scss'
 import { getEngGuides } from "../../state/features/engGuides/actions";
 
-const isCollectionNameIncludes = (searchTerm) => {
-  return function({ collectionData }) {
-    const collectionName = collectionData?.name.toLowerCase() || '';
-    return collectionName.includes(searchTerm.toLowerCase())
+const isFieldIncludes = (searchTerm, fieldName) => {
+  return function(searchItem) {
+    const value = searchItem?.[fieldName].toLowerCase() || '';
+    return value.includes(searchTerm.toLowerCase())
   }
-}
-
-const CATEGORIES_TITLES = {
-  COMMENTS_COLLECTIONS: 'suggested comment collections',
-  COMMENTS: 'suggested comments',
-  ENG_GUIDE_COLLECTIONS: 'community engineering guide collections',
-  ENG_GUIDES: 'community engineering guide',
 }
 
 const GlobalSearch = () => {
   const dispatch = useDispatch();
-  const { engGuides } = useSelector((state) => ({
-    engGuides: state.engGuidesState.engGuides,
-  }));
-  const { user, token } = useSelector((state) => state.authState);
+  const { engGuides } = useSelector((state) => state.engGuidesState);
+  const { token } = useSelector((state) => state.authState);
   const { comments } = useSelector((state) => state.commentsState);
-  // const { collections } = user;
   const [searchTerm, setSearchTerm] = useState('');
 
-  const engGuidesComments = useMemo(() => {
-    return engGuides.flatMap(({ collectionData }) => collectionData.comments)
-  },[engGuides])
-  const engGuidesCollections = useMemo(() => {
-    return engGuides.map(({ collectionData }) => collectionData)
-  },[engGuides])
   console.log(comments);
-  const searchItems = {
-    [CATEGORIES_TITLES.COMMENTS_COLLECTIONS]: [],
-    [CATEGORIES_TITLES.COMMENTS]: [],
-    [CATEGORIES_TITLES.ENG_GUIDE_COLLECTIONS]: engGuidesCollections,
-    [CATEGORIES_TITLES.ENG_GUIDES]: engGuidesComments,
-  }
+
+  const engGuidesComments = useMemo(() => {
+    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments)
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments
+  },[engGuides, searchTerm])
+  const engGuidesCollections = useMemo(() => {
+    const collections = engGuides.map(({ collectionData }) => collectionData)
+    return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections
+  },[engGuides, searchTerm])
+  const suggestedCollections = useMemo(() => {
+    const comments = comments.map(({ collectionData }) => collectionData)
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'name')) : comments
+  },[engGuides, searchTerm])
+  const suggestedComments = useMemo(() => {
+    const comments = comments.map(({ collectionData }) => collectionData)
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'name')) : comments
+  },[engGuides, searchTerm])
+
+  const categories = [
+    { title: "suggested comment collections", items: suggestedCollections },
+    { title: "suggested comments", items: suggestedComments },
+    { title: "community engineering guide collections", items: engGuidesCollections },
+    { title: "community engineering guide", items: engGuidesComments },
+  ]
 
   useEffect(() => {
     if (!engGuides.length) {
@@ -59,14 +61,13 @@ const GlobalSearch = () => {
     setSearchTerm(e.target.value);
   };
 
-
   return (
     <div className="is-flex is-relative">
       <div className="control has-icons-left has-icons-right">
         <input
           onChange={onSearchInputChange}
           value={searchTerm}
-          className="input has-background-white"
+          className={clsx(styles['global-search_input'], "input has-background-white")}
           type="input"
           placeholder="Search Collections and Suggested Comments"
         />
@@ -76,16 +77,16 @@ const GlobalSearch = () => {
       </div>
       {searchTerm && (
         <div className={clsx(styles['global-search'])}>
-          {Object.keys(searchItems).map((category) => (
+          {categories.map((category) => (
             <div className={styles['global-search_category']} key={category}>
               <div className={styles['global-search_category-title']}>
-                {category}
+                {category.title}
               </div>
-              {!searchItems[category].length && (
+              {!category.items.length && (
                 <div className={styles['global-search_no-results']}>No results</div>
               )}
-              {searchItems[category].map((item) => (
-                <SearchItem item={item} key={item._id}/>
+              {category.items.map((item) => (
+                <SearchItem item={item} key={item._id} keyword={searchTerm}/>
               ))}
             </div>
           ))}

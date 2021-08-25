@@ -1,11 +1,22 @@
-import { addHours, addDays, addWeeks, isBefore, subYears, isAfter, isEqual, format, isDate } from 'date-fns';
+import {
+  addHours,
+  addDays,
+  addWeeks,
+  isBefore,
+  subYears,
+  isAfter,
+  isEqual,
+  format,
+  isDate,
+  formatDistanceToNowStrict
+} from 'date-fns';
 import * as Json2CSV from 'json2csv';
 import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 import { suggest } from '../../comments/suggestedComments/commentSuggestions';
 import Reaction from '../../comments/reaction/reactionModel';
 
-export const listUsers = async (params) => {
+export const listUsers = async (params, isExport = false) => {
   const { page, perPage, search, status } = params;
 
   const pipeline = [];
@@ -37,11 +48,13 @@ export const listUsers = async (params) => {
       }
     });
 
-    pipeline.push({
-      $match: {
-        $or: statusQuery,
-      },
-    });
+    if (statusQuery.length) {
+      pipeline.push({
+        $match: {
+          $or: statusQuery,
+        },
+      });
+    }
   }
 
   pipeline.push({
@@ -83,14 +96,54 @@ export const listUsers = async (params) => {
       }
     },
     { $sort: { invitedCount: -1 } },
-    { $skip: (page - 1) * perPage },
-    { $limit: perPage }
+    ...!isExport ? [
+      { $skip: (page - 1) * perPage },
+      { $limit: perPage },
+    ] : [],
   ]);
 
   return {
     users,
-    totalCount: totalCount[0]? totalCount[0].total : 0,
+    totalCount: totalCount[0] ? totalCount[0].total : 0,
   };
+};
+
+export const exportUsers = async (params) => {
+  const { users } = await listUsers(params, true);
+
+  const getStatus = (user) => {
+    if (user.isActive && user.isWaitlist) return 'Waitlisted';
+    if (user.isActive && !user.isWaitlist) return 'Registered';
+    if (!user.isActive && user.isWaitlist) return 'Blocked';
+
+    return 'Disabled';
+  };
+
+  const mappedData = users.map((user) => ({
+    Name: fullName(user),
+    Status: getStatus(user),
+    'Active Date': ((user.createdAt) ? formatDistanceToNowStrict(new Date(user.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
+    Email: user.username,
+    'Invite Available': user.inviteCount,
+    'Invite Pending': user.pendingCount,
+    'Invite Accepted': user.acceptCount,
+  }));
+
+  const { Parser } = Json2CSV;
+
+  const fields = [
+    'Name',
+    'Status',
+    'Active Date',
+    'Email',
+    'Invite Available',
+    'Invite Pending',
+    'Invite Accepted',
+  ];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+  return csv;
 };
 
 export const findUser = async (userId) => {
