@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { uniqBy } from 'lodash';
+import { flatten } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
