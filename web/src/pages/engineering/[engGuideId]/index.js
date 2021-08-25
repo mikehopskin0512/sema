@@ -6,13 +6,12 @@ import {
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
 import CommentFilter from '../../../components/comment/commentFilter';
 import EngGuideTable from '../../../components/engGuides/engGuideTable';
 import withLayout from '../../../components/layout';
 import Helmet from '../../../components/utils/Helmet';
-
 import { engGuidesOperations } from '../../../state/features/engGuides';
+import GlobalSearch from "../../../components/globalSearch";
 
 // const NUM_PER_PAGE = 10;
 
@@ -120,6 +119,9 @@ const CollectionEngGuides = () => {
           <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
             {engGuide.comments.length} suggested comments
           </span>
+          <div style={{ marginLeft: 'auto' }}>
+            <GlobalSearch />
+          </div>
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         <EngGuideTable data={engGuideFilter} />

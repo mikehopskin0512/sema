@@ -8,16 +8,15 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import styles from '../collection.module.scss';
-
 import AddSuggestedCommentModal from '../../../components/comment/addSuggestedCommentModal';
 import CommentFilter from '../../../components/comment/commentFilter';
 import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
 import withLayout from '../../../components/layout';
 import Helmet from '../../../components/utils/Helmet';
 import Toaster from '../../../components/toaster';
-
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
+import GlobalSearch from "../../../components/globalSearch";
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -99,6 +98,7 @@ const CollectionComments = () => {
     });
     setCommentsFiltered([...filtered]);
   };
+  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
 
   useEffect(() => {
     const body = document.querySelector('body');
@@ -135,14 +135,17 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+          {isAddCommentActive && (
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
               onClick={openNewSuggestedCommentModal}>
               Add New Comment
             </button>
-          ) : null}
+          )}
+          <div style={{ marginLeft: 'auto' }}>
+            <GlobalSearch />
+          </div>
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
