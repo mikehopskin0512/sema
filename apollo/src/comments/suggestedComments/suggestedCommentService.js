@@ -79,41 +79,36 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
         },
       },
     },
-    // {
-    //   $project: {
-    //     _id: 0,
-    //     comments: {
-    //       $let: {
-    //         vars: {
-    //           userComments: {
-    //             $reduce: {
-    //               input: '$collections.comments',
-    //               initialValue: [],
-    //               in: { $setUnion: ['$$value', '$$this'] },
-    //             },
-    //           },
-    //         },
-    //         in: { $setIntersection: ['$$userComments', searchResults] },
-    //       },
-    //     },
-    //   },
-    // },
-    // {
-    //   $lookup: {
-    //     from: 'suggestedComments',
-    //     localField: 'comments',
-    //     foreignField: '_id',
-    //     as: 'comments',
-    //   },
-    // },
+    {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: { $setUnion: ['$$value', '$$this'] },
+                },
+              },
+            },
+            in: { $setIntersection: ['$$userComments', searchResults] },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'comments',
+      },
+    },
   ];
 
-  const [{ collections }] = await User.aggregate(userActiveCommentsQuery);
-  const userComments = [...new Set(collections.map(({ comments }) => (comments)).join('').split(','))];
-  const commentsId = searchResults.filter((comment) => userComments.includes(comment.toString()));
-  const comments = await SuggestedComment
-    .find({ _id: { $in: commentsId } })
-    .populate({ path: 'engGuides.engGuide', model: 'EngGuide' });
+  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
   return comments;
 };
 
