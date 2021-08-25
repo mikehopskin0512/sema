@@ -31,7 +31,7 @@ const SearchItem = ({ item, keyword }) => {
           {tags.map((tag) => (
             <div
               className="sema-tag sema-is-rounded"
-              key={tag._id}
+              key={tag.label}
             >{tag.label}
             </div>
           ))}

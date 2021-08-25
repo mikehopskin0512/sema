@@ -18,12 +18,12 @@ const isFieldIncludes = (searchTerm, fieldName) => {
 const GlobalSearch = () => {
   const dispatch = useDispatch();
   const { engGuides } = useSelector((state) => state.engGuidesState);
-  const { token } = useSelector((state) => state.authState);
+  const { user, token } = useSelector((state) => state.authState);
+  const { collections } = user
   const { comments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
 
-  console.log(comments);
-
+  //TODO: it can be so heavy for the frontend in future
   const engGuidesComments = useMemo(() => {
     const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments)
     return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments
@@ -33,12 +33,11 @@ const GlobalSearch = () => {
     return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections
   },[engGuides, searchTerm])
   const suggestedCollections = useMemo(() => {
-    const comments = comments.map(({ collectionData }) => collectionData)
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'name')) : comments
+    const _collections = collections?.map(({ collectionData }) => collectionData)
+    return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections
   },[engGuides, searchTerm])
   const suggestedComments = useMemo(() => {
-    const comments = comments.map(({ collectionData }) => collectionData)
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'name')) : comments
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments
   },[engGuides, searchTerm])
 
   const categories = [
@@ -78,7 +77,7 @@ const GlobalSearch = () => {
       {searchTerm && (
         <div className={clsx(styles['global-search'])}>
           {categories.map((category) => (
-            <div className={styles['global-search_category']} key={category}>
+            <div className={styles['global-search_category']} key={category.title}>
               <div className={styles['global-search_category-title']}>
                 {category.title}
               </div>
@@ -86,7 +85,11 @@ const GlobalSearch = () => {
                 <div className={styles['global-search_no-results']}>No results</div>
               )}
               {category.items.map((item) => (
-                <SearchItem item={item} key={item._id} keyword={searchTerm}/>
+                <SearchItem
+                  key={item._id}
+                  keyword={searchTerm}
+                  item={item}
+                />
               ))}
             </div>
           ))}
