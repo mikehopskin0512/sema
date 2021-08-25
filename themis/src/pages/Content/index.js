@@ -57,9 +57,13 @@ chrome.runtime.onMessage.addListener((request) => {
 });
 
 const checkLoggedIn = async () => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
-    store.dispatch(updateSemaUser({ ...response }));
-  });
+  try {
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
+      store.dispatch(updateSemaUser({ ...response }));
+    });
+  } catch (error) {
+    console.log('Sema Code Assistant extension is disabled');
+  }
 };
 
 checkLoggedIn();
