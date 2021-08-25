@@ -1,35 +1,23 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import styles from './collection.module.scss';
 import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
-import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
+import GlobalSearch from '../../components/globalSearch';
 
 const NUM_PER_PAGE = 9;
-const isCollectionNameIncludes = (searchTerm) => {
-  return function({ collectionData }) {
-    const collectionName = collectionData?.name.toLowerCase() || '';
-    return collectionName.includes(searchTerm.toLowerCase())
-  }
-}
 
 const CommentCollections = () => {
   const { user } = useSelector((state) => state.authState);
   const { collections } = user;
   const [page, setPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
   const [collectionId, setCollectionId] = useState(null);
   const isNewCommentModalOpen = !!collectionId;
-  const filteredCollections = searchTerm ?
-    collections.filter(isCollectionNameIncludes(searchTerm)) :
-    collections
-  const activeCollections = filteredCollections.filter((collection) => collection.isActive);
-  const otherCollections = filteredCollections.filter((collection) => !collection.isActive);
+  const activeCollections = collections.filter((collection) => collection.isActive);
+  const otherCollections = collections.filter((collection) => !collection.isActive);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
@@ -42,18 +30,9 @@ const CommentCollections = () => {
   const closeNewSuggestedCommentModal = () => {
     setCollectionId(null);
   };
-
   const viewMore = () => {
     setPage(page + 1);
   };
-
-  const clearSearchTerm = () => {
-    setSearchTerm('')
-  }
-
-  const onSearchInputChange = (e) => {
-    setSearchTerm(e.target.value)
-  }
 
   return (
     <div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
@@ -64,32 +43,7 @@ const CommentCollections = () => {
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Suggested Comments
           </p>
-          <div className=" is-flex is-flex-wrap-wrap">
-            <form className="mr-25 my-5" onSubmit={(e) => e.preventDefault()}>
-              <div className="control has-icons-left has-icons-right">
-                <input
-                  onChange={onSearchInputChange}
-                  value={searchTerm}
-                  className="input is-small has-background-white"
-                  type="input"
-                  placeholder="Search comment collections"
-                />
-                <span className="icon is-small is-left">
-                  <FontAwesomeIcon icon={faSearch} />
-                </span>
-              </div>
-              {searchTerm && (
-                <button
-                  className="button is-text has p-0 is-absolute is-size-8 has-text-primary"
-                  type="button"
-                  onClick={clearSearchTerm}
-                >
-                  Clear Search
-                </button>
-              )}
-            </form>
-            <CommentsViewButtons />
-          </div>
+          <GlobalSearch />
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">
