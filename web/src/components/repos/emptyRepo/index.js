@@ -24,7 +24,7 @@ const EmptyRepo = () => {
               <h1 className="has-text-weight-semibold is-size-3 mt-15">{title1}</h1>
               <h2 className={clsx('is-size-5 pb-20', styles.subtitle)}>{subtitle1}</h2>
               <a href="https://github.com">
-                <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review codes on Github</button>
+                <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review some code on Github</button>
               </a>
               <div className="columns">
                 {
