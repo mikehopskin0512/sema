@@ -34,7 +34,7 @@ const CollectionEngGuides = () => {
     engGuideState: state.engGuidesState,
   }));
 
-  const { engGuideId } = router.query;
+  const { collectionId } = router.query;
   const { token } = auth;
   const { engGuides, isFetching } = engGuideState;
 
@@ -85,11 +85,11 @@ const CollectionEngGuides = () => {
   }, [engGuide]);
 
   useEffect(() => {
-    const collection = find(engGuides, { collectionData: { _id: engGuideId } });
+    const collection = find(engGuides, { collectionData: { _id: collectionId } });
     if (collection) {
       setEngGuide(collection.collectionData);
     }
-  }, [engGuideId, engGuides]);
+  }, [collectionId, engGuides]);
 
   if (isFetching && !engGuide) {
     return (
@@ -103,13 +103,13 @@ const CollectionEngGuides = () => {
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href="/collections" className="is-hidden-mobile">
+          <a href="/guides" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-              <li className="is-active has-text-weight-semibold"><a href={`/engineering-guidelines/${engGuideId}`}>{engGuide.name}</a></li>
+              <li><a href="/guides" className="has-text-grey">Community Eng Guides</a></li>
+              <li className="is-active has-text-weight-semibold"><a href={`/engineering-guidelines/${collectionId}`}>{engGuide.name}</a></li>
             </ul>
           </nav>
         </div>
@@ -122,7 +122,7 @@ const CollectionEngGuides = () => {
           </span>
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
-        <EngGuideTable data={engGuideFilter} />
+        <EngGuideTable data={engGuideFilter} collectionId={collectionId} />
       </div>
     </div>
   );

@@ -42,3 +42,43 @@ export const getAllEngGuides = async () => {
     return error;
   }
 };
+
+export const create = async (engGuide) => {
+  try {
+    const {
+      displayId, title, slug, body, author,
+      source,
+      collections,
+      tags,
+    } = engGuide;
+    const newEngGuide = new EngGuide({
+      displayId, 
+      title, 
+      slug, 
+      body, 
+      author,
+      source,
+      collections,
+      tags,
+    });
+    const savedEngGuide = await newEngGuide.save();
+    return savedEngGuide;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+}
+
+export const findBySlug = async (slug) => {
+  try {
+    const query = Repositories.find({ slug });
+    const engGuide = await query.exec();
+
+    return engGuide;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+}
