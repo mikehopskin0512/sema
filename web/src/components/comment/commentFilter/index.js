@@ -58,8 +58,8 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
         <div className="is-flex">
           <div className="is-flex-grow-1 p-5">
             <div className={clsx('select is-small', styles.select)}>
-              <select className={clsx('has-background-white', styles.select)} {...register('tag')} onChange={onChangeTag}>
-                <option value="" selected>Tag</option>
+              <select defaultValue="" className={clsx('has-background-white', styles.select)} {...register('tag')} onChange={onChangeTag}>
+                <option value="">Tag</option>
                 {tags.length > 0 ?
                   sortBy(tags, 'label').map((item) => <option value={item.label} key={`tag-${item.label}`}>{item.label}</option>) :
                   <option value="_" disabled>No options</option> }
@@ -68,8 +68,8 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
           </div>
           <div className="is-flex-grow-1 p-5">
             <div className={clsx('select is-small', styles.select)}>
-              <select className={clsx('has-background-white', styles.select)} {...register('language')} onChange={onChangeLanguage}>
-                <option value="" selected>Language</option>
+              <select defaultValue="" className={clsx('has-background-white', styles.select)} {...register('language')} onChange={onChangeLanguage}>
+                <option value="">Language</option>
                 {languages.length > 0 ?
                   sortBy(languages, 'label').map((item) => <option value={item.label} key={`lang-${item.label}`}>{item.label}</option>) :
                   <option value="_" disabled>No options</option>}

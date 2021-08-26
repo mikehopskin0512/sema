@@ -6,6 +6,7 @@ import User from '../../users/userModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
+import { fullName } from '../../shared/utils';
 
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
@@ -201,31 +202,34 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
   };
 };
 
-export const create = async (suggestedComment) => {
+const makeTagsList = async (tags) => {
+      const { existingTags, newTags } = tags;
+  let savedTags = [];
+  if (newTags && newTags.length > 0) {
+        savedTags = await createTags(newTags);
+      }
+      const existingTagsArr = await findTags(existingTags.map(id => ObjectId(id)));
+  const suggestedCommentTags = [...existingTagsArr, ...savedTags].map((item) => ({
+        label: item.label,
+        type: item.type,
+    tag: ObjectId(item._id),
+  }));
+  return suggestedCommentTags;
+};
+
+const create = async (suggestedComment) => {
   try {
     const { title, comment, source, tags } = suggestedComment;
     let suggestedCommentTags = [];
     if (tags) {
-      const { existingTags, newTags } = tags;
-      let savedTags = []
-      if (newTags.length > 0) {
-        savedTags = await createTags(newTags);
-      }
-      const existingTagsArr = await findTags(existingTags.map(id => ObjectId(id)));
-      const savedTagObjects = [...existingTagsArr, ...savedTags].map((item) => {
-      return{
-        label: item.label,
-        type: item.type,
-        tag: ObjectId(item._id)
-      }});
-      suggestedCommentTags = savedTagObjects;
+      suggestedCommentTags = await makeTagsList(tags);
     }
     const newSuggestedComment = new SuggestedComment({
       title,
       comment,
       source,
       tags: suggestedCommentTags,
-    })
+    });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
   } catch (err) {
@@ -234,9 +238,78 @@ export const create = async (suggestedComment) => {
     throw (error);
   }
 };
+
+const update = async (id, body) => {
+  try {
+    const { tags } = body;
+    if (tags) {
+      body.tags = await makeTagsList(tags);
+    }
+    const suggestedComment = await SuggestedComment.findById(id);
+    suggestedComment.set(body);
+    await suggestedComment.save();
+
+    return suggestedComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+const bulkCreateSuggestedComments = async (comments, user) => {
+  try {
+    const suggestedComments = await Promise.all(comments.map(async (comment) => ({
+      ...comment,
+      ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+      author: fullName(user.user),
+    })));
+
+    return await SuggestedComment.create(suggestedComments);
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+const bulkUpdateSuggestedComments = async (comments) => {
+  try {
+    const suggestedComments = await Promise.all(comments.map(async (comment) => ({
+      ...comment,
+      ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+    })));
+
+    return await Promise.all(suggestedComments.map(async (item) => {
+      const result = await SuggestedComment.updateOne({ _id: item._id }, { $set: { ...item } });
+      return result;
+    }));
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+const getSuggestedCommentsByIds = async (params) => {
+  const query = SuggestedComment.find();
+
+  if (params.comments) {
+    query.where('_id', { $in: params.comments });
+  }
+
+  const suggestedComments = await query.exec();
+  const totalCount = await SuggestedComment.countDocuments(query);
+  return { suggestedComments, totalCount };
+};
+
 module.exports = {
   buildSuggestedCommentsIndex,
   searchComments,
   suggestCommentsInsertCount,
   create,
+  update,
+  bulkCreateSuggestedComments,
+  bulkUpdateSuggestedComments,
+  getSuggestedCommentsByIds,
 };
