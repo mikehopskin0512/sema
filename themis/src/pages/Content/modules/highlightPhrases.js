@@ -1079,6 +1079,6 @@ const phrases = [
   'wsdl file containing sensitive information',
   'xml external entity reference',
   'xml injection',
-  "ye canna' change"
+  "ye canna' change",
 ];
 export default phrases;
