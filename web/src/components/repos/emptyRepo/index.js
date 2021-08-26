@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import Lottie from 'react-lottie-player';
 import clsx from 'clsx';
 import styles from './emptyRepo.module.scss';
 import { content } from './content';
 
 const EmptyRepo = () => {
+  const [hovered, setHovered] = useState(null);
   const [title1] = useState('No Smart Repos Yet!');
   const [subtitle1] = useState('Make some code reviews on Github with the Sema Plugin installed and your Repos will appear here.');
 
@@ -13,6 +15,14 @@ const EmptyRepo = () => {
     const rest = arr.slice(4, arr.length).join(' ');
     formatted = `<strong>${formatted}</strong>`;
     return `${formatted} ${rest}`;
+  };
+
+  const onHover = (item) => {
+    setHovered(item);
+  };
+
+  const onRemoveHover = () => {
+    setHovered(null);
   };
 
   return (
@@ -26,14 +36,23 @@ const EmptyRepo = () => {
               <div className="columns">
                 {
                   content.map((d, i) => {
-                    const { img, title, subtitle } = d;
+                    const { img, title, subtitle, animationData } = d;
                     const sub = formatSubtitle(subtitle);
                     return (
                       <React.Fragment key={i}>
                         <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
                           <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
-                            <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}>
-                              <img src={img} alt="gif" className="is-full-width" />
+                            <div 
+                              className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}
+                              onMouseEnter={() => onHover(title)}
+                              onMouseLeave={() => onRemoveHover()}
+                            >
+                              <Lottie
+                                play={hovered === title}
+                                loop
+                                animationData={animationData}
+                                style={{ marginBottom: 10 }}
+                              />
                             </div>
                             <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
                             <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
