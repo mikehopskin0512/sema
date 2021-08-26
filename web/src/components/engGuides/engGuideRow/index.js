@@ -7,7 +7,7 @@ import Checkbox from '../../checkbox';
 
 const EngGuideRow = (props) => {
   const {
-    author, body, collections, source, title, _id, tags, selected, handleSelectChange,
+    author, body, collections, source, title, _id, tags, selected, handleSelectChange, slug, collectionId,
   } = props;
 
   const renderLanguages = (languagesArr) => {
@@ -29,7 +29,7 @@ const EngGuideRow = (props) => {
   };
 
   const onClickRow = () => {
-    window.location = `/engineering/guide/${_id}`;
+    window.location = `/guides/${collectionId}/${slug}`;
   };
 
   return (
@@ -40,9 +40,9 @@ const EngGuideRow = (props) => {
             <Checkbox value={selected} onChange={(value) => handleSelectChange(_id, value)} />
           </div>
           <div className={clsx('is-flex is-flex-direction-column is-justify-content-center', styles.document)}>
-          <p className="has-text-weight-semibold is-size-5">{title}</p>
-          <p className={clsx('is-size-6', styles.body)}>{body}</p>
-        </div>
+            <p className="has-text-weight-semibold is-size-5">{title}</p>
+            <p className={clsx('is-size-6', styles.body)}>{body}</p>
+          </div>
         </div>
       </td>
       <td className="py-15 has-background-white px-10">
@@ -85,6 +85,8 @@ EngGuideRow.defaultProps = {
   tags: [],
   selected: false,
   handleSelectChange: () => {},
+  slug: '',
+  collectionId: '',
 };
 
 EngGuideRow.propTypes = {
@@ -97,6 +99,8 @@ EngGuideRow.propTypes = {
   tags: PropTypes.array,
   selected: PropTypes.bool,
   handleSelectChange: PropTypes.func,
+  slug: PropTypes.string,
+  collectionId: PropTypes.string,
 };
 
 export default EngGuideRow;

@@ -9,7 +9,7 @@ import Checkbox from '../../checkbox';
 
 const defaultDate = '07/01/2021';
 
-const SuggestedCommentCard = ({ data, selected, onSelectChange }) => {
+const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) => {
   const {
     author = '',
     comment = '',
@@ -69,7 +69,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange }) => {
         { engGuides.length > 0 ? (
           <p className="is-size-6 has-text-deep-black">
             <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/engineering/guide/${engGuides[0].engGuide?._id}`}>
+            <a href={`/guides/${collectionId}/${engGuides[0].engGuide?.slug}`}>
               <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
             </a>
           </p>
@@ -85,6 +85,7 @@ SuggestedCommentCard.propTypes = {
   data: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
   onSelectChange: PropTypes.func.isRequired,
+  collectionId: PropTypes.string.isRequired,
 };
 
 export default SuggestedCommentCard;

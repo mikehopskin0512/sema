@@ -172,6 +172,7 @@ const CollectionComments = () => {
               <SuggestedCommentCard
                 data={item}
                 key={item._id || index}
+                collectionId={collectionId}
                 selected={!!selectedComments.find((g) => g === item._id)}
                 onSelectChange={handleSelectChange}
               />

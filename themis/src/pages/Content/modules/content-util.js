@@ -357,7 +357,7 @@ export async function writeSemaToGithub(textarea) {
     createSmartComment(comment).then((smartComment) => {
       store.dispatch(addSmartComment(smartComment));
     });
-    
+
     const semaIds = getSemaIds($(textarea).attr('id'));
     store.dispatch(resetSemaStates(semaIds));
   }

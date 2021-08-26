@@ -5,7 +5,7 @@ import EngGuideRow from '../engGuideRow';
 import styles from './engGuideTable.module.scss';
 import Checkbox from '../../checkbox';
 
-const EngGuideTable = ({ data, selectedGuides, handleSelectChange, handleSelectAllChange }) => (
+const EngGuideTable = ({ data, selectedGuides, handleSelectChange, handleSelectAllChange, collectionId }) => (
   <div className={clsx('table-container', styles['table-wrapper'])}>
     <table className={clsx('table is-fullwidth my-25', styles.table)}>
       <thead className={clsx('is-fullwidth', styles.thead)}>
@@ -34,6 +34,7 @@ const EngGuideTable = ({ data, selectedGuides, handleSelectChange, handleSelectA
       <tbody className="is-fullwidth">
         {data.map((item) => (
           <EngGuideRow
+            collectionId={collectionId}
             selected={!!selectedGuides.find((g) => g === item._id)}
             handleSelectChange={handleSelectChange}
             {...item}
@@ -50,6 +51,7 @@ EngGuideTable.defaultProps = {
   selectedGuides: [],
   handleSelectChange: () => {},
   handleSelectAllChange: () => {},
+  collectionId: '',
 };
 
 EngGuideTable.propTypes = {
@@ -57,6 +59,7 @@ EngGuideTable.propTypes = {
   selectedGuides: PropTypes.array,
   handleSelectChange: PropTypes.func,
   handleSelectAllChange: PropTypes.func,
+  collectionId: PropTypes.string,
 };
 
 export default EngGuideTable;

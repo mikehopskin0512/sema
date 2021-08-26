@@ -50,16 +50,20 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
-const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+// const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
 
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
 
 const checkLoggedIn = async () => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
-    store.dispatch(updateSemaUser({ ...response }));
-  });
+  try {
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
+      store.dispatch(updateSemaUser({ ...response }));
+    });
+  } catch (error) {
+    console.log('Sema Code Assistant extension is disabled');
+  }
 };
 
 checkLoggedIn();

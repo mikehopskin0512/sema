@@ -5,11 +5,15 @@ import { flatten, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { alertOperations } from '../../../../state/features/alerts';
 
-import styles from '../../engineering.module.scss';
+const { triggerAlert, clearAlert } = alertOperations;
+
+import styles from '../../guide.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
+import Toaster from '../../../../components/toaster';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 
@@ -38,18 +42,33 @@ const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [engGuideData, setEngGuideData] = useState(initialEngGuideData);
-  const { auth, engGuideState } = useSelector((state) => ({
+  const { auth, engGuideState, alerts } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
+    alerts: state.alertsState,
   }));
 
   const { token } = auth;
-  const { engGuideId } = router.query;
+  const { slug, collectionId } = router.query;
   const { engGuides } = engGuideState;
+  const { showAlert, alertType, alertLabel } = alerts;
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   useEffect(() => {
     dispatch(getEngGuides());
   }, [dispatch, token]);
+
+  useEffect(() => {
+    if (!slug || slug === "undefined") {
+      dispatch(triggerAlert('Sorry! This page doesn\'t have a slug. You\'ll be redirected to the previous page.', 'error'));
+      setTimeout(() => router.back(), 1000);
+    }
+  }, []);
 
   useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
@@ -57,13 +76,13 @@ const EngineeringGuidePage = () => {
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment._id === engGuideId)[0],
+        data: comments.filter((comment) => comment.slug === slug)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [engGuideId, engGuides]);
+  }, [slug, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
@@ -107,17 +126,22 @@ const EngineeringGuidePage = () => {
   return (
     <div className="hero">
       <Helmet title="Engineering Guide" />
+      <Toaster
+        type={alertType}
+        message={alertLabel}
+        showAlert={showAlert}
+      />
       <div className="hero-body pb-300">
         { engGuideData ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">
-              <a href="/engineering" className="is-hidden-mobile">
+              <a href={`/guides/${collectionId}`} className="is-hidden-mobile">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
-                  <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${engGuideData._id}`}>{engGuideData.name}</a></li>
+                  <li><a href={`/guides/${collectionId}`} className="has-text-grey">Community Eng Guides</a></li>
+                  <li className="is-active has-text-weight-semibold"><a href={`/guides/${collectionId}`}>{engGuideData.name}</a></li>
                 </ul>
               </nav>
             </div>
