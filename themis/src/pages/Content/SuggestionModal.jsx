@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MAX_CHARACTER_LENGTH } from './constants';
+import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from './constants';
 import GuideLink from './GuideLink';
 
 const truncate = (content) => {
@@ -41,9 +41,11 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
-    const links = engGuides?.map(({ engGuide }) => {
-      const { name, url } = engGuide.source;
-      return `\n\n📄 [${name}](${url})`;
+    const links = engGuides?.map(({ title, engGuide, slug }) => {
+      const caption = title || engGuide.source?.name;
+      // eslint-disable-next-line no-underscore-dangle
+      const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+      return `\n\n📄 [${caption}](${url})`;
     }).join(' ');
     return links || '';
   };

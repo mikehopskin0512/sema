@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import EngGuideRow from '../engGuideRow';
 import styles from './engGuideTable.module.scss';
 
-const EngGuideTable = ({ data }) => (
+const EngGuideTable = ({ data, collectionId }) => (
   <div className={clsx('table-container', styles['table-wrapper'])}>
     <table className={clsx('table is-fullwidth my-25', styles.table)}>
       <thead className={clsx('is-fullwidth', styles.thead)}>
@@ -18,7 +18,7 @@ const EngGuideTable = ({ data }) => (
         </tr>
       </thead>
       <tbody className="is-fullwidth">
-        {data.map((item) => (<EngGuideRow {...item} key={`guide-${item._id}`} />))}
+        {data.map((item) => (<EngGuideRow {...item} collectionId={collectionId} key={`guide-${item._id}`} />))}
       </tbody>
     </table>
   </div>
@@ -26,10 +26,12 @@ const EngGuideTable = ({ data }) => (
 
 EngGuideTable.defaultProps = {
   data: [],
+  collectionId: '',
 };
 
 EngGuideTable.propTypes = {
   data: PropTypes.array,
+  collectionId: PropTypes.string,
 };
 
 export default EngGuideTable;

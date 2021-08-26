@@ -8,6 +8,7 @@ export const { SEMA_CLIENT_SECRET } = process.env;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
+export const SEMA_ENG_GUIDE_UI_URL = `${SEMA_UI_URL}/guides`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
@@ -216,7 +217,7 @@ export const SEMA_ICON_ANCHOR_LIGHT = `
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#586069"/>
       </svg>
     </a>
-  </span>  
+  </span>
 `;
 
 export const SEMA_ICON_ANCHOR_DARK = `
@@ -239,6 +240,16 @@ export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
   </span>
 `;
 
+export const SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST = `
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#f0f3f6"/>
+      </svg>
+    </a>
+  </span>
+`;
+
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
 
@@ -255,5 +266,10 @@ export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
 export const LIGHT = 'light';
 export const DARK = 'dark';
 export const DARK_DIMMED = 'dark_dimmed';
+export const DARK_HIGH_CONTRAST = 'dark_high_contrast';
 
 export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
+
+export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
+
+export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';

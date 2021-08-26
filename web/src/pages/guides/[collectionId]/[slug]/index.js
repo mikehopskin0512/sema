@@ -7,11 +7,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faLinkedinIn, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { alertOperations } from '../../../../state/features/alerts';
 
-import styles from '../../engineering.module.scss';
+const { triggerAlert, clearAlert } = alertOperations;
+
+import styles from '../../guide.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
+import Toaster from '../../../../components/toaster';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 
@@ -40,13 +44,14 @@ const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [engGuideData, setEngGuideData] = useState(initialEngGuideData);
-  const { auth, engGuideState } = useSelector((state) => ({
+  const { auth, engGuideState, alerts } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
+    alerts: state.alertsState,
   }));
 
   const { token } = auth;
-  const { query: { engGuideId }, asPath } = router;
+  const { query: { collectionId, slug }, asPath } = router;
   const { engGuides } = engGuideState;
   const {
     name,
@@ -62,10 +67,24 @@ const EngineeringGuidePage = () => {
   } = data;
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}${asPath}`;
+  const { showAlert, alertType, alertLabel } = alerts;
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   useEffect(() => {
     dispatch(getEngGuides());
   }, [dispatch, token]);
+
+  useEffect(() => {
+    if (!slug || slug === "undefined") {
+      dispatch(triggerAlert('Sorry! This page doesn\'t have a slug. You\'ll be redirected to the previous page.', 'error'));
+      setTimeout(() => router.back(), 1000);
+    }
+  }, []);
 
   useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
@@ -73,13 +92,13 @@ const EngineeringGuidePage = () => {
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment._id === engGuideId)[0],
+        data: comments.filter((comment) => comment.slug === slug)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [engGuideId, engGuides]);
+  }, [slug, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
@@ -96,7 +115,7 @@ const EngineeringGuidePage = () => {
   };
 
   const formatText = (text) => {
-    const newText = text.split('\n').map((str) => {
+    const newText = text.split('\n').map((str, index) => {
       if (
         str.toLowerCase() === 'introduction' ||
         str.toLowerCase() === 'rationale' ||
@@ -104,18 +123,18 @@ const EngineeringGuidePage = () => {
         str.toLowerCase() === 'considerations'
       ) {
         return (
-          <b className="py-10">{str}</b>
+          <b className="py-10" key={`str-${index}`}>{str}</b>
         );
       }
       if (str.toLowerCase() === 'links to learn more') {
         return (
-          <div className="py">
+          <div className="py" key={`str-${index}`}>
             <div className="is-divider" />
             <b>{str}</b>
           </div>
         );
       }
-      return <p className="pb-10">{str}</p>;
+      return <p className="pb-10" key={`str-${index}`}>{str}</p>;
     });
     return newText;
   };
@@ -129,17 +148,22 @@ const EngineeringGuidePage = () => {
         <meta property='og:url' content={url} />
         <meta property='og:type' content='website' />
       </Helmet>
+      <Toaster
+        type={alertType}
+        message={alertLabel}
+        showAlert={showAlert}
+      />
       <div className="hero-body pb-300">
         { data ? (
           <>
             <div className="is-flex is-align-items-center px-10 mb-15">
-              <a href="/engineering" className="is-hidden-mobile">
+              <a href={`/guides/${collectionId}`} className="is-hidden-mobile">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
-                  <li><a href="/engineering" className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/engineering/guide/${_id}`}>{name}</a></li>
+                  <li><a href={`/guides/${collectionId}`} className="has-text-grey">Community Eng Guides</a></li>
+                  <li className="is-active has-text-weight-semibold"><a href={`/guides/${collectionId}`}>{name}</a></li>
                 </ul>
               </nav>
             </div>

@@ -45,7 +45,7 @@ const initialize = async (ctx) => {
   if (
     !(ctx.pathname).includes('/login') &&
     !(ctx.pathname).includes('/onboarding') &&
-    !(ctx.pathname).includes('/engineering') &&
+    !(ctx.pathname).includes('/guides') &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset')
   ) {
