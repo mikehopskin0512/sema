@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import SuggestionModal from './SuggestionModal';
+import SuggestionModal from './components/SuggestionModal';
 import { SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
 
 import {
