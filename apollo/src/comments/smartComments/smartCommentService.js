@@ -370,7 +370,7 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subDays(date, 1) } },
+            { createdAt: { $gt: subDays(date, 30) } },
             { createdAt: { $lte: date } },
           ],
         },
@@ -382,7 +382,7 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subWeeks(date, 1) } },
+            { createdAt: { $gt: subWeeks(date, 8) } },
             { createdAt: { $lte: date } },
           ],
         },
@@ -394,13 +394,15 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subMonths(date, 1) } },
+            { createdAt: { $gt: subMonths(date, 3) } },
             { createdAt: { $lte: date } },
           ],
         },
       },
       ...groupQuery,
     ]);
+    
+    const registeredCount = await User.countDocuments({ isActive: true });
 
     const totalDayRepos = oneDayRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
     const totalWeekRepos = oneWeekRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
@@ -408,9 +410,9 @@ export const getGrowthRepositoryMetrics = async () => {
 
     metrics.push({
       date,
-      oneDayRepos: oneDayRepos.length ? (totalDayRepos / oneDayRepos.length).toFixed(2) : 0,
-      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / oneWeekRepos.length).toFixed(2) : 0,
-      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / oneMonthRepos.length).toFixed(2) : 0,
+      oneDayRepos: oneDayRepos.length ? (totalDayRepos / registeredCount).toFixed(2) : 0,
+      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / registeredCount).toFixed(2) : 0,
+      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / registeredCount).toFixed(2) : 0,
     });
   }));
 
