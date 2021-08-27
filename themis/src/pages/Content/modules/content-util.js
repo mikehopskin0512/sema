@@ -534,9 +534,10 @@ export const getGithubMetadata = (document) => {
     ?.content;
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
-  const requester = document.querySelector('a[class*="author"]')?.textContent;
   const title = document.querySelector('span[data-snek-id="issue-title"]')
     ?.innerText;
+  const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
   // eslint-disable-next-line camelcase
   const clone_url = document.querySelector('#clone-help-git-url')?.value;
 
@@ -552,6 +553,7 @@ export const getGithubMetadata = (document) => {
     title,
     clone_url,
     commentId: null,
+    requesterAvatarUrl,
   };
 
   return githubMetadata;

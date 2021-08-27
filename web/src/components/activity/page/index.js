@@ -36,11 +36,13 @@ const ActivityPage = () => {
     }
     const requesters = overview.smartcomments
       .filter((item) => item.githubMetadata.requester)
-      .map((({ githubMetadata }) => ({
-        label: githubMetadata.requester,
-        value: githubMetadata.requester,
-        img: defaultAvatar,
-      })))
+      .map((({ githubMetadata }) => {
+        return {
+          label: githubMetadata.requester,
+          value: githubMetadata.requester,
+          img: githubMetadata.requesterAvatarUrl || defaultAvatar,
+        }
+      }))
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
       const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
       return {

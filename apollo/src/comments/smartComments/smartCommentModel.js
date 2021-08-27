@@ -13,6 +13,7 @@ const githubMetadataSchema = new Schema({
   head: String,
   base: String,
   requester: String,
+  requesterAvatarUrl: String,
   commentId: String,
   clone_url: String,
   user: { id: String, login: String },

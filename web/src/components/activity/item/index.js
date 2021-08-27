@@ -24,6 +24,7 @@ const ActivityItem = (props) => {
       },
       pull_number = '',
       commentId = '',
+      requester = 'Github User',
     },
   } = props;
 
@@ -83,6 +84,7 @@ const ActivityItem = (props) => {
               <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
                 {getPRName(pull_number, title)}
               </a>
+              {` by ${requester}`}
             </p>
           </div>
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
