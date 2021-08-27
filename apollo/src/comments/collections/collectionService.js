@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { uniqBy } from 'lodash';
+import { flatten } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -60,7 +60,7 @@ export const findById = async (id) => {
         path: 'engGuides.engGuide',
         model: 'EngGuide'
       }
-    }).exec();
+    }).sort({ createdAt: -1 }).exec();
     return collection;
   } catch (err) {
     logger.error(err);

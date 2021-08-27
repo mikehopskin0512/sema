@@ -123,7 +123,7 @@ const Login = () => {
               {/** Show on Mobile */}
               <div
                 className={clsx(
-                  'colored-shadow tile is-child is-5 px-40 pb-50 pt-120 box has-text-centered is-hidden-desktop',
+                  'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
                   styles['login-tile'],
                 )}
               >
@@ -132,7 +132,7 @@ const Login = () => {
               {/** Show on Desktop */}
               <div
                 className={clsx(
-                  'colored-shadow tile is-child is-5 px-70 pb-50 pt-120 box has-text-centered is-hidden-mobile',
+                  'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
                   styles['login-tile'],
                 )}
               >

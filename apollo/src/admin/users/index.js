@@ -12,7 +12,8 @@ import {
   getFilterMetrics,
   getTimeToValueMetric,
   exportTimeToValueMetric,
-  findUser } from './userService';
+  findUser, exportUsers
+} from './userService';
 
 const route = Router();
 
@@ -37,6 +38,21 @@ export default (app, passport) => {
         page,
         filters: filterData
       });
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
+  route.post('/export', async (req, res) => {
+    try {
+      const packer = await exportUsers(req.body);
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=users.csv',
+      });
+
+      return res.end(packer);
     } catch (err) {
       const error = new errors.InternalServer(err);
       logger.error(error);

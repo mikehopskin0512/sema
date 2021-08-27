@@ -4,16 +4,18 @@
 
 .modal {
     width: 1040px;
-    height: 800px;
+    height: 600px;
+    @media only screen and (max-width: 768px) {
+        width: auto;
+        height: auto;
+    }
 }
 
-.title {
-    font-size: 24px;
-}
-
-.subtitle {
-    font-size: 16px;
-    margin-bottom: -50px;
+.info {
+    margin-top: -50px;
+    @media only screen and (max-width: 768px) {
+        margin-top: 10px;
+    }
 }
 
 .collection-modal {
@@ -61,4 +63,89 @@
 
 .extension-modal {
     height: calc(100% - 110px);
+}
+
+.ul{
+    list-style-type:none;
+    li{
+        color: #C4C4C4;
+        position: relative;
+        display: inline-block;
+        background-color: #C4C4C4;
+        border-radius: 100px;
+        vertical-align: middle;
+        min-width: 12px;
+        min-height: 12px;
+        padding: 0px;
+        transition: all .3s ease;
+        margin-right: 5px;
+        cursor: hand;
+        cursor: pointer;
+        &:hover{
+            opacity:0.6;
+        }
+    }
+}
+
+.active{
+    min-width: 15px !important;
+    min-height: 15px !important;
+    background-color: #1394BA !important;
+    &:hover{
+        opacity:1;
+    }
+}
+
+.animation-container {
+    background-image: url('/img/onboarding_bg.png');
+    background-position: center;
+    background-size: cover;
+}
+
+.space {
+    width: 52.66px;
+}
+
+.animation-gradient {
+    position:absolute;
+    left:0; top:0;
+    width:100%; height:100%;
+    z-index: 100;
+    background-image: linear-gradient( to bottom, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -moz-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -ms-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -o-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -webkit-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+}
+
+.relative {
+    position: relative;
+}
+
+.chrome-button {
+    width: 230px;
+}
+
+.install-logo-img {
+    width: 100px;
+}
+
+.install-cross-img {
+    width: 40px;
+}
+
+.footer {
+    @media only screen and (max-width: 768px) {
+        margin-top: 25px;
+    }
 }
