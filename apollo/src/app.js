@@ -15,6 +15,8 @@ import { buildSuggestedCommentsIndex } from './comments/suggestedComments/sugges
 import routes from '.';
 import { port, allowedOrigin } from './config';
 
+const nodeEnv = process.env.NODE_ENV || 'development';
+
 const app = express();
 
 app.use(cors({
@@ -52,8 +54,11 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(port, async () => {
-  // search indexing for suggested comments on service booting
-  global.commentLibraryIndex = await buildSuggestedCommentsIndex();
+  // Search indexing for suggested comments on service booting only for local dev
+  if (nodeEnv === 'development') {
+    global.commentLibraryIndex = await buildSuggestedCommentsIndex(); 
+  }
+
   logger.info('Server listening on port %d', port);
 });
 

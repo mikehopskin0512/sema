@@ -8,6 +8,8 @@ import errors from '../../shared/errors';
 import logger from '../../shared/logger';
 import { fullName } from '../../shared/utils';
 
+const nodeEnv = process.env.NODE_ENV || 'development';
+
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
 
@@ -118,11 +120,37 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
   return comments;
 };
 
-const searchComments = async (user, searchQuery) => {
-  let searchResults = await index.search(searchQuery);
+const searchIndex = async (searchQuery) => {
+  if (nodeEnv === 'development') {
+    const searchResults = await index.search(searchQuery);
+    return searchResults;
+  } else {
+    const [{ searchResults }] = await SuggestedComment.aggregate([
+      {
+        $search: {
+          index: 'suggestedComments',
+          text: {
+            query: searchQuery,
+            path: { wildcard: '*', },
+          },
+        },
+      },
+      {
+        $group: {
+            _id: 'searchResults',
+            searchResults: { $push: '$_id' }
+        }
+      }
+    ]);
+    return searchResults;
+  }
+};
 
+const searchComments = async (user, searchQuery) => {
+  let searchResults = await searchIndex(searchQuery);
+  
   // The number of suggested comments to list
-  searchResults = searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
+  searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 
   const comments = await getUserSuggestedComments(user, searchResults);
   const returnResults = comments.map(
