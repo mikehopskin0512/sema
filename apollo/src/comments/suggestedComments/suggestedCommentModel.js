@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { autoIndex } from '../../config';
 
-const nodeEnv = process.env.NODE_ENV || 'development';
 const { Schema } = mongoose;
 
 const commentTagsSchema = new mongoose.Schema({
@@ -43,13 +42,5 @@ const suggestedCommentSchema = new Schema({
 
 suggestedCommentSchema.set('autoIndex', autoIndex);
 suggestedCommentSchema.index({ title: 1 });
-
-suggestedCommentSchema.post('save', function (doc, next) {
-  if (nodeEnv === 'development') {
-    commentLibraryIndex.add(this._id, this.title);
-    commentLibraryIndex.add(this._id, this.comment);
-  }
-  next();
-});
 
 module.exports = mongoose.model('SuggestedComment', suggestedCommentSchema);

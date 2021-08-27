@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
 import { create as createTags, findTags } from '../tags/tagService';
 import User from '../../users/userModel';
@@ -12,40 +11,6 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
-
-const index = new FlexSearch({
-  encode: 'balance',
-  tokenize: 'full',
-  threshold: 0,
-  depth: 5,
-  async: true,
-  worker: 1,
-  cache: true,
-  stemmer: 'en',
-});
-
-const buildSuggestedCommentsIndex = async () => {
-  try {
-    const dbComments = await SuggestedComment.find().lean().exec();
-    const reportEvery = Math.floor(dbComments.length / 10);
-
-    dbComments.forEach(({ _id: commentId, title, comment, tags }, i) => {
-      // index by MongoDB ID
-      const allTags = tags.map(({ label }) => (label)).join(' ');
-      const commentIndex = `${title} ${comment} ${allTags}`;
-      index.add(commentId, commentIndex);
-      if (i % reportEvery === 0) {
-        logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
-      }
-    });
-  } catch (err) {
-    const error = new errors.InternalServer(err);
-    logger.error(error);
-    throw error;
-  }
-
-  return index;
-};
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
   const userActiveCommentsQuery = [
@@ -122,7 +87,7 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
 
 const searchIndex = async (searchQuery) => {
   if (nodeEnv === 'development') {
-    const searchResults = await index.search(searchQuery);
+    return [];
     return searchResults;
   } else {
     const [{ searchResults }] = await SuggestedComment.aggregate([
@@ -332,7 +297,6 @@ const getSuggestedCommentsByIds = async (params) => {
 };
 
 module.exports = {
-  buildSuggestedCommentsIndex,
   searchComments,
   suggestCommentsInsertCount,
   create,
