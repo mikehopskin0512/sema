@@ -25,6 +25,7 @@ import {
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
+  LAST_USED_SMART_COMMENT,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -231,6 +232,7 @@ function rootReducer(state = initialState, action) {
     newState.githubMetadata.filename = null;
     newState.githubMetadata.file_extension = null;
     newState.githubMetadata.line_numbers = null;
+    newState.lastUserSmartComment = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
@@ -256,6 +258,8 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[id].searchValue = searchValue;
   } else if (type === CLOSE_LOGIN_REMINDER) {
     newState.isReminderClosed = true;
+  } else if (type === LAST_USED_SMART_COMMENT) {
+    newState.lastUserSmartComment = payload;
   }
   return newState;
 }

@@ -6,7 +6,7 @@ const truncate = (content) => {
   const contentLength = content.length;
   const shouldTruncate = contentLength > MAX_CHARACTER_LENGTH;
   return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
-  }...` : content;
+    }...` : content;
 };
 
 const getCommentTitleInterface = (title, sourceName) => (
@@ -36,7 +36,7 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
   );
 };
 
-function SuggestionModal({ onInsertPressed, searchResults }) {
+function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartComment }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -57,6 +57,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     navigator.clipboard.writeText(suggestion).then(
       () => {
         setCopiedId(id);
+        onLastUsedSmartComment(suggestion);
       },
       () => {
         // eslint-disable-next-line no-console
