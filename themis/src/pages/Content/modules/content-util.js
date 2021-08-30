@@ -314,12 +314,7 @@ export function getSemaIds(idSuffix) {
 }
 
 const isReply = (textarea) => {
-  let isReplyComment = false;
-  ['js-resolvable-thread-contents', 'review-thread-reply'].forEach((replyClass) => {
-    if ($(textarea).parents(`.${replyClass}`).length > 0) {
-      isReplyComment = true;
-    }
-  });
+  const isReplyComment = ['js-resolvable-thread-contents', 'review-thread-reply'].some((replyClass) => (($(textarea).parents(`.${replyClass}`).length > 0)));
   return isReplyComment;
 };
 
