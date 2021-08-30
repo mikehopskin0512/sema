@@ -386,12 +386,13 @@ class Mirror {
 
   // TODO: implement this
   destroy() {
-    $(this._elementToMimic).off('input', this._onInput);
-    $(this._elementToMimic).off('paste', this._onTextPaste);
     $(this._elementToMimic).off('scroll', this._onScroll);
-    // $(this._elementToMimic).off('click', this._onClick),
-    $(this._elementToMimic).off('mousemove', this._hover);
+    $(this._elementToMimic).off('input', this._onInput);
+    $(this._elementToMimic).off('change', this._onInput);
+    $(this._elementToMimic).off('mousemove', this._onHover);
+    $(this._elementToMimic).off('click', this._onClick);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+    $(this._elementToMimic).off('paste', this._onTextPaste);
     //   this._renderInterval && this._renderInterval.destroy(),
     if (this._container) {
       this._container.remove();
