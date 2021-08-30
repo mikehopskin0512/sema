@@ -102,7 +102,7 @@ const ActivityItem = (props) => {
             </>
           ) : <div className="py-25" />}
         </div>
-        <div className="my-10">
+        <div className={clsx("my-10", styles['item-comment'])}>
           <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-deep-black" />
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
