@@ -9,7 +9,7 @@ import SupportForm from '../supportForm';
 
 const Footer = () => {
   const auth = useSelector((state) => state.authState);
-  const { userVoiceToken } = auth;
+  const { userVoiceToken, isAuthenticated } = auth;
   const [dashboardLink] = useState('https://app.semasoftware.com');
   const [termsAndConditionsLink] = useState('https://semasoftware.com/terms-and-conditions');
   const [userVoiceLink] = useState('https://sema.uservoice.com/forums/934797-sema ');
@@ -79,9 +79,11 @@ const Footer = () => {
           Feedback
         </div>
       </div>
-      <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
-      </div>
+      {isAuthenticated && (
+        <div className="has-text-centered">
+          <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
+        </div>
+      )}
       <div className="has-text-centered">
         <a className="button is-ghost has-text-white has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
@@ -91,25 +93,27 @@ const Footer = () => {
 
   return (
     <>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm} />
+      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
       <footer className={clsx(styles.footer, 'px-50')}>
-        <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
-        <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
-          {renderAppLinks()}
-        </div>
-        <div className="is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-center is-align-items-center is-hidden-mobile">
-          <div className="is-flex is-align-items-center">
+        <div className='content-container'>
+          <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
+          <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
             {renderAppLinks()}
           </div>
-          <div className={styles.socials}>
+          <div className="is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-center is-align-items-center is-hidden-mobile">
+            <div className="is-flex is-align-items-center">
+              {renderAppLinks()}
+            </div>
+            <div className={styles.socials}>
+              {renderSocialLinks()}
+            </div>
+          </div>
+          <div className="is-hidden-desktop mt-25">
             {renderSocialLinks()}
           </div>
-        </div>
-        <div className="is-hidden-desktop mt-25">
-          {renderSocialLinks()}
-        </div>
-        <div className="has-text-white has-text-centered is-hidden-desktop my-25">
-          &copy; {new Date().getFullYear()} Sema
+          <div className="has-text-white has-text-centered is-hidden-desktop my-25">
+            &copy; {new Date().getFullYear()} Sema
+          </div>
         </div>
       </footer>
     </>

@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import { 
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getRepositoryOverview, getDashboardRepositories,
+  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getDashboardRepositories, getRepositoryOverview
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -230,35 +230,13 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
   }
 };
 
-export const fetchReactionStats = (filters, token) => async (dispatch) => {
-  try {
-    dispatch(requestGetRepoReactions());
-    const payload = await getReactionsStats(filters, token);
-    dispatch(requestGetRepoReactionsSuccess(payload.data.reactions));
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestGetReposReactionsError(errMessage));
-  }
-};
-
-export const fetchTagStats = (filters, token) => async (dispatch) => {
-  try {
-    dispatch(requestGetRepoTags());
-    const payload = await getTagsStats(filters, token);
-    dispatch(requestGetRepoTagsSuccess(payload.data.tags));
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestGetRepoTagsError(errMessage));
-  }
-};
-
 export const fetchRepositoryOverview = (externalId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchRepositoryOverview());
-    const { data: overviewData } = await getRepositoryOverview({ externalId }, token);
-    dispatch(requestFetchRepositoryOverviewSuccess(overviewData));
+    const { data } = await getRepositoryOverview({ externalId }, token);
+    if (data._id) {
+      dispatch(requestFetchRepositoryOverviewSuccess(data));
+    }
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -270,7 +248,9 @@ export const fetchRepoDashboard = (externalIds, token) => async (dispatch) => {
   try {
     dispatch(requestFetchDashboardRepos());
     const { data: { repositories = [] } } = await getDashboardRepositories({ externalIds: JSON.stringify(externalIds) }, token);
-    dispatch(requestFetchDashboardReposSuccess(repositories));
+    if (Array.isArray(repositories)) {
+      dispatch(requestFetchDashboardReposSuccess(repositories));
+    }
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

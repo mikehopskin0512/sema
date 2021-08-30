@@ -35,3 +35,27 @@ export const getBadgeColor = (value) => {
 
   return 'dark';
 };
+
+export const makeTagsList = (orgTags, type = 'guide') => {
+  if (!orgTags) return { newTags: [], existingTags: [] };
+
+  const newTags = [];
+  const existingTags = [];
+  orgTags.forEach((tag) => {
+    if (!tag) return;
+    if (!tag.__isNew__) {
+      existingTags.push(tag.value);
+    } else {
+      newTags.push({
+        label: tag.value,
+        isActive: true,
+        type,
+      });
+    }
+  });
+  return {
+    newTags,
+    existingTags,
+  };
+};
+

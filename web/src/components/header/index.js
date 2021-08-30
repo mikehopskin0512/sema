@@ -10,6 +10,7 @@ import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
+import clsx from "clsx";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -104,7 +105,7 @@ const Header = () => {
   const onCloseSignOutModal = () => setSignOutModal(false);
 
   return (
-    <header className={bgColor}>
+    <header className={clsx(bgColor, 'content-container')}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
@@ -150,8 +151,8 @@ const Header = () => {
                   Suggested Comments
                 </a>
               </Link>
-              <Link href="/engineering">
-                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+              <Link href="/guides">
+                <a className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                   Community Eng Guides
                 </a>
               </Link>
@@ -179,7 +180,7 @@ const Header = () => {
                   Suggested Comments
                 </a>
               </Link>
-              <Link href="/engineering">
+              <Link href="/guides">
                 <a className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                   Community Engineering Guides
                 </a>

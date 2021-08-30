@@ -6,6 +6,8 @@ const initialState = {
   isUpdating: false,
   totalCount: 0,
   analytic: {},
+  timeToValueMetric: [],
+  totalTimeToValueMetricCount: 0,
 };
 
 const reducer = (state = initialState, action) => {
@@ -82,6 +84,26 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       users: [],
+      error: action.errors,
+    };
+  case types.REQUEST_TIME_TO_VALUE_METRIC:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_TIME_TO_VALUE_METRIC_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      timeToValueMetric: action.metric,
+      totalTimeToValueMetricCount: action.totalCount,
+      error: {},
+    };
+  case types.REQUEST_TIME_TO_VALUE_METRIC_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      timeToValueMetric: [],
       error: action.errors,
     };
   default:

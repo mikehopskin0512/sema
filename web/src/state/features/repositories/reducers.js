@@ -30,7 +30,9 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: {},
+      data: {
+        ...state.data,
+      },
       error: action.errors,
     };
   case types.REQUEST_FETCH_REPOS:
@@ -43,6 +45,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },
@@ -52,7 +55,9 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: {},
+      data: {
+        ...state.data,
+      },
       error: action.errors,
     };
   case types.REQUEST_FETCH_REPO:
@@ -76,6 +81,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: state.data.repositories,
         repository: action.repository,
       },
@@ -91,6 +97,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },
@@ -101,6 +108,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },
@@ -127,6 +135,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       data: {
+        ...state.data,
         repositories: action.repositories,
         repository: state.data.repository,
       },

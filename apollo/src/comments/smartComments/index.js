@@ -14,6 +14,8 @@ import {
   exportGrowthRepositoryMetrics,
   getSmartComments,
   filterSmartComments,
+  getSuggestedMetrics,
+  exportSuggestedMetrics,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
 
@@ -22,7 +24,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/comments/smart`, route);
 
-  route.post('/', async (req, res) => {
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const smartComment = req.body;
     try {
       const newSmartComment = await create(smartComment);
@@ -59,7 +61,6 @@ export default (app, passport) => {
         throw new errors.BadRequest('Smart Comment update error');
       }
       return res.status(204).json({ smartComment: updatedSmartComment });
-      return updateSmartComment;
     } catch (error) {
       logger(error);
       return res.status(error.statusCode).send(error);

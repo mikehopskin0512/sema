@@ -436,9 +436,13 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByExternalId = async (repoId) => {
+export const findByExternalId = async (repoId, populate) => {
   try {
-    const comments = await SmartComment.find({ "githubMetadata.repo_id": repoId });
+    const query = SmartComment.find({ "githubMetadata.repo_id": repoId });
+    if (populate) {
+      query.populate('userId').populate('tags');
+    }
+    const comments = await query.sort({ createdAt: -1 }).exec();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -468,6 +472,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
+    .sort('-createdAt')
     .populate('userId')
     .populate('reaction');
 

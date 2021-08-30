@@ -46,24 +46,6 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       comments: [],
     };
-  case types.REQUEST_GET_SMART_COMMENTS_BY_REPO:
-    return {
-      ...state,
-      isFetching: true,
-    };
-  case types.REQUEST_GET_SMART_COMMENTS_BY_REPO_SUCCESS:
-    return {
-      ...state,
-      isFetching: false,
-      smartComments: action.smartComments,
-      error: {},
-    };
-  case types.REQUEST_GET_SMART_COMMENTS_BY_REPO_ERROR:
-    return {
-      ...state,
-      isFetching: false,
-      error: action.errors,
-    };
   default:
     return state;
   }

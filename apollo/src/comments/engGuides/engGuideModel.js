@@ -3,6 +3,12 @@ import { autoIndex } from '../../config';
 
 const { Schema } = mongoose;
 
+const engGuideTagsSchema = new mongoose.Schema({
+  tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
+  type: String,
+  label: String,
+}, { _id: false });
+
 const engGuideSchema = new Schema({
   displayId: {
     type: String,
@@ -24,11 +30,7 @@ const engGuideSchema = new Schema({
   },
   source: { name: String, url: String },
   collections: [{ type: Schema.Types.ObjectId, ref: 'Collection' }],
-  tags: [{
-    tag: { type: Schema.Types.ObjectId, ref: 'Tag' },
-    type: String,
-    label: String,
-  }],
+  tags: [engGuideTagsSchema],
   isActive: {
     type: Boolean,
     default: true,

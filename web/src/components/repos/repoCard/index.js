@@ -21,7 +21,7 @@ const RepoCard = (props) => {
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
-    window.location = `/activity/${externalId}`;
+    window.location = `/repo/${externalId}`;
   };
 
   const renderStats = (label, value) => (
@@ -31,28 +31,6 @@ const RepoCard = (props) => {
       <p className={clsx('is-size-9 has-text-weight-semibold has-text-stat is-uppercase')}>{label}</p>
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
     </div>
-  );
-
-  const renderUsers = () => (
-    users.length ? (
-      <>
-        <div className="is-flex">
-          {(users.length > 4 ? users.slice(0, 3) : users.slice(0, 4)).map((item) => (
-            <figure className="image is-32x32 ml-neg8">
-              <img src={item.imgUrl} alt="user" className={clsx('is-rounded', styles.avatar)} />
-            </figure>
-          ))}
-          {users.length > 4 && (
-            <div className={clsx(
-              'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
-              styles['user-count'],
-            )}>
-              <p className="is-size-8 has-text-weight-semibold">+{users.length - 3}</p>
-            </div>
-          )}
-        </div>
-      </>
-    ) : ""
   );
 
   return (

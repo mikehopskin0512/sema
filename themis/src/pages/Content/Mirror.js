@@ -209,6 +209,7 @@ class Mirror {
     if (isReactionDirty) {
       return;
     }
+    // TODO: dont use hard-coded ids
     const fixEmojiId = '607f0d1ed7f45b000ec2ed74';
     const selectedReaction = EMOJIS.find((e) => e._id === fixEmojiId);
     this._store.dispatch(
@@ -232,6 +233,7 @@ class Mirror {
      * after github's own validation
      * has taken place for the textarea
      */
+    // TODO: perform it as a side-effect to an action?
     setTimeout(() => {
       checkSubmitButton(semabarContainerId);
     }, 0);

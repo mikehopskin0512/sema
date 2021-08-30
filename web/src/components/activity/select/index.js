@@ -53,7 +53,7 @@ const CustomSelect = (props) => {
   const Menu = (p) => {
     const { children } = p;
     return (
-      <components.Menu {...p} className={clsx('mt--5', styles.menu)}>
+      <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
         {children}
       </components.Menu>
     );

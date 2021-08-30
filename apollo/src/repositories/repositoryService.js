@@ -4,6 +4,7 @@ import { differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
 import Users from './../users/userModel';
 import { getReactionIdKeys } from "../comments/reaction/reactionService";
+import { findByExternalId as findSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import publish from '../shared/sns';
@@ -133,9 +134,13 @@ export const getRepository = async (_id) => {
   }
 };
 
-export const findByExternalIds = async (externalIds) => {
+export const findByExternalIds = async (externalIds, populateUsers) => {
   try {
-    const repositories = await Repositories.find({ 'externalId': { $in: externalIds } });
+    const query = Repositories.find({ 'externalId': { $in: externalIds } });
+    if (populateUsers) {
+      query.populate({ path: 'repoStats.userIds', model: 'User' });
+    }
+    const repositories = await query.exec();
     return repositories;
   } catch (err) {
     logger.error(err);
@@ -144,54 +149,98 @@ export const findByExternalIds = async (externalIds) => {
   }
 };
 
-export const aggregateRepositories = async (externalIds) => {
+export const aggregateRepositories = async (externalIds, includeSmartComments) => {
   try {
-    const repoRaw = await Repositories.aggregate([
-      {
-        $match: {
-          externalId: {
-            $in: externalIds
-          }
+    // const repoRaw = await Repositories.aggregate([
+    //   {
+    //     $match: {
+    //       externalId: {
+    //         $in: externalIds
+    //       }
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'smartComments',
+    //       as: 'smartComments',
+    //       let: { externalId: '$externalId' },
+    //       pipeline: [
+    //         {
+    //           $match: {
+    //             $expr: {
+    //               $eq: [ '$githubMetadata.repo_id', '$$externalId' ]
+    //             }
+    //           }
+    //         },
+    //         {
+    //           $lookup: {
+    //             from: 'users',
+    //             as: 'user',
+    //             localField: 'userId',
+    //             foreignField: '_id'
+    //           }
+    //         },
+    //         {
+    //           $lookup: {
+    //             from: 'tags',
+    //             as: 'tags',
+    //             localField: 'tags',
+    //             foreignField: '_id'
+    //           }
+    //         },
+    //         {
+    //           $unwind: '$user', 
+    //         },
+    //         {
+    //           $project: {
+    //             'user.collections': 0,
+    //             'user.identities': 0,
+    //           }, 
+    //         },
+    //       ]
+    //     }
+    //   },
+    // ]);
+    // Get Repos by externalId
+    const repos = await findByExternalIds(externalIds, true);
+    if (repos.length > 0) {
+      // Get SmartComments of Repos
+      const repoRaw = await Promise.all(repos.map(async (repo) => {
+        const { externalId = '' } = repo;
+        const smartComments = await findSmartCommentsByExternalId(externalId, true);
+        return {
+          ...repo._doc,
+          smartComments
+        };
+      })) || [];
+      // Tally stats
+      const repositories = repoRaw.map((repo) => {
+        const { _id, externalId = '', name = '', createdAt, smartComments = [], repoStats = { userIds: [] } } = repo;
+        const totalSmartComments = smartComments.length || 0;
+        const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId?.valueOf() || 0).length || 0;
+        const totalPullRequests = _.uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
+        const totalSemaUsers = _.get(repoStats, 'userIds', []).length || 0;
+        const data = {
+          stats: {
+            totalSmartComments,
+            totalSmartCommenters,
+            totalPullRequests,
+            totalSemaUsers,
+          },
+          _id,
+          externalId,
+          name,
+          createdAt,
+          users: repoStats.userIds,
+        };
+        if (includeSmartComments) {
+          data.smartcomments = smartComments;
         }
-      },
-      {
-        $lookup: {
-          from: 'smartComments',
-          as: 'smartComments',
-          let: { externalId: '$externalId' },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $eq: [ '$githubMetadata.repo_id', '$$externalId' ]
-                }
-              }
-            },
-          ]
-        }
-      },
-    ]);
-    const repositories = repoRaw.map((repo) => {
-      const { _id, externalId = '', name = '', createdAt, smartComments = [], repoStats = { userIds: [] } } = repo;
-      const totalSmartComments = smartComments.length || 0;
-      const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId.toString()).length || 0;
-      const totalPullRequests = _.uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
-      const totalSemaUsers = repoStats.userIds.length || 0;
-      const data = {
-        stats: {
-          totalSmartComments,
-          totalSmartCommenters,
-          totalPullRequests,
-          totalSemaUsers,
-        },
-        _id,
-        externalId,
-        name,
-        createdAt,
-      };
-      return data;
-    })
-    return repositories;
+        return data;
+      })
+      return repositories;
+    }
+    return [];
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
