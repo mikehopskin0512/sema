@@ -296,9 +296,13 @@ document.addEventListener(
   'focusin',
   (event) => {
     const commentFieldClassName = 'comment-form-textarea';
+    const pullRequestReviewBodyId = 'pull_request_review_body';
     if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
+    // if (event.target.id === pullRequestReviewBodyId) {
+    //   $(`#${pullRequestReviewBodyId}`).addClass('sema-is-form-bordered');
+    // }
   },
   true,
 );
