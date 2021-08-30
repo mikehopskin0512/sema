@@ -66,22 +66,6 @@ const checkLoggedIn = async () => {
   }
 };
 
-checkLoggedIn();
-const stateCheck = setInterval(() => {
-  if (document.readyState === 'complete') {
-    clearInterval(stateCheck);
-    store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  }
-}, 100);
-let initialCheck = false;
-const updateMetadata = setInterval(() => {
-  if (initialCheck) {
-    clearInterval(updateMetadata);
-  }
-  store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  initialCheck = true;
-}, 5000);
-
 $(() => {
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
   if (!reminderRoot && isPRPage()) {
@@ -168,6 +152,7 @@ document.addEventListener(
     if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
+        store.dispatch(addGithubMetada(getGithubMetadata(document)));
         const semaElements = $(activeElement).siblings('div.sema');
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
         SEMA_ICON = getSemaIconTheme(getActiveTheme());
