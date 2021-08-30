@@ -496,8 +496,8 @@ export function onSuggestion() {
     const state = store.getState();
 
     const { suggestedReaction, suggestedTags } = payload;
+    const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
     if (suggestedReaction) {
-      const { isReactionDirty } = state.semabars[semabarId];
       // isReactionDirty is true when reaction is manually selected from UI
       if (!isReactionDirty) {
         store.dispatch(
@@ -510,7 +510,7 @@ export function onSuggestion() {
       }
     }
     // allow to change state even when empty to remove existing tags if no suggestion
-    if (suggestedTags) {
+    if (!isTagModalDirty && suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,
