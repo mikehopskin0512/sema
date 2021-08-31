@@ -33,7 +33,7 @@ export default (app, passport) => {
       }
       return res.status(201).json({ smartComment: newSmartComment });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -47,7 +47,7 @@ export default (app, passport) => {
         comments,
       });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -62,7 +62,7 @@ export default (app, passport) => {
       }
       return res.status(204).json({ smartComment: updatedSmartComment });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -72,7 +72,7 @@ export default (app, passport) => {
       const userActivities = await getUserActivityChangeMetrics();
       return res.json({ userActivities });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -86,7 +86,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -96,7 +96,7 @@ export default (app, passport) => {
       const comments = await getSowMetrics(req.query);
       return res.json({ comments });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -110,7 +110,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -121,7 +121,7 @@ export default (app, passport) => {
 
       return res.json({ growthOfRepository });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -135,7 +135,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -151,7 +151,7 @@ export default (app, passport) => {
       });
       return res.json({ comments, totalCount });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -166,7 +166,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
