@@ -62,7 +62,7 @@ const checkLoggedIn = async () => {
       store.dispatch(updateSemaUser({ ...response }));
     });
   } catch (error) {
-    console.log('Sema Code Assistant extension is disabled');
+    // console.log('Sema Code Assistant extension is disabled');
   }
 };
 
@@ -285,7 +285,7 @@ document.addEventListener(
   'focusin',
   (event) => {
     const commentFieldClassName = 'comment-form-textarea';
-    const pullRequestReviewBodyId = 'pull_request_review_body';
+    // const pullRequestReviewBodyId = 'pull_request_review_body';
     if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
