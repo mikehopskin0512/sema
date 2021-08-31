@@ -97,6 +97,7 @@ const searchIndex = async (searchQuery) => {
           text: {
             query: searchQuery,
             path: { wildcard: '*', },
+            fuzzy: { maxEdits: 2, prefixLength: 3 },
           },
         },
       },
