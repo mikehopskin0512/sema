@@ -54,6 +54,7 @@ class Mirror {
     this._onHover = this._onHover.bind(this);
     this._onTextPaste = this._onTextPaste.bind(this);
     this._onMousePartial = this._onMousePartial.bind(this);
+    this.destroy = this._destroy.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
@@ -386,8 +387,7 @@ class Mirror {
     $(this._highlighterContainer).children(`.${HIGHLIGHTER_CONTENT}`).remove();
   }
 
-  // TODO: implement this
-  destroy() {
+  _destroy() {
     $(this._elementToMimic).off('scroll', this._onScroll);
     $(this._elementToMimic).off('input', this._onInput);
     $(this._elementToMimic).off('change', this._onInput);
@@ -404,7 +404,8 @@ class Mirror {
       this._elementToMimicResizeObserver.disconnect();
     }
 
-    this._elementMeasurement.clearCache();
+    // TODO: this one doesn't work (need to investigate)
+    // this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }
