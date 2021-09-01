@@ -76,7 +76,6 @@ const StatsPage = () => {
     <>
       <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap px-10">
         <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
-        {/* <CalendarPopover setDate={setDate} /> */}
       </div>
       <div className="is-flex is-flex-wrap-wrap mt-20">
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
