@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { findIndex } from 'lodash';
-import { format, isBefore, isSameDay, subDays } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 import clsx from 'clsx';
+import { generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
 import styles from './stats.module.scss';
 import BarChart from '../BarChart';
 import CircularPacking from '../CircularPackingChart';
 
-import { ReactionList, TagList } from '../../data/activity';
+import { TagList } from '../../data/activity';
 
-const StatsPage = () => {
+const dayInWeek = 7;
+const dayInMonth = 30;
+const dayInYear = 365;
+
+const StatsPage = ({ startDate, endDate }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -18,33 +22,29 @@ const StatsPage = () => {
   const [tags, setTags] = useState({});
 
   const getReactionOverview = (smartcomments) => {
-    let reactionsArr = [];
-    let day = 0;
-    // Create Array of data for the BarChart
-    while (day < 7) {
-      const thisDay = subDays(new Date(), day);
-      const item = {
-        date: format(thisDay, 'MM/dd')
-      };
-      // Set Reaction Ids as object keys
-      ReactionList.forEach((reaction) => {
-        item[reaction.value] = 0;
-      });
-      reactionsArr.push(item);
-      day += 1;
-    }
-    // Add count to matching smart comment reaction with the same day
-    smartcomments.forEach((comment) => {
-      const itemDate =  new Date(comment.createdAt);
-      const within7Days = isBefore(subDays(new Date(), 7), itemDate);
-      if (within7Days) {
-        const dateIndex = findIndex(reactionsArr, { date: format(itemDate, 'MM/dd') })
-        if (dateIndex > -1) {
-          reactionsArr[dateIndex][comment.reaction] += 1;
-        }
+    if (endDate && startDate) {
+      const diff = differenceInCalendarDays(new Date(endDate), new Date(startDate));
+      
+      if (diff < dayInWeek + 1) {
+        const reactionsArr = generateDays(smartcomments, diff, endDate);
+        setReactions(reactionsArr);
       }
-    });
-    setReactions(reactionsArr);
+
+      if (diff < dayInMonth && diff > dayInWeek) {
+        const reactionsArr = generateWeeks(smartcomments, startDate, endDate);
+        setReactions(reactionsArr);
+      }
+
+      if (diff < dayInYear && diff > dayInMonth) {
+        const reactionsArr = generateMonths(smartcomments, startDate, endDate);
+        setReactions(reactionsArr);
+      }
+
+      if (diff > dayInYear) {
+        const reactionsArr = generateYears(smartcomments, startDate, endDate);
+        setReactions(reactionsArr);
+      }
+    }
   }
 
   const getTagsOverview = (smartcomments) => {

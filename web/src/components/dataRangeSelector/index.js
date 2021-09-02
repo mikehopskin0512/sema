@@ -41,7 +41,7 @@ const DATE_RANGES = {
 
 const DateRangeSelector = (props) => {
     const { start, setStartDate, setEndDate, end } = props;
-    const [selectedRange, setSelectedRange] = useState('last7Days');
+    const [selectedRange, setSelectedRange] = useState('allTime');
     const [focusedInput, setFocusedInput] = useState();
 
     useEffect(() => {
