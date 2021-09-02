@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { differenceInCalendarDays } from 'date-fns';
+import { subDays, differenceInCalendarDays } from 'date-fns';
 import clsx from 'clsx';
-import { generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
+import { generateAll, generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
 import styles from './stats.module.scss';
 import BarChart from '../BarChart';
 import CircularPacking from '../CircularPackingChart';
@@ -19,31 +19,37 @@ const StatsPage = ({ startDate, endDate }) => {
   }));
 
   const [reactions, setReactions] = useState([]);
+  const [initial, setInitial] = useState(true);
   const [tags, setTags] = useState({});
 
   const getReactionOverview = (smartcomments) => {
-    if (endDate && startDate) {
-      const diff = differenceInCalendarDays(new Date(endDate), new Date(startDate));
-      
+    if (smartcomments.length > 0) {
+      let start = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
+      let end = new Date();
+      if (startDate && endDate) {
+        start = startDate;
+        end = endDate;
+      }
+      const diff = differenceInCalendarDays(new Date(end), new Date(start));
       if (diff < dayInWeek + 1) {
-        const reactionsArr = generateDays(smartcomments, diff, endDate);
+        const reactionsArr = generateDays(smartcomments, diff, end);
         setReactions(reactionsArr);
       }
 
-      if (diff < dayInMonth && diff > dayInWeek) {
-        const reactionsArr = generateWeeks(smartcomments, startDate, endDate);
+      if (diff < dayInMonth && diff >= dayInWeek) {
+        const reactionsArr = generateWeeks(smartcomments, start, end);
         setReactions(reactionsArr);
       }
 
-      if (diff < dayInYear && diff > dayInMonth) {
-        const reactionsArr = generateMonths(smartcomments, startDate, endDate);
+      if (diff < dayInYear && diff >= dayInMonth) {
+        const reactionsArr = generateMonths(smartcomments, start, end);
         setReactions(reactionsArr);
       }
 
-      if (diff > dayInYear) {
-        const reactionsArr = generateYears(smartcomments, startDate, endDate);
+      if (diff >= dayInYear) {
+        const reactionsArr = generateYears(smartcomments, start, end);
         setReactions(reactionsArr);
-      }
+      } 
     }
   }
 
@@ -80,13 +86,13 @@ const StatsPage = ({ startDate, endDate }) => {
       <div className="is-flex is-flex-wrap-wrap mt-20">
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Reactions (Last 7 Days)</p>
+            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
             <BarChart data={reactions} />
           </div>
         </div>
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags (All Time)</p>
+            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
             <CircularPacking data={tags} />
           </div>
         </div>

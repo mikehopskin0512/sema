@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { DateRangePicker } from 'react-dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { subWeeks, subMonths } from 'date-fns';
+import { subDays, subWeeks, subMonths } from 'date-fns';
 import moment from 'moment';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
@@ -11,27 +11,27 @@ import 'react-dates/lib/css/_datepicker.css';
 const DATE_RANGES = {
     last7Days: {
       name: 'Last 7 Days',
-      startDate: moment(subWeeks(new Date(), 1)),
+      startDate: moment(subDays(new Date(), 6)),
       endDate: moment(new Date()),
     },
     last14Days: {
       name: 'Last 14 Days',
-      startDate: moment(subWeeks(new Date(), 2)),
+      startDate: moment(subDays(new Date(), 13)),
       endDate: moment(new Date()),
     },
     last30Days: {
       name: 'Last 30 Days',
-      startDate: moment(subMonths(new Date(), 1)),
+      startDate: moment(subDays(new Date(), 29)),
       endDate: moment(new Date()),
     },
     last3Months: {
       name: 'Last 3 Months',
-      startDate: moment(subMonths(new Date(), 3)),
+      startDate: moment(subDays(new Date(), 89)),
       endDate: moment(new Date()),
     },
     last12Months: {
       name: 'Last 12 Months',
-      startDate: moment(subMonths(new Date(), 12)),
+      startDate: moment(subDays(new Date(), 264)),
       endDate: moment(new Date()),
     },
     allTime: {
@@ -45,17 +45,20 @@ const DateRangeSelector = (props) => {
     const [focusedInput, setFocusedInput] = useState();
 
     useEffect(() => {
-        if (selectedRange !== 'allTime') {
-            setDates(DATE_RANGES[selectedRange]);
-            return;
-        }
-        setDates({
-          startDate: null,
-          endDate: null,
-        });
+      if (selectedRange === 'custom') {
+        return;
+      }
+      if (selectedRange !== 'allTime') {
+        setStartDate(DATE_RANGES[selectedRange].startDate);
+        setEndDate(DATE_RANGES[selectedRange].endDate);
+      } else {
+        setStartDate(null);
+        setEndDate(null);
+      }
     }, [selectedRange]);
 
     const setDates = ({ startDate, endDate }) => {
+        setSelectedRange('custom');
         setStartDate(startDate);
         setEndDate(endDate);
     }
@@ -87,27 +90,26 @@ const DateRangeSelector = (props) => {
     );
 
     return (
-        <DateRangePicker
-            startDate={start}
-            startDateId="startDate"
-            endDate={end} // momentPropTypes.momentObj or null,
-            endDateId="endDate" // PropTypes.string.isRequired,
-            onDatesChange={setDates} // PropTypes.func.isRequired,
-            focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-            onFocusChange={focused => setFocusedInput(focused)} // PropTypes.func.isRequired,
-            calendarInfoPosition="before"
-            renderCalendarInfo={renderCalendarInfo}
-            orientation="horizontal"
-            anchorDirection="right"
-            renderNavPrevButton={renderNavPrevButton}
-            renderNavNextButton={renderNavNextButton}
-            small
-            keepOpenOnDateSelect
-            hideKeyboardShortcutsPanel
-            displayFormat="MMM DD, YYYY"
-            isOutsideRange={function noRefCheck() {}}
-        />
-        
+      <DateRangePicker
+        startDate={start}
+        startDateId="startDate"
+        endDate={end} // momentPropTypes.momentObj or null,
+        endDateId="endDate" // PropTypes.string.isRequired,
+        onDatesChange={setDates} // PropTypes.func.isRequired,
+        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+        onFocusChange={focused => setFocusedInput(focused)} // PropTypes.func.isRequired,
+        calendarInfoPosition="before"
+        renderCalendarInfo={renderCalendarInfo}
+        orientation="horizontal"
+        anchorDirection="right"
+        renderNavPrevButton={renderNavPrevButton}
+        renderNavNextButton={renderNavNextButton}
+        small
+        keepOpenOnDateSelect
+        hideKeyboardShortcutsPanel
+        displayFormat="MMM DD, YYYY"
+        isOutsideRange={(day) => day.isAfter(moment().add(1, 'days'))}
+      />
     )
 };
 

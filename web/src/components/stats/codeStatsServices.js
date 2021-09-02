@@ -3,11 +3,9 @@ import {
   eachWeekOfInterval,
   eachMonthOfInterval,
   eachYearOfInterval,
-  differenceInCalendarDays,
   subDays,
-  subMonths,
   endOfWeek,
-  isWithinInterval
+  isWithinInterval,
 } from 'date-fns';
 import { findIndex } from 'lodash';
 import { ReactionList } from '../../data/activity';
@@ -70,7 +68,7 @@ export const generateWeeks = (smartcomments, startDate, endDate) => {
       start: item.startDay,
       end: item.endDay,
     })));
-    const dateIndex = findIndex(reactionsArr, { date: weekRange[itemRange].date })
+    const dateIndex = findIndex(reactionsArr, { date: weekRange[itemRange]?.date })
     if (dateIndex > -1) {
       reactionsArr[dateIndex][comment.reaction] += 1;
     }
