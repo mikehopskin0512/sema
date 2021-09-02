@@ -1,5 +1,5 @@
 import {
-  subMonths, subWeeks, subDays, isAfter, format,
+  subMonths, subWeeks, subDays, isAfter, format, endOfDay
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -436,9 +436,18 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByExternalId = async (repoId, populate) => {
+export const findByExternalId = async (repoId, populate, createdAt) => {
   try {
-    const query = SmartComment.find({ "githubMetadata.repo_id": repoId });
+    let findQuery = {
+      "githubMetadata.repo_id": repoId,
+    }
+    if (createdAt) {
+      findQuery = {
+        ...findQuery,
+        createdAt
+      }
+    }
+    const query = SmartComment.find(findQuery);
     if (populate) {
       query.populate('userId').populate('tags');
     }

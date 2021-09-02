@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import ActivityPage from '../../../components/activity/page';
@@ -14,7 +15,7 @@ const tabTitle = {
   stats: 'Repo Stats'
 }
 
-const ActivityLogs = () => {
+const RepoPage = () => {
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
@@ -28,25 +29,34 @@ const ActivityLogs = () => {
   } = useRouter();
 
   const [selectedTab, setSelectedTab] = useState('activity');
+  const [dates, setDates] = useState();
 
   useEffect(() => {
-    dispatch(fetchRepositoryOverview(repoId, token));
-  }, [dispatch, repoId, token]);
+    dispatch(fetchRepositoryOverview(repoId, token, dates?.startDate && dates?.endDate ? {
+      startDate: format(new Date(dates.startDate), 'MMM dd, yyyy'),
+      endDate: format(new Date(dates.endDate), 'MMM dd, yyyy'),
+    } : null));
+  }, [dispatch, repoId, token, dates]);
 
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
-      { overview ? (
-        <>
-          <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-          { selectedTab === 'activity' && <ActivityPage /> }
-          { selectedTab === 'stats' && <StatsPage /> }
-        </>
-      ) : null }
+      { ({ startDate, endDate }) => {
+        useEffect(() => {
+          setDates({ startDate, endDate });
+        }, [startDate, endDate]);
+        return(
+          <>
+            <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+            { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} /> }
+            { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} /> }
+          </>
+        )
+      }}
     </RepoPageLayout>
   );
 };
 
-export default ActivityLogs;
+export default RepoPage;

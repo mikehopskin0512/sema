@@ -6,9 +6,9 @@ import clsx from "clsx";
 import Sidebar from "../../sidebar";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
+import DateRangeSelector from '../../dataRangeSelector';
 import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
-
 
 const { getUserRepositories } = repositoriesOperations;
 
@@ -24,6 +24,8 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -72,15 +74,25 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
 
   return (
     <div className="has-background-white pb-250">
-      <div className={"mt-10 content-container"}>
-        <Select
-          onChange={onChangeSelect}
-          value={selectedRepo}
-          options={repoOptions}
-          className={clsx(styles['repo-select-container'], "pl-8")}
-          components={{ Control, IndicatorSeparator }}
-          isOptionDisabled={(option) => option.disabled}
-          placeholder={''} />
+      <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
+        <div className={"content-container is-flex-grow-1"}>
+          <Select
+            onChange={onChangeSelect}
+            value={selectedRepo}
+            options={repoOptions}
+            className={clsx(styles['repo-select-container'])}
+            components={{ Control, IndicatorSeparator }}
+            isOptionDisabled={(option) => option.disabled}
+            placeholder={''} />
+        </div>
+        <div className={styles['date-picker-container']}>
+          <DateRangeSelector
+            start={startDate}
+            end={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+          />
+        </div>
       </div>
       <div className={clsx(styles["card-container"], 'px-20')}>
         <div className="hero content-container">
@@ -106,7 +118,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
       </div>
       <Sidebar {...sidebarProps}>
         <>
-          {children}
+          {children({ startDate, endDate })}
         </>
       </Sidebar>
     </div>
