@@ -9,7 +9,7 @@ import Checkbox from '../../checkbox';
 
 const defaultDate = '07/01/2021';
 
-const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) => {
+const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, isEditable }) => {
   const {
     author = '',
     comment = '',
@@ -38,7 +38,9 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) 
               </div>
             ))}
           </div>
-          <ActionMenu comment={data} />
+          {isEditable && (
+            <ActionMenu comment={data} />
+          )}
         </div>
       </div>
       { isEmpty(author) && isEmpty(source.name) ? null : (
