@@ -85,7 +85,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
             isOptionDisabled={(option) => option.disabled}
             placeholder={''} />
         </div>
-        <div className={styles['date-picker-container']}>
+        <div className={clsx('is-hidden-mobile', styles['date-picker-container'])}>
           <DateRangeSelector
             start={startDate}
             end={endDate}
