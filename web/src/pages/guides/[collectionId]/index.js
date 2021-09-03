@@ -34,7 +34,7 @@ const CollectionEngGuides = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token } = auth;
+  const { token, user } = auth;
   const { engGuides, isFetching } = engGuideState;
   const [selectedGuides, setSelectedGuides] = useState([]);
 
@@ -112,6 +112,10 @@ const CollectionEngGuides = () => {
 
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
+  
+  // TODO we will replace this logic with role based access control
+  // intentionally used useMemo here
+  const isEditable = useMemo(() => user.isSemaAdmin, [user]);
 
   if (isFetching && !engGuide) {
     return (
@@ -144,17 +148,19 @@ const CollectionEngGuides = () => {
               {engGuide.comments.length} suggested comments
             </span>
           </div>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={redirectToAddPage}
-          >
-            <FontAwesomeIcon icon={faPlus} className="mr-10" />
-            Add new Guide(s)
-          </button>
+          {isEditable && (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={redirectToAddPage}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-10" />
+              Add new Guide(s)
+            </button>
+          )}
         </div>
         {
-          selectedGuides.length ? (
+          isEditable && selectedGuides.length ? (
             <ActionGroup
               selectedGuides={selectedGuides}
               handleSelectAllChange={handleSelectAllChange}
