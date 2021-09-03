@@ -62,25 +62,9 @@ const checkLoggedIn = async () => {
       store.dispatch(updateSemaUser({ ...response }));
     });
   } catch (error) {
-    console.log('Sema Code Assistant extension is disabled');
+    // console.log('Sema Code Assistant extension is disabled');
   }
 };
-
-checkLoggedIn();
-const stateCheck = setInterval(() => {
-  if (document.readyState === 'complete') {
-    clearInterval(stateCheck);
-    store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  }
-}, 100);
-let initialCheck = false;
-const updateMetadata = setInterval(() => {
-  if (initialCheck) {
-    clearInterval(updateMetadata);
-  }
-  store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  initialCheck = true;
-}, 5000);
 
 $(() => {
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
@@ -168,6 +152,7 @@ document.addEventListener(
     if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
+        store.dispatch(addGithubMetada(getGithubMetadata(document)));
         const semaElements = $(activeElement).siblings('div.sema');
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
         SEMA_ICON = getSemaIconTheme(getActiveTheme());
@@ -300,9 +285,13 @@ document.addEventListener(
   'focusin',
   (event) => {
     const commentFieldClassName = 'comment-form-textarea';
+    // const pullRequestReviewBodyId = 'pull_request_review_body';
     if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
+    // if (event.target.id === pullRequestReviewBodyId) {
+    //   $(`#${pullRequestReviewBodyId}`).addClass('sema-is-form-bordered');
+    // }
   },
   true,
 );
