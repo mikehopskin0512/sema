@@ -1,26 +1,31 @@
 import React, { useState } from "react";
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import styles from './collection.module.scss';
+import styles from './suggestedComments.module.scss';
 import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
 import CommentsViewButtons from '../../components/comment/commentsViewButtons';
+import SuggestedCommentCollection from "../../components/comment/suggestedCommentCollections";
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 
 const NUM_PER_PAGE = 9;
 const isCollectionNameIncludes = (searchTerm) => {
-  return function({ collectionData }) {
+  return function ({ collectionData }) {
     const collectionName = collectionData?.name.toLowerCase() || '';
     return collectionName.includes(searchTerm.toLowerCase())
   }
 }
 
 const CommentCollections = () => {
+  const router = useRouter();
+  const { query: { cid } } = router;
   const { user } = useSelector((state) => state.authState);
   const { collections } = user;
+
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [collectionId, setCollectionId] = useState(null);
@@ -55,8 +60,8 @@ const CommentCollections = () => {
     setSearchTerm(e.target.value)
   }
 
-  return (
-    <div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
+  const renderCollections = () => {
+    return (<div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet {...CommentCollectionsHelmet} />
       <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
       <div id="collectionBody" className={clsx('hero-body pb-250', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
@@ -106,7 +111,20 @@ const CommentCollections = () => {
           )}
         </div>
       </div>
-    </div>
+    </div>)
+  }
+
+  const renderSuggestedComments = () => {
+    if (cid) {
+      return <SuggestedCommentCollection collectionId={cid} />
+    }
+    return renderCollections()
+  }
+
+  return (
+    <>
+      {renderSuggestedComments()}
+    </>
   );
 };
 

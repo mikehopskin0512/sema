@@ -46,11 +46,11 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     };
 
     const clickOnCard = () => {
-      if (asPath === '/collections') {
-        window.location = `/collections/${_id}`;
+      if (asPath === '/suggested-comments') {
+        window.location = `/suggested-comments?cid=${_id}`;
       }
       if (asPath === '/guides') {
-        window.location = `/guides/${_id}`;
+        window.location = `/guides?cid=${_id}`;
       }
     };
 
@@ -59,7 +59,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
         <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
           <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
             <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-            { asPath === '/collections' && (
+            { asPath === '/suggested-comments' && (
               <div className="field" onClick={onClickChild} aria-hidden>
                 <input
                   id={`activeSwitch-${_id}`}

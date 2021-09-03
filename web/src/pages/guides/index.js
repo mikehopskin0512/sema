@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import CardList from '../../components/comment/cardList';
+import EngGuidesCollection from '../../components/engGuides/engGuidesCollection';
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import { engGuidesOperations } from '../../state/features/engGuides';
@@ -10,6 +12,7 @@ const NUM_PER_PAGE = 9;
 const { getEngGuides } = engGuidesOperations;
 
 const EngineeringGuides = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { auth, engGuidesState } = useSelector((state) => ({
     auth: state.authState,
@@ -17,7 +20,7 @@ const EngineeringGuides = () => {
   }));
   const { token } = auth;
   const { engGuides = [] } = engGuidesState;
-
+  const { query: { cid: collectionId } } = router;
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -28,8 +31,8 @@ const EngineeringGuides = () => {
     setPage(page + 1);
   };
 
-  return (
-    <div className="has-background-gray-9 hero">
+  const renderCollections = () => {
+    return <div className="has-background-gray-9 hero">
       <Helmet {...CommentCollectionsHelmet} />
       <div className="hero-body pb-250">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
@@ -50,6 +53,19 @@ const EngineeringGuides = () => {
         </div>
       </div>
     </div>
+  }
+
+  const renderGuides = () => {
+    if (collectionId) {
+      return <EngGuidesCollection collectionId={collectionId} />
+    }
+    return renderCollections();
+  }
+
+  return (
+    <>
+      {renderGuides()}
+    </>
   );
 };
 
