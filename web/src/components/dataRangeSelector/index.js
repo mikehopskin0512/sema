@@ -8,6 +8,8 @@ import moment from 'moment';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
 
+console.warn = console.error = () => {};
+
 const DATE_RANGES = {
     last7Days: {
       name: 'Last 7 Days',

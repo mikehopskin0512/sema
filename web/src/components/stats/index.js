@@ -18,11 +18,13 @@ const StatsPage = ({ startDate, endDate }) => {
     repositories: state.repositoriesState,
   }));
 
+  const { data } = repositories;
+  const { overview: { smartcomments = [] } } = data;
+
   const [reactions, setReactions] = useState([]);
-  const [initial, setInitial] = useState(true);
   const [tags, setTags] = useState({});
 
-  const getReactionOverview = (smartcomments) => {
+  const getReactionOverview = () => {
     if (smartcomments.length > 0) {
       let start = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
       let end = new Date();
@@ -53,7 +55,7 @@ const StatsPage = ({ startDate, endDate }) => {
     }
   }
 
-  const getTagsOverview = (smartcomments) => {
+  const getTagsOverview = () => {
     let tagObject = {};
     // Set TagId as object keys
     TagList.forEach((tag) => {
@@ -71,8 +73,7 @@ const StatsPage = ({ startDate, endDate }) => {
   }
 
   useEffect(() => {
-    if (repositories?.data?.overview) {
-      const { overview: { smartcomments = [] } } = repositories.data;
+    if (smartcomments && smartcomments.length) {
       getReactionOverview(smartcomments);
       getTagsOverview(smartcomments);
     }
