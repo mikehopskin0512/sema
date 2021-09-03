@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { subDays, differenceInCalendarDays } from 'date-fns';
 import clsx from 'clsx';
-import { generateAll, generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
+import { generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
 import styles from './stats.module.scss';
 import BarChart from '../BarChart';
 import CircularPacking from '../CircularPackingChart';
@@ -18,13 +18,12 @@ const StatsPage = ({ startDate, endDate }) => {
     repositories: state.repositoriesState,
   }));
 
-  const { data } = repositories;
-  const { overview: { smartcomments = [] } } = data;
+  const { data: { overview } } = repositories;
 
   const [reactions, setReactions] = useState([]);
   const [tags, setTags] = useState({});
 
-  const getReactionOverview = () => {
+  const getReactionOverview = (smartcomments) => {
     if (smartcomments.length > 0) {
       let start = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
       let end = new Date();
@@ -55,7 +54,7 @@ const StatsPage = ({ startDate, endDate }) => {
     }
   }
 
-  const getTagsOverview = () => {
+  const getTagsOverview = (smartcomments) => {
     let tagObject = {};
     // Set TagId as object keys
     TagList.forEach((tag) => {
@@ -73,9 +72,9 @@ const StatsPage = ({ startDate, endDate }) => {
   }
 
   useEffect(() => {
-    if (smartcomments && smartcomments.length) {
-      getReactionOverview(smartcomments);
-      getTagsOverview(smartcomments);
+    if (overview?.smartcomments) {
+      getReactionOverview(overview?.smartcomments);
+      getTagsOverview(overview?.smartcomments);
     }
   }, [repositories]);
 

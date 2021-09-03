@@ -3,7 +3,7 @@ import { DateRangePicker } from 'react-dates';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { subDays, subWeeks, subMonths } from 'date-fns';
+import { subDays } from 'date-fns';
 import moment from 'moment';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
@@ -60,9 +60,9 @@ const DateRangeSelector = (props) => {
     }, [selectedRange]);
 
     const setDates = ({ startDate, endDate }) => {
-        setSelectedRange('custom');
-        setStartDate(startDate);
-        setEndDate(endDate);
+      setSelectedRange('custom');
+      setStartDate(startDate);
+      setEndDate(endDate);
     }
 
     const renderCalendarInfo = () => (

@@ -80,7 +80,7 @@ const NivoBarChart = ({ data = [] }) => {
     return (
       <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
         <FontAwesomeIcon icon={faChartBar} size="3x" />
-        <p className="is-size-5">No data</p>
+        <p className="is-size-5">No Reactions</p>
       </div>
     );
   }

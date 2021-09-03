@@ -32,10 +32,14 @@ const RepoPage = () => {
   const [dates, setDates] = useState();
 
   useEffect(() => {
-    dispatch(fetchRepositoryOverview(repoId, token, dates?.startDate && dates?.endDate ? {
-      startDate: format(new Date(dates.startDate), 'MMM dd, yyyy'),
-      endDate: format(new Date(dates.endDate), 'MMM dd, yyyy'),
-    } : null));
+    if (
+      (dates?.startDate && dates?.endDate) || (!dates?.startDate && !dates?.endDate)
+    ) {
+      dispatch(fetchRepositoryOverview(repoId, token, dates?.startDate && dates?.endDate ? {
+        startDate: format(new Date(dates.startDate), 'MMM dd, yyyy'),
+        endDate: format(new Date(dates.endDate), 'MMM dd, yyyy'),
+      } : null));
+    }
   }, [dispatch, repoId, token, dates]);
 
   return (
