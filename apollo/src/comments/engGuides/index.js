@@ -46,7 +46,7 @@ export default (app, passport) => {
       // this will be replaced by role based ACL
       if (!user.isSemaAdmin) {
         return res.status(422).send({
-          message: 'User does not have permission to create endGuides',
+          message: 'User does not have permission to update endGuides',
         });
       }
       
