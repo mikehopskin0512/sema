@@ -174,3 +174,21 @@ export const findByAuthor = async (author) => {
     return error;
   }
 };
+
+export const createUserCollection = async (username) => {
+  try {
+    const defaultCollection = {
+      name: 'My Comments',
+      description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
+      author: username,
+      isActive: true,
+      comments: [],
+    };
+    const userCollection = await create(defaultCollection);
+    return userCollection
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
