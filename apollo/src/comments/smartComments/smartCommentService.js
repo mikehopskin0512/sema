@@ -1,5 +1,5 @@
 import {
-  subMonths, subWeeks, subDays, isAfter, format,
+  subMonths, subWeeks, subDays, isAfter, format, formatDistanceToNowStrict,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -357,7 +357,16 @@ export const exportUserActivityChangeMetrics = async () => {
 export const getGrowthRepositoryMetrics = async () => {
   const metrics = [];
 
-  await Promise.all(Array(10).fill(0).map(async (_, index) => {
+  const startDate = await SmartComment.findOne().select('createdAt').sort({ createdAt: 1 });
+
+  let daysCount = 0;
+
+  if (startDate) {
+    const distanceString = formatDistanceToNowStrict(new Date(startDate.createdAt), { unit: 'day', roundingMethod: 'ceil' });
+    daysCount = parseInt(distanceString.split(' ')[0], 10);
+  }
+
+  await Promise.all(Array(daysCount + 1).fill(0).map(async (_, index) => {
     const date = subDays(new Date(), index);
     const groupQuery = [{
       $group: {
@@ -370,7 +379,7 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subDays(date, 30) } },
+            { createdAt: { $gt: subDays(date, 1) } },
             { createdAt: { $lte: date } },
           ],
         },
@@ -382,7 +391,7 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subWeeks(date, 8) } },
+            { createdAt: { $gt: subWeeks(date, 1) } },
             { createdAt: { $lte: date } },
           ],
         },
@@ -394,14 +403,14 @@ export const getGrowthRepositoryMetrics = async () => {
       {
         $match: {
           $and: [
-            { createdAt: { $gt: subMonths(date, 3) } },
+            { createdAt: { $gt: subMonths(date, 1) } },
             { createdAt: { $lte: date } },
           ],
         },
       },
       ...groupQuery,
     ]);
-    
+
     const registeredCount = await User.countDocuments({ isActive: true });
 
     const totalDayRepos = oneDayRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
