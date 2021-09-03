@@ -8,7 +8,6 @@ import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
-  closeSearchModal,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -27,7 +26,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
-    closeSearchModal: () => dispatch(closeSearchModal({ id })),
     toggleSearchModal: ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen })),
     // eslint-disable-next-line max-len
     selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
@@ -61,7 +59,7 @@ const SearchBar = (props) => {
     event.preventDefault();
     const { value } = event.target;
     props.handleChange(value);
-    props.closeSearchModal();
+    props.toggleSearchModal({ isOpen: false });
     if (value) {
       getSuggestionsDebounced.current(value, props.userId);
     } else {

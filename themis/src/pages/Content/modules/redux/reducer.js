@@ -122,9 +122,9 @@ function rootReducer(state = initialState, action) {
     const { semasearches } = newState;
     semasearches[id].isSearchModalVisible = false;
   } else if (type === TOGGLE_SEARCH_MODAL) {
-    const { id } = payload;
+    const { id, isOpen } = payload;
     const { semasearches } = newState;
-    semasearches[id].isSearchModalVisible = !semasearches[id]
+    semasearches[id].isSearchModalVisible = isOpen ?? !semasearches[id]
       .isSearchModalVisible;
   } else if (type === ADD_SUGGESTED_TAGS) {
     const { id, suggestedTags } = payload;
