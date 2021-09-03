@@ -192,3 +192,8 @@ export const createUserCollection = async (username) => {
     return error;
   }
 };
+
+export const isEditAllowed = async (user, collectionId) => {
+  const collection = await Collection.findById(collectionId);
+  return collection && (user.isSemaAdmin || collection.name.toLowerCase() === 'my comments' || collection.name.toLowerCase() === 'custom comments');
+};
