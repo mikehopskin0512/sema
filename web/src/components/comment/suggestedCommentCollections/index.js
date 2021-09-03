@@ -115,6 +115,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
 
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
+  
+  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
     <div className={clsx('has-background-gray-9 hero')}>
@@ -141,7 +143,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               {comments.length} suggested comments
             </span>
           </div>
-          {user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+          {isEditable ? (
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
@@ -152,7 +154,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           ) : null}
         </div>
         {
-          selectedComments.length ? (
+          isEditable && selectedComments.length ? (
             <ActionGroup
               selectedComments={selectedComments}
               handleSelectAllChange={handleSelectAllChange}
@@ -175,6 +177,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                 collectionId={collectionId}
                 selected={!!selectedComments.find((g) => g === item._id)}
                 onSelectChange={handleSelectChange}
+                isEditable={isEditable}
               />
             ))
           )

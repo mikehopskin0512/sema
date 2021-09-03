@@ -38,14 +38,13 @@ const ActivityItem = (props) => {
 
   const getPRName = (pull_num, pr_name) => {
     let prName = '';
-    if (!isEmpty(pull_num)) {
-      prName = `PR #${pull_num} `;
-    }
     if (!isEmpty(pr_name)) {
-      prName += pr_name;
+      prName = pr_name;
+    } else {
+      prName = 'Pull Request'
     }
-    if (isEmpty(prName)) {
-      return 'a pull request';
+    if (!isEmpty(pull_num)) {
+      prName += ` (#${pull_num})`;
     }
     return prName;
   }
