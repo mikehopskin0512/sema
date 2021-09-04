@@ -140,6 +140,24 @@ function handleReviewChangesClick(
   );
 }
 
+function onTextPaste(semabarContainerId) {
+  return function setDefaultEmoji() {
+    const state = store.getState();
+    const { isReactionDirty } = state.semabars[semabarContainerId];
+    if (isReactionDirty) {
+      return;
+    }
+    const selectedReaction = EMOJIS.find(({ _id }) => _id === EMOJIS_ID.FIX);
+    store.dispatch(
+      updateSelectedEmoji({
+        id: semabarContainerId,
+        selectedReaction,
+        isReactionDirty: true,
+      }),
+    );
+  };
+}
+
 /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -214,6 +232,7 @@ document.addEventListener(
             <Provider store={store}>
               <Searchbar
                 id={semaSearchContainerId}
+                onTextPaste={onTextPaste(semabarContainerId)}
                 commentBox={activeElement}
               />
             </Provider>,
@@ -246,7 +265,7 @@ document.addEventListener(
               );
             },
             store,
-            semaBarContainerId: semabarContainerId,
+            onTextPaste: onTextPaste(semabarContainerId),
           });
 
           // Add Sema icon before Markdown icon
