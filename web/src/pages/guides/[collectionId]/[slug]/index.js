@@ -194,7 +194,7 @@ const EngineeringGuidePage = () => {
                     <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
                       <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
                     </a>
-                    <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                    <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
                       <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
                     </a>
                   </div>
@@ -219,7 +219,7 @@ const EngineeringGuidePage = () => {
                   <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
                     <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
                   </a>
-                  <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                  <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
                     <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
                   </a>
                 </div>
