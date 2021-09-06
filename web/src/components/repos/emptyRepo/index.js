@@ -50,6 +50,7 @@ const EmptyRepo = () => {
                               onMouseEnter={() => onHover(title)}
                               onMouseLeave={() => onRemoveHover()}
                             >
+                              <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
                               <Lottie
                                 play={hovered === title}
                                 loop
