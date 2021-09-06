@@ -333,6 +333,18 @@ export async function writeSemaToGithub(textarea) {
     const { githubMetadata } = store.getState();
     const { _id: userId } = store.getState().user;
 
+    let fileExtention = $(textarea)?.parents('.file')?.attr('data-file-type');
+    if (!fileExtention) {
+      const url = $(textarea)
+        .parents('.file')
+        .children('.file-header')
+        .children('.Link--primary')
+        .attr('title');
+      fileExtention = url
+        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+        : null;
+    }
+
     comment = {
       githubMetadata: { ...githubMetadata, ...inLineMetada },
       userId,
@@ -342,6 +354,7 @@ export async function writeSemaToGithub(textarea) {
       // eslint-disable-next-line no-underscore-dangle
       reaction: selectedEmojiObj._id,
       tags,
+      fileExtention,
     };
 
     if (isPullRequestReview) {
