@@ -28,7 +28,7 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
       />
       {engGuides?.map(({ engGuide }) => (
         <GuideLink
-          title={engGuide.source?.name}
+          title={engGuide.title || engGuide.source?.name}
           link={engGuide.source?.url}
         />
       ))}
@@ -41,8 +41,8 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
-    const links = engGuides?.map(({ title, engGuide, slug }) => {
-      const caption = title || engGuide.source?.name;
+    const links = engGuides?.map(({ engGuide, slug }) => {
+      const caption = engGuide.title || engGuide.source?.name;
       // eslint-disable-next-line no-underscore-dangle
       const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
       return `\n\n📄 [${caption}](${url})`;

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   find, findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import CommentFilter from '../../../components/comment/commentFilter';
 import EngGuideTable from '../../../components/engGuides/engGuideTable';
@@ -13,8 +13,7 @@ import withLayout from '../../../components/layout';
 import Helmet from '../../../components/utils/Helmet';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
-
-// const NUM_PER_PAGE = 10;
+import ActionGroup from '../../../components/engGuides/actionGroup';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -35,8 +34,9 @@ const CollectionEngGuides = () => {
   }));
 
   const { collectionId } = router.query;
-  const { token } = auth;
+  const { token, user } = auth;
   const { engGuides, isFetching } = engGuideState;
+  const [selectedGuides, setSelectedGuides] = useState([]);
 
   const onSearch = ({ search, tag, language }) => {
     const { comments = [] } = engGuide;
@@ -91,6 +91,32 @@ const CollectionEngGuides = () => {
     }
   }, [collectionId, engGuides]);
 
+  const redirectToAddPage = async () => {
+    await router.push(`/engineering/${engGuideId}/add`);
+  };
+
+  const handleSelectChange = (guideId, value) => {
+    if (value) {
+      setSelectedGuides([...selectedGuides, guideId]);
+    } else {
+      setSelectedGuides(selectedGuides.filter((item) => item !== guideId));
+    }
+  };
+
+  const handleSelectAllChange = (value) => {
+    setSelectedGuides(value ? engGuideFilter.map((g) => g._id) : []);
+  };
+
+  const archiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
+    .indexOf(item._id) !== -1 && !item.isActive), [selectedGuides, engGuideFilter]);
+
+  const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
+    .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
+  
+  // TODO we will replace this logic with role based access control
+  // intentionally used useMemo here
+  const isEditable = useMemo(() => user.isSemaAdmin, [user]);
+
   if (isFetching && !engGuide) {
     return (
       <div>
@@ -108,21 +134,50 @@ const CollectionEngGuides = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/guides" className="has-text-grey">Community Eng Guides</a></li>
+              <li><a href="/guides" className="has-text-grey">Community Engineering Guides</a></li>
               <li className="is-active has-text-weight-semibold"><a href={`/engineering-guidelines/${collectionId}`}>{engGuide.name}</a></li>
             </ul>
           </nav>
         </div>
-        <div className="is-flex is-flex-wrap-wrap p-10 is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            {engGuide.name}
-          </p>
-          <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-            {engGuide.comments.length} suggested comments
-          </span>
+        <div className="is-flex is-justify-content-space-between is-align-items-center">
+          <div className="is-flex is-flex-wrap-wrap p-10 is-align-items-center">
+            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+              {engGuide.name}
+            </p>
+            <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
+              {engGuide.comments.length} suggested comments
+            </span>
+          </div>
+          {isEditable && (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={redirectToAddPage}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-10" />
+              Add new Guide(s)
+            </button>
+          )}
         </div>
-        <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
-        <EngGuideTable data={engGuideFilter} collectionId={collectionId} />
+        {
+          isEditable && selectedGuides.length ? (
+            <ActionGroup
+              selectedGuides={selectedGuides}
+              handleSelectAllChange={handleSelectAllChange}
+              archiveGuides={archiveGuides}
+              unarchiveGuides={unarchiveGuides}
+            />
+          ) : (
+            <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
+          )
+        }
+        <EngGuideTable
+          data={engGuideFilter}
+          selectedGuides={selectedGuides}
+          handleSelectChange={handleSelectChange}
+          handleSelectAllChange={handleSelectAllChange}
+          collectionId={collectionId}
+        />
       </div>
     </div>
   );

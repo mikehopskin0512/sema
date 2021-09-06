@@ -5,7 +5,7 @@ import Card from '../card';
 const CardList = ({ collections, addNewComment }) => (
   collections.length && collections.length > 0 ? (
     <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-      {collections.map((item, index) => (<Card {...item} key={`${index}-collection`} addNewComment={addNewComment} />))}
+      {collections.map((item) => (<Card {...item} key={`${item.collectionData._id}-collection`} addNewComment={addNewComment} />))}
     </div>
   ) :
     <p className="px-10 py-20 mb-50">No collections!</p>

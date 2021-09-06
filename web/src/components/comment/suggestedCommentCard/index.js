@@ -4,10 +4,12 @@ import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './suggestedCommentCard.module.scss';
+import ActionMenu from './actionMenu';
+import Checkbox from '../../checkbox';
 
 const defaultDate = '07/01/2021';
 
-const SuggestedCommentCard = ({ data, collectionId }) => {
+const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, isEditable }) => {
   const {
     author = '',
     comment = '',
@@ -16,20 +18,29 @@ const SuggestedCommentCard = ({ data, collectionId }) => {
     title = '',
     createdAt = defaultDate,
     engGuides = [],
+    _id,
   } = data;
 
   return (
     <div className={clsx('has-background-white border-radius-4px px-40 py-20 my-20', styles.container)}>
       <div className={clsx('is-flex is-justify-content-space-between is-align-items-flex-start', styles.title)}>
-        <p className="has-text-weight-semibold is-size-5 has-text-deep-black pr-10">{title}</p>
-        <div className="is-flex is-flex-wrap-wrap">
-          {tags.map((item) => (
-            <div
-              key={`tag-${item.label}`}
-              className={clsx('tag is-rounded is-uppercase m-5 is-light is-normal', styles.language)}>
-              {item.label}
-            </div>
-          ))}
+        <div className="is-flex is-align-items-center">
+          <Checkbox value={selected} onChange={(value) => onSelectChange(_id, value)} />
+          <p className="has-text-weight-semibold is-size-5 has-text-deep-black pr-10 ml-10">{title}</p>
+        </div>
+        <div className="is-flex">
+          <div className="is-flex is-flex-wrap-wrap mr-10">
+            {tags.map((item) => (
+              <div
+                key={`tag-${item.label}`}
+                className={clsx('tag is-rounded is-uppercase m-5 is-light is-normal', styles.language)}>
+                {item.label}
+              </div>
+            ))}
+          </div>
+          {isEditable && (
+            <ActionMenu comment={data} />
+          )}
         </div>
       </div>
       { isEmpty(author) && isEmpty(source.name) ? null : (
@@ -74,6 +85,8 @@ const SuggestedCommentCard = ({ data, collectionId }) => {
 
 SuggestedCommentCard.propTypes = {
   data: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired,
+  onSelectChange: PropTypes.func.isRequired,
   collectionId: PropTypes.string.isRequired,
 };
 
