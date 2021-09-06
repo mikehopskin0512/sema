@@ -583,6 +583,28 @@ h6 {
   border-color: var(--color-text-input-border);
 }
 
+.tags-modal {
+  display: flex;
+
+  &--column {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  &--separator {
+    width: 26px;
+    margin: 21px 0 19px;
+    border: 1px dashed #BFCBD3;
+  }
+
+  .sema-tag {
+    margin-bottom: 8px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+}
+
 .tags-selection {
   width: auto;
   border-color: var(--color-tags-border);
@@ -590,8 +612,17 @@ h6 {
   margin-top: 4px;
   right: 0;
   left: auto;
+
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
+    padding-bottom: 0;
+    margin: 0;
+    width: fit-content;
+  }
+
+  .sema-dropdown-item {
+    margin: 0;
+    padding: 0 10px 2px;
   }
 }
 
@@ -699,7 +730,6 @@ h6 {
   background-color: var(--color-tags-header-bg);
   color: var(--color-tags-header-font);
   padding: 10px 20px;
-  font-weight: 600;
 }
 
 #sema-reminder-root {
