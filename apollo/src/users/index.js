@@ -109,7 +109,6 @@ export default (app, passport) => {
 
       delete newUser.password;
       delete newUser.collections;
-      console.log(createAuthToken(newUser))
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
       });
