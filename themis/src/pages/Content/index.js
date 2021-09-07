@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
 import { debounce } from 'lodash';
-
 import {
   isValidSemaTextBox,
   onDocumentClicked,
@@ -18,6 +17,7 @@ import {
   getGithubMetadata,
   getHighlights,
   isPRPage,
+  initAmplitude,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -67,6 +67,8 @@ const checkLoggedIn = async () => {
 };
 
 $(() => {
+  initAmplitude();
+
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
   if (!reminderRoot && isPRPage()) {
     const node = document.createElement('div');

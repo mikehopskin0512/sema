@@ -23,6 +23,7 @@ import {
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
   MUTATION_OBSERVER_EVENT,
+  LAST_USED_SMART_COMMENT,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -138,4 +139,9 @@ export const closeAllEmojiSelection = () => ({
 
 export const closeLoginReminder = () => ({
   type: CLOSE_LOGIN_REMINDER,
+});
+
+export const usedSmartComment = (payload) => ({
+  type: LAST_USED_SMART_COMMENT,
+  payload,
 });

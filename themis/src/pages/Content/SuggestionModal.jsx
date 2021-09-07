@@ -36,7 +36,7 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
   );
 };
 
-function SuggestionModal({ onInsertPressed, searchResults }) {
+function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartComment }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -57,6 +57,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     navigator.clipboard.writeText(suggestion).then(
       () => {
         setCopiedId(id);
+        onLastUsedSmartComment(suggestion);
       },
       () => {
         // eslint-disable-next-line no-console
