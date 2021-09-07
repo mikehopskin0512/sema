@@ -160,14 +160,14 @@ function rootReducer(state = initialState, action) {
     }
     case CLOSE_ALL_MODALS: {
       const { semabars, semasearches } = state;
-      const newSemaBars = Object.keys(semabars).map((id) => ({
-        ...semabars[id],
-        isTagModalVisible: false,
-      }));
-      const newSemaSearches = Object.keys(semasearches).map((id) => ({
-        ...semasearches[id],
-        isSearchModalVisible: false,
-      }));
+      const newSemaBars = { ...semabars };
+      Object.keys(newSemaBars).forEach((id) => {
+        newSemaBars[id].isTagModalVisible = false;
+      });
+      const newSemaSearches = { ...semasearches };
+      Object.keys(newSemaSearches).forEach((id) => {
+        newSemaSearches[id].isSearchModalVisible = false;
+      });
       return {
         ...state,
         semabars: newSemaBars,
@@ -180,10 +180,10 @@ function rootReducer(state = initialState, action) {
     }
     case CLOSE_ALL_SELECTING_EMOJI: {
       const { semabars } = state;
-      const newSemaBars = Object.keys(semabars).map((id) => ({
-        ...semabars[id],
-        isSelectingEmoji: false,
-      }));
+      const newSemaBars = { ...semabars };
+      Object.keys(newSemaBars).forEach((id) => {
+        newSemaBars[id].isSelectingEmoji = false;
+      });
       return {
         ...state,
         semabars: newSemaBars,
