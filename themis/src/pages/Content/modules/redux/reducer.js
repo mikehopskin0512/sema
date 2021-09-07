@@ -1,5 +1,5 @@
 // eslint-disable-next-line camelcase
-// import jwt_decode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 
 import initialState from './initialState';
 import {
@@ -9,13 +9,13 @@ import {
   UPDATE_SELECTED_EMOJI,
   UPDATE_SELECTED_TAGS,
   TOGGLE_SEARCH_MODAL,
-  // ADD_SUGGESTED_TAGS,
-  // TOGGLE_GLOBAL_SEARCH_MODAL,
-  // TOGGLE_GLOBAL_SEARCH_LOADING,
-  // ON_INPUT_GLOBAL_SEARCH,
-  // RESET_SEMA_STATES,
-  // UPDATE_GITHUB_TEXTAREA,
-  // UPDATE_SEMA_USER,
+  ADD_SUGGESTED_TAGS,
+  TOGGLE_GLOBAL_SEARCH_MODAL,
+  TOGGLE_GLOBAL_SEARCH_LOADING,
+  ON_INPUT_GLOBAL_SEARCH,
+  RESET_SEMA_STATES,
+  UPDATE_GITHUB_TEXTAREA,
+  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -24,7 +24,7 @@ import {
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
-  // LAST_USED_SMART_COMMENT,
+  LAST_USED_SMART_COMMENT,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -36,14 +36,14 @@ import {
 } from '../content-util';
 
 import {
-  // ADD_OP,
-  // SELECTED,
-  // SUGGESTED_TAG_LIMIT,
+  ADD_OP,
+  SELECTED,
+  SUGGESTED_TAG_LIMIT,
   GLOBAL_SEMA_SEARCH_ID,
-  // TAGS_INIT,
-  // EMOJIS,
-  // POSITIVE,
-  // NEGATIVE,
+  TAGS_INIT,
+  EMOJIS,
+  POSITIVE,
+  NEGATIVE,
 } from '../../constants';
 
 function rootReducer(state = initialState, action) {
@@ -251,138 +251,191 @@ function rootReducer(state = initialState, action) {
         },
       };
     }
-    // case ADD_SUGGESTED_TAGS: {
-    //
-    // }
+    case ADD_SUGGESTED_TAGS: {
+      const { id, suggestedTags } = payload;
+      const {
+        semabars,
+        semabars: {
+          [id]: { selectedTags = [] },
+        },
+      } = state;
+
+      // suggestion=T, selected=F, isDirty=F, showTag=T
+      const suggestionsToShow = suggestedTags.filter((suggestion) => {
+        const tagObj = selectedTags.find(
+          (tagDetails) => tagDetails[POSITIVE] === suggestion
+            || tagDetails[NEGATIVE] === suggestion,
+        );
+        if (tagObj) {
+          const isSelected = !!tagObj[SELECTED];
+          const { isDirty } = tagObj;
+          if (!isSelected && !isDirty) {
+            return true;
+          }
+        }
+        return false;
+      });
+
+      let updatedTags = [...selectedTags];
+      // suggestion=F, selected=T, isDirty=F, showTag=F
+      updatedTags.forEach((tagObj) => {
+        const isSelected = !!tagObj[SELECTED];
+        if (isSelected) {
+          const isSuggested = !!suggestedTags.find(
+            (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE],
+          );
+          const { isDirty } = tagObj;
+          if (!isSuggested && !isDirty) {
+            // eslint-disable-next-line no-param-reassign
+            tagObj[SELECTED] = null;
+          }
+        }
+      });
+
+      const selectedTagsLength = updatedTags.filter((tagObj) => tagObj[SELECTED])
+        .length;
+
+      let numberOfAllowedSuggestions = SUGGESTED_TAG_LIMIT - selectedTagsLength;
+      numberOfAllowedSuggestions = numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
+
+      // reverse so that only new suggestions are removed
+      suggestionsToShow.reverse();
+
+      while (suggestionsToShow.length > numberOfAllowedSuggestions) {
+        suggestionsToShow.pop();
+      }
+
+      // TODO: i am not sure that it works right
+      suggestionsToShow.forEach((tag) => {
+        const operation = { tag, op: ADD_OP };
+        updatedTags = toggleTagSelection(operation, updatedTags);
+      });
+
+      return {
+        ...state,
+        semabars: {
+          ...semabars,
+          [id]: {
+            ...semabars[id],
+            selectedTags: updatedTags,
+          },
+        },
+      };
+    }
+    case LAST_USED_SMART_COMMENT: {
+      return {
+        ...state,
+        lastUserSmartComment: payload,
+      };
+    }
+    case TOGGLE_GLOBAL_SEARCH_MODAL: {
+      const {
+        data, position, isLoading = false, openFor,
+      } = payload;
+      const obj = {};
+      if (data) {
+        // open with data
+        obj.data = data;
+        obj.position = position;
+        obj.isOpen = true;
+        obj.isLoading = isLoading;
+        obj.openFor = openFor;
+      } else {
+        // close
+        obj.data = null;
+        obj.isOpen = false;
+      }
+      return {
+        ...state,
+        [GLOBAL_SEMA_SEARCH_ID]: obj,
+      };
+    }
+    case TOGGLE_GLOBAL_SEARCH_LOADING: {
+      const { isLoading } = payload;
+      return {
+        ...state,
+        [GLOBAL_SEMA_SEARCH_ID]: {
+          ...state[GLOBAL_SEMA_SEARCH_ID],
+          isLoading,
+        },
+      };
+    }
+    case ON_INPUT_GLOBAL_SEARCH: {
+      const { data } = payload;
+      return {
+        ...state,
+        [GLOBAL_SEMA_SEARCH_ID]: {
+          ...state[GLOBAL_SEMA_SEARCH_ID],
+          data,
+        },
+      };
+    }
+    case RESET_SEMA_STATES: {
+      const { semabarContainerId, semaSearchContainerId } = payload;
+
+      const semaBar = {
+        ...state.semabars[semabarContainerId],
+        isTagModalVisible: false,
+        isSelectingEmoji: false,
+        selectedTags: TAGS_INIT,
+        selectedReaction: EMOJIS[0],
+        isReactionDirty: false,
+        suggestedTags: [],
+      };
+
+      const semaSearch = {
+        ...state.semasearches[semaSearchContainerId],
+        isSearchModalVisible: false,
+        selectedSuggestedComments: [],
+        searchValue: '',
+      };
+      return {
+        ...state,
+        semabars: {
+          ...state.semabars,
+          [semabarContainerId]: semaBar,
+        },
+        semasearches: {
+          ...state.semasearches,
+          [semaSearchContainerId]: semaSearch,
+        },
+        lastUserSmartComment: null,
+        githubMetadata: {
+          ...state.githubMetadata,
+          filename: null,
+          file_extension: null,
+          line_numbers: null,
+        },
+      };
+    }
+    case UPDATE_GITHUB_TEXTAREA: {
+      const { isTyping } = payload;
+      return {
+        ...state,
+        github: {
+          ...state.github,
+          isTyping,
+        },
+      };
+    }
+    case UPDATE_SEMA_USER: {
+      const { token, isLoggedIn } = payload;
+      let newUser;
+      if (token) {
+        const { user } = jwt_decode(token);
+        newUser = { ...user, ...{ isLoggedIn } };
+      } else {
+        newUser = { isLoggedIn };
+      }
+      return {
+        ...state,
+        user: newUser,
+      };
+    }
     default: {
       return state;
     }
   }
-  // else if (type === LAST_USED_SMART_COMMENT) {
-  //   newState.lastUserSmartComment = payload;
-  // }
 }
-
-// if (type === ADD_SUGGESTED_TAGS) {
-//   const { id, suggestedTags } = payload;
-//   const {
-//     semabars,
-//     semabars: {
-//       [id]: { selectedTags = [] },
-//     },
-//   } = newState;
-//
-//   // suggestion=T, selected=F, isDirty=F, showTag=T
-//   const suggestionsToShow = suggestedTags.filter((suggestion) => {
-//     const tagObj = selectedTags.find(
-//       (tagDetails) => tagDetails[POSITIVE] === suggestion
-//         || tagDetails[NEGATIVE] === suggestion,
-//     );
-//     if (tagObj) {
-//       const isSelected = !!tagObj[SELECTED];
-//       const { isDirty } = tagObj;
-//       if (!isSelected && !isDirty) {
-//         return true;
-//       }
-//     }
-//     return false;
-//   });
-//
-//   // suggestion=F, selected=T, isDirty=F, showTag=F
-//   selectedTags.forEach((tagObj) => {
-//     const isSelected = !!tagObj[SELECTED];
-//     if (isSelected) {
-//       const isSuggested = !!suggestedTags.find(
-//         (tag) => tag === tagObj[POSITIVE] || tag === tagObj[NEGATIVE],
-//       );
-//       const { isDirty } = tagObj;
-//       if (!isSuggested && !isDirty) {
-//         // eslint-disable-next-line no-param-reassign
-//         tagObj[SELECTED] = null;
-//       }
-//     }
-//   });
-//
-//   const selectedTagsLength = selectedTags.filter((tagObj) => tagObj[SELECTED])
-//     .length;
-//
-//   let numberOfAllowedSuggestions = SUGGESTED_TAG_LIMIT - selectedTagsLength;
-//   numberOfAllowedSuggestions = numberOfAllowedSuggestions < 0 ? 0 : numberOfAllowedSuggestions;
-//
-//   // reverse so that only new suggestions are removed
-//   suggestionsToShow.reverse();
-//
-//   while (suggestionsToShow.length > numberOfAllowedSuggestions) {
-//     suggestionsToShow.pop();
-//   }
-//
-//   let updatedTags = [...selectedTags];
-//   suggestionsToShow.forEach((tag) => {
-//     const operation = { tag, op: ADD_OP };
-//     updatedTags = toggleTagSelection(operation, updatedTags);
-//     semabars[id].selectedTags = updatedTags;
-//   });
-//
-//
-//
-// else if (type === TOGGLE_GLOBAL_SEARCH_MODAL) {
-//   const {
-//     data, position, isLoading = false, openFor,
-//   } = payload;
-//   const obj = {};
-//   if (data) {
-//     // open with data
-//     obj.data = data;
-//     obj.position = position;
-//     obj.isOpen = true;
-//     obj.isLoading = isLoading;
-//     obj.openFor = openFor;
-//   } else {
-//     // close
-//     obj.data = null;
-//     obj.isOpen = false;
-//   }
-//   newState[GLOBAL_SEMA_SEARCH_ID] = obj;
-// } else if (type === TOGGLE_GLOBAL_SEARCH_LOADING) {
-//   const { isLoading } = payload;
-//   newState[GLOBAL_SEMA_SEARCH_ID].isLoading = isLoading;
-// } else if (type === ON_INPUT_GLOBAL_SEARCH) {
-//   const { data } = payload;
-//   newState[GLOBAL_SEMA_SEARCH_ID].data = data;
-// } else if (type === RESET_SEMA_STATES) {
-//   const { semabarContainerId, semaSearchContainerId } = payload;
-//
-//   newState.semabars[semabarContainerId] = {
-//     isTagModalVisible: false,
-//     isSelectingEmoji: false,
-//     selectedTags: TAGS_INIT,
-//     selectedReaction: EMOJIS[0],
-//     isReactionDirty: false,
-//     suggestedTags: [],
-//   };
-//
-//   newState.semasearches[semaSearchContainerId] = {
-//     isSearchModalVisible: false,
-//     selectedSuggestedComments: [],
-//     searchValue: '',
-//   };
-//
-//   // Reset to default Github Metadata
-//   newState.githubMetadata.filename = null;
-//   newState.githubMetadata.file_extension = null;
-//   newState.githubMetadata.line_numbers = null;
-//   newState.lastUserSmartComment = null;
-// } else if (type === UPDATE_GITHUB_TEXTAREA) {
-//   const { isTyping } = payload;
-//   newState.github.isTyping = isTyping;
-// } else if (type === UPDATE_SEMA_USER) {
-//   const { token, isLoggedIn } = payload;
-//   if (token) {
-//     const { user } = jwt_decode(token);
-//     newState.user = { ...user, ...{ isLoggedIn } };
-//   } else {
-//     newState.user = { isLoggedIn };
-//   }
-// }
 
 export default rootReducer;
