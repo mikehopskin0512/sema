@@ -6,6 +6,13 @@ import {
 function TagsModal({ allTags, toggleTagSelection }) {
   const Tag = ({ tag, type }) => {
     const isSelected = tag.selected === type;
+    const toggleTag = () => {
+      toggleTagSelection({
+        tag: tag[type],
+        isSelected,
+        op: TOGGLE_OP,
+      });
+    };
     return (
       <div
         className={`
@@ -14,13 +21,7 @@ function TagsModal({ allTags, toggleTagSelection }) {
           ${isSelected ? 'sema-is-dark' : 'sema-is-light'}
         `}
         style={{ cursor: 'pointer' }}
-        onClick={() => {
-          toggleTagSelection({
-            tag,
-            isSelected,
-            op: TOGGLE_OP,
-          });
-        }}
+        onClick={toggleTag}
       >
         {tag[type]}
       </div>
@@ -30,7 +31,6 @@ function TagsModal({ allTags, toggleTagSelection }) {
   return (
     <div className="tags-modal">
       <div className="tags-modal--column sema-is-align-items-flex-end">
-        <Tag tag={allTags[0]} type={POSITIVE} key={1} />
         {allTags.map((tag) => <Tag tag={tag} type={POSITIVE} key={tag[POSITIVE]} />)}
       </div>
       <div className="tags-modal--column">
@@ -39,43 +39,6 @@ function TagsModal({ allTags, toggleTagSelection }) {
       <div className="tags-modal--column">
         {allTags.map((tag) => <Tag tag={tag} type={NEGATIVE} key={tag[NEGATIVE]} />)}
       </div>
-
-      {
-        // rowsArray.map((_, index) => {
-        //   const tagObj = allTags[index];
-        //   const positiveTag = tagObj[POSITIVE];
-        //   const negativeTag = tagObj[NEGATIVE];
-        //   const selectedLabel = tagObj[SELECTED];
-        //   const baseTagClasses = 'sema-tag sema-is-rounded';
-        //   let positiveClasses = baseTagClasses;
-        //   let negativeClasses = baseTagClasses;
-        //   if (selectedLabel === POSITIVE) {
-        //     positiveClasses += ' sema-is-dark';
-        //     negativeClasses += ' sema-is-light';
-        //   } else if (selectedLabel === NEGATIVE) {
-        //     negativeClasses += ' sema-is-dark';
-        //     positiveClasses += ' sema-is-light';
-        //   } else {
-        //     positiveClasses += ' sema-is-light';
-        //     negativeClasses += ' sema-is-light';
-        //   }
-        //
-        //   const isLastRow = index === rowsArray.length - 1;
-        //
-        //   const tagRowContainerStyle = !isLastRow ? 'sema-mb-4' : '';
-        //
-        //   return (
-        //     <div className={tagRowContainerStyle} key={`${positiveTag}${negativeTag}`}>
-        // eslint-disable-next-line max-len
-        //       <div className="sema-columns sema-pt-2 sema-pb-2 sema-mb-0 sema-is-flex sema-is-align-items-center">
-        //         {getTagColumn(positiveClasses, positiveTag, selectedLabel, POSITIVE)}
-        //         <div className="sema-tags-separator" />
-        //         {getTagColumn(negativeClasses, negativeTag, selectedLabel, NEGATIVE)}
-        //       </div>
-        //     </div>
-        //   );
-        // })
-      }
     </div>
   );
 }
