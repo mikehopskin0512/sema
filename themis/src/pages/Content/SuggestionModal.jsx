@@ -9,6 +9,9 @@ const truncate = (content) => {
   }...` : content;
 };
 
+// eslint-disable-next-line no-underscore-dangle
+const getCollectionUrl = (engGuide, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+
 const getCommentTitleInterface = (title, sourceName) => (
   <div className="suggestion-title">
     <span className="suggestion-name">{title}</span>
@@ -26,10 +29,10 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
-      {engGuides?.map(({ engGuide }) => (
+      {engGuides?.map(({ engGuide, slug }) => (
         <GuideLink
           title={engGuide.title || engGuide.source?.name}
-          link={engGuide.source?.url}
+          link={getCollectionUrl(engGuide, slug)}
         />
       ))}
     </div>
@@ -43,8 +46,7 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
   const engGuidesToStr = (engGuides) => {
     const links = engGuides?.map(({ engGuide, slug }) => {
       const caption = engGuide.title || engGuide.source?.name;
-      // eslint-disable-next-line no-underscore-dangle
-      const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+      const url = getCollectionUrl(engGuide, slug);
       return `\n\n📄 [${caption}](${url})`;
     }).join(' ');
     return links || '';
