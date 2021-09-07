@@ -256,7 +256,7 @@ document.addEventListener(
           );
           reactNodes.add(searchBarNode);
           // Render Semabar
-          const semaBarNode = $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0]
+          const semaBarNode = $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0];
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
