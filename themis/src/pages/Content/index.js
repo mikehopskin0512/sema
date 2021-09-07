@@ -50,8 +50,6 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
-// const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
@@ -141,6 +139,8 @@ function handleReviewChangesClick(
     }),
   );
 }
+
+checkLoggedIn();
 
 function onTextPaste(semabarContainerId) {
   return function setDefaultEmoji() {
