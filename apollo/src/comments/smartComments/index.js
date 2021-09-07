@@ -142,12 +142,13 @@ export default (app, passport) => {
 
   route.get('/suggested', async (req, res) => {
     try {
-      const { page = 1, perPage = 50, search } = req.query;
+      const { page = 1, perPage = 50, search, sortDesc } = req.query;
 
       const { comments, totalCount } = await getSuggestedMetrics({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
         search,
+        sortDesc: sortDesc === 'true',
       });
       return res.json({ comments, totalCount });
     } catch (error) {
@@ -158,8 +159,8 @@ export default (app, passport) => {
 
   route.post('/suggested/export', async (req, res) => {
     try {
-      const { search } = req.body;
-      const packer = await exportSuggestedMetrics({ search });
+      const { search, sortDesc } = req.body;
+      const packer = await exportSuggestedMetrics({ search, sortDesc: sortDesc === 'true' });
       res.writeHead(200, {
         'Content-disposition': `attachment;filename=suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`,
       });

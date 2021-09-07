@@ -2,15 +2,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
 import $ from 'cash-dom';
 import { debounce, isEqual } from 'lodash';
-
 import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
-import { updateSelectedEmoji } from './modules/redux/action';
-import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from './constants';
+import { IS_HIGHLIGHTS_ACTIVE } from './constants';
 import { checkSubmitButton, getSemaIds } from './modules/content-util';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
@@ -29,7 +26,7 @@ class Mirror {
    *
    * @param {HTML textarea} textAreaElement
    * @param {function()} getTokenAlerts
-   * @param {object} options { onMouseoverHighlight, store, semaBarContainerId }
+   * @param {object} options { onMouseoverHighlight, store, onTextPaste }
    */
   constructor(textAreaElement, getTokenAlerts, options) {
     const id = $(textAreaElement).attr('id');
@@ -44,7 +41,6 @@ class Mirror {
       return;
     }
 
-    this._semaBarContainerId = options.semaBarContainerId;
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
@@ -52,8 +48,9 @@ class Mirror {
     this._getHighlightByPosition = this._getHighlightByPosition.bind(this);
     this._onClick = this._onClick.bind(this);
     this._onHover = this._onHover.bind(this);
-    this._onTextPaste = this._onTextPaste.bind(this);
+    this._onTextPaste = options.onTextPaste.bind(this);
     this._onMousePartial = this._onMousePartial.bind(this);
+    this.destroy = this._destroy.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
@@ -201,24 +198,6 @@ class Mirror {
     // this._renderInterval = setAnimationFrameInterval(
     //     this._render,
     //     config.RENDER_INTERVAL
-  }
-
-  _onTextPaste() {
-    const state = this._store.getState();
-    const { isReactionDirty } = state.semabars[this._semaBarContainerId];
-    if (isReactionDirty) {
-      return;
-    }
-    // TODO: dont use hard-coded ids
-    const fixEmojiId = '607f0d1ed7f45b000ec2ed74';
-    const selectedReaction = EMOJIS.find((e) => e._id === fixEmojiId);
-    this._store.dispatch(
-      updateSelectedEmoji({
-        id: this._semaBarContainerId,
-        selectedReaction,
-        isReactionDirty: true,
-      }),
-    );
   }
 
   _onInput() {
@@ -386,14 +365,14 @@ class Mirror {
     $(this._highlighterContainer).children(`.${HIGHLIGHTER_CONTENT}`).remove();
   }
 
-  // TODO: implement this
-  destroy() {
-    $(this._elementToMimic).off('input', this._onInput);
-    $(this._elementToMimic).off('paste', this._onTextPaste);
+  _destroy() {
     $(this._elementToMimic).off('scroll', this._onScroll);
-    // $(this._elementToMimic).off('click', this._onClick),
-    $(this._elementToMimic).off('mousemove', this._hover);
+    $(this._elementToMimic).off('input', this._onInput);
+    $(this._elementToMimic).off('change', this._onInput);
+    $(this._elementToMimic).off('mousemove', this._onHover);
+    $(this._elementToMimic).off('click', this._onClick);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+    $(this._elementToMimic).off('paste', this._onTextPaste);
     //   this._renderInterval && this._renderInterval.destroy(),
     if (this._container) {
       this._container.remove();
@@ -403,7 +382,8 @@ class Mirror {
       this._elementToMimicResizeObserver.disconnect();
     }
 
-    this._elementMeasurement.clearCache();
+    // TODO: this one doesn't work (need to investigate)
+    // this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }
