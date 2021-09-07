@@ -462,7 +462,7 @@ export const findByExternalId = async (repoId, populate) => {
   }
 };
 
-export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = false) => {
+export const getSuggestedMetrics = async ({ page, perPage, search, sortDesc }, isExport = false) => {
   const userIds = search ? (await User.distinct('_id', {
     $or: [
       { username: RegExp(search, 'gi') },
@@ -483,7 +483,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
-    .sort('-createdAt')
+    .sort(sortDesc ? '-createdAt' : 'createdAt')
     .populate('userId')
     .populate('reaction');
 
@@ -497,8 +497,8 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
   return { comments: smartComments, totalCount };
 };
 
-export const exportSuggestedMetrics = async ({ search }) => {
-  const { comments } = await getSuggestedMetrics({ search }, true);
+export const exportSuggestedMetrics = async ({ search, sortDesc }) => {
+  const { comments } = await getSuggestedMetrics({ search, sortDesc }, true);
   const mappedData = comments.map((item) => ({
     Comment: item.comment,
     Reaction: item.reaction && item.reaction.title,
