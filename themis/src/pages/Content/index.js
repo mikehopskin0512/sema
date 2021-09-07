@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
 import { debounce } from 'lodash';
-
 import {
   isValidSemaTextBox,
   onDocumentClicked,
@@ -18,6 +17,7 @@ import {
   getGithubMetadata,
   getHighlights,
   isPRPage,
+  initAmplitude,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -65,6 +65,8 @@ const checkLoggedIn = async () => {
 };
 
 $(() => {
+  initAmplitude();
+
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
   if (!reminderRoot && isPRPage()) {
     const node = document.createElement('div');
@@ -140,6 +142,24 @@ function handleReviewChangesClick(
 
 checkLoggedIn();
 
+function onTextPaste(semabarContainerId) {
+  return function setDefaultEmoji() {
+    const state = store.getState();
+    const { isReactionDirty } = state.semabars[semabarContainerId];
+    if (isReactionDirty) {
+      return;
+    }
+    const selectedReaction = EMOJIS.find(({ _id }) => _id === EMOJIS_ID.FIX);
+    store.dispatch(
+      updateSelectedEmoji({
+        id: semabarContainerId,
+        selectedReaction,
+        isReactionDirty: true,
+      }),
+    );
+  };
+}
+
 /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -214,6 +234,7 @@ document.addEventListener(
             <Provider store={store}>
               <Searchbar
                 id={semaSearchContainerId}
+                onTextPaste={onTextPaste(semabarContainerId)}
                 commentBox={activeElement}
               />
             </Provider>,
@@ -246,7 +267,7 @@ document.addEventListener(
               );
             },
             store,
-            semaBarContainerId: semabarContainerId,
+            onTextPaste: onTextPaste(semabarContainerId),
           });
 
           // Add Sema icon before Markdown icon
