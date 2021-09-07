@@ -77,6 +77,7 @@ function rootReducer(state = initialState, action) {
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
     const { semabars } = newState;
+    semabars[id].isTagModalDirty = true;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
   } else if (type === TOGGLE_IS_SELECTING_EMOJI) {
     const { id } = payload;
