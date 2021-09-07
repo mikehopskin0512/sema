@@ -134,9 +134,13 @@ export const getRepository = async (_id) => {
   }
 };
 
-export const findByExternalIds = async (externalIds) => {
+export const findByExternalIds = async (externalIds, populateUsers) => {
   try {
-    const repositories = await Repositories.find({ 'externalId': { $in: externalIds } });
+    const query = Repositories.find({ 'externalId': { $in: externalIds } });
+    if (populateUsers) {
+      query.populate({ path: 'repoStats.userIds', model: 'User' });
+    }
+    const repositories = await query.exec();
     return repositories;
   } catch (err) {
     logger.error(err);
@@ -198,7 +202,7 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
     //   },
     // ]);
     // Get Repos by externalId
-    const repos = await findByExternalIds(externalIds);
+    const repos = await findByExternalIds(externalIds, true);
     if (repos.length > 0) {
       // Get SmartComments of Repos
       const repoRaw = await Promise.all(repos.map(async (repo) => {
@@ -227,6 +231,7 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
           externalId,
           name,
           createdAt,
+          users: repoStats.userIds,
         };
         if (includeSmartComments) {
           data.smartcomments = smartComments;

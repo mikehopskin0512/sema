@@ -57,26 +57,14 @@ chrome.runtime.onMessage.addListener((request) => {
 });
 
 const checkLoggedIn = async () => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
-    store.dispatch(updateSemaUser({ ...response }));
-  });
+  try {
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
+      store.dispatch(updateSemaUser({ ...response }));
+    });
+  } catch (error) {
+    // console.log('Sema Code Assistant extension is disabled');
+  }
 };
-
-checkLoggedIn();
-const stateCheck = setInterval(() => {
-  if (document.readyState === 'complete') {
-    clearInterval(stateCheck);
-    store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  }
-}, 100);
-let initialCheck = false;
-const updateMetadata = setInterval(() => {
-  if (initialCheck) {
-    clearInterval(updateMetadata);
-  }
-  store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  initialCheck = true;
-}, 5000);
 
 $(() => {
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
@@ -152,6 +140,24 @@ function handleReviewChangesClick(
   );
 }
 
+function onTextPaste(semabarContainerId) {
+  return function setDefaultEmoji() {
+    const state = store.getState();
+    const { isReactionDirty } = state.semabars[semabarContainerId];
+    if (isReactionDirty) {
+      return;
+    }
+    const selectedReaction = EMOJIS.find(({ _id }) => _id === EMOJIS_ID.FIX);
+    store.dispatch(
+      updateSelectedEmoji({
+        id: semabarContainerId,
+        selectedReaction,
+        isReactionDirty: true,
+      }),
+    );
+  };
+}
+
 /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -164,6 +170,7 @@ document.addEventListener(
     if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
         checkLoggedIn();
+        store.dispatch(addGithubMetada(getGithubMetadata(document)));
         const semaElements = $(activeElement).siblings('div.sema');
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
         SEMA_ICON = getSemaIconTheme(getActiveTheme());
@@ -225,6 +232,7 @@ document.addEventListener(
             <Provider store={store}>
               <Searchbar
                 id={semaSearchContainerId}
+                onTextPaste={onTextPaste(semabarContainerId)}
                 commentBox={activeElement}
               />
             </Provider>,
@@ -257,7 +265,7 @@ document.addEventListener(
               );
             },
             store,
-            semaBarContainerId: semabarContainerId,
+            onTextPaste: onTextPaste(semabarContainerId),
           });
 
           // Add Sema icon before Markdown icon
@@ -296,9 +304,13 @@ document.addEventListener(
   'focusin',
   (event) => {
     const commentFieldClassName = 'comment-form-textarea';
+    // const pullRequestReviewBodyId = 'pull_request_review_body';
     if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
+    // if (event.target.id === pullRequestReviewBodyId) {
+    //   $(`#${pullRequestReviewBodyId}`).addClass('sema-is-form-bordered');
+    // }
   },
   true,
 );

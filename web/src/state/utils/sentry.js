@@ -33,25 +33,25 @@ const initialize = async (ctx) => {
     const { user = {} } = (jwt) ? jwtDecode(jwt) : {};
     ({ isVerified } = user);
   }
-  if (jwt && !isVerified) {
-    ctx.store.dispatch(triggerAlert('User is not yet verified.', 'error'));
-    ctx.res.setHeader(
-      'Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`],
-    );
-  }
+
   // console.log("user waitlist", ctx.store.getState().authState.user.isWaitlist)
   // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
     !(ctx.pathname).includes('/login') &&
     !(ctx.pathname).includes('/onboarding') &&
-    !(ctx.pathname).includes('/engineering') &&
+    !(ctx.pathname).includes('/guides') &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset')
   ) {
     if (!jwt) { redirect(ctx, '/login'); }
     if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, '/login'); }
-    if (!isVerified) { redirect(ctx, '/login'); }
+    if (!isVerified) {
+      ctx.res.setHeader(
+        'Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`],
+      );
+      redirect(ctx, '/login');
+    }
   }
 };
 

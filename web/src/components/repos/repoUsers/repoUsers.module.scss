@@ -1,0 +1,15 @@
+.avatar {
+  border: 1px solid #D6D6D6;
+  height: 32px;
+  width: 32px;
+}
+
+.user-count {
+  border: 1px solid #D6D6D6;
+  height: 32px;
+  width: 32px;
+  z-index: 10;
+  p {
+    color: #56626E !important;
+  }
+}
