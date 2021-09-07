@@ -50,6 +50,7 @@ class Mirror {
     this._onHover = this._onHover.bind(this);
     this._onTextPaste = options.onTextPaste.bind(this);
     this._onMousePartial = this._onMousePartial.bind(this);
+    this.destroy = this._destroy.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
@@ -364,14 +365,14 @@ class Mirror {
     $(this._highlighterContainer).children(`.${HIGHLIGHTER_CONTENT}`).remove();
   }
 
-  // TODO: implement this
-  destroy() {
-    $(this._elementToMimic).off('input', this._onInput);
-    $(this._elementToMimic).off('paste', this._onTextPaste);
+  _destroy() {
     $(this._elementToMimic).off('scroll', this._onScroll);
-    // $(this._elementToMimic).off('click', this._onClick),
-    $(this._elementToMimic).off('mousemove', this._hover);
+    $(this._elementToMimic).off('input', this._onInput);
+    $(this._elementToMimic).off('change', this._onInput);
+    $(this._elementToMimic).off('mousemove', this._onHover);
+    $(this._elementToMimic).off('click', this._onClick);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+    $(this._elementToMimic).off('paste', this._onTextPaste);
     //   this._renderInterval && this._renderInterval.destroy(),
     if (this._container) {
       this._container.remove();
@@ -381,7 +382,8 @@ class Mirror {
       this._elementToMimicResizeObserver.disconnect();
     }
 
-    this._elementMeasurement.clearCache();
+    // TODO: this one doesn't work (need to investigate)
+    // this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }
