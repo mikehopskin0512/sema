@@ -63,7 +63,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           )}
         </div>
       ) }
-      <p className="has-text-deep-black is-size-6 my-20">
+      <p className={clsx("has-text-deep-black is-size-6 my-20", styles['comment-container'])}>
         {comment}
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
