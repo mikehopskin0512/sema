@@ -57,6 +57,7 @@ const SearchBar = (props) => {
     props.toggleSearchModal();
     props.onLastUsedSmartComment(suggestion);
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
+    props.onTextPaste();
   };
 
   const onCrossPressed = (event) => {
