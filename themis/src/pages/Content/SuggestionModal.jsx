@@ -6,7 +6,7 @@ const truncate = (content) => {
   const contentLength = content.length;
   const shouldTruncate = contentLength > MAX_CHARACTER_LENGTH;
   return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
-    }...` : content;
+  }...` : content;
 };
 
 const getCommentTitleInterface = (title, sourceName) => (

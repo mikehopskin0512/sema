@@ -62,6 +62,7 @@ const checkLoggedIn = async () => {
       store.dispatch(updateSemaUser({ ...response }));
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log('Sema Code Assistant extension is disabled');
   }
 };

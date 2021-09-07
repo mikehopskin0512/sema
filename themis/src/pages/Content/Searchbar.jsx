@@ -174,10 +174,10 @@ const SearchBar = (props) => {
   const { isSearchModalVisible, searchValue, isLoggedIn } = props;
 
   const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''
-    }`;
+  }`;
 
   const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
-    }`;
+  }`;
 
   useEffect(() => {
     if (suggestionModalDropdownRef) {

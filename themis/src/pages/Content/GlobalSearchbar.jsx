@@ -15,7 +15,7 @@ const mapStateToProps = (state, ownProps) => {
     isOpen, openFor, data, position, isLoading,
   } = state[
     GLOBAL_SEMA_SEARCH_ID
-    ];
+  ];
 
   const { user } = state;
 
@@ -97,10 +97,10 @@ const GlobalSearchbar = (props) => {
   };
 
   const containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
-    }`;
+  }`;
 
   const inputControlClasses = `sema-control sema-has-icons-left${props.isLoading ? ' sema-is-loading' : ''
-    }`;
+  }`;
 
   useEffect(() => {
     if (props.isLoading) {
