@@ -11,7 +11,7 @@ import {
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
 } from './suggestedCommentService';
-import { pushCollectionComment } from '../collections/collectionService';
+import { pushCollectionComment, isEditAllowed } from '../collections/collectionService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -59,6 +59,13 @@ export default (app, passport) => {
   route.post('/', async (req, res) => {
     const { title, comment, source, tags, collectionId } = req.body;
     try {
+      const isCollectionEditable = await isEditAllowed(req.user.user, req.body.collectionId);
+      if (!isCollectionEditable) {
+        return res.status(422).send({
+          message: 'User does not have permission to create',
+        });
+      }
+      
       const newSuggestedComment = await create( { title, comment, source: { name: "", url: source }, tags } );
       if (!newSuggestedComment) {
         throw new errors.BadRequest('Suggested Comment create error');
@@ -79,9 +86,15 @@ export default (app, passport) => {
     }
   });
 
-  route.patch('/:id', async (req, res) => {
+  route.patch('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     try {
+      const isCollectionEditable = await isEditAllowed(req.user.user, req.body.collectionId);
+      if (!isCollectionEditable) {
+        return res.status(422).send({
+          message: 'User does not have permission to edit',
+        });
+      }
       const suggestedComment = await update(id, req.body);
 
       return res.status(200).json({ suggestedComment });

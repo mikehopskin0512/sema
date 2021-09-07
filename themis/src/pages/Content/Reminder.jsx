@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const Reminder = (props) => {
   const { isLoggedIn, isReminderClosed, closeReminder } = props;
-  const display = (isReminderClosed === true || isLoggedIn) ? 'none' : 'block';
+  const display = (isReminderClosed || isLoggedIn) ? 'none' : 'block';
   return (
     <div className="reminder-container" style={{ display }}>
       <div className="reminder-header">

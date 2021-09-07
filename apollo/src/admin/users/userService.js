@@ -111,34 +111,54 @@ export const listUsers = async (params, isExport = false) => {
 export const exportUsers = async (params) => {
   const { users } = await listUsers(params, true);
 
-  const getStatus = (user) => {
-    if (user.isActive && user.isWaitlist) return 'Waitlisted';
-    if (user.isActive && !user.isWaitlist) return 'Registered';
-    if (!user.isActive && user.isWaitlist) return 'Blocked';
-
-    return 'Disabled';
-  };
-
   const mappedData = users.map((user) => ({
-    Name: fullName(user),
-    Status: getStatus(user),
-    'Active Date': ((user.createdAt) ? formatDistanceToNowStrict(new Date(user.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
-    Email: user.username,
-    'Invite Available': user.inviteCount,
-    'Invite Pending': user.pendingCount,
-    'Invite Accepted': user.acceptCount,
+    _id: user._id,
+    avatarUrl: user.avatarUrl,
+    collections: JSON.stringify(user.collections),
+    createdAt: user.createdAt,
+    firstName: user.firstName,
+    identities: JSON.stringify(user.identities),
+    inviteCount: user.inviteCount,
+    isActive: user.isActive,
+    isSemaAdmin: user.isSemaAdmin,
+    isVerified: user.isVerified,
+    isWaitlist: user.isWaitlist,
+    jobTitle: user.jobTitle,
+    lastLogin: user.lastLogin,
+    lastName: user.lastName,
+    organizations: JSON.stringify(user.organizations),
+    origin: user.origin,
+    password: user.password,
+    termsAccepted: user.termsAccepted,
+    termsAcceptedAt: user.termsAcceptedAt,
+    updatedAt: user.updatedAt,
+    username: user.username,
   }));
 
   const { Parser } = Json2CSV;
 
   const fields = [
-    'Name',
-    'Status',
-    'Active Date',
-    'Email',
-    'Invite Available',
-    'Invite Pending',
-    'Invite Accepted',
+    '_id',
+    'avatarUrl',
+    'collections',
+    'createdAt',
+    'firstName',
+    'identities',
+    'inviteCount',
+    'isActive',
+    'isSemaAdmin',
+    'isVerified',
+    'isWaitlist',
+    'jobTitle',
+    'lastLogin',
+    'lastName',
+    'organizations',
+    'origin',
+    'password',
+    'termsAccepted',
+    'termsAcceptedAt',
+    'updatedAt',
+    'username',
   ];
 
   const json2csvParser = new Parser({ fields });
