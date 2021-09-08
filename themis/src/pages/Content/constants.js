@@ -277,6 +277,7 @@ export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
 
 export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';
 
+export const DELIMITERS = [',', '.', ' ', ';', '\n'];
 export const EVENTS = {
   PAGE_VISIT: 'PAGE_VISIT',
   SUBMIT: 'SUBMIT',
