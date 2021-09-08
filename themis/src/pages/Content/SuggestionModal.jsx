@@ -31,6 +31,8 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
       />
       {engGuides?.map(({ engGuide, slug }) => (
         <GuideLink
+          /* eslint-disable-next-line no-underscore-dangle */
+          key={engGuide._id}
           title={engGuide.title || engGuide.source?.name}
           link={getCollectionUrl(engGuide, slug)}
         />

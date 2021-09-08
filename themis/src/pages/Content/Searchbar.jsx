@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { debounce } from 'lodash/function';
 import SuggestionModal from './SuggestionModal';
 import { SUGGESTION_URL, SEMA_WEB_LOGIN, SEMA_WEB_COLLECTIONS } from './constants';
 
@@ -7,7 +8,6 @@ import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
-  closeSearchModal,
   usedSmartComment,
 } from './modules/redux/action';
 
@@ -27,8 +27,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
-    closeSearchModal: () => dispatch(closeSearchModal({ id })),
-    toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
+    toggleSearchModal: ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen })),
     // eslint-disable-next-line max-len
     selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
     handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
@@ -42,10 +41,32 @@ const SearchBar = (props) => {
 
   const suggestionModalDropdownRef = useRef(null);
 
+  const getSemaSuggestions = (value, userId) => {
+    toggleIsLoading(true);
+    const URL = `${SUGGESTION_URL}${value}&user=${userId}`;
+    fetch(URL)
+      .then((response) => response.json())
+      .then((data) => {
+        setSearchResults(data?.searchResults?.result || []);
+      })
+      .finally(() => {
+        props.toggleSearchModal({ isOpen: true });
+        toggleIsLoading(false);
+      });
+  };
+
+  const getSuggestionsDebounced = useRef(debounce(getSemaSuggestions, 500));
+
   const onInputChanged = (event) => {
     event.preventDefault();
     const { value } = event.target;
     props.handleChange(value);
+    props.toggleSearchModal({ isOpen: false });
+    if (value) {
+      getSuggestionsDebounced.current(value, props.userId);
+    } else {
+      getSuggestionsDebounced.current.cancel();
+    }
   };
 
   const onInsertPressed = (id, suggestion) => {
@@ -58,25 +79,6 @@ const SearchBar = (props) => {
     props.onLastUsedSmartComment(suggestion);
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
-  };
-
-  const onCrossPressed = (event) => {
-    event.preventDefault();
-    props.handleChange('');
-    setSearchResults([]);
-    props.toggleSearchModal();
-  };
-
-  const getSemaSuggestions = () => {
-    toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${props.searchValue}&user=${props.userId}`;
-    fetch(URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setSearchResults(data?.searchResults?.result || []);
-        toggleIsLoading(false);
-        props.toggleSearchModal();
-      });
   };
 
   const renderPlaceholder = () => {
@@ -154,21 +156,17 @@ const SearchBar = (props) => {
     return '';
   };
 
+  const resetSearch = () => {
+    props.handleChange('');
+    setSearchResults([]);
+    props.toggleSearchModal();
+  };
+
   const handleKeyPress = (event) => {
-    const charCode = typeof event.which === 'number' ? event.which : event.keyCode;
-    if (charCode === 13) {
-      // enter is pressed
+    const isEscKey = event.keyCode === 27;
+    if (isEscKey) {
       event.preventDefault();
-      if (props.searchValue) {
-        // show dropdown
-        getSemaSuggestions();
-      }
-    } else if (charCode === 27) {
-      // esc is pressed
-      // hide dropdown
-      onCrossPressed(event);
-    } else {
-      props.closeSearchModal();
+      resetSearch();
     }
   };
 
