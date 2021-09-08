@@ -6,6 +6,7 @@ import EngGuidesCollection from '../../components/engGuides/engGuidesCollection'
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import { engGuidesOperations } from '../../state/features/engGuides';
+import GlobalSearch from "@/components/globalSearch";
 
 const NUM_PER_PAGE = 9;
 
@@ -39,6 +40,7 @@ const EngineeringGuides = () => {
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Community Engineering Guides
           </p>
+          <GlobalSearch/>
         </div>
         <p className="is-size-6 has-text-deep-black px-10 mb-40">
           Explore detail of best practise coding techniques from world recongized experts.

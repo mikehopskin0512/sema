@@ -76,7 +76,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
             <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>
             <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-              <div className="p-12 is-flex-grow-2 is-flex-flex-wrap is-flex is-align-items-flex-end">
+              <div className="p-12 is-flex-grow-3 is-flex is-align-items-flex-end">
                 <div className={clsx(
                   'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
                 )}>
@@ -87,7 +87,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
               {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
                 <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                   <div
-                    className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold py-20',
+                    className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
                       styles['add-button'])}
                     onClick={onClickAddComment}
                     aria-hidden

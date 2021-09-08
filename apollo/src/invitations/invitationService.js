@@ -147,9 +147,9 @@ export const deleteInvitation = async (_id) => {
 
 export const getInviteMetrics = async (type, timeRange) => {
   try {
-    const startDate = subDays(new Date(), parseInt(timeRange, 10));
+    const startDate = timeRange === 'all' ? '' : subDays(new Date(), parseInt(timeRange, 10));
     const invites = await Invitation.aggregate([
-      { $match: { createdAt: { $gt: startDate } } },
+      ...startDate ? [{ $match: { createdAt: { $gt: startDate } } }] : [],
       {
         $lookup: {
           from: 'users',

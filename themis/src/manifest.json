@@ -9,7 +9,6 @@
   "host_permissions": [
     "*://semasoftware.com/*",
     "https://*.semasoftware.com/*",
-    "http://localhost/*",
     "*://github.com/*",
     "*://*.github.com/*/"
   ],
@@ -38,8 +37,7 @@
     {
       "matches": [
         "*://github.com/*",
-        "*://*.github.com/*",
-        "*://localhost/*"
+        "*://*.github.com/*"
       ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
@@ -53,7 +51,6 @@
   ],
   "externally_connectable": {
     "matches": [
-      "*://localhost/*",
       "*://semasoftware.com/*",
       "*://*.semasoftware.com/*"
     ]

@@ -57,15 +57,21 @@ export default (app, passport) => {
   });
 
   route.post('/', async (req, res) => {
-    const { title, comment, source, tags, collectionId } = req.body;
+    const { comment, source, tags, collectionId } = req.body;
+    let { title } = req.body;
     try {
+
+      if (!title) {
+        title = comment.substring(0, 100);
+      }
+
       const isCollectionEditable = await isEditAllowed(req.user.user, req.body.collectionId);
       if (!isCollectionEditable) {
         return res.status(422).send({
           message: 'User does not have permission to create',
         });
       }
-      
+
       const newSuggestedComment = await create( { title, comment, source: { name: "", url: source }, tags } );
       if (!newSuggestedComment) {
         throw new errors.BadRequest('Suggested Comment create error');

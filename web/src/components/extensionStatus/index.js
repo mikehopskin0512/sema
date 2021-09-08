@@ -11,7 +11,7 @@ const ExtensionStatus = () => {
   const [extensionStatus, setExtensionInstalled] = useState(true);
 
   const buttonAction = () => {
-    window.location.href = EXTENSION_LINK;
+    window.open(EXTENSION_LINK, '_blank');
   };
 
   const isHidden = () => {

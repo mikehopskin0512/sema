@@ -12,6 +12,7 @@ import CommentFilter from '../commentFilter';
 import SuggestedCommentCard from '../suggestedCommentCard';
 import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
+import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
@@ -97,6 +98,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     });
     setCommentsFiltered([...filtered]);
   };
+  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -115,7 +117,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
 
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
-  
+
   const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
@@ -143,15 +145,20 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               {comments.length} suggested comments
             </span>
           </div>
-          {isEditable ? (
-            <button
-              className="button is-small is-primary border-radius-4px"
-              type="button"
-              onClick={goToAddPage}>
-              <FontAwesomeIcon icon={faPlus} className="mr-10" />
-              Add New Comment
-            </button>
-          ) : null}
+          {
+            isEditable && (
+              <button
+                className="button is-small is-primary border-radius-4px"
+                type="button"
+                onClick={goToAddPage}>
+                <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                Add New Comment
+              </button>
+            )
+          }
+          <div style={{ marginLeft: 'auto' }}>
+            <GlobalSearch />
+          </div>
         </div>
         {
           isEditable && selectedComments.length ? (

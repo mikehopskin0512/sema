@@ -161,9 +161,6 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment }) => {
                   type="text"
                   {...register(
                     'title',
-                    {
-                      required: 'Title is required',
-                    },
                   )}
                 />
                 <p className="help is-danger">{errors.title && errors.title.message}</p>
