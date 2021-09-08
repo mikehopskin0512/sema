@@ -21,6 +21,15 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
     });
   };
 
+  const onChangeSearch = (e) => {
+    setValue('search', e.currentTarget.value);
+    onSearch({
+      search: e.currentTarget.value,
+      language: getValues('language'),
+      tag: getValues('tag'),
+    });
+  };
+
   const onChangeTag = (e) => {
     setValue('tag', e.currentTarget.value);
     onSearch({
@@ -40,7 +49,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSearch)}>
+    <form>
       <div className={clsx('has-background-white border-radius-4px px-10 py-5 is-flex is-flex-wrap-wrap', styles['filter-container'])}>
         <div className="is-flex-grow-1 p-5">
           <div className="control has-icons-left has-icons-right">
@@ -49,6 +58,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
               placeholder="Search suggested comments"
               type="text"
               {...register('search')}
+              onChange={onChangeSearch}
             />
             <span className="icon is-small is-left">
               <FontAwesomeIcon icon={faSearch} />

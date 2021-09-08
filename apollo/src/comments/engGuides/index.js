@@ -21,6 +21,15 @@ export default (app, passport) => {
   route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { engGuides } = req.body;
+      const { user: { user } } = req;
+      
+      // this will be replaced by role based ACL
+      if (!user.isSemaAdmin) {
+        return res.status(422).send({
+          message: 'User does not have permission to create endGuides',
+        });
+      }
+      
       const result = await bulkCreateEngGuides(engGuides, req.user);
       return res.status(200).send(result);
     } catch (error) {
@@ -32,6 +41,15 @@ export default (app, passport) => {
   route.post('/bulk-update', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { engGuides } = req.body;
+      const { user: { user } } = req;
+  
+      // this will be replaced by role based ACL
+      if (!user.isSemaAdmin) {
+        return res.status(422).send({
+          message: 'User does not have permission to update endGuides',
+        });
+      }
+      
       const result = await bulkUpdateEngGuides(engGuides, req.user);
       return res.status(200).send(result);
     } catch (error) {
