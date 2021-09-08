@@ -4,7 +4,7 @@ import CardList from '../../components/comment/cardList';
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import { engGuidesOperations } from '../../state/features/engGuides';
-import GlobalSearch from "@/components/globalSearch";
+import GlobalSearch from "../../components/globalSearch";
 
 const NUM_PER_PAGE = 9;
 
