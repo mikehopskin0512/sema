@@ -4,8 +4,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { connect } from 'react-redux';
 import { closeLoginReminder } from './modules/redux/action';
-
-const semaUIUrl = process.env.SEMA_UI_URL;
+import { SEMA_LANDING_FAQ, SEMA_UI_URL } from './constants';
 
 const logoUrl = chrome.runtime.getURL(
   'img/sema-logo.png',
@@ -20,7 +19,7 @@ const screenshot2 = chrome.runtime.getURL(
 );
 
 const openSema = () => {
-  window.open(semaUIUrl, '_blank');
+  window.open(SEMA_UI_URL, '_blank');
 };
 
 const mapStateToProps = (state) => {
@@ -69,7 +68,7 @@ const Reminder = (props) => {
             Sign in with Github
           </span>
         </button>
-        <a href={semaUIUrl}>Learn More</a>
+        <a target="_blank" href={SEMA_LANDING_FAQ} rel="noreferrer">Have Questions?</a>
       </div>
     </div>
   );
