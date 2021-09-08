@@ -47,7 +47,7 @@ const withLayout = (Page) => (props) => (
     </Head>
     <ExtensionStatus />
     <Header />
-    <div className={clsx(styles.content, 'pb-70')}>
+    <div className={clsx(styles.content, '')}>
       <Page {...props} />
     </div>
     <div className={styles.footer}>

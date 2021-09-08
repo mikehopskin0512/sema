@@ -40,9 +40,9 @@ const EmojiSelection = ({
               ) : (
                 <Emoji symbol={shownEmoji} />
               )}
-            &nbsp;&nbsp;
+              &nbsp;&nbsp;
               <span dangerouslySetInnerHTML={{ __html: isCalculating ? 'Calculating...' : selectedTitle }} />
-              <i className="sema-ml-2 fas fa-caret-right" style={{ paddingTop: 2 }} />
+              {/* <i className="sema-ml-2 fas fa-caret-right" style={{ paddingTop: 2 }} /> */}
             </button>
           </div>
           <div
