@@ -153,7 +153,7 @@ const CollectionComments = () => {
               <FontAwesomeIcon icon={faPlus} className="mr-10" />
               Add New Comment
             </button>
-          )}
+          ) : null}
           <div style={{ marginLeft: 'auto' }}>
             <GlobalSearch />
           </div>
