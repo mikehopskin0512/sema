@@ -5,6 +5,7 @@ import Lottie from 'react-lottie-player';
 import animationReactions from '../../components/onboarding/animationReactions.json';
 import animationTags from '../../components/onboarding/animationTags.json';
 import animationComments from '../../components/onboarding/animationComments.json';
+import { content } from '../../components/repos/emptyRepo/content.js';
 import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import { articles } from '../../data/help';
 import styles from './help.module.scss';
@@ -58,42 +59,30 @@ const HelpAndSupport = () => {
         'is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap',
         styles['animation-container'],
       )}>
-        <div
-          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
-          onMouseEnter={() => onHover('reactions')}
-          onMouseLeave={() => onRemoveHover()}
-        >
-          <p className="is-size-5 has-text-centered mb-10 has-text-weight-semibold has-text-deep-black">Smart Reactions</p>
-          <Lottie
-            loop
-            animationData={animationReactions}
-            play={hovered === 'reactions'}
-          />
-        </div>
-        <div
-          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
-          onMouseEnter={() => onHover('tags')}
-          onMouseLeave={() => onRemoveHover()}
-        >
-          <p className="is-size-5 has-text-centered mb-10 has-text-weight-semibold has-text-deep-black">Smart Tags</p>
-          <Lottie
-            loop
-            animationData={animationTags}
-            play={hovered === 'tags'}
-          />
-        </div>
-        <div
-          className={clsx("has-background-white p-30 mb-20", styles.lottie)}
-          onMouseEnter={() => onHover('comments')}
-          onMouseLeave={() => onRemoveHover()}
-        >
-          <p className="is-size-5 has-text-centered mb-10 has-text-weight-semibold has-text-deep-black">Suggested Comments</p>
-          <Lottie
-            loop
-            animationData={animationComments}
-            play={hovered === 'comments'}
-          />
-        </div>
+        { content.map((item) => {
+          const { img, animationData, title } = item;
+          return(
+            <div
+              className={clsx("has-background-white p-30 mb-20", styles.lottie)}
+              onMouseEnter={() => onHover(title)}
+              onMouseLeave={() => onRemoveHover()}
+            >
+              <p className="is-size-5 has-text-centered mb-10 has-text-weight-semibold has-text-deep-black">{title}</p>
+              {hovered === title ? (
+                <Lottie
+                  loop
+                  animationData={animationData}
+                  play={hovered === title}
+                />
+              ) : (
+                <div className="is-full-height is-flex is-align-items-center is-justify-content-center">
+                  <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
+                  <img src={img} className={styles.img} />
+                </div>
+              )}
+            </div>
+          )
+        }) }
       </div>
       <div className="has-background-gray-9 pb-50">
         <div className="pt-50 has-text-centered px-120 is-hidden-mobile">
