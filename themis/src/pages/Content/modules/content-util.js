@@ -446,7 +446,6 @@ export async function writeSemaToGithub(textarea) {
     }
 
     fireAmplitudeEvent(EVENTS.SUBMIT, opts);
-
     const semaIds = getSemaIds($(textarea).attr('id'));
     store.dispatch(resetSemaStates(semaIds));
   }
