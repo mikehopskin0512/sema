@@ -140,6 +140,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     dispatch(hydrateUser(user, userVoiceToken));
 
     if (!isVerified) {
+      dispatch(triggerAlert('User is not yet verified.', 'error'));
       dispatch(userNotVerifiedError(user));
       // Need server-side check since this is called from sentry
       if (!isServer) { Router.push('/login'); }

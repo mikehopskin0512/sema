@@ -217,12 +217,12 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
   const { cookie, removed } = changeInfo;
 
   if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
-    if (removed === false) {
+    if (removed) {
+      sendMessageToTab({ token: null, isLoggedIn: false });
+    } else {
       processCookie(cookie).then((tokenResponse) => {
         sendMessageToTab(tokenResponse);
       });
-    } else if (removed === true) {
-      sendMessageToTab({ token: null, isLoggedIn: false });
     }
   }
 });

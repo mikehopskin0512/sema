@@ -9,7 +9,7 @@ import Checkbox from '../../checkbox';
 
 const defaultDate = '07/01/2021';
 
-const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) => {
+const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, isEditable }) => {
   const {
     author = '',
     comment = '',
@@ -38,7 +38,9 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) 
               </div>
             ))}
           </div>
-          <ActionMenu comment={data} />
+          {isEditable && (
+            <ActionMenu comment={data} />
+          )}
         </div>
       </div>
       { isEmpty(author) && isEmpty(source.name) ? null : (
@@ -61,7 +63,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) 
           )}
         </div>
       ) }
-      <p className="has-text-deep-black is-size-6 my-20">
+      <p className={clsx("has-text-deep-black is-size-6 my-20", styles['comment-container'])}>
         {comment}
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
@@ -69,7 +71,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId }) 
         { engGuides.length > 0 ? (
           <p className="is-size-6 has-text-deep-black">
             <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/guides/${collectionId}/${engGuides[0].engGuide?.slug}`}>
+            <a href={`/guides/${engGuides[0].engGuide?._id}/${engGuides[0].engGuide?.slug}`}>
               <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
             </a>
           </p>

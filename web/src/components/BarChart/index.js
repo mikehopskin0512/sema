@@ -1,6 +1,8 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
@@ -8,6 +10,8 @@ import { EMOJIS } from '../../utils/constants';
 
 const NivoBarChart = ({ data = [] }) => {
   const [barChartData, setBarChartData] = useState([]);
+  const [noData, setNoData] = useState(false);
+
   const parseData = (rawData) => {
     if (rawData.length) {
       return rawData.map((item) => {
@@ -34,10 +38,26 @@ const NivoBarChart = ({ data = [] }) => {
     return [];
   };
 
+  const getTotalReactions = () => {
+    let total = 0;
+    data.forEach((item) => {
+      let totalItem = 0;
+      EMOJIS.forEach((emoji) => {
+        totalItem += item[emoji._id]
+      })
+      total += totalItem;
+    });
+    return total;
+  }
+
   useEffect(() => {
-    if (data.length > 0) {
+    const total = getTotalReactions();
+    if (total > 0) {
       const parsedData = parseData(data);
       setBarChartData(reverse(parsedData));
+      setNoData(false);
+    } else {
+      setNoData(true);
     }
   }, [data]);
 
@@ -56,8 +76,13 @@ const NivoBarChart = ({ data = [] }) => {
     );
   };
 
-  if (data.length === 0) {
-    return <div className="is-flex is-justify-content-center">No data</div>;
+  if (noData) {
+    return (
+      <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
+        <FontAwesomeIcon icon={faChartBar} size="3x" />
+        <p className="is-size-5">No Reactions</p>
+      </div>
+    );
   }
 
   return (

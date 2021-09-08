@@ -8,6 +8,7 @@ import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
+  usedSmartComment,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -30,6 +31,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     // eslint-disable-next-line max-len
     selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
     handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
+    onLastUsedSmartComment: (payload) => dispatch(usedSmartComment(payload)),
   };
 };
 
@@ -74,7 +76,9 @@ const SearchBar = (props) => {
     props.selectedSuggestedComments(id);
     setSearchResults([]);
     props.toggleSearchModal();
+    props.onLastUsedSmartComment(suggestion);
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
+    props.onTextPaste();
   };
 
   const renderPlaceholder = () => {
@@ -168,19 +172,17 @@ const SearchBar = (props) => {
 
   const { isSearchModalVisible, searchValue, isLoggedIn } = props;
 
-  const containerClasses = `sema-dropdown${
-    isSearchModalVisible ? ' sema-is-active' : ''
+  const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${
-    isLoading ? ' sema-is-loading' : ''
+  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
   }`;
 
   useEffect(() => {
     if (suggestionModalDropdownRef) {
       suggestionModalDropdownRef.current.scrollTop = 0;
     }
-  // eslint-disable-next-line react/destructuring-assignment
+    // eslint-disable-next-line react/destructuring-assignment
   }, [props.isSearchModalVisible]);
 
   return (
@@ -225,6 +227,8 @@ const SearchBar = (props) => {
                   key={`${isSearchModalVisible}${isLoading}${searchValue}`}
                   onInsertPressed={onInsertPressed}
                   searchResults={searchResults}
+                  // eslint-disable-next-line react/destructuring-assignment
+                  onLastUsedSmartComment={props.onLastUsedSmartComment}
                 />
                 <div className="sema-dropdown-footer">
                   <div style={{ marginTop: 'auto' }}>

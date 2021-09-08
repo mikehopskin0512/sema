@@ -36,11 +36,13 @@ const ActivityPage = () => {
     }
     const requesters = overview.smartcomments
       .filter((item) => item.githubMetadata.requester)
-      .map((({ githubMetadata }) => ({
-        label: githubMetadata.requester,
-        value: githubMetadata.requester,
-        img: defaultAvatar,
-      })))
+      .map((({ githubMetadata }) => {
+        return {
+          label: githubMetadata.requester,
+          value: githubMetadata.requester,
+          img: githubMetadata.requesterAvatarUrl || defaultAvatar,
+        }
+      }))
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
       const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
       return {
@@ -51,17 +53,40 @@ const ActivityPage = () => {
     });
     const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
         const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
-        const prName = title || head || 'PR'
+        const prName = title || head || 'Pull Request';
         return {
-          label: `${prName} #${pullNum || ''}`,
+          label: `${prName} (#${pullNum || '0'})`,
           value: pullNum,
+          name: prName,
         };
       });
-
+    let filteredPRs = []
+    prs.forEach((item) => {
+      const index = findIndex(filteredPRs, { value: item.value });
+      if (index !== -1) {
+        if (isEmpty(filteredPRs[index].prName)) {
+          filteredPRs[index] = item;
+        }
+      } else {
+        filteredPRs.push(item);
+      }
+    });
     setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(uniqBy(compact(prs), 'value'));
+    setFilterPRList(filteredPRs);
   }, [overview]);
+
+  const filterByTags = (tags) => {
+    const filterCount = filter.tags.length;
+    let matches = 0;
+    tags.forEach((tag) => {
+      const tagIndex = findIndex(filter.tags, { value: tag._id });
+      if (tagIndex > -1) {
+        matches += 1;
+      }
+    });
+    return matches === filterCount;
+  };
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
@@ -79,7 +104,7 @@ const ActivityPage = () => {
           const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
           const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-          const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
+          const tagsIndex = item?.tags ? filterByTags(item.tags) : false;
           const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
           let filterBool = true;
           if (!isEmpty(filter.from)) {
@@ -92,7 +117,7 @@ const ActivityPage = () => {
             filterBool = filterBool && reactionIndex !== -1;
           }
           if (!isEmpty(filter.tags)) {
-            filterBool = filterBool && tagsIndex !== -1;
+            filterBool = filterBool && tagsIndex;
           }
           if (!isEmpty(filter.search)) {
             filterBool = filterBool && searchBool;

@@ -119,8 +119,9 @@ const Dashboard = () => {
   };
 
   const onboardingOnSubmit = async () => {
-    const userCollections = await getActiveCollections();
-    const updatedUser = { ...user, collections: [...userCollections] };
+    /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
+    // const userCollections = await getActiveCollections();
+    const updatedUser = { ...user };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
   };
