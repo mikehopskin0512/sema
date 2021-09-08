@@ -78,8 +78,6 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
         </div>
         <div className={clsx('column is-flex is-justify-content-center is-6 p-25', styles['animation-container'])}>
           <div className={clsx('is-flex is-justify-content-center is-align-items-center py-30')}>
-            {/* <img src="/img/logo_high_res.png" className={styles['install-logo-img']} /> */}
-            {/* <img src="/img/center.png" className={clsx("mx-50", styles['install-cross-img'])} /> */}
             <img alt="" src="/img/install-extension.png" />
           </div>
         </div>
