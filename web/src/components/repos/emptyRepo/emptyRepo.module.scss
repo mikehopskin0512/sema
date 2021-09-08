@@ -10,7 +10,8 @@
     }
 }
 
-.img {
+.img-container {
+    margin: 20px 0;
     position: relative;
     max-height: 350px;
     height: 350px;
@@ -18,6 +19,10 @@
         height: 180px !important;
         max-width: 300px;
     }
+}
+
+.img {
+    height: 300px;
 }
 
 .button-play {

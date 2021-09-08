@@ -46,17 +46,23 @@ const EmptyRepo = () => {
                         <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
                           <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
                             <div
-                              className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}
+                              className={clsx(styles['img-container'], 'is-flex is-justify-content-center is-align-items-center mb-25')}
                               onMouseEnter={() => onHover(title)}
                               onMouseLeave={() => onRemoveHover()}
                             >
-                              <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
-                              <Lottie
-                                play={hovered === title}
-                                loop
-                                animationData={animationData}
-                                style={{ marginBottom: 10 }}
-                              />
+                              { hovered === title ? (
+                                <Lottie
+                                  play={hovered === title}
+                                  loop
+                                  animationData={animationData}
+                                  style={{ marginBottom: 10 }}
+                                />
+                              ) : (
+                                <>
+                                  <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
+                                  <img src={img} className={styles.img} />
+                                </>
+                              ) }
                             </div>
                             <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
                             <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
