@@ -71,7 +71,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
         { engGuides.length > 0 ? (
           <p className="is-size-6 has-text-deep-black">
             <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/guides/${collectionId}/${engGuides[0].engGuide?.slug}`}>
+            <a href={`/guides/${engGuides[0].engGuide?._id}/${engGuides[0].engGuide?.slug}`}>
               <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
             </a>
           </p>
