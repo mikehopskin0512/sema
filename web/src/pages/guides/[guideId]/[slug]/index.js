@@ -11,7 +11,7 @@ import { alertOperations } from '../../../../state/features/alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
 
-import styles from '../../guide.module.scss';
+import styles from '../../guides.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -156,14 +156,14 @@ const EngineeringGuidePage = () => {
       <div className="hero-body pb-300">
         { data ? (
           <>
-            <div className="is-flex is-align-items-center px-10 mb-15">
-              <a href={`/guides/${collectionId}`} className="is-hidden-mobile">
+            <div className="is-flex is-align-items-center px-10 mb-15" onClick={() => router.back()}>
+              <a className="is-hidden-mobile">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
-                  <li><a href={`/guides/${collectionId}`} className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/guides/${collectionId}`}>{name}</a></li>
+                  <li><a  className="has-text-grey">Community Engineering Guides</a></li>
+                  <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
                 </ul>
               </nav>
             </div>
@@ -231,7 +231,7 @@ const EngineeringGuidePage = () => {
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-deep-black">
                   <b className="mr-5">Related Suggested Comments Collection:</b>
-                  <a href={`/collections/${_id}`}>
+                  <a href={`/comments/${_id}`}>
                     <span className="is-underlined has-text-deep-black">{name}</span>
                   </a>
                 </p>
