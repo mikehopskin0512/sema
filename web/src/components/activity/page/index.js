@@ -53,16 +53,27 @@ const ActivityPage = () => {
     });
     const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
         const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
-        const prName = title || head || 'PR'
+        const prName = title || head || 'Pull Request';
         return {
-          label: `${prName} #${pullNum || ''}`,
+          label: `${prName} (#${pullNum || '0'})`,
           value: pullNum,
+          name: prName,
         };
       });
-
+    let filteredPRs = []
+    prs.forEach((item) => {
+      const index = findIndex(filteredPRs, { value: item.value });
+      if (index !== -1) {
+        if (isEmpty(filteredPRs[index].prName)) {
+          filteredPRs[index] = item;
+        }
+      } else {
+        filteredPRs.push(item);
+      }
+    });
     setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(uniqBy(compact(prs), 'value'));
+    setFilterPRList(filteredPRs);
   }, [overview]);
 
   useEffect(() => {

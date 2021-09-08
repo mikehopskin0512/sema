@@ -38,6 +38,7 @@ const initialState = {
       left: null,
     },
   },
+  lastUserSmartComment: null,
 };
 
 export default initialState;

@@ -9,6 +9,9 @@ const truncate = (content) => {
   }...` : content;
 };
 
+// eslint-disable-next-line no-underscore-dangle
+const getCollectionUrl = (engGuide, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+
 const getCommentTitleInterface = (title, sourceName) => (
   <div className="suggestion-title">
     <span className="suggestion-name">{title}</span>
@@ -26,25 +29,24 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
-      {engGuides?.map(({ engGuide }) => (
+      {engGuides?.map(({ engGuide, slug }) => (
         <GuideLink
-          title={engGuide.source?.name}
-          link={engGuide.source?.url}
+          title={engGuide.title || engGuide.source?.name}
+          link={getCollectionUrl(engGuide, slug)}
         />
       ))}
     </div>
   );
 };
 
-function SuggestionModal({ onInsertPressed, searchResults }) {
+function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartComment }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
-    const links = engGuides?.map(({ title, engGuide, slug }) => {
-      const caption = title || engGuide.source?.name;
-      // eslint-disable-next-line no-underscore-dangle
-      const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+    const links = engGuides?.map(({ engGuide, slug }) => {
+      const caption = engGuide.title || engGuide.source?.name;
+      const url = getCollectionUrl(engGuide, slug);
       return `\n\n📄 [${caption}](${url})`;
     }).join(' ');
     return links || '';
@@ -57,6 +59,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     navigator.clipboard.writeText(suggestion).then(
       () => {
         setCopiedId(id);
+        onLastUsedSmartComment(suggestion);
       },
       () => {
         // eslint-disable-next-line no-console
