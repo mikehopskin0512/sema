@@ -52,6 +52,7 @@ export const getGithubMetadata = (document) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
   const title = document.querySelector('span[data-snek-id="issue-title"]')
     ?.innerText;
   // eslint-disable-next-line camelcase
@@ -69,6 +70,7 @@ export const getGithubMetadata = (document) => {
     title,
     clone_url,
     commentId: null,
+    requesterAvatarUrl,
   };
 
   return githubMetadata;
