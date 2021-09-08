@@ -76,6 +76,18 @@ const ActivityPage = () => {
     setFilterPRList(filteredPRs);
   }, [overview]);
 
+  const filterByTags = (tags) => {
+    const filterCount = filter.tags.length;
+    let matches = 0;
+    tags.forEach((tag) => {
+      const tagIndex = findIndex(filter.tags, { value: tag._id });
+      if (tagIndex > -1) {
+        matches += 1;
+      }
+    });
+    return matches === filterCount;
+  };
+
   useEffect(() => {
     if (overview && overview.smartcomments) {
       let filtered = overview.smartcomments || [];
@@ -92,7 +104,7 @@ const ActivityPage = () => {
           const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
           const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
           const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-          const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
+          const tagsIndex = item?.tags ? filterByTags(item.tags) : false;
           const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
           let filterBool = true;
           if (!isEmpty(filter.from)) {
@@ -105,7 +117,7 @@ const ActivityPage = () => {
             filterBool = filterBool && reactionIndex !== -1;
           }
           if (!isEmpty(filter.tags)) {
-            filterBool = filterBool && tagsIndex !== -1;
+            filterBool = filterBool && tagsIndex;
           }
           if (!isEmpty(filter.search)) {
             filterBool = filterBool && searchBool;
