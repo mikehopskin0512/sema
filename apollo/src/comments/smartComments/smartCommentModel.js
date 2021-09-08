@@ -94,7 +94,7 @@ smartCommentSchema.post('save', async function (doc, next) {
           }
         }
         if (requesterId) {
-          repository.userIds.push(requesterId);
+          repository.repoStats.userIds.push(requesterId);
         }
       }
 

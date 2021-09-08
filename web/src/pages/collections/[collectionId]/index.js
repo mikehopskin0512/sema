@@ -145,7 +145,7 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          {isEditable ? (
+          {isEditable && (
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"

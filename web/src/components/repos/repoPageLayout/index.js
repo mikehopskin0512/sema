@@ -20,7 +20,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
     repositories: state.repositoriesState,
   }));
   const { data: { overview } } = repositories;
-  const { name = '', stats = { totalPullRequests: 0, totalSemaUsers: 0, totalSmartCommenters: 0, totalSmartComments: 0} } = overview;
+  const { name = '', stats: { totalPullRequests = 0, totalSemaUsers = 0, totalSmartCommenters = 0, totalSmartComments = 0 } } = overview;
   const { query: { repoId = '' },  pathname = '' } = router;
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
