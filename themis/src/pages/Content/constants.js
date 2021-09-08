@@ -1,10 +1,13 @@
+export const { SEMA_LANDING_URL } = process.env;
 export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
 export const { SEMA_COOKIE_DOMAIN } = process.env;
 export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
+export const { AMPLITUDE_API_KEY } = process.env;
 
+export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
@@ -273,3 +276,9 @@ export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
 export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
 
 export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';
+
+export const DELIMITERS = [',', '.', ' ', ';', '\n'];
+export const EVENTS = {
+  PAGE_VISIT: 'PAGE_VISIT',
+  SUBMIT: 'SUBMIT',
+};
