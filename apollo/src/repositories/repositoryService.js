@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import _ from "lodash";
-import { differenceInCalendarDays, format, sub } from "date-fns";
+import { endOfDay, toDate, differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
 import Users from './../users/userModel';
 import { getReactionIdKeys } from "../comments/reaction/reactionService";
@@ -149,7 +149,7 @@ export const findByExternalIds = async (externalIds, populateUsers) => {
   }
 };
 
-export const aggregateRepositories = async (externalIds, includeSmartComments) => {
+export const aggregateRepositories = async (externalIds, includeSmartComments, date) => {
   try {
     // const repoRaw = await Repositories.aggregate([
     //   {
@@ -207,7 +207,10 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
       // Get SmartComments of Repos
       const repoRaw = await Promise.all(repos.map(async (repo) => {
         const { externalId = '' } = repo;
-        const smartComments = await findSmartCommentsByExternalId(externalId, true);
+        const smartComments = await findSmartCommentsByExternalId(externalId, true, date ? {
+          $gte: toDate(new Date(date.startDate)),
+          $lte: toDate(endOfDay(new Date(date.endDate))),
+        } : undefined);
         return {
           ...repo._doc,
           smartComments
