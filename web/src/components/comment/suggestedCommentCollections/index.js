@@ -17,6 +17,9 @@ import Toaster from '../../toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
+import ActionGroup from '../../../components/comment/actionGroup';
+import usePermission from '../../../hooks/usePermission';
+import { EditComments } from '../../../data/permissions';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -41,6 +44,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
+  const { checkAccess } = usePermission();
 
   useEffect(() => {
     dispatch(getCollectionById(collectionId, token));
@@ -118,7 +122,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
+  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
     <div className={clsx('has-background-gray-9 hero')}>
