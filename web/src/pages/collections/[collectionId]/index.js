@@ -12,9 +12,9 @@ import SuggestedCommentCard from '../../../components/comment/suggestedCommentCa
 import withLayout from '../../../components/layout';
 import Helmet from '../../../components/utils/Helmet';
 import Toaster from '../../../components/toaster';
-
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
+import GlobalSearch from "../../../components/globalSearch";
 import ActionGroup from '../../../components/comment/actionGroup';
 
 const { getCollectionById } = commentsOperations;
@@ -98,6 +98,7 @@ const CollectionComments = () => {
     });
     setCommentsFiltered([...filtered]);
   };
+  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -116,6 +117,8 @@ const CollectionComments = () => {
 
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
+
+  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
     <div className={clsx('has-background-gray-9 hero')}>
@@ -142,7 +145,7 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          {user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+          {isEditable ? (
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
@@ -150,10 +153,13 @@ const CollectionComments = () => {
               <FontAwesomeIcon icon={faPlus} className="mr-10" />
               Add New Comment
             </button>
-          ) : null}
+          )}
+          <div style={{ marginLeft: 'auto' }}>
+            <GlobalSearch />
+          </div>
         </div>
         {
-          selectedComments.length ? (
+          isEditable && selectedComments.length ? (
             <ActionGroup
               selectedComments={selectedComments}
               handleSelectAllChange={handleSelectAllChange}
@@ -175,6 +181,7 @@ const CollectionComments = () => {
                 collectionId={collectionId}
                 selected={!!selectedComments.find((g) => g === item._id)}
                 onSelectChange={handleSelectChange}
+                isEditable={isEditable}
               />
             ))
           )

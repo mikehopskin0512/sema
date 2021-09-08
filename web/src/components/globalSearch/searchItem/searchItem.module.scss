@@ -1,0 +1,33 @@
+
+.search-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E3E9EE;
+
+  &:nth-last-of-type(1) {
+    border-bottom: none;
+  }
+
+  strong {
+    background: #CDEFF9;
+    font-weight: normal;
+  }
+
+  &_title {
+    font-size: 14px;
+    line-height: 20px;
+    margin-right: 30px;
+  }
+
+  &_source {
+    font-size: 12px;
+    line-height: 21px;
+  }
+
+  &_tags {
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: auto;
+  }
+}
