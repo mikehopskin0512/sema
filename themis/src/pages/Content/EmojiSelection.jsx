@@ -3,6 +3,7 @@ import React from 'react';
 import Lottie from 'react-lottie-player';
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
+import { getSemaIds } from './modules/content-util';
 
 const EmojiSelection = ({
   allEmojis,
@@ -12,12 +13,19 @@ const EmojiSelection = ({
   isReactionDirty,
   toggleIsSelectingEmoji,
   isSelectingEmoji,
+  textareaId,
+  id,
 }) => {
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   const selectedReactionPosition = allEmojis.findIndex((e) => e.title === selectedTitle);
   // depends on actual layout
   const ITEM_HEIGHT = 44;
-  const isCalculating = isTyping && !isSelectingEmoji && !isReactionDirty;
+  let showCalculate = false;
+  const { semabarContainerId } = getSemaIds(textareaId);
+  if (id === semabarContainerId) {
+    showCalculate = true;
+  }
+  const isCalculating = showCalculate && isTyping && !isSelectingEmoji && !isReactionDirty;
 
   return (
     <div>
