@@ -27,7 +27,6 @@ const CommentCollections = () => {
   const { query: { cid } } = router;
   const { user } = useSelector((state) => state.authState);
   const { collections } = user;
-
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
   const isNewCommentModalOpen = !!collectionId;
