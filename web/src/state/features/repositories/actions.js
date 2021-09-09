@@ -230,10 +230,10 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
   }
 };
 
-export const fetchRepositoryOverview = (externalId, token) => async (dispatch) => {
+export const fetchRepositoryOverview = (externalId, token, dates) => async (dispatch) => {
   try {
     dispatch(requestFetchRepositoryOverview());
-    const { data } = await getRepositoryOverview({ externalId }, token);
+    const { data } = await getRepositoryOverview({ externalId, ...dates }, token);
     if (data._id) {
       dispatch(requestFetchRepositoryOverviewSuccess(data));
     }

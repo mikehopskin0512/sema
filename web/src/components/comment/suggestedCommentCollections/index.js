@@ -4,25 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
+import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
-import CommentFilter from '../../../components/comment/commentFilter';
-import SuggestedCommentCard from '../../../components/comment/suggestedCommentCard';
-import withLayout from '../../../components/layout';
-import Helmet from '../../../components/utils/Helmet';
-import Toaster from '../../../components/toaster';
+import CommentFilter from '../commentFilter';
+import SuggestedCommentCard from '../suggestedCommentCard';
+import ActionGroup from '../actionGroup';
+import Helmet from '../../utils/Helmet';
+import GlobalSearch from "../../globalSearch";
+import Toaster from '../../toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
-import ActionGroup from '../../../components/comment/actionGroup';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
 
 const NUM_PER_PAGE = 10;
 
-const CollectionComments = () => {
+const SuggestedCommentCollection = ({ collectionId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { alerts, auth, collectionState } = useSelector((state) => ({
@@ -31,7 +32,6 @@ const CollectionComments = () => {
     alerts: state.alertsState,
   }));
 
-  const { collectionId } = router.query;
   const { token, user } = auth;
   const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
@@ -74,7 +74,7 @@ const CollectionComments = () => {
   };
 
   const goToAddPage = async () => {
-    await router.push(`/collections/${_id}/add`);
+    await router.push(`/suggested-comments/add?cid=${collectionId}`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -98,6 +98,7 @@ const CollectionComments = () => {
     });
     setCommentsFiltered([...filtered]);
   };
+  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -116,7 +117,7 @@ const CollectionComments = () => {
 
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
-  
+
   const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
@@ -125,13 +126,13 @@ const CollectionComments = () => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href="/collections" className="is-hidden-mobile">
+          <a href="/suggested-comments" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/collections" className="has-text-grey">Suggested Comments</a></li>
-              <li className="is-active has-text-weight-semibold"><a href={`/collections/${_id}`}>{name}</a></li>
+              <li><a href="/suggested-comments" className="has-text-grey">Suggested Comments</a></li>
+              <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
             </ul>
           </nav>
         </div>
@@ -144,15 +145,20 @@ const CollectionComments = () => {
               {comments.length} suggested comments
             </span>
           </div>
-          {isEditable ? (
-            <button
-              className="button is-small is-primary border-radius-4px"
-              type="button"
-              onClick={goToAddPage}>
-              <FontAwesomeIcon icon={faPlus} className="mr-10" />
-              Add New Comment
-            </button>
-          ) : null}
+          {
+            isEditable && (
+              <button
+                className="button is-small is-primary border-radius-4px"
+                type="button"
+                onClick={goToAddPage}>
+                <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                Add New Comment
+              </button>
+            )
+          }
+          <div style={{ marginLeft: 'auto' }}>
+            <GlobalSearch />
+          </div>
         </div>
         {
           isEditable && selectedComments.length ? (
@@ -161,6 +167,7 @@ const CollectionComments = () => {
               handleSelectAllChange={handleSelectAllChange}
               archiveComments={archiveComments}
               unarchiveComments={unarchiveComments}
+              collectionId={collectionId}
             />
           ) : (
             <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
@@ -197,4 +204,8 @@ const CollectionComments = () => {
   );
 };
 
-export default withLayout(CollectionComments);
+SuggestedCommentCollection.propTypes = {
+  collectionId: PropTypes.string.isRequired,
+};
+
+export default SuggestedCommentCollection;

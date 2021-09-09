@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from './constants';
+import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from '../../constants';
 import GuideLink from './GuideLink';
+import SuggestionModalFooter from './SuggestionModalFooter';
 
 const truncate = (content) => {
   const contentLength = content.length;
@@ -8,6 +9,9 @@ const truncate = (content) => {
   return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
   }...` : content;
 };
+
+// eslint-disable-next-line no-underscore-dangle
+const getCollectionUrl = (engGuide, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
 
 const getCommentTitleInterface = (title, sourceName) => (
   <div className="suggestion-title">
@@ -26,25 +30,26 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
-      {engGuides?.map(({ engGuide }) => (
+      {engGuides?.map(({ engGuide, slug }) => (
         <GuideLink
+          /* eslint-disable-next-line no-underscore-dangle */
+          key={engGuide._id}
           title={engGuide.title || engGuide.source?.name}
-          link={engGuide.source?.url}
+          link={getCollectionUrl(engGuide, slug)}
         />
       ))}
     </div>
   );
 };
 
-function SuggestionModal({ onInsertPressed, searchResults }) {
+function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartComment }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
     const links = engGuides?.map(({ engGuide, slug }) => {
       const caption = engGuide.title || engGuide.source?.name;
-      // eslint-disable-next-line no-underscore-dangle
-      const url = `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+      const url = getCollectionUrl(engGuide, slug);
       return `\n\n📄 [${caption}](${url})`;
     }).join(' ');
     return links || '';
@@ -57,6 +62,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     navigator.clipboard.writeText(suggestion).then(
       () => {
         setCopiedId(id);
+        onLastUsedSmartComment(suggestion);
       },
       () => {
         // eslint-disable-next-line no-console
@@ -86,7 +92,7 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
     </button>
   );
 
-  const getAllCommentsUI = () => searchResults.map((searchResult) => {
+  const AllComments = () => searchResults.map((searchResult) => {
     const {
       comment, sourceName, title, id, engGuides,
     } = searchResult;
@@ -116,10 +122,10 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
       </div>
     );
   });
-  const getCommentUI = () => {
+  const Comment = () => {
     const {
       comment, sourceName, engGuides, title, id,
-    } = currentSuggestion;
+    } = currentSuggestion || {};
     const isCopied = copiedId === id;
     return (
       <>
@@ -141,14 +147,48 @@ function SuggestionModal({ onInsertPressed, searchResults }) {
             onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
           />
         </div>
-        {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, true, engGuides)}
+        {title && getCommentTitleInterface(title, sourceName)}
+        {comment && getCommentInterface(comment, true, engGuides)}
       </>
     );
   };
-  const element = isCommentDetailsVisible ? getCommentUI() : getAllCommentsUI();
+  const wrapperWidth = 345;
 
-  return <div>{element}</div>;
+  return (
+    <div
+      className="sema-is-flex overflow-hidden"
+      style={{
+        width: wrapperWidth,
+        height: '430px',
+      }}
+    >
+      <div
+        className="sema-is-flex sema-is-flex-direction-column sema-is-relative"
+        style={{
+          minWidth: wrapperWidth,
+          overflowY: 'scroll',
+        }}
+      >
+        <AllComments />
+        <SuggestionModalFooter />
+      </div>
+      <div
+        className="sema-is-flex sema-is-flex-direction-column sema-is-relative"
+        style={{
+          minWidth: wrapperWidth,
+          top: 0,
+          left: isCommentDetailsVisible ? '-100%' : '0%',
+          transition: '.15s ease-out',
+          zIndex: 2,
+          overflowY: 'scroll',
+          background: 'rgb(251, 251, 251)',
+        }}
+      >
+        <Comment />
+        <SuggestionModalFooter />
+      </div>
+    </div>
+  );
 }
 
 export default SuggestionModal;

@@ -10,11 +10,27 @@
     }
 }
 
-.img {
+.img-container {
+    margin: 20px 0;
+    position: relative;
     max-height: 350px;
     height: 350px;
     @media only screen and (max-width: 769px) {
         height: 180px !important;
         max-width: 300px;
     }
+}
+
+.img {
+    height: 300px;
+}
+
+.button-play {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 2;
 }

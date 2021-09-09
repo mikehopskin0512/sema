@@ -13,7 +13,7 @@ const CustomSelect = (props) => {
     label, selectProps, filter, showCheckbox,
   } = props;
 
-  const { value } = selectProps;
+  const { value, onChange, options } = selectProps;
 
   const node = useRef();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -34,11 +34,19 @@ const CustomSelect = (props) => {
     };
   }, []);
 
+  const selectAll = () => {
+    onChange(options);
+  }
+
+  const deselectAll = () => {
+    onChange([]);
+  }
+
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
 
   const Control = (p) => (filter ? (
     <div className={clsx('', styles.control)}>
-      <div className="p-20 has-background-white border-radius-4px">
+      <div className="py-20 px-12 has-background-white border-radius-4px">
         <components.Control {...p} />
       </div>
     </div>
@@ -54,6 +62,11 @@ const CustomSelect = (props) => {
     const { children } = p;
     return (
       <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
+        <div className="mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7">
+          <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+          <div class="mx-5">|</div>
+          <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+        </div>
         {children}
       </components.Menu>
     );
@@ -90,6 +103,15 @@ const CustomSelect = (props) => {
   );
 
   const MultiValueRemove = () => null;
+
+  const IndicatorsContainer = () => null;
+
+  const ValueContainer = (p) => (
+    <components.ValueContainer
+      {...p}
+      className={styles['value-container']}
+    />
+  );
 
   return (
     <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node}>
@@ -130,6 +152,8 @@ const CustomSelect = (props) => {
               MultiValue,
               Input,
               MultiValueRemove,
+              ValueContainer,
+              IndicatorsContainer,
             }}
             menuIsOpen={menuIsOpen}
             {...selectProps}

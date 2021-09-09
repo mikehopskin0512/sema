@@ -19,21 +19,29 @@ const SmartCommentsMetricPage = () => {
   const [perPage, setPerPage] = useState(50);
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
+  const [sortDesc, setSortDesc] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchSuggestedMetrics({ page, perPage, search: debounceSearchTerm }));
-  }, [dispatch, page, perPage, debounceSearchTerm]);
+    dispatch(fetchSuggestedMetrics({ page, perPage, search: debounceSearchTerm, sortDesc }));
+  }, [dispatch, page, perPage, debounceSearchTerm, sortDesc]);
 
   const fetchData = useCallback(({ pageSize, pageIndex }) => {
     setPage(pageIndex + 1);
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
 
-  const columns = [
+  const sortComments = useCallback((column) => {
+    if (column.isSortedDesc !== undefined) {
+      setSortDesc(column.isSortedDesc);
+    }
+  }, [setSortDesc]);
+
+  const columns = useMemo(() => [
     {
       Header: 'Comment',
       accessor: 'comment',
       className: 'p-10',
+      sorted: false,
       Cell: ({ cell: { value } }) => (
         <div dangerouslySetInnerHTML={{ __html: value }} style={{ maxHeight: 200, maxWidth: 400, overflow: 'auto' }} />
       ),
@@ -42,48 +50,60 @@ const SmartCommentsMetricPage = () => {
       Header: 'Reaction',
       accessor: 'reaction',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Tags',
       accessor: 'tags',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Suggested Comments',
       accessor: 'suggestedComment',
       className: 'p-10 is-whitespace-nowrap',
+      sorted: false,
     },
     {
-      Header: 'Date',
+      Header: ({ column }) => {
+        sortComments(column);
+        return 'Date';
+      },
       accessor: 'date',
+      sortDesc,
       className: 'p-10 is-whitespace-nowrap',
     },
     {
       Header: 'Repo',
       accessor: 'repo',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Email',
       accessor: 'email',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Author',
       accessor: 'author',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Reviewer Email',
       accessor: 'reviewerEmail',
       className: 'p-10',
+      sorted: false,
     },
     {
       Header: 'Reviewer Name',
       accessor: 'reviewerName',
       className: 'p-10 is-whitespace-nowrap',
+      sorted: false,
     },
-  ];
+  ], [sortComments, sortDesc]);
 
   const dataSource = useMemo(() => suggestedMetrics.map((item) => ({
     comment: item.comment,
@@ -108,7 +128,7 @@ const SmartCommentsMetricPage = () => {
             <div className="mr-10">
               <SearchInput value={searchTerm} onChange={setSearchTerm} />
             </div>
-            <ExportButton onExport={() => exportSuggestedCommentsMetrics({ search: searchTerm })} />
+            <ExportButton onExport={() => exportSuggestedCommentsMetrics({ search: searchTerm, sortDesc })} />
           </div>
           <Table
             columns={columns}

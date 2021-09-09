@@ -25,6 +25,7 @@ import {
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
+  LAST_USED_SMART_COMMENT,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -77,6 +78,7 @@ function rootReducer(state = initialState, action) {
   } else if (type === TOGGLE_TAG_MODAL) {
     const { id } = payload;
     const { semabars } = newState;
+    semabars[id].isTagModalDirty = true;
     semabars[id].isTagModalVisible = !semabars[id].isTagModalVisible;
   } else if (type === TOGGLE_IS_SELECTING_EMOJI) {
     const { id } = payload;
@@ -122,9 +124,9 @@ function rootReducer(state = initialState, action) {
     const { semasearches } = newState;
     semasearches[id].isSearchModalVisible = false;
   } else if (type === TOGGLE_SEARCH_MODAL) {
-    const { id } = payload;
+    const { id, isOpen } = payload;
     const { semasearches } = newState;
-    semasearches[id].isSearchModalVisible = !semasearches[id]
+    semasearches[id].isSearchModalVisible = isOpen ?? !semasearches[id]
       .isSearchModalVisible;
   } else if (type === ADD_SUGGESTED_TAGS) {
     const { id, suggestedTags } = payload;
@@ -231,6 +233,7 @@ function rootReducer(state = initialState, action) {
     newState.githubMetadata.filename = null;
     newState.githubMetadata.file_extension = null;
     newState.githubMetadata.line_numbers = null;
+    newState.lastUserSmartComment = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
     const { isTyping } = payload;
     newState.github.isTyping = isTyping;
@@ -256,6 +259,8 @@ function rootReducer(state = initialState, action) {
     newState.semasearches[id].searchValue = searchValue;
   } else if (type === CLOSE_LOGIN_REMINDER) {
     newState.isReminderClosed = true;
+  } else if (type === LAST_USED_SMART_COMMENT) {
+    newState.lastUserSmartComment = payload;
   }
   return newState;
 }
