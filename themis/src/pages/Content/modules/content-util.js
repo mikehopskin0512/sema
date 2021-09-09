@@ -346,7 +346,7 @@ export async function writeSemaToGithub(textarea) {
     }
 
     comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
       userId,
       comment: textboxValue,
       location,
@@ -354,7 +354,6 @@ export async function writeSemaToGithub(textarea) {
       // eslint-disable-next-line no-underscore-dangle
       reaction: selectedEmojiObj._id,
       tags,
-      fileExtention,
     };
 
     if (isPullRequestReview) {
