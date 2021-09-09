@@ -16,6 +16,7 @@ import {
   ADD_OP,
   SMART_COMMENT_URL,
   IS_DIRTY,
+  DELIMITERS,
   AMPLITUDE_API_KEY,
   EVENTS,
 } from '../constants';
@@ -52,6 +53,7 @@ export const getGithubMetadata = (document) => {
   const login = document.querySelector('meta[name="octolytics-actor-login"]')
     ?.content;
   const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
   const title = document.querySelector('span[data-snek-id="issue-title"]')
     ?.innerText;
   // eslint-disable-next-line camelcase
@@ -69,6 +71,7 @@ export const getGithubMetadata = (document) => {
     title,
     clone_url,
     commentId: null,
+    requesterAvatarUrl,
   };
 
   return githubMetadata;
@@ -443,7 +446,6 @@ export async function writeSemaToGithub(textarea) {
     }
 
     fireAmplitudeEvent(EVENTS.SUBMIT, opts);
-
     const semaIds = getSemaIds($(textarea).attr('id'));
     store.dispatch(resetSemaStates(semaIds));
   }
@@ -674,8 +676,16 @@ export const getHighlights = (text) => {
     }
     // eslint-disable-next-line no-cond-assign
     while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-      indices.push(index);
       startIndex = index + searchStrLen;
+
+      const nextChar = str[startIndex];
+      const prevChar = str[index - 1];
+
+      if (
+        (nextChar === undefined || DELIMITERS.some((delimitter) => delimitter === nextChar))
+        && (prevChar === undefined || DELIMITERS.some((delimitter) => delimitter === prevChar))) {
+        indices.push(index);
+      }
     }
     return indices;
   };

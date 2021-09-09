@@ -1,24 +1,25 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import {
   find, findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
-import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
-import CommentFilter from '../../../components/comment/commentFilter';
-import EngGuideTable from '../../../components/engGuides/engGuideTable';
-import withLayout from '../../../components/layout';
-import Helmet from '../../../components/utils/Helmet';
+import CommentFilter from '../../comment/commentFilter';
+import EngGuideTable from '../engGuideTable';
+import ActionGroup from '../actionGroup';
+import GlobalSearch from "../../globalSearch";
+import Helmet from '../../utils/Helmet';
+
 import { engGuidesOperations } from '../../../state/features/engGuides';
-import GlobalSearch from "../../../components/globalSearch";
-import ActionGroup from '../../../components/engGuides/actionGroup';
 
 // const NUM_PER_PAGE = 10;
 
 const { getEngGuides } = engGuidesOperations;
 
-const CollectionEngGuides = () => {
+const CollectionEngGuides = ({ collectionId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [engGuide, setEngGuide] = useState({
@@ -34,7 +35,6 @@ const CollectionEngGuides = () => {
     engGuideState: state.engGuidesState,
   }));
 
-  const { collectionId } = router.query;
   const { token, user } = auth;
   const { engGuides, isFetching } = engGuideState;
   const [selectedGuides, setSelectedGuides] = useState([]);
@@ -93,7 +93,7 @@ const CollectionEngGuides = () => {
   }, [collectionId, engGuides]);
 
   const redirectToAddPage = async () => {
-    await router.push(`/engineering/${engGuideId}/add`);
+    await router.push(`/guides/add?cid=${collectionId}`);
   };
 
   const handleSelectChange = (guideId, value) => {
@@ -158,6 +158,7 @@ const CollectionEngGuides = () => {
               handleSelectAllChange={handleSelectAllChange}
               archiveGuides={archiveGuides}
               unarchiveGuides={unarchiveGuides}
+              collectionId={collectionId}
             />
           ) : (
             <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
@@ -175,4 +176,8 @@ const CollectionEngGuides = () => {
   );
 };
 
-export default withLayout(CollectionEngGuides);
+CollectionEngGuides.propTypes = {
+  collectionId: PropTypes.string.isRequired,
+};
+
+export default CollectionEngGuides;

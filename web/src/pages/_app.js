@@ -10,12 +10,14 @@ import {
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import 'react-dates/initialize';
 import initialize from '../state/utils/sentry';
 import { initStore } from '../state/store';
 import * as ga from '../utils/analytics';
 
 import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
+import '../../styles/_calendar_overrides.scss';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,

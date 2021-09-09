@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from './constants';
+import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from '../../constants';
 import GuideLink from './GuideLink';
+import SuggestionModalFooter from './SuggestionModalFooter';
 
 const truncate = (content) => {
   const contentLength = content.length;
@@ -31,6 +32,8 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
       />
       {engGuides?.map(({ engGuide, slug }) => (
         <GuideLink
+          /* eslint-disable-next-line no-underscore-dangle */
+          key={engGuide._id}
           title={engGuide.title || engGuide.source?.name}
           link={getCollectionUrl(engGuide, slug)}
         />
@@ -89,7 +92,7 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
     </button>
   );
 
-  const getAllCommentsUI = () => searchResults.map((searchResult) => {
+  const AllComments = () => searchResults.map((searchResult) => {
     const {
       comment, sourceName, title, id, engGuides,
     } = searchResult;
@@ -119,10 +122,10 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
       </div>
     );
   });
-  const getCommentUI = () => {
+  const Comment = () => {
     const {
       comment, sourceName, engGuides, title, id,
-    } = currentSuggestion;
+    } = currentSuggestion || {};
     const isCopied = copiedId === id;
     return (
       <>
@@ -144,14 +147,48 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
             onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
           />
         </div>
-        {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, true, engGuides)}
+        {title && getCommentTitleInterface(title, sourceName)}
+        {comment && getCommentInterface(comment, true, engGuides)}
       </>
     );
   };
-  const element = isCommentDetailsVisible ? getCommentUI() : getAllCommentsUI();
+  const wrapperWidth = 345;
 
-  return <div>{element}</div>;
+  return (
+    <div
+      className="sema-is-flex overflow-hidden"
+      style={{
+        width: wrapperWidth,
+        height: '430px',
+      }}
+    >
+      <div
+        className="sema-is-flex sema-is-flex-direction-column sema-is-relative"
+        style={{
+          minWidth: wrapperWidth,
+          overflowY: 'scroll',
+        }}
+      >
+        <AllComments />
+        <SuggestionModalFooter />
+      </div>
+      <div
+        className="sema-is-flex sema-is-flex-direction-column sema-is-relative"
+        style={{
+          minWidth: wrapperWidth,
+          top: 0,
+          left: isCommentDetailsVisible ? '-100%' : '0%',
+          transition: '.15s ease-out',
+          zIndex: 2,
+          overflowY: 'scroll',
+          background: 'rgb(251, 251, 251)',
+        }}
+      >
+        <Comment />
+        <SuggestionModalFooter />
+      </div>
+    </div>
+  );
 }
 
 export default SuggestionModal;

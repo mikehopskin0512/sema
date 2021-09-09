@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import withLayout from '../../../components/layout';
-import Helmet from '../../../components/utils/Helmet';
-import { commentsOperations } from '../../../state/features/comments';
-import EngGuideForm from '../../../components/engGuides/engGuideForm';
-import { tagsOperations } from '../../../state/features/tags';
-import { engGuidesOperations } from '../../../state/features/engGuides';
-import { makeTagsList } from '../../../utils';
+import withLayout from '../../components/layout';
+import Helmet from '../../components/utils/Helmet';
+import { commentsOperations } from '../../state/features/comments';
+import EngGuideForm from '../../components/engGuides/engGuideForm';
+import { tagsOperations } from '../../state/features/tags';
+import { engGuidesOperations } from '../../state/features/engGuides';
+import { makeTagsList } from '../../utils';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateEngGuides, getEngGuides } = engGuidesOperations;
@@ -19,7 +19,7 @@ const { getCollectionById } = commentsOperations;
 const EditEngGuidesPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { engGuideId, guides } = router.query;
+  const { cid: collectionId, guides } = router.query;
   const { auth, engGuidesState, collectionState } = useSelector((state) => ({
     auth: state.authState,
     engGuidesState: state.engGuidesState,
@@ -36,8 +36,8 @@ const EditEngGuidesPage = () => {
   }, [dispatch, token, guides]);
 
   useEffect(() => {
-    dispatch(getCollectionById(engGuideId, token));
-  }, [engGuideId, dispatch, token]);
+    dispatch(getCollectionById(collectionId, token));
+  }, [collectionId, dispatch, token]);
 
   useEffect(() => {
     let data = [];
@@ -82,7 +82,7 @@ const EditEngGuidesPage = () => {
       });
     });
     await dispatch(bulkUpdateEngGuides({ engGuides: data }, token));
-    await router.push(`/engineering/${collection._id}`);
+    await router.push(`/guides?cid=${collection._id}`);
   };
 
   return (
@@ -90,14 +90,14 @@ const EditEngGuidesPage = () => {
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href="/collections" className="is-hidden-mobile">
+          <a href={`/guides?cid=${collection._id}`} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/engineering" className="has-text-grey">Community Engineering Guides</a></li>
-              <li className="is-active has-text-weight-semibold"><a href={`/engineering/${collection._id}`}>{collection.name}</a></li>
-              <li className="is-active has-text-weight-semibold">Edit Guides</li>
+              <li><a href="/guides" className="has-text-grey">Community Engineering Guides</a></li>
+              <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/guides?cid=${collection._id}`}>{collection.name}</a></li>
+              <li className="is-active has-text-weight-semibold"><a>Edit Guides</a></li>
             </ul>
           </nav>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import SearchItem from "@/components/globalSearch/searchItem";
+import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";

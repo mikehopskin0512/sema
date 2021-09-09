@@ -133,19 +133,15 @@
 }
 
 .chrome-button {
-    width: 230px;
-}
-
-.install-logo-img {
-    width: 100px;
-}
-
-.install-cross-img {
-    width: 40px;
+    width: 25px;
 }
 
 .footer {
     @media only screen and (max-width: 768px) {
         margin-top: 25px;
     }
+}
+
+.loader {
+    width: 25px;
 }
