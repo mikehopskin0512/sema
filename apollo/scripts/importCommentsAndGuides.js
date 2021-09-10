@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
-import { uniq } from 'lodash';
+import { uniq, differenceWith, isEqual } from 'lodash';
 import Collection from '../src/comments/collections/collectionModel';
 import { mapBooleanValue, mapTags } from '../src/shared/utils';
+import User from '../src/users/userModel';
 import EngGuide from '../src/comments/engGuides/engGuideModel';
 import SuggestedComment from '../src/comments/suggestedComments/suggestedCommentModel';
 
@@ -32,6 +33,8 @@ const checkCollectionByName = async (name) => {
     });
     await collection.save();
   }
+  
+  return collection._id;
 };
 
 const importEngGuides = async () => {
@@ -47,30 +50,42 @@ const importEngGuides = async () => {
     collectionNames = [...collectionNames, ...names];
   });
   collectionNames = uniq(collectionNames);
-
-  await Promise.all(collectionNames.map(checkCollectionByName));
+  
+  const collectionIds = await Promise.all(collectionNames.map(checkCollectionByName));
 
   const guides = await Promise.all(rows.map(async (item) => {
     const names = item['Collections / Tag1'] ? item['Collections / Tag1'].split(';') : [];
     const collectionIds = await Promise.all(names.map(getCollectionIdByName));
     const mappedTags = await mapTags(item['Tags All']);
-
-    return ({
-      displayId: item['Display Id'],
-      title: item.Title,
-      body: item['Combined Text'],
-      author: item.Author,
-      source: {
-        name: item['Source / Tag 6'],
-        url: item['Source Link'],
-      },
-      collections: collectionIds,
-      tags: mappedTags,
-      isActive: mapBooleanValue(item.Active),
-    });
+    
+    const existingGuide = await EngGuide.findOne({ displayId: item['Display Id'], title: item['title'] });
+    if (!existingGuide) {
+      const engGuide = new EngGuide({
+        displayId: item['Display Id'],
+        title: item.Title,
+        body: item['Combined Text'] || '',
+        author: item.Author,
+        source: {
+          name: item['Source / Tag 6'],
+          url: item['Source Link'],
+        },
+        collections: collectionIds,
+        tags: mappedTags,
+        isActive: mapBooleanValue(item.Active),
+      });
+      await engGuide.save();
+    }
   }));
-
-  await EngGuide.insertMany(guides);
+  
+  // add new collections to every user by default
+  const users = await User.find({});
+  await Promise.all(users.map(async (user) => {
+    const userCollectionIds = user.collections.map(item => item.collectionData);
+    const newCollectionIds = differenceWith(collectionIds, userCollectionIds, isEqual);
+    console.log(`${newCollectionIds.length} new collections for ${user._id}`);
+    user.collections = [...user.collections, ...newCollectionIds.map(collectionId => ({ collectionData: collectionId, isActive: true }))];
+    await user.save();
+  }));
 };
 
 const getEngGuideByTitle = async (title) => {
@@ -99,27 +114,41 @@ const importSuggestedComments = async () => {
 
   let collectionNames = rows.map((row) => row['Collections / Tag1']);
   collectionNames = uniq(collectionNames);
-  await Promise.all(collectionNames.map(checkCollectionByName));
+  const collectionIds = await Promise.all(collectionNames.map(checkCollectionByName));
 
   await Promise.all(rows.map(async (item) => {
     const collectionId = await getCollectionIdByName(item['Collections / Tag1']);
-
-    const comment = new SuggestedComment({
-      displayId: item['Display Id'],
-      title: item.Title,
-      comment: item['Body / Introduction'],
-      author: item.Author,
-      source: {
-        name: item['Source / Tag 6'],
-        url: item['Source Link'],
-      },
-      engGuides: await mapEngGuides(item['Engineering Guides']),
-      tags: await mapTags(item['Tags All']),
-      isActive: mapBooleanValue(item.Active),
-    });
-    await comment.save();
-
-    await Collection.updateOne({ _id: collectionId }, { $addToSet: { comments: comment._id } });
+    
+    const existingComment = await SuggestedComment.findOne({ displayId: item['Display Id'], title: item['Title'] });
+    if (!existingComment) {
+      const comment = new SuggestedComment({
+        displayId: item['Display Id'],
+        title: item.Title,
+        comment: item['Body / Introduction'],
+        author: item.Author,
+        source: {
+          name: item['Source / Tag 6'],
+          url: item['Source Link'],
+        },
+        engGuides: await mapEngGuides(item['Engineering Guides']),
+        tags: await mapTags(item['Tags All']),
+        isActive: mapBooleanValue(item.Active),
+      });
+      await comment.save();
+  
+      await Collection.updateOne({ _id: collectionId }, { $addToSet: { comments: comment._id } });
+    }
+  }));
+  
+  // add new collections to every user by default
+  const users = await User.find({});
+  await Promise.all(users.map(async (user) => {
+    const userCollectionIds = user.collections.map(item => item.collectionData);
+    const newCollectionIds = differenceWith(collectionIds, userCollectionIds, isEqual);
+    console.log(`${newCollectionIds.length} new collections for ${user._id}`);
+    console.log(newCollectionIds);
+    user.collections = [...user.collections, ...newCollectionIds.map(collectionId => ({ collectionData: collectionId, isActive: true }))];
+    await user.save();
   }));
 };
 
