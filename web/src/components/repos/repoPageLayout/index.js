@@ -6,7 +6,7 @@ import clsx from "clsx";
 import Sidebar from "../../sidebar";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
-import DateRangeSelector from '../../dataRangeSelector';
+import DateRangeSelector from '../../dateRangeSelector';
 import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
 
@@ -97,6 +97,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
             end={endDate}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
+            isRight
           />
         </div>
       </div>
