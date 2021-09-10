@@ -8,7 +8,7 @@ import StatsFilter from '../../components/statsFilter';
 import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
-import DateRangeSelector from '../../components/dataRangeSelector';
+import DateRangeSelector from '../../components/dateRangeSelector';
 
 const PersonalInsights = () => {
   const [startDate, setStartDate] = useState();
@@ -27,12 +27,6 @@ const PersonalInsights = () => {
         <div className="mb-15">
           <div className="is-flex is-justify-content-space-between">
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Personal Insights</p>
-            <DateRangeSelector
-            start={startDate}
-            end={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-          />
             <div className="is-flex">
               <button className={clsx("button border-radius-0 is-small", commentView === 'received' ? 'is-primary' : '')} onClick={() => setCommentView('received')}>
                 Comments received

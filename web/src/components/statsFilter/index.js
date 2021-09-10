@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import styles from './statsFilter.module.scss';
+import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
+import { groupBy } from 'lodash';
 
 const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
   const [filter, setFilter] = useState({});
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -37,6 +43,14 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
           className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
           style={{zIndex: 2}}
         >
+          <div className="is-flex-grow-1 px-5 my-5">
+            <DateRangeSelector
+              start={startDate}
+              end={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+            />
+          </div>
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{
