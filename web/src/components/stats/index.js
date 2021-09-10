@@ -4,8 +4,8 @@ import { subDays, differenceInCalendarDays } from 'date-fns';
 import clsx from 'clsx';
 import { generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
 import styles from './stats.module.scss';
-import BarChart from '../BarChart';
-import CircularPacking from '../CircularPackingChart';
+import ReactionChart from './reactionChart';
+import TagsChart from './tagsChart';
 
 import { TagList } from '../../data/activity';
 
@@ -84,18 +84,8 @@ const StatsPage = ({ startDate, endDate }) => {
         <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
       </div>
       <div className="is-flex is-flex-wrap-wrap mt-20">
-        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
-            <BarChart data={reactions} />
-          </div>
-        </div>
-        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
-            <CircularPacking data={tags} />
-          </div>
-        </div>
+        <ReactionChart reactions={reactions} />
+        <TagsChart tags={tags} />
       </div>
     </>
   );
