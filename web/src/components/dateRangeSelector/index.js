@@ -97,10 +97,13 @@ const DateRangeSelector = (props) => {
 
     return (
       <>
-        <div className={clsx("dropdown is-flex is-justify-content-flex-end", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
-          <div className="dropdown-trigger">
+        <div className={clsx("dropdown is-flex is-justify-content-stretch", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
+          <div className="dropdown-trigger is-flex-grow-1">
             <button
-              className="has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable"
+              className={clsx(
+                "has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable",
+                styles.button
+              )}
               onClick={toggleMenu}
             >
               <span className={clsx("has-text-weight-semibold is-size-6 is-fullwidth", styles.placeholder)}>
