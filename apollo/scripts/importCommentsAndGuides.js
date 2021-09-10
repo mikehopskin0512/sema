@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
+import { uniq } from 'lodash';
 import Collection from '../src/comments/collections/collectionModel';
 import { mapBooleanValue, mapTags } from '../src/shared/utils';
 import EngGuide from '../src/comments/engGuides/engGuideModel';
@@ -16,7 +17,21 @@ const options = {
 const getCollectionIdByName = async (name) => {
   const collection = await Collection.findOne({ name });
 
-  return collection ? collection._id : '';
+  return collection._id;
+};
+
+const checkCollectionByName = async (name) => {
+  let collection = await Collection.findOne({ name });
+
+  if (!collection) {
+    collection = new Collection({
+      name,
+      description: name,
+      author: 'sema',
+      isActive: true,
+    });
+    await collection.save();
+  }
 };
 
 const importEngGuides = async () => {
@@ -25,6 +40,15 @@ const importEngGuides = async () => {
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   const rows = XLSX.utils.sheet_to_json(sheet);
+
+  let collectionNames = [];
+  rows.forEach((row) => {
+    const names = row['Collections / Tag1'] ? row['Collections / Tag1'].split(';') : [];
+    collectionNames = [...collectionNames, ...names];
+  });
+  collectionNames = uniq(collectionNames);
+
+  await Promise.all(collectionNames.map(checkCollectionByName));
 
   const guides = await Promise.all(rows.map(async (item) => {
     const names = item['Collections / Tag1'] ? item['Collections / Tag1'].split(';') : [];
@@ -40,7 +64,7 @@ const importEngGuides = async () => {
         name: item['Source / Tag 6'],
         url: item['Source Link'],
       },
-      collections: collectionIds.filter((id) => !!id),
+      collections: collectionIds,
       tags: mappedTags,
       isActive: mapBooleanValue(item.Active),
     });
@@ -73,6 +97,10 @@ const importSuggestedComments = async () => {
   const sheet = workbook.Sheets[sheetName];
   const rows = XLSX.utils.sheet_to_json(sheet);
 
+  let collectionNames = rows.map((row) => row['Collections / Tag1']);
+  collectionNames = uniq(collectionNames);
+  await Promise.all(collectionNames.map(checkCollectionByName));
+
   await Promise.all(rows.map(async (item) => {
     const collectionId = await getCollectionIdByName(item['Collections / Tag1']);
 
@@ -91,9 +119,7 @@ const importSuggestedComments = async () => {
     });
     await comment.save();
 
-    if (collectionId) {
-      await Collection.updateOne({ _id: collectionId }, { $addToSet: { comments: comment._id } });
-    }
+    await Collection.updateOne({ _id: collectionId }, { $addToSet: { comments: comment._id } });
   }));
 };
 
