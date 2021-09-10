@@ -97,7 +97,7 @@ const DateRangeSelector = (props) => {
 
     return (
       <>
-        <div className={clsx("dropdown is-flex is-justify-content-stretch", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
+        <div className={clsx("dropdown is-flex is-justify-content-stretch is-align-items-stretch", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
           <div className="dropdown-trigger is-flex-grow-1">
             <button
               className={clsx(
@@ -106,7 +106,7 @@ const DateRangeSelector = (props) => {
               )}
               onClick={toggleMenu}
             >
-              <span className={clsx("has-text-weight-semibold is-size-6 is-fullwidth", styles.placeholder)}>
+              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-6", styles.placeholder)}>
                 { start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
               </span>
               <span className="icon is-small pb-5">

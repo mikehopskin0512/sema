@@ -40,10 +40,10 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
           </p>
         </div>
         <div
-          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
           style={{zIndex: 2}}
         >
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <DateRangeSelector
               start={startDate}
               end={endDate}
@@ -51,7 +51,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               setEndDate={setEndDate}
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterUserList,
@@ -63,7 +63,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               label="From"
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterRequesterList,
@@ -75,7 +75,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               label="To"
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: ReactionList,
@@ -90,7 +90,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               showCheckbox
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: TagList,
@@ -104,7 +104,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               showCheckbox
             />
           </div>
-          <div  className="is-flex-grow-1 px-5 my-5">
+          <div  className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterPRList,
