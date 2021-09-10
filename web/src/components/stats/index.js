@@ -22,6 +22,7 @@ const StatsPage = ({ startDate, endDate }) => {
 
   const [reactions, setReactions] = useState([]);
   const [tags, setTags] = useState({});
+  const [groupBy, setGroupBy] = useState('');
 
   const getReactionOverview = (smartcomments) => {
     if (smartcomments.length > 0) {
@@ -33,21 +34,25 @@ const StatsPage = ({ startDate, endDate }) => {
       }
       const diff = differenceInCalendarDays(new Date(end), new Date(start));
       if (diff < dayInWeek + 1) {
+        setGroupBy('day');
         const reactionsArr = generateDays(smartcomments, diff, end);
         setReactions(reactionsArr);
       }
 
       if (diff < dayInMonth && diff >= dayInWeek) {
+        setGroupBy('week');
         const reactionsArr = generateWeeks(smartcomments, start, end);
         setReactions(reactionsArr);
       }
 
       if (diff < dayInYear && diff >= dayInMonth) {
+        setGroupBy('month');
         const reactionsArr = generateMonths(smartcomments, start, end);
         setReactions(reactionsArr);
       }
 
       if (diff >= dayInYear) {
+        setGroupBy('year');
         const reactionsArr = generateYears(smartcomments, start, end);
         setReactions(reactionsArr);
       } 
@@ -87,7 +92,7 @@ const StatsPage = ({ startDate, endDate }) => {
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
             <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
-            <BarChart data={reactions} />
+            <BarChart data={reactions} groupBy={groupBy} />
           </div>
         </div>
         <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
