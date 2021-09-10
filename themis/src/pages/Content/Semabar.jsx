@@ -204,6 +204,30 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
+          <div
+            style={{
+              height: '16px',
+              width: '1px',
+              background: '#909AA4',
+              margin: '0 10px',
+            }}
+          />
+          <button
+            type="button"
+            className="sema-button sema-is-small"
+            style={{
+              background: '#0081A7',
+              fontSize: '12px',
+              borderRadius: '3px',
+              padding: '1px 8px',
+              lineHeight: '16px',
+              height: 'fit-content',
+              color: 'white',
+            }}
+            aria-haspopup="true"
+          >
+            <span>+ Save</span>
+          </button>
         </div>
       </>
     );
