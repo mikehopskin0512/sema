@@ -11,7 +11,8 @@
     "build": "npm run clean && babel src --out-dir dist",
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
-    "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js"
+    "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
+    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
