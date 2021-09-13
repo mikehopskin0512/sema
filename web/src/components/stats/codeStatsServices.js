@@ -69,7 +69,7 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
   });
   let reactionsByWeek = [];
   const tagsArr = [];
-  const weekRange = weeks.map((week) => {
+  const weekRange = weeks.map((week, index) => {
     const startDay = new Date(week);
     const endDay = endOfWeek(new Date(week));
     const startWeekDay = format(startDay, 'MM/dd');
@@ -82,7 +82,8 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
     });
     reactionsByWeek.unshift(item);
     tagsArr.push({
-      x: `${startWeekDay}-${endWeekDay}`,
+      date: `${startWeekDay}-${endWeekDay}`,
+      x: `Week ${index + 1}`,
       y: 0,
     });
     return {
@@ -110,7 +111,7 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[reactionIndex][comment.reaction] += 1;
     }
     comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByWeek[tag._id].data, { x: weekRange[itemRange]?.date });
+      const tagsIndex = findIndex(tagsByWeek[tag._id].data, { date: weekRange[itemRange]?.date });
       if (tagsIndex > -1) {
         tagsByWeek[tag._id].total += 1;
         const tagData = tagsByWeek[tag._id].data[tagsIndex];
