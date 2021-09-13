@@ -175,7 +175,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     const [tab] = await chrome.tabs.query(queryOptions);
     const { id } = tab;
     chrome.tabs.update(id, {
-      url: SEMA_UI_URL,
+      url: `${SEMA_UI_URL}/dashboard?extensionInstalled=true`,
       active: true,
     });
   } else if (details.reason === 'update') {
