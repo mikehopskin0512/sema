@@ -207,7 +207,7 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
-          <div className="sema-login-bar--separator"/>
+          <div className="sema-login-bar--separator" />
           <button
             type="button"
             // disabled={}
