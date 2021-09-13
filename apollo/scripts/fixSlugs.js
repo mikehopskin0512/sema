@@ -22,8 +22,11 @@ const fixEngGuideSlugs = async () => {
         slug: engGuide.slug
       });
     }
-    suggestedComment.engGuides = newEngGuides;
-    await suggestedComment.save();
+    
+    if (newEngGuides.length > 0) {
+      suggestedComment.engGuides = newEngGuides;
+      await suggestedComment.save();
+    }
   }));
 }
 
