@@ -669,6 +669,13 @@ h6 {
     text-decoration: underline;
     font-size: 12px;
   }
+
+  &--separator {
+    height: 16px;
+    width: 1px;
+    background: #909AA4;
+    margin: 0 10px;
+  }
 }
 
 .login-button {
