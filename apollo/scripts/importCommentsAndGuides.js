@@ -10,6 +10,8 @@ import SuggestedComment from '../src/comments/suggestedComments/suggestedComment
 
 import { mongooseUri } from '../src/config';
 
+const getSlug = require('speakingurl');
+
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -63,6 +65,7 @@ const importEngGuides = async () => {
       const engGuide = new EngGuide({
         displayId: item['Display Id'],
         title: item.Title,
+        slug: getSlug(`${item.Title} ${item['Display Id'].split('-')[1]}`, { symbols: false }),
         body: item['Combined Text'] || '',
         author: item.Author,
         source: {
@@ -93,7 +96,7 @@ const getEngGuideByTitle = async (title) => {
   return {
     engGuide: guide && guide._id,
     name: title,
-    slug: title.split(' ').join('-'),
+    slug: guide.slug ? guide.slug : title.split(' ').join('-'),
   };
 };
 

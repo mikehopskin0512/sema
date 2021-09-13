@@ -51,7 +51,8 @@
     "request": "^2.88.2",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
-    "xlsx": "^0.15.5"
+    "xlsx": "^0.15.5",
+    "speakingurl": "^14.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
