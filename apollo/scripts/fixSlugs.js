@@ -15,17 +15,21 @@ const fixEngGuideSlugs = async () => {
   const suggestedComments = await SuggestedComment.find();
   await Promise.all(suggestedComments.map(async (suggestedComment) => {
     let newEngGuides = [];
-    for (let i = 0; i < suggestedComment.engGuides.length; i++) {
-      const engGuide = await EngGuide.findById(suggestedComment.engGuides[i].engGuide);
-      newEngGuides.push({
-        ...suggestedComment.engGuides[i],
-        slug: engGuide.slug
-      });
-    }
-    
-    if (newEngGuides.length > 0) {
-      suggestedComment.engGuides = newEngGuides;
-      await suggestedComment.save();
+    if (suggestedComment.engGuides) {
+      for (let i = 0; i < suggestedComment.engGuides.length; i++) {
+        const engGuide = await EngGuide.findById(suggestedComment.engGuides[i].engGuide);
+        newEngGuides.push({
+          _id: suggestedComment.engGuides[i]._id,
+          engGuide: suggestedComment.engGuides[i].engGuide,
+          name: suggestedComment.engGuides[i].name,
+          slug: engGuide.slug
+        });
+      }
+  
+      if (newEngGuides.length > 0) {
+        suggestedComment.engGuides = newEngGuides;
+        await suggestedComment.save();
+      }
     }
   }));
 }
