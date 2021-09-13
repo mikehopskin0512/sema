@@ -41,6 +41,7 @@ class Mirror {
       return;
     }
 
+    this._id = getSemaIds(id).semaMirror;
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
@@ -98,6 +99,7 @@ class Mirror {
         this._highlighter.style.display = 'none';
       }
     });
+    window.semaExtensionRegistry.addAdditional(this._destroy);
   }
 
   _render() {
@@ -112,6 +114,7 @@ class Mirror {
 
     if (!this._container) {
       this._container = document.createElement('div');
+      this._container.id = this._id;
 
       this._container.className = `${SHADOW_ROOT_CLASS} ${getActiveThemeClass()}`;
 
@@ -366,25 +369,27 @@ class Mirror {
   }
 
   _destroy() {
-    $(this._elementToMimic).off('scroll', this._onScroll);
-    $(this._elementToMimic).off('input', this._onInput);
-    $(this._elementToMimic).off('change', this._onInput);
-    $(this._elementToMimic).off('mousemove', this._onHover);
-    $(this._elementToMimic).off('click', this._onClick);
-    $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
-    $(this._elementToMimic).off('paste', this._onTextPaste);
-    //   this._renderInterval && this._renderInterval.destroy(),
-    if (this._container) {
-      this._container.remove();
-    }
+    if (this && this._elementToMimic) {
+      $(this._elementToMimic).off('scroll', this._onScroll);
+      $(this._elementToMimic).off('input', this._onInput);
+      $(this._elementToMimic).off('change', this._onInput);
+      $(this._elementToMimic).off('mousemove', this._onHover);
+      $(this._elementToMimic).off('click', this._onClick);
+      $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+      $(this._elementToMimic).off('paste', this._onTextPaste);
+      //   this._renderInterval && this._renderInterval.destroy(),
+      if (this._container) {
+        this._container.remove();
+      }
 
-    if (this._elementToMimicResizeObserver) {
-      this._elementToMimicResizeObserver.disconnect();
-    }
+      if (this._elementToMimicResizeObserver) {
+        this._elementToMimicResizeObserver.disconnect();
+      }
 
-    // TODO: this one doesn't work (need to investigate)
-    // this._elementMeasurement.clearCache();
-    this._unsubscribe();
+      // TODO: this one doesn't work (need to investigate)
+      // this._elementMeasurement.clearCache();
+      this._unsubscribe();
+    }
   }
 }
 
