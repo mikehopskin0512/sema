@@ -348,6 +348,27 @@ button.sema-reaction-selection {
   border-radius: 4px;
 }
 
+.sema-button.sema-button--save-comment {
+  background: v.$color-github-button-blue;
+  font-size: 12px;
+  padding: 2px 8px;
+  line-height: 16px;
+  height: fit-content;
+  color: #ffffff;
+  border: 0;
+  border-radius: 3px;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  span {
+    margin-right: 4px;
+    transform: rotate(90deg);
+    font-size: 16px;
+  }
+}
+
 .suggestion-content-truncated {
   margin-bottom: 16px;
   font-weight: 400;

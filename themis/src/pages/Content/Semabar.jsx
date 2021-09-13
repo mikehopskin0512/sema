@@ -174,6 +174,9 @@ const Semabar = (props) => {
       </div>
     );
   };
+  const saveComment = () => {
+    console.log('saved!');
+  };
 
   // eslint-disable-next-line react/destructuring-assignment
   if (props.isLoggedIn && !props.isWaitlist) {
@@ -214,19 +217,12 @@ const Semabar = (props) => {
           />
           <button
             type="button"
-            className="sema-button sema-is-small"
-            style={{
-              background: '#0081A7',
-              fontSize: '12px',
-              borderRadius: '3px',
-              padding: '1px 8px',
-              lineHeight: '16px',
-              height: 'fit-content',
-              color: 'white',
-            }}
-            aria-haspopup="true"
+            // disabled={}
+            className="sema-button sema-is-small sema-button--save-comment"
+            onClick={saveComment}
           >
-            <span>+ Save</span>
+            <span>+</span>
+            Save
           </button>
         </div>
       </>
