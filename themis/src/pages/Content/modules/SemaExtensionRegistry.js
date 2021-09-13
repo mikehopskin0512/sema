@@ -1,4 +1,5 @@
 import $ from 'cash-dom';
+import { SEMA_REMINDER_ROOT_ID } from '../constants';
 import { getSemaIds } from './content-util';
 
 class SemaExtensionRegistry {
@@ -64,6 +65,8 @@ class SemaExtensionRegistry {
         .children('.tooltipped.tooltipped-nw')[1];
 
       $(semaMarkdownIcon).remove();
+
+      $(`#${SEMA_REMINDER_ROOT_ID}`).remove();
     }
   }
 
