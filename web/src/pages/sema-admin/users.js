@@ -226,6 +226,12 @@ const UsersPage = () => {
     return 'Disabled';
   };
 
+  const getDays = (createdAt) => {
+    if (!createdAt) return '';
+    const days = formatDistanceToNowStrict(new Date(createdAt), { unit: 'day' });
+    return days.replace(/ days?/, '')
+  }
+
   const dataSource = users.map((item) => ({
     ...item,
     userInfo: {
@@ -234,7 +240,7 @@ const UsersPage = () => {
       avatarUrl: item.avatarUrl,
     },
     status: getStatus(item),
-    activeDate: ((item.createdAt) ? formatDistanceToNowStrict(new Date(item.createdAt), { unit: 'day' }).replace(/ days?/, 'd') : ''),
+    activeDate: (getDays(item.createdAt)),
     invites: {
       available: item.inviteCount,
       pending: item.pendingCount,
