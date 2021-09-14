@@ -164,9 +164,13 @@ const SearchBar = (props) => {
 
   const handleKeyPress = (event) => {
     const isEscKey = event.keyCode === 27;
+    const isEnterKey = event.keyCode === 13;
+
     if (isEscKey) {
       event.preventDefault();
       resetSearch();
+    } else if (isEnterKey) {
+      event.preventDefault();
     }
   };
 
