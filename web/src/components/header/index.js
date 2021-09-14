@@ -106,11 +106,11 @@ const Header = () => {
   const onCloseSignOutModal = () => setSignOutModal(false);
 
   return (
-    <header className={clsx(bgColor, 'content-container')}>
+    <header className={bgColor}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent"
+        className="navbar is-transparent content-container"
         role="navigation"
         aria-label="main navigation"
       >
