@@ -20,7 +20,7 @@ const { updateUser } = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { extensionInstalled } = router.query;
+  const { step, page = parseInt(step) } = router.query;
 
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
@@ -84,12 +84,12 @@ const Dashboard = () => {
   }, [onboardingProgress]);
 
   useEffect(() => {
-    if (extensionInstalled) {
-      setOnboardingPage(4);
-      setOnboardingProgress({...onboardingProgress, page: 4});
+    if (typeof page === 'number') {
+      setOnboardingPage(page);
+      setOnboardingProgress({ ...onboardingProgress, page });
       toggleOnboardingModalActive(true);
     }
-  }, [extensionInstalled]);
+  }, [page]);
 
   const createUserCollection = async () => {
     const { username } = identities[0];
