@@ -10,7 +10,8 @@
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "build": "npm run clean && babel src --out-dir dist",
     "serve": "node dist/app.js",
-    "clean": "rm -rf ./dist && mkdir dist"
+    "clean": "rm -rf ./dist && mkdir dist",
+    "createTeamsAndRoles": "nodemon --exec babel-node scripts/createTeamsAndRoles.js --max-http-header-size=16384"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
