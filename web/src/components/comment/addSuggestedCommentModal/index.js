@@ -34,7 +34,7 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment }) => {
     query: { collectionId = _id },
   } = useRouter();
 
-  const { token } = auth;
+  const { token, user } = auth;
   const { isFetching } = suggestedComment;
 
   const [tags, setTags] = useState();
@@ -127,12 +127,14 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment }) => {
     if (comment) {
       await dispatch(updateSuggestComment(comment._id, {
         ...data,
+        user,
         tags: getTagsValue(tags),
         collectionId,
       }, token));
     } else {
       await dispatch(createSuggestComment({
         ...data,
+        user,
         tags: getTagsValue(tags),
         collectionId,
       }, token));
