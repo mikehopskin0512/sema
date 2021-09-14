@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import styles from './statsFilter.module.scss';
+import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
+import { groupBy } from 'lodash';
 
 const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
   const [filter, setFilter] = useState({});
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -34,10 +40,18 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
           </p>
         </div>
         <div
-          className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
+          className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
           style={{zIndex: 2}}
         >
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
+            <DateRangeSelector
+              start={startDate}
+              end={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+            />
+          </div>
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterUserList,
@@ -49,7 +63,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               label="From"
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterRequesterList,
@@ -61,7 +75,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               label="To"
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: ReactionList,
@@ -76,7 +90,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               showCheckbox
             />
           </div>
-          <div className="is-flex-grow-1 px-5 my-5">
+          <div className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: TagList,
@@ -90,7 +104,7 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
               showCheckbox
             />
           </div>
-          <div  className="is-flex-grow-1 px-5 my-5">
+          <div  className={clsx("m-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterPRList,
