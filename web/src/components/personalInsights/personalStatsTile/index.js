@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import clsx from "clsx";
 import styles from "./personalStatsTile.module.scss";
 
-const PersonalStatsTile = () => {
+const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
   const auth = useSelector((state) => state.authState);
   const {
     user: {
@@ -15,6 +15,29 @@ const PersonalStatsTile = () => {
     },
   } = auth;
   const { username: githubUsername } = identities[0];
+
+  const renderTopReactions = () => {
+    return topReactions.map((reaction) => {
+      const emoji = Object.keys(reaction);
+      const value = Object.values(reaction);
+      return (
+        <span className="is-align-items-center">
+          <span className="px-5  is-size-5">{emoji}</span> <span className="is-size-6 pr-10">{value}</span>
+        </span>
+      )
+    })
+  };
+
+  const renderTopTags = () => {
+    return topTags.map((tag) => {
+      const label = Object.keys(tag);
+      return (
+        <>
+          <span class="tag is-rounded is-info is-light has-text-weight-medium m-5 is-uppercase">{label}</span>
+        </>
+      )
+    })
+  };
 
   return (
     <>
@@ -45,22 +68,22 @@ const PersonalStatsTile = () => {
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOTAL COMMENTS
                   </p>
-                  <p>23</p>
+                  <p className="px-5 is-size-4 has-text-weight-semibold">{totalSmartComments}</p>
                 </div>
                 <div className="column is-4">
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOP REACTIONS
                   </p>
-                  <p><span>23</span><span>23</span><span>23</span></p>
+                  <p className="px-5">
+                    {renderTopReactions()}
+                  </p>
                 </div>
                 <div className="column is-5">
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOP TAGS
                   </p>
-                  <p>
-                  <span class="tag is-info is-light has-text-weight-medium m-5">SECURE</span>
-                  <span class="tag is-info is-light has-text-weight-medium m-5">ELEGANT</span>
-                  <span class="tag is-info is-light has-text-weight-medium m-5">PERFORMANT</span>
+                  <p className="px-5">
+                    {renderTopTags()}
                   </p>
                 </div>
               </div>

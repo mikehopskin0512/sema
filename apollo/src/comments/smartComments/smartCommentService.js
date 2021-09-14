@@ -58,7 +58,7 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId }) => {
+export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     let filter = {}
 
@@ -70,6 +70,12 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
     }
     if (repoId) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
+    }
+    if (startDate) {
+      filter = Object.assign(filter, { createdAt: { $gte: new Date(startDate) } });
+    }
+    if (endDate) {
+      filter = Object.assign(filter, { createdAt: { $lt: new Date(endDate) } });
     }
 
     const query = SmartComment.find(filter);
@@ -556,6 +562,40 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   try {
     const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
     return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getSmartCommentsOverview = async ({ reviewer, author, repoId, startDate, endDate }) => {
+  try {
+    const filter = { reviewer, author, repoId, startDate, endDate };
+    const totalReactions = {};
+    const totalTags = {}
+    const smartComments = await filterSmartComments(filter);
+    smartComments.map((comments) => {
+      const { tags, reaction } = comments;
+      if (tags.length) {
+        tags.map((tag) => {
+          const { _id: tagId } = tag;
+          if (tags?.[tagId]) {
+            totalTags[tagId]++
+          } else {
+            totalTags[tagId] = 1
+          }
+        })
+      }
+      if (reaction) {
+        if (totalReactions?.[reaction]) {
+          totalReactions[reaction]++
+        } else {
+          totalReactions[reaction] = 1;
+        }
+      }
+    });
+    return { smartComments, reactions: totalReactions, tags: totalTags };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
