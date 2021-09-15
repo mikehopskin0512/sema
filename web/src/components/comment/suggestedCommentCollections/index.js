@@ -17,7 +17,6 @@ import Toaster from '../../toaster';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
-import ActionGroup from '../../../components/comment/actionGroup';
 import usePermission from '../../../hooks/usePermission';
 import { EditComments } from '../../../data/permissions';
 
