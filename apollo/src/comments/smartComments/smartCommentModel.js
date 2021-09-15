@@ -42,7 +42,7 @@ smartCommentSchema.post('save', async function (doc, next) {
 
     if (externalId) {
       const user = await findById(userId);
-      const { _id: requesterId } = await findByUsernameOrIdentity(requester); 
+      const { _id: requesterId = null } = await findByUsernameOrIdentity(requester) || {};
 
       let repository = await findByExternalId(externalId);
       const reaction = {
@@ -85,13 +85,13 @@ smartCommentSchema.post('save', async function (doc, next) {
           repoStats: {
             reactions: [
               reaction
-            ],
+            ] || [],
             tags: [
               tags
-            ],
+            ] || [],
             userIds: [
               userId
-            ],
+            ] || [],
           }
         }
         if (requesterId) {

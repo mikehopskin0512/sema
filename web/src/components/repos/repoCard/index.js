@@ -28,7 +28,7 @@ const RepoCard = (props) => {
     <div className={clsx(
       'has-background-gray-b border-radius-8px p-15 is-full-width is-flex is-flex-direction-column is-justify-content-space-between',
     )}>
-      <p className={clsx('is-size-9 has-text-weight-semibold has-text-stat is-uppercase')}>{label}</p>
+      <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase', styles['stat-title'])}>{label}</p>
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
     </div>
   );
