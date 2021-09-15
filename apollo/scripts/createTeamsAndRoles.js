@@ -67,8 +67,8 @@ const createUserRoles = async () => {
     console.log('Error while Connecting to Apollo - Document DB', err);
   }
   console.log('START MIGRATION!!!');
-  // await createTeams();
-  // await createRoles();
+  await createTeams();
+  await createRoles();
   await createUserRoles();
   console.log('END!!!');
 })();
