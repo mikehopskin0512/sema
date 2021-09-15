@@ -107,3 +107,11 @@ export const TAGS = [
     _id: '607f0594ab1bc1aecbe2ce58',
   },
 ];
+
+export const DAYS_IN_WEEK = 7;
+export const DAYS_IN_MONTH = 30;
+export const DAYS_IN_YEAR = 365;
+
+export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
+
+export const GITHUB_URL = 'https://github.com';

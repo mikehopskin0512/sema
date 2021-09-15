@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary } from './api';
+import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;

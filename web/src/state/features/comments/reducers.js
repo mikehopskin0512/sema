@@ -83,6 +83,23 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.error
     }
+  case types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW:
+    return {
+      ...state,
+      isFetching: true,
+    }
+  case types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_SUCCESS:
+    return {
+      ...state,
+      overview: action.overview,
+      isFetching: false,
+    }
+  case types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.error
+    }
   default:
     return state;
   }
