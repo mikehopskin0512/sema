@@ -51,7 +51,7 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { query: { collectionId, slug }, asPath } = router;
+  const { query: { guideId, slug }, asPath } = router;
   const { engGuides } = engGuideState;
   const {
     name,
@@ -92,13 +92,13 @@ const EngineeringGuidePage = () => {
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment.slug === slug)[0],
+        data: comments.filter((comment) => comment._id === guideId)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [slug, engGuides]);
+  }, [guideId, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
