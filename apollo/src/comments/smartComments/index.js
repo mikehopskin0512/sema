@@ -174,7 +174,7 @@ export default (app, passport) => {
   });
 
   route.get('/summary', async (req, res) => {
-    const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
+    const { requester: author, reviewer, externalId: repoId } = req.query;
     try {
       const summary = await getSmartCommentsOverview({author, reviewer, repoId});
       return res.status(201).send({
@@ -187,7 +187,7 @@ export default (app, passport) => {
   });
 
   route.get('/overview', async (req, res) => {
-    const { requester: author, reviewer: reviewer, externalId: repoId, startDate, endDate, searchKeyword, reactions, tags, pullRequests } = req.query;
+    const { requester: author, reviewer, externalId: repoId, startDate, endDate, } = req.query;
     try {
       const overview = await getSmartCommentsOverview({ author, reviewer, repoId, startDate, endDate });
       return res.status(201).send({

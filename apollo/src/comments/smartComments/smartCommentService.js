@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import { uniq } from 'lodash';
+import _, { uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -61,7 +61,7 @@ export const getSmartComments = async ({ repo }) => {
 export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     let filter = {}
-
+    let dateFilter = { createdAt: { } }
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -72,15 +72,18 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
     }
     if (startDate) {
-      filter = Object.assign(filter, { createdAt: { $gte: new Date(startDate) } });
+      dateFilter = Object.assign(dateFilter, { createdAt: { $gte: new Date(startDate) } });
     }
     if (endDate) {
-      filter = Object.assign(filter, { createdAt: { $lt: new Date(endDate) } });
+      dateFilter = Object.assign(dateFilter, { createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt } });
+    }
+    if (!_.isEmpty(dateFilter.createdAt)) {
+      filter = Object.assign(filter, dateFilter);
     }
 
     const query = SmartComment.find(filter);
     const smartComments = await query.lean()
-      .populate('userId', 'firstName lastName avatarUrl')
+      .populate('userId')
       .populate('tags')
       .exec();
 
@@ -580,7 +583,7 @@ export const getSmartCommentsOverview = async ({ reviewer, author, repoId, start
       if (tags.length) {
         tags.map((tag) => {
           const { _id: tagId } = tag;
-          if (tags?.[tagId]) {
+          if (totalTags?.[tagId]) {
             totalTags[tagId]++
           } else {
             totalTags[tagId] = 1

@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 import styles from "./personalStatsTile.module.scss";
+import { GITHUB_URL } from "src/utils/constants";
 
 const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
   const auth = useSelector((state) => state.authState);
@@ -33,7 +34,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       const label = Object.keys(tag);
       return (
         <>
-          <span class="tag is-rounded is-info is-light has-text-weight-medium m-5 is-uppercase">{label}</span>
+          <span class="tag is-rounded is-info is-light has-text-weight-medium ml-5 is-uppercase is-size-8">{label}</span>
         </>
       )
     })
@@ -68,13 +69,13 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOTAL COMMENTS
                   </p>
-                  <p className="px-5 is-size-4 has-text-weight-semibold">{totalSmartComments}</p>
+                  <p className="pl-5 is-size-4 has-text-weight-semibold">{totalSmartComments}</p>
                 </div>
                 <div className="column is-4">
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOP REACTIONS
                   </p>
-                  <p className="px-5">
+                  <p className="pl-5">
                     {renderTopReactions()}
                   </p>
                 </div>
@@ -82,7 +83,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                   <p className="is-size-7 has-text-grey has-text-weight-medium">
                     TOP TAGS
                   </p>
-                  <p className="px-5">
+                  <p className="pl-5">
                     {renderTopTags()}
                   </p>
                 </div>
@@ -90,7 +91,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
             </div>
             <div className="is-divider-vertical" />
             <div className="column is-2 is-flex is-justify-content-center is-align-items-center">
-              <button className="button is-primary">View Public Profile</button>
+              <button className="button is-primary" onClick={() => window.open(`${GITHUB_URL}/${githubUsername}`, '_blank').focus()}>View Public Profile</button>
             </div>
           </div>
         </div>

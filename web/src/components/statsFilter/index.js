@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,10 +7,18 @@ import styles from './statsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
-import { groupBy } from 'lodash';
+import { groupBy, isEmpty } from 'lodash';
+import { format } from 'date-fns';
 
-const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
-  const [filter, setFilter] = useState({});
+const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
+  const [filter, setFilter] = useState({
+    search: '',
+    from: [],
+    to: [],
+    reactions: [],
+    tags: [],
+    pr: [],
+  });
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
@@ -20,6 +28,24 @@ const StatsFilter = ({filterUserList, filterRequesterList, filterPRList,}) => {
       [type]: value,
     });
   };
+
+  useEffect(() => {
+    if (!isEmpty(filter)) {
+      handleFilter(filter)
+    }
+  }, [filter])
+
+  useEffect(() => {
+    if (startDate) {
+      setFilter({startDate: format(new Date(startDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
+    }
+  }, [startDate])
+
+  useEffect(() => {
+    if (endDate) {
+      setFilter({endDate: format(new Date(endDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
+    }
+  }, [endDate])
 
   return (
     <>
