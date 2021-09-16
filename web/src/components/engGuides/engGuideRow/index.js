@@ -29,7 +29,7 @@ const EngGuideRow = (props) => {
   };
 
   const onClickRow = () => {
-    window.location = `/guides/${collectionId}/${slug}`;
+    window.location = `/guides/${_id}/${slug}`;
   };
 
   return (

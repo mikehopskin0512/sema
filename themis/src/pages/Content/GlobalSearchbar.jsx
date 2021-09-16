@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import SuggestionModal from './SuggestionModal';
+import SuggestionModal from './components/SuggestionModal';
 import { SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
 
 import {
   toggleGlobalSearchModal,
   toggleGlobalSearchLoading,
   onGlobalSearchInputChange,
+  usedSmartComment,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
@@ -35,6 +36,7 @@ const mapDispatchToProps = (dispatch) => ({
   toggleSearchModal: () => dispatch(toggleGlobalSearchModal()),
   toggleIsLoading: (isLoading) => dispatch(toggleGlobalSearchLoading({ isLoading })),
   onGlobalSearchInputChange: (value) => dispatch(onGlobalSearchInputChange({ data: value })),
+  onLastUsedSmartComment: (payload) => dispatch(usedSmartComment(payload)),
 });
 
 const GlobalSearchbar = (props) => {
@@ -46,12 +48,13 @@ const GlobalSearchbar = (props) => {
     props.onGlobalSearchInputChange(value);
   };
 
-  const onCopyPressed = (id, suggestion) => {
+  const onInsertPressed = (id, suggestion) => {
     const { value } = props.commentBox;
     // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}\n${suggestion}\n`;
     setSearchResults([]);
     props.toggleSearchModal();
+    props.onLastUsedSmartComment(suggestion);
 
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
@@ -93,12 +96,10 @@ const GlobalSearchbar = (props) => {
     }
   };
 
-  const containerClasses = `sema-dropdown${
-    props.isSearchModalVisible ? ' sema-is-active' : ''
+  const containerClasses = `sema-dropdown${props.isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${
-    props.isLoading ? ' sema-is-loading' : ''
+  const inputControlClasses = `sema-control sema-has-icons-left${props.isLoading ? ' sema-is-loading' : ''
   }`;
 
   useEffect(() => {
@@ -151,8 +152,9 @@ const GlobalSearchbar = (props) => {
             <div className="sema-dropdown-item">
               <SuggestionModal
                 key={props.isLoading}
-                onCopyPressed={onCopyPressed}
+                onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
+                onLastUsedSmartComment={props.onLastUsedSmartComment}
               />
             </div>
           </div>

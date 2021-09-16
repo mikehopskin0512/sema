@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
-import { addRepositoryToIdentity, findById } from '../../users/userService';
+import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
 import { buildReactionsEmptyObject, incrementReactions } from '../reaction/reactionService';
 import { buildTagsEmptyObject, incrementTags } from '../tags/tagService';
 const { Schema } = mongoose;
@@ -13,6 +13,7 @@ const githubMetadataSchema = new Schema({
   head: String,
   base: String,
   requester: String,
+  requesterAvatarUrl: String,
   commentId: String,
   clone_url: String,
   user: { id: String, login: String },
@@ -37,10 +38,12 @@ const smartCommentSchema = new Schema({
 smartCommentSchema.post('save', async function (doc, next) {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { githubMetadata: { repo_id: externalId, url }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
+    const { githubMetadata: { repo_id: externalId, url, requester }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
 
     if (externalId) {
       const user = await findById(userId);
+      const { _id: requesterId = null } = await findByUsernameOrIdentity(requester) || {};
+
       let repository = await findByExternalId(externalId);
       const reaction = {
         smartCommentId: mongoose.Types.ObjectId(_id),
@@ -58,13 +61,16 @@ smartCommentSchema.post('save', async function (doc, next) {
         const repoTags = repository.repoStats.tags;
         repoReactions.push(reaction);
         repoTags.push(tags);
-        const idExists = repository.repoStats.userIds.some(function (id) {
-          if (id) {
-            return id.equals(userId);
-          }
-        });
-        if (!idExists) {
+
+        const repoUserIds = repository.repoStats.userIds.map((id) => id.toString());
+        if (repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
+        }
+
+        if (requesterId) {
+          if (repoUserIds.includes(requesterId.toString())) {
+            repository.repoStats.userIds.push(requesterId);
+          }
         }
       } else {
         repository = {
@@ -79,14 +85,17 @@ smartCommentSchema.post('save', async function (doc, next) {
           repoStats: {
             reactions: [
               reaction
-            ],
+            ] || [],
             tags: [
               tags
-            ],
+            ] || [],
             userIds: [
               userId
-            ],
+            ] || [],
           }
+        }
+        if (requesterId) {
+          repository.repoStats.userIds.push(requesterId);
         }
       }
 

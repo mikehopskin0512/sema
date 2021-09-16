@@ -1,5 +1,7 @@
 import $ from 'cash-dom';
 
+import amplitude from 'amplitude-js';
+
 import {
   EMOJIS,
   TAGS_INIT,
@@ -14,6 +16,9 @@ import {
   ADD_OP,
   SMART_COMMENT_URL,
   IS_DIRTY,
+  DELIMITERS,
+  AMPLITUDE_API_KEY,
+  EVENTS,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -32,6 +37,74 @@ import {
 import store from './redux/store';
 
 import phrases from './highlightPhrases';
+
+// FIXME: no need for the function to accept 'document'
+export const getGithubMetadata = (document) => {
+  const url = document.querySelector('meta[property="og:url"]')?.content || '';
+  const decoupleUrl = url.split('/');
+  // eslint-disable-next-line camelcase
+  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
+  // eslint-disable-next-line camelcase
+  const [, , , , repo, , pull_number] = decoupleUrl;
+  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
+  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
+  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')
+    ?.content;
+  const login = document.querySelector('meta[name="octolytics-actor-login"]')
+    ?.content;
+  const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
+  const title = document.querySelector('span[data-snek-id="issue-title"]')
+    ?.innerText;
+  // eslint-disable-next-line camelcase
+  const clone_url = document.querySelector('#clone-help-git-url')?.value;
+
+  const githubMetadata = {
+    url,
+    repo_id,
+    repo,
+    pull_number,
+    head,
+    base,
+    user: { id, login },
+    requester,
+    title,
+    clone_url,
+    commentId: null,
+    requesterAvatarUrl,
+  };
+
+  return githubMetadata;
+};
+
+export const fireAmplitudeEvent = (event, opts) => {
+  const githubMetadata = getGithubMetadata(document);
+
+  amplitude.getInstance().logEvent(event, {
+    ...opts,
+    ...githubMetadata,
+    url: window.location.href,
+  });
+};
+
+export const initAmplitude = () => {
+  const githubMetadata = getGithubMetadata(document);
+
+  const { user: { login } } = githubMetadata;
+
+  amplitude.getInstance().init(AMPLITUDE_API_KEY, login);
+
+  fireAmplitudeEvent(EVENTS.PAGE_VISIT);
+  let lastLocation = window.location.href;
+  // no good way to detect all types of URL changes
+  setInterval(() => {
+    const currentLocation = window.location.href;
+    if (lastLocation !== currentLocation) {
+      lastLocation = currentLocation;
+      fireAmplitudeEvent(EVENTS.PAGE_VISIT);
+    }
+  }, 200);
+};
 
 export const isTextBox = (element) => {
   const tagName = element.tagName.toLowerCase();
@@ -243,6 +316,11 @@ export function getSemaIds(idSuffix) {
   };
 }
 
+const isReply = (textarea) => {
+  const isReplyComment = ['js-resolvable-thread-contents', 'review-thread-reply'].some((replyClass) => (($(textarea).parents(`.${replyClass}`).length > 0)));
+  return isReplyComment;
+};
+
 export async function writeSemaToGithub(textarea) {
   if (textarea) {
     let comment = {};
@@ -330,7 +408,7 @@ export async function writeSemaToGithub(textarea) {
       textarea.value = `${textboxValue}\n\n${semaString}`;
     }
 
-    const { githubMetadata } = store.getState();
+    const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
     comment = {
@@ -358,6 +436,16 @@ export async function writeSemaToGithub(textarea) {
       store.dispatch(addSmartComment(smartComment));
     });
 
+    const opts = {
+      isSemaBarUsed: false,
+      isReply: isReply(textarea),
+      isSmartCommentUsed: textarea.value.includes(lastUserSmartComment),
+    };
+    if (typeof semaString === 'string' && semaString.length) {
+      opts.isSemaBarUsed = true;
+    }
+
+    fireAmplitudeEvent(EVENTS.SUBMIT, opts);
     const semaIds = getSemaIds($(textarea).attr('id'));
     store.dispatch(resetSemaStates(semaIds));
   }
@@ -496,8 +584,8 @@ export function onSuggestion() {
     const state = store.getState();
 
     const { suggestedReaction, suggestedTags } = payload;
+    const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
     if (suggestedReaction) {
-      const { isReactionDirty } = state.semabars[semabarId];
       // isReactionDirty is true when reaction is manually selected from UI
       if (!isReactionDirty) {
         store.dispatch(
@@ -510,7 +598,7 @@ export function onSuggestion() {
       }
     }
     // allow to change state even when empty to remove existing tags if no suggestion
-    if (suggestedTags) {
+    if (!isTagModalDirty && suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,
@@ -520,42 +608,6 @@ export function onSuggestion() {
     }
   }
 }
-
-export const getGithubMetadata = (document) => {
-  const url = document.querySelector('meta[property="og:url"]')?.content || '';
-  const decoupleUrl = url.split('/');
-  // eslint-disable-next-line camelcase
-  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
-  // eslint-disable-next-line camelcase
-  const [, , , , repo, , pull_number] = decoupleUrl;
-  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
-  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
-  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')
-    ?.content;
-  const login = document.querySelector('meta[name="octolytics-actor-login"]')
-    ?.content;
-  const requester = document.querySelector('a[class*="author"]')?.textContent;
-  const title = document.querySelector('span[data-snek-id="issue-title"]')
-    ?.innerText;
-  // eslint-disable-next-line camelcase
-  const clone_url = document.querySelector('#clone-help-git-url')?.value;
-
-  const githubMetadata = {
-    url,
-    repo_id,
-    repo,
-    pull_number,
-    head,
-    base,
-    user: { id, login },
-    requester,
-    title,
-    clone_url,
-    commentId: null,
-  };
-
-  return githubMetadata;
-};
 
 export const getHighlights = (text) => {
   const alerts = [];
@@ -624,8 +676,16 @@ export const getHighlights = (text) => {
     }
     // eslint-disable-next-line no-cond-assign
     while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-      indices.push(index);
       startIndex = index + searchStrLen;
+
+      const nextChar = str[startIndex];
+      const prevChar = str[index - 1];
+
+      if (
+        (nextChar === undefined || DELIMITERS.some((delimitter) => delimitter === nextChar))
+        && (prevChar === undefined || DELIMITERS.some((delimitter) => delimitter === prevChar))) {
+        indices.push(index);
+      }
     }
     return indices;
   };
@@ -663,7 +723,4 @@ export const checkSubmitButton = (semabarId, data) => {
   }
 };
 
-export const isPRPage = () => {
-  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-  return prPage.test(document.URL);
-};
+export const isPRPage = () => document.URL.includes('/pull/');

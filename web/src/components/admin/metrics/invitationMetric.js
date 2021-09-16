@@ -34,6 +34,10 @@ const timeRangeOptions = [
     label: '30 days',
     value: '30',
   },
+  {
+    label: 'All time',
+    value: 'all',
+  },
 ];
 
 const InvitationMetric = () => {
