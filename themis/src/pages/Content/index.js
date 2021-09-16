@@ -311,8 +311,6 @@ document.addEventListener(
           }
         }
       }
-    } else if (!activeElement.classList.contains('sema-input')) {
-      activeElement?.blur();
     }
   },
   true,
