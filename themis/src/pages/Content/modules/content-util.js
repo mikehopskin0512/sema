@@ -313,6 +313,7 @@ export function getSemaIds(idSuffix) {
   return {
     semabarContainerId: `semabar_${idSuffix}`,
     semaSearchContainerId: `semasearch_${idSuffix}`,
+    semaMirror: `semamirror_${idSuffix}`,
   };
 }
 

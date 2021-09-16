@@ -190,6 +190,8 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
             isSelectingEmoji={props.isSelectingEmoji}
             toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
+            id={props.id}
+            textareaId={props.textareaId}
           />
         </div>
         <div
