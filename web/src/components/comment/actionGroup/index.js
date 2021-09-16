@@ -13,9 +13,8 @@ import ArchiveModal from '../../archiveModal';
 const { bulkUpdateSuggestedComments } = suggestCommentsOperations;
 const { getCollectionById } = commentsOperations;
 
-const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments, unarchiveComments }) => {
+const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments, unarchiveComments, collectionId }) => {
   const router = useRouter();
-  const { collectionId } = router.query;
   const dispatch = useDispatch();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
@@ -34,7 +33,7 @@ const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments,
   };
 
   const goToEditPage = async () => {
-    await router.push(`/collections/${collectionId}/edit?comments=${selectedComments}`);
+    await router.push(`/suggested-comments/edit?cid=${collectionId}&comments=${selectedComments}`);
   };
 
   const onArchive = () => {
@@ -106,6 +105,7 @@ ActionGroup.propTypes = {
   handleSelectAllChange: PropTypes.func.isRequired,
   unarchiveComments: PropTypes.array.isRequired,
   archiveComments: PropTypes.array.isRequired,
+  collectionId: PropTypes.string.isRequired,
 };
 
 export default ActionGroup;

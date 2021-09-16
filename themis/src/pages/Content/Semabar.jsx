@@ -88,7 +88,7 @@ const Semabar = (props) => {
       y, height, offsetPos,
     } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
-    const modalHeight = 300;
+    const modalHeight = 350;
 
     if (y && height) {
       const vh = Math.max(

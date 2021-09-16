@@ -7,7 +7,7 @@ import { content } from './content';
 const EmptyRepo = () => {
   const [hovered, setHovered] = useState(null);
   const [title1] = useState('No Smart Repos Yet!');
-  const [subtitle1] = useState('Make some code reviews on Github with the Sema Plugin installed and your Repos will appear here.');
+  const [subtitle1] = useState('Make some code reviews on GitHub with the Sema Plugin installed and your Repos will appear here.');
 
   const formatSubtitle = (str) => {
     const arr = str.split(' ');
@@ -34,7 +34,7 @@ const EmptyRepo = () => {
               <h1 className="has-text-weight-semibold is-size-3 mt-15">{title1}</h1>
               <h2 className={clsx('is-size-5 pb-20', styles.subtitle)}>{subtitle1}</h2>
               <a href="https://github.com">
-                <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review some code on Github</button>
+                <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review some code on GitHub</button>
               </a>
               <div className="columns">
                 {
@@ -45,17 +45,24 @@ const EmptyRepo = () => {
                       <React.Fragment key={i}>
                         <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
                           <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
-                            <div 
-                              className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mb-25')}
+                            <div
+                              className={clsx(styles['img-container'], 'is-flex is-justify-content-center is-align-items-center mb-25')}
                               onMouseEnter={() => onHover(title)}
                               onMouseLeave={() => onRemoveHover()}
                             >
-                              <Lottie
-                                play={hovered === title}
-                                loop
-                                animationData={animationData}
-                                style={{ marginBottom: 10 }}
-                              />
+                              { hovered === title ? (
+                                <Lottie
+                                  play={hovered === title}
+                                  loop
+                                  animationData={animationData}
+                                  style={{ marginBottom: 10 }}
+                                />
+                              ) : (
+                                <>
+                                  <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
+                                  <img src={img} className={styles.img} />
+                                </>
+                              ) }
                             </div>
                             <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
                             <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />

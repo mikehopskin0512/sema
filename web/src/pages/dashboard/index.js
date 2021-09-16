@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
@@ -18,6 +19,9 @@ const { createSuggestComment } = suggestCommentsOperations;
 const { updateUser } = authOperations;
 
 const Dashboard = () => {
+  const router = useRouter();
+  const { step, page = parseInt(step) } = router.query;
+
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
@@ -78,6 +82,14 @@ const Dashboard = () => {
       setOnboardingPage(onboardingProgress.page || 1);
     }
   }, [onboardingProgress]);
+
+  useEffect(() => {
+    if (page && typeof page === 'number') {
+      setOnboardingPage(page);
+      setOnboardingProgress({ ...onboardingProgress, page });
+      toggleOnboardingModalActive(true);
+    }
+  }, [page]);
 
   const createUserCollection = async () => {
     const { username } = identities[0];

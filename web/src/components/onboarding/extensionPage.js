@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-regular-svg-icons';
-import { faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './onboarding.module.scss';
 
@@ -16,43 +15,31 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
   const renderExtensionState = () => {
     if (!isQueryFinished) {
       return (
-        <>
-          <div className="has-text-centered mt-90">
-            <img src="/img/logo_loader.gif" alt="loader" />
-          </div>
-          <div className="has-text-centered mt-20 mb-70">
-            Searching for the Extension
-          </div>
-        </>
+        <div className="is-flex is-align-item-center mt-25">
+          <img src="/img/logo_loader.gif" alt="loader" className={clsx("mr-10", styles.loader)} />
+          <p>Searching for the Extension...</p>
+        </div>
       );
     }
     if (!isPluginInstalled) {
       return (
         <>
-          <div className="has-text-centered mt-70">
-            <img src="/img/chrome_extension.png" alt="Chrome Extension" className="has-text-centered" />
-          </div>
-          <div className="has-text-centered">
-            <button
-              type="button"
-              className="button is-text has-text-primary my-20"
-              onClick={() => window.open(EXTENSION_LINK, '_blank')}
-            >
-              Install the extension
-            </button>
-          </div>
+          <button
+            type="button"
+            className="button is-primary has-text-weight-semibold mt-25"
+            onClick={() => window.open(EXTENSION_LINK, '_blank')}
+          >
+            <img src="/img/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
+            Install Extension Here
+          </button>
         </>
       );
     }
     return (
-      <>
-        <div className="has-text-centered mt-90">
-          <FontAwesomeIcon icon={faCheckCircle} className="has-text-success" style={{ fontSize: '50px' }} />
-        </div>
-        <div className="has-text-centered has-text-success mt-20 mb-70">
-          Extension Found!
-        </div>
-      </>
+      <div className="is-flex is-align-items-center mt-25">
+        <FontAwesomeIcon icon={faCheckCircle} className="has-text-primary mr-10" size="lg" />
+        <p>Extension Installed</p>
+      </div>
     );
   };
 
@@ -72,21 +59,19 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
       <div className="columns m-0 is-full-height" style={{}}>
         <div className="is-flex is-justify-content-space-between is-align-items-center p-15 is-hidden-desktop">
           <p className="has-text-primary has-text-weight-semibold is-size-4 p-5">One last step</p>
-          <button className="button is-white" onClick={closeModal}>
+          <button type="button" className="button is-white" onClick={closeModal}>
             <FontAwesomeIcon className="is-clickable" icon={faTimes} size="lg" />
           </button>
         </div>
-        <div className={clsx("column is-flex is-justify-content-center is-6 p-25", styles['animation-container'])}>
-          <div className={clsx("is-flex is-justify-content-center is-align-items-center py-30")}>
-            <img src="/img/logo_high_res.png" className={styles['install-logo-img']} />
-            <img src="/img/center.png" className={clsx("mx-50", styles['install-cross-img'])} />
-            <img src="/img/chrome_logo.png" className={styles['install-logo-img']} />
+        <div className={clsx('column is-flex is-justify-content-center is-6 p-25', styles['animation-container'])}>
+          <div className={clsx('is-flex is-justify-content-center is-align-items-center py-30')}>
+            <img alt="" src="/img/install-extension.png" />
           </div>
         </div>
         <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="is-flex is-justify-content-space-between is-align-items-center">
             <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">One last step</p>
-            <button className="button is-white" onClick={closeModal}>
+            <button type="button" className="button is-white" onClick={closeModal}>
               <FontAwesomeIcon className="is-clickable" icon={faTimes} />
             </button>
           </div>
@@ -96,31 +81,29 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             <p className={clsx('mt-20')}>
               The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.
             </p>
-            <a href={EXTENSION_LINK} target="_blank" rel="noreferrer">
-              <img src="/img/chrome_ext_button.png" alt="install" className={clsx('mt-20', styles['chrome-button'])} />
-            </a>
+            {renderExtensionState()}
           </div>
-          <div className={clsx("is-flex is-justify-content-space-between is-align-items-center mb-10", styles.footer)}>
+          <div className={clsx('is-flex is-justify-content-space-between is-align-items-center mb-10', styles.footer)}>
             {
               page !== 1 ? (
                 <button
                   type="button"
-                  className={clsx("button is-primary is-outlined")}
+                  className={clsx('button is-primary is-outlined')}
                   onClick={previousPage}
                 >
                   <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
                 </button>
-              ) : <div className={styles.space}></div>
+              ) : <div className={styles.space} />
             }
             <ul className={styles.ul}>
-              <li className={page === 1 ? styles.active : null}></li>
-              <li className={page === 2 ? styles.active : null}></li>
-              <li className={page === 3 ? styles.active : null}></li>
-              <li className={page === 4 ? styles.active : null}></li>
+              <li className={page === 1 ? styles.active : null} />
+              <li className={page === 2 ? styles.active : null} />
+              <li className={page === 3 ? styles.active : null} />
+              <li className={page === 4 ? styles.active : null} />
             </ul>
             <button
               type="button"
-              className={clsx("button is-primary")}
+              className={clsx('button is-primary')}
               onClick={async () => {
                 await onSubmit();
                 closeModal();

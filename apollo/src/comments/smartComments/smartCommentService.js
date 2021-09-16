@@ -1,5 +1,5 @@
 import {
-  subMonths, subWeeks, subDays, isAfter, format, formatDistanceToNowStrict,
+  subMonths, subWeeks, subDays, isAfter, format, endOfDay, formatDistanceToNowStrict,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
@@ -447,9 +447,18 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByExternalId = async (repoId, populate) => {
+export const findByExternalId = async (repoId, populate, createdAt) => {
   try {
-    const query = SmartComment.find({ "githubMetadata.repo_id": repoId });
+    let findQuery = {
+      "githubMetadata.repo_id": repoId,
+    }
+    if (createdAt) {
+      findQuery = {
+        ...findQuery,
+        createdAt
+      }
+    }
+    const query = SmartComment.find(findQuery);
     if (populate) {
       query.populate('userId').populate('tags');
     }
@@ -462,7 +471,7 @@ export const findByExternalId = async (repoId, populate) => {
   }
 };
 
-export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = false) => {
+export const getSuggestedMetrics = async ({ page, perPage, search, sortDesc }, isExport = false) => {
   const userIds = search ? (await User.distinct('_id', {
     $or: [
       { username: RegExp(search, 'gi') },
@@ -483,7 +492,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
-    .sort('-createdAt')
+    .sort(sortDesc ? '-createdAt' : 'createdAt')
     .populate('userId')
     .populate('reaction');
 
@@ -497,8 +506,8 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
   return { comments: smartComments, totalCount };
 };
 
-export const exportSuggestedMetrics = async ({ search }) => {
-  const { comments } = await getSuggestedMetrics({ search }, true);
+export const exportSuggestedMetrics = async ({ search, sortDesc }) => {
+  const { comments } = await getSuggestedMetrics({ search, sortDesc }, true);
   const mappedData = comments.map((item) => ({
     Comment: item.comment,
     Reaction: item.reaction && item.reaction.title,

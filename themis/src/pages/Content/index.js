@@ -50,8 +50,6 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
-// const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
@@ -66,6 +64,7 @@ const checkLoggedIn = async () => {
   }
 };
 
+checkLoggedIn();
 $(() => {
   initAmplitude();
 
@@ -142,6 +141,8 @@ function handleReviewChangesClick(
   );
 }
 
+checkLoggedIn();
+
 function onTextPaste(semabarContainerId) {
   return function setDefaultEmoji() {
     const state = store.getState();
@@ -160,6 +161,9 @@ function onTextPaste(semabarContainerId) {
   };
 }
 
+const reactNodes = new Set();
+let mirror;
+
 /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -168,6 +172,15 @@ function onTextPaste(semabarContainerId) {
 document.addEventListener(
   'focus',
   (event) => {
+    const isExtensionDisabled = !chrome.runtime.id;
+    if (isExtensionDisabled) {
+      mirror?.destroy();
+      reactNodes.forEach((node) => {
+        ReactDOM.unmountComponentAtNode(node);
+      });
+      reactNodes.clear();
+      return;
+    }
     const activeElement = event.target;
     if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
@@ -229,6 +242,7 @@ document.addEventListener(
 
           /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
           // Render searchbar
+          const searchBarNode = $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0];
           ReactDOM.render(
             // eslint-disable-next-line react/jsx-filename-extension
             <Provider store={store}>
@@ -238,9 +252,11 @@ document.addEventListener(
                 commentBox={activeElement}
               />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0],
+            searchBarNode,
           );
+          reactNodes.add(searchBarNode);
           // Render Semabar
+          const semaBarNode = $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0];
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
@@ -248,13 +264,13 @@ document.addEventListener(
                 style={{ position: 'relative' }}
               />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0],
+            semaBarNode,
           );
-
+          reactNodes.add(semaBarNode);
           /** RENDER MIRROR */
           // TODO: try to make it into React component for consistency and not to have to pass store
           // eslint-disable-next-line no-new
-          new Mirror(activeElement, getHighlights, {
+          mirror = new Mirror(activeElement, getHighlights, {
             onMouseoverHighlight: (payload) => {
               // close existing
               store.dispatch(toggleGlobalSearchModal());

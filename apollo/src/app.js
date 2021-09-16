@@ -12,14 +12,14 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import routes from '.';
-import { port, allowedOrigin } from './config';
+import { port, allowedOrigin, chromeExtensionId } from './config';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 const app = express();
 
 app.use(cors({
-  origin: [allowedOrigin, 'https://github.com', /\.github\.com$/],
+  origin: [allowedOrigin, 'https://github.com', /\.github\.com$/, `chrome-extension://${chromeExtensionId}`],
   credentials: true,
 }));
 app.use(compression());

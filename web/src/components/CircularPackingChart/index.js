@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import PropTypes from 'prop-types';
 import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
@@ -8,6 +10,8 @@ const CircularPacking = ({ data }) => {
   const [circlePackingData, setCirclePackingData] = useState({
     children: [],
   });
+  const [noData, setNoData] = useState(false);
+
   const parseData = (rawData) => {
     let children = [];
     if (rawData) {
@@ -40,10 +44,23 @@ const CircularPacking = ({ data }) => {
     return chartData;
   };
 
+  const getTotalTags = () => {
+    let total = 0;
+    const keys = Object.keys(data);
+    keys.forEach((key) => {
+      total += data[key].total;
+    })
+    return total;
+  }
+
   useEffect(() => {
-    if (!isEmpty(data)) {
+    const total = getTotalTags();
+    if (!isEmpty(data) && total > 0) {
       const parsedData = parseData(data);
       setCirclePackingData(parsedData);
+      setNoData(false);
+    } else {
+      setNoData(true);
     }
   }, [data]);
 
@@ -53,8 +70,13 @@ const CircularPacking = ({ data }) => {
     </div>
   );
 
-  if (circlePackingData.children.length === 0) {
-    return <div className="is-flex is-justify-content-center">No data</div>;
+  if (noData) {
+    return (
+      <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
+        <FontAwesomeIcon icon={faChartBar} size="3x" />
+        <p className="is-size-5">No Tags</p>
+      </div>
+    );
   }
 
   return (

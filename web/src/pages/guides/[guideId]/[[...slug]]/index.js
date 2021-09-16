@@ -11,7 +11,7 @@ import { alertOperations } from '../../../../state/features/alerts';
 
 const { triggerAlert, clearAlert } = alertOperations;
 
-import styles from '../../guide.module.scss';
+import styles from '../../guides.module.scss';
 
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -51,7 +51,7 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { query: { collectionId, slug }, asPath } = router;
+  const { query: { guideId, slug = '' }, asPath } = router;
   const { engGuides } = engGuideState;
   const {
     name,
@@ -80,25 +80,18 @@ const EngineeringGuidePage = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
-    if (!slug || slug === "undefined") {
-      dispatch(triggerAlert('Sorry! This page doesn\'t have a slug. You\'ll be redirected to the previous page.', 'error'));
-      setTimeout(() => router.back(), 1000);
-    }
-  }, []);
-
-  useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
       const { collectionData: { comments = [], name = '', _id = '' } } = item;
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment.slug === slug)[0],
+        data: comments.filter((comment) => comment._id === guideId)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [slug, engGuides]);
+  }, [guideId, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {
@@ -156,14 +149,14 @@ const EngineeringGuidePage = () => {
       <div className="hero-body pb-300">
         { data ? (
           <>
-            <div className="is-flex is-align-items-center px-10 mb-15">
-              <a href={`/guides/${collectionId}`} className="is-hidden-mobile">
+            <div className="is-flex is-align-items-center px-10 mb-15" onClick={() => router.back()}>
+              <a className="is-hidden-mobile">
                 <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
-                  <li><a href={`/guides/${collectionId}`} className="has-text-grey">Community Eng Guides</a></li>
-                  <li className="is-active has-text-weight-semibold"><a href={`/guides/${collectionId}`}>{name}</a></li>
+                  <li><a  className="has-text-grey">Community Engineering Guides</a></li>
+                  <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
                 </ul>
               </nav>
             </div>
@@ -194,7 +187,7 @@ const EngineeringGuidePage = () => {
                     <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
                       <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
                     </a>
-                    <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                    <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
                       <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
                     </a>
                   </div>
@@ -219,7 +212,7 @@ const EngineeringGuidePage = () => {
                   <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
                     <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
                   </a>
-                  <a href={`mailto:?to=&body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
+                  <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
                     <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
                   </a>
                 </div>
@@ -231,7 +224,7 @@ const EngineeringGuidePage = () => {
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-deep-black">
                   <b className="mr-5">Related Suggested Comments Collection:</b>
-                  <a href={`/collections/${_id}`}>
+                  <a href={`/comments/${_id}`}>
                     <span className="is-underlined has-text-deep-black">{name}</span>
                   </a>
                 </p>

@@ -1,65 +1,61 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import withLayout from '../../../components/layout';
-import Helmet from '../../../components/utils/Helmet';
-import { commentsOperations } from '../../../state/features/comments';
-import EngGuideForm from '../../../components/engGuides/engGuideForm';
-import { tagsOperations } from '../../../state/features/tags';
-import { engGuidesOperations } from '../../../state/features/engGuides';
-import { makeTagsList } from '../../../utils';
+import { tagsOperations } from '../../state/features/tags';
+import Helmet from '../../components/utils/Helmet';
+import { commentsOperations } from '../../state/features/comments';
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
+import withLayout from '../../components/layout';
+import EditSuggestedCommentForm from '../../components/comment/editSuggestedCommentForm';
+import { makeTagsList } from '../../utils';
 
 const { fetchTagList } = tagsOperations;
-const { bulkCreateEngGuides } = engGuidesOperations;
-
 const { getCollectionById } = commentsOperations;
+const { bulkCreateSuggestedComments } = suggestCommentsOperations;
 
-const initialValue = {
+const initialValues = {
   title: '',
-  body: '',
-  slug: '',
-  tags: [],
-  languages: [],
   source: {
     name: '',
     url: '',
   },
-  collections: [],
+  tags: [],
+  comment: '',
 };
 
-const AddEngGuidesPage = () => {
+const AddCollectionPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { engGuideId } = router.query;
+  const [comments, setComments] = useState([initialValues]);
+
   const { auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
   }));
 
-  const { collection } = collectionState;
+  const { cid: collectionId } = router.query;
   const { token } = auth;
-
-  const [engGuides, setEngGuides] = useState([initialValue]);
+  const { collection } = collectionState;
 
   useEffect(() => {
-    dispatch(getCollectionById(engGuideId, token));
-  }, [engGuideId, dispatch, token]);
+    dispatch(getCollectionById(collectionId, token));
+  }, [collectionId, dispatch, token]);
 
   useEffect(() => {
     dispatch(fetchTagList(token));
   }, [dispatch, token]);
 
-  const addEngGuide = () => {
-    setEngGuides([...engGuides, initialValue]);
+  const addComment = () => {
+    setComments([...comments, initialValues]);
   };
 
   const onChange = (value, index) => {
-    setEngGuides(engGuides.map((guide, i) => i === index ? ({
-      ...guide,
+    setComments(comments.map((comment, i) => i === index ? ({
+      ...comment,
       ...value,
-    }) : guide));
+    }) : comment));
   };
 
   const onCancel = async () => {
@@ -67,43 +63,37 @@ const AddEngGuidesPage = () => {
   };
 
   const onSave = async () => {
-    const data = engGuides.map((item) => {
-      const languages = makeTagsList(item.languages, 'language');
-      const otherTags = makeTagsList(item.tags);
+    const data = comments.filter((item) => item.title).map((comment) => ({
+      ...comment,
+      tags: makeTagsList(comment.tags),
+    }));
 
-      return ({
-        ...item,
-        tags: {
-          newTags: languages.newTags.concat(otherTags.newTags),
-          existingTags: languages.existingTags.concat(otherTags.existingTags),
-        },
-      });
-    });
-
-    await dispatch(bulkCreateEngGuides({ engGuides: data }, token));
-    await router.push(`/engineering/${collection._id}`);
+    if (data && data.length) {
+      await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
+      await router.push(`/suggested-comments?cid=${collection._id}`);
+    }
   };
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet title="Engineering Guide" />
+      <Helmet title="Add suggested comments" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href="/collections" className="is-hidden-mobile">
+          <a href={`/suggested-comments?cid=${collection._id}`} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/engineering" className="has-text-grey">Community Engineering Guides</a></li>
-              <li className="is-active has-text-weight-semibold"><a href={`/engineering/${collection._id}`}>{collection.name}</a></li>
-              <li className="is-active has-text-weight-semibold">Add Guides</li>
+              <li><a href="/suggested-comments" className="has-text-grey">Suggested Comments</a></li>
+              <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/suggested-comments?cid=${collection._id}`}>{collection.name}</a></li>
+              <li className="is-active has-text-weight-semibold"><div className="px-5">Add Suggested Comments</div></li>
             </ul>
           </nav>
         </div>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-              Add Community Engineering Guides
+              Add Suggested Comments
             </p>
           </div>
           <div className="is-flex">
@@ -126,10 +116,10 @@ const AddEngGuidesPage = () => {
         </div>
         <div className="px-10">
           {
-            engGuides.map((item, index) => (
-              <EngGuideForm
-                key={index}
-                engGuide={item}
+            comments.map((item, index) => (
+              <EditSuggestedCommentForm
+                key={item._id || index}
+                comment={item}
                 onChange={(e) => onChange(e, index)}
               />
             ))
@@ -137,10 +127,10 @@ const AddEngGuidesPage = () => {
           <button
             className="button is-small is-outlined is-primary border-radius-4px"
             type="button"
-            onClick={addEngGuide}
+            onClick={addComment}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-10" />
-            Add another Guide
+            Add another comment
           </button>
         </div>
       </div>
@@ -148,4 +138,4 @@ const AddEngGuidesPage = () => {
   );
 };
 
-export default withLayout(AddEngGuidesPage);
+export default withLayout(AddCollectionPage);

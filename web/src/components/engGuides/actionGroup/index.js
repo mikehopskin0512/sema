@@ -11,9 +11,10 @@ import ArchiveModal from '../../archiveModal';
 
 const { bulkUpdateEngGuides, getEngGuides } = engGuidesOperations;
 
-const ActionGroup = ({ selectedGuides, handleSelectAllChange, archiveGuides, unarchiveGuides }) => {
+const ActionGroup = ({
+  selectedGuides, handleSelectAllChange, archiveGuides, unarchiveGuides, collectionId,
+}) => {
   const router = useRouter();
-  const { engGuideId } = router.query;
   const dispatch = useDispatch();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
@@ -32,7 +33,7 @@ const ActionGroup = ({ selectedGuides, handleSelectAllChange, archiveGuides, una
   };
 
   const goToEditPage = async () => {
-    await router.push(`/engineering/${engGuideId}/edit?guides=${selectedGuides}`);
+    await router.push(`/guides/edit?cid=${collectionId}&guides=${selectedGuides}`);
   };
 
   const onArchive = () => {
@@ -104,6 +105,7 @@ ActionGroup.propTypes = {
   handleSelectAllChange: PropTypes.func.isRequired,
   unarchiveGuides: PropTypes.array.isRequired,
   archiveGuides: PropTypes.array.isRequired,
+  collectionId: PropTypes.string.isRequired,
 };
 
 export default ActionGroup;
