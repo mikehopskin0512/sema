@@ -235,8 +235,9 @@ function rootReducer(state = initialState, action) {
     newState.githubMetadata.line_numbers = null;
     newState.lastUserSmartComment = null;
   } else if (type === UPDATE_GITHUB_TEXTAREA) {
-    const { isTyping } = payload;
+    const { isTyping, textareaId } = payload;
     newState.github.isTyping = isTyping;
+    newState.github.textareaId = textareaId;
   } else if (type === UPDATE_SEMA_USER) {
     const { token, isLoggedIn } = payload;
     if (token) {

@@ -209,12 +209,14 @@ document.addEventListener(
               store.dispatch(
                 updateTextareaState({
                   isTyping: true,
+                  textareaId: githubTextareaId,
                 }),
               );
               setTimeout(() => {
                 store.dispatch(
                   updateTextareaState({
                     isTyping: false,
+                    textareaId: null,
                   }),
                 );
               }, CALCULATION_ANIMATION_DURATION_MS);
@@ -261,6 +263,7 @@ document.addEventListener(
             <Provider store={store}>
               <Semabar
                 id={semabarContainerId}
+                textareaId={githubTextareaId}
                 style={{ position: 'relative' }}
               />
             </Provider>,

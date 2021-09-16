@@ -20,6 +20,7 @@ const initialState = {
   },
   github: {
     isTyping: false,
+    textareaId: null,
   },
   user: {
     isLoggedIn: false,
