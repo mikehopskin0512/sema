@@ -14,6 +14,7 @@ import {
 const mapStateToProps = (state, ownProps) => {
   const { semasearches, user } = state;
   const semaSearchState = semasearches[ownProps.id];
+
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
     commentBox: ownProps.commentBox,
