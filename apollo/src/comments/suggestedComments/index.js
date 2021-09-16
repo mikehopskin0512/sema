@@ -11,7 +11,7 @@ import {
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
 } from './suggestedCommentService';
-import { pushCollectionComment, isEditAllowed } from '../collections/collectionService';
+import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -56,10 +56,19 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/', async (req, res) => {
-    const { comment, source, tags, collectionId, user } = req.body;
-    let { title } = req.body;
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { comment, source, tags } = req.body;
+    const { user } = req.user;
+    let title = req.body.title;
+    let collectionId = req.body.collectionId;
     try {
+      if (!collectionId) {
+        const collections = await getUserCollectionsById(user._id);
+        const defaultCollection = collections.find((collection) => {
+          return collection.collectionData.name.toLowerCase() === 'my comments';
+        });
+        collectionId = defaultCollection.collectionData._id;
+      }
 
       if (!title) {
         title = comment.substring(0, 100);
