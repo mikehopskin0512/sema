@@ -84,7 +84,7 @@ const Dashboard = () => {
   }, [onboardingProgress]);
 
   useEffect(() => {
-    if (typeof page === 'number') {
+    if (page && typeof page === 'number') {
       setOnboardingPage(page);
       setOnboardingProgress({ ...onboardingProgress, page });
       toggleOnboardingModalActive(true);
