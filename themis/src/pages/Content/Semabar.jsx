@@ -12,8 +12,8 @@ import {
 } from './modules/redux/action';
 
 import {
-  DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ
-} from "./constants";
+  DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
+} from './constants';
 import LoginBar from './LoginBar';
 
 const DROP_POSITIONS = {
