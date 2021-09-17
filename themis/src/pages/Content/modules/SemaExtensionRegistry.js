@@ -1,5 +1,5 @@
 import $ from 'cash-dom';
-import { SEMA_REMINDER_ROOT_ID } from '../constants';
+import { SEMA_REMINDER_ROOT_ID, SEMA_TEXTAREA_IDENTIFIER } from '../constants';
 import { getSemaIds } from './content-util';
 
 class SemaExtensionRegistry {
@@ -58,6 +58,8 @@ class SemaExtensionRegistry {
       $(`#${semabarContainerId}`).remove();
       $(`#${semaSearchContainerId}`).remove();
       $(`#${semaMirror}`).remove();
+
+      $(textarea).removeAttr(SEMA_TEXTAREA_IDENTIFIER);
 
       const semaMarkdownIcon = $(textarea)
         .parent()

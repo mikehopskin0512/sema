@@ -19,6 +19,7 @@ import {
   getHighlights,
   isPRPage,
   initAmplitude,
+  setTextareaSemaIdentifier,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -33,6 +34,7 @@ import {
   EMOJIS,
   EMOJIS_ID,
   SEMA_REMINDER_ROOT_ID,
+  SEMA_TEXTAREA_IDENTIFIER,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -182,6 +184,10 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
 
       const githubTextareaId = $(activeElement).attr('id');
       window.semaExtensionRegistry.registerGithubTextarea(githubTextareaId);
+
+      if (!$(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER)) {
+        setTextareaSemaIdentifier(githubTextareaId);
+      }
 
       const { semabarContainerId, semaSearchContainerId } = getSemaIds(
         githubTextareaId,
