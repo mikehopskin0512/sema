@@ -6,7 +6,6 @@ import clsx from "clsx";
 import Sidebar from "../../sidebar";
 import withLayout from "../../layout";
 import styles from "./repoPageLayout.module.scss";
-import DateRangeSelector from '../../dateRangeSelector';
 import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
 
@@ -26,8 +25,6 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -91,15 +88,6 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
             <p className={clsx("has-text-deep-black px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile", styles['select-container'], styles['repo-select-container'])}>{name}</p>
           ) }
         </div>
-        <div className={clsx('is-hidden-mobile', styles['date-picker-container'])}>
-          <DateRangeSelector
-            start={startDate}
-            end={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-            isRight
-          />
-        </div>
       </div>
       <div className={clsx(styles["card-container"], 'px-20')}>
         <div className="hero content-container">
@@ -125,7 +113,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
       </div>
       <Sidebar {...sidebarProps}>
         <>
-          {children({ startDate, endDate })}
+          {children}
         </>
       </Sidebar>
     </div>
