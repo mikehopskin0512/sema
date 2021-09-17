@@ -45,6 +45,11 @@
   --color-emoji-font: #{v.$color-light-emoji-font};
   --color-emoji-bg-hover: #{v.$color-light-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-light-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-light-reminder-border};
+  --color-reminder-font: #{v.$color-light-reminder-font};
+  --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-light-reminder-sign-in-btn-font};
 }
 
 .theme--dark {
@@ -91,6 +96,12 @@
   --color-emoji-font: #{v.$color-dark-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-reminder-border};
+  --color-reminder-font: #{v.$color-dark-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-reminder-sign-in-btn-font};
 }
 
 .theme--dark-dimmed {
@@ -137,6 +148,12 @@
   --color-emoji-font: #{v.$color-dark-dim-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-dim-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-dim-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-dim-reminder-border};
+  --color-reminder-font: #{v.$color-dark-dim-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-dim-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-dim-reminder-sign-in-btn-font};
 }
 
 .theme--dark-high-contrast {
@@ -183,6 +200,12 @@
   --color-emoji-font: #{v.$color-dark-high-contrast-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-high-contrast-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-high-contrast-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-high-contrast-reminder-border};
+  --color-reminder-font: #{v.$color-dark-high-contrast-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-high-contrast-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-high-contrast-reminder-sign-in-btn-font};
 }
 
 .sema {
@@ -712,6 +735,8 @@ h6 {
   position: fixed;
   left: calc(95vw - #{v.$reminder-width});
   top: calc(98vh - #{v.$reminder-height});
+  border: 1.5px solid var(--color-reminder-border);
+  color: var(--color-reminder-font);
 }
 
 .reminder-container {
@@ -771,7 +796,8 @@ h6 {
   font-size: 15px;
   line-height: 19.36px;
   vertical-align: top;
-  color: #394a64;
+  // color: #394a64;
+  color: var(--color-reminder-font);
   text-align: center;
 }
 
@@ -783,8 +809,9 @@ h6 {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  color: v.$color-github-button-blue;
-  border: 2px solid v.$color-github-button-blue;
+  color: var(--color-reminder-github-font);
+  border: 2px solid var(--color-reminder-github-font);
+  background-color: var(--color-reminder-github-bg);
   border-radius: 4px;
 }
 
@@ -795,6 +822,6 @@ h6 {
 }
 
 .reminder-hero > a {
-  color: v.$color-github-button-blue;
+  color: var(--color-reminder-font);
   text-decoration: underline;
 }
