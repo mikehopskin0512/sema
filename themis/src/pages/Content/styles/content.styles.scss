@@ -503,6 +503,7 @@ h6 {
     top: -4px;
     border-radius: 10px;
     padding-top: 12px;
+    padding-bottom: 0;
     overflow: hidden;
     margin: 0;
     background: var(--color-emoji-bg);
@@ -704,6 +705,19 @@ h6 {
   display: block;
   color: #192129;
   cursor: pointer;
+}
+
+.learn-more-link {
+  display: flex;
+  background: #F0F2F4;
+  padding: 10px 20px 14px;
+
+  a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0081A7;
+    text-decoration: underline;
+  }
 }
 
 .suggestion-guide-link-title {
