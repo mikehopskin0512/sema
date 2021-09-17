@@ -709,6 +709,9 @@ h6 {
 
 .learn-more-link {
   display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
   background: #F0F2F4;
   padding: 10px 20px 14px;
 
@@ -745,9 +748,7 @@ h6 {
 
 .tags-selection-header {
   display: flex;
-  background-color: var(--color-tags-header-bg);
   color: var(--color-tags-header-font);
-  padding: 10px 20px;
 }
 
 #sema-reminder-root {

@@ -12,8 +12,8 @@ import {
 } from './modules/redux/action';
 
 import {
-  DELETE_OP, SELECTED, EMOJIS,
-} from './constants';
+  DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ
+} from "./constants";
 import LoginBar from './LoginBar';
 
 const DROP_POSITIONS = {
@@ -161,7 +161,14 @@ const Semabar = (props) => {
           role="menu"
           style={dropdownStyle}
         >
-          <div className="tags-selection-header">All Tags</div>
+          <div className="tags-selection-header">
+            <div className="learn-more-link">
+              All Tags
+              <a href={SEMA_LANDING_FAQ} target="_blank" rel="noreferrer">
+                Learn more about tags
+              </a>
+            </div>
+          </div>
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
