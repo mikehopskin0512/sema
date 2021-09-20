@@ -10,8 +10,7 @@ const truncate = (content) => {
   }...` : content;
 };
 
-// eslint-disable-next-line no-underscore-dangle
-const getCollectionUrl = (engGuide, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${engGuide._id}/${slug}`;
+const getCollectionUrl = (id, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${id}/${slug}`;
 
 const getCommentTitleInterface = (title, sourceName) => (
   <div className="suggestion-title">
@@ -30,11 +29,10 @@ const getCommentInterface = (comment, isDetailed, engGuides) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: finalComment }}
       />
-      {engGuides?.map(({ engGuide, slug }) => (
+      {engGuides?.map(({ engGuide, slug, name }) => (
         <GuideLink
-          /* eslint-disable-next-line no-underscore-dangle */
-          key={engGuide._id}
-          title={engGuide.title || engGuide.source?.name}
+          key={engGuide}
+          title={name}
           link={getCollectionUrl(engGuide, slug)}
         />
       ))}
@@ -47,10 +45,9 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const engGuidesToStr = (engGuides) => {
-    const links = engGuides?.map(({ engGuide, slug }) => {
-      const caption = engGuide.title || engGuide.source?.name;
+    const links = engGuides?.map(({ name, engGuide, slug }) => {
       const url = getCollectionUrl(engGuide, slug);
-      return `\n\n📄 [${caption}](${url})`;
+      return `\n\n📄 [${name}](${url})`;
     }).join(' ');
     return links || '';
   };
