@@ -260,6 +260,7 @@ document.addEventListener(
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
+                textarea={activeElement}
                 id={semabarContainerId}
                 style={{ position: 'relative' }}
               />

@@ -19,6 +19,7 @@ import {
   DELIMITERS,
   AMPLITUDE_API_KEY,
   EVENTS,
+  SUGGESTED_COMMENTS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -209,6 +210,14 @@ const updateSmartComment = async (comment) => {
   const response = await res.text();
   const { smartComment } = JSON.parse(response);
   return smartComment;
+};
+
+export const saveSmartComment = async (comment) => {
+  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(comment),
+  });
 };
 
 export const onConversationMutationObserver = ([mutation]) => {
