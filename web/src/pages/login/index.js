@@ -97,7 +97,9 @@ const Login = () => {
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faThumbsUp} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Reactions: </span>
+                          Choose a simple summary of your review.</span>
                       </div>
                     </li>
                     <li className="mb-25">
@@ -105,7 +107,10 @@ const Login = () => {
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faTag} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Tags: </span>
+                          Highlight the key takeaways of your review
+                        </span>
                       </div>
                     </li>
                     <li className="mb-25">
@@ -113,7 +118,10 @@ const Login = () => {
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Suggested Comments: </span>
+                          Insert pre-written comments from the world’s best sources of coding knowledge.
+                        </span>
                       </div>
                     </li>
                   </ul>
