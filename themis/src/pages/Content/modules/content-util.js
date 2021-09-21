@@ -730,7 +730,7 @@ export const checkSubmitButton = (semabarId, data) => {
       $(primaryButton).attr('disabled', true);
     }
   } else {
-    $(primaryButton).attr('disabled', true);
+    $(primaryButton).removeAttr('disabled');
   }
 };
 
