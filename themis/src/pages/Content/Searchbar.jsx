@@ -165,12 +165,12 @@ const SearchBar = (props) => {
   const handleKeyPress = (event) => {
     const isEscKey = event.keyCode === 27;
     const isEnterKey = event.keyCode === 13;
-
+    event.preventDefault();
     if (isEscKey) {
-      event.preventDefault();
       resetSearch();
-    } else if (isEnterKey) {
-      event.preventDefault();
+    }
+    if (isEnterKey) {
+      props.toggleSearchModal({ isOpen: true });
     }
   };
 
