@@ -30,9 +30,10 @@ const CommentCollections = () => {
 
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
+  const [activeCollections, setActiveCollections] = useState([]);
+  const [otherCollections, setOtherCollections] = useState([]);
+
   const isNewCommentModalOpen = !!collectionId;
-  const activeCollections = collections.filter((collection) => collection.isActive);
-  const otherCollections = collections.filter((collection) => !collection.isActive);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
