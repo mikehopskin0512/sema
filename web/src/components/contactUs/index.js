@@ -16,8 +16,8 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
         </div>
       </div>
 
-      <div className="ml-30 is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)} type="button">Contact Us</button>
+      <div className={clsx("is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile", styles['contact-us-desktop'])}>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mr-20 my-5 px-50', styles.button)} type="button">Contact Us</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)}
