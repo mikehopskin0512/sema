@@ -24,7 +24,7 @@ const isCollectionNameIncludes = (searchTerm) => {
 
 const CommentCollections = () => {
   const router = useRouter();
-  const { query: { cid } } = router;
+  const { query: { cid }, pathname } = router;
   const { user } = useSelector((state) => state.authState);
   const { collections } = user;
 
@@ -38,7 +38,7 @@ const CommentCollections = () => {
   useEffect(() => {
     setActiveCollections(collections.filter((collection) => collection.isActive));
     setOtherCollections(collections.filter((collection) => !collection.isActive));
-  }, [collections]);
+  }, [pathname, collections]);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');

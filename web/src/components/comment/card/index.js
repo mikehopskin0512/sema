@@ -64,7 +64,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                 <input
                   id={`activeSwitch-${_id}`}
                   type="checkbox"
-                  onClick={onChangeToggle}
+                  onChange={onChangeToggle}
                   name={`activeSwitch-${_id}`}
                   className="switch is-rounded"
                   checked={isActive}
