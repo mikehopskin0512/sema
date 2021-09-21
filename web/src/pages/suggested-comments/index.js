@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +34,11 @@ const CommentCollections = () => {
   const [otherCollections, setOtherCollections] = useState([]);
 
   const isNewCommentModalOpen = !!collectionId;
+
+  useEffect(() => {
+    setActiveCollections(collections.filter((collection) => collection.isActive));
+    setOtherCollections(collections.filter((collection) => !collection.isActive));
+  }, [collections]);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
