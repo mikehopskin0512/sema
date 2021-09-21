@@ -158,7 +158,7 @@ const SearchBar = (props) => {
   const resetSearch = () => {
     props.handleChange('');
     setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
   };
 
   const handleKeyPress = (event) => {
