@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection } from './api';
+import { getSmartComments, getAllCollections, getCollection, getSuggestedComments } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
@@ -48,12 +48,25 @@ export const getCollectionById = (id, token) => async (dispatch) => {
 export const getUserSuggestedComments = (token) => async (dispatch) => {
   try {
     dispatch(fetchSuggestedComments(token));
-    const comments = await getAllSuggestedComments(token);
+    const comments = await getAllCollections(token);
     dispatch(fetchSuggestedCommentsSuccess(comments.data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(fetchSuggestedCommentsError(errMessage));
+  }
+};
+
+export const getAllSuggestedComments = (searchTerm, userId, token) => async (dispatch) => {
+  try {
+    // dispatch(fetchSuggestedComments(token));
+    const comments = await getSuggestedComments({ q: searchTerm, user: userId }, token);
+    console.log(comments, 'comments');
+    // dispatch(fetchSuggestedCommentsSuccess(comments.data));
+  } catch (error) {
+    // const { response: { data: { message }, status, statusText } } = error;
+    // const errMessage = message || `${status} - ${statusText}`;
+    // dispatch(fetchSuggestedCommentsError(errMessage));
   }
 };
 
