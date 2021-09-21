@@ -30,7 +30,7 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
       </div>
 
       <div className="is-hidden-desktop mt-10">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)} type="button">Contact Us</button>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium my-10 mr-20', styles.button)} type="button">Contact Us</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)}
