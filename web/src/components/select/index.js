@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,8 @@ const Select = ({
 }) => {
   const debouncedSearchTerm = useDebounce(searchValue, 300);
   const popupRef = useRef(null);
-  const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
+  const [isOpen, setIsOpen] = useState(false);
+  // const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
 
   const getLabel = useCallback((v) => {
     if (!options) return '';
@@ -30,6 +31,27 @@ const Select = ({
     onChange(v);
     closeMenu();
   };
+
+  const handleClick = (e) => {
+    if (popupRef.current.contains(e.target)) {
+      return;
+    }
+    setIsOpen(false);
+  };
+
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
+  const closeMenu = () => setIsOpen(false);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, []);
 
   const suggestOptions = useMemo(() => options.filter((option) => option.label
     .toLowerCase()
