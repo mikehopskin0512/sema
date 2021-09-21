@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserSuggestedComments } from "../../state/features/comments/actions";
+import { getAllSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
 import styles from './globalSearch.module.scss'
 import { getEngGuides } from "../../state/features/engGuides/actions";
@@ -19,10 +19,11 @@ const GlobalSearch = () => {
   const dispatch = useDispatch();
   const { engGuides } = useSelector((state) => state.engGuidesState);
   const { user, token } = useSelector((state) => state.authState);
-  const { collections } = user
-  const { comments } = useSelector((state) => state.commentsState);
+  const { collections: userCollections } = user
+  const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
 
+  console.log(suggestedComments);
   //TODO: it can be so heavy for the frontend in future
   const engGuidesComments = useMemo(() => {
     const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
@@ -33,27 +34,29 @@ const GlobalSearch = () => {
     return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
   },[engGuides, searchTerm]);
   const suggestedCollections = useMemo(() => {
-    const _collections = collections?.map(({ collectionData }) => collectionData);
+    const _collections = userCollections?.map(({ collectionData }) => collectionData);
     return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
-  },[engGuides, searchTerm]);
-  const suggestedComments = useMemo(() => {
-    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
-  },[engGuides, searchTerm]);
+  },[userCollections, searchTerm]);
+  const suggestedCommentsItems = useMemo(() => {
+    return [];
+    // const comments = comments.flatMap(({ collectionData }) => collectionData.comments);
+    // return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
+  },[suggestedComments, searchTerm]);
 
   const categories = [
     { title: "suggested comment collections", items: suggestedCollections },
-    { title: "suggested comments", items: suggestedComments },
+    { title: "suggested comments", items: suggestedCommentsItems },
     { title: "community engineering guide collections", items: engGuidesCollections },
     { title: "community engineering guide", items: engGuidesComments },
   ]
 
   useEffect(() => {
+    dispatch(getAllSuggestedComments(searchTerm, user._id, token));
+  }, [searchTerm]);
+
+  useEffect(() => {
     if (!engGuides.length) {
       dispatch(getEngGuides(token));
-    }
-    if (!comments.length) {
-      dispatch(getUserSuggestedComments(token));
     }
   }, [dispatch, token]);
 
