@@ -69,21 +69,11 @@ export const findById = async (id) => {
   }
 };
 
-export const getUserCollectionsById = async (userData) => {
+export const getUserCollectionsById = async (id) => {
   try {
-    const query = User.findOne({ _id: userData._id });
-    const user = await query.lean().populate({
-      path: 'collections.collectionData',
-      model: 'Collection',
-      populate: {
-        path: 'comments',
-        model: 'SuggestedComment',
-      }
-      }).exec();
-      if (user) {
-        const { collections } = user;
-        const comments = flatten(collections.map((item) => item.collectionData.comments));
-      return comments;
+    const user = await findUserById(id);
+    if (user) {
+      return user.collections;
     }
     return {
       statusCode: 400,
