@@ -75,7 +75,7 @@ const SearchBar = (props) => {
     props.commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
     setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
     props.onLastUsedSmartComment(suggestion);
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
