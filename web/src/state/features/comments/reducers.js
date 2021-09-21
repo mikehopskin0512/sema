@@ -3,7 +3,9 @@ import * as types from './types';
 const initialState = {
   isFetching: false,
   collection: {},
+  //TODO: it's collections state - need to be refactored
   comments: [],
+  suggestedComments: [],
   smartComments: [],
 };
 

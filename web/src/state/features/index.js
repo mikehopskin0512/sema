@@ -1,5 +1,6 @@
 export { default as alertsState } from './alerts';
 export { default as authState } from './auth';
+//TODO: remove commentState and refactor suggestedComments and smartComments states that also accommodates the metrics in the old smartComments state
 export { default as commentsState } from './comments';
 export { default as engGuidesState } from './engGuides';
 export { default as invitationsState } from './invitations';
