@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -24,15 +24,21 @@ const isCollectionNameIncludes = (searchTerm) => {
 
 const CommentCollections = () => {
   const router = useRouter();
-  const { query: { cid } } = router;
+  const { query: { cid }, pathname } = router;
   const { user } = useSelector((state) => state.authState);
   const { collections } = user;
 
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
+  const [activeCollections, setActiveCollections] = useState([]);
+  const [otherCollections, setOtherCollections] = useState([]);
+
   const isNewCommentModalOpen = !!collectionId;
-  const activeCollections = collections.filter((collection) => collection.isActive);
-  const otherCollections = collections.filter((collection) => !collection.isActive);
+
+  useEffect(() => {
+    setActiveCollections(collections.filter((collection) => collection.isActive));
+    setOtherCollections(collections.filter((collection) => !collection.isActive));
+  }, [pathname, collections]);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
