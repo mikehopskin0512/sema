@@ -48,9 +48,12 @@ const SearchBar = (props) => {
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data?.searchResults?.result || []);
+        props.toggleSearchModal({ isOpen: true });
+      })
+      .catch(() => {
+        props.toggleSearchModal({ isOpen: false });
       })
       .finally(() => {
-        props.toggleSearchModal({ isOpen: true });
         toggleIsLoading(false);
       });
   };
@@ -66,6 +69,7 @@ const SearchBar = (props) => {
       getSuggestionsDebounced.current(value, props.userId);
     } else {
       getSuggestionsDebounced.current.cancel();
+      props.toggleSearchModal({ isOpen: false });
     }
   };
 
