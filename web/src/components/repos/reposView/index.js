@@ -37,11 +37,11 @@ const ReposView = () => {
     }
   }, [repositories]);
 
-  if (!repositories.length) {
+  if (!repositories.length && !repositories.isFetching) {
     return <EmptyRepo />
   }
 
-  return (
+  return ( !repositories.isFetching &&
     <>
       <div className="py-30 px-80 is-hidden-mobile">
         {/* TODO: it renders twice and create 2 requests on server every time just because of mobile styles */}
