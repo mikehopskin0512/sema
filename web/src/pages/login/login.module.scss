@@ -52,6 +52,9 @@
   @media only screen and (min-width: 769px) {
     height: 100%;
   }
+  @media screen and (max-width: 1023px) {
+    padding-bottom: 250px
+  }
 }
 
 .fa-container {
