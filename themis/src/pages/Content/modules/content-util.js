@@ -20,6 +20,7 @@ import {
   AMPLITUDE_API_KEY,
   EVENTS,
   SEMA_TEXTAREA_IDENTIFIER,
+  SUGGESTED_COMMENTS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -210,6 +211,14 @@ const updateSmartComment = async (comment) => {
   const response = await res.text();
   const { smartComment } = JSON.parse(response);
   return smartComment;
+};
+
+export const saveSmartComment = async (comment) => {
+  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(comment),
+  });
 };
 
 export const onConversationMutationObserver = ([mutation]) => {
@@ -727,13 +736,12 @@ export const checkSubmitButton = (semabarId, data) => {
     } else {
       $(primaryButton).attr('disabled', true);
     }
+  } else {
+    $(primaryButton).removeAttr('disabled');
   }
 };
 
-export const isPRPage = () => {
-  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-  return prPage.test(document.URL);
-};
+export const isPRPage = () => document.URL.includes('/pull/');
 
 export const setTextareaSemaIdentifier = (textareaId) => {
   const textarea = document.getElementById(textareaId);

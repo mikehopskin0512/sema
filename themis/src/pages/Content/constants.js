@@ -13,6 +13,7 @@ export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/suggested-collections`;
 export const SEMA_ENG_GUIDE_UI_URL = `${SEMA_UI_URL}/guides`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
+export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';

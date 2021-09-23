@@ -20,6 +20,7 @@ import {
   isPRPage,
   initAmplitude,
   setTextareaSemaIdentifier,
+  checkSubmitButton,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -159,6 +160,25 @@ function onTextPaste(semabarContainerId) {
   };
 }
 
+const getDebouncedInput = (githubTextareaId) => debounce(() => {
+  store.dispatch(
+    updateTextareaState({
+      isTyping: true,
+      textareaId: githubTextareaId,
+    }),
+  );
+  setTimeout(() => {
+    store.dispatch(
+      updateTextareaState({
+        isTyping: false,
+        textareaId: null,
+      }),
+    );
+  }, CALCULATION_ANIMATION_DURATION_MS);
+
+  onSuggestion();
+}, ON_INPUT_DEBOUCE_INTERVAL_MS);
+
 /**
    * "focus" event is when we put SEMA elements in the DOM
    * if the event.target is a valid DOM node for SEMA
@@ -193,24 +213,19 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
         githubTextareaId,
       );
       if (!semaElements[0]) {
-        window.semaExtensionRegistry.registerElementEventListener(activeElement, 'input', debounce(() => {
-          store.dispatch(
-            updateTextareaState({
-              isTyping: true,
-              textareaId: githubTextareaId,
-            }),
-          );
-          setTimeout(() => {
-            store.dispatch(
-              updateTextareaState({
-                isTyping: false,
-                textareaId: null,
-              }),
-            );
-          }, CALCULATION_ANIMATION_DURATION_MS);
+        const debouncedOnInput = getDebouncedInput(githubTextareaId);
 
-          onSuggestion();
-        }, ON_INPUT_DEBOUCE_INTERVAL_MS));
+        window.semaExtensionRegistry.registerElementEventListener(activeElement, 'input', () => {
+          /**
+           * check for the button's behaviour
+           * after github's own validation
+           * has taken place for the textarea
+          */
+          setTimeout(() => {
+            checkSubmitButton(semabarContainerId);
+          }, 0);
+          debouncedOnInput();
+        });
 
         /** ADD ROOTS FOR REACT COMPONENTS */
         // search bar container
@@ -232,7 +247,7 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
 
         /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
         // Render searchbar
-        const searchBarNode = $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0];
+        const searchBarNode = document.getElementById(semaSearchContainerId);
         ReactDOM.render(
           // eslint-disable-next-line react/jsx-filename-extension
           <Provider store={store}>
@@ -245,7 +260,7 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
           searchBarNode,
         );
         // Render Semabar
-        const semaBarNode = $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0];
+        const semaBarNode = document.getElementById(semabarContainerId);
         ReactDOM.render(
           <Provider store={store}>
             <Semabar
