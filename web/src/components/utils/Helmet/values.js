@@ -1,5 +1,5 @@
 export const DashboardHelmet = {
-  title: 'Dashboard',
+  title: 'Sema Dashboard',
   description: null,
 };
 

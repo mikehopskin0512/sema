@@ -15,6 +15,7 @@ import {
   DELETE_OP, SELECTED, EMOJIS,
 } from './constants';
 import LoginBar from './LoginBar';
+import { saveSmartComment } from './modules/content-util';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -53,8 +54,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const Semabar = (props) => {
+  const {
+    textarea,
+    isLoggedIn,
+    isWaitlist,
+  } = props;
   const [isHover, setHover] = useState(false);
+  const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
+  const isCommentSaved = lastSavedComment === textarea.value;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -174,9 +182,18 @@ const Semabar = (props) => {
       </div>
     );
   };
+  const saveComment = async () => {
+    try {
+      await saveSmartComment({ comment: textarea.value });
+      setLastSavedComment(textarea.value);
+    } catch (e) {
+      // TODO: handle the error with alert or caprion
+      console.error('error', e);
+    }
+  };
 
   // eslint-disable-next-line react/destructuring-assignment
-  if (props.isLoggedIn && !props.isWaitlist) {
+  if (isLoggedIn && !isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
@@ -204,6 +221,20 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
+          <div className="sema-login-bar--separator" />
+          {isCommentSaved ? (
+            <span style={{ color: '#909AA4' }}>Saved!</span>
+          ) : (
+            <button
+              type="button"
+              disabled={!textarea.value}
+              className="sema-button sema-is-small sema-button--save-comment"
+              onClick={saveComment}
+            >
+              <span>+</span>
+              Save
+            </button>
+          )}
         </div>
       </>
     );

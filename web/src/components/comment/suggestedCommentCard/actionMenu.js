@@ -22,7 +22,7 @@ const ActionMenu = ({ comment }) => {
   );
   const { token } = auth;
   const router = useRouter();
-  const { collectionId } = router.query;
+  const { cid: collectionId } = router.query;
 
   const updateArchiveStatus = async () => {
     closeMenu();
@@ -67,7 +67,7 @@ const ActionMenu = ({ comment }) => {
           </div>
         </div>
       </div>
-      <AddSuggestedCommentModal onClose={() => setModalOpen(false)} active={modalOpen} comment={comment} />
+      <AddSuggestedCommentModal onClose={() => setModalOpen(false)} active={modalOpen} comment={comment} _id={collectionId} />
     </div>
   );
 };
