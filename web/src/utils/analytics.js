@@ -16,9 +16,11 @@ export const initAmplitude = (user) => {
 };
 
 export const fireAmplitudeEvent = (event, opts) => {
-  amplitude.getInstance().logEvent(event, {
-    ...opts,
-  });
+  if (amplitudeApiKey) {
+    amplitude.getInstance().logEvent(event, {
+      ...opts,
+    });
+  }
 };
 
 // log the pageview with their URL
