@@ -25,20 +25,21 @@ const GlobalSearch = () => {
 
   //TODO: it can be so heavy for the frontend in future
   const engGuidesComments = useMemo(() => {
-    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments)
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments
-  },[engGuides, searchTerm])
+    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
+  },[engGuides, searchTerm]);
   const engGuidesCollections = useMemo(() => {
-    const collections = engGuides.map(({ collectionData }) => collectionData)
-    return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections
-  },[engGuides, searchTerm])
+    const collections = engGuides.map(({ collectionData }) => collectionData);
+    return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
+  },[engGuides, searchTerm]);
   const suggestedCollections = useMemo(() => {
-    const _collections = collections?.map(({ collectionData }) => collectionData)
-    return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections
-  },[engGuides, searchTerm])
+    const _collections = collections?.map(({ collectionData }) => collectionData);
+    return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
+  },[engGuides, searchTerm]);
   const suggestedComments = useMemo(() => {
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments
-  },[engGuides, searchTerm])
+    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
+    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
+  },[engGuides, searchTerm]);
 
   const categories = [
     { title: "suggested comment collections", items: suggestedCollections },

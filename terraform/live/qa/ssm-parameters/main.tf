@@ -91,7 +91,7 @@ resource "aws_ssm_parameter" "apollo_sendgrid_api-key" {
 resource "aws_ssm_parameter" "apollo_sendgrid_sender" {
   name  = "/${var.env}/apollo/sendgrid/sender"
   type  = "String"
-  value = "info@semasoftware.com"
+  value = "info@semasoftware.io"
 }
 resource "aws_ssm_parameter" "apollo_token_life" {
   name  = "/${var.env}/apollo/token/life"

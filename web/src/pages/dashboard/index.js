@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
@@ -18,6 +19,9 @@ const { createSuggestComment } = suggestCommentsOperations;
 const { updateUser } = authOperations;
 
 const Dashboard = () => {
+  const router = useRouter();
+  const { step, page = parseInt(step) } = router.query;
+
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
@@ -30,7 +34,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities } = user;
+  const { identities, isOnboarded = null} = user;
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
@@ -79,6 +83,14 @@ const Dashboard = () => {
     }
   }, [onboardingProgress]);
 
+  useEffect(() => {
+    if (page && typeof page === 'number') {
+      setOnboardingPage(page);
+      setOnboardingProgress({ ...onboardingProgress, page });
+      toggleOnboardingModalActive(true);
+    }
+  }, [page]);
+
   const createUserCollection = async () => {
     const { username } = identities[0];
     const userCollection = {
@@ -121,16 +133,16 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
     // const userCollections = await getActiveCollections();
-    const updatedUser = { ...user };
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
   };
 
   useEffect(() => {
-    if (user?.collections?.length === 0) {
+    if (isOnboarded === null)  {
       toggleOnboardingModalActive(true);
     }
-  }, [user]);
+  }, [isOnboarded]);
 
   return (
     <>

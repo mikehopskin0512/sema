@@ -51,7 +51,7 @@ const EngineeringGuidePage = () => {
   }));
 
   const { token } = auth;
-  const { query: { collectionId, slug }, asPath } = router;
+  const { query: { guideId, slug = '' }, asPath } = router;
   const { engGuides } = engGuideState;
   const {
     name,
@@ -80,25 +80,18 @@ const EngineeringGuidePage = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
-    if (!slug || slug === "undefined") {
-      dispatch(triggerAlert('Sorry! This page doesn\'t have a slug. You\'ll be redirected to the previous page.', 'error'));
-      setTimeout(() => router.back(), 1000);
-    }
-  }, []);
-
-  useEffect(() => {
     const engGuidesList = flatten(engGuides.map((item) => {
       const { collectionData: { comments = [], name = '', _id = '' } } = item;
       return {
         name,
         _id,
-        data: comments.filter((comment) => comment.slug === slug)[0],
+        data: comments.filter((comment) => comment._id === guideId)[0],
       };
     })).filter((item) => item.data);
     if (engGuidesList.length > 0) {
       setEngGuideData(engGuidesList[0]);
     }
-  }, [slug, engGuides]);
+  }, [guideId, engGuides]);
 
   const renderTags = (tagsArr) => {
     if (tagsArr.length > 0) {

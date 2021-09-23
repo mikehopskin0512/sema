@@ -74,8 +74,7 @@ const SearchBar = (props) => {
     // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
-    setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
     props.onLastUsedSmartComment(suggestion);
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
@@ -159,14 +158,18 @@ const SearchBar = (props) => {
   const resetSearch = () => {
     props.handleChange('');
     setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
   };
 
   const handleKeyPress = (event) => {
     const isEscKey = event.keyCode === 27;
+    const isEnterKey = event.keyCode === 13;
     if (isEscKey) {
       event.preventDefault();
       resetSearch();
+    } else if (isEnterKey) {
+      event.preventDefault();
+      props.toggleSearchModal({ isOpen: true });
     }
   };
 
@@ -230,30 +233,6 @@ const SearchBar = (props) => {
                   // eslint-disable-next-line react/destructuring-assignment
                   onLastUsedSmartComment={props.onLastUsedSmartComment}
                 />
-                <div className="sema-dropdown-footer">
-                  <div style={{ marginTop: 'auto' }}>
-                    <a
-                      href={SEMA_WEB_COLLECTIONS}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="fas fa-cog"
-                        style={{ color: '#56626E', fontSize: '16px' }}
-                      />
-                    </a>
-                  </div>
-                  <div className="sema-logo__alt">
-                    <img
-                      width={18}
-                      className="sema-mr-1"
-                      src={chrome.runtime.getURL('img/tray-logo.svg')}
-                      alt="sema logo"
-                    />
-                    {' '}
-                    Powered by Sema
-                  </div>
-                </div>
               </>
             )}
           </div>
