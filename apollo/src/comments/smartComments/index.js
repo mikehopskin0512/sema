@@ -173,7 +173,7 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/summary', async (req, res) => {
+  route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer, externalId: repoId } = req.query;
     try {
       const summary = await getSmartCommentsOverview({author, reviewer, repoId});
@@ -186,7 +186,7 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/overview', async (req, res) => {
+  route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer, externalId: repoId, startDate, endDate, } = req.query;
     try {
       const overview = await getSmartCommentsOverview({ author, reviewer, repoId, startDate, endDate });
