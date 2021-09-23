@@ -1,4 +1,5 @@
 import $ from 'cash-dom';
+import ReactDOM from 'react-dom';
 import { SEMA_REMINDER_ROOT_ID, SEMA_TEXTAREA_IDENTIFIER } from '../constants';
 import { getSemaIds } from './content-util';
 
@@ -55,9 +56,16 @@ class SemaExtensionRegistry {
       const textarea = document.getElementById(textareaId);
       const { semabarContainerId, semaSearchContainerId, semaMirror } = getSemaIds(textareaId);
 
-      $(`#${semabarContainerId}`).remove();
-      $(`#${semaSearchContainerId}`).remove();
-      $(`#${semaMirror}`).remove();
+      const semabarContainerNode = document.getElementById(semabarContainerId);
+      const semaSearchContainerNode = document.getElementById(semaSearchContainerId);
+      const semaMirrorNode = document.getElementById(semaMirror);
+
+      ReactDOM.unmountComponentAtNode(semabarContainerNode);
+      ReactDOM.unmountComponentAtNode(semaSearchContainerNode);
+
+      semabarContainerNode.remove();
+      semaSearchContainerNode.remove();
+      semaMirrorNode.remove();
 
       $(textarea).removeAttr(SEMA_TEXTAREA_IDENTIFIER);
 
@@ -85,8 +93,8 @@ class SemaExtensionRegistry {
 
   clear() {
     this.clearAdditional();
-    this.removeAllSemaElements();
     this.removeAllListeners();
+    this.removeAllSemaElements();
   }
 }
 
