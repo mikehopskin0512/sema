@@ -240,6 +240,7 @@
 
 .sema-tag-container {
   display: flex;
+  align-items: center;
   flex: 1;
   flex-direction: row;
   margin-left: 50px;
@@ -368,6 +369,27 @@ button.sema-reaction-selection {
   margin-top: 7px;
   box-sizing: border-box;
   border-radius: 4px;
+}
+
+.sema-button.sema-button--save-comment {
+  background: v.$color-github-button-blue;
+  font-size: 12px;
+  padding: 2px 8px;
+  line-height: 16px;
+  height: fit-content;
+  color: #ffffff;
+  border: 0;
+  border-radius: 3px;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  span {
+    margin-right: 4px;
+    transform: rotate(90deg);
+    font-size: 16px;
+  }
 }
 
 .suggestion-content-truncated {
@@ -669,6 +691,13 @@ h6 {
   .sema-login-link {
     text-decoration: underline;
     font-size: 12px;
+  }
+
+  &--separator {
+    height: 16px;
+    width: 1px;
+    background: #909AA4;
+    margin: 0 10px;
   }
 }
 

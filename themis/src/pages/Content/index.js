@@ -18,6 +18,7 @@ import {
   getHighlights,
   isPRPage,
   initAmplitude,
+  checkSubmitButton,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -206,22 +207,33 @@ document.addEventListener(
         if (!semaElements[0]) {
           $(activeElement).on(
             'input',
-            debounce(() => {
-              store.dispatch(
-                updateTextareaState({
-                  isTyping: true,
-                }),
-              );
+            () => {
+              /**
+             * check for the button's behaviour
+             * after github's own validation
+             * has taken place for the textarea
+             */
               setTimeout(() => {
+                checkSubmitButton(semabarContainerId);
+              }, 0);
+
+              debounce(() => {
                 store.dispatch(
                   updateTextareaState({
-                    isTyping: false,
+                    isTyping: true,
                   }),
                 );
-              }, CALCULATION_ANIMATION_DURATION_MS);
+                setTimeout(() => {
+                  store.dispatch(
+                    updateTextareaState({
+                      isTyping: false,
+                    }),
+                  );
+                }, CALCULATION_ANIMATION_DURATION_MS);
 
-              onSuggestion();
-            }, ON_INPUT_DEBOUCE_INTERVAL_MS),
+                onSuggestion();
+              }, ON_INPUT_DEBOUCE_INTERVAL_MS);
+            },
           );
           /** ADD ROOTS FOR REACT COMPONENTS */
           // search bar container
@@ -261,6 +273,7 @@ document.addEventListener(
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
+                textarea={activeElement}
                 id={semabarContainerId}
                 style={{ position: 'relative' }}
               />
@@ -312,8 +325,6 @@ document.addEventListener(
           }
         }
       }
-    } else if (!activeElement.classList.contains('sema-input')) {
-      activeElement?.blur();
     }
   },
   true,
