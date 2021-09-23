@@ -23,6 +23,7 @@
     "@nivo/bar": "^0.73.1",
     "@nivo/circle-packing": "^0.73.0",
     "@nivo/core": "^0.73.0",
+    "amplitude-js": "^8.8.0",
     "axios": "^0.19.2",
     "bulma": "^0.9.0",
     "bulma-extensions": "^6.2.7",
@@ -61,7 +62,6 @@
     "toasted-notes": "^3.2.0"
   },
   "devDependencies": {
-    "next": "^9.5.3",
     "@babel/core": "^7.8.4",
     "babel-loader": "^8.0.6",
     "babel-plugin-inline-react-svg": "^1.1.1",
@@ -70,6 +70,7 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
-    "eslint-plugin-react-hooks": "^1.7.0"
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "next": "^9.5.3"
   }
 }
