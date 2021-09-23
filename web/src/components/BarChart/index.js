@@ -8,7 +8,7 @@ import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from '../../utils/constants';
 
-const NivoBarChart = ({ data = [] }) => {
+const NivoBarChart = ({ data = [], yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
 
@@ -24,7 +24,7 @@ const NivoBarChart = ({ data = [] }) => {
         }, 0);
         if (total > 0) {
           return keys.reduce((acc, curr) => {
-            if (curr === 'date') {
+            if (curr === 'date' || yAxisType === 'total') {
               return acc[curr] = item[curr], acc;
             }
             return acc[curr] = round((item[curr] * 100) / total, 2), acc;
@@ -71,7 +71,7 @@ const NivoBarChart = ({ data = [] }) => {
     const { emoji, label } = find(EMOJIS, { _id: id });
     return (
       <div className="box has-background-white px-20 py-5 border-radius-4px">
-        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}%</p>
+        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}{yAxisType === 'percentage' ? '%' : ''}</p>
       </div>
     );
   };
@@ -147,7 +147,7 @@ const NivoBarChart = ({ data = [] }) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: '%',
+          legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
           legendPosition: 'middle',
           legendOffset: -40,
         }}
