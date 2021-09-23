@@ -89,8 +89,9 @@ const Login = () => {
           <div className="container">
             <div className="tile is-ancestor">
               <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
-                <img src="/img/codelines.png" width="430"/>
-                <div className="feature-list mt-50">
+                <img src="/img/codelines.png" width="430" style={{ marginRight: 'auto' }}/>
+                <h1 className={styles.title}>Write more meaningful code reviews.</h1>
+                <div className="feature-list mt-20">
                   <ul>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
