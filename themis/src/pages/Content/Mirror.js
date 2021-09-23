@@ -8,6 +8,7 @@ import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
 import { IS_HIGHLIGHTS_ACTIVE } from './constants';
+import { getSemaIds } from './modules/content-util';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';

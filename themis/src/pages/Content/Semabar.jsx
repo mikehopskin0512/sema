@@ -55,13 +55,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const {
-    textarea,
+    textareaId,
     isLoggedIn,
     isWaitlist,
   } = props;
   const [isHover, setHover] = useState(false);
   const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
+  const textarea = document.getElementById(textareaId);
   const isCommentSaved = lastSavedComment === textarea.value;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {

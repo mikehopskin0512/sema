@@ -20,11 +20,9 @@ const EmojiSelection = ({
   const selectedReactionPosition = allEmojis.findIndex((e) => e.title === selectedTitle);
   // depends on actual layout
   const ITEM_HEIGHT = 44;
-  let showCalculate = false;
   const { semabarContainerId } = getSemaIds(textareaId);
-  if (id === semabarContainerId) {
-    showCalculate = true;
-  }
+
+  const showCalculate = id === semabarContainerId;
   const isCalculating = showCalculate && isTyping && !isSelectingEmoji && !isReactionDirty;
 
   return (
