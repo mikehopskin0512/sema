@@ -1,3 +1,4 @@
+const amplitudeApiKey = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY || null;
 let amplitude = null;
 
 export const AMPLITUDE_EVENTS = {
@@ -6,9 +7,11 @@ export const AMPLITUDE_EVENTS = {
 
 // Conditional import and init amplitude only on the browser side
 export const initAmplitude = (user) => {
-  if (process.browser) {
-    amplitude = require('amplitude-js');
-    amplitude.getInstance().init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY, user);
+  if (amplitudeApiKey) {
+    if (process.browser) {
+      amplitude = require('amplitude-js');
+      amplitude.getInstance().init(amplitudeApiKey, user);
+    }
   }
 };
 
