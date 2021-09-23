@@ -34,7 +34,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities } = user;
+  const { identities, isOnboarded = null} = user;
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
@@ -84,7 +84,7 @@ const Dashboard = () => {
   }, [onboardingProgress]);
 
   useEffect(() => {
-    if (typeof page === 'number') {
+    if (page && typeof page === 'number') {
       setOnboardingPage(page);
       setOnboardingProgress({ ...onboardingProgress, page });
       toggleOnboardingModalActive(true);
@@ -133,16 +133,16 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
     // const userCollections = await getActiveCollections();
-    const updatedUser = { ...user };
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
   };
 
   useEffect(() => {
-    if (user?.collections?.length === 0) {
+    if (isOnboarded === null)  {
       toggleOnboardingModalActive(true);
     }
-  }, [user]);
+  }, [isOnboarded]);
 
   return (
     <>

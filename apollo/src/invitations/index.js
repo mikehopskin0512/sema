@@ -67,7 +67,7 @@ export default (app, passport) => {
         email: senderEmail,
         sender: {
           name: `${senderName} via Sema`,
-          email: "invites@semasoftware.com",
+          email: "invites@semasoftware.io",
         }
       };
       await sendEmail(message);
@@ -209,7 +209,7 @@ export default (app, passport) => {
         email: senderEmail,
         sender: {
           name: `${senderName} via Sema`,
-          email: "invites@semasoftware.com",
+          email: "invites@semasoftware.io",
         }
       };
       await sendEmail(message);
