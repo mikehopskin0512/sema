@@ -19,6 +19,7 @@ import {
   DELIMITERS,
   AMPLITUDE_API_KEY,
   EVENTS,
+  SEMA_TEXTAREA_IDENTIFIER,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -309,11 +310,12 @@ const createSmartComment = async (comment) => {
   return smartComment;
 };
 
-export function getSemaIds(idSuffix) {
+export function getSemaIds(textareaId) {
+  const semaIdentifier = $(`#${textareaId}`).attr(SEMA_TEXTAREA_IDENTIFIER);
   return {
-    semabarContainerId: `semabar_${idSuffix}`,
-    semaSearchContainerId: `semasearch_${idSuffix}`,
-    semaMirror: `semamirror_${idSuffix}`,
+    semabarContainerId: `semabar_${semaIdentifier}`,
+    semaSearchContainerId: `semasearch_${semaIdentifier}`,
+    semaMirror: `semamirror_${semaIdentifier}`,
   };
 }
 
@@ -706,7 +708,11 @@ export const getHighlights = (text) => {
 export const checkSubmitButton = (semabarId, data) => {
   const semabarData = data || store.getState().semabars[semabarId];
   const { selectedReaction, selectedTags } = semabarData;
-  const textareaId = semabarId.replace('semabar_', '');
+
+  const start = semabarId.indexOf('-');
+  const end = semabarId.lastIndexOf('-');
+
+  const textareaId = semabarId.substring(start + 1, end);
   const textareaValue = document.getElementById(textareaId).value.trim();
 
   const parents = $(`#${semabarId}`).parentsUntil('form');
@@ -727,4 +733,10 @@ export const checkSubmitButton = (semabarId, data) => {
 export const isPRPage = () => {
   const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
   return prPage.test(document.URL);
+};
+
+export const setTextareaSemaIdentifier = (textareaId) => {
+  const textarea = document.getElementById(textareaId);
+  const semaIdentifier = `sema-${textareaId}-${Date.now()}`;
+  $(textarea).attr(SEMA_TEXTAREA_IDENTIFIER, semaIdentifier);
 };
