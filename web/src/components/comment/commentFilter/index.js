@@ -49,7 +49,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
   };
 
   return (
-    <form>
+    <form onSubmit={(e) => e.preventDefault()}>
       <div className={clsx('has-background-white border-radius-4px px-10 py-5 is-flex is-flex-wrap-wrap', styles['filter-container'])}>
         <div className="is-flex-grow-1 p-5">
           <div className="control has-icons-left has-icons-right">
