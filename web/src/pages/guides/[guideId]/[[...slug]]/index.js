@@ -108,6 +108,8 @@ const EngineeringGuidePage = () => {
   };
 
   const formatText = (text) => {
+    const { source } = data;
+    const isSourceLinkExists = source.url
     const newText = text.split('\n').map((str, index) => {
       if (
         str.toLowerCase() === 'introduction' ||
@@ -120,12 +122,17 @@ const EngineeringGuidePage = () => {
         );
       }
       if (str.toLowerCase() === 'links to learn more') {
-        return (
+        return isSourceLinkExists ? (
           <div className="py" key={`str-${index}`}>
             <div className="is-divider" />
             <b>{str}</b>
+            <div>
+              <a target="_blank" href={source.url}>{source.name}</a>
+            </div>
           </div>
-        );
+        ) : (
+          null
+        )
       }
       return <p className="pb-10" key={`str-${index}`}>{str}</p>;
     });
