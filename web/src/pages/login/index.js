@@ -110,7 +110,7 @@ const Login = () => {
                         </div>
                         <span className="is-size-1r">
                           <span className="has-text-weight-bold">Tags: </span>
-                          Highlight the key takeaways of your review
+                          Highlight the key takeaways of your review.
                         </span>
                       </div>
                     </li>
