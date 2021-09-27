@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import $ from 'cash-dom';
 
 import TagsModal from './TagsModal';
 import EmojiSelection from './EmojiSelection';
@@ -55,14 +56,17 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const {
-    textarea,
     isLoggedIn,
     isWaitlist,
+    id,
   } = props;
   const [isHover, setHover] = useState(false);
   const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
-  const isCommentSaved = lastSavedComment === textarea.value;
+  const activeElement = $(`#${id}`).prev().get(0);
+
+  const activeElementValue = activeElement?.value;
+  const isCommentSaved = lastSavedComment === activeElementValue;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -184,10 +188,9 @@ const Semabar = (props) => {
   };
   const saveComment = async () => {
     try {
-      await saveSmartComment({ comment: textarea.value });
-      setLastSavedComment(textarea.value);
+      await saveSmartComment({ comment: activeElementValue });
+      setLastSavedComment(activeElementValue);
     } catch (e) {
-      // TODO: handle the error with alert or caprion
       // eslint-disable-next-line no-console
       console.error('error', e);
     }
@@ -208,6 +211,7 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
             isSelectingEmoji={props.isSelectingEmoji}
             toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
+            id={props.id}
           />
         </div>
         <div
@@ -228,7 +232,7 @@ const Semabar = (props) => {
           ) : (
             <button
               type="button"
-              disabled={!textarea.value}
+              disabled={!activeElementValue}
               className="sema-button sema-is-small sema-button--save-comment"
               onClick={saveComment}
             >
