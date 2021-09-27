@@ -448,7 +448,7 @@ export async function writeSemaToGithub(textarea) {
     const opts = {
       isSemaBarUsed: false,
       isReply: isReply(textarea),
-      isSmartCommentUsed: textarea.value.includes(lastUserSmartComment),
+      isSuggestedCommentUsed: textarea.value.includes(lastUserSmartComment),
     };
     if (typeof semaString === 'string' && semaString.length) {
       opts.isSemaBarUsed = true;
