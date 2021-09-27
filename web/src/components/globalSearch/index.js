@@ -23,8 +23,6 @@ const GlobalSearch = () => {
   const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
 
-  console.log(suggestedComments);
-  //TODO: it can be so heavy for the frontend in future
   const engGuidesComments = useMemo(() => {
     const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
     return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
@@ -37,15 +35,10 @@ const GlobalSearch = () => {
     const _collections = userCollections?.map(({ collectionData }) => collectionData);
     return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
   },[userCollections, searchTerm]);
-  const suggestedCommentsItems = useMemo(() => {
-    return [];
-    // const comments = comments.flatMap(({ collectionData }) => collectionData.comments);
-    // return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
-  },[suggestedComments, searchTerm]);
 
   const categories = [
     { title: "suggested comment collections", items: suggestedCollections },
-    { title: "suggested comments", items: suggestedCommentsItems },
+    { title: "suggested comments", items: suggestedComments },
     { title: "community engineering guide collections", items: engGuidesCollections },
     { title: "community engineering guide", items: engGuidesComments },
   ]
