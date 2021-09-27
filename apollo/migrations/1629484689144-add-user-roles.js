@@ -22,7 +22,7 @@ exports.up = async (next) => {
     const UserRole = mongoose.connection.collection('userroles');
 
     const user1 = await User.findOne({ username: 'aslanlin21@gmail.com' });
-    const user2 = await User.findOne({ username: 'matt@semasoftware.com' });
+    const user2 = await User.findOne({ username: 'mvi@semasoftware.com' });
     const semaTeam = await Team.findOne({ name: 'Sema Super Team' });
     const adminRole = await Role.findOne({ name: 'Admin' });
     const libraryAdminRole = await Role.findOne({ name: 'Library Admin' });
