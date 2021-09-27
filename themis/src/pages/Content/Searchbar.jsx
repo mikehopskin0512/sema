@@ -50,9 +50,12 @@ const SearchBar = (props) => {
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data?.searchResults?.result || []);
+        props.toggleSearchModal({ isOpen: true });
+      })
+      .catch(() => {
+        props.toggleSearchModal({ isOpen: false });
       })
       .finally(() => {
-        props.toggleSearchModal({ isOpen: true });
         toggleIsLoading(false);
       });
   };
@@ -68,6 +71,7 @@ const SearchBar = (props) => {
       getSuggestionsDebounced.current(value, props.userId);
     } else {
       getSuggestionsDebounced.current.cancel();
+      props.toggleSearchModal({ isOpen: false });
     }
   };
 
@@ -86,7 +90,8 @@ const SearchBar = (props) => {
     const commentPlaceholder = chrome.runtime.getURL(
       'img/comment-placeholder.png',
     );
-    const noResults = chrome.runtime.getURL('img/no-results.png');
+    // TODO: need to add different color icons for dimmed and dark mode
+    const noResults = chrome.runtime.getURL('img/no-results-light.svg');
     const loader = chrome.runtime.getURL('img/loader.png');
     if (isLoading) {
       return (

@@ -31,11 +31,11 @@ const ReposView = () => {
     }
   }, [repositories]);
 
-  if (!repositories.length) {
+  if (!repositories.length && !repositories.isFetching) {
     return <EmptyRepo />
   }
 
-  return (
+  return ( !repositories.isFetching &&
     <>
       <div className={styles['repos-container']}>
         <RepoList type="FAVORITES" repos={repos.favorites} />
