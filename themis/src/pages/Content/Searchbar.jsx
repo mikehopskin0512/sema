@@ -84,7 +84,8 @@ const SearchBar = (props) => {
     const commentPlaceholder = chrome.runtime.getURL(
       'img/comment-placeholder.png',
     );
-    const noResults = chrome.runtime.getURL('img/no-results.png');
+    // TODO: need to add different color icons for dimmed and dark mode
+    const noResults = chrome.runtime.getURL('img/no-results-light.svg');
     const loader = chrome.runtime.getURL('img/loader.png');
     if (isLoading) {
       return (
