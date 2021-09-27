@@ -442,9 +442,9 @@ export async function writeSemaToGithub(activeElement) {
     const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
-    let fileExtention = $(textarea)?.parents('.file')?.attr('data-file-type');
+    let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
     if (!fileExtention) {
-      const url = $(textarea)
+      const url = $(activeElement)
         .parents('.file')
         .children('.file-header')
         .children('.Link--primary')
