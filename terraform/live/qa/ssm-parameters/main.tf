@@ -1,3 +1,8 @@
+resource "aws_ssm_parameter" "apollo_chrome_extension_id" {
+  name  = "/${var.env}/apollo/chrome/extensionid"
+  type  = "String"
+  value = "nompfgddpldjighjfnkncgehjdbcphbf"
+}
 resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
   name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
   type  = "String"

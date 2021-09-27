@@ -35,8 +35,6 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
     await dispatch(getUserRepositories(githubUser?.repositories, token));
   };
 
-  console.log({ overview });
-
   useEffect(() => {
     getUserRepos(auth.user);
   }, [auth]);
