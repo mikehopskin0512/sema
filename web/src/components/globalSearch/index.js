@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllSuggestedComments } from "../../state/features/comments/actions";
+import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
 import styles from './globalSearch.module.scss'
 import { getEngGuides } from "../../state/features/engGuides/actions";
+import useOutsideClick from '../../utils/useOutsideClick'
 
 const isFieldIncludes = (searchTerm, fieldName) => {
   return function(searchItem) {
@@ -23,6 +24,7 @@ const GlobalSearch = () => {
   const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const wrapper = useRef(null);
   const engGuidesComments = useMemo(() => {
     const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
     return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
@@ -42,6 +44,12 @@ const GlobalSearch = () => {
     { title: "community engineering guide collections", items: engGuidesCollections },
     { title: "community engineering guide", items: engGuidesComments },
   ]
+  const onSearchInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const clearSearch = () => setSearchTerm('');
+
+  useOutsideClick(wrapper, clearSearch)
 
   useEffect(() => {
     dispatch(getAllSuggestedComments(searchTerm, user._id, token));
@@ -53,15 +61,12 @@ const GlobalSearch = () => {
     }
   }, [dispatch, token]);
 
-  const onSearchInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   return (
-    <div className="is-flex is-relative">
+    <div className="is-flex is-relative" ref={wrapper}>
       <div className="control has-icons-left has-icons-right">
         <input
           onChange={onSearchInputChange}
+          onKeyDown={e => e.keyCode === 27 && clearSearch()}
           value={searchTerm}
           className={clsx(styles['global-search_input'], "input has-background-white")}
           type="input"
@@ -92,7 +97,6 @@ const GlobalSearch = () => {
           ))}
         </div>
       )}
-
     </div>
   );
 };
