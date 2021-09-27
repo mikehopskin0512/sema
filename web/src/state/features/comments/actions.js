@@ -19,17 +19,31 @@ const fetchCollectionError = (error) => ({
   error,
 });
 
-const fetchSuggestedComments = () => ({
-  type: types.FETCH_SUGGESTED_COMMENTS,
+const fetchUserCollections = () => ({
+  type: types.FETCH_USER_COLLECTIONS,
 });
 
-const fetchSuggestedCommentsSuccess = (comments) => ({
-  type: types.FETCH_SUGGESTED_COMMENTS_SUCCESS,
+const fetchUserCollectionsSuccess = (comments) => ({
+  type: types.FETCH_USER_COLLECTIONS_SUCCESS,
   comments,
 });
 
-const fetchSuggestedCommentsError = (error) => ({
-  type: types.FETCH_SUGGESTED_COMMENTS_ERROR,
+const fetchUserCollectionsError = (error) => ({
+  type: types.FETCH_USER_COLLECTIONS_ERROR,
+  error,
+});
+
+const fetchUserSuggestedComments = () => ({
+  type: types.FETCH_USER_COLLECTIONS,
+});
+
+const fetchUserSuggestedCommentsSuccess = (payload) => ({
+  type: types.FETCH_USER_COLLECTIONS_SUCCESS,
+  payload,
+});
+
+const fetchUserSuggestedCommentsError = (error) => ({
+  type: types.FETCH_USER_COLLECTIONS_ERROR,
   error,
 });
 
@@ -45,28 +59,27 @@ export const getCollectionById = (id, token) => async (dispatch) => {
   }
 };
 
-export const getUserSuggestedComments = (token) => async (dispatch) => {
+export const getUserCollection = (token) => async (dispatch) => {
   try {
-    dispatch(fetchSuggestedComments(token));
-    const comments = await getAllCollections(token);
-    dispatch(fetchSuggestedCommentsSuccess(comments.data));
+    dispatch(fetchUserCollections(token));
+    const collections = await getAllCollections(token);
+    dispatch(fetchUserCollectionsSuccess(collections.data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(fetchSuggestedCommentsError(errMessage));
+    dispatch(fetchUserCollectionsError(errMessage));
   }
 };
 
-export const getAllSuggestedComments = (searchTerm, userId, token) => async (dispatch) => {
+export const getSuggestedCommentsByTitle = (title, userId, token) => async (dispatch) => {
   try {
-    // dispatch(fetchSuggestedComments(token));
-    const comments = await getSuggestedComments({ q: searchTerm, user: userId }, token);
-    console.log(comments, 'comments');
-    // dispatch(fetchSuggestedCommentsSuccess(comments.data));
+    dispatch(fetchUserSuggestedComments(token));
+    const { searchResults } = await getSuggestedComments({ q: title, user: userId }, token);
+    dispatch(fetchUserSuggestedCommentsSuccess(searchResults.result));
   } catch (error) {
-    // const { response: { data: { message }, status, statusText } } = error;
-    // const errMessage = message || `${status} - ${statusText}`;
-    // dispatch(fetchSuggestedCommentsError(errMessage));
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(fetchUserSuggestedCommentsError(errMessage));
   }
 };
 
