@@ -162,6 +162,23 @@ function onTextPaste(semabarContainerId) {
   };
 }
 
+const debouncedOnInput = debounce(() => {
+  store.dispatch(
+    updateTextareaState({
+      isTyping: true,
+    }),
+  );
+  setTimeout(() => {
+    store.dispatch(
+      updateTextareaState({
+        isTyping: false,
+      }),
+    );
+  }, CALCULATION_ANIMATION_DURATION_MS);
+
+  onSuggestion();
+}, ON_INPUT_DEBOUCE_INTERVAL_MS);
+
 const reactNodes = new Set();
 let mirror;
 
@@ -216,22 +233,7 @@ document.addEventListener(
                 checkSubmitButton(semabarContainerId);
               }, 0);
 
-              debounce(() => {
-                store.dispatch(
-                  updateTextareaState({
-                    isTyping: true,
-                  }),
-                );
-                setTimeout(() => {
-                  store.dispatch(
-                    updateTextareaState({
-                      isTyping: false,
-                    }),
-                  );
-                }, CALCULATION_ANIMATION_DURATION_MS);
-
-                onSuggestion();
-              }, ON_INPUT_DEBOUCE_INTERVAL_MS);
+              debouncedOnInput();
             },
           );
           /** ADD ROOTS FOR REACT COMPONENTS */

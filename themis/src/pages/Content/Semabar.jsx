@@ -188,6 +188,7 @@ const Semabar = (props) => {
       setLastSavedComment(textarea.value);
     } catch (e) {
       // TODO: handle the error with alert or caprion
+      // eslint-disable-next-line no-console
       console.error('error', e);
     }
   };
