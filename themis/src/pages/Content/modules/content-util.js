@@ -442,8 +442,20 @@ export async function writeSemaToGithub(activeElement) {
     const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
+    let fileExtention = $(textarea)?.parents('.file')?.attr('data-file-type');
+    if (!fileExtention) {
+      const url = $(textarea)
+        .parents('.file')
+        .children('.file-header')
+        .children('.Link--primary')
+        .attr('title');
+      fileExtention = url
+        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+        : null;
+    }
+
     comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
       userId,
       comment: textboxValue,
       location,
