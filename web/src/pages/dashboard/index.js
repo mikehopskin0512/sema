@@ -25,7 +25,8 @@ const Dashboard = () => {
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
-  const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
+  const [isOnboardingModalActivea, toggleOnboardingModalActive] = useState(false);
+  const isOnboardingModalActive = false
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
@@ -144,17 +145,19 @@ const Dashboard = () => {
     }
   }, [isOnboarded]);
 
+  if (repositories.isFetching || auth.isFetching) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='has-background-gray-9 pb-180'>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching || auth.isFetching ? (
-          <div style={{ height: '400px', display: 'flex' }}>
-            <Loader/>
-          </div>
-        ) : (
-          <ReposView />
-        )}
+        <ReposView />
       </div>
       <OnboardingModal
         isModalActive={isOnboardingModalActive}
