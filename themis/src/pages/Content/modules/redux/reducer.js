@@ -51,8 +51,8 @@ function rootReducer(state = initialState, action) {
 
   switch (action.type) {
     case ADD_SEMA_COMPONENTS: {
-      const { seedId, activeElement } = payload;
-      const { semabarContainerId, semaSearchContainerId } = getSemaIds(seedId);
+      const { activeElement } = payload;
+      const { semabarContainerId, semaSearchContainerId } = getSemaIds(activeElement);
       const { initialTags, initialReaction } = getInitialSemaValues(
         activeElement,
       );

@@ -160,18 +160,16 @@ function onTextPaste(semabarContainerId) {
   };
 }
 
-const getDebouncedInput = (githubTextareaId) => debounce(() => {
+const getDebouncedInput = () => debounce(() => {
   store.dispatch(
     updateTextareaState({
       isTyping: true,
-      textareaId: githubTextareaId,
     }),
   );
   setTimeout(() => {
     store.dispatch(
       updateTextareaState({
         isTyping: false,
-        textareaId: null,
       }),
     );
   }, CALCULATION_ANIMATION_DURATION_MS);
@@ -202,18 +200,17 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
         ).style.maxHeight = '580px';
       }
 
-      const githubTextareaId = $(activeElement).attr('id');
-      window.semaExtensionRegistry.registerGithubTextarea(githubTextareaId);
-
       if (!$(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER)) {
-        setTextareaSemaIdentifier(githubTextareaId);
+        setTextareaSemaIdentifier(activeElement);
       }
 
+      window.semaExtensionRegistry.registerGithubTextarea(activeElement);
+
       const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-        githubTextareaId,
+        activeElement,
       );
       if (!semaElements[0]) {
-        const debouncedOnInput = getDebouncedInput(githubTextareaId);
+        const debouncedOnInput = getDebouncedInput();
 
         window.semaExtensionRegistry.registerElementEventListener(activeElement, 'input', () => {
           /**
@@ -240,7 +237,6 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
         /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
         store.dispatch(
           addSemaComponents({
-            seedId: githubTextareaId,
             activeElement,
           }),
         );
@@ -265,7 +261,6 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
           <Provider store={store}>
             <Semabar
               id={semabarContainerId}
-              textareaId={githubTextareaId}
               style={{ position: 'relative' }}
             />
           </Provider>,

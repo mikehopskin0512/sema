@@ -24,24 +24,18 @@ const UPDATE_HIGHLIGHT_INTERVAL_MS = 250;
 class Mirror {
   /**
    *
-   * @param {HTML textarea} textAreaElement
+   * @param {HTML textarea} activeElement
    * @param {function()} getTokenAlerts
    * @param {object} options { onMouseoverHighlight, store, onTextPaste }
    */
-  constructor(textAreaElement, getTokenAlerts, options) {
-    const id = $(textAreaElement).attr('id');
-    if (!id) {
-      // eslint-disable-next-line no-console
-      console.error('Element doesnot have any ID attribute');
-      return;
-    }
+  constructor(activeElement, getTokenAlerts, options) {
     if (typeof getTokenAlerts !== 'function') {
       // eslint-disable-next-line no-console
       console.error('valid getTokenAlerts function not provided');
       return;
     }
 
-    this._id = getSemaIds(id).semaMirror;
+    this._id = getSemaIds(activeElement).semaMirror;
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
@@ -58,8 +52,7 @@ class Mirror {
       UPDATE_HIGHLIGHT_INTERVAL_MS,
     );
 
-    // making sure to have raw DOM element
-    this._elementToMimic = document.getElementById(id);
+    this._elementToMimic = activeElement;
     this._elementMeasurement = new ElementMeasurement(this._elementToMimic);
     this._container = null;
     this._highlighter = null;

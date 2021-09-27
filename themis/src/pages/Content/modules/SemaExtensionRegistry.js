@@ -1,13 +1,13 @@
 import $ from 'cash-dom';
 import ReactDOM from 'react-dom';
 import { SEMA_REMINDER_ROOT_ID, SEMA_TEXTAREA_IDENTIFIER } from '../constants';
-import { getSemaIds } from './content-util';
+import { getSemaIdentifier, getSemaIdsFromIdentifier } from './content-util';
 
 class SemaExtensionRegistry {
   constructor() {
     this.eventListeners = new Set();
     this.elementEventListener = new Set();
-    this.githubTextareaIds = new Set();
+    this.semaIdentifiers = new Set();
     this.additionalCleanupFunctions = new Set();
     this.startExtensionCheck();
   }
@@ -32,8 +32,9 @@ class SemaExtensionRegistry {
     this.elementEventListener.add({ element, event, eventHandler });
   }
 
-  registerGithubTextarea(githubId) {
-    this.githubTextareaIds.add(githubId);
+  registerGithubTextarea(activeElement) {
+    const semaIdentifier = getSemaIdentifier(activeElement);
+    this.semaIdentifiers.add(semaIdentifier);
   }
 
   removeAllListeners() {
@@ -52,13 +53,26 @@ class SemaExtensionRegistry {
 
   removeAllSemaElements() {
     // eslint-disable-next-line no-restricted-syntax
-    for (const textareaId of this.githubTextareaIds) {
-      const textarea = document.getElementById(textareaId);
-      const { semabarContainerId, semaSearchContainerId, semaMirror } = getSemaIds(textareaId);
+    for (const identifier of this.semaIdentifiers) {
+      const {
+        semabarContainerId,
+        semaSearchContainerId,
+        semaMirror,
+      } = getSemaIdsFromIdentifier(identifier);
 
       const semabarContainerNode = document.getElementById(semabarContainerId);
       const semaSearchContainerNode = document.getElementById(semaSearchContainerId);
       const semaMirrorNode = document.getElementById(semaMirror);
+
+      const activeElement = $(`#${semabarContainerId}`).prev().get(0);
+      $(activeElement).removeAttr(SEMA_TEXTAREA_IDENTIFIER);
+
+      const semaMarkdownIcon = $(activeElement)
+        .parent()
+        .siblings('label')
+        .children('.tooltipped.tooltipped-nw')[1];
+
+      $(semaMarkdownIcon).remove();
 
       ReactDOM.unmountComponentAtNode(semabarContainerNode);
       ReactDOM.unmountComponentAtNode(semaSearchContainerNode);
@@ -66,15 +80,6 @@ class SemaExtensionRegistry {
       semabarContainerNode.remove();
       semaSearchContainerNode.remove();
       semaMirrorNode.remove();
-
-      $(textarea).removeAttr(SEMA_TEXTAREA_IDENTIFIER);
-
-      const semaMarkdownIcon = $(textarea)
-        .parent()
-        .siblings('label')
-        .children('.tooltipped.tooltipped-nw')[1];
-
-      $(semaMarkdownIcon).remove();
 
       $(`#${SEMA_REMINDER_ROOT_ID}`).remove();
     }
