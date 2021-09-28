@@ -32,10 +32,7 @@ const CommentCollections = () => {
     commentsState: state.commentsState,
   }));
   const { user, token, isFetching } = auth;  
-  const { collections } = user;
   const { comments } = commentsState;
-
-  console.log({ collections, comments })
 
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
@@ -114,7 +111,7 @@ const CommentCollections = () => {
 
   return (
     <>
-      { isFetching ? (
+      { auth.isFetching || commentsState.isFetching ? (
         <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
           <Loader/>
         </div>
