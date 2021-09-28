@@ -80,7 +80,7 @@ const Login = () => {
     }
   }, [])
       
-if (!isAuthenticated) {
+if (!isAuthenticated || user.isWaitlist) {
   return (
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
