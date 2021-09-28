@@ -168,6 +168,39 @@ export const findById = async (id) => {
   }
 };
 
+export const findUserCollectionsById = async (id) => {
+  try {
+    const query = User.findOne({ _id: id });
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      select: {
+        _id: 1,
+        isActive: 1,
+        name: 1,
+        description: 1,
+        author: 1,
+      },
+      populate: {
+        path: 'comments',
+        model: 'SuggestedComment',
+        select: {
+          source: 1,
+        },
+        populate: {
+          path: 'tags.tag'
+        }
+      }
+    }).exec();
+
+    return user;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
 export const findByOrgId = async (orgId) => {
   try {
     const query = User.find({ orgId });

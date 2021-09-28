@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './suggestedComments.module.scss';
 import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
@@ -12,6 +12,9 @@ import SuggestedCommentCollection from "../../components/comment/suggestedCommen
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import GlobalSearch from '../../components/globalSearch';
+import { commentsOperations } from "../../state/features/comments";
+
+const { getUserSuggestedComments } = commentsOperations;
 
 const NUM_PER_PAGE = 9;
 
@@ -23,10 +26,18 @@ const isCollectionNameIncludes = (searchTerm) => {
 }
 
 const CommentCollections = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const { query: { cid }, pathname } = router;
-  const { user } = useSelector((state) => state.authState);
+  const { auth, commentsState } = useSelector((state) => ({
+    auth: state.authState,
+    commentsState: state.commentsState,
+  }));
+  const { user, token } = auth;
   const { collections } = user;
+  const { comments } = commentsState;
+
+  console.log({ collections, comments })
 
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
@@ -36,9 +47,13 @@ const CommentCollections = () => {
   const isNewCommentModalOpen = !!collectionId;
 
   useEffect(() => {
-    setActiveCollections(collections.filter((collection) => collection.isActive));
-    setOtherCollections(collections.filter((collection) => !collection.isActive));
-  }, [pathname, collections]);
+    dispatch(getUserSuggestedComments(token));
+  }, [token]);
+
+  useEffect(() => {
+    setActiveCollections(comments.filter((collection) => collection.isActive));
+    setOtherCollections(comments.filter((collection) => !collection.isActive));
+  }, [pathname, comments]);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
