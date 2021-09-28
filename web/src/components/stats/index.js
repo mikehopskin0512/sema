@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { format, subDays, differenceInCalendarDays } from 'date-fns';
 import ReactionChart from './reactionChart';
@@ -8,9 +7,6 @@ import TagsChart from './tagsChart';
 import DateRangeSelector from '../dateRangeSelector';
 
 import { generateArraysByDays, generateArraysByWeeks, generateArraysByMonths, generateArraysByYears } from './codeStatsServices';
-import styles from './stats.module.scss';
-import BarChart from '../BarChart';
-import CircularPacking from '../CircularPackingChart';
 
 const dayInWeek = 7;
 const dayInMonth = 30;
@@ -109,20 +105,6 @@ const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
               placeholder: 'Select Dates',
             }}
           />
-        </div>
-      </div>
-      <div className="is-flex is-flex-wrap-wrap mt-20">
-        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
-            <BarChart data={reactions} groupBy={groupBy} />
-          </div>
-        </div>
-        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
-            <CircularPacking data={tags} groupBy={groupBy} />
-          </div>
         </div>
       </div>
       {startDate && endDate && (

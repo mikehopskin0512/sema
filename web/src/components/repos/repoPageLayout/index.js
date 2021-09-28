@@ -26,6 +26,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -36,6 +37,12 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   useEffect(() => {
     getUserRepos(auth.user);
   }, [auth]);
+
+  useEffect(() => {
+    if (totalPullRequests && totalSemaUsers && totalSmartCommenters && totalSmartComments) {
+      setInitialLoading(false);
+    }
+  }, [repositories]);
 
   const formatOptions = (repositories) => {
     if (repositories) {
@@ -73,12 +80,11 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   }
 
   return (
-    <div className="has-background-white pb-250">
+    <div className="has-background-white pb-180">
       {
-        auth.isFetching || repositories.isFetching ? (
+        (auth.isFetching || repositories.isFetching) && initialLoading ? (
           <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
             <Loader/>
-            {children({ startDate, endDate })}
           </div>
         ) : (
           <>
