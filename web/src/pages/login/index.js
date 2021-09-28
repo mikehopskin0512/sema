@@ -79,7 +79,8 @@ const Login = () => {
       dispatch(fetchInvite(token));
     }
   }, [])
-
+      
+if (!isAuthenticated) {
   return (
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
