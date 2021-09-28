@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -8,20 +8,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './actionGroup.module.scss';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
 import { commentsOperations } from '../../../state/features/comments';
-import ArchiveModal from '../../archiveModal';
 
 const { bulkUpdateSuggestedComments } = suggestCommentsOperations;
 const { getCollectionById } = commentsOperations;
 
-const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments, unarchiveComments, collectionId }) => {
+const ActionGroup = ({
+  selectedComments,
+  handleSelectAllChange,
+  archiveComments,
+  unarchiveComments,
+  collectionId,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
   }));
   const { token } = auth;
-  const [isOpen, setIsOpen] = useState(false);
-  const [comments, setComments] = useState([]);
 
   const onUpdate = async (data) => {
     const isActive = !data[0].isActive;
@@ -36,13 +39,11 @@ const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments,
     await router.push(`/suggested-comments/edit?cid=${collectionId}&comments=${selectedComments}`);
   };
 
-  const onArchive = () => {
-    setIsOpen(true);
-    setComments(unarchiveComments);
+  const onArchive = async () => {
+    await onUpdate(unarchiveComments);
   };
-  const onUnarchive = () => {
-    setIsOpen(true);
-    setComments(archiveComments);
+  const onUnarchive = async () => {
+    await onUpdate(archiveComments);
   };
 
   return (
@@ -86,13 +87,6 @@ const ActionGroup = ({ selectedComments, handleSelectAllChange, archiveComments,
       >
         Undo selection
       </button>
-      <ArchiveModal
-        onClose={() => setIsOpen(false)}
-        active={isOpen}
-        message="Suggested Comments"
-        data={comments}
-        onSubmit={onUpdate}
-      />
     </div>
   );
 };

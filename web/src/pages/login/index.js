@@ -79,72 +79,80 @@ const Login = () => {
       dispatch(fetchInvite(token));
     }
   }, [])
-
-  if (!isAuthenticated) {
-    return (
-      <div className={styles.container}>
-        <Helmet { ...LoginHelmet } />
-        <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-        <section className="hero">
-          <div className="hero-body pb-300">
-            <div className="container">
-              <div className="tile is-ancestor">
-                <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
-                  <img src="/img/codelines.png" width="430"/>
-                  <div className="feature-list mt-50">
-                    <ul>
-                      <li className="mb-25">
-                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                          <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                            <FontAwesomeIcon icon={faThumbsUp} size="lg" />
-                          </div>
-                          <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
+      
+if (!isAuthenticated || user.isWaitlist) {
+  return (
+    <div className={styles.container}>
+      <Helmet { ...LoginHelmet } />
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <section className="hero">
+        <div className="hero-body pb-300">
+          <div className="container">
+            <div className="tile is-ancestor">
+              <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
+                <img src="/img/codelines.png" width="430" style={{ marginRight: 'auto' }}/>
+                <h1 className={styles.title}>Write more meaningful code reviews.</h1>
+                <div className="feature-list mt-20">
+                  <ul>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faThumbsUp} size="lg" />
                         </div>
-                      </li>
-                      <li className="mb-25">
-                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                          <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                            <FontAwesomeIcon icon={faTag} size="lg" />
-                          </div>
-                          <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Reactions: </span>
+                          Choose a simple summary of your review.</span>
+                      </div>
+                    </li>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faTag} size="lg" />
                         </div>
-                      </li>
-                      <li className="mb-25">
-                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                          <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                            <FontAwesomeIcon icon={faCommentAlt} size="lg" />
-                          </div>
-                          <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Tags: </span>
+                          Highlight the key takeaways of your review.
+                        </span>
+                      </div>
+                    </li>
+                    <li className="mb-25">
+                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
+                          <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
-                      </li>
-                    </ul>
-                  </div>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Suggested Comments: </span>
+                          Insert pre-written comments from the world’s best sources of coding knowledge.
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-                <div className="tile is-1"/>
-                {/** Show on Mobile */}
-                <div
-                  className={clsx(
-                    'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
-                    styles['login-tile'],
-                  )}
-                >
-                  {renderCard()}
-                </div>
-                {/** Show on Desktop */}
-                <div
-                  className={clsx(
-                    'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
-                    styles['login-tile'],
-                  )}
-                >
-                  {renderCard()}
-                </div>
+              </div>
+              <div className="tile is-1"/>
+              {/** Show on Mobile */}
+              <div
+                className={clsx(
+                  'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
+                  styles['login-tile'],
+                )}
+              >
+                {renderCard()}
+              </div>
+              {/** Show on Desktop */}
+              <div
+                className={clsx(
+                  'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
+                  styles['login-tile'],
+                )}
+              >
+                {renderCard()}
               </div>
             </div>
           </div>
-        </section>
-      </div>
-    );
+        </div>
+      </section>
+    </div>);
   }
 
   return(
