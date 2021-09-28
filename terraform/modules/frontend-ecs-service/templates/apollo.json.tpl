@@ -123,6 +123,9 @@
       }, {
         "name": "MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
+      }, {
+        "name": "CHROME_EXTENSION_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/chrome/extensionid"
       }],
     "portMappings": [
       {
