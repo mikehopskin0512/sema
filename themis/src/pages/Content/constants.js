@@ -283,3 +283,5 @@ export const EVENTS = {
   PAGE_VISIT: 'PAGE_VISIT',
   SUBMIT: 'SUBMIT',
 };
+
+export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';

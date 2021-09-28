@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { subDays, differenceInCalendarDays } from 'date-fns';
 import clsx from 'clsx';
-import { generateDays, generateWeeks, generateMonths, generateYears } from './codeStatsServices';
+import { generateArraysByDays, generateArraysByWeeks, generateArraysByMonths, generateArraysByYears } from './codeStatsServices';
 import styles from './stats.module.scss';
 import ReactionChart from './reactionChart';
 import TagsChart from './tagsChart';
-
-import { TagList } from '../../data/activity';
 
 const dayInWeek = 7;
 const dayInMonth = 30;
@@ -20,63 +18,76 @@ const StatsPage = ({ startDate, endDate }) => {
 
   const { data: { overview } } = repositories;
 
+  const [start, setStart] = useState();
+  const [end, setEnd] = useState();
+  const [dateDiff, setDateDiff] = useState();
   const [reactions, setReactions] = useState([]);
   const [tags, setTags] = useState({});
+  const [groupBy, setGroupBy] = useState('');
 
-  const getReactionOverview = (smartcomments) => {
-    if (smartcomments.length > 0) {
-      let start = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
-      let end = new Date();
-      if (startDate && endDate) {
-        start = startDate;
-        end = endDate;
-      }
-      const diff = differenceInCalendarDays(new Date(end), new Date(start));
-      if (diff < dayInWeek + 1) {
-        const reactionsArr = generateDays(smartcomments, diff, end);
-        setReactions(reactionsArr);
-      }
-
-      if (diff < dayInMonth && diff >= dayInWeek) {
-        const reactionsArr = generateWeeks(smartcomments, start, end);
-        setReactions(reactionsArr);
-      }
-
-      if (diff < dayInYear && diff >= dayInMonth) {
-        const reactionsArr = generateMonths(smartcomments, start, end);
-        setReactions(reactionsArr);
-      }
-
-      if (diff >= dayInYear) {
-        const reactionsArr = generateYears(smartcomments, start, end);
-        setReactions(reactionsArr);
-      } 
+  const setDates = (smartcomments) => {
+    let startDay = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
+    let endDay = new Date();
+    if (startDate && endDate) {
+      startDay = startDate;
+      endDay = endDate;
     }
-  }
+    const diff = differenceInCalendarDays(new Date(endDay), new Date(startDay));
+    setStart(startDay);
+    setEnd(endDay);
+    setDateDiff(diff);
+    if (diff < dayInWeek + 1) {
+      setGroupBy('day');
+    }
+    if (diff < dayInMonth && diff >= dayInWeek) {
+      setGroupBy('week');
+    }
 
-  const getTagsOverview = (smartcomments) => {
-    let tagObject = {};
-    // Set TagId as object keys
-    TagList.forEach((tag) => {
-      tagObject[tag.value] = {
-        total: 0
-      };
-    });
-    // Add count to matching smart comment tag
-    smartcomments.forEach((comment) => {
-      comment.tags.forEach((tag) => {
-        tagObject[tag._id].total += 1;
-      })
-    });
-    setTags(tagObject)
-  }
+    if (diff < dayInYear && diff >= dayInMonth) {
+      setGroupBy('month');
+    }
+
+    if (diff >= dayInYear) {
+      setGroupBy('year');
+    } 
+  };
 
   useEffect(() => {
-    if (overview?.smartcomments) {
-      getReactionOverview(overview?.smartcomments);
-      getTagsOverview(overview?.smartcomments);
+    if (overview?.smartcomments && overview?.smartcomments.length > 0) {
+      setDates(overview.smartcomments);
     }
   }, [repositories]);
+
+  useEffect(() => {
+    if (start && end && dateDiff && groupBy) {
+      const { smartcomments } = overview;
+      // GENERATE REACTIONS AND TAGS
+      switch (groupBy) {
+        case 'day':
+          const { reactionsByDay, tagsByDay } = generateArraysByDays(smartcomments, dateDiff, end);
+          setReactions(reactionsByDay);
+          setTags(tagsByDay);
+          return;
+        case 'week':
+          const { reactionsByWeek, tagsByWeek } = generateArraysByWeeks(smartcomments, start, end);
+          setReactions(reactionsByWeek);
+          setTags(tagsByWeek);
+          return;
+        case 'month':
+          const { reactionsByMonth, tagsByMonth } = generateArraysByMonths(smartcomments, start, end);
+          setReactions(reactionsByMonth);
+          setTags(tagsByMonth);
+          return;
+        case 'year':
+          const { reactionsByYear, tagsByYear } = generateArraysByYears(smartcomments, start, end);
+          setReactions(reactionsByYear);
+          setTags(tagsByYear);
+          return;
+        default:
+          return;
+      }
+    }
+  }, [start, end, groupBy]);
 
   return(
     <>
@@ -86,6 +97,18 @@ const StatsPage = ({ startDate, endDate }) => {
       <div className="is-flex is-flex-wrap-wrap mt-20">
         <ReactionChart reactions={reactions} />
         <TagsChart tags={tags} />
+        {/* <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
+          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
+            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
+            <BarChart data={reactions} groupBy={groupBy} />
+          </div>
+        </div>
+        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
+          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
+            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
+            <CircularPacking data={tags} groupBy={groupBy} />
+          </div>
+        </div> */}
       </div>
     </>
   );

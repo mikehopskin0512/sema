@@ -4,7 +4,7 @@ import GuideLink from './GuideLink';
 import SuggestionModalFooter from './SuggestionModalFooter';
 
 const truncate = (content) => {
-  const contentLength = content.length;
+  const contentLength = content?.length;
   const shouldTruncate = contentLength > MAX_CHARACTER_LENGTH;
   return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
   }...` : content;
