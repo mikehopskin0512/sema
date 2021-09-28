@@ -13,7 +13,8 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DAYS_IN_MONTH, DAYS_IN_WEEK, DAYS_IN_YEAR, EMOJIS, TAGS, DEFAULT_AVATAR } from '../../utils/constants';
+import { DAYS_IN_MONTH, DAYS_IN_WEEK, DAYS_IN_YEAR, DEFAULT_AVATAR } from '../../utils/constants';
+import { getEmoji, getTagLabel } from '../../utils/parsing';
 import { generateDays, generateMonths, generateWeeks, generateYears } from '../../components/stats/codeStatsServices';
 
 const { getUserComments, getUserReceivedComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
@@ -167,16 +168,6 @@ const PersonalInsights = () => {
 
   const handleFilter = (value) => {
     setFilter(value)
-  };
-
-  const getEmoji = (id) => {
-    const { emoji } = find(EMOJIS, { _id: id });
-    return emoji;
-  };
-
-  const getTagLabel = async (id) => {
-    const { label } = find(TAGS, { _id: id });
-    return label;
   };
 
   useEffect(() => {

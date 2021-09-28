@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import _, { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -77,7 +77,7 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     if (endDate) {
       dateFilter = Object.assign(dateFilter, { createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt } });
     }
-    if (!_.isEmpty(dateFilter.createdAt)) {
+    if (!isEmpty(dateFilter.createdAt)) {
       filter = Object.assign(filter, dateFilter);
     }
 
@@ -572,7 +572,7 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsOverview = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     const filter = { reviewer, author, repoId, startDate, endDate };
     const totalReactions = {};
