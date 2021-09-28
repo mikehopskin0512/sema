@@ -11,7 +11,7 @@ export default (app, passport) => {
 
   route.get('/', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
     try {
-      const engGuides = await getAllEngGuides();
+      const engGuides = await getAllEngGuides(req.query);
       return res.status(200).send(engGuides);
     } catch (error) {
       logger.error(error);

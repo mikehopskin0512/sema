@@ -1,15 +1,22 @@
 .avatar {
-  border: 1px solid #D6D6D6;
+  border: 1px solid #E3E9EE;
   height: 32px;
   width: 32px;
+  margin-left: -10px;
+
+  &:nth-of-type(1) {
+    margin-left: 0;
+  }
 }
 
 .user-count {
-  border: 1px solid #D6D6D6;
+  border: 1px solid #CDEFF9;
   height: 32px;
   width: 32px;
   z-index: 10;
+  background-color: #CDEFF9;
+
   p {
-    color: #56626E !important;
+    color: #212B36 !important;
   }
 }

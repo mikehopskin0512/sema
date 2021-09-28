@@ -11,6 +11,7 @@ import CommentFilter from '../../comment/commentFilter';
 import EngGuideTable from '../engGuideTable';
 import GlobalSearch from "../../globalSearch";
 import Helmet from '../../utils/Helmet';
+import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
 import { EditGuides } from '../../../data/permissions';
@@ -35,7 +36,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   }));
 
   const { token, user } = auth;
-  const { engGuides, isFetching } = engGuideState;
+  const { engGuides } = engGuideState;
   const [selectedGuides, setSelectedGuides] = useState([]);
   const { checkAccess } = usePermission();
 
@@ -116,10 +117,10 @@ const CollectionEngGuides = ({ collectionId }) => {
 
   const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditGuides), [checkAccess]);
 
-  if (isFetching && !engGuide) {
+  if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (
-      <div>
-        Loading
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
       </div>
     );
   }
@@ -172,13 +173,19 @@ const CollectionEngGuides = ({ collectionId }) => {
             <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
           )
         }
-        <EngGuideTable
-          data={engGuideFilter}
-          selectedGuides={selectedGuides}
-          handleSelectChange={handleSelectChange}
-          handleSelectAllChange={handleSelectAllChange}
-          collectionId={collectionId}
-        />
+        { auth.isFetching || engGuideState.isFetching ? (
+          <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '30vh' }}>
+            <Loader/>
+          </div>
+        ) : (
+          <EngGuideTable
+            data={engGuideFilter}
+            selectedGuides={selectedGuides}
+            handleSelectChange={handleSelectChange}
+            handleSelectAllChange={handleSelectAllChange}
+            collectionId={collectionId}
+          />
+        ) }
       </div>
     </div>
   );

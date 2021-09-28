@@ -14,6 +14,7 @@ import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
 import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
+import Loader from '../../Loader';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
@@ -28,7 +29,7 @@ const NUM_PER_PAGE = 10;
 const SuggestedCommentCollection = ({ collectionId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { alerts, auth, collectionState } = useSelector((state) => ({
+  const { alerts, auth, collectionState, isFetching } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
     alerts: state.alertsState,
@@ -44,6 +45,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
   const { checkAccess } = usePermission();
+  const [isParsing, setIsParsing] = useState(true);
 
   useEffect(() => {
     dispatch(getCollectionById(collectionId, token));
@@ -56,6 +58,11 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   }, [showAlert, dispatch]);
 
   useEffect(() => {
+    setIsParsing(false);
+  }, [commentsFiltered]);
+
+  useEffect(() => {
+    setIsParsing(true);
     setCommentsFiltered(comments);
     const commentTags = uniqBy(flatten(comments.map((item) => item.tags.map((tag) => tag))), 'label');
     const tags = [];
@@ -81,6 +88,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   };
 
   const onSearch = ({ search, tag, language }) => {
+    setIsParsing(true);
     const filtered = comments.filter((item) => {
       const isMatchSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.comment.toLowerCase().includes(search.toLowerCase()) ||
@@ -100,6 +108,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       return filterBool;
     });
     setCommentsFiltered([...filtered]);
+    setIsParsing(false);
   };
   const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
 
@@ -177,7 +186,11 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           )
         }
         {
-          isEmpty(commentsFiltered) ? (
+          isParsing || isFetching ? (
+            <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '30vh' }}>
+              <Loader/>
+            </div>
+          ) : isEmpty(commentsFiltered) ? (
             <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div>
           ) : (
             commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item, index) => (
