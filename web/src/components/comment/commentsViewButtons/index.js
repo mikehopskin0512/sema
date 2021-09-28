@@ -17,7 +17,7 @@ const CommentsViewButtons = () => {
           <span className="is-hidden-desktop">Collections</span>
         </button>
       </a>
-      <a href="/comments">
+      <a href="/suggested-comments">
         <button
           className={clsx('button is-small border-radius-4px', styles['button-suggested'], asPath === '/comments' ? 'is-primary' : '')}
           type="button">

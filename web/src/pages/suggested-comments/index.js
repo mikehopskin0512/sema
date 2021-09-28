@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './suggestedComments.module.scss';
 import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
-import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import SuggestedCommentCollection from "../../components/comment/suggestedCommentCollections";
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import GlobalSearch from '../../components/globalSearch';
+import Loader from '../../components/Loader';
 import { commentsOperations } from "../../state/features/comments";
 
 const { getUserSuggestedComments } = commentsOperations;
@@ -33,7 +31,7 @@ const CommentCollections = () => {
     auth: state.authState,
     commentsState: state.commentsState,
   }));
-  const { user, token } = auth;
+  const { user, token, isFetching } = auth;  
   const { collections } = user;
   const { comments } = commentsState;
 
@@ -116,7 +114,11 @@ const CommentCollections = () => {
 
   return (
     <>
-      {renderSuggestedComments()}
+      { isFetching ? (
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+          <Loader/>
+        </div>
+      ) : renderSuggestedComments()}
     </>
   );
 };
