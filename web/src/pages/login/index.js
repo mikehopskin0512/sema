@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons'
 import { faThumbsUp, faCommentAlt } from '@fortawesome/free-regular-svg-icons'
@@ -10,6 +9,7 @@ import { isEmpty } from "lodash";
 import clsx from 'clsx';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import Loader from '../../components/Loader';
 import LoginCard from '../../components/auth/LoginCard';
 import InviteCard from '../../components/auth/InviteCard';
 import WaitlistCard from '../../components/auth/WaitlistCard';
@@ -127,32 +127,38 @@ const Login = () => {
                     </li>
                   </ul>
                 </div>
-              </div>
-              <div className="tile is-1"/>
-              {/** Show on Mobile */}
-              <div
-                className={clsx(
-                  'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
-                  styles['login-tile'],
-                )}
-              >
-                {renderCard()}
-              </div>
-              {/** Show on Desktop */}
-              <div
-                className={clsx(
-                  'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
-                  styles['login-tile'],
-                )}
-              >
-                {renderCard()}
+                <div className="tile is-1"/>
+                {/** Show on Mobile */}
+                <div
+                  className={clsx(
+                    'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
+                    styles['login-tile'],
+                  )}
+                >
+                  {renderCard()}
+                </div>
+                {/** Show on Desktop */}
+                <div
+                  className={clsx(
+                    'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
+                    styles['login-tile'],
+                  )}
+                >
+                  {renderCard()}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
+    );
+  }
+
+  return(
+    <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+      <Loader/>
     </div>
-  );
+  )
 };
 
 export default withLayout(Login);

@@ -43,4 +43,12 @@ export const articles = [
     mins: 30,
     link: 'https://research.google/pubs/pub47025/',
   },
+  {
+    id: 7,
+    author: 'Gergely Orosz',
+    title: 'Good Code Reviews, Better Code Reviews',
+    date: 'Oct 7, 2019',
+    mins:15,
+    link: 'https://blog.pragmaticengineer.com/good-code-reviews-better-code-reviews/',
+  },
 ];

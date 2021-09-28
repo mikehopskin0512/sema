@@ -16,6 +16,7 @@ import styles from '../../guides.module.scss';
 import Helmet from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import Toaster from '../../../../components/toaster';
+import Loader from '../../../../components/Loader';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 
@@ -44,6 +45,7 @@ const EngineeringGuidePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [engGuideData, setEngGuideData] = useState(initialEngGuideData);
+  const [isParsing, setIsParsing] = useState(true);
   const { auth, engGuideState, alerts } = useSelector((state) => ({
     auth: state.authState,
     engGuideState: state.engGuidesState,
@@ -80,6 +82,11 @@ const EngineeringGuidePage = () => {
   }, [dispatch, token]);
 
   useEffect(() => {
+    setIsParsing(false);
+  }, [engGuideData]);
+
+  useEffect(() => {
+    setIsParsing(true);
     const engGuidesList = flatten(engGuides.map((item) => {
       const { collectionData: { comments = [], name = '', _id = '' } } = item;
       return {
@@ -108,6 +115,8 @@ const EngineeringGuidePage = () => {
   };
 
   const formatText = (text) => {
+    const { source } = data;
+    const isSourceLinkExists = source.url
     const newText = text.split('\n').map((str, index) => {
       if (
         str.toLowerCase() === 'introduction' ||
@@ -120,17 +129,30 @@ const EngineeringGuidePage = () => {
         );
       }
       if (str.toLowerCase() === 'links to learn more') {
-        return (
+        return isSourceLinkExists ? (
           <div className="py" key={`str-${index}`}>
             <div className="is-divider" />
             <b>{str}</b>
+            <div>
+              <a target="_blank" href={source.url}>{source.name}</a>
+            </div>
           </div>
-        );
+        ) : (
+          null
+        )
       }
       return <p className="pb-10" key={`str-${index}`}>{str}</p>;
     });
     return newText;
   };
+
+  if (isParsing) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
+      </div>
+    )
+  }
 
   return (
     <div className="hero">
@@ -224,7 +246,7 @@ const EngineeringGuidePage = () => {
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-deep-black">
                   <b className="mr-5">Related Suggested Comments Collection:</b>
-                  <a href={`/comments/${_id}`}>
+                  <a href={`/suggested-comments?cid=${_id}`}>
                     <span className="is-underlined has-text-deep-black">{name}</span>
                   </a>
                 </p>
