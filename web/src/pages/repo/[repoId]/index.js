@@ -52,11 +52,15 @@ const RepoPage = () => {
           setDates({ startDate, endDate });
         }, [startDate, endDate]);
         return(
-          <>
-            <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-            { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} /> }
-            { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} /> }
-          </>
+          repositories.isFetching || auth.isFetching ? (
+            null
+          ) : (
+            <>
+              <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+              { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} /> }
+              { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} /> }
+            </>
+          )
         )
       }}
     </RepoPageLayout>

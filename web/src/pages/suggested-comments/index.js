@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import styles from './suggestedComments.module.scss';
 import AddSuggestedCommentModal from '../../components/comment/addSuggestedCommentModal';
 import CardList from '../../components/comment/cardList';
-import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import SuggestedCommentCollection from "../../components/comment/suggestedCommentCollections";
 import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import GlobalSearch from '../../components/globalSearch';
+import Loader from '../../components/Loader';
 
 const NUM_PER_PAGE = 9;
 
@@ -25,7 +23,7 @@ const isCollectionNameIncludes = (searchTerm) => {
 const CommentCollections = () => {
   const router = useRouter();
   const { query: { cid }, pathname } = router;
-  const { user } = useSelector((state) => state.authState);
+  const { user, isFetching } = useSelector((state) => state.authState);
   const { collections } = user;
 
   const [page, setPage] = useState(1);
@@ -101,7 +99,11 @@ const CommentCollections = () => {
 
   return (
     <>
-      {renderSuggestedComments()}
+      { isFetching ? (
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+          <Loader/>
+        </div>
+      ) : renderSuggestedComments()}
     </>
   );
 };
