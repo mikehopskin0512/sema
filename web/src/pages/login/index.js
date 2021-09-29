@@ -80,7 +80,7 @@ const Login = () => {
     }
   }, [])
       
-if (!isAuthenticated) {
+if (!isAuthenticated || user.isWaitlist) {
   return (
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
@@ -128,31 +128,31 @@ if (!isAuthenticated) {
                     </li>
                   </ul>
                 </div>
-                <div className="tile is-1"/>
-                {/** Show on Mobile */}
-                <div
-                  className={clsx(
-                    'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
-                    styles['login-tile'],
-                  )}
-                >
-                  {renderCard()}
-                </div>
-                {/** Show on Desktop */}
-                <div
-                  className={clsx(
-                    'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
-                    styles['login-tile'],
-                  )}
-                >
-                  {renderCard()}
-                </div>
+              </div>
+              <div className="tile is-1"/>
+              {/** Show on Mobile */}
+              <div
+                className={clsx(
+                  'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
+                  styles['login-tile'],
+                )}
+              >
+                {renderCard()}
+              </div>
+              {/** Show on Desktop */}
+              <div
+                className={clsx(
+                  'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
+                  styles['login-tile'],
+                )}
+              >
+                {renderCard()}
               </div>
             </div>
           </div>
-        </section>
-      </div>
-    );
+        </div>
+      </section>
+    </div>);
   }
 
   return(
