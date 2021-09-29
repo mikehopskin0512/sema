@@ -19,6 +19,8 @@ import {
   DELIMITERS,
   AMPLITUDE_API_KEY,
   EVENTS,
+  SEMA_TEXTAREA_IDENTIFIER,
+  SUGGESTED_COMMENTS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -211,6 +213,14 @@ const updateSmartComment = async (comment) => {
   return smartComment;
 };
 
+export const saveSmartComment = async (comment) => {
+  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(comment),
+  });
+};
+
 export const onConversationMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const nodeIndex = [...mutation.addedNodes].findIndex(
@@ -309,11 +319,32 @@ const createSmartComment = async (comment) => {
   return smartComment;
 };
 
-export function getSemaIds(idSuffix) {
+export const getSemaIdentifier = (activeElement) => {
+  if (!(activeElement instanceof HTMLElement)) {
+    throw new Error('Should be an HTMLElement');
+  }
+
+  return $(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER);
+};
+
+export const getSemaIdsFromIdentifier = (semaIdentifier) => {
+  if (typeof semaIdentifier !== 'string') {
+    throw new Error('Should be sema identifier attribute');
+  }
   return {
-    semabarContainerId: `semabar_${idSuffix}`,
-    semaSearchContainerId: `semasearch_${idSuffix}`,
+    semabarContainerId: `semabar_${semaIdentifier}`,
+    semaSearchContainerId: `semasearch_${semaIdentifier}`,
+    semaMirror: `semamirror_${semaIdentifier}`,
   };
+};
+
+export function getSemaIds(activeElement) {
+  if (!(activeElement instanceof HTMLElement)) {
+    throw new Error('Should be an HTMLElement');
+  }
+
+  const semaIdentifier = getSemaIdentifier(activeElement);
+  return getSemaIdsFromIdentifier(semaIdentifier);
 }
 
 const isReply = (textarea) => {
@@ -321,12 +352,12 @@ const isReply = (textarea) => {
   return isReplyComment;
 };
 
-export async function writeSemaToGithub(textarea) {
-  if (textarea) {
+export async function writeSemaToGithub(activeElement) {
+  if (activeElement) {
     let comment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location = onFilesTab ? 'files changed' : 'conversation';
@@ -343,14 +374,14 @@ export async function writeSemaToGithub(textarea) {
         config: { childList: true, subtree: true },
         onMutationEvent: onFilesChangedMutationObserver,
       }));
-      inLineMetada = getGithubInlineMetadata(textarea.id);
+      inLineMetada = getGithubInlineMetadata(activeElement.id);
     }
 
     const state = store.getState();
 
-    const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
+    const semaSearchId = $(activeElement).siblings('div.sema-search')?.[0]?.id;
 
-    const semabar = $(textarea).siblings('div.sema')?.[0];
+    const semabar = $(activeElement).siblings('div.sema')?.[0];
 
     const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
 
@@ -373,7 +404,7 @@ export async function writeSemaToGithub(textarea) {
 
     const semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
 
-    let textboxValue = textarea.value;
+    let textboxValue = activeElement.value;
 
     const { selectedSuggestedComments } = store.getState().semasearches[
       semaSearchId
@@ -401,18 +432,30 @@ export async function writeSemaToGithub(textarea) {
 
       // On edit, do not add extra line breaks
       // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}${semaString}`;
+      activeElement.value = `${textboxValue}${semaString}`;
     } else {
       // On initial submit, 2 line breaks break up the markdown correctly
       // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}\n\n${semaString}`;
+      activeElement.value = `${textboxValue}\n\n${semaString}`;
     }
 
     const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
+    let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
+    if (!fileExtention) {
+      const url = $(activeElement)
+        .parents('.file')
+        .children('.file-header')
+        .children('.Link--primary')
+        .attr('title');
+      fileExtention = url
+        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+        : null;
+    }
+
     comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
       userId,
       comment: textboxValue,
       location,
@@ -424,7 +467,7 @@ export async function writeSemaToGithub(textarea) {
 
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
-      const pullRequestReviewId = textarea?.id.split('_').pop();
+      const pullRequestReviewId = activeElement?.id.split('_').pop();
       const commentDiv = document.querySelector(
         `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
       );
@@ -438,15 +481,15 @@ export async function writeSemaToGithub(textarea) {
 
     const opts = {
       isSemaBarUsed: false,
-      isReply: isReply(textarea),
-      isSmartCommentUsed: textarea.value.includes(lastUserSmartComment),
+      isReply: isReply(activeElement),
+      isSuggestedCommentUsed: activeElement.value.includes(lastUserSmartComment),
     };
     if (typeof semaString === 'string' && semaString.length) {
       opts.isSemaBarUsed = true;
     }
 
     fireAmplitudeEvent(EVENTS.SUBMIT, opts);
-    const semaIds = getSemaIds($(textarea).attr('id'));
+    const semaIds = getSemaIds(activeElement);
     store.dispatch(resetSemaStates(semaIds));
   }
 }
@@ -705,8 +748,9 @@ export const getHighlights = (text) => {
 export const checkSubmitButton = (semabarId, data) => {
   const semabarData = data || store.getState().semabars[semabarId];
   const { selectedReaction, selectedTags } = semabarData;
-  const textareaId = semabarId.replace('semabar_', '');
-  const textareaValue = document.getElementById(textareaId).value.trim();
+
+  const activeElement = $(`#${semabarId}`).prev().get(0);
+  const textareaValue = activeElement.value.trim();
 
   const parents = $(`#${semabarId}`).parentsUntil('form');
   const lastParent = parents[parents.length - 1];
@@ -720,7 +764,15 @@ export const checkSubmitButton = (semabarId, data) => {
     } else {
       $(primaryButton).attr('disabled', true);
     }
+  } else {
+    $(primaryButton).removeAttr('disabled');
   }
 };
 
 export const isPRPage = () => document.URL.includes('/pull/');
+
+export const setTextareaSemaIdentifier = (activeElement) => {
+  const { id } = activeElement;
+  const semaIdentifier = `sema-${id}-${Date.now()}`;
+  $(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER, semaIdentifier);
+};

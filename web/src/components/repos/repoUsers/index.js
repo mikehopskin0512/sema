@@ -10,7 +10,7 @@ const RepoUsers = ({ users }) => (
     ))}
     {users.length > 4 && (
       <div className={clsx(
-        'is-fullwidth is-full-height has-background-white border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
+        'is-fullwidth is-full-height border-radius-16px is-flex is-align-items-center is-justify-content-center ml-neg8',
         styles['user-count'],
       )}>
         <p className="is-size-8 has-text-weight-semibold">+{users.length - 3}</p>

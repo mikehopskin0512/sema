@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import $ from 'cash-dom';
 
 import TagsModal from './TagsModal';
 import EmojiSelection from './EmojiSelection';
@@ -15,6 +16,7 @@ import {
   DELETE_OP, SELECTED, EMOJIS,
 } from './constants';
 import LoginBar from './LoginBar';
+import { saveSmartComment } from './modules/content-util';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -53,8 +55,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 const Semabar = (props) => {
+  const {
+    isLoggedIn,
+    isWaitlist,
+    id,
+  } = props;
   const [isHover, setHover] = useState(false);
+  const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
+  const activeElement = $(`#${id}`).prev().get(0);
+
+  const activeElementValue = activeElement?.value;
+  const isCommentSaved = lastSavedComment === activeElementValue;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -174,9 +186,18 @@ const Semabar = (props) => {
       </div>
     );
   };
+  const saveComment = async () => {
+    try {
+      await saveSmartComment({ comment: activeElementValue });
+      setLastSavedComment(activeElementValue);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('error', e);
+    }
+  };
 
   // eslint-disable-next-line react/destructuring-assignment
-  if (props.isLoggedIn && !props.isWaitlist) {
+  if (isLoggedIn && !isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
@@ -190,6 +211,7 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
             isSelectingEmoji={props.isSelectingEmoji}
             toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
+            id={props.id}
           />
         </div>
         <div
@@ -204,6 +226,20 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
+          <div className="sema-login-bar--separator" />
+          {isCommentSaved ? (
+            <span style={{ color: '#909AA4' }}>Saved!</span>
+          ) : (
+            <button
+              type="button"
+              disabled={!activeElementValue}
+              className="sema-button sema-is-small sema-button--save-comment"
+              onClick={saveComment}
+            >
+              <span>+</span>
+              Save
+            </button>
+          )}
         </div>
       </>
     );

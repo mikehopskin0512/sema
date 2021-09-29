@@ -1,3 +1,8 @@
+resource "aws_ssm_parameter" "apollo_chrome_extension_id" {
+  name  = "/${var.env}/apollo/chrome/extensionid"
+  type  = "String"
+  value = "nompfgddpldjighjfnkncgehjdbcphbf"
+}
 resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
   name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
   type  = "String"
@@ -96,7 +101,7 @@ resource "aws_ssm_parameter" "apollo_sendgrid_api-key" {
 resource "aws_ssm_parameter" "apollo_sendgrid_sender" {
   name  = "/${var.env}/apollo/sendgrid/sender"
   type  = "String"
-  value = "info@semasoftware.com"
+  value = "info@semasoftware.io"
 }
 resource "aws_ssm_parameter" "apollo_token_life" {
   name  = "/${var.env}/apollo/token/life"
