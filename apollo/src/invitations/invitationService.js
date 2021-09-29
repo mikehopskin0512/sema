@@ -52,6 +52,11 @@ export const findById = async (id) => {
   }
 };
 
+export const checkIfInvited = async (recipient) => {
+  const invitation = await Invitation.find({ recipient });
+  return invitation;
+};
+
 export const findByToken = async (token) => {
   try {
     const query = Invitation.findOne({ token });
