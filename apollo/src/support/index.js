@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version } from '../config';
+import { version, sendgrid } from '../config';
 import logger from '../shared/logger';
 import { sendEmail } from '../shared/emailService';
 
@@ -20,7 +20,7 @@ export default (app, passport) => {
             templateName: 'feedbackSupportAdmin',
             sender: {
                 name: `${email} via Sema`,
-                email: "info@semasoftware.io"
+                email: sendgrid.defaultSender
             },
             email,
             title,
