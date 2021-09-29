@@ -39,9 +39,8 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/', async (req, res) => {
+  route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
-    console.log(req.query, 'query')
     try {
       const comments = await filterSmartComments({author, reviewer, repoId});
       return res.status(201).send({

@@ -60,8 +60,8 @@ export const getSmartComments = async ({ repo }) => {
 
 export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
-    let filter = {}
-    let dateFilter = { createdAt: { } }
+    let filter = {};
+    let dateFilter = { createdAt: { } };
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -576,7 +576,7 @@ export const getSmartCommentsOverview = async ({ reviewer, author, repoId, start
   try {
     const filter = { reviewer, author, repoId, startDate, endDate };
     const totalReactions = {};
-    const totalTags = {}
+    const totalTags = {};
     const smartComments = await filterSmartComments(filter);
     smartComments.map((comments) => {
       const { tags, reaction } = comments;
@@ -584,15 +584,15 @@ export const getSmartCommentsOverview = async ({ reviewer, author, repoId, start
         tags.map((tag) => {
           const { _id: tagId } = tag;
           if (totalTags?.[tagId]) {
-            totalTags[tagId]++
+            totalTags[tagId]++;
           } else {
-            totalTags[tagId] = 1
+            totalTags[tagId] = 1;
           }
-        })
+        });
       }
       if (reaction) {
         if (totalReactions?.[reaction]) {
-          totalReactions[reaction]++
+          totalReactions[reaction]++;
         } else {
           totalReactions[reaction] = 1;
         }
