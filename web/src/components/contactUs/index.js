@@ -16,8 +16,8 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
         </div>
       </div>
 
-      <div className="ml-30 is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-touch">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium mx-20 my-5 px-50', styles.button)} type="button">Email</button>
+      <div className={clsx("is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile", styles['contact-us-desktop'])}>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mr-20 my-5 px-50', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium mx-20 my-5 px-50', styles.button)}
@@ -30,7 +30,7 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
       </div>
 
       <div className="is-hidden-desktop mt-10">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10', styles.button)} type="button">Email</button>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10 mr-20', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10', styles.button)}

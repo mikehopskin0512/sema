@@ -10,6 +10,7 @@ import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import GlobalSearch from '../../components/globalSearch';
 import Loader from '../../components/Loader';
+import { DEFAULT_COLLECTION_NAME } from '../../utils/constants';
 
 const NUM_PER_PAGE = 9;
 
@@ -25,18 +26,18 @@ const CommentCollections = () => {
   const { query: { cid }, pathname } = router;
   const { user, isFetching } = useSelector((state) => state.authState);
   const { collections } = user;
-
+  const sortedCollections = [...collections].sort((_a, _b) => {
+    const a = _a.collectionData.name.toLowerCase();
+    const b = _b.collectionData.name.toLowerCase();
+    if (a === DEFAULT_COLLECTION_NAME) return -1;
+    if (b === DEFAULT_COLLECTION_NAME) return 1;
+    return a >= b ? 1 : -1
+  })
   const [page, setPage] = useState(1);
   const [collectionId, setCollectionId] = useState(null);
-  const [activeCollections, setActiveCollections] = useState([]);
-  const [otherCollections, setOtherCollections] = useState([]);
-
   const isNewCommentModalOpen = !!collectionId;
-
-  useEffect(() => {
-    setActiveCollections(collections.filter((collection) => collection.isActive));
-    setOtherCollections(collections.filter((collection) => !collection.isActive));
-  }, [pathname, collections]);
+  const activeCollections = sortedCollections.filter((collection) => collection.isActive);
+  const otherCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
