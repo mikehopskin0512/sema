@@ -39,3 +39,8 @@
     height: auto !important;
   }
 }
+
+.stat-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

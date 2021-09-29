@@ -14,9 +14,9 @@ import {
 const mapStateToProps = (state, ownProps) => {
   const { semasearches, user } = state;
   const semaSearchState = semasearches[ownProps.id];
+
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
-    commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
     // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
@@ -41,6 +41,8 @@ const SearchBar = (props) => {
 
   const suggestionModalDropdownRef = useRef(null);
 
+  const { commentBox } = props;
+
   const getSemaSuggestions = (value, userId) => {
     toggleIsLoading(true);
     const URL = `${SUGGESTION_URL}${value}&user=${userId}`;
@@ -48,9 +50,12 @@ const SearchBar = (props) => {
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data?.searchResults?.result || []);
+        props.toggleSearchModal({ isOpen: true });
+      })
+      .catch(() => {
+        props.toggleSearchModal({ isOpen: false });
       })
       .finally(() => {
-        props.toggleSearchModal({ isOpen: true });
         toggleIsLoading(false);
       });
   };
@@ -66,18 +71,18 @@ const SearchBar = (props) => {
       getSuggestionsDebounced.current(value, props.userId);
     } else {
       getSuggestionsDebounced.current.cancel();
+      props.toggleSearchModal({ isOpen: false });
     }
   };
 
   const onInsertPressed = (id, suggestion) => {
-    const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
+    const value = commentBox.value ? `${commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
-    props.commentBox.value = `${value}${suggestion}`;
+    commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
-    setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
     props.onLastUsedSmartComment(suggestion);
-    props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
+    commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
   };
 
@@ -85,7 +90,8 @@ const SearchBar = (props) => {
     const commentPlaceholder = chrome.runtime.getURL(
       'img/comment-placeholder.png',
     );
-    const noResults = chrome.runtime.getURL('img/no-results.png');
+    // TODO: need to add different color icons for dimmed and dark mode
+    const noResults = chrome.runtime.getURL('img/no-results-light.svg');
     const loader = chrome.runtime.getURL('img/loader.png');
     if (isLoading) {
       return (
@@ -159,14 +165,18 @@ const SearchBar = (props) => {
   const resetSearch = () => {
     props.handleChange('');
     setSearchResults([]);
-    props.toggleSearchModal();
+    props.toggleSearchModal({ isOpen: false });
   };
 
   const handleKeyPress = (event) => {
     const isEscKey = event.keyCode === 27;
+    const isEnterKey = event.keyCode === 13;
     if (isEscKey) {
       event.preventDefault();
       resetSearch();
+    } else if (isEnterKey) {
+      event.preventDefault();
+      props.toggleSearchModal({ isOpen: true });
     }
   };
 
@@ -230,30 +240,6 @@ const SearchBar = (props) => {
                   // eslint-disable-next-line react/destructuring-assignment
                   onLastUsedSmartComment={props.onLastUsedSmartComment}
                 />
-                <div className="sema-dropdown-footer">
-                  <div style={{ marginTop: 'auto' }}>
-                    <a
-                      href={SEMA_WEB_COLLECTIONS}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="fas fa-cog"
-                        style={{ color: '#56626E', fontSize: '16px' }}
-                      />
-                    </a>
-                  </div>
-                  <div className="sema-logo__alt">
-                    <img
-                      width={18}
-                      className="sema-mr-1"
-                      src={chrome.runtime.getURL('img/tray-logo.svg')}
-                      alt="sema logo"
-                    />
-                    {' '}
-                    Powered by Sema
-                  </div>
-                </div>
               </>
             )}
           </div>
