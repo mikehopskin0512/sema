@@ -85,6 +85,7 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     const smartComments = await query.lean()
       .populate('userId')
       .populate('tags')
+      .sort('-createdAt')
       .exec();
 
     return smartComments;
