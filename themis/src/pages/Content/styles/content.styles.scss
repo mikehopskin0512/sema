@@ -525,6 +525,7 @@ h6 {
     top: -4px;
     border-radius: 10px;
     padding-top: 12px;
+    padding-bottom: 0;
     overflow: hidden;
     margin: 0;
     background: var(--color-emoji-bg);
@@ -609,6 +610,28 @@ h6 {
   border-color: var(--color-text-input-border);
 }
 
+.tags-modal {
+  display: flex;
+
+  &--column {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  &--separator {
+    width: 26px;
+    margin: 21px 0 19px;
+    border: 1px dashed #BFCBD3;
+  }
+
+  .sema-tag {
+    margin-bottom: 8px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+}
+
 .tags-selection {
   width: auto;
   border-color: var(--color-tags-border);
@@ -616,8 +639,17 @@ h6 {
   margin-top: 4px;
   right: 0;
   left: auto;
+
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
+    padding-bottom: 0;
+    margin: 0;
+    width: fit-content;
+  }
+
+  .sema-dropdown-item {
+    margin: 0;
+    padding: 0 10px 2px;
   }
 }
 
@@ -704,6 +736,22 @@ h6 {
   cursor: pointer;
 }
 
+.learn-more-link {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #F0F2F4;
+  padding: 10px 20px 14px;
+
+  a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0081A7;
+    text-decoration: underline;
+  }
+}
+
 .suggestion-guide-link-title {
   font-size: 12px;
   font-weight: 400;
@@ -729,10 +777,7 @@ h6 {
 
 .tags-selection-header {
   display: flex;
-  background-color: var(--color-tags-header-bg);
   color: var(--color-tags-header-font);
-  padding: 10px 20px;
-  font-weight: 600;
 }
 
 #sema-reminder-root {

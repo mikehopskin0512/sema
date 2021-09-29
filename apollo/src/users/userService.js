@@ -420,3 +420,13 @@ export const addRepositoryToIdentity = async (user, repository) => {
     throw (error);
   }
 };
+
+export const revokeInvitation = async (senderEmail) => {
+  try {
+    await User.findOneAndUpdate({ username: senderEmail }, { $inc: { inviteCount: 1 }});
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  } 
+};

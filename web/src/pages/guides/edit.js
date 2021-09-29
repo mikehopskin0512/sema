@@ -42,7 +42,7 @@ const EditEngGuidesPage = () => {
   useEffect(() => {
     let data = [];
     engGuidesState.engGuides.forEach((item) => {
-      data = [...data, ...item.collectionData.comments.map((comment) => ({
+      data = [...data, ...item.collectionData.comments.filter(item => guides.split(',').includes(item._id)).map((comment) => ({
         ...comment,
         collections: comment.collections.map((c) => c._id),
         tags: comment.tags.filter((t) => t.type !== 'language').map((t) => ({ value: t.id, label: t.label })),
