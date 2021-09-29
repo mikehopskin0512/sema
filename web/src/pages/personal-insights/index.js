@@ -15,7 +15,7 @@ import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 
-const { getUserComments, getUserReceivedComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
+const { getUserComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
@@ -51,15 +51,13 @@ const PersonalInsights = () => {
     startDate: null,
     endDate: null,
   })
-  // const [groupBy, setGroupBy] = useState('');
-  // const [dateDiff, setDateDiff] = useState();
 
   const fetchUserComments = async (username) => {
-    await dispatch(getUserComments(username, token))
+    await dispatch(getUserComments({ author: username }, token))
   };
 
   const fetchUserReceivedComments = async (username) => {
-    await dispatch(getUserReceivedComments(username, token))
+    await dispatch(getUserComments({ requester: username }, token))
   }
 
   const getUserSummary = async (username) => {
