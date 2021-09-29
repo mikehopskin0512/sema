@@ -8,12 +8,19 @@ export {
   RegisterHelmet,
   InvitesHelmet,
   UserManagementHelmet,
+  SuggestedCommentsHelmet,
+  ActivityLogHelmet,
+  CommentCollectionsHelmet,
+  ProfileHelmet,
+  RepoStatsHelmet,
+  HelpSupportHelmet,
 } from './values';
 
-const HelmetComponent = ({ title, description }) => (
+const HelmetComponent = ({ title, description, children }) => (
   <Helmet>
     <title>{title}</title>
     { description && <meta name="description" content={description} /> }
+    {children}
   </Helmet>
 );
 

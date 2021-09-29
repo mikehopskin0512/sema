@@ -1,340 +1,181 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import clsx from 'clsx';
-import { useForm } from 'react-hook-form';
-import { isEmpty } from "lodash";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
+import { repositoriesOperations } from '../../state/features/repositories';
+import { collectionsOperations } from '../../state/features/collections';
+import { authOperations } from '../../state/features/auth';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
-import { isExtensionInstalled } from '../../utils/extension';
-import Carousel from '../../components/utils/Carousel';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
-import Toaster from '../../components/toaster';
-import SupportForm from '../../components/supportForm';
-import InvitationsGrid from '../../components/invitationsGrid';
+import { suggestCommentsOperations } from '../../state/features/suggest-comments';
+import OnboardingModal from '../../components/onboarding/onboardingModal';
+import ReposView from '../../components/repos/reposView';
+import Loader from '../../components/Loader';
 
-import { invitationsOperations } from '../../state/features/invitations';
-import { alertOperations } from '../../state/features/alerts';
+const { fetchRepoDashboard } = repositoriesOperations;
+const { findCollectionsByAuthor, createCollections } = collectionsOperations;
+const { createSuggestComment } = suggestCommentsOperations;
+const { updateUser } = authOperations;
 
-import styles from './dashboard.module.scss';
+const Dashboard = () => {
+  const router = useRouter();
+  const { step, page = parseInt(step) } = router.query;
 
-const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
-
-const { clearAlert } = alertOperations;
-const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
-
-const Invite = () => {
+  const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
+  const [semaCollections, setSemaCollections] = useState([]);
+  const [collectionState, setCollection] = useState({ personalComments: true });
+  const [isOnboardingModalActivea, toggleOnboardingModalActive] = useState(false);
+  const isOnboardingModalActive = false
+  const [onboardingPage, setOnboardingPage] = useState(1);
+  const [comment, setComment] = useState({});
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState, reset, setError } = useForm();
-  const { errors } = formState;
-  // Import state vars
-  const { alerts, auth, invitations } = useSelector((state) => ({
-    alerts: state.alertsState,
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
-    invitations: state.invitationsState,
+    repositories: state.repositoriesState,
   }));
+  const { token, user } = auth;
+  const { identities, isOnboarded = null} = user;
 
-  const [isPluginInstalled, togglePluginInstalled] = useState(false);
-  const [title, setTitle] = useState('You&apos;re almost there!');
-  const [buttonText, setButtonText] = useState('Install Chrome Plugin');
-  const [body2, setBody2] = useState('Learn more about Sema while you wait...');
-  const [tableHeader, setTableHeader] = useState('Sema is better with friends');
-  const [loading, setLoading] = useState(false);
-  const [isCardVisible, toggleCard] = useState(true);
-  const [recipient, setRecipient] = useState("");
-  const [supportForm, setSupportForm] = useState(false);
-
-  const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user, userVoiceToken } = auth;
-  const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0} = user;
-  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
-  const [currentOrg = {}] = organizations;
-  const { id: orgId, orgName } = currentOrg;
-
-  const onSubmit = async (data) => {
-    if (inviteCount > 0 || user.isSemaAdmin) {
-      const { email } = data;
-      // Build invitation data
-      const invitation = {
-        recipient: email,
-        orgId,
-        orgName,
-        sender: userId,
-        senderName: fullName,
-        senderEmail,
-        inviteCount
-      };
-      // Send invite & reset form
-      setRecipient(email);
-      const response = await dispatch(createInviteAndHydrateUser(invitation, token));
-      if (response.status === 201) {
-        reset();
-      } else {
-        setError("email", {
-          type: "manual",
-          message: response.data.message
-        });
-      }
-      await dispatch(getInvitesBySender(userId, token));
-    }
+  const nextOnboardingPage = (currentPage) => {
+    setOnboardingPage(currentPage + 1);
+    setOnboardingProgress({...onboardingProgress, page: currentPage + 1});
   };
 
-  useEffect(() => {
-    if (isPluginInstalled) {
-      setTitle('Install Complete');
-      setButtonText('Continue');
-      setBody2('Here&apos;s how to use Sema');
+  const previousOnboardingPage = (currentPage) => {
+    setOnboardingPage(currentPage - 1);
+    setOnboardingProgress({...onboardingProgress, page: currentPage -1});
+  };
+
+  const toggleCollection = (field) => {
+    const newCollection = { ...collectionState };
+    newCollection[field] = !newCollection[field];
+    setCollection(newCollection);
+  };
+
+  const handleCommentFields = (e) => {
+    setComment({ ...comment, [e.target.name]: e.target.value });
+  };
+
+  const getUserRepos = useCallback(() => {
+    if (identities && identities.length) {
+      const githubUser = identities[0];
+      const externalIds = githubUser?.repositories?.map((repo) => repo.id);
+      dispatch(fetchRepoDashboard(externalIds, token));
     }
-  }, [isPluginInstalled]);
+  }, [dispatch, token]);
 
   useEffect(() => {
-    let interval;
-    interval = setInterval(async () => {
-      if (isPluginInstalled) {
-        clearInterval(interval);
-      }
-      setLoading(true);
-      const res = await isExtensionInstalled();
-      togglePluginInstalled(res);
-      setLoading(false);
-    }, 5000);
-    dispatch(getInvitesBySender(userId, token));
+    getUserRepos();
+  }, [auth, getUserRepos]);
+
+  useEffect(() => {
+    getCollectionsByAuthor('sema');
   }, []);
 
+  const getCollectionsByAuthor = async (author) => {
+    const defaultCollections = await dispatch(findCollectionsByAuthor(author, token));
+    setSemaCollections(defaultCollections);
+  };
+
   useEffect(() => {
-    if (showAlert === true) {
-      dispatch(clearAlert());
+    if (!_.isEmpty(onboardingProgress)) {
+      setOnboardingPage(onboardingProgress.page || 1);
     }
-  }, [showAlert, dispatch]);
+  }, [onboardingProgress]);
 
-  const resendInvitation = async (email) => {
-    await dispatch(resendInvite(email, token));
-  };
-
-  const revokeInvitation = (invitationId, recipient) => {
-    dispatch(revokeInviteAndHydrateUser(invitationId, user._id, token, recipient))
-  };
-
-  const buttonAction = () => {
-    if (isPluginInstalled) {
-      toggleCard(false);
-      return;
+  useEffect(() => {
+    if (page && typeof page === 'number') {
+      setOnboardingPage(page);
+      setOnboardingProgress({ ...onboardingProgress, page });
+      toggleOnboardingModalActive(true);
     }
-    window.location.href = EXTENSION_LINK;
-  };
+  }, [page]);
 
-  const openSupportForm = () => setSupportForm(true);
-  const closeSupportForm = () => setSupportForm(false);
-
-  const renderIcon = () => {
-    if (!isPluginInstalled) {
-      return (
-        <div className="mb-50">
-          <img src="/img/logo_loader.gif" />
-          <p>Searching for plugin...</p>
-        </div>
-      );
-    }
-    return (
-      <>
-        <div className="mb-50">
-          <p className={'subtitle px-120'}>Here's how to get started using the plugin in Github:</p>
-          <img src="/img/product-demo.gif" width="600px" className="colored-shadow"/>
-        </div>
-      </>
-    );
-  };
-
-  const renderErrorMessage = () => {
-    if (!isEmpty(errors)) {
-      const error = errors.email.message;
-      if (error.search("has already been invited by another user.") >= 0) {
-        return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
+  const createUserCollection = async () => {
+    const { username } = identities[0];
+    const userCollection = {
+      name: 'My Comments',
+      description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
+      author: username,
+      // isActive: collectionState.personalComments,
+      isActive: true,
+      comments: [],
+    };
+    if (collectionState.personalComments) {
+      if (!_.isEmpty(comment)) {
+        const suggestedComment = await dispatch(createSuggestComment({ ...comment }, token));
+        userCollection.comments.push(suggestedComment._id);
       }
-      return error;
     }
+    const personalCollection = await dispatch(createCollections({ collections: [userCollection] }, token));
+    return personalCollection;
   };
 
-  return (
-    <>
-      <Helmet { ...DashboardHelmet } />
-      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <SupportForm active={supportForm} closeForm={closeSupportForm} />
-      <section className={clsx("hero", styles.container)}>
-        <div className="hero-body">
-          <div className={clsx('container', styles['styled-container'])}>
-            <p className={'title has-text-centered is-size-1 m-15 mb-25'}>
-              Welcome to Sema!
-            </p>
-            <PluginStateCard
-              title={title}
-              buttonText={buttonText}
-              loading={loading}
-              isCardVisible={isCardVisible}
-              buttonAction={buttonAction}
-              renderIcon={renderIcon}
-            />
-            <p
-              className={
-                'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
-              }
-              dangerouslySetInnerHTML={{ __html: tableHeader }}
-            />
-            <p
-              className={
-                'subtitle has-text-centered has-text-weight-semibold is-size-4 is-size-5-mobile mb-20'
-              }
-            >
-              <span className={clsx('tag is-success is-size-4 is-size-6-mobile m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
-              Invites Available
-            </p>
-            <div className="tile is-ancestor">
-              <div className="tile is-parent is-vertical">
-                <div className={clsx('tile is-child mb-0')}>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className={styles.tableForm}>
-                      <div className={`is-fullwidth px-20`}>
-                        <div className="field is-flex-mobile is-flex-direction-column">
-                          <label className="label has-text-white">Username</label>
-                          <div className={clsx("control has-icons-right is-inline-block mr-25", styles['invite-input'])}>
-                            <input
-                              className={clsx(
-                                `input mr-25`,
-                                errors?.email && 'is-danger',
-                              )}
-                              type="email"
-                              placeholder="tony@starkindustries.com"
-                              {
-                              ...register(`email`,
-                                {
-                                  required: 'Email is required',
-                                  pattern: {
-                                    value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                                    message: 'Invaild email format'
-                                  },
-                                })
-                              }
-                            />
-                            <span className="icon is-small is-right is-clickable has-text-dark is-4" onClick={reset}>
-                              <FontAwesomeIcon icon={faTimes} size="sm" />
-                            </span>
-                          </div>
-                          <button
-                            className={clsx(
-                              'button is-white-gray has-text-centered',
-                              styles.formBtn
-                            )}
-                            type="submit"
-                            disabled={!user.isSemaAdmin && inviteCount <= 0}
-                          >
-                            Send Invite
-                            </button>
-                          <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden", styles['invite-input'])}>
-                            <div className="message-body">
-                              {renderErrorMessage()}
-                            </div>
-                          </article>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  <InvitationsGrid type='dashboard' invites={invitations.data} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
-                </div>
-                <PromotionBoard />
-              </div>
-            </div>
-          </div>
-        </div>
-        <ContactUs userVoiceToken={userVoiceToken} openSupportForm={openSupportForm}/>
-      </section>
-    </>
-  );
-};
+  const getActiveCollections = async () => {
+    const userCollections = [];
+    const defaultSemaCollections = ['Philosophies', 'Famous Quotes'];
+    const activeSemaCollectionIds = semaCollections.filter((s) => defaultSemaCollections.includes(s.name)).map((s) => s._id);
+    for (const [key, val] of Object.entries(collectionState)) {
+      if (key === 'personalComments') {
+        const [userCollection] = await createUserCollection();
+        if (userCollection._id) {
+          userCollections.push({ collectionData: userCollection._id, isActive: val });
+        }
+      } else if (activeSemaCollectionIds.includes(key)) {
+        userCollections.push({ collectionData: key, isActive: true })
+      } else {
+        userCollections.push({ collectionData: key, isActive: false })
+      }
+    }
+    return userCollections;
+  };
 
-const PluginStateCard = ({
-  title,
-  buttonText,
-  loading,
-  isCardVisible,
-  buttonAction,
-  renderIcon,
-}) => {
-  return (
-    <div className={clsx("is-hidden-mobile", !isCardVisible && "is-hidden")}>
-      <article
-        className={'notification has-background-white shadow has-text-centered p-50'}
-      >
-        <p
-          className={'title is-size-3 mt-15'}
-          dangerouslySetInnerHTML={{ __html: title }}
-        />
-        <p className={'subtitle px-120 py-20'}>
-          The Sema Chrome Plugin allows us to modify the Github commenting UI
-          and supercharge your code review workflow
-        </p>
-        {renderIcon()}
-        <button
-          type="button"
-          className="button is-primary"
-          onClick={buttonAction}
-        >
-          {buttonText}
-        </button>
-      </article>
-    </div>
-  );
-};
+  const onboardingOnSubmit = async () => {
+    /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
+    // const userCollections = await getActiveCollections();
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
+    setOnboardingProgress({});
+    dispatch(updateUser(updatedUser, token));
+  };
 
-const PromotionBoard = () => {
-  const [heading,] = useState('Learn more about Sema while you wait...');
+  useEffect(() => {
+    if (isOnboarded === null)  {
+      toggleOnboardingModalActive(true);
+    }
+  }, [isOnboarded]);
+
+  if (repositories.isFetching || auth.isFetching) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
+      </div>
+    )
+  }
 
   return (
     <>
-      <p
-        className={clsx(
-          'title has-text-centered has-text-weight-semibold is-size-4 mt-120 mb-50'
-          // styles.tableHeader
-        )}
-        dangerouslySetInnerHTML={{
-          __html: heading,
-        }}
+      <div className='has-background-gray-9 pb-180'>
+        <Helmet {...DashboardHelmet} />
+        <ReposView />
+      </div>
+      <OnboardingModal
+        isModalActive={isOnboardingModalActive}
+        toggleModalActive={toggleOnboardingModalActive}
+        page={onboardingPage}
+        nextPage={nextOnboardingPage}
+        previousPage={previousOnboardingPage}
+        collectionState={collectionState}
+        setCollection={setCollection}
+        toggleCollection={toggleCollection}
+        handleCommentFields={handleCommentFields}
+        comment={comment}
+        setComment={setComment}
+        semaCollections={semaCollections}
+        onSubmit={onboardingOnSubmit}
       />
-      <Carousel />
     </>
   );
 };
 
-const ContactUsContent = ({ userVoiceToken, openSupportForm }) => {
-  return(
-    <>
-      <div className="column is-6">
-        <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
-        <div className="subtitle has-text-white is-size-6">Please share your thoughts with us so we can continue to craft an amazing developer experience</div>
-      </div>
-      <div className="column is-2-widescreen is-offset-1 is-2-tablet">
-        <button onClick={openSupportForm} className="button is-white-gray has-text-primary is-medium is-fullwidth">Email</button>
-      </div>
-      <div className="column is-2-widescreen is-2-tablet">
-        <a className="button is-white-gray has-text-primary is-medium is-fullwidth" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`} target="_blank">Idea Board</a>
-      </div>
-    </>
-  )
-}
-
-const ContactUs = (props) => {
-  return (
-    <>
-      {/* Desktop View */}
-      <div className="mt-20 py-50 px-120 has-background-primary is-flex is-hidden-mobile">
-        <ContactUsContent {...props} />
-      </div>
-      {/* Mobile View */}
-      <div className="mt-20 p-25 has-background-primary is-hidden-desktop">
-        <ContactUsContent {...props} />
-      </div>
-    </>
-  )
-};
-
-export default withLayout(Invite);
+export default withLayout(Dashboard);

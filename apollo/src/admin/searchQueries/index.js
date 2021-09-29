@@ -35,7 +35,6 @@ export default (app, passport) => {
 
       res.writeHead(200, {
         'Content-disposition': 'attachment;filename=' + 'metric.csv',
-        'Content-Length': packer.length
       });
 
       res.end(packer);

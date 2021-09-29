@@ -1,8 +1,11 @@
+import md5 from 'md5';
 import { Router } from 'express';
 import { version, orgDomain } from '../config';
+import { mailchimpAudiences } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import intercom from '../shared/apiIntercom';
+import mailchimp from '../shared/apiMailchimp';
 import { checkAndSendEmail } from '../shared/utils';
 import {
   create, update, patch, findByUsername, findById,
@@ -43,7 +46,6 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { user, invitation } = req.body;
     const { username } = user;
-
     try {
       const existingUser = await findByUsername(username);
       if (existingUser) { throw new errors.BadRequest('User with this email already exists. Please try again.'); }
@@ -58,7 +60,6 @@ export default (app, passport) => {
         throw new errors.BadRequest('User create error');
       }
       const { _id: userId } = newUser;
-
       // If invitation, call joinOrg function
       let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
@@ -88,6 +89,24 @@ export default (app, passport) => {
         });
       }
 
+      // Add user to Mailchimp and suscribe it to Sema - Newsletters
+      const listId = mailchimpAudiences.registeredAndWaitlistUsers;
+      const { firstName, lastName } = newUser;
+
+      try {
+        await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
+          list_id: listId,
+          merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
+          status: 'subscribed',
+          email_type: 'html',
+          email_address: username,
+          tags: ['Registered and Waitlist Users'],
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
+      }
+
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
 
@@ -101,12 +120,13 @@ export default (app, passport) => {
       // await sendEmail(message);
 
       delete newUser.password;
+      delete newUser.collections;
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
       });
     } catch (error) {
       logger.error(error);
-      return res.status(error.statusCode).send(error);
+      return res.status(400).send(error);
     }
   });
 

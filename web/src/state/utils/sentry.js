@@ -2,9 +2,11 @@ import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
+import { alertOperations } from '../features/alerts';
 import { getCookie } from './cookie';
 
 const { refreshJwt } = authOperations;
+const { triggerAlert } = alertOperations;
 
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
 const isServer = () => typeof window === 'undefined';
@@ -31,17 +33,25 @@ const initialize = async (ctx) => {
     const { user = {} } = (jwt) ? jwtDecode(jwt) : {};
     ({ isVerified } = user);
   }
+
   // console.log("user waitlist", ctx.store.getState().authState.user.isWaitlist)
   // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
     !(ctx.pathname).includes('/login') &&
+    !(ctx.pathname).includes('/onboarding') &&
+    !(ctx.pathname).includes('/guides') &&
     !(ctx.pathname).includes('/register') &&
     !(ctx.pathname).includes('/password-reset')
   ) {
     if (!jwt) { redirect(ctx, '/login'); }
     if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, '/login'); }
-    if (!isVerified) { redirect(ctx, '/login'); }
+    if (!isVerified) {
+      ctx.res.setHeader(
+        'Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`],
+      );
+      redirect(ctx, '/login');
+    }
   }
 };
 

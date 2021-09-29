@@ -2,16 +2,15 @@
   "manifest_version": 3,
   "name": "Sema | Smart Code Reviews",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "1.12.0",
+  "version": "1.40.2",
   "background": {
     "service_worker": "background.bundle.js"
   },
   "host_permissions": [
     "*://semasoftware.com/*",
     "https://*.semasoftware.com/*",
-    "http://localhost/*",
-    "*://github.com/*/pull/*",
-    "*://*.github.com/*/pull/*"
+    "*://github.com/*",
+    "*://*.github.com/*/"
   ],
   "permissions": [
     "cookies",
@@ -37,18 +36,21 @@
   "content_scripts": [
     {
       "matches": [
-        "*://github.com/*/pull/*",
-        "*://*.github.com/*/pull/*",
-        "*://localhost/*"
+        "*://github.com/*",
+        "*://*.github.com/*"
       ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
-      "css": ["sema-custom.css", "content.styles.css", "css/all.min.css"]
+      "css": [
+        "css/all.min.css",
+        "css/sema-custom.css",
+        "css/content.styles.css",
+        "css/overwritten-github.styles.css"
+      ]
     }
   ],
   "externally_connectable": {
     "matches": [
-      "*://localhost/*",
       "*://semasoftware.com/*",
       "*://*.semasoftware.com/*"
     ]

@@ -8,7 +8,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/support`, route);
 
-  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.post('/', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
     const { email, title, type, message } = req.body;
 
     try {
@@ -20,7 +20,7 @@ export default (app, passport) => {
             templateName: 'feedbackSupportAdmin',
             sender: {
                 name: `${email} via Sema`,
-                email: "info@semasoftware.com"
+                email: "info@semasoftware.io"
             },
             email,
             title,

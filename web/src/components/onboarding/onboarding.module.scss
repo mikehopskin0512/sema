@@ -1,0 +1,147 @@
+.onboarding-container {
+    background-color: #E5E5E5;
+}
+
+.modal {
+    width: 1040px;
+    height: 600px;
+    @media only screen and (max-width: 768px) {
+        width: auto;
+        height: auto;
+    }
+}
+
+.info {
+    margin-top: -50px;
+    @media only screen and (max-width: 768px) {
+        margin-top: 10px;
+    }
+}
+
+.collection-modal {
+    height: calc(100% - 40px);
+}
+
+.collection-container {
+    max-height: 490px;
+    overflow-y: auto;
+    padding: 10px 0px;
+    overflow-x: hidden;
+}
+
+.btn-footer {
+    position: absolute;
+    height: 50px;
+    bottom: 40px;
+}
+
+.footer-content {
+    position: relative;
+}
+
+.prev {
+    bottom: 20px;
+    position: absolute;
+    // left: 20px;
+}
+
+.next {
+    bottom: 20px;
+    position: absolute;
+    right: 40px;
+}
+
+.skip {
+    bottom: 20px;
+    position: absolute;
+    right: 120px;
+}
+
+.comment-modal {
+    height: calc(100% - 40px);
+}
+
+.extension-modal {
+    height: calc(100% - 110px);
+}
+
+.ul{
+    list-style-type:none;
+    li{
+        color: #C4C4C4;
+        position: relative;
+        display: inline-block;
+        background-color: #C4C4C4;
+        border-radius: 100px;
+        vertical-align: middle;
+        min-width: 12px;
+        min-height: 12px;
+        padding: 0px;
+        transition: all .3s ease;
+        margin-right: 5px;
+        cursor: hand;
+        cursor: pointer;
+        &:hover{
+            opacity:0.6;
+        }
+    }
+}
+
+.active{
+    min-width: 15px !important;
+    min-height: 15px !important;
+    background-color: #1394BA !important;
+    &:hover{
+        opacity:1;
+    }
+}
+
+.animation-container {
+    background-image: url('/img/onboarding_bg.png');
+    background-position: center;
+    background-size: cover;
+}
+
+.space {
+    width: 52.66px;
+}
+
+.animation-gradient {
+    position:absolute;
+    left:0; top:0;
+    width:100%; height:100%;
+    z-index: 100;
+    background-image: linear-gradient( to bottom, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -moz-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -ms-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -o-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+    background-image: -webkit-linear-gradient( top, 
+        rgba( 0, 0, 0, 0 ) 80%, 
+        rgba( 0, 0, 0, 0.8 ) 100% );
+}
+
+.relative {
+    position: relative;
+}
+
+.chrome-button {
+    width: 25px;
+}
+
+.footer {
+    @media only screen and (max-width: 768px) {
+        margin-top: 25px;
+    }
+}
+
+.loader {
+    width: 25px;
+}

@@ -48,3 +48,9 @@ export const fetchGithubToken = async (externalSourceId) => {
     );
   }
 };
+
+export const getRepositoryList = async (token) => {
+  const octokit = new Octokit({ auth: `token ${token}` });
+  const { data } = await octokit.request('GET /user/repos');
+  return data;
+};

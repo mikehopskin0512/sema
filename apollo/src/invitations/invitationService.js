@@ -1,9 +1,10 @@
+import { subDays } from 'date-fns';
 import * as Json2CSV from 'json2csv';
 import Invitation from './invitationModel';
 import User from '../users/userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { generateToken } from '../shared/utils';
+import { fullName, generateToken } from '../shared/utils';
 
 export const create = async (invitation) => {
   try {
@@ -51,6 +52,11 @@ export const findById = async (id) => {
   }
 };
 
+export const checkIfInvited = async (recipient) => {
+  const invitation = await Invitation.find({ recipient });
+  return invitation;
+};
+
 export const findByToken = async (token) => {
   try {
     const query = Invitation.findOne({ token });
@@ -94,7 +100,7 @@ export const getInvitationsBySender = async (params) => {
       query.where('recipient', new RegExp(search, 'gi'))
     }
 
-    const invites = await query.lean().exec();
+    const invites = await query.populate('sender').lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
@@ -144,10 +150,11 @@ export const deleteInvitation = async (_id) => {
   }
 };
 
-export const getInviteMetrics = async (type) => {
+export const getInviteMetrics = async (type, timeRange) => {
   try {
+    const startDate = timeRange === 'all' ? '' : subDays(new Date(), parseInt(timeRange, 10));
     const invites = await Invitation.aggregate([
-      { $match: { createdAt: { $gt: new Date(Date.now() - 604800000) } } },
+      ...startDate ? [{ $match: { createdAt: { $gt: startDate } } }] : [],
       {
         $lookup: {
           from: 'users',
@@ -185,8 +192,8 @@ export const getInviteMetrics = async (type) => {
   }
 };
 
-export const exportInviteMetrics = async (type) => {
-  const metricData = await getInviteMetrics(type);
+export const exportInviteMetrics = async (type, timeRange) => {
+  const metricData = await getInviteMetrics(type, timeRange);
   const mappedMetricData = metricData.map(item => ({
     Email: item.sender && (
       type === 'person'
@@ -209,6 +216,23 @@ export const exportInviteMetrics = async (type) => {
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedMetricData);
+
+  return csv;
+};
+
+export const exportInvitations = async (params) => {
+  const invites = await getInvitationsBySender(params);
+  const mappedData = invites.map((item) => ({
+    Sender: fullName(item.sender),
+    Recipient: item.isPending ? item.recipient : fullName(item.user),
+    Status: item.isPending ? 'Pending Invite' : 'Accepted',
+  }));
+
+  const { Parser } = Json2CSV;
+  const fields = ['Sender', 'Recipient', 'Status'];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
 
   return csv;
 };

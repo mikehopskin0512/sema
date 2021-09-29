@@ -1,0 +1,115 @@
+[
+  {
+    "name": "mitre",
+    "url": "https://cwe.mitre.org/index.html",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bda"
+  },
+  {
+    "name": "sonarsource",
+    "url": "https://rules.sonarsource.com",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bdb"
+  },
+  {
+    "name": "Kat",
+    "url": "https://Kat",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bdc"
+  },
+  {
+    "name": "Sema",
+    "url": "semasoftware.com",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bdd"
+  },
+  {
+    "name": "Star Trek",
+    "url": "https://en.wikipedia.org/wiki/Star_Trek",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bde"
+  },
+  {
+    "name": "Star Wars",
+    "url": "https://en.wikipedia.org/wiki/Star_Wars",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bdf"
+  },
+  {
+    "name": "Iron Man",
+    "url": "https://en.wikipedia.org/wiki/Iron_Man",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be0"
+  },
+  {
+    "name": "Dr. Who",
+    "url": "https://en.wikipedia.org/wiki/Doctor_Who",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be1"
+  },
+  {
+    "name": "Simpsons",
+    "url": "https://en.wikipedia.org/wiki/The_Simpsons",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be2"
+  },
+  {
+    "name": "The Dark Knight, 2008",
+    "url": "https://en.wikipedia.org/wiki/The_Dark_Knight_(film)",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be3"
+  },
+  {
+    "name": "Finding Nemo",
+    "url": "https://en.wikipedia.org/wiki/Finding_Nemo",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be4"
+  },
+  {
+    "name": "The Godfather",
+    "url": "https://en.wikipedia.org/wiki/The_Godfather",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be5"
+  },
+  {
+    "name": "Taxi Driver",
+    "url": "https://en.wikipedia.org/wiki/Taxi_Drive",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be6"
+  },
+  {
+    "name": "Jerry Maguire",
+    "url": "https://en.wikipedia.org/wiki/Jerry_Maguire",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be7"
+  },
+  {
+    "name": "Forrest Gump",
+    "url": "https://en.wikipedia.org/wiki/Forrest_Gump",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be8"
+  },
+  {
+    "name": "Frankenstein",
+    "url": "https://en.wikipedia.org/wiki/Frankenstein",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26be9"
+  },
+  {
+    "name": "Scarface",
+    "url": "https://en.wikipedia.org/wiki/Scarface_(1932_film)",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26bea"
+  },
+  {
+    "name": "The Matrix",
+    "url": "https://en.wikipedia.org/wiki/The_Matrix",
+    "isActive": true,
+    "_id": "60f5ea2d9f694c54a8f26beb"
+  },
+  {
+    "name": "Bojack Horseman",
+    "url": "https://en.wikipedia.org/wiki/BoJack_Horseman",
+    "_id": "60f5ea2d9f694c54a8f26bec"
+  }
+]

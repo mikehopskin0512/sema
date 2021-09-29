@@ -1,4 +1,5 @@
 import * as types from './types';
+import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-comments/types'
 
 const initialState = {
   isFetching: false,
@@ -10,6 +11,30 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
+      const collections = state.user.collections.map((collection) => {
+        if (action.collectionId !== collection.collectionData._id) {
+          return collection
+        }
+        return {
+          ...collection,
+          collectionData: {
+            ...collection.collectionData,
+            comments: [
+              ...collection.collectionData.comments,
+              action.suggestedComment
+            ]
+          }
+        };
+      })
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          collections,
+        },
+      };
+    }
   case types.AUTHENTICATE_REQUEST:
     return {
       ...state,
@@ -115,6 +140,25 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       user: {},
+      error: action.errors,
+    };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
+  case types.TOGGLE_USER_COLLECTION_ACTIVE_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      users: [],
       error: action.errors,
     };
   default:

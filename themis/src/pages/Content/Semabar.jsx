@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import $ from 'cash-dom';
 
-import TagsModal from './TagsModal.jsx';
-import EmojiSelection from './EmojiSelection.jsx';
+import TagsModal from './TagsModal';
+import EmojiSelection from './EmojiSelection';
 
 import {
   toggleTagModal,
@@ -11,12 +12,16 @@ import {
   toggleIsSelectingEmoji,
 } from './modules/redux/action';
 
+import {
+  DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
+} from './constants';
+import LoginBar from './LoginBar';
+import { saveSmartComment } from './modules/content-util';
+
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
   DOWN: 'sema-is-right',
 };
-
-import { DELETE_OP, SELECTED, EMOJIS, SEMA_WEB_LOGIN } from './constants';
 
 const mapStateToProps = (state, ownProps) => {
   const { semabars, github, user } = state;
@@ -39,22 +44,29 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
     toggleTagModal: () => dispatch(toggleTagModal({ id })),
-    updateSelectedEmoji: (emojiObj) =>
-      dispatch(
-        updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true })
-      ),
-    updateSelectedTags: (operation) =>
-      dispatch(updateSelectedTags({ id, operation, isDirty: true })),
+    updateSelectedEmoji: (emojiObj) => dispatch(
+      updateSelectedEmoji({ id, selectedReaction: emojiObj, isDirty: true }),
+    ),
+    // eslint-disable-next-line max-len
+    updateSelectedTags: (operation) => dispatch(updateSelectedTags({ id, operation, isDirty: true })),
 
     toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
 };
 
 const Semabar = (props) => {
+  const {
+    isLoggedIn,
+    isWaitlist,
+    id,
+  } = props;
   const [isHover, setHover] = useState(false);
-  const [dropPosition, setDropPosition] = useState(DROP_POSITIONS.DOWN);
+  const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
+  const activeElement = $(`#${id}`).prev().get(0);
 
+  const activeElementValue = activeElement?.value;
+  const isCommentSaved = lastSavedComment === activeElementValue;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -65,35 +77,35 @@ const Semabar = (props) => {
     }, []);
     return (
       <>
-        {activeTags.map((tag) => {
-          return (
-            <span
-              className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
-              style={{ height: '2.5em' }}
-              key={tag}
-            >
-              {tag}
-              <button
-                className="sema-delete sema-is-small"
-                onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
-              ></button>
-            </span>
-          );
-        })}
+        {activeTags.map((tag) => (
+          <span
+            className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
+            style={{ height: '2.5em' }}
+            key={tag}
+          >
+            {tag}
+            <button
+              aria-label={tag}
+              type="button"
+              className="sema-delete sema-is-small"
+              onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
+            />
+          </span>
+        ))}
       </>
     );
   };
-
   const createAddTags = () => {
-    const { x, y, height, width, offsetPos } = tagsButtonPositionValues;
+    const {
+      y, height, offsetPos,
+    } = tagsButtonPositionValues;
     let dropPosition = DROP_POSITIONS.DOWN;
-    const modalHeight = 300;
-    const modalWidth = 250;
+    const modalHeight = 350;
 
     if (y && height) {
       const vh = Math.max(
         document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
+        window.innerHeight || 0,
       );
 
       const availableHeight = vh - (y + height);
@@ -105,7 +117,7 @@ const Semabar = (props) => {
       }
     }
 
-    let containerClasses = `sema-dropdown ${dropPosition}${
+    const containerClasses = `sema-dropdown ${dropPosition}${
       props.isTagModalVisible ? ' sema-is-active' : ''
     }`;
 
@@ -117,32 +129,29 @@ const Semabar = (props) => {
      * Prefer to not do it and work with
      * base bulma styles only
      */
-    const dropdownStyle =
-      dropPosition === DROP_POSITIONS.UP
-        ? {
-            left: offsetPos.left + width - modalWidth,
-            top: offsetPos.top - modalHeight,
-          }
-        : { marginTop: '-3.5em' };
+    const dropdownStyle = dropPosition === DROP_POSITIONS.UP
+      ? { top: offsetPos.top - modalHeight }
+      : { marginTop: '-3.5em' };
 
     return (
       <div className={containerClasses} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
+            type="button"
             className="sema-button sema-is-rounded sema-is-small sema-add-tags"
             aria-haspopup="true"
             onClick={(event) => {
               event.preventDefault();
               const {
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
               } = event.currentTarget.getBoundingClientRect();
               setTagsButtonPositionValues({
                 x,
-                y,
-                height,
+                y: targetY,
+                height: targetHeight,
                 width,
                 offsetPos: {
                   left: event.currentTarget.offsetLeft,
@@ -154,7 +163,7 @@ const Semabar = (props) => {
             }}
           >
             <span className="sema-icon sema-is-small">
-              <i className="fas fa-tag"></i>
+              <i className="fas fa-tag" />
             </span>
             <span>Add Tags</span>
           </button>
@@ -164,7 +173,14 @@ const Semabar = (props) => {
           role="menu"
           style={dropdownStyle}
         >
-          <div className="tags-selection-header">All Tags</div>
+          <div className="tags-selection-header">
+            <div className="learn-more-link">
+              All Tags
+              <a href={SEMA_LANDING_FAQ} target="_blank" rel="noreferrer">
+                Learn more about tags
+              </a>
+            </div>
+          </div>
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <TagsModal
@@ -177,8 +193,18 @@ const Semabar = (props) => {
       </div>
     );
   };
+  const saveComment = async () => {
+    try {
+      await saveSmartComment({ comment: activeElementValue });
+      setLastSavedComment(activeElementValue);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('error', e);
+    }
+  };
 
-  if (props.isLoggedIn && !props.isWaitlist) {
+  // eslint-disable-next-line react/destructuring-assignment
+  if (isLoggedIn && !isWaitlist) {
     return (
       <>
         <div className="sema-emoji-container">
@@ -192,6 +218,7 @@ const Semabar = (props) => {
             isReactionDirty={props.isReactionDirty}
             isSelectingEmoji={props.isSelectingEmoji}
             toggleIsSelectingEmoji={props.toggleIsSelectingEmoji}
+            id={props.id}
           />
         </div>
         <div
@@ -206,40 +233,46 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
-        </div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <div className="sema-emoji-container">
-          <span>
-            Please{' '}
-            <a href={SEMA_WEB_LOGIN} target="_blank">
-              Log In
-            </a>{' '}
-            to Sema to get the full code review experience.
-          </span>
-        </div>
-        <div className="sema-tag-container sema-tags-content">
-          <button
-            disabled
-            className="sema-button sema-is-rounded sema-is-small sema-add-tags"
-            aria-haspopup="true"
-            onClick={(event) => {
-              event.preventDefault();
-              props.toggleTagModal();
-            }}
-          >
-            <span className="sema-icon sema-is-small">
-              <i className="fas fa-tag"></i>
-            </span>
-            <span>Add Tags</span>
-          </button>
+          <div className="sema-login-bar--separator" />
+          {isCommentSaved ? (
+            <span style={{ color: '#909AA4' }}>Saved!</span>
+          ) : (
+            <button
+              type="button"
+              disabled={!activeElementValue}
+              className="sema-button sema-is-small sema-button--save-comment"
+              onClick={saveComment}
+            >
+              <span>+</span>
+              Save
+            </button>
+          )}
         </div>
       </>
     );
   }
+  return (
+    <>
+      <LoginBar />
+      <div className="sema-tag-container sema-tags-content">
+        <button
+          type="button"
+          disabled
+          className="sema-button sema-is-rounded sema-is-small sema-add-tags"
+          aria-haspopup="true"
+          onClick={(event) => {
+            event.preventDefault();
+            props.toggleTagModal();
+          }}
+        >
+          <span className="sema-icon sema-is-small">
+            <i className="fas fa-tag" />
+          </span>
+          <span>Add Tags</span>
+        </button>
+      </div>
+    </>
+  );
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Semabar);

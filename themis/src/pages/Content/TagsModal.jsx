@@ -1,33 +1,44 @@
 import React from 'react';
-import { POSITIVE, NEGATIVE, SELECTED, TOGGLE_OP } from './constants';
+import {
+  POSITIVE, NEGATIVE, TOGGLE_OP,
+} from './constants';
 
 function TagsModal({ allTags, toggleTagSelection }) {
-  const getTags = (isPositive) => {
-    const label = isPositive ? POSITIVE : NEGATIVE;
-    return allTags.map((tagObj, index) => {
-      const tag = tagObj[label];
-      const isSelected = tagObj[SELECTED] === label;
-      const classes = `sema-tag sema-is-rounded ${
-        index !== allTags.length - 1 ? 'sema-mb-4' : ''
-      } ${isSelected ? 'sema-is-dark' : 'sema-is-light '}`;
-      return (
-        <span
-          key={tag}
-          className={classes}
-          onClick={() => {
-            toggleTagSelection({ tag, isSelected, op: TOGGLE_OP });
-          }}
-        >
-          {tag}
-        </span>
-      );
-    });
+  const Tag = ({ tag, type }) => {
+    const isSelected = tag.selected === type;
+    const toggleTag = () => {
+      toggleTagSelection({
+        tag: tag[type],
+        isSelected,
+        op: TOGGLE_OP,
+      });
+    };
+    return (
+      <div
+        className={`
+          sema-tag 
+          sema-is-rounded 
+          ${isSelected ? 'sema-is-dark' : 'sema-is-light'}
+        `}
+        style={{ cursor: 'pointer' }}
+        onClick={toggleTag}
+      >
+        {tag[type]}
+      </div>
+    );
   };
 
   return (
-    <div className="sema-columns sema-is-mobile">
-      <div className="sema-column tagsPositiveContainer">{getTags(true)}</div>
-      <div className="sema-column tagsNegativeContainer">{getTags(false)}</div>
+    <div className="tags-modal">
+      <div className="tags-modal--column sema-is-align-items-flex-end">
+        {allTags.map((tag) => <Tag tag={tag} type={POSITIVE} key={tag[POSITIVE]} />)}
+      </div>
+      <div className="tags-modal--column">
+        {allTags.map((tag) => <div className="tags-modal--separator" key={`separator-${tag[POSITIVE]}`} />)}
+      </div>
+      <div className="tags-modal--column">
+        {allTags.map((tag) => <Tag tag={tag} type={NEGATIVE} key={tag[NEGATIVE]} />)}
+      </div>
     </div>
   );
 }

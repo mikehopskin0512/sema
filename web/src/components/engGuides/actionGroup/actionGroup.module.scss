@@ -1,0 +1,11 @@
+.filter-container {
+  border: 1px solid #E3E9EE;
+  box-shadow: 1px 3px 6px rgba(149, 165, 177, 0.1);
+}
+
+.select {
+  width: 250px !important;
+  @media only screen and (max-width: 768px) {
+    width: 100px !important;
+  }
+}

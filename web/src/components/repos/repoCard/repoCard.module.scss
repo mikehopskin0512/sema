@@ -1,0 +1,46 @@
+.card {
+  width: calc(100%/3);
+  max-width: calc(100%/3);
+  @media only screen and (max-width: 769px) {
+    min-width: 100% !important;
+    flex: 1;
+    min-height: auto !important;
+  }
+}
+
+.stat {
+  width: calc(95%/4);
+  @media only screen and (max-width: 769px) {
+    width: calc(95%/2);
+  }
+}
+
+.repo-info {
+  min-height: 120px;
+}
+
+.avatar {
+  border: 1px solid #D6D6D6;
+}
+
+.user-count {
+  background: #CDEFF9 !important;
+  height: 32px;
+  width: 32px;
+  z-index: 10;
+  p {
+    color: #56626E !important;
+  }
+}
+
+.description {
+  height: 3rem;
+  @media only screen and (max-width: 769px) {
+    height: auto !important;
+  }
+}
+
+.stat-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

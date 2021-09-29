@@ -3,7 +3,7 @@ import * as types from './types';
 import {
   getInvite, postInvite, getInvitations,
   patchRedeemInvite, postResendInvite, deleteInvite,
-  getInvitationsMetric, exportInvitationsMetric,
+  getInvitationsMetric, exportInvitationsMetric, exportInvitations,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -165,7 +165,6 @@ export const redeemInvite = (invitationToken, userId, token) => async (dispatch)
     const { data: { response } } = payload;
     dispatch(requestRedeemInviteSuccess(response));
   } catch (error) {
-    console.log(error);
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestRedeemInviteError(errMessage));
@@ -204,10 +203,10 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
   }
 };
 
-export const fetchInviteMetrics = (type) => async (dispatch) => {
+export const fetchInviteMetrics = (type, timeRange) => async (dispatch) => {
   try {
     dispatch(requestFetchInviteMetrics());
-    const payload = await getInvitationsMetric({ type });
+    const payload = await getInvitationsMetric({ type, timeRange });
     const { data: { invites = {} } } = payload;
 
     dispatch(requestFetchInviteMetricsSuccess(invites));
@@ -218,9 +217,9 @@ export const fetchInviteMetrics = (type) => async (dispatch) => {
   }
 };
 
-export const exportInviteMetrics = async (type, token) => {
+export const exportInviteMetrics = async (type, timeRange, token) => {
   try {
-    const payload = await exportInvitationsMetric({ type }, token);
+    const payload = await exportInvitationsMetric({ type, timeRange }, token);
     const { data } = payload;
 
     const url = window.URL.createObjectURL(new Blob([data]));
@@ -228,6 +227,24 @@ export const exportInviteMetrics = async (type, token) => {
 
     link.href = url;
     link.setAttribute('download', `metric_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const exportInvites = async (params, token) => {
+  try {
+    const payload = await exportInvitations(params, token);
+    const {data} = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `invites_${format(new Date(), 'yyyyMMdd')}.csv`);
 
     document.body.appendChild(link);
     link.click();

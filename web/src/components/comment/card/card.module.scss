@@ -1,0 +1,30 @@
+.card {
+  width: calc(100%/3);
+  max-width: calc(100%/3);
+  height: 250px;
+  @media only screen and (max-width: 769px) {
+    max-width: 100% !important;
+    width: 100% !important;
+    flex: 1;
+    min-height: auto !important;
+    height: auto;
+  }
+}
+
+.stat {
+  width: calc(95%/4);
+  @media only screen and (max-width: 769px) {
+    width: calc(100%/2);
+    padding-right: 12px;
+  }
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.add-button {
+  height: 100%;
+}

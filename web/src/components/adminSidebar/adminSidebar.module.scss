@@ -1,0 +1,30 @@
+.sidebar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  min-width: 240px;
+  max-width: 240px;
+  background: #2a113f;
+}
+
+.menu-item {
+  padding: 7px 10px;
+  font-size: 14px;
+
+  &:hover, &:focus {
+    background: #3f2852;
+    outline: none;
+  }
+}
+
+.active {
+  background: #3f2852;
+  outline: none;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 20px;
+  width: calc(100% - 20px);
+}

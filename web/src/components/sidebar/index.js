@@ -1,78 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import clsx from 'clsx';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
+
 import styles from './sidebar.module.scss';
 
-const MenuItem = ({ pathName, icon, name }) => {
-  const router = useRouter();
-
-  const isActiveRoute = () => router.asPath === pathName;
-
+const MenuItem = ({ pathName, icon, name, selectedTab, setSelectedTab }) => {
   return (
-    <Link href={pathName}>
-      <a className={clsx(styles['menu-item'], isActiveRoute(pathName) && styles.active, 'is-flex is-align-items-center mb-10 is-clickable')}>
-        { icon }
-        <span className={clsx(styles['label-menu'], 'has-text-white ml-15')}>{ name }</span>
-      </a>
-    </Link>
-  )
+    <div
+      className={clsx(
+        styles['menu-item'],
+        selectedTab === pathName && styles.active,
+        'is-size-6 has-text-weight-semibold is-flex is-align-items-center is-justify-content-flex-start mb-10 is-clickable'
+      )}
+      onClick={() => setSelectedTab(pathName)}
+    >
+      <FontAwesomeIcon
+        className="is-clickable"
+        icon={icon}
+      />
+      <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
+    </div>
+  );
 };
 
-const Sidebar = () => {
-  const [open, setOpen] = useState(true);
+MenuItem.propTypes = {
+  pathName: PropTypes.string.isRequired,
+  icon: PropTypes.any.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-  useEffect(() => {
-    const isMenuOpen = localStorage.getItem('semo_menu_open');
-    if (isMenuOpen) {
-      setOpen(JSON.parse(isMenuOpen));
-    }
-  }, []);
+const Sidebar = ({ children, ...menuItemProps }) => {
+  const [menus] = useState([
+    // {
+    //   name: 'Overview',
+    //   pathName: '/overview',
+    //   icon: faHome,
+    // },
+    {
+      name: 'Activity Logs',
+      pathName: 'activity',
+      icon: faListAlt,
+    },
+    {
+      name: 'Code Stats',
+      pathName: 'stats',
+      icon: faChartPie,
+    },
+  ]);
 
-  useEffect(() => {
-    localStorage.setItem('semo_menu_open', JSON.stringify(open));
-  }, [open]);
-
-  const menus = [
-    {
-      name: 'Dashboard',
-      pathName: '/dashboard',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'User Management',
-      pathName: '/sema-admin/users',
-      icon: <img src="/img/icons/users.png" alt="" />,
-    },
-    {
-      name: 'Invites',
-      pathName: '/sema-admin/invites',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-    {
-      name: 'Report',
-      pathName: '/sema-admin/reports',
-      icon: <img src="/img/icons/dashboard.png" alt="" />,
-    },
-  ];
   return (
-    <div className={clsx(styles.sidebar, styles[open ? 'open' : 'close'], `p-10 is-flex is-flex-direction-column is-relative is-fullheight`)}>
-      <div className={`is-flex is-align-items-center is-clickable ${open ? 'p-10' : 'px-5 py-10'}`} onClick={() => setOpen(!open)}>
-        <img src="/img/logo_short.png" alt="logo" />
-        {
-          open && <span className="has-text-white is-size-4 ml-10">sema</span>
-        }
-      </div>
-      <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
-        {
-          menus.map(item => (
-            <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} />
-          ))
-        }
+    <div className={clsx(styles['layout-container'], 'pb-70')}>
+      <div className="columns content-container" style={{ maxWidth: '1530px' }}>
+        <div className={clsx("column is-one-fifth")}>
+          <div className={clsx(styles.sidebar, 'ml-40 p-10 is-flex is-flex-direction-column is-fullheight')}>
+            <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25 is-flex-wrap-wrap">
+              {
+                menus.map((item) => (
+                  <MenuItem key={item.pathName} pathName={item.pathName} name={item.name} icon={item.icon} {...menuItemProps}/>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+        <div className="column mr-50 my-50">
+          {children}
+        </div>
       </div>
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  children: PropTypes.element.isRequired,
 };
 
 export default Sidebar;

@@ -1,6 +1,7 @@
-import { GLOBAL_SEMA_SEARCH_ID } from '../../constants';
+import { GLOBAL_SEMA_SEARCH_ID, SEMA_REMINDER_SESSION_STORAGE_KEY } from '../../constants';
 
 const initialState = {
+  isReminderClosed: !!sessionStorage.getItem(SEMA_REMINDER_SESSION_STORAGE_KEY),
   githubMetadata: {
     url: null,
     repo: null,
@@ -9,9 +10,13 @@ const initialState = {
     base: null,
     user: { id: null, login: null },
     requester: null,
+    requesterAvatarUrl: null,
+    commentId: null,
     filename: null,
     file_extension: null,
     line_numbers: [],
+    title: null,
+    clone_url: null,
   },
   github: {
     isTyping: false,
@@ -33,6 +38,7 @@ const initialState = {
       left: null,
     },
   },
+  lastUserSmartComment: null,
 };
 
 export default initialState;

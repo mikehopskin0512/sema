@@ -26,6 +26,7 @@
   --color-add-tags-border: #{v.$color-light-add-tags-border};
 
   --color-title: #{v.$color-light-title};
+  --color-source-name: #{v.$color-font-dark-1};
   --color-content: #{v.$color-light-content};
 
   --color-suggestion-container: #{v.$color-light-btn-container};
@@ -39,6 +40,16 @@
   --color-form-border: #{v.$color-light-form-border};
 
   --color-highlight: #{v.$color-light-highlight};
+
+  --color-emoji-bg: #{v.$color-light-emoji-bg};
+  --color-emoji-font: #{v.$color-light-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-light-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-light-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-light-reminder-border};
+  --color-reminder-font: #{v.$color-light-reminder-font};
+  --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-light-reminder-sign-in-btn-font};
 }
 
 .theme--dark {
@@ -80,6 +91,17 @@
   --color-form-border: #{v.$color-dark-form-border};
 
   --color-highlight: #{v.$color-dark-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-reminder-border};
+  --color-reminder-font: #{v.$color-dark-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-reminder-sign-in-btn-font};
 }
 
 .theme--dark-dimmed {
@@ -121,6 +143,69 @@
   --color-form-border: #{v.$color-dark-dim-form-border};
 
   --color-highlight: #{v.$color-dark-dim-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-dim-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-dim-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-dim-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-dim-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-dim-reminder-border};
+  --color-reminder-font: #{v.$color-dark-dim-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-dim-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-dim-reminder-sign-in-btn-font};
+}
+
+.theme--dark-high-contrast {
+  --color-border: #{v.$color-light-1};
+
+  --color-sema-bg: #{v.$color-dark-high-contrast-bg};
+  --color-sema-border: #{v.$color-dark-high-contrast-border};
+
+  --color-text-input-bg: #{v.$color-dark-high-contrast-bg};
+  --color-text-input-border: #{v.$color-dark-high-contrast-border};
+  --color-text-input-font: #{v.$color-dark-high-contrast-font};
+
+  --color-tags-border: #{v.$color-dark-high-contrast-tags-container-border};
+  --color-tags-background: #{v.$color-dark-high-contrast-tags-container-bg};
+  --color-tags-header-bg: #{v.$color-dark-high-contrast-tags-header-bg};
+  --color-tags-header-font: #{v.$color-dark-high-contrast-tags-header-font};
+
+  --color-tag-font: #{v.$color-dark-high-contrast-tag-font};
+  --color-tag-bg: #{v.$color-dark-high-contrast-tag-bg};
+
+  --color-selected-tag-font: #{v.$color-dark-high-contrast-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-dark-high-contrast-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-dark-high-contrast-add-tags-bg};
+  --color-add-tags-font: #{v.$color-dark-high-contrast-add-tags-font};
+  --color-add-tags-border: #{v.$color-dark-high-contrast-add-tags-border};
+
+  --color-title: #{v.$color-dark-high-contrast-title};
+  --color-content: #{v.$color-dark-high-contrast-content};
+
+  --color-suggestion-container: #{v.$color-dark-high-contrast-btn-container};
+  --color-credit-img: invert(1);
+
+  --color-btn-border: #{v.$color-dark-high-contrast-btn-border};
+
+  --color-scroll-bg: #{v.$color-dark-high-contrast-scroll-bg};
+  --color-scroll-border: #{v.$color-dark-high-contrast-scroll-border};
+
+  --color-form-border: #{v.$color-dark-high-contrast-form-border};
+
+  --color-highlight: #{v.$color-dark-high-contrast-highlight};
+
+  --color-emoji-bg: #{v.$color-dark-high-contrast-emoji-bg};
+  --color-emoji-font: #{v.$color-dark-high-contrast-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-dark-high-contrast-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-dark-high-contrast-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-high-contrast-reminder-border};
+  --color-reminder-font: #{v.$color-dark-high-contrast-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-high-contrast-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-high-contrast-reminder-sign-in-btn-font};
 }
 
 .sema {
@@ -149,8 +234,13 @@
   border: 1px solid var(--color-border);
 }
 
+.sema-dropdown-menu.suggestion-modal {
+  background-color: var(--color-text-input-bg);
+}
+
 .sema-tag-container {
   display: flex;
+  align-items: center;
   flex: 1;
   flex-direction: row;
   margin-left: 50px;
@@ -182,15 +272,12 @@
 
 .sema-tag-container::-webkit-scrollbar-thumb {
   height: 12px;
-  // background-color: rgb(168, 168, 168);
   background-color: var(--color-scroll-bg);
   border-radius: 50px;
   border: 3px solid var(--color-scroll-border);
-  // border: 3px solid rgb(243, 243, 243);
 }
 
 .sema-add-tags {
-  // border-style: dashed;
   border: var(--color-add-tags-border);
   background-color: var(--color-add-tags-bg);
   color: var(--color-add-tags-font);
@@ -204,28 +291,24 @@
   color: var(--color-add-tags-font);
 }
 
-.tagsPositiveContainer > span {
-  cursor: pointer;
-}
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
 
-.tagsNegativeContainer > span {
-  cursor: pointer;
+  span {
+    cursor: pointer;
+  }
 }
 
 .reaction-selection-wrapper {
-  // background-color: white;
-  // border: 1px solid rgb(225, 228, 232);
   background-color: var(--color-sema-bg);
-  border: 1px solid var(--color-btn-border);
-  border-radius: 34px;
-  border-width: 1px;
-  border-style: solid;
-  border-image: initial;
 }
 
-.reaction-selection {
+button.sema-reaction-selection {
   border: unset;
   background: transparent;
+  height: auto;
+  padding-top: 6px;
 }
 
 .expandedEmojis {
@@ -236,33 +319,81 @@
   width: 384px;
   max-height: 462px;
   overflow: auto;
+  border: none;
+  margin-top: 2px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  color: var(--color-text-input-font);
+  border-color: var(--color-text-input-border);
+  pointer-events: all;
+
+  .sema-dropdown-content {
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+    box-shadow: none;
+  }
+
+  .sema-dropdown-item {
+    margin-top: 10px;
+    border: none;
+    box-shadow: none;
+  }
 }
 
 .suggestion-title {
-  font-weight: 600;
-  font-style: normal;
-  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+  overflow: hidden;
   line-height: 16px;
+  letter-spacing: -0.15 px;
   color: var(--color-title);
 }
 
-.suggestion-via {
+.suggestion-name {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.suggestion-source {
   font-weight: 400;
-  font-style: normal;
   font-size: 9px;
-  line-height: 16px;
-  color: var(--color-content);
+  line-height: 10px;
+  white-space: nowrap;
+  color: var(--color-source-name);
 }
 
 .suggestion-content-truncated-container {
+  padding: 10px;
   background: #fbfbfb;
   border: 0.5px solid #c4c4c4;
+  margin-top: 7px;
   box-sizing: border-box;
   border-radius: 4px;
 }
 
+.sema-button.sema-button--save-comment {
+  background: v.$color-github-button-blue;
+  font-size: 12px;
+  padding: 2px 8px;
+  line-height: 16px;
+  height: fit-content;
+  color: #ffffff;
+  border: 0;
+  border-radius: 3px;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  span {
+    margin-right: 4px;
+    transform: rotate(90deg);
+    font-size: 16px;
+  }
+}
+
 .suggestion-content-truncated {
-  margin: 8px 14px 23px 7px;
+  margin-bottom: 16px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -306,6 +437,7 @@ h6 {
 .sema-shadow-root {
   display: inline !important;
   position: relative !important;
+  pointer-events: none;
 }
 
 .sema-mirror {
@@ -322,16 +454,29 @@ h6 {
   white-space: pre-wrap !important;
   border-color: transparent !important;
   overflow: auto !important;
+  overflow-y: hidden !important;
 }
 
 .sema-highlighter {
-  position: absolute;
+  display: inline;
   overflow: hidden;
-  pointer-events: none;
+  position: absolute;
+}
+
+.sema-highlighter-intermediate {
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.sema-highlighter-container {
+  display: block;
+  position: absolute;
 }
 
 .sema-highlighter-content {
   position: absolute !important;
+  display: block;
   border-radius: 4px;
   background: var(--color-highlight);
 }
@@ -346,14 +491,67 @@ h6 {
   height: 2.8em;
   padding-right: 1em;
 
-  .sema-button {
+  .sema-dropdown-trigger .sema-button {
+    padding-right: 20px;
     color: var(--color-title);
-    background-color: var(--color-sema-bg);
-    border-color: var(--color-btn-border);
+
+    :after {
+      content: '';
+      position: absolute;
+      right: 4px;
+      top: 11px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      background: transparent;
+      border-left: 4px solid var(--color-title);
+      border-bottom: 4px solid transparent;
+    }
   }
-  .reaction-selection {
+
+  .sema-button {
+    position: relative;
+    background: none;
+    border: 0;
+
+    &:active {
+      background: rgba(0, 129, 167, 0.05);
+    }
+  }
+  .sema-reaction-selection {
     border: unset;
     background: transparent;
+    font-size: 14px;
+  }
+
+  .sema-dropdown-item {
+    margin-bottom: 4px;
+    margin-top: 0;
+    color: var(--color-emoji-font);
+
+    &:hover {
+      // background: #0081a70d;
+      color: var(--color-emoji-font-hover);
+      background-color: var(--color-emoji-bg-hover);
+    }
+  }
+
+  .sema-dropdown-menu {
+    border: none;
+    padding: 0;
+    left: -8px;
+    top: -8px;
+  }
+
+  .sema-dropdown-content {
+    position: relative;
+    top: -4px;
+    border-radius: 10px;
+    padding-top: 12px;
+    padding-bottom: 0;
+    overflow: hidden;
+    margin: 0;
+    background: var(--color-emoji-bg);
   }
 }
 
@@ -368,20 +566,56 @@ h6 {
 }
 
 .sema-comment-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+
+  &--img {
+    width: 160px;
+    margin-top: 40px;
+  }
+
+  &--title {
+    margin-top: 32px;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19px;
+  }
+
+  &--link {
+    margin-top: 18px;
+    font-size: 16px;
+    line-height: 19px;
+    color: #508bff;
+  }
 }
 
 .sema-is-oblong {
   border-radius: 25px;
 }
 
-.sema-dropdown-footer {
-  color: #4a4a4a;
-  display: block;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  padding: 0.375rem 1rem;
+.sema-logo__alt {
   position: relative;
+  margin-left: auto;
+  display: flex;
+  padding: 4px 8px;
+  width: fit-content;
+  color: #4a4a4a;
+  line-height: 18px;
+  font-size: 10px;
+  border-radius: 21px;
+  background: rgba(183, 183, 183, 0.1);
+}
+
+.sema-dropdown-footer {
+  position: relative;
+  margin-top: auto;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
 }
 
 .sema-input {
@@ -393,33 +627,59 @@ h6 {
   color: var(--color-content);
 }
 
-.suggestion-modal {
-  border-color: var(--color-text-input-border);
-  .sema-dropdown-content {
-    background-color: var(--color-text-input-bg);
-    color: var(--color-text-input-font);
-  }
-}
-
 .suggestion-content-truncated-container {
   background-color: var(--color-text-input-bg);
   color: var(--color-content);
   border-color: var(--color-text-input-border);
 }
 
+.tags-modal {
+  display: flex;
+
+  &--column {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  &--separator {
+    width: 26px;
+    margin: 21px 0 19px;
+    border: 1px dashed #BFCBD3;
+  }
+
+  .sema-tag {
+    margin-bottom: 8px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+}
+
 .tags-selection {
+  width: auto;
   border-color: var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
+  right: 0;
+  left: auto;
+
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
+    padding-bottom: 0;
+    margin: 0;
+    width: fit-content;
   }
-  width: 250px;
+
+  .sema-dropdown-item {
+    margin: 0;
+    padding: 0 10px 2px;
+  }
 }
 
 .sema-tag {
   background-color: var(--color-tag-bg) !important;
   color: var(--color-tag-font) !important;
+  width: fit-content;
 }
 
 .sema-tag.sema-is-dark {
@@ -440,43 +700,98 @@ h6 {
   color: var(--color-content);
 }
 
+.sema-login-bar {
+  display: flex;
+  height: auto;
+  align-items: center;
+
+  .sema-offline-badge {
+    display: flex;
+    align-items: center;
+    background: rgba(246, 224, 224, 1);
+    padding: 3px 4px;
+    border-radius: 4px;
+    margin-right: 6px;
+  }
+
+  .sema-offline-label {
+    color: rgba(222, 54, 23, 1);
+    margin-left: 3px;
+    font-size: 12px;
+  }
+
+  .sema-login-link {
+    text-decoration: underline;
+    font-size: 12px;
+  }
+
+  &--separator {
+    height: 16px;
+    width: 1px;
+    background: #909AA4;
+    margin: 0 10px;
+  }
+}
+
 .login-button {
   // background-color: var(--color-text-input-bg);
   // color: var(--color-text-input-font);
   background-color: #00779a;
   border-color: transparent !important;
   color: #fff !important;
-  box-shadow: 4px 4px 0px rgb(229 42 145 / 10%);
+  box-shadow: 4px 4px 0 rgb(229 42 145 / 10%);
 }
 
 .suggestion-header {
   position: sticky;
   top: 0;
+  background-color: #fff;
   width: 100%;
-  background-color: var(--color-text-input-bg);
-  margin-bottom: 5px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+}
+
+.suggestion-guide-link {
+  display: block;
+  color: #192129;
+  cursor: pointer;
+}
+
+.learn-more-link {
+  display: flex;
+  width: 100%;
   justify-content: space-between;
-  .sema-button {
-    background-color: var(--color-text-input-bg);
-    color: var(--color-text-input-font);
+  align-items: center;
+  background: #F0F2F4;
+  padding: 10px 20px 14px;
+
+  a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0081A7;
+    text-decoration: underline;
   }
 }
 
-.sema-dropdown-menu.suggestion-modal {
-  margin-top: 4px;
-  padding-top: 0px;
+.suggestion-guide-link-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-left: 6px;
+  text-decoration-line: underline;
+  color: #626262;
 }
 
 .sema-dropdown-content {
   margin-top: 8px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .sema-dropdown-item {
   margin-top: 6px;
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .sema-is-form-bordered {
@@ -485,8 +800,102 @@ h6 {
 
 .tags-selection-header {
   display: flex;
-  background-color: var(--color-tags-header-bg);
   color: var(--color-tags-header-font);
-  padding: 10px 20px;
+}
+
+#sema-reminder-root {
+  background: inherit;
+  z-index: 2147483647;
+  position: fixed;
+  left: calc(95vw - #{v.$reminder-width});
+  top: calc(98vh - #{v.$reminder-height});
+  border: 1.5px solid var(--color-reminder-border);
+  color: var(--color-reminder-font);
+}
+
+.reminder-container {
+  width: v.$reminder-width;
+  height: v.$reminder-height;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.reminder-header {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.reminder-header > img {
+  width: 66px;
+}
+
+.reminder-close {
+  width: 12px;
+  cursor: pointer;
+}
+
+.reminder-hero {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reminder-screenshots-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 22px;
+}
+
+.reminder-screenshot1 {
+  position: absolute;
+  width: 158px;
+  height: 177px;
+}
+
+.reminder-screenshot2 {
+  position: absolute;
+  width: 214px;
+  height: 162px;
+  left: 128px;
+  top: 30px;
+}
+
+.reminder-hero > p {
   font-weight: 600;
+  font-size: 15px;
+  line-height: 19.36px;
+  vertical-align: top;
+  // color: #394a64;
+  color: var(--color-reminder-font);
+  text-align: center;
+}
+
+.reminder-hero > button {
+  margin: 22px 0px;
+  height: 45px;
+  width: 225px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  color: var(--color-reminder-github-font);
+  border: 2px solid var(--color-reminder-github-font);
+  background-color: var(--color-reminder-github-bg);
+  border-radius: 4px;
+}
+
+.reminder-hero > button > span {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.reminder-hero > a {
+  color: var(--color-reminder-font);
+  text-decoration: underline;
 }

@@ -5,6 +5,7 @@ import errors from '../shared/errors';
 
 import { findById, validateLogin } from '../users/userService';
 import { validateRefreshToken, setRefreshToken, createRefreshToken, createAuthToken } from './authService';
+import { getTokenData } from '../shared/utils';
 
 const route = Router();
 
@@ -58,9 +59,11 @@ export default (app, passport) => {
         throw new errors.NotFound('No user found');
       }
 
-      await setRefreshToken(res, user, await createRefreshToken(user));
+      const tokenData = getTokenData(user);
 
-      return res.status(201).send({ jwtToken: await createAuthToken(user) });
+      await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
+
+      return res.status(201).send({ jwtToken: await createAuthToken(tokenData) });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

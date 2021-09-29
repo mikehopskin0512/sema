@@ -1,9 +1,13 @@
 /* eslint react/no-danger: 0, max-len: 0 */
+import React from 'react';
+import clsx from 'clsx';
 import Head from 'next/head';
+import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
+import ExtensionStatus from '../extensionStatus';
 
-const withLayout = (Page) => () => (
+const withLayout = (Page) => (props) => (
   <div className="Layout background-foggy-white">
     {/* Styling for full height width */}
     <style global jsx>{`
@@ -41,9 +45,14 @@ const withLayout = (Page) => () => (
       catch(e){window.attachEvent("onload", $buo_f)}
       ` }} />
     </Head>
+    <ExtensionStatus />
     <Header />
-    <Page style={{ backgroundColor: '#FCFCFC' }} />
-    <Footer />
+    <div className={clsx(styles.content, '')}>
+      <Page {...props} />
+    </div>
+    <div className={styles.footer}>
+      <Footer />
+    </div>
   </div>
 );
 

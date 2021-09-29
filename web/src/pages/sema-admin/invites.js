@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import withLayout from '../../components/layout/adminLayout';
 import { invitationsOperations } from '../../state/features/invitations';
@@ -10,9 +10,10 @@ import { alertOperations } from '../../state/features/alerts';
 import FilterTabs from '../../components/admin/filterTabs';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import InvitationsGrid from '../../components/invitationsGrid';
+import ExportButton from '../../components/admin/exportButton';
 
 const { clearAlert } = alertOperations;
-const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
+const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser, exportInvites } = invitationsOperations;
 
 const tabOptions = [
   {
@@ -42,19 +43,19 @@ const InvitesPage = () => {
 
   useEffect(() => {
     dispatch(getInvitesBySender(user._id, token))
-  }, []);
+  }, [dispatch, token, user._id]);
 
-  const getInvites = () => {
+  const getInvites = useCallback(() => {
     if (category === 'your_invites') {
-      dispatch(getInvitesBySender(user._id, token, debounceSearchTerm))
+      dispatch(getInvitesBySender(user._id, token, debounceSearchTerm));
     } else {
-      dispatch(getInvitesBySender(undefined, token, debounceSearchTerm))
+      dispatch(getInvitesBySender(undefined, token, debounceSearchTerm));
     }
-  };
+  }, [category, debounceSearchTerm, dispatch, token, user._id]);
 
   useEffect(() => {
     getInvites();
-  }, [category, debounceSearchTerm]);
+  }, [category, debounceSearchTerm, getInvites]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -70,6 +71,13 @@ const InvitesPage = () => {
     await dispatch(revokeInviteAndHydrateUser(invitationId, user._id, token, recipient));
   };
 
+  const handleExport = () => {
+    exportInvites({
+      senderId: category === 'your_invites' ? user._id : undefined,
+      search: debounceSearchTerm,
+    });
+  };
+
   if (isFetching) {
     return (
       <div className='loading' />
@@ -77,7 +85,7 @@ const InvitesPage = () => {
   }
 
   return (
-    <div className="is-fullheight is-flex is-flex-direction-column px-25 py-25 background-gray-white">
+    <>
       <Helmet {...InvitesHelmet} />
       <h1 className='has-text-black has-text-weight-bold is-size-3'>Invites</h1>
       <p className='mb-15 is-size-6 text-gray-light'>Sema is better with friends. View your invites at a glance</p>
@@ -87,12 +95,17 @@ const InvitesPage = () => {
         </div>
         <div className='is-flex is-justify-content-space-between mb-10'>
           <FilterTabs tabs={tabOptions} value={category} onChange={setCategory} />
-          <SearchInput value={searchTerm} onChange={setSearchTerm} />
+          <div className="is-flex">
+            <SearchInput value={searchTerm} onChange={setSearchTerm} />
+            <div className="ml-10">
+              <ExportButton onExport={handleExport} />
+            </div>
+          </div>
         </div>
         <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
       </div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-    </div>
+    </>
   );
 };
 

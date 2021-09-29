@@ -1,0 +1,16 @@
+.date {
+  color: #606060;
+}
+
+.avatar {
+  height: 70px;
+  width: 70px;
+  @media only screen and (max-width: 768px) {
+    height: 48px;
+    width: 48px;
+  }
+}
+
+.item-comment {
+  word-break: break-all
+}

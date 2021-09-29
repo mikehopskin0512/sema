@@ -12,6 +12,7 @@ import {
   getInviteMetrics,
   exportInviteMetrics,
   redeemInvite,
+  exportInvitations,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
@@ -66,7 +67,7 @@ export default (app, passport) => {
         email: senderEmail,
         sender: {
           name: `${senderName} via Sema`,
-          email: "invites@semasoftware.com",
+          email: "invites@semasoftware.io",
         }
       };
       await sendEmail(message);
@@ -105,10 +106,25 @@ export default (app, passport) => {
     }
   });
 
+  route.post('/export', async (req, res) => {
+    try {
+      const packer = await exportInvitations(req.body);
+
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=' + 'invites.csv',
+      });
+
+      res.end(packer);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
   route.get('/metric', async (req, res) => {
     try {
-      const { type } = req.query;
-      const invites = await getInviteMetrics(type);
+      const { type, timeRange } = req.query;
+      const invites = await getInviteMetrics(type, timeRange);
 
       return res.status(200).send({
         invites,
@@ -121,13 +137,12 @@ export default (app, passport) => {
 
   route.post('/metric/export', async (req, res) => {
     try {
-      const { type } = req.body;
+      const { type, timeRange } = req.body;
 
-      const packer = await exportInviteMetrics(type);
+      const packer = await exportInviteMetrics(type, timeRange);
 
       res.writeHead(200, {
         'Content-disposition': 'attachment;filename=' + 'metric.csv',
-        'Content-Length': packer.length
       });
 
       res.end(packer);
@@ -194,7 +209,7 @@ export default (app, passport) => {
         email: senderEmail,
         sender: {
           name: `${senderName} via Sema`,
-          email: "invites@semasoftware.com",
+          email: "invites@semasoftware.io",
         }
       };
       await sendEmail(message);

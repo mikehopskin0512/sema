@@ -5,7 +5,19 @@ import errors from '../../shared/errors';
 import intercom from '../../shared/apiIntercom';
 import { sendEmail } from '../../shared/emailService';
 
-import { bulkAdmitUsers, listUsers, updateUserAvailableInvitesCount, updateUserStatus, getFilterMetrics, findUser } from './userService';
+import {
+  bulkAdmitUsers,
+  listUsers,
+  updateUserAvailableInvitesCount,
+  updateUserStatus,
+  getFilterMetrics,
+  getTimeToValueMetric,
+  exportTimeToValueMetric,
+  findUser, exportUsers
+} from './userService';
+
+import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService'
+import { revokeInvitation } from '../../users/userService';
 
 const route = Router();
 
@@ -30,6 +42,53 @@ export default (app, passport) => {
         page,
         filters: filterData
       });
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
+  route.post('/export', async (req, res) => {
+    try {
+      const packer = await exportUsers(req.body);
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=users.csv',
+      });
+
+      return res.end(packer);
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
+  route.get('/time-to-value', async (req, res) => {
+    try {
+      const { range, page = 1, perPage = 10 } = req.query;
+      const { metric, totalCount } = await getTimeToValueMetric({
+        page: parseInt(page, 10),
+        perPage: parseInt(perPage, 10),
+        range,
+      });
+
+      return res.json({ metric, totalCount });
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
+  route.post('/time-to-value/export', async (req, res) => {
+    try {
+      const packer = await exportTimeToValueMetric(req.body);
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=metric.csv',
+      });
+
+      return res.end(packer);
     } catch (err) {
       const error = new errors.InternalServer(err);
       logger.error(error);
@@ -76,8 +135,14 @@ export default (app, passport) => {
 
       const { key, value } = body;
 
-      if (key === 'isWaitlist' && value === false) {
-        const { firstName, lastName, username, avatarUrl } = user;
+      if (key === "isWaitlist" && value === false) {
+        const { username } = user;
+        const [invitation] = await checkIfInvited(username);
+        if (invitation) {
+          await deleteInvitation(invitation._id);
+          await revokeInvitation(invitation.senderEmail);
+        }
+
         // Send email
         const message = {
           recipient: username,

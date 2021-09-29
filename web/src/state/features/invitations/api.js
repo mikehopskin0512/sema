@@ -8,3 +8,4 @@ export const patchRedeemInvite = (invitationToken, params, token) => patch(`/api
 export const deleteInvite = (id, token) => deleteItem('/api/proxy/invitations', id, token);
 export const getInvitationsMetric = (params, token) => getAll('/api/proxy/invitations/metric', { params }, token);
 export const exportInvitationsMetric = (params, token) => exportItem('/api/proxy/invitations/metric/export', params, token);
+export const exportInvitations = (params, token) => exportItem('/api/proxy/invitations/export', params, token);

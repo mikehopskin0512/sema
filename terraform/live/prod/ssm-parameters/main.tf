@@ -1,3 +1,23 @@
+resource "aws_ssm_parameter" "apollo_chrome_extension_id" {
+  name  = "/${var.env}/apollo/chrome/extensionid"
+  type  = "String"
+  value = "nompfgddpldjighjfnkncgehjdbcphbf"
+}
+resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
+  name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
+  type  = "String"
+  value = "3b4eff2591"
+}
+resource "aws_ssm_parameter" "apollo_mailchimp_token" {
+  name  = "/${var.env}/apollo/mailchimp/token"
+  type  = "SecureString"
+  value = "94eeb0c32194ee7a4cf7d3bb6a72192e-us6"
+}
+resource "aws_ssm_parameter" "apollo_mailchimp_server_prefix" {
+  name  = "/${var.env}/apollo/mailchimp/serverprefix"
+  type  = "String"
+  value = "us6"
+}
 resource "aws_ssm_parameter" "apollo_user_voice_secret_key" {
   name  = "/${var.env}/apollo/uservoice/secretkey"
   type  = "SecureString"
@@ -51,7 +71,7 @@ resource "aws_ssm_parameter" "apollo_mongo_cert-path" {
 resource "aws_ssm_parameter" "apollo_mongo_uri" {
   name  = "/${var.env}/apollo/mongo/uri"
   type  = "SecureString"
-  value = "mongodb://phoenix_admin:cjXUo7OvmwVX2jX4@phoenix-prod.cluster-c5uj1ynuqnl4.us-east-1.docdb.amazonaws.com:27017/apollo?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false"
+  value = "mongodb+srv://phoenix_admin:DnUKm3vsf3C3zaym@sema-cluster.tpplx.mongodb.net/phoenix_prod?authSource=admin&replicaSet=atlas-bjp57o-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
 }
 resource "aws_ssm_parameter" "apollo_org-domain" {
   name  = "/${var.env}/apollo/org-domain"
@@ -81,7 +101,7 @@ resource "aws_ssm_parameter" "apollo_sendgrid_api-key" {
 resource "aws_ssm_parameter" "apollo_sendgrid_sender" {
   name  = "/${var.env}/apollo/sendgrid/sender"
   type  = "String"
-  value = "info@semasoftware.com"
+  value = "info@semasoftware.io"
 }
 resource "aws_ssm_parameter" "apollo_token_life" {
   name  = "/${var.env}/apollo/token/life"

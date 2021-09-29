@@ -1,0 +1,40 @@
+.placeholder {
+  color: #394A64 !important;
+}
+
+.select {
+  min-width: 150px;
+}
+
+.select-container {
+  width: 230px;
+}
+
+.control {
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
+}
+
+.menu {
+  border-top: 1px solid #E5E7EB;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07) !important;
+  border-top-left-radius: 0px !important;
+  border-top-right-radius: 0px !important;
+}
+
+.img {
+  object-fit: cover;
+  height: 24px;
+  width: 24px;
+  border-radius: 12px;
+}
+
+.badge {
+  height: 20px;
+  width: 20px;
+  border-radius: 10px;
+}
+
+.value-container {
+  max-height: 70px;
+  overflow: auto !important;
+}

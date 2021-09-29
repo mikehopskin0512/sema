@@ -7,7 +7,6 @@ import {
   CLOSE_SEARCH_MODAL,
   TOGGLE_SEARCH_MODAL,
   ADD_SUGGESTED_TAGS,
-  UPDATE_SELECTED_TAG_WITH_SUGGESTION,
   TOGGLE_GLOBAL_SEARCH_MODAL,
   TOGGLE_GLOBAL_SEARCH_LOADING,
   ON_INPUT_GLOBAL_SEARCH,
@@ -22,6 +21,9 @@ import {
   UPDATE_SEARCH_BAR_INPUT_VALUE,
   TOGGLE_IS_SELECTING_EMOJI,
   CLOSE_ALL_SELECTING_EMOJI,
+  CLOSE_LOGIN_REMINDER,
+  MUTATION_OBSERVER_EVENT,
+  LAST_USED_SMART_COMMENT,
 } from './actionConstants';
 
 export const addSemaComponents = (payload) => ({
@@ -116,6 +118,11 @@ export const removeMutationObserver = () => ({
   type: REMOVE_MUTATION_OBSERVER,
 });
 
+export const mutationObserverEvent = (payload) => ({
+  type: MUTATION_OBSERVER_EVENT,
+  payload,
+});
+
 export const updatetSearchBarInputValue = (payload) => ({
   type: UPDATE_SEARCH_BAR_INPUT_VALUE,
   payload,
@@ -128,4 +135,13 @@ export const toggleIsSelectingEmoji = (payload) => ({
 
 export const closeAllEmojiSelection = () => ({
   type: CLOSE_ALL_SELECTING_EMOJI,
+});
+
+export const closeLoginReminder = () => ({
+  type: CLOSE_LOGIN_REMINDER,
+});
+
+export const usedSmartComment = (payload) => ({
+  type: LAST_USED_SMART_COMMENT,
+  payload,
 });

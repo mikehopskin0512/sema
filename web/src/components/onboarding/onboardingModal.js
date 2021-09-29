@@ -1,0 +1,126 @@
+import React, { useEffect } from 'react';
+import _ from 'lodash';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import AddSuggestedCommentPage from './addSuggestedCommentPage';
+import SmartBankCommentsPage from './smartBankCommentsPage';
+import ContentPage from './contentPage';
+import ExtensionPage from './extensionPage';
+import styles from './onboarding.module.scss';
+
+const OnboardingModal = ({
+  isModalActive,
+  page,
+  nextPage,
+  previousPage,
+  collectionState,
+  setCollection,
+  toggleCollection,
+  handleCommentFields,
+  comment,
+  toggleModalActive,
+  semaCollections,
+  setComment,
+  onSubmit
+}) => {
+  const renderModalContent = (currentPage) => {
+    switch (currentPage) {
+    case 1:
+    case 2:
+    case 3:
+      return (
+        <ContentPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+          closeModal={() => toggleModalActive(false)}
+        />
+      );
+    // case 4:
+    //   return (
+    //     <SmartBankCommentsPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       collectionState={collectionState}
+    //       toggleCollection={toggleCollection}
+    //       semaCollections={semaCollections}
+    //     />
+    //   );
+    // case 5:
+    //   return (
+    //     <AddSuggestedCommentPage
+    //       page={page}
+    //       nextPage={() => nextPage(currentPage)}
+    //       previousPage={() => previousPage(currentPage)}
+    //       comment={comment}
+    //       handleCommentFields={(e) => handleCommentFields(e)}
+    //       setComment={setComment}
+    //     />
+    //   );
+    case 4:
+      return (
+        <ExtensionPage
+          page={page}
+          nextPage={() => nextPage(currentPage)}
+          previousPage={() => previousPage(currentPage)}
+          closeModal={() => toggleModalActive(false)}
+          onSubmit={onSubmit}
+        />
+      );
+    default:
+      return '';
+    }
+  };
+
+  useEffect(() => {
+    const collection = {...collectionState};
+    for (const [key, value] of Object.entries(semaCollections)) {
+      const field = value._id;
+      collection[field] = true;
+    }
+    setCollection(collection);
+  }, [semaCollections]);
+
+  return (
+    <div className={clsx('modal', isModalActive && 'is-active')}>
+      <div className="modal-background"></div>
+      <div className={clsx('modal-card', styles['modal'])}>
+        {/* <header className="modal-card-head has-background-white">
+            <p className="modal-card-title"></p>
+            <button
+              type="button"
+              className="delete"
+              aria-label="close"
+              onClick={() => toggleModalActive(false)}
+            />
+          </header> */}
+        <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
+          {renderModalContent(page)}
+        </section>
+        {/* <footer className="modal-card-foot">
+            <button className="button is-success">Save changes</button>
+            <button className="button">Cancel</button>
+          </footer> */}
+      </div>
+    </div>
+  );
+};
+
+OnboardingModal.propTypes = {
+  isModalActive: PropTypes.bool.isRequired,
+  page: PropTypes.number.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  previousPage: PropTypes.func.isRequired,
+  collectionState: PropTypes.object.isRequired,
+  setCollection: PropTypes.func.isRequired,
+  toggleCollection: PropTypes.func.isRequired,
+  handleCommentFields: PropTypes.func.isRequired,
+  comment: PropTypes.object.isRequired,
+  toggleModalActive: PropTypes.func.isRequired,
+  semaCollections: PropTypes.array.isRequired,
+  setComment: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+export default OnboardingModal;

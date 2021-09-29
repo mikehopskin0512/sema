@@ -1,5 +1,5 @@
 export const DashboardHelmet = {
-  title: 'Dashboard',
+  title: 'Sema Dashboard',
   description: null,
 };
 
@@ -13,6 +13,11 @@ export const RegisterHelmet = {
   description: null,
 };
 
+export const CommentCollectionsHelmet = {
+  title: 'Comment Collections',
+  description: null,
+};
+
 // ADMIN PAGES
 export const InvitesHelmet = {
   title: 'Invites',
@@ -21,5 +26,30 @@ export const InvitesHelmet = {
 
 export const UserManagementHelmet = {
   title: 'User Management',
+  description: null,
+};
+
+export const SuggestedCommentsHelmet = {
+  title: 'Suggested Comments',
+  description: null,
+};
+
+export const RepoStatsHelmet = {
+  title: 'Repo Stats',
+  description: null,
+};
+
+export const ProfileHelmet = {
+  title: 'Profile',
+  description: null,
+};
+
+export const ActivityLogHelmet = {
+  title: 'Activity Log',
+  description: null,
+};
+
+export const HelpSupportHelmet = {
+  title: 'Help and Support',
   description: null,
 };
