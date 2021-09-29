@@ -33,19 +33,19 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
     if (!isEmpty(filter)) {
       handleFilter(filter)
     }
-  }, [filter])
+  }, [filter]);
 
   useEffect(() => {
     if (startDate) {
       setFilter({startDate: format(new Date(startDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
     }
-  }, [startDate])
+  }, [startDate]);
 
   useEffect(() => {
     if (endDate) {
       setFilter({endDate: format(new Date(endDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
     }
-  }, [endDate])
+  }, [endDate]);
 
   return (
     <>

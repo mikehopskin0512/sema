@@ -191,10 +191,10 @@ const PersonalInsights = () => {
     const { summary, overview } = comments;
     getTopReactions(summary.reactions);
     getTopTags(summary.tags);
-    setTotalSmartComments(summary?.smartComments?.length)
-    parseTagsData(overview?.tags)
-    parseReactionsData(overview?.smartComments)
-  }, [comments])
+    setTotalSmartComments(summary?.smartComments?.length);
+    parseTagsData(overview?.tags);
+    parseReactionsData(overview?.smartComments);
+  }, [comments]);
 
   useEffect(() => {
     getCommentsOverview(filter);
