@@ -3,8 +3,7 @@ import * as types from './types';
 const initialState = {
   isFetching: false,
   collection: {},
-  // TODO: it's collections state - need to be refactored
-  comments: [],
+  collections: [],
   suggestedComments: [],
   smartComments: [],
 };
@@ -39,30 +38,30 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      comments: action.comments,
+      collections: action.payload,
       error: {},
     };
   case types.FETCH_USER_COLLECTIONS_ERROR:
     return {
       ...state,
       isFetching: false,
-      comments: [],
+      collections: [],
     };
-    case FETCH_USER_SUGGESTED_COMMENTS:
+    case types.FETCH_USER_SUGGESTED_COMMENTS:
       return {
         ...state,
         isFetching: true,
         suggestedComments: [],
         error: {},
       }
-    case FETCH_USER_SUGGESTED_COMMENTS_SUCCESS:
+    case types.FETCH_USER_SUGGESTED_COMMENTS_SUCCESS:
       return {
         ...state,
         isFetching: false,
         suggestedComments: action.payload,
         error: {},
       }
-    case FETCH_USER_SUGGESTED_COMMENTS_ERROR:
+    case types.FETCH_USER_SUGGESTED_COMMENTS_ERROR:
       return {
         ...state,
         suggestedComments: [],

@@ -23,9 +23,9 @@ const fetchUserCollections = () => ({
   type: types.FETCH_USER_COLLECTIONS,
 });
 
-const fetchUserCollectionsSuccess = (comments) => ({
+const fetchUserCollectionsSuccess = (payload) => ({
   type: types.FETCH_USER_COLLECTIONS_SUCCESS,
-  comments,
+  payload,
 });
 
 const fetchUserCollectionsError = (error) => ({
@@ -71,14 +71,20 @@ export const getUserCollection = (token) => async (dispatch) => {
   }
 };
 
-export const getSuggestedCommentsByTitle = (title, userId, token) => async (dispatch) => {
+export const getUserSuggestedComments = (title, userId, token) => async (dispatch) => {
   try {
+    console.log('start getUserSuggestedComments');
     dispatch(fetchUserSuggestedComments(token));
-    const { searchResults } = await getSuggestedComments({ q: title, user: userId }, token);
-    dispatch(fetchUserSuggestedCommentsSuccess(searchResults.result));
+    const { data } = await getSuggestedComments({ q: title, user: userId }, token);
+    dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
+    let errMessage = '';
+    if (!error.responese) {
+      let errMessage = 'unknown error';
+    } else {
+      const { response: { data: { message }, status, statusText } } = error;
+      errMessage = message || `${status} - ${statusText}`;
+    }
     dispatch(fetchUserSuggestedCommentsError(errMessage));
   }
 };

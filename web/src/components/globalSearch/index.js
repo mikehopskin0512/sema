@@ -52,7 +52,7 @@ const GlobalSearch = () => {
   useOutsideClick(wrapper, clearSearch)
 
   useEffect(() => {
-    dispatch(getAllSuggestedComments(searchTerm, user._id, token));
+    dispatch(getUserSuggestedComments(searchTerm, user._id, token));
   }, [searchTerm]);
 
   useEffect(() => {
