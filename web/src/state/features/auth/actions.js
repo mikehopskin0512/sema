@@ -2,7 +2,6 @@
 import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 import * as types from './types';
-import { fetchUser } from '../users/actions';
 import { toggleActiveCollection } from '../comments/api';
 import {
   auth, exchangeToken, createUser, putUser, patchUser,
@@ -11,6 +10,7 @@ import {
 
 import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
+import { getUser } from '../users/api';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
@@ -126,13 +126,41 @@ export const authenticate = (username, password) => async (dispatch) => {
   }
 };
 
+const getCurrentUserRequest = () => ({
+  type: types.GET_CURRENT_USER,
+});
+
+const getCurrentUserSuccess = (user) => ({
+  type: types.GET_CURRENT_USER_SUCCESS,
+  user,
+});
+
+const getCurrentUserError = (errors) => ({
+  type: types.GET_CURRENT_USER_ERROR,
+  errors,
+});
+
+const getCurrentUser = (id, token) => async (dispatch) => {
+  try {
+    dispatch(getCurrentUserRequest());
+    const payload = await getUser(id, token);
+    const { data } = payload;
+    dispatch(getCurrentUserSuccess(data));
+    return data;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(getCurrentUserError(errMessage));
+  }
+};
+
 export const refreshJwt = (refreshToken) => async (dispatch) => {
   dispatch(requestRefreshToken());
   try {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
     const { user: { _id }, userVoiceToken } = jwtDecode(jwtToken) || {};
-    const user = await dispatch(fetchUser(_id, jwtToken));
+    const user = await dispatch(getCurrentUser(_id, jwtToken));
     const { isVerified } = user;
 
     // Send token to state and hydrate user

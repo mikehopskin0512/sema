@@ -136,6 +136,25 @@ const reducer = (state = initialState, action) => {
       users: [],
       error: action.errors,
     };
+  case types.GET_CURRENT_USER:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.GET_CURRENT_USER_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
+  case types.GET_CURRENT_USER_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      user: {},
+      error: action.errors,
+    };
   default:
     return state;
   }
