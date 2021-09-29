@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
+import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
@@ -195,7 +195,6 @@ const ActivityPage = () => {
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
@@ -222,8 +221,10 @@ const ActivityPage = () => {
                 isMulti: true,
                 onChange: ((value) => onChangeFilter('pr', value)),
                 value: filter.pr,
+                hideSelectedOptions: false,
               }}
               label="Pull requests"
+              showCheckbox
             />
           </div>
         </div>

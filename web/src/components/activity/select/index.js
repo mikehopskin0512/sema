@@ -1,12 +1,26 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
+
+const Menu = ({ selectAll, deselectAll, ...p }) => {
+  const { children } = p;
+  return (
+    <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
+      <div className="mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7">
+        <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+        <div class="mx-5">|</div>
+        <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+      </div>
+      {children}
+    </components.Menu>
+  );
+};
 
 const CustomSelect = (props) => {
   const {
@@ -58,20 +72,6 @@ const CustomSelect = (props) => {
 
   const Placeholder = (p) => <components.Placeholder {...p} className={clsx('has-text-weight-semibold', styles.placeholder)} />;
 
-  const Menu = (p) => {
-    const { children } = p;
-    return (
-      <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
-        <div className="mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7">
-          <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
-          <div class="mx-5">|</div>
-          <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
-        </div>
-        {children}
-      </components.Menu>
-    );
-  };
-
   const Option = (p) => {
     const { isSelected, data: { label: optionLabel, img, value, emoji } } = p;
     return (
@@ -113,6 +113,12 @@ const CustomSelect = (props) => {
     />
   );
 
+  const RenderMenu = useCallback((p) => Menu({
+    ...p,
+    selectAll,
+    deselectAll
+  }), []);
+
   return (
     <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node}>
       <button
@@ -147,13 +153,13 @@ const CustomSelect = (props) => {
               IndicatorSeparator,
               Placeholder,
               DropdownIndicator,
-              Menu,
               Option,
               MultiValue,
               Input,
               MultiValueRemove,
               ValueContainer,
               IndicatorsContainer,
+              Menu: RenderMenu,
             }}
             menuIsOpen={menuIsOpen}
             {...selectProps}
