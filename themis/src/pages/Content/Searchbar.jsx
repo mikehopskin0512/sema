@@ -17,7 +17,6 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
-    commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
     // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
@@ -41,6 +40,8 @@ const SearchBar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
 
   const suggestionModalDropdownRef = useRef(null);
+
+  const { commentBox } = props;
 
   const getSemaSuggestions = (value, userId) => {
     toggleIsLoading(true);
@@ -75,13 +76,13 @@ const SearchBar = (props) => {
   };
 
   const onInsertPressed = (id, suggestion) => {
-    const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
+    const value = commentBox.value ? `${commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
-    props.commentBox.value = `${value}${suggestion}`;
+    commentBox.value = `${value}${suggestion}`;
     props.selectedSuggestedComments(id);
     props.toggleSearchModal({ isOpen: false });
     props.onLastUsedSmartComment(suggestion);
-    props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
+    commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
   };
 

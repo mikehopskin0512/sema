@@ -1,6 +1,8 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
 import Lottie from 'react-lottie-player';
+import $ from 'cash-dom';
+
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
 import { SEMA_LANDING_FAQ } from './constants';
@@ -13,12 +15,19 @@ const EmojiSelection = ({
   isReactionDirty,
   toggleIsSelectingEmoji,
   isSelectingEmoji,
+  id,
 }) => {
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   const selectedReactionPosition = allEmojis.findIndex((e) => e.title === selectedTitle);
   // depends on actual layout
   const ITEM_HEIGHT = 44;
-  const isCalculating = isTyping && !isSelectingEmoji && !isReactionDirty;
+
+  const { activeElement } = document;
+
+  const semabarActiveElementSibling = $(`#${id}`).prev().get(0);
+
+  const showCalculate = semabarActiveElementSibling === activeElement;
+  const isCalculating = showCalculate && isTyping && !isSelectingEmoji && !isReactionDirty;
 
   return (
     <div>
