@@ -15,6 +15,9 @@ import {
   findUser, exportUsers
 } from './userService';
 
+import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService'
+import { revokeInvitation } from '../../users/userService';
+
 const route = Router();
 
 export default (app, passport) => {
@@ -133,6 +136,12 @@ export default (app, passport) => {
 
       if (key === "isWaitlist" && value === false) {
         const { username } = user;
+        const [invitation] = await checkIfInvited(username);
+        if (invitation) {
+          await deleteInvitation(invitation._id);
+          await revokeInvitation(invitation.senderEmail);
+        }
+
         // Send email
         const message = {
           recipient: username,
