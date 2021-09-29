@@ -15,6 +15,7 @@ import Helmet from '../../utils/Helmet';
 import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
+import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
@@ -107,7 +108,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     setCommentsFiltered([...filtered]);
     setIsParsing(false);
   };
-  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
+  const isAddCommentActive = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -127,7 +128,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
+  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
     <div className={clsx('has-background-gray-9 hero')}>

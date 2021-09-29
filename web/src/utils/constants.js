@@ -41,7 +41,6 @@ export const EMOJIS = [
     color: '#afadaa',
   },
 ];
-
 export const TAGS = [
   {
     label: 'Readable',
@@ -107,3 +106,4 @@ export const TAGS = [
     _id: '607f0594ab1bc1aecbe2ce58',
   },
 ];
+export const DEFAULT_COLLECTION_NAME = "my comments";

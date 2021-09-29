@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
+import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
 import { authOperations } from '../../../state/features/auth';
 
@@ -77,7 +78,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>
-                {name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments' ? (
+                {name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments' ? (
                   <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                     <div
                       className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
