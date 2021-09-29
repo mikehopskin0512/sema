@@ -37,7 +37,13 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
 
   useEffect(() => {
     if (startDate) {
-      setFilter({startDate: format(new Date(startDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
+      const newFilter = {
+        startDate: format(new Date(startDate), 'yyyy-MM-dd hh:mm:ss'),
+        ...filter,
+      };
+      delete newFilter.endDate;
+      setFilter(newFilter)
+      setEndDate()
     }
   }, [startDate])
 

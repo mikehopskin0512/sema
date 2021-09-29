@@ -79,7 +79,9 @@ const PersonalInsights = () => {
     } else {
       params.requester = username
     }
-    dispatch(fetchSmartCommentOverview(params, token))
+    if ((startDate && endDate) || (!startDate && !endDate)) {
+      dispatch(fetchSmartCommentOverview(params, token))
+    }
   };
 
   const getTopReactions = async (reactions) => {
@@ -122,7 +124,6 @@ const PersonalInsights = () => {
     if (overview?.smartComments && overview?.smartComments.length > 0) {
       const dates = setSmartCommentsDateRange(overview.smartComments, startDate, endDate);
       const { startDay, endDay, dateDiff, groupBy } = dates;
-      console.log(dates)
       setDateData({
         dateDiff,
         groupBy,

@@ -20,7 +20,6 @@ export const setSmartCommentsDateRange = (smartcomments, startDate, endDate) => 
     startDay = startDate;
     endDay = endDate;
   }
-  console.log({ startDay, endDay })
   const diff = differenceInCalendarDays(new Date(endDay), new Date(startDay));
   let dates = {
     startDay,
