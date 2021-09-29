@@ -6,7 +6,9 @@ import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
+import { format } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
+import index from 'src/pages/suggested-comments/[collectionId]/[slug]';
 
 const NivoBarChart = ({ data = [], groupBy }) => {
   const [barChartData, setBarChartData] = useState([]);
@@ -70,9 +72,20 @@ const NivoBarChart = ({ data = [], groupBy }) => {
     const { id, value, indexValue } = itemData;
     const { emoji, label } = find(EMOJIS, { _id: id });
     const count = find(data, { date: indexValue })[id];
+    let dateString = '';
+    if (indexValue.search('-') !== -1) {
+      const [date1, date2] = indexValue.split('-')
+      const parseDate1 = format(new Date(date1), 'LLL d')
+      const parseDate2 = format(new Date(date2), 'LLL d')
+      dateString = `${parseDate1} - ${parseDate2}`
+    } else {
+
+    }
+    console.log(itemData)
     return (
       <div className="box has-background-white p-8 border-radius-4px">
         <p className="has-text-weight-semibold">{emoji} {label}</p>
+        <div className="is-size-7 has-text-primary">{dateString}</div>
         <p className="is-size-7">{count} comments</p>
         <p className="is-size-7">{value}% of total comments {groupBy ? `on this ${groupBy}` : '' }</p>
       </div>
@@ -172,11 +185,11 @@ const NivoBarChart = ({ data = [], groupBy }) => {
             translateX: 0,
             translateY: 90,
             itemsSpacing: 5,
-            itemWidth: 120,
+            itemWidth: 100,
             itemHeight: 20,
             itemDirection: 'left-to-right',
             itemOpacity: 0.85,
-            symbolSize: 20,
+            symbolSize: 15,
             effects: [
               {
                 on: 'hover',
