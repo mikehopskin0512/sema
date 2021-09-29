@@ -20,7 +20,7 @@ export default (app, passport) => {
             templateName: 'feedbackSupportAdmin',
             sender: {
                 name: `${email} via Sema`,
-                email: "info@semasoftware.com"
+                email: "info@semasoftware.io"
             },
             email,
             title,

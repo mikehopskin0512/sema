@@ -18,6 +18,7 @@ import {
   getHighlights,
   isPRPage,
   initAmplitude,
+  checkSubmitButton,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -161,6 +162,23 @@ function onTextPaste(semabarContainerId) {
   };
 }
 
+const debouncedOnInput = debounce(() => {
+  store.dispatch(
+    updateTextareaState({
+      isTyping: true,
+    }),
+  );
+  setTimeout(() => {
+    store.dispatch(
+      updateTextareaState({
+        isTyping: false,
+      }),
+    );
+  }, CALCULATION_ANIMATION_DURATION_MS);
+
+  onSuggestion();
+}, ON_INPUT_DEBOUCE_INTERVAL_MS);
+
 const reactNodes = new Set();
 let mirror;
 
@@ -205,22 +223,18 @@ document.addEventListener(
         if (!semaElements[0]) {
           $(activeElement).on(
             'input',
-            debounce(() => {
-              store.dispatch(
-                updateTextareaState({
-                  isTyping: true,
-                }),
-              );
+            () => {
+              /**
+             * check for the button's behaviour
+             * after github's own validation
+             * has taken place for the textarea
+             */
               setTimeout(() => {
-                store.dispatch(
-                  updateTextareaState({
-                    isTyping: false,
-                  }),
-                );
-              }, CALCULATION_ANIMATION_DURATION_MS);
+                checkSubmitButton(semabarContainerId);
+              }, 0);
 
-              onSuggestion();
-            }, ON_INPUT_DEBOUCE_INTERVAL_MS),
+              debouncedOnInput();
+            },
           );
           /** ADD ROOTS FOR REACT COMPONENTS */
           // search bar container
@@ -260,6 +274,7 @@ document.addEventListener(
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
+                textarea={activeElement}
                 id={semabarContainerId}
                 style={{ position: 'relative' }}
               />

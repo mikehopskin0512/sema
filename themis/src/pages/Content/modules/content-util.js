@@ -19,6 +19,7 @@ import {
   DELIMITERS,
   AMPLITUDE_API_KEY,
   EVENTS,
+  SUGGESTED_COMMENTS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -209,6 +210,14 @@ const updateSmartComment = async (comment) => {
   const response = await res.text();
   const { smartComment } = JSON.parse(response);
   return smartComment;
+};
+
+export const saveSmartComment = async (comment) => {
+  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(comment),
+  });
 };
 
 export const onConversationMutationObserver = ([mutation]) => {
@@ -411,8 +420,20 @@ export async function writeSemaToGithub(textarea) {
     const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
+    let fileExtention = $(textarea)?.parents('.file')?.attr('data-file-type');
+    if (!fileExtention) {
+      const url = $(textarea)
+        .parents('.file')
+        .children('.file-header')
+        .children('.Link--primary')
+        .attr('title');
+      fileExtention = url
+        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+        : null;
+    }
+
     comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
       userId,
       comment: textboxValue,
       location,
@@ -439,7 +460,7 @@ export async function writeSemaToGithub(textarea) {
     const opts = {
       isSemaBarUsed: false,
       isReply: isReply(textarea),
-      isSmartCommentUsed: textarea.value.includes(lastUserSmartComment),
+      isSuggestedCommentUsed: textarea.value.includes(lastUserSmartComment),
     };
     if (typeof semaString === 'string' && semaString.length) {
       opts.isSemaBarUsed = true;
@@ -720,6 +741,8 @@ export const checkSubmitButton = (semabarId, data) => {
     } else {
       $(primaryButton).attr('disabled', true);
     }
+  } else {
+    $(primaryButton).removeAttr('disabled');
   }
 };
 

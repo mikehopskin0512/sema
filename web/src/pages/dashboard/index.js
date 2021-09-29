@@ -25,7 +25,8 @@ const Dashboard = () => {
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
-  const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
+  const [isOnboardingModalActivea, toggleOnboardingModalActive] = useState(false);
+  const isOnboardingModalActive = false
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities } = user;
+  const { identities, isOnboarded = null} = user;
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
@@ -133,28 +134,30 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
     // const userCollections = await getActiveCollections();
-    const updatedUser = { ...user };
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
   };
 
   useEffect(() => {
-    if (user?.collections?.length === 0) {
+    if (isOnboarded === null)  {
       toggleOnboardingModalActive(true);
     }
-  }, [user]);
+  }, [isOnboarded]);
+
+  if (repositories.isFetching || auth.isFetching) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
+      </div>
+    )
+  }
 
   return (
     <>
       <div className='has-background-gray-9 pb-180'>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching || auth.isFetching ? (
-          <div style={{ height: '400px', display: 'flex' }}>
-            <Loader/>
-          </div>
-        ) : (
-          <ReposView />
-        )}
+        <ReposView />
       </div>
       <OnboardingModal
         isModalActive={isOnboardingModalActive}

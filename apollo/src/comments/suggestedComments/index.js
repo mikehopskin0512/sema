@@ -11,7 +11,7 @@ import {
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
 } from './suggestedCommentService';
-import { pushCollectionComment, isEditAllowed } from '../collections/collectionService';
+import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -56,16 +56,25 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/', async (req, res) => {
-    const { comment, source, tags, collectionId } = req.body;
-    let { title } = req.body;
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { comment, source, tags } = req.body;
+    const { user } = req.user;
+    let title = req.body.title;
+    let collectionId = req.body.collectionId;
     try {
+      if (!collectionId) {
+        const collections = await getUserCollectionsById(user._id);
+        const defaultCollection = collections.find((collection) => {
+          return collection.collectionData.name.toLowerCase() === 'my comments';
+        });
+        collectionId = defaultCollection.collectionData._id;
+      }
 
       if (!title) {
         title = comment.substring(0, 100);
       }
 
-      const isCollectionEditable = await isEditAllowed(req.user.user, req.body.collectionId);
+      const isCollectionEditable = await isEditAllowed(user, collectionId);
       if (!isCollectionEditable) {
         return res.status(422).send({
           message: 'User does not have permission to create',
@@ -94,8 +103,9 @@ export default (app, passport) => {
 
   route.patch('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
+    const { user, collectionId } = req.body
     try {
-      const isCollectionEditable = await isEditAllowed(req.user.user, req.body.collectionId);
+      const isCollectionEditable = await isEditAllowed(user, collectionId);
       if (!isCollectionEditable) {
         return res.status(422).send({
           message: 'User does not have permission to edit',
