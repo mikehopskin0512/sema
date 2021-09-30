@@ -117,7 +117,7 @@ const CustomSelect = (props) => {
     ...p,
     selectAll,
     deselectAll
-  }), []);
+  }), [menuIsOpen]);
 
   return (
     <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node}>
@@ -184,4 +184,4 @@ CustomSelect.propTypes = {
   showCheckbox: PropTypes.bool,
 };
 
-export default CustomSelect;
+export default React.memo(CustomSelect);
