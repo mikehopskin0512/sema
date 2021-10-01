@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { intercomToken } from '../config';
-// const intercomToken = 'dG9rOmNlZGFlZmNiXzUzNjZfNDYxNF9iOWQzXzA1ODYzYWY2OTU5MzoxOjA=';
 
 const config = {
   headers: {
