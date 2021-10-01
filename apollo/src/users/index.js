@@ -13,7 +13,7 @@ import {
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
-import { redeemInvite } from '../invitations/invitationService';
+import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -58,11 +58,9 @@ export default (app, passport) => {
       if (!newUser) {
         throw new errors.BadRequest('User create error');
       }
-      const { _id: userId } = newUser;
+      const { _id: userId, username } = newUser;
       // If invitation, call joinOrg function
-      let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
-        hasInvite = true;
         const { orgId, orgName, sender, token } = invitation;
         // const org = { id: orgId, orgName, invitedBy: sender };
         // const invitedUser = await joinOrg(userId, org);
@@ -75,6 +73,13 @@ export default (app, passport) => {
 
         // Redeem invite
         await redeemInvite(token, userId);
+      }
+
+      // Check if user has been previously invited
+      const [hasInvite] = await checkIfInvited(username);
+      if (hasInvite) {
+        const { _id: invitationId } = hasInvite;
+        redeemInvite(null, userId, invitationId)
       }
 
       // Add user to Mailchimp and suscribe it to Sema - Newsletters

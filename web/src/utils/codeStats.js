@@ -8,9 +8,9 @@ import {
   isWithinInterval,
 } from 'date-fns';
 import { findIndex } from 'lodash';
-import { ReactionList, TagList } from '../../data/activity';
+import { EMOJIS, TAGS } from './constants';
 
-export const generateArraysByDays = (smartcomments, diff, endDate) => {
+export const generateChartDataByDays = (smartcomments, diff, endDate) => {
   let reactionsByDay = [];
   const tagsArr = [];
   let day = 0;
@@ -22,8 +22,8 @@ export const generateArraysByDays = (smartcomments, diff, endDate) => {
       date: format(thisDay, 'MM/dd')
     };
     // Set Reaction Ids as object keys
-    ReactionList.forEach((reaction) => {
-      item[reaction.value] = 0;
+    EMOJIS.forEach((reaction) => {
+      item[reaction._id] = 0;
     });
     reactionsByDay.push(item);
     tagsArr.push({
@@ -34,8 +34,8 @@ export const generateArraysByDays = (smartcomments, diff, endDate) => {
   }
   // Set TagId as object keys
   let tagsByDay = {};
-  TagList.forEach((tag) => {
-    tagsByDay[tag.value] = {
+  TAGS.forEach((tag) => {
+    tagsByDay[tag._id] = {
       total: 0,
       data: [...tagsArr],
     };
@@ -62,7 +62,7 @@ export const generateArraysByDays = (smartcomments, diff, endDate) => {
   return { reactionsByDay, tagsByDay };
 }
 
-export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
+export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   const weeks = eachWeekOfInterval({
     start: new Date(startDate),
     end: new Date(endDate)
@@ -77,8 +77,8 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
     const item = {
       date: `${startWeekDay}-${endWeekDay}`,
     };
-    ReactionList.forEach((reaction) => {
-      item[reaction.value] = 0;
+    EMOJIS.forEach((reaction) => {
+      item[reaction._id] = 0;
     });
     reactionsByWeek.unshift(item);
     tagsArr.push({
@@ -94,8 +94,8 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
   });
   // Set TagId as object keys
   let tagsByWeek = {};
-  TagList.forEach((tag) => {
-    tagsByWeek[tag.value] = {
+  TAGS.forEach((tag) => {
+    tagsByWeek[tag._id] = {
       total: 0,
       data: [...tagsArr],
     };
@@ -125,7 +125,7 @@ export const generateArraysByWeeks = (smartcomments, startDate, endDate) => {
   return { reactionsByWeek, tagsByWeek };
 }
 
-export const generateArraysByMonths = (smartcomments, startDate, endDate) => {
+export const generateChartDataByMonths = (smartcomments, startDate, endDate) => {
   const months = eachMonthOfInterval({
     start: new Date(startDate),
     end: new Date(endDate)
@@ -137,8 +137,8 @@ export const generateArraysByMonths = (smartcomments, startDate, endDate) => {
     const item = {
       date: format(month, 'MMM'),
     };
-    ReactionList.forEach((reaction) => {
-      item[reaction.value] = 0;
+    EMOJIS.forEach((reaction) => {
+      item[reaction._id] = 0;
     });
     reactionsByMonth.unshift(item);
     tagsArr.push({
@@ -148,8 +148,8 @@ export const generateArraysByMonths = (smartcomments, startDate, endDate) => {
   });
   // Set TagId as object keys
   let tagsByMonth = {};
-  TagList.forEach((tag) => {
-    tagsByMonth[tag.value] = {
+  TAGS.forEach((tag) => {
+    tagsByMonth[tag._id] = {
       total: 0,
       data: [...tagsArr],
     };
@@ -176,7 +176,7 @@ export const generateArraysByMonths = (smartcomments, startDate, endDate) => {
   return { reactionsByMonth, tagsByMonth };
 }
 
-export const generateArraysByYears = (smartcomments, startDate, endDate) => {
+export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
   const years = eachYearOfInterval({
     start: new Date(startDate),
     end: new Date(endDate)
@@ -188,8 +188,8 @@ export const generateArraysByYears = (smartcomments, startDate, endDate) => {
     const item = {
       date: format(month, 'yyyy'),
     };
-    ReactionList.forEach((reaction) => {
-      item[reaction.value] = 0;
+    EMOJIS.forEach((reaction) => {
+      item[reaction._id] = 0;
     });
     reactionsByYear.unshift(item);
     tagsArr.push({
@@ -199,8 +199,8 @@ export const generateArraysByYears = (smartcomments, startDate, endDate) => {
   });
   // Set TagId as object keys
   let tagsByYear = {};
-  TagList.forEach((tag) => {
-    tagsByYear[tag.value] = {
+  TAGS.forEach((tag) => {
+    tagsByYear[tag._id] = {
       total: 0,
       data: [...tagsArr],
     };

@@ -7,7 +7,7 @@ import Sidebar from "../../sidebar";
 import withLayout from "../../layout";
 import Loader from "../../Loader";
 import styles from "./repoPageLayout.module.scss";
-import DateRangeSelector from '../../dataRangeSelector';
+import DateRangeSelector from '../../dateRangeSelector';
 import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
 

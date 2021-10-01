@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
+import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
 
 import { ReactionList, TagList } from '../../../data/activity';
+
+import { filterSmartComments } from '../../../utils/parsing';
 
 const defaultAvatar = '/img/default-avatar.jpg';
 
@@ -76,59 +78,9 @@ const ActivityPage = () => {
     setFilterPRList(filteredPRs);
   }, [overview]);
 
-  // const filterByTags = (tags) => {
-  //   const filterCount = filter.tags.length;
-  //   let matches = 0;
-  //   tags.forEach((tag) => {
-  //     const tagIndex = findIndex(filter.tags, { value: tag._id });
-  //     if (tagIndex > -1) {
-  //       matches += 1;
-  //     }
-  //   });
-  //   return matches === filterCount;
-  // };
-
   useEffect(() => {
     if (overview && overview.smartcomments) {
-      let filtered = overview.smartcomments || [];
-      if (
-        !isEmpty(filter.from) ||
-        !isEmpty(filter.to) ||
-        !isEmpty(filter.reactions) ||
-        !isEmpty(filter.tags) ||
-        !isEmpty(filter.search) ||
-        !isEmpty(filter.pr)
-      ) {
-        filtered = overview.smartcomments.filter((item) => {
-          const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
-          const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
-          const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-          // const tagsIndex = item?.tags ? filterByTags(item.tags) : false;
-          const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
-          const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
-          let filterBool = true;
-          if (!isEmpty(filter.from)) {
-            filterBool = filterBool && fromIndex !== -1;
-          }
-          if (!isEmpty(filter.to)) {
-            filterBool = filterBool && toIndex !== -1;
-          }
-          if (!isEmpty(filter.reactions)) {
-            filterBool = filterBool && reactionIndex !== -1;
-          }
-          if (!isEmpty(filter.tags)) {
-            filterBool = filterBool && tagsIndex !== -1;
-          }
-          if (!isEmpty(filter.search)) {
-            filterBool = filterBool && searchBool;
-          }
-          if (!isEmpty(filter.pr)) {
-            filterBool = filterBool && prIndex !== -1;
-          }
-          return filterBool;
-        });
-      }
+      const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments });
       setFilteredComments(filtered);
     }
   }, [overview, filter]);

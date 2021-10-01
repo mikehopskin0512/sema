@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -58,10 +58,10 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId }) => {
+export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     let filter = {}
-
+    let dateFilter = { createdAt: { } }
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -71,11 +71,21 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
     if (repoId) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
     }
+    if (startDate) {
+      dateFilter = Object.assign(dateFilter, { createdAt: { $gte: new Date(startDate) } });
+    }
+    if (endDate) {
+      dateFilter = Object.assign(dateFilter, { createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt } });
+    }
+    if (!isEmpty(dateFilter.createdAt)) {
+      filter = Object.assign(filter, dateFilter);
+    }
 
     const query = SmartComment.find(filter);
     const smartComments = await query.lean()
-      .populate('userId', 'firstName lastName avatarUrl')
+      .populate('userId')
       .populate('tags')
+      .sort('-createdAt')
       .exec();
 
     return smartComments;
@@ -556,6 +566,40 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   try {
     const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
     return smartComments;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
+  try {
+    const filter = { reviewer, author, repoId, startDate, endDate };
+    const totalReactions = {};
+    const totalTags = {}
+    const smartComments = await filterSmartComments(filter);
+    smartComments.map((comments) => {
+      const { tags, reaction } = comments;
+      if (tags.length) {
+        tags.map((tag) => {
+          const { _id: tagId } = tag;
+          if (totalTags?.[tagId]) {
+            totalTags[tagId]++
+          } else {
+            totalTags[tagId] = 1
+          }
+        })
+      }
+      if (reaction) {
+        if (totalReactions?.[reaction]) {
+          totalReactions[reaction]++
+        } else {
+          totalReactions[reaction] = 1;
+        }
+      }
+    });
+    return { smartComments, reactions: totalReactions, tags: totalTags };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
