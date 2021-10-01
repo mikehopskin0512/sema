@@ -1,12 +1,12 @@
 /* eslint-disable import/prefer-default-export */
-import * as types from './types';
-import { getSmartComments, getAllCollections, getCollection, getSuggestedComments } from './api';
-import { alertOperations } from '../alerts';
+import * as types from "./types";
+import { getSmartComments, getAllCollections, getCollection, getSuggestedComments } from "./api";
+import { alertOperations } from "../alerts";
 
 const { triggerAlert } = alertOperations;
 
 const fetchCollection = () => ({
-  type: types.FETCH_COLLECTION,
+  type: types.FETCH_COLLECTION
 });
 
 const fetchCollectionSuccess = (collection) => ({
@@ -34,16 +34,16 @@ const fetchUserCollectionsError = (error) => ({
 });
 
 const fetchUserSuggestedComments = () => ({
-  type: types.FETCH_USER_COLLECTIONS,
+  type: types.FETCH_USER_SUGGESTED_COMMENTS,
 });
 
 const fetchUserSuggestedCommentsSuccess = (payload) => ({
-  type: types.FETCH_USER_COLLECTIONS_SUCCESS,
+  type: types.FETCH_USER_SUGGESTED_COMMENTS_SUCCESS,
   payload,
 });
 
 const fetchUserSuggestedCommentsError = (error) => ({
-  type: types.FETCH_USER_COLLECTIONS_ERROR,
+  type: types.FETCH_USER_SUGGESTED_COMMENTS_ERROR,
   error,
 });
 
@@ -73,7 +73,6 @@ export const getUserCollection = (token) => async (dispatch) => {
 
 export const getUserSuggestedComments = (title, userId, token) => async (dispatch) => {
   try {
-    console.log('start getUserSuggestedComments');
     dispatch(fetchUserSuggestedComments(token));
     const { data } = await getSuggestedComments({ q: title, user: userId }, token);
     dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
