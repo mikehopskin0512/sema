@@ -130,7 +130,7 @@ const CustomSelect = (props) => {
         )}>
         <div className="is-flex is-align-items-center">
           <span className={clsx('has-text-weight-semibold is-size-6 mr-10', styles.placeholder)}>{label}</span>
-          {value && value.length > 0 && (
+          {value && value.length > 0 ? (
             <span className={
               clsx(
                 'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center',
@@ -139,7 +139,7 @@ const CustomSelect = (props) => {
             }>
               {value.length}
             </span>
-          )}
+          ) : (<div className={styles.badge} />)}
         </div>
         <span className="icon is-small pb-5">
           <FontAwesomeIcon icon={faSortDown} color="#394A64" />
