@@ -142,7 +142,7 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
                 <Link href="/personal-insights">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
                     Personal Insights
                   </a>
                 </Link>

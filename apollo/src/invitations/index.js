@@ -35,12 +35,10 @@ export default (app, passport) => {
       });
     }
 
-    const userRecipient = await findByUsername(invitation.recipient);
+    let userRecipient = await findByUsername(invitation.recipient);
     if (userRecipient) {
-      const { isWaitlist = false } = userRecipient;
-      if (!isWaitlist) {
-        return res.status(401).send({ message: `${invitation.recipient} is already an active member.` });
-      }
+      userRecipient.isWaitlist = false;
+      await update(userRecipient);
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
     if (userInvitation) {
@@ -56,21 +54,32 @@ export default (app, passport) => {
         throw new errors.BadRequest('Invitation create error');
       }
 
-      // Send invitation
-      const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
-      const message = {
-        recipient,
-        url: `${orgDomain}/login?token=${token}`,
-        templateName: 'inviteUser',
-        orgName,
-        fullName: senderName,
-        email: senderEmail,
-        sender: {
-          name: `${senderName} via Sema`,
-          email: "invites@semasoftware.io",
-        }
-      };
-      await sendEmail(message);
+      if (userRecipient){
+        const message = {
+          recipient: userRecipient.username,
+          url: `${orgDomain}/`,
+          templateName: 'userAdmitted',
+        };
+        await sendEmail(message);
+        await redeemInvite(newInvitation.token, userRecipient._id);
+      } else { 
+        // Send invitation
+        const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
+        const message = {
+          recipient,
+          url: `${orgDomain}/login?token=${token}`,
+          templateName: 'inviteUser',
+          orgName,
+          fullName: senderName,
+          email: senderEmail,
+          sender: {
+            name: `${senderName} via Sema`,
+            email: "invites@semasoftware.io",
+          }
+        };
+        await sendEmail(message);
+      }
+
       const updatedUser = userData.isSemaAdmin ? userData : await update({
         ...userData,
         inviteCount: invitation.inviteCount - 1,

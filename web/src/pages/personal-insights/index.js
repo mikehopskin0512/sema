@@ -12,14 +12,11 @@ import StatsFilter from '../../components/statsFilter';
 import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
-import DateRangeSelector from '../../components/dateRangeSelector';
-import { repositoriesOperations } from "../../state/features/repositories";
 import { commentsOperations } from "../../state/features/comments";
-import { DAYS_IN_MONTH, DAYS_IN_WEEK, DAYS_IN_YEAR, EMOJIS, TAGS, DEFAULT_AVATAR } from '../../utils/constants';
-import { generateDays, generateMonths, generateWeeks, generateYears } from '../../components/stats/codeStatsServices';
+import { DEFAULT_AVATAR } from '../../utils/constants';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 
-const { getUserComments, getUserReceivedComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
-
+const { getUserComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
@@ -50,13 +47,18 @@ const PersonalInsights = () => {
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
+  const [dateData, setDateData] = useState({
+    groupBy: '',
+    startDate: null,
+    endDate: null,
+  });
 
   const fetchUserComments = async (username) => {
-    await dispatch(getUserComments(username, token))
+    await dispatch(getUserComments({ author: username }, token));
   };
 
   const fetchUserReceivedComments = async (username) => {
-    await dispatch(getUserReceivedComments(username, token))
+    await dispatch(getUserComments({ requester: username }, token));
   }
 
   const getUserSummary = async (username) => {
@@ -78,7 +80,9 @@ const PersonalInsights = () => {
     } else {
       params.requester = username
     }
-    dispatch(fetchSmartCommentOverview(params, token))
+    if ((startDate && endDate) || (!startDate && !endDate)) {
+      dispatch(fetchSmartCommentOverview(params, token));
+    }
   };
 
   const getTopReactions = async (reactions) => {
@@ -102,7 +106,7 @@ const PersonalInsights = () => {
     if (tags) {
       const sorted = Object.keys(tags).sort(function (a, b) { return tags[b] - tags[a] })
       data = await Promise.all(sorted.filter((_, index) => index <= 2).map(async (tag) => {
-        const label = await getTagLabel(tag)
+        const label = getTagLabel(tag);
         return {
           [label]: tags[tag]
         }
@@ -111,78 +115,39 @@ const PersonalInsights = () => {
     setTopTags(data);
   };
 
-  const filterByTags = (tags) => {
-    const filterCount = filter.tags.length;
-    let matches = 0;
-    tags.forEach((tag) => {
-      const tagIndex = findIndex(filter.tags, { value: tag._id });
-      if (tagIndex > -1) {
-        matches += 1;
-      }
-    });
-    return matches === filterCount;
-  };
-
-  const parseTagsData = (tags) => {
-    if (tags) {
-      let tagsObject = {};
-      for (const [key, val] of Object.entries(tags)) {
-        tagsObject[key] = {
-          total: val
-        };
-      }
-      setTagsChartData(tagsObject)
-    }
-  }
-
-  const parseReactionsData = (smartcomments = []) => {
-    if (smartcomments.length > 0) {
-      const { startDate, endDate } = filter;
-      let start = smartcomments[smartcomments.length - 1]?.createdAt || subDays(new Date(), 6);
-      let end = new Date();
-      if (startDate && endDate) {
-        start = startDate;
-        end = endDate;
-      }
-      const diff = differenceInCalendarDays(new Date(end), new Date(start));
-      if (diff < DAYS_IN_WEEK + 1) {
-        const reactionsArr = generateDays(smartcomments, diff, end);
-        setReactionChartData(reactionsArr);
-      }
-
-      if (diff < DAYS_IN_MONTH && diff >= DAYS_IN_WEEK) {
-        const reactionsArr = generateWeeks(smartcomments, start, end);
-        setReactionChartData(reactionsArr);
-      }
-
-      if (diff < DAYS_IN_YEAR && diff >= DAYS_IN_MONTH) {
-        const reactionsArr = generateMonths(smartcomments, start, end);
-        setReactionChartData(reactionsArr);
-      }
-
-      if (diff >= DAYS_IN_YEAR) {
-        const reactionsArr = generateYears(smartcomments, start, end);
-        setReactionChartData(reactionsArr);
-      }
-    }
-  }
-
   const handleFilter = (value) => {
     setFilter(value)
   };
 
-  const getEmoji = (id) => {
-    const { emoji } = find(EMOJIS, { _id: id });
-    return emoji;
-  };
-
-  const getTagLabel = async (id) => {
-    const { label } = find(TAGS, { _id: id });
-    return label;
-  };
+  useEffect(() => {
+    const { overview } = comments;
+    const { startDate, endDate } = filter;
+    if (overview?.smartComments && overview?.smartComments.length > 0) {
+      const dates = setSmartCommentsDateRange(overview.smartComments, startDate, endDate);
+      const { startDay, endDay, dateDiff, groupBy } = dates;
+      setDateData({
+        dateDiff,
+        groupBy,
+        startDate: new Date(startDay),
+        endDate: endDay
+      })
+    }
+  }, [comments, filter]);
 
   useEffect(() => {
-    // getUserRepos(githubUser?.repositories);
+    const { startDate, endDate, groupBy, dateDiff } = dateData;
+    if (startDate && endDate && dateDiff && groupBy) {
+      const { overview: { smartComments } } = comments;
+      const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
+        ...dateData,
+        smartComments,
+      });
+      setReactionChartData(reactionsChartData);
+      setTagsChartData(tagsChartData);
+    }
+  }, [dateData]);
+
+  useEffect(() => {
     fetchUserReceivedComments(githubUser?.username)
     getUserSummary(githubUser?.username)
   }, [auth]);
@@ -191,10 +156,8 @@ const PersonalInsights = () => {
     const { summary, overview } = comments;
     getTopReactions(summary.reactions);
     getTopTags(summary.tags);
-    setTotalSmartComments(summary?.smartComments?.length);
-    parseTagsData(overview?.tags);
-    parseReactionsData(overview?.smartComments);
-  }, [comments]);
+    setTotalSmartComments(summary?.smartComments?.length)
+  }, [comments])
 
   useEffect(() => {
     getCommentsOverview(filter);
@@ -248,44 +211,7 @@ const PersonalInsights = () => {
 
   const filterComments = (overview) => {
     if (overview && overview.smartComments) {
-      let filtered = overview.smartComments || [];
-      if (
-        !isEmpty(filter.from) ||
-        !isEmpty(filter.to) ||
-        !isEmpty(filter.reactions) ||
-        !isEmpty(filter.tags) ||
-        !isEmpty(filter.search) ||
-        !isEmpty(filter.pr)
-      ) {
-        filtered = overview.smartComments.filter((item) => {
-          const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
-          const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
-          const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-          const tagsIndex = item?.tags ? filterByTags(item.tags) : false;
-          const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
-          let filterBool = true;
-          if (!isEmpty(filter.from)) {
-            filterBool = filterBool && fromIndex !== -1;
-          }
-          if (!isEmpty(filter.to)) {
-            filterBool = filterBool && toIndex !== -1;
-          }
-          if (!isEmpty(filter.reactions)) {
-            filterBool = filterBool && reactionIndex !== -1;
-          }
-          if (!isEmpty(filter.tags)) {
-            filterBool = filterBool && tagsIndex;
-          }
-          if (!isEmpty(filter.search)) {
-            filterBool = filterBool && searchBool;
-          }
-          if (!isEmpty(filter.pr)) {
-            filterBool = filterBool && prIndex !== -1;
-          }
-          return filterBool;
-        });
-      }
+      const filtered = filterSmartComments({ filter, smartComments: overview.smartComments });
       setFilteredComments(filtered);
     }
   };
