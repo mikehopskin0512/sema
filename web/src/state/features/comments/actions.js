@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection } from './api';
+import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
@@ -33,6 +33,46 @@ const fetchSuggestedCommentsError = (error) => ({
   error,
 });
 
+const requestFetchSmartComments = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS
+});
+
+const requestFetchSmartCommentsSuccess = (smartComments) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS_SUCCESS,
+  smartComments
+});
+
+const requestFetchSmartCommentsError = (error) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS_ERROR,
+  error
+});
+
+const requestFetchSmartCommentSummary = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY
+});
+
+const requestFetchSmartCommentSummarySuccess = (summary) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY_SUCCESS,
+  summary
+});
+
+const requestFetchSmartCommentSummaryError = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY_ERROR
+});
+
+const requestFetchSmartCommentOverview = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW
+});
+
+const requestFetchSmartCommentOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_SUCCESS,
+  overview
+});
+
+const requestFetchSmartCommentOverviewError = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_ERROR
+});
+
 export const getCollectionById = (id, token) => async (dispatch) => {
   try {
     dispatch(fetchCollection());
@@ -54,6 +94,42 @@ export const getUserSuggestedComments = (token) => async (dispatch) => {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(fetchSuggestedCommentsError(errMessage));
+  }
+};
+
+export const fetchSmartComments = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartComments())
+    const comments = await getSmartComments(params, token);
+    dispatch(requestFetchSmartCommentsSuccess(comments.data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentsError(errMessage));
+  }
+}
+
+export const fetchSmartCommentSummary = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartCommentSummary())
+    const { data: { summary } } = await getSmartCommentSummary(params, token);
+    dispatch(requestFetchSmartCommentSummarySuccess(summary));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentSummaryError(errMessage));
+  }
+};
+
+export const fetchSmartCommentOverview = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartCommentOverview())
+    const { data: { overview } } = await getSmartCommentOverview(params, token);
+    dispatch(requestFetchSmartCommentOverviewSuccess(overview));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentOverviewError(errMessage));
   }
 };
 

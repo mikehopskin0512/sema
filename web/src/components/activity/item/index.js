@@ -27,7 +27,7 @@ const ActivityItem = (props) => {
       requester = 'Github User',
     },
   } = props;
-
+  
   const {
     username = 'User@email.com',
     firstName = '',

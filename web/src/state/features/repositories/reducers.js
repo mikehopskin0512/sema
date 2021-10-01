@@ -7,7 +7,15 @@ const initialState = {
     repositories: [],
     reactions: [],
     tags: {},
-    overview: {},
+    overview: {
+      name: '',
+      stats: {
+        totalPullRequests: 0,
+        totalSemaUsers: 0,
+        totalSmartCommenters: 0,
+        totalSmartComments: 0
+      }
+    },
   },
 
 };
