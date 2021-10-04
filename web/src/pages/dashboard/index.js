@@ -25,8 +25,7 @@ const Dashboard = () => {
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
-  const [isOnboardingModalActivea, toggleOnboardingModalActive] = useState(false);
-  const isOnboardingModalActive = false
+  const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
