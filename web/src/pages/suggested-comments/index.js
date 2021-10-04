@@ -32,11 +32,10 @@ const CommentCollections = () => {
     auth: state.authState,
     commentsState: state.commentsState,
   }));
-  const { user, token, isFetching } = auth;  
-  const { collections } = user;
+  const { token } = auth;  
   const { comments } = commentsState;
   
-  const sortedCollections = [...collections].sort((_a, _b) => {
+  const sortedCollections = [...comments].sort((_a, _b) => {
     const a = _a.collectionData.name.toLowerCase();
     const b = _b.collectionData.name.toLowerCase();
     if (a === DEFAULT_COLLECTION_NAME) return -1;
