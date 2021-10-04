@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
+import clsx from 'clsx';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
@@ -12,6 +13,7 @@ import { suggestCommentsOperations } from '../../state/features/suggest-comments
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
+import styles from './dashboard.module.scss';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
@@ -155,7 +157,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className='has-background-gray-9 pb-180'>
+      <div className={clsx('has-background-gray-9', styles.container)}>
         <Helmet {...DashboardHelmet} />
         <ReposView />
       </div>
