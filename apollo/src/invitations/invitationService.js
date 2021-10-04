@@ -70,10 +70,10 @@ export const findByToken = async (token) => {
   }
 };
 
-export const redeemInvite = async (token, userId) => {
+export const redeemInvite = async (token, userId, invitationId = null) => {
   try {
     const query = Invitation.findOneAndUpdate({
-      token, 'redemptions.user': { $ne: userId },
+      $or: [{ token }, { _id: invitationId }], 'redemptions.user': { $ne: userId },
     },
     { $push: { redemptions: { user: userId } }, $set: { isPending: false } });
     const invite = await query.lean().exec();

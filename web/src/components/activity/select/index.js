@@ -119,7 +119,7 @@ const CustomSelect = (props) => {
         type="button"
         onClick={toggleMenu}
         className={clsx(
-          'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15',
+          'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
           styles.select,
         )}>
         <div className="is-flex is-align-items-center">

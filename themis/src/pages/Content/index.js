@@ -78,6 +78,7 @@ $(() => {
   if (!reminderRoot && isPRPage()) {
     const node = document.createElement('div');
     node.id = SEMA_REMINDER_ROOT_ID;
+    node.className = `${getActiveThemeClass()}`;
     document.body.appendChild(node);
     ReactDOM.render(
       // eslint-disable-next-line react/jsx-filename-extension
@@ -310,8 +311,6 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
         }
       }
     }
-  } else if (!activeElement.classList.contains('sema-input')) {
-    activeElement?.blur();
   }
 },
 true);
