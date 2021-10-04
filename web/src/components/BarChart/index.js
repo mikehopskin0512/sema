@@ -79,9 +79,8 @@ const NivoBarChart = ({ data = [], groupBy }) => {
       const parseDate2 = format(new Date(date2), 'LLL d')
       dateString = `${parseDate1} - ${parseDate2}`
     } else {
-
+      dateString = format(new Date(indexValue), 'LLL d')
     }
-    console.log(itemData)
     return (
       <div className="box has-background-white p-8 border-radius-4px">
         <p className="has-text-weight-semibold">{emoji} {label}</p>
