@@ -44,11 +44,9 @@ const EmptyRepo = () => {
                     return (
                       <React.Fragment key={i}>
                         <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
-                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex' +
-                            ' is-flex-direction-column is-justify-content-flex-start')}>
+                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-flex-start')}>
                             <div
-                              className={clsx(styles['img-container'], 'is-flex is-justify-content-start' +
-                                ' is-align-items-start mb-25')}
+                              className={clsx(styles['img-container'], 'is-flex is-justify-content-start is-align-items-start mb-25')}
                               onMouseEnter={() => onHover(title)}
                               onMouseLeave={() => onRemoveHover()}
                             >
