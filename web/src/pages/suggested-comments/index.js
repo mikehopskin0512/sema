@@ -77,13 +77,15 @@ const CommentCollections = () => {
             <div className="mr-10">
               <GlobalSearch />
             </div>
-            <button
-              className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
-              type="button"
-            >
-              <FontAwesomeIcon icon={faPlus} className="mr-10" />
-              Add a Comment Collection
-            </button>
+            <a href="/suggested-comments/add">
+              <button
+                className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
+                type="button"
+              >
+                <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                Add a Comment Collection
+              </button>
+            </a>
           </div>
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
