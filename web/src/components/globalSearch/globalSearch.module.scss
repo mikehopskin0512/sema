@@ -39,5 +39,8 @@
 
   &_input {
     width: 430px;
+    @media only screen and (max-width: 769px) {
+      max-width: 300px !important;
+    }
   }
 }

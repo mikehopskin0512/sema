@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
@@ -71,7 +73,18 @@ const CommentCollections = () => {
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Suggested Comments
           </p>
-          <GlobalSearch />
+          <div className="is-flex is-align-items-center is-flex-wrap-wrap">
+            <div className="mr-10">
+              <GlobalSearch />
+            </div>
+            <button
+              className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
+              type="button"
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-10" />
+              Add a Comment Collection
+            </button>
+          </div>
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">
