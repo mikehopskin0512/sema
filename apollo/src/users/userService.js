@@ -175,7 +175,7 @@ export const findById = async (id) => {
   }
 };
 
-export const findUserCollectionsById = async (id) => {
+export const findUserCollectionsByUserId = async (id) => {
   try {
     const query = User.findOne({ _id: id });
     const user = await query.lean().populate({

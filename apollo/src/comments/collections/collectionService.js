@@ -4,7 +4,7 @@ import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import User from '../../users/userModel';
-import { findById as findUserById, update as updateUser, findUserCollectionsById } from '../../users/userService';
+import { findById as findUserById, update as updateUser, findUserCollectionsByUserId } from '../../users/userService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -71,7 +71,7 @@ export const findById = async (id) => {
 
 export const getUserCollectionsById = async (id) => {
   try {
-    const user = await findUserCollectionsById(id);
+    const user = await findUserCollectionsByUserId(id);
     if (user) {
       const collections = user.collections.map((collection) => {
         const { collectionData = { comments: [] } } = collection;
