@@ -10,6 +10,28 @@
     }
 }
 
+.container {
+    padding: 50px;
+    margin: 50px;
+
+    @media only screen and (max-width: 1200px) {
+        padding: 8px;
+        margin: 16px;
+    }
+}
+
+.mobile-view {
+    @media screen and (min-width: 900px) {
+        display: none !important;
+    }
+}
+
+.desktop-view {
+    @media screen and (max-width: 900px) {
+        display: none !important;
+    }
+}
+
 .img-container {
     position: relative;
     height: 250px;
