@@ -54,7 +54,7 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
-  
+
   build-chrome-extension:
     docker:
       - image: cimg/node:15.14.0
@@ -83,6 +83,7 @@ jobs:
       - run:
           name: push the extension file to s3
           command: filename=$(ls themis | grep Sema_Code_Review_Assistant_ | head -1) && aws s3 cp themis/$filename s3://$ENV-chrome-store/$filename --profile phoenix
+
 workflows:
   version: 2
   primary:
