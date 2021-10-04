@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 
-const AddCommentCollection = ({ token }) => {
+const EditCommentCollectionPage = ({ token }) => {
   return(
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
@@ -33,4 +33,4 @@ const AddCommentCollection = ({ token }) => {
   )
 }
 
-export default AddCommentCollection;
+export default EditCommentCollectionPage;

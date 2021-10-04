@@ -30,7 +30,7 @@ const AddCollectionPage = () => {
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet title="Add suggested comments" />
+      <Helmet title={cid ? "Add suggested comments" : "Add a comment collection"} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={`/suggested-comments?cid=${collection._id}`} className="is-hidden-mobile">
