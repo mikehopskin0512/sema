@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
+import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
 import { authOperations } from '../../../state/features/auth';
 
@@ -59,7 +60,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       }
     };
 
-    const isMyComments = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
+    const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
 
     return (
       <Link href={`?cid=${_id}`}>

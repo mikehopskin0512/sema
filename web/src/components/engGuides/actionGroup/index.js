@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './actionGroup.module.scss';
 import { engGuidesOperations } from '../../../state/features/engGuides';
-import ArchiveModal from '../../archiveModal';
 
 const { bulkUpdateEngGuides, getEngGuides } = engGuidesOperations;
 
@@ -20,8 +19,6 @@ const ActionGroup = ({
     auth: state.authState,
   }));
   const { token } = auth;
-  const [isOpen, setIsOpen] = useState(false);
-  const [guides, setGuides] = useState([]);
 
   const onUpdate = async (data) => {
     const isActive = !data[0].isActive;
@@ -36,13 +33,11 @@ const ActionGroup = ({
     await router.push(`/guides/edit?cid=${collectionId}&guides=${selectedGuides}`);
   };
 
-  const onArchive = () => {
-    setIsOpen(true);
-    setGuides(unarchiveGuides);
+  const onArchive = async () => {
+    await onUpdate(unarchiveGuides);
   };
-  const onUnarchive = () => {
-    setIsOpen(true);
-    setGuides(archiveGuides);
+  const onUnarchive = async () => {
+    await onUpdate(archiveGuides);
   };
 
   return (
@@ -86,13 +81,6 @@ const ActionGroup = ({
       >
         Undo selection
       </button>
-      <ArchiveModal
-        onClose={() => setIsOpen(false)}
-        active={isOpen}
-        message="Community Engineering Guides"
-        data={guides}
-        onSubmit={onUpdate}
-      />
     </div>
   );
 };

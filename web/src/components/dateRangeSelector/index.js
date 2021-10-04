@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { DateRangePicker } from 'react-dates';
+import React, { useEffect, useRef, useState } from 'react';
+import { DayPickerRangeController } from 'react-dates';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { subDays } from 'date-fns';
+import { isEqual, subDays } from 'date-fns';
 import moment from 'moment';
+import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
 
@@ -42,9 +44,11 @@ const DATE_RANGES = {
   };
 
 const DateRangeSelector = (props) => {
-    const { start, setStartDate, setEndDate, end } = props;
+    const { start, setStartDate, setEndDate, end, isRight = false, buttonProps = {} } = props;
+    const popupRef = useRef(null);
     const [selectedRange, setSelectedRange] = useState('allTime');
-    const [focusedInput, setFocusedInput] = useState();
+    const [focusedInput, setFocusedInput] = useState('startDate');
+    const { isOpen, toggleMenu } = usePopup(popupRef);
 
     useEffect(() => {
       if (selectedRange === 'custom') {
@@ -61,8 +65,13 @@ const DateRangeSelector = (props) => {
 
     const setDates = ({ startDate, endDate }) => {
       setSelectedRange('custom');
+      // Clear end date everytime startDate is changed
+      if (isEqual(new Date(end), new Date(endDate)) && !isEqual(new Date(start), new Date(startDate))) {
+        setEndDate();
+      } else {
+        setEndDate(endDate);
+      }
       setStartDate(startDate);
-      setEndDate(endDate);
     }
 
     const renderCalendarInfo = () => (
@@ -92,27 +101,63 @@ const DateRangeSelector = (props) => {
     );
 
     return (
-      <DateRangePicker
-        startDate={start}
-        startDateId="startDate"
-        endDate={end} // momentPropTypes.momentObj or null,
-        endDateId="endDate" // PropTypes.string.isRequired,
-        onDatesChange={setDates} // PropTypes.func.isRequired,
-        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-        onFocusChange={focused => setFocusedInput(focused)} // PropTypes.func.isRequired,
-        calendarInfoPosition="before"
-        renderCalendarInfo={renderCalendarInfo}
-        orientation="horizontal"
-        anchorDirection="right"
-        renderNavPrevButton={renderNavPrevButton}
-        renderNavNextButton={renderNavNextButton}
-        small
-        keepOpenOnDateSelect
-        hideKeyboardShortcutsPanel
-        displayFormat="MMM DD, YYYY"
-        isOutsideRange={(day) => day.isAfter(moment().add(1, 'days'))}
-      />
+      <>
+        <div className={clsx("dropdown is-flex is-justify-content-stretch is-align-items-stretch", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
+          <div className="dropdown-trigger is-flex-grow-1">
+            <button
+              className={clsx(
+                "has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable",
+                styles.button
+              )}
+              onClick={toggleMenu}
+              {...buttonProps}
+            >
+              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-6", styles.placeholder)}>
+                { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
+              </span>
+              <span className="icon is-small pb-5">
+                <FontAwesomeIcon icon={faSortDown} color="#394A64" />
+              </span>
+            </button>
+          </div>
+          <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
+            <div className={clsx("dropdown-content", styles['dropdown-container'])}>
+              <DayPickerRangeController
+                startDate={start}
+                endDate={end}
+                onDatesChange={setDates}
+                focusedInput={focusedInput}
+                onFocusChange={focused => setFocusedInput(focused || 'startDate')}
+                calendarInfoPosition="before"
+                renderCalendarInfo={renderCalendarInfo}
+                orientation="horizontal"
+                renderNavPrevButton={renderNavPrevButton}
+                renderNavNextButton={renderNavNextButton}
+                displayFormat="MMM DD, YYYY"
+                isOutsideRange={(day) => day.isAfter(moment().add(1, 'days'))}
+                initialVisibleMonth={() => moment()}
+                numberOfMonths={2}
+                hideKeyboardShortcutsPanel
+              />
+            </div>
+          </div>
+        </div>
+      </>
     )
+};
+
+DateRangeSelector.defaultProps = {
+  isRight: false,
+  buttonProps: {},
+};
+
+DateRangeSelector.propTypes = {
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
+  setStartDate: PropTypes.func.isRequired,
+  setEndDate: PropTypes.func.isRequired,
+  isRight: PropTypes.bool,
+  buttonProps: PropTypes.object,
 };
 
 export default DateRangeSelector;

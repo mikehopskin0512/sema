@@ -5,6 +5,7 @@ import $ from 'cash-dom';
 
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
+import { SEMA_LANDING_FAQ } from './constants';
 
 const EmojiSelection = ({
   allEmojis,
@@ -80,6 +81,11 @@ const EmojiSelection = ({
                   />
                 </button>
               ))}
+              <div className="learn-more-link">
+                <a rel="noreferrer" target="_blank" href={SEMA_LANDING_FAQ}>
+                  Learn more about reactions
+                </a>
+              </div>
             </div>
           </div>
         </div>
