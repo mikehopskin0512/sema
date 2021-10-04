@@ -16,6 +16,7 @@ import {
   filterSmartComments,
   getSuggestedMetrics,
   exportSuggestedMetrics,
+  getSmartCommentsTagsReactions,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
 
@@ -40,7 +41,6 @@ export default (app, passport) => {
 
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
-
     try {
       const comments = await filterSmartComments({author, reviewer, repoId});
       return res.status(201).send({
@@ -166,6 +166,32 @@ export default (app, passport) => {
       });
 
       return res.end(packer);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { requester: author, reviewer, externalId: repoId } = req.query;
+    try {
+      const summary = await getSmartCommentsTagsReactions({author, reviewer, repoId});
+      return res.status(201).send({
+        summary,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { requester: author, reviewer, externalId: repoId, startDate, endDate, } = req.query;
+    try {
+      const overview = await getSmartCommentsTagsReactions({ author, reviewer, repoId, startDate, endDate });
+      return res.status(201).send({
+        overview,
+      });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { version, orgDomain } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import intercom from '../../shared/apiIntercom';
 import { sendEmail } from '../../shared/emailService';
 
 import {
@@ -127,7 +128,7 @@ export default (app, passport) => {
     try {
       const {
         params: { id },
-        body
+        body,
       } = req;
 
       const { user } = await updateUserStatus(id, body);
@@ -149,6 +150,16 @@ export default (app, passport) => {
           templateName: 'userAdmitted',
         };
         await sendEmail(message);
+
+        // Add user to Intercom
+        await intercom.create('contacts', {
+          role: 'user',
+          external_id: id,
+          name: `${firstName} ${lastName}`.trim(),
+          email: username,
+          avatar: avatarUrl,
+          signed_up_at: new Date(),
+        });
       }
 
       return res.status(200).json();

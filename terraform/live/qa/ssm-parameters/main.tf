@@ -137,6 +137,12 @@ resource "aws_ssm_parameter" "allowed_origin" {
   value = "https://app-qa.semasoftware.com"
 }
 
+resource "aws_ssm_parameter" "phoenix_intercom_token" {
+  name  = "/${var.env}/apollo/intercom-token"
+  type  = "String"
+  value = "dG9rOmFlNGMyZGIzXzFmN2RfNDFjM19hNDgwX2I5MjZkZmRkNjEwYToxOjA="
+}
+
 resource "aws_ssm_parameter" "org_domain" {
   name  = "/${var.env}/apollo/org-domain"
   type  = "String"
