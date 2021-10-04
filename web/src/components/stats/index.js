@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { format } from 'date-fns';
+import DateRangeSelector from '../dateRangeSelector';
 import ReactionChart from './reactionChart';
 import TagsChart from './tagsChart';
 import { setSmartCommentsDateRange, getReactionTagsChartData } from '../../utils/parsing'
 
-const StatsPage = ({ startDate, endDate }) => {
+const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -48,22 +50,25 @@ const StatsPage = ({ startDate, endDate }) => {
     <>
       <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap px-10">
         <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
+        <div>
+          <DateRangeSelector
+            start={startDate}
+            end={endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+            isRight
+            buttonProps={{
+              placeholder: 'Select Dates',
+            }}
+          />
+        </div>
       </div>
-      <div className="is-flex is-flex-wrap-wrap mt-20">
+      {startDate && endDate && (
+        <p className="px-10 mt-10 has-text-primary">Showing data from <b>{format(new Date(startDate), 'MMMM dd, yyyy')}</b> to <b>{format(new Date(endDate), 'MMMM dd, yyyy')}</b></p>
+      )}
+      <div className="is-flex is-flex-wrap-wrap mt-10">
         <ReactionChart reactions={reactions} />
         <TagsChart tags={tags} />
-        {/* <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Reactions</p>
-            <BarChart data={reactions} groupBy={groupBy} />
-          </div>
-        </div>
-        <div className={clsx('is-flex-grow-1 px-10 mb-20', styles.containers)}>
-          <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
-            <CircularPacking data={tags} groupBy={groupBy} />
-          </div>
-        </div> */}
       </div>
     </>
   );

@@ -31,9 +31,9 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
 
   useEffect(() => {
     if (!isEmpty(filter)) {
-      handleFilter(filter)
+      handleFilter(filter);
     }
-  }, [filter])
+  }, [filter]);
 
   useEffect(() => {
     if (startDate) {
@@ -42,16 +42,16 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
         ...filter,
       };
       delete newFilter.endDate;
-      setFilter(newFilter)
-      setEndDate()
+      setFilter(newFilter);
+      setEndDate();
     }
-  }, [startDate])
+  }, [startDate]);
 
   useEffect(() => {
     if (endDate) {
-      setFilter({endDate: format(new Date(endDate), 'yyyy-MM-dd hh:mm:ss'), ...filter})
+      setFilter({endDate: format(new Date(endDate), 'yyyy-MM-dd hh:mm:ss'), ...filter});
     }
-  }, [endDate])
+  }, [endDate]);
 
   return (
     <>
@@ -152,7 +152,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
       </div>
     </div>
     </>
-  )
+  );
 }
 StatsFilter.defaultProps = {
   filterUserList: [],
