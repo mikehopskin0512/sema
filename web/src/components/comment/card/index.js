@@ -1,12 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
@@ -15,10 +16,14 @@ import { authOperations } from '../../../state/features/auth';
 const { setCollectionIsActive } = authOperations;
 
 const Card = ({ isActive, collectionData, addNewComment }) => {
+  const popupRef = useRef(null);
   const router = useRouter();
-  const { token } = useSelector((state) => state.authState);
+  const { token, user } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
+  const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
+
+  const { isSemaAdmin, organizations } = user;
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -32,6 +37,27 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   const onClickChild = (e) => {
     e.stopPropagation();
   };
+
+  const handleClick = (e) => {
+    if (popupRef.current.contains(e.target)) {
+      return;
+    }
+    setShowMenu(false);
+  };
+
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  };
+
+  const closeMenu = () => setShowMenu(false);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, []);
 
   if (collectionData) {
     const { _id = '', name = '', description = '', comments = [] } = collectionData;
@@ -50,7 +76,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     return (
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} aria-hidden="true">
-          <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
+          <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
               <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
               { asPath === '/suggested-comments' && (
@@ -78,19 +104,45 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>
-                {name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments' ? (
-                  <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
-                    <div
-                      className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
-                        styles['add-button'])}
-                      onClick={onClickAddComment}
-                      aria-hidden
-                    >
-                      <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                      Add a comment
+                <div className="is-flex is-align-items-center">
+                  {name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments' ? (
+                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
+                      <div
+                        className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
+                          styles['add-button'])}
+                        onClick={onClickAddComment}
+                        aria-hidden
+                      >
+                        <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                        Add a comment
+                      </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                  { (isSemaAdmin || get(organizations, '[0].isAdmin', false)) && (
+                    <div className={clsx("dropdown mr-10 is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
+                      <div className="dropdown-trigger">
+                        <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                          <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
+                        </button>
+                      </div>
+                      <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
+                        <div className="dropdown-content">
+                          <a href="#" className="dropdown-item">
+                            Edit Collection
+                          </a>
+                          <a className="dropdown-item">
+                            Archive Collection
+                          </a>
+                          {!isSemaAdmin && (
+                            <a href="#" className="dropdown-item is-active">
+                              Share with Sema Community
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ) }
+                </div>
               </div>
             </div>
           </div>
