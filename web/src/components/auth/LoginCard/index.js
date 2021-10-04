@@ -18,7 +18,7 @@ const LoginCard = ({ isAuthenticated }) => {
       </p>
       <div className="mb-15">
         <span className="is-size-8 has-text-gray-dark">
-          By joining, you are agreeing to Sema’s
+          By joining, you are agreeing to Sema’s &nbsp;
           <a href="https://semasoftware.com/terms-and-conditions/">
             Terms & Conditions
           </a>

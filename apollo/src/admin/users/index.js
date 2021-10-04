@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { version, orgDomain } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import intercom from '../../shared/apiIntercom';
 import { sendEmail } from '../../shared/emailService';
 
 import {
@@ -14,6 +15,9 @@ import {
   exportTimeToValueMetric,
   findUser, exportUsers
 } from './userService';
+
+import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService'
+import { revokeInvitation } from '../../users/userService';
 
 const route = Router();
 
@@ -124,7 +128,7 @@ export default (app, passport) => {
     try {
       const {
         params: { id },
-        body
+        body,
       } = req;
 
       const { user } = await updateUserStatus(id, body);
@@ -133,6 +137,12 @@ export default (app, passport) => {
 
       if (key === "isWaitlist" && value === false) {
         const { username } = user;
+        const [invitation] = await checkIfInvited(username);
+        if (invitation) {
+          await deleteInvitation(invitation._id);
+          await revokeInvitation(invitation.senderEmail);
+        }
+
         // Send email
         const message = {
           recipient: username,
@@ -140,6 +150,16 @@ export default (app, passport) => {
           templateName: 'userAdmitted',
         };
         await sendEmail(message);
+
+        // Add user to Intercom
+        await intercom.create('contacts', {
+          role: 'user',
+          external_id: id,
+          name: `${firstName} ${lastName}`.trim(),
+          email: username,
+          avatar: avatarUrl,
+          signed_up_at: new Date(),
+        });
       }
 
       return res.status(200).json();

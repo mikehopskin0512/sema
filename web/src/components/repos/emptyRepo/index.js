@@ -26,7 +26,7 @@ const EmptyRepo = () => {
   };
 
   return (
-    <div className="hero">
+    <div className="hero content-container">
       <div className="hero-body m-50 p-50">
         <div className="tile is-ancestor mb-50">
           <div className="is-parent is-full-width">

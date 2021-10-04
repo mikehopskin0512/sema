@@ -1,3 +1,8 @@
+resource "aws_ssm_parameter" "apollo_chrome_extension_id" {
+  name  = "/${var.env}/apollo/chrome/extensionid"
+  type  = "String"
+  value = "nompfgddpldjighjfnkncgehjdbcphbf"
+}
 resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
   name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
   type  = "String"
@@ -130,6 +135,12 @@ resource "aws_ssm_parameter" "allowed_origin" {
   name  = "/${var.env}/apollo/allowed-origin"
   type  = "String"
   value = "https://app-qa.semasoftware.com"
+}
+
+resource "aws_ssm_parameter" "phoenix_intercom_token" {
+  name  = "/${var.env}/apollo/intercom-token"
+  type  = "String"
+  value = "dG9rOmFlNGMyZGIzXzFmN2RfNDFjM19hNDgwX2I5MjZkZmRkNjEwYToxOjA="
 }
 
 resource "aws_ssm_parameter" "org_domain" {

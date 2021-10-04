@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 import styles from "./personalStatsTile.module.scss";
-import { GITHUB_URL } from "src/utils/constants";
+import { GITHUB_URL } from "../../../utils/constants";
 
 const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
   const auth = useSelector((state) => state.authState);
@@ -15,7 +15,8 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       identities
     },
   } = auth;
-  const { username: githubUsername } = identities[0];
+  // Get GitHub identity
+  const { username: githubUsername } = identities.find((item) => item.provider === "github");
 
   const renderTopReactions = () => {
     return topReactions.map((reaction) => {

@@ -12,6 +12,7 @@ import EngGuideTable from '../engGuideTable';
 import ActionGroup from '../actionGroup';
 import GlobalSearch from "../../globalSearch";
 import Helmet from '../../utils/Helmet';
+import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
 
@@ -36,7 +37,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   }));
 
   const { token, user } = auth;
-  const { engGuides, isFetching } = engGuideState;
+  const { engGuides } = engGuideState;
   const [selectedGuides, setSelectedGuides] = useState([]);
 
   const onSearch = ({ search, tag, language }) => {
@@ -118,10 +119,10 @@ const CollectionEngGuides = ({ collectionId }) => {
   // intentionally used useMemo here
   const isEditable = useMemo(() => user.isSemaAdmin, [user]);
 
-  if (isFetching && !engGuide) {
+  if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (
-      <div>
-        Loading
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
       </div>
     );
   }
@@ -164,13 +165,19 @@ const CollectionEngGuides = ({ collectionId }) => {
             <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
           )
         }
-        <EngGuideTable
-          data={engGuideFilter}
-          selectedGuides={selectedGuides}
-          handleSelectChange={handleSelectChange}
-          handleSelectAllChange={handleSelectAllChange}
-          collectionId={collectionId}
-        />
+        { auth.isFetching || engGuideState.isFetching ? (
+          <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '30vh' }}>
+            <Loader/>
+          </div>
+        ) : (
+          <EngGuideTable
+            data={engGuideFilter}
+            selectedGuides={selectedGuides}
+            handleSelectChange={handleSelectChange}
+            handleSelectAllChange={handleSelectAllChange}
+            collectionId={collectionId}
+          />
+        ) }
       </div>
     </div>
   );

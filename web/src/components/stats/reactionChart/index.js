@@ -19,12 +19,14 @@ const ReactionChart = ({reactions, className, yAxisType = 'percentage'}) => {
 
 ReactionChart.defaultProps = {
   reactions: [],
-  className: ''
+  className: '',
+  yAxisType: 'percentage'
 };
 
 ReactionChart.PropTypes = {
   reactions: PropTypes.array,
-  className: PropTypes.string
+  className: PropTypes.string,
+  yAxisType: PropTypes.string
 };
 
 export default ReactionChart

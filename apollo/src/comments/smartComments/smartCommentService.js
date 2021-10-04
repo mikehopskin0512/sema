@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import _, { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -77,7 +77,7 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     if (endDate) {
       dateFilter = Object.assign(dateFilter, { createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt } });
     }
-    if (!_.isEmpty(dateFilter.createdAt)) {
+    if (!isEmpty(dateFilter.createdAt)) {
       filter = Object.assign(filter, dateFilter);
     }
 
@@ -85,6 +85,7 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     const smartComments = await query.lean()
       .populate('userId')
       .populate('tags')
+      .sort('-createdAt')
       .exec();
 
     return smartComments;
@@ -572,11 +573,11 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsOverview = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     const filter = { reviewer, author, repoId, startDate, endDate };
     const totalReactions = {};
-    const totalTags = {}
+    const totalTags = {};
     const smartComments = await filterSmartComments(filter);
     smartComments.map((comments) => {
       const { tags, reaction } = comments;
@@ -584,15 +585,15 @@ export const getSmartCommentsOverview = async ({ reviewer, author, repoId, start
         tags.map((tag) => {
           const { _id: tagId } = tag;
           if (totalTags?.[tagId]) {
-            totalTags[tagId]++
+            totalTags[tagId]++;
           } else {
-            totalTags[tagId] = 1
+            totalTags[tagId] = 1;
           }
-        })
+        });
       }
       if (reaction) {
         if (totalReactions?.[reaction]) {
-          totalReactions[reaction]++
+          totalReactions[reaction]++;
         } else {
           totalReactions[reaction] = 1;
         }
