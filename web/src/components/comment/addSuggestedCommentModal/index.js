@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { find } from 'lodash';
 import CreatableSelect from 'react-select/creatable';
 
+import { collectionsOperations } from '../../../state/features/collections';
 import { commentsOperations } from '../../../state/features/comments';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
 import { tagsOperations } from '../../../state/features/tags';
@@ -15,9 +16,10 @@ import { tagsState } from '../../../state/features';
 const { fetchTagList } = tagsOperations;
 
 const { getCollectionById } = commentsOperations;
+const { fetchAllUserCollections } = collectionsOperations;
 const { createSuggestComment, updateSuggestComment } = suggestCommentsOperations;
 
-const AddSuggestedCommentModal = ({ active, onClose, _id, comment }) => {
+const AddSuggestedCommentModal = ({ active, onClose, _id, comment, inCollectionsPage = false }) => {
   const dispatch = useDispatch();
   const {
     register, handleSubmit, reset, formState, setValue,
@@ -141,7 +143,11 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment }) => {
     }
     reset();
     onClose();
-    dispatch(getCollectionById(collectionId, token));
+    if (inCollectionsPage) {
+      dispatch(fetchAllUserCollections(token));
+    } else {
+      dispatch(getCollectionById(collectionId, token));
+    }
   };
 
   return (
@@ -226,11 +232,13 @@ AddSuggestedCommentModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   _id: PropTypes.string,
   comment: PropTypes.any,
+  inCollectionsPage: PropTypes.bool,
 };
 
 AddSuggestedCommentModal.defaultProps = {
   comment: null,
   _id: '',
+  inCollectionsPage: false,
 };
 
 export default AddSuggestedCommentModal;

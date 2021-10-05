@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { flatten } from 'lodash';
+import { get } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import User from '../../users/userModel';
-import { findById as findUserById, update as updateUser } from '../../users/userService';
+import { findById as findUserById, update as updateUser, findUserCollectionsByUserId } from '../../users/userService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -71,9 +71,37 @@ export const findById = async (id) => {
 
 export const getUserCollectionsById = async (id) => {
   try {
-    const user = await findUserById(id);
+    const user = await findUserCollectionsByUserId(id);
     if (user) {
-      return user.collections;
+      const collections = user.collections.map((collection) => {
+        const { collectionData = { comments: [] } } = collection;
+        const { comments } = collectionData;
+        const languages = [];
+        const guides = [];
+        comments.forEach((comment) => {
+          comment.tags.forEach((tagItem) => {
+            const { tag } = tagItem;
+            if (tag.type === 'language' && !languages.includes(tag.label)) {
+              languages.push(tag.label)
+            }
+            if (tag.type === 'guide' && !guides.includes(tag.label)) {
+              guides.push(tag.label)
+            }
+          })
+        });
+        return {
+          ...collection,
+          collectionData: {
+            ...collectionData,
+            commentsCount: comments.length,
+            source: get(comments, '[0].source.name', null),
+            languages,
+            guides,
+            comments: undefined,
+          }
+        }
+      })
+      return collections;
     }
     return {
       statusCode: 400,
