@@ -311,8 +311,6 @@ window.semaExtensionRegistry.registerEventListener('focus', (event) => {
         }
       }
     }
-  } else if (!activeElement.classList.contains('sema-input')) {
-    activeElement?.blur();
   }
 },
 true);

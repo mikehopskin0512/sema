@@ -5,14 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
-
+import DateRangeSelector from '../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../data/activity';
 
 import { filterSmartComments } from '../../../utils/parsing';
 
 const defaultAvatar = '/img/default-avatar.jpg';
 
-const ActivityPage = () => {
+const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -95,7 +95,7 @@ const ActivityPage = () => {
   return(
     <>
       <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
-        <div className="field is-flex-grow-1 px-5 my-5">
+        <div className="field px-5 my-5 is-flex-grow-1">
           <p className="control has-icons-left">
             <input
               className="input has-background-white"
@@ -113,6 +113,14 @@ const ActivityPage = () => {
           className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
           style={{zIndex: 2}}
         >
+          <div className="px-5 my-5">
+            <DateRangeSelector
+              start={startDate}
+              end={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+            />
+          </div>
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{

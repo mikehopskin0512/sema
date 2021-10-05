@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx'
-import { findIndex, isEmpty, uniqBy } from 'lodash';
+import { find, findIndex, isEmpty, uniqBy } from 'lodash';
+import { differenceInCalendarDays } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
@@ -50,14 +51,14 @@ const PersonalInsights = () => {
     groupBy: '',
     startDate: null,
     endDate: null,
-  })
+  });
 
   const fetchUserComments = async (username) => {
-    await dispatch(getUserComments({ author: username }, token))
+    await dispatch(getUserComments({ author: username }, token));
   };
 
   const fetchUserReceivedComments = async (username) => {
-    await dispatch(getUserComments({ requester: username }, token))
+    await dispatch(getUserComments({ requester: username }, token));
   }
 
   const getUserSummary = async (username) => {
@@ -80,7 +81,7 @@ const PersonalInsights = () => {
       params.requester = username
     }
     if ((startDate && endDate) || (!startDate && !endDate)) {
-      dispatch(fetchSmartCommentOverview(params, token))
+      dispatch(fetchSmartCommentOverview(params, token));
     }
   };
 
@@ -105,7 +106,7 @@ const PersonalInsights = () => {
     if (tags) {
       const sorted = Object.keys(tags).sort(function (a, b) { return tags[b] - tags[a] })
       data = await Promise.all(sorted.filter((_, index) => index <= 2).map(async (tag) => {
-        const label = getTagLabel(tag)
+        const label = getTagLabel(tag);
         return {
           [label]: tags[tag]
         }

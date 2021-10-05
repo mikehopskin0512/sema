@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { subDays } from 'date-fns';
+import { isEqual, subDays } from 'date-fns';
 import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
@@ -44,7 +44,7 @@ const DATE_RANGES = {
   };
 
 const DateRangeSelector = (props) => {
-    const { start, setStartDate, setEndDate, end, isRight = false } = props;
+    const { start, setStartDate, setEndDate, end, isRight = false, buttonProps = {} } = props;
     const popupRef = useRef(null);
     const [selectedRange, setSelectedRange] = useState('allTime');
     const [focusedInput, setFocusedInput] = useState('startDate');
@@ -65,8 +65,13 @@ const DateRangeSelector = (props) => {
 
     const setDates = ({ startDate, endDate }) => {
       setSelectedRange('custom');
+      // Clear end date everytime startDate is changed
+      if (isEqual(new Date(end), new Date(endDate)) && !isEqual(new Date(start), new Date(startDate))) {
+        setEndDate();
+      } else {
+        setEndDate(endDate);
+      }
       setStartDate(startDate);
-      setEndDate(endDate);
     }
 
     const renderCalendarInfo = () => (
@@ -105,9 +110,10 @@ const DateRangeSelector = (props) => {
                 styles.button
               )}
               onClick={toggleMenu}
+              {...buttonProps}
             >
               <span className={clsx("has-text-weight-semibold is-fullwidth is-size-6", styles.placeholder)}>
-                { start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
+                { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
               </span>
               <span className="icon is-small pb-5">
                 <FontAwesomeIcon icon={faSortDown} color="#394A64" />
@@ -142,6 +148,7 @@ const DateRangeSelector = (props) => {
 
 DateRangeSelector.defaultProps = {
   isRight: false,
+  buttonProps: {},
 };
 
 DateRangeSelector.propTypes = {
@@ -150,6 +157,7 @@ DateRangeSelector.propTypes = {
   setStartDate: PropTypes.func.isRequired,
   setEndDate: PropTypes.func.isRequired,
   isRight: PropTypes.bool,
+  buttonProps: PropTypes.object,
 };
 
 export default DateRangeSelector;

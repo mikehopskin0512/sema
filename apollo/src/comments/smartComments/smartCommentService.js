@@ -580,26 +580,6 @@ export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, 
     const smartComments = await filterSmartComments(filter);
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);
-    // smartComments.map((comments) => {
-    //   const { tags, reaction } = comments;
-    //   if (tags.length) {
-    //     tags.map((tag) => {
-    //       const { _id: tagId } = tag;
-    //       if (totalTags?.[tagId]) {
-    //         totalTags[tagId]++
-    //       } else {
-    //         totalTags[tagId] = 1
-    //       }
-    //     })
-    //   }
-    //   if (reaction) {
-    //     if (totalReactions?.[reaction]) {
-    //       totalReactions[reaction]++
-    //     } else {
-    //       totalReactions[reaction] = 1;
-    //     }
-    //   }
-    // });
     return { smartComments, reactions: totalReactions, tags: totalTags };
   } catch (err) {
     logger.error(err);
