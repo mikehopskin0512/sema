@@ -29,8 +29,8 @@ const CommentCollections = () => {
   const { user, isFetching } = useSelector((state) => state.authState);
   const { collections, isSemaAdmin } = user;
   const sortedCollections = [...collections].sort((_a, _b) => {
-    const a = _a.collectionData.name.toLowerCase();
-    const b = _b.collectionData.name.toLowerCase();
+    const a = _a.collectionData?.name.toLowerCase();
+    const b = _b.collectionData?.name.toLowerCase();
     if (a === DEFAULT_COLLECTION_NAME) return -1;
     if (b === DEFAULT_COLLECTION_NAME) return 1;
     return a >= b ? 1 : -1

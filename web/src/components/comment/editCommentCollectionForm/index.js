@@ -5,15 +5,20 @@ import { tagsOperations } from '../../../state/features/tags';
 
 const { fetchTagList } = tagsOperations;
 
-const EditCommentCollectionForm = ({ token }) => {
+const EditCommentCollectionForm = ({ register, formState, setValue }) => {
   const dispatch = useDispatch();
+
   const [tagOptions, setTagOptions] = useState([]);
 
-  const { tagState } = useSelector(
+  const { authState, tagState } = useSelector(
     (state) => ({
       tagState: state.tagsState,
+      authState: state.authState,
     }),
   );
+
+  const { token } = authState;
+  const { errors } = formState;
 
   useEffect(() => {
     dispatch(fetchTagList(token));
@@ -27,20 +32,26 @@ const EditCommentCollectionForm = ({ token }) => {
       const { type, _id, label } = item;
       if (type === 'guide') {
         guides.push({
+          type,
           label,
           value: _id,
+          tagData: item
         });
       }
       if (type === 'language') {
         languages.push({
+          type,
           label,
           value: _id,
+          tagData: item
         });
       }
       if (type === 'custom') {
         custom.push({
+          type,
           label,
           value: _id,
+          tagData: item
         });
       }
     });
@@ -60,6 +71,15 @@ const EditCommentCollectionForm = ({ token }) => {
     ]);
   }, [tagState.tags]);
 
+  const onSelectTags = (e) => {
+    const tags = e.map(({ type, label, value }) => ({
+      tag: value,
+      type,
+      label,
+    }));
+    setValue('tags', tags);
+  }
+
   return(
     <div className="p-10">
       <div className="mb-25">
@@ -67,7 +87,14 @@ const EditCommentCollectionForm = ({ token }) => {
         <input
           className="input has-background-white"
           type="text"
+          {...register(
+            'name',
+            {
+              required: 'Title is required',
+            },
+          )}
         />
+        {errors.name && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.name.message}</p>)}
       </div>
       <div className="mb-25">
         <label className="label has-text-deep-black">Tags/Language/Framework/Version *</label>
@@ -75,12 +102,16 @@ const EditCommentCollectionForm = ({ token }) => {
           isMulti
           options={tagOptions}
           placeholder=""
+          onChange={onSelectTags}
         />
         <p className="is-size-7 is-italic">These tags automatically add to new Comment in this Collection</p>
       </div>
       <div className="mb-25">
-        <label className="label has-text-deep-black">Collection Title *</label>
-        <textarea className="textarea has-background-white"></textarea>
+        <label className="label has-text-deep-black">Description</label>
+        <textarea
+          className="textarea has-background-white"
+          {...register('description')}
+        ></textarea>
       </div>
     </div>
   )

@@ -4,6 +4,7 @@ import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import User from '../../users/userModel';
+import Tag from '../tags/tagModel';
 import { findById as findUserById, update as updateUser } from '../../users/userService';
 
 const { Types: { ObjectId } } = mongoose;
@@ -34,9 +35,21 @@ export const create = async ({
 
 export const createMany = async (collections) => {
   try {
-    const newCollections = await Collection.insertMany(collections, { ordered: false });
+    const cols = collections.map((collection) => ({
+      ...collection,
+      tags: collection.tags.map((tag) => {
+        const hello = {
+          label: tag.label,
+          type: tag.type,
+          tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
+        }
+        return hello;
+      })
+    }));
+    const newCollections = await Collection.insertMany(cols);
     return newCollections;
   } catch (err) {
+    console.log({ err })
     // When using "unordered" insertMany, Mongo will ignore dup key errors and only insert new records
     // However it will throw an error, so data needs to be conditionally returned via catch block
     const { name, insertedDocs = [] } = err;
