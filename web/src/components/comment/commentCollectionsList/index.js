@@ -27,8 +27,8 @@ const CommentCollectionsList = () => {
   const [page, setPage] = useState(1);
   
   const sortedCollections = [...data].sort((_a, _b) => {
-    const a = _a.collectionData.name.toLowerCase();
-    const b = _b.collectionData.name.toLowerCase();
+    const a = _a.collectionData?.name.toLowerCase();
+    const b = _b.collectionData?.name.toLowerCase();
     if (a === DEFAULT_COLLECTION_NAME) return -1;
     if (b === DEFAULT_COLLECTION_NAME) return 1;
     return a >= b ? 1 : -1

@@ -47,7 +47,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   };
 
   if (collectionData) {
-    const { _id = '', name = '', description = '', commentsCount = 0, author = '', source, guides = [], languages = [] } = collectionData;
+    const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [] } = collectionData;
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
@@ -97,7 +97,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   <div className={clsx(
                     'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
                   )}>
-                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount}</p>
+                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount || comments.length}</p>
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>
