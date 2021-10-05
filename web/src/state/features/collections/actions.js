@@ -78,9 +78,8 @@ export const fetchAllUserCollections = (token) => async (dispatch) => {
     const collections = await getAllUserCollections(token);
     dispatch(requestFetchAllUserCollectionsSuccess(collections.data));
   } catch (error) {
-    console.log({ error })
-    // const { response: { data: { message }, status, statusText } } = error;
-    // const errMessage = message || `${status} - ${statusText}`;
-    // dispatch(requestFetchAllUserCollectionsError(errMessage));
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchAllUserCollectionsError(errMessage));
   }
 };
