@@ -10,9 +10,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
-import { commentsOperations } from '../../../state/features/comments';
+import { collectionsOperations } from 'src/state/features/collections';
 
-const { updateCollectionIsActiveAndFetchComments } = commentsOperations;
+const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 
 const Tag = ({ tag, _id, type }) => (
   <div
@@ -47,11 +47,11 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   };
 
   if (collectionData) {
-    const { _id = '', name = '', description = '', comments = [], author = '', source, guides = [], languages = [] } = collectionData;
+    const { _id = '', name = '', description = '', commentsCount = 0, author = '', source, guides = [], languages = [] } = collectionData;
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      dispatch(updateCollectionIsActiveAndFetchComments(_id, token));
+      dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
     };
 
     const onClickAddComment = () => {
@@ -97,7 +97,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   <div className={clsx(
                     'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
                   )}>
-                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{comments.length}</p>
+                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount}</p>
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>

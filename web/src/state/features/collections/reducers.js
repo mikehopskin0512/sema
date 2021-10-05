@@ -43,6 +43,24 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REQUEST_FETCH_ALL_USER_COLLECTIONS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_ALL_USER_COLLECTIONS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: action.collections,
+      error: {},
+    };
+  case types.REQUEST_FETCH_ALL_USER_COLLECTIONS_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

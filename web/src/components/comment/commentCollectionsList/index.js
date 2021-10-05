@@ -8,25 +8,25 @@ import Helmet, { CommentCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants';
-import { commentsOperations } from "../../../state/features/comments";
+import { collectionsOperations } from "../../../state/features/collections";
 
-const { getUserSuggestedComments } = commentsOperations;
+const { fetchAllUserCollections } = collectionsOperations;
 
 const NUM_PER_PAGE = 9;
 
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
-  const { auth, commentsState } = useSelector((state) => ({
+  const { auth, collectionsState } = useSelector((state) => ({
     auth: state.authState,
-    commentsState: state.commentsState,
+    collectionsState: state.collectionsState,
   }));
   const { token } = auth;  
-  const { comments, isFetching } = commentsState;
+  const { data = [] , isFetching } = collectionsState;
 
   const [collectionId, setCollectionId] = useState(null);
   const [page, setPage] = useState(1);
   
-  const sortedCollections = [...comments].sort((_a, _b) => {
+  const sortedCollections = [...data].sort((_a, _b) => {
     const a = _a.collectionData.name.toLowerCase();
     const b = _b.collectionData.name.toLowerCase();
     if (a === DEFAULT_COLLECTION_NAME) return -1;
@@ -40,7 +40,7 @@ const CommentCollectionsList = () => {
   const otherCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {
-    dispatch(getUserSuggestedComments(token));
+    dispatch(fetchAllUserCollections(token));
   }, []);
 
   const openNewSuggestedCommentModal = (_id) => {
@@ -71,7 +71,7 @@ const CommentCollectionsList = () => {
   return(
     <div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Helmet {...CommentCollectionsHelmet} />
-      <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} />
+      <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} inCollectionsPage />
       <div id="collectionBody" className={clsx('hero-body pb-250', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
