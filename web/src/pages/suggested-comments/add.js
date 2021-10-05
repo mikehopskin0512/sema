@@ -51,7 +51,7 @@ const AddCollectionPage = () => {
         { cid ? (
           <AddSuggestedComment token={token} />
         ) : (
-          <AddCommentCollection />
+          <AddCommentCollection token={token} />
         ) }
       </div>
     </div>

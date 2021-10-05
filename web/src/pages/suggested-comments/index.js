@@ -27,7 +27,7 @@ const CommentCollections = () => {
   const router = useRouter();
   const { query: { cid }, pathname } = router;
   const { user, isFetching } = useSelector((state) => state.authState);
-  const { collections } = user;
+  const { collections, isSemaAdmin } = user;
   const sortedCollections = [...collections].sort((_a, _b) => {
     const a = _a.collectionData.name.toLowerCase();
     const b = _b.collectionData.name.toLowerCase();
@@ -77,15 +77,17 @@ const CommentCollections = () => {
             <div className="mr-10">
               <GlobalSearch />
             </div>
-            <a href="/suggested-comments/add">
-              <button
-                className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
-                type="button"
-              >
-                <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                Add a Comment Collection
-              </button>
-            </a>
+            { isSemaAdmin && (
+              <a href="/suggested-comments/add">
+                <button
+                  className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                  Add a Comment Collection
+                </button>
+              </a>
+            ) }
           </div>
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
