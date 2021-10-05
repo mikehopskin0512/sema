@@ -21,7 +21,7 @@ export default (app, passport) => {
   });
 
   route.get('/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user: { user: _id } } = req;
+    const { user: { user: { _id } } } = req;
     try {
       const collections = await getUserCollectionsById(_id);
       return res.status(200).send(collections);
