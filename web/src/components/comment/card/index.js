@@ -10,9 +10,9 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
-import { authOperations } from '../../../state/features/auth';
+import { commentsOperations } from '../../../state/features/comments';
 
-const { setCollectionIsActive } = authOperations;
+const { updateCollectionIsActiveAndFetchComments } = commentsOperations;
 
 const Tag = ({ tag, _id, type }) => (
   <div
@@ -51,7 +51,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      dispatch(setCollectionIsActive(_id, token));
+      dispatch(updateCollectionIsActiveAndFetchComments(_id, token));
     };
 
     const onClickAddComment = () => {
