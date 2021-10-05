@@ -54,7 +54,7 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
-  
+
   build-chrome-extension:
     docker:
       - image: cimg/node:15.14.0

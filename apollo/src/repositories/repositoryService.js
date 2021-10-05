@@ -380,7 +380,6 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
         if (tags?.[tag]) {
           tags[tag].total += 1;
           const index = _.findIndex(tags[tag].tally, function (o) {
-            console.log(o.date, formattedDataDate);
             return o.date === formattedDataDate
           });
           if (index === -1) {

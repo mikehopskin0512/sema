@@ -29,40 +29,45 @@ const RepoPage = () => {
   } = useRouter();
 
   const [selectedTab, setSelectedTab] = useState('activity');
-  const [dates, setDates] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [dates, setDates] = useState({
+    startDate: null,
+    endDate: null,
+  });
 
   useEffect(() => {
     if (
-      (dates?.startDate && dates?.endDate) || (!dates?.startDate && !dates?.endDate)
+      (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
     ) {
-      dispatch(fetchRepositoryOverview(repoId, token, dates?.startDate && dates?.endDate ? {
+      dispatch(fetchRepositoryOverview(repoId, token, dates.startDate && dates.endDate ? {
         startDate: format(new Date(dates.startDate), 'MMM dd, yyyy'),
         endDate: format(new Date(dates.endDate), 'MMM dd, yyyy'),
       } : null));
     }
   }, [dispatch, repoId, token, dates]);
 
+  // Prevent from doing multiple calls while user is selecting dates
+  useEffect(() => {
+    if (startDate && endDate) {
+      setDates({ startDate, endDate });
+    }
+    if (!startDate && !endDate) {
+      setDates({
+        startDate: null,
+        endDate: null,
+      });
+    }
+  }, [startDate, endDate]);
+
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
-      { ({ startDate, endDate }) => {
-        useEffect(() => {
-          setDates({ startDate, endDate });
-        }, [startDate, endDate]);
-        return(
-          repositories.isFetching || auth.isFetching ? (
-            null
-          ) : (
-            <>
-              <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-              { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} /> }
-              { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} /> }
-            </>
-          )
-        )
-      }}
+      <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+      { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} /> }
+      { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} /> }
     </RepoPageLayout>
   );
 };
