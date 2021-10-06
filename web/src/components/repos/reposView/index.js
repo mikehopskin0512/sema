@@ -30,7 +30,7 @@ const ReposView = () => {
       });
     }
   }, [repositories]);
-  return <EmptyRepo />
+
   if (!repositories.length && !repositories.isFetching) {
     return <EmptyRepo />
   }
