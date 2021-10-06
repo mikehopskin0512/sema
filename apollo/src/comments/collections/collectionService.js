@@ -81,10 +81,10 @@ export const getUserCollectionsById = async (id) => {
         comments.forEach((comment) => {
           comment.tags.forEach((tagItem) => {
             const { tag } = tagItem;
-            if (tag.type === 'language' && !languages.includes(tag.label)) {
+            if (tag?.type === 'language' && !languages.includes(tag.label)) {
               languages.push(tag.label)
             }
-            if (tag.type === 'guide' && !guides.includes(tag.label)) {
+            if (tag?.type === 'guide' && !guides.includes(tag.label)) {
               guides.push(tag.label)
             }
           })
