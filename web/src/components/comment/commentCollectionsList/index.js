@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './commentCollectionsList.module.scss';
@@ -20,7 +22,8 @@ const CommentCollectionsList = () => {
     auth: state.authState,
     collectionsState: state.collectionsState,
   }));
-  const { token } = auth;  
+  const { token, user } = auth;  
+  const { isSemaAdmin } = user;
   const { data = [] , isFetching } = collectionsState;
 
   const [collectionId, setCollectionId] = useState(null);
@@ -77,7 +80,22 @@ const CommentCollectionsList = () => {
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Suggested Comments
           </p>
-          <GlobalSearch />
+          <div className="is-flex is-align-items-center is-flex-wrap-wrap">
+            <div className="mr-10">
+              <GlobalSearch />
+            </div>
+            { isSemaAdmin && (
+              <a href="/suggested-comments/add">
+                <button
+                  className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                  Add a Comment Collection
+                </button>
+              </a>
+            ) }
+          </div>
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">

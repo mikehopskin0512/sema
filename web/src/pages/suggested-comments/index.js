@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import SuggestedCommentCollection from "../../components/comment/suggestedCommentsList";
 import CommentCollectionsList from "../../components/comment/commentCollectionsList";

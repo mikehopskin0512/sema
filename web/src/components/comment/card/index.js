@@ -128,7 +128,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   </div>
                 </div>
                 <div className="is-flex is-align-items-center">
-                  {name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments' ? (
+                  {isMyComments ? (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                       <div
                         className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
@@ -140,7 +140,14 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                         Add a comment
                       </div>
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="is-flex is-flex-wrap-wrap is-align-items-center mr-10 is-justify-content-flex-end">
+                      {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
+                      {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
+                      {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
+                      {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
+                    </div>
+                  )}
                   { (isSemaAdmin || get(organizations, '[0].isAdmin', false)) && (
                     <div className={clsx("dropdown mr-10 is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                       <div className="dropdown-trigger">
@@ -165,26 +172,6 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                     </div>
                   ) }
-                  {isMyComments ? (
-                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
-                      <div
-                        className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
-                          styles['add-button'])}
-                        onClick={onClickAddComment}
-                        aria-hidden
-                      >
-                        <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                        Add a comment
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="is-flex is-flex-wrap-wrap is-align-items-center mr-10 is-justify-content-flex-end mb-10">
-                      {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
-                      {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
-                      {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
-                      {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
