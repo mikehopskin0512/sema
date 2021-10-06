@@ -73,7 +73,7 @@ export const getUserCollectionsById = async (id) => {
   try {
     const user = await findUserCollectionsByUserId(id);
     if (user) {
-      const collections = user.collections.map((collection) => {
+      const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData = { comments: [] } } = collection;
         const { comments } = collectionData;
         const languages = [];
@@ -81,10 +81,10 @@ export const getUserCollectionsById = async (id) => {
         comments.forEach((comment) => {
           comment.tags.forEach((tagItem) => {
             const { tag } = tagItem;
-            if (tag.type === 'language' && !languages.includes(tag.label)) {
+            if (tag?.type === 'language' && !languages.includes(tag.label)) {
               languages.push(tag.label)
             }
-            if (tag.type === 'guide' && !guides.includes(tag.label)) {
+            if (tag?.type === 'guide' && !guides.includes(tag.label)) {
               guides.push(tag.label)
             }
           })
