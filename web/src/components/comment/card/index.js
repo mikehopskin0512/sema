@@ -11,9 +11,22 @@ import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
-import { authOperations } from '../../../state/features/auth';
+import { collectionsOperations } from 'src/state/features/collections';
 
-const { setCollectionIsActive } = authOperations;
+const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
+
+const Tag = ({ tag, _id, type }) => (
+  <div
+    className={
+      clsx(
+        'tag is-uppercase is-rounded is-size-7 has-text-weight-semibold mr-5',
+        type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light'
+      )
+    }
+    key={`${type}-${tag}-${_id}`}>
+    {tag}
+  </div>
+)
 
 const Card = ({ isActive, collectionData, addNewComment }) => {
   const popupRef = useRef(null);
@@ -27,7 +40,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
 
   const renderStats = (label, value) => (
     <div className={clsx(
-      'has-background-gray-4 border-radius-8px p-10 is-full-width is-flex is-flex-direction-column is-justify-content-space-between',
+      'has-background-gray-4 border-radius-8px p-10 is-full-width is-flex is-flex-direction-column is-justify-content-space-between mb-5',
     )}>
       <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>{label}</p>
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
@@ -60,11 +73,11 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   }, []);
 
   if (collectionData) {
-    const { _id = '', name = '', description = '', comments = [] } = collectionData;
+    const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [] } = collectionData;
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      dispatch(setCollectionIsActive(_id, token));
+      dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
     };
 
     const onClickAddComment = () => {
@@ -72,6 +85,8 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
         addNewComment(_id);
       }
     };
+
+    const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
 
     return (
       <Link href={`?cid=${_id}`}>
@@ -94,13 +109,21 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
               ) }
             </div>
             <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
-              <p className={clsx('is-size-7 is-clipped is-fullwidth mr-20 p-12')}>{description}</p>
-              <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-                <div className="p-12 is-flex-grow-3 is-flex is-align-items-flex-end">
+              <div className="px-12 pt-12 has-text-gray-900 is-size-6 mr-20">
+                <p className={clsx("is-fullwidth", styles.title)}>{description}</p>
+                {!isMyComments && (
+                  <div className="mt-10">
+                    <p><span className="has-text-weight-semibold">Source:</span> {source}</p>
+                    <p><span className="has-text-weight-semibold">Author:</span> {author}</p>
+                  </div>
+                )}
+              </div>
+              <div className="is-flex is-justify-content-space-between">
+                <div className="p-12 is-flex-grow-3 is-flex">
                   <div className={clsx(
                     'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
                   )}>
-                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{comments.length}</p>
+                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount || comments.length}</p>
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>
@@ -142,6 +165,26 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                     </div>
                   ) }
+                  {isMyComments ? (
+                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
+                      <div
+                        className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
+                          styles['add-button'])}
+                        onClick={onClickAddComment}
+                        aria-hidden
+                      >
+                        <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                        Add a comment
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="is-flex is-flex-wrap-wrap is-align-items-center mr-10 is-justify-content-flex-end mb-10">
+                      {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
+                      {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
+                      {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
+                      {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
