@@ -6,7 +6,7 @@ import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
 import index from 'src/pages/suggested-comments/[collectionId]/[slug]';
 
@@ -73,13 +73,18 @@ const NivoBarChart = ({ data = [], groupBy }) => {
     const { emoji, label } = find(EMOJIS, { _id: id });
     const count = find(data, { date: indexValue })[id];
     let dateString = '';
+    console.log(indexValue)
     if (indexValue.search('-') !== -1) {
       const [date1, date2] = indexValue.split('-')
-      const parseDate1 = format(new Date(date1), 'LLL d')
-      const parseDate2 = format(new Date(date2), 'LLL d')
-      dateString = `${parseDate1} - ${parseDate2}`
+      const parsedDate1 = format(new Date(date1), 'LLL d')
+      const parsedDate2 = format(new Date(date2), 'LLL d')
+      dateString = `${parsedDate1} - ${parsedDate2}`
     } else {
-      dateString = format(new Date(indexValue), 'LLL d')
+      const parsedDate = new Date(indexValue);
+      const dateValid = isValid(parsedDate);
+      if (dateValid) {
+        dateString = format(new Date(indexValue), 'LLL d')
+      }
     }
     return (
       <div className="box has-background-white p-8 border-radius-4px">
