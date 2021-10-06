@@ -115,3 +115,14 @@ export const deleteTag = async (_id) => {
     return error;
   }
 };
+
+export const updateTag = async (_id, tag) => {
+  try {
+    const res = await Tag.updateOne({ _id }, { $set: { ...tag } });
+    return { tag };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
