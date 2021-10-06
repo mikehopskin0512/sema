@@ -8,7 +8,7 @@ import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from '../../utils/constants';
 
-const NivoBarChart = ({ data = [], groupBy }) => {
+const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
 
@@ -24,7 +24,7 @@ const NivoBarChart = ({ data = [], groupBy }) => {
         }, 0);
         if (total > 0) {
           return keys.reduce((acc, curr) => {
-            if (curr === 'date') {
+            if (curr === 'date' || yAxisType === 'total') {
               return acc[curr] = item[curr], acc;
             }
             return acc[curr] = round((item[curr] * 100) / total, 2), acc;
@@ -71,8 +71,8 @@ const NivoBarChart = ({ data = [], groupBy }) => {
     const { emoji, label } = find(EMOJIS, { _id: id });
     const count = find(data, { date: indexValue })[id];
     return (
-      <div className="box has-background-white p-8 border-radius-4px">
-        <p className="has-text-weight-semibold">{emoji} {label}</p>
+      <div className="box has-background-white px-20 py-5 border-radius-4px">
+        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}{yAxisType === 'percentage' ? '%' : ''}</p>
         <p className="is-size-7">{count} comments</p>
         <p className="is-size-7">{value}% of total comments {groupBy ? `on this ${groupBy}` : '' }</p>
       </div>
@@ -150,7 +150,7 @@ const NivoBarChart = ({ data = [], groupBy }) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: '%',
+          legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
           legendPosition: 'middle',
           legendOffset: -40,
         }}
