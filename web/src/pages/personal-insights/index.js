@@ -234,7 +234,7 @@ const PersonalInsights = () => {
                 <span className="ml-20 is-size-7 has-text-weight-normal">
                   <FontAwesomeIcon icon={faInfoCircle} color="#2D74BA" className="mx-10" />
                   Only you can see this page.
-                  <a href="https://semasoftware.com/blog/introducing-release-1-0-9a67cf38a841">
+                  <a href="https://semasoftware.com/faq">
                     <span className="is-underlined ml-5">
                       Learn More
                     </span>
