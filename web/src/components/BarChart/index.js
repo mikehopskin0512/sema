@@ -73,17 +73,16 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     const { emoji, label } = find(EMOJIS, { _id: id });
     const count = find(data, { date: indexValue })[id];
     let dateString = '';
-    console.log(indexValue)
     if (indexValue.search('-') !== -1) {
-      const [date1, date2] = indexValue.split('-')
-      const parsedDate1 = format(new Date(date1), 'LLL d')
-      const parsedDate2 = format(new Date(date2), 'LLL d')
-      dateString = `${parsedDate1} - ${parsedDate2}`
+      const [date1, date2] = indexValue.split('-');
+      const parsedDate1 = format(new Date(date1), 'LLL d');
+      const parsedDate2 = format(new Date(date2), 'LLL d');
+      dateString = `${parsedDate1} - ${parsedDate2}`;
     } else {
       const parsedDate = new Date(indexValue);
       const dateValid = isValid(parsedDate);
       if (dateValid) {
-        dateString = format(new Date(indexValue), 'LLL d')
+        dateString = format(new Date(indexValue), 'LLL d');
       }
     }
     return (
