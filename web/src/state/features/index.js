@@ -1,5 +1,6 @@
 export { default as alertsState } from './alerts';
 export { default as authState } from './auth';
+export { default as collectionsState } from './collections';
 export { default as commentsState } from './comments';
 export { default as engGuidesState } from './engGuides';
 export { default as invitationsState } from './invitations';

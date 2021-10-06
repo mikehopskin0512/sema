@@ -10,7 +10,7 @@ import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
 import index from 'src/pages/suggested-comments/[collectionId]/[slug]';
 
-const NivoBarChart = ({ data = [], groupBy }) => {
+const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
 
@@ -26,7 +26,7 @@ const NivoBarChart = ({ data = [], groupBy }) => {
         }, 0);
         if (total > 0) {
           return keys.reduce((acc, curr) => {
-            if (curr === 'date') {
+            if (curr === 'date' || yAxisType === 'total') {
               return acc[curr] = item[curr], acc;
             }
             return acc[curr] = round((item[curr] * 100) / total, 2), acc;
@@ -87,8 +87,8 @@ const NivoBarChart = ({ data = [], groupBy }) => {
       }
     }
     return (
-      <div className="box has-background-white p-8 border-radius-4px">
-        <p className="has-text-weight-semibold">{emoji} {label}</p>
+      <div className="box has-background-white px-20 py-5 border-radius-4px">
+        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}{yAxisType === 'percentage' ? '%' : ''}</p>
         <div className="is-size-7 has-text-primary">{dateString}</div>
         <p className="is-size-7">{count} comments</p>
         <p className="is-size-7">{value}% of total comments {groupBy ? `on this ${groupBy}` : '' }</p>
@@ -167,7 +167,7 @@ const NivoBarChart = ({ data = [], groupBy }) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: '%',
+          legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
           legendPosition: 'middle',
           legendOffset: -40,
         }}
