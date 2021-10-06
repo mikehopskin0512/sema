@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getCollectionByAuthor, getAllUserCollections, postCollections } from './api';
+import { getCollection, getCollectionByAuthor, getAllUserCollections, postCollections } from './api';
 
 const requestCreateCollections = () => ({
   type: types.REQUEST_CREATE_COLLECTIONS,
@@ -43,6 +43,20 @@ const requestFetchAllUserCollectionsError = (errors) => ({
   errors,
 });
 
+const requestFetchCollection = () => ({
+  type: types.FETCH_COLLECTION,
+});
+
+const requestFetchCollectionSuccess = (collection) => ({
+  type: types.FETCH_COLLECTION_SUCCESS,
+  collection,
+});
+
+const requestFetchCollectionError = (errors) => ({
+  type: types.FETCH_COLLECTION_ERROR,
+  errors,
+});
+
 export const createCollections = (collectionsData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateCollections());
@@ -69,6 +83,18 @@ export const findCollectionsByAuthor = (author, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestFindCollectionsByAuthorError(errMessage));
     return error.response;
+  }
+};
+
+export const fetchCollectionById = (id, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchCollection());
+    const collection = await getCollection(id, token);
+    dispatch(requestFetchCollectionSuccess(collection.data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchCollectionError(errMessage));
   }
 };
 

@@ -157,7 +157,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                       <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                         <div className="dropdown-content">
-                          <a href="#" className="dropdown-item">
+                          <a href={`/suggested-comments/edit?cid=${_id}`} className="dropdown-item">
                             Edit Collection
                           </a>
                           <a className="dropdown-item">

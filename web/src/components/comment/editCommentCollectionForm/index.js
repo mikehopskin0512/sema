@@ -5,7 +5,7 @@ import { tagsOperations } from '../../../state/features/tags';
 
 const { fetchTagList } = tagsOperations;
 
-const EditCommentCollectionForm = ({ register, formState, setValue }) => {
+const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => {
   const dispatch = useDispatch();
 
   const [tagOptions, setTagOptions] = useState([]);
@@ -35,7 +35,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue }) => {
           type,
           label,
           value: _id,
-          tagData: item
+          tag: _id,
         });
       }
       if (type === 'language') {
@@ -43,7 +43,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue }) => {
           type,
           label,
           value: _id,
-          tagData: item
+          tag: _id,
         });
       }
       if (type === 'custom') {
@@ -51,7 +51,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue }) => {
           type,
           label,
           value: _id,
-          tagData: item
+          tag: _id,
         });
       }
     });
@@ -72,8 +72,8 @@ const EditCommentCollectionForm = ({ register, formState, setValue }) => {
   }, [tagState.tags]);
 
   const onSelectTags = (e) => {
-    const tags = e.map(({ type, label, value }) => ({
-      tag: value,
+    const tags = e.map(({ type, label, value, tag }) => ({
+      tag: value | tag,
       type,
       label,
     }));
@@ -103,6 +103,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue }) => {
           options={tagOptions}
           placeholder=""
           onChange={onSelectTags}
+          value={watch('tags')}
         />
         <p className="is-size-7 is-italic">These tags automatically add to new Comment in this Collection</p>
       </div>

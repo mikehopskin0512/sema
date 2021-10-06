@@ -1,9 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
+import { collectionsOperations } from 'src/state/features/collections';
 
-const EditCommentCollectionPage = ({ token }) => {
+const { fetchCollectionById } = collectionsOperations;
+
+const EditCommentCollectionPage = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { auth, collectionState } = useSelector((state) => ({
+    auth: state.authState,
+    collectionState: state.commentsState,
+  }));
+
+  const { token } = auth;
+  const { cid } = router;
+  const { collection } = collectionState;
+
+  const {
+    register, handleSubmit, formState, setValue, watch,
+  } = useForm();
+
+  useEffect(() => {
+    if (cid) {
+      dispatch(fetchCollectionById(cid, token));
+    }
+  }, [cid]);
+
+  useEffect(() => {
+    if (collection) {
+      const { name, description, tags } = collection;
+      setValue('name', name);
+      setValue('description', description);
+      setValue('tags', tags);
+    }
+  }, [collection]);
+
+
   return(
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
@@ -28,7 +65,7 @@ const EditCommentCollectionPage = ({ token }) => {
           </button>
         </div>
       </div>
-      <EditCommentCollectionForm token={token} />
+      <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />
     </>
   )
 }
