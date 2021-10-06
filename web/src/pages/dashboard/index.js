@@ -56,6 +56,19 @@ const Dashboard = () => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
+  const onboardUser = () => {
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
+    setOnboardingProgress({});
+    dispatch(updateUser(updatedUser, token));
+  };
+
+  const toggleOnboardingModal = (status) => {
+    if (status === false) {
+      onboardUser();
+    }
+    toggleOnboardingModalActive(status)
+  }
+
   const getUserRepos = useCallback(() => {
     if (identities && identities.length) {
       const githubUser = identities[0];
@@ -133,9 +146,7 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
     // const userCollections = await getActiveCollections();
-    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
-    setOnboardingProgress({});
-    dispatch(updateUser(updatedUser, token));
+    onboardUser();
   };
 
   useEffect(() => {
@@ -160,7 +171,7 @@ const Dashboard = () => {
       </div>
       <OnboardingModal
         isModalActive={isOnboardingModalActive}
-        toggleModalActive={toggleOnboardingModalActive}
+        toggleModalActive={toggleOnboardingModal}
         page={onboardingPage}
         nextPage={nextOnboardingPage}
         previousPage={previousOnboardingPage}
