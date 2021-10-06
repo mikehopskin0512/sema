@@ -73,7 +73,7 @@ export const getUserCollectionsById = async (id) => {
   try {
     const user = await findUserCollectionsByUserId(id);
     if (user) {
-      const collections = user.collections.map((collection) => {
+      const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData = { comments: [] } } = collection;
         const { comments } = collectionData;
         const languages = [];
