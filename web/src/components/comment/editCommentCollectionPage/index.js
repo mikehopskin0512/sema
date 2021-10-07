@@ -17,7 +17,8 @@ const EditCommentCollectionPage = () => {
     collectionState: state.commentsState,
   }));
 
-  const { token } = auth;
+  const { token, user } = auth;
+  const { isSemaAdmin } = user;
   const { cid } = router;
   const { collection } = collectionState;
 
@@ -47,6 +48,14 @@ const EditCommentCollectionPage = () => {
     if (updatedCollection?._id) {
       window.location.href = `/suggested-comments?cid=${collection._id}`
     }
+  }
+
+  if (!isSemaAdmin) {
+    return(
+      <div className="has-text-centered my-50">
+        <p className="has-text-weight-semibold is-size-6">Unauthorized</p>
+      </div>
+    );
   }
 
   return(
