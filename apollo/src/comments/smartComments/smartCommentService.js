@@ -589,7 +589,7 @@ export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, 
 
 export const getTotalReactionsOfComments = (smartComments = []) => {
   return smartComments
-    .filter((comment) => comment.reaction)
+    .filter((comment) => comment?.reaction)
     .reduce((acc, comment) => {
       const { reaction } = comment;
       if (acc?.[reaction]) {
@@ -603,7 +603,7 @@ export const getTotalReactionsOfComments = (smartComments = []) => {
 
 export const getTotalTagsOfComments = (smartComments = []) => {
   return smartComments
-    .filter((comment) => comment?.tags.length)
+    .filter((comment) => comment?.tags?.length)
     .reduce((acc, comment) => {
       const { tags } = comment;
       const total = tags.reduce((acc, tag) => {
