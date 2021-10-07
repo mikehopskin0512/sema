@@ -15,7 +15,7 @@ const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
 
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
-  const [dateDiff, setDateDiff] = useState();
+  const [dateDiff, setDateDiff] = useState(0);
   const [reactions, setReactions] = useState([]);
   const [tags, setTags] = useState({});
   const [groupBy, setGroupBy] = useState('');
