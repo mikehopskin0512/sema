@@ -72,7 +72,6 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
   }, [tagState.tags]);
 
   const onSelectTags = (e) => {
-    console.log
     if (e) {
       const tags = e.map(({ type, label, tag }) => ({
         tag: tag,

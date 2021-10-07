@@ -92,7 +92,6 @@ export const getUserCollectionsById = async (id) => {
         if (tags?.length > 0) {
           languages = tags.filter((tag) => tag.type === 'language').map((tag) => tag.label);
           guides = tags.filter((tag) => tag.type === 'guide').map((tag) => tag.label);
-          console.log(tags)
         } else {
           comments.forEach((comment) => {
             comment.tags.forEach((tagItem) => {
