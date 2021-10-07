@@ -9,7 +9,7 @@ import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
 
 import { commentsOperations } from '../../state/features/comments';
 
-const { getUserSuggestedComments } = commentsOperations;
+const { getUserCollections } = commentsOperations;
 
 const NUM_PER_PAGE = 10;
 
@@ -23,7 +23,7 @@ const SuggestedComments = () => {
   const { comments = [] } = commentsState;
 
   useEffect(() => {
-    dispatch(getUserSuggestedComments(token));
+    dispatch(getUserCollections(token));
   }, [dispatch, token]);
 
   const [page, setPage] = useState(1);

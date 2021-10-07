@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
+import clsx from 'clsx';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
@@ -12,6 +13,7 @@ import { suggestCommentsOperations } from '../../state/features/suggest-comments
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
+import styles from './dashboard.module.scss';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
@@ -34,7 +36,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities } = user;
+  const { identities, isOnboarded = null} = user;
 
   const nextOnboardingPage = (currentPage) => {
     setOnboardingPage(currentPage + 1);
@@ -55,6 +57,19 @@ const Dashboard = () => {
   const handleCommentFields = (e) => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
+
+  const onboardUser = () => {
+    const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
+    setOnboardingProgress({});
+    dispatch(updateUser(updatedUser, token));
+  };
+
+  const toggleOnboardingModal = (status) => {
+    if (status === false) {
+      onboardUser();
+    }
+    toggleOnboardingModalActive(status)
+  }
 
   const getUserRepos = useCallback(() => {
     if (identities && identities.length) {
@@ -133,32 +148,32 @@ const Dashboard = () => {
   const onboardingOnSubmit = async () => {
     /* TODO: Code clean up for the getActiveCollections since it was moved to the user model on save */
     // const userCollections = await getActiveCollections();
-    const updatedUser = { ...user };
-    setOnboardingProgress({});
-    dispatch(updateUser(updatedUser, token));
+    onboardUser();
   };
 
   useEffect(() => {
-    if (user?.collections?.length === 0) {
+    if (isOnboarded === null)  {
       toggleOnboardingModalActive(true);
     }
-  }, [user]);
+  }, [isOnboarded]);
+
+  if (repositories.isFetching || auth.isFetching) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader/>
+      </div>
+    )
+  }
 
   return (
     <>
-      <div className='has-background-gray-9 pb-180'>
+      <div className={clsx('has-background-gray-9', styles.container)}>
         <Helmet {...DashboardHelmet} />
-        {repositories.isFetching || auth.isFetching ? (
-          <div style={{ height: '400px', display: 'flex' }}>
-            <Loader/>
-          </div>
-        ) : (
-          <ReposView />
-        )}
+        <ReposView />
       </div>
       <OnboardingModal
         isModalActive={isOnboardingModalActive}
-        toggleModalActive={toggleOnboardingModalActive}
+        toggleModalActive={toggleOnboardingModal}
         page={onboardingPage}
         nextPage={nextOnboardingPage}
         previousPage={previousOnboardingPage}

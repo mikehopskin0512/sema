@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
-import { reverse, find, round } from 'lodash';
+import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { EMOJIS } from '../../utils/constants';
 
-const NivoBarChart = ({ data = [] }) => {
+const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
 
@@ -24,7 +24,7 @@ const NivoBarChart = ({ data = [] }) => {
         }, 0);
         if (total > 0) {
           return keys.reduce((acc, curr) => {
-            if (curr === 'date') {
+            if (curr === 'date' || yAxisType === 'total') {
               return acc[curr] = item[curr], acc;
             }
             return acc[curr] = round((item[curr] * 100) / total, 2), acc;
@@ -66,15 +66,18 @@ const NivoBarChart = ({ data = [] }) => {
     return emoji.color;
   };
 
-  const renderTooltip = (itemData) => {
-    const { id, value } = itemData;
+  const renderTooltip = React.memo((itemData) => {
+    const { id, value, indexValue } = itemData;
     const { emoji, label } = find(EMOJIS, { _id: id });
+    const count = find(data, { date: indexValue })[id];
     return (
       <div className="box has-background-white px-20 py-5 border-radius-4px">
-        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}%</p>
+        <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}{yAxisType === 'percentage' ? '%' : ''}</p>
+        <p className="is-size-7">{count} comments</p>
+        <p className="is-size-7">{value}% of total comments {groupBy ? `on this ${groupBy}` : '' }</p>
       </div>
     );
-  };
+  });
 
   if (noData) {
     return (
@@ -147,7 +150,7 @@ const NivoBarChart = ({ data = [] }) => {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: '%',
+          legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
           legendPosition: 'middle',
           legendOffset: -40,
         }}
@@ -189,8 +192,13 @@ const NivoBarChart = ({ data = [] }) => {
   );
 };
 
+NivoBarChart.defaultProps = {
+  groupBy: null,
+};
+
 NivoBarChart.propTypes = {
   data: PropTypes.array.isRequired,
+  groupBy: PropTypes.string,
 };
 
 export default NivoBarChart;

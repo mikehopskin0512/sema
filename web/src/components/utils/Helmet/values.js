@@ -1,5 +1,5 @@
 export const DashboardHelmet = {
-  title: 'Dashboard',
+  title: 'Sema Dashboard',
   description: null,
 };
 
@@ -51,5 +51,10 @@ export const ActivityLogHelmet = {
 
 export const HelpSupportHelmet = {
   title: 'Help and Support',
+  description: null,
+};
+
+export const PersonalInsightsHelmet = {
+  title: 'Personal Insights',
   description: null,
 };

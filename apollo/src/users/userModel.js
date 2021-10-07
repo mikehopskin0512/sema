@@ -48,6 +48,7 @@ const userSchema = mongoose.Schema({
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
+  isOnboarded: { type: Date, default: null },
   verificationToken: String,
   verificationExpires: Date,
   resetToken: String,

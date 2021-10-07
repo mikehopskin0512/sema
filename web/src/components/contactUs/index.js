@@ -10,17 +10,17 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
       style={{maxWidth: '1540px', minHeight: '100px'}}
     >
       <div>
-        <div className="title has-text-white is-size-4 has-text-weight-semibold">We want to hear from you</div>
-        <div className="subtitle has-text-white is-size-6">
+        <div className="has-text-white is-size-3">We want to hear from you</div>
+        <div className="has-text-white is-size-6 mt-10">
           Please share your thoughts with us so we can continue to craft an amazing developer experience
         </div>
       </div>
 
-      <div className="ml-30 is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)} type="button">Contact Us</button>
+      <div className={clsx("is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile", styles['contact-us-desktop'])}>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium mr-20 my-5 px-50', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
-            className={clsx('button is-white-gray has-text-primary is-medium mx-20 my-5 px-50', styles.button)}
+            className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium mx-20 my-5 px-50', styles.button)}
             href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
             target="_blank"
             rel="noreferrer">
@@ -30,10 +30,10 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
       </div>
 
       <div className="is-hidden-desktop mt-10">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)} type="button">Contact Us</button>
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10 mr-20', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
-            className={clsx('button is-white-gray has-text-primary is-medium my-10', styles.button)}
+            className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10', styles.button)}
             href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
             target="_blank"
             rel="noreferrer">
@@ -47,7 +47,7 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
   return (
     <>
       {/* Desktop View */}
-      <div className="py-50 has-background-primary is-justify-content-space-evenly is-align-items-center is-flex is-hidden-mobile">
+      <div className="py-30 has-background-primary is-justify-content-space-evenly is-align-items-center is-flex is-hidden-touch">
         {renderContent()}
       </div>
       {/* Mobile View */}
