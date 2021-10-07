@@ -10,7 +10,7 @@ import {
 
 import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
-import { getUser } from '../users/api';
+import { getUser } from '../selected-user/api';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
@@ -126,31 +126,31 @@ export const authenticate = (username, password) => async (dispatch) => {
   }
 };
 
-const getCurrentUserRequest = () => ({
+const fetchCurrentUserRequest = () => ({
   type: types.GET_CURRENT_USER,
 });
 
-const getCurrentUserSuccess = (user) => ({
+const fetchCurrentUserSuccess = (user) => ({
   type: types.GET_CURRENT_USER_SUCCESS,
   user,
 });
 
-const getCurrentUserError = (errors) => ({
+const fetchCurrentUserError = (errors) => ({
   type: types.GET_CURRENT_USER_ERROR,
   errors,
 });
 
-const getCurrentUser = (id, token) => async (dispatch) => {
+const fetchCurrentUser = (id, token) => async (dispatch) => {
   try {
-    dispatch(getCurrentUserRequest());
+    dispatch(fetchCurrentUserRequest());
     const payload = await getUser(id, token);
     const { data } = payload;
-    dispatch(getCurrentUserSuccess(data));
+    dispatch(fetchCurrentUserSuccess(data));
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(getCurrentUserError(errMessage));
+    dispatch(fetchCurrentUserError(errMessage));
   }
 };
 
@@ -160,7 +160,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     const res = await exchangeToken({ refreshToken });
     const { data: { jwtToken } } = res;
     const { user: { _id }, userVoiceToken } = jwtDecode(jwtToken) || {};
-    const user = await dispatch(getCurrentUser(_id, jwtToken));
+    const user = await dispatch(fetchCurrentUser(_id, jwtToken));
     const { isVerified } = user;
 
     // Send token to state and hydrate user
