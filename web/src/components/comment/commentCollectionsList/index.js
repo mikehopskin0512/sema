@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -9,33 +9,45 @@ import CardList from '../cardList';
 import Helmet, { CommentCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
+import Toaster from '../../toaster';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
+import { alertOperations } from '../../../state/features/alerts';
 
+const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
 
 const NUM_PER_PAGE = 9;
 
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
-  const { auth, collectionsState } = useSelector((state) => ({
+  const { auth, collectionsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
+    alerts: state.alertsState,
   }));
+  const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;  
   const { isSemaAdmin } = user;
   const { data = [] , isFetching } = collectionsState;
 
   const [collectionId, setCollectionId] = useState(null);
   const [page, setPage] = useState(1);
-  
-  const sortedCollections = [...data].sort((_a, _b) => {
-    const a = _a.collectionData?.name.toLowerCase();
-    const b = _b.collectionData?.name.toLowerCase();
-    if (a === DEFAULT_COLLECTION_NAME) return -1;
-    if (b === DEFAULT_COLLECTION_NAME) return 1;
-    return a >= b ? 1 : -1
-  })
+
+  const sortedCollections = useMemo(() => {
+    let collections = [...data];
+    if (!isSemaAdmin) {
+      collections = collections.filter((collection) => collection?.collectionData?.isActive);
+    }
+    collections = collections.sort((_a, _b) => {
+      const a = _a.collectionData?.name.toLowerCase();
+      const b = _b.collectionData?.name.toLowerCase();
+      if (a === DEFAULT_COLLECTION_NAME) return -1;
+      if (b === DEFAULT_COLLECTION_NAME) return 1;
+      return a >= b ? 1 : -1
+    });
+    return collections;
+  }, [data]);
   
   const isNewCommentModalOpen = !!collectionId;
 
@@ -45,6 +57,12 @@ const CommentCollectionsList = () => {
   useEffect(() => {
     dispatch(fetchAllUserCollections(token));
   }, []);
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   const openNewSuggestedCommentModal = (_id) => {
     const element = document.getElementById('#collectionBody');
@@ -73,6 +91,7 @@ const CommentCollectionsList = () => {
   
   return(
     <div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...CommentCollectionsHelmet} />
       <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} inCollectionsPage />
       <div id="collectionBody" className={clsx('hero-body pb-250', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>

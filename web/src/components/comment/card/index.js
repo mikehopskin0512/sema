@@ -10,10 +10,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
-
+import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 
-const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
+const { triggerAlert } = alertOperations;
+const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
 
 const Tag = ({ tag, _id, type }) => (
   <div
@@ -54,7 +55,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   };
 
   const handleClick = (e) => {
-    if (popupRef.current.contains(e.target)) {
+    if (popupRef.current?.contains(e.target)) {
       return;
     }
     setShowMenu(false);
@@ -75,7 +76,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   }, []);
 
   if (collectionData) {
-    const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [] } = collectionData;
+    const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [], isActive: isNotArchived } = collectionData;
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
@@ -88,6 +89,26 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       }
     };
 
+    const onClickArchiveCollection = async () => {
+      const collection = await dispatch(updateCollection(_id, { collection: { isActive: false } }, token));
+      if (collection) {
+        dispatch(triggerAlert('Collection archived!', 'success'));
+        dispatch(fetchAllUserCollections(token));
+        return;
+      }
+      dispatch(triggerAlert('Unable to archive collection', 'error'));
+    }
+
+    const onClickUnarchiveCollection = async () => {
+      const collection = await dispatch(updateCollection(_id, { collection: { isActive: true } }, token));
+      if (collection) {
+        dispatch(triggerAlert('Collection unarchived!', 'success'));
+        dispatch(fetchAllUserCollections(token));
+        return;
+      }
+      dispatch(triggerAlert('Unable to unarchived collection', 'error'));
+    }
+
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
 
     return (
@@ -96,7 +117,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
               <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              { asPath === '/suggested-comments' && (
+              { asPath === '/suggested-comments' && isNotArchived ? (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
@@ -108,7 +129,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   />
                   <label htmlFor={`activeSwitch-${_id}`} />
                 </div>
-              ) }
+              ) : <p className="is-size-7 is-italic">archived</p> }
             </div>
             <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
               <div className="px-12 pt-12 has-text-gray-900 is-size-6 mr-20">
@@ -162,9 +183,9 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                           <a href={`/suggested-comments/edit?cid=${_id}`} className="dropdown-item">
                             Edit Collection
                           </a>
-                          <a className="dropdown-item">
-                            Archive Collection
-                          </a>
+                          <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                            {isNotArchived ? 'Archive' : 'Unarchive'} Collection
+                          </div>
                           {!isSemaAdmin && (
                             <a href="#" className="dropdown-item is-active">
                               Share with Sema Community

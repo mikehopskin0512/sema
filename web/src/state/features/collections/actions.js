@@ -142,7 +142,6 @@ export const fetchAllUserCollections = (token) => async (dispatch) => {
     if (collections?.status === 200) {
       dispatch(requestFetchAllUserCollectionsSuccess(collections.data));
     }
-    dispatch(triggerAlert('Unable to fetch collections', 'error'));
     return false;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
