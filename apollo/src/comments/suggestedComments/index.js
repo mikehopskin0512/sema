@@ -112,7 +112,6 @@ export default (app, passport) => {
         });
       }
       const suggestedComment = await update(id, req.body);
-
       return res.status(200).json({ suggestedComment });
     } catch (error) {
       logger.error(error);
