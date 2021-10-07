@@ -80,7 +80,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   }
 
   return (
-    <div className="has-background-white pb-180">
+    <div className="has-background-white">
       {
         (auth.isFetching || repositories.isFetching) && initialLoading ? (
           <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
@@ -89,7 +89,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
         ) : (
           <>
             <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
-              <div className={"content-container is-flex-grow-1"}>
+              <div className={"is-flex-grow-1"}>
                 { repoOptions.length > 1 ? (
                   <Select
                     onChange={onChangeSelect}
@@ -105,8 +105,8 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
               </div>
             </div>
             <div className={clsx(styles["card-container"], 'px-20')}>
-              <div className="hero content-container">
-                <div className="my-40 columns m-0">
+              <div className="container">
+                <div className="mt-40 pb-10 columns m-0">
                   <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
                     <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
                     <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalPullRequests}</div>
@@ -126,11 +126,13 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
                   </div>
                 </div>
             </div>
-            <Sidebar {...sidebarProps}>
-              <>
-                {children}
-              </>
-            </Sidebar>
+            <div className="has-background-gray-4">
+              <Sidebar {...sidebarProps}>
+                <>
+                  {children}
+                </>
+              </Sidebar>
+            </div>
           </>
         )
       }
