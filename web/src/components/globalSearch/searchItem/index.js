@@ -13,6 +13,7 @@ const SearchItem = ({ item, keyword }) => {
     const re = new RegExp(`${keyword}`, 'gi')
     return substr.replaceAll(re, `<strong>$&</strong>`)
   }
+  const sourceName = item.source?.name || item.sourceName
   return (
     <div className={styles['search-item']}>
       <div className="is-flex is-flex-direction-column">
@@ -22,7 +23,7 @@ const SearchItem = ({ item, keyword }) => {
         />
         {item.source && (
           <div className={styles['search-item_source']}>
-            <b>Source:</b> {item.source.name}
+            <b>Source:</b> {sourceName}
           </div>
         )}
       </div>

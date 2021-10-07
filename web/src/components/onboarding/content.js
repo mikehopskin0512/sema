@@ -17,7 +17,7 @@ export const content = [
   },
   {
     title: 'Suggested Comments',
-    subtitle: 'Write great comments faster by quickly search for and insert pre-written comments from some of the best knowledge bases in the world, and add your own!',
+    subtitle: 'Write great comments faster by quickly searching for and inserting pre-written comments from some of the best knowledge bases in the world, and add your own!',
     img: '/img/suggested-comments.png',
     animationData: animationComments,
   },
