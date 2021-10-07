@@ -101,7 +101,7 @@ resource "aws_ssm_parameter" "apollo_sendgrid_sender" {
 resource "aws_ssm_parameter" "apollo_token_life" {
   name  = "/${var.env}/apollo/token/life"
   type  = "String"
-  value = "2592000"
+  value = "7776000"
 }
 resource "aws_ssm_parameter" "apollo_token_name" {
   name  = "/${var.env}/apollo/token/name"

@@ -1,7 +1,7 @@
 import { addMinutes } from '../shared/utils';
 import { sign, verify } from 'jsonwebtoken';
 import {
-  jwtSecret, privateKeyFile,
+  jwtSecret, privateKeyFile, tokenLife,
   refreshSecret, refreshTokenName, rootDomain,
   userVoiceKey,
 } from '../config';
@@ -38,7 +38,7 @@ export const createIdentityToken = async (identity) => sign({ identity }, jwtSec
 });
 
 export const createRefreshToken = async (user) => sign({ user }, refreshSecret, {
-  expiresIn: '120d',
+  expiresIn: tokenLife,
 });
 
 export const validateRefreshToken = async (token) => {
@@ -52,9 +52,15 @@ export const validateAuthToken = async (token) => {
 };
 
 export const setRefreshToken = async (response, user, token) => {
+  // Set cookie expDate based on tokenLife
+  const expDate = new Date();
+  expDate.setTime(expDate.getTime() + (tokenLife * 1000));
+
+  // Define cookie config options
   const cookieConfig = {
     // httpOnly: true
     path: '/',
+    expires: expDate
   };
   const { _id: userId } = user;
   const filter = { userId };
@@ -64,6 +70,8 @@ export const setRefreshToken = async (response, user, token) => {
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
     cookieConfig.domain = `.${rootDomain}`;
+    cookieConfig.httpOnly = true;
+    cookieConfig.secure = true;
   } else {
     console.log(`${nodeEnv} === development, so we are NOT setting cookieConfig.domain`);
   }

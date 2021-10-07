@@ -11,7 +11,7 @@ import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
-import { collectionsOperations } from 'src/state/features/collections';
+import { collectionsOperations } from '../../../state/features/collections';
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 
