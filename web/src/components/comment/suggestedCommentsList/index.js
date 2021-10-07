@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
+import styles from './suggestedCommentCollections.module.scss';
 import CommentFilter from '../commentFilter';
 import SuggestedCommentCard from '../suggestedCommentCard';
 import ActionGroup from '../actionGroup';
@@ -15,6 +16,7 @@ import Helmet from '../../utils/Helmet';
 import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
+import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
@@ -110,7 +112,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     setCommentsFiltered([...filtered]);
     setIsParsing(false);
   };
-  const isAddCommentActive = name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments';
+  const isAddCommentActive = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -191,7 +193,17 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               <Loader/>
             </div>
           ) : isEmpty(commentsFiltered) ? (
-            <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div>
+            <div className="is-size-5 has-text-deep-black my-120 has-text-centered">
+              <img src="/img/no-suggested-comments.png" className={styles['no-comments-img']} />
+              <p className="is-size-7 my-25">You don't have any Custom Comments.</p>
+              <button
+                className="button is-small is-primary border-radius-4px has-text-semibold"
+                type="button"
+                onClick={goToAddPage}>
+                <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                Add a Comment
+              </button>
+            </div>
           ) : (
             commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item, index) => (
               <SuggestedCommentCard
