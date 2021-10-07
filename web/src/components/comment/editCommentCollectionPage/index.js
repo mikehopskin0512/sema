@@ -46,7 +46,7 @@ const EditCommentCollectionPage = () => {
       collection: data
     }, token));
     if (updatedCollection?._id) {
-      window.location.href = `/suggested-comments?cid=${collection._id}`
+      window.location.href = `/suggested-comments`
     }
   }
 

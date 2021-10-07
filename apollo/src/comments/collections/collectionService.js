@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { get } from 'lodash';
+import { filter, get } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -45,10 +45,9 @@ export const createMany = async (collections) => {
         return hello;
       })
     }));
-    const newCollections = await Collection.insertMany(cols);
+    const newCollections = await Collection.insertMany(cols, { ordered: false });
     return newCollections;
   } catch (err) {
-    console.log({ err })
     // When using "unordered" insertMany, Mongo will ignore dup key errors and only insert new records
     // However it will throw an error, so data needs to be conditionally returned via catch block
     const { name, insertedDocs = [] } = err;
@@ -87,20 +86,26 @@ export const getUserCollectionsById = async (id) => {
     if (user) {
       const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData = { comments: [] } } = collection;
-        const { comments } = collectionData;
-        const languages = [];
-        const guides = [];
-        comments.forEach((comment) => {
-          comment.tags.forEach((tagItem) => {
-            const { tag } = tagItem;
-            if (tag?.type === 'language' && !languages.includes(tag.label)) {
-              languages.push(tag.label)
-            }
-            if (tag?.type === 'guide' && !guides.includes(tag.label)) {
-              guides.push(tag.label)
-            }
-          })
-        });
+        const { comments, tags } = collectionData;
+        let languages = [];
+        let guides = [];
+        if (tags?.length > 0) {
+          languages = tags.filter((tag) => tag.type === 'language').map((tag) => tag.label);
+          guides = tags.filter((tag) => tag.type === 'guide').map((tag) => tag.label);
+          console.log(tags)
+        } else {
+          comments.forEach((comment) => {
+            comment.tags.forEach((tagItem) => {
+              const { tag } = tagItem;
+              if (tag?.type === 'language' && !languages.includes(tag.label)) {
+                languages.push(tag.label)
+              }
+              if (tag?.type === 'guide' && !guides.includes(tag.label)) {
+                guides.push(tag.label)
+              }
+            })
+          });
+        }
         return {
           ...collection,
           collectionData: {

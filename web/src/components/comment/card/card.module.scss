@@ -29,3 +29,11 @@
 .add-button {
   height: 100%;
 }
+
+.tag {
+  max-width: 150px;
+  p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } 
+}

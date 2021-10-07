@@ -19,12 +19,14 @@ const Tag = ({ tag, _id, type }) => (
   <div
     className={
       clsx(
-        'tag is-uppercase is-rounded is-size-7 has-text-weight-semibold mr-5',
-        type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light'
+        'tag is-uppercase is-rounded is-size-7 has-text-weight-semibold mr-5 is-clipped my-5',
+        type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light',
+        styles.tag
       )
     }
     key={`${type}-${tag}-${_id}`}>
-    {tag}
+      <p>{tag}</p>
+    
   </div>
 )
 
@@ -113,12 +115,12 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                 <p className={clsx("is-fullwidth", styles.title)}>{description}</p>
                 {!isMyComments && (
                   <div className="mt-10">
-                    <p><span className="has-text-weight-semibold">Source:</span> {source}</p>
-                    <p><span className="has-text-weight-semibold">Author:</span> {author}</p>
+                    {source && <p><span className="has-text-weight-semibold">Source:</span> {source}</p>}
+                    {author && <p><span className="has-text-weight-semibold">Author:</span> {author}</p>}
                   </div>
                 )}
               </div>
-              <div className="is-flex is-justify-content-space-between">
+              <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
                 <div className="p-12 is-flex-grow-3 is-flex">
                   <div className={clsx(
                     'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
@@ -127,7 +129,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                     <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
                   </div>
                 </div>
-                <div className="is-flex is-align-items-center">
+                <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">
                   {isMyComments ? (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                       <div
@@ -141,7 +143,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="is-flex is-flex-wrap-wrap is-align-items-center mr-10 is-justify-content-flex-end">
+                    <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
                       {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
                       {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
                       {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
@@ -149,7 +151,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                     </div>
                   )}
                   { (isSemaAdmin || get(organizations, '[0].isAdmin', false)) && (
-                    <div className={clsx("dropdown mr-10 is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
+                    <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                       <div className="dropdown-trigger">
                         <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                           <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
