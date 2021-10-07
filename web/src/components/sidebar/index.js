@@ -53,7 +53,7 @@ const Sidebar = ({ children, ...menuItemProps }) => {
   ]);
 
   return (
-    <div className="pb-70 container">
+    <div className="pb-100 container">
       <div className="columns">
         <div className={clsx("column is-one-fifth")}>
           <div className={clsx(styles.sidebar, 'ml-40 p-10 is-flex is-flex-direction-column is-fullheight')}>
