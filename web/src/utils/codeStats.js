@@ -243,7 +243,7 @@ export const getTotalReactionsOfComments = (smartComments = []) => {
 
 export const getTotalTagsOfComments = (smartComments = []) => {
   return smartComments
-    .filter((comment) => comment.tags.length)
+    .filter((comment) => comment?.tags.length)
     .reduce((acc, comment) => {
       const { tags } = comment;
       const total = tags.reduce((acc, tag) => {
