@@ -156,7 +156,7 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
 
 export const findById = async (id) => {
   try {
-    const query = User.findOne({ _id: id });
+    const query = User.findById(id);
     const user = await query.lean().populate({
       path: 'collections.collectionData',
       model: 'Collection',
