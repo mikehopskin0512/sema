@@ -13,7 +13,7 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR } from '../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 
 const { getUserComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
@@ -233,7 +233,7 @@ const PersonalInsights = () => {
                 <span className="ml-20 is-size-7 has-text-weight-normal">
                   <FontAwesomeIcon icon={faInfoCircle} color="#2D74BA" className="mx-10" />
                   Only you can see this page.
-                  <a href="https://semasoftware.com/blog/introducing-release-1-0-9a67cf38a841">
+                  <a href={SEMA_FAQ_URL}>
                     <span className="is-underlined ml-5">
                       Learn More
                     </span>
