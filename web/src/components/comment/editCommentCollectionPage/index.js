@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
@@ -6,17 +7,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 import { collectionsOperations } from 'src/state/features/collections';
+import Toaster from '../../toaster';
+import Loader from '../../Loader';
+import { alertOperations } from '../../../state/features/alerts';
 
+const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;
 
 const EditCommentCollectionPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { auth, collectionState } = useSelector((state) => ({
+  const [loading, setLoading] = useState(false);
+  const { auth, collectionState, alerts } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
+    alerts: state.alertsState,
   }));
 
+  const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
   const { isSemaAdmin } = user;
   const { cid } = router;
@@ -33,6 +41,12 @@ const EditCommentCollectionPage = () => {
   }, [cid]);
 
   useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
+
+  useEffect(() => {
     if (collection) {
       const { name, description, tags } = collection;
       setValue('name', name);
@@ -42,12 +56,14 @@ const EditCommentCollectionPage = () => {
   }, [collection]);
 
   const onSubmit = async (data) => {
+    setLoading(true);
     const updatedCollection = await dispatch(updateCollection(collection._id, {
       collection: data
     }, token));
     if (updatedCollection?._id) {
       window.location.href = `/suggested-comments`
     }
+    setLoading(false);
   }
 
   if (!isSemaAdmin) {
@@ -61,6 +77,7 @@ const EditCommentCollectionPage = () => {
   return(
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
+        <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
             Add a Comment Collection
@@ -70,11 +87,12 @@ const EditCommentCollectionPage = () => {
           <button
             className="button is-small is-outlined is-primary border-radius-4px mr-10"
             type="button"
+            onClick={() => router.back()}
           >
             Cancel
           </button>
           <button
-            className="button is-small is-primary border-radius-4px"
+            className={clsx("button is-small is-primary border-radius-4px", loading && "is-loading")}
             type="button"
             onClick={handleSubmit(onSubmit)}
           >
@@ -83,7 +101,11 @@ const EditCommentCollectionPage = () => {
           </button>
         </div>
       </div>
-      { collection?.tags && (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />) }
+      { collection?.tags ?
+        (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />) :
+        (<div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '20vh' }}>
+          <Loader/>
+        </div>) }
     </>
   )
 }
