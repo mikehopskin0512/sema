@@ -19,7 +19,7 @@ const AddCommentCollection = () => {
   const github = identities.find((identity) => identity.provider === 'github');
 
   const {
-    register, handleSubmit, formState, setValue, reset, setError,
+    register, handleSubmit, formState, setValue, watch,
   } = useForm({
     defaultValues: {
       tags: [],
@@ -63,7 +63,7 @@ const AddCommentCollection = () => {
           </button>
         </div>
       </div>
-      <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} />
+      <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />
     </form>
   );
 }

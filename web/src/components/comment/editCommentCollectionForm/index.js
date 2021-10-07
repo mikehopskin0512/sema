@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import CreatableSelect from 'react-select/creatable';
+import Select, { components } from 'react-select';
 import { tagsOperations } from '../../../state/features/tags';
 
 const { fetchTagList } = tagsOperations;
@@ -72,13 +72,26 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
   }, [tagState.tags]);
 
   const onSelectTags = (e) => {
-    const tags = e.map(({ type, label, value, tag }) => ({
-      tag: value | tag,
-      type,
-      label,
-    }));
-    setValue('tags', tags);
+    console.log
+    if (e) {
+      const tags = e.map(({ type, label, tag }) => ({
+        tag: tag,
+        type,
+        label,
+      }));
+      setValue('tags', tags);
+    }
   }
+
+  const onRemove = (data) => {
+    const tags = [...watch('tags')];
+    const filtered = tags.filter((tag) => tag.tag !== data.tag);
+    setValue('tags', filtered);
+  }
+
+  const MultiValueRemove = ({ innerProps, ...props }) => (
+    <components.MultiValueRemove {...props} innerProps={{ ...innerProps, onClick: () => onRemove(props.data) }} />
+  );
 
   return(
     <div className="p-10">
@@ -98,12 +111,15 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
       </div>
       <div className="mb-25">
         <label className="label has-text-deep-black">Tags/Language/Framework/Version *</label>
-        <CreatableSelect
+        <Select
           isMulti
           options={tagOptions}
           placeholder=""
           onChange={onSelectTags}
           value={watch('tags')}
+          components={{
+            MultiValueRemove
+          }}
         />
         <p className="is-size-7 is-italic">These tags automatically add to new Comment in this Collection</p>
       </div>

@@ -80,6 +80,24 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REQUEST_UPDATE_COLLECTION:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_UPDATE_COLLECTION_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      collection: action.collection,
+      error: {},
+    };
+  case types.REQUEST_UPDATE_COLLECTION_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

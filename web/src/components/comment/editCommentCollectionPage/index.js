@@ -7,7 +7,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 import { collectionsOperations } from 'src/state/features/collections';
 
-const { fetchCollectionById } = collectionsOperations;
+const { fetchCollectionById, updateCollection } = collectionsOperations;
 
 const EditCommentCollectionPage = () => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const EditCommentCollectionPage = () => {
   const { collection } = collectionState;
 
   const {
-    register, handleSubmit, formState, setValue, watch,
+    register, handleSubmit, formState, setValue, watch
   } = useForm();
 
   useEffect(() => {
@@ -40,6 +40,14 @@ const EditCommentCollectionPage = () => {
     }
   }, [collection]);
 
+  const onSubmit = async (data) => {
+    const updatedCollection = await dispatch(updateCollection(collection._id, {
+      collection: data
+    }, token));
+    if (updatedCollection?._id) {
+      window.location.href = `/suggested-comments?cid=${collection._id}`
+    }
+  }
 
   return(
     <>
@@ -59,13 +67,14 @@ const EditCommentCollectionPage = () => {
           <button
             className="button is-small is-primary border-radius-4px"
             type="button"
+            onClick={handleSubmit(onSubmit)}
           >
             <FontAwesomeIcon icon={faCheck} className="mr-10" />
             Save
           </button>
         </div>
       </div>
-      <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />
+      { collection?.tags && (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />) }
     </>
   )
 }
