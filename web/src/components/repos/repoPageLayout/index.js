@@ -7,7 +7,6 @@ import Sidebar from "../../sidebar";
 import withLayout from "../../layout";
 import Loader from "../../Loader";
 import styles from "./repoPageLayout.module.scss";
-import DateRangeSelector from '../../dataRangeSelector';
 import { repositoriesOperations } from "../../../state/features/repositories";
 import Select, { components } from 'react-select';
 
@@ -27,8 +26,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -39,6 +37,12 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   useEffect(() => {
     getUserRepos(auth.user);
   }, [auth]);
+
+  useEffect(() => {
+    if (totalPullRequests && totalSemaUsers && totalSmartCommenters && totalSmartComments) {
+      setInitialLoading(false);
+    }
+  }, [repositories]);
 
   const formatOptions = (repositories) => {
     if (repositories) {
@@ -76,12 +80,11 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   }
 
   return (
-    <div className="has-background-white pb-250">
+    <div className="has-background-white pb-180">
       {
-        auth.isFetching || repositories.isFetching ? (
+        (auth.isFetching || repositories.isFetching) && initialLoading ? (
           <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
             <Loader/>
-            {children({ startDate, endDate })}
           </div>
         ) : (
           <>
@@ -100,42 +103,32 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
                   <p className={clsx("has-text-deep-black px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile", styles['select-container'], styles['repo-select-container'])}>{name}</p>
                 ) }
               </div>
-              <div className={clsx('is-hidden-mobile', styles['date-picker-container'])}>
-                <DateRangeSelector
-                  start={startDate}
-                  end={endDate}
-                  setStartDate={setStartDate}
-                  setEndDate={setEndDate}
-                />
-              </div>
             </div>
-            { totalPullRequests && totalSemaUsers && totalSmartCommenters && totalSmartComments && (
-              <div className={clsx(styles["card-container"], 'px-20')}>
-                <div className="hero content-container">
-                  <div className="my-40 columns m-0">
-                    <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
-                      <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
-                      <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalPullRequests}</div>
-                    </div>
-                    <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
-                      <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTS</div>
-                      <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalSmartComments}</div>
-                    </div>
-                    <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
-                      <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTERS</div>
-                      <div className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{totalSmartCommenters}</div>
-                    </div>
-                    <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
-                      <div className={clsx("is-size-7", styles['card-title'])}>SEMA USERS</div>
-                      <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalSemaUsers}</div>
-                    </div>
+            <div className={clsx(styles["card-container"], 'px-20')}>
+              <div className="hero content-container">
+                <div className="my-40 columns m-0">
+                  <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+                    <div className={clsx("is-size-7", styles['card-title'])}>SMART CODE REVIEWS</div>
+                    <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalPullRequests}</div>
+                  </div>
+                  <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+                    <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTS</div>
+                    <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalSmartComments}</div>
+                  </div>
+                  <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+                    <div className={clsx("is-size-7", styles['card-title'])}>SMART COMMENTERS</div>
+                    <div className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{totalSmartCommenters}</div>
+                  </div>
+                  <div className={clsx("column mx-20 m-5 border-radius-4px", styles["card"])}>
+                    <div className={clsx("is-size-7", styles['card-title'])}>SEMA USERS</div>
+                    <div className={clsx("is-size-3 has-text-weight-semibold has-text-deep-black", styles['card-subtitle'])}>{totalSemaUsers}</div>
+                  </div>
                   </div>
                 </div>
-              </div>
-            ) }
+            </div>
             <Sidebar {...sidebarProps}>
               <>
-                {children({ startDate, endDate })}
+                {children}
               </>
             </Sidebar>
           </>

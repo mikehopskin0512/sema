@@ -82,9 +82,12 @@ export const getGithubMetadata = (document) => {
 export const fireAmplitudeEvent = (event, opts) => {
   const githubMetadata = getGithubMetadata(document);
 
+  const { user: { isLoggedIn } } = store.getState();
+
   amplitude.getInstance().logEvent(event, {
     ...opts,
     ...githubMetadata,
+    isLoggedIn,
     url: window.location.href,
   });
 };

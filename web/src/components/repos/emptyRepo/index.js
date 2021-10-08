@@ -27,7 +27,7 @@ const EmptyRepo = () => {
 
   return (
     <div className="hero content-container">
-      <div className="hero-body m-50 p-50">
+      <div className={clsx('hero-body', styles.container)}>
         <div className="tile is-ancestor mb-50">
           <div className="is-parent is-full-width">
             <div className="tile is-child py-30 box has-text-centered">
@@ -43,10 +43,10 @@ const EmptyRepo = () => {
                     const sub = formatSubtitle(subtitle);
                     return (
                       <React.Fragment key={i}>
-                        <div className={clsx('column p-25 mb-25 is-hidden-mobile')}>
-                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-center')}>
+                        <div className={clsx('column p-25 mb-25', styles['desktop-view'])}>
+                          <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-justify-content-flex-start')}>
                             <div
-                              className={clsx(styles['img-container'], 'is-flex is-justify-content-center is-align-items-center mb-25')}
+                              className={clsx(styles['img-container'], 'is-flex is-justify-content-start is-align-items-start mb-25')}
                               onMouseEnter={() => onHover(title)}
                               onMouseLeave={() => onRemoveHover()}
                             >
@@ -68,7 +68,7 @@ const EmptyRepo = () => {
                             <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
                           </div>
                         </div>
-                        <div className={clsx('column p-2 mb-10 is-hidden-desktop')}>
+                        <div className={clsx('column p-2 mb-10', styles['mobile-view'])}>
                           <div className={clsx(styles.tile, 'tile is-child colored-shadow box is-flex is-flex-direction-column is-align-items-center')}>
                             <div className={clsx(styles.img, 'is-flex is-justify-content-center is-align-items-center mt-25')}>
                               <img src={img} alt="gif" />

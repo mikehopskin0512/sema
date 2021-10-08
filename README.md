@@ -28,6 +28,19 @@ $ sudo docker-compose up
 # Browse to http://localhost:3000 to test the webapp
 ```
 
+## Deploying chrome extension
+
+```sh
+# make sure you are in the themis dir
+$ cd phoenix/themis
+
+# read help message from deploy script
+$ ./deploy.sh -h 
+
+# set all necessary variables and run script
+$ ./deploy.sh -a [GOOGLE_APP_ID]
+```
+
 ## Development approach
 
 Branch off, and pull request against `qa`
