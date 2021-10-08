@@ -84,7 +84,9 @@ jobs:
       - run:
           name: push the extension file to s3
           command: filename=$(ls themis | grep Sema_Code_Review_Assistant_ | head -1) && aws s3 cp themis/$filename s3://$ENV-chrome-store/$filename --profile phoenix
-
+      - slack/notify:
+          event: pass
+          template: basic_on_hold_1
 workflows:
   version: 2
   primary:
@@ -102,6 +104,7 @@ workflows:
                 - qa
                 - master
       - build-chrome-extension:
+          context: slack-secrets
           filters:
             branches:
               only:
