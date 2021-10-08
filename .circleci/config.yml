@@ -72,6 +72,13 @@ jobs:
             else
               echo 'export ENV=qa' >> $BASH_ENV
             fi
+      - run: 
+          name: crash system
+          command: exit 1 
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          channel: "support"
       - run:
           name: build chrome extension
           command: cd themis && ./build.sh $ENV
@@ -84,18 +91,12 @@ jobs:
       - run:
           name: push the extension file to s3
           command: filename=$(ls themis | grep Sema_Code_Review_Assistant_ | head -1) && aws s3 cp themis/$filename s3://$ENV-chrome-store/$filename --profile phoenix
-      - run: 
-          name: crash system
-          command: exit 1 
+      
   phoenix-notify:
     docker:
         - image: cimg/base:2020.01
     steps: 
       - checkout
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-          channel: "support"
       - slack/notify:
           event: pass
           template: basic_success_1
