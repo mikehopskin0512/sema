@@ -104,6 +104,7 @@ workflows:
                 - qa
                 - master
       - build-chrome-extension:
+          context: slack-secrets
           filters:
             branches:
               only:
