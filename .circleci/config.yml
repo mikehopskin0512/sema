@@ -107,3 +107,4 @@ workflows:
               only:
                 - qa
                 - master
+                - PHX-1455
