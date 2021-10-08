@@ -155,7 +155,6 @@ const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
@@ -182,8 +181,10 @@ const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
                 isMulti: true,
                 onChange: ((value) => onChangeFilter('pr', value)),
                 value: filter.pr,
+                hideSelectedOptions: false,
               }}
               label="Pull requests"
+              showCheckbox
             />
           </div>
         </div>
