@@ -135,4 +135,4 @@ workflows:
           requires:
             - build-chrome-extension
             - deploy-web
-            - eploy-apollo
+            - deploy-apollo
