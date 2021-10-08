@@ -84,13 +84,17 @@ jobs:
       - run:
           name: push the extension file to s3
           command: filename=$(ls themis | grep Sema_Code_Review_Assistant_ | head -1) && aws s3 cp themis/$filename s3://$ENV-chrome-store/$filename --profile phoenix
+  notify:
+    docker:
+        - image: cimg/node:15.14.0
+    steps: 
       - slack/notify:
           event: fail
           template: basic_fail_1
           mentions: "@support"
       - slack/notify:
           event: pass
-          template: success_tagged_deploy_1
+          template: basic_success_1
 workflows:
   version: 2
   primary:
