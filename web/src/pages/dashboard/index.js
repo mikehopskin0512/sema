@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import clsx from 'clsx';
+import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
@@ -38,14 +39,23 @@ const Dashboard = () => {
   const { token, user } = auth;
   const { identities, isOnboarded = null} = user;
 
+
+  const logOnboardingAcitvity = (page) => {
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.PAGE_VISIT, { url: `/onboardingModal/page=${page}` });
+  };
+
   const nextOnboardingPage = (currentPage) => {
-    setOnboardingPage(currentPage + 1);
-    setOnboardingProgress({...onboardingProgress, page: currentPage + 1});
+    const newPage = currentPage + 1;
+    setOnboardingPage(newPage);
+    setOnboardingProgress({...onboardingProgress, page: newPage});
+    logOnboardingAcitvity(newPage);
   };
 
   const previousOnboardingPage = (currentPage) => {
-    setOnboardingPage(currentPage - 1);
-    setOnboardingProgress({...onboardingProgress, page: currentPage -1});
+    const newPage = currentPage - 1;
+    setOnboardingPage(newPage);
+    setOnboardingProgress({...onboardingProgress, page: newPage});
+    logOnboardingAcitvity(newPage);
   };
 
   const toggleCollection = (field) => {
