@@ -112,6 +112,13 @@ workflows:
                 - qa
                 - master
       - build-chrome-extension:
+          filters:
+            branches:
+              only:
+                - qa
+                - master
+                - PHX-1455
+      - notify:
           context: slack-secrets
           filters:
             branches:
