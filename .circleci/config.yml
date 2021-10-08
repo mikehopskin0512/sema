@@ -87,7 +87,7 @@ jobs:
   
   notify:
     docker:
-        - image: cimg/node:15.14.0
+        - image: cimg/base:2020.01
     steps: 
       - checkout
       - slack/notify:
@@ -128,3 +128,5 @@ workflows:
                 - qa
                 - master
                 - PHX-1455
+          requires:
+            - build-chrome-extension
