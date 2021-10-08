@@ -93,7 +93,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          mentions: "@support"
+          channel: "support"
       - slack/notify:
           event: pass
           template: basic_success_1
@@ -121,7 +121,8 @@ workflows:
                 - master
                 - PHX-1455
       - notify:
-          context: slack-secrets
+          context: 
+           - slack-secrets
           filters:
             branches:
               only:
