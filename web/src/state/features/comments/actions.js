@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview } from './api';
+import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview, getSuggestedComments } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
@@ -114,6 +114,7 @@ export const getUserCollection = (token) => async (dispatch) => {
 export const getUserSuggestedComments = (title, userId, token) => async (dispatch) => {
   try {
     dispatch(fetchUserSuggestedComments(token));
+    console.log({ q: title, user: userId });
     const { data } = await getSuggestedComments({ q: title, user: userId }, token);
     dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
   } catch (error) {
