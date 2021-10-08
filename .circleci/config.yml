@@ -1,6 +1,6 @@
 version: '2.1'
 orbs:
-  slack: circleci/slack@4.1
+  slack: circleci/slack@4.4
 jobs:
   deploy-web:
     environment:
@@ -96,7 +96,7 @@ jobs:
           channel: "support"
       - slack/notify:
           event: pass
-          template: success_tagged_deploy_1
+          template: basic_success_1
 workflows:
   version: 2
   primary:
