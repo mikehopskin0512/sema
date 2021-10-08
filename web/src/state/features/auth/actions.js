@@ -127,16 +127,16 @@ export const authenticate = (username, password) => async (dispatch) => {
 };
 
 const fetchCurrentUserRequest = () => ({
-  type: types.GET_CURRENT_USER,
+  type: types.FETCH_CURRENT_USER,
 });
 
 const fetchCurrentUserSuccess = (user) => ({
-  type: types.GET_CURRENT_USER_SUCCESS,
+  type: types.FETCH_CURRENT_USER_SUCCESS,
   user,
 });
 
 const fetchCurrentUserError = (errors) => ({
-  type: types.GET_CURRENT_USER_ERROR,
+  type: types.FETCH_CURRENT_USER_ERROR,
   errors,
 });
 

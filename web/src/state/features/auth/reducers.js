@@ -161,19 +161,19 @@ const reducer = (state = initialState, action) => {
       users: [],
       error: action.errors,
     };
-  case types.GET_CURRENT_USER:
+  case types.FETCH_CURRENT_USER:
     return {
       ...state,
       isFetching: true,
     };
-  case types.GET_CURRENT_USER_SUCCESS:
+  case types.FETCH_CURRENT_USER_SUCCESS:
     return {
       ...state,
       isFetching: false,
       user: action.user,
       error: {},
     };
-  case types.GET_CURRENT_USER_ERROR:
+  case types.FETCH_CURRENT_USER_ERROR:
     return {
       ...state,
       isFetching: false,
