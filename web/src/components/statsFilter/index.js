@@ -12,6 +12,8 @@ import { format } from 'date-fns';
 
 const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
   const [filter, setFilter] = useState({
+    startDate: null,
+    endDate: null,
     search: '',
     from: [],
     to: [],
@@ -19,8 +21,8 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
     tags: [],
     pr: [],
   });
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const onChangeFilter = (type, value) => {
     setFilter({
@@ -35,23 +37,16 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
     }
   }, [filter]);
 
-  useEffect(() => {
-    if (startDate) {
-      const newFilter = {
-        startDate: format(new Date(startDate), 'yyyy-MM-dd hh:mm:ss'),
-        ...filter,
-      };
-      delete newFilter.endDate;
-      setFilter(newFilter);
-      setEndDate();
-    }
-  }, [startDate]);
-
-  useEffect(() => {
-    if (endDate) {
-      setFilter({endDate: format(new Date(endDate), 'yyyy-MM-dd hh:mm:ss'), ...filter});
-    }
-  }, [endDate]);
+  const onDateChange = ({ startDate, endDate }) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    const formatDate = (date) => format(new Date(date), 'yyyy-MM-dd hh:mm:ss');
+    setFilter({
+      ...filter,
+      startDate: startDate ? formatDate(startDate) : null,
+      endDate: endDate ? formatDate(endDate) : null,
+    });
+  }
 
   return (
     <>
@@ -79,8 +74,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
             <DateRangeSelector
               start={startDate}
               end={endDate}
-              setStartDate={setStartDate}
-              setEndDate={setEndDate}
+              onChange={onDateChange}
             />
           </div>
           <div className={clsx("m-5", styles['filter-container'])}>

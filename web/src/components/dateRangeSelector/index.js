@@ -40,38 +40,40 @@ const DATE_RANGES = {
     },
     allTime: {
       name: 'All Time',
+      startDate: null,
+      endDate: null,
     },
   };
 
 const DateRangeSelector = (props) => {
-    const { start, setStartDate, setEndDate, end, isRight = false, buttonProps = {} } = props;
+    const { start, end, onChange, isRight = false, buttonProps = {} } = props;
     const popupRef = useRef(null);
     const [selectedRange, setSelectedRange] = useState('allTime');
     const [focusedInput, setFocusedInput] = useState('startDate');
     const { isOpen, toggleMenu } = usePopup(popupRef);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     useEffect(() => {
       if (selectedRange === 'custom') {
         return;
       }
-      if (selectedRange !== 'allTime') {
-        setStartDate(DATE_RANGES[selectedRange].startDate);
-        setEndDate(DATE_RANGES[selectedRange].endDate);
-      } else {
-        setStartDate(null);
-        setEndDate(null);
-      }
+      onChange({
+        startDate: DATE_RANGES[selectedRange].startDate,
+        endDate: DATE_RANGES[selectedRange].endDate,
+      })
     }, [selectedRange]);
 
     const setDates = ({ startDate, endDate }) => {
       setSelectedRange('custom');
-      // Clear end date everytime startDate is changed
-      if (isEqual(new Date(end), new Date(endDate)) && !isEqual(new Date(start), new Date(startDate))) {
-        setEndDate();
-      } else {
-        setEndDate(endDate);
-      }
       setStartDate(startDate);
+      setEndDate(endDate);
+      const isSameDate = (a, b) => isEqual(new Date(a), new Date(b));
+      const isStartedDateChanged = isSameDate(end, endDate) && !isSameDate(start, startDate);
+      onChange({
+        startDate: startDate,
+        endDate: isStartedDateChanged ? null : endDate,
+      })
     }
 
     const renderCalendarInfo = () => (
