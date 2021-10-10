@@ -6,7 +6,7 @@ export const EMOJIS = [
     label: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
-    color: '#f4f4f4',
+    color: '#9FE1F5',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed71',
@@ -14,7 +14,7 @@ export const EMOJIS = [
     label: 'Awesome',
     emoji: '🏆',
     github_emoji: ':trophy:',
-    color: '#a9db5f',
+    color: '#212B36',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed72',
@@ -22,7 +22,7 @@ export const EMOJIS = [
     label: 'Looks good',
     emoji: '👌',
     github_emoji: ':ok_hand:',
-    color: '#bbc5aa',
+    color: '#33C2EC',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed73',
@@ -30,15 +30,15 @@ export const EMOJIS = [
     label: 'Question',
     emoji: '❓',
     github_emoji: ':question:',
-    color: '#e4e4e4',
+    color: '#13A3CD',
   },
   {
     _id: '607f0d1ed7f45b000ec2ed74',
     title: 'This code <b>needs a fix</b>',
-    label: 'Fix',
+    label: 'Needs a fix',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
-    color: '#afadaa',
+    color: '#006D8D',
   },
 ];
 export const TAGS = [
@@ -116,3 +116,5 @@ export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 export const GITHUB_URL = 'https://github.com';
 
 export const DEFAULT_COLLECTION_NAME = "my comments";
+
+export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';

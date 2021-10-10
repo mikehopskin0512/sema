@@ -10,8 +10,7 @@ import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import { articles } from '../../data/help';
 import styles from './help.module.scss';
 import withLayout from '../../components/layout';
-
-const FAQLink = 'https://semasoftware.com/faq';
+import { SEMA_FAQ_URL } from '../../utils/constants';
 
 const HelpAndSupport = () => {
   const [hovered, setHovered] = useState(null);
@@ -97,7 +96,7 @@ const HelpAndSupport = () => {
           <div className="mb-25">
             <p className="has-text-weight-semibold has-text-deep-black is-size-3 is-size-4-mobile">Frequently asked questions</p>
             <p className="has-text-deep-black is-size-4 is-size-5-mobile mt-15">Check our FAQ page to learn more about Sema</p>
-            <a href={FAQLink} target="_blank" rel="noreferrer">
+            <a href={SEMA_FAQ_URL} target="_blank" rel="noreferrer">
               <button className="button is-primary has-text-weight-semibold px-50 py-20 colored-shadow-small mt-25" type="button">FAQ page</button>
             </a>
           </div>
