@@ -114,7 +114,6 @@ export const getUserCollection = (token) => async (dispatch) => {
 export const getUserSuggestedComments = (title, userId, token) => async (dispatch) => {
   try {
     dispatch(fetchUserSuggestedComments(token));
-    console.log({ q: title, user: userId });
     const { data } = await getSuggestedComments({ q: title, user: userId }, token);
     dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
   } catch (error) {
