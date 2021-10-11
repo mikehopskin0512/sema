@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
 const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
+  const [initialFormState, setInitialFormState] = useState(true);
   const { tagState } = useSelector((state) => ({
     tagState: state.tagsState,
   }));
@@ -69,8 +70,8 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
           <input
             className="input has-background-white"
             type="text"
-            value={comment.source}
-            onChange={(e) => onChange({ source: e.target.value })}
+            value={comment.source.url}
+            onChange={(e) => onChange({ source: { name: comment.source.name, url: e.target.value } })}
           />
         </div>
         <div className="mb-10 column">

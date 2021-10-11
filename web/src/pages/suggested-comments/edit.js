@@ -9,7 +9,7 @@ import { commentsOperations } from '../../state/features/comments';
 import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 import withLayout from '../../components/layout';
 import EditSuggestedCommentForm from '../../components/comment/editSuggestedCommentForm';
-import { makeTagsList } from '../../utils';
+import { makeTagsList, parseRelatedLinks } from '../../utils';
 
 const { fetchTagList } = tagsOperations;
 const { getCollectionById } = commentsOperations;
@@ -47,7 +47,8 @@ const EditCollectionPage = () => {
   useEffect(() => {
     setComments(suggestedComments.map((comment) => ({
       ...comment,
-      tags: comment.tags.map((t) => t.tag ? ({ value: t.tag, label: t.label }) : undefined),
+      languages: comment.tags.filter((tag) => tag.type === 'language').map((t) => t.tag ? ({ value: t.tag, label: t.label, type: t.type }) : undefined),
+      guides: comment.tags.filter((tag) => tag.type === 'guide').map((t) => t.tag ? ({ value: t.tag, label: t.label, type: t.type }) : undefined),
     })));
   }, [suggestedComments]);
 
@@ -65,7 +66,12 @@ const EditCollectionPage = () => {
   const onSave = async () => {
     const data = comments.map((comment) => ({
       ...comment,
-      tags: makeTagsList(comment.tags),
+      tags: makeTagsList([...comment?.languages || [], ...comment?.guides || []]),
+      relatedLinks: parseRelatedLinks(comment.relatedLinks.toString()),
+      source: {
+        url: comment.source.url,
+        name: comment.source.url ? new URL(comment.source.url).hostname : ''
+      },
     }));
 
     await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
@@ -119,6 +125,7 @@ const EditCollectionPage = () => {
                 key={item._id || index}
                 comment={item}
                 onChange={(e) => onChange(e, index)}
+                collection={collection}
               />
             ))
           }

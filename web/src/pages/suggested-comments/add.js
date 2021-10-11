@@ -29,7 +29,10 @@ const defaultValues = {
   title: '',
   languages: [],
   guides: [],
-  source: '',
+  source: {
+    url: '',
+    name: ''
+  },
   author: '',
   comment: '',
   link: '',
@@ -80,12 +83,12 @@ const AddCollectionPage = () => {
   const onSave = async () => {
     const data = comments.filter((item) => item.title).map((comment) => ({
       ...comment,
+      source: {
+        url: comment.source.url,
+        name: comment.source.url ? new URL(comment.source.url).hostname : ''
+      },
       tags: makeTagsList([...comment.languages, ...comment.guides]),
       relatedLinks: parseRelatedLinks(comment.relatedLinks),
-      source: {
-        name: comment.author,
-        url: comment.source
-      }
     }));
 
     if (data && data.length) {
