@@ -59,3 +59,7 @@ export const makeTagsList = (orgTags, type = 'guide') => {
   };
 };
 
+export const parseRelatedLinks = (string) => {
+  const links = string.replace(/\s/g, '');
+  return links.split(',');
+}

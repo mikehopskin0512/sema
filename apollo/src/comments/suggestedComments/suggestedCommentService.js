@@ -251,7 +251,7 @@ const bulkCreateSuggestedComments = async (comments, user) => {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
-      author: fullName(user.user),
+      author: comment.author ? comment.author : fullName(user.user),
     })));
 
     return await SuggestedComment.create(suggestedComments);

@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
 import { commentsOperations } from '../../state/features/comments';
 import { suggestCommentsOperations } from '../../state/features/suggest-comments';
 import withLayout from '../../components/layout';
 import EditSuggestedCommentForm from '../../components/comment/editSuggestedCommentForm';
-import { makeTagsList } from '../../utils';
+import { makeTagsList, parseRelatedLinks } from '../../utils';
 
 const { fetchTagList } = tagsOperations;
 const { getCollectionById } = commentsOperations;
@@ -25,10 +25,21 @@ const initialValues = {
   comment: '',
 };
 
+const defaultValues = {
+  title: '',
+  languages: [],
+  guides: [],
+  source: '',
+  author: '',
+  comment: '',
+  link: '',
+  relatedLinks: '',
+}
+
 const AddCollectionPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [comments, setComments] = useState([initialValues]);
+  const [comments, setComments] = useState([defaultValues]);
 
   const { auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
@@ -48,7 +59,11 @@ const AddCollectionPage = () => {
   }, [dispatch, token]);
 
   const addComment = () => {
-    setComments([...comments, initialValues]);
+    setComments([...comments, defaultValues]);
+  };
+
+  const removeComment = (index) => {
+    setComments(comments.filter((_comment, idx) => index !== idx));
   };
 
   const onChange = (value, index) => {
@@ -65,7 +80,12 @@ const AddCollectionPage = () => {
   const onSave = async () => {
     const data = comments.filter((item) => item.title).map((comment) => ({
       ...comment,
-      tags: makeTagsList(comment.tags),
+      tags: makeTagsList([...comment.languages, ...comment.guides]),
+      relatedLinks: parseRelatedLinks(comment.relatedLinks),
+      source: {
+        name: comment.author,
+        url: comment.source
+      }
     }));
 
     if (data && data.length) {
@@ -117,11 +137,25 @@ const AddCollectionPage = () => {
         <div className="px-10">
           {
             comments.map((item, index) => (
-              <EditSuggestedCommentForm
-                key={item._id || index}
-                comment={item}
-                onChange={(e) => onChange(e, index)}
-              />
+              <div key={item._id || index} style={{ borderBottom: '1px solid #dbdbdb' }} className="mb-25 pb-25">
+                <EditSuggestedCommentForm
+                  comment={item}
+                  onChange={(e) => onChange(e, index)}
+                  collection={collection}
+                />
+                { index > 0 && (
+                  <div className="is-flex is-justify-content-flex-end">
+                    <button
+                      className="button is-small is-danger is-outlined border-radius-4px"
+                      type="button"
+                      onClick={() => removeComment(index)}
+                    >
+                      <FontAwesomeIcon icon={faTimes} className="mr-10" />
+                      Remove comment
+                    </button>
+                  </div>
+                ) }
+              </div>
             ))
           }
           <button
