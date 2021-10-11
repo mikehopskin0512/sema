@@ -12,11 +12,11 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       lastName,
       username,
       avatarUrl,
-      identities
+      identities = []
     },
   } = auth;
   // Get GitHub identity
-  const { username: githubUsername } = identities.find((item) => item.provider === "github");
+  const { username: githubUsername } = identities.length && identities.find((item) => item?.provider === "github");
 
   const renderTopReactions = () => {
     return topReactions.map((reaction) => {
