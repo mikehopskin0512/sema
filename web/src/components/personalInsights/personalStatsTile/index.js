@@ -12,7 +12,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       lastName,
       username,
       avatarUrl,
-      identities
+      identities = []
     },
   } = auth;
   // Get GitHub identity
