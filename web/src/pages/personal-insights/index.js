@@ -51,6 +51,7 @@ const PersonalInsights = () => {
     groupBy: '',
     startDate: null,
     endDate: null,
+    dateDiff: 0,
   });
 
   const fetchUserComments = async (username) => {
@@ -136,16 +137,15 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     const { startDate, endDate, groupBy, dateDiff } = dateData;
-    if (startDate && endDate && dateDiff && groupBy) {
-      const { overview: { smartComments } } = comments;
+    if (startDate && endDate && groupBy) {
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         ...dateData,
-        smartComments,
+        smartComments: filteredComments,
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
     }
-  }, [dateData]);
+  }, [dateData, filteredComments]);
 
   useEffect(() => {
     fetchUserReceivedComments(githubUser?.username)
