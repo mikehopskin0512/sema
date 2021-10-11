@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import styles from './suggestedCommentCard.module.scss';
 import ActionMenu from './actionMenu';
 import Checkbox from '../../checkbox';
+import PreviewableLink from "./previewableLink";
 
 const defaultDate = '07/01/2021';
 
@@ -15,6 +16,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
     comment = '',
     tags = [],
     source,
+    sourceMetadata = null,
     title = '',
     createdAt = defaultDate,
     engGuides = [],
@@ -68,14 +70,10 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
-        { engGuides.length > 0 ? (
-          <p className="is-size-6 has-text-deep-black">
-            <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/guides/${engGuides[0].engGuide?._id}/${engGuides[0].engGuide?.slug}`}>
-              <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
-            </a>
-          </p>
-        ) : null }
+        <p className="is-flex is-size-6 has-text-deep-black">
+          <b className="mr-5">Related Link:</b>
+          <PreviewableLink source={source} sourceMetadata={sourceMetadata}/>
+        </p>
         <span />
         <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>
