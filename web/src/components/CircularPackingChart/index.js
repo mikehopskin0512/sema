@@ -69,7 +69,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
     }
   }, [data]);
 
-  const renderTooltip = ({ formattedValue, value, data: tag }) => (
+  const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
     <div className="box has-background-white p-20 border-radius-4px">
       <p className="has-text-weight-semibold">{tag.name}</p>
       { tag.data.length > 0 && (
@@ -80,7 +80,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
       <p className="is-size-7">{value} comments</p>
       <p className="is-size-7">{formattedValue} of all tags</p>
     </div>
-  )
+  ))
 
   if (noData) {
     return (
