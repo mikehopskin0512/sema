@@ -24,7 +24,7 @@ const AddCommentCollection = () => {
   }));
   const { showAlert, alertType, alertLabel } = alerts;
   const { user, token } = auth;
-  const { isSemaAdmin, identities } = user;
+  const { isSemaAdmin, identities = [] } = user;
 
   const github = identities.find((identity) => identity.provider === 'github');
 
