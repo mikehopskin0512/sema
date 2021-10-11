@@ -69,19 +69,18 @@ const CircularPacking = ({ data, groupBy = '' }) => {
     }
   }, [data]);
 
-  const renderTooltip = React.memo(({ formattedValue, value, data }) => (
-      <div className="box has-background-white p-20 border-radius-4px">
-        <p className="has-text-weight-semibold">Readable - last {data.data.length} {groupBy}s</p>
-        { data.data.length > 0 && (
-          <div className={clsx('py-5', styles['line-chart-container'])}>
-            <LineChart data={[data]}  />
-          </div>
-        ) }
-        <p className="is-size-7">{value} comments</p>
-        <p className="is-size-7">{formattedValue} of all tags</p>
-      </div>
-    )
-  );
+  const renderTooltip = ({ formattedValue, value, data: tag }) => (
+    <div className="box has-background-white p-20 border-radius-4px">
+      <p className="has-text-weight-semibold">{tag.name}</p>
+      { tag.data.length > 0 && (
+        <div className={clsx('py-5', styles['line-chart-container'])}>
+          <LineChart data={[tag]}  />
+        </div>
+      ) }
+      <p className="is-size-7">{value} comments</p>
+      <p className="is-size-7">{formattedValue} of all tags</p>
+    </div>
+  )
 
   if (noData) {
     return (
