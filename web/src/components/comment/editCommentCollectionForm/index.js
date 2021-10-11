@@ -73,10 +73,11 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
 
   const onSelectTags = (e) => {
     if (e) {
-      const tags = e.map(({ type, label, tag }) => ({
-        tag: tag,
+      const tags = e.map(({ type, label, tag, value }) => ({
+        tag,
         type,
         label,
+        value
       }));
       setValue('tags', tags);
     }
