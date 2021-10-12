@@ -15,7 +15,10 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
     author = '',
     comment = '',
     tags = [],
-    source,
+    source = {
+      name: '',
+      url: '',
+    },
     sourceMetadata = null,
     title = '',
     createdAt = defaultDate,
