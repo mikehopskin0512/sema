@@ -30,11 +30,11 @@ const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', las
 };
 
 export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user) }, jwtSecret, {
-  expiresIn: '15m',
+  expiresIn: '2m',
 });
 
 export const createIdentityToken = async (identity) => sign({ identity }, jwtSecret, {
-  expiresIn: '15m',
+  expiresIn: '2m',
 });
 
 export const createRefreshToken = async (user) => sign({ user }, refreshSecret, {
@@ -69,7 +69,7 @@ export const setRefreshToken = async (response, user, token) => {
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
     cookieConfig.domain = `.${rootDomain}`;
-    cookieConfig.secure = true;
+    // cookieConfig.secure = true;
 
     // Removed httpOnly setting from cookie. Causes issues with JWT token refresh.
     // cookieConfig.httpOnly = true;
