@@ -40,11 +40,16 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    const formatDate = (date) => format(new Date(date), 'yyyy-MM-dd hh:mm:ss');
+    const formatDate = (date, time) => {
+      if (!date || !time) {
+        return null
+      }
+      return format(new Date(date), `yyyy-MM-dd ${time}`)
+    }
     setFilter({
       ...filter,
-      startDate: startDate ? formatDate(startDate) : null,
-      endDate: endDate ? formatDate(endDate) : null,
+      startDate: formatDate(startDate, '00:00:00'),
+      endDate: formatDate(endDate, '23:59:59'),
     });
   }
 
