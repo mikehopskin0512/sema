@@ -29,10 +29,10 @@ const Profile = () => {
   };
 
   return (
-    <div className="has-background-white-gray pb-300">
+    <div>
       <Helmet {...ProfileHelmet} />
       <EditModal onClose={onClose} isActive={editModalIsOpen} />
-      <div className="container py-80 px-20">
+      <div className="my-40">
         <>
           <p className="has-text-black has-text-weight-bold is-size-4 mb-30">Profile Info</p>
           <div className={clsx('border-radius-4px p-25 has-background-white', styles.shadow)}>
