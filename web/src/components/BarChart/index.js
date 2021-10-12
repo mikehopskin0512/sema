@@ -8,7 +8,7 @@ import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
 import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
-import index from 'src/pages/suggested-comments/[collectionId]/[slug]';
+
 
 const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
