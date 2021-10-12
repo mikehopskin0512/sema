@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { isEqual, subDays } from 'date-fns';
+import { isEqual, subDays, subMonths } from 'date-fns';
 import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
@@ -30,12 +30,12 @@ const DATE_RANGES = {
     },
     last3Months: {
       name: 'Last 3 Months',
-      startDate: moment(subDays(new Date(), 89)),
+      startDate: moment(subMonths(new Date(), 3)),
       endDate: moment(new Date()),
     },
     last12Months: {
       name: 'Last 12 Months',
-      startDate: moment(subDays(new Date(), 264)),
+      startDate: moment(subMonths(new Date(), 12)),
       endDate: moment(new Date()),
     },
     allTime: {
@@ -136,7 +136,7 @@ const DateRangeSelector = (props) => {
                 renderNavPrevButton={renderNavPrevButton}
                 renderNavNextButton={renderNavNextButton}
                 displayFormat="MMM DD, YYYY"
-                isOutsideRange={(day) => day.isAfter(moment().add(1, 'days'))}
+                isOutsideRange={(day) => day.isAfter(moment())}
                 initialVisibleMonth={() => moment()}
                 numberOfMonths={2}
                 hideKeyboardShortcutsPanel
