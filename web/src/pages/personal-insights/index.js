@@ -258,7 +258,7 @@ const PersonalInsights = () => {
             <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' />
             <TagsChart className="mr-neg10" tags={tagsChartData} />
           </div>
-          <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
+          <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20">Comments {commentView}</p>
           <ActivityItemList comments={filteredComments} />
         </div>
       </div>

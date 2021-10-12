@@ -23,8 +23,8 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       const emoji = Object.keys(reaction);
       const value = Object.values(reaction);
       return (
-        <span className="is-align-items-center">
-          <span className="px-5  is-size-5">{emoji}</span> <span className="is-size-6 pr-10">{value}</span>
+        <span className="is-align-items-center is-flex is-flex-grow-1">
+          <span className="px-5 is-size-5">{emoji}</span> <span className="is-size-6 pr-10 has-text-deep-black">{value}</span>
         </span>
       )
     })
@@ -35,7 +35,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       const label = Object.keys(tag);
       return (
         <>
-          <span class="tag is-rounded is-info is-light has-text-weight-medium ml-5 is-uppercase is-size-8">{label}</span>
+          <span class="tag is-rounded is-primary is-light has-text-weight-semibold mr-5 mb-5 is-uppercase is-size-8">{label}</span>
         </>
       )
     })
@@ -46,7 +46,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       <div className="tile">
         <div className="tile has-background-white border-radius-4px box is-child">
           <div className="columns is-vcentered">
-            <div className="column is-2">
+            <div className="column is-3">
               <div className="is-flex">
                 <img
                   className={clsx("mr-20", styles.avatar)}
@@ -65,26 +65,26 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
             </div>
             <div className="is-divider-vertical" />
             <div className="column">
-              <div className="columns is-vcentered">
+              <div className="columns">
                 <div className="column is-3">
-                  <p className="is-size-7 has-text-grey has-text-weight-medium">
+                  <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOTAL COMMENTS
                   </p>
-                  <p className="pl-5 is-size-4 has-text-weight-semibold">{totalSmartComments}</p>
+                  <p className="is-size-4 has-text-weight-semibold has-text-deep-black">{totalSmartComments}</p>
                 </div>
                 <div className="column is-4">
-                  <p className="is-size-7 has-text-grey has-text-weight-medium">
+                  <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOP REACTIONS
                   </p>
-                  <p className="pl-5">
+                  <p className="is-flex is-flex-wrap-wrap">
                     {renderTopReactions()}
                   </p>
                 </div>
                 <div className="column is-5">
-                  <p className="is-size-7 has-text-grey has-text-weight-medium">
+                  <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOP TAGS
                   </p>
-                  <p className="pl-5">
+                  <p>
                     {renderTopTags()}
                   </p>
                 </div>
