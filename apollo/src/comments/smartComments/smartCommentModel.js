@@ -63,12 +63,12 @@ smartCommentSchema.post('save', async function (doc, next) {
         repoTags.push(tags);
 
         const repoUserIds = repository.repoStats.userIds.map((id) => id.toString());
-        if (repoUserIds.includes(userId.toString())) {
+        if (!repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
         }
 
         if (requesterId) {
-          if (repoUserIds.includes(requesterId.toString())) {
+          if (!repoUserIds.includes(requesterId.toString())) {
             repository.repoStats.userIds.push(requesterId);
           }
         }
