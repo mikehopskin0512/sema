@@ -47,8 +47,8 @@ const EditCollectionPage = () => {
   useEffect(() => {
     setComments(suggestedComments.map((comment) => ({
       ...comment,
-      languages: comment.tags.filter((tag) => tag.type === 'language').map((t) => t.tag ? ({ value: t.tag, label: t.label, type: t.type }) : undefined),
-      guides: comment.tags.filter((tag) => tag.type === 'guide').map((t) => t.tag ? ({ value: t.tag, label: t.label, type: t.type }) : undefined),
+      languages: comment.tags.filter((tag) => tag.tag && tag.type === 'language').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
+      guides: comment.tags.filter((tag) => tag.tag && tag.type === 'guide').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
     })));
   }, [suggestedComments]);
 
