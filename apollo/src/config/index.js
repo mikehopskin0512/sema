@@ -42,4 +42,5 @@ module.exports = {
     registeredAndWaitlistUsers: process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID,
   },
   chromeExtensionId: process.env.CHROME_EXTENSION_ID,
+  iframelyApiKey: process.env.IFRAMELY_API_KEY,
 };
