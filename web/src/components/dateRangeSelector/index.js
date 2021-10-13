@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { isEqual, subDays } from 'date-fns';
+import { isEqual, subDays, subMonths } from 'date-fns';
 import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
@@ -30,48 +30,50 @@ const DATE_RANGES = {
     },
     last3Months: {
       name: 'Last 3 Months',
-      startDate: moment(subDays(new Date(), 89)),
+      startDate: moment(subMonths(new Date(), 3)),
       endDate: moment(new Date()),
     },
     last12Months: {
       name: 'Last 12 Months',
-      startDate: moment(subDays(new Date(), 264)),
+      startDate: moment(subMonths(new Date(), 12)),
       endDate: moment(new Date()),
     },
     allTime: {
       name: 'All Time',
+      startDate: null,
+      endDate: null,
     },
   };
 
 const DateRangeSelector = (props) => {
-    const { start, setStartDate, setEndDate, end, isRight = false, buttonProps = {} } = props;
+    const { start, end, onChange, isRight = false, buttonProps = {} } = props;
     const popupRef = useRef(null);
     const [selectedRange, setSelectedRange] = useState('allTime');
     const [focusedInput, setFocusedInput] = useState('startDate');
     const { isOpen, toggleMenu } = usePopup(popupRef);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
 
     useEffect(() => {
       if (selectedRange === 'custom') {
         return;
       }
-      if (selectedRange !== 'allTime') {
-        setStartDate(DATE_RANGES[selectedRange].startDate);
-        setEndDate(DATE_RANGES[selectedRange].endDate);
-      } else {
-        setStartDate(null);
-        setEndDate(null);
-      }
+      onChange({
+        startDate: DATE_RANGES[selectedRange].startDate,
+        endDate: DATE_RANGES[selectedRange].endDate,
+      })
     }, [selectedRange]);
 
     const setDates = ({ startDate, endDate }) => {
       setSelectedRange('custom');
-      // Clear end date everytime startDate is changed
-      if (isEqual(new Date(end), new Date(endDate)) && !isEqual(new Date(start), new Date(startDate))) {
-        setEndDate();
-      } else {
-        setEndDate(endDate);
-      }
       setStartDate(startDate);
+      setEndDate(endDate);
+      const isSameDate = (a, b) => isEqual(new Date(a), new Date(b));
+      const isStartedDateChanged = isSameDate(end, endDate) && !isSameDate(start, startDate);
+      onChange({
+        startDate: startDate,
+        endDate: isStartedDateChanged ? null : endDate,
+      })
     }
 
     const renderCalendarInfo = () => (
@@ -134,7 +136,7 @@ const DateRangeSelector = (props) => {
                 renderNavPrevButton={renderNavPrevButton}
                 renderNavNextButton={renderNavNextButton}
                 displayFormat="MMM DD, YYYY"
-                isOutsideRange={(day) => day.isAfter(moment().add(1, 'days'))}
+                isOutsideRange={(day) => day.isAfter(moment())}
                 initialVisibleMonth={() => moment()}
                 numberOfMonths={2}
                 hideKeyboardShortcutsPanel
