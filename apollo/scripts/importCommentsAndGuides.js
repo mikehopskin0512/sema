@@ -26,7 +26,6 @@ const getCollectionIdByName = async (name) => {
 };
 
 const checkCollectionByName = async (name) => {
-  if (!name) return null;
   let collection = await Collection.findOne({ name });
 
   if (!collection) {
