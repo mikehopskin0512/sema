@@ -65,7 +65,11 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         ? item.recipient
         : (
           <>
-            <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+            {
+              item.user && item.user.avatarUrl && (
+                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+              )
+            }
             {fullName(item.user)}
           </>
         ),
