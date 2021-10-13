@@ -177,7 +177,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className={clsx('has-background-gray-9', styles.container)}>
+      <div>
         <Helmet {...DashboardHelmet} />
         <ReposView />
       </div>
