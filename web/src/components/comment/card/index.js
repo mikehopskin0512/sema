@@ -20,14 +20,13 @@ const Tag = ({ tag, _id, type }) => (
   <div
     className={
       clsx(
-        'tag is-uppercase is-rounded is-size-7 has-text-weight-semibold mr-5 is-clipped my-5',
+        'tag is-uppercase is-rounded is-size-8 has-text-weight-semibold mr-5 is-clipped my-5',
         type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light',
         styles.tag
       )
     }
     key={`${type}-${tag}-${_id}`}>
       <p>{tag}</p>
-    
   </div>
 )
 
@@ -141,7 +140,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   </div>
                 )}
               </div>
-              <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
+              <div className="is-flex is-justify-content-space-between">
                 <div className="p-12 is-flex-grow-3 is-flex">
                   <div className={clsx(
                     'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
@@ -164,7 +163,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
+                    <div className="is-flex is-flex-grow-1 is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
                       {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
                       {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
                       {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}

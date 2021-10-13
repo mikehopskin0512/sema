@@ -1,7 +1,6 @@
 .card {
   width: calc(100%/3);
   max-width: calc(100%/3);
-  height: 250px;
   @media only screen and (max-width: 769px) {
     max-width: 100% !important;
     width: 100% !important;
@@ -31,7 +30,7 @@
 }
 
 .tag {
-  max-width: 150px;
+  max-width: 120px;
   p {
     overflow: hidden;
     text-overflow: ellipsis;
