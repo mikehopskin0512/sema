@@ -65,7 +65,7 @@ const AddCommentCollection = () => {
   }
 
   return(
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
@@ -92,7 +92,7 @@ const AddCommentCollection = () => {
         </div>
       </div>
       <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />
-    </form>
+    </>
   );
 }
 

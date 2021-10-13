@@ -116,6 +116,12 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
       <div className="mb-25">
         <label className="label has-text-deep-black">Tags/Language/Framework/Version *</label>
         <Select
+          {...register(
+            'tags',
+            {
+              required: 'At least one tag is required'
+            }
+          )}
           isMulti
           options={tagOptions}
           placeholder=""
@@ -127,6 +133,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
           }}
         />
         <p className="is-size-7 is-italic">These tags automatically add to new Comment in this Collection</p>
+        {errors.tags && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.tags.message}</p>)}
       </div>
       <div className="mb-25">
         <label className="label has-text-deep-black">Description</label>
