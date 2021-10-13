@@ -93,6 +93,10 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
     <components.MultiValueRemove {...props} innerProps={{ ...innerProps, onClick: () => onRemove(props.data) }} />
   );
 
+  const ClearIndicator = ({ innerProps, ...props }) => (
+    <components.ClearIndicator {...props} innerProps={{ ...innerProps, onClick: () => setValue('tags', []) }} />
+  );
+
   return(
     <div className="p-10">
       <div className="mb-25">
@@ -118,7 +122,8 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
           onChange={onSelectTags}
           value={watch('tags')}
           components={{
-            MultiValueRemove
+            MultiValueRemove,
+            ClearIndicator
           }}
         />
         <p className="is-size-7 is-italic">These tags automatically add to new Comment in this Collection</p>
