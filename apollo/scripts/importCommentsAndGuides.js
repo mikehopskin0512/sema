@@ -18,12 +18,15 @@ const options = {
 };
 
 const getCollectionIdByName = async (name) => {
+  if (!name) return null;
+  
   const collection = await Collection.findOne({ name });
 
   return collection._id;
 };
 
 const checkCollectionByName = async (name) => {
+  if (!name) return null;
   let collection = await Collection.findOne({ name });
 
   if (!collection) {
@@ -53,11 +56,11 @@ const importEngGuides = async () => {
   });
   collectionNames = uniq(collectionNames);
   
-  const collectionIds = await Promise.all(collectionNames.map(checkCollectionByName));
+  const collectionIds = await Promise.all(collectionNames.filter(item => !!item).map(checkCollectionByName));
 
   const guides = await Promise.all(rows.map(async (item) => {
     const names = item['Collections / Tag1'] ? item['Collections / Tag1'].split(';') : [];
-    const collectionIds = await Promise.all(names.map(getCollectionIdByName));
+    const collectionIds = await Promise.all(names.filter(item => !!item).map(getCollectionIdByName));
     const mappedTags = await mapTags(item['Tags All']);
     
     const existingGuide = await EngGuide.findOne({ displayId: item['Display Id'], title: item['title'] });
@@ -67,9 +70,9 @@ const importEngGuides = async () => {
         title: item.Title,
         slug: getSlug(`${item.Title} ${item['Display Id'].split('-')[1]}`, { symbols: false }),
         body: item['Combined Text'] || '',
-        author: item.Author,
+        author: item.Author || '',
         source: {
-          name: item['Source / Tag 6'],
+          name: item['Source / Tag 6'] || '',
           url: item['Source Link'],
         },
         collections: collectionIds,
@@ -92,6 +95,7 @@ const importEngGuides = async () => {
 };
 
 const getEngGuideByTitle = async (title) => {
+  if (!title) return null;
   const guide = await EngGuide.findOne({ title });
   return {
     engGuide: guide && guide._id,
@@ -128,9 +132,9 @@ const importSuggestedComments = async () => {
         displayId: item['Display Id'],
         title: item.Title,
         comment: item['Body / Introduction'],
-        author: item.Author,
+        author: item.Author || '',
         source: {
-          name: item['Source / Tag 6'],
+          name: item['Source / Tag 6'] || '',
           url: item['Source Link'],
         },
         engGuides: await mapEngGuides(item['Engineering Guides']),
