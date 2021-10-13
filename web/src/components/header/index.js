@@ -58,7 +58,7 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname === '/dashboard' || window.location.pathname === '/support') {
+    if (window.location.pathname === '/login' || window.location.pathname === '/support') {
       setBgColor('has-background-white');
     }
   }, []);
@@ -110,7 +110,7 @@ const Header = () => {
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent content-container"
+        className="navbar is-transparent container"
         role="navigation"
         aria-label="main navigation"
       >
