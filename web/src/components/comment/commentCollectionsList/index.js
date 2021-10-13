@@ -90,11 +90,11 @@ const CommentCollectionsList = () => {
   }
   
   return(
-    <div className={clsx('has-background-gray-9 hero', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
+    <div className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...CommentCollectionsHelmet} />
       <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} inCollectionsPage />
-      <div id="collectionBody" className={clsx('hero-body pb-250', isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
+      <div id="collectionBody" className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
             Suggested Comments

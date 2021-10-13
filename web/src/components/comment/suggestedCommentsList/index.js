@@ -132,10 +132,10 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
-    <div className={clsx('has-background-gray-9 hero')}>
+    <div>
       <Helmet title={`Collection - ${name}`} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <div className="hero-body pb-250">
+      <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/suggested-comments" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />

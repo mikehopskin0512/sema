@@ -109,7 +109,7 @@ const Invite = () => {
         <p className="is-size-6 has-text-deep-black px-10 mb-40">
           Sema is better with friends. View your invites at a glance
         </p> */}
-        <div className={clsx('container', styles['styled-container'])}>
+        <div>
           <p
             className={
               'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
