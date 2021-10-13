@@ -51,7 +51,7 @@ const EditCommentCollectionPage = () => {
       const { name, description, tags } = collection;
       setValue('name', name);
       setValue('description', description);
-      setValue('tags', tags);
+      setValue('tags', tags?.filter((tag) => tag.tag).map((tag) => ({ ...tag, value: tag.tag })) || []);
     }
   }, [collection]);
 
