@@ -32,7 +32,7 @@ const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
   }, [repositories]);
 
   useEffect(() => {
-    if (start && end && dateDiff && groupBy) {
+    if (start && end && groupBy) {
       const { smartcomments } = overview;
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         startDate: start,
