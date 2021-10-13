@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
-const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
+const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }) => {
   const [initialFormState, setInitialFormState] = useState(true);
   const { tagState } = useSelector((state) => ({
     tagState: state.tagsState,
@@ -31,6 +31,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
             value={comment.title}
             onChange={(e) => onChange({ title: e.target.value })}
           />
+          { errors.title && <p className="has-text-danger is-size-7 is-italic">{errors.title.message}</p> }
         </div>
         <div className="mb-10 column">
           <label className="label has-text-deep-black">Comment Collections</label>
@@ -52,6 +53,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
             onChange={(e) => onChange({ languages: e })}
             value={comment.languages}
           />
+          { errors.languages && <p className="has-text-danger is-size-7 is-italic">{errors.languages.message}</p> }
         </div>
         <div className="mb-10 column">
           <label className="label has-text-deep-black">Other Labels</label>
@@ -62,6 +64,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
             onChange={(e) => onChange({ guides: e })}
             value={comment.guides}
           />
+          { errors.guides && <p className="has-text-danger is-size-7 is-italic">{errors.guides.message}</p> }
         </div>
       </div>
       <div className="columns mb-0">
@@ -73,6 +76,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
             value={comment.source.url}
             onChange={(e) => onChange({ source: { name: comment.source.name, url: e.target.value } })}
           />
+          { errors.source && <p className="has-text-danger is-size-7 is-italic">{errors.source.message}</p> }
         </div>
         <div className="mb-10 column">
           <label className="label has-text-deep-black">Author</label>
@@ -82,16 +86,17 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
             value={comment.author}
             onChange={(e) => onChange({ author: e.target.value })}
           />
+          { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
         </div>
       </div>
       <div className="mb-10">
-        <label className="label has-text-deep-black">Comment</label>
+        <label className="label has-text-deep-black">Body</label>
         <textarea
           className="textarea has-background-white"
           value={comment.comment}
           onChange={(e) => onChange({ comment: e.target.value })}
         />
-        {/* <p className="has-text-danger m-0">Comment is required.</p> */}
+        { errors.comment && <p className="has-text-danger is-size-7 is-italic">{errors.comment.message}</p> }
       </div>
       <div className="mb-10">
         <label className="label has-text-deep-black">Link to Original Article</label>
@@ -110,7 +115,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection }) => {
           value={comment.relatedLinks}
           onChange={(e) => onChange({ relatedLinks: e.target.value })}
         />
-        <p className="is-size-8 is-italic">Separate links with comma (e.g. https://semasoftware.com, https://app.semasoftware.com)</p>
+        {/* <p className="is-size-8 is-italic">Separate links with comma (e.g. https://semasoftware.com, https://app.semasoftware.com)</p> */}
       </div>
     </div>
   );

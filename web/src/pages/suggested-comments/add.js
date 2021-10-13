@@ -15,16 +15,6 @@ const { fetchTagList } = tagsOperations;
 const { getCollectionById } = commentsOperations;
 const { bulkCreateSuggestedComments } = suggestCommentsOperations;
 
-const initialValues = {
-  title: '',
-  source: {
-    name: '',
-    url: '',
-  },
-  tags: [],
-  comment: '',
-};
-
 const defaultValues = {
   title: '',
   languages: [],
@@ -39,10 +29,43 @@ const defaultValues = {
   relatedLinks: '',
 }
 
+const requiredFields = {
+  title: 'Title is required',
+  languages: 'At least one language is required',
+  guides: 'At least one guide is required',
+  source: 'Source is required',
+  author: 'Author is required',
+  comment: 'Body is required'
+};
+
+export const validateData = (data, setErrors) => {
+  const keys = Object.keys(data);
+  const errorFields = {};
+  keys.filter((key) => {
+    const requiredFieldsKeys = Object.keys(requiredFields);
+    if (requiredFieldsKeys.includes(key)) {
+      if (key === 'source') {
+        return !data[key].url
+      }
+      return !data[key] || data[key].length < 1
+    }
+  }).forEach((key) => {
+    errorFields[key] = {
+      message: requiredFields[key]
+    }
+  });
+  if (Object.keys(errorFields).length > 0) {
+    setErrors(errorFields);
+    return false;
+  }
+  return true;
+};
+
 const AddCollectionPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [comments, setComments] = useState([defaultValues]);
+  const [errors, setErrors] = useState({});
 
   const { auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
@@ -81,17 +104,38 @@ const AddCollectionPage = () => {
   };
 
   const onSave = async () => {
-    const data = comments.filter((item) => item.title).map((comment) => ({
-      ...comment,
-      source: {
-        url: comment.source.url,
-        name: comment.source.url ? new URL(comment.source.url).hostname : ''
-      },
-      tags: makeTagsList([...comment.languages, ...comment.guides]),
-      relatedLinks: parseRelatedLinks(comment.relatedLinks),
-    }));
+    setErrors({});
+    const data = comments.map((comment) => {
+      const isDataValid = validateData(comment, setErrors);
+      if (!isDataValid) {
+        return;
+      }
 
-    if (data && data.length) {
+      let sourceName = '';
+      const re = new RegExp("^(http|https)://", "i");
+      if (re.test(comment.source?.url)) {
+        sourceName =  new URL(comment.source.url).hostname
+      } else {
+        setErrors({
+          source: {
+            message: 'Source should be a URL'
+          }
+        });
+        return;
+      }
+
+      return {
+        ...comment,
+        source: {
+          url: comment.source.url,
+          name: sourceName
+        },
+        tags: makeTagsList([...comment.languages, ...comment.guides]),
+        relatedLinks: parseRelatedLinks(comment.relatedLinks),
+      }
+    });
+
+    if (data[0]) {
       await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
       await router.push(`/suggested-comments?cid=${collection._id}`);
     }
@@ -109,14 +153,14 @@ const AddCollectionPage = () => {
             <ul>
               <li><a href="/suggested-comments" className="has-text-grey">Suggested Comments</a></li>
               <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/suggested-comments?cid=${collection._id}`}>{collection.name}</a></li>
-              <li className="is-active has-text-weight-semibold"><div className="px-5">Add Suggested Comments</div></li>
+              <li className="is-active has-text-weight-semibold"><div className="px-5">Add a Suggested Comment</div></li>
             </ul>
           </nav>
         </div>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-              Add Suggested Comments
+              Add a Suggested Comment
             </p>
           </div>
           <div className="is-flex">
@@ -145,6 +189,7 @@ const AddCollectionPage = () => {
                   comment={item}
                   onChange={(e) => onChange(e, index)}
                   collection={collection}
+                  errors={errors}
                 />
                 { index > 0 && (
                   <div className="is-flex is-justify-content-flex-end">
@@ -161,14 +206,14 @@ const AddCollectionPage = () => {
               </div>
             ))
           }
-          <button
+          {/* <button
             className="button is-small is-outlined is-primary border-radius-4px"
             type="button"
             onClick={addComment}
           >
             <FontAwesomeIcon icon={faPlus} className="mr-10" />
             Add another comment
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

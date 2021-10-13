@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { validateData } from './add';
 import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
 import { commentsOperations } from '../../state/features/comments';
@@ -19,6 +20,7 @@ const EditCollectionPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [comments, setComments] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const { auth, collectionState, suggestCommentsState } = useSelector((state) => ({
     auth: state.authState,
@@ -64,23 +66,46 @@ const EditCollectionPage = () => {
   };
 
   const onSave = async () => {
-    const data = comments.map((comment) => ({
-      ...comment,
-      tags: makeTagsList([...comment?.languages || [], ...comment?.guides || []]),
-      relatedLinks: parseRelatedLinks(comment.relatedLinks.toString()),
-      source: {
-        url: comment.source.url,
-        name: comment.source.url ? new URL(comment.source.url).hostname : ''
-      },
-    }));
+    setErrors({});
+    const data = comments.map((comment) => {
+      const isDataValid = validateData(comment, setErrors);
+      if (!isDataValid) {
+        return;
+      }
 
-    await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
-    await router.push(`/suggested-comments?cid=${collection._id}`);
+      let sourceName = '';
+      const re = new RegExp("^(http|https)://", "i");
+      if (re.test(comment.source?.url)) {
+        sourceName =  new URL(comment.source.url).hostname
+      } else {
+        setErrors({
+          source: {
+            message: 'Source should be a URL'
+          }
+        });
+        return;
+      }
+
+      return {
+        ...comment,
+        source: {
+          url: comment.source.url,
+          name: sourceName
+        },
+        tags: makeTagsList([...comment.languages, ...comment.guides]),
+        relatedLinks: comment.relatedLinks ? parseRelatedLinks(comment.relatedLinks.toString()) : '',
+      }
+    });
+
+    if (data[0]) {
+      await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
+      await router.push(`/suggested-comments?cid=${collection._id}`);
+    }
   };
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet title="Add suggested comments" />
+      <Helmet title="Add a Suggested Comments" />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href="/suggested-comments" className="is-hidden-mobile">
@@ -121,12 +146,14 @@ const EditCollectionPage = () => {
         <div className="px-10">
           {
             comments.map((item, index) => (
-              <EditSuggestedCommentForm
-                key={item._id || index}
-                comment={item}
-                onChange={(e) => onChange(e, index)}
-                collection={collection}
-              />
+              <div key={item._id || index} style={{ borderBottom: '1px solid #dbdbdb' }} className="mb-50 pb-50">
+                <EditSuggestedCommentForm
+                  comment={item}
+                  onChange={(e) => onChange(e, index)}
+                  collection={collection}
+                  errors={errors}
+                />
+              </div>
             ))
           }
         </div>
