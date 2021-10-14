@@ -10,8 +10,7 @@ const non_sema_recipient = db.invitations.find({
     recipient: { $regex: /@(?!semasoftware\.com$)([^.]+\.)+.*$/ }
 })
 
-const non_sema_users_id = new Array
-const non_sema_recipient_id = new Array
+const non_sema_users_id = non_sema_recipient_id = new Array
 
 while (non_sema_recipient.hasNext()) {
     non_sema_recipient_id.push(non_sema_recipient.next()["_id"])

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eo pipefail
 
 BASE_DIR=~/db_backups/
@@ -7,6 +7,7 @@ ANON_BACKUP_PATH=mongo/"anonymized-$(date '+%Y%m%d%H%M%S')"
 DB_DUMP_DIR="${BASE_DIR}${BACKUP_PATH}"
 ANON_DUMP_DIR="${BASE_DIR}${ANON_BACKUP_PATH}"
 RESTORE_DB_DUMP_DIR="${DB_DUMP_DIR}/phoenix_prod"
+
 mkdir -p "${DB_DUMP_DIR}"
 
 mongodump --quiet --uri="mongodb+srv://phoenix_admin:DnUKm3vsf3C3zaym@sema-cluster.tpplx.mongodb.net/phoenix_prod?authSource=admin&replicaSet=atlas-bjp57o-shard-0&readPreference=primary&appname=MongoDB%20Compass&retryWrites=false&ssl=true" -o $DB_DUMP_DIR
@@ -43,7 +44,7 @@ if sudo docker ps --format "table {{.Names}}" | grep -q mongo; then
     sudo docker rm --force mongo
 fi
 
-set +eo pipefail
+set +eo pipefail # It needs because the code below might be fail
 
 cd "${ANON_DUMP_DIR}/phoenix" || exit
 #  flatten array
