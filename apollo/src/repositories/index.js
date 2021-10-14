@@ -117,9 +117,13 @@ export default (app, passport) => {
   });
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { externalId } = req.query;
+    const { externalId, startDate, endDate } = req.query;
     try {
-      const repositories = await aggregateRepositories([externalId], true);
+      let dateRange = undefined;
+      if (startDate && endDate) {
+        dateRange = { startDate, endDate };
+      }
+      const repositories = await aggregateRepositories([externalId], true, dateRange);
       if (repositories.length > 0) {
         return res.status(201).send(repositories[0]);
       }

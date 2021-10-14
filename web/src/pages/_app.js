@@ -10,12 +10,14 @@ import {
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faTwitter, faFacebook } from '@fortawesome/free-brands-svg-icons';
+import 'react-dates/initialize';
 import initialize from '../state/utils/sentry';
 import { initStore } from '../state/store';
-import * as ga from '../utils/analytics';
+import * as analytics from '../utils/analytics';
 
 import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
+import '../../styles/_calendar_overrides.scss';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
@@ -27,9 +29,17 @@ const Application = ({ Component, pageProps, store }) => {
   const router = useRouter();
 
   useEffect(() => {
+    const { authState: { user: { username = null } } } = store.getState();
+
+    if (username) {
+      analytics.initAmplitude(username);
+    }
+    
     const handleRouteChange = (url) => {
-      ga.pageview(url);
+      analytics.googleAnalyticsPageView(url);
+      analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.PAGE_VISIT, { url });
     };
+    
     // When the component is mounted, subscribe to router changes
     // and log those page views
     router.events.on('routeChangeComplete', handleRouteChange);

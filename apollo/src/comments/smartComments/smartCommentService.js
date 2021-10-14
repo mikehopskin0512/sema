@@ -1,9 +1,9 @@
 import {
-  subMonths, subWeeks, subDays, isAfter, format,
+  subMonths, subWeeks, subDays, isAfter, format, endOfDay, formatDistanceToNowStrict,
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -58,10 +58,10 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId }) => {
+export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
   try {
     let filter = {}
-
+    let dateFilter = { createdAt: { } }
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -71,11 +71,21 @@ export const filterSmartComments = async ({ reviewer, author, repoId }) => {
     if (repoId) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
     }
+    if (startDate) {
+      dateFilter = Object.assign(dateFilter, { createdAt: { $gte: new Date(startDate) } });
+    }
+    if (endDate) {
+      dateFilter = Object.assign(dateFilter, { createdAt: { $lt: new Date(endDate), ...dateFilter.createdAt } });
+    }
+    if (!isEmpty(dateFilter.createdAt)) {
+      filter = Object.assign(filter, dateFilter);
+    }
 
     const query = SmartComment.find(filter);
     const smartComments = await query.lean()
-      .populate('userId', 'firstName lastName avatarUrl')
+      .populate('userId')
       .populate('tags')
+      .sort('-createdAt')
       .exec();
 
     return smartComments;
@@ -357,7 +367,16 @@ export const exportUserActivityChangeMetrics = async () => {
 export const getGrowthRepositoryMetrics = async () => {
   const metrics = [];
 
-  await Promise.all(Array(10).fill(0).map(async (_, index) => {
+  const startDate = await SmartComment.findOne().select('createdAt').sort({ createdAt: 1 });
+
+  let daysCount = 0;
+
+  if (startDate) {
+    const distanceString = formatDistanceToNowStrict(new Date(startDate.createdAt), { unit: 'day', roundingMethod: 'ceil' });
+    daysCount = parseInt(distanceString.split(' ')[0], 10);
+  }
+
+  await Promise.all(Array(daysCount + 1).fill(0).map(async (_, index) => {
     const date = subDays(new Date(), index);
     const groupQuery = [{
       $group: {
@@ -402,15 +421,17 @@ export const getGrowthRepositoryMetrics = async () => {
       ...groupQuery,
     ]);
 
+    const registeredCount = await User.countDocuments({ isActive: true });
+
     const totalDayRepos = oneDayRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
     const totalWeekRepos = oneWeekRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
     const totalMonthRepos = oneMonthRepos.reduce((sum, el) => sum + uniq(el.repos).length, 0);
 
     metrics.push({
       date,
-      oneDayRepos: oneDayRepos.length ? (totalDayRepos / oneDayRepos.length).toFixed(2) : 0,
-      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / oneWeekRepos.length).toFixed(2) : 0,
-      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / oneMonthRepos.length).toFixed(2) : 0,
+      oneDayRepos: oneDayRepos.length ? (totalDayRepos / registeredCount).toFixed(2) : 0,
+      oneWeekRepos: oneWeekRepos.length ? (totalWeekRepos / registeredCount).toFixed(2) : 0,
+      oneMonthRepos: oneMonthRepos.length ? (totalMonthRepos / registeredCount).toFixed(2) : 0,
     });
   }));
 
@@ -436,9 +457,18 @@ export const exportGrowthRepositoryMetrics = async () => {
   return csv;
 };
 
-export const findByExternalId = async (repoId, populate) => {
+export const findByExternalId = async (repoId, populate, createdAt) => {
   try {
-    const query = SmartComment.find({ "githubMetadata.repo_id": repoId });
+    let findQuery = {
+      "githubMetadata.repo_id": repoId,
+    }
+    if (createdAt) {
+      findQuery = {
+        ...findQuery,
+        createdAt
+      }
+    }
+    const query = SmartComment.find(findQuery);
     if (populate) {
       query.populate('userId').populate('tags');
     }
@@ -451,7 +481,7 @@ export const findByExternalId = async (repoId, populate) => {
   }
 };
 
-export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = false) => {
+export const getSuggestedMetrics = async ({ page, perPage, search, sortDesc }, isExport = false) => {
   const userIds = search ? (await User.distinct('_id', {
     $or: [
       { username: RegExp(search, 'gi') },
@@ -472,7 +502,7 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
       { reaction: { $in: reactionIds } },
     ],
   } : {})
-    .sort('-createdAt')
+    .sort(sortDesc ? '-createdAt' : 'createdAt')
     .populate('userId')
     .populate('reaction');
 
@@ -486,8 +516,8 @@ export const getSuggestedMetrics = async ({ page, perPage, search }, isExport = 
   return { comments: smartComments, totalCount };
 };
 
-export const exportSuggestedMetrics = async ({ search }) => {
-  const { comments } = await getSuggestedMetrics({ search }, true);
+export const exportSuggestedMetrics = async ({ search, sortDesc }) => {
+  const { comments } = await getSuggestedMetrics({ search, sortDesc }, true);
   const mappedData = comments.map((item) => ({
     Comment: item.comment,
     Reaction: item.reaction && item.reaction.title,
@@ -541,4 +571,56 @@ export const getSmartCommentersByExternalId = async (externalId) => {
     const error = new errors.NotFound(err);
     return error;
   }
+};
+
+export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
+  try {
+    const filter = { reviewer, author, repoId, startDate, endDate };
+    const smartComments = await filterSmartComments(filter);
+    const totalReactions = getTotalReactionsOfComments(smartComments);
+    const totalTags = getTotalTagsOfComments(smartComments);
+    return { smartComments, reactions: totalReactions, tags: totalTags };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getTotalReactionsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment?.reaction)
+    .reduce((acc, comment) => {
+      const { reaction } = comment;
+      if (acc?.[reaction]) {
+        acc[reaction]++
+      } else {
+        acc[reaction] = 1;
+      }
+      return acc
+    }, {});
+};
+
+export const getTotalTagsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment?.tags?.length)
+    .reduce((acc, comment) => {
+      const { tags } = comment;
+      const total = tags.reduce((acc, tag) => {
+        const { _id: tagId } = tag;
+        if (acc?.[tagId]) {
+          acc[tagId]++
+        } else {
+          acc[tagId] = 1
+        }
+        return acc;
+      }, {})
+      for (const [key, val] of Object.entries(total)) {
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key] += val
+      }
+      return acc
+    }, {})
 };

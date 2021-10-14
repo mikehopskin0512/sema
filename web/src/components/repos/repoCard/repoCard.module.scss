@@ -2,7 +2,7 @@
   width: calc(100%/3);
   max-width: calc(100%/3);
   @media only screen and (max-width: 769px) {
-    max-width: 100% !important;
+    min-width: 100% !important;
     flex: 1;
     min-height: auto !important;
   }
@@ -38,4 +38,9 @@
   @media only screen and (max-width: 769px) {
     height: auto !important;
   }
+}
+
+.stat-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

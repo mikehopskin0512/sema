@@ -45,6 +45,11 @@
   --color-emoji-font: #{v.$color-light-emoji-font};
   --color-emoji-bg-hover: #{v.$color-light-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-light-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-light-reminder-border};
+  --color-reminder-font: #{v.$color-light-reminder-font};
+  --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-light-reminder-sign-in-btn-font};
 }
 
 .theme--dark {
@@ -91,6 +96,12 @@
   --color-emoji-font: #{v.$color-dark-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-reminder-border};
+  --color-reminder-font: #{v.$color-dark-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-reminder-sign-in-btn-font};
 }
 
 .theme--dark-dimmed {
@@ -137,6 +148,12 @@
   --color-emoji-font: #{v.$color-dark-dim-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-dim-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-dim-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-dim-reminder-border};
+  --color-reminder-font: #{v.$color-dark-dim-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-dim-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-dim-reminder-sign-in-btn-font};
 }
 
 .theme--dark-high-contrast {
@@ -183,6 +200,12 @@
   --color-emoji-font: #{v.$color-dark-high-contrast-emoji-font};
   --color-emoji-bg-hover: #{v.$color-dark-high-contrast-emoji-bg-hover};
   --color-emoji-font-hover: #{v.$color-dark-high-contrast-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-dark-high-contrast-reminder-border};
+  --color-reminder-font: #{v.$color-dark-high-contrast-reminder-font};
+
+  --color-reminder-github-bg: #{v.$color-dark-high-contrast-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-dark-high-contrast-reminder-sign-in-btn-font};
 }
 
 .sema {
@@ -211,17 +234,22 @@
   border: 1px solid var(--color-border);
 }
 
+.sema-dropdown-menu.suggestion-modal {
+  background-color: var(--color-text-input-bg);
+}
+
 .sema-tag-container {
   display: flex;
+  align-items: center;
   flex: 1;
   flex-direction: row;
-  margin-left: 50px;
   margin: auto;
 }
 
 .sema-tags-content {
   height: 2.8em;
   display: flex;
+  align-items: center;
   flex: 1;
   flex-direction: row-reverse;
 }
@@ -343,6 +371,27 @@ button.sema-reaction-selection {
   border-radius: 4px;
 }
 
+.sema-button.sema-button--save-comment {
+  background: v.$color-github-button-blue;
+  font-size: 12px;
+  padding: 2px 8px;
+  line-height: 16px;
+  height: fit-content;
+  color: #ffffff;
+  border: 0;
+  border-radius: 3px;
+
+  &:hover {
+    color: #ffffff;
+  }
+
+  span {
+    margin-right: 4px;
+    transform: rotate(90deg);
+    font-size: 16px;
+  }
+}
+
 .suggestion-content-truncated {
   margin-bottom: 16px;
   font-weight: 400;
@@ -455,7 +504,7 @@ h6 {
       height: 0;
       border-top: 4px solid transparent;
       background: transparent;
-      border-left: 4px solid #000000;
+      border-left: 4px solid var(--color-title);
       border-bottom: 4px solid transparent;
     }
   }
@@ -499,6 +548,7 @@ h6 {
     top: -4px;
     border-radius: 10px;
     padding-top: 12px;
+    padding-bottom: 0;
     overflow: hidden;
     margin: 0;
     background: var(--color-emoji-bg);
@@ -549,23 +599,27 @@ h6 {
 .sema-logo__alt {
   position: relative;
   margin-left: auto;
-  margin-top: 60px;
   display: flex;
   padding: 4px 8px;
   width: fit-content;
-  color: #4a4a4a;
   line-height: 18px;
   font-size: 10px;
   border-radius: 21px;
-  background: rgba(183, 183, 183, 0.1);
+  // color: #4a4a4a;
+  // background: rgba(183, 183, 183, 0.1);
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }
 
 .sema-dropdown-footer {
   position: relative;
+  margin-top: auto;
   padding: 0;
   display: flex;
   justify-content: space-between;
   font-size: 10px;
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }
 
 .sema-input {
@@ -583,6 +637,28 @@ h6 {
   border-color: var(--color-text-input-border);
 }
 
+.tags-modal {
+  display: flex;
+
+  &--column {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+
+  &--separator {
+    width: 26px;
+    margin: 21px 0 19px;
+    border: 1px dashed #BFCBD3;
+  }
+
+  .sema-tag {
+    margin-bottom: 8px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+}
+
 .tags-selection {
   width: auto;
   border-color: var(--color-tags-border);
@@ -590,8 +666,17 @@ h6 {
   margin-top: 4px;
   right: 0;
   left: auto;
+
   .sema-dropdown-content {
     background-color: var(--color-tags-background);
+    padding-bottom: 0;
+    margin: 0;
+    width: fit-content;
+  }
+
+  .sema-dropdown-item {
+    margin: 0;
+    padding: 0 10px 2px;
   }
 }
 
@@ -643,6 +728,13 @@ h6 {
     text-decoration: underline;
     font-size: 12px;
   }
+
+  &--separator {
+    height: 16px;
+    width: 1px;
+    background: #909AA4;
+    margin: 0 10px;
+  }
 }
 
 .login-button {
@@ -657,12 +749,17 @@ h6 {
 .suggestion-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
   width: 100%;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  .sema-button {
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+  }
 }
 
 .suggestion-guide-link {
@@ -671,13 +768,29 @@ h6 {
   cursor: pointer;
 }
 
+.learn-more-link {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #F0F2F4;
+  padding: 10px 20px 14px;
+
+  a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0081A7;
+    text-decoration: underline;
+  }
+}
+
 .suggestion-guide-link-title {
   font-size: 12px;
   font-weight: 400;
   line-height: 22px;
   margin-left: 6px;
   text-decoration-line: underline;
-  color: #626262;
+  color: var(--color-title);
 }
 
 .sema-dropdown-content {
@@ -696,10 +809,7 @@ h6 {
 
 .tags-selection-header {
   display: flex;
-  background-color: var(--color-tags-header-bg);
   color: var(--color-tags-header-font);
-  padding: 10px 20px;
-  font-weight: 600;
 }
 
 #sema-reminder-root {
@@ -708,6 +818,8 @@ h6 {
   position: fixed;
   left: calc(95vw - #{v.$reminder-width});
   top: calc(98vh - #{v.$reminder-height});
+  border: 1.5px solid var(--color-reminder-border);
+  color: var(--color-reminder-font);
 }
 
 .reminder-container {
@@ -767,7 +879,8 @@ h6 {
   font-size: 15px;
   line-height: 19.36px;
   vertical-align: top;
-  color: #394a64;
+  // color: #394a64;
+  color: var(--color-reminder-font);
   text-align: center;
 }
 
@@ -779,8 +892,9 @@ h6 {
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  color: v.$color-github-button-blue;
-  border: 2px solid v.$color-github-button-blue;
+  color: var(--color-reminder-github-font);
+  border: 2px solid var(--color-reminder-github-font);
+  background-color: var(--color-reminder-github-bg);
   border-radius: 4px;
 }
 
@@ -791,6 +905,11 @@ h6 {
 }
 
 .reminder-hero > a {
-  color: v.$color-github-button-blue;
+  color: var(--color-reminder-font);
   text-decoration: underline;
+}
+
+.view-suggestion-modal {
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }

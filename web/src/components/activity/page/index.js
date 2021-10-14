@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { compact, findIndex, uniqBy, isEmpty } from 'lodash';
+import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
-
+import DateRangeSelector from '../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../data/activity';
+
+import { filterSmartComments } from '../../../utils/parsing';
 
 const defaultAvatar = '/img/default-avatar.jpg';
 
-const ActivityPage = () => {
+const ActivityPage = ({ startDate, endDate, onDateChange }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -36,11 +38,13 @@ const ActivityPage = () => {
     }
     const requesters = overview.smartcomments
       .filter((item) => item.githubMetadata.requester)
-      .map((({ githubMetadata }) => ({
-        label: githubMetadata.requester,
-        value: githubMetadata.requester,
-        img: defaultAvatar,
-      })))
+      .map((({ githubMetadata }) => {
+        return {
+          label: githubMetadata.requester,
+          value: githubMetadata.requester,
+          img: githubMetadata.requesterAvatarUrl || defaultAvatar,
+        }
+      }))
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
       const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
       return {
@@ -51,58 +55,32 @@ const ActivityPage = () => {
     });
     const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
         const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
-        const prName = title || head || 'PR'
+        const prName = title || head || 'Pull Request';
         return {
-          label: `${prName} #${pullNum || ''}`,
+          label: `${prName} (#${pullNum || '0'})`,
           value: pullNum,
+          name: prName,
         };
       });
-
+    let filteredPRs = []
+    prs.forEach((item) => {
+      const index = findIndex(filteredPRs, { value: item.value });
+      if (index !== -1) {
+        if (isEmpty(filteredPRs[index].prName)) {
+          filteredPRs[index] = item;
+        }
+      } else {
+        filteredPRs.push(item);
+      }
+    });
     setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
-    setFilterPRList(uniqBy(compact(prs), 'value'));
+    setFilterPRList(filteredPRs);
   }, [overview]);
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
-      let filtered = overview.smartcomments || [];
-      if (
-        !isEmpty(filter.from) ||
-        !isEmpty(filter.to) ||
-        !isEmpty(filter.reactions) ||
-        !isEmpty(filter.tags) ||
-        !isEmpty(filter.search) ||
-        !isEmpty(filter.pr)
-      ) {
-        filtered = overview.smartcomments.filter((item) => {
-          const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
-          const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
-          const prIndex = item?.githubMetadata ? findIndex(filter.pr, { value: item?.githubMetadata?.pull_number }) : -1;
-          const reactionIndex = findIndex(filter.reactions, { value: item?.reaction });
-          const tagsIndex = item?.tags ? findIndex(filter.tags, (tag) => findIndex(item.tags, (commentTag) => commentTag._id === tag.value) !== -1) : -1;
-          const searchBool = item?.comment?.toLowerCase().includes(filter.search.toLowerCase());
-          let filterBool = true;
-          if (!isEmpty(filter.from)) {
-            filterBool = filterBool && fromIndex !== -1;
-          }
-          if (!isEmpty(filter.to)) {
-            filterBool = filterBool && toIndex !== -1;
-          }
-          if (!isEmpty(filter.reactions)) {
-            filterBool = filterBool && reactionIndex !== -1;
-          }
-          if (!isEmpty(filter.tags)) {
-            filterBool = filterBool && tagsIndex !== -1;
-          }
-          if (!isEmpty(filter.search)) {
-            filterBool = filterBool && searchBool;
-          }
-          if (!isEmpty(filter.pr)) {
-            filterBool = filterBool && prIndex !== -1;
-          }
-          return filterBool;
-        });
-      }
+      const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments });
       setFilteredComments(filtered);
     }
   }, [overview, filter]);
@@ -117,7 +95,7 @@ const ActivityPage = () => {
   return(
     <>
       <div className="has-background-white border-radius-4px px-25 py-10 is-flex is-flex-wrap-wrap">
-        <div className="field is-flex-grow-1 px-5 my-5">
+        <div className="field px-5 my-5 is-flex-grow-1">
           <p className="control has-icons-left">
             <input
               className="input has-background-white"
@@ -135,6 +113,13 @@ const ActivityPage = () => {
           className="is-flex-grow-1 is-flex is-flex-wrap-wrap is-relative"
           style={{zIndex: 2}}
         >
+          <div className="px-5 my-5">
+            <DateRangeSelector
+              start={startDate}
+              end={endDate}
+              onChange={onDateChange}
+            />
+          </div>
           <div className="is-flex-grow-1 px-5 my-5">
             <CustomSelect
               selectProps={{
@@ -169,7 +154,6 @@ const ActivityPage = () => {
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
@@ -196,8 +180,10 @@ const ActivityPage = () => {
                 isMulti: true,
                 onChange: ((value) => onChangeFilter('pr', value)),
                 value: filter.pr,
+                hideSelectedOptions: false,
               }}
               label="Pull requests"
+              showCheckbox
             />
           </div>
         </div>

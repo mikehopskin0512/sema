@@ -1,0 +1,10 @@
+.container {
+  @media only screen and (max-width: 769px) {
+    padding: 0 10px;
+  }
+}
+
+.overflow-hidden {
+  max-height: calc(100%-325px);
+  overflow: hidden !important;
+}

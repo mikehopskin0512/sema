@@ -4,7 +4,7 @@ import Avatar from 'react-avatar';
 import withSemaAdmin from '../../../components/auth/withSemaAdmin';
 import withLayout from '../../../components/layout/adminLayout';
 import {useDispatch, useSelector} from 'react-redux';
-import { usersOperations } from '../../../state/features/users';
+import { selectedUserOperations } from '../../../state/features/selected-user';
 import { fullName, getBadgeColor, getUserStatus } from '../../../utils';
 import Badge from '../../../components/badge/badge';
 import Toaster from '../../../components/toaster';
@@ -13,22 +13,22 @@ import { alertOperations } from '../../../state/features/alerts';
 import InvitationsGrid from '../../../components/invitationsGrid';
 
 const { clearAlert } = alertOperations;
-const { fetchUser } = usersOperations;
+const { fetchUser } = selectedUserOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const UserDetailPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { alerts, auth, users, invitations } = useSelector((state) => ({
+  const { alerts, auth, selectedUser, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
     auth: state.authState,
-    users: state.usersState,
+    selectedUser: state.selectedUserState,
     invitations: state.invitationsState,
   }));
 
   const { userId } = router.query;
   const { token } = auth;
-  const { user, isFetching: isUserLoading } = users;
+  const { user, isFetching: isUserLoading } = selectedUser;
   const { data: invites, isFetching: isInvitesLoading } = invitations;
   const { showAlert, alertType, alertLabel } = alerts;
 

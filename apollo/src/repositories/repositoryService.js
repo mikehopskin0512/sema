@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import _ from "lodash";
-import { differenceInCalendarDays, format, sub } from "date-fns";
+import { endOfDay, toDate, differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
 import Users from './../users/userModel';
 import { getReactionIdKeys } from "../comments/reaction/reactionService";
@@ -134,9 +134,13 @@ export const getRepository = async (_id) => {
   }
 };
 
-export const findByExternalIds = async (externalIds) => {
+export const findByExternalIds = async (externalIds, populateUsers) => {
   try {
-    const repositories = await Repositories.find({ 'externalId': { $in: externalIds } });
+    const query = Repositories.find({ 'externalId': { $in: externalIds } });
+    if (populateUsers) {
+      query.populate({ path: 'repoStats.userIds', model: 'User' });
+    }
+    const repositories = await query.exec();
     return repositories;
   } catch (err) {
     logger.error(err);
@@ -145,7 +149,7 @@ export const findByExternalIds = async (externalIds) => {
   }
 };
 
-export const aggregateRepositories = async (externalIds, includeSmartComments) => {
+export const aggregateRepositories = async (externalIds, includeSmartComments, date) => {
   try {
     // const repoRaw = await Repositories.aggregate([
     //   {
@@ -198,12 +202,15 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
     //   },
     // ]);
     // Get Repos by externalId
-    const repos = await findByExternalIds(externalIds);
+    const repos = await findByExternalIds(externalIds, true);
     if (repos.length > 0) {
       // Get SmartComments of Repos
       const repoRaw = await Promise.all(repos.map(async (repo) => {
         const { externalId = '' } = repo;
-        const smartComments = await findSmartCommentsByExternalId(externalId, true);
+        const smartComments = await findSmartCommentsByExternalId(externalId, true, date ? {
+          $gte: toDate(new Date(date.startDate)),
+          $lte: toDate(endOfDay(new Date(date.endDate))),
+        } : undefined);
         return {
           ...repo._doc,
           smartComments
@@ -227,6 +234,7 @@ export const aggregateRepositories = async (externalIds, includeSmartComments) =
           externalId,
           name,
           createdAt,
+          users: repoStats.userIds,
         };
         if (includeSmartComments) {
           data.smartcomments = smartComments;
@@ -372,7 +380,6 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
         if (tags?.[tag]) {
           tags[tag].total += 1;
           const index = _.findIndex(tags[tag].tally, function (o) {
-            console.log(o.date, formattedDataDate);
             return o.date === formattedDataDate
           });
           if (index === -1) {

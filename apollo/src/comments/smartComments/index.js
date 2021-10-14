@@ -16,6 +16,7 @@ import {
   filterSmartComments,
   getSuggestedMetrics,
   exportSuggestedMetrics,
+  getSmartCommentsTagsReactions,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
 
@@ -33,21 +34,20 @@ export default (app, passport) => {
       }
       return res.status(201).json({ smartComment: newSmartComment });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
 
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
-
     try {
       const comments = await filterSmartComments({author, reviewer, repoId});
       return res.status(201).send({
         comments,
       });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -62,7 +62,7 @@ export default (app, passport) => {
       }
       return res.status(204).json({ smartComment: updatedSmartComment });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -72,7 +72,7 @@ export default (app, passport) => {
       const userActivities = await getUserActivityChangeMetrics();
       return res.json({ userActivities });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -86,7 +86,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -96,7 +96,7 @@ export default (app, passport) => {
       const comments = await getSowMetrics(req.query);
       return res.json({ comments });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -110,7 +110,7 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -121,7 +121,7 @@ export default (app, passport) => {
 
       return res.json({ growthOfRepository });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
@@ -135,38 +135,65 @@ export default (app, passport) => {
 
       return res.end(packer);
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
 
   route.get('/suggested', async (req, res) => {
     try {
-      const { page = 1, perPage = 50, search } = req.query;
+      const { page = 1, perPage = 50, search, sortDesc } = req.query;
 
       const { comments, totalCount } = await getSuggestedMetrics({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
         search,
+        sortDesc: sortDesc === 'true',
       });
       return res.json({ comments, totalCount });
     } catch (error) {
-      logger(error);
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
 
   route.post('/suggested/export', async (req, res) => {
     try {
-      const { search } = req.body;
-      const packer = await exportSuggestedMetrics({ search });
+      const { search, sortDesc } = req.body;
+      const packer = await exportSuggestedMetrics({ search, sortDesc: sortDesc === 'true' });
       res.writeHead(200, {
         'Content-disposition': `attachment;filename=suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`,
       });
 
       return res.end(packer);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { requester: author, reviewer, externalId: repoId } = req.query;
+    try {
+      const summary = await getSmartCommentsTagsReactions({author, reviewer, repoId});
+      return res.status(201).send({
+        summary,
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { requester: author, reviewer, externalId: repoId, startDate, endDate, } = req.query;
+    try {
+      const overview = await getSmartCommentsTagsReactions({ author, reviewer, repoId, startDate, endDate });
+      return res.status(201).send({
+        overview,
+      });
+    } catch (error) {
+      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });

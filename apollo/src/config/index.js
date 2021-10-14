@@ -35,9 +35,12 @@ module.exports = {
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
   userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
+  intercomToken: process.env.INTERCOM_TOKEN,
   mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX,
   mailchimpToken: process.env.MAILCHIMP_TOKEN,
   mailchimpAudiences: {
     registeredAndWaitlistUsers: process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID,
   },
+  chromeExtensionId: process.env.CHROME_EXTENSION_ID,
+  iframelyApiKey: process.env.IFRAMELY_API_KEY,
 };

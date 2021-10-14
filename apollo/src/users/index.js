@@ -4,6 +4,7 @@ import { version, orgDomain } from '../config';
 import { mailchimpAudiences } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import intercom from '../shared/apiIntercom';
 import mailchimp from '../shared/apiMailchimp';
 import { checkAndSendEmail } from '../shared/utils';
 import {
@@ -13,7 +14,7 @@ import {
   initiatePasswordReset, validatePasswordReset, resetPassword,
 } from './userService';
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
-import { redeemInvite } from '../invitations/invitationService';
+import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
 
 const route = Router();
@@ -58,11 +59,9 @@ export default (app, passport) => {
       if (!newUser) {
         throw new errors.BadRequest('User create error');
       }
-      const { _id: userId } = newUser;
+      const { _id: userId, username } = newUser;
       // If invitation, call joinOrg function
-      let hasInvite = false;
       if (Object.prototype.hasOwnProperty.call(invitation, '_id')) {
-        hasInvite = true;
         const { orgId, orgName, sender, token } = invitation;
         // const org = { id: orgId, orgName, invitedBy: sender };
         // const invitedUser = await joinOrg(userId, org);
@@ -77,9 +76,16 @@ export default (app, passport) => {
         await redeemInvite(token, userId);
       }
 
+      // Check if user has been previously invited
+      const [hasInvite] = await checkIfInvited(username);
+      if (hasInvite) {
+        const { _id: invitationId } = hasInvite;
+        redeemInvite(null, userId, invitationId)
+      }
+
       // Add user to Mailchimp and suscribe it to Sema - Newsletters
       const listId = mailchimpAudiences.registeredAndWaitlistUsers;
-      const { firstName, lastName } = newUser;
+      const { firstName, lastName, avatarUrl} = newUser;
 
       try {
         await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
@@ -95,6 +101,16 @@ export default (app, passport) => {
         return res.status(400).send(error);
       }
 
+       // Add user to Intercom
+       await intercom.create('contacts', {
+         role: 'user',
+         external_id: userId,
+         name: `${firstName} ${lastName}`.trim(),
+         email: username,
+         avatar: avatarUrl,
+         signed_up_at: new Date(),
+       });
+
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
 
@@ -109,7 +125,6 @@ export default (app, passport) => {
 
       delete newUser.password;
       delete newUser.collections;
-      console.log(createAuthToken(newUser))
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
       });

@@ -1,0 +1,59 @@
+@import './theme';
+
+.DateRangePicker_picker {
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.CalendarDay {
+  border: none !important;
+  padding: 10px;
+}
+
+// Will edit everything selected including everything between a range of dates
+.CalendarDay__selected_span {
+  background: #F8F7FA !important; //background
+  color: $primary !important; //text
+  font-weight: bold;
+  border: none !important; //default styles include a border
+}
+
+.CalendarDay__selected, .CalendarDay__selected:active {
+  background: $primary !important;
+}
+
+.CalendarDay__selected_end {
+  border-radius: 0 10px 10px 0 !important;
+}
+
+.CalendarDay__selected_start {
+  border-radius: 10px 0 0 10px !important;
+}
+
+// Will edit when the second date (end date) in a range of dates
+// is not yet selected. Edits the dates between your mouse and said date
+.CalendarDay__hovered_span:hover,
+.CalendarDay__hovered_span {
+  background: #F8F7FA !important;
+}
+
+.DateInput {
+  width: 130px !important;
+}
+
+.DateInput_input {
+  text-align: center !important;
+  color: $black !important;
+  font-weight: bold !important;
+}
+
+.DateInput_input__focused {
+  background: #F8F7FA !important;
+  border-bottom: 2px solid $primary !important;
+  color: $primary !important;
+}
+
+.DayPicker__hidden {
+  visibility: visible !important;
+}

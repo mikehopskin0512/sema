@@ -99,9 +99,14 @@ $color-dark-dim-scroll-border: #1f232b;
 $color-dark-high-contrast-scroll-border: #010409;
 
 $color-light-form-border: #0366d6;
-$color-dark-form-border: #388bfd;
-$color-dark-dim-form-border: #4184e4;
+$color-dark-form-border: #1f6feb;
+$color-dark-dim-form-border: #316dca;
 $color-dark-high-contrast-form-border: #409eff;
+
+$color-light-review-form-border: #0366d6;
+$color-dark-review-form-border: #1f6feb;
+$color-dark-dim-review-form-border: #4184e4;
+$color-dark-high-contrast-review-form-border: #409eff;
 
 $color-light-add-tags-bg: white;
 $color-dark-add-tags-bg: #272e33;
@@ -133,12 +138,37 @@ $color-dark-emoji-font: #f0f2f4;
 $color-dark-dim-emoji-font: #f0f2f4;
 $color-dark-high-contrast-emoji-font: #f0f2f4;
 
-$color-light-emoji-bg-hover: #0a0a0a;
+$color-light-emoji-bg-hover: #0081a70d;
 $color-dark-emoji-bg-hover: #343c42;
 $color-dark-dim-emoji-bg-hover: #343c42;
 $color-dark-high-contrast-emoji-bg-hover: #343c42;
 
-$color-light-emoji-font-hover: #000;
+$color-light-emoji-font-hover: #0a0a0a;
 $color-dark-emoji-font-hover: #fff;
 $color-dark-dim-emoji-font-hover: #fff;
 $color-dark-high-contrast-emoji-font-hover: #fff;
+
+$color-light-reminder-bg: #ffffff;
+$color-dark-reminder-bg: #0E1218;
+$color-dark-dim-reminder-bg: #23272D;
+$color-dark-high-contrast-reminder-bg: #0E1218;
+
+$color-light-reminder-border: #ffffff;
+$color-dark-reminder-border: #30363d;
+$color-dark-dim-reminder-border: #444c56;
+$color-dark-high-contrast-reminder-border: #7a828e;
+
+$color-light-reminder-font: #394a64;
+$color-dark-reminder-font: #F0F2F4;
+$color-dark-dim-reminder-font: #B7C0C6;
+$color-dark-high-contrast-reminder-font: #f0f3f6;
+
+$color-light-reminder-sign-in-btn-bg: #0081A7;
+$color-dark-reminder-sign-in-btn-bg: #212B36;
+$color-dark-dim-reminder-sign-in-btn-bg: #212B36;
+$color-dark-high-contrast-reminder-sign-in-btn-bg: #212B36;
+
+$color-light-reminder-sign-in-btn-font: #ffffff;
+$color-dark-reminder-sign-in-btn-font: #33C2EC;
+$color-dark-dim-reminder-sign-in-btn-font: #0081a7;
+$color-dark-high-contrast-reminder-sign-in-btn-font: #33C2EC;

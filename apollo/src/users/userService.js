@@ -1,14 +1,16 @@
 import mongoose from 'mongoose';
 import _ from 'lodash';
 import User from './userModel';
+import Invitation from '../invitations/invitationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
+import { checkIfInvited } from '../invitations/invitationService';
 
 const { Types: { ObjectId } } = mongoose;
 
 export const create = async (user) => {
-  const {
+  let {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
     identities, terms,
@@ -22,6 +24,11 @@ export const create = async (user) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
+    const invitation = await checkIfInvited(username);
+    if(invitation) {
+      isWaitlist = false;
+    }
+
     const newUser = new User({
       username: username.toLowerCase(),
       password,
@@ -149,7 +156,7 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
 
 export const findById = async (id) => {
   try {
-    const query = User.findOne({ _id: id });
+    const query = User.findById(id);
     const user = await query.lean().populate({
       path: 'collections.collectionData',
       model: 'Collection',
@@ -167,6 +174,39 @@ export const findById = async (id) => {
     return error;
   }
 };
+
+export const findUserCollectionsByUserId = async (id) => {
+  try {
+    const query = User.findOne({ _id: id });
+    const user = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      select: {
+        _id: 1,
+        isActive: 1,
+        name: 1,
+        description: 1,
+        author: 1,
+      },
+      populate: {
+        path: 'comments',
+        model: 'SuggestedComment',
+        select: {
+          source: 1,
+        },
+        populate: {
+          path: 'tags.tag'
+        }
+      }
+    }).exec();
+
+    return user;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
 
 export const findByOrgId = async (orgId) => {
   try {
@@ -419,4 +459,14 @@ export const addRepositoryToIdentity = async (user, repository) => {
     logger.error(error);
     throw (error);
   }
+};
+
+export const revokeInvitation = async (senderEmail) => {
+  try {
+    await User.findOneAndUpdate({ username: senderEmail }, { $inc: { inviteCount: 1 }});
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  } 
 };

@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
 import { debounce } from 'lodash';
-
+import SemaExtensionRegistry from './modules/SemaExtensionRegistry';
 import {
   isValidSemaTextBox,
   onDocumentClicked,
@@ -18,6 +18,9 @@ import {
   getGithubMetadata,
   getHighlights,
   isPRPage,
+  initAmplitude,
+  setTextareaSemaIdentifier,
+  checkSubmitButton,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -32,6 +35,7 @@ import {
   EMOJIS,
   EMOJIS_ID,
   SEMA_REMINDER_ROOT_ID,
+  SEMA_TEXTAREA_IDENTIFIER,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -50,120 +54,139 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 
-// const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
+window.semaExtensionRegistry = new SemaExtensionRegistry();
 
 chrome.runtime.onMessage.addListener((request) => {
   store.dispatch(updateSemaUser({ ...request }));
 });
 
-const checkLoggedIn = async () => {
-  chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
-    store.dispatch(updateSemaUser({ ...response }));
-  });
+const checkLoggedIn = async (cb) => {
+  try {
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
+      store.dispatch(updateSemaUser({ ...response }));
+      cb(response);
+    });
+  } catch (error) {
+    // console.log('Sema Code Assistant extension is disabled');
+  }
 };
 
-checkLoggedIn();
-const stateCheck = setInterval(() => {
-  if (document.readyState === 'complete') {
-    clearInterval(stateCheck);
-    store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  }
-}, 100);
-let initialCheck = false;
-const updateMetadata = setInterval(() => {
-  if (initialCheck) {
-    clearInterval(updateMetadata);
-  }
-  store.dispatch(addGithubMetada(getGithubMetadata(document)));
-  initialCheck = true;
-}, 5000);
+const onLoginChecked = () => {
+  $(() => {
+    initAmplitude();
 
-$(() => {
-  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
-  if (!reminderRoot && isPRPage()) {
-    const node = document.createElement('div');
-    node.id = SEMA_REMINDER_ROOT_ID;
-    document.body.appendChild(node);
-    ReactDOM.render(
-      // eslint-disable-next-line react/jsx-filename-extension
-      <Provider store={store}>
-        <Reminder />
-      </Provider>,
-      node,
+    const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+    if (!reminderRoot && isPRPage()) {
+      const node = document.createElement('div');
+      node.id = SEMA_REMINDER_ROOT_ID;
+      node.className = `${getActiveThemeClass()}`;
+      document.body.appendChild(node);
+      ReactDOM.render(
+        // eslint-disable-next-line react/jsx-filename-extension
+        <Provider store={store}>
+          <Reminder />
+        </Provider>,
+        node,
+      );
+    }
+  });
+
+  /**
+       * Listening to click event for:
+       * 1. if github button is pressed then put sema comments in the textarea
+       * 2. things like closing modals when clicked outside of the element
+       */
+  window.semaExtensionRegistry.registerEventListener('click', (event) => {
+    onDocumentClicked(event);
+  }, true);
+
+  /**
+       * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
+       * also triggers text submission
+       */
+  window.semaExtensionRegistry.registerEventListener('keydown',
+    (event) => {
+      const { code, ctrlKey, metaKey } = event;
+      if ((ctrlKey || metaKey) && code === 'Enter') {
+        const { activeElement } = document;
+        if ($(activeElement).is('textarea')) {
+          writeSemaToGithub(activeElement);
+        }
+      }
+    },
+    true);
+
+  function handleReviewChangesClick(
+    semabarContainerId,
+    activeElement,
+    selectedReactionId,
+  ) {
+    // eslint-disable-next-line no-underscore-dangle
+    const looksGoodEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.GOOD);
+    // eslint-disable-next-line no-underscore-dangle
+    const noReactionEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.NO_REACTION);
+    const form = $(activeElement).parents('form')?.[0];
+    const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
+      .checked;
+    const isEmptyComment = !activeElement.value;
+    const reaction = isApprovedOption
+        && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
+      ? looksGoodEmoji
+      : noReactionEmoji;
+    store.dispatch(
+      updateSelectedEmoji({
+        id: semabarContainerId,
+        selectedReaction: reaction,
+        isReactionDirty: false,
+      }),
     );
   }
-});
 
-/**
-   * Listening to click event for:
-   * 1. if github button is pressed then put sema comments in the textarea
-   * 2. things like closing modals when clicked outside of the element
-   */
-document.addEventListener(
-  'click',
-  (event) => {
-    onDocumentClicked(event);
-  },
-  // adding listener in the "capturing" phase
-  true,
-);
-
-/**
-   * While on textbox pressing "CTRL + ENTER" or "CMD + ENTER" or "WINDOW + ENTER"
-   * also triggers text submission
-   */
-document.addEventListener(
-  'keydown',
-  (event) => {
-    const { code, ctrlKey, metaKey } = event;
-    if ((ctrlKey || metaKey) && code === 'Enter') {
-      const { activeElement } = document;
-      if ($(activeElement).is('textarea')) {
-        writeSemaToGithub(activeElement);
+  function onTextPaste(semabarContainerId) {
+    return function setDefaultEmoji() {
+      const state = store.getState();
+      const { isReactionDirty } = state.semabars[semabarContainerId];
+      if (isReactionDirty) {
+        return;
       }
-    }
-  },
-  true,
-);
+      const selectedReaction = EMOJIS.find(({ _id }) => _id === EMOJIS_ID.FIX);
+      store.dispatch(
+        updateSelectedEmoji({
+          id: semabarContainerId,
+          selectedReaction,
+          isReactionDirty: true,
+        }),
+      );
+    };
+  }
 
-function handleReviewChangesClick(
-  semabarContainerId,
-  activeElement,
-  selectedReactionId,
-) {
-  // eslint-disable-next-line no-underscore-dangle
-  const looksGoodEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.GOOD);
-  // eslint-disable-next-line no-underscore-dangle
-  const noReactionEmoji = EMOJIS.find((e) => e._id === EMOJIS_ID.NO_REACTION);
-  const form = $(activeElement).parents('form')?.[0];
-  const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
-    .checked;
-  const isEmptyComment = !activeElement.value;
-  const reaction = isApprovedOption
-    && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
-    ? looksGoodEmoji
-    : noReactionEmoji;
-  store.dispatch(
-    updateSelectedEmoji({
-      id: semabarContainerId,
-      selectedReaction: reaction,
-      isReactionDirty: false,
-    }),
-  );
-}
+  const getDebouncedInput = () => debounce(() => {
+    store.dispatch(
+      updateTextareaState({
+        isTyping: true,
+      }),
+    );
+    setTimeout(() => {
+      store.dispatch(
+        updateTextareaState({
+          isTyping: false,
+        }),
+      );
+    }, CALCULATION_ANIMATION_DURATION_MS);
 
-/**
-   * "focus" event is when we put SEMA elements in the DOM
-   * if the event.target is a valid DOM node for SEMA
-   * then appropriate "div" roots are created and React elements are placed in the roots.
-   */
-document.addEventListener(
-  'focus',
-  (event) => {
+    onSuggestion();
+  }, ON_INPUT_DEBOUCE_INTERVAL_MS);
+
+  /**
+       * "focus" event is when we put SEMA elements in the DOM
+       * if the event.target is a valid DOM node for SEMA
+       * then appropriate "div" roots are created and React elements are placed in the roots.
+       */
+  window.semaExtensionRegistry.registerEventListener('focus', (event) => {
     const activeElement = event.target;
     if (isPRPage()) {
       if (isValidSemaTextBox(activeElement)) {
-        checkLoggedIn();
+        store.dispatch(addGithubMetada(getGithubMetadata(document)));
         const semaElements = $(activeElement).siblings('div.sema');
         let SEMA_ICON = SEMA_ICON_ANCHOR_LIGHT;
         SEMA_ICON = getSemaIconTheme(getActiveTheme());
@@ -176,30 +199,30 @@ document.addEventListener(
           ).style.maxHeight = '580px';
         }
 
-        const githubTextareaId = $(activeElement).attr('id');
+        if (!$(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER)) {
+          setTextareaSemaIdentifier(activeElement);
+        }
+
+        window.semaExtensionRegistry.registerGithubTextarea(activeElement);
+
         const { semabarContainerId, semaSearchContainerId } = getSemaIds(
-          githubTextareaId,
+          activeElement,
         );
         if (!semaElements[0]) {
-          $(activeElement).on(
-            'input',
-            debounce(() => {
-              store.dispatch(
-                updateTextareaState({
-                  isTyping: true,
-                }),
-              );
-              setTimeout(() => {
-                store.dispatch(
-                  updateTextareaState({
-                    isTyping: false,
-                  }),
-                );
-              }, CALCULATION_ANIMATION_DURATION_MS);
+          const debouncedOnInput = getDebouncedInput();
 
-              onSuggestion();
-            }, ON_INPUT_DEBOUCE_INTERVAL_MS),
-          );
+          window.semaExtensionRegistry.registerElementEventListener(activeElement, 'input', () => {
+            /**
+               * check for the button's behaviour
+               * after github's own validation
+               * has taken place for the textarea
+              */
+            setTimeout(() => {
+              checkSubmitButton(semabarContainerId);
+            }, 0);
+            debouncedOnInput();
+          });
+
           /** ADD ROOTS FOR REACT COMPONENTS */
           // search bar container
           $(activeElement).before(
@@ -213,24 +236,26 @@ document.addEventListener(
           /** ADD RESPECTIVE STATES FOR REACT COMPONENTS */
           store.dispatch(
             addSemaComponents({
-              seedId: githubTextareaId,
               activeElement,
             }),
           );
 
           /** RENDER REACT COMPONENTS ON RESPECTIVE ROOTS */
           // Render searchbar
+          const searchBarNode = document.getElementById(semaSearchContainerId);
           ReactDOM.render(
             // eslint-disable-next-line react/jsx-filename-extension
             <Provider store={store}>
               <Searchbar
                 id={semaSearchContainerId}
+                onTextPaste={onTextPaste(semabarContainerId)}
                 commentBox={activeElement}
               />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMA_SEARCH_CLASS}`)[0],
+            searchBarNode,
           );
           // Render Semabar
+          const semaBarNode = document.getElementById(semabarContainerId);
           ReactDOM.render(
             <Provider store={store}>
               <Semabar
@@ -238,9 +263,8 @@ document.addEventListener(
                 style={{ position: 'relative' }}
               />
             </Provider>,
-            $(activeElement).siblings(`div.${SEMABAR_CLASS}`)[0],
+            semaBarNode,
           );
-
           /** RENDER MIRROR */
           // TODO: try to make it into React component for consistency and not to have to pass store
           // eslint-disable-next-line no-new
@@ -257,7 +281,7 @@ document.addEventListener(
               );
             },
             store,
-            semaBarContainerId: semabarContainerId,
+            onTextPaste: onTextPaste(semabarContainerId),
           });
 
           // Add Sema icon before Markdown icon
@@ -285,31 +309,28 @@ document.addEventListener(
           }
         }
       }
-    } else if (!activeElement.classList.contains('sema-input')) {
-      activeElement?.blur();
     }
   },
-  true,
-);
+  true);
 
-document.addEventListener(
-  'focusin',
-  (event) => {
+  window.semaExtensionRegistry.registerEventListener('focusin', (event) => {
     const commentFieldClassName = 'comment-form-textarea';
+    // const pullRequestReviewBodyId = 'pull_request_review_body';
     if (event.target.classList.contains(commentFieldClassName)) {
       $('div.sema').addClass('sema-is-form-bordered');
     }
-  },
-  true,
-);
+    // if (event.target.id === pullRequestReviewBodyId) {
+    //   $(`#${pullRequestReviewBodyId}`).addClass('sema-is-form-bordered');
+    // }
+  }, true);
 
-document.addEventListener(
-  'focusout',
-  () => {
+  window.semaExtensionRegistry.registerEventListener('focusout', () => {
     $('div.sema').removeClass('sema-is-form-bordered');
   },
-  true,
-);
+  true);
+};
+
+checkLoggedIn(onLoginChecked);
 
 const destructionEvent = `destructmyextension_${chrome.runtime.id}`;
 const destructor = () => document.removeEventListener(destructionEvent, destructor);

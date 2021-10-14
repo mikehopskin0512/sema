@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import ActivityPage from '../../../components/activity/page';
@@ -14,7 +15,7 @@ const tabTitle = {
   stats: 'Repo Stats'
 }
 
-const ActivityLogs = () => {
+const RepoPage = () => {
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
@@ -28,25 +29,52 @@ const ActivityLogs = () => {
   } = useRouter();
 
   const [selectedTab, setSelectedTab] = useState('activity');
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [dates, setDates] = useState({
+    startDate: null,
+    endDate: null,
+  });
 
   useEffect(() => {
-    dispatch(fetchRepositoryOverview(repoId, token));
-  }, [dispatch, repoId, token]);
+    if (
+      (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
+    ) {
+      dispatch(fetchRepositoryOverview(repoId, token, dates.startDate && dates.endDate ? {
+        startDate: format(new Date(dates.startDate), 'MMM dd, yyyy'),
+        endDate: format(new Date(dates.endDate), 'MMM dd, yyyy'),
+      } : null));
+    }
+  }, [dispatch, repoId, token, dates]);
+
+  // Prevent from doing multiple calls while user is selecting dates
+  useEffect(() => {
+    if (startDate && endDate) {
+      setDates({ startDate, endDate });
+    }
+    if (!startDate && !endDate) {
+      setDates({
+        startDate: null,
+        endDate: null,
+      });
+    }
+  }, [startDate, endDate]);
+
+  const onDateChange = ({ startDate, endDate }) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+  }
 
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
-      { overview ? (
-        <>
-          <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-          { selectedTab === 'activity' && <ActivityPage /> }
-          { selectedTab === 'stats' && <StatsPage /> }
-        </>
-      ) : null }
+      <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
+      { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
+      { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
     </RepoPageLayout>
   );
 };
 
-export default ActivityLogs;
+export default RepoPage;

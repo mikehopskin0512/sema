@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
+import { createUserCollection, findByAuthor } from '../comments/collections/collectionService';
 
 const userOrgSchema = mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', index: true },
@@ -47,6 +48,7 @@ const userSchema = mongoose.Schema({
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
+  isOnboarded: { type: Date, default: null },
   verificationToken: String,
   verificationExpires: Date,
   resetToken: String,
@@ -68,7 +70,23 @@ const SALT_WORK_FACTOR = 10;
 userSchema.pre('save', async function save(next) {
   if (!this.isModified('password')) return next();
   try {
+    const { username } = this.identities[0];
+    const defaultSemaCollections = ['Philosophies', 'Famous Quotes'];
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    
+    // Creates default user collection
+    const personalCollection = await createUserCollection(username);
+    const semaCollections = await findByAuthor('sema');
+    let userCollections = semaCollections.map((c) => {
+      const collection = { isActive: false, collectionData: c._id}
+      if (defaultSemaCollections.includes(c.name)) {
+        collection.isActive = true
+      }
+      return collection;
+    });
+    userCollections.push({ collectionData: personalCollection._id, isActive: true });
+    this.collections = userCollections
+
     // Allow null password (don't hash if password is null)
     if (this.password) {
       this.password = await bcrypt.hash(this.password, salt);

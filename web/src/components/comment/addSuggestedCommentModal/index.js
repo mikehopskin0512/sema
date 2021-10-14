@@ -1,34 +1,42 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import SelectTags from '../selectTags';
+import { find } from 'lodash';
+import CreatableSelect from 'react-select/creatable';
+
+import { collectionsOperations } from '../../../state/features/collections';
 import { commentsOperations } from '../../../state/features/comments';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { tagsOperations } from '../../../state/features/tags';
+import { tagsState } from '../../../state/features';
+
+const { fetchTagList } = tagsOperations;
 
 const { getCollectionById } = commentsOperations;
-const { createSuggestComment } = suggestCommentsOperations;
+const { fetchAllUserCollections } = collectionsOperations;
+const { createSuggestComment, updateSuggestComment } = suggestCommentsOperations;
 
-const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
+const AddSuggestedCommentModal = ({ active, onClose, _id, comment, inCollectionsPage = false }) => {
   const dispatch = useDispatch();
   const {
-    register, handleSubmit, reset, formState,
+    register, handleSubmit, reset, formState, setValue,
   } = useForm();
 
-  const { auth, suggestedComment } = useSelector(
+  const { auth, suggestedComment, tagState } = useSelector(
     (state) => ({
       auth: state.authState,
       suggestedComment: state.suggestCommentsState,
+      tagState: state.tagsState,
     }),
   );
   const {
     query: { collectionId = _id },
   } = useRouter();
 
-  const { token } = auth;
+  const { token, user } = auth;
   const { isFetching } = suggestedComment;
 
   const [tags, setTags] = useState();
@@ -36,15 +44,110 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
 
   const { errors } = formState;
 
+  const [tagOptions, setTagOptions] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchTagList(token));
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    const guides = [];
+    const languages = [];
+    const custom = [];
+    tagState.tags.forEach((item) => {
+      const { type, _id, label } = item;
+      if (type === 'guide') {
+        guides.push({
+          label,
+          value: _id,
+        });
+      }
+      if (type === 'language') {
+        languages.push({
+          label,
+          value: _id,
+        });
+      }
+      if (type === 'custom') {
+        custom.push({
+          label,
+          value: _id,
+        });
+      }
+    });
+    setTagOptions([
+      {
+        label: 'Guides',
+        options: guides,
+      },
+      {
+        label: 'Languages',
+        options: languages,
+      },
+      {
+        label: 'Custom',
+        options: custom,
+      },
+    ]);
+  }, [tagState.tags]);
+
+  useEffect(() => {
+    if (comment) {
+      setValue('title', comment.title);
+      setValue('comment', comment.comment);
+      setValue('source', comment.source ? comment.source.url : '');
+      setTags(comment.tags ? comment.tags.map((item) => ({ label: item.label, value: item.tag })) : []);
+    }
+  }, [comment, setValue]);
+
+  const getTagsValue = (newValue) => {
+    const existingTags = [];
+    const newTags = [];
+    if (newValue) {
+      newValue.forEach((item) => {
+        const { __isNew__, label, value } = item;
+        if (__isNew__) {
+          const isTagAlreadyExists = find(tagsState.tags, ((tag) => tag.label.toLowerCase() === label.toLowerCase()));
+          if (isTagAlreadyExists) {
+            existingTags.push(isTagAlreadyExists._id);
+            return;
+          }
+          newTags.push({
+            label,
+            isActive: true,
+            type: 'custom',
+          });
+          return;
+        }
+        existingTags.push(value);
+      });
+    }
+    return ({ existingTags, newTags });
+  };
+
   const onSubmit = async (data) => {
-    await dispatch(createSuggestComment({
-      ...data,
-      tags,
-      collectionId,
-    }, token));
+    if (comment) {
+      await dispatch(updateSuggestComment(comment._id, {
+        ...data,
+        user,
+        tags: getTagsValue(tags),
+        collectionId,
+      }, token));
+    } else {
+      await dispatch(createSuggestComment({
+        ...data,
+        user,
+        tags: getTagsValue(tags),
+        collectionId,
+      }, token));
+    }
     reset();
     onClose();
-    dispatch(getCollectionById(collectionId, token));
+    if (inCollectionsPage) {
+      dispatch(fetchAllUserCollections(token));
+    } else {
+      dispatch(getCollectionById(collectionId, token));
+    }
   };
 
   return (
@@ -52,7 +155,7 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
       <div className="modal-background" />
       <div className="modal-content px-10">
         <div className="p-50 has-background-white">
-          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">Create a Custom Suggested Comment</p>
+          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">{`${comment ? 'Update' : 'Create'} a Custom Suggested Comment`}</p>
           <p className="mb-20">
             Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.
             <b> Fill out at least one of these fields and we&apos;ll do the rest.</b>
@@ -66,9 +169,6 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
                   type="text"
                   {...register(
                     'title',
-                    {
-                      required: 'Title is required',
-                    },
                   )}
                 />
                 <p className="help is-danger">{errors.title && errors.title.message}</p>
@@ -93,7 +193,13 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
             <div className="field mb-20">
               <label className="label is-size-7">Tags</label>
               <div className="control">
-                <SelectTags modalRef={modalRef} setTags={setTags} />
+                <CreatableSelect
+                  isMulti
+                  onChange={setTags}
+                  options={tagOptions}
+                  placeholder="Select tags"
+                  value={tags}
+                />
               </div>
             </div>
             <div className="field mb-20">
@@ -111,7 +217,7 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
                 className={clsx('button is-primary has-text-weight-semibold is-size-7 mx-10', isFetching ? 'is-loading' : '')}
                 type="submit"
               >
-                Create
+                { comment ? 'Update' : 'Create'}
               </button>
             </div>
           </form>
@@ -124,7 +230,15 @@ const AddSuggestedCommentModal = ({ active, onClose, _id }) => {
 AddSuggestedCommentModal.propTypes = {
   active: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  _id: PropTypes.string.isRequired,
+  _id: PropTypes.string,
+  comment: PropTypes.any,
+  inCollectionsPage: PropTypes.bool,
+};
+
+AddSuggestedCommentModal.defaultProps = {
+  comment: null,
+  _id: '',
+  inCollectionsPage: false,
 };
 
 export default AddSuggestedCommentModal;

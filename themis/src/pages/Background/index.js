@@ -175,7 +175,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     const [tab] = await chrome.tabs.query(queryOptions);
     const { id } = tab;
     chrome.tabs.update(id, {
-      url: SEMA_UI_URL,
+      url: `${SEMA_UI_URL}/dashboard?step=1`,
       active: true,
     });
   } else if (details.reason === 'update') {
@@ -217,12 +217,12 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
   const { cookie, removed } = changeInfo;
 
   if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
-    if (removed === false) {
+    if (removed) {
+      sendMessageToTab({ token: null, isLoggedIn: false });
+    } else {
       processCookie(cookie).then((tokenResponse) => {
         sendMessageToTab(tokenResponse);
       });
-    } else if (removed === true) {
-      sendMessageToTab({ token: null, isLoggedIn: false });
     }
   }
 });

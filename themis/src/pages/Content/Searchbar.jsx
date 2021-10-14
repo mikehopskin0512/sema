@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import SuggestionModal from './SuggestionModal';
+import { debounce } from 'lodash/function';
+import SuggestionModal from './components/SuggestionModal';
 import { SUGGESTION_URL, SEMA_WEB_LOGIN, SEMA_WEB_COLLECTIONS } from './constants';
 
 import {
   toggleSearchModal,
   addSuggestedComments,
   updatetSearchBarInputValue,
-  closeSearchModal,
+  usedSmartComment,
 } from './modules/redux/action';
 
 const mapStateToProps = (state, ownProps) => {
   const { semasearches, user } = state;
   const semaSearchState = semasearches[ownProps.id];
+
   return {
     isSearchModalVisible: semaSearchState.isSearchModalVisible,
-    commentBox: ownProps.commentBox,
     searchValue: semaSearchState.searchValue,
     // eslint-disable-next-line no-underscore-dangle
     userId: user?._id,
@@ -26,11 +27,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
-    closeSearchModal: () => dispatch(closeSearchModal({ id })),
-    toggleSearchModal: () => dispatch(toggleSearchModal({ id })),
+    toggleSearchModal: ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen })),
     // eslint-disable-next-line max-len
     selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
     handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
+    onLastUsedSmartComment: (payload) => dispatch(usedSmartComment(payload)),
   };
 };
 
@@ -40,46 +41,57 @@ const SearchBar = (props) => {
 
   const suggestionModalDropdownRef = useRef(null);
 
-  const onInputChanged = (event) => {
-    event.preventDefault();
-    const { value } = event.target;
-    props.handleChange(value);
-  };
+  const { commentBox } = props;
 
-  const onInsertPressed = (id, suggestion) => {
-    const value = props.commentBox.value ? `${props.commentBox.value}\n` : '';
-    // eslint-disable-next-line no-param-reassign
-    props.commentBox.value = `${value}${suggestion}`;
-    props.selectedSuggestedComments(id);
-    setSearchResults([]);
-    props.toggleSearchModal();
-    props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
-  };
-
-  const onCrossPressed = (event) => {
-    event.preventDefault();
-    props.handleChange('');
-    setSearchResults([]);
-    props.toggleSearchModal();
-  };
-
-  const getSemaSuggestions = () => {
+  const getSemaSuggestions = (value, userId) => {
     toggleIsLoading(true);
-    const URL = `${SUGGESTION_URL}${props.searchValue}&user=${props.userId}`;
+    const URL = `${SUGGESTION_URL}${value}&user=${userId}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data?.searchResults?.result || []);
+        props.toggleSearchModal({ isOpen: true });
+      })
+      .catch(() => {
+        props.toggleSearchModal({ isOpen: false });
+      })
+      .finally(() => {
         toggleIsLoading(false);
-        props.toggleSearchModal();
       });
+  };
+
+  const getSuggestionsDebounced = useRef(debounce(getSemaSuggestions, 500));
+
+  const onInputChanged = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    props.handleChange(value);
+    props.toggleSearchModal({ isOpen: false });
+    if (value) {
+      getSuggestionsDebounced.current(value, props.userId);
+    } else {
+      getSuggestionsDebounced.current.cancel();
+      props.toggleSearchModal({ isOpen: false });
+    }
+  };
+
+  const onInsertPressed = (id, suggestion) => {
+    const value = commentBox.value ? `${commentBox.value}\n` : '';
+    // eslint-disable-next-line no-param-reassign
+    commentBox.value = `${value}${suggestion}`;
+    props.selectedSuggestedComments(id);
+    props.toggleSearchModal({ isOpen: false });
+    props.onLastUsedSmartComment(suggestion);
+    commentBox.dispatchEvent(new Event('change', { bubbles: true }));
+    props.onTextPaste();
   };
 
   const renderPlaceholder = () => {
     const commentPlaceholder = chrome.runtime.getURL(
       'img/comment-placeholder.png',
     );
-    const noResults = chrome.runtime.getURL('img/no-results.png');
+    // TODO: need to add different color icons for dimmed and dark mode
+    const noResults = chrome.runtime.getURL('img/no-results-light.svg');
     const loader = chrome.runtime.getURL('img/loader.png');
     if (isLoading) {
       return (
@@ -150,39 +162,37 @@ const SearchBar = (props) => {
     return '';
   };
 
+  const resetSearch = () => {
+    props.handleChange('');
+    setSearchResults([]);
+    props.toggleSearchModal({ isOpen: false });
+  };
+
   const handleKeyPress = (event) => {
-    const charCode = typeof event.which === 'number' ? event.which : event.keyCode;
-    if (charCode === 13) {
-      // enter is pressed
+    const isEscKey = event.keyCode === 27;
+    const isEnterKey = event.keyCode === 13;
+    if (isEscKey) {
       event.preventDefault();
-      if (props.searchValue) {
-        // show dropdown
-        getSemaSuggestions();
-      }
-    } else if (charCode === 27) {
-      // esc is pressed
-      // hide dropdown
-      onCrossPressed(event);
-    } else {
-      props.closeSearchModal();
+      resetSearch();
+    } else if (isEnterKey) {
+      event.preventDefault();
+      props.toggleSearchModal({ isOpen: true });
     }
   };
 
   const { isSearchModalVisible, searchValue, isLoggedIn } = props;
 
-  const containerClasses = `sema-dropdown${
-    isSearchModalVisible ? ' sema-is-active' : ''
+  const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''
   }`;
 
-  const inputControlClasses = `sema-control sema-has-icons-left${
-    isLoading ? ' sema-is-loading' : ''
+  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
   }`;
 
   useEffect(() => {
     if (suggestionModalDropdownRef) {
       suggestionModalDropdownRef.current.scrollTop = 0;
     }
-  // eslint-disable-next-line react/destructuring-assignment
+    // eslint-disable-next-line react/destructuring-assignment
   }, [props.isSearchModalVisible]);
 
   return (
@@ -227,31 +237,9 @@ const SearchBar = (props) => {
                   key={`${isSearchModalVisible}${isLoading}${searchValue}`}
                   onInsertPressed={onInsertPressed}
                   searchResults={searchResults}
+                  // eslint-disable-next-line react/destructuring-assignment
+                  onLastUsedSmartComment={props.onLastUsedSmartComment}
                 />
-                <div className="sema-dropdown-footer">
-                  <div style={{ marginTop: 'auto' }}>
-                    <a
-                      href={SEMA_WEB_COLLECTIONS}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="fas fa-cog"
-                        style={{ color: '#56626E', fontSize: '16px' }}
-                      />
-                    </a>
-                  </div>
-                  <div className="sema-logo__alt">
-                    <img
-                      width={18}
-                      className="sema-mr-1"
-                      src={chrome.runtime.getURL('img/tray-logo.svg')}
-                      alt="sema logo"
-                    />
-                    {' '}
-                    Powered by Sema
-                  </div>
-                </div>
               </>
             )}
           </div>

@@ -3,18 +3,54 @@
 
 .tile {
     background-color: #F4F4F4;
-    height: 690px;
+    height: 510px;
     margin: 0 0 50px 0 !important;
-    @media only screen and (max-width: 769px) {
+    @media only screen and (max-width: 980px) {
         height: auto !important;
     }
 }
 
-.img {
-    max-height: 350px;
-    height: 350px;
-    @media only screen and (max-width: 769px) {
+.container {
+    padding: 50px;
+    margin: 50px;
+
+    @media only screen and (max-width: 1450px) {
+        padding: 8px;
+        margin: 16px;
+    }
+}
+
+.mobile-view {
+    @media screen and (min-width: 980px) {
+        display: none !important;
+    }
+}
+
+.desktop-view {
+    @media screen and (max-width: 980px) {
+        display: none !important;
+    }
+}
+
+.img-container {
+    position: relative;
+    height: 250px;
+    @media only screen and (max-width: 980px) {
         height: 180px !important;
         max-width: 300px;
     }
+}
+
+.img {
+    width: fit-content;
+}
+
+.button-play {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 2;
 }

@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import * as types from './types';
-import { getSmartComments, getAllSuggestedComments, getCollection } from './api';
+import { getSmartComments, getAllSuggestedComments, getCollection, getSmartCommentSummary, getSmartCommentOverview, getSuggestedComments } from './api';
 import { alertOperations } from '../alerts';
 
 const { triggerAlert } = alertOperations;
@@ -19,18 +19,72 @@ const fetchCollectionError = (error) => ({
   error,
 });
 
-const fetchSuggestedComments = () => ({
-  type: types.FETCH_SUGGESTED_COMMENTS,
+const fetchUserCollections = () => ({
+  type: types.FETCH_USER_COLLECTIONS,
 });
 
-const fetchSuggestedCommentsSuccess = (comments) => ({
-  type: types.FETCH_SUGGESTED_COMMENTS_SUCCESS,
-  comments,
+const fetchUserCollectionsSuccess = (payload) => ({
+  type: types.FETCH_USER_COLLECTIONS_SUCCESS,
+  payload,
 });
 
-const fetchSuggestedCommentsError = (error) => ({
-  type: types.FETCH_SUGGESTED_COMMENTS_ERROR,
+const fetchUserCollectionsError = (error) => ({
+  type: types.FETCH_USER_COLLECTIONS_ERROR,
   error,
+});
+
+const fetchUserSuggestedComments = () => ({
+  type: types.FETCH_USER_SUGGESTED_COMMENTS,
+});
+
+const fetchUserSuggestedCommentsSuccess = (payload) => ({
+  type: types.FETCH_USER_SUGGESTED_COMMENTS_SUCCESS,
+  payload,
+});
+
+const fetchUserSuggestedCommentsError = (error) => ({
+  type: types.FETCH_USER_SUGGESTED_COMMENTS_ERROR,
+  error,
+});
+
+const requestFetchSmartComments = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS
+});
+
+const requestFetchSmartCommentsSuccess = (smartComments) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS_SUCCESS,
+  smartComments
+});
+
+const requestFetchSmartCommentsError = (error) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENTS_ERROR,
+  error
+});
+
+const requestFetchSmartCommentSummary = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY
+});
+
+const requestFetchSmartCommentSummarySuccess = (summary) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY_SUCCESS,
+  summary
+});
+
+const requestFetchSmartCommentSummaryError = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_SUMMARY_ERROR
+});
+
+const requestFetchSmartCommentOverview = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW
+});
+
+const requestFetchSmartCommentOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_SUCCESS,
+  overview
+});
+
+const requestFetchSmartCommentOverviewError = () => ({
+  type: types.REQUEST_FETCH_SMART_COMMENT_OVERVIEW_ERROR
 });
 
 export const getCollectionById = (id, token) => async (dispatch) => {
@@ -45,15 +99,68 @@ export const getCollectionById = (id, token) => async (dispatch) => {
   }
 };
 
-export const getUserSuggestedComments = (token) => async (dispatch) => {
+export const getUserCollection = (token) => async (dispatch) => {
   try {
-    dispatch(fetchSuggestedComments(token));
-    const comments = await getAllSuggestedComments(token);
-    dispatch(fetchSuggestedCommentsSuccess(comments.data));
+    dispatch(fetchUserCollections(token));
+    const collections = await getAllCollections(token);
+    dispatch(fetchUserCollectionsSuccess(collections.data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(fetchSuggestedCommentsError(errMessage));
+    dispatch(fetchUserCollectionsError(errMessage));
+  }
+};
+
+export const getUserSuggestedComments = (title, userId, token) => async (dispatch) => {
+  try {
+    dispatch(fetchUserSuggestedComments(token));
+    const { data } = await getSuggestedComments({ q: title, user: userId }, token);
+    dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
+  } catch (error) {
+    let errMessage = '';
+    if (!error.responese) {
+      let errMessage = 'unknown error';
+    } else {
+      const { response: { data: { message }, status, statusText } } = error;
+      errMessage = message || `${status} - ${statusText}`;
+    }
+    dispatch(fetchUserSuggestedCommentsError(errMessage));
+  }
+};
+
+export const fetchSmartComments = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartComments())
+    const comments = await getSmartComments(params, token);
+    dispatch(requestFetchSmartCommentsSuccess(comments.data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentsError(errMessage));
+  }
+}
+
+export const fetchSmartCommentSummary = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartCommentSummary())
+    const { data: { summary } } = await getSmartCommentSummary(params, token);
+    dispatch(requestFetchSmartCommentSummarySuccess(summary));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentSummaryError(errMessage));
+  }
+};
+
+export const fetchSmartCommentOverview = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchSmartCommentOverview())
+    const { data: { overview } } = await getSmartCommentOverview(params, token);
+    dispatch(requestFetchSmartCommentOverviewSuccess(overview));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchSmartCommentOverviewError(errMessage));
   }
 };
 

@@ -1,11 +1,11 @@
-.layout-container {
-  background: #F4F4F4;
-}
-
 .sidebar {
   width: 200px;
   min-width: 200px;
   max-width: 300px;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  display: block; 
   // max-width: 200px;
 }
 

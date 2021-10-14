@@ -1,14 +1,19 @@
+export const { SEMA_LANDING_URL } = process.env;
 export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
 export const { SEMA_COOKIE_DOMAIN } = process.env;
 export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
+export const { AMPLITUDE_API_KEY } = process.env;
 
+export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
-export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/collections`;
+export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/suggested-comments`;
+export const SEMA_ENG_GUIDE_UI_URL = `${SEMA_UI_URL}/guides`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
+export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';
@@ -216,7 +221,7 @@ export const SEMA_ICON_ANCHOR_LIGHT = `
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#586069"/>
       </svg>
     </a>
-  </span>  
+  </span>
 `;
 
 export const SEMA_ICON_ANCHOR_DARK = `
@@ -272,3 +277,11 @@ export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
 export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
 
 export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';
+
+export const DELIMITERS = [',', '.', ' ', ';', '\n'];
+export const EVENTS = {
+  PAGE_VISIT: 'PAGE_VISIT',
+  SUBMIT: 'SUBMIT',
+};
+
+export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';

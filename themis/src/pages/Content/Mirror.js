@@ -2,16 +2,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-
 import $ from 'cash-dom';
 import { debounce, isEqual } from 'lodash';
-
 import ElementMeasurement from './ElementMeasurement';
 import GlobalSearchBar from './GlobalSearchbar';
 import { getActiveThemeClass } from '../../../utils/theme';
-import { updateSelectedEmoji } from './modules/redux/action';
-import { EMOJIS, IS_HIGHLIGHTS_ACTIVE } from './constants';
-import { checkSubmitButton, getSemaIds } from './modules/content-util';
+import { IS_HIGHLIGHTS_ACTIVE } from './constants';
+import { getSemaIds } from './modules/content-util';
 
 const SHADOW_ROOT_CLASS = 'sema-shadow-root';
 const MIRROR_CLASS = 'sema-mirror';
@@ -27,24 +24,18 @@ const UPDATE_HIGHLIGHT_INTERVAL_MS = 250;
 class Mirror {
   /**
    *
-   * @param {HTML textarea} textAreaElement
+   * @param {HTML textarea} activeElement
    * @param {function()} getTokenAlerts
-   * @param {object} options { onMouseoverHighlight, store, semaBarContainerId }
+   * @param {object} options { onMouseoverHighlight, store, onTextPaste }
    */
-  constructor(textAreaElement, getTokenAlerts, options) {
-    const id = $(textAreaElement).attr('id');
-    if (!id) {
-      // eslint-disable-next-line no-console
-      console.error('Element doesnot have any ID attribute');
-      return;
-    }
+  constructor(activeElement, getTokenAlerts, options) {
     if (typeof getTokenAlerts !== 'function') {
       // eslint-disable-next-line no-console
       console.error('valid getTokenAlerts function not provided');
       return;
     }
 
-    this._semaBarContainerId = options.semaBarContainerId;
+    this._id = getSemaIds(activeElement).semaMirror;
     this._render = this._render.bind(this);
     this._addHandlers = this._addHandlers.bind(this);
     this._onInput = this._onInput.bind(this);
@@ -52,16 +43,16 @@ class Mirror {
     this._getHighlightByPosition = this._getHighlightByPosition.bind(this);
     this._onClick = this._onClick.bind(this);
     this._onHover = this._onHover.bind(this);
-    this._onTextPaste = this._onTextPaste.bind(this);
+    this._onTextPaste = options.onTextPaste.bind(this);
     this._onMousePartial = this._onMousePartial.bind(this);
+    this._destroy = this._destroy.bind(this);
 
     this._updateHighlights = debounce(
       this._updateHighlights.bind(this),
       UPDATE_HIGHLIGHT_INTERVAL_MS,
     );
 
-    // making sure to have raw DOM element
-    this._elementToMimic = document.getElementById(id);
+    this._elementToMimic = activeElement;
     this._elementMeasurement = new ElementMeasurement(this._elementToMimic);
     this._container = null;
     this._highlighter = null;
@@ -101,6 +92,7 @@ class Mirror {
         this._highlighter.style.display = 'none';
       }
     });
+    window.semaExtensionRegistry.addAdditional(this._destroy);
   }
 
   _render() {
@@ -115,6 +107,7 @@ class Mirror {
 
     if (!this._container) {
       this._container = document.createElement('div');
+      this._container.id = this._id;
 
       this._container.className = `${SHADOW_ROOT_CLASS} ${getActiveThemeClass()}`;
 
@@ -203,40 +196,10 @@ class Mirror {
     //     config.RENDER_INTERVAL
   }
 
-  _onTextPaste() {
-    const state = this._store.getState();
-    const { isReactionDirty } = state.semabars[this._semaBarContainerId];
-    if (isReactionDirty) {
-      return;
-    }
-    // TODO: dont use hard-coded ids
-    const fixEmojiId = '607f0d1ed7f45b000ec2ed74';
-    const selectedReaction = EMOJIS.find((e) => e._id === fixEmojiId);
-    this._store.dispatch(
-      updateSelectedEmoji({
-        id: this._semaBarContainerId,
-        selectedReaction,
-        isReactionDirty: true,
-      }),
-    );
-  }
-
   _onInput() {
     const { value } = this._elementToMimic;
     this._mirrorContent.textContent = value;
     this._updateHighlights();
-
-    const textareaId = this._elementToMimic.id;
-    const { semabarContainerId } = getSemaIds(textareaId);
-    /**
-     * check for the button's behaviour
-     * after github's own validation
-     * has taken place for the textarea
-     */
-    // TODO: perform it as a side-effect to an action?
-    setTimeout(() => {
-      checkSubmitButton(semabarContainerId);
-    }, 0);
   }
 
   _onMousePartial(event) {
@@ -386,24 +349,22 @@ class Mirror {
     $(this._highlighterContainer).children(`.${HIGHLIGHTER_CONTENT}`).remove();
   }
 
-  // TODO: implement this
-  destroy() {
-    $(this._elementToMimic).off('input', this._onInput);
-    $(this._elementToMimic).off('paste', this._onTextPaste);
+  _destroy() {
     $(this._elementToMimic).off('scroll', this._onScroll);
-    // $(this._elementToMimic).off('click', this._onClick),
-    $(this._elementToMimic).off('mousemove', this._hover);
+    $(this._elementToMimic).off('input', this._onInput);
+    $(this._elementToMimic).off('change', this._onInput);
+    $(this._elementToMimic).off('mousemove', this._onHover);
+    $(this._elementToMimic).off('click', this._onClick);
     $(this._elementToMimic).off('mouseup mousedown', this._onMousePartial);
+    $(this._elementToMimic).off('paste', this._onTextPaste);
     //   this._renderInterval && this._renderInterval.destroy(),
-    if (this._container) {
-      this._container.remove();
-    }
 
     if (this._elementToMimicResizeObserver) {
       this._elementToMimicResizeObserver.disconnect();
     }
 
-    this._elementMeasurement.clearCache();
+    // TODO: this one doesn't work (need to investigate)
+    // this._elementMeasurement.clearCache();
     this._unsubscribe();
   }
 }

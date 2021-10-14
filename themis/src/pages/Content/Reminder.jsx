@@ -4,11 +4,15 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { connect } from 'react-redux';
 import { closeLoginReminder } from './modules/redux/action';
-
-const semaUIUrl = process.env.SEMA_UI_URL;
+import { SEMA_LANDING_FAQ, SEMA_UI_URL } from './constants';
+import { getActiveThemeClass } from '../../../utils/theme';
 
 const logoUrl = chrome.runtime.getURL(
   'img/sema-logo.png',
+);
+
+const darkModelogoUrl = chrome.runtime.getURL(
+  'img/dark_mode_sema.png',
 );
 
 const screenshot1 = chrome.runtime.getURL(
@@ -20,7 +24,7 @@ const screenshot2 = chrome.runtime.getURL(
 );
 
 const openSema = () => {
-  window.open(semaUIUrl, '_blank');
+  window.open(SEMA_UI_URL, '_blank');
 };
 
 const mapStateToProps = (state) => {
@@ -37,11 +41,12 @@ const mapDispatchToProps = (dispatch) => ({
 
 const Reminder = (props) => {
   const { isLoggedIn, isReminderClosed, closeReminder } = props;
-  const display = (isReminderClosed === true || isLoggedIn) ? 'none' : 'block';
+  const display = (isReminderClosed || isLoggedIn) ? 'none' : 'block';
+  const activeTheme = getActiveThemeClass();
   return (
     <div className="reminder-container" style={{ display }}>
       <div className="reminder-header">
-        <img src={logoUrl} alt="sema logo" />
+        <img src={activeTheme === '' ? logoUrl : darkModelogoUrl} alt="sema logo" />
         <FontAwesomeIcon
           onClick={closeReminder}
           icon={faTimes}
@@ -69,7 +74,7 @@ const Reminder = (props) => {
             Sign in with Github
           </span>
         </button>
-        <a href={semaUIUrl}>Learn More</a>
+        <a target="_blank" href={SEMA_LANDING_FAQ} rel="noreferrer">Have Questions?</a>
       </div>
     </div>
   );

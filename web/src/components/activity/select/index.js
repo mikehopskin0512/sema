@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -8,12 +8,26 @@ import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
 
+const Menu = ({ selectAll, deselectAll, ...p }) => {
+  const { children } = p;
+  return (
+    <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
+      <div className="mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7">
+        <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+        <div class="mx-5">|</div>
+        <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+      </div>
+      {children}
+    </components.Menu>
+  );
+};
+
 const CustomSelect = (props) => {
   const {
     label, selectProps, filter, showCheckbox,
   } = props;
 
-  const { value } = selectProps;
+  const { value, onChange, options } = selectProps;
 
   const node = useRef();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -34,11 +48,19 @@ const CustomSelect = (props) => {
     };
   }, []);
 
+  const selectAll = () => {
+    onChange(options);
+  }
+
+  const deselectAll = () => {
+    onChange([]);
+  }
+
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
 
   const Control = (p) => (filter ? (
     <div className={clsx('', styles.control)}>
-      <div className="p-20 has-background-white border-radius-4px">
+      <div className="py-20 px-12 has-background-white border-radius-4px">
         <components.Control {...p} />
       </div>
     </div>
@@ -49,15 +71,6 @@ const CustomSelect = (props) => {
   const DropdownIndicator = () => null;
 
   const Placeholder = (p) => <components.Placeholder {...p} className={clsx('has-text-weight-semibold', styles.placeholder)} />;
-
-  const Menu = (p) => {
-    const { children } = p;
-    return (
-      <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
-        {children}
-      </components.Menu>
-    );
-  };
 
   const Option = (p) => {
     const { isSelected, data: { label: optionLabel, img, value, emoji } } = p;
@@ -91,18 +104,33 @@ const CustomSelect = (props) => {
 
   const MultiValueRemove = () => null;
 
+  const IndicatorsContainer = () => null;
+
+  const ValueContainer = (p) => (
+    <components.ValueContainer
+      {...p}
+      className={styles['value-container']}
+    />
+  );
+
+  const RenderMenu = useCallback((p) => Menu({
+    ...p,
+    selectAll,
+    deselectAll
+  }), [menuIsOpen]);
+
   return (
     <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node}>
       <button
         type="button"
         onClick={toggleMenu}
         className={clsx(
-          'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15',
+          'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
           styles.select,
         )}>
         <div className="is-flex is-align-items-center">
           <span className={clsx('has-text-weight-semibold is-size-6 mr-10', styles.placeholder)}>{label}</span>
-          {value && value.length > 0 && (
+          {value && value.length > 0 ? (
             <span className={
               clsx(
                 'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center',
@@ -111,7 +139,7 @@ const CustomSelect = (props) => {
             }>
               {value.length}
             </span>
-          )}
+          ) : (<div className={styles.badge} />)}
         </div>
         <span className="icon is-small pb-5">
           <FontAwesomeIcon icon={faSortDown} color="#394A64" />
@@ -125,11 +153,13 @@ const CustomSelect = (props) => {
               IndicatorSeparator,
               Placeholder,
               DropdownIndicator,
-              Menu,
               Option,
               MultiValue,
               Input,
               MultiValueRemove,
+              ValueContainer,
+              IndicatorsContainer,
+              Menu: RenderMenu,
             }}
             menuIsOpen={menuIsOpen}
             {...selectProps}
@@ -154,4 +184,4 @@ CustomSelect.propTypes = {
   showCheckbox: PropTypes.bool,
 };
 
-export default CustomSelect;
+export default React.memo(CustomSelect);

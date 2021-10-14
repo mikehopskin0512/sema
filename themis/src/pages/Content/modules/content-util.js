@@ -1,5 +1,7 @@
 import $ from 'cash-dom';
 
+import amplitude from 'amplitude-js';
+
 import {
   EMOJIS,
   TAGS_INIT,
@@ -14,6 +16,11 @@ import {
   ADD_OP,
   SMART_COMMENT_URL,
   IS_DIRTY,
+  DELIMITERS,
+  AMPLITUDE_API_KEY,
+  EVENTS,
+  SEMA_TEXTAREA_IDENTIFIER,
+  SUGGESTED_COMMENTS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -32,6 +39,77 @@ import {
 import store from './redux/store';
 
 import phrases from './highlightPhrases';
+
+// FIXME: no need for the function to accept 'document'
+export const getGithubMetadata = (document) => {
+  const url = document.querySelector('meta[property="og:url"]')?.content || '';
+  const decoupleUrl = url.split('/');
+  // eslint-disable-next-line camelcase
+  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
+  // eslint-disable-next-line camelcase
+  const [, , , , repo, , pull_number] = decoupleUrl;
+  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
+  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
+  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')
+    ?.content;
+  const login = document.querySelector('meta[name="octolytics-actor-login"]')
+    ?.content;
+  const requester = document.querySelector('a[class*="author"]')?.textContent;
+  const requesterAvatarUrl = document.querySelector(`img[alt*="@${requester}"]`)?.src;
+  const title = document.querySelector('span[data-snek-id="issue-title"]')
+    ?.innerText;
+  // eslint-disable-next-line camelcase
+  const clone_url = document.querySelector('#clone-help-git-url')?.value;
+
+  const githubMetadata = {
+    url,
+    repo_id,
+    repo,
+    pull_number,
+    head,
+    base,
+    user: { id, login },
+    requester,
+    title,
+    clone_url,
+    commentId: null,
+    requesterAvatarUrl,
+  };
+
+  return githubMetadata;
+};
+
+export const fireAmplitudeEvent = (event, opts) => {
+  const githubMetadata = getGithubMetadata(document);
+
+  const { user: { isLoggedIn } } = store.getState();
+
+  amplitude.getInstance().logEvent(event, {
+    ...opts,
+    ...githubMetadata,
+    isLoggedIn,
+    url: window.location.href,
+  });
+};
+
+export const initAmplitude = () => {
+  const githubMetadata = getGithubMetadata(document);
+
+  const { user: { login } } = githubMetadata;
+
+  amplitude.getInstance().init(AMPLITUDE_API_KEY, login);
+
+  fireAmplitudeEvent(EVENTS.PAGE_VISIT);
+  let lastLocation = window.location.href;
+  // no good way to detect all types of URL changes
+  setInterval(() => {
+    const currentLocation = window.location.href;
+    if (lastLocation !== currentLocation) {
+      lastLocation = currentLocation;
+      fireAmplitudeEvent(EVENTS.PAGE_VISIT);
+    }
+  }, 200);
+};
 
 export const isTextBox = (element) => {
   const tagName = element.tagName.toLowerCase();
@@ -138,6 +216,14 @@ const updateSmartComment = async (comment) => {
   return smartComment;
 };
 
+export const saveSmartComment = async (comment) => {
+  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify(comment),
+  });
+};
+
 export const onConversationMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const nodeIndex = [...mutation.addedNodes].findIndex(
@@ -236,19 +322,45 @@ const createSmartComment = async (comment) => {
   return smartComment;
 };
 
-export function getSemaIds(idSuffix) {
+export const getSemaIdentifier = (activeElement) => {
+  if (!(activeElement instanceof HTMLElement)) {
+    throw new Error('Should be an HTMLElement');
+  }
+
+  return $(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER);
+};
+
+export const getSemaIdsFromIdentifier = (semaIdentifier) => {
+  if (typeof semaIdentifier !== 'string') {
+    throw new Error('Should be sema identifier attribute');
+  }
   return {
-    semabarContainerId: `semabar_${idSuffix}`,
-    semaSearchContainerId: `semasearch_${idSuffix}`,
+    semabarContainerId: `semabar_${semaIdentifier}`,
+    semaSearchContainerId: `semasearch_${semaIdentifier}`,
+    semaMirror: `semamirror_${semaIdentifier}`,
   };
+};
+
+export function getSemaIds(activeElement) {
+  if (!(activeElement instanceof HTMLElement)) {
+    throw new Error('Should be an HTMLElement');
+  }
+
+  const semaIdentifier = getSemaIdentifier(activeElement);
+  return getSemaIdsFromIdentifier(semaIdentifier);
 }
 
-export async function writeSemaToGithub(textarea) {
-  if (textarea) {
+const isReply = (textarea) => {
+  const isReplyComment = ['js-resolvable-thread-contents', 'review-thread-reply'].some((replyClass) => (($(textarea).parents(`.${replyClass}`).length > 0)));
+  return isReplyComment;
+};
+
+export async function writeSemaToGithub(activeElement) {
+  if (activeElement) {
     let comment = {};
     let inLineMetada = {};
 
-    const isPullRequestReview = textarea?.id && textarea.id.includes('pending_pull_request_review_');
+    const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
     const onFilesTab = document.URL.split('/').pop().includes('files');
 
     const location = onFilesTab ? 'files changed' : 'conversation';
@@ -265,14 +377,14 @@ export async function writeSemaToGithub(textarea) {
         config: { childList: true, subtree: true },
         onMutationEvent: onFilesChangedMutationObserver,
       }));
-      inLineMetada = getGithubInlineMetadata(textarea.id);
+      inLineMetada = getGithubInlineMetadata(activeElement.id);
     }
 
     const state = store.getState();
 
-    const semaSearchId = $(textarea).siblings('div.sema-search')?.[0]?.id;
+    const semaSearchId = $(activeElement).siblings('div.sema-search')?.[0]?.id;
 
-    const semabar = $(textarea).siblings('div.sema')?.[0];
+    const semabar = $(activeElement).siblings('div.sema')?.[0];
 
     const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
 
@@ -295,7 +407,7 @@ export async function writeSemaToGithub(textarea) {
 
     const semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
 
-    let textboxValue = textarea.value;
+    let textboxValue = activeElement.value;
 
     const { selectedSuggestedComments } = store.getState().semasearches[
       semaSearchId
@@ -323,18 +435,30 @@ export async function writeSemaToGithub(textarea) {
 
       // On edit, do not add extra line breaks
       // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}${semaString}`;
+      activeElement.value = `${textboxValue}${semaString}`;
     } else {
       // On initial submit, 2 line breaks break up the markdown correctly
       // eslint-disable-next-line no-param-reassign
-      textarea.value = `${textboxValue}\n\n${semaString}`;
+      activeElement.value = `${textboxValue}\n\n${semaString}`;
     }
 
-    const { githubMetadata } = store.getState();
+    const { githubMetadata, lastUserSmartComment } = store.getState();
     const { _id: userId } = store.getState().user;
 
+    let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
+    if (!fileExtention) {
+      const url = $(activeElement)
+        .parents('.file')
+        .children('.file-header')
+        .children('.Link--primary')
+        .attr('title');
+      fileExtention = url
+        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+        : null;
+    }
+
     comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada },
+      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
       userId,
       comment: textboxValue,
       location,
@@ -346,7 +470,7 @@ export async function writeSemaToGithub(textarea) {
 
     if (isPullRequestReview) {
       store.dispatch(removeMutationObserver());
-      const pullRequestReviewId = textarea?.id.split('_').pop();
+      const pullRequestReviewId = activeElement?.id.split('_').pop();
       const commentDiv = document.querySelector(
         `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
       );
@@ -357,8 +481,18 @@ export async function writeSemaToGithub(textarea) {
     createSmartComment(comment).then((smartComment) => {
       store.dispatch(addSmartComment(smartComment));
     });
-    
-    const semaIds = getSemaIds($(textarea).attr('id'));
+
+    const opts = {
+      isSemaBarUsed: false,
+      isReply: isReply(activeElement),
+      isSuggestedCommentUsed: activeElement.value.includes(lastUserSmartComment),
+    };
+    if (typeof semaString === 'string' && semaString.length) {
+      opts.isSemaBarUsed = true;
+    }
+
+    fireAmplitudeEvent(EVENTS.SUBMIT, opts);
+    const semaIds = getSemaIds(activeElement);
     store.dispatch(resetSemaStates(semaIds));
   }
 }
@@ -496,8 +630,8 @@ export function onSuggestion() {
     const state = store.getState();
 
     const { suggestedReaction, suggestedTags } = payload;
+    const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
     if (suggestedReaction) {
-      const { isReactionDirty } = state.semabars[semabarId];
       // isReactionDirty is true when reaction is manually selected from UI
       if (!isReactionDirty) {
         store.dispatch(
@@ -510,7 +644,7 @@ export function onSuggestion() {
       }
     }
     // allow to change state even when empty to remove existing tags if no suggestion
-    if (suggestedTags) {
+    if (!isTagModalDirty && suggestedTags) {
       store.dispatch(
         addSuggestedTags({
           id: semabarId,
@@ -520,42 +654,6 @@ export function onSuggestion() {
     }
   }
 }
-
-export const getGithubMetadata = (document) => {
-  const url = document.querySelector('meta[property="og:url"]')?.content || '';
-  const decoupleUrl = url.split('/');
-  // eslint-disable-next-line camelcase
-  const repo_id = document.querySelector('input[name="repository_id"]')?.value;
-  // eslint-disable-next-line camelcase
-  const [, , , , repo, , pull_number] = decoupleUrl;
-  const head = document.querySelector('span[class*="head-ref"] a')?.textContent;
-  const base = document.querySelector('span[class*="base-ref"] a')?.textContent;
-  const id = document.querySelector('meta[name="octolytics-dimension-user_id"]')
-    ?.content;
-  const login = document.querySelector('meta[name="octolytics-actor-login"]')
-    ?.content;
-  const requester = document.querySelector('a[class*="author"]')?.textContent;
-  const title = document.querySelector('span[data-snek-id="issue-title"]')
-    ?.innerText;
-  // eslint-disable-next-line camelcase
-  const clone_url = document.querySelector('#clone-help-git-url')?.value;
-
-  const githubMetadata = {
-    url,
-    repo_id,
-    repo,
-    pull_number,
-    head,
-    base,
-    user: { id, login },
-    requester,
-    title,
-    clone_url,
-    commentId: null,
-  };
-
-  return githubMetadata;
-};
 
 export const getHighlights = (text) => {
   const alerts = [];
@@ -624,8 +722,16 @@ export const getHighlights = (text) => {
     }
     // eslint-disable-next-line no-cond-assign
     while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-      indices.push(index);
       startIndex = index + searchStrLen;
+
+      const nextChar = str[startIndex];
+      const prevChar = str[index - 1];
+
+      if (
+        (nextChar === undefined || DELIMITERS.some((delimitter) => delimitter === nextChar))
+        && (prevChar === undefined || DELIMITERS.some((delimitter) => delimitter === prevChar))) {
+        indices.push(index);
+      }
     }
     return indices;
   };
@@ -645,8 +751,9 @@ export const getHighlights = (text) => {
 export const checkSubmitButton = (semabarId, data) => {
   const semabarData = data || store.getState().semabars[semabarId];
   const { selectedReaction, selectedTags } = semabarData;
-  const textareaId = semabarId.replace('semabar_', '');
-  const textareaValue = document.getElementById(textareaId).value.trim();
+
+  const activeElement = $(`#${semabarId}`).prev().get(0);
+  const textareaValue = activeElement.value.trim();
 
   const parents = $(`#${semabarId}`).parentsUntil('form');
   const lastParent = parents[parents.length - 1];
@@ -660,10 +767,15 @@ export const checkSubmitButton = (semabarId, data) => {
     } else {
       $(primaryButton).attr('disabled', true);
     }
+  } else {
+    $(primaryButton).removeAttr('disabled');
   }
 };
 
-export const isPRPage = () => {
-  const prPage = /[https://github.com/\w*/\w*/pull/\d+]/;
-  return prPage.test(document.URL);
+export const isPRPage = () => document.URL.includes('/pull/');
+
+export const setTextareaSemaIdentifier = (activeElement) => {
+  const { id } = activeElement;
+  const semaIdentifier = `sema-${id}-${Date.now()}`;
+  $(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER, semaIdentifier);
 };

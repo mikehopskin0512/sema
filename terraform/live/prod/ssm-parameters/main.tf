@@ -1,3 +1,8 @@
+resource "aws_ssm_parameter" "apollo_chrome_extension_id" {
+  name  = "/${var.env}/apollo/chrome/extensionid"
+  type  = "String"
+  value = "nompfgddpldjighjfnkncgehjdbcphbf"
+}
 resource "aws_ssm_parameter" "apollo_mailchimp_registered_and_waitlist_users_audience_id" {
   name  = "/${var.env}/apollo/mailchimp/registeredandwaitlistusersaudienceid"
   type  = "String"
@@ -96,12 +101,12 @@ resource "aws_ssm_parameter" "apollo_sendgrid_api-key" {
 resource "aws_ssm_parameter" "apollo_sendgrid_sender" {
   name  = "/${var.env}/apollo/sendgrid/sender"
   type  = "String"
-  value = "info@semasoftware.com"
+  value = "info@semasoftware.io"
 }
 resource "aws_ssm_parameter" "apollo_token_life" {
   name  = "/${var.env}/apollo/token/life"
   type  = "String"
-  value = "2592000"
+  value = "7776000"
 }
 resource "aws_ssm_parameter" "apollo_token_name" {
   name  = "/${var.env}/apollo/token/name"
@@ -208,4 +213,10 @@ resource "aws_ssm_parameter" "phoenix_client_secret" {
   name  = "/${var.env}/phoenix/client/secret"
   type  = "String"
   value = "d7f3b825-bf97-4f21-babc-cf03a1babe91"
+}
+
+resource "aws_ssm_parameter" "phoenix_intercom_token" {
+  name  = "/${var.env}/apollo/intercom-token"
+  type  = "String"
+  value = "dG9rOmNlZGFlZmNiXzUzNjZfNDYxNF9iOWQzXzA1ODYzYWY2OTU5MzoxOjA="
 }

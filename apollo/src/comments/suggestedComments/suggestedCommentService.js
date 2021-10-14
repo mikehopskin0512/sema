@@ -1,48 +1,17 @@
 import mongoose from 'mongoose';
-import FlexSearch from 'flexsearch';
 import SuggestedComment from './suggestedCommentModel';
 import { create as createTags, findTags } from '../tags/tagService';
 import User from '../../users/userModel';
 import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
+import { fullName } from '../../shared/utils';
+import { fetchMetadata } from "../../shared/preview";
+
+const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
-
-const index = new FlexSearch({
-  encode: 'balance',
-  tokenize: 'full',
-  threshold: 0,
-  depth: 5,
-  async: true,
-  worker: 1,
-  cache: true,
-  stemmer: 'en',
-});
-
-const buildSuggestedCommentsIndex = async () => {
-  try {
-    const dbComments = await SuggestedComment.find().lean().exec();
-    const reportEvery = Math.floor(dbComments.length / 10);
-
-    dbComments.forEach(({ _id: commentId, title, comment, tags }, i) => {
-      // index by MongoDB ID
-      const allTags = tags.map(({ label }) => (label)).join(' ');
-      const commentIndex = `${title} ${comment} ${allTags}`;
-      index.add(commentId, commentIndex);
-      if (i % reportEvery === 0) {
-        logger.info(`Building comment bank search index: ${i} / ${dbComments.length} done`);
-      }
-    });
-  } catch (err) {
-    const error = new errors.InternalServer(err);
-    logger.error(error);
-    throw error;
-  }
-
-  return index;
-};
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
   const userActiveCommentsQuery = [
@@ -79,49 +48,71 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
         },
       },
     },
-    // {
-    //   $project: {
-    //     _id: 0,
-    //     comments: {
-    //       $let: {
-    //         vars: {
-    //           userComments: {
-    //             $reduce: {
-    //               input: '$collections.comments',
-    //               initialValue: [],
-    //               in: { $setUnion: ['$$value', '$$this'] },
-    //             },
-    //           },
-    //         },
-    //         in: { $setIntersection: ['$$userComments', searchResults] },
-    //       },
-    //     },
-    //   },
-    // },
-    // {
-    //   $lookup: {
-    //     from: 'suggestedComments',
-    //     localField: 'comments',
-    //     foreignField: '_id',
-    //     as: 'comments',
-    //   },
-    // },
+    {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: { $setUnion: ['$$value', '$$this'] },
+                },
+              },
+            },
+            in: { $setIntersection: ['$$userComments', searchResults] },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'comments',
+      },
+    },
   ];
 
-  const [{ collections }] = await User.aggregate(userActiveCommentsQuery);
-  const userComments = [...new Set(collections.map(({ comments }) => (comments)).join('').split(','))];
-  const commentsId = searchResults.filter((comment) => userComments.includes(comment.toString()));
-  const comments = await SuggestedComment
-    .find({ _id: { $in: commentsId } })
-    .populate({ path: 'engGuides.engGuide', model: 'EngGuide' });
+  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
   return comments;
 };
 
-const searchComments = async (user, searchQuery) => {
-  let searchResults = await index.search(searchQuery);
+const searchIndex = async (searchQuery) => {
+  if (nodeEnv === 'development') {
+    return [];
+    return searchResults;
+  } else {
+    const [{ searchResults }] = await SuggestedComment.aggregate([
+      {
+        $search: {
+          index: 'suggestedComments',
+          text: {
+            query: searchQuery,
+            path: { wildcard: '*', },
+            fuzzy: { maxEdits: 2, prefixLength: 3 },
+          },
+        },
+      },
+      {
+        $group: {
+            _id: 'searchResults',
+            searchResults: { $push: '$_id' }
+        }
+      }
+    ]);
+    return searchResults;
+  }
+};
 
+const searchComments = async (user, searchQuery) => {
+  let searchResults = await searchIndex(searchQuery);
+  
   // The number of suggested comments to list
-  searchResults = searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
+  searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 
   const comments = await getUserSuggestedComments(user, searchResults);
   const returnResults = comments.map(
@@ -201,31 +192,41 @@ const suggestCommentsInsertCount = async ({ page, perPage }) => {
   };
 };
 
-export const create = async (suggestedComment) => {
-  try {
-    const { title, comment, source, tags } = suggestedComment;
-    let suggestedCommentTags = [];
-    if (tags) {
+const makeTagsList = async (tags) => {
       const { existingTags, newTags } = tags;
-      let savedTags = []
-      if (newTags.length > 0) {
+  let savedTags = [];
+  if (newTags && newTags.length > 0) {
         savedTags = await createTags(newTags);
       }
       const existingTagsArr = await findTags(existingTags.map(id => ObjectId(id)));
-      const savedTagObjects = [...existingTagsArr, ...savedTags].map((item) => {
-      return{
+  const suggestedCommentTags = [...existingTagsArr, ...savedTags].map((item) => ({
         label: item.label,
         type: item.type,
-        tag: ObjectId(item._id)
-      }});
-      suggestedCommentTags = savedTagObjects;
+    tag: ObjectId(item._id),
+  }));
+  return suggestedCommentTags;
+};
+
+const create = async (suggestedComment) => {
+  try {
+    const { title, comment, source, tags } = suggestedComment;
+    let suggestedCommentTags = [];
+    let sourceMetaData;
+    if (tags) {
+      suggestedCommentTags = await makeTagsList(tags);
     }
+  
+    if (source && source.url) {
+      sourceMetaData = await getLinkPreviewData(source.url);
+    }
+    
     const newSuggestedComment = new SuggestedComment({
       title,
       comment,
       source,
       tags: suggestedCommentTags,
-    })
+      sourceMetaData,
+    });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
   } catch (err) {
@@ -234,9 +235,108 @@ export const create = async (suggestedComment) => {
     throw (error);
   }
 };
+
+const update = async (id, body) => {
+  try {
+    const { tags } = body;
+    if (tags) {
+      body.tags = await makeTagsList(tags);
+    }
+    const suggestedComment = await SuggestedComment.findById(id);
+    suggestedComment.set(body);
+    
+    if (!suggestedComment.sourceMetadata?.title && suggestedComment.source && suggestedComment.source.url) {
+      // fetch metadata from iframely
+      suggestedComment.sourceMetadata = await getLinkPreviewData(suggestedComment.source.url);
+    }
+    
+    await suggestedComment.save();
+
+    return suggestedComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
+const bulkCreateSuggestedComments = async (comments, user) => {
+  try {
+    const suggestedComments = await Promise.all(comments.map(async (comment) => ({
+      ...comment,
+      ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+      author: fullName(user.user),
+    })));
+    
+    for (let i = 0; i < suggestedComments.length; i++) {
+      const { source } = suggestedComments[i];
+      if (source && source.url) {
+        suggestedComments[i].sourceMetadata = await getLinkPreviewData(source.url);
+      }
+    }
+
+    return await SuggestedComment.create(suggestedComments);
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+const bulkUpdateSuggestedComments = async (comments) => {
+  try {
+    const suggestedComments = await Promise.all(comments.map(async (comment) => ({
+      ...comment,
+      ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+    })));
+
+    return await Promise.all(suggestedComments.map(async (item) => {
+      const result = await SuggestedComment.updateOne({ _id: item._id }, { $set: { ...item } });
+      return result;
+    }));
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+const getSuggestedCommentsByIds = async (params) => {
+  const query = SuggestedComment.find();
+
+  if (params.comments) {
+    query.where('_id', { $in: params.comments });
+  }
+
+  const suggestedComments = await query.exec();
+  const totalCount = await SuggestedComment.countDocuments(query);
+  return { suggestedComments, totalCount };
+};
+
+const getLinkPreviewData = async (url)=> {
+  try {
+    const { data: metadata } = await fetchMetadata(url);
+  
+    const metaIcon = metadata?.links?.icon?.find(item => item.href.includes('favicon')) || metadata?.links?.icon[0];
+    const metaThumbnail = metadata?.links?.thumbnail ? metadata?.links?.thumbnail[0] : null;
+    return {
+      title: metadata?.meta?.title,
+      icon: metaIcon?.href,
+      thumbnail: metaThumbnail?.href,
+    }
+  } catch (error) {
+    logger.error(error);
+    return null;
+  }
+}
+
 module.exports = {
-  buildSuggestedCommentsIndex,
   searchComments,
   suggestCommentsInsertCount,
   create,
+  update,
+  bulkCreateSuggestedComments,
+  bulkUpdateSuggestedComments,
+  getSuggestedCommentsByIds,
+  getLinkPreviewData,
 };

@@ -53,10 +53,10 @@ const Sidebar = ({ children, ...menuItemProps }) => {
   ]);
 
   return (
-    <div className={clsx(styles['layout-container'])}>
-      <div className="columns content-container" style={{ maxWidth: '1530px' }}>
-        <div className="column is-one-fifth">
-          <div className={clsx(styles.sidebar, 'ml-40 p-10 is-flex is-flex-direction-column is-relative is-fullheight')}>
+    <div className="pb-100 container">
+      <div className="columns">
+        <div className={clsx("column is-one-fifth")}>
+          <div className={clsx(styles.sidebar, 'ml-40 p-10 is-flex is-flex-direction-column is-fullheight')}>
             <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25 is-flex-wrap-wrap">
               {
                 menus.map((item) => (
@@ -66,7 +66,7 @@ const Sidebar = ({ children, ...menuItemProps }) => {
             </div>
           </div>
         </div>
-        <div className="column mr-50 my-50">
+        <div className="column mx-10 my-50">
           {children}
         </div>
       </div>
