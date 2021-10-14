@@ -1,9 +1,20 @@
+// Examples usage: 
+// Before the run, you should change the variable DB_NAME on the necessary database name 
+// Also you should change the variable USERS_NAME 
+// 
+// Command: mongo <DB_URL> deleteTestUsers.js 
+// 
 const DB_NAME = "phoenix-qa"
 const USERS_NAME = ["semacodereviewtester1000@protonmail.com"]
 
 const conn = new Mongo();
 const db = conn.getDB(DB_NAME);
 const all_collections = db.getCollectionNames()
+
+if (!Array.isArray(USERS_NAME)) {
+    print("USERS NAME should be Array")
+    quit(1)
+}
 
 const users = db.users.find({
     username: { $in: USERS_NAME },
