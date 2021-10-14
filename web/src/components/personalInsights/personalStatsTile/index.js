@@ -65,22 +65,22 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
             </div>
             <div className="is-divider-vertical" />
             <div className="column">
-              <div className="columns">
-                <div className="column is-3">
+              <div className="columns i">
+                <div className="column is-3 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOTAL COMMENTS
                   </p>
-                  <p className="is-size-4 has-text-weight-semibold has-text-deep-black">{totalSmartComments}</p>
+                  <p className="m-0 is-size-4 has-text-weight-semibold has-text-deep-black">{totalSmartComments}</p>
                 </div>
-                <div className="column is-4">
+                <div className="column is-4 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOP REACTIONS
                   </p>
-                  <p className="is-flex is-flex-wrap-wrap">
+                  <p className="is-flex is-flex-wrap-wrap pb-3">
                     {renderTopReactions()}
                   </p>
                 </div>
-                <div className="column is-5">
+                <div className="column is-5 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOP TAGS
                   </p>
