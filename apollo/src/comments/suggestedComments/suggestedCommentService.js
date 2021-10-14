@@ -6,6 +6,7 @@ import Query from '../queryModel';
 import errors from '../../shared/errors';
 import logger from '../../shared/logger';
 import { fullName } from '../../shared/utils';
+import { fetchMetadata } from "../../shared/preview";
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
@@ -210,14 +211,21 @@ const create = async (suggestedComment) => {
   try {
     const { title, comment, source, tags } = suggestedComment;
     let suggestedCommentTags = [];
+    let sourceMetaData;
     if (tags) {
       suggestedCommentTags = await makeTagsList(tags);
     }
+  
+    if (source && source.url) {
+      sourceMetaData = await getLinkPreviewData(source.url);
+    }
+    
     const newSuggestedComment = new SuggestedComment({
       title,
       comment,
       source,
       tags: suggestedCommentTags,
+      sourceMetaData,
     });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
@@ -236,6 +244,12 @@ const update = async (id, body) => {
     }
     const suggestedComment = await SuggestedComment.findById(id);
     suggestedComment.set(body);
+    
+    if (!suggestedComment.sourceMetadata?.title && suggestedComment.source && suggestedComment.source.url) {
+      // fetch metadata from iframely
+      suggestedComment.sourceMetadata = await getLinkPreviewData(suggestedComment.source.url);
+    }
+    
     await suggestedComment.save();
 
     return suggestedComment;
@@ -253,6 +267,13 @@ const bulkCreateSuggestedComments = async (comments, user) => {
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user.user),
     })));
+    
+    for (let i = 0; i < suggestedComments.length; i++) {
+      const { source } = suggestedComments[i];
+      if (source && source.url) {
+        suggestedComments[i].sourceMetadata = await getLinkPreviewData(source.url);
+      }
+    }
 
     return await SuggestedComment.create(suggestedComments);
   } catch (err) {
@@ -292,6 +313,23 @@ const getSuggestedCommentsByIds = async (params) => {
   return { suggestedComments, totalCount };
 };
 
+const getLinkPreviewData = async (url)=> {
+  try {
+    const { data: metadata } = await fetchMetadata(url);
+  
+    const metaIcon = metadata?.links?.icon?.find(item => item.href.includes('favicon')) || metadata?.links?.icon[0];
+    const metaThumbnail = metadata?.links?.thumbnail ? metadata?.links?.thumbnail[0] : null;
+    return {
+      title: metadata?.meta?.title,
+      icon: metaIcon?.href,
+      thumbnail: metaThumbnail?.href,
+    }
+  } catch (error) {
+    logger.error(error);
+    return null;
+  }
+}
+
 module.exports = {
   searchComments,
   suggestCommentsInsertCount,
@@ -300,4 +338,5 @@ module.exports = {
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
+  getLinkPreviewData,
 };

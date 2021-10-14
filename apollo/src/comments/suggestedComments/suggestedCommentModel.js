@@ -24,7 +24,10 @@ const suggestedCommentSchema = new Schema({
   author: {
     type: String,
   },
-  source: { name: String, url: String },
+  source: {
+    name: String,
+    url: String,
+  },
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
@@ -37,6 +40,11 @@ const suggestedCommentSchema = new Schema({
   },
   link: { type: String },
   relatedLinks: [String],
+  sourceMetadata: {
+    title: String,
+    icon: String,
+    thumbnail: String,
+  }
 }, {
   timestamps: true,
   collection: 'suggestedComments',

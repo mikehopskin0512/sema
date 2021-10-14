@@ -66,3 +66,7 @@ export const parseRelatedLinks = (string) => {
   }
   return [];
 }
+
+export const shortenUrl = (url) => {
+  return url.length > 50 ? url.substring(0, 50) + '...' : url;
+}
