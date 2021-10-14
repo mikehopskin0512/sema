@@ -10,6 +10,7 @@ import { updateLastLogin } from '../users/userService';
 import RefreshToken from './refreshTokenModel';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
+const authTokenMinutes = 15;
 
 const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', lastName = '' }) => {
   let displayName = 'Sema User';
@@ -29,17 +30,11 @@ const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', las
   );
 };
 
-export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user) }, jwtSecret, {
-  expiresIn: '2m',
-});
+export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user), exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
 
-export const createIdentityToken = async (identity) => sign({ identity }, jwtSecret, {
-  expiresIn: '2m',
-});
+export const createIdentityToken = async (identity) => sign({ identity, exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
 
-export const createRefreshToken = async (user) => sign({ user }, refreshSecret, {
-  expiresIn: tokenLife,
-});
+export const createRefreshToken = async (user) => sign({ user, exp: Math.floor(Date.now() / 1000) + parseInt(tokenLife, 10) }, refreshSecret);
 
 export const validateRefreshToken = async (token) => {
   const payload = await verify(token, refreshSecret);
