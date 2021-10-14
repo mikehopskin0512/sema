@@ -84,8 +84,8 @@ export const getReactionTagsChartData = ({ smartComments, groupBy, dateDiff, sta
   }
 }
 
-export const filterSmartComments = ({ filter, smartComments }) => {
-  let filtered = smartComments || [];
+export const filterSmartComments = ({ filter, smartComments = [] }) => {
+  let filtered = smartComments;
   if (
     !isEmpty(filter.from) ||
     !isEmpty(filter.to) ||

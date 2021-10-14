@@ -13,7 +13,7 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR } from '../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 
 const { getUserComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
@@ -51,6 +51,7 @@ const PersonalInsights = () => {
     groupBy: '',
     startDate: null,
     endDate: null,
+    dateDiff: 0,
   });
 
   const fetchUserComments = async (username) => {
@@ -136,16 +137,15 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     const { startDate, endDate, groupBy, dateDiff } = dateData;
-    if (startDate && endDate && dateDiff && groupBy) {
-      const { overview: { smartComments } } = comments;
+    if (startDate && endDate && groupBy) {
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         ...dateData,
-        smartComments,
+        smartComments: filteredComments,
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
     }
-  }, [dateData]);
+  }, [dateData, filteredComments]);
 
   useEffect(() => {
     fetchUserReceivedComments(githubUser?.username)
@@ -224,43 +224,41 @@ const PersonalInsights = () => {
 
   return (
     <>
-      <div className='has-background-gray-9 pb-300'>
-        <Helmet {...PersonalInsightsHelmet} />
-        <div className="py-30 px-80 is-hidden-mobile">
-          <div className="mb-15">
-            <div className="is-flex is-justify-content-space-between">
-              <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">
-                Personal Insights
-                <span className="ml-20 is-size-7 has-text-weight-normal">
-                  <FontAwesomeIcon icon={faInfoCircle} color="#2D74BA" className="mx-10" />
-                  Only you can see this page.
-                  <a href="https://semasoftware.com/blog/introducing-release-1-0-9a67cf38a841">
-                    <span className="is-underlined ml-5">
-                      Learn More
-                    </span>
-                  </a>
-                </span>
-              </p>
+      <Helmet {...PersonalInsightsHelmet} />
+      <div className="my-40 is-hidden-mobile">
+        <div className="mb-15">
+          <div className="is-flex is-justify-content-space-between">
+            <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">
+              Personal Insights
+              <span className="ml-20 is-size-7 has-text-weight-normal">
+                <FontAwesomeIcon icon={faInfoCircle} color="#2D74BA" className="mx-10" />
+                Only you can see this page.
+                <a href={SEMA_FAQ_URL}>
+                  <span className="is-underlined ml-5">
+                    Learn More
+                  </span>
+                </a>
+              </span>
+            </p>
 
-              <div className="is-flex">
-                <button className={clsx("button border-radius-0 is-small", commentView === 'received' ? 'is-primary' : '')} onClick={() => setCommentView('received')}>
-                  Comments received
-                </button>
-                <button className={clsx("button border-radius-0 is-small", commentView === 'given' ? 'is-primary' : '')} onClick={() => setCommentView('given')}>
-                  Comments given
-                </button>
-              </div>
+            <div className="is-flex">
+              <button className={clsx("button border-radius-0 is-small", commentView === 'received' ? 'is-primary' : '')} onClick={() => setCommentView('received')}>
+                Comments received
+              </button>
+              <button className={clsx("button border-radius-0 is-small", commentView === 'given' ? 'is-primary' : '')} onClick={() => setCommentView('given')}>
+                Comments given
+              </button>
             </div>
           </div>
-          <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
-          <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
-          <div className="is-flex is-flex-wrap-wrap my-20">
-            <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' />
-            <TagsChart className="mr-neg10" tags={tagsChartData} />
-          </div>
-          <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
-          <ActivityItemList comments={filteredComments} />
         </div>
+        <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
+        <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
+        <div className="is-flex is-flex-wrap-wrap my-20">
+          <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' />
+          <TagsChart className="mr-neg10" tags={tagsChartData} />
+        </div>
+        <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
+        <ActivityItemList comments={filteredComments} />
       </div>
     </>
   )

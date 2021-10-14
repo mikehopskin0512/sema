@@ -226,3 +226,41 @@ export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
   });
   return { reactionsByYear, tagsByYear };
 }
+
+export const getTotalReactionsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment.reaction)
+    .reduce((acc, comment) => {
+      const { reaction } = comment;
+      if (acc?.[reaction]) {
+        acc[reaction]++
+      } else {
+        acc[reaction] = 1;
+      }
+      return acc
+    }, {});
+};
+
+export const getTotalTagsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment?.tags?.length)
+    .reduce((acc, comment) => {
+      const { tags } = comment;
+      const total = tags.reduce((acc, tag) => {
+        const { _id: tagId } = tag;
+        if (acc?.[tagId]) {
+          acc[tagId]++
+        } else {
+          acc[tagId] = 1
+        }
+        return acc;
+      }, {})
+      for (const [key, val] of Object.entries(total)) {
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key] += val
+      }
+      return acc
+    }, {})
+};

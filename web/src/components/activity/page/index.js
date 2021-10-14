@@ -12,7 +12,7 @@ import { filterSmartComments } from '../../../utils/parsing';
 
 const defaultAvatar = '/img/default-avatar.jpg';
 
-const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
+const ActivityPage = ({ startDate, endDate, onDateChange }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -117,8 +117,7 @@ const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
             <DateRangeSelector
               start={startDate}
               end={endDate}
-              setStartDate={setStartDate}
-              setEndDate={setEndDate}
+              onChange={onDateChange}
             />
           </div>
           <div className="is-flex-grow-1 px-5 my-5">
@@ -155,7 +154,6 @@ const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
@@ -182,8 +180,10 @@ const ActivityPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
                 isMulti: true,
                 onChange: ((value) => onChangeFilter('pr', value)),
                 value: filter.pr,
+                hideSelectedOptions: false,
               }}
               label="Pull requests"
+              showCheckbox
             />
           </div>
         </div>

@@ -42,9 +42,9 @@ const EngineeringGuides = () => {
       )
     }
     return (
-      <div className="has-background-gray-9 hero">
+      <div className="my-40">
         <Helmet {...CommentCollectionsHelmet} />
-        <div className="hero-body pb-250">
+        <div>
           <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
             <p className="has-text-weight-semibold has-text-deep-black is-size-3">
               Community Engineering Guides

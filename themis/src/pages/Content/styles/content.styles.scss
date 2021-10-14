@@ -243,13 +243,13 @@
   align-items: center;
   flex: 1;
   flex-direction: row;
-  margin-left: 50px;
   margin: auto;
 }
 
 .sema-tags-content {
   height: 2.8em;
   display: flex;
+  align-items: center;
   flex: 1;
   flex-direction: row-reverse;
 }
@@ -602,11 +602,13 @@ h6 {
   display: flex;
   padding: 4px 8px;
   width: fit-content;
-  color: #4a4a4a;
   line-height: 18px;
   font-size: 10px;
   border-radius: 21px;
-  background: rgba(183, 183, 183, 0.1);
+  // color: #4a4a4a;
+  // background: rgba(183, 183, 183, 0.1);
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }
 
 .sema-dropdown-footer {
@@ -616,6 +618,8 @@ h6 {
   display: flex;
   justify-content: space-between;
   font-size: 10px;
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }
 
 .sema-input {
@@ -745,12 +749,17 @@ h6 {
 .suggestion-header {
   position: sticky;
   top: 0;
-  background-color: #fff;
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
   width: 100%;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  .sema-button {
+    background-color: var(--color-text-input-bg);
+    color: var(--color-text-input-font);
+  }
 }
 
 .suggestion-guide-link {
@@ -781,7 +790,7 @@ h6 {
   line-height: 22px;
   margin-left: 6px;
   text-decoration-line: underline;
-  color: #626262;
+  color: var(--color-title);
 }
 
 .sema-dropdown-content {
@@ -898,4 +907,9 @@ h6 {
 .reminder-hero > a {
   color: var(--color-reminder-font);
   text-decoration: underline;
+}
+
+.view-suggestion-modal {
+  background-color: var(--color-text-input-bg);
+  color: var(--color-text-input-font);
 }

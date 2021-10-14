@@ -1,28 +1,33 @@
 export const ReactionList = [
   {
     value: '607f0d1ed7f45b000ec2ed70',
-    label: 'No reaction',
+    description: 'No reaction',
     emoji: '⚪',
+    label: 'No reaction',
   },
   {
     value: '607f0d1ed7f45b000ec2ed71',
-    label: 'This code is <b>awesome</b>',
+    description: 'This code is <b>awesome</b>',
     emoji: '🏆',
+    label: 'Awesome',
   },
   {
     value: '607f0d1ed7f45b000ec2ed72',
-    label: 'This code <b>looks good</b>',
+    description: 'This code <b>looks good</b>',
     emoji: '👌',
+    label: 'Looks Good',
   },
   {
     value: '607f0d1ed7f45b000ec2ed73',
-    label: 'I have a <b>question</b>',
+    description: 'I have a <b>question</b>',
     emoji: '❓',
+    label: 'Question',
   },
   {
     value: '607f0d1ed7f45b000ec2ed74',
-    label: 'This code <b>needs a fix</b>',
+    description: 'This code <b>needs a fix</b>',
     emoji: '🛠',
+    label: 'Fix',
   },
 ];
 

@@ -6,7 +6,9 @@ import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round, groupBy } from 'lodash';
 import PropTypes from 'prop-types';
+import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
+
 
 const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
@@ -70,9 +72,23 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     const { id, value, indexValue } = itemData;
     const { emoji, label } = find(EMOJIS, { _id: id });
     const count = find(data, { date: indexValue })[id];
+    let dateString = '';
+    if (indexValue.search('-') !== -1) {
+      const [date1, date2] = indexValue.split('-');
+      const parsedDate1 = format(new Date(date1), 'LLL d');
+      const parsedDate2 = format(new Date(date2), 'LLL d');
+      dateString = `${parsedDate1} - ${parsedDate2}`;
+    } else {
+      const parsedDate = new Date(indexValue);
+      const dateValid = isValid(parsedDate);
+      if (dateValid) {
+        dateString = format(new Date(indexValue), 'LLL d');
+      }
+    }
     return (
       <div className="box has-background-white px-20 py-5 border-radius-4px">
         <p className="has-text-weight-semibold">{emoji} {label}: {round(value)}{yAxisType === 'percentage' ? '%' : ''}</p>
+        <div className="is-size-7 has-text-primary">{dateString}</div>
         <p className="is-size-7">{count} comments</p>
         <p className="is-size-7">{value}% of total comments {groupBy ? `on this ${groupBy}` : '' }</p>
       </div>
@@ -172,11 +188,11 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
             translateX: 0,
             translateY: 90,
             itemsSpacing: 5,
-            itemWidth: 120,
+            itemWidth: 100,
             itemHeight: 20,
             itemDirection: 'left-to-right',
             itemOpacity: 0.85,
-            symbolSize: 20,
+            symbolSize: 15,
             effects: [
               {
                 on: 'hover',

@@ -135,10 +135,10 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
-    <div className={clsx('has-background-gray-9 hero')}>
+    <div>
       <Helmet title={`Collection - ${name}`} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <div className="hero-body pb-250">
+      <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href="/suggested-comments" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
@@ -196,13 +196,15 @@ const SuggestedCommentCollection = ({ collectionId }) => {
             <div className="is-size-5 has-text-deep-black my-120 has-text-centered">
               <img src="/img/no-suggested-comments.png" className={styles['no-comments-img']} />
               <p className="is-size-7 my-25">You don't have any Custom Comments.</p>
-              <button
-                className="button is-small is-primary border-radius-4px has-text-semibold"
-                type="button"
-                onClick={goToAddPage}>
-                <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                Add a Comment
-              </button>
+              { isEditable && (
+                <button
+                  className="button is-small is-primary border-radius-4px has-text-semibold"
+                  type="button"
+                  onClick={goToAddPage}>
+                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
+                  Add a Comment
+                </button>
+              ) }
             </div>
           ) : (
             commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item, index) => (
