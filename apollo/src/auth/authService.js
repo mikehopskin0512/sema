@@ -69,7 +69,7 @@ export const setRefreshToken = async (response, user, token) => {
   // Can't use domain on localhost or cookie fails to be set
   if (nodeEnv !== 'development') {
     cookieConfig.domain = `.${rootDomain}`;
-    // cookieConfig.secure = true;
+    cookieConfig.secure = true;
 
     // Removed httpOnly setting from cookie. Causes issues with JWT token refresh.
     // cookieConfig.httpOnly = true;
