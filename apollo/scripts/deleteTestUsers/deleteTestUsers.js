@@ -4,7 +4,7 @@
 // 
 // Command: mongo <DB_URL> deleteTestUsers.js 
 // 
-const DB_NAME = "phoenix-qa"
+const DB_NAME = "phoenix-qa" // Might be used phoenix-prod 
 const USERS_NAME = ["semacodereviewtester1000@protonmail.com"]
 
 const conn = new Mongo();
