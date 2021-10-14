@@ -18,7 +18,10 @@ exports.up = async (next) => {
   try {
     const teams = await mongoose.connection
       .collection('teams')
-      .insertMany(data);
+      .insertMany(data.map((teamItem) => ({
+        ...teamItem,
+        _id: new ObjectId(teamItem._id)
+      })));
     fs.writeFileSync(`${process.cwd()}/data/teams.json`, JSON.stringify(teams.ops));
   } catch (error) {
     next(error);

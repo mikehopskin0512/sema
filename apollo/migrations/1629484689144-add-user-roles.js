@@ -21,34 +21,43 @@ exports.up = async (next) => {
     const Role = mongoose.connection.collection('roles');
     const UserRole = mongoose.connection.collection('userroles');
 
-    const user1 = await User.findOne({ username: 'semacodereviewtester1000@protonmail.com' });
-    const user2 = await User.findOne({ username: 'andrew.b@semalab.com' });
-    const semaTeam = await Team.findOne({ name: 'Sema Super Team' });
-    const adminRole = await Role.findOne({ name: 'Admin' });
-    const libraryAdminRole = await Role.findOne({ name: 'Library Admin' });
-
-    const isExist1 = await UserRole.findOne({ user: user1._id, team: semaTeam._id, role: libraryAdminRole._id });
-    const isExist2 = await UserRole.findOne({ user: user2._id, team: semaTeam._id, role: adminRole._id });
     const dataSource = [];
-    if (!isExist1) {
-      dataSource.push({
-        user: user1._id,
-        team: semaTeam._id,
-        role: libraryAdminRole._id,
-      });
-    }
-    if (!isExist2) {
-      dataSource.push({
-        user: user2._id,
-        team: semaTeam._id,
-        role: adminRole._id,
-      });
-    }
+    await Promise.all(data.map(async (userRole) => {
+      const user = await User.findOne({ username: userRole.user });
+      const team = await Team.findOne({ name: userRole.team });
+      const role = await Role.findOne({ name: userRole.role });
+
+      const isExist = await UserRole.findOne({ user: user._id, team: team._id, role: role._id });
+
+      if (!isExist) {
+        dataSource.push({
+          user: user._id,
+          team: team._id,
+          role: role._id,
+        });
+      }
+    }));
+
+    if (!dataSource.length) return;
 
     const userRoles = await UserRole.insertMany(dataSource);
 
-    fs.writeFileSync(`${process.cwd()}/data/userRoles.json`, JSON.stringify(userRoles.ops));
+    const mappedData = await Promise.all(userRoles.ops.map(async (userRole) => {
+      const user = await User.findOne({ _id: userRole.user });
+      const team = await Team.findOne({ _id: userRole.team });
+      const role = await Role.findOne({ _id: userRole.role });
+
+      return {
+        _id: userRole._id,
+        user: user.username,
+        team: team.name,
+        role: role.name,
+      };
+    }));
+
+    fs.writeFileSync(`${process.cwd()}/data/userRoles.json`, JSON.stringify(mappedData));
   } catch (error) {
+    console.log(error);
     next(error);
   }
   mongoose.connection.close();

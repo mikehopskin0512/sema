@@ -5,8 +5,10 @@ export const EditGuides = 'canEditGuides';
 export const ManageLinks = 'canManageLinks';
 
 export const permissionsMap = {
-  '/collections/[collectionId]/add': [EditComments],
-  '/collections/[collectionId]/edit': [EditComments],
-  '/guides/[collectionId]/add': [EditGuides],
-  '/guides/[collectionId]/edit': [EditGuides],
+  '/suggested-comments/add': [EditComments],
+  '/suggested-comments/edit': [EditComments],
+  '/sema-admin/users': [ViewAdmin],
+  '/sema-admin/users/[userId]': [EditUsers],
+  '/sema-admin/reports': [ViewAdmin],
+  '/sema-admin/invites': [ViewAdmin],
 };
