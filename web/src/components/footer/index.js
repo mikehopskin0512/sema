@@ -32,22 +32,22 @@ const Footer = () => {
     <div className="is-flex is-align-items-center is-justify-content-center">
       <div className="mx-15">
         <a href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faLinkedinIn} color="white" size="lg" />
+          <FontAwesomeIcon icon={faLinkedinIn} color="#F4F4F4" size="md" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.instagram} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faInstagram} color="white" size="lg" />
+          <FontAwesomeIcon icon={faInstagram} color="#F4F4F4" size="md" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.facebook} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faFacebook} color="white" size="lg" />
+          <FontAwesomeIcon icon={faFacebook} color="#F4F4F4" size="md" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.twitter} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faTwitter} color="white" size="lg" />
+          <FontAwesomeIcon icon={faTwitter} color="#F4F4F4" size="md" />
         </a>
       </div>
     </div>
@@ -55,37 +55,37 @@ const Footer = () => {
 
   const renderAppLinks = () => (
     <>
-      <div className="has-text-white has-text-centered is-hidden-mobile">
+      <div className="has-text-gray-4 is-size-7 has-text-centered is-hidden-mobile">
         &copy; {new Date().getFullYear()} Sema
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
+        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
       </div>
       <div className="has-text-centered">
         <div
-          className="button is-ghost has-text-white is-size-m-desktop has-text-weight-semibold"
+          className="button is-ghost has-text-gray-4 is-size-7 is-size-m-desktop has-text-weight-semibold"
+          onClick={() => openSupportForm('Feedback')}
+          aria-hidden="true"
+        >
+          Send Feedback
+        </div>
+      </div>
+      {isAuthenticated && (
+        <div className="has-text-centered">
+          <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
+        </div>
+      )}
+      <div className="has-text-centered">
+        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
+      </div>
+      <div className="has-text-centered">
+        <div
+          className="button is-ghost has-text-gray-4 is-size-7 is-size-m-desktop has-text-weight-semibold"
           onClick={() => openSupportForm('Support')}
           aria-hidden="true"
         >
           Support
         </div>
-      </div>
-      <div className="has-text-centered">
-        <div
-          className="button is-ghost has-text-white is-size-m-desktop has-text-weight-semibold"
-          onClick={() => openSupportForm('Feedback')}
-          aria-hidden="true"
-        >
-          Feedback
-        </div>
-      </div>
-      {isAuthenticated && (
-        <div className="has-text-centered">
-          <a className="button is-ghost has-text-white has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
-        </div>
-      )}
-      <div className="has-text-centered">
-        <a className="button is-ghost has-text-white has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>

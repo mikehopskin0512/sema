@@ -20,11 +20,11 @@ const GlobalSearch = () => {
   const dispatch = useDispatch();
   const { engGuides } = useSelector((state) => state.engGuidesState);
   const { user, token } = useSelector((state) => state.authState);
-  const { collections } = user
-  const { comments } = useSelector((state) => state.commentsState);
+  const { collections: userCollections } = user
+  const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
+
   const wrapper = useRef(null);
-    //TODO: it can be so heavy for the frontend in future
   const engGuidesComments = useMemo(() => {
     const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
     return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
@@ -34,13 +34,10 @@ const GlobalSearch = () => {
     return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
   },[engGuides, searchTerm]);
   const suggestedCollections = useMemo(() => {
-    const _collections = collections?.map(({ collectionData }) => collectionData);
+    const _collections = userCollections?.map(({ collectionData }) => collectionData);
     return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
-  },[engGuides, searchTerm]);
-  const suggestedComments = useMemo(() => {
-    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
-  },[engGuides, searchTerm]);
+  },[userCollections, searchTerm]);
+
   const categories = [
     { title: "suggested comment collections", items: suggestedCollections },
     { title: "suggested comments", items: suggestedComments },
@@ -55,11 +52,12 @@ const GlobalSearch = () => {
   useOutsideClick(wrapper, clearSearch)
 
   useEffect(() => {
+    dispatch(getUserSuggestedComments(searchTerm, user._id, token));
+  }, [searchTerm]);
+
+  useEffect(() => {
     if (!engGuides.length) {
       dispatch(getEngGuides(token));
-    }
-    if (!comments.length) {
-      dispatch(getUserSuggestedComments(token));
     }
   }, [dispatch, token]);
 

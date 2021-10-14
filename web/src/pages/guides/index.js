@@ -7,6 +7,7 @@ import withLayout from '../../components/layout';
 import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
 import { engGuidesOperations } from '../../state/features/engGuides';
 import GlobalSearch from "../../components/globalSearch";
+import Loader from '../../components/Loader';
 
 const NUM_PER_PAGE = 9;
 
@@ -33,28 +34,37 @@ const EngineeringGuides = () => {
   };
 
   const renderCollections = () => {
-    return <div className="has-background-gray-9 hero">
-      <Helmet {...CommentCollectionsHelmet} />
-      <div className="hero-body pb-250">
-        <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-3">
-            Community Engineering Guides
-          </p>
-          <GlobalSearch/>
+    if (auth.isFetching || engGuidesState.isFetching) {
+      return(
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+          <Loader/>
         </div>
-        <p className="is-size-6 has-text-deep-black px-10 mb-40">
-          Explore detail of best practise coding techniques from world recongized experts.
-        </p>
-        <CardList collections={engGuides?.slice(0, NUM_PER_PAGE * page) || []} />
-        <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
-          {engGuides?.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides?.length && (
-            <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6 has-text-primary" type="button">
-              View More
-            </button>
-          )}
+      )
+    }
+    return (
+      <div className="my-40">
+        <Helmet {...CommentCollectionsHelmet} />
+        <div>
+          <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
+            <p className="has-text-weight-semibold has-text-deep-black is-size-3">
+              Community Engineering Guides
+            </p>
+            <GlobalSearch/>
+          </div>
+          <p className="is-size-6 has-text-deep-black px-10 mb-40">
+            Explore detail of best practise coding techniques from world recongized experts.
+          </p>
+          <CardList collections={engGuides?.slice(0, NUM_PER_PAGE * page) || []} />
+          <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
+            {engGuides?.length > NUM_PER_PAGE && NUM_PER_PAGE * page < engGuides?.length && (
+              <button onClick={viewMore} className="button has-background-gray-9 is-primary is-outlined has-text-weight-semibold is-size-6 has-text-primary" type="button">
+                View More
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    )
   }
 
   const renderGuides = () => {
@@ -64,11 +74,7 @@ const EngineeringGuides = () => {
     return renderCollections();
   }
 
-  return (
-    <>
-      {renderGuides()}
-    </>
-  );
+  return renderGuides();
 };
 
 export default withLayout(EngineeringGuides);

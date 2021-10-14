@@ -59,3 +59,6 @@ export const makeTagsList = (orgTags, type = 'guide') => {
   };
 };
 
+export const shortenUrl = (url) => {
+  return url.length > 50 ? url.substring(0, 50) + '...' : url;
+}

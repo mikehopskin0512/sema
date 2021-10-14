@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import EmptyRepo from '../../../components/repos/emptyRepo';
 import RepoList from '../../../components/repos/repoList';
 import { remove } from 'lodash';
 import { useSelector } from 'react-redux';
+import styles from './reposView.module.scss';
 
 const NUM_PER_PAGE = 9;
 
@@ -18,13 +20,6 @@ const ReposView = () => {
   const [page, setPage] = useState(1);
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
 
-  const renderRepos = () => (
-    <>
-      <RepoList type="FAVORITES" repos={repos.favorites} />
-      <RepoList type="MY_REPOS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
-    </>
-  );
-
   useEffect(() => {
     if (githubUser) {
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
@@ -37,18 +32,15 @@ const ReposView = () => {
     }
   }, [repositories]);
 
-  if (!repositories.length) {
+  if (!repositories.length && !repositories.isFetching) {
     return <EmptyRepo />
   }
 
-  return (
+  return ( !repositories.isFetching &&
     <>
-      <div className="py-30 px-80 is-hidden-mobile">
-        {/* TODO: it renders twice and create 2 requests on server every time just because of mobile styles */}
-        {renderRepos()}
-      </div>
-      <div className="p-25 is-hidden-desktop">
-        {renderRepos()}
+      <div className={clsx('my-40', styles['repos-container'])}>
+        <RepoList type="FAVORITES" repos={repos.favorites} />
+        <RepoList type="MY_REPOS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mb-80">
         {isMoreReposAvailable && (

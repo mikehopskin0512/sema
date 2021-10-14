@@ -7,7 +7,7 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
-import './header.module.scss';
+import styles from './header.module.scss';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
@@ -58,7 +58,7 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname === '/dashboard') {
+    if (window.location.pathname !== '/login') {
       setBgColor('has-background-white');
     }
   }, []);
@@ -106,67 +106,76 @@ const Header = () => {
   const onCloseSignOutModal = () => setSignOutModal(false);
 
   return (
-    <header className={clsx(bgColor, 'content-container')}>
+    <header className={bgColor}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent"
+        className="navbar is-transparent container"
         role="navigation"
         aria-label="main navigation"
       >
         <div className="navbar-brand">
           <Link href="/">
             <a>
-              <img src="/img/sema-logo.png" alt="sema-logo" width="110" className="mt-10" />
+              <img src="/img/sema-logo.png" alt="sema-logo" width="100" className="mt-15" />
             </a>
           </Link>
-          <button
-            onClick={toggleHamburger}
-            type="button"
-            className="navbar-burger burger button is-white"
-            aria-label="menu"
-            aria-expanded="false"
-            data-target="navbarBasicExample"
-            ref={burger}
-          >
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-            <span aria-hidden="true" />
-          </button>
+          {token && isVerified && !isWaitlist && (
+            <button
+              onClick={toggleHamburger}
+              type="button"
+              className="navbar-burger burger button is-white"
+              aria-label="menu"
+              aria-expanded="false"
+              data-target="navbarBasicExample"
+              ref={burger}
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+          )}
         </div>
         {
           token && isVerified && !isWaitlist ? (
             <div className="navbar-menu" ref={menu}>
               {/* Desktop menu */}
               <div
-                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1"
+                className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
+                <Link href="/personal-insights">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                    Personal Insights
+                  </a>
+                </Link>
                 <Link href="/">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
                     Repos
                   </a>
                 </Link>
                 <Link href="/suggested-comments">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Suggested Comments
                   </a>
                 </Link>
-                <Link href="/guides">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                {/* <Link href="/guides">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Community Eng Guides
                   </a>
-                </Link>
+                </Link> */}
                 <Link href="/invitations">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
-                    Invitations
-                    <span className="badge is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                    <div className="is-flex is-flex-wrap-wrap">
+                      Invitations
+                      <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
+                    </div>
                   </a>
                 </Link>
-                <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
-                  <a aria-hidden="true" className="navbar-item has-text-deep-black mx-25" onClick={toggleHamburger}>
+                {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
+                  <a aria-hidden="true" className="navbar-item has-text-deep-black mr-15" onClick={toggleHamburger}>
                     Support
                   </a>
-                </div>
+                </div> */}
               </div>
               {/* Hamburger menu (mobile & tablet) */}
               <div className="navbar-start is-hidden-desktop">
@@ -180,22 +189,22 @@ const Header = () => {
                     Suggested Comments
                   </a>
                 </Link>
-                <Link href="/guides">
+                {/* <Link href="/guides">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Community Engineering Guides
                   </a>
-                </Link>
+                </Link> */}
                 <Link href="/invitations">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Invitations
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
-                <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
+                {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Support
                   </a>
-                </div>
+                </div> */}
                 <hr className="navbar-divider" />
                 {isSemaAdmin && (
                   <Link href="/sema-admin/users">
@@ -327,7 +336,7 @@ const Header = () => {
           ) : (
             <div className="navbar-menu" ref={menu}>
               {/* Desktop menu */}
-              <div
+              {/* <div
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1"
               >
                 <Link href="/guides">
@@ -335,16 +344,16 @@ const Header = () => {
                     Community Eng Guides
                   </a>
                 </Link>
-              </div>
+              </div> */}
               {/* Hamburger menu (mobile & tablet) */}
-              <div className="navbar-start is-hidden-desktop">
+              {/* <div className="navbar-start is-hidden-desktop">
                 <Link href="/guides">
                   <a className="navbar-item has-text-weight-semibold is-uppercase" aria-hidden="true" onClick={toggleHamburger}>
                     Community Engineering Guides
                   </a>
                 </Link>
                 <hr className="navbar-divider" />
-              </div>
+              </div> */}
             </div>
           )
         }

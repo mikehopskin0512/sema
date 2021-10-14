@@ -30,9 +30,10 @@ const requestCreateSuggestComment = () => ({
   type: types.REQUEST_CREATE_SUGGEST_COMMENT,
 });
 
-const requestCreateSuggestCommentSuccess = (suggestedComment) => ({
+const requestCreateSuggestCommentSuccess = (suggestedComment, collectionId) => ({
   type: types.REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS,
   suggestedComment,
+  collectionId,
 });
 
 const requestCreateSuggestCommentError = (errors) => ({
@@ -117,7 +118,7 @@ export const createSuggestComment = (body, token) => async (dispatch) => {
     dispatch(requestCreateSuggestComment());
     const { data: { suggestedComment } } = await postSuggestComment(body, token);
     dispatch(triggerAlert('Suggested comment has been added', 'success'));
-    dispatch(requestCreateSuggestCommentSuccess(suggestedComment));
+    dispatch(requestCreateSuggestCommentSuccess(suggestedComment, body.collectionId));
     return suggestedComment;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;

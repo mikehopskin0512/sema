@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { flatten } from 'lodash';
+import { filter, get } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import User from '../../users/userModel';
-import { findById as findUserById, update as updateUser } from '../../users/userService';
+import { findById as findUserById, update as updateUser, findUserCollectionsByUserId } from '../../users/userService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -34,7 +34,18 @@ export const create = async ({
 
 export const createMany = async (collections) => {
   try {
-    const newCollections = await Collection.insertMany(collections, { ordered: false });
+    const cols = collections.map((collection) => ({
+      ...collection,
+      tags: collection.tags.map((tag) => {
+        const hello = {
+          label: tag.label,
+          type: tag.type,
+          tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
+        }
+        return hello;
+      })
+    }));
+    const newCollections = await Collection.insertMany(cols, { ordered: false });
     return newCollections;
   } catch (err) {
     // When using "unordered" insertMany, Mongo will ignore dup key errors and only insert new records
@@ -71,9 +82,42 @@ export const findById = async (id) => {
 
 export const getUserCollectionsById = async (id) => {
   try {
-    const user = await findUserById(id);
+    const user = await findUserCollectionsByUserId(id);
     if (user) {
-      return user.collections;
+      const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
+        const { collectionData = { comments: [] } } = collection;
+        const { comments, tags } = collectionData;
+        let languages = [];
+        let guides = [];
+        if (tags?.length > 0) {
+          languages = tags.filter((tag) => tag.type === 'language').map((tag) => tag.label);
+          guides = tags.filter((tag) => tag.type === 'guide').map((tag) => tag.label);
+        } else {
+          comments.forEach((comment) => {
+            comment.tags.forEach((tagItem) => {
+              const { tag } = tagItem;
+              if (tag?.type === 'language' && !languages.includes(tag.label)) {
+                languages.push(tag.label)
+              }
+              if (tag?.type === 'guide' && !guides.includes(tag.label)) {
+                guides.push(tag.label)
+              }
+            })
+          });
+        }
+        return {
+          ...collection,
+          collectionData: {
+            ...collectionData,
+            commentsCount: comments.length,
+            source: get(comments, '[0].source.name', null),
+            languages,
+            guides,
+            comments: undefined,
+          }
+        }
+      })
+      return collections;
     }
     return {
       statusCode: 400,

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { getActiveThemeClass } from '../../../../../utils/theme';
 import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from '../../constants';
 import GuideLink from './GuideLink';
 import SuggestionModalFooter from './SuggestionModalFooter';
 
 const truncate = (content) => {
-  const contentLength = content.length;
+  const contentLength = content?.length;
   const shouldTruncate = contentLength > MAX_CHARACTER_LENGTH;
   return shouldTruncate ? `${content.substring(0, Math.min(MAX_CHARACTER_LENGTH, contentLength))
   }...` : content;
@@ -170,7 +171,7 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
         <SuggestionModalFooter />
       </div>
       <div
-        className="sema-is-flex sema-is-flex-direction-column sema-is-relative"
+        className={`sema-is-flex sema-is-flex-direction-column sema-is-relative view-suggestion-modal ${getActiveThemeClass()}`}
         style={{
           minWidth: wrapperWidth,
           top: 0,
@@ -178,7 +179,6 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
           transition: '.15s ease-out',
           zIndex: 2,
           overflowY: 'scroll',
-          background: 'rgb(251, 251, 251)',
         }}
       >
         <Comment />

@@ -38,9 +38,10 @@
 .formBtn {
   // margin-left: 20px !important;
   color: #3582a7 !important;
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1332px) {
     margin-top: 10px;
     text-align: center;
+    width: 100%;
   }
 }
 
@@ -85,12 +86,14 @@
   background-repeat: no-repeat;
   background-size: auto;
   // background-image: url("/img/lines-background.png");
-  background-color: #FFF;
+  @media only screen and (min-width: 769px) {
+    padding: 0 10px;
+  }
 }
 
 .invite-input {
   width: 80%;
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1332px) {
     width: 100%;
   }
 }

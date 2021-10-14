@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar } from '@fortawesome/free-regular-svg-icons';
+import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
+import styles from './circularPackingChart.module.scss';
+import LineChart from '../LineChart';
 import { TAGS } from '../../utils/constants';
 
-const CircularPacking = ({ data }) => {
+const CircularPacking = ({ data, groupBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
     children: [],
   });
@@ -25,6 +28,7 @@ const CircularPacking = ({ data }) => {
             id: _id,
             color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
             value: rawData[_id].total,
+            data: rawData[_id].data || [],
           };
         }
         return {
@@ -33,6 +37,7 @@ const CircularPacking = ({ data }) => {
           id: _id,
           color: '#AFADAA',
           value: 0,
+          data: [],
         };
       });
     }
@@ -64,11 +69,18 @@ const CircularPacking = ({ data }) => {
     }
   }, [data]);
 
-  const renderTooltip = ({ percentage }) => (
-    <div className="box has-background-white px-20 py-5 border-radius-4px">
-      <p className="has-text-weight-semibold">{round(percentage)}%</p>
+  const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
+    <div className="box has-background-white p-20 border-radius-4px">
+      <p className="has-text-weight-semibold">{tag.name}</p>
+      { tag.data.length > 0 && (
+        <div className={clsx('py-5', styles['line-chart-container'])}>
+          <LineChart data={[tag]}  />
+        </div>
+      ) }
+      <p className="is-size-7">{value} comments</p>
+      <p className="is-size-7">{formattedValue} of all tags</p>
     </div>
-  );
+  ))
 
   if (noData) {
     return (
@@ -103,6 +115,7 @@ const CircularPacking = ({ data }) => {
 
 CircularPacking.propTypes = {
   data: PropTypes.object.isRequired,
+  groupBy: PropTypes.string.isRequired,
 };
 
 export default CircularPacking;

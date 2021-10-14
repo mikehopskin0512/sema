@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons'
 import { faThumbsUp, faCommentAlt } from '@fortawesome/free-regular-svg-icons'
@@ -10,6 +9,7 @@ import { isEmpty } from "lodash";
 import clsx from 'clsx';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
+import Loader from '../../components/Loader';
 import LoginCard from '../../components/auth/LoginCard';
 import InviteCard from '../../components/auth/InviteCard';
 import WaitlistCard from '../../components/auth/WaitlistCard';
@@ -79,25 +79,29 @@ const Login = () => {
       dispatch(fetchInvite(token));
     }
   }, [])
-
+      
+if (!isAuthenticated || user.isWaitlist) {
   return (
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className="hero">
-        <div className="hero-body pb-300">
+        <div className="hero-body mb-120">
           <div className="container">
             <div className="tile is-ancestor">
               <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
-                <img src="/img/codelines.png" width="430"/>
-                <div className="feature-list mt-50">
+                <img src="/img/codelines.png" width="430" style={{ marginRight: 'auto' }}/>
+                <h1 className={styles.title}>Write more meaningful code reviews.</h1>
+                <div className="feature-list mt-20">
                   <ul>
                     <li className="mb-25">
                       <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faThumbsUp} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Give Reactions:</span> simple, clear summary of the review </span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Reactions: </span>
+                          Choose a simple summary of your review.</span>
                       </div>
                     </li>
                     <li className="mb-25">
@@ -105,7 +109,10 @@ const Login = () => {
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faTag} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Add Tags:</span> Describe the code in positive or constructive coding characteristics</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Tags: </span>
+                          Highlight the key takeaways of your review.
+                        </span>
                       </div>
                     </li>
                     <li className="mb-25">
@@ -113,7 +120,10 @@ const Login = () => {
                         <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
                           <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
-                        <span className="is-size-1r"><span className="has-text-weight-bold">Suggested Comments:</span> Use pre-written comments from the world’s best sources of coding knowledge</span>
+                        <span className="is-size-1r">
+                          <span className="has-text-weight-bold">Suggested Comments: </span>
+                          Insert pre-written comments from the world’s best sources of coding knowledge.
+                        </span>
                       </div>
                     </li>
                   </ul>
@@ -142,8 +152,14 @@ const Login = () => {
           </div>
         </div>
       </section>
+    </div>);
+  }
+
+  return(
+    <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+      <Loader/>
     </div>
-  );
+  )
 };
 
 export default withLayout(Login);
