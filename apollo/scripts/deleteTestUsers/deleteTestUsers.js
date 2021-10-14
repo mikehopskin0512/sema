@@ -1,4 +1,4 @@
-const DB_NAME = "phoenix"
+const DB_NAME = "phoenix-qa"
 const USERS_NAME = ["semacodereviewtester1000@protonmail.com"]
 
 const conn = new Mongo();
