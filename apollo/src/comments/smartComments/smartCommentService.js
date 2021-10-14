@@ -573,7 +573,7 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate }) => {
   try {
     const filter = { reviewer, author, repoId, startDate, endDate };
     const smartComments = await filterSmartComments(filter);

@@ -77,9 +77,9 @@ const PersonalInsights = () => {
       endDate
     }
     if (commentView === 'given') {
-      params.author = username
+      params.reviewer = username
     } else {
-      params.requester = username
+      params.author = username
     }
     if ((startDate && endDate) || (!startDate && !endDate)) {
       dispatch(fetchSmartCommentOverview(params, token));
