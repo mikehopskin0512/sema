@@ -4,7 +4,6 @@ set -eo pipefail
 BASE_DIR=~/db_backups/
 BACKUP_PATH=mongo/"$(date '+%Y%m%d%H%M%S')"
 ANON_BACKUP_PATH=mongo/"anonymized-$(date '+%Y%m%d%H%M%S')"
-SERVER_PATH="http://10.1.3.25/"
 DB_DUMP_DIR="${BASE_DIR}${BACKUP_PATH}"
 ANON_DUMP_DIR="${BASE_DIR}${ANON_BACKUP_PATH}"
 RESTORE_DB_DUMP_DIR="${DB_DUMP_DIR}/phoenix_prod"
