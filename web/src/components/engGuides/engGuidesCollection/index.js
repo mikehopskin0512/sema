@@ -9,14 +9,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 import CommentFilter from '../../comment/commentFilter';
 import EngGuideTable from '../engGuideTable';
-import ActionGroup from '../actionGroup';
 import GlobalSearch from "../../globalSearch";
 import Helmet from '../../utils/Helmet';
 import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
-
-// const NUM_PER_PAGE = 10;
+import { EditGuides } from '../../../data/permissions';
+import usePermission from '../../../hooks/usePermission';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -39,6 +38,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const { token, user } = auth;
   const { engGuides } = engGuideState;
   const [selectedGuides, setSelectedGuides] = useState([]);
+  const { checkAccess } = usePermission();
 
   const onSearch = ({ search, tag, language }) => {
     const { comments = [] } = engGuide;
@@ -115,9 +115,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
 
-  // TODO we will replace this logic with role based access control
-  // intentionally used useMemo here
-  const isEditable = useMemo(() => user.isSemaAdmin, [user]);
+  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditGuides), [checkAccess]);
 
   if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (
@@ -151,6 +149,16 @@ const CollectionEngGuides = ({ collectionId }) => {
           <div style={{ marginLeft: 'auto' }}>
             <GlobalSearch />
           </div>
+          {isEditable && (
+            <button
+              className="button is-small is-primary border-radius-4px"
+              type="button"
+              onClick={redirectToAddPage}
+            >
+              <FontAwesomeIcon icon={faPlus} className="mr-10" />
+              Add new Guide(s)
+            </button>
+          )}
         </div>
         {
           isEditable && selectedGuides.length ? (
