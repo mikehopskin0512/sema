@@ -1,12 +1,12 @@
 import React from 'react';
 import GuideLink from './GuideLink';
+import { getCollectionUrl } from '../../helpers';
 
 function SuggestionComment({
   title,
   sourceName,
   comment,
   engGuides,
-  getCollectionUrl,
 }) {
   return (
     <>
