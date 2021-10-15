@@ -113,3 +113,13 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
   max-width: 1440px;
   margin: 0 auto;
 }
+
+.has-footer-margin {
+  margin-bottom: 80px;
+  @media screen and (max-width: 1350px) {
+    margin-bottom: 150px;
+  }
+  @media screen and (max-width: 951px) {
+    margin-bottom: 40px;
+  }
+}

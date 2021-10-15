@@ -65,7 +65,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
             </div>
             <div className="is-divider-vertical" />
             <div className="column">
-              <div className="columns i">
+              <div className="columns">
                 <div className="column is-3 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOTAL COMMENTS
