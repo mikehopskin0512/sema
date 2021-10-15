@@ -58,10 +58,10 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate, user }) => {
   try {
     let filter = {}
-    let dateFilter = { createdAt: { } }
+    let dateFilter = { createdAt: {} }
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -70,6 +70,9 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     }
     if (repoId) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
+    }
+    if (user) {
+      filter = Object.assign(filter, { $or: [{ "githubMetadata.requester": user }, { "githubMetadata.user.login": user }] });
     }
     if (startDate) {
       dateFilter = Object.assign(dateFilter, { createdAt: { $gte: new Date(startDate) } });
@@ -553,7 +556,7 @@ export const getSmartCommentsByExternalId = async (externalId) => {
 
 export const getPullRequestsByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.url' ).exec();
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.url').exec();
     return smartComments;
   } catch (err) {
     logger.error(err);
@@ -564,7 +567,7 @@ export const getPullRequestsByExternalId = async (externalId) => {
 
 export const getSmartCommentersByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.user.login').exec();
     return smartComments;
   } catch (err) {
     logger.error(err);
@@ -573,9 +576,9 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate, user }) => {
   try {
-    const filter = { reviewer, author, repoId, startDate, endDate };
+    const filter = { reviewer, author, repoId, startDate, endDate, user };
     const smartComments = await filterSmartComments(filter);
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);

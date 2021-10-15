@@ -16,7 +16,7 @@ import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 
-const { getUserComments, fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
+const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
 const PersonalInsights = () => {
   const dispatch = useDispatch();
@@ -54,17 +54,9 @@ const PersonalInsights = () => {
     dateDiff: 0,
   });
 
-  const fetchUserComments = async (username) => {
-    await dispatch(getUserComments({ author: username }, token));
-  };
-
-  const fetchUserReceivedComments = async (username) => {
-    await dispatch(getUserComments({ requester: username }, token));
-  }
-
   const getUserSummary = async (username) => {
     const params = {
-      author: username,
+      user: username,
     };
     dispatch(fetchSmartCommentSummary(params, token))
   };
@@ -79,7 +71,7 @@ const PersonalInsights = () => {
     if (commentView === 'given') {
       params.reviewer = username
     } else {
-      params.author = username
+      params.requester = username
     }
     if ((startDate && endDate) || (!startDate && !endDate)) {
       dispatch(fetchSmartCommentOverview(params, token));
@@ -148,7 +140,6 @@ const PersonalInsights = () => {
   }, [dateData, filteredComments]);
 
   useEffect(() => {
-    fetchUserReceivedComments(githubUser?.username)
     getUserSummary(githubUser?.username)
   }, [auth]);
 
