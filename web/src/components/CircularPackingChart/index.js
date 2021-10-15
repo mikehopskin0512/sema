@@ -7,7 +7,7 @@ import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
-import { TAGS } from '../../utils/constants';
+import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
 
 const CircularPacking = ({ data, groupBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
@@ -26,7 +26,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
             isPositive: tag.isPositive,
             name: tag.label,
             id: _id,
-            color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
+            color: tag.isPositive ? CIRCULAR_PACKING_COLORS.POSITIVE : CIRCULAR_PACKING_COLORS.NEGATIVE,
             value: rawData[_id].total,
             data: rawData[_id].data || [],
           };
@@ -35,7 +35,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
           isPositive: false,
           name: '',
           id: _id,
-          color: '#AFADAA',
+          color: CIRCULAR_PACKING_COLORS.NEGATIVE,
           value: 0,
           data: [],
         };
