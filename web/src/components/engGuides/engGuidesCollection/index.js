@@ -46,7 +46,7 @@ const CollectionEngGuides = ({ collectionId }) => {
       const isMatchSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.body.toLowerCase().includes(search.toLowerCase()) ||
       item.author.toLowerCase().includes(search.toLowerCase()) ||
-      item.source.name.toLowerCase().includes(search.toLowerCase());
+      item.source.name?.toLowerCase().includes(search.toLowerCase());
       const tagIndex = findIndex(item.tags, { label: tag });
       const languageIndex = findIndex(item.tags, { label: language });
       let filterBool = true;
