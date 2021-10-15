@@ -59,3 +59,7 @@ export const makeTagsList = (orgTags, type = 'guide') => {
   };
 };
 
+export const getCharCount = (value) => {
+  if (value === 'ꝏ') return 'ꝏ';
+  return value?.toString()?.length || 0
+}

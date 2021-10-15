@@ -2,14 +2,18 @@
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 
 // Import font
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 // Colors
-$blue: #0081A7;
-$neon-blue: #75F4F4;
-$lint-green: #A9DB5F;
-$pink: #E93B89;
-$purple: #2A113F;
+$blue: #0081a7;
+$neon-blue: #75f4f4;
+$lint-green: #a9db5f;
+$pink: #e93b89;
+$purple: #2a113f;
+$dark-green: #0a8150;
+$light-green: #daece5;
+$light-yellow: #ffeacb;
+$light-red: #f6e0e0;
 
 // Update Bulma global variables
 // Override colors
@@ -19,42 +23,46 @@ $info: $neon-blue;
 $success: $lint-green;
 $danger: $pink;
 
+$success-dark: $dark-green;
+$success-light: $light-green;
+$warning-light: $light-yellow;
+$danger-light: $light-red;
 $black: #202020;
-$white: #FFFFFF;
-$grey-light: #E4E4E4;
-$gray-light: #E4E4E4;
-$white-gray: #FCFCFC;
-$gray-dark: #AFADAA;
+$white: #ffffff;
+$grey-light: #e4e4e4;
+$gray-light: #e4e4e4;
+$white-gray: #fcfcfc;
+$gray-dark: #afadaa;
 
 // Set custom colors
 $custom-colors: (
-    "black-2": #222222,
-    "white-gray": $white-gray,
-    "gray-dark": $gray-dark,
-    "gray-2": #F2F2F2,
-    "gray-3": #F3F3F3,
-    "gray-4": #F4F4F4,
-    "gray-9": #F9F9F9,
-    "gray-b": #FBFBFB,
-    "tag-blue": #EEF1FB,
-    "tag-text": #1F44CC,
-    "stat": #73839C,
-    "deep-black": #000000,
-    "sky-light": #F0F7FA,
-    "gray-300": #E3E9EE,
-    "black-6": "606060",
-    "red": #FF0000,
-    "orange": #de3617,
-    "gray-700": #56626E,
-    "gray-900": #192129,
+  "black-2": #222222,
+  "white-gray": $white-gray,
+  "gray-dark": $gray-dark,
+  "gray-2": #f2f2f2,
+  "gray-3": #f3f3f3,
+  "gray-4": #f4f4f4,
+  "gray-9": #f9f9f9,
+  "gray-b": #fbfbfb,
+  "tag-blue": #eef1fb,
+  "tag-text": #1f44cc,
+  "stat": #73839c,
+  "deep-black": #000000,
+  "sky-light": #f0f7fa,
+  "gray-300": #e3e9ee,
+  "black-6": "606060",
+  "red": #ff0000,
+  "orange": #de3617,
+  "gray-700": #56626e,
+  "gray-900": #192129,
 );
 
 // Set custom shades
 $custom-shades: (
-    "gray-light": $gray-light
+  "gray-light": $gray-light,
 );
 
-$switch-background: #909AA4;
+$switch-background: #909aa4;
 
 // Sizes
 $size-1: 3rem;
@@ -69,38 +77,42 @@ $size-9: 0.5625rem;
 
 $sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7 $size-8 $size-9;
 $spacing-values: (
-    "auto": auto,
-    "0": 0,
-    "1r": 1rem,
-    "2r": 2rem,
-    "neg5": -5px,
-    "neg8": -8px,
-    "neg10": -10px,
-    "3": 3px, 
-    "5": 5px, 
-    "8": 8px, 
-    "10": 10px, 
-    "12": 12px, 
-    "15": 15px, 
-    "16": 16px, 
-    "20": 20px, 
-    "25": 25px, 
-    "30": 30px, 
-    "40": 40px, 
-    "50": 50px, 
-    "60": 60px, 
-    "70": 70px, 
-    "80": 80px, 
-    "90": 90px, 
-    "120": 120px, 
-    "150": 150px, 
-    "180": 180px, 
-    "200": 200px, 
-    "250": 250px,
-    "300": 300px,
-    "450": 450px
+  "auto": auto,
+  "0": 0,
+  "1r": 1rem,
+  "2r": 2rem,
+  "neg5": -5px,
+  "neg8": -8px,
+  "neg10": -10px,
+  "3": 3px,
+  "5": 5px,
+  "8": 8px,
+  "10": 10px,
+  "12": 12px,
+  "15": 15px,
+  "16": 16px,
+  "20": 20px,
+  "24": 24px,
+  "25": 25px,
+  "30": 30px,
+  "35": 35px,
+  "40": 40px,
+  "50": 50px,
+  "60": 60px,
+  "70": 70px,
+  "80": 80px,
+  "90": 90px,
+  "100": 100px,
+  "110": 110px,
+  "120": 120px,
+  "150": 150px,
+  "180": 180px,
+  "200": 200px,
+  "250": 250px,
+  "300": 300px,
+  "450": 450px,
 );
-$input-background-color: #E7E8EA;
+$input-background-color: #e7e8ea;
 $family-sans-serif: "Inter", "Montserrat", sans-serif;
 $family-monospace: sans-serif;
 
@@ -116,12 +128,12 @@ $badge-height: 30px;
 @import "../node_modules/bulma-extensions/src/sass/index.sass";
 
 // 3rd party components  (for CSS imports omit extension)
-@import '../node_modules/bulma-social/bin/bulma-social.min';
+@import "../node_modules/bulma-social/bin/bulma-social.min";
 
 // React date-picker styles
-@import '../node_modules/react-datepicker/dist/react-datepicker.css';
+@import "../node_modules/react-datepicker/dist/react-datepicker.css";
 
-@import '@creativebulma/bulma-badge';
+@import "@creativebulma/bulma-badge";
 
 // Additional SCSS files
 @import "./fonts";
@@ -133,4 +145,3 @@ $badge-height: 30px;
 @import "./transitions";
 @import "./helpers";
 @import "./table";
-

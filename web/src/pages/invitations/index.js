@@ -15,6 +15,7 @@ import { alertOperations } from '../../state/features/alerts';
 
 import styles from './invitations.module.scss';
 import InvitationsGrid from '../../components/invitationsGrid';
+import { getCharCount } from '../../utils';
 
 
 const { clearAlert } = alertOperations;
@@ -32,7 +33,9 @@ const Invite = () => {
   }));
 
   const [recipient, setRecipient] = useState("");
-  const [tableHeader] = useState('Sema is better with friends. View your invites at a glance.');
+  const [tableHeader] = useState('Sema is better with friends, invite yours 🙌');
+  const [acceptedInvites, setAcceptedInvites] = useState(0);
+  const [pendingInvites, setPendingInvites] = useState(0);
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
@@ -68,9 +71,18 @@ const Invite = () => {
       await dispatch(getInvitesBySender(userId, token));
     }
   };
+
   useEffect(() => {
     dispatch(getInvitesBySender(userId, token));
   }, []);
+
+  useEffect(() => {
+    const { data = [] } = invitations ?? []
+    const pending = data.filter((d) => d.isPending === true).length;
+    const accepted = data.filter((d) => d.isPending !== true).length;
+    setPendingInvites(pending);
+    setAcceptedInvites(accepted);
+  }, [invitations]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -96,19 +108,13 @@ const Invite = () => {
     }
   };
 
+  const cardStyling = 'is-size-5 has-text-weight-semibold p-10 border-radius-4px'
+
   return (
     <>
       <Helmet {...InvitesHelmet} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className={clsx("hero mb-40 pb-300", styles.container)}>
-        {/* <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-3">
-            Invites
-          </p>
-        </div>
-        <p className="is-size-6 has-text-deep-black px-10 mb-40">
-          Sema is better with friends. View your invites at a glance
-        </p> */}
         <div className={clsx('container', styles['styled-container'])}>
           <p
             className={
@@ -116,14 +122,41 @@ const Invite = () => {
             }
             dangerouslySetInnerHTML={{ __html: tableHeader }}
           />
-          <p
-            className={
-              'subtitle has-text-centered has-text-weight-semibold is-size-4 is-size-5-mobile mb-20'
-            }
-          >
-            <span className={clsx('tag is-success is-size-4 is-size-6-mobile m-1r')}>{user.isSemaAdmin ? 'ꝏ' : inviteCount}</span>
-            Invites Available
-          </p>
+          <div className="mb-5 mt-30 mx-3 columns">
+            <div className={`box column mr-10 px-20 py-30`}>
+              <span className={`${cardStyling} ${getCharCount(acceptedInvites) > 1 ? '' : 'px-15'} has-background-primary has-text-white`}>
+                {user.isSemaAdmin ? acceptedInvites + pendingInvites : acceptedInvites + pendingInvites + inviteCount}
+              </span>
+              <span className="has-text-weight-semibold ml-30">
+                Total Invites
+              </span>
+            </div>
+            <div className="box column mx-10 px-20 py-30">
+              <span className={`${cardStyling} ${getCharCount(acceptedInvites) > 1 ? '' : 'px-15'} has-background-success-dark has-text-white`}>
+                {acceptedInvites}
+              </span>
+              <span className="has-text-weight-semibold ml-15">
+                Invites Accepted
+              </span>
+            </div>
+            <div className="box column mx-10 px-20 py-30">
+              <span className={`${cardStyling} ${getCharCount(pendingInvites) > 1 ? '' : 'px-15'} has-background-grey-lighter`}>
+                {pendingInvites}
+              </span>
+              <span className="has-text-weight-semibold ml-15">
+                Invites Pending
+              </span>
+            </div>
+            <div className="box column ml-10 px-20 py-30 mb-24">
+              <span className={`${cardStyling} ${getCharCount(user.isSemaAdmin ? 'ꝏ' : inviteCount) > 1 ? '' : 'px-15'} has-background-success`}>
+                {user.isSemaAdmin ? 'ꝏ' : inviteCount}
+              </span>
+              <span className="has-text-weight-semibold ml-15">
+                Invites Available
+              </span>
+            </div>
+          </div>
+
           <div className="tile is-ancestor">
             <div className="tile is-parent is-vertical">
               <div className={clsx(styles['sema-tile'], styles['sema-is-child'], 'mb-0')}>
@@ -131,11 +164,11 @@ const Invite = () => {
                   <div className={styles.tableForm}>
                     <div className={`is-fullwidth px-20`}>
                       <div className="field is-flex-mobile is-flex-direction-column">
-                        <label className="label has-text-white">Username</label>
-                        <div className={clsx("control has-icons-right is-inline-block mr-25", styles['invite-input'])}>
+                        <label className="label">Who would you like to invite?</label>
+                        <div className={clsx("control has-icons-right is-inline-block mr-25 ", styles['invite-input'])}>
                           <input
                             className={clsx(
-                              `input mr-25`,
+                              `input mr-25 has-background-white`,
                               errors?.email && 'is-danger',
                             )}
                             type="email"
@@ -157,7 +190,7 @@ const Invite = () => {
                         </div>
                         <button
                           className={clsx(
-                            'button is-white-gray has-text-centered',
+                            'button is-primary has-text-centered has-text-white',
                             styles.formBtn
                           )}
                           type="submit"
