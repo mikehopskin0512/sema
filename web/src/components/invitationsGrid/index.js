@@ -10,7 +10,7 @@ import styles from './invitationsGrid.module.scss';
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(50);
+  const [perPage, setPerPage] = useState(10);
 
   const getHeaderClass = (accessor) => {
     switch(accessor) {
