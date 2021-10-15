@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { validateData } from '../addSuggestedComment';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
-import { makeTagsList } from '../../../utils';
+import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
 
@@ -15,6 +16,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [comments, setComments] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const { auth, collectionState, suggestCommentsState } = useSelector((state) => ({
     auth: state.authState,
@@ -38,7 +40,8 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   useEffect(() => {
     setComments(suggestedComments.map((comment) => ({
       ...comment,
-      tags: comment.tags.map((t) => t.tag ? ({ value: t.tag, label: t.label }) : undefined),
+      languages: comment.tags.filter((tag) => tag.tag && tag.type === 'language').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
+      guides: comment.tags.filter((tag) => tag.tag && tag.type === 'guide').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
     })));
   }, [suggestedComments]);
 
@@ -54,13 +57,41 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   };
 
   const onSave = async () => {
-    const data = comments.map((comment) => ({
-      ...comment,
-      tags: makeTagsList(comment.tags),
-    }));
+    setErrors({});
+    const data = comments.map((comment) => {
+      const isDataValid = validateData(comment, setErrors);
+      if (!isDataValid) {
+        return;
+      }
 
-    await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
-    await router.push(`/suggested-comments?cid=${collection._id}`);
+      let sourceName = '';
+      const re = new RegExp("^(http|https)://", "i");
+      if (re.test(comment.source?.url)) {
+        sourceName =  new URL(comment.source.url).hostname
+      } else {
+        setErrors({
+          source: {
+            message: 'Source should be a URL'
+          }
+        });
+        return;
+      }
+
+      return {
+        ...comment,
+        source: {
+          url: comment.source.url,
+          name: sourceName
+        },
+        tags: makeTagsList([...comment.languages, ...comment.guides]),
+        relatedLinks: comment.relatedLinks ? parseRelatedLinks(comment.relatedLinks.toString()) : '',
+      }
+    });
+
+    if (data[0]) {
+      await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
+      await router.push(`/suggested-comments?cid=${collection._id}`);
+    }
   };
 
   return(
@@ -92,11 +123,14 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       <div className="px-10">
         {
           comments.map((item, index) => (
-            <EditSuggestedCommentForm
-              key={item._id || index}
-              comment={item}
-              onChange={(e) => onChange(e, index)}
-            />
+            <div key={item._id || index} style={{ borderBottom: '1px solid #dbdbdb' }} className="mb-50 pb-50">
+              <EditSuggestedCommentForm
+                comment={item}
+                onChange={(e) => onChange(e, index)}
+                collection={collection}
+                errors={errors}
+              />
+            </div>
           ))
         }
       </div>
