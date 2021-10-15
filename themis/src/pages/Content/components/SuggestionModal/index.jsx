@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 import { MAX_CHARACTER_LENGTH, SEMA_ENG_GUIDE_UI_URL } from '../../constants';
-import GuideLink from './GuideLink';
 import SuggestionModalFooter from './SuggestionModalFooter';
+import SuggestionComment from './SuggestionComment';
 
 const truncate = (content) => {
   const contentLength = content?.length;
@@ -12,34 +12,6 @@ const truncate = (content) => {
 };
 
 const getCollectionUrl = (id, slug) => `${SEMA_ENG_GUIDE_UI_URL}/${id}/${slug}`;
-
-const getCommentTitleInterface = (title, sourceName) => (
-  <div className="suggestion-title">
-    <span className="suggestion-name">{title}</span>
-    {' '}
-    <span className="suggestion-source">{sourceName}</span>
-  </div>
-);
-
-const getCommentInterface = (comment, isDetailed, engGuides) => {
-  const finalComment = isDetailed ? comment : truncate(comment);
-  return (
-    <div className="suggestion-content-truncated-container">
-      <div
-        className="suggestion-content-truncated"
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: finalComment }}
-      />
-      {engGuides?.map(({ engGuide, slug, name }) => (
-        <GuideLink
-          key={engGuide}
-          title={name}
-          link={getCollectionUrl(engGuide, slug)}
-        />
-      ))}
-    </div>
-  );
-};
 
 function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartComment }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
@@ -98,8 +70,13 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
 
     return (
       <div key={id} className="sema-mb-5">
-        {getCommentTitleInterface(title, sourceName)}
-        {getCommentInterface(comment, false, engGuides)}
+        <SuggestionComment
+          title={title}
+          sourceName={sourceName}
+          comment={truncate(comment)}
+          engGuides={engGuides}
+          getCollectionUrl={getCollectionUrl}
+        />
         <div className="suggestion-buttons">
           <Button
             icon="fa-file-import"
@@ -145,8 +122,15 @@ function SuggestionModal({ onInsertPressed, searchResults, onLastUsedSmartCommen
             onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
           />
         </div>
-        {title && getCommentTitleInterface(title, sourceName)}
-        {comment && getCommentInterface(comment, true, engGuides)}
+        {title && comment && (
+          <SuggestionComment
+            title={title}
+            sourceName={sourceName}
+            comment={comment}
+            engGuides={engGuides}
+            getCollectionUrl={getCollectionUrl}
+          />
+        )}
       </>
     );
   };
