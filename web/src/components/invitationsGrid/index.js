@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { format } from 'date-fns';
 import Table from '../table';
 import Badge from '../badge/badge';
 import { fullName } from '../../utils';
@@ -24,6 +25,16 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
         Cell: ({ cell: { value } }) => (
           <div className='is-flex is-align-items-center'>
+            { value }
+          </div>
+        ),
+      },
+      {
+        Header: 'Sent',
+        accessor: 'sent',
+        className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
             { value }
           </div>
         ),
@@ -85,6 +96,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
           {fullName(item.sender)}
         </>
       ),
+      sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
       isPending: item.isPending,
       actions: item,
     })) : [];
