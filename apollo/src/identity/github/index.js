@@ -87,7 +87,7 @@ export default (app) => {
 
         // await updateUserRepositoryList(user, repositories, identity);
 
-        const tokenData = getTokenData(user);
+        const tokenData = await getTokenData(user);
 
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));

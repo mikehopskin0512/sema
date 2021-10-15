@@ -7,7 +7,7 @@ import { find, isEmpty, round } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
-import { TAGS } from '../../utils/constants';
+import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
 
 const CircularPacking = ({ data, groupBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
@@ -26,7 +26,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
             isPositive: tag.isPositive,
             name: tag.label,
             id: _id,
-            color: tag.isPositive ? '#BBC5AA' : '#AFADAA',
+            color: tag.isPositive ? CIRCULAR_PACKING_COLORS.POSITIVE : CIRCULAR_PACKING_COLORS.NEGATIVE,
             value: rawData[_id].total,
             data: rawData[_id].data || [],
           };
@@ -35,7 +35,7 @@ const CircularPacking = ({ data, groupBy = '' }) => {
           isPositive: false,
           name: '',
           id: _id,
-          color: '#AFADAA',
+          color: CIRCULAR_PACKING_COLORS.NEGATIVE,
           value: 0,
           data: [],
         };
@@ -69,19 +69,18 @@ const CircularPacking = ({ data, groupBy = '' }) => {
     }
   }, [data]);
 
-  const renderTooltip = React.memo(({ formattedValue, value, data }) => (
-      <div className="box has-background-white p-20 border-radius-4px">
-        <p className="has-text-weight-semibold">Readable - last {data.data.length} {groupBy}s</p>
-        { data.data.length > 0 && (
-          <div className={clsx('py-5', styles['line-chart-container'])}>
-            <LineChart data={[data]}  />
-          </div>
-        ) }
-        <p className="is-size-7">{value} comments</p>
-        <p className="is-size-7">{formattedValue} of all tags</p>
-      </div>
-    )
-  );
+  const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
+    <div className="box has-background-white p-20 border-radius-4px">
+      <p className="has-text-weight-semibold">{tag.name}</p>
+      { tag.data.length > 0 && (
+        <div className={clsx('py-5', styles['line-chart-container'])}>
+          <LineChart data={[tag]}  />
+        </div>
+      ) }
+      <p className="is-size-7">{value} comments</p>
+      <p className="is-size-7">{formattedValue} of all tags</p>
+    </div>
+  ))
 
   if (noData) {
     return (

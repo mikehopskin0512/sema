@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import EmptyRepo from '../../../components/repos/emptyRepo';
 import RepoList from '../../../components/repos/repoList';
 import { remove } from 'lodash';
@@ -37,11 +38,11 @@ const ReposView = () => {
 
   return ( !repositories.isFetching &&
     <>
-      <div className={styles['repos-container']}>
+      <div className={clsx('my-40', styles['repos-container'])}>
         <RepoList type="FAVORITES" repos={repos.favorites} />
         <RepoList type="MY_REPOS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
       </div>
-      <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mb-80">
+      <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
         {isMoreReposAvailable && (
           <button
             onClick={() => setPage(page + 1)}

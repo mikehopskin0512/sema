@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { orgDomain } from '../config';
 import { sendEmail } from './emailService';
+import UserRole from '../roles/userRoleModel';
 
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
@@ -46,7 +47,11 @@ export const fullName = (user) => {
   return `${user.firstName || ''} ${user.lastName || ''}`;
 };
 
-export const getTokenData = (user) => {
+export const getTokenData = async (user) => {
+  const roles = await UserRole.find({ user: user._id })
+    .populate('team')
+    .populate('role');
+
   const tokenData = {
     _id: user._id,
     firstName: user.firstName,
@@ -55,6 +60,8 @@ export const getTokenData = (user) => {
     isVerified: user.isVerified,
     isWaitlist: user.isWaitlist,
     isSemaAdmin: user.isSemaAdmin,
+    roles,
   };
+
   return tokenData;
 };

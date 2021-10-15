@@ -115,7 +115,7 @@ const Invite = () => {
       <Helmet {...InvitesHelmet} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className={clsx("hero mb-40 pb-300", styles.container)}>
-        <div className={clsx('container', styles['styled-container'])}>
+        <div>
           <p
             className={
               'title has-text-centered has-text-weight-semibold is-size-4 mt-50'

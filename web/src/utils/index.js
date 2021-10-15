@@ -63,3 +63,15 @@ export const getCharCount = (value) => {
   if (value === 'ꝏ') return 'ꝏ';
   return value?.toString()?.length || 0
 }
+
+export const parseRelatedLinks = (string) => {
+  if (string) {
+    const links = string.replace(/\s/g, '');
+    return links.split(',');
+  }
+  return [];
+}
+
+export const shortenUrl = (url) => {
+  return url.length > 50 ? url.substring(0, 50) + '...' : url;
+}
