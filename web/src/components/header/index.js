@@ -211,6 +211,17 @@ const Header = () => {
                     </a>
                   </Link>
                 )}
+                <Link href="/team">
+                  <a
+                    aria-hidden="true"
+                    type="button"
+                    className="navbar-item has-text-weight-semibold is-uppercase"
+                    onClick={toggleUserMenu}
+                  >
+                    <span>Create a Team</span>
+                    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+                  </a>
+                </Link>
                 <Link href="/profile">
                   <a
                     aria-hidden="true"
@@ -273,6 +284,17 @@ const Header = () => {
                           </a>
                         </Link>
                       )}
+                      <Link href="/teams/edit">
+                        <a
+                          aria-hidden="true"
+                          type="button"
+                          className="navbar-item"
+                          onClick={toggleUserMenu}
+                        >
+                          <span>Create a Team</span>
+                          <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+                        </a>
+                      </Link>
                       <Link href="/profile">
                         <a
                           aria-hidden="true"

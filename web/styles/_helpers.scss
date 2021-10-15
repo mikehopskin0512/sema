@@ -113,3 +113,22 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
   max-width: 1440px;
   margin: 0 auto;
 }
+
+.switch-input {
+  .switch[type="checkbox"] + label::after, .switch[type="checkbox"] + label:after {
+    background: #0081A7;
+  }
+  .switch[type="checkbox"] + label::before, .switch[type="checkbox"] + label:before {
+    background: #f0f2f4;
+    border: 1px solid #CCCCCC;
+  }
+
+  .switch[type="checkbox"]:checked + label::after, .switch[type="checkbox"]:checked + label:after {
+    background: #ffffff;
+  }
+  .switch[type="checkbox"]:checked + label::before, .switch[type="checkbox"]:checked + label:before {
+    background: #0081A7;
+    border: 1px solid #0081A7;
+  }
+}
+
