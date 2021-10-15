@@ -37,7 +37,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities, isOnboarded = null} = user;
+  const { identities, isOnboarded = null } = user;
 
 
   const logOnboardingAcitvity = (page) => {
@@ -47,14 +47,14 @@ const Dashboard = () => {
   const nextOnboardingPage = (currentPage) => {
     const newPage = currentPage + 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({...onboardingProgress, page: newPage});
+    setOnboardingProgress({ ...onboardingProgress, page: newPage });
     logOnboardingAcitvity(newPage);
   };
 
   const previousOnboardingPage = (currentPage) => {
     const newPage = currentPage - 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({...onboardingProgress, page: newPage});
+    setOnboardingProgress({ ...onboardingProgress, page: newPage });
     logOnboardingAcitvity(newPage);
   };
 
@@ -162,15 +162,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isOnboarded === null)  {
+    if (isOnboarded === null) {
       toggleOnboardingModalActive(true);
     }
   }, [isOnboarded]);
 
   if (repositories.isFetching || auth.isFetching) {
-    return(
+    return (
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-        <Loader/>
+        <Loader />
       </div>
     )
   }

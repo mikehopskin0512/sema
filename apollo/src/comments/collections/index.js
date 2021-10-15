@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection } from './collectionService';
+import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, update } from './collectionService';
 
 const route = Router();
 
@@ -10,9 +10,14 @@ export default (app, passport) => {
   app.use(`/${version}/comments/collections`, route);
   
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { params: { id }, user: { user: { _id }} } = req;
+    const { body: { collection }, params: { id }, user: { user: { _id }} } = req;
     try {
-      const payload = await toggleActiveCollection(_id, id);
+      let payload;
+      if (collection) {
+        payload = await update({_id: id, ...collection});
+      } else {
+        payload = await toggleActiveCollection(_id, id);
+      }
       return res.status(200).send(payload);
     } catch (error) {
       logger.error(error);
