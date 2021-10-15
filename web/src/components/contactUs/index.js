@@ -6,8 +6,8 @@ import styles from './contactUs.module.scss';
 const ContactUs = ({ userVoiceToken, openSupportForm }) => {
   const renderContent = () => (
     <div
-      className='is-flex is-align-content-center is-justify-content-space-between is-flex-wrap-wrap is-full-width px-50 is-align-items-center'
-      style={{maxWidth: '1540px', minHeight: '100px'}}
+      className='is-flex is-align-content-center container is-justify-content-space-between is-flex-wrap-wrap is-full-width is-align-items-center'
+      style={{ minHeight: '100px'}}
     >
       <div>
         <div className="has-text-white is-size-3">We want to hear from you</div>
@@ -29,8 +29,8 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
         ) }
       </div>
 
-      <div className="is-hidden-desktop mt-10">
-        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10 mr-20', styles.button)} type="button">Email</button>
+      <div className="is-hidden-desktop is-full-width is-flex is-flex-direction-column is-align-items-center mt-20">
+        <button onClick={openSupportForm} className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
             className={clsx('button is-white-gray has-text-primary has-text-weight-semibold is-medium my-10', styles.button)}

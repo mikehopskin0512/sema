@@ -6,7 +6,7 @@ import ReactionChart from './reactionChart';
 import TagsChart from './tagsChart';
 import { setSmartCommentsDateRange, getReactionTagsChartData } from '../../utils/parsing'
 
-const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
+const StatsPage = ({ startDate, endDate, onDateChange }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -15,7 +15,7 @@ const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
 
   const [start, setStart] = useState();
   const [end, setEnd] = useState();
-  const [dateDiff, setDateDiff] = useState();
+  const [dateDiff, setDateDiff] = useState(0);
   const [reactions, setReactions] = useState([]);
   const [tags, setTags] = useState({});
   const [groupBy, setGroupBy] = useState('');
@@ -54,8 +54,7 @@ const StatsPage = ({ startDate, endDate, setStartDate, setEndDate }) => {
           <DateRangeSelector
             start={startDate}
             end={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
+            onChange={onDateChange}
             isRight
             buttonProps={{
               placeholder: 'Select Dates',

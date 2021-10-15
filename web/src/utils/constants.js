@@ -107,6 +107,11 @@ export const TAGS = [
   },
 ];
 
+export const CIRCULAR_PACKING_COLORS = {
+  POSITIVE: '#9FE1F5',
+  NEGATIVE: '#E8E8E8'
+}
+
 export const DAYS_IN_WEEK = 7;
 export const DAYS_IN_MONTH = 30;
 export const DAYS_IN_YEAR = 365;

@@ -187,6 +187,7 @@ export const findUserCollectionsByUserId = async (id) => {
         name: 1,
         description: 1,
         author: 1,
+        tags: 1,
       },
       populate: {
         path: 'comments',
@@ -470,3 +471,23 @@ export const revokeInvitation = async (senderEmail) => {
     throw (error);
   } 
 };
+
+export const bulkUpdateUserCollections = async (doc) => {
+  try {
+    await User.updateMany(
+      {},
+      {
+        $push: {
+          "collections": {
+            isActive: false,
+            collectionData: doc
+          }
+        }
+      }
+    )
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  } 
+}

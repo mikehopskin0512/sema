@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import clsx from 'clsx';
+import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
@@ -36,16 +37,25 @@ const Dashboard = () => {
     repositories: state.repositoriesState,
   }));
   const { token, user } = auth;
-  const { identities, isOnboarded = null} = user;
+  const { identities, isOnboarded = null } = user;
+
+
+  const logOnboardingAcitvity = (page) => {
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.PAGE_VISIT, { url: `/onboardingModal/page=${page}` });
+  };
 
   const nextOnboardingPage = (currentPage) => {
-    setOnboardingPage(currentPage + 1);
-    setOnboardingProgress({...onboardingProgress, page: currentPage + 1});
+    const newPage = currentPage + 1;
+    setOnboardingPage(newPage);
+    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    logOnboardingAcitvity(newPage);
   };
 
   const previousOnboardingPage = (currentPage) => {
-    setOnboardingPage(currentPage - 1);
-    setOnboardingProgress({...onboardingProgress, page: currentPage -1});
+    const newPage = currentPage - 1;
+    setOnboardingPage(newPage);
+    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    logOnboardingAcitvity(newPage);
   };
 
   const toggleCollection = (field) => {
@@ -152,22 +162,22 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isOnboarded === null)  {
+    if (isOnboarded === null) {
       toggleOnboardingModalActive(true);
     }
   }, [isOnboarded]);
 
   if (repositories.isFetching || auth.isFetching) {
-    return(
+    return (
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-        <Loader/>
+        <Loader />
       </div>
     )
   }
 
   return (
     <>
-      <div className={clsx('has-background-gray-9', styles.container)}>
+      <div>
         <Helmet {...DashboardHelmet} />
         <ReposView />
       </div>

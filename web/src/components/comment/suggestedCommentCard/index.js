@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import styles from './suggestedCommentCard.module.scss';
 import ActionMenu from './actionMenu';
 import Checkbox from '../../checkbox';
+import PreviewableLink from "./previewableLink";
 
 const defaultDate = '07/01/2021';
 
@@ -14,7 +15,11 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
     author = '',
     comment = '',
     tags = [],
-    source,
+    source = {
+      name: '',
+      url: '',
+    },
+    sourceMetadata = null,
     title = '',
     createdAt = defaultDate,
     engGuides = [],
@@ -43,7 +48,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           )}
         </div>
       </div>
-      { isEmpty(author) && isEmpty(source.name) ? null : (
+      { isEmpty(author) && isEmpty(source?.name) ? null : (
         <div className="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
           <div className="is-flex is-align-items-center">
             { isEmpty(author) ? null : (
@@ -52,13 +57,13 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
                 <div className={clsx('mr-10', styles.vl)} />
               </>
             )}
-            { isEmpty(source.name) ? null : (
-              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
+            { isEmpty(source?.name) ? null : (
+              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source?.name}</p>
             ) }
           </div>
-          { isEmpty(source.name) ? null : (
-            <a href={source.url} target="_blank" rel="noreferrer">
-              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
+          { isEmpty(source?.name) ? null : (
+            <a href={source?.url} target="_blank" rel="noreferrer">
+              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source?.name}</button>
             </a>
           )}
         </div>
@@ -68,14 +73,10 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
-        { engGuides.length > 0 ? (
-          <p className="is-size-6 has-text-deep-black">
-            <b className="mr-5">Related Eng. Guides:</b>
-            <a href={`/guides/${engGuides[0].engGuide?._id}/${engGuides[0].engGuide?.slug}`}>
-              <span className="is-underlined has-text-deep-black">{engGuides[0].engGuide?.title}</span>
-            </a>
-          </p>
-        ) : null }
+        <p className="is-flex is-size-6 has-text-deep-black">
+          <b className="mr-5">Related Link:</b>
+          <PreviewableLink source={source} sourceMetadata={sourceMetadata}/>
+        </p>
         <span />
         <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>

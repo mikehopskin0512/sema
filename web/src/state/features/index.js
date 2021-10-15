@@ -16,3 +16,4 @@ export { default as searchQueriesState } from './search-queries';
 export { default as suggestCommentsState } from './suggest-comments';
 export { default as smartCommentsState } from './smart-comments';
 export { default as teamsState } from './teams';
+export { default as selectedUserState } from './selected-user';

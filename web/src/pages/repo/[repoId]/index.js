@@ -60,14 +60,19 @@ const RepoPage = () => {
     }
   }, [startDate, endDate]);
 
+  const onDateChange = ({ startDate, endDate }) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+  }
+
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-      { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} /> }
-      { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} /> }
+      { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
+      { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
     </RepoPageLayout>
   );
 };

@@ -58,10 +58,10 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate, user }) => {
   try {
     let filter = {}
-    let dateFilter = { createdAt: { } }
+    let dateFilter = { createdAt: {} }
     if (reviewer) {
       filter = Object.assign(filter, { "githubMetadata.user.login": reviewer });
     }
@@ -70,6 +70,9 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     }
     if (repoId) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
+    }
+    if (user) {
+      filter = Object.assign(filter, { $or: [{ "githubMetadata.requester": user }, { "githubMetadata.user.login": user }] });
     }
     if (startDate) {
       dateFilter = Object.assign(dateFilter, { createdAt: { $gte: new Date(startDate) } });
@@ -553,7 +556,7 @@ export const getSmartCommentsByExternalId = async (externalId) => {
 
 export const getPullRequestsByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.url' ).exec();
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.url').exec();
     return smartComments;
   } catch (err) {
     logger.error(err);
@@ -564,7 +567,7 @@ export const getPullRequestsByExternalId = async (externalId) => {
 
 export const getSmartCommentersByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct( 'githubMetadata.user.login' ).exec();
+    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.user.login').exec();
     return smartComments;
   } catch (err) {
     logger.error(err);
@@ -573,36 +576,54 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ reviewer, author, repoId, startDate, endDate }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate, user }) => {
   try {
-    const filter = { reviewer, author, repoId, startDate, endDate };
-    const totalReactions = {};
-    const totalTags = {};
+    const filter = { reviewer, author, repoId, startDate, endDate, user };
     const smartComments = await filterSmartComments(filter);
-    smartComments.map((comments) => {
-      const { tags, reaction } = comments;
-      if (tags.length) {
-        tags.map((tag) => {
-          const { _id: tagId } = tag;
-          if (totalTags?.[tagId]) {
-            totalTags[tagId]++;
-          } else {
-            totalTags[tagId] = 1;
-          }
-        });
-      }
-      if (reaction) {
-        if (totalReactions?.[reaction]) {
-          totalReactions[reaction]++;
-        } else {
-          totalReactions[reaction] = 1;
-        }
-      }
-    });
+    const totalReactions = getTotalReactionsOfComments(smartComments);
+    const totalTags = getTotalTagsOfComments(smartComments);
     return { smartComments, reactions: totalReactions, tags: totalTags };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
   }
+};
+
+export const getTotalReactionsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment?.reaction)
+    .reduce((acc, comment) => {
+      const { reaction } = comment;
+      if (acc?.[reaction]) {
+        acc[reaction]++
+      } else {
+        acc[reaction] = 1;
+      }
+      return acc
+    }, {});
+};
+
+export const getTotalTagsOfComments = (smartComments = []) => {
+  return smartComments
+    .filter((comment) => comment?.tags?.length)
+    .reduce((acc, comment) => {
+      const { tags } = comment;
+      const total = tags.reduce((acc, tag) => {
+        const { _id: tagId } = tag;
+        if (acc?.[tagId]) {
+          acc[tagId]++
+        } else {
+          acc[tagId] = 1
+        }
+        return acc;
+      }, {})
+      for (const [key, val] of Object.entries(total)) {
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key] += val
+      }
+      return acc
+    }, {})
 };
