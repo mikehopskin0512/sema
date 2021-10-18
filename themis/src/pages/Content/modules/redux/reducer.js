@@ -238,7 +238,7 @@ function rootReducer(state = initialState, action) {
       };
     }
     case TOGGLE_SEARCH_MODAL: {
-      const { id } = payload;
+      const { id, isOpen } = payload;
       const { semasearches } = state;
       return {
         ...state,
@@ -246,7 +246,7 @@ function rootReducer(state = initialState, action) {
           ...semasearches,
           [id]: {
             ...semasearches[id],
-            isSearchModalVisible: !semasearches[id].isSearchModalVisible,
+            isSearchModalVisible: isOpen || !semasearches[id].isSearchModalVisible,
           },
         },
       };
