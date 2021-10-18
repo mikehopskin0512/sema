@@ -5,7 +5,7 @@
 // Command: mongo <DB_URL> deleteTestUsers.js 
 // 
 const DB_NAME = "phoenix_qa" // Might be used phoenix_prod 
-const USERS_NAME = ["semacodereviewtester1000@protonmail.com"]
+const USERS_NAME = ["artem@semasoftware.com"]
 
 var db = db.getSiblingDB(DB_NAME)
 const all_collections = db.getCollectionNames()
@@ -32,6 +32,9 @@ while (users.hasNext()) {
 while (recipient.hasNext()) {
     recipient_id.push(recipient.next()["_id"])
 }
+
+repo_users = db.repositories.update({}, { $pull: { "repoStats.userIds": { $in: users_id } } }, { multi: true })
+print(`Affected repository documents = ${repo_users["nModified"]}`)
 
 all_collections.forEach(element => {
     const current_collection = db.getCollection(element)
