@@ -39,11 +39,39 @@ export const getAllTagIds = async () => {
 
 export const findTagsByType = async () => {
   try {
-    const tags = await Tag.find({
-      "type": {
-        $in: ["language", "guide", "custom"],
+    // const tags = await Tag.find({
+    //   "type": {
+    //     $in: ["language", "guide", "custom"],
+    //   }
+    // });
+    const tags = await Tag.aggregate([
+      {
+        $match: {
+          "type": {
+            $in: ["language", "guide", "custom"],
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "suggestedComments",
+          localField: "_id",
+          foreignField: "tags.tag",
+          as: "suggestedCommentsForeign"
+        },
+
+      },
+      {
+        $project: {
+          _id: 1,
+          label: 1,
+          type: 1,
+          sentiment: 1,
+          isActive: 1,
+          suggestedCommentsCount: { $size: "$suggestedCommentsForeign" },
+        }
       }
-    }).exec();
+    ]).exec()
     return tags;
   } catch (err) {
     logger.error(err);
@@ -71,7 +99,7 @@ export const findTags = async (tagsArr) => {
 export const buildTagsEmptyObject = async () => {
   try {
     const schema = {};
-    const tags = await getAllTags(); 
+    const tags = await getAllTags();
     for (const [key, value] of Object.entries(tags)) {
       schema[tags[key]['_id']] = 0
     }
@@ -83,7 +111,7 @@ export const buildTagsEmptyObject = async () => {
   }
 };
 
-export  const incrementTags = (tagsObject = {}, tagsArray) => {
+export const incrementTags = (tagsObject = {}, tagsArray) => {
   // tagsObject - data from db
   // tagsArray - raw data from smart comments
   const tagsObject2 = {};
