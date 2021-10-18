@@ -59,7 +59,7 @@ export default (app, passport) => {
         throw new errors.NotFound('No user found');
       }
 
-      const tokenData = getTokenData(user);
+      const tokenData = await getTokenData(user);
 
       await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 

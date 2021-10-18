@@ -173,9 +173,9 @@ export default (app, passport) => {
   });
 
   route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { requester: author, reviewer, externalId: repoId } = req.query;
+    const { user } = req.query;
     try {
-      const summary = await getSmartCommentsTagsReactions({author, reviewer, repoId});
+      const summary = await getSmartCommentsTagsReactions({ user });
       return res.status(201).send({
         summary,
       });

@@ -38,6 +38,8 @@ const suggestedCommentSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  link: { type: String },
+  relatedLinks: [String],
   sourceMetadata: {
     title: String,
     icon: String,
