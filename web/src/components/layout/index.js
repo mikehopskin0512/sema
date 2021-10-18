@@ -8,7 +8,7 @@ import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
 
-const widescreenPages = ['/repo/[repoId]'];
+const widescreenPages = ['/repo/[repoId]', '/support'];
 
 const withLayout = (Page) => (props) => {
   const router = useRouter();
