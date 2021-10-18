@@ -10,7 +10,9 @@
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",
     "build": "npm run clean && babel src --out-dir dist",
     "serve": "node dist/app.js",
-    "clean": "rm -rf ./dist && mkdir dist"
+    "clean": "rm -rf ./dist && mkdir dist",
+    "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
+    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
@@ -49,7 +51,9 @@
     "pg": "^8.2.1",
     "request": "^2.88.2",
     "text-clipper": "^2.1.0",
-    "uuid": "^8.1.0"
+    "uuid": "^8.1.0",
+    "xlsx": "^0.15.5",
+    "speakingurl": "^14.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

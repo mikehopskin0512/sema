@@ -26,6 +26,8 @@ exports.up = async (next) => {
       const user = await User.findOne({ username: userRole.user });
       const team = await Team.findOne({ name: userRole.team });
       const role = await Role.findOne({ name: userRole.role });
+  
+      if (!user || !team || !role) return false;
 
       const isExist = await UserRole.findOne({ user: user._id, team: team._id, role: role._id });
 
