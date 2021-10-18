@@ -12,6 +12,8 @@ import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
+import usePermission from '../../hooks/usePermission';
+import { ViewAdmin } from '../../data/permissions';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const Header = () => {
   const [bgColor, setBgColor] = useState('');
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
+  const { checkAccess } = usePermission();
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -216,7 +219,7 @@ const Header = () => {
                   </a>
                 </div> */}
                 <hr className="navbar-divider" />
-                {isSemaAdmin && (
+                {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
                   <Link href="/sema-admin/users">
                     <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                       Admin Panel
@@ -273,7 +276,7 @@ const Header = () => {
                         </a>
                       </Link>
                       <hr className="navbar-divider has-background-grey-lighter is-hidden" />
-                      {isSemaAdmin && (
+                      {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
                         <Link href="/sema-admin/users">
                           <a
                             aria-hidden="true"

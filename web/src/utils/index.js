@@ -59,3 +59,14 @@ export const makeTagsList = (orgTags, type = 'guide') => {
   };
 };
 
+export const parseRelatedLinks = (string) => {
+  if (string) {
+    const links = string.replace(/\s/g, '');
+    return links.split(',');
+  }
+  return [];
+}
+
+export const shortenUrl = (url) => {
+  return url.length > 50 ? url.substring(0, 50) + '...' : url;
+}

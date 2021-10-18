@@ -1,7 +1,6 @@
 .card {
   width: calc(100%/3);
   max-width: calc(100%/3);
-  height: 250px;
   @media only screen and (max-width: 769px) {
     max-width: 100% !important;
     width: 100% !important;
@@ -9,6 +8,7 @@
     min-height: auto !important;
     height: auto;
   }
+  overflow: visible;
 }
 
 .stat {
@@ -27,4 +27,12 @@
 
 .add-button {
   height: 100%;
+}
+
+.tag {
+  max-width: 120px;
+  p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } 
 }
