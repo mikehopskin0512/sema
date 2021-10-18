@@ -13,7 +13,9 @@ const non_sema_recipient = db.invitations.find({
 const non_sema_users_id = non_sema_recipient_id = new Array
 
 while (non_sema_recipient.hasNext()) {
-    non_sema_recipient_id.push(non_sema_recipient.next()["_id"])
+    user = non_sema_users.next()
+    non_sema_users_id.push(user["_id"]);
+    print(`User to delete: ${user["username"]}`)
 }
 
 while (non_sema_users.hasNext()) {
