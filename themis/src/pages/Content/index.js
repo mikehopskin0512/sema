@@ -23,8 +23,6 @@ import {
   checkSubmitButton,
 } from './modules/content-util';
 
-import Reminder from './Reminder';
-
 import {
   SEMA_ICON_ANCHOR_LIGHT,
   SEMABAR_CLASS,
@@ -53,6 +51,7 @@ import {
   updateSelectedEmoji,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
+import LogOutToaster from './components/LogOutToaster';
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
@@ -84,7 +83,7 @@ const onLoginChecked = () => {
       ReactDOM.render(
         // eslint-disable-next-line react/jsx-filename-extension
         <Provider store={store}>
-          <Reminder />
+          <LogOutToaster />
         </Provider>,
         node,
       );
