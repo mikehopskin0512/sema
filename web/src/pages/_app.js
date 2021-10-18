@@ -18,12 +18,32 @@ import * as analytics from '../utils/analytics';
 import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
 import '../../styles/_calendar_overrides.scss';
+import usePermission from '../hooks/usePermission';
+import NotFound from './404';
+import { permissionsMap } from '../data/permissions';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faFilter, faCloudDownloadAlt, faPlus, faGithub, faTwitter, faFacebook, faChevronDown, faChevronUp, faCaretDown, faCaretUp,
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 );
+
+function Layout({ Component, pageProps }) {
+  const { checkAccess } = usePermission();
+  const router = useRouter();
+
+  const checkPermission = () => {
+    if (permissionsMap[router.pathname]) {
+      const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess({name: 'Sema Super Team'}, permission));
+      return !unauthorizedAccess;
+    }
+    return true;
+  };
+
+  return (
+    checkPermission() ? <Component {...pageProps} /> : <NotFound />
+  );
+}
 
 const Application = ({ Component, pageProps, store }) => {
   const router = useRouter();
@@ -53,7 +73,7 @@ const Application = ({ Component, pageProps, store }) => {
 
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <Layout Component={Component} pageProps={pageProps} />
     </Provider>
   );
 };
