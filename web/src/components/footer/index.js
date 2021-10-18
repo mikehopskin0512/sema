@@ -32,22 +32,22 @@ const Footer = () => {
     <div className="is-flex is-align-items-center is-justify-content-center">
       <div className="mx-15">
         <a href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faLinkedinIn} color="#F4F4F4" size="md" />
+          <FontAwesomeIcon icon={faLinkedinIn} color="#F4F4F4" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.instagram} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faInstagram} color="#F4F4F4" size="md" />
+          <FontAwesomeIcon icon={faInstagram} color="#F4F4F4" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.facebook} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faFacebook} color="#F4F4F4" size="md" />
+          <FontAwesomeIcon icon={faFacebook} color="#F4F4F4" />
         </a>
       </div>
       <div className="mx-15">
         <a href={socialLinks.twitter} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faTwitter} color="#F4F4F4" size="md" />
+          <FontAwesomeIcon icon={faTwitter} color="#F4F4F4" />
         </a>
       </div>
     </div>

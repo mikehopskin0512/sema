@@ -58,3 +58,8 @@ export const PersonalInsightsHelmet = {
   title: 'Personal Insights',
   description: null,
 };
+
+export const LabelsManagementHelmet = {
+  title: 'Labels Management',
+  description: null,
+};
