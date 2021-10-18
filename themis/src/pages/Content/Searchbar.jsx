@@ -11,6 +11,7 @@ import {
   usedSmartComment,
 } from './modules/redux/action';
 
+// TODO: replace with useSelector
 const mapStateToProps = (state, ownProps) => {
   const { semasearches, user } = state;
   const semaSearchState = semasearches[ownProps.id];
@@ -22,7 +23,7 @@ const mapStateToProps = (state, ownProps) => {
     userId: user?._id,
   };
 };
-
+// TODO: replace with dispatch
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { id } = ownProps;
   return {
@@ -37,9 +38,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const SearchBar = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
-
   const suggestionModalDropdownRef = useRef(null);
-
   const { commentBox } = props;
 
   const getSemaSuggestions = (value, userId) => {
@@ -65,12 +64,10 @@ const SearchBar = (props) => {
     event.preventDefault();
     const { value } = event.target;
     props.handleChange(value);
-    // props.toggleSearchModal({ isOpen: false });
     if (value) {
       getSuggestionsDebounced.current(value, props.userId);
     } else {
       getSuggestionsDebounced.current.cancel();
-      props.toggleSearchModal({ isOpen: false });
     }
   };
 
@@ -104,12 +101,8 @@ const SearchBar = (props) => {
   };
 
   const { isSearchModalVisible, searchValue } = props;
-
-  const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''
-  }`;
-
-  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''
-  }`;
+  const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''}`;
+  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''}`;
 
   useEffect(() => {
     if (suggestionModalDropdownRef) {
