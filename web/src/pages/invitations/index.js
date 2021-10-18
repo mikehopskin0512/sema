@@ -33,7 +33,7 @@ const Invite = () => {
   }));
 
   const [recipient, setRecipient] = useState("");
-  const [tableHeader] = useState('Sema is better with friends, invite yours 🙌');
+  const [tableHeader] = useState('is better with friends, invite yours 🙌');
   const [acceptedInvites, setAcceptedInvites] = useState(0);
   const [pendingInvites, setPendingInvites] = useState(0);
 
@@ -116,12 +116,16 @@ const Invite = () => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <section className={clsx("hero mb-40 pb-300", styles.container)}>
         <div>
-          <p
-            className={
-              'title has-text-centered has-text-weight-semibold is-size-4 mt-50'
-            }
-            dangerouslySetInnerHTML={{ __html: tableHeader }}
-          />
+          <div className="is-flex is-align-items-center is-justify-content-center mt-60 mb-30">
+            <img src="/img/sema-logo.png" alt="sema-logo" width="100" className="mr-10" />
+            <p
+              className={
+                'title has-text-centered has-text-weight-semibold is-size-4'
+              }
+
+              dangerouslySetInnerHTML={{ __html: `${tableHeader}` }}
+            />
+          </div>
           <div className="mb-5 mt-30 mx-3 columns">
             <div className={`box column mr-10 px-20 py-30`}>
               <span className={`${cardStyling} ${getCharCount(acceptedInvites) > 1 ? '' : 'px-15'} has-background-primary has-text-white`}>
