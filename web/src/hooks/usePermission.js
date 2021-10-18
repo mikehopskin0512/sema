@@ -5,7 +5,7 @@ function usePermission() {
 
   const checkAccess = (team, permission) => {
     // TODO this will be replaced with more team comparison here in the future
-    const role = user.roles.find((item) => item.role[permission] && item.team.name === team.name);
+    const role = user?.roles?.find((item) => item.role[permission] && item.team.name === team.name);
 
     return !!role;
   };
