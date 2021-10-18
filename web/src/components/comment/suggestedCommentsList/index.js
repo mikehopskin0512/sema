@@ -20,6 +20,8 @@ import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
+import usePermission from '../../../hooks/usePermission';
+import { EditComments } from '../../../data/permissions';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -44,6 +46,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
+  const { checkAccess } = usePermission();
   const [isParsing, setIsParsing] = useState(true);
 
   useEffect(() => {
@@ -91,7 +94,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     const filtered = comments.filter((item) => {
       const isMatchSearch = item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.comment.toLowerCase().includes(search.toLowerCase()) ||
-      item.source.name.toLowerCase().includes(search.toLowerCase());
+      item.source.name?.toLowerCase().includes(search.toLowerCase());
       const tagIndex = findIndex(item.tags, { label: tag });
       const languageIndex = findIndex(item.tags, { label: language });
       let filterBool = true;
@@ -129,7 +132,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => user.isSemaAdmin || name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments', [user, name]);
+  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
 
   return (
     <div>

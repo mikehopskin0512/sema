@@ -52,7 +52,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           )}
         </div>
       </div>
-      { isEmpty(author) && isEmpty(source.name) ? null : (
+      { isEmpty(author) && isEmpty(source?.name) ? null : (
         <div className="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
           <div className="is-flex is-align-items-center">
             { isEmpty(author) ? null : (
@@ -61,13 +61,13 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
                 <div className={clsx('mr-10', styles.vl)} />
               </>
             )}
-            { isEmpty(source.name) ? null : (
-              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
+            { isEmpty(source?.name) ? null : (
+              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source?.name}</p>
             ) }
           </div>
-          { isEmpty(source.name) ? null : (
-            <a href={source.url} target="_blank" rel="noreferrer">
-              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
+          { isEmpty(source?.name) ? null : (
+            <a href={source?.url} target="_blank" rel="noreferrer">
+              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source?.name}</button>
             </a>
           )}
         </div>
