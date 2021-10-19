@@ -6,10 +6,10 @@ import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
-import { collectionsOperations } from 'src/state/features/collections';
+import { alertOperations } from '../../../state/features/alerts';
+import { collectionsOperations } from '../../../state/features/collections';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { alertOperations } from '../../../state/features/alerts';
 
 const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;

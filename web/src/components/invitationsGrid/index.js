@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { format } from 'date-fns';
 import Table from '../table';
 import Badge from '../badge/badge';
 import { fullName } from '../../utils';
@@ -43,6 +44,16 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         Cell: ({ cell: { value } }) => (
           <div className='is-flex is-align-items-center is-underlined'>
             {value}
+          </div>
+        ),
+      },
+      {
+        Header: 'Sent',
+        accessor: 'sent',
+        className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            { value }
           </div>
         ),
       },
@@ -113,6 +124,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
           {fullName(item.sender)}
         </>
       ),
+      sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
       isPending: item.isPending,
       actions: item,
     })) : [];
