@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+import toaster from 'toasted-notes';
 import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import { teamsOperations } from '../../state/features/teams';
@@ -25,7 +26,32 @@ const TeamEditPage = () => {
   const { token } = auth;
 
   const onSave = async () => {
-    await dispatch(createTeam(team, token));
+    const data = await dispatch(createTeam(team, token));
+
+    toaster.notify(({ onClose }) => (
+      <div className="message is-success shadow mt-60">
+        <div className="message-body has-background-white is-flex">
+          <FontAwesomeIcon className="has-text-success mr-10" icon={faCheckCircle} />
+          <div>
+            <div className="is-flex is-justify-content-space-between mb-15">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black">Team Created</span>
+              <FontAwesomeIcon className="has-text-black mr-10" icon={faTimes} onClick={onClose} />
+            </div>
+            <div className="has-text-black">
+              You've successfully created the team
+            </div>
+            <div>
+              <span className="has-text-black has-text-weight-semibold">{ data.name }.</span>
+              <a href="/teams" className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: 4000,
+    });
+
     await router.push('/teams');
   };
 
@@ -43,7 +69,7 @@ const TeamEditPage = () => {
   return (
     <div className="has-background-gray-9 hero">
       <Helmet {...TeamCreateHelmet} />
-      <div className="hero-body pb-300">
+      <div className="hero-body pb-100">
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
