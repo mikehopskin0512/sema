@@ -7,13 +7,10 @@ import Badge from '../badge/badge';
 import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 
-const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
-
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isLoading, fetchData, totalInvites = 0 }) => {
 
   const getHeaderClass = (accessor) => {
-    switch(accessor) {
+    switch (accessor) {
       case 'sender':
         return 'p-10';
       case 'recipient':
@@ -35,7 +32,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         className: getHeaderClass('sender'),
         Cell: ({ cell: { value } }) => (
           <div className="is-flex is-align-items-center">
-            { value }
+            {value}
           </div>
         ),
       }] : [],
@@ -45,7 +42,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         className: getHeaderClass('recipient'),
         Cell: ({ cell: { value } }) => (
           <div className='is-flex is-align-items-center is-underlined'>
-            { value }
+            {value}
           </div>
         ),
       },
@@ -57,10 +54,10 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
           <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
         ) : (
           <div className="py-15">
-            <span 
+            <span
               className={`has-text-black-bis tag has-text-weight-medium is-rounded ${value ? 'is-warning is-light' : 'is-success is-light'}`}
             >
-              { value ? 'Pending Invite' : 'Active' }
+              {value ? 'Pending Invite' : 'Active'}
             </span>
           </div>
         )),
@@ -75,10 +72,10 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
               el.isPending && (
                 <>
                   <button className="button is-text outline-none" onClick={() => resendInvitation(el.recipient)}>
-                    <FontAwesomeIcon icon={faUndo} className="mr-15"/>Resend Invitation
+                    <FontAwesomeIcon icon={faUndo} className="mr-15" />Resend Invitation
                   </button>
                   <button className="button is-text outline-none" onClick={() => revokeInvitation(el._id, el.recipient)}>
-                    <FontAwesomeIcon icon={faTimes} className="mr-15"/>Revoke
+                    <FontAwesomeIcon icon={faTimes} className="mr-15" />Revoke
                   </button>
                 </>
               )
@@ -98,7 +95,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
           <>
             {
               item.user && item.user.avatarUrl && (
-                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }} />
               )
             }
             {fullName(item.user)}
@@ -121,13 +118,6 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
     })) : [];
   }, [invites]);
 
-  const totalCount = dataSource.length
-
-  const fetchData = useCallback(({ pageSize, pageIndex }) => {
-    setPage(pageIndex + 1);
-    setPerPage(pageSize);
-  }, [setPage, setPerPage]);
-
   return (
     <div>
       <Table
@@ -143,10 +133,10 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
         )}
         pagination={{
           page,
-            perPage,
-            totalCount,
-            fetchData,
-            loading: false
+          perPage,
+          totalCount: totalInvites,
+          fetchData,
+          loading: isLoading
         }}
       />
     </div>
@@ -158,6 +148,10 @@ InvitationsGrid.propTypes = {
   invites: PropTypes.array.isRequired,
   resendInvitation: PropTypes.func.isRequired,
   revokeInvitation: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  perPage: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool.isRequired
 };
 
 export default InvitationsGrid;

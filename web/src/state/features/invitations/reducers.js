@@ -3,6 +3,8 @@ import * as types from './types';
 const initialState = {
   isFetching: false,
   data: [],
+  acceptedInvitationCount: 0,
+  pendingInvitationCount: 0,
   error: {}
 };
 
@@ -53,7 +55,9 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: action.invitation,
+        data: action.invitations,
+        acceptedInvitationCount: action.acceptedInvites,
+        pendingInvitationCount: action.pendingInvites,
         error: {},
       };
     case types.REQUEST_GET_INVITES_BY_SENDER_ERROR:

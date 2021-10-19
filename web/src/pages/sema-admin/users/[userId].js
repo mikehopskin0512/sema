@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
 import withSemaAdmin from '../../../components/auth/withSemaAdmin';
@@ -25,17 +25,19 @@ const UserDetailPage = () => {
     selectedUser: state.selectedUserState,
     invitations: state.invitationsState,
   }));
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
 
   const { userId } = router.query;
   const { token } = auth;
   const { user, isFetching: isUserLoading } = selectedUser;
-  const { data: invites, isFetching: isInvitesLoading } = invitations;
+  const { data: invites, isFetching: isInvitesLoading, acceptedInvitationCount, pendingInvitationCount } = invitations;
   const { showAlert, alertType, alertLabel } = alerts;
 
   useEffect(() => {
     dispatch(fetchUser(userId, token));
-    dispatch(getInvitesBySender(userId, token))
-  }, []);
+    dispatch(getInvitesBySender({ userId, page, perPage }, token))
+  }, [userId, page, perPage]);
 
   const userStatus = useMemo(() => user ? getUserStatus(user) : '', [user]);
   const badgeColor = useMemo(() => getBadgeColor(userStatus), [userStatus]);
@@ -48,11 +50,27 @@ const UserDetailPage = () => {
     await dispatch(revokeInviteAndHydrateUser(invitationId, userId, token, recipient));
   };
 
+  const getTotalInvitations = (type = 'table') => {
+    switch (type) {
+      case 'table':
+        return acceptedInvitationCount + pendingInvitationCount
+      case 'label':
+        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : user.inviteCount + acceptedInvitationCount + pendingInvitationCount;
+      default:
+        return acceptedInvitationCount + pendingInvitationCount
+    }
+  };
+
   useEffect(() => {
     if (showAlert === true) {
       dispatch(clearAlert());
     }
   }, [showAlert, dispatch]);
+
+  const fetchData = useCallback(({ pageSize, pageIndex }) => {
+    setPage(pageIndex + 1);
+    setPerPage(pageSize);
+  }, [setPage, setPerPage]);
 
   return (
     <>
@@ -101,14 +119,24 @@ const UserDetailPage = () => {
                     <div>Invites Available</div>
                   </div>
                   <div className='is-flex is-align-items-center'>
-                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: '#888888' }}>{invites?.length}</span>
+                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: '#888888' }}>{getTotalInvitations('label')}</span>
                     <div>Invites Used</div>
                   </div>
                 </div>
               </div>
             </div>
             <div className='column is-8 p-0'>
-              <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
+              <InvitationsGrid
+                  type='admin'
+                  invites={invites}
+                  totalInvites={getTotalInvitations()}
+                  resendInvitation={resendInvitation}
+                  revokeInvitation={revokeInvitation}
+                  fetchData={fetchData}
+                  page={page}
+                  perPage={perPage}
+                  isLoading={isInvitesLoading}
+                />
             </div>
           </>
         )

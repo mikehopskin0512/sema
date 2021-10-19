@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
@@ -34,11 +34,14 @@ const Invite = () => {
 
   const [recipient, setRecipient] = useState("");
   const [tableHeader] = useState('is better with friends, invite yours 🙌');
-  const [acceptedInvites, setAcceptedInvites] = useState(0);
-  const [pendingInvites, setPendingInvites] = useState(0);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const cardStyling = 'is-size-5 has-text-weight-semibold p-10 border-radius-4px'
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user, userVoiceToken } = auth;
+  const { data = [], isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
+
   const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0 } = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
@@ -68,20 +71,28 @@ const Invite = () => {
           message: response.data.message
         });
       }
-      await dispatch(getInvitesBySender(userId, token));
+      await dispatch(getInvitesBySender({ userId, page, perPage }, token));
+    }
+  };
+
+  const getTotalInvitations = (type = 'table') => {
+    switch (type) {
+      case 'table':
+        return acceptedInvitationCount + pendingInvitationCount
+      case 'label':
+        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
+      default:
+        return acceptedInvitationCount + pendingInvitationCount
     }
   };
 
   useEffect(() => {
-    dispatch(getInvitesBySender(userId, token));
-  }, []);
+    dispatch(getInvitesBySender({ userId, page, perPage}, token));
+  }, [userId, page, perPage]);
 
   useEffect(() => {
-    const { data = [] } = invitations ?? []
-    const pending = data.filter((d) => d.isPending === true).length;
-    const accepted = data.filter((d) => d.isPending !== true).length;
-    setPendingInvites(pending);
-    setAcceptedInvites(accepted);
+    console.log(pendingInvitationCount, acceptedInvitationCount)
+    console.log(getTotalInvitations());
   }, [invitations]);
 
   useEffect(() => {
@@ -108,7 +119,10 @@ const Invite = () => {
     }
   };
 
-  const cardStyling = 'is-size-5 has-text-weight-semibold p-10 border-radius-4px'
+  const fetchData = useCallback(({ pageSize, pageIndex }) => {
+    setPage(pageIndex + 1);
+    setPerPage(pageSize);
+  }, [setPage, setPerPage]);
 
   return (
     <>
@@ -128,24 +142,24 @@ const Invite = () => {
           </div>
           <div className="mb-5 mt-30 mx-3 columns">
             <div className={`box column mr-10 px-20 py-30`}>
-              <span className={`${cardStyling} ${getCharCount(acceptedInvites) > 1 ? '' : 'px-15'} has-background-primary has-text-white`}>
-                {user.isSemaAdmin ? acceptedInvites + pendingInvites : acceptedInvites + pendingInvites + inviteCount}
+              <span className={`${cardStyling} ${getCharCount(acceptedInvitationCount) > 1 ? '' : 'px-15'} has-background-primary has-text-white`}>
+                {getTotalInvitations()}
               </span>
               <span className="has-text-weight-semibold ml-30">
                 Total Invites
               </span>
             </div>
             <div className="box column mx-10 px-20 py-30">
-              <span className={`${cardStyling} ${getCharCount(acceptedInvites) > 1 ? '' : 'px-15'} has-background-success-dark has-text-white`}>
-                {acceptedInvites}
+              <span className={`${cardStyling} ${getCharCount(acceptedInvitationCount) > 1 ? '' : 'px-15'} has-background-success-dark has-text-white`}>
+                {acceptedInvitationCount}
               </span>
               <span className="has-text-weight-semibold ml-15">
                 Invites Accepted
               </span>
             </div>
             <div className="box column mx-10 px-20 py-30">
-              <span className={`${cardStyling} ${getCharCount(pendingInvites) > 1 ? '' : 'px-15'} has-background-grey-lighter`}>
-                {pendingInvites}
+              <span className={`${cardStyling} ${getCharCount(pendingInvitationCount) > 1 ? '' : 'px-15'} has-background-grey-lighter`}>
+                {pendingInvitationCount}
               </span>
               <span className="has-text-weight-semibold ml-15">
                 Invites Pending
@@ -213,7 +227,17 @@ const Invite = () => {
                 </form>
               </div>
               <div className={clsx(styles['sema-tile'], styles['sema-is-child'])}>
-                <InvitationsGrid type='dashboard' invites={invitations.data} resendInvitation={RESEND_INVITE} revokeInvitation={revokeInvitation} />
+                <InvitationsGrid
+                  type='dashboard'
+                  invites={invitations.data}
+                  totalInvites={getTotalInvitations()}
+                  resendInvitation={RESEND_INVITE}
+                  revokeInvitation={revokeInvitation}
+                  fetchData={fetchData}
+                  page={page}
+                  perPage={perPage}
+                  isLoading={isFetching}
+                />
               </div>
             </div>
           </div>
