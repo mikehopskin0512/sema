@@ -25,7 +25,7 @@ export const create = async (user) => {
 
   try {
     const invitation = await checkIfInvited(username);
-    if(invitation) {
+    if(!!invitation.length) {
       isWaitlist = false;
     }
 

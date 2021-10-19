@@ -12,9 +12,6 @@ import {
   getSuggestedCommentsByIds,
 } from './suggestedCommentService';
 import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
-import checkAccess from '../../middlewares/checkAccess';
-
-const { Types: { ObjectId } } = mongoose;
 
 const route = Router();
 
@@ -57,7 +54,7 @@ export default (app, passport) => {
     }
   });
   
-  route.post('/', checkAccess({name: 'Sema Super Team'}, 'canEditComments'), async (req, res) => {
+  route.post('/', async (req, res) => {
     const { comment, source, tags } = req.body;
     const { user } = req.user;
     let title = req.body.title;
@@ -95,7 +92,7 @@ export default (app, passport) => {
     }
   });
 
-  route.patch('/:id', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditComments'), async (req, res) => {
+  route.patch('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     const { user, collectionId } = req.body
     try {
@@ -108,7 +105,7 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditComments'), async (req, res) => {
+  route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comments, collectionId } = req.body;
     try {
       const result = await bulkCreateSuggestedComments(comments, req.user);
@@ -127,7 +124,7 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/bulk-update', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditComments'), async (req, res) => {
+  route.post('/bulk-update', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comments } = req.body;
     try {
       const result = await bulkUpdateSuggestedComments(comments);
