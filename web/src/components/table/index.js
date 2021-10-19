@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLessThan, faGreaterThan } from '@fortawesome/free-solid-svg-icons';
+import styles from './table.module.scss';
+import { getCharCount } from 'src/utils';
 
 const Table = ({
   columns,
@@ -17,9 +21,11 @@ const Table = ({
     headerGroups,
     prepareRow,
     page,
+    pageCount,
     canPreviousPage,
     canNextPage,
     nextPage,
+    gotoPage,
     previousPage,
     setPageSize,
     state: { pageIndex, pageSize },
@@ -35,6 +41,8 @@ const Table = ({
     useSortBy,
     usePagination,
   );
+
+  const [pageValue, setPageValue] = useState(pageIndex + 1)
 
   useEffect(() => {
     if (fetchData) {
@@ -113,29 +121,51 @@ const Table = ({
       </div>
       <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-align-items-center">
-          <div className="mr-10">Total Count: {totalCount || data.length}</div>
-          <div>Show: {data.length}</div>
+          <div className='mr-10'>Items per page</div>
+          <div className="select">
+            <select value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
+              {
+                [10, 20, 50, 100].map((item) => (
+                  <option key={item} value={item}>{item}</option>
+                ))
+              }
+            </select>
+          </div>
         </div>
         {
           !!pagination && (
             <div className="is-flex is-align-items-center">
               <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
-                <button className="pagination-previous" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
-                <button className="pagination-next" onClick={() => nextPage()} disabled={!canNextPage}>Next page</button>
+                <button className="pagination-previous button is-ghost" onClick={() => previousPage()} disabled={!canPreviousPage}>
+                  <FontAwesomeIcon icon={faLessThan} />
+                </button>
+                <button className="pagination-next button is-ghost" onClick={() => nextPage()} disabled={!canNextPage}>
+                  <FontAwesomeIcon icon={faGreaterThan} />
+                </button>
                 <ul className="pagination-list">
-                  <li><a className="pagination-link is-current" aria-current="page">{pageIndex + 1}</a></li>
+                  <li className="is-flex is-align-items-center mx-5">
+                    <input
+                      id="page-input"
+                      className={`input mr-5 has-text-centered ${styles['page-input']} ${pageValue > pageCount && 'is-danger'}`}
+                      type="number"
+                      defaultValue={pageIndex + 1}
+                      onChange={e => {
+                        const len = getCharCount(e.target.value);
+                        const width = len === 0 ? 40 : 30 + (len*10);
+                        const input = document.getElementById('page-input');
+                        input.style.width = `${width}px`;
+                        const page = e.target.value ? Number(e.target.value) - 1 : 0
+                        gotoPage(page)
+                        setPageValue(page + 1)
+                      }}
+                      required
+                    />
+                    <span className='mx-5'>
+                      of {pageCount === 0 ? '1' : pageCount}
+                    </span>
+                  </li>
                 </ul>
               </nav>
-
-              <div className="select">
-                <select value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
-                  {
-                    [10, 20, 50, 100].map((item) => (
-                      <option key={item} value={item}>{item}</option>
-                    ))
-                  }
-                </select>
-              </div>
             </div>
           )
         }

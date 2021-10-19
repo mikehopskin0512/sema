@@ -41,9 +41,11 @@ const requestGetInvitesBySender = () => ({
   type: types.REQUEST_GET_INVITES_BY_SENDER,
 });
 
-const requestGetInvitesBySenderSuccess = (invitation) => ({
+const requestGetInvitesBySenderSuccess = ({invitations, pendingInvites, acceptedInvites}) => ({
   type: types.REQUEST_GET_INVITES_BY_SENDER_SUCCESS,
-  invitation,
+  invitations,
+  pendingInvites,
+  acceptedInvites
 });
 
 const requestGetInvitesBySenderError = (errors) => ({
@@ -139,16 +141,15 @@ export const fetchInvite = (inviteToken) => async (dispatch) => {
   }
 };
 
-export const getInvitesBySender = (userId, token, search) => async (dispatch) => {
+export const getInvitesBySender = (params, token) => async (dispatch) => {
   try {
     dispatch(requestGetInvitesBySender());
-    const params = {
-      senderId: userId,
-      search
+    const p = {
+      senderId: params.userId,
+      ...params
     };
-    const payload = await getInvitations(params, token);
-    const { data: { data } } = payload;
-
+    const payload = await getInvitations(p, token);
+    const { data } = payload;
     dispatch(requestGetInvitesBySenderSuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
@@ -192,7 +193,7 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
     dispatch(requestDeleteInvite());
     const payload = await deleteInvite(id, token);
     const { data: { user }} = payload;
-    dispatch(getInvitesBySender(userId, token));
+    dispatch(getInvitesBySender({ userId }, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));
     dispatch(requestDeleteInviteSuccess());
     return { user };

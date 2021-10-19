@@ -1,31 +1,49 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
 import Table from '../table';
 import Badge from '../badge/badge';
 import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 
-const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) => {
+const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isLoading, fetchData, totalInvites = 0 }) => {
+
+  const getHeaderClass = (accessor) => {
+    switch (accessor) {
+      case 'sender':
+        return 'p-10';
+      case 'recipient':
+        return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-sky-light p-15 pt-35';
+      case 'isPending':
+        return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35' : '';
+      case 'actions':
+        return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
+      default:
+        return ''
+    }
+  };
+
   const columns = useMemo(
     () => [
       ...type === 'admin' ? [{
         Header: 'Sender',
         accessor: 'sender',
-        className: 'p-10',
+        className: getHeaderClass('sender'),
         Cell: ({ cell: { value } }) => (
           <div className="is-flex is-align-items-center">
-            { value }
+            {value}
           </div>
         ),
       }] : [],
       {
-        Header: 'User',
+        Header: 'USER',
         accessor: 'recipient',
-        className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
+        className: getHeaderClass('recipient'),
         Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center'>
-            { value }
+          <div className='is-flex is-align-items-center is-underlined'>
+            {value}
           </div>
         ),
       },
@@ -42,24 +60,34 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
       {
         Header: 'Status',
         accessor: 'isPending',
-        className: type === 'dashboard' ? 'has-background-sky-light' : '',
+        className: getHeaderClass('isPending'),
         Cell: ({ cell: { value } }) => (type === 'admin' ? (
           <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
         ) : (
-          <div className="py-15"><span className={`tag is-rounded ${value ? 'is-primary' : 'is-success'}`}>{ value ? 'Pending Invite' : 'Accepted' }</span></div>
+          <div className="py-15">
+            <span
+              className={`has-text-black-bis tag has-text-weight-medium is-rounded ${value ? 'is-warning is-light' : 'is-success is-light'}`}
+            >
+              {value ? 'Pending Invite' : 'Active'}
+            </span>
+          </div>
         )),
       },
       {
         Header: 'Actions',
         accessor: 'actions',
-        className: type === 'dashboard' ? 'pl-50 has-background-sky-light' : '',
+        className: getHeaderClass('actions'),
         Cell: ({ cell: { value: el } }) => (
           <div className='is-flex is-align-items-center py-10'>
             {
               el.isPending && (
                 <>
-                  <button className="button is-text outline-none" onClick={() => resendInvitation(el.recipient)}>Resend Invitation</button>
-                  <button className="button is-text outline-none" onClick={() => revokeInvitation(el._id, el.recipient)}>Revoke</button>
+                  <button className="button is-text outline-none" onClick={() => resendInvitation(el.recipient)}>
+                    <FontAwesomeIcon icon={faUndo} className="mr-15" />Resend Invitation
+                  </button>
+                  <button className="button is-text outline-none" onClick={() => revokeInvitation(el._id, el.recipient)}>
+                    <FontAwesomeIcon icon={faTimes} className="mr-15" />Revoke
+                  </button>
                 </>
               )
             }
@@ -78,7 +106,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
           <>
             {
               item.user && item.user.avatarUrl && (
-                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+                <img src={item.user && item.user.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }} />
               )
             }
             {fullName(item.user)}
@@ -115,6 +143,13 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation }) 
             </div>
           </div>
         )}
+        pagination={{
+          page,
+          perPage,
+          totalCount: totalInvites,
+          fetchData,
+          loading: isLoading
+        }}
       />
     </div>
   );
@@ -125,6 +160,10 @@ InvitationsGrid.propTypes = {
   invites: PropTypes.array.isRequired,
   resendInvitation: PropTypes.func.isRequired,
   revokeInvitation: PropTypes.func.isRequired,
+  fetchData: PropTypes.func.isRequired,
+  perPage: PropTypes.number.isRequired,
+  page: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool.isRequired
 };
 
 export default InvitationsGrid;
