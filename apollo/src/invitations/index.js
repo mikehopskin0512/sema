@@ -13,8 +13,7 @@ import {
   exportInviteMetrics,
   redeemInvite,
   exportInvitations,
-  getPendingInvitesByUserId,
-  getAcceptedInvitesByUserId,
+  getInvitationCountByUserId,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
@@ -107,8 +106,8 @@ export default (app, passport) => {
         search,
         senderId
       });
-      const pendingInvites = await getPendingInvitesByUserId(senderId)
-      const acceptedInvites = await getAcceptedInvitesByUserId(senderId)
+      const pendingInvites = await getInvitationCountByUserId(senderId, 'pending')
+      const acceptedInvites = await getInvitationCountByUserId(senderId, 'accepted')
 
       if (invites.statusCode === 404) {
         if (invites.name === 'Not Found') {

@@ -236,24 +236,19 @@ export const exportInvitations = async (params) => {
   return csv;
 };
 
-export const getPendingInvitesByUserId = async (userId) => {
+export const getInvitationCountByUserId = async (userId, type = 'pending') => {
   try {
-    const query = Invitation.find({ 'isPending': true })
-    if (userId) {
-      query.where('sender', userId);
+    const query = Invitation.find()
+    switch (type) {
+      case 'pending':
+        query.where('isPending', true);
+        break;
+      case 'accepted':
+        query.where('isPending', false);
+        break;
+      default:
+        break;
     }
-    const count = query.countDocuments().lean().exec();
-    return count;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-};
-
-export const getAcceptedInvitesByUserId = async (userId) => {
-  try {
-    const query = Invitation.find({ 'isPending': false })
     if (userId) {
       query.where('sender', userId);
     }
