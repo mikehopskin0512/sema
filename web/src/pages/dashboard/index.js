@@ -169,6 +169,14 @@ const Dashboard = () => {
     }
   }, [isOnboarded]);
 
+  if (repositories.isFetching || auth.isFetching) {
+    return (
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+        <Loader />
+      </div>
+    )
+  }
+  
   return (
     <>
       {repositories.isFetching || !isUserReposLoaded ? (
