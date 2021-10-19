@@ -393,7 +393,6 @@ button.sema-reaction-selection {
 }
 
 .suggestion-content-truncated {
-  margin-bottom: 16px;
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -573,19 +572,18 @@ h6 {
 
   &--img {
     width: 160px;
-    margin-top: 40px;
   }
 
   &--title {
-    margin-top: 32px;
-    margin-bottom: 6px;
+    margin-top: 24px;
+    margin-bottom: 12px;
     font-size: 16px;
     font-weight: 600;
     line-height: 19px;
   }
 
   &--link {
-    margin-top: 18px;
+    margin: 8px 0;
     font-size: 16px;
     line-height: 19px;
     color: #508bff;
@@ -763,6 +761,7 @@ h6 {
 }
 
 .suggestion-guide-link {
+  margin-top: 8px;
   display: block;
   color: #192129;
   cursor: pointer;

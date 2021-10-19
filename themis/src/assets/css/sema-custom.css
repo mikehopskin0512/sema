@@ -175,9 +175,9 @@
   border-top-color: transparent;
   content: "";
   display: block;
-  height: 1em;
+  height: 12px;
   position: relative;
-  width: 1em;
+  width: 12px;
 }
 
 .sema-image.sema-is-square img,
@@ -4958,8 +4958,8 @@ fieldset[disabled] .sema-select select:hover {
 
 .sema-control.sema-is-loading::after {
   position: absolute !important;
-  right: 0.625em;
-  top: 0.625em;
+  right: 8px;
+  top: 8px;
   z-index: 4;
 }
 
