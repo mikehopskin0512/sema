@@ -32,6 +32,7 @@ const Dashboard = () => {
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
+  const [isUserReposLoaded, setUserReposLoaded] = useState(false)
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
@@ -81,11 +82,12 @@ const Dashboard = () => {
     toggleOnboardingModalActive(status)
   }
 
-  const getUserRepos = useCallback(() => {
+  const getUserRepos = useCallback(async () => {
     if (identities && identities.length) {
       const githubUser = identities[0];
       const externalIds = githubUser?.repositories?.map((repo) => repo.id);
-      dispatch(fetchRepoDashboard(externalIds, token));
+      await dispatch(fetchRepoDashboard(externalIds, token));
+      setUserReposLoaded(true)
     }
   }, [dispatch, token]);
 
@@ -174,13 +176,19 @@ const Dashboard = () => {
       </div>
     )
   }
-
+  
   return (
     <>
-      <div>
-        <Helmet {...DashboardHelmet} />
-        <ReposView />
-      </div>
+      {repositories.isFetching || !isUserReposLoaded ? (
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+          <Loader/>
+        </div>
+      ) : (
+        <div>
+          <Helmet {...DashboardHelmet} />
+          <ReposView />
+        </div>
+      )}
       <OnboardingModal
         isModalActive={isOnboardingModalActive}
         toggleModalActive={toggleOnboardingModal}

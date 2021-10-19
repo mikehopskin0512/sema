@@ -15,6 +15,9 @@ import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 import { suggest } from '../../comments/suggestedComments/commentSuggestions';
 import Reaction from '../../comments/reaction/reactionModel';
+import UserRole from '../../roles/userRoleModel';
+import Team from '../../teams/teamModel';
+import Role from '../../roles/roleModel';
 
 export const listUsers = async (params, isExport = false) => {
   const { page, perPage, search, status } = params;
@@ -172,7 +175,10 @@ export const findUser = async (userId) => {
     model: 'Collection',
   });
 
-  return user;
+  const roles = await UserRole.find({ user: userId })
+    .populate('team')
+    .populate('role');
+  return { ...user.toJSON(), roles };
 };
 
 export const updateUserAvailableInvitesCount = async (id, params) => {

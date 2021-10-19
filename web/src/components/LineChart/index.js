@@ -21,14 +21,14 @@ const LineChart = ({ data = [] }) => {
           legendPosition: 'middle'
         }}
         axisLeft={null}
-        colors="#333333"
+        colors="#BFCBD3"
         lineWidth={1}
         pointSize={5}
         pointColor="#333333"
         pointBorderWidth={0}
         pointLabelYOffset={-12}
         enableArea={true}
-        areaOpacity={0.2}
+        areaOpacity={1}
         useMesh={true}
         enableGridX={false}
         enableGridY={false}

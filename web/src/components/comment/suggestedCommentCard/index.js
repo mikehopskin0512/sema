@@ -30,8 +30,12 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
     <div className={clsx('has-background-white border-radius-4px px-40 py-20 my-20', styles.container)}>
       <div className={clsx('is-flex is-justify-content-space-between is-align-items-flex-start', styles.title)}>
         <div className="is-flex is-align-items-center">
-          <Checkbox value={selected} onChange={(value) => onSelectChange(_id, value)} />
-          <p className="has-text-weight-semibold is-size-5 has-text-deep-black pr-10 ml-10">{title}</p>
+          { isEditable && (
+            <div className={clsx(styles.checkbox)}>
+              <Checkbox value={selected} onChange={(value) => onSelectChange(_id, value)} />
+            </div>
+          ) }
+          <p className="has-text-weight-semibold is-size-5 has-text-deep-black">{title}</p>
         </div>
         <div className="is-flex">
           <div className="is-flex is-flex-wrap-wrap mr-10">
@@ -48,7 +52,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           )}
         </div>
       </div>
-      { isEmpty(author) && isEmpty(source.name) ? null : (
+      { isEmpty(author) && isEmpty(source?.name) ? null : (
         <div className="is-flex is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
           <div className="is-flex is-align-items-center">
             { isEmpty(author) ? null : (
@@ -57,13 +61,13 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
                 <div className={clsx('mr-10', styles.vl)} />
               </>
             )}
-            { isEmpty(source.name) ? null : (
-              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source.name}</p>
+            { isEmpty(source?.name) ? null : (
+              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source?.name}</p>
             ) }
           </div>
-          { isEmpty(source.name) ? null : (
-            <a href={source.url} target="_blank" rel="noreferrer">
-              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source.name}</button>
+          { isEmpty(source?.name) ? null : (
+            <a href={source?.url} target="_blank" rel="noreferrer">
+              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source?.name}</button>
             </a>
           )}
         </div>
