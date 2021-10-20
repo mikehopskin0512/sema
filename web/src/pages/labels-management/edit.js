@@ -7,19 +7,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { validateTags } from './add';
 import LabelForm, { initialValues } from '../../components/labels-management/LabelForm';
 import withLayout from '../../components/layout';
+import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
 const { clearAlert } = alertOperations;
-const { createTags } = tagsOperations;
+const { createTags, fetchTagsById } = tagsOperations;
 
 const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const { query } = router;
+  const { id } = query;
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,
@@ -32,11 +34,15 @@ const EditLabel = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
-  const { isFetching } = tagsState;
+  const { isFetching, tag } = tagsState;
 
-  // useEffect(() => {
-  //   dispatch()
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchTagsById(id, token));
+  }, []);
+
+  useEffect(() => {
+    setTags([tag])
+  }, [tag]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -114,7 +120,11 @@ const EditLabel = () => {
           </button>
         </div>
       </div>
-      { tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />)}
+      { isFetching ? (
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+          <Loader />
+        </div>
+      ) : tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />) }
     </div>
   )
 }

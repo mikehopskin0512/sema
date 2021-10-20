@@ -3,6 +3,7 @@ import * as types from './types';
 const initialState = {
   tags: [],
   isFetching: false,
+  tag: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +38,24 @@ const reducer = (state = initialState, action) => {
       error: {},
     };
   case types.CREATE_NEW_TAG_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
+  case types.FETCH_TAG_BY_ID:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.FETCH_TAG_BY_ID_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      tag: action.tag,
+      error: {},
+    };
+  case types.FETCH_TAG_BY_ID_ERROR:
     return {
       ...state,
       isFetching: false,

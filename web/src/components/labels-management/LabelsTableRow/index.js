@@ -7,7 +7,7 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 // TODO: GET SUGGESTED COMMENTS WITH SUGGESTED COMMENTS COUNT
 
 const LabelsTableRow = ({ data }) => {
-  const { label, _id, type } = data;
+  const { label, _id, type, suggestedCommentsCount } = data;
 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const popupRef = useRef(null);
@@ -50,7 +50,7 @@ const LabelsTableRow = ({ data }) => {
       <td className="py-15 has-background-white px-10">
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="is-size-7">
-            1
+            {suggestedCommentsCount}
           </p>
         </div>
       </td>
@@ -64,7 +64,7 @@ const LabelsTableRow = ({ data }) => {
             </div>
             <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
               <div className="dropdown-content">
-                <a href="/labels-management/add" className="dropdown-item">
+                <a href={`/labels-management/edit?id=${_id}`} className="dropdown-item">
                   Edit Label
                 </a>
                 <a href="/labels-management/edit" className="dropdown-item">

@@ -2,7 +2,8 @@
 /* eslint-disable import/no-cycle */
 import {
   getSuggestedCommentTags,
-  addTags
+  addTags,
+  getTagById
 } from './api';
 import * as types from './types';
 import { alertOperations } from '../alerts';
@@ -36,6 +37,20 @@ const createNewTagError = (errors) => ({
   errors,
 });
 
+const fetchTagById = () => ({
+  type: types.FETCH_TAG_BY_ID,
+});
+
+const fetchTagByIdSuccess = (tag) => ({
+  type: types.FETCH_TAG_BY_ID_SUCCESS,
+  tag,
+});
+
+const fetchTagByIdError = (errors) => ({
+  type: types.FETCH_TAG_BY_ID_ERROR,
+  errors,
+});
+
 export const fetchTagList = (token) => async (dispatch) => {
   try {
     dispatch(fetchAllTags());
@@ -64,3 +79,16 @@ export const createTags = (tags, token) => async (dispatch) => {
     dispatch(createNewTagError(errMessage));
   }
 }
+
+export const fetchTagsById = (id, token) => async (dispatch) => {
+  try {
+    dispatch(fetchTagById());
+    const payload = await getTagById(id, token);
+    const { data } = payload;
+    dispatch(fetchTagByIdSuccess(data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(fetchTagByIdError(errMessage));
+  }
+};

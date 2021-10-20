@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
+import Loader from '../../components/Loader';
 import FilterLabels from '../../components/labels-management/FilterLabels';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
@@ -17,12 +18,26 @@ const LabelsManagement = () => {
     tagsState: state.tagsState,
   }));
 
+  const [filters, setFilters] = useState({
+    label: ''
+  });
+  const [filteredData, setFilteredData] = useState([]);
+
   const { token } = auth;
-  const { tags } = tagsState;
+  const { tags = [], isFetching } = tagsState;
 
   useEffect(() => {
     dispatch(fetchTagList(token));
   }, []);
+
+  useEffect(() => {
+    setFilteredData(tags.filter((tag) => {
+      return tag.label.toLowerCase().includes(filters.label.toLowerCase()) && (
+        !filters.languages && !filters.others ? true :
+        (filters.languages && tag.type === 'language' || filters.others && tag.type !== 'language')
+      )
+    }))
+  }, [tags, filters]);
   
   return(
     <div className="my-50">
@@ -43,8 +58,20 @@ const LabelsManagement = () => {
           </button>
         </a>
       </div>
-      <FilterLabels />
-      <LabelsTable data={tags} />
+      <FilterLabels setFilters={setFilters} filters={filters} />
+      { isFetching ? (
+        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '30vh' }}>
+          <Loader />
+        </div>
+      ) : filteredData.length > 0 ? (
+        <LabelsTable
+          data={filteredData}
+        />
+      ) : (
+        <div className="is-flex py-25 is-justify-content-center">
+          No tags found!
+        </div>
+      ) }
     </div>
   )
 }

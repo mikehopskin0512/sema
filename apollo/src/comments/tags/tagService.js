@@ -4,6 +4,8 @@ import Tag from "./tagModel";
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 
+const { Types: { ObjectId } } = mongoose;
+
 export const getAllTags = async () => {
   try {
     const tags = await Tag.find({}).exec();
@@ -36,6 +38,47 @@ export const getAllTagIds = async () => {
     return error;
   }
 };
+
+export const getTagsById = async (id) => {
+  try {
+    const tags = await Tag.aggregate([
+      {
+        $match: {
+          "_id": {
+            $eq: new ObjectId(id),
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "suggestedComments",
+          localField: "_id",
+          foreignField: "tags.tag",
+          as: "suggestedComments"
+        },
+
+      },
+      {
+        $project: {
+          _id: 1,
+          label: 1,
+          type: 1,
+          sentiment: 1,
+          isActive: 1,
+          suggestedComments: {
+            title: 1,
+            _id: 1,
+          },
+        }
+      },
+    ]).exec()
+    return tags[0];
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
 
 export const findTagsByType = async () => {
   try {
