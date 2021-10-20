@@ -9,7 +9,7 @@ export const initialValues = {
 
 const LabelForm = ({ onChangeData, id, data, errors }) => {
   const index = useMemo(() => id, []);
-  console.log({ errors })
+  
   return (
     <div className="columns pb-25" style={{ borderBottom: '1px solid #dbdbdb' }}>
       <div className="column">

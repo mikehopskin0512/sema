@@ -21,7 +21,7 @@ const LabelsTable = ({ data, columns = [], renderRow }) => {
       <table className={clsx('table is-fullwidth', tableStyles.table)}>
         <thead className={clsx('is-fullwidth', tableStyles.thead)}>
           <tr>
-            { columns.map((col) => <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">{col.label}</th>)}
+            { columns.map((col) => <th className="is-uppercase has-text-weight-semibold is-size-8 p-10" key={`column-${col.label}`}>{col.label}</th>)}
             <th></th>
           </tr>
         </thead>

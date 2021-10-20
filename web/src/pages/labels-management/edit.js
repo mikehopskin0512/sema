@@ -127,7 +127,7 @@ const EditLabel = () => {
           <Loader />
         </div>
       ) : tags.map((_tag, index) => 
-        <div>
+        <div key={`tag-${index}`}>
           <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />
           <div className="has-background-white is-fullwidth px-15 py-10 my-15">
             <div className="control has-icons-left has-icons-left" style={{ width: 350 }}>
