@@ -4,7 +4,7 @@ import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLessThan, faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 import styles from './table.module.scss';
-import { getCharCount } from 'src/utils';
+import { getCharCount } from '../utils';
 
 const Table = ({
   columns,

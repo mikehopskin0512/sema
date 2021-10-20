@@ -123,3 +123,10 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
     margin-bottom: 40px;
   }
 }
+
+.vertical-divider {
+  display: inline-block;
+  border-left: 1px solid #dbdbdb;
+  margin: 0 32px;
+  height: 50px;
+}
