@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form';
 import CustomRadio from '../../radio';
 
 export const initialValues = {
-  label: 'HELLO',
+  label: '',
   type: 'language'
 }
 
-const LabelForm = ({ onChangeData, id, data }) => {
+const LabelForm = ({ onChangeData, id, data, errors }) => {
   const index = useMemo(() => id, []);
+  console.log({ errors })
   return (
     <div className="columns pb-25" style={{ borderBottom: '1px solid #dbdbdb' }}>
       <div className="column">
@@ -20,7 +21,7 @@ const LabelForm = ({ onChangeData, id, data }) => {
           value={data.label}
           onChange={(e) => onChangeData('label', e.target.value, index)}
         />
-        {/* { errors.tags && errors.tags[index].name && <p className="has-text-danger is-size-7 is-italic">{errors.tags[index].name.message}</p> } */}
+        { errors[index] && errors[index].label && <p className="has-text-danger is-size-7 is-italic">{errors[index].label}</p> }
       </div>
       <div className="column">
         <label className="has-text-deep-black">Category</label>
@@ -30,14 +31,17 @@ const LabelForm = ({ onChangeData, id, data }) => {
             name={`category-${index}`}
             value="language"
             checked={data.type === 'language'}
+            onChange={() => onChangeData('type', 'language', index)}
           />
           <CustomRadio
             label="Other labels"
             name={`category-${index}`}
             value="other"
             checked={data.type === 'other'} 
+            onChange={() => onChangeData('type', 'other', index)}
           />
         </div>
+        { errors[index] && errors[index].type && <p className="has-text-danger is-size-7 is-italic mt-10">{errors[index].type}</p> }
       </div>
     </div>
   );

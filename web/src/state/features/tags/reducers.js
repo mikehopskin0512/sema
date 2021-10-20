@@ -25,6 +25,23 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.CREATE_NEW_TAG:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.CREATE_NEW_TAG_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      error: {},
+    };
+  case types.CREATE_NEW_TAG_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

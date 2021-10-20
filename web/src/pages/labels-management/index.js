@@ -34,12 +34,14 @@ const LabelsManagement = () => {
           </p>
           <p>View and Edit Labels</p>
         </div>
-        <button
-          className="button is-small is-primary border-radius-4px has-text-semibold"
-          type="button">
-          <FontAwesomeIcon icon={faPlus} className="mr-10" />
-          Add Labels
-        </button>
+        <a href="/labels-management/add">
+          <button
+            className="button is-small is-primary border-radius-4px has-text-semibold"
+            type="button">
+            <FontAwesomeIcon icon={faPlus} className="mr-10" />
+            Add Labels
+          </button>
+        </a>
       </div>
       <FilterLabels />
       <LabelsTable data={tags} />
