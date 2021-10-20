@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, findTagsByType, getAllTags } from './tagService';
+import { create, findTagsByType, getAllTags, deleteTag, updateTag } from './tagService';
 
 const route = Router();
 
@@ -39,4 +39,28 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  route.delete('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const tag = await deleteTag(id);
+      return res.status(200).send(tag);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { body, params: { id } } = req;
+    try {
+      const { tag } = await updateTag(id, body);
+      return res.status(200).send(tag);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+
 };

@@ -132,3 +132,25 @@ export const create = async (tags) => {
     return error;
   }
 };
+
+export const deleteTag = async (_id) => {
+  try {
+    await Tag.deleteOne({ _id });
+    return { id: _id };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const updateTag = async (_id, tag) => {
+  try {
+    const res = await Tag.updateOne({ _id }, { $set: { ...tag } });
+    return { tag };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
