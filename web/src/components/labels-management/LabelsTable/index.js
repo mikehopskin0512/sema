@@ -1,14 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLessThan, faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import LabelsTableRow from '../LabelsTableRow';
 import tableStyles from '../../repos/repoTable/repoTable.module.scss';
 import styles from './labelsTable.module.scss';
 import { getCharCount } from 'src/utils';
 
-const LabelsTable = ({ data }) => {
+const LabelsTable = ({ data, columns = [], renderRow }) => {
   const [pageSize, setPageSize] = useState(10);
   const [pageValue, setPageValue] = useState(1);
 
@@ -22,14 +21,12 @@ const LabelsTable = ({ data }) => {
       <table className={clsx('table is-fullwidth', tableStyles.table)}>
         <thead className={clsx('is-fullwidth', tableStyles.thead)}>
           <tr>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Label</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Category</th>
-            <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Suggested Comments</th>
+            { columns.map((col) => <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">{col.label}</th>)}
             <th></th>
           </tr>
         </thead>
         <tbody className="is-fullwidth">
-          { data.slice((pageValue - 1) * pageSize, pageValue * pageSize).map((tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} />) }
+          { data.slice((pageValue - 1) * pageSize, pageValue * pageSize).map(renderRow) }
         </tbody>
       </table>
       <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center">

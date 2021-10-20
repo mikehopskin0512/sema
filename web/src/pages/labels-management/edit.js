@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,6 +10,8 @@ import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
+import LabelsTable from '../../components/labels-management/LabelsTable';
+import LabelCommentsRow from '../../components/labels-management/LabelCommentsRow';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
@@ -31,6 +33,7 @@ const EditLabel = () => {
 
   const [tags, setTags] = useState([initialValues]);
   const [errors, setErrors] = useState([]);
+  const [search, setSearch] = useState('');
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
@@ -124,7 +127,31 @@ const EditLabel = () => {
         <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
           <Loader />
         </div>
-      ) : tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />) }
+      ) : tags.map((_tag, index) => 
+        <div>
+          <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />
+          <div className="has-background-white is-fullwidth px-15 py-10 my-15">
+            <div className="control has-icons-left has-icons-left" style={{ width: 350 }}>
+              <input
+                className="input has-background-white is-small"
+                type="input"
+                placeholder="Search by Suggested Comment"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <span className="icon is-small is-left">
+                <FontAwesomeIcon icon={faSearch} />
+              </span>
+            </div>
+          </div>
+          <LabelsTable
+            data={_tag.suggestedComments?.filter((tag) => {
+              return tag.title.toLowerCase().includes(search.toLowerCase());
+            }) || []}
+            columns={[{ label: 'Added On'}]}
+            renderRow={(comment) => <LabelCommentsRow {...comment} onChange={() => {}} />}
+          />
+        </div>
+      ) }
     </div>
   )
 }

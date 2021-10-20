@@ -6,6 +6,7 @@ import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import FilterLabels from '../../components/labels-management/FilterLabels';
 import LabelsTable from '../../components/labels-management/LabelsTable';
+import LabelsTableRow from '../../components/labels-management/LabelsTableRow';
 import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
 import { tagsOperations } from '../../state/features/tags';
 
@@ -66,6 +67,8 @@ const LabelsManagement = () => {
       ) : filteredData.length > 0 ? (
         <LabelsTable
           data={filteredData}
+          columns={[{ label: 'Label'}, { label: 'Category'}, { label: 'Suggested Comments'}]}
+          renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} />}
         />
       ) : (
         <div className="is-flex py-25 is-justify-content-center">

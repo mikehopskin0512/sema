@@ -32,7 +32,7 @@ const LabelsTableRow = ({ data }) => {
   }, []);
 
   return(
-    <tr className="has-background-white my-10 is-clickable">
+    <tr className="has-background-white my-10">
       <td className="py-15 has-background-white px-10">
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="is-size-7">
