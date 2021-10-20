@@ -8,7 +8,7 @@ files:
   # You can assign groups defined above as well as GitHub usernames.
   "**/.env":
     - devops-lovers # group
-  "terraform/**":
+  'terraform/**':
     - devops-lovers # group
   "apollo/migrations/**":
     - devops-lovers # group
