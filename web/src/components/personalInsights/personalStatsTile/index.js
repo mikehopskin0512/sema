@@ -46,7 +46,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       <div className="tile">
         <div className="tile has-background-white border-radius-4px box is-child">
           <div className="columns is-vcentered">
-            <div className="column is-3">
+            <div className="column is-4">
               <div className="is-flex">
                 <img
                   className={clsx("mr-20", styles.avatar)}
@@ -63,7 +63,8 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                 </div>
               </div>
             </div>
-            <div className="is-divider-vertical" />
+            {/* <div className="is-divider-vertical" /> */}
+            <div className="vertical-divider" />
             <div className="column">
               <div className="columns">
                 <div className="column is-3 is-flex is-flex-direction-column is-justify-content-space-between">
@@ -89,10 +90,6 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                   </p>
                 </div>
               </div>
-            </div>
-            <div className="is-divider-vertical" />
-            <div className="column is-2 is-flex is-justify-content-center is-align-items-center">
-              <button className="button is-primary" onClick={() => window.open(`${GITHUB_URL}/${githubUsername}`, '_blank').focus()}>View Public Profile</button>
             </div>
           </div>
         </div>

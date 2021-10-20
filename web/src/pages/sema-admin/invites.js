@@ -37,25 +37,27 @@ const InvitesPage = () => {
   const { token, user } = auth;
   const [category, setCategory] = useState('your_invites');
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
   const debounceSearchTerm = useDebounce(searchTerm);
   const { showAlert, alertType, alertLabel } = alerts;
-  const { isFetching, data: invites } = invitations;
+  const { isFetching, data: invites, acceptedInvitationCount, pendingInvitationCount} = invitations;
 
   useEffect(() => {
-    dispatch(getInvitesBySender(user._id, token))
+    dispatch(getInvitesBySender({ userId: user._id, page, perPage }, token))
   }, [dispatch, token, user._id]);
 
   const getInvites = useCallback(() => {
     if (category === 'your_invites') {
-      dispatch(getInvitesBySender(user._id, token, debounceSearchTerm));
+      dispatch(getInvitesBySender({ userId: user._id, search: debounceSearchTerm, page, perPage }, token));
     } else {
-      dispatch(getInvitesBySender(undefined, token, debounceSearchTerm));
+      dispatch(getInvitesBySender({ userId: undefined, search: debounceSearchTerm, page, perPage }, token));
     }
-  }, [category, debounceSearchTerm, dispatch, token, user._id]);
+  }, [category, debounceSearchTerm, dispatch, token, user._id, page, perPage]);
 
   useEffect(() => {
     getInvites();
-  }, [category, debounceSearchTerm, getInvites]);
+  }, [category, debounceSearchTerm, getInvites, page, perPage]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -77,6 +79,22 @@ const InvitesPage = () => {
       search: debounceSearchTerm,
     });
   };
+
+  const getTotalInvitations = (type = 'table') => {
+    switch (type) {
+      case 'table':
+        return acceptedInvitationCount + pendingInvitationCount
+      case 'label':
+        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
+      default:
+        return acceptedInvitationCount + pendingInvitationCount
+    }
+  };
+
+  const fetchData = useCallback(({ pageSize, pageIndex }) => {
+    setPage(pageIndex + 1);
+    setPerPage(pageSize);
+  }, [setPage, setPerPage]);
 
   if (isFetching) {
     return (
@@ -102,7 +120,18 @@ const InvitesPage = () => {
             </div>
           </div>
         </div>
-        <InvitationsGrid type='admin' invites={invites} resendInvitation={resendInvitation} revokeInvitation={revokeInvitation} />
+        <InvitationsGrid
+          type='admin'
+          invites={invites}
+          totalInvites={getTotalInvitations()}
+          resendInvitation={resendInvitation}
+          revokeInvitation={revokeInvitation}
+          fetchData={fetchData}
+          page={page}
+          perPage={perPage}
+          isLoading={isFetching}
+          invites={invites}
+        />
       </div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
     </>

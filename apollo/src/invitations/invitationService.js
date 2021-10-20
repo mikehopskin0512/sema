@@ -19,7 +19,7 @@ export const create = async (invitation) => {
     const token = await generateToken();
     const now = new Date();
     // const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
-    const tokenExpires = now.setHours(now.getHours() + (9999*999));
+    const tokenExpires = now.setHours(now.getHours() + (9999 * 999));
 
     const newInvite = new Invitation({
       recipient,
@@ -75,7 +75,7 @@ export const redeemInvite = async (token, userId, invitationId = null) => {
     const query = Invitation.findOneAndUpdate({
       $or: [{ token }, { _id: invitationId }], 'redemptions.user': { $ne: userId },
     },
-    { $push: { redemptions: { user: userId } }, $set: { isPending: false } });
+      { $push: { redemptions: { user: userId } }, $set: { isPending: false } });
     const invite = await query.lean().exec();
 
     return invite;
@@ -88,10 +88,8 @@ export const redeemInvite = async (token, userId, invitationId = null) => {
 
 export const getInvitationsBySender = async (params) => {
   try {
-    const { senderId, search } = params;
-
+    const { senderId, search, page, perPage } = params;
     const query = Invitation.find();
-
     if (senderId) {
       query.where('sender', senderId);
     }
@@ -99,6 +97,7 @@ export const getInvitationsBySender = async (params) => {
     if (search) {
       query.where('recipient', new RegExp(search, 'gi'))
     }
+    query.skip((page - 1) * perPage).limit(perPage)
 
     const invites = await query.populate('sender').lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
@@ -175,9 +174,9 @@ export const getInviteMetrics = async (type, timeRange) => {
             'sender': type === 'domain' ? '$domain' : '$sender',
           },
           total: { $sum: 1 },
-          accepted: { $sum: { $cond: { if: { $and: [ { $eq: [ "$isPending", false ] }, { $gte: [ "$tokenExpires", new Date() ] } ]  }, then: 1, else: 0 } } },
-          pending: { $sum: { $cond: { if: { $and: [ { $eq: [ "$isPending", true ] }, { $gte: [ "$tokenExpires", new Date() ] } ]  }, then: 1, else: 0 } } },
-          expired: { $sum: { $cond: { if: { $lt: [ "$tokenExpires", new Date() ] }, then: 1, else: 0 } } },
+          accepted: { $sum: { $cond: { if: { $and: [{ $eq: ["$isPending", false] }, { $gte: ["$tokenExpires", new Date()] }] }, then: 1, else: 0 } } },
+          pending: { $sum: { $cond: { if: { $and: [{ $eq: ["$isPending", true] }, { $gte: ["$tokenExpires", new Date()] }] }, then: 1, else: 0 } } },
+          expired: { $sum: { $cond: { if: { $lt: ["$tokenExpires", new Date()] }, then: 1, else: 0 } } },
           sender: { $first: '$senders' },
           domain: { $first: '$domain' },
         },
@@ -223,16 +222,45 @@ export const exportInviteMetrics = async (type, timeRange) => {
 export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
   const mappedData = invites.map((item) => ({
+    Sender_Email: item.senderEmail,
     Sender: fullName(item.sender),
     Recipient: item.isPending ? item.recipient : fullName(item.user),
     Status: item.isPending ? 'Pending Invite' : 'Accepted',
+    Invitations_Available: item.numAvailable,
+    Invitation_Redeemed: item.redemptions.length ? item.redemptions[0].createdAt : '-',
+    Created_At: item.createdAt
   }));
 
   const { Parser } = Json2CSV;
-  const fields = ['Sender', 'Recipient', 'Status'];
+  const fields = ['Sender_Email', 'Sender', 'Recipient', 'Status', 'Invitations_Available', 'Invitation_Redeemed', 'Created_At'];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
 
   return csv;
+};
+
+export const getInvitationCountByUserId = async (userId, type = 'pending') => {
+  try {
+    const query = Invitation.find()
+    switch (type) {
+      case 'pending':
+        query.where('isPending', true);
+        break;
+      case 'accepted':
+        query.where('isPending', false);
+        break;
+      default:
+        break;
+    }
+    if (userId) {
+      query.where('sender', userId);
+    }
+    const count = query.countDocuments().lean().exec();
+    return count;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
 };
