@@ -76,8 +76,10 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
       },
     },
   ];
-
-  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
+  
+  const commentsData = await User.aggregate(userActiveCommentsQuery);
+  if (!commentsData || commentsData.length === 0) return [];
+  const [{ comments }] = commentsData;
   return comments;
 };
 

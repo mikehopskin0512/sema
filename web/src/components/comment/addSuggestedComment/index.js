@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -63,8 +63,12 @@ const AddSuggestedComment = (props) => {
   const { token } = props;
   const [comments, setComments] = useState([defaultValues]);
   const [errors, setErrors] = useState({});
+  const { collectionState } = useSelector((state) => ({
+    collectionState: state.commentsState,
+  }));
 
   const { cid: collectionId } = router.query;
+  const { collection } = collectionState;
 
   useEffect(() => {
     dispatch(getCollectionById(collectionId, token));
