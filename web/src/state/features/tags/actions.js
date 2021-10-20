@@ -4,7 +4,8 @@ import {
   getSuggestedCommentTags,
   addTags,
   getTagById,
-  deleteTag
+  deleteTag,
+  putTag
 } from './api';
 import * as types from './types';
 import { alertOperations } from '../alerts';
@@ -65,6 +66,19 @@ const removeTagError = (errors) => ({
   errors,
 });
 
+const updateTag = () => ({
+  type: types.UPDATE_TAG,
+});
+
+const updateTagSuccess = () => ({
+  type: types.UPDATE_TAG_SUCCESS,
+});
+
+const updateTagError = (errors) => ({
+  type: types.UPDATE_TAG_ERROR,
+  errors,
+});
+
 export const fetchTagList = (token) => async (dispatch) => {
   try {
     dispatch(fetchAllTags());
@@ -118,5 +132,19 @@ export const removeTagById = (id, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(triggerAlert('Unable to delete tag', 'error'));
     dispatch(removeTagError(errMessage));
+  }
+};
+
+export const updateTagById = (id, body, token) => async (dispatch) => {
+  try {
+    dispatch(updateTag());
+    await putTag(id, body, token);
+    dispatch(triggerAlert('Successfully updated tag', 'success'));
+    dispatch(updateTagSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(triggerAlert('Unable to update tag', 'error'));
+    dispatch(updateTagError(errMessage));
   }
 };

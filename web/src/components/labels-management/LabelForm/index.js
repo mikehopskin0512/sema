@@ -37,8 +37,8 @@ const LabelForm = ({ onChangeData, id, data, errors }) => {
             label="Other labels"
             name={`category-${index}`}
             value="other"
-            checked={data.type === 'other'} 
-            onChange={() => onChangeData('type', 'other', index)}
+            checked={data.type !== 'language'} 
+            onChange={() => onChangeData('type', 'guide', index)}
           />
         </div>
         { errors[index] && errors[index].type && <p className="has-text-danger is-size-7 is-italic mt-10">{errors[index].type}</p> }

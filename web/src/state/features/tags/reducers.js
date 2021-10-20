@@ -78,6 +78,23 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.UPDATE_TAG:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.UPDATE_TAG_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      error: {},
+    };
+  case types.UPDATE_TAG_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

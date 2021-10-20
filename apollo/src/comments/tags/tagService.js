@@ -65,10 +65,7 @@ export const getTagsById = async (id) => {
           type: 1,
           sentiment: 1,
           isActive: 1,
-          suggestedComments: {
-            title: 1,
-            _id: 1,
-          },
+          suggestedComments: 1,
         }
       },
     ]).exec()

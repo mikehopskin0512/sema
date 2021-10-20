@@ -16,7 +16,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
 const { clearAlert } = alertOperations;
-const { createTags, fetchTagsById } = tagsOperations;
+const { updateTagById, fetchTagsById } = tagsOperations;
 
 const EditLabel = () => {
   const dispatch = useDispatch();
@@ -77,9 +77,8 @@ const EditLabel = () => {
       setErrors([...tagsErrors]);
       return;
     }
-    const data = dispatch(createTags(tags, token));
-    if (data) {
-      router.push('/labels-management');
+    if (tags.length > 0) {
+      dispatch(updateTagById(tags[0]._id, tags[0], token));
     }
   };
 
@@ -148,7 +147,7 @@ const EditLabel = () => {
               return tag.title.toLowerCase().includes(search.toLowerCase());
             }) || []}
             columns={[{ label: 'Added On'}]}
-            renderRow={(comment) => <LabelCommentsRow {...comment} onChange={() => {}} />}
+            renderRow={(comment, index) => <LabelCommentsRow data={comment} token={token} tagId={id} key={`row-${index}`} />}
           />
         </div>
       ) }
