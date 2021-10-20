@@ -4,19 +4,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
+import Toaster from '../../components/toaster';
 import FilterLabels from '../../components/labels-management/FilterLabels';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelsTableRow from '../../components/labels-management/LabelsTableRow';
 import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
 import { tagsOperations } from '../../state/features/tags';
+import { alertOperations } from '../../state/features/alerts';
 
+const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
 
 const LabelsManagement = () => {
   const dispatch = useDispatch();
-  const { auth, tagsState } = useSelector((state) => ({
+  const { auth, tagsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     tagsState: state.tagsState,
+    alerts: state.alertsState,
   }));
 
   const [filters, setFilters] = useState({
@@ -24,8 +28,15 @@ const LabelsManagement = () => {
   });
   const [filteredData, setFilteredData] = useState([]);
 
+  const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
   const { tags = [], isFetching } = tagsState;
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   useEffect(() => {
     dispatch(fetchTagList(token));
@@ -42,6 +53,7 @@ const LabelsManagement = () => {
   
   return(
     <div className="my-50">
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...LabelsManagementHelmet} />
       <div className="is-flex is-justify-content-space-between">
         <div>
@@ -68,7 +80,7 @@ const LabelsManagement = () => {
         <LabelsTable
           data={filteredData}
           columns={[{ label: 'Label'}, { label: 'Category'}, { label: 'Suggested Comments'}]}
-          renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} />}
+          renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} token={token} />}
         />
       ) : (
         <div className="is-flex py-25 is-justify-content-center">

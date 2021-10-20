@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
+import { useDispatch } from 'react-redux';
 import Tag from '../../tag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { tagsOperations } from '../../../state/features/tags';
 
-// TODO: GET SUGGESTED COMMENTS WITH SUGGESTED COMMENTS COUNT
+const { deleteTagAndFetchTags } = tagsOperations;
 
-const LabelsTableRow = ({ data }) => {
+const LabelsTableRow = ({ data, token }) => {
+  const dispatch = useDispatch();
   const { label, _id, type, suggestedCommentsCount } = data;
 
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -30,6 +33,10 @@ const LabelsTableRow = ({ data }) => {
       document.removeEventListener('mousedown', handleClick);
     };
   }, []);
+
+  const onClickDelete = () => {
+    dispatch(deleteTagAndFetchTags(_id, token))
+  }
 
   return(
     <tr className="has-background-white my-10">
@@ -67,7 +74,7 @@ const LabelsTableRow = ({ data }) => {
                 <a href={`/labels-management/edit?id=${_id}`} className="dropdown-item">
                   Edit Label
                 </a>
-                <a href="/labels-management/edit" className="dropdown-item">
+                <a href="#" className="dropdown-item" onClick={onClickDelete}>
                   Delete Label
                 </a>
               </div>

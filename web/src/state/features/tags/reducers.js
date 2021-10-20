@@ -61,6 +61,23 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REMOVE_TAG:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REMOVE_TAG_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      error: {},
+    };
+  case types.REMOVE_TAG_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

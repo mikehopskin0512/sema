@@ -3,7 +3,8 @@
 import {
   getSuggestedCommentTags,
   addTags,
-  getTagById
+  getTagById,
+  deleteTag
 } from './api';
 import * as types from './types';
 import { alertOperations } from '../alerts';
@@ -51,6 +52,19 @@ const fetchTagByIdError = (errors) => ({
   errors,
 });
 
+const removeTag = () => ({
+  type: types.REMOVE_TAG,
+});
+
+const removeTagSuccess = () => ({
+  type: types.REMOVE_TAG_SUCCESS,
+});
+
+const removeTagError = (errors) => ({
+  type: types.REMOVE_TAG_ERROR,
+  errors,
+});
+
 export const fetchTagList = (token) => async (dispatch) => {
   try {
     dispatch(fetchAllTags());
@@ -90,5 +104,19 @@ export const fetchTagsById = (id, token) => async (dispatch) => {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(fetchTagByIdError(errMessage));
+  }
+};
+
+export const removeTagById = (id, token) => async (dispatch) => {
+  try {
+    dispatch(removeTag());
+    await deleteTag(id, token);
+    dispatch(triggerAlert('Successfully deleted tag', 'success'));
+    dispatch(removeTagSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(triggerAlert('Unable to delete tag', 'error'));
+    dispatch(removeTagError(errMessage));
   }
 };
