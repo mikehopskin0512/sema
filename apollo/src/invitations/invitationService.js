@@ -222,13 +222,17 @@ export const exportInviteMetrics = async (type, timeRange) => {
 export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
   const mappedData = invites.map((item) => ({
+    Sender_Email: item.senderEmail,
     Sender: fullName(item.sender),
     Recipient: item.isPending ? item.recipient : fullName(item.user),
     Status: item.isPending ? 'Pending Invite' : 'Accepted',
+    Invitations_Available: item.numAvailable,
+    Invitation_Redeemed: item.redemptions.length ? item.redemptions[0].createdAt : '-',
+    Created_At: item.createdAt
   }));
 
   const { Parser } = Json2CSV;
-  const fields = ['Sender', 'Recipient', 'Status'];
+  const fields = ['Sender_Email', 'Sender', 'Recipient', 'Status', 'Invitations_Available', 'Invitation_Redeemed', 'Created_At'];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);
