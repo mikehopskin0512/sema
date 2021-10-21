@@ -27,7 +27,7 @@ const ActivityItem = (props) => {
       requester = 'Github User',
     },
   } = props;
-  
+
   const {
     username = 'User@email.com',
     firstName = '',
@@ -88,13 +88,13 @@ const ActivityItem = (props) => {
           </div>
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
         </div>
-        <div className="is-flex is-align-items-center is-flex-wrap-wrap">
+        <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
           <div className="has-text-deep-black has-text-weight-semibold is-size-5 is-size-7-mobile is-flex">
             {renderEmoji()}
           </div>
           { tags.length > 0 ? (
             <>
-              <div className="is-divider-vertical" />
+              <div className={styles.['item-comment_divider']} />
               <div className="is-flex is-flex-wrap-wrap">
                 {tags.map(({ label }) => (
                   <span key={`tag-${label}`} className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{label}</span>
@@ -103,7 +103,7 @@ const ActivityItem = (props) => {
             </>
           ) : <div className="py-25" />}
         </div>
-        <div className={clsx("my-10", styles['item-comment'])}>
+        <div className={clsx("my-8", styles['item-comment'])}>
           <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-deep-black" />
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
