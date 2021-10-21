@@ -1,1 +1,6 @@
-*       @semalab/devops
+*                       @semalab/qa @semalab/phoenix-reviewers
+
+*.env                   @semalab/qa @semalab/devops
+terraform/*             @semalab/qa @semalab/devops
+apollo/migrations/*     @semalab/qa @semalab/devops
+apollo/scripts/*        @semalab/qa @semalab/devops
