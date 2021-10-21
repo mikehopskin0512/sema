@@ -35,7 +35,7 @@ const LoginCard = ({ isAuthenticated }) => {
             size="2x"
           />
         </span>
-        <span className="has-text-weight-semibold is-size-16 ">Join our Waitlist with Github</span>
+        <span className="has-text-weight-semibold is-size-16 ">Join our Waitlist with GitHub</span>
       </button>
       {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
       <p className={styles['through-container']}>
@@ -57,7 +57,7 @@ const LoginCard = ({ isAuthenticated }) => {
             size="2x"
           />
         </span>
-        <span className="has-text-weight-semibold is-size-16">Sign in with Github</span>
+        <span className="has-text-weight-semibold is-size-16">Sign in with GitHub</span>
       </button>
     </>
   );

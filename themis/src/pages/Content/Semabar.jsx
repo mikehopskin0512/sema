@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import $ from 'cash-dom';
 
-import TagsModal from './TagsModal';
+import TagsModal from './components/TagsModal';
 import EmojiSelection from './EmojiSelection';
 
 import {
