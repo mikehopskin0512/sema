@@ -13,6 +13,7 @@ import {
   exportInviteMetrics,
   redeemInvite,
   exportInvitations,
+  getInvitationCountByUserId,
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
@@ -54,7 +55,7 @@ export default (app, passport) => {
         throw new errors.BadRequest('Invitation create error');
       }
 
-      if (userRecipient){
+      if (userRecipient) {
         const message = {
           recipient: userRecipient.username,
           url: `${orgDomain}/`,
@@ -62,7 +63,7 @@ export default (app, passport) => {
         };
         await sendEmail(message);
         await redeemInvite(newInvitation.token, userRecipient._id);
-      } else { 
+      } else {
         // Send invitation
         const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
         const message = {
@@ -97,8 +98,17 @@ export default (app, passport) => {
 
   // Fetch all invitation by senderId
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { senderId, search, page = 1, perPage = 10 } = req.query
     try {
-      const invites = await getInvitationsBySender(req.query);
+      const invites = await getInvitationsBySender({
+        page: parseInt(page, 10),
+        perPage: parseInt(perPage, 10),
+        search,
+        senderId
+      });
+      const pendingInvites = await getInvitationCountByUserId(senderId, 'pending')
+      const acceptedInvites = await getInvitationCountByUserId(senderId, 'accepted')
+
       if (invites.statusCode === 404) {
         if (invites.name === 'Not Found') {
           throw new errors.BadRequest('Invalid Sender ID');
@@ -107,7 +117,9 @@ export default (app, passport) => {
       }
 
       return res.status(200).send({
-        data: invites,
+        invitations: invites,
+        pendingInvites,
+        acceptedInvites
       });
     } catch (error) {
       logger.error(error);

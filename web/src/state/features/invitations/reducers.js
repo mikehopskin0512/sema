@@ -1,7 +1,11 @@
 import * as types from './types';
 
 const initialState = {
-
+  isFetching: false,
+  data: [],
+  acceptedInvitationCount: 0,
+  pendingInvitationCount: 0,
+  error: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -15,7 +19,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: action.invitation,
         error: {},
       };
     case types.REQUEST_CREATE_INVITE_ERROR:
@@ -40,7 +43,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: {},
+        data: [],
         error: action.errors,
       };
     case types.REQUEST_GET_INVITES_BY_SENDER:
@@ -52,14 +55,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: action.invitation,
+        data: action.invitations,
+        acceptedInvitationCount: action.acceptedInvites,
+        pendingInvitationCount: action.pendingInvites,
         error: {},
       };
     case types.REQUEST_GET_INVITES_BY_SENDER_ERROR:
       return {
         ...state,
         isFetching: false,
-        data: {},
+        data: [],
         error: action.errors,
       };
     case types.REQUEST_DELETE_INVITE:
@@ -76,7 +81,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
-        data: {},
+        data: [],
         error: action.errors,
       };
     case types.REQUEST_FETCH_INVITE_METRICS:

@@ -57,7 +57,7 @@ const userSchema = mongoose.Schema({
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },
   lastLogin: { type: Date, default: null },
-  origin: { type: String, enum: ['invitation', 'waitlist', 'signup'], default: 'signup' },
+  origin: { type: String, enum: ['invitation', 'waitlist', 'signup'] },
   isSemaAdmin: { type: Boolean, default: false },
   collections: [{
     collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
