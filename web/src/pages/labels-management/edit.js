@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -12,6 +12,8 @@ import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelCommentsRow from '../../components/labels-management/LabelCommentsRow';
+import { ViewAdmin } from '../../data/permissions';
+import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
@@ -21,6 +23,7 @@ const { updateTagById, fetchTagsById } = tagsOperations;
 const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { checkAccess } = usePermission();
 
   const { query } = router;
   const { id } = query;
@@ -38,6 +41,8 @@ const EditLabel = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
   const { isFetching, tag } = tagsState;
+
+  const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
@@ -81,6 +86,20 @@ const EditLabel = () => {
       dispatch(updateTagById(tags[0]._id, tags[0], token));
     }
   };
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      router.replace('/');
+    }
+  }, []);
+  
+  if (!isAuthorized) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
+        <Loader />
+      </div>
+    )
+  }
 
   return(
     <div className="my-50 px-10">

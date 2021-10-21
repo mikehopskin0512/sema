@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -6,8 +6,11 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import LabelForm, { initialValues } from '../../components/labels-management/LabelForm';
 import withLayout from '../../components/layout';
+import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
+import { ViewAdmin } from '../../data/permissions';
+import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
@@ -43,6 +46,9 @@ export const validateTags = (tags) => {
 const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { checkAccess } = usePermission();
+
+  const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,
@@ -96,6 +102,20 @@ const AddLabels = () => {
       router.push('/labels-management');
     }
   };
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      router.replace('/');
+    }
+  }, []);
+  
+  if (!isAuthorized) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
+        <Loader />
+      </div>
+    )
+  }
 
   return(
     <div className="my-50 px-10">

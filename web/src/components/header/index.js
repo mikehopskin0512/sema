@@ -216,7 +216,7 @@ const Header = () => {
                 </Link>
                 <hr className="navbar-divider" />
                 { roles.map((role, item) => (
-                  <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${role}`} />
+                  <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${item}`} />
                 )) }
                 <span
                   aria-hidden="true"

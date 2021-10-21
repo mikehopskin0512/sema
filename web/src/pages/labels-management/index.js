@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
@@ -9,6 +10,8 @@ import FilterLabels from '../../components/labels-management/FilterLabels';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelsTableRow from '../../components/labels-management/LabelsTableRow';
 import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
+import { ViewAdmin } from '../../data/permissions';
+import usePermission from '../../hooks/usePermission';
 import { tagsOperations } from '../../state/features/tags';
 import { alertOperations } from '../../state/features/alerts';
 
@@ -17,6 +20,8 @@ const { fetchTagList } = tagsOperations;
 
 const LabelsManagement = () => {
   const dispatch = useDispatch();
+  const { checkAccess } = usePermission();
+  const router = useRouter();
   const { auth, tagsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     tagsState: state.tagsState,
@@ -31,6 +36,8 @@ const LabelsManagement = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
   const { tags = [], isFetching } = tagsState;
+
+  const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -50,7 +57,21 @@ const LabelsManagement = () => {
       )
     }))
   }, [tags, filters]);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      router.replace('/');
+    }
+  }, []);
   
+  if (!isAuthorized) {
+    return(
+      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
+        <Loader />
+      </div>
+    )
+  }
+
   return(
     <div className="my-50 px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
