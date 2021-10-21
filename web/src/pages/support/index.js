@@ -26,7 +26,7 @@ const HelpAndSupport = () => {
   const renderBestPractices = () => (
     <>
       <p className="has-text-weight-semibold has-text-black is-size-2 is-size-4-mobile">Best Practices for Code Reviews</p>
-      <div className="is-flex is-align-items-center is-flex-wrap-wrap is-justify-content-space-between my-50">
+      <div className="is-flex is-align-items-flex-start is-flex-wrap-wrap is-justify-content-space-between my-50">
         {articles.map((child) => renderArticle(child))}
       </div>
     </>
