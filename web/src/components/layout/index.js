@@ -13,6 +13,7 @@ const widescreenPages = ['/repo/[repoId]', '/support'];
 const withLayout = (Page) => (props) => {
   const router = useRouter();
   const { pathname } = router;
+  const [noContactUs] = useState(['/login'])
 
   const isWideScreen = widescreenPages.includes(pathname);
 
@@ -56,7 +57,7 @@ const withLayout = (Page) => (props) => {
       </Head>
       <ExtensionStatus />
       <Header />
-      <div className={clsx(!isWideScreen && "container", "pb-250")}>
+      <div className={clsx(!isWideScreen && "container",!noContactUs.includes(pathname) && "pb-250")}>
         <Page {...props} />
       </div>
       <div className={styles.footer}>

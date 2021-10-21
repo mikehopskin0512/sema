@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx'
 import { find, findIndex, isEmpty, uniqBy } from 'lodash';
-import { differenceInCalendarDays } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
@@ -246,7 +245,7 @@ const PersonalInsights = () => {
         <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' />
-          <TagsChart className="mr-neg10" tags={tagsChartData} />
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} />
         </div>
         <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
         <ActivityItemList comments={filteredComments} />

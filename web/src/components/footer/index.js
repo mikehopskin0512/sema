@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedinIn, faInstagram, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import styles from './footer.module.scss';
@@ -8,6 +9,8 @@ import ContactUs from '../contactUs';
 import SupportForm from '../supportForm';
 
 const Footer = () => {
+  const router = useRouter();
+  const { pathname } = router;
   const auth = useSelector((state) => state.authState);
   const { userVoiceToken, isAuthenticated } = auth;
   const [dashboardLink] = useState('https://app.semasoftware.com');
@@ -21,6 +24,7 @@ const Footer = () => {
   });
   const [supportForm, setSupportForm] = useState(false);
   const [formType, setFormType] = useState(null);
+  const [noContactUs] = useState(['/login'])
 
   const openSupportForm = (type) => {
     setSupportForm(true);
@@ -85,9 +89,16 @@ const Footer = () => {
     </>
   );
 
+  const renderContactUs = () => {
+    if (noContactUs.includes(pathname)) {
+      return;
+    }
+    return <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
+  }
+
   return (
     <>
-      <ContactUs userVoiceToken={userVoiceToken} openSupportForm={() => openSupportForm('Support')} />
+      {renderContactUs()}
       <footer className={clsx(styles.footer, 'px-50')}>
         <div className='content-container'>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />

@@ -6,7 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
-import AddCommentCollection from '../../components/comment/AddCommentCollection';
+import AddCommentCollection from '../../components/comment/addCommentCollection';
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
 
 const { fetchTagList } = tagsOperations;

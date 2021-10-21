@@ -81,7 +81,7 @@ const EmojiSelection = ({
                   />
                 </button>
               ))}
-              <div className="learn-more-link">
+              <div className="learn-more-link learn-more-link--reactions">
                 <a rel="noreferrer" target="_blank" href={SEMA_LANDING_FAQ}>
                   Learn more about reactions
                 </a>

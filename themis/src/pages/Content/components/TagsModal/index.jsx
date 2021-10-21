@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   POSITIVE, NEGATIVE, TOGGLE_OP,
-} from './constants';
+} from '../../constants';
 
 function TagsModal({ allTags, toggleTagSelection }) {
   const Tag = ({ tag, type }) => {

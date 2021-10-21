@@ -32,7 +32,7 @@ const StatsPage = ({ startDate, endDate, onDateChange }) => {
   }, [repositories]);
 
   useEffect(() => {
-    if (start && end && dateDiff && groupBy) {
+    if (start && end && groupBy) {
       const { smartcomments } = overview;
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         startDate: start,
@@ -67,7 +67,7 @@ const StatsPage = ({ startDate, endDate, onDateChange }) => {
       )}
       <div className="is-flex is-flex-wrap-wrap mt-10">
         <ReactionChart reactions={reactions} />
-        <TagsChart tags={tags} />
+        <TagsChart tags={tags} groupBy={groupBy} />
       </div>
     </>
   );

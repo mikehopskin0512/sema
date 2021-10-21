@@ -142,7 +142,7 @@ if (!isAuthenticated || user.isWaitlist) {
               {/** Show on Desktop */}
               <div
                 className={clsx(
-                  'colored-shadow tile is-child is-5 p-70 box has-text-centered is-hidden-mobile',
+                  'colored-shadow tile is-child is-5 px-70 pt-95 box has-text-centered is-hidden-mobile',
                   styles['login-tile'],
                 )}
               >
