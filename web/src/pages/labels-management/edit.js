@@ -83,11 +83,11 @@ const EditLabel = () => {
   };
 
   return(
-    <div className="my-50">
+    <div className="my-50 px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet title="Edit label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
-        <a href="/labels-management" className="is-hidden-mobile">
+        <a href="/labels-management">
           <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
