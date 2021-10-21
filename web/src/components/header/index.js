@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import styles from './header.module.scss';
 import HeaderMenu from './HeaderMenu';
-import TeamMenuItem from './TeamMenuIteam';
+import TeamMenuItem from './TeamMenuItem';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';

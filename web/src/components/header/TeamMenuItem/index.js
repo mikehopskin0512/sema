@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
 import { ViewAdmin } from '../../../data/permissions';
@@ -39,6 +40,11 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
       )}
     </div>
   )
+}
+
+TeamMenuItem.propTypes = {
+  toggleUserMenu: PropTypes.func.isRequired,
+  role: PropTypes.object.isRequired,
 }
 
 export default TeamMenuItem;

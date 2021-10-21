@@ -104,6 +104,8 @@ LabelsTable.defaultProps = {
 
 LabelsTable.propTypes = {
   data: PropTypes.array,
+  columns: PropTypes.array.isRequired,
+  renderRow: PropTypes.func.isRequired,
 };
 
 export default LabelsTable;

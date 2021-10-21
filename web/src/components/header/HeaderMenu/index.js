@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
-import TeamMenuItem from '../TeamMenuIteam';
+import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
 
 const HeaderMenu = ({
@@ -84,6 +85,11 @@ const HeaderMenu = ({
       </a>
     </div>
   )
+}
+
+HeaderMenu.propTypes = {
+  handleLogout: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 
 export default HeaderMenu;

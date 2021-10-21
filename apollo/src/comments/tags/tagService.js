@@ -77,7 +77,7 @@ export const getTagsById = async (id) => {
   }
 }
 
-export const findTagsByType = async () => {
+export const findSuggestedCommentTags = async () => {
   try {
     // const tags = await Tag.find({
     //   "type": {

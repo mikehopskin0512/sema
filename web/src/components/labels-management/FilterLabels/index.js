@@ -1,8 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
+import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import styles from './filterLabels.module.scss';
 
 import CustomCheckbox from '../../customCheckbox';
 
@@ -37,6 +36,11 @@ const FilterLabels = ({ setFilters, filters }) => {
       </div>
     </div>
   )
+}
+
+FilterLabels.propTypes = {
+  setFilters: PropTypes.func.isRequired,
+  filters: PropTypes.object.isRequired
 }
 
 export default FilterLabels;

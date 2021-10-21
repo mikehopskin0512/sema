@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import PropTypes from 'prop-types';
 import CustomRadio from '../../radio';
 
 export const initialValues = {
@@ -46,5 +46,12 @@ const LabelForm = ({ onChangeData, id, data, errors }) => {
     </div>
   );
 };
+
+LabelForm.propTypes = {
+  data: PropTypes.object.isRequired,
+  id: PropTypes.string.isRequired,
+  onChangeData: PropTypes.func.isRequired,
+  errors: PropTypes.array.isRequired,
+}
 
 export default LabelForm;

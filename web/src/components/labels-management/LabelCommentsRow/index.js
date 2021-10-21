@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
 
@@ -75,6 +76,12 @@ const LabelCommentsRow = ({ data, token, tagId }) => {
       </td>
     </tr>
   )
+}
+
+LabelCommentsRow.propTypes = {
+  data: PropTypes.object.isRequired,
+  token: PropTypes.string.isRequired,
+  tagId: PropTypes.string.isRequired,
 }
 
 export default LabelCommentsRow;

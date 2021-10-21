@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
 import Tag from '../../tag';
@@ -93,5 +94,10 @@ const LabelsTableRow = ({ data, token }) => {
     </tr>
   )
 }
+
+LabelsTableRow.propTypes = {
+  token: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+};
 
 export default LabelsTableRow;
