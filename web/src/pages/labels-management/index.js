@@ -52,7 +52,7 @@ const LabelsManagement = () => {
   }, [tags, filters]);
   
   return(
-    <div className="my-50">
+    <div className="my-50 px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...LabelsManagementHelmet} />
       <div className="is-flex is-justify-content-space-between">
@@ -79,7 +79,7 @@ const LabelsManagement = () => {
       ) : filteredData.length > 0 ? (
         <LabelsTable
           data={filteredData}
-          columns={[{ label: 'Label'}, { label: 'Category'}, { label: 'Suggested Comments'}]}
+          columns={[{ label: 'Label'}, { label: 'Category', isHiddenMobile: true }, { label: 'Suggested Comments', isHiddenMobile: true }]}
           renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} token={token} />}
         />
       ) : (

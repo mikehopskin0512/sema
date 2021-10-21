@@ -8,7 +8,7 @@ import CustomCheckbox from '../../customCheckbox';
 
 const FilterLabels = ({ setFilters, filters }) => {
   return(
-    <div className="has-background-white px-15 py-10 is-flex my-15 is-align-items-center">
+    <div className="has-background-white px-15 py-10 is-flex my-15 is-align-items-center is-flex-wrap-wrap">
       <div className="is-flex-grow-1 mr-20">
         <div className="control has-icons-left has-icons-left">
           <input
@@ -27,7 +27,7 @@ const FilterLabels = ({ setFilters, filters }) => {
           </span>
         </div>
       </div>
-      <div className="is-flex-grow-3 is-flex">
+      <div className="is-flex-grow-3 is-flex my-10">
         <div className="mr-25">
           <CustomCheckbox label="Language" checked={filters.languages} onChange={(e) => setFilters({ ...filters, languages: e.target.checked})} />
         </div>

@@ -1,5 +1,6 @@
 .show-overflow-y {
-  overflow: visible !important;
+  overflow-y: visible !important;
+  overflow-x: auto;
 }
 
 .page-input {

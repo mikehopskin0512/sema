@@ -45,16 +45,24 @@ const LabelsTableRow = ({ data, token }) => {
           <p className="is-size-7">
             <Tag tag={label} _id={_id} type={type} />
           </p>
+          <div className="is-hidden-desktop m-5 is-hidden-tablet">
+            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-stat m-0">
+              Type: {type}
+            </p>
+            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-stat m-0">
+              Suggested Comments: {suggestedCommentsCount}
+            </p>
+          </div>
         </div>
       </td>
-      <td className="py-15 has-background-white px-10">
+      <td className="py-15 has-background-white px-10 is-hidden-mobile">
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="is-size-7" style={{ textTransform: "capitalize" }}>
             {type}
           </p>
         </div>
       </td>
-      <td className="py-15 has-background-white px-10">
+      <td className="py-15 has-background-white px-10 is-hidden-mobile">
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="is-size-7">
             {suggestedCommentsCount}
