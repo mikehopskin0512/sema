@@ -2,12 +2,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Avatar from 'react-avatar';
 import styles from './header.module.scss';
+import HeaderMenu from './HeaderMenu';
+import TeamMenuItem from './TeamMenuIteam';
 import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
@@ -32,16 +31,13 @@ const Header = () => {
   const auth = useSelector((state) => state.authState);
   const { user, token } = auth;
   const {
-    firstName = '',
-    lastName = '',
-    avatarUrl,
     isVerified = false,
     organizations = [],
     isWaitlist = true,
     isSemaAdmin = false,
     inviteCount = 0,
+    roles = [],
   } = user;
-  const fullName = `${firstName} ${lastName}`;
   // Initials replaced by react-avatar
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
@@ -203,19 +199,6 @@ const Header = () => {
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
-                {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
-                  <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                    Support
-                  </a>
-                </div> */}
-                <hr className="navbar-divider" />
-                {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
-                  <Link href="/sema-admin/users">
-                    <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                      Admin Panel
-                    </a>
-                  </Link>
-                )}
                 <Link href="/profile">
                   <a
                     aria-hidden="true"
@@ -226,6 +209,15 @@ const Header = () => {
                     Your Profile
                   </a>
                 </Link>
+                <Link href="/support">
+                  <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                    Support
+                  </a>
+                </Link>
+                <hr className="navbar-divider" />
+                { roles.map((role, item) => (
+                  <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${role}`} />
+                )) }
                 <span
                   aria-hidden="true"
                   role="button"
@@ -240,98 +232,10 @@ const Header = () => {
               <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
                 {/* Right icon menu - desktop */}
                 {!isWaitlist ? (
-                  <div className="navbar-item has-dropdown" ref={userMenu}>
-                    <div className="navbar-dropdown is-right">
-                      <div className="nested navbar-item dropdown is-hidden">
-                        <div className="dropdown-trigger">
-                          <a
-                            // className="has-text-white"
-                            aria-haspopup="true"
-                            aria-controls="dropdown-menu"
-                          >
-                            Switch Organization
-                          </a>
-                          <div className="navbar-dropdown is-right">
-                            {orgMenuList}
-                            <hr className="navbar-divider has-background-grey-lighter" />
-                            <Link href="/register/organization">
-                              <a className="navbar-item">Create New Organization</a>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                      <Link href="/">
-                        <a aria-hidden="true" className="navbar-item is-hidden" onClick={toggleUserMenu}>
-                          My Account
-                        </a>
-                      </Link>
-                      <hr className="navbar-divider has-background-grey-lighter is-hidden" />
-                      {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
-                        <Link href="/sema-admin/users">
-                          <a
-                            aria-hidden="true"
-                            type="button"
-                            className="navbar-item"
-                            onClick={toggleUserMenu}
-                          >
-                            Admin Panel
-                          </a>
-                        </Link>
-                      )}
-                      <Link href="/profile">
-                        <a
-                          aria-hidden="true"
-                          type="button"
-                          className="navbar-item"
-                          onClick={toggleUserMenu}
-                        >
-                          Your Profile
-                        </a>
-                      </Link>
-                      <span
-                        role="button"
-                        className="navbar-item has-text-red"
-                        style={{ cursor: 'pointer' }}
-                        onClick={handleLogout}
-                        tabIndex={0}
-                        aria-hidden="true"
-                      >
-                        Sign out
-                      </span>
-                    </div>
-                    {/* User menu */}
-                    <a aria-hidden="true" className="navbar-link is-arrowless mx-20" onClick={toggleUserMenu} ref={userMenu}>
-                      {/* <span className="mr-10">{firstName}</span> */}
-                      <div className="is-flex is-align-items-center">
-                        <Avatar
-                          name={fullName}
-                          src={avatarUrl || null}
-                          // githubHandle={githubHandle || null}
-                          size="30"
-                          round
-                          textSizeRatio={2.5}
-                        />
-                        <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
-                      </div>
-                    </a>
-                    {/* <button
-                    type="button"
-                    className="button user-menu"
-                    onClick={toggleUserMenu}
-                    ref={userMenu}
-                  >
-                    <span className="mr-10">{firstName}</span>
-                    <Avatar
-                      className="mr-10"
-                      name={fullName}
-                      src={avatarUrl || null}
-                      // githubHandle={githubHandle || null}
-                      size="30"
-                      round
-                      textSizeRatio={2.5}
-                    />
-                  </button> */}
-                  </div>
+                  <HeaderMenu
+                    handleLogout={handleLogout}
+                    user={user}
+                  />
                 )
                   : null}
               </div>
