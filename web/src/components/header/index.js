@@ -158,7 +158,7 @@ const Header = () => {
                 </Link>
                 <Link href="/suggested-comments">
                   <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-                    Suggested Comments
+                    Suggested Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
