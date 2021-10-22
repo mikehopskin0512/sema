@@ -39,12 +39,20 @@ const CustomSelect = (props) => {
     setMenuIsOpen(false);
   };
 
+  const handleKeypress = (e) => {
+    if (e.charCode == 13) {
+      setMenuIsOpen(false);
+    }
+  };
+
   useEffect(() => {
     // add when mounted
     document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keypress', handleKeypress);
     // return function to be called when unmounted
     return () => {
       document.removeEventListener('mousedown', handleClick);
+      document.addEventListener('keypress', handleKeypress);
     };
   }, []);
 
