@@ -47,13 +47,16 @@ all_collections.forEach(element => {
     const current_collection = db.getCollection(element)
     const documents_deleted = current_collection.deleteMany({
         $or: [{
-                userId: { $in: non_sema_users_id }
+                "userId": { $in: non_sema_users_id }
             },
             {
                 "_id": { $in: non_sema_users_id }
             },
             {
                 "_id": { $in: non_sema_recipient_id }
+            },
+            {
+                "user": { $in: non_sema_users_id }
             }
 
         ]
