@@ -16,6 +16,10 @@ const TeamEditPage = () => {
     description: '',
     members: '',
   });
+  const [errors, setErrors] = useState({
+    name: null,
+    description: null
+  });
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -26,6 +30,15 @@ const TeamEditPage = () => {
   const { token } = auth;
 
   const onSave = async () => {
+    // validation
+    if (!team.name || !team.description) {
+      setErrors({
+        name: !team.name ? 'Team name is required' : null,
+        description: !team.description ? 'Team description is required' : null
+      });
+      return;
+    }
+    
     const data = await dispatch(createTeam(team, token));
 
     toaster.notify(({ onClose }) => (
@@ -102,8 +115,13 @@ const TeamEditPage = () => {
               type="text"
               placeholder="Team name"
               value={team.name}
-              onChange={(e) => mutate({ name: e.target.value })}
+              onChange={(e) => {
+                mutate({name: e.target.value});
+                setErrors({ name: null, description: errors.description });
+              }}
+              required={true}
             />
+            { errors.name && <p className="has-text-danger is-size-7 is-italic">{errors.name}</p> }
           </div>
           <div className="mb-15">
             <label className="label is-size-7">Description</label>
@@ -111,8 +129,13 @@ const TeamEditPage = () => {
               className="textarea has-background-white mb-10"
               placeholder="Description"
               value={team.description}
-              onChange={(e) => mutate({ description: e.target.value })}
+              onChange={(e) => {
+                mutate({description: e.target.value});
+                setErrors({ name: errors.name, description: null });
+              }}
+              required={true}
             />
+            { errors.description && <p className="has-text-danger is-size-7 is-italic">{errors.description}</p> }
           </div>
           <div className="mt-40">
             <p className="has-text-weight-semibold has-text-deep-black is-size-4 mb-15">
