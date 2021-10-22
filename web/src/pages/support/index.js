@@ -14,7 +14,7 @@ const HelpAndSupport = () => {
   const renderArticle = ({
     author, id, title, date, mins, link,
   }) => (
-    <a href={link} className={clsx("is-flex-grow-1 my-25", styles.article)} target="_blank" rel="noreferrer" key={`${id}-article`}>
+    <a href={link} className={clsx("my-25", styles.article)} target="_blank" rel="noreferrer" key={`${id}-article`}>
       <div className="has-text-left p-10">
         <p className="has-text-weight-bold is-size-6 has-text-deep-black">By {author}</p>
         <p className="has-text-weight-bold is-size-5 has-text-primary">{title}</p>
