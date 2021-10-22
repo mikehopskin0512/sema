@@ -54,7 +54,7 @@ export default (app, passport) => {
     }
   });
   
-  route.post('/', async (req, res) => {
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comment, source, tags } = req.body;
     const { user } = req.user;
     let title = req.body.title;
@@ -97,7 +97,6 @@ export default (app, passport) => {
     const { user, collectionId } = req.body
     try {
       const suggestedComment = await update(id, req.body);
-
       return res.status(200).json({ suggestedComment });
     } catch (error) {
       logger.error(error);

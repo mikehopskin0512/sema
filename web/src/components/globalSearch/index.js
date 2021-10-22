@@ -39,8 +39,8 @@ const GlobalSearch = () => {
   },[userCollections, searchTerm]);
 
   const categories = [
-    { title: "suggested comment collections", items: suggestedCollections },
-    { title: "suggested comments", items: suggestedComments },
+    { title: "suggested snippets collections", items: suggestedCollections },
+    { title: "suggested snippets", items: suggestedComments },
     { title: "community engineering guide collections", items: engGuidesCollections },
     { title: "community engineering guide", items: engGuidesComments },
   ]
@@ -70,7 +70,7 @@ const GlobalSearch = () => {
           value={searchTerm}
           className={clsx(styles['global-search_input'], "input has-background-white")}
           type="input"
-          placeholder="Search Collections and Suggested Comments"
+          placeholder="Search Collections and Suggested Snippets"
         />
         <span className="icon is-small is-left">
           <FontAwesomeIcon icon={faSearch} />

@@ -71,7 +71,7 @@ export const findTags = async (tagsArr) => {
 export const buildTagsEmptyObject = async () => {
   try {
     const schema = {};
-    const tags = await getAllTags(); 
+    const tags = await getAllTags();
     for (const [key, value] of Object.entries(tags)) {
       schema[tags[key]['_id']] = 0
     }
@@ -98,6 +98,28 @@ export const create = async (tags) => {
   try {
     const response = await Tag.insertMany(tags);
     return response;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const deleteTag = async (_id) => {
+  try {
+    await Tag.deleteOne({ _id });
+    return { id: _id };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const updateTag = async (_id, tag) => {
+  try {
+    const res = await Tag.updateOne({ _id }, { $set: { ...tag } });
+    return { tag };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

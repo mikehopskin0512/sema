@@ -9,7 +9,7 @@ import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
 import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
 
-const CircularPacking = ({ data, groupBy = 'week' }) => {
+const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
     children: [],
   });
@@ -71,14 +71,14 @@ const CircularPacking = ({ data, groupBy = 'week' }) => {
 
   const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
     <div className="box has-background-white p-20 border-radius-4px">
-      <p className="has-text-weight-semibold">{tag.name} - last {tag.data.length} {groupBy[0]}</p>
+      <p className="has-text-weight-semibold is-size-7 has-text-deep-black">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
       {tag.data.length > 0 && (
-        <div className={clsx('py-5', styles['line-chart-container'])}>
+        <div className={clsx('py-3', styles['line-chart-container'])}>
           <LineChart data={[tag]} />
         </div>
       )}
       <p className="is-size-7">{value} comments</p>
-      <p className="is-size-7">{formattedValue} of all tags</p>
+      <p className="is-size-7">{formattedValue} of all tags {tagBy}</p>
     </div>
   ))
 
@@ -116,6 +116,7 @@ const CircularPacking = ({ data, groupBy = 'week' }) => {
 CircularPacking.propTypes = {
   data: PropTypes.object.isRequired,
   groupBy: PropTypes.string.isRequired,
+  tagBy: PropTypes.string.isRequired,
 };
 
 export default CircularPacking;

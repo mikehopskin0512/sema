@@ -61,7 +61,7 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname !== '/login') {
+    if (window.location.pathname === '/login' || window.location.pathname === '/support') {
       setBgColor('has-background-white');
     }
   }, []);
@@ -147,18 +147,18 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
                 <Link href="/personal-insights">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`}>
                     Personal Insights
                   </a>
                 </Link>
                 <Link href="/">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`}>
                     Repos
                   </a>
                 </Link>
                 <Link href="/suggested-comments">
                   <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-                    Suggested Comments
+                    Suggested Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
@@ -167,11 +167,16 @@ const Header = () => {
                   </a>
                 </Link> */}
                 <Link href="/invitations">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`}>
                     <div className="is-flex is-flex-wrap-wrap">
                       Invitations
                       <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
                     </div>
+                  </a>
+                </Link>
+                <Link href="/support">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/support' && 'has-text-weight-semibold'}`}>
+                    Support
                   </a>
                 </Link>
                 {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
@@ -201,6 +206,11 @@ const Header = () => {
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Invitations
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+                  </a>
+                </Link>
+                <Link href="/support">
+                  <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                    Support
                   </a>
                 </Link>
                 {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
