@@ -39,6 +39,10 @@ while (non_sema_recipient.hasNext()) {
     non_sema_recipient_id.push(non_sema_recipient.next()["_id"]);
 }
 
+
+repo_users = db.repositories.update({}, { $pull: { "repoStats.userIds": { $in: non_sema_users_id } } }, { multi: true })
+print(`Affected repository documents = ${repo_users["nModified"]}`)
+
 all_collections.forEach(element => {
     const current_collection = db.getCollection(element)
     const documents_deleted = current_collection.deleteMany({
