@@ -2,8 +2,25 @@ const conn = new Mongo();
 const db = conn.getDB("phoenix");
 const all_collections = db.getCollectionNames()
 
+
+const list_of_external_users = [
+    "abonyimichael@gmail.com",
+    "andrew.b@semalab.com",
+    "aslanlin21@gmail.com",
+    "codykenny@gmail.com",
+    "dprachi2607@gmail.com",
+    "justin@digitalchamps.com",
+    "mattvanitallie@gmail.com",
+    "sema.test.code.author@gmail.com",
+    "semacodereviewtester1000@protonmail.com",
+    "vnkgd@mail.ru"
+]
+
 const non_sema_users = db.users.find({
-    username: { $regex: /@(?!semasoftware\.com$)([^.]+\.)+.*$/ },
+    $and: [
+        { username: { $regex: /@(?!semasoftware\.com$)([^.]+\.)+.*$/ } },
+        { username: { $nin: list_of_external_users } }
+    ]
 })
 
 const non_sema_recipient = db.invitations.find({
@@ -12,14 +29,14 @@ const non_sema_recipient = db.invitations.find({
 
 const non_sema_users_id = non_sema_recipient_id = new Array
 
-while (non_sema_recipient.hasNext()) {
+while (non_sema_users.hasNext()) {
     user = non_sema_users.next()
     non_sema_users_id.push(user["_id"]);
     print(`User to delete: ${user["username"]}`)
 }
 
-while (non_sema_users.hasNext()) {
-    non_sema_users_id.push(non_sema_users.next()["_id"]);
+while (non_sema_recipient.hasNext()) {
+    non_sema_recipient_id.push(non_sema_recipient.next()["_id"]);
 }
 
 all_collections.forEach(element => {
