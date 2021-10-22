@@ -83,13 +83,7 @@ const Footer = () => {
         <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="has-text-centered">
-        <div
-          className="button is-ghost has-text-gray-4 is-size-7 is-size-m-desktop has-text-weight-semibold"
-          onClick={() => openSupportForm('Support')}
-          aria-hidden="true"
-        >
-          Support
-        </div>
+        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="/support">Support</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>

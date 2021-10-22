@@ -1,5 +1,4 @@
 .animation-container {
-  background: #f2f3f5;
   padding: 50px 100px;
   @media only screen and (max-width: 768px) {
     padding: 50px 20px;
@@ -7,7 +6,7 @@
 }
 
 .article {
-  width: 400px;
+  width: calc(95%/3);
   @media only screen and (max-width: 768px) {
     width: auto !important;
     max-width: 400px;
@@ -17,7 +16,6 @@
 .lottie {
   position: relative;
   width: calc(95%/3);
-  height: 500px;
   @media only screen and (max-width: 768px) {
     width: 100%;
   }
@@ -25,6 +23,7 @@
 
 .img {
   height: 300px;
+  object-fit: contain;
 }
 
 .button-play {
