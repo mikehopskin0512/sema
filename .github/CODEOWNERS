@@ -1,0 +1,10 @@
+*                       @semalab/qa @semalab/phoenix-reviewers
+
+*.env*                      @semalab/qa @semalab/devops
+terraform/*                 @semalab/qa @semalab/devops
+apollo/migrations/*         @semalab/qa @semalab/devops
+apollo/scripts/*            @semalab/qa @semalab/devops
+themis/build.sh             @semalab/qa @semalab/devops
+themis/deploy.sh            @semalab/qa @semalab/devops
+docker-compose.*            @semalab/qa @semalab/devops
+*/build-and-deploy.sh       @semalab/qa @semalab/devops
