@@ -79,7 +79,7 @@ const EmptyRepo = () => {
                   })
                 }
               </div>
-              <a href="https://github.com">
+              <a href="https://github.com" rel="noopener noreferrer" target="_blank">
                 <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review some code on GitHub</button>
               </a>
             </div>
