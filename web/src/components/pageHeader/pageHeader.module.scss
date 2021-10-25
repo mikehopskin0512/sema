@@ -1,0 +1,17 @@
+.wrapper {
+  border-bottom: 1px solid #E6EAEE !important;
+}
+
+.active {
+  color: #53a9C3 !important;
+  border-bottom: 2px solid #53a9C3 !important;
+}
+
+.listItem {
+  padding: 3px !important;
+  margin-right: 20px;
+  &:hover {
+    color: #53a9C3 !important;
+    border-bottom: 2px solid #53a9C3 !important;
+  }
+}

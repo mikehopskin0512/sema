@@ -14,6 +14,9 @@ import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { ViewAdmin } from '../../data/permissions';
+import { teamsOperations } from '../../state/features/teams';
+
+const { getTeams } = teamsOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -30,6 +33,7 @@ const Header = () => {
 
   // Get auth state
   const auth = useSelector((state) => state.authState);
+  const { teams } = useSelector((state) => state.teamsState);
   const { user, token } = auth;
   const {
     firstName = '',
@@ -64,7 +68,8 @@ const Header = () => {
     if (window.location.pathname === '/login' || window.location.pathname === '/support') {
       setBgColor('has-background-white');
     }
-  }, []);
+    dispatch(getTeams(token));
+  }, [dispatch, token]);
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -226,6 +231,17 @@ const Header = () => {
                     </a>
                   </Link>
                 )}
+                <Link href="/team">
+                  <a
+                    aria-hidden="true"
+                    type="button"
+                    className="navbar-item has-text-weight-semibold is-uppercase"
+                    onClick={toggleUserMenu}
+                  >
+                    <span>Create a Team</span>
+                    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+                  </a>
+                </Link>
                 <Link href="/profile">
                   <a
                     aria-hidden="true"
@@ -252,6 +268,24 @@ const Header = () => {
                 {!isWaitlist ? (
                   <div className="navbar-item has-dropdown" ref={userMenu}>
                     <div className="navbar-dropdown is-right">
+                      {
+                        (teams && teams.length) ? (
+                          <div className="navbar-item">
+                            <div className="is-flex">
+                              <img src="/img/team.png" className="mr-10" alt="" />
+                              <div>
+                                <div className="is-size-7 has-text-weight-semibold">{teams[0].name}</div>
+                                <div className="is-size-8 has-text-weight-semibold has-text-gray-dark is-uppercase my-5">Team Account</div>
+                                <Link href="/teams">
+                                  <a className="is-line-height-1 is-size-6 has-text-weight-semibold has-text-primary mt-5">
+                                    <span className="mr-10">Manage</span><span>Team</span>
+                                  </a>
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (<></>)
+                      }
                       <div className="nested navbar-item dropdown is-hidden">
                         <div className="dropdown-trigger">
                           <a
@@ -288,6 +322,21 @@ const Header = () => {
                           </a>
                         </Link>
                       )}
+                      <Link href="/teams/add">
+                        <a
+                          aria-hidden="true"
+                          type="button"
+                          className="navbar-item"
+                          onClick={toggleUserMenu}
+                        >
+                          <span>Create a Team</span>
+                          {
+                            (teams && teams.length) ? (
+                              <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+                            ) : ''
+                          }
+                        </a>
+                      </Link>
                       <Link href="/profile">
                         <a
                           aria-hidden="true"
