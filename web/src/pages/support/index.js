@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import Lottie from 'react-lottie-player';
-import { content } from './data';
-import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import { articles } from '../../data/help';
+import { content } from '../../data/supportContent';
+import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import styles from './support.module.scss';
 import withLayout from '../../components/layout';
 import { SEMA_FAQ_URL } from '../../utils/constants';

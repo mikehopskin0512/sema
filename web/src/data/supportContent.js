@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import animationReactions from '../../components/onboarding/animationReactions.json';
 import animationTags from '../../components/onboarding/animationTags.json';
 import animationComments from '../../components/onboarding/animationComments.json';
