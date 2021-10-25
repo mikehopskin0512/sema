@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import animationReactions from '../../components/onboarding/animationReactions.json';
 import animationTags from '../../components/onboarding/animationTags.json';
 import animationComments from '../../components/onboarding/animationComments.json';
@@ -5,7 +6,7 @@ import animationComments from '../../components/onboarding/animationComments.jso
 export const content = [
   {
     title: 'Suggested Comments',
-    subtitle: 'Leave better reviews by inserting pre-written snippets based on the world\'s top sources of coding knowledge + intenal best practices.',
+    subtitle: 'Leave better reviews by inserting pre-written snippets based on the world\'s top sources of coding knowledge + internal best practices.',
     img: '/img/repo-suggested-comments.png',
     animationData: animationComments,
   },
