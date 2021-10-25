@@ -30,10 +30,10 @@ const EmptyRepo = () => {
       <div className={clsx('hero-body', styles.container)}>
         <div className="tile is-ancestor mb-50">
           <div className="is-parent is-full-width">
-            <div className="tile is-child py-30 box has-text-centered">
+            <div className="tile is-child py-30 px-40 box has-text-centered">
               <h1 className="has-text-weight-semibold is-size-3 mt-15">{title1}</h1>
               <h2 className={clsx('is-size-5 pb-20 px-230', styles.subtitle)}>{subtitle1}</h2>
-              <div className="columns">
+              <div className={clsx('columns')}>
                 {
                   content.map((d, i) => {
                     const { img, title, subtitle, animationData } = d;
@@ -61,8 +61,8 @@ const EmptyRepo = () => {
                                 </>
                               ) }
                             </div>
-                            <h1 className="title has-text-primary has-text-left is-size-4">{title}</h1>
-                            <h2 className="subtitle has-text-left is-size-5" dangerouslySetInnerHTML={{ __html: sub }} />
+                            <span className="title has-text-primary has-text-left is-size-5">{title}</span>
+                            <span className="subtitle has-text-left is-size-6" dangerouslySetInnerHTML={{ __html: sub }} />
                           </div>
                         </div>
                         <div className={clsx('column p-2 mb-10', styles['mobile-view'])}>
@@ -79,7 +79,7 @@ const EmptyRepo = () => {
                   })
                 }
               </div>
-              <a href="https://github.com">
+              <a href="https://github.com" rel="noopener noreferrer" target="_blank">
                 <button type="button" className="button is-primary mb-20 has-text-weight-semibold is-size-5">Review some code on GitHub</button>
               </a>
             </div>

@@ -83,13 +83,7 @@ const Footer = () => {
         <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="has-text-centered">
-        <div
-          className="button is-ghost has-text-gray-4 is-size-7 is-size-m-desktop has-text-weight-semibold"
-          onClick={() => openSupportForm('Support')}
-          aria-hidden="true"
-        >
-          Support
-        </div>
+        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="/support">Support</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>
@@ -106,12 +100,12 @@ const Footer = () => {
     <>
       {renderContactUs()}
       <footer className={clsx(styles.footer, 'px-50')}>
-        <div className='content-container'>
+        <div className='content-container px-50'>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
           <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
             {renderAppLinks()}
           </div>
-          <div className="is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-center is-align-items-center is-hidden-touch">
+          <div className="is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-flex-start is-align-items-center is-hidden-touch">
             <div className="is-flex is-align-items-center">
               {renderAppLinks()}
             </div>
