@@ -63,6 +63,9 @@ const AddSuggestedComment = (props) => {
   const { token } = props;
   const [comments, setComments] = useState([defaultValues]);
   const [errors, setErrors] = useState({});
+  const { collectionState } = useSelector((state) => ({
+    collectionState: state.commentsState,
+  }));
 
   const { collectionState } = useSelector((state) => ({
     collectionState: state.commentsState,

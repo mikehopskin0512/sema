@@ -15,7 +15,9 @@ export {
   RepoStatsHelmet,
   HelpSupportHelmet,
   PersonalInsightsHelmet,
-  LabelsManagementHelmet
+  LabelsManagementHelmet,
+  TeamCreateHelmet,
+  TeamManagementHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description, children }) => (

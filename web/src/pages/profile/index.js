@@ -31,7 +31,7 @@ const Profile = () => {
   return (
     <div>
       <Helmet {...ProfileHelmet} />
-      <EditModal onClose={onClose} isActive={editModalIsOpen} />
+      {editModalIsOpen && <EditModal onClose={onClose} />}
       <div className="my-40">
         <>
           <p className="has-text-black has-text-weight-bold is-size-4 mb-30">Profile Info</p>

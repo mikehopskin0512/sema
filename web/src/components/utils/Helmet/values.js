@@ -63,3 +63,13 @@ export const LabelsManagementHelmet = {
   title: 'Labels Management',
   description: null,
 };
+
+export const TeamCreateHelmet = {
+  title: 'Create a Team',
+  description: null,
+};
+
+export const TeamManagementHelmet = {
+  title: 'Team Management',
+  description: null,
+};

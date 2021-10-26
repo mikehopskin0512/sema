@@ -13,6 +13,9 @@ import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { ViewAdmin } from '../../data/permissions';
+import { teamsOperations } from '../../state/features/teams';
+
+const { getTeams } = teamsOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,7 @@ const Header = () => {
 
   // Get auth state
   const auth = useSelector((state) => state.authState);
+  const { teams } = useSelector((state) => state.teamsState);
   const { user, token } = auth;
   const {
     isVerified = false,
@@ -57,10 +61,11 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname !== '/login') {
+    if (window.location.pathname === '/login' || window.location.pathname === '/support') {
       setBgColor('has-background-white');
     }
-  }, []);
+    dispatch(getTeams(token));
+  }, [dispatch, token]);
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -143,18 +148,18 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
                 <Link href="/personal-insights">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`}>
                     Personal Insights
                   </a>
                 </Link>
                 <Link href="/">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`}>
                     Repos
                   </a>
                 </Link>
                 <Link href="/suggested-comments">
                   <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-                    Suggested Comments
+                    Suggested Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
@@ -163,11 +168,16 @@ const Header = () => {
                   </a>
                 </Link> */}
                 <Link href="/invitations">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`}>
                     <div className="is-flex is-flex-wrap-wrap">
                       Invitations
                       <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
                     </div>
+                  </a>
+                </Link>
+                <Link href="/support">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/support' && 'has-text-weight-semibold'}`}>
+                    Support
                   </a>
                 </Link>
                 {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
@@ -197,6 +207,36 @@ const Header = () => {
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Invitations
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+                  </a>
+                </Link>
+                
+                <Link href="/support">
+                  <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                    Support
+                  </a>
+                </Link>
+                {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
+                  <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                    Support
+                  </a>
+                </div> */}
+                <hr className="navbar-divider" />
+                {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
+                  <Link href="/sema-admin/users">
+                    <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                      Admin Panel
+                    </a>
+                  </Link>
+                )}
+                <Link href="/team">
+                  <a
+                    aria-hidden="true"
+                    type="button"
+                    className="navbar-item has-text-weight-semibold is-uppercase"
+                    onClick={toggleUserMenu}
+                  >
+                    <span>Create a Team</span>
+                    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
                   </a>
                 </Link>
                 <Link href="/profile">
@@ -238,6 +278,41 @@ const Header = () => {
                   />
                 )
                   : null}
+                {/* TODO We will enable this again when team mgmt feature is fully implemented  */}
+                {/*{*/}
+                {/*  (teams && teams.length) ? (*/}
+                {/*    <div className="navbar-item">*/}
+                {/*      <div className="is-flex">*/}
+                {/*        <img src="/img/team.png" className="mr-10" alt="" />*/}
+                {/*        <div>*/}
+                {/*          <div className="is-size-7 has-text-weight-semibold">{teams[0].name}</div>*/}
+                {/*          <div className="is-size-8 has-text-weight-semibold has-text-gray-dark is-uppercase my-5">Team Account</div>*/}
+                {/*          <Link href="/teams">*/}
+                {/*            <a className="is-line-height-1 is-size-6 has-text-weight-semibold has-text-primary mt-5">*/}
+                {/*              <span className="mr-10">Manage</span><span>Team</span>*/}
+                {/*            </a>*/}
+                {/*          </Link>*/}
+                {/*        </div>*/}
+                {/*      </div>*/}
+                {/*    </div>*/}
+                {/*  ) : (<></>)*/}
+                {/*}*/}
+                {/* TODO We will enable this again when team mgmt feature is fully implemented  */}
+                {/*<Link href="/teams/add">*/}
+                {/*  <a*/}
+                {/*    aria-hidden="true"*/}
+                {/*    type="button"*/}
+                {/*    className="navbar-item"*/}
+                {/*    onClick={toggleUserMenu}*/}
+                {/*  >*/}
+                {/*    <span>Create a Team</span>*/}
+                {/*    {*/}
+                {/*      (teams && teams.length) ? (*/}
+                {/*        <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>*/}
+                {/*      ) : ''*/}
+                {/*    }*/}
+                {/*  </a>*/}
+                {/*</Link>*/}
               </div>
             </div>
           ) : (

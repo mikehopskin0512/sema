@@ -8,7 +8,7 @@ import Toaster from '../../toaster';
 import { alertOperations } from '../../../state/features/alerts';
 import { authOperations } from '../../../state/features/auth';
 
-const EditModal = ({ isActive, onClose }) => {
+const EditModal = ({ onClose }) => {
   const dispatch = useDispatch();
   const [usernames, setUsernames] = useState([]);
   const { alerts, auth } = useSelector((state) => ({
@@ -58,7 +58,7 @@ const EditModal = ({ isActive, onClose }) => {
   };
 
   return (
-    <div className={`modal ${isActive ? 'is-active' : ''}`}>
+    <div className="modal is-active">
       <Toaster
         type={alertType}
         message={alertLabel}
@@ -122,7 +122,6 @@ const EditModal = ({ isActive, onClose }) => {
 };
 
 EditModal.propTypes = {
-  isActive: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
