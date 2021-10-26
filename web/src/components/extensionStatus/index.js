@@ -57,7 +57,7 @@ const ExtensionStatus = () => {
                   Activate Chrome Plugin
                 </div>
                 <div>
-                  The Sema Chrome Plugin allows us to modify the Github commenting UI and supercharge your code review workflow.
+                  The Sema Chrome Plugin allows us to modify the GitHub commenting UI and supercharge your code review workflow.
                 </div>
               </div>
             </div>
