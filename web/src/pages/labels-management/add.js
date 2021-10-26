@@ -15,17 +15,31 @@ import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
 const { clearAlert } = alertOperations;
-const { createTags } = tagsOperations;
+const { createTags, fetchTagList } = tagsOperations;
 
-export const validateTags = (tags) => {
+export const validateTags = (tags, existingTags = [], currentTag = false) => {
   let hasErrors = false;
   const errors = tags.map((tag) => {
     let errs = {};
+    if (tags.filter((item) => item.label.toLowerCase() === tag.label.toLowerCase()).length > 1) {
+      hasErrors = true;
+      errs = {
+        ...errs,
+        label: 'Label names should be unique'
+      }
+    }
+    if (existingTags.find((existing) => existing.label.toLowerCase() === tag.label.toLowerCase()) && !currentTag) {
+      hasErrors = true;
+      errs = {
+        ...errs,
+        label: 'Label already exists in the database.'
+      }
+    }
     if (!tag.label) {
       hasErrors = true;
       errs = {
         ...errs,
-        label: 'Name is required!'
+        label: 'Label is required!'
       }
     }
     if (!tag.type) {
@@ -61,13 +75,17 @@ const AddLabels = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
-  const { isFetching } = tagsState;
+  const { isFetching, tags: existingTags } = tagsState;
 
   useEffect(() => {
     if (showAlert === true) {
       dispatch(clearAlert());
     }
   }, [showAlert, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchTagList(token))
+  }, []);
 
   const onCancel = async () => {
     await router.back();
@@ -87,12 +105,16 @@ const AddLabels = () => {
   };
 
   const onAddLabel = () => {
-    setTags([...tags, initialValues])
+    setTags([...tags, initialValues]);
+  }
+
+  const onRemove = (id) => {
+    setTags(tags.filter((_tag, index) => index !== id));
   }
 
   const onSubmit = () => {
     setErrors([]);
-    const tagsErrors = validateTags(tags);
+    const tagsErrors = validateTags(tags, existingTags);
     if (tagsErrors) {
       setErrors([...tagsErrors]);
       return;
@@ -127,15 +149,15 @@ const AddLabels = () => {
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
-            <li><a href="/labels-management" className="has-text-grey">Label management</a></li>
-            <li className="is-active has-text-weight-semibold"><div className="px-5">Add Label</div></li>
+            <li><a href="/labels-management" className="has-text-grey">Label Management</a></li>
+            <li className="is-active has-text-weight-semibold"><div className="px-5">Add Labels</div></li>
           </ul>
         </nav>
       </div>
       <div className="is-flex mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add label
+            Add Labels
           </p>
         </div>
         <div className="is-flex">
@@ -157,7 +179,7 @@ const AddLabels = () => {
           </button>
         </div>
       </div>
-      { tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />)}
+      { tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} onRemove={onRemove} />)}
       <button
           className="button is-small is-outlined is-primary border-radius-4px mt-20"
           type="button"

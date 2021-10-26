@@ -18,7 +18,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 
 const { clearAlert } = alertOperations;
-const { updateTagById, fetchTagsById } = tagsOperations;
+const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
 
 const EditLabel = () => {
   const dispatch = useDispatch();
@@ -40,12 +40,13 @@ const EditLabel = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
-  const { isFetching, tag } = tagsState;
+  const { isFetching, tag, tags: existingTags } = tagsState;
 
   const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
+    dispatch(fetchTagList(token));
   }, []);
 
   useEffect(() => {
@@ -77,13 +78,13 @@ const EditLabel = () => {
 
   const onSubmit = () => {
     setErrors([]);
-    const tagsErrors = validateTags(tags);
+    const tagsErrors = validateTags(tags, existingTags, tag);
     if (tagsErrors) {
       setErrors([...tagsErrors]);
       return;
     }
     if (tags.length > 0) {
-      dispatch(updateTagById(tags[0]._id, tags[0], token));
+      dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
     }
   };
 
@@ -111,7 +112,7 @@ const EditLabel = () => {
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
-            <li><a href="/labels-management" className="has-text-grey">Label management</a></li>
+            <li><a href="/labels-management" className="has-text-grey">Label Management</a></li>
             <li className="is-active has-text-weight-semibold"><div className="px-5">Edit Label</div></li>
           </ul>
         </nav>
@@ -119,7 +120,7 @@ const EditLabel = () => {
       <div className="is-flex mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Edit label
+            Edit Label
           </p>
         </div>
         <div className="is-flex">

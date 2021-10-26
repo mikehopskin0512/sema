@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import CustomCheckbox from '../../customCheckbox';
 
@@ -31,9 +31,17 @@ const FilterLabels = ({ setFilters, filters }) => {
           <CustomCheckbox label="Language" checked={filters.languages} onChange={(e) => setFilters({ ...filters, languages: e.target.checked})} />
         </div>
         <div className="">
-          <CustomCheckbox label="Other tags" checked={filters.others} onChange={(e) => setFilters({ ...filters, others: e.target.checked})} />
+          <CustomCheckbox label="Other labels" checked={filters.others} onChange={(e) => setFilters({ ...filters, others: e.target.checked})} />
         </div>
       </div>
+      <a href="/labels-management/add">
+        <button
+          className="button is-small is-primary border-radius-4px has-text-semibold"
+          type="button">
+          <FontAwesomeIcon icon={faPlus} className="mr-10" />
+          Add Labels
+        </button>
+      </a>
     </div>
   )
 }

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import Avatar from 'react-avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
@@ -34,8 +33,15 @@ const LabelsManagement = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token } = auth;
+  const { token, user } = auth;
+  const { roles } = user ?? { roles: [] };
   const { tags = [], isFetching } = tagsState;
+
+  const roleTeam = roles.find((role) => {
+    const { team } = role;
+    // While teams selection is not implemented
+    return team?.name === "Sema Super Team";
+  });
 
   const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
 
@@ -76,21 +82,22 @@ const LabelsManagement = () => {
     <div className="my-50 px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...LabelsManagementHelmet} />
-      <div className="is-flex is-justify-content-space-between">
-        <div>
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4">
-            Labels Management
-          </p>
-          <p>View and Edit Labels</p>
-        </div>
-        <a href="/labels-management/add">
-          <button
-            className="button is-small is-primary border-radius-4px has-text-semibold"
-            type="button">
-            <FontAwesomeIcon icon={faPlus} className="mr-10" />
-            Add Labels
-          </button>
-        </a>
+      <div className="is-flex is-align-items-center mb-30">
+        <Avatar
+          name={roleTeam?.team?.name || "Team"}
+          src={roleTeam?.team?.avatarUrl}
+          size="30"
+          round
+          textSizeRatio={2.5}
+          className="mr-15"
+          maxInitials={2}
+        />
+        <p className="is-size-4 has-text-weight-semibold has-text-deep-black">{roleTeam?.team?.name}</p>
+      </div>
+      <div className="tabs">
+        <ul>
+          <li className="is-active"><a href="/labels-management" className="px-0">Label Management</a></li>
+        </ul>
       </div>
       <FilterLabels setFilters={setFilters} filters={filters} />
       { isFetching ? (
