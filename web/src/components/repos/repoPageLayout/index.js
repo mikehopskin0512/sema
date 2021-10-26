@@ -8,7 +8,7 @@ import withLayout from "../../layout";
 import Loader from "../../Loader";
 import styles from "./repoPageLayout.module.scss";
 import { repositoriesOperations } from "../../../state/features/repositories";
-import Select, { components } from 'react-select';
+import HoverSelect from '../../../components/select/hoverSelect';
 
 const { getUserRepositories } = repositoriesOperations;
 
@@ -65,13 +65,6 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
     }
   }, [repositories]);
 
-  const Control = (props) => {
-    return <components.Control
-      {...props}
-      className={clsx("has-background-white has-text-weight-semibold has-text-primary is-size-3 is-size-5-mobile p-0", styles['select-container'])}
-    />
-  }
-
   const IndicatorSeparator = () => null;
 
   const onChangeSelect = (obj) => {
@@ -91,14 +84,14 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
             <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
               <div className={"is-flex-grow-1"}>
                 { repoOptions.length > 1 ? (
-                  <Select
+                  <HoverSelect
                     onChange={onChangeSelect}
                     value={selectedRepo}
                     options={repoOptions}
-                    className={clsx(styles['repo-select-container'], "pl-8")}
-                    components={{ Control, IndicatorSeparator }}
-                    isOptionDisabled={(option) => option.disabled}
-                    placeholder={''} />
+                    className="pl-8"
+                    openOnMouseOver
+                    placeholder={''}
+                  />
                 ) : (
                   <p className={clsx("has-text-deep-black px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile", styles['select-container'], styles['repo-select-container'])}>{name}</p>
                 ) }

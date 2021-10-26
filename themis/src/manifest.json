@@ -15,8 +15,7 @@
   "permissions": [
     "cookies",
     "tabs",
-    "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "declarativeNetRequest"
   ],
   "action": {
     "default_popup": "popup.html",
