@@ -8,7 +8,7 @@ import withLayout from '../../components/layout';
 import { teamsOperations } from '../../state/features/teams';
 import styles from './teams.module.scss';
 import clsx from 'clsx';
-import Checkbox from '@/components/checkbox';
+import Checkbox from '../../components/checkbox';
 
 const { createTeam } = teamsOperations;
 
