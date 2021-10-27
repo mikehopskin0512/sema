@@ -58,7 +58,7 @@ function suggestReaction(originalCommentText) {
   checkTerms(commentText, trophyWords, reactionBallots[1]);
 
   // good, ok, works, enough → 👌
-  const okWords = ['good', 'ok', 'works', 'enough'];
+  const okWords = ['good', 'ok', 'works', 'enough', 'lgtm'];
   checkTerms(commentText, okWords, reactionBallots[2]);
 
   // question mark, why → ❓

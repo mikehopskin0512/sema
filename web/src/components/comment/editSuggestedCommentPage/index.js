@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { validateData } from '../addSuggestedComment';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
@@ -40,6 +40,8 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   useEffect(() => {
     setComments(suggestedComments.map((comment) => ({
       ...comment,
+      sourceName: comment.source && comment.source.name,
+      sourceLink: comment.source && comment.source.url,
       languages: comment.tags.filter((tag) => tag.tag && tag.type === 'language').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
       guides: comment.tags.filter((tag) => tag.tag && tag.type === 'guide').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
     })));
@@ -60,32 +62,30 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
     setErrors({});
     const data = comments.map((comment) => {
       const isDataValid = validateData(comment, setErrors);
+  
       if (!isDataValid) {
         return;
       }
-
-      let sourceName = '';
+  
       const re = new RegExp("^(http|https)://", "i");
-      if (re.test(comment.source?.url)) {
-        sourceName =  new URL(comment.source.url).hostname
-      } else {
+      if (!re.test(comment.sourceLink)) {
         setErrors({
-          source: {
+          sourceLink: {
             message: 'Source should be a URL'
           }
         });
         return;
       }
 
-      return {
+      return isDataValid ? {
         ...comment,
         source: {
-          url: comment.source.url,
-          name: sourceName
+          name: comment.sourceName,
+          url: comment.sourceLink,
         },
         tags: makeTagsList([...comment.languages, ...comment.guides]),
         relatedLinks: comment.relatedLinks ? parseRelatedLinks(comment.relatedLinks.toString()) : '',
-      }
+      } : null;
     });
 
     if (data[0]) {
@@ -94,7 +94,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
     }
   };
 
-  return(
+  return (
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
@@ -135,7 +135,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
         }
       </div>
     </>
-  )
-}
+  );
+};
 
 export default EditSuggestedCommentPage;

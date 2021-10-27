@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faPlus, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
 import { commentsOperations } from '../../../state/features/comments';
@@ -15,40 +15,31 @@ const defaultValues = {
   title: '',
   languages: [],
   guides: [],
-  source: {
-    url: '',
-    name: ''
-  },
+  sourceName: '',
+  sourceLink: '',
   author: '',
   comment: '',
   link: '',
   relatedLinks: '',
-}
+};
 
 const requiredFields = {
   title: 'Title is required',
   languages: 'At least one language is required',
   guides: 'At least one guide is required',
-  source: 'Source is required',
+  sourceName: 'Source Name is required',
+  sourceLink: 'Source Link is required',
   author: 'Author is required',
   comment: 'Body is required'
 };
 
 export const validateData = (data, setErrors) => {
-  const keys = Object.keys(data);
   const errorFields = {};
-  keys.filter((key) => {
-    const requiredFieldsKeys = Object.keys(requiredFields);
-    if (requiredFieldsKeys.includes(key)) {
-      if (key === 'source') {
-        return !data[key].url
-      }
-      return !data[key] || data[key].length < 1
-    }
-  }).forEach((key) => {
+  const keys = Object.keys(requiredFields);
+  keys.filter((key) => !data[key] || data[key].length < 1).forEach((key) => {
     errorFields[key] = {
-      message: requiredFields[key]
-    }
+      message: requiredFields[key],
+    };
   });
   if (Object.keys(errorFields).length > 0) {
     setErrors(errorFields);
@@ -101,32 +92,30 @@ const AddSuggestedComment = (props) => {
     setErrors({});
     const data = comments.map((comment) => {
       const isDataValid = validateData(comment, setErrors);
+  
       if (!isDataValid) {
         return;
       }
-
-      let sourceName = '';
+  
       const re = new RegExp("^(http|https)://", "i");
-      if (re.test(comment.source?.url)) {
-        sourceName =  new URL(comment.source.url).hostname
-      } else {
+      if (!re.test(comment.sourceLink)) {
         setErrors({
-          source: {
+          sourceLink: {
             message: 'Source should be a URL'
           }
         });
         return;
       }
 
-      return {
+      return isDataValid ? {
         ...comment,
         source: {
-          url: comment.source.url,
-          name: sourceName
+          name: comment.sourceName,
+          url: comment.sourceLink,
         },
         tags: makeTagsList([...comment.languages, ...comment.guides]),
         relatedLinks: parseRelatedLinks(comment.relatedLinks),
-      }
+      } : null;
     });
 
     if (data[0]) {
@@ -135,7 +124,7 @@ const AddSuggestedComment = (props) => {
     }
   };
 
-  return(
+  return (
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
@@ -196,7 +185,7 @@ const AddSuggestedComment = (props) => {
         </button> */}
       </div>
     </>
-  )
-}
+  );
+};
 
 export default AddSuggestedComment;

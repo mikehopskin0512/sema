@@ -77,10 +77,12 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
-        <p className="is-flex is-size-6 has-text-deep-black">
-          <b className="mr-5">Related Link:</b>
-          <PreviewableLink source={source} sourceMetadata={sourceMetadata}/>
-        </p>
+        {source && source.url && (
+          <p className="is-flex is-size-6 has-text-deep-black">
+            <b className="mr-5">Related Link:</b>
+            <PreviewableLink source={source} sourceMetadata={sourceMetadata}/>
+          </p>
+        )}
         <span />
         <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>
