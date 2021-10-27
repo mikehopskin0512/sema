@@ -22,6 +22,16 @@ const Menu = ({ selectAll, deselectAll, ...p }) => {
   );
 };
 
+const Control = ({ children, ...rest }) => (
+  <div className={clsx('', styles.control)}>
+    <div className="py-20 px-12 has-background-white border-radius-4px">
+      <components.Control {...rest}>
+        {children}
+      </components.Control>
+    </div>
+  </div>
+);
+
 const CustomSelect = (props) => {
   const {
     label, selectProps, filter, showCheckbox,
@@ -39,12 +49,20 @@ const CustomSelect = (props) => {
     setMenuIsOpen(false);
   };
 
+  const handleKeypress = (e) => {
+    if (e.charCode == 13) {
+      setMenuIsOpen(false);
+    }
+  };
+
   useEffect(() => {
     // add when mounted
     document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keypress', handleKeypress);
     // return function to be called when unmounted
     return () => {
       document.removeEventListener('mousedown', handleClick);
+      document.addEventListener('keypress', handleKeypress);
     };
   }, []);
 
@@ -58,13 +76,6 @@ const CustomSelect = (props) => {
 
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
 
-  const Control = (p) => (filter ? (
-    <div className={clsx('', styles.control)}>
-      <div className="py-20 px-12 has-background-white border-radius-4px">
-        <components.Control {...p} />
-      </div>
-    </div>
-  ) : null);
 
   const IndicatorSeparator = () => null;
 
@@ -93,7 +104,9 @@ const CustomSelect = (props) => {
     );
   };
 
-  const Input = (p) => <components.Input className="p-0 is-size-8 has-text-weight-semibold has-text-dee-black" {...p} />;
+  // const Input = (p) => (
+  //   <components.Input className="p-0 is-size-8 has-text-weight-semibold has-text-deep-black is-fullwidth" {...p} />
+  // );
 
   const MultiValue = (p) => (
     <components.MultiValue
@@ -109,7 +122,8 @@ const CustomSelect = (props) => {
   const ValueContainer = (p) => (
     <components.ValueContainer
       {...p}
-      className={styles['value-container']}
+      style={{ width: 300, ...p.style }}
+      className={clsx("is-flex is-fullwidth", styles['value-container'], p.class)}
     />
   );
 
@@ -155,13 +169,14 @@ const CustomSelect = (props) => {
               DropdownIndicator,
               Option,
               MultiValue,
-              Input,
               MultiValueRemove,
-              ValueContainer,
               IndicatorsContainer,
               Menu: RenderMenu,
+              // ValueContainer,
+              // Input,
             }}
             menuIsOpen={menuIsOpen}
+            blurInputOnSelect
             {...selectProps}
           />
         </div>

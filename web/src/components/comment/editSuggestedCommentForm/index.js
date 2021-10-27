@@ -69,27 +69,37 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
       </div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Source</label>
+          <label className="label has-text-deep-black">Source Name</label>
           <input
             className="input has-background-white"
             type="text"
-            value={comment.source.url}
-            onChange={(e) => onChange({ source: { name: comment.source.name, url: e.target.value } })}
+            value={comment.sourceName}
+            onChange={(e) => onChange({ sourceName: e.target.value })}
           />
-          { errors.source && <p className="has-text-danger is-size-7 is-italic">{errors.source.message}</p> }
+          { errors.sourceName && errors.sourceName && <p className="has-text-danger is-size-7 is-italic">{errors.sourceName.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Author</label>
+          <label className="label has-text-deep-black">Source Link</label>
           <input
             className="input has-background-white"
             type="text"
-            value={comment.author}
-            onChange={(e) => onChange({ author: e.target.value })}
+            value={comment.sourceLink}
+            onChange={(e) => onChange({ sourceLink: e.target.value })}
           />
-          { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
+          { errors.sourceLink && <p className="has-text-danger is-size-7 is-italic">{errors.sourceLink.message}</p> }
         </div>
       </div>
-      <div className="mb-10">
+      <div className="mb-20">
+        <label className="label has-text-deep-black">Author</label>
+        <input
+          className="input has-background-white"
+          type="text"
+          value={comment.author}
+          onChange={(e) => onChange({ author: e.target.value })}
+        />
+        { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
+      </div>
+      <div className="mb-20">
         <label className="label has-text-deep-black">Body</label>
         <textarea
           className="textarea has-background-white"
@@ -98,7 +108,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
         />
         { errors.comment && <p className="has-text-danger is-size-7 is-italic">{errors.comment.message}</p> }
       </div>
-      <div className="mb-10">
+      <div className="mb-20">
         <label className="label has-text-deep-black">Link to Original Article</label>
         <input
           className="input has-background-white"
