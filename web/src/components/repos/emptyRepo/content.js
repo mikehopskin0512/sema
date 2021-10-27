@@ -18,7 +18,7 @@ export const content = [
     subtitleHtml: '<b>Provide more actionable feedback</b> with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.',
   },
   {
-    title: 'Suggested Comments',
+    title: 'Suggested Snippets',
     subtitle: 'Write great comments faster by quickly searching for and inserting pre-written comments from some of the best knowledge bases in the world. And add your own!',
     img: '/img/repo-suggested-comments.png',
     animationData: animationComments,
