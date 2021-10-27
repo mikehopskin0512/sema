@@ -76,7 +76,7 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
       },
     },
   ];
-  
+
   const commentsData = await User.aggregate(userActiveCommentsQuery);
   if (!commentsData || commentsData.length === 0) return [];
   const [{ comments }] = commentsData;
@@ -86,9 +86,8 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
 const searchIndex = async (searchQuery) => {
   if (nodeEnv === 'development') {
     return [];
-    return searchResults;
   } else {
-    const [{ searchResults }] = await SuggestedComment.aggregate([
+    const results = await SuggestedComment.aggregate([
       {
         $search: {
           index: 'suggestedComments',
@@ -101,18 +100,19 @@ const searchIndex = async (searchQuery) => {
       },
       {
         $group: {
-            _id: 'searchResults',
-            searchResults: { $push: '$_id' }
+          _id: 'searchResults',
+          searchResults: { $push: '$_id' }
         }
       }
     ]);
-    return searchResults;
+    const isNoResults = !results.length
+    return isNoResults ? [] : results[0].searchResults;
   }
 };
 
 const searchComments = async (user, searchQuery) => {
-  let searchResults = await searchIndex(searchQuery);
-  
+  const searchResults = await searchIndex(searchQuery);
+
   // The number of suggested comments to list
   searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 

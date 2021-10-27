@@ -23,8 +23,6 @@ import {
   checkSubmitButton,
 } from './modules/content-util';
 
-import Reminder from './Reminder';
-
 import {
   SEMA_ICON_ANCHOR_LIGHT,
   SEMABAR_CLASS,
@@ -53,6 +51,7 @@ import {
   updateSelectedEmoji,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
+import LogOutToaster from './components/LogOutToaster';
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
@@ -71,24 +70,27 @@ const checkLoggedIn = async (cb) => {
   }
 };
 
+const showLogoutToaster = () => {
+  const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
+  if (!reminderRoot) {
+    const node = document.createElement('div');
+    node.id = SEMA_REMINDER_ROOT_ID;
+    node.className = `${getActiveThemeClass()}`;
+    document.body.appendChild(node);
+    ReactDOM.render(
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Provider store={store}>
+        <LogOutToaster />
+      </Provider>,
+      node,
+    );
+  }
+};
+
 const onLoginChecked = () => {
   $(() => {
     initAmplitude();
-
-    const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
-    if (!reminderRoot && isPRPage()) {
-      const node = document.createElement('div');
-      node.id = SEMA_REMINDER_ROOT_ID;
-      node.className = `${getActiveThemeClass()}`;
-      document.body.appendChild(node);
-      ReactDOM.render(
-        // eslint-disable-next-line react/jsx-filename-extension
-        <Provider store={store}>
-          <Reminder />
-        </Provider>,
-        node,
-      );
-    }
+    showLogoutToaster();
   });
 
   /**

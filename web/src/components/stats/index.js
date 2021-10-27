@@ -66,7 +66,7 @@ const StatsPage = ({ startDate, endDate, onDateChange }) => {
         <p className="px-10 mt-10 has-text-primary">Showing data from <b>{format(new Date(startDate), 'MMMM dd, yyyy')}</b> to <b>{format(new Date(endDate), 'MMMM dd, yyyy')}</b></p>
       )}
       <div className="is-flex is-flex-wrap-wrap mt-10">
-        <ReactionChart reactions={reactions} />
+        <ReactionChart reactions={reactions} groupBy={groupBy} />
         <TagsChart tags={tags} groupBy={groupBy} />
       </div>
     </>

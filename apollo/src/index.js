@@ -17,6 +17,7 @@ import users from './users';
 import adminUsers from './admin/users';
 import searchQueries from './admin/searchQueries';
 import support from './support';
+import team from './teams';
 
 function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -38,6 +39,7 @@ function attachRoutes(app, passport) {
   adminUsers(app, passport);
   searchQueries(app, passport);
   support(app, passport);
+  team(app, passport);
 }
 
 module.exports.attachRoutes = attachRoutes;
