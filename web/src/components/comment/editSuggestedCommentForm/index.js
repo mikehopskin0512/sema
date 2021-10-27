@@ -1,24 +1,31 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
 const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }) => {
-  const [initialFormState, setInitialFormState] = useState(true);
   const { tagState } = useSelector((state) => ({
     tagState: state.tagsState,
   }));
   const { tags } = tagState;
 
-  const languagesOptions = useMemo(() => tags.filter((item) => item.type === 'language').map((item) => ({
-    label: item.label,
-    value: item._id,
-  })), [tags]);
+  const addTags = (tags, types) => tags
+    .filter((tag) => types.some((type) => type === tag.type))
+    .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
 
-  const guidesOptions = useMemo(() => tags.filter((item) => item.type === 'guide' || item.type === 'other').map((item) => ({
-    label: item.label,
-    value: item._id,
-  })), [tags]);
+  const languagesOptions = useMemo(() => addTags(tags, ['language']), [tags]);
+  const guidesOptions = useMemo(() => addTags(tags, ['guide', 'other']), [tags]);
+
+  useEffect(() => {
+    const { tags } = collection
+    const isDefaultTagsExist = !!tags?.length
+    if (isDefaultTagsExist) {
+      onChange({
+        guides: addTags(tags, ['guide', 'other']),
+        languages: addTags(tags, ['language']),
+      })
+    }
+  }, [collection])
 
   return (
     <div>
