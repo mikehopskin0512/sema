@@ -151,14 +151,14 @@ const Header = () => {
               <div
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
-                <Link href="/personal-insights">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`}>
-                    Personal Insights
-                  </a>
-                </Link>
                 <Link href="/">
                   <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`}>
                     Repos
+                  </a>
+                </Link>
+                <Link href="/personal-insights">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`}>
+                    Personal Insights
                   </a>
                 </Link>
                 <Link href="/suggested-comments">
@@ -199,7 +199,7 @@ const Header = () => {
                 </Link>
                 <Link href="/suggested-comments">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                    Suggested Comments
+                    Suggested Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
@@ -323,7 +323,7 @@ const Header = () => {
                           </a>
                         </Link>
                       )}
-  
+
                       {/* TODO We will enable this again when team mgmt feature is fully implemented  */}
                       {/*<Link href="/teams/add">*/}
                       {/*  <a*/}

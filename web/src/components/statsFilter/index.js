@@ -111,7 +111,6 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
