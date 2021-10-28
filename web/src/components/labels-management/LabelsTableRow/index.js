@@ -41,7 +41,7 @@ const LabelsTableRow = ({ data, token }) => {
 
   return(
     <tr className="has-background-white my-10">
-      <td className="py-15 has-background-white px-10">
+      <td className="py-15 has-background-white px-10" style={{ width: '50%' }}>
         <div className="is-flex is-flex-direction-column is-justify-content-center">
           <p className="is-size-7">
             <Tag tag={label} _id={_id} type={type} />
@@ -70,8 +70,8 @@ const LabelsTableRow = ({ data, token }) => {
           </p>
         </div>
       </td>
-      <td className="py-15 has-background-white px-10" style={{ width: 80 }}>
-        <div className="is-flex is-flex-direction-column is-justify-content-center">
+      <td className="py-15 has-background-white px-10">
+        <div className="is-flex is-justify-content-flex-end">
           <div className={clsx("dropdown is-right", menuIsOpen && "is-active")}>
             <div className="dropdown-trigger">
               <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
