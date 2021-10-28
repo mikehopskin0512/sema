@@ -1,23 +1,26 @@
 const mongoose = require('mongoose');
 
 const { mongooseUri } = require('../src/config');
-
-const { Types: { ObjectId } } = mongoose;
+const data = require('../data/imgUrls');
 
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
 
+
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    await mongoose.connection
-      .collection('teams')
-      .findOneAndUpdate(
-        { name: 'Sema Super Team' },
-        { $set: { avatarUrl: '/img/logo.png' } },
-      );
+    await Promise.all(data.map(async (item) => {
+      const { avatarUrl, name } = data.find((team) => team.name === item.name)
+      await mongoose.connection
+        .collection('teams')
+        .findOneAndUpdate(
+          { name },
+          { $set: { avatarUrl } },
+        );
+    }))
   } catch (error) {
     next(error);
   }
