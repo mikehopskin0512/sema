@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import {
   getSuggestCommentsReport,
   postSuggestComment,
@@ -5,6 +6,7 @@ import {
   bulkCreateSuggestedCommentsApi,
   bulkUpdateSuggestedCommentsApi,
   getSuggestCommentsApi,
+  exportSuggestedCommentsApi,
 } from './api';
 import * as types from './types';
 import { alertOperations } from '../alerts';
@@ -185,5 +187,23 @@ export const getAllSuggestComments = (params = {}, token) => async (dispatch) =>
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestGetSuggestCommentsError(errMessage));
+  }
+};
+
+export const exportSuggestedComments = async (params = {}, token) => {
+  try {
+    const payload = await exportSuggestedCommentsApi(params, token);
+    const { data } = payload;
+
+    const url = window.URL.createObjectURL(new Blob([data]));
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', `sema_suggested_comments_${format(new Date(), 'yyyyMMdd')}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+  } catch (error) {
+    console.error(error);
   }
 };

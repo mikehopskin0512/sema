@@ -7,11 +7,15 @@ import errors from '../../shared/errors';
 import logger from '../../shared/logger';
 import { fullName } from '../../shared/utils';
 import { fetchMetadata } from "../../shared/preview";
+import * as Json2CSV from 'json2csv';
+import { format } from 'date-fns';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
+const { Parser } = Json2CSV;
+
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
   const userActiveCommentsQuery = [
@@ -217,11 +221,11 @@ const create = async (suggestedComment) => {
     if (tags) {
       suggestedCommentTags = await makeTagsList(tags);
     }
-  
+
     if (source && source.url) {
       sourceMetaData = await getLinkPreviewData(source.url);
     }
-    
+
     const newSuggestedComment = new SuggestedComment({
       title,
       comment,
@@ -246,12 +250,12 @@ const update = async (id, body) => {
     }
     const suggestedComment = await SuggestedComment.findById(id);
     suggestedComment.set(body);
-    
+
     if (!suggestedComment.sourceMetadata?.title && suggestedComment.source && suggestedComment.source.url) {
       // fetch metadata from iframely
       suggestedComment.sourceMetadata = await getLinkPreviewData(suggestedComment.source.url);
     }
-    
+
     await suggestedComment.save();
 
     return suggestedComment;
@@ -269,7 +273,7 @@ const bulkCreateSuggestedComments = async (comments, user) => {
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user.user),
     })));
-    
+
     for (let i = 0; i < suggestedComments.length; i++) {
       const { source } = suggestedComments[i];
       if (source && source.url) {
@@ -318,7 +322,7 @@ const getSuggestedCommentsByIds = async (params) => {
 const getLinkPreviewData = async (url)=> {
   try {
     const { data: metadata } = await fetchMetadata(url);
-  
+
     const metaIcon = metadata?.links?.icon?.find(item => item.href.includes('favicon')) || metadata?.links?.icon[0];
     const metaThumbnail = metadata?.links?.thumbnail ? metadata?.links?.thumbnail[0] : null;
     return {
@@ -332,6 +336,66 @@ const getLinkPreviewData = async (url)=> {
   }
 }
 
+const exportSuggestedComments = async () => {
+  const suggestedComments = await SuggestedComment.aggregate([
+    {
+      $lookup: {
+        from: 'collections',
+        localField: '_id',
+        foreignField: 'comments',
+        as: 'collection',
+      }
+    },
+    { $unwind: { path: '$collection', preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'enteredBy',
+        foreignField: '_id',
+        as: 'createdBy',
+      }
+    },
+    { $unwind: { path: '$createdBy', preserveNullAndEmptyArrays: true } },
+  ]);
+  
+  const mappedData = suggestedComments.map((comment) => ({
+    'Title': comment.title,
+    'Comment': comment.comment,
+    'Collection': comment.collection ? comment.collection.name : '',
+    'Author': comment.author,
+    'Source name': comment.source && comment.source.name,
+    'Source url': comment.source && comment.source.url,
+    'Tag 1': comment.tags && comment.tags.length ? comment.tags[0].label : '',
+    'Tag 2': comment.tags && comment.tags.length > 1 ? comment.tags[1].label : '',
+    'Tag 3': comment.tags && comment.tags.length > 2 ? comment.tags[2].label : '',
+    'Link': comment.link,
+    'Related Links': comment.relatedLinks && comment.relatedLinks.length ? comment.relatedLinks.join(';') : '',
+    'IsActive': comment.isActive,
+    'Created by': comment.createdBy ? fullName(comment.createdBy) : '',
+    'Created at': format(new Date(comment.createdAt), 'yyyy-MM-dd'),
+  }));
+  const fields = [
+    'Title',
+    'Comment',
+    'Collection',
+    'Author',
+    'Source name',
+    'Source url',
+    'Tag 1',
+    'Tag 2',
+    'Tag 3',
+    'Link',
+    'Related Links',
+    'IsActive',
+    'Created by',
+    'Created at',
+  ];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+  return csv;
+};
+
 module.exports = {
   searchComments,
   suggestCommentsInsertCount,
@@ -341,4 +405,5 @@ module.exports = {
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
   getLinkPreviewData,
+  exportSuggestedComments,
 };

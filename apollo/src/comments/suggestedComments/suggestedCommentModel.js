@@ -44,7 +44,11 @@ const suggestedCommentSchema = new Schema({
     title: String,
     icon: String,
     thumbnail: String,
-  }
+  },
+  enteredBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
 }, {
   timestamps: true,
   collection: 'suggestedComments',
