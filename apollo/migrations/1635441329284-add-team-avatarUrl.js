@@ -15,7 +15,7 @@ exports.up = async (next) => {
     await mongoose.connection
       .collection('teams')
       .findOneAndUpdate(
-        { _id: ObjectId('614f2fe7811ae802fc08e36e') },
+        { name: 'Sema Super Team' },
         { $set: { avatarUrl: '/img/logo.png' } },
       );
   } catch (error) {
