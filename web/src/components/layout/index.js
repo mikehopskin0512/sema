@@ -7,13 +7,13 @@ import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
+import { noContactUs } from '../../utils/constants';
 
 const widescreenPages = ['/repo/[repoId]', '/support'];
 
 const withLayout = (Page) => (props) => {
   const router = useRouter();
   const { pathname } = router;
-  const [noContactUs] = useState(['/login'])
 
   const isWideScreen = widescreenPages.includes(pathname);
 

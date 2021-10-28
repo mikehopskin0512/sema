@@ -7,6 +7,7 @@ import { faLinkedinIn, faInstagram, faFacebook, faTwitter } from '@fortawesome/f
 import styles from './footer.module.scss';
 import ContactUs from '../contactUs';
 import SupportForm from '../supportForm';
+import { noContactUs } from '../../utils/constants';
 
 const Footer = () => {
   const router = useRouter();
@@ -24,7 +25,6 @@ const Footer = () => {
   });
   const [supportForm, setSupportForm] = useState(false);
   const [formType, setFormType] = useState(null);
-  const [noContactUs] = useState(['/login'])
 
   const openSupportForm = (type) => {
     setSupportForm(true);
