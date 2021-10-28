@@ -7,13 +7,12 @@ resource "aws_ecr_lifecycle_policy" "this" {
     "rules": [
         {
             "rulePriority": 1,
-            "description": "Expire images older than 30 days",
+            "description": "Keep only 45 image, expire all others",
             "selection": {
                 "tagStatus": "tagged",
                 "tagPrefixList": ${local.tag_prefix_list},
-                "countUnit": "days",
-                "countType": "sinceImagePushed",
-                "countNumber": 30
+                "countType": "imageCountMoreThan",
+                "countNumber": 45
             },
             "action": {
                 "type": "expire"
