@@ -39,7 +39,7 @@ export const validateTags = (tags, existingTags = [], currentTag = false) => {
       hasErrors = true;
       errs = {
         ...errs,
-        label: 'Label is required!'
+        label: 'Label name is required!'
       }
     }
     if (!tag.type) {
