@@ -123,3 +123,5 @@ export const GITHUB_URL = 'https://github.com';
 export const DEFAULT_COLLECTION_NAME = "my comments";
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
+
+export const noContactUs = ['/login', '/register/[[...param]]']
