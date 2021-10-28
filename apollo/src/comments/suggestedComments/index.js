@@ -73,7 +73,14 @@ export default (app, passport) => {
         title = comment.substring(0, 100);
       }
 
-      const newSuggestedComment = await create( { title, comment, source: { name: "", url: source }, tags } );
+      const newSuggestedComment = await create({
+        title,
+        comment,
+        source: { name: '', url: source },
+        tags,
+        enteredBy: user._id,
+      });
+
       if (!newSuggestedComment) {
         throw new errors.BadRequest('Suggested Comment create error');
       }

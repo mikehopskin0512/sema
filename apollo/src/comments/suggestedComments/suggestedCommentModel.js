@@ -24,6 +24,13 @@ const suggestedCommentSchema = new Schema({
   author: {
     type: String,
   },
+  enteredBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  lastModified: {
+    type: Date,
+  },
   source: {
     name: String,
     url: String,
@@ -44,11 +51,7 @@ const suggestedCommentSchema = new Schema({
     title: String,
     icon: String,
     thumbnail: String,
-  },
-  enteredBy: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
+  }
 }, {
   timestamps: true,
   collection: 'suggestedComments',

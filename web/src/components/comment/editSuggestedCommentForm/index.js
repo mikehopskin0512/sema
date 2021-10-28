@@ -1,24 +1,31 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
 
 const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }) => {
-  const [initialFormState, setInitialFormState] = useState(true);
   const { tagState } = useSelector((state) => ({
     tagState: state.tagsState,
   }));
   const { tags } = tagState;
 
-  const languagesOptions = useMemo(() => tags.filter((item) => item.type === 'language').map((item) => ({
-    label: item.label,
-    value: item._id,
-  })), [tags]);
+  const addTags = (tags, types) => tags
+    .filter((tag) => types.some((type) => type === tag.type))
+    .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
 
-  const guidesOptions = useMemo(() => tags.filter((item) => item.type === 'guide' || item.type === 'other').map((item) => ({
-    label: item.label,
-    value: item._id,
-  })), [tags]);
+  const languagesOptions = useMemo(() => addTags(tags, ['language']), [tags]);
+  const guidesOptions = useMemo(() => addTags(tags, ['guide', 'other']), [tags]);
+
+  useEffect(() => {
+    const { tags } = collection
+    const isDefaultTagsExist = !!tags?.length
+    if (isDefaultTagsExist) {
+      onChange({
+        guides: addTags(tags, ['guide', 'other']),
+        languages: addTags(tags, ['language']),
+      })
+    }
+  }, [collection])
 
   return (
     <div>
@@ -69,27 +76,37 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
       </div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Source</label>
+          <label className="label has-text-deep-black">Source Name</label>
           <input
             className="input has-background-white"
             type="text"
-            value={comment.source.url}
-            onChange={(e) => onChange({ source: { name: comment.source.name, url: e.target.value } })}
+            value={comment.sourceName}
+            onChange={(e) => onChange({ sourceName: e.target.value })}
           />
-          { errors.source && <p className="has-text-danger is-size-7 is-italic">{errors.source.message}</p> }
+          { errors.sourceName && errors.sourceName && <p className="has-text-danger is-size-7 is-italic">{errors.sourceName.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Author</label>
+          <label className="label has-text-deep-black">Source Link</label>
           <input
             className="input has-background-white"
             type="text"
-            value={comment.author}
-            onChange={(e) => onChange({ author: e.target.value })}
+            value={comment.sourceLink}
+            onChange={(e) => onChange({ sourceLink: e.target.value })}
           />
-          { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
+          { errors.sourceLink && <p className="has-text-danger is-size-7 is-italic">{errors.sourceLink.message}</p> }
         </div>
       </div>
-      <div className="mb-10">
+      <div className="mb-20">
+        <label className="label has-text-deep-black">Author</label>
+        <input
+          className="input has-background-white"
+          type="text"
+          value={comment.author}
+          onChange={(e) => onChange({ author: e.target.value })}
+        />
+        { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
+      </div>
+      <div className="mb-20">
         <label className="label has-text-deep-black">Body</label>
         <textarea
           className="textarea has-background-white"
@@ -98,7 +115,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
         />
         { errors.comment && <p className="has-text-danger is-size-7 is-italic">{errors.comment.message}</p> }
       </div>
-      <div className="mb-10">
+      <div className="mb-20">
         <label className="label has-text-deep-black">Link to Original Article</label>
         <input
           className="input has-background-white"
