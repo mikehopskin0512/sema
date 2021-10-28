@@ -381,6 +381,7 @@ const exportSuggestedComments = async () => {
     'IsActive': comment.isActive,
     'Created by': comment.createdBy ? fullName(comment.createdBy) : '',
     'Created at': format(new Date(comment.createdAt), 'yyyy-MM-dd'),
+    'Last modified at': comment.lastModified ? format(new Date(comment.lastModified), 'yyyy-MM-dd') : ''
   }));
   const fields = [
     'Title',
@@ -397,6 +398,7 @@ const exportSuggestedComments = async () => {
     'IsActive',
     'Created by',
     'Created at',
+    'Last modified at'
   ];
 
   const json2csvParser = new Parser({ fields });
