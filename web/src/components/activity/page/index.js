@@ -130,6 +130,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
                 value: filter.from,
               }}
               label="From"
+              showCheckbox
             />
           </div>
           <div className="is-flex-grow-1 px-5 my-5">
@@ -142,6 +143,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
                 value: filter.to,
               }}
               label="To"
+              showCheckbox
             />
           </div>
           <div className="is-flex-grow-1 px-5 my-5">
