@@ -12,15 +12,16 @@ const options = {
 exports.up = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    await Promise.all(data.map(async (item) => {
-      const { avatarUrl, name } = data.find((team) => team.name === item.name)
-      await mongoose.connection
-        .collection('teams')
-        .findOneAndUpdate(
-          { name },
-          { $set: { avatarUrl } },
-        );
-    }))
+    const bulkUpdateTeams = data.map((item) => {
+      return {
+        updateOne: {
+          filter: { name: item.name },
+          update: { $set: { avatarUrl: item.avatarUrl } }
+        }
+      }
+    });
+    await mongoose.connection.collection('teams')
+      .bulkWrite(bulkUpdateTeams, { ordered: true });
   } catch (error) {
     next(error);
   }
@@ -28,4 +29,20 @@ exports.up = async (next) => {
 }
 
 exports.down = async (next) => {
+  await mongoose.connect(mongooseUri, options);
+  try {
+    const bulkUpdateTeams = data.map((item) => {
+      return {
+        updateOne: {
+          filter: { name: item.name },
+          update: { $unset: { avatarUrl: "" } }
+        }
+      }
+    });
+    await mongoose.connection.collection('teams')
+      .bulkWrite(bulkUpdateTeams, { ordered: true });
+  } catch (error) {
+    next(error);
+  }
+  mongoose.connection.close();
 };
