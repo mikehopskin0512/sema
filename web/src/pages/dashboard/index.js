@@ -164,7 +164,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isOnboarded === null) {
+    if (!_.isEmpty(user) && isOnboarded === null) {
       toggleOnboardingModalActive(true);
     }
   }, [isOnboarded]);
