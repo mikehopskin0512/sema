@@ -77,16 +77,17 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
     },
   ];
 
-  const [{ comments }] = await User.aggregate(userActiveCommentsQuery);
+  const commentsData = await User.aggregate(userActiveCommentsQuery);
+  if (!commentsData || commentsData.length === 0) return [];
+  const [{ comments }] = commentsData;
   return comments;
 };
 
 const searchIndex = async (searchQuery) => {
   if (nodeEnv === 'development') {
     return [];
-    return searchResults;
   } else {
-    const [{ searchResults }] = await SuggestedComment.aggregate([
+    const results = await SuggestedComment.aggregate([
       {
         $search: {
           index: 'suggestedComments',
@@ -99,18 +100,19 @@ const searchIndex = async (searchQuery) => {
       },
       {
         $group: {
-            _id: 'searchResults',
-            searchResults: { $push: '$_id' }
+          _id: 'searchResults',
+          searchResults: { $push: '$_id' }
         }
       }
     ]);
-    return searchResults;
+    const isNoResults = !results.length
+    return isNoResults ? [] : results[0].searchResults;
   }
 };
 
 const searchComments = async (user, searchQuery) => {
-  let searchResults = await searchIndex(searchQuery);
-  
+  const searchResults = await searchIndex(searchQuery);
+
   // The number of suggested comments to list
   searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 
@@ -209,23 +211,25 @@ const makeTagsList = async (tags) => {
 
 const create = async (suggestedComment) => {
   try {
-    const { title, comment, source, tags } = suggestedComment;
+    const { title, comment, source, tags, enteredBy } = suggestedComment;
     let suggestedCommentTags = [];
     let sourceMetaData;
     if (tags) {
       suggestedCommentTags = await makeTagsList(tags);
     }
-  
+
     if (source && source.url) {
       sourceMetaData = await getLinkPreviewData(source.url);
     }
-    
+
     const newSuggestedComment = new SuggestedComment({
       title,
       comment,
       source,
       tags: suggestedCommentTags,
       sourceMetaData,
+      enteredBy,
+      lastModified: new Date(),
     });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
@@ -243,13 +247,16 @@ const update = async (id, body) => {
       body.tags = await makeTagsList(tags);
     }
     const suggestedComment = await SuggestedComment.findById(id);
-    suggestedComment.set(body);
-    
+    suggestedComment.set({
+      ...body,
+      lastModified: new Date(),
+    });
+
     if (!suggestedComment.sourceMetadata?.title && suggestedComment.source && suggestedComment.source.url) {
       // fetch metadata from iframely
       suggestedComment.sourceMetadata = await getLinkPreviewData(suggestedComment.source.url);
     }
-    
+
     await suggestedComment.save();
 
     return suggestedComment;
@@ -266,8 +273,10 @@ const bulkCreateSuggestedComments = async (comments, user) => {
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user.user),
+      enteredBy: user.user._id,
+      lastModified: new Date(),
     })));
-    
+
     for (let i = 0; i < suggestedComments.length; i++) {
       const { source } = suggestedComments[i];
       if (source && source.url) {
@@ -288,6 +297,7 @@ const bulkUpdateSuggestedComments = async (comments) => {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+      lastModified: new Date(),
     })));
 
     return await Promise.all(suggestedComments.map(async (item) => {
@@ -316,7 +326,7 @@ const getSuggestedCommentsByIds = async (params) => {
 const getLinkPreviewData = async (url)=> {
   try {
     const { data: metadata } = await fetchMetadata(url);
-  
+
     const metaIcon = metadata?.links?.icon?.find(item => item.href.includes('favicon')) || metadata?.links?.icon[0];
     const metaThumbnail = metadata?.links?.thumbnail ? metadata?.links?.thumbnail[0] : null;
     return {

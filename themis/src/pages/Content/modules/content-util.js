@@ -773,7 +773,21 @@ export const checkSubmitButton = (semabarId, data) => {
   }
 };
 
-export const isPRPage = () => document.URL.includes('/pull/');
+export const isPRPage = () => document.location.pathname.includes('/pull/');
+
+export const detectURLChange = (callback) => {
+  let previousUrl = document.location.href;
+  function checkURLChanges() {
+    const currentUrl = document.location.href;
+    const isUrlChanged = previousUrl !== currentUrl;
+    if (isUrlChanged) {
+      callback();
+    }
+    previousUrl = currentUrl;
+  }
+  document.addEventListener('click', checkURLChanges);
+  return () => document.removeEventListener('click', checkURLChanges);
+};
 
 export const setTextareaSemaIdentifier = (activeElement) => {
   const { id } = activeElement;

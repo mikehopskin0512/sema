@@ -97,7 +97,7 @@ const CommentCollectionsList = () => {
       <div id="collectionBody" className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-3">
-            Suggested Comments
+            Suggested Snippets
           </p>
           <div className="is-flex is-align-items-center is-flex-wrap-wrap">
             <div className="mr-10">
@@ -118,7 +118,7 @@ const CommentCollectionsList = () => {
         </div>
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-deep-black my-10 px-10">
-          Comments from these collections will be suggested as you create code reviews
+          Snippets from these collections will be suggested as you create code reviews
         </p>
         <CardList addNewComment={openNewSuggestedCommentModal} collections={activeCollections || []} />
         <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Collections</p>

@@ -53,8 +53,8 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
-  route.post('/', async (req, res) => {
+
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comment, source, tags } = req.body;
     const { user } = req.user;
     let title = req.body.title;
@@ -72,7 +72,14 @@ export default (app, passport) => {
         title = comment.substring(0, 100);
       }
 
-      const newSuggestedComment = await create( { title, comment, source: { name: "", url: source }, tags } );
+      const newSuggestedComment = await create({
+        title,
+        comment,
+        source: { name: '', url: source },
+        tags,
+        enteredBy: user._id,
+      });
+
       if (!newSuggestedComment) {
         throw new errors.BadRequest('Suggested Comment create error');
       }
@@ -97,7 +104,6 @@ export default (app, passport) => {
     const { user, collectionId } = req.body
     try {
       const suggestedComment = await update(id, req.body);
-
       return res.status(200).json({ suggestedComment });
     } catch (error) {
       logger.error(error);

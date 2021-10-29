@@ -87,6 +87,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 value: filter.from,
               }}
               label="From"
+              showCheckbox
             />
           </div>
           <div className={clsx("m-5", styles['filter-container'])}>
@@ -99,6 +100,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 value: filter.to,
               }}
               label="To"
+              showCheckbox
             />
           </div>
           <div className={clsx("m-5", styles['filter-container'])}>
@@ -111,7 +113,6 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              filter={false}
               label="Reactions"
               showCheckbox
             />
@@ -140,6 +141,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 value: filter.pr,
               }}
               label="Pull requests"
+              showCheckbox
             />
           </div>
         </div>

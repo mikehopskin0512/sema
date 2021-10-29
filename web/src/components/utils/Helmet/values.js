@@ -58,3 +58,13 @@ export const PersonalInsightsHelmet = {
   title: 'Personal Insights',
   description: null,
 };
+
+export const TeamCreateHelmet = {
+  title: 'Create a Team',
+  description: null,
+};
+
+export const TeamManagementHelmet = {
+  title: 'Team Management',
+  description: null,
+};
