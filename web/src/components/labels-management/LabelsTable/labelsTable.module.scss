@@ -1,0 +1,23 @@
+.show-overflow-y {
+  overflow-y: visible !important;
+  overflow-x: auto;
+}
+
+.page-input {
+  width: 40px;
+  -moz-appearance: textfield;
+}
+
+.pagination-buttons {
+  border: none;
+  background: none;
+  &:disabled {
+    background: none;
+  }
+}
+
+.page-selection {
+  &:not(.is-multiple):not(.is-loading)::after {
+    border-color: #000 !important;
+  }
+}

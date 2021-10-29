@@ -62,7 +62,7 @@ const Profile = () => {
                 <p className="is-size-6 has-text-black">{identities[0].username}</p>
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
-                <FontAwesomeIcon icon={faSyncAlt} size="md" className="mr-5" color="#000000" />
+                <FontAwesomeIcon icon={faSyncAlt} className="mr-5" color="#000000" />
                 Refresh
               </button>
             </div>

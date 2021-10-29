@@ -59,6 +59,11 @@ export const PersonalInsightsHelmet = {
   description: null,
 };
 
+export const LabelsManagementHelmet = {
+  title: 'Labels Management',
+  description: null,
+};
+
 export const TeamCreateHelmet = {
   title: 'Create a Team',
   description: null,

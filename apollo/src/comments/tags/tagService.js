@@ -4,6 +4,8 @@ import Tag from "./tagModel";
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 
+const { Types: { ObjectId } } = mongoose;
+
 export const getAllTags = async () => {
   try {
     const tags = await Tag.find({}).exec();
@@ -37,13 +39,79 @@ export const getAllTagIds = async () => {
   }
 };
 
-export const findTagsByType = async () => {
+export const getTagsById = async (id) => {
   try {
-    const tags = await Tag.find({
-      "type": {
-        $in: ["language", "guide", "custom"],
+    const tags = await Tag.aggregate([
+      {
+        $match: {
+          "_id": {
+            $eq: new ObjectId(id),
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "suggestedComments",
+          localField: "_id",
+          foreignField: "tags.tag",
+          as: "suggestedComments"
+        },
+
+      },
+      {
+        $project: {
+          _id: 1,
+          label: 1,
+          type: 1,
+          sentiment: 1,
+          isActive: 1,
+          suggestedComments: 1,
+        }
+      },
+    ]).exec()
+    return tags[0];
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
+export const findSuggestedCommentTags = async () => {
+  try {
+    // const tags = await Tag.find({
+    //   "type": {
+    //     $in: ["language", "guide", "custom"],
+    //   }
+    // });
+    const tags = await Tag.aggregate([
+      {
+        $match: {
+          "type": {
+            $in: ["language", "guide", "custom"],
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "suggestedComments",
+          localField: "_id",
+          foreignField: "tags.tag",
+          as: "suggestedCommentsForeign"
+        },
+
+      },
+      {
+        $project: {
+          _id: 1,
+          label: 1,
+          type: 1,
+          sentiment: 1,
+          isActive: 1,
+          suggestedCommentsCount: { $size: "$suggestedCommentsForeign" },
+        }
       }
-    }).exec();
+    ]).exec()
     return tags;
   } catch (err) {
     logger.error(err);
@@ -83,7 +151,7 @@ export const buildTagsEmptyObject = async () => {
   }
 };
 
-export  const incrementTags = (tagsObject = {}, tagsArray) => {
+export const incrementTags = (tagsObject = {}, tagsArray) => {
   // tagsObject - data from db
   // tagsArray - raw data from smart comments
   const tagsObject2 = {};

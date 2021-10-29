@@ -129,17 +129,17 @@ export const createSuggestComment = (body, token) => async (dispatch) => {
   }
 };
 
-export const updateSuggestComment = (id, body, token) => async (dispatch) => {
+export const updateSuggestComment = (id, body, token, messages) => async (dispatch) => {
   try {
     dispatch(requestUpdateSuggestComment());
     const { data: { suggestedComment } } = await patchSuggestComment(id, body, token);
-    dispatch(triggerAlert('Suggested comment has been updated', 'success'));
+    dispatch(triggerAlert(messages?.successMsg || 'Suggested comment has been updated', 'success'));
     dispatch(requestUpdateSuggestCommentSuccess(suggestedComment));
     return suggestedComment;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert('Error saving suggested comment', 'error'));
+    dispatch(triggerAlert(messages?.errorMsg || 'Error saving suggested comment', 'error'));
     dispatch(requestUpdateSuggestCommentError(errMessage));
     return error;
   }

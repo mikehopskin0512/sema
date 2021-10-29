@@ -15,6 +15,7 @@ export {
   RepoStatsHelmet,
   HelpSupportHelmet,
   PersonalInsightsHelmet,
+  LabelsManagementHelmet,
   TeamCreateHelmet,
   TeamManagementHelmet,
 } from './values';
