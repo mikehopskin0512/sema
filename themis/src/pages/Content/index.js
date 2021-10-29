@@ -21,6 +21,7 @@ import {
   initAmplitude,
   setTextareaSemaIdentifier,
   checkSubmitButton,
+  fireAmplitudeEvent,
 } from './modules/content-util';
 
 import Reminder from './Reminder';
@@ -57,6 +58,9 @@ import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
 chrome.runtime.onMessage.addListener((request) => {
+  if (request?.amplitude) {
+    fireAmplitudeEvent(request.event);
+  }
   store.dispatch(updateSemaUser({ ...request }));
 });
 
@@ -73,7 +77,8 @@ const checkLoggedIn = async (cb) => {
 
 const onLoginChecked = () => {
   $(() => {
-    initAmplitude();
+    const { user } = store.getState();
+    initAmplitude(user);
 
     const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
     if (!reminderRoot && isPRPage()) {

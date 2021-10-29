@@ -13,10 +13,10 @@ import {
 } from './modules/redux/action';
 
 import {
-  DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
+  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
 } from './constants';
 import LoginBar from './LoginBar';
-import { saveSmartComment } from './modules/content-util';
+import { fireAmplitudeEvent, saveSmartComment } from './modules/content-util';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -176,7 +176,17 @@ const Semabar = (props) => {
           <div className="tags-selection-header">
             <div className="learn-more-link">
               All Tags
-              <a href={SEMA_LANDING_FAQ} target="_blank" rel="noreferrer">
+              <a
+                href={SEMA_LANDING_FAQ}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => {
+                  // eslint-disable-next-line max-len
+                  fireAmplitudeEvent(EVENTS.CLICKED_ADD_TAGS, {
+                    change_tag: false, tag: null, tag_type: null, clicked_faq: true,
+                  });
+                }}
+              >
                 Learn more about tags
               </a>
             </div>
@@ -195,6 +205,7 @@ const Semabar = (props) => {
   };
   const saveComment = async () => {
     try {
+      fireAmplitudeEvent(EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
       await saveSmartComment({ comment: activeElementValue });
       setLastSavedComment(activeElementValue);
     } catch (e) {
