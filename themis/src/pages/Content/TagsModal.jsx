@@ -1,7 +1,9 @@
+/* eslint-disable max-len */
 import React from 'react';
 import {
-  POSITIVE, NEGATIVE, TOGGLE_OP,
+  EVENTS, POSITIVE, NEGATIVE, TOGGLE_OP,
 } from './constants';
+import { fireAmplitudeEvent } from './modules/content-util';
 
 function TagsModal({ allTags, toggleTagSelection }) {
   const Tag = ({ tag, type }) => {
@@ -12,6 +14,8 @@ function TagsModal({ allTags, toggleTagSelection }) {
         isSelected,
         op: TOGGLE_OP,
       });
+      // eslint-disable-next-line object-curly-newline
+      fireAmplitudeEvent(EVENTS.CLICKED_ADD_TAGS, { change_tag: true, tag: tag[type], tag_type: type, clicked_faq: false });
     };
     return (
       <div
