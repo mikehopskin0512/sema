@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { DEFAULT_COLLECTION_NAME } from 'src/utils/constants';
+import { DEFAULT_COLLECTION_NAME } from '../utils/constants';
 
 function usePermission() {
   const { user } = useSelector((state) => (state.authState));
@@ -12,7 +12,7 @@ function usePermission() {
     if (collection?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME) {
       return true;
     }
-    
+
     const role = user?.roles?.find((item) => item.role[permission] && item.team.name === team.name);
 
     return !!role;
