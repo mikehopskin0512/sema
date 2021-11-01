@@ -58,6 +58,10 @@ const AddSuggestedComment = (props) => {
     collectionState: state.commentsState,
   }));
 
+  const { collectionState } = useSelector((state) => ({
+    collectionState: state.commentsState,
+  }));
+
   const { cid: collectionId } = router.query;
   const { collection } = collectionState;
 

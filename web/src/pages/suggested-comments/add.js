@@ -23,6 +23,7 @@ const AddCollectionPage = () => {
   const { cid } = router.query;
   const { token } = auth;
   const { collection } = collectionState;
+  const parentPageUrl = cid ? `/suggested-comments?cid=${cid}` : '/suggested-comments';
 
   useEffect(() => {
     dispatch(fetchTagList(token));
@@ -33,7 +34,7 @@ const AddCollectionPage = () => {
       <Helmet title={cid ? "Add suggested comments" : "Add a comment collection"} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href={`/suggested-comments?cid=${collection._id}`} className="is-hidden-mobile">
+          <a href={parentPageUrl} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">

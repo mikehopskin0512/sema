@@ -57,3 +57,11 @@
 .DayPicker__hidden {
   visibility: visible !important;
 }
+
+.DayPicker_transitionContainer, .DayPicker_transitionContainer_1, .DayPicker_transitionContainer__horizontal, .DayPicker_transitionContainer__horizontal_2 {
+  height: 340px !important;
+}
+
+.DayPicker_wrapper__horizontal, .DayPicker_wrapper__horizontal_1 {
+  border-left: 1px solid #EEEDF0 !important;
+}

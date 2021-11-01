@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, findTagsByType, getAllTags, deleteTag, updateTag } from './tagService';
+import { create, findSuggestedCommentTags, getAllTags, deleteTag, updateTag, getTagsById } from './tagService';
 
 const route = Router();
 
@@ -21,7 +21,18 @@ export default (app, passport) => {
 
   route.get('/suggested-comment', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const tags = await findTagsByType();
+      const tags = await findSuggestedCommentTags();
+      return res.status(200).send(tags);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const tags = await getTagsById(id);
       return res.status(200).send(tags);
     } catch (error) {
       logger.error(error);
