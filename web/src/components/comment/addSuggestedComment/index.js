@@ -58,10 +58,6 @@ const AddSuggestedComment = (props) => {
     collectionState: state.commentsState,
   }));
 
-  const { collectionState } = useSelector((state) => ({
-    collectionState: state.commentsState,
-  }));
-
   const { cid: collectionId } = router.query;
   const { collection } = collectionState;
 
@@ -92,11 +88,11 @@ const AddSuggestedComment = (props) => {
     setErrors({});
     const data = comments.map((comment) => {
       const isDataValid = validateData(comment, setErrors);
-  
+
       if (!isDataValid) {
         return;
       }
-  
+
       const re = new RegExp("^(http|https)://", "i");
       if (!re.test(comment.sourceLink)) {
         setErrors({
