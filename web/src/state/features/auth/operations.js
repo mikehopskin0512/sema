@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import * as actions from './actions';
 import { organizationsOperations } from '../organizations';
 import { triggerAlert } from '../alerts/actions';
+import * as analytics from '../../../utils/analytics';
 
 const { createOrg } = organizationsOperations;
 
@@ -35,7 +36,8 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
     const { user: newUser } = jwtDecode(jwtToken) || {};
     const { verificationToken } = newUser;
     await dispatch(actions.activateUser(verificationToken));
-
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE, { url: '/dashboard' });
     Router.push('/dashboard');
   } catch (error) {
     const { response: { data: { message } = {}, status, statusText } = {} } = error || '';

@@ -42,7 +42,7 @@ const Dashboard = () => {
 
 
   const logOnboardingAcitvity = (page) => {
-    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.PAGE_VISIT, { url: `/onboardingModal/page=${page}` });
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_ONBOARDING_WIZARD, { url: `/onboardingModal/page=${page}` });
   };
 
   const nextOnboardingPage = (currentPage) => {

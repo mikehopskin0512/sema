@@ -16,6 +16,7 @@ import { alertOperations } from '../../state/features/alerts';
 import styles from './invitations.module.scss';
 import InvitationsGrid from '../../components/invitationsGrid';
 import { getCharCount } from '../../utils';
+import * as analytics from '../../utils/analytics';
 
 
 const { clearAlert } = alertOperations;
@@ -63,6 +64,7 @@ const Invite = () => {
       // Send invite & reset form
       setRecipient(email);
       const response = await dispatch(createInviteAndHydrateUser(invitation, token));
+      analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
       if (response.status === 201) {
         reset();
       } else {
