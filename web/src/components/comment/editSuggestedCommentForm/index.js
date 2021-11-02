@@ -41,7 +41,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.title && <p className="has-text-danger is-size-7 is-italic">{errors.title.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Comment Collections</label>
+          <label className="label has-text-deep-black">Snippet Collections</label>
           <input
             className="input has-background-white"
             type="text"

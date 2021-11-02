@@ -13,7 +13,7 @@ export { default as supportState } from './support';
 export { default as tagsState } from './tags';
 export { default as usersState } from './users';
 export { default as searchQueriesState } from './search-queries';
-export { default as suggestCommentsState } from './suggest-comments';
+export { default as suggestSnippetsState } from './suggest-snippets';
 export { default as smartCommentsState } from './smart-comments';
 export { default as teamsState } from './teams';
 export { default as selectedUserState } from './selected-user';

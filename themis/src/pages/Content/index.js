@@ -21,6 +21,7 @@ import {
   initAmplitude,
   setTextareaSemaIdentifier,
   checkSubmitButton,
+  fireAmplitudeEvent,
 } from './modules/content-util';
 
 import {
@@ -56,6 +57,9 @@ import LogOutToaster from './components/LogOutToaster';
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
 chrome.runtime.onMessage.addListener((request) => {
+  if (request?.amplitude) {
+    fireAmplitudeEvent(request.event);
+  }
   store.dispatch(updateSemaUser({ ...request }));
 });
 
@@ -89,7 +93,8 @@ const showLogoutToaster = () => {
 
 const onLoginChecked = () => {
   $(() => {
-    initAmplitude();
+    const { user } = store.getState();
+    initAmplitude(user);
     showLogoutToaster();
   });
 

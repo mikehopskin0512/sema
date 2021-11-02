@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './actionGroup.module.scss';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 
 const { bulkUpdateSuggestedComments } = suggestCommentsOperations;
@@ -36,7 +36,7 @@ const ActionGroup = ({
   };
 
   const goToEditPage = async () => {
-    await router.push(`/suggested-comments/edit?cid=${collectionId}&comments=${selectedComments}`);
+    await router.push(`/suggested-snippets/edit?cid=${collectionId}&comments=${selectedComments}`);
   };
 
   const onArchive = async () => {
@@ -64,7 +64,7 @@ const ActionGroup = ({
             onClick={onArchive}
           >
             <FontAwesomeIcon icon={faExclamationTriangle} className="mr-10" />
-            Archive {unarchiveComments.length} Suggested Comments
+            Archive {unarchiveComments.length} Suggested Snippets
           </button>
         ) : ''
       }
@@ -76,7 +76,7 @@ const ActionGroup = ({
             onClick={onUnarchive}
           >
             <FontAwesomeIcon icon={faExclamationTriangle} className="mr-10" />
-            UnArchive {archiveComments.length} Suggested Comments
+            UnArchive {archiveComments.length} Suggested Snippets
           </button>
         ) : ''
       }

@@ -154,7 +154,7 @@ const EditLabel = () => {
               <input
                 className="input has-background-white is-small"
                 type="input"
-                placeholder="Search by Suggested Comment"
+                placeholder="Search by Suggested Snippet"
                 onChange={(e) => setSearch(e.target.value)}
               />
               <span className="icon is-small is-left">

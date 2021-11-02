@@ -11,8 +11,8 @@ const SmartBankCommentsPage = ({
   return (
     <>
       <div className={clsx("m-20 p-40 is-relative", styles['collection-modal'])}>
-        <p className="title is-4">Please choose some comment collections</p>
-        <p className="subtitle is-6">You can now activate groups of comments that suit your style and work environment. Choose the ones you want, or add your own to My Comments.</p>
+        <p className="title is-4">Please choose some snippet collections</p>
+        <p className="subtitle is-6">You can now activate groups of snippets that suit your style and work environment. Choose the ones you want, or add your own to My Snippets.</p>
         <div className={clsx(styles['collection-container'])}>
           {
             semaCollections.map((collection, i) => {
@@ -44,7 +44,7 @@ const SmartBankCommentsPage = ({
           }
           <div className="columns">
             <div className="column is-11 pb-0">
-              <div className="title is-6">My Comments</div>
+              <div className="title is-6">My Snippets</div>
               <div className="subtitle is-6">Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.</div>
             </div>
             <div className="column">

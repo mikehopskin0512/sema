@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { invitationsOperations } from '../../state/features/invitations';
 import { useDispatch, useSelector } from 'react-redux';
 import { fullName } from '../../utils';
+import * as analytics from '../../utils/analytics';
 
 const { resendInvite, createInviteAndHydrateUser } = invitationsOperations;
 
@@ -52,6 +53,7 @@ const InviteForm = ({ onReload }) => {
     };
     // Send invite & reset form
     setRecipient(email);
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
 
     if (response.status === 201) {

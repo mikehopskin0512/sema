@@ -9,19 +9,19 @@ const CommentsViewButtons = () => {
 
   return (
     <div className="is-flex my-5">
-      <a href="/suggested-comments">
+      <a href="/suggested-snippets">
         <button
-          className={clsx('button is-small border-radius-4px', styles['button-collections'], asPath === '/suggested-comments' ? 'is-primary' : '')}
+          className={clsx('button is-small border-radius-4px', styles['button-collections'], asPath === '/suggested-snippets' ? 'is-primary' : '')}
           type="button">
-          <span className="is-hidden-mobile">Comment Collections</span>
+          <span className="is-hidden-mobile">Snippet Collections</span>
           <span className="is-hidden-desktop">Collections</span>
         </button>
       </a>
-      <a href="/suggested-comments">
+      <a href="/suggested-snippets">
         <button
           className={clsx('button is-small border-radius-4px', styles['button-suggested'], asPath === '/comments' ? 'is-primary' : '')}
           type="button">
-          Suggested Comments
+          Suggested Snippets
         </button>
       </a>
     </div>

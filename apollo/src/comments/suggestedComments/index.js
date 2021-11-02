@@ -10,6 +10,7 @@ import {
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
+  exportSuggestedComments,
 } from './suggestedCommentService';
 import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
 
@@ -63,7 +64,7 @@ export default (app, passport) => {
       if (!collectionId) {
         const collections = await getUserCollectionsById(user._id);
         const defaultCollection = collections.find((collection) => {
-          return collection.collectionData.name.toLowerCase() === 'my comments';
+          return collection.collectionData.name.toLowerCase() === 'my snippets';
         });
         collectionId = defaultCollection.collectionData._id;
       }
@@ -136,6 +137,21 @@ export default (app, passport) => {
       const result = await bulkUpdateSuggestedComments(comments);
 
       return res.status(200).json(result);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/export', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const packer = await exportSuggestedComments();
+
+      res.writeHead(200, {
+        'Content-disposition': 'attachment;filename=suggested_comments.csv',
+      });
+
+      return res.end(packer);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

@@ -144,7 +144,7 @@ const CollectionEngGuides = ({ collectionId }) => {
             {engGuide.name}
           </p>
           <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-            {engGuide.comments.length} suggested comments
+            {engGuide.comments.length} suggested snippets
           </span>
           <div style={{ marginLeft: 'auto' }}>
             <GlobalSearch />

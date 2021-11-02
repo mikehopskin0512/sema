@@ -16,12 +16,22 @@ import { fullName } from '../../utils';
 import FilterTabs from '../../components/admin/filterTabs';
 import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 import ExportButton from '../../components/admin/exportButton';
+import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 
-const { fetchUsers, updateUserAvailableInvitationsCount, updateStatus, bulkAdmitUsers, exportUsers } = usersOperations;
+const {
+  fetchUsers,
+  updateUserAvailableInvitationsCount,
+  updateStatus,
+  bulkAdmitUsers,
+  exportUsers,
+} = usersOperations;
+
+const { exportSuggestedComments } = suggestCommentsOperations;
 
 const UsersPage = () => {
   const dispatch = useDispatch();
   const { users, analytic, totalCount, isFetching } = useSelector((state) => state.usersState);
+  const { token } = useSelector((state) => state.authState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
@@ -330,6 +340,12 @@ const UsersPage = () => {
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
             <div className="ml-10">
               <ExportButton onExport={onExport} />
+            </div>
+            <div className="ml-10">
+              <ExportButton
+                label="Export All Suggested Snippets"
+                onExport={() => exportSuggestedComments({}, token)}
+              />
             </div>
           </div>
         </div>

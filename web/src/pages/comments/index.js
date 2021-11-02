@@ -5,7 +5,7 @@ import CommentFilter from '../../components/comment/commentFilter';
 import CommentsViewButtons from '../../components/comment/commentsViewButtons';
 import SuggestedCommentCard from '../../components/comment/suggestedCommentCard';
 import withLayout from '../../components/layout';
-import Helmet, { SuggestedCommentsHelmet } from '../../components/utils/Helmet';
+import Helmet, { SuggestedSnippetsHelmet } from '../../components/utils/Helmet';
 
 import { commentsOperations } from '../../state/features/comments';
 
@@ -76,17 +76,17 @@ const SuggestedComments = () => {
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet {...SuggestedCommentsHelmet} />
+      <Helmet {...SuggestedSnippetsHelmet} />
       <div className="hero-body">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4">
-            Suggested Comments
+            Suggested Snippets
           </p>
           <CommentsViewButtons />
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
-          <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested comments found!</div> :
+          <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested snippets found!</div> :
           commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-30">

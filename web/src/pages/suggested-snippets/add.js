@@ -23,7 +23,7 @@ const AddCollectionPage = () => {
   const { cid } = router.query;
   const { token } = auth;
   const { collection } = collectionState;
-  const parentPageUrl = cid ? `/suggested-comments?cid=${cid}` : '/suggested-comments';
+  const parentPageUrl = cid ? `/suggested-snippets?cid=${cid}` : '/suggested-snippets';
 
   useEffect(() => {
     dispatch(fetchTagList(token));
@@ -31,7 +31,7 @@ const AddCollectionPage = () => {
 
   return (
     <div className="has-background-gray-9 hero">
-      <Helmet title={cid ? "Add suggested comments" : "Add a comment collection"} />
+      <Helmet title={cid ? "Add suggested snippet" : "Add a snippet collection"} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={parentPageUrl} className="is-hidden-mobile">
@@ -39,13 +39,13 @@ const AddCollectionPage = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/suggested-comments" className="has-text-grey">Suggested Comments</a></li>
+              <li><a href="/suggested-snippets" className="has-text-grey">Suggested Snippets</a></li>
               { cid ? (
                 <>
-                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/suggested-comments?cid=${collection._id}`}>{collection.name}</a></li>
-                  <li className="is-active has-text-weight-semibold"><div className="px-5">Add Suggested Comments</div></li>
+                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/suggested-snippets?cid=${collection._id}`}>{collection.name}</a></li>
+                  <li className="is-active has-text-weight-semibold"><div className="px-5">Add Suggested Snippets</div></li>
                 </>
-              ) : (<li className="is-active has-text-weight-semibold"><div className="px-5">Add a Comment Collection</div></li>) }
+              ) : (<li className="is-active has-text-weight-semibold"><div className="px-5">Add a Snippet Collection</div></li>) }
             </ul>
           </nav>
         </div>

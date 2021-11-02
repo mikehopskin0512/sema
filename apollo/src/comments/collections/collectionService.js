@@ -212,7 +212,7 @@ export const findByAuthor = async (author) => {
 export const createUserCollection = async (username) => {
   try {
     const defaultCollection = {
-      name: 'My Comments',
+      name: 'My Snippets',
       description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
       author: username,
       isActive: true,
@@ -229,5 +229,5 @@ export const createUserCollection = async (username) => {
 
 export const isEditAllowed = async (user, collectionId) => {
   const collection = await Collection.findById(collectionId);
-  return collection && (user.isSemaAdmin || collection.name.toLowerCase() === 'my comments' || collection.name.toLowerCase() === 'custom comments');
+  return collection && (user.isSemaAdmin || collection.name.toLowerCase() === 'my snippets' || collection.name.toLowerCase() === 'custom snippets');
 };

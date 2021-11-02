@@ -8,7 +8,7 @@ const menus = [
     path: '/repos',
   },
   {
-    name: 'Suggested Comments',
+    name: 'Suggested Snippets',
     path: '/repos',
   },
   {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 
 const { updateSuggestComment } = suggestCommentsOperations;
 
@@ -23,14 +23,14 @@ const LabelCommentsRow = ({ data, token, tagId }) => {
     setLoading(true);
     const body = { ...data };
     let message = {
-      errorMsg: 'Unable to remove tag from this comment!',
-      successMsg: 'Successfully removed tag from this comment!',
+      errorMsg: 'Unable to remove tag from this snippet!',
+      successMsg: 'Successfully removed tag from this snippet!',
     }
     if (isOn) {
       const existingTags = tagIds.filter((tag) => tag !== tagId);
       message = {
-        errorMsg: 'Unable to remove tag from this comment!',
-        successMsg: 'Successfully removed tag from this comment!',
+        errorMsg: 'Unable to remove tag from this snippet!',
+        successMsg: 'Successfully removed tag from this snippet!',
       }
       body.tags = {
         existingTags
@@ -39,8 +39,8 @@ const LabelCommentsRow = ({ data, token, tagId }) => {
     } else {
       const existingTags = [...tagIds, tagId];
       message = {
-        errorMsg: 'Unable to add tag to this comment!',
-        successMsg: 'Successfully added tag to this comment!',
+        errorMsg: 'Unable to add tag to this snippet!',
+        successMsg: 'Successfully added tag to this snippet!',
       }
       body.tags = {
         existingTags

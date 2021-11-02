@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './commentCollectionsList.module.scss';
 import AddSuggestedCommentModal from '../addSuggestedCommentModal';
 import CardList from '../cardList';
-import Helmet, { CommentCollectionsHelmet } from '../../utils/Helmet';
+import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
 import Toaster from '../../toaster';
@@ -92,7 +92,7 @@ const CommentCollectionsList = () => {
   return(
     <div className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <Helmet {...CommentCollectionsHelmet} />
+      <Helmet {...SnippetCollectionsHelmet} />
       <AddSuggestedCommentModal _id={collectionId} active={isNewCommentModalOpen} onClose={closeNewSuggestedCommentModal} inCollectionsPage />
       <div id="collectionBody" className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
@@ -104,13 +104,13 @@ const CommentCollectionsList = () => {
               <GlobalSearch />
             </div>
             { isSemaAdmin && (
-              <a href="/suggested-comments/add">
+              <a href="/suggested-snippets/add">
                 <button
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
                   type="button"
                 >
                   <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                  Add a Comment Collection
+                  Add a Snippet Collection
                 </button>
               </a>
             ) }

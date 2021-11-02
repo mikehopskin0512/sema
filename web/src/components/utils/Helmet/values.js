@@ -13,8 +13,8 @@ export const RegisterHelmet = {
   description: null,
 };
 
-export const CommentCollectionsHelmet = {
-  title: 'Comment Collections',
+export const SnippetCollectionsHelmet = {
+  title: 'Snippet Collections',
   description: null,
 };
 
@@ -29,8 +29,8 @@ export const UserManagementHelmet = {
   description: null,
 };
 
-export const SuggestedCommentsHelmet = {
-  title: 'Suggested Comments',
+export const SuggestedSnippetsHelmet = {
+  title: 'Suggested Snippets',
   description: null,
 };
 

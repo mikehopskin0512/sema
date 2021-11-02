@@ -7,11 +7,15 @@ import errors from '../../shared/errors';
 import logger from '../../shared/logger';
 import { fullName } from '../../shared/utils';
 import { fetchMetadata } from "../../shared/preview";
+import * as Json2CSV from 'json2csv';
+import { format } from 'date-fns';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
 const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
+const { Parser } = Json2CSV;
+
 
 const getUserSuggestedComments = async (userId, searchResults = []) => {
   const userActiveCommentsQuery = [
@@ -340,6 +344,64 @@ const getLinkPreviewData = async (url)=> {
   }
 }
 
+const exportSuggestedComments = async () => {
+  const suggestedComments = await SuggestedComment.aggregate([
+    {
+      $lookup: {
+        from: 'collections',
+        localField: '_id',
+        foreignField: 'comments',
+        as: 'collection',
+      }
+    },
+    { $unwind: { path: '$collection', preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'enteredBy',
+        foreignField: '_id',
+        as: 'createdBy',
+      }
+    },
+    { $unwind: { path: '$createdBy', preserveNullAndEmptyArrays: true } },
+  ]);
+  
+  const mappedData = suggestedComments.map((comment) => ({
+    'Title': comment.title,
+    'Comment': comment.comment,
+    'Collection': comment.collection ? comment.collection.name : '',
+    'Author': comment.author,
+    'Source name': comment.source && comment.source.name,
+    'Source url': comment.source && comment.source.url,
+    'Tags': comment.tags ? JSON.stringify(comment.tags.map(tag => tag.label)) : '',
+    'Link': comment.link,
+    'Related Links': comment.relatedLinks && comment.relatedLinks.length ? comment.relatedLinks.join(';') : '',
+    'IsActive': comment.isActive,
+    'Created by': comment.createdBy ? fullName(comment.createdBy) : '',
+    'Created at': format(new Date(comment.createdAt), 'yyyy-MM-dd'),
+    'Last modified at': comment.lastModified ? format(new Date(comment.lastModified), 'yyyy-MM-dd') : ''
+  }));
+  const fields = [
+    'Title',
+    'Comment',
+    'Collection',
+    'Author',
+    'Source name',
+    'Source url',
+    'Tags',
+    'Link',
+    'Related Links',
+    'IsActive',
+    'Created by',
+    'Created at',
+    'Last modified at'
+  ];
+
+  const json2csvParser = new Parser({ fields });
+  const csv = json2csvParser.parse(mappedData);
+  return csv;
+};
+
 module.exports = {
   searchComments,
   suggestCommentsInsertCount,
@@ -349,4 +411,5 @@ module.exports = {
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
   getLinkPreviewData,
+  exportSuggestedComments,
 };
