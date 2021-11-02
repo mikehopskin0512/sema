@@ -35,7 +35,7 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
           style={{ textDecoration: 'none' }}
           onClick={toggleUserMenu}
         >
-          Manage
+          Manage Labels
         </a>
       )}
     </div>

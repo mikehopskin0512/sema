@@ -121,7 +121,7 @@ if (!isAuthenticated || user.isWaitlist) {
                           <FontAwesomeIcon icon={faCommentAlt} size="lg" />
                         </div>
                         <span className="is-size-1r">
-                          <span className="has-text-weight-bold">Suggested Comments: </span>
+                          <span className="has-text-weight-bold">Suggested Snippets: </span>
                           Insert pre-written comments from the world’s best sources of coding knowledge.
                         </span>
                       </div>

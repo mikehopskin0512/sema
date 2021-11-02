@@ -8,7 +8,7 @@ import carouselData from './data';
 
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
-  const [screens] = useState(['Reactions', 'Tags', 'Suggested Comments', 'Developer Insights', 'Social Graph']);
+  const [screens] = useState(['Reactions', 'Tags', 'Suggested Snippets', 'Developer Insights', 'Social Graph']);
   const buttonProps = (index) => ({
     onClick: () => setCurrent(index),
     className: clsx('is-uppercase is-size-5 has-text-weight-semibold tab mx-25', current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
@@ -39,7 +39,7 @@ const Carousel = () => {
           </li>
           <li>
             <a {...buttonProps(2)}>
-              Suggested Comments
+              Suggested Snippets
             </a>
           </li>
           <li>
@@ -165,19 +165,19 @@ const SuggestedComments = ({ current }) => (
       <div className="tile is-horizontal is-12 is-hidden-mobile">
         <div className="tile is-1" />
         <div className="tile is-5 is-parent is-vertical mt-70 pr-20">
-          <p className="title">Suggested Comments</p>
+          <p className="title">Suggested Snippets</p>
           <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
         </div>
         <div className="tile is-6">
-          <img src={carouselData[2]} alt="suggested-comments" className="" />
+          <img src={carouselData[2]} alt="suggested-snippets" className="" />
         </div>
       </div>
       {/* Mobile View */}
       <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
-        <p className="is-size-5-mobile has-text-weight-semibold">Suggested Comments</p>
+        <p className="is-size-5-mobile has-text-weight-semibold">Suggested Snippets</p>
         <p className="is-size-6-mobile">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity.</p>
         <figure className="image is-4by3 mt-20">
-          <img src={carouselData[2]} alt="suggested-comments" className={styles['mobile-img']} />
+          <img src={carouselData[2]} alt="suggested-snippets" className={styles['mobile-img']} />
         </figure>
       </div>
     </TileAncestor>

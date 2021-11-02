@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import SuggestionModal from './components/SuggestionModal';
-import { SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
+import { EVENTS, SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
+import { fireAmplitudeEvent } from './modules/content-util';
 
 import {
   toggleGlobalSearchModal,
@@ -48,13 +49,14 @@ const GlobalSearchbar = (props) => {
     props.onGlobalSearchInputChange(value);
   };
 
-  const onInsertPressed = (id, suggestion) => {
+  const onInsertPressed = (id, title, sourceName, suggestion) => {
     const { value } = props.commentBox;
     // eslint-disable-next-line no-param-reassign
     props.commentBox.value = `${value}\n${suggestion}\n`;
     setSearchResults([]);
     props.toggleSearchModal();
     props.onLastUsedSmartComment(suggestion);
+    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
 
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
@@ -151,7 +153,7 @@ const GlobalSearchbar = (props) => {
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <SuggestionModal
-                key={props.isLoading}
+                isLoading={props.isLoading}
                 onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
                 onLastUsedSmartComment={props.onLastUsedSmartComment}

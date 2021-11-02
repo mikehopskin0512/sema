@@ -86,7 +86,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   };
 
   const goToAddPage = async () => {
-    await router.push(`/suggested-comments/add?cid=${collectionId}`);
+    await router.push(`/suggested-snippets/add?cid=${collectionId}`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -112,7 +112,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     setCommentsFiltered([...filtered]);
     setIsParsing(false);
   };
-  const isAddCommentActive = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
+  const isAddCommentActive = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
 
   const handleSelectChange = (commentId, value) => {
     if (value) {
@@ -132,7 +132,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my comments' || name.toLowerCase() === 'custom comments', [user, name]);
+  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my snippets' || name.toLowerCase() === 'custom snippets', [user, name]);
 
   return (
     <div>
@@ -140,12 +140,12 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href="/suggested-comments" className="is-hidden-mobile">
+          <a href="/suggested-snippets" className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/suggested-comments" className="has-text-grey">Suggested Comments</a></li>
+              <li><a href="/suggested-snippets" className="has-text-grey">Suggested Snippets</a></li>
               <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
             </ul>
           </nav>
@@ -156,7 +156,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               {name}
             </p>
             <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-              {comments.length} suggested comments
+              {comments.length} suggested snippets
             </span>
           </div>
           {
@@ -166,7 +166,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                 type="button"
                 onClick={goToAddPage}>
                 <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                Add New Comment
+                Add New Snippet
               </button>
             )
           }
@@ -195,14 +195,14 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           ) : isEmpty(commentsFiltered) ? (
             <div className="is-size-5 has-text-deep-black my-120 has-text-centered">
               <img src="/img/no-suggested-comments.png" className={styles['no-comments-img']} />
-              <p className="is-size-7 my-25">You don't have any Custom Comments.</p>
+              <p className="is-size-7 my-25">You don't have any Custom Snippets.</p>
               { isEditable && (
                 <button
                   className="button is-small is-primary border-radius-4px has-text-semibold"
                   type="button"
                   onClick={goToAddPage}>
                   <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                  Add a Comment
+                  Add a Snippet
                 </button>
               ) }
             </div>

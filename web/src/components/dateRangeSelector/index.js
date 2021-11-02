@@ -77,7 +77,7 @@ const DateRangeSelector = (props) => {
     }
 
     const renderCalendarInfo = () => (
-        <div className={clsx("menu py-20", styles['calendar-info'])}>
+        <div className={"menu py-20"}>
             <ul className="menu-list">
                 <li><a className={clsx("px-25", selectedRange === 'last7Days' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('last7Days')}>Last 7 days</a></li>
                 <li><a className={clsx("px-25", selectedRange === 'last14Days' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('last14Days')}>Last 14 days</a></li>
@@ -122,7 +122,7 @@ const DateRangeSelector = (props) => {
               </span>
             </button>
           </div>
-          <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
+          <div className={"dropdown-menu"} id="dropdown-menu" role="menu" ref={popupRef}>
             <div className={clsx("dropdown-content", styles['dropdown-container'])}>
               <DayPickerRangeController
                 startDate={start}

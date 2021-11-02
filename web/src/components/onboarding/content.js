@@ -16,7 +16,7 @@ export const content = [
     animationData: animationTags,
   },
   {
-    title: 'Suggested Comments',
+    title: 'Suggested Snippets',
     subtitle: 'Write great comments faster by quickly searching for and inserting pre-written comments from some of the best knowledge bases in the world, and add your own!',
     img: '/img/suggested-comments.png',
     animationData: animationComments,
@@ -60,7 +60,7 @@ export const commentCollection = [
     field: 'famousQuotes',
   },
   {
-    title: 'My Comments',
+    title: 'My Snippets',
     subtitle: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
     field: 'personalComments',
   },

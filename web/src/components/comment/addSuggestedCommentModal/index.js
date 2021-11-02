@@ -9,7 +9,7 @@ import CreatableSelect from 'react-select/creatable';
 
 import { collectionsOperations } from '../../../state/features/collections';
 import { commentsOperations } from '../../../state/features/comments';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { tagsOperations } from '../../../state/features/tags';
 import { tagsState } from '../../../state/features';
 
@@ -28,7 +28,7 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment, inCollections
   const { auth, suggestedComment, tagState } = useSelector(
     (state) => ({
       auth: state.authState,
-      suggestedComment: state.suggestCommentsState,
+      suggestedComment: state.suggestSnippetsState,
       tagState: state.tagsState,
     }),
   );
@@ -155,7 +155,7 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment, inCollections
       <div className="modal-background" />
       <div className="modal-content px-10">
         <div className="p-50 has-background-white">
-          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">{`${comment ? 'Update' : 'Create'} a Custom Suggested Comment`}</p>
+          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">{`${comment ? 'Update' : 'Create'} a Custom Suggested Snippet`}</p>
           <p className="mb-20">
             Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.
             <b> Fill out at least one of these fields and we&apos;ll do the rest.</b>

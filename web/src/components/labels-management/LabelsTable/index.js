@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import tableStyles from '../../repos/repoTable/repoTable.module.scss';
 import styles from './labelsTable.module.scss';
-import { getCharCount } from 'src/utils';
+import { getCharCount } from '../../../utils';
 
 const LabelsTable = ({ data, columns = [], renderRow }) => {
   const [pageSize, setPageSize] = useState(10);
@@ -25,7 +25,7 @@ const LabelsTable = ({ data, columns = [], renderRow }) => {
       <table className={clsx('table is-fullwidth', tableStyles.table)}>
         <thead className={clsx('is-fullwidth', tableStyles.thead)}>
           <tr>
-            { columns.map((col) => 
+            { columns.map((col) =>
               <th
                 className={clsx(
                   "is-uppercase has-text-weight-semibold is-size-8 p-10",

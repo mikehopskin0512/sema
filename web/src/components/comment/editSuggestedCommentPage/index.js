@@ -7,7 +7,7 @@ import { validateData } from '../addSuggestedComment';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { tagsOperations } from '../../../state/features/tags';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -18,15 +18,15 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   const [comments, setComments] = useState([]);
   const [errors, setErrors] = useState({});
 
-  const { auth, collectionState, suggestCommentsState } = useSelector((state) => ({
+  const { auth, collectionState, suggestSnippetsState } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
-    suggestCommentsState: state.suggestCommentsState,
+    suggestSnippetsState: state.suggestSnippetsState,
   }));
 
   const { token } = auth;
   const { collection } = collectionState;
-  const { suggestedComments } = suggestCommentsState;
+  const { suggestedComments } = suggestSnippetsState;
 
   useEffect(() => {
     const ids = commentIds.split(',');
@@ -90,7 +90,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
 
     if (data[0]) {
       await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
-      await router.push(`/suggested-comments?cid=${collection._id}`);
+      await router.push(`/suggested-snippets?cid=${collection._id}`);
     }
   };
 
@@ -99,7 +99,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Edit Suggested Comments
+            Edit Suggested Snippets
           </p>
         </div>
         <div className="is-flex">

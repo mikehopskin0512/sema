@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CardList from '../../components/comment/cardList';
 import EngGuidesCollection from '../../components/engGuides/engGuidesCollection';
 import withLayout from '../../components/layout';
-import Helmet, { CommentCollectionsHelmet } from '../../components/utils/Helmet';
+import Helmet, { SnippetCollectionsHelmet } from '../../components/utils/Helmet';
 import { engGuidesOperations } from '../../state/features/engGuides';
 import GlobalSearch from "../../components/globalSearch";
 import Loader from '../../components/Loader';
@@ -43,7 +43,7 @@ const EngineeringGuides = () => {
     }
     return (
       <div className="my-40">
-        <Helmet {...CommentCollectionsHelmet} />
+        <Helmet {...SnippetCollectionsHelmet} />
         <div>
           <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
             <p className="has-text-weight-semibold has-text-deep-black is-size-3">

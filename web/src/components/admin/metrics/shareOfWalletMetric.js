@@ -63,7 +63,7 @@ const ShareOfWalletMetric = () => {
         className: 'p-10',
       },
       {
-        Header: 'Suggested Comments(%)',
+        Header: 'Suggested Snippets(%)',
         accessor: 'suggestedComments',
         className: 'p-10',
       },

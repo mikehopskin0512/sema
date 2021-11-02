@@ -1,5 +1,5 @@
 import * as types from './types';
-import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-comments/types'
+import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types'
 
 const initialState = {
   isFetching: false,

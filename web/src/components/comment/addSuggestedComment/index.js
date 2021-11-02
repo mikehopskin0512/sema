@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
 
@@ -58,10 +58,6 @@ const AddSuggestedComment = (props) => {
     collectionState: state.commentsState,
   }));
 
-  const { collectionState } = useSelector((state) => ({
-    collectionState: state.commentsState,
-  }));
-
   const { cid: collectionId } = router.query;
   const { collection } = collectionState;
 
@@ -92,11 +88,11 @@ const AddSuggestedComment = (props) => {
     setErrors({});
     const data = comments.map((comment) => {
       const isDataValid = validateData(comment, setErrors);
-  
+
       if (!isDataValid) {
         return;
       }
-  
+
       const re = new RegExp("^(http|https)://", "i");
       if (!re.test(comment.sourceLink)) {
         setErrors({
@@ -120,7 +116,7 @@ const AddSuggestedComment = (props) => {
 
     if (data[0]) {
       await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
-      await router.push(`/suggested-comments?cid=${collection._id}`);
+      await router.push(`/suggested-snippets?cid=${collection._id}`);
     }
   };
 
@@ -129,7 +125,7 @@ const AddSuggestedComment = (props) => {
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add a Suggested Comment
+            Add a Suggested Snippet
           </p>
         </div>
         <div className="is-flex">
@@ -168,7 +164,7 @@ const AddSuggestedComment = (props) => {
                     onClick={() => removeComment(index)}
                   >
                     <FontAwesomeIcon icon={faTimes} className="mr-10" />
-                    Remove comment
+                    Remove snippet
                   </button>
                 </div>
               ) }

@@ -15,7 +15,7 @@ function SuggestionModal({
 }) {
   const { isLoggedIn } = useSelector((state) => state.user);
   const isNoResults = searchResults.length === 0;
-  const isNoValue = searchValue.length === 0;
+  const isNoValue = searchValue?.length === 0;
   switch (true) {
     case !isLoggedIn:
       return <NoLoggedView />;

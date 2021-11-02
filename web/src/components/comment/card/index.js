@@ -108,7 +108,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       dispatch(triggerAlert('Unable to unarchived collection', 'error'));
     }
 
-    const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom comments';
+    const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
 
     return (
       <Link href={`?cid=${_id}`}>
@@ -116,7 +116,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
               <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              { asPath === '/suggested-comments' && isNotArchived ? (
+              { asPath === '/suggested-snippets' && isNotArchived ? (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
@@ -159,7 +159,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                         aria-hidden
                       >
                         <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                        Add a comment
+                        Add a snippet
                       </div>
                     </div>
                   ) : (
@@ -179,7 +179,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                       <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                         <div className="dropdown-content">
-                          <a href={`/suggested-comments/edit?cid=${_id}`} className="dropdown-item">
+                          <a href={`/suggested-snippets/edit?cid=${_id}`} className="dropdown-item">
                             Edit Collection
                           </a>
                           <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
