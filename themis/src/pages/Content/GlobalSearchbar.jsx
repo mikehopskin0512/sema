@@ -151,7 +151,7 @@ const GlobalSearchbar = (props) => {
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <SuggestionModal
-                key={props.isLoading}
+                isLoading={props.isLoading}
                 onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
                 onLastUsedSmartComment={props.onLastUsedSmartComment}
