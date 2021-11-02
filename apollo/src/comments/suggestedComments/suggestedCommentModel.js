@@ -51,7 +51,7 @@ const suggestedCommentSchema = new Schema({
     title: String,
     icon: String,
     thumbnail: String,
-  },
+  }
 }, {
   timestamps: true,
   collection: 'suggestedComments',
