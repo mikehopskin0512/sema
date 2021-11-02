@@ -5,8 +5,8 @@ export const EditGuides = 'canEditGuides';
 export const ManageLinks = 'canManageLinks';
 
 export const permissionsMap = {
-  '/suggested-comments/add': [EditComments],
-  '/suggested-comments/edit': [EditComments],
+  '/suggested-snippets/add': [EditComments],
+  '/suggested-snippets/edit': [EditComments],
   '/sema-admin/users': [ViewAdmin],
   '/sema-admin/users/[userId]': [EditUsers],
   '/sema-admin/reports': [ViewAdmin],

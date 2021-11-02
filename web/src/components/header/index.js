@@ -157,8 +157,8 @@ const Header = () => {
                     Personal Insights
                   </a>
                 </Link>
-                <Link href="/suggested-comments">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-comments') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                <Link href="/suggested-snippets">
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-snippets') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Suggested Snippets
                   </a>
                 </Link>
@@ -193,7 +193,7 @@ const Header = () => {
                     Repos
                   </a>
                 </Link>
-                <Link href="/suggested-comments">
+                <Link href="/suggested-snippets">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Suggested Snippets
                   </a>

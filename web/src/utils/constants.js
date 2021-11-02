@@ -120,7 +120,7 @@ export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
 export const GITHUB_URL = 'https://github.com';
 
-export const DEFAULT_COLLECTION_NAME = "my comments";
+export const DEFAULT_COLLECTION_NAME = "my snippets";
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 

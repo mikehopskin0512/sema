@@ -71,7 +71,7 @@ userSchema.pre('save', async function save(next) {
   if (!this.isModified('password')) return next();
   try {
     const { username } = this.identities[0];
-    const defaultSemaCollections = ['Philosophies', 'Famous Quotes', 'My Comments', 'Common Comments', 'Security - Mitre’s Common Weakness Enumeration (CWE)'];
+    const defaultSemaCollections = ['Philosophies', 'Famous Quotes', 'My Snippets', 'Common Comments', 'Security - Mitre’s Common Weakness Enumeration (CWE)'];
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
     
     // Creates default user collection

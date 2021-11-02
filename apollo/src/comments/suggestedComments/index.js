@@ -64,7 +64,7 @@ export default (app, passport) => {
       if (!collectionId) {
         const collections = await getUserCollectionsById(user._id);
         const defaultCollection = collections.find((collection) => {
-          return collection.collectionData.name.toLowerCase() === 'my comments';
+          return collection.collectionData.name.toLowerCase() === 'my snippets';
         });
         collectionId = defaultCollection.collectionData._id;
       }

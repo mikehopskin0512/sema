@@ -119,13 +119,13 @@ export const createSuggestComment = (body, token) => async (dispatch) => {
   try {
     dispatch(requestCreateSuggestComment());
     const { data: { suggestedComment } } = await postSuggestComment(body, token);
-    dispatch(triggerAlert('Suggested comment has been added', 'success'));
+    dispatch(triggerAlert('Suggested snippet has been added', 'success'));
     dispatch(requestCreateSuggestCommentSuccess(suggestedComment, body.collectionId));
     return suggestedComment;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert('Error saving suggested comment', 'error'));
+    dispatch(triggerAlert('Error saving suggested snippet', 'error'));
     dispatch(requestCreateSuggestCommentError(errMessage));
     return error;
   }
@@ -135,13 +135,13 @@ export const updateSuggestComment = (id, body, token, messages) => async (dispat
   try {
     dispatch(requestUpdateSuggestComment());
     const { data: { suggestedComment } } = await patchSuggestComment(id, body, token);
-    dispatch(triggerAlert(messages?.successMsg || 'Suggested comment has been updated', 'success'));
+    dispatch(triggerAlert(messages?.successMsg || 'Suggested snippet has been updated', 'success'));
     dispatch(requestUpdateSuggestCommentSuccess(suggestedComment));
     return suggestedComment;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert(messages?.errorMsg || 'Error saving suggested comment', 'error'));
+    dispatch(triggerAlert(messages?.errorMsg || 'Error saving suggested snippet', 'error'));
     dispatch(requestUpdateSuggestCommentError(errMessage));
     return error;
   }

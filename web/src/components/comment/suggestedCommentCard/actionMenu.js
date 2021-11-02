@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import usePopup from '../../../hooks/usePopup';
 import AddSuggestedCommentModal from '../addSuggestedCommentModal';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 
 const { getCollectionById } = commentsOperations;
@@ -52,7 +52,7 @@ const ActionMenu = ({ comment }) => {
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
                 onClick={() => setModalOpen(true)}
               >
-                Edit Suggested Comment
+                Edit Suggested Snippet
               </button>
             </div>
             <div className="dropdown-item py-0">

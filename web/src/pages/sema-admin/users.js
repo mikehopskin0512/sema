@@ -16,7 +16,7 @@ import { fullName } from '../../utils';
 import FilterTabs from '../../components/admin/filterTabs';
 import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 import ExportButton from '../../components/admin/exportButton';
-import { suggestCommentsOperations } from '../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 
 const {
   fetchUsers,
@@ -343,7 +343,7 @@ const UsersPage = () => {
             </div>
             <div className="ml-10">
               <ExportButton
-                label="Export All Suggested Comments"
+                label="Export All Suggested Snippets"
                 onExport={() => exportSuggestedComments({}, token)}
               />
             </div>

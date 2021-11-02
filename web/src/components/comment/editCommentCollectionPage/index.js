@@ -61,7 +61,7 @@ const EditCommentCollectionPage = () => {
       collection: data
     }, token));
     if (updatedCollection?._id) {
-      window.location.href = `/suggested-comments`
+      window.location.href = `/suggested-snippets`
     }
     setLoading(false);
   }
@@ -80,7 +80,7 @@ const EditCommentCollectionPage = () => {
         <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add a Comment Collection
+            Add a Snippet Collection
           </p>
         </div>
         <div className="is-flex">

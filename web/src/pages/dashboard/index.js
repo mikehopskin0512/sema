@@ -10,7 +10,7 @@ import { authOperations } from '../../state/features/auth';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
-import { suggestCommentsOperations } from '../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
@@ -121,7 +121,7 @@ const Dashboard = () => {
   const createUserCollection = async () => {
     const { username } = identities[0];
     const userCollection = {
-      name: 'My Comments',
+      name: 'My Snippets',
       description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
       author: username,
       // isActive: collectionState.personalComments,

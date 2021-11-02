@@ -51,7 +51,7 @@ const AddCommentCollection = () => {
       collections: [data]
     }, token));
     if (collections.length > 0) {
-      window.location.href = '/suggested-comments';
+      window.location.href = '/suggested-snippets';
     }
     setLoading(false);
   }
@@ -70,7 +70,7 @@ const AddCommentCollection = () => {
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add a Comment Collection
+            Add a Snippet Collection
           </p>
         </div>
         <div className="is-flex">

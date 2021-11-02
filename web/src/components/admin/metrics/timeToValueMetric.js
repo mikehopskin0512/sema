@@ -52,7 +52,7 @@ const TimeToValueMetric = () => {
           className: 'p-10',
         },
         {
-          Header: 'Insert suggested comment',
+          Header: 'Insert suggested snippet',
           accessor: 'insertSuggestedCommentAt',
           className: 'p-10',
         },

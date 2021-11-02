@@ -5,7 +5,7 @@ import animationComments from '../components/onboarding/animationComments.json';
 
 export const content = [
   {
-    title: 'Suggested Comments',
+    title: 'Suggested Snippets',
     subtitle: 'Leave better reviews by inserting pre-written snippets based on the world\'s top sources of coding knowledge + internal best practices.',
     img: '/img/repo-suggested-comments.png',
     animationData: animationComments,

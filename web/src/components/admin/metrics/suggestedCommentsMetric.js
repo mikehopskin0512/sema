@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Table from '../../table';
-import { suggestCommentsOperations } from '../../../state/features/suggest-comments';
+import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 
 const { fetchSuggestComments } = suggestCommentsOperations;
 
 const SuggestedCommentsMetric = () => {
   const dispatch = useDispatch();
-  const { suggestedComments, isFetching, totalCount } = useSelector((state) => state.suggestCommentsState);
+  const { suggestedComments, isFetching, totalCount } = useSelector((state) => state.suggestSnippetsState);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
 
