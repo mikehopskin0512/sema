@@ -80,35 +80,34 @@ export const getGithubMetadata = (document) => {
 };
 
 export const fireAmplitudeEvent = (event, opts) => {
-  const githubMetadata = getGithubMetadata(document);
-
-  const { user: { isLoggedIn } } = store.getState();
-
-  amplitude.getInstance().logEvent(event, {
-    ...opts,
-    ...githubMetadata,
-    isLoggedIn,
-    url: window.location.href,
-  });
+  if (AMPLITUDE_API_KEY) {
+    const githubMetadata = getGithubMetadata(document);
+    amplitude.getInstance().logEvent(event, {
+      ...opts,
+      ...githubMetadata,
+      url: window.location.href,
+    });
+  }
 };
 
-export const initAmplitude = () => {
-  const githubMetadata = getGithubMetadata(document);
-
-  const { user: { login } } = githubMetadata;
-
-  amplitude.getInstance().init(AMPLITUDE_API_KEY, login);
-
-  fireAmplitudeEvent(EVENTS.PAGE_VISIT);
-  let lastLocation = window.location.href;
-  // no good way to detect all types of URL changes
-  setInterval(() => {
-    const currentLocation = window.location.href;
-    if (lastLocation !== currentLocation) {
-      lastLocation = currentLocation;
-      fireAmplitudeEvent(EVENTS.PAGE_VISIT);
-    }
-  }, 200);
+export const initAmplitude = ({
+  _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = null,
+}) => {
+  if (AMPLITUDE_API_KEY) {
+    const [{ role = null, team = null }] = roles;
+    amplitude.getInstance().init(AMPLITUDE_API_KEY, username);
+    amplitude.getInstance().setUserProperties({
+      user_id: _id,
+      first_name: firstName,
+      last_name: lastName,
+      is_verified: isVerified,
+      is_waitlist: isWaitlist,
+      is_logged_in: isLoggedIn,
+      role: role.name,
+      team: team.name,
+    });
+    fireAmplitudeEvent(EVENTS.VIEWED_GITHUB_PAGE);
+  }
 };
 
 export const isTextBox = (element) => {
@@ -482,16 +481,18 @@ export async function writeSemaToGithub(activeElement) {
       store.dispatch(addSmartComment(smartComment));
     });
 
+    // Evaluate user interactions
     const opts = {
-      isSemaBarUsed: false,
-      isReply: isReply(activeElement),
-      isSuggestedCommentUsed: activeElement.value.includes(lastUserSmartComment),
+      location,
+      is_sema_bar_used: false,
+      is_reply: isReply(activeElement),
+      is_suggested_comment_used: activeElement.value.includes(lastUserSmartComment),
     };
     if (typeof semaString === 'string' && semaString.length) {
-      opts.isSemaBarUsed = true;
+      opts.is_sema_bar_used = true;
     }
 
-    fireAmplitudeEvent(EVENTS.SUBMIT, opts);
+    fireAmplitudeEvent(EVENTS.CREATE_SMART_COMMENT, opts);
     const semaIds = getSemaIds(activeElement);
     store.dispatch(resetSemaStates(semaIds));
   }

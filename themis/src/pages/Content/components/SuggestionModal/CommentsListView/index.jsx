@@ -4,20 +4,24 @@ import { getActiveThemeClass } from '../../../../../../utils/theme';
 import SuggestionComment from './SuggestionComment';
 import { engGuidesToStr, truncate } from '../helpers';
 import ControlButton from './ControlButton';
+import { EVENTS } from '../../../constants';
+import { fireAmplitudeEvent } from '../../../modules/content-util';
 
 function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed }) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
-  const onViewPressed = (suggestion) => {
+  const onViewPressed = (title, sourceName, suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
+    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'view', comment_source: sourceName, comment_used: title });
   };
   const [copiedId, setCopiedId] = useState(null);
-  const onCopyPressed = (id, suggestion) => {
+  const onCopyPressed = (id, title, sourceName, suggestion) => {
     navigator.clipboard.writeText(suggestion).then(
       () => {
         setCopiedId(id);
         onLastUsedSmartComment(suggestion);
+        fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'copy', comment_source: sourceName, comment_used: title });
       },
       () => {
         // eslint-disable-next-line no-console
@@ -47,17 +51,19 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed }
           <ControlButton
             icon="fa-file-import"
             title="Insert"
-            onClick={() => onInsertPressed(id, comment + engGuidesToStr(engGuides))}
+            // eslint-disable-next-line max-len
+            onClick={() => onInsertPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
           />
           <ControlButton
             icon="fa-copy"
             title={isCopied ? 'Copied!' : 'Copy'}
-            onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
+            // eslint-disable-next-line max-len
+            onClick={() => onCopyPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
           />
           <ControlButton
             icon="fa-eye"
             title="View"
-            onClick={() => onViewPressed(searchResult)}
+            onClick={() => onViewPressed(title, sourceName, searchResult)}
           />
         </div>
       </div>
@@ -80,12 +86,14 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed }
           <ControlButton
             title="Insert"
             icon="fa-file-import"
-            onClick={() => onInsertPressed(id, comment + engGuidesToStr(engGuides))}
+            // eslint-disable-next-line max-len
+            onClick={() => onInsertPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
           />
           <ControlButton
             title={isCopied ? 'Copied!' : 'Copy'}
             icon="fa-copy"
-            onClick={() => onCopyPressed(id, comment + engGuidesToStr(engGuides))}
+            // eslint-disable-next-line max-len
+            onClick={() => onCopyPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
           />
         </div>
         {title && comment && (

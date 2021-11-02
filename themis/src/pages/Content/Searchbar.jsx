@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { debounce } from 'lodash/function';
 import SuggestionModal from './components/SuggestionModal';
-import { SUGGESTION_URL } from './constants';
+import { EVENTS, SUGGESTION_URL } from './constants';
+import { fireAmplitudeEvent } from './modules/content-util';
 
 import {
   toggleSearchModal,
@@ -71,7 +72,7 @@ const SearchBar = (props) => {
     }
   };
 
-  const onInsertPressed = (id, suggestion) => {
+  const onInsertPressed = (id, title, sourceName, suggestion) => {
     const value = commentBox.value ? `${commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
     commentBox.value = `${value}${suggestion}`;
@@ -80,6 +81,7 @@ const SearchBar = (props) => {
     props.onLastUsedSmartComment(suggestion);
     commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     props.onTextPaste();
+    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
   };
 
   const resetSearch = () => {
