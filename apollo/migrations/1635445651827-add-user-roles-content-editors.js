@@ -71,6 +71,7 @@ exports.down = async (next) => {
     const UserRole = mongoose.connection.db.collection('userroles');
     await UserRole.deleteMany({ _id: { $in: userRoleIds } });
   } catch (error) {
+    console.log(error);
     next(error);
   }
   mongoose.connection.close();
