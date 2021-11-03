@@ -34,6 +34,14 @@
       {
         "name": "GITHUB_REDIRECT",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/github/redirect"
+      },
+      {
+        "name":"NEXT_PUBLIC_AMPLITUDE_API_KEY",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/next_public_amplitude_api_key"
+      },
+      {
+        "name":"INTERCOM_APP_ID",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/phoenix/intercom_app_id"
       }
     ],
     "portMappings": [

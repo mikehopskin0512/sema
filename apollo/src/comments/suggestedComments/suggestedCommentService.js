@@ -17,7 +17,7 @@ const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
 const { Parser } = Json2CSV;
 
 
-const getUserSuggestedComments = async (userId, searchResults = []) => {
+const getUserSuggestedComments = async (userId, searchResults = [], allCollections) => {
   const userActiveCommentsQuery = [
     {
       $match: { _id: new ObjectId(userId) },
@@ -80,8 +80,49 @@ const getUserSuggestedComments = async (userId, searchResults = []) => {
       },
     },
   ];
+  const allUserCommentsQuery = [
+    {
+      $match: { _id: new ObjectId(userId) },
+    },
+    {
+      $lookup: {
+        from: 'collections',
+        localField: 'collections.collectionData',
+        foreignField: '_id',
+        as: 'collections',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: { $setUnion: ['$$value', '$$this'] },
+                },
+              },
+            },
+            in: { $setIntersection: ['$$userComments', searchResults] },
+          },
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'comments',
+      },
+    },
+  ];
 
-  const commentsData = await User.aggregate(userActiveCommentsQuery);
+  const commentsQuery = allCollections ? allUserCommentsQuery : userActiveCommentsQuery;
+  const commentsData = await User.aggregate(commentsQuery);
   if (!commentsData || commentsData.length === 0) return [];
   const [{ comments }] = commentsData;
   return comments;
@@ -111,16 +152,16 @@ const searchIndex = async (searchQuery) => {
     ]);
     const isNoResults = !results.length
     return isNoResults ? [] : results[0].searchResults;
-  }
+ }
 };
 
-const searchComments = async (user, searchQuery) => {
+const searchComments = async (user, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
 
   // The number of suggested comments to list
   searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 
-  const comments = await getUserSuggestedComments(user, searchResults);
+  const comments = await getUserSuggestedComments(user, searchResults, allCollections);
   const returnResults = comments.map(
     ({
       _id: id,

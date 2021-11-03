@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
 import styles from './globalSearch.module.scss'
-import { getEngGuides } from "../../state/features/engGuides/actions";
+// TODO: turned off temporary / delete in 2022
+// import { getEngGuides } from "../../state/features/engGuides/actions";
 import useOutsideClick from '../../utils/useOutsideClick'
 
 const isFieldIncludes = (searchTerm, fieldName) => {
@@ -18,21 +19,23 @@ const isFieldIncludes = (searchTerm, fieldName) => {
 
 const GlobalSearch = () => {
   const dispatch = useDispatch();
-  const { engGuides } = useSelector((state) => state.engGuidesState);
+  // TODO: turned off temporary / delete in 2022
+  // const { engGuides } = useSelector((state) => state.engGuidesState);
   const { user, token } = useSelector((state) => state.authState);
   const { collections: userCollections } = user
   const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
 
   const wrapper = useRef(null);
-  const engGuidesComments = useMemo(() => {
-    const comments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
-    return searchTerm ? comments.filter(isFieldIncludes(searchTerm, 'title')) : comments;
-  },[engGuides, searchTerm]);
-  const engGuidesCollections = useMemo(() => {
-    const collections = engGuides.map(({ collectionData }) => collectionData);
-    return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
-  },[engGuides, searchTerm]);
+  // TODO: turned off temporary / delete in 2022
+  // const engGuidesComments = useMemo(() => {
+  //   const guideComments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
+  //   return searchTerm ? guideComments.filter(isFieldIncludes(searchTerm, 'title')) : guideComments;
+  // },[engGuides, searchTerm]);
+  // const engGuidesCollections = useMemo(() => {
+  //   const collections = engGuides.map(({ collectionData }) => collectionData);
+  //   return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
+  // },[engGuides, searchTerm]);
   const suggestedCollections = useMemo(() => {
     const _collections = userCollections?.map(({ collectionData }) => collectionData);
     return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
@@ -41,8 +44,9 @@ const GlobalSearch = () => {
   const categories = [
     { title: "suggested snippets collections", items: suggestedCollections },
     { title: "suggested snippets", items: suggestedComments },
-    { title: "community engineering guide collections", items: engGuidesCollections },
-    { title: "community engineering guide", items: engGuidesComments },
+    // TODO: turned off temporary / delete in 2022
+    // { title: "community engineering guide collections", items: engGuidesCollections },
+    // { title: "community engineering guide", items: engGuidesComments },
   ]
   const onSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -52,14 +56,16 @@ const GlobalSearch = () => {
   useOutsideClick(wrapper, clearSearch)
 
   useEffect(() => {
-    dispatch(getUserSuggestedComments(searchTerm, user._id, token));
+    const isAllCollections = true;
+    dispatch(getUserSuggestedComments(searchTerm, user._id, token, isAllCollections));
   }, [searchTerm]);
 
-  useEffect(() => {
-    if (!engGuides.length) {
-      dispatch(getEngGuides(token));
-    }
-  }, [dispatch, token]);
+  // TODO: turned off temporary / delete in 2022
+  // useEffect(() => {
+  //   if (!engGuides.length) {
+  //     dispatch(getEngGuides(token));
+  //   }
+  // }, [dispatch, token]);
 
   return (
     <div className="is-flex is-relative" ref={wrapper}>
