@@ -220,3 +220,9 @@ resource "aws_ssm_parameter" "phoenix_intercom_token" {
   type  = "String"
   value = "dG9rOmNlZGFlZmNiXzUzNjZfNDYxNF9iOWQzXzA1ODYzYWY2OTU5MzoxOjA="
 }
+
+resource "aws_ssm_parameter" "phoenix_next_public_amplitude_api_key" {
+  name  = "/${var.env}/phoenix/next_public_amplitude_api_key"
+  type  = "String"
+  value = "6b2de3d0d7e75b094f7eee2a6e0afd18"
+}
