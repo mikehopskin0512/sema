@@ -60,7 +60,9 @@ chrome.runtime.onMessage.addListener((request) => {
   if (request?.amplitude) {
     fireAmplitudeEvent(request.event);
   }
-  store.dispatch(updateSemaUser({ ...request }));
+  if (request?.isUserUpdated) {
+    store.dispatch(updateSemaUser({ ...request }));
+  }
 });
 
 const checkLoggedIn = async (cb) => {
