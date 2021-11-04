@@ -219,10 +219,10 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
 
   if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
     if (removed) {
-      sendMessageToTab({ token: null, isLoggedIn: false });
+      sendMessageToTab({ isUserUpdated: true, token: null, isLoggedIn: false });
     } else {
       processCookie(cookie).then((tokenResponse) => {
-        sendMessageToTab(tokenResponse);
+        sendMessageToTab({ isUserUpdated: true, ...tokenResponse });
       });
     }
   }
