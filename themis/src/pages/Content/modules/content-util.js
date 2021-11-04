@@ -91,7 +91,7 @@ export const fireAmplitudeEvent = (event, opts) => {
 };
 
 export const initAmplitude = ({
-  _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = null,
+  _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = [{}],
 }) => {
   if (AMPLITUDE_API_KEY) {
     const [{ role = null, team = null }] = roles;
@@ -103,8 +103,8 @@ export const initAmplitude = ({
       is_verified: isVerified,
       is_waitlist: isWaitlist,
       is_logged_in: isLoggedIn,
-      role: role.name,
-      team: team.name,
+      role: role?.name,
+      team: team?.name,
     });
     fireAmplitudeEvent(EVENTS.VIEWED_GITHUB_PAGE);
   }

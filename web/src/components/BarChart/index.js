@@ -73,7 +73,6 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   };
 
   const renderTooltip = React.memo((itemData) => {
-    console.log({ itemData })
     const { id, value, indexValue, data: colData } = itemData;
     const { total } = colData;
     const { emoji, label } = find(EMOJIS, { _id: id });
@@ -93,16 +92,20 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
         dateString = format(new Date(indexValue), 'LLLL d');
       }
     }
+
+    // Create dynamic totalCommentsLabel
+    const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
+    const totalCommentsLabel = (yAxisType === 'total') ? round((value*100)/total, 2) : value +
+                                `% of total comments ${groupBy && totalCommentRange}` || '';
+
     return (
       <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
         <div className="is-flex is-justify-content-space-between is-full-width mb-10">
           <p className="has-text-weight-semibold has-text-deep-black is-size-7">{emoji} {label}</p>
           <div className="is-size-7 has-text-primary has-text-weight-semibold is-uppercase">{dateString}</div>
         </div>
-        <p className="is-size-7">{count} of {total} comments</p>
-        <p className="is-size-7">
-          {yAxisType === 'total' ? round((value*100)/total, 2) : value}% of total comments {groupBy ? `on this ${groupBy}` : '' }
-        </p>
+        <p className="is-size-7">{count} of {total} comment{(total > 1) && `s`}</p>
+        <p className="is-size-7">{totalCommentsLabel}</p>
       </div>
     );
   });
