@@ -6,20 +6,6 @@ resource "aws_security_group" "lb" {
   description = "controls access to the ALB"
   vpc_id      = data.aws_vpc.main.id
 
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     protocol    = "-1"
     from_port   = 0
@@ -28,8 +14,8 @@ resource "aws_security_group" "lb" {
   }
 
   tags = {
-    Name = "${var.env}-lb-sg"
-    Env  = var.env
+    Name      = "${var.env}-lb-sg"
+    Env       = var.env
     Terraform = true
   }
 }
@@ -37,6 +23,28 @@ resource "aws_security_group" "lb" {
 # ---------------------------------------------------------------------------------------------------------------------
 # ADD VPN CIDR ACCESS TO THE LOAD BALANCER SECURITY GROUP (FOR VPC PEERING)
 # ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_security_group_rule" "tcp" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.lb.id
+
+  depends_on = [aws_security_group.lb]
+}
+
+resource "aws_security_group_rule" "tls" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.lb.id
+
+  depends_on = [aws_security_group.lb]
+}
 
 resource "aws_security_group_rule" "vpn" {
   type              = "ingress"

@@ -17,7 +17,7 @@ data "aws_acm_certificate" "cert" {
 data "aws_subnet_ids" "public" {
   vpc_id = data.aws_vpc.main.id
   tags = {
-    Name = "vpc-${var.env}_public_*"
+    Name = "*${var.env}*public*"
   }
 }
 
@@ -33,8 +33,8 @@ resource "aws_lb" "main" {
   enable_deletion_protection = true
 
   tags = {
-    Name = var.name
-    Env  = var.env
+    Name      = var.name
+    Env       = var.env
     Terraform = true
   }
 }
@@ -48,8 +48,8 @@ resource "aws_lb_listener" "main_http" {
     type = "redirect"
 
     redirect {
-      port = "443"
-      protocol = "HTTPS"
+      port        = "443"
+      protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
   }
