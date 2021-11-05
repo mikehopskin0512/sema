@@ -82,6 +82,34 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     return emoji.color;
   };
 
+  const TotalLabels = ({ bars, yScale }) => {
+    const labelMargin = 20;
+    return bars.map(({ data: { data, indexValue }, x, width }, i) => {
+      const total = data?.total
+
+      return (
+        <g
+          transform={`translate(${x}, ${yScale(total) - labelMargin})`}
+          key={`${indexValue}-${i}`}
+        >
+          <text
+            className="bar-total-label"
+            x={width / 2}
+            y={labelMargin / 2}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            style={{
+              fill: '#202020',
+              fontSize: '14px'
+            }}
+          >
+            {total >= 1 && total}
+          </text>
+        </g>
+      );
+    });
+  };
+
   const renderTooltip = React.memo((itemData) => {
     const { id, value, indexValue, data: colData } = itemData;
     const { total } = colData;
@@ -105,8 +133,8 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
 
     // Create dynamic totalCommentsLabel
     const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
-    const totalCommentsLabel = (yAxisType === 'total') ? round((value*100)/total, 2) : value +
-                                `% of total comments ${groupBy && totalCommentRange}` || '';
+    const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
+      `% of total comments ${groupBy && totalCommentRange}`;
 
     return (
       <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
@@ -228,7 +256,9 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
               },
             ],
           },
-        ]} />
+        ]}
+        layers={["grid", "axes", "bars", TotalLabels, "markers", "legends"]}
+      />
     </>
 
   );
