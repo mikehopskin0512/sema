@@ -9,13 +9,15 @@ import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
 import { noContactUs } from '../../utils/constants';
 
-const widescreenPages = ['/repo/[repoId]', '/support'];
+const widescreenPages = ['/repo/[repoId]', '/support', '/login'];
+const noHeaderPages = ['/login'];
 
 const withLayout = (Page) => (props) => {
   const router = useRouter();
   const { pathname } = router;
 
   const isWideScreen = widescreenPages.includes(pathname);
+  const hasNoHeader = noHeaderPages.includes(pathname);
 
   return(
     <div className="Layout">
@@ -56,7 +58,7 @@ const withLayout = (Page) => (props) => {
         ` }} />
       </Head>
       <ExtensionStatus />
-      <Header />
+      {!hasNoHeader && (<Header />) }
       <div className={clsx(!isWideScreen && "container",!noContactUs.includes(pathname) && "pb-250")}>
         <Page {...props} />
       </div>

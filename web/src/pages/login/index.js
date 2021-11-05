@@ -85,68 +85,77 @@ if (!isAuthenticated || user.isWaitlist) {
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <img src="/img/login_bg.png" className={clsx("is-hidden-mobile", styles.bg)} />
       <section className="hero">
         <div className="hero-body mb-120">
           <div className="container">
-            <div className="tile is-ancestor">
-              <div className="tile is-vertical is-parent is-6 is-flex is-justify-content-center is-align-items-center">
-                <img src="/img/codelines.png" width="430" style={{ marginRight: 'auto' }}/>
-                <h1 className={styles.title}>Write more meaningful code reviews.</h1>
-                <div className="feature-list mt-20">
-                  <ul>
-                    <li className="mb-25">
-                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faThumbsUp} size="lg" />
+            <img src="/img/hires_logo_name.svg" width="170" className="mb-80" />
+            <div className="is-flex is-flex-wrap-wrap is-justify-content-space-around">
+              <div className="is-flex-grow-1 is-flex is-flex-direction-column is-align-items-center is-justify-content-center" >
+                <div style={{ maxWidth: 500 }}>
+                  <img src="/img/codelines.png" width="380" style={{ marginRight: 'auto' }}/>
+                  <h1 className={clsx("my-40", styles.title)}>Write more meaningful code reviews.</h1>
+                  <div className="feature-list mt-20">
+                    <ul>
+                      <li className="mb-25">
+                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                          <div className={clsx("mr-15", styles['fa-container'])} >
+                            <img src="/img/like_vector.png" />
+                          </div>
+                          <span className={clsx(styles.subtitles, "is-size-1r")}>
+                            <span className="has-text-weight-bold">Suggested Snippets: </span>
+                            Leave better reviews by inserting pre-written snippets based on best practices.
+                          </span>
                         </div>
-                        <span className="is-size-1r">
-                          <span className="has-text-weight-bold">Reactions: </span>
-                          Choose a simple summary of your review.</span>
-                      </div>
-                    </li>
-                    <li className="mb-25">
-                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faTag} size="lg" />
+                      </li>
+                      <li className="mb-25">
+                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                          <div className={clsx("mr-15", styles['fa-container'])} >
+                            <img src="/img/comment_vector.png" />
+                          </div>
+                          <span className={clsx(styles.subtitles, "is-size-1r")}>
+                            <span className="has-text-weight-bold">Comment Reactions: </span>
+                            Quickly summarize your review by choosing from a list of reactions.
+                          </span>
                         </div>
-                        <span className="is-size-1r">
-                          <span className="has-text-weight-bold">Tags: </span>
-                          Highlight the key takeaways of your review.
-                        </span>
-                      </div>
-                    </li>
-                    <li className="mb-25">
-                      <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
-                        <div className={clsx("has-background-gray-2 mr-15", styles['fa-container'])} >
-                          <FontAwesomeIcon icon={faCommentAlt} size="lg" />
+                      </li>
+                      <li className="mb-25">
+                        <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
+                          <div className={clsx("mr-15", styles['fa-container'])} >
+                            <img src="/img/tag_vector.png" />
+                          </div>
+                          <span className={clsx(styles.subtitles, "is-size-1r")}>
+                            <span className="has-text-weight-bold">Comment Tags: </span>
+                            Automatically categorize your comments with clear, mutually exclusive tags.
+                          </span>
                         </div>
-                        <span className="is-size-1r">
-                          <span className="has-text-weight-bold">Suggested Snippets: </span>
-                          Insert pre-written comments from the world’s best sources of coding knowledge.
-                        </span>
-                      </div>
-                    </li>
-                  </ul>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-              <div className="tile is-1"/>
-              {/** Show on Mobile */}
-              <div
-                className={clsx(
-                  'colored-shadow tile is-child is-5 p-40 box has-text-centered is-hidden-desktop',
-                  styles['login-tile'],
-                )}
-              >
-                {renderCard()}
-              </div>
-              {/** Show on Desktop */}
-              <div
-                className={clsx(
-                  'colored-shadow tile is-child is-5 px-70 pt-95 box has-text-centered is-hidden-mobile',
-                  styles['login-tile'],
-                )}
-              >
-                {renderCard()}
+              <div className="is-hidden-mobile" style={{ minWidth: 50 }} />
+              <div className="is-flex-grow-2">
+                {/** Show on Desktop */}
+                <div
+                  className={clsx(
+                    'colored-shadow has-text-centered is-hidden-mobile px-50 py-80',
+                    styles['login-tile'],
+                  )}
+                >
+                  {renderCard()}
+                </div>
+                {/** Show on Mobile */}
+                <div className="is-hidden-desktop p-20">
+                  <div
+                    className={clsx(
+                      'colored-shadow has-text-centered px-20 py-50',
+                      styles['login-tile'],
+                    )}
+                  >
+                    {renderCard()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

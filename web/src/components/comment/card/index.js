@@ -12,6 +12,8 @@ import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
+import {EditComments} from "../../../data/permissions";
+import usePermission from '../../../hooks/usePermission';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -31,6 +33,7 @@ const Tag = ({ tag, _id, type }) => (
 )
 
 const Card = ({ isActive, collectionData, addNewComment }) => {
+  const { checkAccess } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
   const { token, user } = useSelector((state) => state.authState);
@@ -39,6 +42,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   const { asPath } = router;
 
   const { isSemaAdmin, organizations } = user;
+  const isEditable = checkAccess({name: 'Sema Super Team'}, EditComments);
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -170,7 +174,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
                     </div>
                   )}
-                  { (isSemaAdmin || get(organizations, '[0].isAdmin', false)) && (
+                  { isEditable && (
                     <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                       <div className="dropdown-trigger">
                         <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>

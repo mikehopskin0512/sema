@@ -56,14 +56,6 @@ const AddCommentCollection = () => {
     setLoading(false);
   }
 
-  if (!isSemaAdmin) {
-    return(
-      <div className="has-text-centered my-50">
-        <p className="has-text-weight-semibold is-size-6">Unauthorized</p>
-      </div>
-    );
-  }
-
   return(
     <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />

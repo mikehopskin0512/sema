@@ -66,14 +66,6 @@ const EditCommentCollectionPage = () => {
     setLoading(false);
   }
 
-  if (!isSemaAdmin) {
-    return(
-      <div className="has-text-centered my-50">
-        <p className="has-text-weight-semibold is-size-6">Unauthorized</p>
-      </div>
-    );
-  }
-
   return(
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">

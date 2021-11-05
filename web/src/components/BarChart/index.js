@@ -1,6 +1,6 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
@@ -13,6 +13,16 @@ import { EMOJIS } from '../../utils/constants';
 const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
+  const [maxValue, setMaxValue] = useState(0);
+
+  useEffect(() => {
+    if (yAxisType === "total") {
+      const totalArr = barChartData.filter((chartData) => chartData.total).map((chartData) => chartData.total);
+      setMaxValue(Math.max(...totalArr));
+    } else {
+      setMaxValue(100);
+    }
+  }, [barChartData])
 
   const parseData = (rawData) => {
     if (rawData.length) {
@@ -72,6 +82,34 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     return emoji.color;
   };
 
+  const TotalLabels = ({ bars, yScale }) => {
+    const labelMargin = 20;
+    return bars.map(({ data: { data, indexValue }, x, width }, i) => {
+      const total = data?.total
+
+      return (
+        <g
+          transform={`translate(${x}, ${yScale(total) - labelMargin})`}
+          key={`${indexValue}-${i}`}
+        >
+          <text
+            className="bar-total-label"
+            x={width / 2}
+            y={labelMargin / 2}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            style={{
+              fill: '#202020',
+              fontSize: '14px'
+            }}
+          >
+            {total >= 1 && total}
+          </text>
+        </g>
+      );
+    });
+  };
+
   const renderTooltip = React.memo((itemData) => {
     const { id, value, indexValue, data: colData } = itemData;
     const { total } = colData;
@@ -95,8 +133,8 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
 
     // Create dynamic totalCommentsLabel
     const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
-    const totalCommentsLabel = (yAxisType === 'total') ? round((value*100)/total, 2) : value +
-                                `% of total comments ${groupBy && totalCommentRange}` || '';
+    const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
+      `% of total comments ${groupBy && totalCommentRange}`;
 
     return (
       <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
@@ -177,6 +215,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
           legendOffset: 35,
         }}
         tooltip={renderTooltip}
+        maxValue={maxValue}
         axisLeft={{
           tickSize: 5,
           tickPadding: 5,
@@ -217,7 +256,9 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
               },
             ],
           },
-        ]} />
+        ]}
+        layers={["grid", "axes", "bars", TotalLabels, "markers", "legends"]}
+      />
     </>
 
   );

@@ -45,7 +45,7 @@ export const fireAmplitudeEvent = (event, opts) => {
     }
   }
     
-  amplitude.getInstance().logEvent(event, {
+  amplitude?.getInstance().logEvent(event, {
     ...opts,
   });
 };

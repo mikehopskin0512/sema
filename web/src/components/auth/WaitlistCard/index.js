@@ -6,7 +6,7 @@ const WaitlistCard = () => (
       <p className="title is-size-3 has-text-weight-semibold has-text-centered has-text-black">You&apos;re on the list!</p>
       <div className="is-divider is-primary mx-90" />
       <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
-        Thanks for your interest. We&apos;ve added you on the list. We&apos;ll
+        Thanks for your interest. We&apos;ve added you on the list.<br /> We&apos;ll
         email as soon as a slot opens up in the private beta
       </p>
     </div>
