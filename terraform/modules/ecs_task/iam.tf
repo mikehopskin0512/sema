@@ -28,6 +28,12 @@ resource "aws_iam_role_policy" "cw" {
   policy = data.aws_iam_policy_document.cw.json
 }
 
+resource "aws_iam_role_policy" "ssm" {
+  name   = local.task_definition_exec_ssm_policy
+  role   = aws_iam_role.execution.id
+  policy = data.aws_iam_policy_document.ssm.json
+}
+
 resource "aws_iam_role_policy" "secret" {
   count  = local.create_secret_policy ? 1 : 0
   name   = local.task_definition_exec_secret_policy

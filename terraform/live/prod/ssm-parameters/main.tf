@@ -215,7 +215,7 @@ resource "aws_ssm_parameter" "phoenix_client_secret" {
   value = "d7f3b825-bf97-4f21-babc-cf03a1babe91"
 }
 
-resource "aws_ssm_parameter" "phoenix_intercom_token" {
+resource "aws_ssm_parameter" "apollo_intercom_token" {
   name  = "/${var.env}/apollo/intercom-token"
   type  = "String"
   value = "dG9rOmNlZGFlZmNiXzUzNjZfNDYxNF9iOWQzXzA1ODYzYWY2OTU5MzoxOjA="

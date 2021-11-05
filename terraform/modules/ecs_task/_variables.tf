@@ -31,12 +31,11 @@ variable "subnets" {
 }
 
 variable "ecs_cluster" {
-  type        = string
+  type = object({
+    name = string
+    arn  = string
+  })
   description = "ECS cluster ARN where services are located."
-  validation {
-    condition     = length(compact([null, "", var.ecs_cluster])) > 0
-    error_message = "ECS cluster ARN must not be empty."
-  }
 }
 
 variable "ecr_repo" {
@@ -59,4 +58,26 @@ variable "image" {
     condition     = length(compact([null, "", var.image])) > 0
     error_message = "ECR image tag must not be empty."
   }
+}
+variable "health_check_path" {
+  type        = string
+  description = "A path in the ecs for checking app health"
+  validation {
+    condition     = length(compact([null, "", var.health_check_path])) > 0
+    error_message = "ECR image tag must not be empty."
+  }
+}
+
+variable "ecs_external_access" {
+  type = object({
+    lb_listener_arn   = string
+    port              = number
+    lb_security_group = string
+    domain            = string
+    dns_zone_id       = string
+    lb_domain         = string
+    domain_prefix     = string
+    lb_zone_id        = string
+  })
+  description = "Configuration parameters for allowing external access."
 }

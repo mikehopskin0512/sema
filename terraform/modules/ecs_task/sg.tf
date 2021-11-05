@@ -15,7 +15,7 @@ resource "aws_security_group" "this" {
       protocol        = "tcp"
       from_port       = var.ecs_external_access.port
       to_port         = var.ecs_external_access.port
-      security_groups = var.ecs_external_access.allowed_sg
+      security_groups = [var.ecs_external_access.lb_security_group]
     }
   }
 

@@ -76,3 +76,26 @@ data "aws_iam_policy_document" "secret" {
     }
   }
 }
+
+data "aws_lb_listener" "https" {
+  for_each = local.ecs_external_access_enabled ? { "created" = "true" } : {}
+  arn      = var.ecs_external_access.lb_listener_arn
+}
+
+
+data "aws_iam_policy_document" "ssm" {
+    version ="2012-10-17"
+    statement {
+       effect = "Allow"
+       actions = [
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+       ]
+
+      resources = [
+      "*",
+    ]
+    }
+}

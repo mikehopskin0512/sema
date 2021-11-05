@@ -1,11 +1,12 @@
 locals {
-  task_definition                      = "${var.name_prefix}-ecs-task"
-  service                              = "${var.name_prefix}-ecs-service"
+  task_definition                      = "${var.name_prefix}-${var.application}"
+  service                              = var.application
   task_definition_role                 = "${local.service}-role"
   task_definition_extra_policy         = "${local.service}-extra-policy"
   task_definition_exec_role            = "${local.service}-exec-role"
   task_definition_exec_ecr_policy      = "${local.service}-ecr-policy"
   task_definition_exec_cw_policy       = "${local.service}-cw-policy"
+  task_definition_exec_ssm_policy      = "${local.service}-ssm-policy"
   task_definition_exec_secret_policy   = "${local.service}-secret-policy"
   task_definition_exec_external_policy = "${local.service}-external-policy"
   cw_log_group                         = "${local.service}-logs"
@@ -40,6 +41,7 @@ locals {
 }
 
 locals {
+  domain                      = "${var.ecs_external_access.domain_prefix}.${var.ecs_external_access.domain}"
   requires_compatibilities    = var.requires_compatibilities_ec2_enabled ? ["EC2"] : ["FARGATE"]
   ecs_external_access_enabled = var.ecs_external_access != null ? true : false
   ecs_port_mappings           = local.ecs_external_access_enabled ? [{ containerPort = var.ecs_external_access.port }] : []

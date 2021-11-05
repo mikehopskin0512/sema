@@ -9,16 +9,6 @@ variable "requires_compatibilities_ec2_enabled" {
   default     = false
 }
 
-variable "ecs_external_access" {
-  type = object({
-    target_group_arn = string
-    port             = number
-    allowed_sg       = list(string)
-  })
-  description = "Configuration parameters for allowing external access."
-  default     = null
-}
-
 variable "task_definition_resources" {
   type = object({
     cpu    = number
