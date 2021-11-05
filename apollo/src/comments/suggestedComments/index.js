@@ -60,13 +60,16 @@ export default (app, passport) => {
     const { user } = req.user;
     let title = req.body.title;
     let collectionId = req.body.collectionId;
+
     try {
       if (!collectionId) {
         const collections = await getUserCollectionsById(user._id);
+        // TODO: we should delete my comments later. It's a legacy name
+        const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
         const defaultCollection = collections.find((collection) => {
-          return collection.collectionData.name.toLowerCase() === 'my snippets';
+          return collection.collectionData.name.toLowerCase() === defaultCollectionName;
         });
-        collectionId = defaultCollection.collectionData._id;
+        collectionId = defaultCollection?.collectionData._id;
       }
 
       if (!title) {
