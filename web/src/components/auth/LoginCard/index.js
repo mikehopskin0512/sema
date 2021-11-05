@@ -10,23 +10,23 @@ const LoginCard = ({ isAuthenticated }) => {
 
   return (
     <>
-      <h1 className="title has-text-centered">Welcome to Sema</h1>
+      <h1 className="title has-text-centered has-text-black">Welcome to Sema</h1>
       <div className="is-divider is-primary mx-90" />
       <p className="has-text-centered is-size-6 has-text-black mb-50 has-text-weight-medium">
-        Sema is still a work in progress. Join the waitlist to be
+        Sema is still a work in progress. Join the waitlist<br /> to be
         amongst the first to try it out.
       </p>
       <div className="mb-15">
         <span className="is-size-8 has-text-gray-dark">
           By joining, you are agreeing to Sema’s &nbsp;
-          <a href="https://semasoftware.com/terms-and-conditions/">
+          <a href="https://semasoftware.com/terms-and-conditions/" className="is-underlined">
             Terms & Conditions
           </a>
         </span>
       </div>
       <button
         type="button"
-        className="button is-black is-primary colored-shadow-small p-25 mt-15"
+        className="button is-black is-primary colored-shadow-small p-25"
         onClick={githubLogin}
       >
         <span className="icon is-large mr-16 ml-0 is-hidden-mobile">
