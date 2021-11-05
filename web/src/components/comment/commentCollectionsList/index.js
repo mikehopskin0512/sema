@@ -13,6 +13,8 @@ import Toaster from '../../toaster';
 import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
+import {EditComments} from "../../../data/permissions";
+import usePermission from '../../../hooks/usePermission';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -21,6 +23,7 @@ const NUM_PER_PAGE = 9;
 
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
+  const { checkAccess } = usePermission();
   const { auth, collectionsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
@@ -33,6 +36,8 @@ const CommentCollectionsList = () => {
 
   const [collectionId, setCollectionId] = useState(null);
   const [page, setPage] = useState(1);
+  
+  const isEditable = checkAccess({name: 'Sema Super Team'}, EditComments);
 
   const sortedCollections = useMemo(() => {
     let collections = [...data];
@@ -103,7 +108,7 @@ const CommentCollectionsList = () => {
             <div className="mr-10">
               <GlobalSearch />
             </div>
-            { isSemaAdmin && (
+            { isEditable && (
               <a href="/suggested-snippets/add">
                 <button
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
