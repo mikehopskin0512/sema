@@ -7,14 +7,12 @@
     "service_worker": "background.bundle.js"
   },
   "host_permissions": [
-    "*://semasoftware.com/*",
-    "https://*.semasoftware.com/*",
-    "*://github.com/*",
-    "*://*.github.com/*/"
+    "https://github.com/*",
+    "https://*.semasoftware.com/*"
   ],
   "permissions": [
+    "activeTab",
     "cookies",
-    "tabs",
     "declarativeNetRequest"
   ],
   "action": {
@@ -35,8 +33,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://github.com/*",
-        "*://*.github.com/*"
+        "https://github.com/*"
       ],
       "run_at": "document_start",
       "js": ["contentScript.bundle.js"],
@@ -50,11 +47,9 @@
   ],
   "externally_connectable": {
     "matches": [
-      "*://semasoftware.com/*",
-      "*://*.semasoftware.com/*"
+      "https://*.semasoftware.com/*"
     ]
   },
-  "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
       "resources": [
@@ -66,10 +61,8 @@
         "webfonts/*"
       ],
       "matches": [
-        "*://github.com/*",
-        "*://*.github.com/*",
-        "*://semasoftware.com/*",
-        "*://*.semasoftware.com/*"
+        "https://github.com/*",
+        "https://*.semasoftware.com/*"
       ],
       "extension_ids": []
     }
