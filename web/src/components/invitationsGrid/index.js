@@ -18,6 +18,8 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-sky-light p-15 pt-35';
       case 'isPending':
         return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35' : '';
+      case 'sent':
+        return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35';
       case 'actions':
         return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
       default:
@@ -50,7 +52,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       {
         Header: 'Sent',
         accessor: 'sent',
-        className: type === 'admin' ? 'p-10' : 'pl-150 has-background-sky-light',
+        className: getHeaderClass('sent'),
         Cell: ({ cell: { value } }) => (
           <div className="is-flex is-align-items-center">
             { value }
