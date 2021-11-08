@@ -34,3 +34,10 @@ data "aws_secretsmanager_secret_version" "phoenix" {
     aws_secretsmanager_secret_version.phoenix
   ]
 }
+
+data "aws_secretsmanager_secret_version" "apollo" {
+  secret_id = aws_secretsmanager_secret.apollo.id
+  depends_on = [
+    aws_secretsmanager_secret_version.apollo
+  ]
+}

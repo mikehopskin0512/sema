@@ -50,6 +50,8 @@ locals {
     {
       name         = var.application,
       image        = "${var.image}",
+      cpu          = var.task_definition_resources.cpu,
+      memory       = var.task_definition_resources.memory,
       essential    = true,
       portMappings = local.ecs_port_mappings,
       environment  = var.ecs_envs,

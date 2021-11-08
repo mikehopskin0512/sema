@@ -25,3 +25,9 @@ variable "ecs_task_definition_resources" {
     memory = 2048
   }
 }
+
+variable "aws_region" {
+  type        = string
+  description = "The AWS region things are created in"
+  default     = "us-east-1"
+}
