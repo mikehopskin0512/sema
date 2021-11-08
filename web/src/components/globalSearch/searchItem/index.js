@@ -10,7 +10,10 @@ const SearchItem = ({ item, keyword }) => {
   const title = item.name || item.title
 
   const highlightSubString = (substr) => {
-    const re = new RegExp(`${keyword}`, 'gi')
+    // Add \ to parenthesis and brackets to prevent Regex errors (parenthesis and brackets are reserved)
+    const escapeRegex = keyword.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
+    //The gi modifier is used to do a case insensitive search of all occurrences of a regular expression in a string
+    const re = new RegExp(`${escapeRegex}`, 'gi') 
     return substr.replaceAll(re, `<strong>$&</strong>`)
   }
   const sourceName = item.source?.name || item.sourceName
