@@ -1,14 +1,12 @@
 name: Creating release candidate
 on: 
   schedule: 
-  - cron: '50 * * * *'
+  - cron: '*/5 * * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: master
       - run: |
           DATE=$(date +"%Y-%m-%d")
           git checkout -b release-${DATE}
