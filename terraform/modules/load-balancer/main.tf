@@ -26,7 +26,7 @@ data "aws_subnet_ids" "public" {
 # ---------------------------------------------------------------------------------------------------------------------
 resource "aws_lb" "main" {
   name                       = var.name
-  internal                   = var.env == "qa" ? true : false
+  internal                   = var.internal
   load_balancer_type         = "application"
   subnets                    = data.aws_subnet_ids.public.ids
   security_groups            = [aws_security_group.lb.id]

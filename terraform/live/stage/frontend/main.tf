@@ -9,6 +9,7 @@ module "alb" {
   env         = var.name_prefix
   name        = local.alb
   vpc_name    = var.vpc_name
+  internal    = true
 }
 
 module "phoenix" {
