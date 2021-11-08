@@ -1,3 +1,4 @@
+name: Creating release candidate
 on: 
   schedule: 
     - cron:  '*/5 * * * *'
