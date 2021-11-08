@@ -23,7 +23,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       case 'actions':
         return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
       default:
-        return ''
+        return 'p-10';
     }
   };
 
@@ -75,6 +75,34 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
           </div>
         )),
       },
+      ...type === 'admin' ? [{
+        Header: 'Company Name',
+        accessor: 'companyName',
+        className: getHeaderClass('companyName'),
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            {value}
+          </div>
+        ),
+      }, {
+        Header: 'Cohort',
+        accessor: 'cohort',
+        className: getHeaderClass('cohort'),
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            {value}
+          </div>
+        ),
+      }, {
+        Header: 'Notes',
+        accessor: 'notes',
+        className: getHeaderClass('notes'),
+        Cell: ({ cell: { value } }) => (
+          <div className="is-flex is-align-items-center">
+            {value}
+          </div>
+        ),
+      }] : [],
       {
         Header: 'Actions',
         accessor: 'actions',
@@ -128,6 +156,9 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       ),
       sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
       isPending: item.isPending,
+      companyName: item.companyName,
+      cohort: item.cohort,
+      notes: item.notes,
       actions: item,
     })) : [];
   }, [invites]);
