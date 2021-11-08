@@ -130,7 +130,6 @@ const InvitesPage = () => {
           page={page}
           perPage={perPage}
           isLoading={isFetching}
-          invites={invites}
         />
       </div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />

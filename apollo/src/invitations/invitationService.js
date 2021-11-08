@@ -10,8 +10,13 @@ export const create = async (invitation) => {
   try {
     const {
       recipient,
+      companyName,
+      cohort,
+      notes,
       // orgId, orgName,
-      sender, senderName, senderEmail,
+      sender,
+      senderName,
+      senderEmail,
     } = invitation;
 
     // Generate token and expiration data (2 weeks from now)
@@ -23,6 +28,9 @@ export const create = async (invitation) => {
 
     const newInvite = new Invitation({
       recipient,
+      companyName,
+      cohort,
+      notes,
       // orgId,
       // orgName,
       sender,
@@ -228,11 +236,25 @@ export const exportInvitations = async (params) => {
     Status: item.isPending ? 'Pending Invite' : 'Accepted',
     Invitations_Available: item.numAvailable,
     Invitation_Redeemed: item.redemptions.length ? item.redemptions[0].createdAt : '-',
+    'Company name': item.companyName,
+    Cohort: item.cohort,
+    Notes: item.notes,
     Created_At: item.createdAt
   }));
 
   const { Parser } = Json2CSV;
-  const fields = ['Sender_Email', 'Sender', 'Recipient', 'Status', 'Invitations_Available', 'Invitation_Redeemed', 'Created_At'];
+  const fields = [
+    'Sender_Email',
+    'Sender',
+    'Recipient',
+    'Status',
+    'Invitations_Available',
+    'Invitation_Redeemed',
+    'Company name',
+    'Cohort',
+    'Notes',
+    'Created_At',
+  ];
 
   const json2csvParser = new Parser({ fields });
   const csv = json2csvParser.parse(mappedData);

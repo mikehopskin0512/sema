@@ -183,6 +183,10 @@ const UsersPage = () => {
         sorted: false,
       },
       {
+        Header: 'Week of signup',
+        accessor: 'weekOfSignUp',
+      },
+      {
         Header: () => (
           <div className='has-text-centered pt-10' style={{ background: '#E9E1F0' }}>
             <div>Invite</div>
@@ -258,6 +262,7 @@ const UsersPage = () => {
       id: item._id,
     },
     lastLogin: item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
+    weekOfSignUp: item.createdAt ? format(new Date(item.createdAt), 'yyyy.ww', {firstWeekContainsDate: 4, weekStartsOn: 1}) : '',
     actionStatus: {
       id: item._id,
       status: getStatus(item),

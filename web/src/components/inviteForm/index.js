@@ -13,7 +13,7 @@ const { resendInvite, createInviteAndHydrateUser } = invitationsOperations;
 
 const InviteForm = ({ onReload }) => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState, reset, setError } = useForm();
+  const { register, handleSubmit, formState, reset, setError, setValue } = useForm();
   const { errors } = formState;
 
   const { auth } = useSelector((state) => ({
@@ -28,8 +28,8 @@ const InviteForm = ({ onReload }) => {
 
   const renderErrorMessage = () => {
     if (!isEmpty(errors)) {
-      const error = errors.email.message;
-      if (error.search("has already been invited by another user.") >= 0) {
+      const error = errors?.email?.message;
+      if (error && error.search("has already been invited by another user.") >= 0) {
         return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
       }
       return error;
@@ -43,6 +43,7 @@ const InviteForm = ({ onReload }) => {
   const onSubmit = async (data) => {
     const { email } = data;
     const invitation = {
+      ...data,
       recipient: email,
       orgId,
       orgName,
@@ -67,13 +68,17 @@ const InviteForm = ({ onReload }) => {
     }
   };
 
+  const clearField = (name) => {
+    setValue(name, '');
+  };
+
   return (
     <div className="py-25 px-50" style={{ background: '#f2f1f4' }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
           <label className="label">Who would you like to invite?</label>
-          <div className="is-flex">
-            <div className="control has-icons-right is-flex-grow-1 is-inline-block mr-25">
+          <div className="">
+            <div className="control has-icons-right mb-25">
               <input
                 className={clsx(
                   `input mr-25 has-background-white`,
@@ -92,13 +97,63 @@ const InviteForm = ({ onReload }) => {
                     })
                 }
               />
-              <span className="icon is-small is-right is-clickable has-text-dark" onClick={reset}>
+              <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('email')}>
                 <FontAwesomeIcon icon={faTimes} size="sm"/>
               </span>
             </div>
-            <button className="button has-background-purple has-text-white" type="submit">
-              Send Invite
-            </button>
+            <div className="control has-icons-right mb-25">
+              <input
+                className={clsx(
+                  `input mr-25 has-background-white`,
+                  errors?.companyName && 'is-danger',
+                )}
+                type="text"
+                placeholder="Company Name"
+                {
+                  ...register(`companyName`)
+                }
+              />
+              <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('companyName')}>
+                <FontAwesomeIcon icon={faTimes} size="sm"/>
+              </span>
+            </div>
+            <div className="control has-icons-right mb-25">
+              <input
+                className={clsx(
+                  `input mr-25 has-background-white`,
+                  errors?.cohort && 'is-danger',
+                )}
+                type="text"
+                placeholder="Cohort"
+                {
+                  ...register(`cohort`)
+                }
+              />
+              <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('cohort')}>
+                <FontAwesomeIcon icon={faTimes} size="sm"/>
+              </span>
+            </div>
+            <div className="control has-icons-right mb-25">
+              <textarea
+                className={clsx(
+                  `input mr-25 has-background-white is-height-auto`,
+                  errors?.notes && 'is-danger',
+                )}
+                rows="4"
+                placeholder="Notes"
+                {
+                  ...register(`notes`)
+                }
+              />
+              <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('notes')}>
+                <FontAwesomeIcon icon={faTimes} size="sm"/>
+              </span>
+            </div>
+            <div className="is-flex is-justify-content-flex-end">
+              <button className="button has-background-purple has-text-white" type="submit">
+                Send Invite
+              </button>
+            </div>
           </div>
           <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden")} style={{ width: "80%" }}>
             <div className="message-body">
