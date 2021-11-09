@@ -1,7 +1,7 @@
 name: Creating release candidate
 on:
   schedule:
-    - cron:  '* * * * *'
+    - cron: 40 * * * *
 jobs:
   build:
     runs-on: ubuntu-latest
