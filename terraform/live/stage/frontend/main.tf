@@ -64,8 +64,8 @@ module "apollo" {
   }
   task_definition_resources = var.ecs_task_definition_resources
   ecr_repo = {
-    arn     = data.terraform_remote_state.repos.outputs.phoenix_web_repo_arn
-    url     = data.terraform_remote_state.repos.outputs.phoenix_web_repo_url
+    arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
+    url     = data.terraform_remote_state.repos.outputs.apollo_web_repo_url
     kms_key = ""
   }
 

@@ -2,7 +2,6 @@ resource "aws_ecs_service" "this" {
   name                              = local.service
   task_definition                   = "${aws_ecs_task_definition.this.id}:${aws_ecs_task_definition.this.revision}"
   cluster                           = var.ecs_cluster.arn
-  desired_count                     = var.task_count
   health_check_grace_period_seconds = 0
   launch_type                       = local.requires_compatibilities[0]
 
