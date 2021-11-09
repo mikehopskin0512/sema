@@ -40,10 +40,13 @@ const Dashboard = () => {
   const { token, user } = auth;
   const { identities, isOnboarded = null } = user;
 
-
   const logOnboardingAcitvity = (page) => {
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_ONBOARDING_WIZARD, { url: `/onboardingModal/page=${page}` });
   };
+
+  if (page && typeof page === 'number') {
+    logOnboardingAcitvity(page);
+  }
 
   const nextOnboardingPage = (currentPage) => {
     const newPage = currentPage + 1;

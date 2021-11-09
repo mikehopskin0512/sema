@@ -2,10 +2,12 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import styles from './LoginCard.module.scss';
+import * as analytics from '../../../utils/analytics';
 
 const LoginCard = ({ isAuthenticated }) => {
   const githubLogin = () => {
     window.location.href = '/api/identities/github';
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOGIN, { url: '/login' });
   };
 
   return (

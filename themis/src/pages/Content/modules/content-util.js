@@ -82,6 +82,8 @@ export const getGithubMetadata = (document) => {
 export const fireAmplitudeEvent = (event, opts) => {
   if (AMPLITUDE_API_KEY) {
     const githubMetadata = getGithubMetadata(document);
+    const { user: { login: github_username_id = null } = null } = githubMetadata;
+    amplitude.getInstance().setUserProperties({ github_username_id });
     amplitude.getInstance().logEvent(event, {
       ...opts,
       ...githubMetadata,

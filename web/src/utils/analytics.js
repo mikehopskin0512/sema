@@ -3,11 +3,12 @@ let amplitude = null;
 
 export const AMPLITUDE_EVENTS = {
   CLICKED_LOGIN: 'CLICKED_LOGIN',
+  CLICKED_LOG_OUT: 'CLICKED_LOG_OUT',
   CLICKED_JOIN_WAITLIST: 'CLICKED_JOIN_WAITLIST',
   VIEWED_PAGE: 'VIEWED_PAGE',
   VIEWED_DASHBOARD_PAGE: 'VIEWED_DASHBOARD_PAGE',
   VIEWED_PERSONAL_INSIGHTS_PAGE: 'VIEWED_PERSONAL_INSIGHTS_PAGE',
-  VIEWED_SUGGESTED_COMMENTS_PAGE: 'VIEWED_SUGGESTED_COMMENTS_PAGE',
+  VIEWED_SUGGESTED_SNIPPETS_PAGE: 'VIEWED_SUGGESTED_SNIPPETS_PAGE',
   VIEWED_REPOS_PAGE: 'VIEWED_REPOS_PAGE',
   VIEWED_INVITATIONS_PAGE: 'VIEWED_INVITATIONS_PAGE',
   VIEWED_PROFILE_PAGE: 'VIEWED_PROFILE_PAGE',
@@ -19,8 +20,21 @@ export const AMPLITUDE_EVENTS = {
 export const initAmplitude = (user) => {
   if (amplitudeApiKey) {
     if (process.browser) {
+      const { _id, username, firstName, lastName, isVerified, isWaitlist, roles = [{}] } = user;
+      const [{ role = null, team = null }] = roles;
+
       amplitude = require('amplitude-js');
-      amplitude.getInstance().init(amplitudeApiKey, user);
+      amplitude.getInstance().init(amplitudeApiKey, username);
+
+      amplitude.getInstance().setUserProperties({
+        user_id: _id,
+        first_name: firstName,
+        last_name: lastName,
+        is_verified: isVerified,
+        is_waitlist: isWaitlist,
+        role: role?.name,
+        team: team?.name,
+      });
     }
   }
 };
@@ -33,8 +47,8 @@ export const fireAmplitudeEvent = (event, opts) => {
         event = AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE;
       } else if (url === '/personal-insights') {
         event = AMPLITUDE_EVENTS.VIEWED_PERSONAL_INSIGHTS_PAGE;
-      } else if (url === '/suggested-comments') {
-        event = AMPLITUDE_EVENTS.VIEWED_SUGGESTED_COMMENTS_PAGE;
+      } else if (url === '/suggested-snippets') {
+        event = AMPLITUDE_EVENTS.VIEWED_SUGGESTED_SNIPPETS_PAGE;
       }  else if (url === '/dashboard') {
         event = AMPLITUDE_EVENTS.VIEWED_REPOS_PAGE;
       }  else if (url === '/invitations') {
