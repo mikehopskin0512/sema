@@ -1,0 +1,17 @@
+name: Creating release candidate
+on:
+  schedule:
+    - cron: '0 11 * * 1-5' # At 11:00 on every day-of-week from Monday through Friday. UTC 
+  workflow_dispatch: 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          DATE=$(date +"%Y-%m-%d")
+          BRANCH_NAME="release-${DATE}"
+          git checkout -b ${BRANCH_NAME}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git push --set-upstream origin ${BRANCH_NAME}

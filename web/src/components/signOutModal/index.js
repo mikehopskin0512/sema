@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { authOperations } from '../../state/features/auth';
+import * as analytics from '../../utils/analytics';
 
 const { deauthenticate } = authOperations;
 
@@ -13,6 +14,7 @@ const SignOutModal = ({ active, onClose }) => {
   const handleLogout = () => {
     setLoading(true);
     dispatch(deauthenticate());
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOG_OUT, { url: '/logout' });
   };
 
   return (

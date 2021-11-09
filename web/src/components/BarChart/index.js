@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
-import { reverse, find, round, groupBy } from 'lodash';
+import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
@@ -89,7 +89,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
 
       return (
         <g
-          transform={`translate(${x}, ${yScale(total) - labelMargin})`}
+          transform={`translate(${x}, ${yAxisType === 'percentage' ? -labelMargin : yScale(total) - labelMargin})`}
           key={`${indexValue}-${i}`}
         >
           <text

@@ -49,9 +49,9 @@ const Application = ({ Component, pageProps, store }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const { authState: { user: { username = null } } } = store.getState();
+    const { authState: { user = null } } = store.getState();
 
-    analytics.initAmplitude(username);
+    analytics.initAmplitude(user);
     
     const handleRouteChange = (url) => {
       analytics.googleAnalyticsPageView(url);
