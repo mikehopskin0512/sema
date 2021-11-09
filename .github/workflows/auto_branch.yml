@@ -1,9 +1,7 @@
 name: Creating release candidate
 on:
-  push:
-  pull_request:
   schedule:
-    - cron:  "*/5 * * * *"
+    - cron:  "* * * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
