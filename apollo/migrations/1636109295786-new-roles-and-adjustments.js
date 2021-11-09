@@ -31,7 +31,7 @@ exports.up = async (next) => {
       
       const existingRole = await UserRole.findOne({ user: user._id, team: team._id });
       if (existingRole) {
-        await UserRole.deleteOne(existingRole._id);
+        await UserRole.deleteOne({ _id: existingRole._id });
       }
   
       dataSource.push({
