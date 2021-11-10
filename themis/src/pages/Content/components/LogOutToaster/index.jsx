@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { detectURLChange, isPRPage } from '../../modules/content-util';
+import { fireAmplitudeEvent, detectURLChange, isPRPage } from '../../modules/content-util';
 import { closeLoginReminder } from '../../modules/redux/action';
-import { SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
+import { EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 
 const lightModeLogoUrl = chrome.runtime.getURL(
@@ -25,6 +25,7 @@ const screenshot2 = chrome.runtime.getURL(
 );
 
 const openSemaDashboard = () => {
+  fireAmplitudeEvent(EVENTS.CLICKED_LOGIN_TOASTER);
   window.open(SEMA_UI_URL, '_blank');
 };
 

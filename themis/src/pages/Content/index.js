@@ -25,6 +25,7 @@ import {
 } from './modules/content-util';
 
 import {
+  EVENTS,
   SEMA_ICON_ANCHOR_LIGHT,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
@@ -77,6 +78,7 @@ const checkLoggedIn = async (cb) => {
 };
 
 const showLogoutToaster = () => {
+  fireAmplitudeEvent(EVENTS.LOGIN_TOASTER_SHOWED);
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
   if (!reminderRoot) {
     const node = document.createElement('div');
