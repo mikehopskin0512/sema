@@ -129,6 +129,9 @@
       },{
         "name":"INTERCOM_TOKEN",
         "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/intercom-token"
+      },{
+        "name":"DEFAULT_COLLECTION_NAME",
+        "valueFrom": "arn:aws:ssm:us-east-1:091235034633:parameter/${env}/apollo/default_collection_name"
       }
       ],
     "portMappings": [

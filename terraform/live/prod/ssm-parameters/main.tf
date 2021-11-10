@@ -232,3 +232,9 @@ resource "aws_ssm_parameter" "phoenix_intercom_app_id" {
   type  = "String"
   value = "bkmx8nl7"
 }
+
+resource "aws_ssm_parameter" "apollo_default_collection_name" {
+  name  = "/${var.env}/apollo/default_collection_name"
+  type  = "String"
+  value = "my snippets"
+}
