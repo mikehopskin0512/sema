@@ -7,7 +7,7 @@ import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
-import { noContactUs } from '../../utils/constants';
+import { noContactUs, FACEBOOK_VERIFICATION_META } from '../../utils/constants';
 
 const widescreenPages = ['/repo/[repoId]', '/support', '/login'];
 const noHeaderPages = ['/login'];
@@ -41,6 +41,7 @@ const withLayout = (Page) => (props) => {
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#2b5797" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name={FACEBOOK_VERIFICATION_META.NAME} content={FACEBOOK_VERIFICATION_META.CONTENT} />
 
         {/* Heap Analytics */}
         <script dangerouslySetInnerHTML={{ __html: '' }} />

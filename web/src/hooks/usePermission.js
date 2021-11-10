@@ -13,7 +13,7 @@ function usePermission() {
       return true;
     }
 
-    const role = user?.roles?.find((item) => item.role[permission] && item.team.name === team.name);
+    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?.name === team.name);
 
     return !!role;
   };
