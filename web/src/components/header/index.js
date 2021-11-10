@@ -61,10 +61,13 @@ const Header = () => {
   ));
 
   useEffect(() => {
-    if (window.location.pathname === '/login' || window.location.pathname === '/support') {
-      setBgColor('has-background-white');
+    if (token) {
+      if (window.location.pathname === '/login' || window.location.pathname === '/support') {
+        setBgColor('has-background-white');
+      }
+      dispatch(getTeams(token));
     }
-    dispatch(getTeams(token));
+
   }, [dispatch, token]);
 
   const toggleHamburger = () => {
@@ -209,7 +212,7 @@ const Header = () => {
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
-                
+
                 <Link href="/support">
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Support
