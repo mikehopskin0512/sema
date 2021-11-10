@@ -20,8 +20,15 @@ export const AMPLITUDE_EVENTS = {
 export const initAmplitude = (user) => {
   if (amplitudeApiKey) {
     if (process.browser) {
-      const { _id, username, firstName, lastName, isVerified, isWaitlist, roles = [{}] } = user;
-      const [{ role = null, team = null }] = roles;
+
+      const { _id, username, firstName, lastName, isVerified, isWaitlist, roles = [] } = user;
+
+      // ## REFACTORING NEEDED ##
+      // Roles is an array (ie. users can have several roles and teams)
+      // This needs to be refactored to decide what role/team we'd want to pass to Amplitude (if any)
+      // Trying to handle it as a single role/team won't work and a user without a userrole will fail
+
+      // const [{ role = null, team = null }] = roles;
 
       amplitude = require('amplitude-js');
       amplitude.getInstance().init(amplitudeApiKey, username);
@@ -32,8 +39,10 @@ export const initAmplitude = (user) => {
         last_name: lastName,
         is_verified: isVerified,
         is_waitlist: isWaitlist,
-        role: role?.name,
-        team: team?.name,
+        // Removed based on comments above
+        // ## REFACTORING NEEDED ##
+        // role: role?.name,
+        // team: team?.name,
       });
     }
   }
@@ -58,7 +67,7 @@ export const fireAmplitudeEvent = (event, opts) => {
       }
     }
   }
-    
+
   amplitude?.getInstance().logEvent(event, {
     ...opts,
   });
