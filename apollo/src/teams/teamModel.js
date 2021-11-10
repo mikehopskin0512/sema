@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const teamSchema = new Schema({
-  name: String,
+  name: { type: String, required: true },
   avatarUrl: String,
   description: String,
   createdBy: {
