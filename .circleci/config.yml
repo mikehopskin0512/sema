@@ -22,9 +22,9 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "qa" ]
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "release-*" ]
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
@@ -54,9 +54,9 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "qa" ]
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "release-*" ]
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
@@ -79,9 +79,9 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "qa" ]
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "release-*" ]
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
@@ -118,21 +118,21 @@ workflows:
               only:
                 - qa
                 - master
-                - release-*
+                - /release-.*/
       - deploy-apollo:
           filters:
             branches:
               only:
                 - qa
                 - master
-                - release-*
+                - /release-.*/
       - build-chrome-extension:
           filters:
             branches:
               only:
                 - qa
                 - master
-                - release-*
+                - /release-.*/
       - phoenix-notify:
           context: 
            - slack-secrets
@@ -141,7 +141,7 @@ workflows:
               only:
                 - qa
                 - master
-                - release-*
+                - /release-.*/
           requires:
             - build-chrome-extension
             - deploy-web
