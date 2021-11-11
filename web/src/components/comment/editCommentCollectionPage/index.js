@@ -10,6 +10,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
+import { PATHS } from '../../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;
@@ -61,7 +62,7 @@ const EditCommentCollectionPage = () => {
       collection: data
     }, token));
     if (updatedCollection?._id) {
-      window.location.href = `/suggested-snippets`
+      window.location.href = PATHS.SUGGESTED_SNIPPETS._;
     }
     setLoading(false);
   }

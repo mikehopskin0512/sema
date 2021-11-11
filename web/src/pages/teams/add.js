@@ -7,6 +7,7 @@ import toaster from 'toasted-notes';
 import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import { teamsOperations } from '../../state/features/teams';
+import { PATHS } from '../../utils/constants' ;
 
 const { createTeam } = teamsOperations;
 
@@ -55,7 +56,7 @@ const TeamEditPage = () => {
             </div>
             <div>
               <span className="has-text-black has-text-weight-semibold">{ data.name }.</span>
-              <a href="/teams" className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <a href={PATHS.TEAMS} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -65,7 +66,7 @@ const TeamEditPage = () => {
       duration: 4000,
     });
 
-    await router.push('/teams');
+    await router.push(PATHS.TEAMS);
   };
 
   const mutate = (obj) => {

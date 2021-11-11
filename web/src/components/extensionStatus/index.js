@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './extensionStatus.module.scss';
+import { PATHS } from '../../utils/constants';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
@@ -15,7 +16,7 @@ const ExtensionStatus = () => {
   };
 
   const isHidden = () => {
-    const enabledPaths = ['/overview', '/repo', '/dashboard', '/suggested-snippets', '/support', '/profile', '/guides', '/invitations', '/personal-insights'];
+    const enabledPaths = [PATHS.OVERVIEW, PATHS.REPO, PATHS.DASHBOARD, PATHS.SUGGESTED_SNIPPETS._, PATHS.SUPPORT, PATHS.PROFILE, PATHS.GUIDES, PATHS.INVITATIONS, PATHS.PERSONAL_INSIGHTS];
     let hidden = true;
     enabledPaths.forEach((item) => {
       if (route.includes(item)) {

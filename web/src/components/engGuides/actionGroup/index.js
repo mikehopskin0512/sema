@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './actionGroup.module.scss';
 import { engGuidesOperations } from '../../../state/features/engGuides';
+import { PATHS } from '../../../utils/constants';
 
 const { bulkUpdateEngGuides, getEngGuides } = engGuidesOperations;
 
@@ -30,7 +31,7 @@ const ActionGroup = ({
   };
 
   const goToEditPage = async () => {
-    await router.push(`/guides/edit?cid=${collectionId}&guides=${selectedGuides}`);
+    await router.push(`${PATHS.GUIDES}/edit?cid=${collectionId}&guides=${selectedGuides}`);
   };
 
   const onArchive = async () => {

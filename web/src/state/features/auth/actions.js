@@ -11,6 +11,7 @@ import {
 import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
 import { getUser } from '../selected-user/api';
+import { PATHS } from '../../../utils/constants';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
@@ -43,7 +44,7 @@ export const reauthenticate = (token) => ({
 
 export const deauthenticate = () => (dispatch) => {
   removeCookie(refreshCookie);
-  Router.push('/login');
+  Router.push(PATHS.LOGIN);
   dispatch(triggerAlert('You have successfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
@@ -108,11 +109,11 @@ export const authenticate = (username, password) => async (dispatch) => {
       // Only allow store token if isVerified
       if (isVerified) {
         dispatch(authenticateSuccess(jwtToken));
-        Router.push('/reports');
+        Router.push(PATHS.REPORTS);
       } else {
         // Auth error clears token but preserves user object
         dispatch(authenticateError({ errors: 'User is not verified' }));
-        Router.push('/login');
+        Router.push(PATHS.LOGIN);
       }
 
       // Hydrate user regardless of isVerified
@@ -171,7 +172,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
       dispatch(triggerAlert('User is not yet verified.', 'error'));
       dispatch(userNotVerifiedError(user));
       // Need server-side check since this is called from sentry
-      if (!isServer) { Router.push('/login'); }
+      if (!isServer) { Router.push(PATHS.LOGIN); }
     }
     return { isVerified };
   } catch (err) {
@@ -288,7 +289,7 @@ export const joinOrg = (userId, org, token) => async (dispatch) => {
     const { user: updatedUser } = jwtDecode(jwtToken) || {};
 
     // Send user to reports page after registration & joinOrg
-    Router.push('/reports');
+    Router.push(PATHS.REPORTS);
 
     dispatch(requestJoinOrgSuccess(jwtToken, updatedUser));
   } catch (error) {

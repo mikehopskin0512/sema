@@ -6,11 +6,15 @@ import {
   subDays,
   endOfWeek,
   isWithinInterval,
+  addWeeks,
+  addMonths,
+  addYears,
+  startOfWeek,
 } from 'date-fns';
 import { findIndex } from 'lodash';
 import { EMOJIS, TAGS } from './constants';
 
-export const generateChartDataByDays = (smartcomments, diff, endDate) => {
+export const generateChartDataByDays = (smartcomments, diff, startDate, endDate) => {
   let reactionsByDay = [];
   const tagsArr = [];
   let day = 0;
@@ -23,7 +27,10 @@ export const generateChartDataByDays = (smartcomments, diff, endDate) => {
     };
     // Set Reaction Ids as object keys
     EMOJIS.forEach((reaction) => {
-      item[reaction._id] = 0;
+      item[reaction._id] = {
+        current: 0,
+        previous: 0
+      };
     });
     reactionsByDay.push(item);
     tagsArr.push({
@@ -32,34 +39,19 @@ export const generateChartDataByDays = (smartcomments, diff, endDate) => {
     });
     day += 1;
   }
-  // Set TagId as object keys
-  let tagsByDay = {};
-  TAGS.forEach((tag) => {
-    tagsByDay[tag._id] = {
-      total: 0,
-      data: [...tagsArr],
-    };
-  });
-  // Add count to matching smart comment reaction with the same day
-  smartcomments.forEach((comment) => {
-    const itemDate =  new Date(comment.createdAt);
-    const reactionsIndex = findIndex(reactionsByDay, { date: format(itemDate, 'MM/dd') });
-    if (reactionsIndex > -1) {
-      reactionsByDay[reactionsIndex][comment.reaction] += 1;
-    }
-    comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByDay[tag._id].data, { x: format(itemDate, 'MM/dd') });
-      if (tagsIndex > -1) {
-        tagsByDay[tag._id].total += 1;
-        const tagData = tagsByDay[tag._id].data[tagsIndex];
-        tagsByDay[tag._id].data[tagsIndex] = {
-          ...tagData,
-          y: tagData.y + 1,
-        };
-      }
-    })
-  });
-  return { reactionsByDay, tagsByDay };
+  const tagsByDay = createTags(tagsArr);
+  const {
+    reactions,
+    tags
+  } = parseTagsAndReactions(
+    smartcomments,
+    "MM/dd",
+    reactionsByDay,
+    tagsByDay,
+    startDate,
+    endDate,
+  );
+  return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
@@ -78,7 +70,10 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       date: `${startWeekDay}-${endWeekDay}`,
     };
     EMOJIS.forEach((reaction) => {
-      item[reaction._id] = 0;
+      item[reaction._id] = {
+        current: 0,
+        previous: 0
+      };
     });
     reactionsByWeek.unshift(item);
     tagsArr.push({
@@ -92,23 +87,31 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       endDay
     };
   });
-  // Set TagId as object keys
-  let tagsByWeek = {};
-  TAGS.forEach((tag) => {
-    tagsByWeek[tag._id] = {
-      total: 0,
-      data: [...tagsArr],
-    };
-  });
-  // Add count to matching smart comment reaction with the same day
-  smartcomments.forEach((comment) => {
+  const tagsByWeek = createTags(tagsArr);
+  // Separate comments within and outside the date range
+  const filteredComments = smartcomments.filter((comment) => isWithinInterval(
+    new Date(comment.createdAt),
+    {
+      start: new Date(startDate),
+      end: new Date(endDate)
+    }
+  ));
+  const outOfRangeComments = smartcomments.filter((comment) => !isWithinInterval(
+    new Date(comment.createdAt),
+    {
+      start: new Date(startDate),
+      end: new Date(endDate)
+    }
+  ));
+  // Count reactions and tags within time range
+  filteredComments.forEach((comment) => {
     const itemRange =  findIndex(weekRange, (item) => (isWithinInterval(new Date(comment.createdAt), {
       start: item.startDay,
       end: item.endDay,
     })));
     const reactionIndex = findIndex(reactionsByWeek, { date: weekRange[itemRange]?.date })
     if (reactionIndex > -1) {
-      reactionsByWeek[reactionIndex][comment.reaction] += 1;
+      reactionsByWeek[reactionIndex][comment.reaction].current += 1;
     }
     comment.tags.forEach((tag) => {
       const tagsIndex = findIndex(tagsByWeek[tag._id].data, { date: weekRange[itemRange]?.date });
@@ -121,6 +124,16 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
         };
       }
     });
+  });
+  // Count reactions outside the time range (will be saved to previous)
+  outOfRangeComments.forEach((comment) => {
+    const dayAfterAMonth = addMonths(new Date(comment.createdAt), 1);
+    const startWeek = format(startOfWeek(new Date(dayAfterAMonth)), 'MM/dd');
+    const endWeek = format(endOfWeek(new Date(dayAfterAMonth)), 'MM/dd');
+    const index = findIndex(reactionsByWeek, { date: `${startWeek}-${endWeek}` });
+    if (index > -1) {
+      reactionsByWeek[index][comment.reaction].previous += 1;
+    }
   });
   return { reactionsByWeek, tagsByWeek };
 }
@@ -138,7 +151,10 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
       date: format(month, 'MMM'),
     };
     EMOJIS.forEach((reaction) => {
-      item[reaction._id] = 0;
+      item[reaction._id] = {
+        current: 0,
+        previous: 0
+      };
     });
     reactionsByMonth.unshift(item);
     tagsArr.push({
@@ -147,33 +163,19 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
     });
   });
   // Set TagId as object keys
-  let tagsByMonth = {};
-  TAGS.forEach((tag) => {
-    tagsByMonth[tag._id] = {
-      total: 0,
-      data: [...tagsArr],
-    };
-  });
-  // Add count to matching smart comment reaction with the same day
-  smartcomments.forEach((comment) => {
-    const month =  format(new Date(comment.createdAt), 'MMM');
-    const reactionIndex = findIndex(reactionsByMonth, { date: month });
-    if (reactionIndex > -1) {
-      reactionsByMonth[reactionIndex][comment.reaction] += 1;
-    }
-    comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByMonth[tag._id].data, { x: month });
-      if (tagsIndex > -1) {
-        tagsByMonth[tag._id].total += 1;
-        const tagData = tagsByMonth[tag._id].data[tagsIndex];
-        tagsByMonth[tag._id].data[tagsIndex] = {
-          ...tagData,
-          y: tagData.y + 1,
-        };
-      }
-    })
-  });
-  return { reactionsByMonth, tagsByMonth };
+  const tagsByMonth = createTags(tagsArr);
+  const {
+    reactions,
+    tags
+  } = parseTagsAndReactions(
+    smartcomments,
+    "MMM",
+    reactionsByMonth,
+    tagsByMonth,
+    startDate,
+    endDate,
+  )
+  return { reactionsByMonth: reactions, tagsByMonth: tags };
 }
 
 export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
@@ -189,7 +191,10 @@ export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
       date: format(month, 'yyyy'),
     };
     EMOJIS.forEach((reaction) => {
-      item[reaction._id] = 0;
+      item[reaction._id] = {
+        current: 0,
+        previous: 0,
+      };
     });
     reactionsByYear.unshift(item);
     tagsArr.push({
@@ -197,34 +202,19 @@ export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
       y: 0,
     });
   });
-  // Set TagId as object keys
-  let tagsByYear = {};
-  TAGS.forEach((tag) => {
-    tagsByYear[tag._id] = {
-      total: 0,
-      data: [...tagsArr],
-    };
-  });
-  // Add count to matching smart comment reaction with the same day
-  smartcomments.forEach((comment) => {
-    const year =  format(new Date(comment.createdAt), 'yyyy');
-    const reactionIndex = findIndex(reactionsByYear, { date: year });
-    if (reactionIndex > -1) {
-      reactionsByYear[reactionIndex][comment.reaction] += 1;
-    }
-    comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByYear.data, { x: year });
-      if (tagsIndex > -1) {
-        tagsByYear[tag._id].total += 1;
-        const tagData = tagsByYear[tag._id].data[tagsIndex];
-        tagsByYear[tag._id].data[tagsIndex] = {
-          ...tagData,
-          y: tagData.y + 1,
-        };
-      }
-    });
-  });
-  return { reactionsByYear, tagsByYear };
+  const tagsByYear = createTags(tagsArr);
+  const {
+    reactions,
+    tags
+  } = parseTagsAndReactions(
+    smartcomments,
+    "yyyy",
+    reactionsByYear,
+    tagsByYear,
+    startDate,
+    endDate,
+  )
+  return { reactionsByYear: reactions, tagsByYear: tags };
 }
 
 export const getTotalReactionsOfComments = (smartComments = []) => {
@@ -264,3 +254,91 @@ export const getTotalTagsOfComments = (smartComments = []) => {
       return acc
     }, {})
 };
+
+const createTags = (tagsArr) => {
+  let tags = {};
+  TAGS.forEach((tag) => {
+    tags[tag._id] = {
+      total: 0,
+      data: [...tagsArr],
+    };
+  });
+  return tags;
+}
+
+const parseTagsAndReactions = (
+  smartComments,
+  dateFormat,
+  reactionsData,
+  tagsData,
+  startDate,
+  endDate,
+) => {
+  const reactionsArr = [...reactionsData];
+  const tags = { ...tagsData };
+  // Separate comments within and outside the time range
+  const filteredComments = smartComments.filter((comment) => isWithinInterval(
+    new Date(comment.createdAt),
+    {
+      start: new Date(startDate),
+      end: new Date(endDate)
+    }
+  ));
+  const outOfRangeComments = smartComments.filter((comment) => !isWithinInterval(
+    new Date(comment.createdAt),
+    {
+      start: new Date(startDate),
+      end: new Date(endDate)
+    }
+  ));
+  // Count reactions and tags within the time range
+  filteredComments.forEach((comment) => {
+    const formattedDate =  format(new Date(comment.createdAt), dateFormat);
+    const reactionIndex = findIndex(reactionsArr, { date: formattedDate });
+    if (reactionIndex > -1) {
+      reactionsArr[reactionIndex][comment.reaction].current += 1;
+    }
+    comment.tags.forEach((tag) => {
+      const tagsIndex = findIndex(tags[tag._id].data, { x: formattedDate });
+      if (tagsIndex > -1) {
+        tags[tag._id].total += 1;
+        const tagData = tags[tag._id].data[tagsIndex];
+        tags[tag._id].data[tagsIndex] = {
+          ...tagData,
+          y: tagData.y + 1,
+        };
+      }
+    })
+  });
+  // Count reactions and tags outside the time range
+  outOfRangeComments.forEach((comment) => {
+    let formatDate;
+    let index;
+    switch (dateFormat) {
+      case 'MM/dd':
+        formatDate = format(addWeeks(new Date(comment.createdAt), 1), dateFormat);
+        index = findIndex(reactionsArr, { date: formatDate });
+        if (index > -1) {
+          reactionsArr[index][comment.reaction].previous += 1;
+        }
+        return;
+      case 'MMM':
+        formatDate = format(addYears(new Date(comment.createdAt), 1), dateFormat);
+        index = findIndex(reactionsArr, { date: formatDate });
+        if (index > -1) {
+          reactionsArr[index][comment.reaction].previous += 1;
+        }
+        return;
+      case 'yyyy':
+        formatDate = format(addYears(new Date(comment.createdAt), 10), dateFormat);
+        index = findIndex(reactionsArr, { date: formatDate });
+        if (index > -1) {
+          reactionsArr[index][comment.reaction].previous += 1;
+        }
+        return;
+      default:
+        return;
+    }
+  });
+  return { reactions: reactionsArr, tags };
+}

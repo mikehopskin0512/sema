@@ -11,6 +11,7 @@ import PageHeader from '../../components/pageHeader';
 import styles from './teams.module.scss';
 import Table from '../../components/table';
 import ActionMenu from '../../components/team/actionMenu';
+import { PATHS } from '../../utils/constants';
 
 function SwitchCell({ name, row }) {
   return (
@@ -147,7 +148,7 @@ const TeamManagementPage = () => {
   ];
 
   const goToInviteMembers = () => {
-    router.push('/teams/invite');
+    router.push(`${PATHS.TEAMS}/invite`);
   };
 
   return (

@@ -2,6 +2,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import { PATHS } from '../../utils/constants';
 
 const withAdmin = (WrappedComponent) => {
   return (props) => {
@@ -11,7 +12,7 @@ const withAdmin = (WrappedComponent) => {
       const isAdmin = () => !!(user && user.organizations && user.organizations.findIndex(org => org.isAdmin) > -1);
 
       if (!isAdmin()) {
-        Router.push('/dashboard');
+        Router.push(PATHS.DASHBOARD);
         return null;
       }
 

@@ -10,6 +10,7 @@ import './login.module.scss';
 
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
+import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
@@ -107,13 +108,13 @@ const Login = () => {
                         </p>
                       </div>
                       <div className="field">
-                        <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href="/password-reset/"><a>Reset password</a></Link></p>
+                        <p><strong>Having trouble logging in?</strong>&nbsp;&nbsp;<Link href={`${PATHS.PASSWORD_RESET}/`}><a>Reset password</a></Link></p>
                       </div>
                       <div className="field">
                         <div className="is-divider" data-content="OR" />
                         <p><strong>Want to sign up for the Sema platform?</strong></p>
                         <div className="mt-1r">
-                          <Link href="/register">
+                          <Link href={PATHS.REGISTER}>
                             <a className="button is-black">
                               <span className="icon">
                                 <FontAwesomeIcon icon={['fas', 'user']} />

@@ -14,6 +14,7 @@ import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { ViewAdmin } from '../../data/permissions';
 import { teamsOperations } from '../../state/features/teams';
+import { PATHS } from '../../utils/constants';
 
 const { getTeams } = teamsOperations;
 
@@ -62,7 +63,7 @@ const Header = () => {
 
   useEffect(() => {
     if (token) {
-      if (window.location.pathname === '/login' || window.location.pathname === '/support') {
+      if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
         setBgColor('has-background-white');
       }
       dispatch(getTeams(token));
@@ -151,17 +152,17 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
                 <Link href="/">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/dashboard' && 'has-text-weight-semibold'}`}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
                     Repos
                   </a>
                 </Link>
-                <Link href="/personal-insights">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === '/personal-insights' && 'has-text-weight-semibold'}`}>
+                <Link href={PATHS.PERSONAL_INSIGHTS}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
                     Personal Insights
                   </a>
                 </Link>
-                <Link href="/suggested-snippets">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/suggested-snippets') || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                <Link href={PATHS.SUGGESTED_SNIPPETS._}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes(PATHS.SUGGESTED_SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Suggested Snippets
                   </a>
                 </Link>
@@ -170,16 +171,16 @@ const Header = () => {
                     Community Eng Guides
                   </a>
                 </Link> */}
-                <Link href="/invitations">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === '/invitations' && 'has-text-weight-semibold'}`}>
+                <Link href={PATHS.INVITATIONS}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
                     <div className="is-flex is-flex-wrap-wrap">
                       Invitations
                       <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
                     </div>
                   </a>
                 </Link>
-                <Link href="/support">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === '/support' && 'has-text-weight-semibold'}`}>
+                <Link href={PATHS.SUPPORT}>
+                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
                     Support
                   </a>
                 </Link>
@@ -196,7 +197,7 @@ const Header = () => {
                     Repos
                   </a>
                 </Link>
-                <Link href="/suggested-snippets">
+                <Link href={PATHS.SUGGESTED_SNIPPETS._}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Suggested Snippets
                   </a>
@@ -206,14 +207,14 @@ const Header = () => {
                     Community Engineering Guides
                   </a>
                 </Link> */}
-                <Link href="/invitations">
+                <Link href={PATHS.INVITATIONS}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Invitations
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
-
-                <Link href="/support">
+                
+                <Link href={PATHS.SUPPORT}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Support
                   </a>
@@ -231,7 +232,7 @@ const Header = () => {
                     </a>
                   </Link>
                 )}
-                <Link href="/team">
+                <Link href={PATHS.TEAM}>
                   <a
                     aria-hidden="true"
                     type="button"
@@ -242,7 +243,7 @@ const Header = () => {
                     <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
                   </a>
                 </Link>
-                <Link href="/profile">
+                <Link href={PATHS.PROFILE}>
                   <a
                     aria-hidden="true"
                     type="button"
@@ -252,7 +253,7 @@ const Header = () => {
                     Your Profile
                   </a>
                 </Link>
-                <Link href="/support">
+                <Link href={PATHS.SUPPORT}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Support
                   </a>

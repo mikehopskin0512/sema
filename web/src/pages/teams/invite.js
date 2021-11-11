@@ -9,6 +9,7 @@ import { teamsOperations } from '../../state/features/teams';
 import styles from './teams.module.scss';
 import clsx from 'clsx';
 import Checkbox from '../../components/checkbox';
+import { PATHS } from '../../utils/constants';
 
 const { createTeam } = teamsOperations;
 
@@ -29,7 +30,7 @@ const TeamInvitePage = () => {
 
   const onSave = async () => {
     await dispatch(createTeam(team, token));
-    await router.push('/teams');
+    await router.push(PATHS.TEAMS);
   };
 
   const mutate = (obj) => {

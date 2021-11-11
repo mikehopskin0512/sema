@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import { passwordOperations } from '../../state/features/password-reset';
+import { PATHS } from '../../utils/constants';
 
 const { passwordResetRequest } = passwordOperations;
 
@@ -78,7 +79,7 @@ export const Confirmation = (props) => {
       <p>If an account exists with {emailSubmitted ? <strong>{emailSubmitted}</strong> : 'your email'}, you&apos;ll receive an email.</p>
       <p>Please follow the instructions within to reset your password.</p>
       <br />
-      <Link href="/login"><a className="button is-black">Return to Login</a></Link>
+      <Link href={PATHS.LOGIN}><a className="button is-black">Return to Login</a></Link>
       <br />
     </div>
   );

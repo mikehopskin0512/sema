@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './engGuideRow.module.scss';
 import Checkbox from '../../checkbox';
+import { PATHS } from '../../../utils/constants';
 
 const EngGuideRow = (props) => {
   const {
@@ -29,7 +30,7 @@ const EngGuideRow = (props) => {
   };
 
   const onClickRow = () => {
-    window.location = `/guides/${_id}/${slug}`;
+    window.location = `${PATHS.GUIDES}/${_id}/${slug}`;
   };
 
   return (

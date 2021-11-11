@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { find } from 'lodash';
+import { isWithinInterval } from 'date-fns';
+import { find, uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Sidebar from '../../sidebar';
@@ -13,7 +14,7 @@ import StatCard from './components/StatCard'
 
 const { getUserRepositories } = repositoriesOperations;
 
-const RepoPageLayout = ({ children, ...sidebarProps }) => {
+const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
@@ -21,19 +22,29 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
     repositories: state.repositoriesState,
   }));
   const { data: { overview = {} } } = repositories;
-  const { name = '', stats = {} } = overview;
-  const { totalPullRequests, totalSemaUsers, totalSmartCommenters, totalSmartComments } = stats;
+  const { name = '', smartcomments = [], users = [] } = overview;
   const { query: { repoId = '' }, pathname = '' } = router;
   const { token } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
-  const reposStats = [
-    { title: 'smart code reviews', value: totalPullRequests, tooltip: 'Smart code review is a pull request that is reviewed uses Sema product'},
-    { title: 'smart comments', value: totalSmartComments, tooltip: 'Smart Comment is a part of Smart Code Review'},
-    { title: 'smart commenters', value: totalSmartCommenters, tooltip: 'Smart commenter is a reviewer that uses Sema'},
-    { title: 'sema users', value: totalSemaUsers, tooltip: 'Sema user is a code reviewer who uses Sema, or a code author that has a Sema account'},
-  ]
+
+  const reposStats = useMemo(() => {
+    const smartComments = smartcomments.filter((item) => dates.startDate && dates.endDate ? isWithinInterval(new Date(item.createdAt), {
+      start: new Date(dates.startDate),
+      end: new Date(dates.endDate)
+    }) : true);
+    const totalSmartComments = smartComments.length || 0;
+    const totalSmartCommenters = uniqBy(smartComments, (item) => item.userId?._id?.valueOf() || 0).length || 0;
+    const totalPullRequests = uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
+    const totalSemaUsers = users.length || 0;
+    return [
+      { title: 'smart code reviews', value: totalPullRequests, tooltip: 'Smart code review is a pull request that is reviewed uses Sema product'},
+      { title: 'smart comments', value: totalSmartComments, tooltip: 'Smart Comment is a part of Smart Code Review'},
+      { title: 'smart commenters', value: totalSmartCommenters, tooltip: 'Smart commenter is a reviewer that uses Sema'},
+      { title: 'sema users', value: totalSemaUsers, tooltip: 'Sema user is a code reviewer who uses Sema, or a code author that has a Sema account'},
+    ]
+  }, [overview]);
 
   const getUserRepos = async (user) => {
     const { identities } = user;
@@ -46,7 +57,7 @@ const RepoPageLayout = ({ children, ...sidebarProps }) => {
   }, [auth]);
 
   useEffect(() => {
-    if (totalPullRequests && totalSemaUsers && totalSmartCommenters && totalSmartComments) {
+    if (smartcomments) {
       setInitialLoading(false);
     }
   }, [repositories]);

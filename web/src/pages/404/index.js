@@ -7,6 +7,7 @@ import SupportForm from '../../components/supportForm';
 import Toaster from '../../components/toaster';
 
 import { alertOperations } from '../../state/features/alerts';
+import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 
@@ -40,7 +41,7 @@ const NotFound = () => {
         <a
           type="button"
           className="button is-primary"
-          href="/dashboard">
+          href={PATHS.DASHBOARD}>
           <span>Return to Dashboard</span>
         </a>
       </div>

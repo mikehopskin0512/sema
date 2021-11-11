@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 
 import withLayout from '../../../components/layout';
 import { passwordOperations } from '../../../state/features/password-reset';
+import { PATHS } from '../../../utils/constants';
 
 const { verifyResetToken, changePassword } = passwordOperations;
 
@@ -99,7 +100,7 @@ const Confirmation = () => (
     <h1 className="title is-spaced">Reset Password Completed</h1>
     <p>You have successfully reset the password for your account</p>
     <br />
-    <Link href="/login"><a className="button is-black">Return to Login</a></Link>
+    <Link href={PATHS.LOGIN}><a className="button is-black">Return to Login</a></Link>
     <br />
   </div>
 );

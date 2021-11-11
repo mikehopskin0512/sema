@@ -16,7 +16,7 @@ import Helmet from '../../utils/Helmet';
 import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
@@ -86,7 +86,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   };
 
   const goToAddPage = async () => {
-    await router.push(`/suggested-snippets/add?cid=${collectionId}`);
+    await router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${collectionId}`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -140,12 +140,12 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href="/suggested-snippets" className="is-hidden-mobile">
+          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/suggested-snippets" className="has-text-grey">Suggested Snippets</a></li>
+              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
               <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
             </ul>
           </nav>

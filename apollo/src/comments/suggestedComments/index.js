@@ -82,6 +82,7 @@ export default (app, passport) => {
         source: { name: '', url: source },
         tags,
         enteredBy: user._id,
+        collectionId,
       });
 
       if (!newSuggestedComment) {

@@ -8,6 +8,7 @@ import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
+import { PATHS } from '../../../utils/constants';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -90,7 +91,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
 
     if (data[0]) {
       await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
-      await router.push(`/suggested-snippets?cid=${collection._id}`);
+      await router.push(`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`);
     }
   };
 

@@ -170,6 +170,7 @@ const searchComments = async (user, searchQuery, allCollections) => {
       engGuides,
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
+      collectionId = '',
     }) => ({
       id,
       title,
@@ -177,6 +178,7 @@ const searchComments = async (user, searchQuery, allCollections) => {
       sourceName,
       sourceUrl,
       engGuides,
+      collectionId,
     }),
   );
 
@@ -256,7 +258,7 @@ const makeTagsList = async (tags) => {
 
 const create = async (suggestedComment) => {
   try {
-    const { title, comment, source, tags, enteredBy } = suggestedComment;
+    const { title, comment, source, tags, enteredBy, collectionId } = suggestedComment;
     let suggestedCommentTags = [];
     let sourceMetaData;
     if (tags) {
@@ -275,6 +277,7 @@ const create = async (suggestedComment) => {
       sourceMetaData,
       enteredBy,
       lastModified: new Date(),
+      collectionId,
     });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
@@ -420,7 +423,8 @@ const exportSuggestedComments = async () => {
     'IsActive': comment.isActive,
     'Created by': comment.createdBy ? fullName(comment.createdBy) : '',
     'Created at': format(new Date(comment.createdAt), 'yyyy-MM-dd'),
-    'Last modified at': comment.lastModified ? format(new Date(comment.lastModified), 'yyyy-MM-dd') : ''
+    'Last modified at': comment.lastModified ? format(new Date(comment.lastModified), 'yyyy-MM-dd') : '',
+    'CollectionId': comment.collectionId
   }));
   const fields = [
     'Title',
@@ -435,7 +439,8 @@ const exportSuggestedComments = async () => {
     'IsActive',
     'Created by',
     'Created at',
-    'Last modified at'
+    'Last modified at',
+    'CollectionId',
   ];
 
   const json2csvParser = new Parser({ fields });
