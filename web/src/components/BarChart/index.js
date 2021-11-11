@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar } from '@fortawesome/free-regular-svg-icons';
+import { faArrowDown, faArrowUp, faEquals } from '@fortawesome/free-solid-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
@@ -32,14 +33,17 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
           if (val === 'date') {
             return acc;
           }
-          return acc + item[val];
+          return acc + item[val].current;
         }, 0);
         if (total > 0) {
           const obj = keys.reduce((acc, curr) => {
-            if (curr === 'date' || yAxisType === 'total') {
+            if (curr === 'date') {
               return acc[curr] = item[curr], acc;
             }
-            return acc[curr] = round((item[curr] * 100) / total, 2), acc;
+            if (yAxisType === 'total') {
+              return acc[curr] = item[curr].current, acc;
+            }
+            return acc[curr] = round((item[curr].current * 100) / total, 2), acc;
           }, {});
           return {
             total,
@@ -59,7 +63,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     data.forEach((item) => {
       let totalItem = 0;
       EMOJIS.forEach((emoji) => {
-        totalItem += item[emoji._id]
+        totalItem += item[emoji._id].current
       })
       total += totalItem;
     });
@@ -112,40 +116,75 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
 
   const renderTooltip = React.memo((itemData) => {
     const { id, value, indexValue, data: colData } = itemData;
-    const { total } = colData;
     const { emoji, label } = find(EMOJIS, { _id: id });
-    const count = find(data, { date: indexValue })[id];
+    const completeData = find(data, { date: indexValue });
+    if (completeData) {
+      const thisReactionData = completeData[id];
 
-    // Parse date format
-    let dateString = indexValue;
-    if (indexValue.search('-') !== -1) {
-      const [date1, date2] = indexValue.split('-');
-      const parsedDate1 = format(new Date(date1), 'LLL d');
-      const parsedDate2 = format(new Date(date2), 'LLL d');
-      dateString = `${parsedDate1} - ${parsedDate2}`;
-    } else {
-      const parsedDate = new Date(indexValue);
-      const dateValid = isValid(parsedDate);
-      if (dateValid) {
-        dateString = format(new Date(indexValue), 'LLLL d');
+      // Parse date format
+      let dateString = indexValue;
+      if (indexValue.search('-') !== -1) {
+        const [date1, date2] = indexValue.split('-');
+        const parsedDate1 = format(new Date(date1), 'LLL d');
+        const parsedDate2 = format(new Date(date2), 'LLL d');
+        dateString = `${parsedDate1} - ${parsedDate2}`;
+      } else {
+        const parsedDate = new Date(indexValue);
+        const dateValid = isValid(parsedDate);
+        if (dateValid) {
+          dateString = format(new Date(indexValue), 'LLLL d');
+        }
       }
-    }
-
-    // Create dynamic totalCommentsLabel
-    const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
-    const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
-      `% of total comments ${groupBy && totalCommentRange}`;
-
-    return (
-      <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
-        <div className="is-flex is-justify-content-space-between is-full-width mb-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-7">{emoji} {label}</p>
-          <div className="is-size-7 has-text-primary has-text-weight-semibold is-uppercase">{dateString}</div>
+  
+      // Create dynamic totalCommentsLabel
+      const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
+      const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / colData.total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
+        `% of total comments ${groupBy && totalCommentRange}`;
+  
+      // Increase/decrease percentage
+      const { current, previous } = completeData[id] ?? {};
+      const valDifference = current - previous;
+      const percentage = previous ? (valDifference/previous)*100 : 100;
+  
+      const lastPeriod = (groupBy) => {
+        switch (groupBy) {
+          case 'day':
+            return 'week';
+          case 'week':
+            return 'month';
+          case 'month':
+            return 'year';
+          case 'year':
+            return 'decade'; // Needs confirmation
+        }
+      }
+  
+      return (
+        <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
+          <div className="is-flex is-justify-content-space-between is-full-width mb-10">
+            <p className="has-text-weight-semibold has-text-deep-black is-size-7">{emoji} {label}</p>
+            <div className="is-size-7 has-text-primary has-text-weight-semibold is-uppercase">{dateString}</div>
+          </div>
+          <p className="is-size-7">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
+          <p className="is-size-7">{totalCommentsLabel}</p>
+          <span className="is-size-7 py-3 px-5 border-radius-4px mt-3" style={{
+            background: percentage === 0 ? '#f0f0f0' : percentage > 0 ? 'rgba(52, 168, 83, 0.1)' : '#F6E0E0',
+            color: percentage === 0 ? '#202020' : percentage > 0 ? '#34A853' : '#DE3617',
+          }}>
+            { percentage === 0 ?
+              <FontAwesomeIcon icon={faEquals} size="sm" className="mr-5" />  : 
+              percentage > 0 ? (
+                <FontAwesomeIcon icon={faArrowUp} size="sm" color="#34A853" className="mr-5" />
+              ) : (
+                <FontAwesomeIcon icon={faArrowDown} size="sm" color="#DE3617" className="mr-5" />
+              )
+            }
+            {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
+          </span>
         </div>
-        <p className="is-size-7">{count} of {total} comment{(total > 1) && `s`}</p>
-        <p className="is-size-7">{totalCommentsLabel}</p>
-      </div>
-    );
+      );
+    }
+    return;
   });
 
   if (noData) {

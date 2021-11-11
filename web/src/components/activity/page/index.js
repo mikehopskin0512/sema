@@ -80,10 +80,10 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
-      const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments });
+      const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments, startDate, endDate });
       setFilteredComments(filtered);
     }
-  }, [overview, filter]);
+  }, [overview, filter, startDate, endDate]);
 
   const onChangeFilter = (type, value) => {
     setFilter({

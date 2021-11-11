@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { find, findIndex, isEmpty, uniqBy } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { isWithinInterval } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import PersonalStatsTile from '../../components/personalInsights/personalStatsTile';
@@ -13,7 +14,7 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getDateSub } from '../../utils/parsing';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -46,6 +47,7 @@ const PersonalInsights = () => {
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
+  const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [dateData, setDateData] = useState({
     groupBy: '',
     startDate: null,
@@ -63,10 +65,7 @@ const PersonalInsights = () => {
   const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
     const { startDate, endDate, search } = filter;
-    const params = {
-      startDate,
-      endDate
-    }
+    const params = startDate && endDate ? getDateSub(startDate, endDate) : {}
     if (commentView === 'given') {
       params.reviewer = username
     } else {
@@ -127,11 +126,11 @@ const PersonalInsights = () => {
   }, [comments, filter]);
 
   useEffect(() => {
-    const { startDate, endDate, groupBy, dateDiff } = dateData;
+    const { startDate, endDate, groupBy } = dateData;
     if (startDate && endDate && groupBy) {
       const { reactionsChartData, tagsChartData } = getReactionTagsChartData({
         ...dateData,
-        smartComments: filteredComments,
+        smartComments: [...filteredComments, ...outOfRangeComments],
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
@@ -201,8 +200,14 @@ const PersonalInsights = () => {
 
   const filterComments = (overview) => {
     if (overview && overview.smartComments) {
-      const filtered = filterSmartComments({ filter, smartComments: overview.smartComments });
+      const { startDate, endDate } = dateData;
+      const filtered = filterSmartComments({ filter, smartComments: overview.smartComments, startDate, endDate });
+      const outOfRangeCommentsFilter = overview.smartComments.filter((comment) => !isWithinInterval(new Date(comment.createdAt), {
+        start: new Date(startDate),
+        end: new Date(endDate)
+      }));
       setFilteredComments(filtered);
+      setOutOfRangeComments(outOfRangeCommentsFilter);
     }
   };
 
