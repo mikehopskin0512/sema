@@ -8,6 +8,7 @@ import { commentsOperations } from '../../state/features/comments';
 import withLayout from '../../components/layout';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
+import { PATHS } from '../../utils/constants';
 
 const { getCollectionById } = commentsOperations;
 
@@ -34,15 +35,15 @@ const EditCollectionPage = () => {
       <Helmet title={comments ? "Edit suggested snippets" : "Edit snippet collection"} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href="/suggested-snippets" className="is-hidden-mobile">
+          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/suggested-snippets" className="has-text-grey">Suggested Snippets</a></li>
+              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
               { comments ? (
                 <>
-                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/suggested-snippets?cid=${collection._id}`}>{collection.name}</a></li>
+                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
                   <li className="is-active has-text-weight-semibold"><a>Edit Suggested Snippets</a></li>
                 </>
               ) : (

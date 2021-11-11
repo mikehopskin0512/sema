@@ -1,3 +1,5 @@
+import { PATHS } from './constants';
+
 const amplitudeApiKey = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY || null;
 let amplitude = null;
 
@@ -52,17 +54,17 @@ export const fireAmplitudeEvent = (event, opts) => {
   const { url } = opts;
   if (amplitudeApiKey) {
     if (event ==='VIEWED_PAGE') {
-      if (url === '/dashboard') {
+      if (url === PATHS.DASHBOARD) {
         event = AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE;
-      } else if (url === '/personal-insights') {
+      } else if (url === PATHS.PERSONAL_INSIGHTS) {
         event = AMPLITUDE_EVENTS.VIEWED_PERSONAL_INSIGHTS_PAGE;
-      } else if (url === '/suggested-snippets') {
+      } else if (url === PATHS.SUGGESTED_SNIPPETS._) {
         event = AMPLITUDE_EVENTS.VIEWED_SUGGESTED_SNIPPETS_PAGE;
-      }  else if (url === '/dashboard') {
+      }  else if (url === PATHS.DASHBOARD) {
         event = AMPLITUDE_EVENTS.VIEWED_REPOS_PAGE;
-      }  else if (url === '/invitations') {
+      }  else if (url === PATHS.INVITATIONS) {
         event = AMPLITUDE_EVENTS.VIEWED_INVITATIONS_PAGE;
-      }  else if (url === '/profile') {
+      }  else if (url === PATHS.PROFILE) {
         event = AMPLITUDE_EVENTS.VIEWED_PROFILE_PAGE;
       }
     }

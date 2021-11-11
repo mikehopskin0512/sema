@@ -16,6 +16,7 @@ import Loader from '../../Loader';
 import { engGuidesOperations } from '../../../state/features/engGuides';
 import { EditGuides } from '../../../data/permissions';
 import usePermission from '../../../hooks/usePermission';
+import { PATHS } from '../../../utils/constants';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -94,7 +95,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   }, [collectionId, engGuides]);
 
   const redirectToAddPage = async () => {
-    await router.push(`/guides/add?cid=${collectionId}`);
+    await router.push(`${PATHS.GUIDES}/add?cid=${collectionId}`);
   };
 
   const handleSelectChange = (guideId, value) => {
@@ -129,12 +130,12 @@ const CollectionEngGuides = ({ collectionId }) => {
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href="/guides" className="is-hidden-mobile">
+          <a href={PATHS.GUIDES} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/guides" className="has-text-grey">Community Engineering Guides</a></li>
+              <li><a href={PATHS.GUIDES} className="has-text-grey">Community Engineering Guides</a></li>
               <li className="is-active has-text-weight-semibold"><a href={`/engineering-guidelines/${collectionId}`}>{engGuide.name}</a></li>
             </ul>
           </nav>

@@ -130,3 +130,26 @@ export const FACEBOOK_VERIFICATION_META = {
   CONTENT: 'ifssvqgtnpjyeaear8sksn3oez0aqk',
   NAME: 'facebook-domain-verification',
 };
+
+export const PATHS = {
+  DASHBOARD: '/dashboard',
+  PERSONAL_INSIGHTS: '/personal-insights',
+  SUGGESTED_SNIPPETS: { 
+    _: '/suggested-snippets',
+    EDIT: '/suggested-snippets/edit',
+    ADD: '/suggested-snippets/add',
+  },
+  INVITATIONS: '/invitations',
+  PROFILE: '/profile',
+  OVERVIEW: '/overview',
+  REPO: '/repo',
+  SUPPORT: '/support',
+  GUIDES: '/guides',
+  LOGIN: '/login',
+  TEAM: '/team',
+  ONBOARDING: '/onboarding',
+  REGISTER: '/register',
+  PASSWORD_RESET: '/password-reset',
+  TEAMS: '/teams',
+  REPORTS: '/reports',
+};

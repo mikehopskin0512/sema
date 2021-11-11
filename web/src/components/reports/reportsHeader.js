@@ -8,6 +8,7 @@ import MultiSelectFilter from './multiSelectFilter';
 import styles from './reportsHeader.module.scss';
 import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
+import { PATHS } from '../../utils/constants';
 
 const { downloadPdf } = reportsOperations;
 const { fetchFilterLists, toggleFilters, clearFilters } = organizationsOperations;
@@ -87,7 +88,7 @@ const ReportsHeader = (props) => {
         {/* -- Left side -- */}
         <div className="level-left">
           <div className="level-item">
-            <Link href="/reports/"><span><FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;Report list</span></Link>
+            <Link href={`${PATHS.REPORTS}/`}><span><FontAwesomeIcon icon="arrow-left" />&nbsp;&nbsp;&nbsp;Report list</span></Link>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './actionGroup.module.scss';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
+import { PATHS } from '../../../utils/constants';
 
 const { bulkUpdateSuggestedComments } = suggestCommentsOperations;
 const { getCollectionById } = commentsOperations;
@@ -36,7 +37,7 @@ const ActionGroup = ({
   };
 
   const goToEditPage = async () => {
-    await router.push(`/suggested-snippets/edit?cid=${collectionId}&comments=${selectedComments}`);
+    await router.push(`${PATHS.SUGGESTED_SNIPPETS.EDIT}?cid=${collectionId}&comments=${selectedComments}`);
   };
 
   const onArchive = async () => {

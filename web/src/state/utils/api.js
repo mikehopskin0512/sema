@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import { getCookie } from './cookie';
 import { requestRefreshTokenSuccess } from '../features/auth/actions.js'
+import { PATHS } from '../../utils/constants';
 
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
 
@@ -28,7 +29,7 @@ export const setAxiosInterceptor = ({ dispatch }) => {
           error.config.headers.Authorization = `Bearer ${newToken}`;
           return axios.request(error.config);
         } catch (err) {
-          window.location = '/login';
+          window.location = PATHS.LOGIN;
         }
       }
     }

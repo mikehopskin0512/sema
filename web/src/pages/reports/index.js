@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import withLayout from '../../components/layout';
 
 import { reportsOperations } from '../../state/features/reports';
+import { PATHS } from '../../utils/constants';
 
 const { fetchReportList } = reportsOperations;
 
@@ -35,7 +36,7 @@ const Reports = () => {
   const { user: { organizations = [] } = {} } = auth;
 
   const reportsStuff = reportList.map((report) => (
-    <p key={report.token}><Link href={`/reports/${report.token}`}><a title="Test report">{report.name}</a></Link></p>
+    <p key={report.token}><Link href={`${PATHS.REPORTS}/${report.token}`}><a title="Test report">{report.name}</a></Link></p>
   ));
 
   return (
@@ -43,7 +44,7 @@ const Reports = () => {
       <section className="section">
         <div className="container">
           <h2 className="subtitle"><strong>Static reports</strong></h2>
-          <p><Link href={`/reports/${testReportId}`}><a title="Test report">Test report (use this)</a></Link></p>
+          <p><Link href={`${PATHS.REPORTS}/${testReportId}`}><a title="Test report">Test report (use this)</a></Link></p>
           <br />
           <h2 className="subtitle"><strong>Dynamic reports from Mode</strong></h2>
           {reportsStuff}

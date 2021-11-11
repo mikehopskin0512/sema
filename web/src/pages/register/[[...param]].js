@@ -15,6 +15,7 @@ import Helmet, { RegisterHelmet } from '../../components/utils/Helmet';
 import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
+import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { registerAndAuthUser, partialUpdateUser } = authOperations;
@@ -28,7 +29,7 @@ const InviteError = () => (
       </h2>
       <p>Your invitation token is either expired or invalid. Please request a new invitation from your administrator.</p>
       <br />
-      <Link href="/login"><a className="button is-black">Back to login</a></Link>
+      <Link href={PATHS.LOGIN}><a className="button is-black">Back to login</a></Link>
     </div>
   </div>
 );
@@ -71,7 +72,7 @@ const RegistrationForm = (props) => {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
-      router.push('/dashboard');
+      router.push(PATHS.DASHBOARD);
     } else {
       // New user
       // If no invite, set to waitlist

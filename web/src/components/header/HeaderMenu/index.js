@@ -8,6 +8,7 @@ import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
 import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
+import { PATHS } from '../../../utils/constants';
 
 const HeaderMenu = ({
   handleLogout,
@@ -48,7 +49,7 @@ const HeaderMenu = ({
           <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${role}`} />
         )) }
         <hr className={clsx("navbar-divider m-0", styles.divider)} />
-        <Link href="/profile">
+        <Link href={PATHS.PROFILE}>
           <span
             role="button"
             className="navbar-item px-15 py-20"

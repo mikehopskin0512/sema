@@ -7,7 +7,7 @@ import { faLinkedinIn, faInstagram, faFacebook, faTwitter } from '@fortawesome/f
 import styles from './footer.module.scss';
 import ContactUs from '../contactUs';
 import SupportForm from '../supportForm';
-import { noContactUs } from '../../utils/constants';
+import { noContactUs, PATHS } from '../../utils/constants';
 
 const Footer = () => {
   const router = useRouter();
@@ -83,7 +83,7 @@ const Footer = () => {
         <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="/support">Support</a>
+        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={PATHS.SUPPORT}>Support</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>

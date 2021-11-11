@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThLarge, faUserFriends, faPaperPlane, faFileContract, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import styles from './adminSidebar.module.scss';
+import { PATHS } from '../../utils/constants';
 
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const AdminSidebar = () => {
   const menus = [
     {
       name: 'Dashboard (coming)',
-      pathName: '/dashboard',
+      pathName: PATHS.DASHBOARD,
       icon: <FontAwesomeIcon icon={faThLarge} color="#ffffff" size="lg" />,
     },
     {
@@ -73,7 +74,7 @@ const AdminSidebar = () => {
     >
       <div
         className="is-flex is-align-items-center is-clickable p-10"
-        onClick={() => Router.push('/dashboard')}
+        onClick={() => Router.push(PATHS.DASHBOARD)}
         aria-hidden="true"
       >
         <img src="/img/logo_white.png" alt="logo" />

@@ -7,6 +7,7 @@ import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
+import { PATHS } from '../../../utils/constants';
 
 const { getCollectionById } = commentsOperations;
 const { bulkCreateSuggestedComments } = suggestCommentsOperations;
@@ -116,7 +117,7 @@ const AddSuggestedComment = (props) => {
 
     if (data[0]) {
       await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
-      await router.push(`/suggested-snippets?cid=${collection._id}`);
+      await router.push(`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`);
     }
   };
 

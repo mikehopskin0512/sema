@@ -9,6 +9,7 @@ import withLayout from '../../components/layout';
 
 import { authOperations } from '../../state/features/auth';
 import { organizationsOperations } from '../../state/features/organizations';
+import { PATHS } from '../../utils/constants';
 
 const { createAndJoinOrg } = authOperations;
 const { fetchOrganizationBySlug } = organizationsOperations;
@@ -34,7 +35,7 @@ const JoinOrg = () => {
 
   // Redirect to register page if no userId
   useEffect(() => {
-    if (!userId) { Router.push('/register'); }
+    if (!userId) { Router.push(PATHS.REGISTER); }
   });
 
   const onSubmit = async (data) => {

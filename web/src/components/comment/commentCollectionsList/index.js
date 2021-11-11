@@ -10,7 +10,7 @@ import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
 import Toaster from '../../toaster';
-import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants';
+import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
 import {EditComments} from "../../../data/permissions";
@@ -109,7 +109,7 @@ const CommentCollectionsList = () => {
               <GlobalSearch />
             </div>
             { isEditable && (
-              <a href="/suggested-snippets/add">
+              <a href={PATHS.SUGGESTED_SNIPPETS.ADD}>
                 <button
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
                   type="button"

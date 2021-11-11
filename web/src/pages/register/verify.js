@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import { authOperations } from '../../state/features/auth';
+import { PATHS } from '../../utils/constants';
 
 const { activateUser, resendVerification } = authOperations;
 
@@ -38,7 +39,7 @@ const ResetMessage = (props) => {
         </div>
       )}
       <p className="mt-20">
-        <span>Need help? Email us at <a href="mailto:support@semasoftware.com">support@semasoftware.com</a> or <Link href="/login"><a title="Login">return to login</a></Link>.</span>
+        <span>Need help? Email us at <a href="mailto:support@semasoftware.com">support@semasoftware.com</a> or <Link href={PATHS.LOGIN}><a title="Login">return to login</a></Link>.</span>
       </p>
     </div>
   );
@@ -55,8 +56,8 @@ const Confirmation = (props) => {
         <p>We have verified your email and your account is fully activated {hasInvite}</p>
         <br />
         {(hasInvite)
-          ? <Link href="/reports"><a className="button is-black">Continue to dashboard</a></Link>
-          : <Link href="/register/organization"><a className="button is-black">Setup your organization</a></Link>}
+          ? <Link href={PATHS.REPORTS}><a className="button is-black">Continue to dashboard</a></Link>
+          : <Link href={`${PATHS.REGISTER}/organization`}><a className="button is-black">Setup your organization</a></Link>}
       </div>
     </div>
   );

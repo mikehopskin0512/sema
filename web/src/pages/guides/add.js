@@ -10,6 +10,7 @@ import EngGuideForm from '../../components/engGuides/engGuideForm';
 import { tagsOperations } from '../../state/features/tags';
 import { engGuidesOperations } from '../../state/features/engGuides';
 import { makeTagsList } from '../../utils';
+import { PATHS } from '../../utils/constants';
 
 const { fetchTagList } = tagsOperations;
 const { bulkCreateEngGuides } = engGuidesOperations;
@@ -81,7 +82,7 @@ const AddEngGuidesPage = () => {
     });
 
     await dispatch(bulkCreateEngGuides({ engGuides: data }, token));
-    await router.push(`/guides?cid=${collection._id}`);
+    await router.push(`${PATHS.GUIDES}?cid=${collection._id}`);
   };
 
   return (
@@ -89,13 +90,13 @@ const AddEngGuidesPage = () => {
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href={`/guides?cid=${collection._id}`} className="is-hidden-mobile">
+          <a href={`${PATHS.GUIDES}?cid=${collection._id}`} className="is-hidden-mobile">
             <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href="/guides" className="has-text-grey">Community Engineering Guides</a></li>
-              <li className="has-text-weight-semibold"><a className="has-text-grey" href={`/guides?cid=${collection._id}`}>{collection.name}</a></li>
+              <li><a href={PATHS.GUIDES} className="has-text-grey">Community Engineering Guides</a></li>
+              <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.GUIDES}?cid=${collection._id}`}>{collection.name}</a></li>
               <li className="is-active has-text-weight-semibold"><a>Add Guides</a></li>
             </ul>
           </nav>

@@ -7,6 +7,7 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
+import { PATHS } from '../../../utils/constants';
 
 const RepoRow = (props) => {
   const {
@@ -14,7 +15,7 @@ const RepoRow = (props) => {
   } = props;
 
   const onClickRow = () => {
-    window.location = `/repo/${externalId}`;
+    window.location = `${PATHS.REPO}/${externalId}`;
   };
 
   return (

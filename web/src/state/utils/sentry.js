@@ -4,6 +4,7 @@ import jwtDecode from 'jwt-decode';
 import { authOperations } from '../features/auth';
 import { alertOperations } from '../features/alerts';
 import { getCookie } from './cookie';
+import { PATHS } from '../../utils/constants';
 
 const { refreshJwt } = authOperations;
 const { triggerAlert } = alertOperations;
@@ -38,19 +39,19 @@ const initialize = async (ctx) => {
   // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
-    !(ctx.pathname).includes('/login') &&
-    !(ctx.pathname).includes('/onboarding') &&
-    !(ctx.pathname).includes('/guides') &&
-    !(ctx.pathname).includes('/register') &&
-    !(ctx.pathname).includes('/password-reset')
+    !(ctx.pathname).includes(PATHS.LOGIN) &&
+    !(ctx.pathname).includes(PATHS.ONBOARDING) &&
+    !(ctx.pathname).includes(PATHS.GUIDES) &&
+    !(ctx.pathname).includes(PATHS.REGISTER) &&
+    !(ctx.pathname).includes(PATHS.PASSWORD_RESET)
   ) {
-    if (!jwt) { redirect(ctx, '/login'); }
-    if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, '/login'); }
+    if (!jwt) { redirect(ctx, PATHS.LOGIN); }
+    if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, PATHS.LOGIN); }
     if (!isVerified) {
       ctx.res.setHeader(
         'Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`],
       );
-      redirect(ctx, '/login');
+      redirect(ctx, PATHS.LOGIN);
     }
   }
 };

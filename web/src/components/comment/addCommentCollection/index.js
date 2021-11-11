@@ -9,6 +9,7 @@ import EditCommentCollectionForm from '../editCommentCollectionForm';
 import Toaster from '../../toaster';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
+import { PATHS } from '../../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { createCollections } = collectionsOperations;
@@ -51,7 +52,7 @@ const AddCommentCollection = () => {
       collections: [data]
     }, token));
     if (collections.length > 0) {
-      window.location.href = '/suggested-snippets';
+      window.location.href = PATHS.SUGGESTED_SNIPPETS._;
     }
     setLoading(false);
   }

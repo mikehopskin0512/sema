@@ -7,10 +7,10 @@ import styles from './layout.module.scss';
 import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
-import { noContactUs, FACEBOOK_VERIFICATION_META } from '../../utils/constants';
+import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
 
-const widescreenPages = ['/repo/[repoId]', '/support', '/login'];
-const noHeaderPages = ['/login'];
+const widescreenPages = [`${PATHS.REPO}/[repoId]`, PATHS.SUPPORT, PATHS.LOGIN];
+const noHeaderPages = [PATHS.LOGIN];
 
 const withLayout = (Page) => (props) => {
   const router = useRouter();

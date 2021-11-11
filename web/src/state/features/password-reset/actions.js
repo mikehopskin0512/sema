@@ -3,6 +3,7 @@ import * as types from './types';
 import { initiatePasswordReset, validatePasswordReset, resetPassword } from './api';
 
 import { alertOperations } from '../alerts';
+import { PATHS } from '../../../utils/constants';
 
 const { triggerAlert } = alertOperations;
 
@@ -64,7 +65,7 @@ export const verifyResetToken = (userId, resetToken) => async (dispatch) => {
     dispatch(verifyResetTokenSuccess());
   } catch (error) {
     dispatch(verifyResetTokenError(error.response.data));
-    Router.push('/password-reset?err=1');
+    Router.push(`${PATHS.PASSWORD_RESET}?err=1`);
   }
 };
 

@@ -19,6 +19,7 @@ import Toaster from '../../../../components/toaster';
 import Loader from '../../../../components/Loader';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
+import { PATHS } from '../../../../utils/constants';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -246,7 +247,7 @@ const EngineeringGuidePage = () => {
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-deep-black">
                   <b className="mr-5">Related Suggested Snippets Collection:</b>
-                  <a href={`/suggested-snippets?cid=${_id}`}>
+                  <a href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${_id}`}>
                     <span className="is-underlined has-text-deep-black">{name}</span>
                   </a>
                 </p>

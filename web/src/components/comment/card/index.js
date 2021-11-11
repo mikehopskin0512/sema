@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
-import { DEFAULT_COLLECTION_NAME } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import {EditComments} from "../../../data/permissions";
@@ -120,7 +120,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
               <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              { asPath === '/suggested-snippets' && isNotArchived ? (
+              { asPath === PATHS.SUGGESTED_SNIPPETS._ && isNotArchived ? (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
@@ -183,7 +183,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                       <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                         <div className="dropdown-content">
-                          <a href={`/suggested-snippets/edit?cid=${_id}`} className="dropdown-item">
+                          <a href={`${PATHS.SUGGESTED_SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                             Edit Collection
                           </a>
                           <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>

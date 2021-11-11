@@ -5,6 +5,7 @@ import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
 import styles from './repoCard.module.scss';
 import RepoUsers from '../repoUsers';
+import { PATHS } from '../../../utils/constants';
 
 const statLabels = {
   totalPullRequests: 'Smart Code Reviews',
@@ -20,7 +21,7 @@ const RepoCard = (props) => {
 
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
-    window.location = `/repo/${externalId}`;
+    window.location = `${PATHS.REPO}/${externalId}`;
   };
 
   const renderStats = (label, value) => (
