@@ -1,3 +1,5 @@
+import { SEARCH_CATEGORY_TITLES } from './constants';
+
 export const upsert = (arr, key, newval) => {
   const match = arr.find((item) => item._id === key);
   if (match) {
@@ -76,3 +78,5 @@ export const shortenUrl = (url) => {
   if (!url) return '';
   return url.length > 50 ? url.substring(0, 50) + '...' : url;
 }
+
+export const isSuggestedCollectionTitle = (title) => title === SEARCH_CATEGORY_TITLES.COLLECTIONS;

@@ -5,10 +5,12 @@ import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
-import styles from './globalSearch.module.scss'
+import styles from './globalSearch.module.scss';
 // TODO: turned off temporary / delete in 2022
 // import { getEngGuides } from "../../state/features/engGuides/actions";
-import useOutsideClick from '../../utils/useOutsideClick'
+import useOutsideClick from '../../utils/useOutsideClick';
+import { SEARCH_CATEGORY_TITLES } from '../../utils/constants';
+import { isSuggestedCollectionTitle } from '../../utils';
 
 const isFieldIncludes = (searchTerm, fieldName) => {
   return function(searchItem) {
@@ -42,8 +44,8 @@ const GlobalSearch = () => {
   },[userCollections, searchTerm]);
 
   const categories = [
-    { title: "suggested snippets collections", items: suggestedCollections },
-    { title: "suggested snippets", items: suggestedComments },
+    { title: SEARCH_CATEGORY_TITLES.COLLECTIONS, items: suggestedCollections },
+    { title: SEARCH_CATEGORY_TITLES.SNIPPETS, items: suggestedComments },
     // TODO: turned off temporary / delete in 2022
     // { title: "community engineering guide collections", items: engGuidesCollections },
     // { title: "community engineering guide", items: engGuidesComments },
@@ -94,6 +96,7 @@ const GlobalSearch = () => {
               )}
               {category.items.map((item) => (
                 <SearchItem
+                  isCollection={isSuggestedCollectionTitle(category.title)}
                   key={item._id}
                   keyword={searchTerm}
                   item={item}
