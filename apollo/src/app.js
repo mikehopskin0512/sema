@@ -26,8 +26,9 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true,
+  limit: '1mb'
 }));
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(methodOverride());
 app.use(passport.initialize());
 app.disable('x-powered-by');
