@@ -1,4 +1,3 @@
-import { addMinutes } from '../shared/utils';
 import { sign, verify } from 'jsonwebtoken';
 import {
   jwtSecret, privateKeyFile, tokenLife,
@@ -11,6 +10,8 @@ import RefreshToken from './refreshTokenModel';
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const authTokenMinutes = 15;
+const authTokenExpTime = Math.floor(Date.now() / 1000) + (authTokenMinutes * 60);
+const refreshTokenExpTime = Math.floor(Date.now() / 1000) + parseInt(tokenLife, 10);
 
 const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', lastName = '' }) => {
   let displayName = 'Sema User';
@@ -25,16 +26,16 @@ const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', las
       email: username,
       display_name: displayName,
       trusted: true,
-      exp: addMinutes(15),
+      exp: authTokenExpTime,
     }, userVoiceKey,
   );
 };
 
-export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user), exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
+export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user), exp: authTokenExpTime }, jwtSecret);
 
-export const createIdentityToken = async (identity) => sign({ identity, exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
+export const createIdentityToken = async (identity) => sign({ identity, exp: authTokenExpTime }, jwtSecret);
 
-export const createRefreshToken = async (user) => sign({ user, exp: Math.floor(Date.now() / 1000) + parseInt(tokenLife, 10) }, refreshSecret);
+export const createRefreshToken = async (user) => sign({ user, exp: refreshTokenExpTime }, refreshSecret);
 
 export const validateRefreshToken = async (token) => {
   const payload = await verify(token, refreshSecret);

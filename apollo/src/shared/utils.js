@@ -26,9 +26,6 @@ export const generateToken = () => new Promise((resolve, reject) => {
   });
 });
 
-// add minutes - return in unix time
-export const addMinutes = (minutes = 0, date = new Date()) => (new Date(date).getTime() + minutes * 60000);
-
 export const checkAndSendEmail = async (user) => {
   const { username, isWaitlist = true, lastLogin } = user;
   const re = /\S+@\S+\.\S+/;
