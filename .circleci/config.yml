@@ -22,8 +22,10 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            else
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
           name: build and deploy phoenix/web
@@ -52,8 +54,10 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            else
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
           name: build and deploy apollo
@@ -75,8 +79,10 @@ jobs:
           command: |
             if [ $CIRCLE_BRANCH = "master" ]; then
               echo 'export ENV=prod' >> $BASH_ENV
-            else
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              echo 'export ENV=stage' >> $BASH_ENV
             fi
       - run:
           name: build chrome extension
@@ -112,18 +118,21 @@ workflows:
               only:
                 - qa
                 - master
+                - /release-.*/
       - deploy-apollo:
           filters:
             branches:
               only:
                 - qa
                 - master
+                - /release-.*/
       - build-chrome-extension:
           filters:
             branches:
               only:
                 - qa
                 - master
+                - /release-.*/
       - phoenix-notify:
           context: 
            - slack-secrets
@@ -132,6 +141,7 @@ workflows:
               only:
                 - qa
                 - master
+                - /release-.*/
           requires:
             - build-chrome-extension
             - deploy-web
