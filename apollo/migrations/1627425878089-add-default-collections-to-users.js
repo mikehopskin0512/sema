@@ -35,21 +35,19 @@ exports.up = async (next) => {
 
     const data = await Promise.all(
       usersCollections.map(async ({ userId, collections, myCollection }) => {
-        try {
           await mongoose.connection
            .collection('users')
            .updateOne({ _id: new ObjectId(userId) },
-             { $set: { collections } }
+                      { $addToSet: { collections: { $each: collections}  }
+                      }
            );
            return { userId, myCollection }
-        } catch (error) {
-         next(error);
-        }
      }),
     );
 
     fs.writeFileSync(`${process.cwd()}/data/removeUsersCollection.json`, JSON.stringify(data));
   } catch (error) {
+    throw(error);
     next(error);
   }
   mongoose.connection.close();
