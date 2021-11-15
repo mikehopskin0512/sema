@@ -40,7 +40,6 @@ variable "ecs_cluster" {
 
 variable "ecr_repo" {
   type = object({
-    url     = string
     arn     = string
     kms_key = string
   })
