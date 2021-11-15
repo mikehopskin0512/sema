@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faListAlt, faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { ActivityLogIcon, CodeIcon } from "../Icons";
 
 import styles from './sidebar.module.scss';
 
@@ -18,11 +15,8 @@ const MenuItem = ({ pathName, icon, name, selectedTab, setSelectedTab }) => {
       )}
       onClick={() => setSelectedTab(pathName)}
     >
-      <FontAwesomeIcon
-        className="is-clickable"
-        icon={icon}
-      />
-      <span className={clsx(styles['label-menu'], 'ml-15')}>{name}</span>
+      {icon}
+      <span className={clsx(styles['label-menu'], 'ml-8')}>{name}</span>
     </div>
   );
 };
@@ -43,12 +37,12 @@ const Sidebar = ({ children, ...menuItemProps }) => {
     {
       name: 'Activity Logs',
       pathName: 'activity',
-      icon: faListAlt,
+      icon: <ActivityLogIcon />,
     },
     {
       name: 'Code Stats',
       pathName: 'stats',
-      icon: faChartPie,
+      icon: <CodeIcon />,
     },
   ]);
 

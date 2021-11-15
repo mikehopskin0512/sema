@@ -1,16 +1,12 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { forwardRef, useEffect, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatDistance } from 'date-fns';
-
+import { ArrowRightIcon, GithubIcon } from '../../components/Icons';
 import {
   useTable,
-  useFilters,
   useSortBy,
   useRowSelect,
-  usePagination,
 } from 'react-table';
 
 import withLayout from '../../components/layout';
@@ -140,13 +136,11 @@ function Table({ columns, data, auth }) {
       <br />
       <button
         type="button"
-        className="button is-black"
+        className="button is-black is-flex fa-align-center"
         disabled={Object.keys(selectedRowIds).length === 0}
         onClick={addRepos}>
-        <span>Add selected repositories and continue</span>
-        <span className="icon is-small">
-          <FontAwesomeIcon icon={['fas', 'arrow-right']} />
-        </span>
+        <span className="mr-8">Add selected repositories and continue</span>
+        <ArrowRightIcon size="small" />
       </button>
     </div>
   );
@@ -257,7 +251,7 @@ const Sources = () => {
                   className="button is-github"
                   href={`https://github.com/apps/${githubAppName}/installations/new`}>
                   <span className="icon">
-                    <FontAwesomeIcon icon={['fab', 'github']} />
+                    <GithubIcon size="small" />
                   </span>
                   <span>Add repositories from GitHub</span>
                 </a>

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { CheckOnlineIcon, CloseIcon } from '../../Icons';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
@@ -142,8 +141,10 @@ const AddSuggestedComment = (props) => {
             type="button"
             onClick={onSave}
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            <CheckOnlineIcon size="small" />
+            <span className="ml-8">
+              Save
+            </span>
           </button>
         </div>
       </div>
@@ -164,8 +165,10 @@ const AddSuggestedComment = (props) => {
                     type="button"
                     onClick={() => removeComment(index)}
                   >
-                    <FontAwesomeIcon icon={faTimes} className="mr-10" />
-                    Remove snippet
+                    <CloseIcon size="small" />
+                    <span className="ml-8">
+                      Remove snippet
+                    </span>
                   </button>
                 </div>
               ) }

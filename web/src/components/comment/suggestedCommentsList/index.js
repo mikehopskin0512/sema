@@ -1,13 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   findIndex, flatten, isEmpty, uniqBy,
 } from 'lodash';
 import PropTypes from 'prop-types';
+import { ArrowLeftIcon, PlusIcon } from '../../Icons';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './suggestedCommentCollections.module.scss';
 import CommentFilter from '../commentFilter';
 import SuggestedCommentCard from '../suggestedCommentCard';
@@ -140,8 +138,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
+            <ArrowLeftIcon color="#000" size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
@@ -165,8 +163,10 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                 className="button is-small is-primary border-radius-4px"
                 type="button"
                 onClick={goToAddPage}>
-                <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                Add New Snippet
+                <PlusIcon size="small" />
+                <span className="ml-8">
+                  Add New Snippet
+                </span>
               </button>
             )
           }
@@ -201,8 +201,10 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                   className="button is-small is-primary border-radius-4px has-text-semibold"
                   type="button"
                   onClick={goToAddPage}>
-                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                  Add a Snippet
+                  <PlusIcon size="small" />
+                  <span className="ml-8">
+                    Add New Snippet
+                  </span>
                 </button>
               ) }
             </div>

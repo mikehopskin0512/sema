@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Helmet from '../../components/utils/Helmet';
 import { commentsOperations } from '../../state/features/comments';
 import withLayout from '../../components/layout';
+import { ArrowLeftIcon } from '../../components/Icons';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
 import { PATHS } from '../../utils/constants';
@@ -35,8 +34,8 @@ const EditCollectionPage = () => {
       <Helmet title={comments ? "Edit suggested snippets" : "Edit snippet collection"} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
+            <ArrowLeftIcon color="#000" size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

@@ -1,10 +1,10 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
+import { GithubIcon } from '../../Icons';
 import styles from './LoginCard.module.scss';
 import * as analytics from '../../../utils/analytics';
 
-const LoginCard = ({ isAuthenticated }) => {
+const LoginCard = () => {
   const githubLogin = () => {
     window.location.href = '/api/identities/github';
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOGIN, { url: '/login' });
@@ -31,12 +31,9 @@ const LoginCard = ({ isAuthenticated }) => {
         className="button is-black is-primary colored-shadow-small p-25"
         onClick={githubLogin}
       >
-        <span className="icon is-large mr-16 ml-0 is-hidden-mobile">
-          <FontAwesomeIcon
-            icon={['fab', 'github']}
-            size="2x"
-          />
-        </span>
+        <div className="is-flex mr-16 is-hidden-mobile">
+          <GithubIcon size="large" />
+        </div>
         <span className="has-text-weight-semibold is-size-16 ">Join our Waitlist with GitHub</span>
       </button>
       {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
@@ -53,13 +50,8 @@ const LoginCard = ({ isAuthenticated }) => {
         className="button p-25 is-primary is-outlined colored-shadow-small"
         onClick={githubLogin}
       >
-        <span className="icon is-large mr-20">
-          <FontAwesomeIcon
-            icon={['fab', 'github']}
-            size="2x"
-          />
-        </span>
-        <span className="has-text-weight-semibold is-size-16">Sign in with GitHub</span>
+        <GithubIcon size="large" />
+        <span className="ml-16 has-text-weight-semibold is-size-16">Sign in with GitHub</span>
       </button>
     </>
   );

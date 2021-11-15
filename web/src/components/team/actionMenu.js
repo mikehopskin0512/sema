@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import usePopup from '../../hooks/usePopup';
+import { OptionsIcon, TrashIcon } from '../Icons';
 
 const ActionMenu = () => {
   const popupRef = useRef(null);
@@ -16,7 +15,7 @@ const ActionMenu = () => {
             type="button"
             onClick={toggleMenu}
           >
-            <FontAwesomeIcon icon={faEllipsisV} />
+            <OptionsIcon />
           </button>
         </div>
         <div className="dropdown-menu" role="menu" ref={popupRef}>
@@ -26,8 +25,8 @@ const ActionMenu = () => {
                 type="button"
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
               >
-                <FontAwesomeIcon color="#de3617" icon={faTrashAlt} />
-                <span className="ml-5">Remove member</span>
+                <TrashIcon size="small" color="#de3617" />
+                <span className="ml-8">Remove member</span>
               </button>
             </div>
           </div>

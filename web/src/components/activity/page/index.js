@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { findIndex, uniqBy, isEmpty } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
 import DateRangeSelector from '../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../data/activity';
+import { SearchIcon } from '../../Icons';
 
 import { filterSmartComments } from '../../../utils/parsing';
 
@@ -105,7 +104,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
               value={filter.search}
             />
             <span className="icon is-small is-left">
-              <FontAwesomeIcon icon={faSearch} />
+              <SearchIcon size="small" />
             </span>
           </p>
         </div>

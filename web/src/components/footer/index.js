@@ -2,8 +2,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLinkedinIn, faInstagram, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '../Icons';
 import styles from './footer.module.scss';
 import ContactUs from '../contactUs';
 import SupportForm from '../supportForm';
@@ -34,24 +33,24 @@ const Footer = () => {
 
   const renderSocialLinks = () => (
     <div className="is-flex is-align-items-center is-justify-content-center">
-      <div className="mx-15">
+      <div className={styles.socials__icon}>
         <a href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faLinkedinIn} color="#F4F4F4" />
+          <LinkedinIcon color="rgb(244, 244, 244)" size="small" />
         </a>
       </div>
-      <div className="mx-15">
+      <div className={styles.socials__icon}>
         <a href={socialLinks.instagram} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faInstagram} color="#F4F4F4" />
+          <InstagramIcon color="rgb(244, 244, 244)" size="small" />
         </a>
       </div>
-      <div className="mx-15">
+      <div className={styles.socials__icon}>
         <a href={socialLinks.facebook} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faFacebook} color="#F4F4F4" />
+          <FacebookIcon color="rgb(244, 244, 244)" size="small" />
         </a>
       </div>
-      <div className="mx-15">
+      <div className={styles.socials__icon}>
         <a href={socialLinks.twitter} target="_blank" rel="noreferrer">
-          <FontAwesomeIcon icon={faTwitter} color="#F4F4F4" />
+          <TwitterIcon color="rgb(244, 244, 244)" size="small" />
         </a>
       </div>
     </div>

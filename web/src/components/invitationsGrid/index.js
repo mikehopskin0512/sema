@@ -1,12 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUndo, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
 import Table from '../table';
 import Badge from '../badge/badge';
 import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
+import { CloseIcon, UndoIcon } from '../Icons';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isLoading, fetchData, totalInvites = 0 }) => {
 
@@ -113,10 +112,16 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
               el.isPending && (
                 <>
                   <button className="button is-text outline-none" onClick={() => resendInvitation(el.recipient)}>
-                    <FontAwesomeIcon icon={faUndo} className="mr-15" />Resend Invitation
+                    <UndoIcon size="small" />
+                    <span className="ml-8">
+                      Resend Invitation
+                    </span>
                   </button>
                   <button className="button is-text outline-none" onClick={() => revokeInvitation(el._id, el.recipient)}>
-                    <FontAwesomeIcon icon={faTimes} className="mr-15" />Revoke
+                    <CloseIcon size="small" />
+                    <span className="ml-8">
+                      Revoke
+                    </span>
                   </button>
                 </>
               )

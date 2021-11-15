@@ -4,6 +4,8 @@
 }
 
 .notification {
+  display: flex;
+  align-items: center;
   background-color: #CADCEE;
   border: 1px solid #2D74B9;
   color: black;

@@ -3,9 +3,14 @@ import Router, { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThLarge, faUserFriends, faPaperPlane, faFileContract, faFileSignature } from '@fortawesome/free-solid-svg-icons';
 import styles from './adminSidebar.module.scss';
+import {
+  AuthorIcon,
+  CodeStatsIcon,
+  FileIcon,
+  GridIcon,
+  MailIcon,
+} from '../Icons';
 import { PATHS } from '../../utils/constants';
 
 const MenuItem = ({ pathName, icon, name }) => {
@@ -42,27 +47,27 @@ const AdminSidebar = () => {
     {
       name: 'Dashboard (coming)',
       pathName: PATHS.DASHBOARD,
-      icon: <FontAwesomeIcon icon={faThLarge} color="#ffffff" size="lg" />,
+      icon: <GridIcon color="#ffffff" size="small" />,
     },
     {
       name: 'User Management',
       pathName: '/sema-admin/users',
-      icon: <FontAwesomeIcon icon={faUserFriends} color="#ffffff" size="lg" />,
+      icon: <AuthorIcon color="#ffffff" size="small" />,
     },
     {
       name: 'Invites',
       pathName: '/sema-admin/invites',
-      icon: <FontAwesomeIcon icon={faPaperPlane} color="#ffffff" size="lg" />,
+      icon: <MailIcon color="#ffffff" size="small" />,
     },
     {
       name: 'Reports',
       pathName: '/sema-admin/reports',
-      icon: <FontAwesomeIcon icon={faFileContract} color="#ffffff" size="lg" />,
+      icon: <FileIcon color="#ffffff" size="small" />,
     },
     {
       name: 'Smart Comment Metrics',
       pathName: '/sema-admin/smart-comments',
-      icon: <FontAwesomeIcon icon={faFileSignature} color="#ffffff" size="lg" />,
+      icon: <CodeStatsIcon color="#ffffff" size="small" />,
     },
   ];
   return (

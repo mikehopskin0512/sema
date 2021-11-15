@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { SearchIcon } from '../Icons';
 
 const SearchInput = ({ value, onChange }) => (
   <div className="field has-addons mb-15 has-background-white">
@@ -15,7 +15,7 @@ const SearchInput = ({ value, onChange }) => (
     </p>
     <div className="control">
       <div className="button is-static is-clickable">
-        <FontAwesomeIcon icon='search' />
+        <SearchIcon size="small" />
       </div>
     </div>
   </div>

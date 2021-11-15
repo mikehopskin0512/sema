@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useForm } from 'react-hook-form';
 import { isEmpty } from 'lodash';
 import { invitationsOperations } from '../../state/features/invitations';
 import { useDispatch, useSelector } from 'react-redux';
 import { fullName } from '../../utils';
 import * as analytics from '../../utils/analytics';
+import { CloseIcon } from '../Icons';
 
 const { resendInvite, createInviteAndHydrateUser } = invitationsOperations;
 
@@ -98,7 +97,7 @@ const InviteForm = ({ onReload }) => {
                 }
               />
               <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('email')}>
-                <FontAwesomeIcon icon={faTimes} size="sm"/>
+                <CloseIcon size="small" />
               </span>
             </div>
             <div className="control has-icons-right mb-25">

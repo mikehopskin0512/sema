@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Lottie from 'react-lottie-player';
 import clsx from 'clsx';
+import { PlayIcon } from '../../Icons';
 import styles from './emptyRepo.module.scss';
 import { content } from './content';
 
@@ -56,8 +57,18 @@ const EmptyRepo = () => {
                                 />
                               ) : (
                                 <>
-                                  <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
-                                  <img src={img} className={styles.img} />
+                                  <div className={clsx(styles['button-play'])}>
+                                    <PlayIcon
+                                      size="large"
+                                      // style={{
+                                      //   position: 'absolute',
+                                      //   top: 'calc(50% - 16px)',
+                                      //   left: 'calc(50% - 16px)',
+                                      // }}
+                                    />
+                                  </div>
+
+                                  <img src={img} className={styles.img} alt={title} />
                                 </>
                               ) }
                             </div>

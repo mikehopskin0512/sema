@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar } from '@fortawesome/free-regular-svg-icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { find, isEmpty, round } from 'lodash';
@@ -8,6 +6,7 @@ import { ResponsiveCirclePacking } from '@nivo/circle-packing';
 import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
 import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
+import { CodeIcon } from '../Icons';
 
 const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
@@ -85,7 +84,7 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
   if (noData) {
     return (
       <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
-        <FontAwesomeIcon icon={faChartBar} size="3x" />
+        <CodeIcon size="large" />
         <p className="is-size-5">No Tags</p>
       </div>
     );

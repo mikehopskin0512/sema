@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { DownloadIcon } from '../Icons';
 
 const ExportButton = ({ onExport, label }) => (
   <button type="button" className="button has-background-purple has-text-white" onClick={onExport}>
     <span className="icon">
-      <FontAwesomeIcon icon="download" />
+      <DownloadIcon size="small" />
     </span>
     <span>{ label || 'Export as CSV'}</span>
   </button>

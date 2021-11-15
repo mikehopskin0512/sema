@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLessThan, faGreaterThan } from '@fortawesome/free-solid-svg-icons';
 import styles from './table.module.scss';
 import { getCharCount } from '../../utils';
+import { ChevronLeftIcon, ChevronRightIcon } from '../Icons';
 
 const Table = ({
   columns,
@@ -137,10 +136,10 @@ const Table = ({
             <div className="is-flex is-align-items-center">
               <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
                 <button className="pagination-previous button is-ghost" onClick={() => previousPage()} disabled={!canPreviousPage}>
-                  <FontAwesomeIcon icon={faLessThan} />
+                  <ChevronLeftIcon />
                 </button>
                 <button className="pagination-next button is-ghost" onClick={() => nextPage()} disabled={!canNextPage}>
-                  <FontAwesomeIcon icon={faGreaterThan} />
+                  <ChevronRightIcon />
                 </button>
                 <ul className="pagination-list">
                   <li className="is-flex is-align-items-center mx-5">

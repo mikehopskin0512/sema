@@ -60,6 +60,7 @@ const HelpAndSupport = () => {
                 onMouseEnter={() => onHover(title)}
                 onMouseLeave={() => onRemoveHover()}
               >
+                {/* TODO: we should reuse it from the login page */}
                 <div className="is-flex is-align-items-center" style={{ height: 300 }}>
                   {hovered === title ? (
                     <Lottie

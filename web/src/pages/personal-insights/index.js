@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx'
-import { find, findIndex, isEmpty, uniqBy } from 'lodash';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { findIndex, isEmpty, uniqBy } from 'lodash';
+import { InfoFilledIcon } from '../../components/Icons';
 import { isWithinInterval } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
@@ -226,8 +225,14 @@ const PersonalInsights = () => {
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">
               Personal Insights
               <span className="ml-20 is-size-7 has-text-weight-normal">
-                <FontAwesomeIcon icon={faInfoCircle} color="#2D74BA" className="mx-10" />
-                Only you can see this page.
+                <InfoFilledIcon
+                  color="#2D74BA"
+                  size="small"
+                  style={{ verticalAlign: 'text-bottom' }}
+                />
+                <span className="ml-8">
+                  Only you can see this page.
+                </span>
                 <a href={SEMA_FAQ_URL}>
                   <span className="is-underlined ml-5">
                     Learn More

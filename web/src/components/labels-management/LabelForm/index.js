@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import PropTypes from 'prop-types';
 import CustomRadio from '../../radio';
+import { TrashIcon } from '../../Icons';
 
 export const initialValues = {
   label: '',
-  type: 'language'
-}
+  type: 'language',
+};
 
 const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
   const index = useMemo(() => id, []);
-  
+
   return (
     <div className="columns" style={{ borderBottom: '1px solid #dbdbdb' }}>
       <div className="column">
@@ -39,7 +38,7 @@ const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
             label="Other labels"
             name={`category-${index}`}
             value="other"
-            checked={data.type !== 'language'} 
+            checked={data.type !== 'language'}
             onChange={() => onChangeData('type', 'guide', index)}
           />
         </div>
@@ -47,8 +46,8 @@ const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
       </div>
       <div className="column is-one-fifth is-flex is-align-items-center is-justify-content-flex-end">
         { id !== 0 && (
-          <button className="button is-text" onClick={() => onRemove(id)}>
-            <FontAwesomeIcon icon={faTrashAlt} color="#192129" size="lg" />
+          <button className="button is-text" onClick={() => onRemove(id)} type="button">
+            <TrashIcon />
           </button>
         ) }
       </div>

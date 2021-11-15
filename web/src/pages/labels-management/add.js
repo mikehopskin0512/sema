@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,7 +10,8 @@ import Helmet from '../../components/utils/Helmet';
 import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
-import { tagsOperations  } from '../../state/features/tags';
+import { tagsOperations } from '../../state/features/tags';
+import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
 
 const { clearAlert } = alertOperations;
 const { createTags, fetchTagList } = tagsOperations;
@@ -130,7 +129,7 @@ const AddLabels = () => {
       router.replace('/');
     }
   }, []);
-  
+
   if (!isAuthorized) {
     return(
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
@@ -144,8 +143,8 @@ const AddLabels = () => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet title="Add label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
-        <a href="/labels-management">
-          <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+        <a href="/labels-management" className="mr-8 is-flex">
+          <ArrowLeftIcon size="small" color="#000" />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
@@ -174,22 +173,26 @@ const AddLabels = () => {
             type="button"
             onClick={onSubmit}
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            <CheckOnlineIcon size="small" />
+            <span className="ml-8">
+              Save
+            </span>
           </button>
         </div>
       </div>
       { tags.map((_tag, index) => <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} onRemove={onRemove} />)}
       <button
-          className="button is-small is-outlined is-primary border-radius-4px mt-20"
-          type="button"
-          onClick={onAddLabel}
-        >
-          <FontAwesomeIcon icon={faPlus} className="mr-10" />
+        className="button is-small is-outlined is-primary border-radius-4px mt-20"
+        type="button"
+        onClick={onAddLabel}
+      >
+        <PlusIcon size="small" />
+        <span className="ml-8">
           Add another label
-        </button>
+        </span>
+      </button>
     </div>
-  )
-}
+  );
+};
 
 export default withLayout(AddLabels);

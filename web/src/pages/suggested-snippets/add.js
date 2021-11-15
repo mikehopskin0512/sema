@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
+import { ArrowLeftIcon } from '../../components/Icons';
 import withLayout from '../../components/layout';
 import AddCommentCollection from '../../components/comment/addCommentCollection';
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
@@ -35,8 +34,8 @@ const AddCollectionPage = () => {
       <Helmet title={cid ? "Add suggested snippet" : "Add a snippet collection"} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href={parentPageUrl} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+          <a href={parentPageUrl} className="is-hidden-mobile mr-8 is-flex">
+            <ArrowLeftIcon color="#000" size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

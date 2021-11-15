@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
+import { SearchIcon } from '../Icons';
 import styles from './globalSearch.module.scss';
 // TODO: turned off temporary / delete in 2022
 // import { getEngGuides } from "../../state/features/engGuides/actions";
@@ -81,7 +80,7 @@ const GlobalSearch = () => {
           placeholder="Search Collections and Suggested Snippets"
         />
         <span className="icon is-small is-left">
-          <FontAwesomeIcon icon={faSearch} />
+          <SearchIcon size="small" />
         </span>
       </div>
       {searchTerm && (

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/router';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
+import { CheckOnlineIcon } from '../../Icons';
 import Toaster from '../../toaster';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
@@ -57,7 +56,7 @@ const AddCommentCollection = () => {
     setLoading(false);
   }
 
-  return(
+  return (
     <>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
@@ -79,8 +78,10 @@ const AddCommentCollection = () => {
             type="button"
             onClick={handleSubmit(onSubmit)}
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            <CheckOnlineIcon size="small" />
+            <span className="ml-8">
+              Save
+            </span>
           </button>
         </div>
       </div>

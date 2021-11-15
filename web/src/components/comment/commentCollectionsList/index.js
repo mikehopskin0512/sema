@@ -1,6 +1,5 @@
+import { PlusIcon } from '../../Icons';
 import React, { useEffect, useMemo, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './commentCollectionsList.module.scss';
@@ -30,13 +29,13 @@ const CommentCollectionsList = () => {
     alerts: state.alertsState,
   }));
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;  
+  const { token, user } = auth;
   const { isSemaAdmin } = user;
   const { data = [] , isFetching } = collectionsState;
 
   const [collectionId, setCollectionId] = useState(null);
   const [page, setPage] = useState(1);
-  
+
   const isEditable = checkAccess({name: 'Sema Super Team'}, EditComments);
 
   const sortedCollections = useMemo(() => {
@@ -53,7 +52,7 @@ const CommentCollectionsList = () => {
     });
     return collections;
   }, [data]);
-  
+
   const isNewCommentModalOpen = !!collectionId;
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
@@ -93,7 +92,7 @@ const CommentCollectionsList = () => {
       </div>
     )
   }
-  
+
   return(
     <div className={clsx(isNewCommentModalOpen ? styles['overflow-hidden'] : null)}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
@@ -114,8 +113,10 @@ const CommentCollectionsList = () => {
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
                   type="button"
                 >
-                  <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                  Add a Snippet Collection
+                  <PlusIcon size="small" />
+                  <span className="ml-8">
+                    Add a Snippet Collection
+                  </span>
                 </button>
               </a>
             ) }

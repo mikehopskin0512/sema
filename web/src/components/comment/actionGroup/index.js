@@ -1,10 +1,9 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
+import { AlertFilledIcon, EditIcon } from '../../Icons';
 import styles from './actionGroup.module.scss';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
@@ -54,8 +53,10 @@ const ActionGroup = ({
         type="button"
         onClick={goToEditPage}
       >
-        <FontAwesomeIcon icon={faEdit} className="mr-10" />
-        Edit
+        <EditIcon size="small" />
+        <span className="ml-8">
+          Edit
+        </span>
       </button>
       {
         unarchiveComments.length ? (
@@ -64,8 +65,10 @@ const ActionGroup = ({
             type="button"
             onClick={onArchive}
           >
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-10" />
-            Archive {unarchiveComments.length} Suggested Snippets
+            <AlertFilledIcon size="small" />
+            <span className="ml-8">
+              Archive {unarchiveComments.length} Suggested Snippets
+            </span>
           </button>
         ) : ''
       }
@@ -76,8 +79,10 @@ const ActionGroup = ({
             type="button"
             onClick={onUnarchive}
           >
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-10" />
-            UnArchive {archiveComments.length} Suggested Snippets
+            <AlertFilledIcon size="small" />
+            <span className="ml-8">
+              UnArchive {archiveComments.length} Suggested Snippets
+            </span>
           </button>
         ) : ''
       }

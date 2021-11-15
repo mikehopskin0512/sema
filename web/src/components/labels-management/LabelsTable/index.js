@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import tableStyles from '../../repos/repoTable/repoTable.module.scss';
 import styles from './labelsTable.module.scss';
 import { getCharCount } from '../../../utils';
+import { ChevronLeftIcon, ChevronRightIcon } from '../../Icons';
 
 const LabelsTable = ({ data, columns = [], renderRow }) => {
   const [pageSize, setPageSize] = useState(10);
@@ -60,10 +59,10 @@ const LabelsTable = ({ data, columns = [], renderRow }) => {
             <div className="is-flex is-align-items-center">
               <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
                 <button className={clsx("pagination-previous is-clickable", styles['pagination-buttons'])} onClick={() => setPageValue(pageValue-1)} disabled={!canPreviousPage}>
-                  <FontAwesomeIcon icon={faChevronLeft} />
+                  <ChevronLeftIcon />
                 </button>
                 <button className={clsx("pagination-next is-clickable", styles['pagination-buttons'])} onClick={() => setPageValue(pageValue+1)} disabled={!canNextPage}>
-                  <FontAwesomeIcon icon={faChevronRight} />
+                  <ChevronRightIcon />
                 </button>
                 <ul className="pagination-list">
                   <li className="is-flex is-align-items-center mx-5">

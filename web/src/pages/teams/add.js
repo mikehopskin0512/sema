@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import toaster from 'toasted-notes';
 import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import { teamsOperations } from '../../state/features/teams';
+import { CheckFilledIcon, CheckOnlineIcon, CloseIcon } from '../../components/Icons';
 import { PATHS } from '../../utils/constants' ;
 
 const { createTeam } = teamsOperations;
@@ -39,17 +38,19 @@ const TeamEditPage = () => {
       });
       return;
     }
-    
+
     const data = await dispatch(createTeam(team, token));
 
     toaster.notify(({ onClose }) => (
       <div className="message is-success shadow mt-60">
         <div className="message-body has-background-white is-flex">
-          <FontAwesomeIcon className="has-text-success mr-10" icon={faCheckCircle} />
+          <CheckFilledIcon size="small" />
           <div>
             <div className="is-flex is-justify-content-space-between mb-15">
-              <span className="is-line-height-1 has-text-weight-semibold has-text-black">Team Created</span>
-              <FontAwesomeIcon className="has-text-black mr-10" icon={faTimes} onClick={onClose} />
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">Team Created</span>
+              <div onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
             </div>
             <div className="has-text-black">
               You've successfully created the team
@@ -103,8 +104,10 @@ const TeamEditPage = () => {
               type="button"
               onClick={onSave}
             >
-              <FontAwesomeIcon icon={faCheck} className="mr-10" />
-              Save
+              <CheckOnlineIcon size="small" />
+              <span className="ml-8">
+                Save
+              </span>
             </button>
           </div>
         </div>

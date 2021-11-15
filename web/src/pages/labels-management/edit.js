@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faCheck, faSearch } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +14,7 @@ import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
+import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
 
 const { clearAlert } = alertOperations;
 const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
@@ -93,7 +92,7 @@ const EditLabel = () => {
       router.replace('/');
     }
   }, []);
-  
+
   if (!isAuthorized) {
     return(
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
@@ -107,8 +106,8 @@ const EditLabel = () => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet title="Edit label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
-        <a href="/labels-management">
-          <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+        <a href="/labels-management" className="mr-8 is-flex">
+          <ArrowLeftIcon color="#000" size="small" />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
@@ -137,8 +136,10 @@ const EditLabel = () => {
             type="button"
             onClick={onSubmit}
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            <CheckOnlineIcon size="small" />
+            <span className="ml-8">
+              Save
+            </span>
           </button>
         </div>
       </div>
@@ -146,7 +147,7 @@ const EditLabel = () => {
         <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
           <Loader />
         </div>
-      ) : tags.map((_tag, index) => 
+      ) : tags.map((_tag, index) =>
         <div key={`tag-${index}`}>
           <LabelForm onChangeData={onChangeData} id={index} data={_tag} key={index} errors={errors} />
           <div className="has-background-white is-fullwidth px-15 py-10 my-15">
@@ -157,8 +158,8 @@ const EditLabel = () => {
                 placeholder="Search by Suggested Snippet"
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <span className="icon is-small is-left">
-                <FontAwesomeIcon icon={faSearch} />
+              <span className="icon is-left">
+                <SearchIcon size="small" />
               </span>
             </div>
           </div>

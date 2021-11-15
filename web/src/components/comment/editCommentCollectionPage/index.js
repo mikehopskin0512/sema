@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import { CheckOnlineIcon } from '../../Icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
@@ -89,8 +88,10 @@ const EditCommentCollectionPage = () => {
             type="button"
             onClick={handleSubmit(onSubmit)}
           >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            <CheckOnlineIcon size="small" />
+            <span className="ml-8">
+              Save
+            </span>
           </button>
         </div>
       </div>

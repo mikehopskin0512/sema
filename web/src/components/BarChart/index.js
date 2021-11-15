@@ -1,8 +1,6 @@
-/* eslint-disable no-sequences */
 /* eslint-disable no-return-assign */
-import React, { useEffect, useState, useMemo } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartBar } from '@fortawesome/free-regular-svg-icons';
+import React, { useEffect, useState } from 'react';
+import { CodeIcon } from '../Icons';
 import { faArrowDown, faArrowUp, faEquals } from '@fortawesome/free-solid-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
@@ -135,17 +133,17 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
           dateString = format(new Date(indexValue), 'LLLL d');
         }
       }
-  
+
       // Create dynamic totalCommentsLabel
       const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
       const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / colData.total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
         `% of total comments ${groupBy && totalCommentRange}`;
-  
+
       // Increase/decrease percentage
       const { current, previous } = completeData[id] ?? {};
       const valDifference = current - previous;
       const percentage = previous ? (valDifference/previous)*100 : 100;
-  
+
       const lastPeriod = (groupBy) => {
         switch (groupBy) {
           case 'day':
@@ -158,7 +156,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
             return 'decade'; // Needs confirmation
         }
       }
-  
+
       return (
         <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
           <div className="is-flex is-justify-content-space-between is-full-width mb-10">
@@ -172,7 +170,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
             color: percentage === 0 ? '#202020' : percentage > 0 ? '#34A853' : '#DE3617',
           }}>
             { percentage === 0 ?
-              <FontAwesomeIcon icon={faEquals} size="sm" className="mr-5" />  : 
+              <FontAwesomeIcon icon={faEquals} size="sm" className="mr-5" />  :
               percentage > 0 ? (
                 <FontAwesomeIcon icon={faArrowUp} size="sm" color="#34A853" className="mr-5" />
               ) : (
@@ -190,7 +188,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   if (noData) {
     return (
       <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
-        <FontAwesomeIcon icon={faChartBar} size="3x" />
+        <CodeIcon size="large" />
         <p className="is-size-5">No Reactions</p>
       </div>
     );

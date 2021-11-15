@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import { teamsOperations } from '../../state/features/teams';
 import styles from './teams.module.scss';
-import clsx from 'clsx';
-import Checkbox from '../../components/checkbox';
+import { CheckOnlineIcon, InfoFilledIcon } from '../../components/Icons';
 import { PATHS } from '../../utils/constants';
 
 const { createTeam } = teamsOperations;
@@ -67,15 +65,19 @@ const TeamInvitePage = () => {
               type="button"
               onClick={onSave}
             >
-              <FontAwesomeIcon icon={faCheck} className="mr-10" />
-              Save
+              <CheckOnlineIcon size="small" />
+              <span className="ml-8">
+                Save
+              </span>
             </button>
           </div>
         </div>
         <div className="px-10">
           <div className={clsx('py-10 px-20', styles.notification)}>
-            <FontAwesomeIcon icon={faInfoCircle} color="#2D74B9" className="mr-10" />
-            You can add multiple team members with same permission
+            <InfoFilledIcon color="#2D74B9" size="small" />
+            <span className="ml-8">
+              You can add multiple team members with same permission
+            </span>
           </div>
           <div>
             <div className="my-25">

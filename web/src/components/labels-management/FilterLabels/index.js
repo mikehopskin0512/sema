@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faPlus } from '@fortawesome/free-solid-svg-icons';
-
+import { PlusIcon, SearchIcon } from '../../Icons';
 import CustomCheckbox from '../../customCheckbox';
 
 const FilterLabels = ({ setFilters, filters }) => {
@@ -22,7 +20,7 @@ const FilterLabels = ({ setFilters, filters }) => {
             }}
           />
           <span className="icon is-small is-left">
-            <FontAwesomeIcon icon={faSearch} />
+            <SearchIcon size="small" />
           </span>
         </div>
       </div>
@@ -38,8 +36,10 @@ const FilterLabels = ({ setFilters, filters }) => {
         <button
           className="button is-small is-primary border-radius-4px has-text-semibold"
           type="button">
-          <FontAwesomeIcon icon={faPlus} className="mr-10" />
-          Add Labels
+          <PlusIcon size="small" />
+          <span className="ml-8">
+            Add Labels
+          </span>
         </button>
       </a>
     </div>

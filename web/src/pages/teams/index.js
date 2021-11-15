@@ -1,7 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
@@ -11,6 +9,7 @@ import PageHeader from '../../components/pageHeader';
 import styles from './teams.module.scss';
 import Table from '../../components/table';
 import ActionMenu from '../../components/team/actionMenu';
+import { PlusIcon } from '../../components/Icons';
 import { PATHS } from '../../utils/constants';
 
 function SwitchCell({ name, row }) {
@@ -174,8 +173,10 @@ const TeamManagementPage = () => {
               type="button"
               onClick={goToInviteMembers}
             >
-              <FontAwesomeIcon icon={faPlus} className="mr-10" />
-              Invite new members
+              <PlusIcon size="small" />
+              <span className="ml-8">
+                Invite new members
+              </span>
             </button>
           </div>
           <div className={styles['table-wrapper']}>
