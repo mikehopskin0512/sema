@@ -1,11 +1,11 @@
 backend:
-- apollo/*
+- apollo/**/*
 
 chrome-extension:
-- themis/*
+- themis/**/*
 
 frontend:
-- web/*
+- web/**/*
 
 requiring-migrations:
 - apollo/migrations/*
