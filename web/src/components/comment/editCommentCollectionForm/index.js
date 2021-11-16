@@ -97,7 +97,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
     <components.ClearIndicator {...props} innerProps={{ ...innerProps, onClick: () => setValue('tags', []) }} />
   );
 
-  return(
+  return (
     <div className="p-10">
       <div className="mb-25">
         <label className="label has-text-deep-black">Collection Title *</label>
@@ -112,6 +112,40 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
           )}
         />
         {errors.name && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.name.message}</p>)}
+      </div>
+      <div className="columns mb-0">
+        <div className="mb-10 column">
+          <label className="label has-text-deep-black">Source *</label>
+          <input
+            className="input has-background-white"
+            type="text"
+            {...register(
+              'source.name',
+              {
+                required: 'Source Name is required',
+              },
+            )}
+          />
+          { errors && errors.source && errors.source.name && <p className="has-text-danger is-size-7 is-italic">{errors.source.name.message}</p> }
+        </div>
+        <div className="mb-10 column">
+          <label className="label has-text-deep-black">Source Link *</label>
+          <input
+            className="input has-background-white"
+            type="text"
+            {...register(
+              'source.url',
+              {
+                required: 'Source Link is required',
+                pattern: {
+                  value: /^(http|https):\/\//i,
+                  message: 'Source Link should be url',
+                },
+              },
+            )}
+          />
+          { errors && errors.source && errors.source.url && <p className="has-text-danger is-size-7 is-italic">{errors.source.url.message}</p> }
+        </div>
       </div>
       <div className="mb-25">
         <label className="label has-text-deep-black">Tags/Language/Framework/Version *</label>
@@ -143,7 +177,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
         ></textarea>
       </div>
     </div>
-  )
+  );
 };
 
 export default EditCommentCollectionForm;

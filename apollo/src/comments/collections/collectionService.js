@@ -14,6 +14,7 @@ export const create = async ({
   tags,
   comments,
   author,
+  source: {}
 }) => {
   try {
     const newCollection = new Collection({
@@ -21,7 +22,8 @@ export const create = async ({
       description,
       tags,
       comments,
-      author
+      author,
+      source,
     })
     const savedCollection = await newCollection.save();
     return savedCollection;

@@ -48,10 +48,12 @@ const EditCommentCollectionPage = () => {
 
   useEffect(() => {
     if (collection) {
-      const { name, description, tags } = collection;
+      const { name, description, tags, source } = collection;
       setValue('name', name);
       setValue('description', description);
       setValue('tags', tags?.filter((tag) => tag.tag).map((tag) => ({ ...tag, value: tag.tag })) || []);
+      setValue('source.name', source ? source.name : '');
+      setValue('source.url', source ? source.url : '');
     }
   }, [collection]);
 

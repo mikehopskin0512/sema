@@ -15,6 +15,10 @@ const collectionSchema = new Schema({
   comments: [{ $type: Schema.Types.ObjectId, ref: 'suggestedComment' }],
   author: { $type: String },
   isActive: { $type: Boolean, default: true },
+  source: {
+    name: String,
+    url: String,
+  },
   createdAt: { $type: Date, default: Date.now },
 }, { timestamps: true, collection: 'collections', typeKey: '$type' });
 
