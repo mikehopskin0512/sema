@@ -1,13 +1,13 @@
 variable "vpc_name" {
   type        = string
   description = "The vpc name for other resources"
-  default     = "vpc-stage"
+  default     = "vpc-staging"
 }
 
 variable "name_prefix" {
   type        = string
   description = "Name prefix for all resources."
-  default     = "stage"
+  default     = "staging"
   validation {
     condition     = length(compact([null, "", var.name_prefix])) > 0
     error_message = "Name prefix must not be empty."

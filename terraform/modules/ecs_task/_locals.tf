@@ -1,16 +1,16 @@
 locals {
   task_definition                      = "${var.name_prefix}-${var.application}"
   service                              = var.application
-  task_definition_role                 = "${local.service}-role"
-  task_definition_extra_policy         = "${local.service}-extra-policy"
-  task_definition_exec_role            = "${local.service}-exec-role"
-  task_definition_exec_ecr_policy      = "${local.service}-ecr-policy"
-  task_definition_exec_cw_policy       = "${local.service}-cw-policy"
-  task_definition_exec_ssm_policy      = "${local.service}-ssm-policy"
-  task_definition_exec_secret_policy   = "${local.service}-secret-policy"
-  task_definition_exec_external_policy = "${local.service}-external-policy"
-  cw_log_group                         = "${local.service}-logs"
-  sg                                   = "${local.service}-sg"
+  task_definition_role                 = "${local.task_definition}-role"
+  task_definition_extra_policy         = "${local.task_definition}-extra-policy"
+  task_definition_exec_role            = "${local.task_definition}-exec-role"
+  task_definition_exec_ecr_policy      = "${local.task_definition}-ecr-policy"
+  task_definition_exec_cw_policy       = "${local.task_definition}-cw-policy"
+  task_definition_exec_ssm_policy      = "${local.task_definition}-ssm-policy"
+  task_definition_exec_secret_policy   = "${local.task_definition}-secret-policy"
+  task_definition_exec_external_policy = "${local.task_definition}-external-policy"
+  cw_log_group                         = "${var.name_prefix}/ecs/${var.application}"
+  sg                                   = "${local.task_definition}-sg"
 }
 
 locals {

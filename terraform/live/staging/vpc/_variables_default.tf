@@ -58,7 +58,7 @@ variable "common_tags" {
   type        = map(string)
   description = "A key - value list of common tags, that is attached to the all resources"
   default = {
-    "environment"  = "stage",
+    "environment"  = "staging",
     "organization" = "sema",
     "project"      = "phoenix",
     "terraform"    = "true"
@@ -72,7 +72,7 @@ variable "common_tags" {
 variable "name_prefix" {
   type        = string
   description = "Name prefix for all resources."
-  default     = "stage"
+  default     = "staging"
   validation {
     condition     = length(compact([null, "", var.name_prefix])) > 0
     error_message = "Name prefix must not be empty."
