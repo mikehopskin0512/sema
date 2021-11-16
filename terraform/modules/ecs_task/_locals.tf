@@ -9,7 +9,7 @@ locals {
   task_definition_exec_ssm_policy      = "${local.task_definition}-ssm-policy"
   task_definition_exec_secret_policy   = "${local.task_definition}-secret-policy"
   task_definition_exec_external_policy = "${local.task_definition}-external-policy"
-  cw_log_group                         = "${var.name_prefix}/ecs/${var.application}"
+  cw_log_group                         = "/${var.name_prefix}/ecs/${var.application}"
   sg                                   = "${local.task_definition}-sg"
 }
 
