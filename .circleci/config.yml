@@ -25,7 +25,7 @@ jobs:
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
-              echo 'export ENV=stage' >> $BASH_ENV
+              echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run:
           name: build and deploy phoenix/web
@@ -57,7 +57,7 @@ jobs:
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
-              echo 'export ENV=stage' >> $BASH_ENV
+              echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run:
           name: build and deploy apollo
@@ -82,7 +82,7 @@ jobs:
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
-              echo 'export ENV=stage' >> $BASH_ENV
+              echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run:
           name: build chrome extension
