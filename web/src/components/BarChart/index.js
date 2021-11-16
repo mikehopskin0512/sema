@@ -1,6 +1,7 @@
 /* eslint-disable no-return-assign */
 import React, { useEffect, useState } from 'react';
 import { CodeIcon } from '../Icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faEquals } from '@fortawesome/free-solid-svg-icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
