@@ -16,7 +16,8 @@ import Loader from '../../Loader';
 import { engGuidesOperations } from '../../../state/features/engGuides';
 import { EditGuides } from '../../../data/permissions';
 import usePermission from '../../../hooks/usePermission';
-import { PATHS } from '../../../utils/constants';
+import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -65,9 +66,9 @@ const CollectionEngGuides = ({ collectionId }) => {
     setEngGuideFilter([...filtered]);
   };
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getEngGuides());
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     const { comments = [] } = engGuide;
@@ -116,7 +117,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
 
-  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditGuides), [checkAccess]);
+  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditGuides), [checkAccess]);
 
   if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (

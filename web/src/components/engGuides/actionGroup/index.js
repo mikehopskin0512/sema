@@ -16,10 +16,7 @@ const ActionGroup = ({
 }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { auth } = useSelector((state) => ({
-    auth: state.authState,
-  }));
-  const { token } = auth;
+  const { token } = useSelector((state) => state.authState);
 
   const onUpdate = async (data) => {
     const isActive = !data[0].isActive;

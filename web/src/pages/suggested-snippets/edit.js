@@ -8,6 +8,7 @@ import { ArrowLeftIcon } from '../../components/Icons';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { getCollectionById } = commentsOperations;
 
@@ -25,9 +26,9 @@ const EditCollectionPage = () => {
   const { token } = auth;
   const { collection } = collectionState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getCollectionById(collectionId, token));
-  }, [collectionId, dispatch, token]);
+  }, [collectionId]);
 
   return (
     <div className="has-background-gray-9 hero">

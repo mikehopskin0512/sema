@@ -12,6 +12,7 @@ import { commentsOperations } from '../../../state/features/comments';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { tagsOperations } from '../../../state/features/tags';
 import { tagsState } from '../../../state/features';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 
@@ -46,9 +47,9 @@ const AddSuggestedCommentModal = ({ active, onClose, _id, comment, inCollections
 
   const [tagOptions, setTagOptions] = useState([]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     const guides = [];

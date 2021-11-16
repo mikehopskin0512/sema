@@ -7,6 +7,7 @@ import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import { getDateSub } from '../../../utils/parsing';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { fetchRepositoryOverview } = repositoriesOperations;
 
@@ -36,13 +37,13 @@ const RepoPage = () => {
     endDate: null,
   });
 
-  useEffect(() => {
+  useAuthEffect(() => {
     if (
       (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
     ) {
       dispatch(fetchRepositoryOverview(repoId, token, dates.startDate && dates.endDate ? getDateSub(dates.startDate, dates.endDate) : null));
     }
-  }, [dispatch, repoId, token, dates]);
+  }, [repoId, dates]);
 
   // Prevent from doing multiple calls while user is selecting dates
   useEffect(() => {

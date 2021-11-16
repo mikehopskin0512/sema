@@ -13,6 +13,7 @@ import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { tagsOperations } from '../../state/features/tags';
 import { alertOperations } from '../../state/features/alerts';
+import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
@@ -40,10 +41,10 @@ const LabelsManagement = () => {
   const roleTeam = roles.find((role) => {
     const { team } = role;
     // While teams selection is not implemented
-    return team?.name === "Sema Super Team";
+    return team?.name === SEMA_TEAM_ADMIN_NAME;
   });
 
-  const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
 
   useEffect(() => {
     if (showAlert === true) {

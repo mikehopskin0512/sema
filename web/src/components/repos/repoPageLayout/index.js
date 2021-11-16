@@ -10,7 +10,8 @@ import Loader from '../../Loader';
 import styles from './repoPageLayout.module.scss';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import HoverSelect from '../../../components/select/hoverSelect';
-import StatCard from './components/StatCard'
+import StatCard from './components/StatCard';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getUserRepositories } = repositoriesOperations;
 
@@ -52,7 +53,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
     await dispatch(getUserRepositories(githubUser?.repositories, token));
   };
 
-  useEffect(() => {
+  useAuthEffect(() => {
     getUserRepos(auth.user);
   }, [auth]);
 

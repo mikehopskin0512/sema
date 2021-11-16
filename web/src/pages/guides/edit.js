@@ -11,6 +11,7 @@ import { tagsOperations } from '../../state/features/tags';
 import { engGuidesOperations } from '../../state/features/engGuides';
 import { makeTagsList } from '../../utils';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateEngGuides, getEngGuides } = engGuidesOperations;
@@ -31,14 +32,14 @@ const EditEngGuidesPage = () => {
   const [engGuides, setEngGuides] = useState([]);
   const { collection } = collectionState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     const ids = guides.split(',');
     dispatch(getEngGuides(token, { guides: ids }));
-  }, [dispatch, token, guides]);
+  }, [guides]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getCollectionById(collectionId, token));
-  }, [collectionId, dispatch, token]);
+  }, [collectionId]);
 
   useEffect(() => {
     let data = [];
@@ -54,9 +55,9 @@ const EditEngGuidesPage = () => {
     setEngGuides(data);
   }, [engGuidesState]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   const onChange = (value, index) => {
     setEngGuides(engGuides.map((guide, i) => i === index ? ({

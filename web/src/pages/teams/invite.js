@@ -20,11 +20,7 @@ const TeamInvitePage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { auth } = useSelector((state) => ({
-    auth: state.authState,
-  }));
-
-  const { token } = auth;
+  const { token } = useSelector((state) => state.authState);
 
   const onSave = async () => {
     await dispatch(createTeam(team, token));

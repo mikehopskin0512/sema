@@ -13,6 +13,7 @@ import withLayout from '../../components/layout';
 
 import { repositoriesOperations } from '../../state/features/repositories';
 import { sourcesOperations } from '../../state/features/sources';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { addRepositories } = repositoriesOperations;
 const { createSource, fetchSources, fetchSourceRepos } = sourcesOperations;
@@ -160,26 +161,26 @@ const Sources = () => {
   );
 
   // Get org id from user
-  const { user: { organizations = [] } = {} } = auth;
+  const { user: { organizations = [] } = {}, token } = auth;
   const [firstOrg = {}] = organizations;
   const { id: orgId = null } = firstOrg;
 
   // Post source if cb
-  useEffect(() => {
+  useAuthEffect(() => {
     if (externalSourceId && action === 'install') {
       const source = {
         orgId, externalSourceId, type: 'github',
       };
-      dispatch(createSource(source, auth.token));
+      dispatch(createSource(source, token));
     }
-  }, [dispatch, orgId, externalSourceId, action, auth.token, router]);
+  }, [orgId, externalSourceId, action, router]);
 
   // Fetch sources list
-  useEffect(() => {
-    if (auth.token && orgId) {
-      dispatch(fetchSources(orgId, auth.token));
+  useAuthEffect(() => {
+    if (orgId) {
+      dispatch(fetchSources(orgId, token));
     }
-  }, [dispatch, orgId, auth.token]);
+  }, [orgId]);
 
   // Get sources from state
   const { data: sourcesData = [] } = sources;
@@ -188,11 +189,11 @@ const Sources = () => {
   const { _id: sourceId } = firstSource;
 
   // Fetch repos from source
-  useEffect(() => {
-    if (auth.token && sourceId) {
-      dispatch(fetchSourceRepos(sourceId, auth.token));
+  useAuthEffect(() => {
+    if (sourceId) {
+      dispatch(fetchSourceRepos(sourceId, token));
     }
-  }, [dispatch, sourceId, auth.token]);
+  }, [sourceId]);
 
   // Map source repository data to only needed fields
   const { selectedSourceRepos: repositoriesData = [] } = sources;

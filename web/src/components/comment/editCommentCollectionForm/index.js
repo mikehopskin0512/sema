@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Select, { components } from 'react-select';
 import { tagsOperations } from '../../../state/features/tags';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 
@@ -20,9 +21,9 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
   const { token } = authState;
   const { errors } = formState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     const guides = [];

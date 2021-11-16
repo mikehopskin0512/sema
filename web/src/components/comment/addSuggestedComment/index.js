@@ -7,6 +7,7 @@ import { suggestCommentsOperations } from '../../../state/features/suggest-snipp
 import { commentsOperations } from '../../../state/features/comments';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { PATHS } from '../../../utils/constants';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getCollectionById } = commentsOperations;
 const { bulkCreateSuggestedComments } = suggestCommentsOperations;
@@ -61,9 +62,9 @@ const AddSuggestedComment = (props) => {
   const { cid: collectionId } = router.query;
   const { collection } = collectionState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getCollectionById(collectionId, token));
-  }, [collectionId, dispatch, token]);
+  }, [collectionId]);
 
   const addComment = () => {
     setComments([...comments, defaultValues]);

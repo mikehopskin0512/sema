@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import CreatableSelect from 'react-select/creatable';
 
 import { tagsOperations } from '../../../state/features/tags';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 
@@ -20,9 +21,9 @@ const SelectTags = ({ modalRef, setTags }) => {
   const { token } = auth;
   const { tags } = tagState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     const guides = [];

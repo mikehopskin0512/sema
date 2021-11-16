@@ -8,6 +8,7 @@ import Helmet, { SnippetCollectionsHelmet } from '../../components/utils/Helmet'
 import { engGuidesOperations } from '../../state/features/engGuides';
 import GlobalSearch from "../../components/globalSearch";
 import Loader from '../../components/Loader';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const NUM_PER_PAGE = 9;
 
@@ -25,9 +26,9 @@ const EngineeringGuides = () => {
   const { query: { cid: collectionId } } = router;
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getEngGuides());
-  }, [dispatch, token]);
+  }, []);
 
   const viewMore = () => {
     setPage(page + 1);

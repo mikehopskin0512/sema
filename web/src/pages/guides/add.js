@@ -11,6 +11,7 @@ import { tagsOperations } from '../../state/features/tags';
 import { engGuidesOperations } from '../../state/features/engGuides';
 import { makeTagsList } from '../../utils';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 const { bulkCreateEngGuides } = engGuidesOperations;
@@ -44,13 +45,13 @@ const AddEngGuidesPage = () => {
 
   const [engGuides, setEngGuides] = useState([initialValue]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getCollectionById(collectionId, token));
-  }, [collectionId, dispatch, token]);
+  }, [collectionId]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   const addEngGuide = () => {
     setEngGuides([...engGuides, initialValue]);

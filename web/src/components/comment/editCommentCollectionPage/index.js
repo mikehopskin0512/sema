@@ -10,6 +10,7 @@ import { collectionsOperations } from '../../../state/features/collections';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
 import { PATHS } from '../../../utils/constants';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;
@@ -34,7 +35,7 @@ const EditCommentCollectionPage = () => {
     register, handleSubmit, formState, setValue, watch
   } = useForm();
 
-  useEffect(() => {
+  useAuthEffect(() => {
     if (cid) {
       dispatch(fetchCollectionById(cid, token));
     }

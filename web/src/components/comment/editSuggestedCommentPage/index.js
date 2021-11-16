@@ -9,6 +9,7 @@ import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { PATHS } from '../../../utils/constants';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -29,14 +30,14 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
   const { collection } = collectionState;
   const { suggestedComments } = suggestSnippetsState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     const ids = commentIds.split(',');
     dispatch(getAllSuggestComments({ comments: ids }, token));
-  }, [dispatch, token, commentIds]);
+  }, [commentIds]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     setComments(suggestedComments.map((comment) => ({

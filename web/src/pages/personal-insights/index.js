@@ -14,6 +14,7 @@ import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getDateSub } from '../../utils/parsing';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -57,7 +58,7 @@ const PersonalInsights = () => {
   const getUserSummary = async (username) => {
     const params = {
       user: username,
-    };
+    };//this
     dispatch(fetchSmartCommentSummary(params, token))
   };
 
@@ -136,7 +137,7 @@ const PersonalInsights = () => {
     }
   }, [dateData, filteredComments]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     getUserSummary(githubUser?.username)
   }, [auth]);
 

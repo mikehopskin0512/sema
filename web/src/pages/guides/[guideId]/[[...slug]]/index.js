@@ -20,6 +20,7 @@ import Loader from '../../../../components/Loader';
 
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 import { PATHS } from '../../../../utils/constants';
+import useAuthEffect from '../../../../hooks/useAuthEffect';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -78,9 +79,9 @@ const EngineeringGuidePage = () => {
     }
   }, [showAlert, dispatch]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getEngGuides());
-  }, [dispatch, token]);
+  }, []);
 
   useEffect(() => {
     setIsParsing(false);

@@ -11,6 +11,7 @@ import FilterTabs from '../../components/admin/filterTabs';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import InvitationsGrid from '../../components/invitationsGrid';
 import ExportButton from '../../components/admin/exportButton';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser, exportInvites } = invitationsOperations;
@@ -43,9 +44,9 @@ const InvitesPage = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { isFetching, data: invites, acceptedInvitationCount, pendingInvitationCount} = invitations;
 
-  useEffect(() => {
-    dispatch(getInvitesBySender({ userId: user._id, page, perPage }, token))
-  }, [dispatch, token, user._id]);
+  useAuthEffect(() => {
+    dispatch(getInvitesBySender({ userId: user._id, page, perPage }, token));
+  }, [user._id]);
 
   const getInvites = useCallback(() => {
     if (category === 'your_invites') {
@@ -55,7 +56,7 @@ const InvitesPage = () => {
     }
   }, [category, debounceSearchTerm, dispatch, token, user._id, page, perPage]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     getInvites();
   }, [category, debounceSearchTerm, getInvites, page, perPage]);
 

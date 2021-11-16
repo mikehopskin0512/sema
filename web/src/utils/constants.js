@@ -158,3 +158,5 @@ export const PATHS = {
   TEAMS: '/teams',
   REPORTS: '/reports',
 };
+
+export const SEMA_TEAM_ADMIN_NAME = 'Sema Super Team';

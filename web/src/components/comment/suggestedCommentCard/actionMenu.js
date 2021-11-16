@@ -17,10 +17,7 @@ const ActionMenu = ({ comment }) => {
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
-  const { auth } = useSelector(
-    (state) => ({ auth: state.authState }),
-  );
-  const { token } = auth;
+  const { token } = useSelector((state) => state.authState);
   const router = useRouter();
   const { cid: collectionId } = router.query;
 

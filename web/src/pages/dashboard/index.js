@@ -15,6 +15,7 @@ import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
 import styles from './dashboard.module.scss';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
@@ -94,7 +95,7 @@ const Dashboard = () => {
     }
   }, [dispatch, token]);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     getUserRepos();
   }, [auth, getUserRepos]);
 

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
-import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import {EditComments} from "../../../data/permissions";
@@ -42,7 +42,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   const { asPath } = router;
 
   const { isSemaAdmin, organizations } = user;
-  const isEditable = checkAccess({name: 'Sema Super Team'}, EditComments);
+  const isEditable = checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments);
 
   const renderStats = (label, value) => (
     <div className={clsx(

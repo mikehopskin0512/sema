@@ -6,6 +6,7 @@ import withLayout from '../../components/layout';
 
 import { reportsOperations } from '../../state/features/reports';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchReportList } = reportsOperations;
 
@@ -24,13 +25,12 @@ const Reports = () => {
 
   // Get reportList from Redux state
   const { reportList = [] } = reports;
+  const { token } = auth;
 
   // Fetch reports list from Mode space
-  useEffect(() => {
-    if (auth.token) {
-      dispatch(fetchReportList(spaceId, auth.token));
-    }
-  }, [dispatch, spaceId, auth.token]);
+  useAuthEffect(() => {
+    dispatch(fetchReportList(spaceId, token));
+  }, [spaceId]);
 
   // For QA of orgs
   const { user: { organizations = [] } = {} } = auth;

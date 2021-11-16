@@ -6,12 +6,13 @@ import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
 import { ViewAdmin } from '../../../data/permissions';
 import usePermission from '../../../hooks/usePermission';
+import { SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
 
 const TeamMenuItem = ({ role, toggleUserMenu }) => {
   const { checkAccess } = usePermission();
   return (
     <div className="has-background-white p-15">
-      <Link href={role?.team?.name === 'Sema Super Team'  ? '/sema-admin/users' : '/'}>
+      <Link href={role?.team?.name === SEMA_TEAM_ADMIN_NAME  ? '/sema-admin/users' : '/'}>
         <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.team)} onClick={toggleUserMenu}>
           <Avatar
             name={role?.team?.name || "Team"}

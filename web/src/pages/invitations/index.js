@@ -17,6 +17,7 @@ import styles from './invitations.module.scss';
 import InvitationsGrid from '../../components/invitationsGrid';
 import { getCharCount } from '../../utils';
 import * as analytics from '../../utils/analytics';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 
 const { clearAlert } = alertOperations;
@@ -88,7 +89,7 @@ const Invite = () => {
     }
   };
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getInvitesBySender({ userId, page, perPage}, token));
   }, [userId, page, perPage]);
 

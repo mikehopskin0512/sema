@@ -9,6 +9,7 @@ import styles from './reportsHeader.module.scss';
 import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { downloadPdf } = reportsOperations;
 const { fetchFilterLists, toggleFilters, clearFilters } = organizationsOperations;
@@ -32,9 +33,9 @@ const ReportsHeader = (props) => {
   const orgId = 84;
   const { updateFilters } = props;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchFilterLists(orgId, auth.token));
-  }, [dispatch, orgId, auth.token]);
+  }, [orgId]);
 
   const {
     repositories = [],

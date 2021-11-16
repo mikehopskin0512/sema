@@ -14,7 +14,8 @@ import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { ViewAdmin } from '../../data/permissions';
 import { teamsOperations } from '../../state/features/teams';
-import { PATHS } from '../../utils/constants';
+import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { getTeams } = teamsOperations;
 
@@ -61,15 +62,12 @@ const Header = () => {
     </Link>
   ));
 
-  useEffect(() => {
-    if (token) {
-      if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
-        setBgColor('has-background-white');
-      }
-      dispatch(getTeams(token));
+  useAuthEffect(() => {
+    if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
+      setBgColor('has-background-white');
     }
-
-  }, [dispatch, token]);
+    dispatch(getTeams(token));
+  }, []);
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -225,7 +223,7 @@ const Header = () => {
                   </a>
                 </div> */}
                 <hr className="navbar-divider" />
-                {checkAccess({name: 'Sema Super Team'}, ViewAdmin) && (
+                {checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) && (
                   <Link href="/sema-admin/users">
                     <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                       Admin Panel

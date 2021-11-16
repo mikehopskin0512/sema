@@ -8,6 +8,7 @@ import withLayout from '../../components/layout';
 import Helmet, { SuggestedSnippetsHelmet } from '../../components/utils/Helmet';
 
 import { commentsOperations } from '../../state/features/comments';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { getUserCollections } = commentsOperations;
 
@@ -22,9 +23,9 @@ const SuggestedComments = () => {
   const { token } = auth;
   const { comments = [] } = commentsState;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getUserCollections(token));
-  }, [dispatch, token]);
+  }, []);
 
   const [page, setPage] = useState(1);
   const [commentsFiltered, setCommentsFiltered] = useState(comments);

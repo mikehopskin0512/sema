@@ -9,7 +9,7 @@ import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
 import Toaster from '../../toaster';
-import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
 import {EditComments} from "../../../data/permissions";
@@ -35,8 +35,8 @@ const CommentCollectionsList = () => {
 
   const [collectionId, setCollectionId] = useState(null);
   const [page, setPage] = useState(1);
-
-  const isEditable = checkAccess({name: 'Sema Super Team'}, EditComments);
+  
+  const isEditable = checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments);
 
   const sortedCollections = useMemo(() => {
     let collections = [...data];

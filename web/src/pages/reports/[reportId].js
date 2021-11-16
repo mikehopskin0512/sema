@@ -7,6 +7,7 @@ import ReportsHeader from '../../components/reports/reportsHeader';
 
 import { reportsOperations } from '../../state/features/reports';
 import { organizationsOperations } from '../../state/features/organizations';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchReportUrl } = reportsOperations;
 const { updateFilters } = organizationsOperations;
@@ -41,6 +42,7 @@ const Report = () => {
       organizations: state.organizationsState,
     }),
   );
+  const { token } = auth;
 
   // Get filters and user.orgId from Redux
   const { currentFilters } = organizations;
@@ -66,9 +68,9 @@ const Report = () => {
   }, [currentFilters]);
 
   // Get mode Url from reports endpoint
-  useEffect(() => {
-    dispatch(fetchReportUrl(reportId, orgId, filterUrl, auth.token));
-  }, [reportId, orgId, dispatch, filterUrl, auth.token]);
+  useAuthEffect(() => {
+    dispatch(fetchReportUrl(reportId, orgId, filterUrl, token));
+  }, [reportId, orgId, filterUrl]);
 
   const { reportUrl } = reports;
 

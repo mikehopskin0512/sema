@@ -14,12 +14,13 @@ import Helmet from '../../utils/Helmet';
 import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
 import { EditComments } from '../../../data/permissions';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -47,9 +48,9 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const { checkAccess } = usePermission();
   const [isParsing, setIsParsing] = useState(true);
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(getCollectionById(collectionId, token));
-  }, [collectionId, dispatch, token]);
+  }, [collectionId]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -130,7 +131,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => checkAccess({name: 'Sema Super Team'}, EditComments) || name.toLowerCase() === 'my snippets' || name.toLowerCase() === 'custom snippets', [user, name]);
+  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments) || name.toLowerCase() === 'my snippets' || name.toLowerCase() === 'custom snippets', [user, name]);
 
   return (
     <div>

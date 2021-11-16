@@ -8,6 +8,7 @@ import withLayout from '../../components/layout';
 import AddCommentCollection from '../../components/comment/addCommentCollection';
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
 import { PATHS } from '../../utils/constants';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { fetchTagList } = tagsOperations;
 
@@ -25,9 +26,9 @@ const AddCollectionPage = () => {
   const { collection } = collectionState;
   const parentPageUrl = cid ? `${PATHS.SUGGESTED_SNIPPETS._}?cid=${cid}` : PATHS.SUGGESTED_SNIPPETS._;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchTagList(token));
-  }, [dispatch, token]);
+  }, []);
 
   return (
     <div className="has-background-gray-9 hero">

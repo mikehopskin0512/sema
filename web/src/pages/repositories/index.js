@@ -16,11 +16,12 @@ import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
 import { alertOperations } from '../../state/features/alerts';
 import { repositoriesOperations } from '../../state/features/repositories';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { clearAlert } = alertOperations;
 const { fetchRepos, addAnalysis } = repositoriesOperations;
 
-function Table({ columns, data, auth }) {
+function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
@@ -102,7 +103,7 @@ const Repos = () => {
   );
 
   // Get org id from user
-  const { user: { organizations = [] } = {} } = auth;
+  const { user: { organizations = [] } = {}, token } = auth;
   const [firstOrg = {}] = organizations;
   const { id: orgId = null } = firstOrg;
 
@@ -115,17 +116,15 @@ const Repos = () => {
   }, [showAlert, dispatch]);
 
   // Fetch repos
-  useEffect(() => {
-    if (auth.token) {
-      dispatch(fetchRepos(orgId, auth.token));
-    }
-  }, [dispatch, orgId, auth.token]);
+  useAuthEffect(() => {
+    dispatch(fetchRepos(orgId, token));
+  }, [orgId]);
 
   // Get repositories from state
   const { data: repositoriesList = [] } = repositories;
 
   const onAnalysisPress = (repository) => {
-    dispatch(addAnalysis(repository, auth.token));
+    dispatch(addAnalysis(repository, token));
   };
 
   const columns = useMemo(

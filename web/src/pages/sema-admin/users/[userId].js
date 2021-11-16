@@ -11,6 +11,7 @@ import Toaster from '../../../components/toaster';
 import { invitationsOperations } from '../../../state/features/invitations';
 import { alertOperations } from '../../../state/features/alerts';
 import InvitationsGrid from '../../../components/invitationsGrid';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { clearAlert } = alertOperations;
 const { fetchUser } = selectedUserOperations;
@@ -34,9 +35,9 @@ const UserDetailPage = () => {
   const { data: invites, isFetching: isInvitesLoading, acceptedInvitationCount, pendingInvitationCount } = invitations;
   const { showAlert, alertType, alertLabel } = alerts;
 
-  useEffect(() => {
+  useAuthEffect(() => {
     dispatch(fetchUser(userId, token));
-    dispatch(getInvitesBySender({ userId, page, perPage }, token))
+    dispatch(getInvitesBySender({ userId, page, perPage }, token));
   }, [userId, page, perPage]);
 
   const userStatus = useMemo(() => user ? getUserStatus(user) : '', [user]);

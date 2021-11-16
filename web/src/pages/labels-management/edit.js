@@ -14,6 +14,7 @@ import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
+import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
 
 const { clearAlert } = alertOperations;
@@ -41,7 +42,7 @@ const EditLabel = () => {
   const { token } = auth;
   const { isFetching, tag, tags: existingTags } = tagsState;
 
-  const isAuthorized = useMemo(() => checkAccess({name: 'Sema Super Team'}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
