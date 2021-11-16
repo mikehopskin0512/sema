@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "main" {
-  name = "stage-frontend"
+  name = "${var.name_prefix}-frontend"
 }
 
 module "alb" {
@@ -64,7 +64,6 @@ module "apollo" {
   task_definition_resources = var.ecs_task_definition_resources
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
-    url     = data.terraform_remote_state.repos.outputs.apollo_web_repo_url
     kms_key = ""
   }
 
