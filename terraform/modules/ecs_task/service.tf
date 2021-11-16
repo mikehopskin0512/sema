@@ -4,6 +4,7 @@ resource "aws_ecs_service" "this" {
   cluster                           = var.ecs_cluster.arn
   health_check_grace_period_seconds = 0
   launch_type                       = local.requires_compatibilities[0]
+  enable_execute_command            = true
 
   network_configuration {
     assign_public_ip = false
