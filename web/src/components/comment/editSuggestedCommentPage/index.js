@@ -10,6 +10,7 @@ import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { addTags } from '../../../utils';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -44,8 +45,8 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       ...comment,
       sourceName: comment.source && comment.source.name,
       sourceLink: comment.source && comment.source.url,
-      languages: comment.tags.filter((tag) => tag.tag && tag.type === 'language').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
-      guides: comment.tags.filter((tag) => tag.tag && tag.type === 'guide').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
+      languages: addTags(comment.tags, ['language']),
+      guides: addTags(comment.tags, ['other', 'guide', 'custom']),
     })));
   }, [suggestedComments]);
 

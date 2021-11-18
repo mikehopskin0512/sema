@@ -11,11 +11,14 @@ import Toaster from '../../toaster';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import { PATHS } from '../../../utils/constants';
+import { EditComments } from "../../../data/permissions";
+import usePermission from '../../../hooks/usePermission';
 
 const { clearAlert } = alertOperations;
 const { createCollections } = collectionsOperations;
 
 const AddCommentCollection = () => {
+  const { checkAccess } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -34,10 +37,15 @@ const AddCommentCollection = () => {
     register, handleSubmit, formState, setValue, watch,
   } = useForm({
     defaultValues: {
-      tags: [],
+      languages: [],
+      others: [],
       comments: [],
-      author: isSemaAdmin ? "sema" : github.username,
+      author: checkAccess({name: 'Sema Super Team'}, EditComments) ? "sema" : github.username,
       isActive: true,
+      sourceName: '',
+      sourceLink: '',
+      name: '',
+      description: '',
       isPopulate: true,
     },
   });
@@ -50,6 +58,19 @@ const AddCommentCollection = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+    const { languages, others, comments, author, isActive, sourceName, sourceLink, name, description } = data;
+    const collection = {
+      isActive,
+      author,
+      comments,
+      name,
+      description,
+      source: {
+        name: sourceName,
+        url: sourceLink
+      },
+      tags: [...languages, ...others],
+    }
     
     let currentSemaTeamId = null;
     if (data.isPopulate && roles && roles.length > 0) {
@@ -59,12 +80,12 @@ const AddCommentCollection = () => {
     }
     
     const collections = await dispatch(createCollections({
-      collections: [data],
+      collections: new Array(collection),
       team: currentSemaTeamId
     }, token));
     
     if (collections.length > 0) {
-      router.push(PATHS.SUGGESTED_SNIPPETS._);
+      await router.push(PATHS.SUGGESTED_SNIPPETS._)
     }
     
     setLoading(false);

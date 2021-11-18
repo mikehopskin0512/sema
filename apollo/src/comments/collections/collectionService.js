@@ -38,18 +38,20 @@ export const create = async ({
   }
 };
 
-export const createMany = async (collections) => {
+export const createMany = async (collections, userId) => {
   try {
+    // Should we add a field for which team this collection is for once teams feature is implemented?
     const cols = collections.map((collection) => ({
       ...collection,
       tags: collection.tags.map((tag) => {
-        const hello = {
+        const tags = {
           label: tag.label,
           type: tag.type,
           tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
         }
-        return hello;
-      })
+        return tags;
+      }),
+      createdBy: userId && ObjectId(userId)
     }));
     const newCollections = await Collection.insertMany(cols, { ordered: false });
     return newCollections;

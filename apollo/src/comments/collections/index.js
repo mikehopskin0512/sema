@@ -43,7 +43,7 @@ export default (app, passport) => {
     const { user } = req.user;
 
     try {
-      const newCollections = await createMany(collections);
+      const newCollections = await createMany(collections, user?.user?._id);
       if (!newCollections) {
         throw new errors.BadRequest('Collections create error');
       }

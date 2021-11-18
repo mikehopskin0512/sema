@@ -472,10 +472,13 @@ export const revokeInvitation = async (senderEmail) => {
   }
 };
 
-export const bulkUpdateUserCollections = async (doc) => {
+export const bulkUpdateUserCollections = async (doc, ids) => {
   try {
+    const filter = ids ? {
+      _id: { $in: ids }
+    } : {};
     await User.updateMany(
-      {},
+      filter,
       {
         $push: {
           "collections": {

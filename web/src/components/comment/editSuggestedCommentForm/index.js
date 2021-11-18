@@ -2,16 +2,13 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { useSelector } from 'react-redux';
+import { addTags } from '../../../utils';
 
 const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }) => {
   const { tagState } = useSelector((state) => ({
     tagState: state.tagsState,
   }));
   const { tags } = tagState;
-
-  const addTags = (tags, types) => tags
-    .filter((tag) => types.some((type) => type === tag.type))
-    .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
 
   const languagesOptions = useMemo(() => addTags(tags, ['language']), [tags]);
   const guidesOptions = useMemo(() => addTags(tags, ['guide', 'other']), [tags]);

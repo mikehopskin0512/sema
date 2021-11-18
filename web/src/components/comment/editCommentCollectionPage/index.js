@@ -11,6 +11,7 @@ import Toaster from '../../toaster';
 import Loader from '../../Loader';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { addTags } from '../../../utils';
 
 const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;
@@ -48,22 +49,37 @@ const EditCommentCollectionPage = () => {
 
   useEffect(() => {
     if (collection) {
-      const { name, description, tags, source } = collection;
+      const { name, description, tags = [], author, source } = collection;
       setValue('name', name);
       setValue('description', description);
-      setValue('tags', tags?.filter((tag) => tag.tag).map((tag) => ({ ...tag, value: tag.tag })) || []);
-      setValue('source.name', source ? source.name : '');
-      setValue('source.url', source ? source.url : '');
+      setValue('author', author);
+      setValue('sourceName', source?.name);
+      setValue('sourceLink', source?.url);
+      setValue('languages', addTags(tags, ['language']));
+      setValue('others', addTags(tags, ['guide', 'other', 'custom']));
     }
   }, [collection]);
 
   const onSubmit = async (data) => {
     setLoading(true);
+    const { languages, others, comments, author, isActive, sourceName, sourceLink, name, description } = data;
+    const collectionData = {
+      isActive,
+      author,
+      comments,
+      name,
+      description,
+      source: {
+        name: sourceName,
+        url: sourceLink
+      },
+      tags: [...languages, ...others],
+    }
     const updatedCollection = await dispatch(updateCollection(collection._id, {
-      collection: data
+      collection: collectionData
     }, token));
     if (updatedCollection?._id) {
-      router.push(PATHS.SUGGESTED_SNIPPETS._);
+      await router.push(PATHS.SUGGESTED_SNIPPETS._);
     }
     setLoading(false);
   }
@@ -73,8 +89,8 @@ const EditCommentCollectionPage = () => {
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap">
         <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-            Add a Snippet Collection
+          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+            Edit a Snippet Collection
           </p>
         </div>
         <div className="is-flex">

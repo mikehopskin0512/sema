@@ -80,3 +80,7 @@ export const shortenUrl = (url) => {
 }
 
 export const isSuggestedCollectionTitle = (title) => title === SEARCH_CATEGORY_TITLES.COLLECTIONS;
+
+export const addTags = (tags, types) => tags
+  .filter((tag) => types.some((type) => type === tag.type))
+  .map(({ tag, _id, label }) => ({ value: tag || _id, label }))

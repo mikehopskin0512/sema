@@ -87,9 +87,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     };
 
     const onClickAddComment = () => {
-      if (addNewComment) {
-        addNewComment(_id);
-      }
+      router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${_id}`)
     };
 
     const onClickArchiveCollection = async () => {
