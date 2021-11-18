@@ -41,7 +41,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.title && <p className="has-text-danger is-size-7 is-italic">{errors.title.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Snippet Collections</label>
+          <label className="label has-text-deep-black">Snippet Collection</label>
           <input
             className="input has-background-white"
             type="text"
@@ -50,9 +50,18 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           />
         </div>
       </div>
+      <div className="mb-20">
+        <label className="label has-text-deep-black">Body</label>
+        <textarea
+          className="textarea has-background-white"
+          value={comment.comment}
+          onChange={(e) => onChange({ comment: e.target.value })}
+        />
+        { errors.comment && <p className="has-text-danger is-size-7 is-italic">{errors.comment.message}</p> }
+      </div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Language Labels</label>
+          <label className="label has-text-deep-black">Languages</label>
           <Select
             isMulti
             options={languagesOptions}
@@ -63,7 +72,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.languages && <p className="has-text-danger is-size-7 is-italic">{errors.languages.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Other Labels</label>
+          <label className="label has-text-deep-black">Labels</label>
           <Select
             isMulti
             options={guidesOptions}
@@ -97,7 +106,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
         </div>
       </div>
       <div className="mb-20">
-        <label className="label has-text-deep-black">Author</label>
+        <label className="label has-text-deep-black">Author Name</label>
         <input
           className="input has-background-white"
           type="text"
@@ -105,34 +114,6 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           onChange={(e) => onChange({ author: e.target.value })}
         />
         { errors.author && <p className="has-text-danger is-size-7 is-italic">{errors.author.message}</p> }
-      </div>
-      <div className="mb-20">
-        <label className="label has-text-deep-black">Body</label>
-        <textarea
-          className="textarea has-background-white"
-          value={comment.comment}
-          onChange={(e) => onChange({ comment: e.target.value })}
-        />
-        { errors.comment && <p className="has-text-danger is-size-7 is-italic">{errors.comment.message}</p> }
-      </div>
-      <div className="mb-20">
-        <label className="label has-text-deep-black">Link to Original Article</label>
-        <input
-          className="input has-background-white"
-          type="text"
-          value={comment.link}
-          onChange={(e) => onChange({ link: e.target.value })}
-        />
-      </div>
-      <div className="mb-10">
-        <label className="label has-text-deep-black">Related links</label>
-        <input
-          className="input has-background-white"
-          type="text"
-          value={comment.relatedLinks}
-          onChange={(e) => onChange({ relatedLinks: e.target.value })}
-        />
-        {/* <p className="is-size-8 is-italic">Separate links with comma (e.g. https://semasoftware.com, https://app.semasoftware.com)</p> */}
       </div>
     </div>
   );

@@ -101,7 +101,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Edit Suggested Snippets
+            Edit Snippet
           </p>
         </div>
         <div className="is-flex">
@@ -118,7 +118,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
             onClick={onSave}
           >
             <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            Save Snippet
           </button>
         </div>
       </div>
