@@ -94,6 +94,17 @@ const getUserSuggestedComments = async (userId, searchResults = [], allCollectio
     },
     {
       $project: {
+        collections: {
+          $filter: {
+            input: '$collections',
+            as: 'collection',
+            cond: { $eq: ['$$collection.isActive', true] },
+          },
+        },
+      },
+    },
+    {
+      $project: {
         _id: 0,
         comments: {
           $let: {
@@ -152,7 +163,7 @@ const searchIndex = async (searchQuery) => {
     ]);
     const isNoResults = !results.length
     return isNoResults ? [] : results[0].searchResults;
- }
+  }
 };
 
 const searchComments = async (user, searchQuery, allCollections) => {
