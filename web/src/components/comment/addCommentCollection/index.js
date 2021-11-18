@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 import { CheckOnlineIcon } from '../../Icons';
 import Toaster from '../../toaster';
@@ -23,8 +25,8 @@ const AddCommentCollection = () => {
     alerts: state.alertsState,
   }));
   const { showAlert, alertType, alertLabel } = alerts;
-  const { user, token } = auth;
-  const { isSemaAdmin, identities = [] } = user;
+  const { user = {}, token } = auth;
+  const { isSemaAdmin, identities = [], roles = [] } = user;
 
   const github = identities.find((identity) => identity.provider === 'github');
 
@@ -36,6 +38,7 @@ const AddCommentCollection = () => {
       comments: [],
       author: isSemaAdmin ? "sema" : github.username,
       isActive: true,
+      isPopulate: true,
     },
   });
 
@@ -47,12 +50,23 @@ const AddCommentCollection = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    const collections = await dispatch(createCollections({
-      collections: [data]
-    }, token));
-    if (collections.length > 0) {
-      window.location.href = PATHS.SUGGESTED_SNIPPETS._;
+    
+    let currentSemaTeamId = null;
+    if (data.isPopulate && roles && roles.length > 0) {
+      // TODO this hardcoded Sema Super Team will be replaced very soon
+      const semaTeam = roles.find(role => role && role.team && role.team.name === 'Sema Super Team');
+      if (semaTeam) currentSemaTeamId = semaTeam.team._id;
     }
+    
+    const collections = await dispatch(createCollections({
+      collections: [data],
+      team: currentSemaTeamId
+    }, token));
+    
+    if (collections.length > 0) {
+      router.push(PATHS.SUGGESTED_SNIPPETS._);
+    }
+    
     setLoading(false);
   }
 
@@ -91,3 +105,4 @@ const AddCommentCollection = () => {
 }
 
 export default AddCommentCollection;
+

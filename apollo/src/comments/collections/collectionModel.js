@@ -25,12 +25,4 @@ const collectionSchema = new Schema({
 collectionSchema.set('autoIndex', autoIndex);
 collectionSchema.index({ name: 1 });
 
-collectionSchema.post('insertMany', async (doc) => {
-  doc.forEach(async (document) => {
-    if (document.author === 'sema') {
-      bulkUpdateUserCollections(document)
-    }
-  })
-});
-
 module.exports = mongoose.model('Collection', collectionSchema);

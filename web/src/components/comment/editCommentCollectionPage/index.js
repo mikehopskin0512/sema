@@ -27,8 +27,7 @@ const EditCommentCollectionPage = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { isSemaAdmin } = user;
-  const { cid } = router;
+  const { query: { cid } } = router;
   const { collection } = collectionState;
 
   const {
@@ -64,7 +63,7 @@ const EditCommentCollectionPage = () => {
       collection: data
     }, token));
     if (updatedCollection?._id) {
-      window.location.href = PATHS.SUGGESTED_SNIPPETS._;
+      router.push(PATHS.SUGGESTED_SNIPPETS._);
     }
     setLoading(false);
   }
@@ -99,7 +98,7 @@ const EditCommentCollectionPage = () => {
         </div>
       </div>
       { collection?.tags ?
-        (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />) :
+        (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} cid={cid}/>) :
         (<div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '20vh' }}>
           <Loader/>
         </div>) }

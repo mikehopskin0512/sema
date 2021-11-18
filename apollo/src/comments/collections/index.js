@@ -3,6 +3,8 @@ import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, update } from './collectionService';
+import Team from "../../teams/teamModel";
+import { populateCollectionsToUsers } from "../../users/userService";
 
 const route = Router();
 
@@ -36,13 +38,26 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/', async (req, res) => {
-    const { collections } = req.body;
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { collections, team } = req.body;
+    const { user } = req.user;
 
     try {
       const newCollections = await createMany(collections);
       if (!newCollections) {
         throw new errors.BadRequest('Collections create error');
+      }
+  
+      const collectionIds = newCollections.map((col) => col._id);
+      if (team) {
+        const teamData = await Team.findById(team);
+        if (teamData.name === 'Sema Super Team') {
+          await populateCollectionsToUsers(collectionIds);
+        } else {
+          await populateCollectionsToUsers(collectionIds, user._id);
+        }
+      } else {
+        await populateCollectionsToUsers(collectionIds, user._id);
       }
 
       return res.status(201).send({
@@ -75,24 +90,6 @@ export default (app, passport) => {
 
       return res.status(201).send({
         collections
-      });
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
-    }
-  });
-
-  route.post('/', async (req, res) => {
-    const { collections } = req.body;
-
-    try {
-      const newCollections = await createMany(collections);
-      if (!newCollections) {
-        throw new errors.BadRequest('Collections create error');
-      }
-
-      return res.status(201).send({
-        collections: newCollections
       });
     } catch (error) {
       logger.error(error);

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select, { components } from 'react-select';
 import { tagsOperations } from '../../../state/features/tags';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import CustomCheckbox from '../../customCheckbox';
+import usePermission from '../../../hooks/usePermission';
 
 const { fetchTagList } = tagsOperations;
 
-const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => {
+const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid = null }) => {
   const dispatch = useDispatch();
 
   const [tagOptions, setTagOptions] = useState([]);
@@ -17,6 +19,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
       authState: state.authState,
     }),
   );
+  const { checkTeam } = usePermission();
 
   const { token } = authState;
   const { errors } = formState;
@@ -177,8 +180,22 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
           {...register('description')}
         ></textarea>
       </div>
+      {
+        !cid && checkTeam('Sema Super Team') && (
+          <div>
+            <CustomCheckbox
+              label="Populate this collection to all users"
+              checked={watch('isPopulate')}
+              {...register('isPopulate')}
+              onChange={(e) => setValue('isPopulate', e.target.checked)}
+            />
+          </div>
+        )
+      }
     </div>
   );
 };
 
+
 export default EditCommentCollectionForm;
+

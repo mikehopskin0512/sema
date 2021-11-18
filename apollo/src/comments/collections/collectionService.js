@@ -1,10 +1,14 @@
 import mongoose from 'mongoose';
-import { filter, get } from 'lodash';
+import { get } from 'lodash';
 import Collection from './collectionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import User from '../../users/userModel';
-import { findById as findUserById, update as updateUser, findUserCollectionsByUserId } from '../../users/userService';
+import {
+  findById as findUserById,
+  update as updateUser,
+  findUserCollectionsByUserId,
+  populateCollectionsToUsers,
+} from '../../users/userService';
 
 const { Types: { ObjectId } } = mongoose;
 
