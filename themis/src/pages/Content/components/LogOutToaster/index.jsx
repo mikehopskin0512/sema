@@ -9,7 +9,7 @@ import { EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 
 const lightModeLogoUrl = chrome.runtime.getURL(
-  'img/logos/sema-logo.png',
+  'img/sema-logo.png',
 );
 
 const darkModeLogoUrl = chrome.runtime.getURL(
