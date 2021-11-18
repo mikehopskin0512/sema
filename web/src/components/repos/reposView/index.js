@@ -46,7 +46,7 @@ const ReposView = () => {
         {isMoreReposAvailable && (
           <button
             onClick={() => setPage(page + 1)}
-            className="button has-background-gray-9 is-outlined has-text-black-2 has-text-weight-semibold is-size-6 has-text-primary"
+            className="button has-background-gray-200 is-outlined has-text-black-900 has-text-weight-semibold is-size-6 has-text-primary"
             type="button"
           >View More
           </button>

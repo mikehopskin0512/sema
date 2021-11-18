@@ -72,7 +72,7 @@ const EditModal = ({ onClose }) => {
             <div className="is-flex">
               <div className="is-flex-grow-1">
                 <div className="field my-10 px-10">
-                  <p className="has-text-weight-semibold is-size-7 has-text-gray-dark mb-8">First Name</p>
+                  <p className="has-text-weight-semibold is-size-7 has-text-gray-500 mb-8">First Name</p>
                   <input
                     className="input has-background-white"
                     {...register('firstName', { required: 'First Name is required.' })}
@@ -83,7 +83,7 @@ const EditModal = ({ onClose }) => {
               </div>
               <div className="is-flex-grow-1">
                 <div className="field my-10 px-10">
-                  <p className="has-text-weight-semibold is-size-7 has-text-gray-dark mb-8">Last Name</p>
+                  <p className="has-text-weight-semibold is-size-7 has-text-gray-500 mb-8">Last Name</p>
                   <input
                     className="input has-background-white"
                     {...register('lastName', { required: 'Last Name is required.' })}
@@ -94,7 +94,7 @@ const EditModal = ({ onClose }) => {
             </div>
             <div className="is-flex">
               <div className="field is-flex-grow-1 px-10 my-10">
-                <p className="has-text-weight-semibold is-size-7 has-text-gray-dark mb-8">Primary Sema Email</p>
+                <p className="has-text-weight-semibold is-size-7 has-text-gray-500 mb-8">Primary Sema Email</p>
                 <div className="select is-fullwidth">
                   <select
                     className="has-background-white"

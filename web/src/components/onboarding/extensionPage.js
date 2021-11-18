@@ -16,7 +16,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
     if (!isQueryFinished) {
       return (
         <div className="is-flex is-align-item-center mt-25">
-          <img src="/img/logo_loader.gif" alt="loader" className={clsx("mr-10", styles.loader)} />
+          <img src="/img/onboarding/logo_loader.gif" alt="loader" className={clsx("mr-10", styles.loader)} />
           <p>Searching for the Extension...</p>
         </div>
       );
@@ -29,7 +29,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             className="button is-primary has-text-weight-semibold mt-25"
             onClick={() => window.open(EXTENSION_LINK, '_blank')}
           >
-            <img src="/img/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
+            <img src="/img/onboarding/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
             Install Extension Here
           </button>
         </>
@@ -65,7 +65,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
         </div>
         <div className={clsx('column is-flex is-justify-content-center is-6 p-25', styles['animation-container'])}>
           <div className={clsx('is-flex is-justify-content-center is-align-items-center py-30')}>
-            <img alt="" src="/img/install-extension.png" />
+            <img alt="" src="/img/onboarding/install-extension.png" />
           </div>
         </div>
         <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
@@ -76,8 +76,8 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             </button>
           </div>
           <div className={styles.info}>
-            <p className="has-text-deep-black is-size-7 mb-5">One last step</p>
-            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-deep-black')}>Install the Sema Extension!</p>
+            <p className="has-text-black-950 is-size-7 mb-5">One last step</p>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950')}>Install the Sema Extension!</p>
             <p className={clsx('mt-20')}>
               The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.
             </p>

@@ -140,10 +140,15 @@ const SupportForm = ({ active, closeForm, type = 'Support' }) => {
               </div>
               <div className="field is-grouped mt-25 is-flex is-justify-content-center">
                 <div className="control">
-                  <button className={`button is-link ${isSending ? 'is-loading' : ''}`} type="submit">Submit</button>
+                  <button onClick={close} className="button" type="button">Cancel</button>
                 </div>
                 <div className="control">
-                  <button onClick={close} className="button is-link is-light" type="button">Cancel</button>
+                  <button
+                    type="submit"
+                    className={`button is-primary is-pulled-right ${isSending ? 'is-loading' : ''}`}
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </form>

@@ -46,9 +46,9 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
 
   const renderStats = (label, value) => (
     <div className={clsx(
-      'has-background-gray-4 border-radius-8px p-10 is-full-width is-flex is-flex-direction-column is-justify-content-space-between mb-5',
+      'has-background-gray-200 border-radius-8px p-10 is-full-width is-flex is-flex-direction-column is-justify-content-space-between mb-5',
     )}>
-      <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>{label}</p>
+      <p className={clsx('is-size-8 has-text-weight-semibold has-text-gray-700 is-uppercase')}>{label}</p>
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
     </div>
   );
@@ -87,9 +87,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     };
 
     const onClickAddComment = () => {
-      if (addNewComment) {
-        addNewComment(_id);
-      }
+      router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${_id}`)
     };
 
     const onClickArchiveCollection = async () => {
@@ -118,8 +116,8 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} aria-hidden="true">
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
-            <div className="has-background-gray-300 is-flex is-justify-content-space-between p-12 is-align-items-center">
-              <p className={clsx('has-text-black-2 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
+            <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
+              <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
               { asPath === PATHS.SUGGESTED_SNIPPETS._ && isNotArchived ? (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input
@@ -147,10 +145,10 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
               <div className="is-flex is-justify-content-space-between">
                 <div className="p-12 is-flex-grow-3 is-flex">
                   <div className={clsx(
-                    'has-background-gray-4 border-radius-8px p-10 is-flex is-align-items-center',
+                    'has-background-gray-200 border-radius-8px p-10 is-flex is-align-items-center',
                   )}>
                     <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount || comments.length}</p>
-                    <p className={clsx('is-size-8 has-text-weight-semibold has-text-stat is-uppercase')}>comments</p>
+                    <p className={clsx('is-size-8 has-text-weight-semibold has-text-gray-700 is-uppercase')}>comments</p>
                   </div>
                 </div>
                 <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">

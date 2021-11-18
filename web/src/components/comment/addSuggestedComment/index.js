@@ -125,8 +125,8 @@ const AddSuggestedComment = (props) => {
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add a Suggested Snippet
+          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
+            Create New Snippet
           </p>
         </div>
         <div className="is-flex">
@@ -144,7 +144,7 @@ const AddSuggestedComment = (props) => {
           >
             <CheckOnlineIcon size="small" />
             <span className="ml-8">
-              Save
+              Save New Snippet
             </span>
           </button>
         </div>

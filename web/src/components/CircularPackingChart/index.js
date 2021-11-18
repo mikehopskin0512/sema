@@ -70,7 +70,7 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
 
   const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
     <div className="box has-background-white p-20 border-radius-4px">
-      <p className="has-text-weight-semibold is-size-7 has-text-deep-black">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
+      <p className="has-text-weight-semibold is-size-7 has-text-black-950">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
       {tag.data.length > 0 && (
         <div className={clsx('py-3', styles['line-chart-container'])}>
           <LineChart data={[tag]} />

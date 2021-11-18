@@ -34,7 +34,7 @@ const NotFound = () => {
     <div className={clsx(styles.body, 'hero background-gray-white is-fullheight p-15 is-flex is-flex-direction-column is-justify-content-center is-align-content-center is-align-items-center')}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
-      <img src="/img/404.png" alt="Not Found" />
+      <img src="/img/404.svg" alt="Not Found" />
       <p className="has-text-weight-semibold is-size-2 has-text-black mt-70">OOOOPS</p>
       <p className="is-size-5 has-text-black mt-10 has-text-centered">Sorry, we can’t find the page but here is a doughnut!</p>
       <div className="mt-70">

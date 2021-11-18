@@ -160,7 +160,7 @@ const EngineeringGuidePage = () => {
     <div className="hero">
       <Helmet title="Engineering Guide">
         <meta property='og:title' content={`Sema Software | Engineering Guide`}/>
-        <meta property='og:image' content='/img/logo_white.png'/>
+        {/*<meta property='og:image' content='/img/logos/logo_white.png'/>*/}
         <meta property='og:description' content={`Engineering Guide - ${name}: ${title} by ${author}`}/>
         <meta property='og:url' content={url} />
         <meta property='og:type' content='website' />
@@ -188,13 +188,13 @@ const EngineeringGuidePage = () => {
               <div className="is-flex is-justify-content-space-between">
                 <div>
                   <div className="is-flex is-flex-wrap-wrap">
-                    <p className="mr-15 has-text-weight-semibold has-text-deep-black is-size-4">{title || ''}</p>
+                    <p className="mr-15 has-text-weight-semibold has-text-black-950 is-size-4">{title || ''}</p>
                     <div className="is-flex is-flex-wrap-wrap is-align-items-center">
                       {renderTags(tags || [])}
                     </div>
                   </div>
                   <div className="is-flex my-10 is-align-items-center">
-                    <p className="is-underlined mr-15 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
+                    <p className="is-underlined mr-15 has-text-black-950">{isEmpty(author) ? 'user' : author}</p>
                   </div>
                 </div>
                 <div className="is-flex is-flex-direction-column is-hidden-mobile">
@@ -218,9 +218,9 @@ const EngineeringGuidePage = () => {
                 </div>
               </div>
               <div className="is-flex my-10 is-align-items-center is-flex-wrap-wrap">
-                <p className="is-size-5 has-text-deep-black is-size-7-mobile"><b>Source:</b> {source?.name || 'sema'}</p>
+                <p className="is-size-5 has-text-black-950 is-size-7-mobile"><b>Source:</b> {source?.name || 'sema'}</p>
                 <div className="is-divider-vertical is-hidden-mobile" />
-                <p className="is-size-5 mr-15 has-text-deep-black is-size-7-mobile"><b>Collection:</b> {name}</p>
+                <p className="is-size-5 mr-15 has-text-black-950 is-size-7-mobile"><b>Collection:</b> {name}</p>
               </div>
               <div className="is-hidden-desktop mb-20">
                 <p className="has-text-gray-700 has-text-weight-semibold mt-15">
@@ -246,10 +246,10 @@ const EngineeringGuidePage = () => {
                 {formatText(body || '')}
               </div>
               <div className="is-flex mt-25 is-align-items-center">
-                <p className="is-size-6 has-text-deep-black">
+                <p className="is-size-6 has-text-black-950">
                   <b className="mr-5">Related Suggested Snippets Collection:</b>
                   <a href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${_id}`}>
-                    <span className="is-underlined has-text-deep-black">{name}</span>
+                    <span className="is-underlined has-text-black-950">{name}</span>
                   </a>
                 </p>
               </div>

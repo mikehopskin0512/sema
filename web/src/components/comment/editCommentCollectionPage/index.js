@@ -11,6 +11,7 @@ import Toaster from '../../toaster';
 import Loader from '../../Loader';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { addTags } from '../../../utils';
 
 const { clearAlert } = alertOperations;
 const { fetchCollectionById, updateCollection } = collectionsOperations;
@@ -27,8 +28,7 @@ const EditCommentCollectionPage = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { isSemaAdmin } = user;
-  const { cid } = router;
+  const { query: { cid } } = router;
   const { collection } = collectionState;
 
   const {
@@ -49,22 +49,37 @@ const EditCommentCollectionPage = () => {
 
   useEffect(() => {
     if (collection) {
-      const { name, description, tags, source } = collection;
+      const { name, description, tags = [], author, source } = collection;
       setValue('name', name);
       setValue('description', description);
-      setValue('tags', tags?.filter((tag) => tag.tag).map((tag) => ({ ...tag, value: tag.tag })) || []);
-      setValue('source.name', source ? source.name : '');
-      setValue('source.url', source ? source.url : '');
+      setValue('author', author);
+      setValue('sourceName', source?.name);
+      setValue('sourceLink', source?.url);
+      setValue('languages', addTags(tags, ['language']));
+      setValue('others', addTags(tags, ['guide', 'other', 'custom']));
     }
   }, [collection]);
 
   const onSubmit = async (data) => {
     setLoading(true);
+    const { languages, others, comments, author, isActive, sourceName, sourceLink, name, description } = data;
+    const collectionData = {
+      isActive,
+      author,
+      comments,
+      name,
+      description,
+      source: {
+        name: sourceName,
+        url: sourceLink
+      },
+      tags: [...languages, ...others],
+    }
     const updatedCollection = await dispatch(updateCollection(collection._id, {
-      collection: data
+      collection: collectionData
     }, token));
     if (updatedCollection?._id) {
-      window.location.href = PATHS.SUGGESTED_SNIPPETS._;
+      await router.push(PATHS.SUGGESTED_SNIPPETS._);
     }
     setLoading(false);
   }
@@ -75,7 +90,7 @@ const EditCommentCollectionPage = () => {
         <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
           <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Add a Snippet Collection
+            Edit a Snippet Collection
           </p>
         </div>
         <div className="is-flex">
@@ -99,7 +114,7 @@ const EditCommentCollectionPage = () => {
         </div>
       </div>
       { collection?.tags ?
-        (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />) :
+        (<EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} cid={cid}/>) :
         (<div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '20vh' }}>
           <Loader/>
         </div>) }

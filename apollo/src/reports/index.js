@@ -86,8 +86,10 @@ export default (app, passport) => {
       return res.status(200).send(reports);
     } catch (err) {
       logger.error('Error getting reports list...');
-      const { response: { status, data } } = err;
-      return res.status(status).send(data.message);
+      if (err.response) {
+        const { response: { status, data } } = err;
+        return res.status(status).send(data.message);
+      }
     }
   });
 };

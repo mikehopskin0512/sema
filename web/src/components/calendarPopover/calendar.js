@@ -206,7 +206,7 @@ const CustomHeader = ({
       >
         <FontAwesomeIcon icon={faChevronLeft} color="#19181A" size="xs" />
       </button>
-      <div className="has-text-weight-semibold has-text-deep-black">{months[getMonth(date)]} {getYear(date)}</div>
+      <div className="has-text-weight-semibold has-text-black-950">{months[getMonth(date)]} {getYear(date)}</div>
       <button disabled={disabledNext} className="button is-white" type="button" onClick={nextMonth}>
         <FontAwesomeIcon icon={faChevronRight} color="#19181A" size="xs" />
       </button>

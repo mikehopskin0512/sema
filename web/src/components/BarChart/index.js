@@ -161,7 +161,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
       return (
         <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
           <div className="is-flex is-justify-content-space-between is-full-width mb-10">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-7">{emoji} {label}</p>
+            <p className="has-text-weight-semibold has-text-black-950 is-size-7">{emoji} {label}</p>
             <div className="is-size-7 has-text-primary has-text-weight-semibold is-uppercase">{dateString}</div>
           </div>
           <p className="is-size-7">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>

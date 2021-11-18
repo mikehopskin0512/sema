@@ -17,6 +17,7 @@ import styles from './invitations.module.scss';
 import InvitationsGrid from '../../components/invitationsGrid';
 import { getCharCount } from '../../utils';
 import * as analytics from '../../utils/analytics';
+import Logo from '../../components/Logo';
 import useAuthEffect from '../../hooks/useAuthEffect';
 
 
@@ -134,12 +135,10 @@ const Invite = () => {
       <section className={clsx("hero mb-40 pb-300", styles.container)}>
         <div>
           <div className="is-flex is-align-items-center is-justify-content-center mt-60 mb-30">
-            <img src="/img/sema-logo.png" alt="sema-logo" width="100" className="mr-10" />
+            <Logo shape="horizontal" width={100} height={34} />
             <p
-              className={
-                'title has-text-centered has-text-weight-semibold is-size-4'
-              }
-
+              style={{ lineHeight: '26px' }}
+              className={'title has-text-centered has-text-weight-semibold is-size-4 ml-8'}
               dangerouslySetInnerHTML={{ __html: `${tableHeader}` }}
             />
           </div>

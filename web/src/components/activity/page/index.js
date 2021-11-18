@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { findIndex, uniqBy, isEmpty } from 'lodash';
+import { DEFAULT_AVATAR } from '../../../utils/constants';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
 import DateRangeSelector from '../../dateRangeSelector';
@@ -8,8 +9,6 @@ import { ReactionList, TagList } from '../../../data/activity';
 import { SearchIcon } from '../../Icons';
 
 import { filterSmartComments } from '../../../utils/parsing';
-
-const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityPage = ({ startDate, endDate, onDateChange }) => {
   const { repositories } = useSelector((state) => ({
@@ -41,7 +40,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
         return {
           label: githubMetadata.requester,
           value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || defaultAvatar,
+          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
         }
       }))
     const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
@@ -49,7 +48,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
       return {
         label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
         value: _id,
-        img: isEmpty(avatarUrl) ? defaultAvatar : avatarUrl,
+        img: isEmpty(avatarUrl) ? DEFAULT_AVATAR : avatarUrl,
       };
     });
     const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import usePopup from '../../../hooks/usePopup';
-import AddSuggestedCommentModal from '../addSuggestedCommentModal';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 
@@ -15,7 +14,6 @@ const { updateSuggestComment } = suggestCommentsOperations;
 const ActionMenu = ({ comment }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
-  const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const router = useRouter();
@@ -47,9 +45,9 @@ const ActionMenu = ({ comment }) => {
               <button
                 type="button"
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
-                onClick={() => setModalOpen(true)}
+                onClick={() => router.push(`/suggested-snippets/edit?cid=${collectionId}&comments=${comment._id}`)}
               >
-                Edit Suggested Snippet
+                Edit Snippet
               </button>
             </div>
             <div className="dropdown-item py-0">
@@ -58,13 +56,13 @@ const ActionMenu = ({ comment }) => {
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
                 onClick={updateArchiveStatus}
               >
-                {`${comment.isActive ? 'Unarchive' : 'Archive'} Comment`}
+                {`${comment.isActive ? 'Archive' : 'Unarchive' } Comment`}
               </button>
             </div>
           </div>
         </div>
       </div>
-      <AddSuggestedCommentModal onClose={() => setModalOpen(false)} active={modalOpen} comment={comment} _id={collectionId} />
+      {/* <AddSuggestedCommentModal onClose={() => setModalOpen(false)} active={modalOpen} comment={comment} _id={collectionId} /> */}
     </div>
   );
 };

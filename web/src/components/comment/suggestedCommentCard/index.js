@@ -35,7 +35,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
               <Checkbox value={selected} onChange={(value) => onSelectChange(_id, value)} />
             </div>
           ) }
-          <p className="has-text-weight-semibold is-size-5 has-text-deep-black">{title}</p>
+          <p className="has-text-weight-semibold is-size-5 has-text-black-950">{title}</p>
         </div>
         <div className="is-flex">
           <div className="is-flex is-flex-wrap-wrap mr-10">
@@ -57,34 +57,35 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           <div className="is-flex is-align-items-center">
             { isEmpty(author) ? null : (
               <>
-                <p className="is-size-6 mr-10 has-text-deep-black">{isEmpty(author) ? 'user' : author}</p>
+                <p className="is-size-6 mr-10 has-text-black-950">{isEmpty(author) ? 'user' : author}</p>
                 <div className={clsx('mr-10', styles.vl)} />
               </>
             )}
             { isEmpty(source?.name) ? null : (
-              <p className="has-text-deep-black is-size-6"><b>Source: </b> {source?.name}</p>
+              <p className="has-text-black-950 is-size-6"><b>Source: </b> {source?.name}</p>
             ) }
           </div>
           { isEmpty(source?.name) ? null : (
             <a href={source?.url} target="_blank" rel="noreferrer">
-              <button className="button is-text is-small p-0 has-text-deep-black" type="button">{source?.name}</button>
+              <button className="button is-text is-small p-0 has-text-black-950" type="button">{source?.name}</button>
             </a>
           )}
         </div>
       ) }
-      <p className={clsx("has-text-deep-black is-size-6 my-20", styles['comment-container'])}>
+      <p className={clsx("has-text-black-950 is-size-6 my-20", styles['comment-container'])}>
         {comment}
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
         {source && source.url && (
-          <p className="is-flex is-size-6 has-text-deep-black">
+          <p className="is-flex is-size-6 has-text-black-950">
             <b className="mr-5">Related Link:</b>
             <PreviewableLink source={source} sourceMetadata={sourceMetadata}/>
           </p>
         )}
         <span />
-        <p className="is-size-8 has-text-black-6">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
+
+        <p className="is-size-8">{format(new Date(createdAt), 'dd MMM, yyyy')}</p>
       </div>
     </div>
   );

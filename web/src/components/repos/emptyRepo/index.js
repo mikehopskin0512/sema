@@ -58,16 +58,8 @@ const EmptyRepo = () => {
                               ) : (
                                 <>
                                   <div className={clsx(styles['button-play'])}>
-                                    <PlayIcon
-                                      size="large"
-                                      // style={{
-                                      //   position: 'absolute',
-                                      //   top: 'calc(50% - 16px)',
-                                      //   left: 'calc(50% - 16px)',
-                                      // }}
-                                    />
+                                    <PlayIcon size="large" />
                                   </div>
-
                                   <img src={img} className={styles.img} alt={title} />
                                 </>
                               ) }

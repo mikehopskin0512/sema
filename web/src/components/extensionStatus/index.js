@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './extensionStatus.module.scss';
+import { CodeIcon } from '../Icons';
 import { PATHS } from '../../utils/constants';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
@@ -51,7 +52,7 @@ const ExtensionStatus = () => {
           <div className="is-flex m-0 is-align-items-center is-flex-wrap-wrap is-justify-content-space-between">
             <div className="is-flex is-align-items-center">
               <div className="mr-20 is-hidden-mobile">
-                <img src="/img/code-logo.png" alt="sema-logo" />
+                <CodeIcon />
               </div>
               <div className="my-10">
                 <div className="has-text-weight-semibold">

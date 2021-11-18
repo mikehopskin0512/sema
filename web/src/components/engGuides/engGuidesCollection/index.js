@@ -127,7 +127,7 @@ const CollectionEngGuides = ({ collectionId }) => {
     );
   }
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
@@ -142,7 +142,7 @@ const CollectionEngGuides = ({ collectionId }) => {
           </nav>
         </div>
         <div className="is-flex is-flex-wrap-wrap p-10 is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
             {engGuide.name}
           </p>
           <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">

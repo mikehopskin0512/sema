@@ -76,24 +76,24 @@ const SuggestedComments = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet {...SuggestedSnippetsHelmet} />
       <div className="hero-body">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4">
+          <p className="has-text-weight-semibold has-text-black-950 is-size-4">
             Suggested Snippets
           </p>
           <CommentsViewButtons />
         </div>
         <CommentFilter onSearch={onSearch} tags={tagFilters} languages={languageFilters} />
         { isEmpty(commentsFiltered) ?
-          <div className="is-size-5 has-text-deep-black my-80 has-text-centered">No suggested snippets found!</div> :
+          <div className="is-size-5 has-text-black-950 my-80 has-text-centered">No suggested snippets found!</div> :
           commentsFiltered.slice(0, NUM_PER_PAGE * page).map((item) => (<SuggestedCommentCard data={item} key={item.displayId} />)) }
         {commentsFiltered.length > NUM_PER_PAGE && NUM_PER_PAGE * page < commentsFiltered.length && (
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-30">
             <button
               onClick={viewMore}
-              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
+              className="button has-background-gray-200 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
               type="button">
               View More
             </button>

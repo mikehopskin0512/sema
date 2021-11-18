@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { DownloadIcon } from '../Icons';
 
 const ExportButton = ({ onExport, label }) => (
-  <button type="button" className="button has-background-purple has-text-white" onClick={onExport}>
+  <button type="button" className="button has-background-black-900 has-text-white" onClick={onExport}>
     <span className="icon">
       <DownloadIcon size="small" />
     </span>

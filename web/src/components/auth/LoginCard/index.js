@@ -19,7 +19,7 @@ const LoginCard = () => {
         amongst the first to try it out.
       </p>
       <div className="mb-15">
-        <span className="is-size-8 has-text-gray-dark">
+        <span className="is-size-8 has-text-gray-500">
           By joining, you are agreeing to Sema’s &nbsp;
           <a href="https://semasoftware.com/terms-and-conditions/" className="is-underlined">
             Terms & Conditions
@@ -40,7 +40,7 @@ const LoginCard = () => {
       <p className={styles['through-container']}>
         <span className={styles.line} />
         <span className={styles['text-container']}>
-          <span className={clsx('has-text-weight-semibold is-size-7 has-text-gray-dark', styles['through-text'])}>
+          <span className={clsx('has-text-weight-semibold is-size-7 has-text-gray-500', styles['through-text'])}>
             Already have an account?
           </span>
         </span>

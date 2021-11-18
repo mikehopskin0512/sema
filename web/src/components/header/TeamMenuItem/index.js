@@ -24,14 +24,14 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
             maxInitials={2}
           />
           <div>
-            <p className="has-text-deep-black has-text-weight-semibold">{role.team.name}</p>
-            <p className="has-text-weight-semibold is-uppercase has-text-gray-dark is-size-9">Team Account</p>
+            <p className="has-text-black-950 has-text-weight-semibold">{role.team.name}</p>
+            <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Team Account</p>
           </div>
         </div>
       </Link>
       {checkAccess({name: role?.team?.name}, ViewAdmin) && (
         <a
-          className="has-text-blue-light has-text-weight-semibold is-size-7 is-small ml-40 p-5"
+          className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
           href="/labels-management"
           style={{ textDecoration: 'none' }}
           onClick={toggleUserMenu}

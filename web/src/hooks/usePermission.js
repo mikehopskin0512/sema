@@ -18,8 +18,15 @@ function usePermission() {
     return !!role;
   };
 
+  const checkTeam = (name) => {
+    const role = user?.roles?.find((item) => item.team && item.team.name && item.team.name === name);
+
+    return !!role;
+  };
+
   return {
     checkAccess,
+    checkTeam,
   };
 }
 

@@ -31,7 +31,7 @@ const EditCollectionPage = () => {
   }, [collectionId]);
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet title={comments ? "Edit suggested snippets" : "Edit snippet collection"} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">

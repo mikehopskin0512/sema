@@ -58,15 +58,15 @@ const Footer = () => {
 
   const renderAppLinks = () => (
     <>
-      <div className="has-text-gray-4 is-size-7 has-text-centered is-hidden-mobile">
+      <div className="has-text-gray-200 is-size-7 has-text-centered is-hidden-mobile">
         &copy; {new Date().getFullYear()} Sema
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
+        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
       </div>
       <div className="has-text-centered">
         <div
-          className="button is-ghost has-text-gray-4 is-size-7 is-size-m-desktop has-text-weight-semibold"
+          className="button is-ghost has-text-gray-200 is-size-7 is-size-m-desktop has-text-weight-semibold"
           onClick={() => openSupportForm('Feedback')}
           aria-hidden="true"
         >
@@ -75,14 +75,14 @@ const Footer = () => {
       </div>
       {isAuthenticated && (
         <div className="has-text-centered">
-          <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
+          <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
         </div>
       )}
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
+        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-4 is-size-7 has-text-weight-semibold" href={PATHS.SUPPORT}>Support</a>
+        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={PATHS.SUPPORT}>Support</a>
       </div>
       <div className="is-one-quarter-fullhd is-1-desktop" />
     </>

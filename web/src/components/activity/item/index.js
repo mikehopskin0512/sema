@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { get, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
-
-const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityItem = (props) => {
   const {
@@ -32,7 +31,7 @@ const ActivityItem = (props) => {
     username = 'User@email.com',
     firstName = '',
     lastName = '',
-    avatarUrl = defaultAvatar,
+    avatarUrl = DEFAULT_AVATAR,
   } = user || {};
 
   const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'MM/dd/yyyy hh:mm aa') : '');
@@ -75,12 +74,12 @@ const ActivityItem = (props) => {
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
-            <p className="is-size-7 has-text-deep-black">
+            <p className="is-size-7 has-text-black-950">
               { !isEmpty(firstName) ?
-                <a href={`https://github.com/${login}`} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
-                <span className="has-text-deep-black is-underlined">{username.split('@')[0] || 'User'}</span>}
+                <a href={`https://github.com/${login}`} className="has-text-black-950 is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
+                <span className="has-text-black-950 is-underlined">{username.split('@')[0] || 'User'}</span>}
               {' reviewed '}
-              <a href={getPRUrl()} className="has-text-deep-black is-underlined" target="_blank" rel="noreferrer">
+              <a href={getPRUrl()} className="has-text-black-950 is-underlined" target="_blank" rel="noreferrer">
                 {getPRName(pull_number, title)}
               </a>
               {` by ${requester}`}
@@ -89,7 +88,7 @@ const ActivityItem = (props) => {
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
         </div>
         <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
-          <div className="has-text-deep-black has-text-weight-semibold is-size-5 is-size-7-mobile is-flex">
+          <div className="has-text-black-950 has-text-weight-semibold is-size-5 is-size-7-mobile is-flex">
             {renderEmoji()}
           </div>
           { tags.length > 0 ? (
@@ -104,7 +103,7 @@ const ActivityItem = (props) => {
           ) : <div className="py-25" />}
         </div>
         <div className={clsx("my-8", styles['item-comment'])}>
-          <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-deep-black" />
+          <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-black-950" />
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
       </div>

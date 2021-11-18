@@ -10,6 +10,7 @@ import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { addTags } from '../../../utils';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -44,8 +45,8 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       ...comment,
       sourceName: comment.source && comment.source.name,
       sourceLink: comment.source && comment.source.url,
-      languages: comment.tags.filter((tag) => tag.tag && tag.type === 'language').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
-      guides: comment.tags.filter((tag) => tag.tag && tag.type === 'guide').map((t) => ({ value: t.tag, label: t.label, type: t.type })),
+      languages: addTags(comment.tags, ['language']),
+      guides: addTags(comment.tags, ['other', 'guide', 'custom']),
     })));
   }, [suggestedComments]);
 
@@ -64,11 +65,11 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
     setErrors({});
     const data = comments.map((comment) => {
       const isDataValid = validateData(comment, setErrors);
-  
+
       if (!isDataValid) {
         return;
       }
-  
+
       const re = new RegExp("^(http|https)://", "i");
       if (!re.test(comment.sourceLink)) {
         setErrors({
@@ -100,8 +101,8 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
-            Edit Suggested Snippets
+          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
+            Edit Snippet
           </p>
         </div>
         <div className="is-flex">
@@ -118,7 +119,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
             onClick={onSave}
           >
             <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save
+            Save Snippet
           </button>
         </div>
       </div>

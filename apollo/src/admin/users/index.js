@@ -13,11 +13,12 @@ import {
   getFilterMetrics,
   getTimeToValueMetric,
   exportTimeToValueMetric,
-  findUser, exportUsers
+  findUser,
+  exportUsers,
 } from './userService';
 
-import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService'
-import { revokeInvitation } from '../../users/userService';
+import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService';
+import { revokeInvitation, patch as updateUser } from '../../users/userService';
 
 const route = Router();
 
@@ -117,6 +118,23 @@ export default (app, passport) => {
       await updateUserAvailableInvitesCount(id, req.body);
 
       return res.status(200).json();
+    } catch (err) {
+      const error = new errors.InternalServer(err);
+      logger.error(error);
+      throw error;
+    }
+  });
+
+  route.patch('/:id', async (req, res) => {
+    try {
+      const {
+        params: { id },
+        body,
+      } = req;
+
+      const { user } = await updateUser(id, body);
+
+      return res.status(200).json(user);
     } catch (err) {
       const error = new errors.InternalServer(err);
       logger.error(error);

@@ -108,7 +108,7 @@ const DateRangeSelector = (props) => {
           <div className="dropdown-trigger is-flex-grow-1">
             <button
               className={clsx(
-                "has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable",
+                "has-background-gray-100 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable",
                 styles.button
               )}
               onClick={toggleMenu}

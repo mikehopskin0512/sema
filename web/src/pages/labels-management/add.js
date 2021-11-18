@@ -156,7 +156,7 @@ const AddLabels = () => {
       </div>
       <div className="is-flex mb-25 is-justify-content-space-between is-align-items-center">
         <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
             Add Labels
           </p>
         </div>

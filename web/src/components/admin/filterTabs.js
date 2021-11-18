@@ -8,7 +8,7 @@ const FilterTabs = ({ tabs, value, onChange }) => {
         tabs.map((tab, i) => (
           <button
             key={i}
-            className={`button outline-none ${value === tab.value && 'has-background-purple has-text-white'}`}
+            className={`button outline-none ${value === tab.value && 'has-background-black-900 has-text-white'}`}
             onClick={() => onChange(tab.value)}
           >
             <span>{tab.label}</span>

@@ -56,41 +56,41 @@ const TeamManagementPage = () => {
     {
       Header: () => <div className="is-size-8">Member</div>,
       accessor: 'name',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
     },
     {
       Header: () => <div className="is-size-8">Email</div>,
       accessor: 'email',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
     },
     {
       Header: () => <div className="is-size-8">Add Suggested Snippets</div>,
       accessor: 'suggestedComments',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
       Cell: (props) => <SwitchCell name="suggestedComments" {...props} />,
     },
     {
       Header: () => <div className="is-size-8">Add Community Guides</div>,
       accessor: 'communityGuides',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
       Cell: (props) => <SwitchCell name="communityGuides" {...props} />,
     },
     {
       Header: () => <div className="is-size-8">Library Admin</div>,
       accessor: 'libraryAdmin',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
       Cell: (props) => <SwitchCell name="libraryAdmin" {...props} />,
     },
     {
       Header: () => <div className="is-size-8">Status</div>,
       accessor: 'status',
-      className: clsx('px-20 py-10 has-background-gray-9', styles.status),
+      className: clsx('px-20 py-10 has-background-gray-200', styles.status),
       Cell: StatusCell,
     },
     {
       Header: '',
       accessor: 'action',
-      className: 'px-20 py-10 has-background-gray-9',
+      className: 'px-20 py-10 has-background-gray-200',
       Cell: ActionMenu,
     },
   ];
@@ -151,13 +151,13 @@ const TeamManagementPage = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet {...TeamManagementHelmet} />
       <div className="hero-body pb-300">
         <PageHeader />
         <div className="content-container px-20">
           <div className="is-flex is-align-items-center mb-15">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-5 mr-10">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-5 mr-10">
               Team admin
             </p>
             <span
