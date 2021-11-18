@@ -88,7 +88,7 @@ const EditEngGuidesPage = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet title="Engineering Guide" />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
@@ -105,7 +105,7 @@ const EditEngGuidesPage = () => {
         </div>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
               Edit Community Engineering Guides
             </p>
           </div>

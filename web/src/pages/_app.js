@@ -53,12 +53,12 @@ const Application = ({ Component, pageProps, store }) => {
     const { authState: { user = null } } = store.getState();
 
     analytics.initAmplitude(user);
-    
+
     const handleRouteChange = (url) => {
       analytics.googleAnalyticsPageView(url);
       analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_PAGE, { url });
     };
-    
+
     // When the component is mounted, subscribe to router changes
     // and log those page views
     router.events.on('routeChangeComplete', handleRouteChange);

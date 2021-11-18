@@ -49,7 +49,7 @@ const StatsPage = ({ startDate, endDate, onDateChange }) => {
   return(
     <>
       <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap px-10">
-        <p className="has-text-deep-black has-text-weight-semibold is-size-4">Repo Stats</p>
+        <p className="has-text-black-950 has-text-weight-semibold is-size-4">Repo Stats</p>
         <div>
           <DateRangeSelector
             start={startDate}

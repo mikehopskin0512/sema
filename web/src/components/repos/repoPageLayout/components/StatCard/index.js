@@ -14,7 +14,7 @@ const StatCard = ({ title, value, tooltip }) => (
       </Tooltip>
     </div>
     <div
-      className={clsx('is-size-3 has-text-weight-semibold has-text-deep-black', styles['card-subtitle'])}>{value}</div>
+      className={clsx('is-size-3 has-text-weight-semibold has-text-black-950', styles['card-subtitle'])}>{value}</div>
   </div>
 );
 

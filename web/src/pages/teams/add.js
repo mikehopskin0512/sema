@@ -78,12 +78,12 @@ const TeamEditPage = () => {
   };
 
   return (
-    <div className="has-background-gray-9 hero">
+    <div className="has-background-gray-200 hero">
       <Helmet {...TeamCreateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
               Create a Team
             </p>
           </div>
@@ -138,7 +138,7 @@ const TeamEditPage = () => {
             { errors.description && <p className="has-text-danger is-size-7 is-italic">{errors.description}</p> }
           </div>
           <div className="mt-40">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mb-15">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 mb-15">
               Invite members
             </p>
             <p className="is-size-7">

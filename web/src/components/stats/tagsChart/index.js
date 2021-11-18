@@ -10,7 +10,7 @@ const TagsChart = ({tags, className, groupBy }) => {
     <>
       <div className={clsx(`is-flex-grow-1 px-10 mb-20 ${className}`, styles.containers)}>
           <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-            <p className="has-text-deep-black has-text-weight-semibold">Tags</p>
+            <p className="has-text-black-950 has-text-weight-semibold">Tags</p>
             <CircularPacking data={tags} groupBy={groupBy} />
           </div>
         </div>

@@ -35,7 +35,7 @@ const PageHeader = () => {
     <div className="content-container px-20 mb-25">
       <div className="is-flex mb-25">
         <Logo shape="pill" width={40} height={30} />
-        <p className="has-text-weight-semibold has-text-deep-black is-size-5 ml-20">
+        <p className="has-text-weight-semibold has-text-black-950 is-size-5 ml-20">
           Calendly Front End Admin
         </p>
       </div>

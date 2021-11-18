@@ -31,7 +31,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
     <div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Title</label>
+          <label className="label has-text-black-950">Title</label>
           <input
             className="input has-background-white"
             type="text"
@@ -41,7 +41,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.title && <p className="has-text-danger is-size-7 is-italic">{errors.title.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Snippet Collection</label>
+          <label className="label has-text-black-950">Snippet Collection</label>
           <input
             className="input has-background-white"
             type="text"
@@ -61,7 +61,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
       </div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Languages</label>
+          <label className="label has-text-black-950">Languages</label>
           <Select
             isMulti
             options={languagesOptions}
@@ -72,7 +72,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.languages && <p className="has-text-danger is-size-7 is-italic">{errors.languages.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Labels</label>
+          <label className="label has-text-black-950">Labels</label>
           <Select
             isMulti
             options={guidesOptions}
@@ -85,7 +85,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
       </div>
       <div className="columns mb-0">
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Source Name</label>
+          <label className="label has-text-black-950">Source Name</label>
           <input
             className="input has-background-white"
             type="text"
@@ -95,7 +95,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
           { errors.sourceName && errors.sourceName && <p className="has-text-danger is-size-7 is-italic">{errors.sourceName.message}</p> }
         </div>
         <div className="mb-10 column">
-          <label className="label has-text-deep-black">Source Link</label>
+          <label className="label has-text-black-950">Source Link</label>
           <input
             className="input has-background-white"
             type="text"
@@ -106,7 +106,7 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
         </div>
       </div>
       <div className="mb-20">
-        <label className="label has-text-deep-black">Author Name</label>
+        <label className="label has-text-black-950">Author Name</label>
         <input
           className="input has-background-white"
           type="text"

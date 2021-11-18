@@ -14,13 +14,13 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       case 'sender':
         return 'p-10';
       case 'recipient':
-        return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-sky-light p-15 pt-35';
+        return type === 'admin' ? 'p-10' : 'has-text-gray-700 has-background-white-50 p-15 pt-35';
       case 'isPending':
-        return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35' : '';
+        return type === 'dashboard' ? 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35' : '';
       case 'sent':
-        return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35';
+        return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35';
       case 'actions':
-        return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-sky-light is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
+        return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
       default:
         return 'p-10';
     }
@@ -176,7 +176,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         empty={(
           <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
             <img className={styles['no-data-img']} src="/img/social-graph.svg" />
-            <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
+            <div className={"subtitle has-text-centered mt-50 has-text-gray-500 is-size-5"}>
               You haven't invited anyone yet.
             </div>
           </div>

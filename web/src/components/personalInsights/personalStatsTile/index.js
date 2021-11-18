@@ -24,7 +24,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       const value = Object.values(reaction);
       return (
         <span className="is-align-items-center is-flex is-flex-grow-1">
-          <span className="px-5 is-size-5">{emoji}</span> <span className="is-size-6 pr-10 has-text-deep-black">{value}</span>
+          <span className="px-5 is-size-5">{emoji}</span> <span className="is-size-6 pr-10 has-text-black-950">{value}</span>
         </span>
       )
     })
@@ -71,7 +71,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
                     TOTAL COMMENTS
                   </p>
-                  <p className="m-0 is-size-4 has-text-weight-semibold has-text-deep-black">{totalSmartComments}</p>
+                  <p className="m-0 is-size-4 has-text-weight-semibold has-text-black-950">{totalSmartComments}</p>
                 </div>
                 <div className="column is-4 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">

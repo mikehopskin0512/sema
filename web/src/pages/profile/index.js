@@ -59,7 +59,7 @@ const Profile = () => {
             <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap', styles.social)}>
               <div className="is-flex is-align-items-center">
                 <GithubIcon size="large" />
-                <p className="has-text-weight-bold is-size-6 has-text-deep-black ml-8 mr-15">Github</p>
+                <p className="has-text-weight-bold is-size-6 has-text-black-950 ml-8 mr-15">Github</p>
                 <p className="is-size-6 has-text-black">{identities[0].username}</p>
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
@@ -73,21 +73,21 @@ const Profile = () => {
               <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center', styles.social, styles.upcoming)}>
                 <div className="is-flex is-align-items-center">
                   <img src="/img/icons/twitter.png" alt="twitter" className={clsx('mr-10', styles['social-icon'])} />
-                  <p className="has-text-weight-bold is-size-6 has-text-deep-black mr-15">Twitter</p>
+                  <p className="has-text-weight-bold is-size-6 has-text-black-950 mr-15">Twitter</p>
                 </div>
                 <p className="is-size-7 gray-dark">coming soon</p>
               </div>
               <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center', styles.social, styles.upcoming)}>
                 <div className="is-flex is-align-items-center">
                   <img src="/img/icons/linkedIn.png" alt="linkedin" className={clsx('mr-10', styles['social-icon-small'])} />
-                  <p className="has-text-weight-bold is-size-6 has-text-deep-black mr-15">LinkedIn</p>
+                  <p className="has-text-weight-bold is-size-6 has-text-black-950 mr-15">LinkedIn</p>
                 </div>
                 <p className="is-size-7 gray-dark">coming soon</p>
               </div>
               <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center', styles.social, styles.upcoming)}>
                 <div className="is-flex is-align-items-center">
                   <img src="/img/icons/stackOverflow.png" alt="stack overflow" className={clsx('mr-10', styles['social-icon-small'])} />
-                  <p className="has-text-weight-bold is-size-6 has-text-deep-black mr-15">Stack Overflow</p>
+                  <p className="has-text-weight-bold is-size-6 has-text-black-950 mr-15">Stack Overflow</p>
                 </div>
                 <p className="is-size-7 gray-dark">coming soon</p>
               </div>

@@ -76,8 +76,8 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             </button>
           </div>
           <div className={styles.info}>
-            <p className="has-text-deep-black is-size-7 mb-5">One last step</p>
-            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-deep-black')}>Install the Sema Extension!</p>
+            <p className="has-text-black-950 is-size-7 mb-5">One last step</p>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950')}>Install the Sema Extension!</p>
             <p className={clsx('mt-20')}>
               The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.
             </p>

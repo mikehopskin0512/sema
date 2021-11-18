@@ -14,7 +14,7 @@ const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
   return (
     <div className="columns" style={{ borderBottom: '1px solid #dbdbdb' }}>
       <div className="column">
-        <label className="has-text-deep-black">Label name</label>
+        <label className="has-text-black-950">Label name</label>
         <input
           name={`input-${index}`}
           className="input has-background-white mt-8"
@@ -25,7 +25,7 @@ const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
         { errors[index] && errors[index].label && <p className="has-text-danger is-size-7 is-italic">{errors[index].label}</p> }
       </div>
       <div className="column is-half">
-        <label className="has-text-deep-black">Category</label>
+        <label className="has-text-black-950">Category</label>
         <div className="control mt-20 is-flex">
           <CustomRadio
             label="Language"

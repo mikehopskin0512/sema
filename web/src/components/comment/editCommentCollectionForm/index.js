@@ -101,7 +101,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
   return (
     <div className="p-10">
       <div className="mb-25">
-        <label className="label has-text-deep-black">Collection Title *</label>
+        <label className="label has-text-black-950">Collection Title *</label>
         <input
           className="input has-background-white"
           type="text"
@@ -149,7 +149,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
         </div>
       </div>
       <div className="mb-25">
-        <label className="label has-text-deep-black">Tags/Language/Framework/Version *</label>
+        <label className="label has-text-black-950">Tags/Language/Framework/Version *</label>
         <Select
           {...register(
             'tags',
@@ -171,7 +171,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch }) => 
         {errors.tags && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.tags.message}</p>)}
       </div>
       <div className="mb-25">
-        <label className="label has-text-deep-black">Description</label>
+        <label className="label has-text-black-950">Description</label>
         <textarea
           className="textarea has-background-white"
           {...register('description')}

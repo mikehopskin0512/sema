@@ -17,9 +17,9 @@ const HelpAndSupport = () => {
   }) => (
     <a href={link} className={clsx("my-25", styles.article)} target="_blank" rel="noreferrer" key={`${id}-article`}>
       <div className="has-text-left p-10">
-        <p className="has-text-weight-bold is-size-6 has-text-deep-black">By {author}</p>
+        <p className="has-text-weight-bold is-size-6 has-text-black-950">By {author}</p>
         <p className="has-text-weight-bold is-size-5 has-text-primary">{title}</p>
-        <p className="is-size-7 has-text-deep-black">{date} &#8226; {mins} minutes read</p>
+        <p className="is-size-7 has-text-black-950">{date} &#8226; {mins} minutes read</p>
       </div>
     </a>
   );
@@ -57,7 +57,7 @@ const HelpAndSupport = () => {
             return(
               <div
                 key={title}
-                className={clsx("p-30 mb-20 has-background-gray-4 border-radius-14px colored-shadow", styles.lottie)}
+                className={clsx("p-30 mb-20 has-background-gray-200 border-radius-14px colored-shadow", styles.lottie)}
                 onMouseEnter={() => onHover(title)}
                 onMouseLeave={() => onRemoveHover()}
               >
@@ -79,7 +79,7 @@ const HelpAndSupport = () => {
                   )}
                 </div>
                 <p className="is-size-5 mb-10 has-text-weight-semibold has-text-primary">{title}</p>
-                <p className="is-size-57 has-text-deep-black mb-20">{subtitle}</p>
+                <p className="is-size-57 has-text-black-950 mb-20">{subtitle}</p>
               </div>
             )
           }) }
@@ -87,8 +87,8 @@ const HelpAndSupport = () => {
         <div className="has-background-white py-120 px-80 container">
           <div className="is-flex is-flex-wrap-wrap is-justify-content-space-evenly is-align-items-center">
             <div className="mb-25">
-              <p className="has-text-weight-semibold has-text-deep-black is-size-3 is-size-4-mobile">Frequently asked questions</p>
-              <p className="has-text-deep-black is-size-4 is-size-5-mobile mt-15">Check our FAQ page to learn more about Sema</p>
+              <p className="has-text-weight-semibold has-text-black-950 is-size-3 is-size-4-mobile">Frequently asked questions</p>
+              <p className="has-text-black-950 is-size-4 is-size-5-mobile mt-15">Check our FAQ page to learn more about Sema</p>
               <a href={SEMA_FAQ_URL} target="_blank" rel="noreferrer">
                 <button className="button is-primary has-text-weight-semibold px-50 py-20 colored-shadow-small mt-25" type="button">FAQ page</button>
               </a>

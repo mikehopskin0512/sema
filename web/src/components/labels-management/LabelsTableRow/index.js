@@ -47,10 +47,10 @@ const LabelsTableRow = ({ data, token }) => {
             <Tag tag={label} _id={_id} type={type} />
           </p>
           <div className="is-hidden-desktop m-5 is-hidden-tablet">
-            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-stat m-0">
+            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-gray-700 m-0">
               Type: {type}
             </p>
-            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-stat m-0">
+            <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-gray-700 m-0">
               Suggested Snippets: {suggestedCommentsCount}
             </p>
           </div>

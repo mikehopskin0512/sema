@@ -19,7 +19,7 @@ const RepoList = ({ type, repos }) => {
     repos.length > 0 ? (
       <div className="mb-50">
         <div className="is-flex is-justify-content-space-between">
-          <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
+          <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
           <div className="is-flex">
             <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
               <FontAwesomeIcon icon={faBars} />

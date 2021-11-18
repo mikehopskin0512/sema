@@ -56,7 +56,7 @@ const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
             </button>
           </div>
           <div className={styles.info}>
-            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-deep-black ')}>{title}</p>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950 ')}>{title}</p>
             <p className={clsx('mt-20')}>{subtitle}</p>
           </div>
           <div className={clsx("is-flex is-justify-content-space-between is-align-items-center mb-10", styles.footer)}>

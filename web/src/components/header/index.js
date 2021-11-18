@@ -151,27 +151,27 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
                 <Link href="/">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
                     Repos
                   </a>
                 </Link>
                 <Link href={PATHS.PERSONAL_INSIGHTS}>
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
                     Personal Insights
                   </a>
                 </Link>
                 <Link href={PATHS.SUGGESTED_SNIPPETS._}>
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes(PATHS.SUGGESTED_SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SUGGESTED_SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Suggested Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Community Eng Guides
                   </a>
                 </Link> */}
                 <Link href={PATHS.INVITATIONS}>
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
                     <div className="is-flex is-flex-wrap-wrap">
                       Invitations
                       <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
@@ -179,12 +179,12 @@ const Header = () => {
                   </a>
                 </Link>
                 <Link href={PATHS.SUPPORT}>
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.SUPPORT && 'has-text-weight-semibold'}`}>
                     Support
                   </a>
                 </Link>
                 {/* <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
-                  <a aria-hidden="true" className="navbar-item has-text-deep-black mr-15" onClick={toggleHamburger}>
+                  <a aria-hidden="true" className="navbar-item has-text-black-950 mr-15" onClick={toggleHamburger}>
                     Support
                   </a>
                 </div> */}
@@ -289,7 +289,7 @@ const Header = () => {
                 {/*        <img src="/img/team.png" className="mr-10" alt="" />*/}
                 {/*        <div>*/}
                 {/*          <div className="is-size-7 has-text-weight-semibold">{teams[0].name}</div>*/}
-                {/*          <div className="is-size-8 has-text-weight-semibold has-text-gray-dark is-uppercase my-5">Team Account</div>*/}
+                {/*          <div className="is-size-8 has-text-weight-semibold has-text-gray-500 is-uppercase my-5">Team Account</div>*/}
                 {/*          <Link href="/teams">*/}
                 {/*            <a className="is-line-height-1 is-size-6 has-text-weight-semibold has-text-primary mt-5">*/}
                 {/*              <span className="mr-10">Manage</span><span>Team</span>*/}
@@ -325,7 +325,7 @@ const Header = () => {
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1"
               >
                 <Link href="/guides">
-                  <a aria-hidden="true" className={`navbar-item has-text-deep-black mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-25 ${pathname.includes('/engineering') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Community Eng Guides
                   </a>
                 </Link>

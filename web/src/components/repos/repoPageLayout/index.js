@@ -114,7 +114,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
                   />
                 ) : (
                   <p
-                    className={clsx('has-text-deep-black px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile', styles['select-container'], styles['repo-select-container'])}>{name}</p>
+                    className={clsx('has-text-black-950 px-20 pt-20 has-background-white has-text-weight-semibold is-size-3 is-size-5-mobile', styles['select-container'], styles['repo-select-container'])}>{name}</p>
                 )}
               </div>
             </div>
@@ -131,7 +131,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
                 </div>
               </div>
             </div>
-            <div className="has-background-gray-4">
+            <div className="has-background-gray-200">
               <Sidebar {...sidebarProps}>
                 <>
                   {children}

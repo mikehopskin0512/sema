@@ -92,12 +92,12 @@ const CustomSelect = (props) => {
             <input type="checkbox" className="mr-8" checked={isSelected} />
             {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} /> }
             <span className="is-size-7 mr-5">{emoji ? `${emoji} ` : ''}</span>
-            <span className="is-size-7 has-text-weight-semibold has-text-deep-black"><div dangerouslySetInnerHTML={{ __html: optionLabel }} /></span>
+            <span className="is-size-7 has-text-weight-semibold has-text-black-950"><div dangerouslySetInnerHTML={{ __html: optionLabel }} /></span>
           </label>
         ) : (
           <div className="is-flex is-align-items-center">
             {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} /> }
-            <span className="is-size-7 has-text-weight-semibold has-text-deep-black">{optionLabel}</span>
+            <span className="is-size-7 has-text-weight-semibold has-text-black-950">{optionLabel}</span>
           </div>
         ) }
 
@@ -106,13 +106,13 @@ const CustomSelect = (props) => {
   };
 
   // const Input = (p) => (
-  //   <components.Input className="p-0 is-size-8 has-text-weight-semibold has-text-deep-black is-fullwidth" {...p} />
+  //   <components.Input className="p-0 is-size-8 has-text-weight-semibold has-text-black-950 is-fullwidth" {...p} />
   // );
 
   const MultiValue = (p) => (
     <components.MultiValue
       {...p}
-      className="px-5 py-2 is-size-8 has-text-weight-semibold has-text-deep-black has-background-gray-2"
+      className="px-5 py-2 is-size-8 has-text-weight-semibold has-text-black-950 has-background-gray-100"
     />
   );
 
@@ -140,7 +140,7 @@ const CustomSelect = (props) => {
         type="button"
         onClick={toggleMenu}
         className={clsx(
-          'has-background-gray-2 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
+          'has-background-gray-100 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
           styles.select,
         )}>
         <div className="is-flex is-align-items-center">

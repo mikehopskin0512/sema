@@ -70,7 +70,7 @@ const LabelsManagement = () => {
       router.replace('/');
     }
   }, []);
-  
+
   if (!isAuthorized) {
     return(
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '50vh' }}>
@@ -93,7 +93,7 @@ const LabelsManagement = () => {
           className="mr-15"
           maxInitials={2}
         />
-        <p className="is-size-4 has-text-weight-semibold has-text-deep-black">{roleTeam?.team?.name}</p>
+        <p className="is-size-4 has-text-weight-semibold has-text-black-950">{roleTeam?.team?.name}</p>
       </div>
       <div className="tabs">
         <ul>

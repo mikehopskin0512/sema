@@ -151,7 +151,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
         </div>
         <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-space-between">
           <div className="is-flex is-align-items-center p-10">
-            <p className="has-text-weight-semibold has-text-deep-black is-size-4 mr-10">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
               {name}
             </p>
             <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
@@ -194,7 +194,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               <Loader/>
             </div>
           ) : isEmpty(commentsFiltered) ? (
-            <div className="is-size-5 has-text-deep-black my-120 has-text-centered">
+            <div className="is-size-5 has-text-black-950 my-120 has-text-centered">
               <img src="/img/empty-page.svg" className={styles['no-comments-img']} />
               <p className="is-size-7 my-25">You don't have any Custom Snippets.</p>
               { isEditable && (
@@ -226,7 +226,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth mt-50 mb-70">
             <button
               onClick={viewMore}
-              className="button has-background-gray-9 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
+              className="button has-background-gray-200 is-outlined has-text-weight-semibold is-size-6 is-primary has-text-primary"
               type="button">
               View More
             </button>

@@ -14,7 +14,7 @@ const BulkAdmitForm = ({ onSubmit }) => {
         onChange={(e) => setBulkCount(e.target.value)}
       />
       <p>Waitlisted users into Sema</p>
-      <button className='button mx-10 has-background-purple has-text-white' onClick={() => onSubmit(bulkCount)}>Go</button>
+      <button className='button mx-10 has-background-black-900 has-text-white' onClick={() => onSubmit(bulkCount)}>Go</button>
     </div>
   )
 };

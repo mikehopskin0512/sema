@@ -223,7 +223,7 @@ const PersonalInsights = () => {
       <div className="my-40 is-hidden-mobile">
         <div className="mb-15">
           <div className="is-flex is-justify-content-space-between">
-            <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">
+            <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">
               Personal Insights
               <span className="ml-20 is-size-7 has-text-weight-normal">
                 <InfoFilledIcon
@@ -258,7 +258,7 @@ const PersonalInsights = () => {
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} />
           <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} />
         </div>
-        <p className="has-text-deep-black has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
+        <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
         <ActivityItemList comments={filteredComments} />
       </div>
     </>

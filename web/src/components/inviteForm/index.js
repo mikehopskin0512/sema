@@ -149,7 +149,7 @@ const InviteForm = ({ onReload }) => {
               </span>
             </div>
             <div className="is-flex is-justify-content-flex-end">
-              <button className="button has-background-purple has-text-white" type="submit">
+              <button className="button has-background-black-900 has-text-white" type="submit">
                 Send Invite
               </button>
             </div>

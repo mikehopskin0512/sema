@@ -90,9 +90,9 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
       </div>
       {(getValues('search') || getValues('tag') || getValues('language')) && (
         <div className="is-flex is-align-items-flex-end mt-20">
-          {getValues('search') && <p className="is-size-6 mr-15 has-text-deep-black"><b>Search:</b> {getValues('search')}</p>}
-          {getValues('tag') && <p className="is-size-6 mr-15 has-text-deep-black"><b>Tag:</b> {getValues('tag')}</p>}
-          {getValues('language') && <p className="is-size-6 mr-15 has-text-deep-black"><b>Language:</b> {getValues('language')}</p>}
+          {getValues('search') && <p className="is-size-6 mr-15 has-text-black-950"><b>Search:</b> {getValues('search')}</p>}
+          {getValues('tag') && <p className="is-size-6 mr-15 has-text-black-950"><b>Tag:</b> {getValues('tag')}</p>}
+          {getValues('language') && <p className="is-size-6 mr-15 has-text-black-950"><b>Language:</b> {getValues('language')}</p>}
           <div
             className="is-clickable has-text-primary is-size-8 pb-3"
             aria-hidden
