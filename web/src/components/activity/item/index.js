@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { get, find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
-
-const defaultAvatar = '/img/default-avatar.jpg';
 
 const ActivityItem = (props) => {
   const {
@@ -32,7 +31,7 @@ const ActivityItem = (props) => {
     username = 'User@email.com',
     firstName = '',
     lastName = '',
-    avatarUrl = defaultAvatar,
+    avatarUrl = DEFAULT_AVATAR,
   } = user || {};
 
   const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'MM/dd/yyyy hh:mm aa') : '');

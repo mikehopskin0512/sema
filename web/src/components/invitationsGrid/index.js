@@ -175,7 +175,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         data={dataSource}
         empty={(
           <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
-            <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
+            <img className={styles['no-data-img']} src="/img/social-graph.svg" />
             <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
               You haven't invited anyone yet.
             </div>

@@ -180,7 +180,7 @@ const Dashboard = () => {
       </div>
     )
   }
-  
+
   return (
     <>
       {repositories.isFetching || !isUserReposLoaded ? (

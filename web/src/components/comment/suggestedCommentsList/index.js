@@ -195,7 +195,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
             </div>
           ) : isEmpty(commentsFiltered) ? (
             <div className="is-size-5 has-text-deep-black my-120 has-text-centered">
-              <img src="/img/no-suggested-comments.png" className={styles['no-comments-img']} />
+              <img src="/img/empty-page.svg" className={styles['no-comments-img']} />
               <p className="is-size-7 my-25">You don't have any Custom Snippets.</p>
               { isEditable && (
                 <button

@@ -1,12 +1,13 @@
 import React from 'react';
 import clsx from 'clsx';
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash';
+import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './repoUsers.module.scss';
 
 const RepoUsers = ({ users }) => (
   <div className="is-flex">
     {(users.length > 4 ? users.slice(0, 3) : users.slice(0, 4)).map((item) => (
-      <img src={isEmpty(item.avatarUrl) ? '/img/default-avatar.jpg' : item.avatarUrl } alt="user" className={clsx('border-radius-16px', styles.avatar)} />
+      <img src={isEmpty(item.avatarUrl) ? DEFAULT_AVATAR : item.avatarUrl} alt="user" className={clsx('border-radius-16px', styles.avatar)} />
     ))}
     {users.length > 4 && (
       <div className={clsx(

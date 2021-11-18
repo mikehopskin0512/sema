@@ -7,6 +7,7 @@ import Helmet, { HelpSupportHelmet } from '../../components/utils/Helmet';
 import styles from './support.module.scss';
 import withLayout from '../../components/layout';
 import { SEMA_FAQ_URL } from '../../utils/constants';
+import { PlayIcon } from '../../components/Icons';
 
 const HelpAndSupport = () => {
   const [hovered, setHovered] = useState(null);
@@ -70,7 +71,9 @@ const HelpAndSupport = () => {
                     />
                   ) : (
                     <div className="is-full-height is-flex is-align-items-center is-justify-content-center">
-                      <img src="/img/button-play.png" className={clsx(styles['button-play'], hovered === title ? 'is-invisible' : '')} />
+                      <div className={clsx(styles['button-play'])}>
+                        <PlayIcon size="large" />
+                      </div>
                       <img src={img} className={styles.img} />
                     </div>
                   )}
@@ -91,7 +94,7 @@ const HelpAndSupport = () => {
               </a>
             </div>
             <div>
-              <img src="/img/faq.png" alt="faq" />
+              <img src="/img/ide-question.svg" alt="faq" />
             </div>
           </div>
         </div>

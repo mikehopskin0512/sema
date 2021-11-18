@@ -1,11 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
-import { faThumbsUp, faCommentAlt } from '@fortawesome/free-regular-svg-icons'
 import { isEmpty } from "lodash";
-
+import Logo from '../../components/Logo';
 import clsx from 'clsx';
 import Toaster from '../../components/toaster';
 import withLayout from '../../components/layout';
@@ -79,28 +76,30 @@ const Login = () => {
       dispatch(fetchInvite(token));
     }
   }, [])
-      
+
 if (!isAuthenticated || user.isWaitlist) {
   return (
     <div className={styles.container}>
       <Helmet { ...LoginHelmet } />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <img src="/img/login_bg.png" className={clsx("is-hidden-mobile", styles.bg)} />
+      <img src="/img/lines-bg.png" className={clsx("is-hidden-mobile", styles.bg)} />
       <section className="hero">
         <div className="hero-body mb-120">
           <div className="container">
-            <img src="/img/hires_logo_name.svg" width="170" className="mb-80" />
+            <div className="mb-80">
+              <Logo shape="horizontal" width={170} height={60}/>
+            </div>
             <div className="is-flex is-flex-wrap-wrap is-justify-content-space-around">
               <div className="is-flex-grow-1 is-flex is-flex-direction-column is-align-items-center is-justify-content-center" >
                 <div style={{ maxWidth: 500 }}>
-                  <img src="/img/codelines.png" width="380" style={{ marginRight: 'auto' }}/>
+                  <img src="/img/ide-secondary.svg" width="380" style={{ marginRight: 'auto' }}/>
                   <h1 className={clsx("my-40", styles.title)}>Write more meaningful code reviews.</h1>
                   <div className="feature-list mt-20">
                     <ul>
                       <li className="mb-25">
                         <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
                           <div className={clsx("mr-15", styles['fa-container'])} >
-                            <img src="/img/like_vector.png" />
+                            <img src="/img/icons/like_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
                             <span className="has-text-weight-bold">Suggested Snippets: </span>
@@ -111,7 +110,7 @@ if (!isAuthenticated || user.isWaitlist) {
                       <li className="mb-25">
                         <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
                           <div className={clsx("mr-15", styles['fa-container'])} >
-                            <img src="/img/comment_vector.png" />
+                            <img src="/img/icons/comment_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
                             <span className="has-text-weight-bold">Comment Reactions: </span>
@@ -122,7 +121,7 @@ if (!isAuthenticated || user.isWaitlist) {
                       <li className="mb-25">
                         <div className="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center">
                           <div className={clsx("mr-15", styles['fa-container'])} >
-                            <img src="/img/tag_vector.png" />
+                            <img src="/img/icons/tag_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
                             <span className="has-text-weight-bold">Comment Tags: </span>

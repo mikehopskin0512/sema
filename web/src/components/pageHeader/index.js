@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './pageHeader.module.scss';
+import Logo from '../Logo';
 
 const menus = [
   {
@@ -33,7 +34,7 @@ const PageHeader = () => {
   return (
     <div className="content-container px-20 mb-25">
       <div className="is-flex mb-25">
-        <img src="/img/logo_rect.png" alt="logo" />
+        <Logo shape="pill" width={40} height={30} />
         <p className="has-text-weight-semibold has-text-deep-black is-size-5 ml-20">
           Calendly Front End Admin
         </p>

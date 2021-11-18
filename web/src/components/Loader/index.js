@@ -1,9 +1,10 @@
 import React from 'react';
+import Logo from '../Logo';
 
 const Loader = () => (
   <div className="is-flex is-align-content-center is-align-items-center is-flex-direction-column is-justify-content-center p-20">
-    <img src="/img/logo.png" alt="sema" width={60} className="mb-20" />
-    <p className="has-text-weight-semibold">Warming up the photons...</p>
+    <Logo width={60} height={60} />
+    <p className="has-text-weight-semibold mt-20">Warming up the photons...</p>
   </div>
 );
 

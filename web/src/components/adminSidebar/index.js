@@ -11,6 +11,7 @@ import {
   GridIcon,
   MailIcon,
 } from '../Icons';
+import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 
 const MenuItem = ({ pathName, icon, name }) => {
@@ -82,7 +83,7 @@ const AdminSidebar = () => {
         onClick={() => Router.push(PATHS.DASHBOARD)}
         aria-hidden="true"
       >
-        <img src="/img/logo_white.png" alt="logo" />
+        <Logo theme="dark" shape="horizontal" />
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-space-between mt-25">
         {menus.map((item) => (

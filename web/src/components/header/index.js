@@ -14,6 +14,7 @@ import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { ViewAdmin } from '../../data/permissions';
 import { teamsOperations } from '../../state/features/teams';
+import Logo from '../Logo';
 import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 
@@ -122,8 +123,8 @@ const Header = () => {
       >
         <div className="navbar-brand">
           <Link href="/">
-            <a>
-              <img src="/img/sema-logo.png" alt="sema-logo" width="100" className="mt-15" />
+            <a className="is-flex is-align-items-center">
+              <Logo shape="horizontal" width={100} height={34} />
             </a>
           </Link>
           {token && isVerified && !isWaitlist && (
@@ -211,7 +212,7 @@ const Header = () => {
                     <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
-                
+
                 <Link href={PATHS.SUPPORT}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Support

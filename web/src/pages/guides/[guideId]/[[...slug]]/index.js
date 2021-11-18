@@ -160,7 +160,7 @@ const EngineeringGuidePage = () => {
     <div className="hero">
       <Helmet title="Engineering Guide">
         <meta property='og:title' content={`Sema Software | Engineering Guide`}/>
-        <meta property='og:image' content='/img/logo_white.png'/>
+        {/*<meta property='og:image' content='/img/logos/logo_white.png'/>*/}
         <meta property='og:description' content={`Engineering Guide - ${name}: ${title} by ${author}`}/>
         <meta property='og:url' content={url} />
         <meta property='og:type' content='website' />
