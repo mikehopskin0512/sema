@@ -45,7 +45,7 @@ module "phoenix" {
     lb_security_group = module.alb.alb_security_group
     port              = "3000"
     domain            = "semasoftware.com"
-    domain_prefix     = "app-stage"
+    domain_prefix     = "app-staging"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
@@ -83,7 +83,7 @@ module "apollo" {
     lb_security_group = module.alb.alb_security_group
     port              = "3001"
     domain            = "semasoftware.com"
-    domain_prefix     = "api-stage"
+    domain_prefix     = "api-staging"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
