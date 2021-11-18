@@ -63,6 +63,9 @@ const userSchema = mongoose.Schema({
     collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
     isActive: { type: Boolean, default: true },
   }],
+  companyName: String,
+  cohort: String,
+  notes: String,
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;
@@ -73,7 +76,7 @@ userSchema.pre('save', async function save(next) {
     const { username } = this.identities[0];
     const defaultSemaCollections = ['Philosophies', 'Famous Quotes', 'My Snippets', 'Common Comments', 'Security - Mitre’s Common Weakness Enumeration (CWE)'];
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-    
+
     // Creates default user collection
     const personalCollection = await createUserCollection(username);
     const semaCollections = await findByAuthor('sema');

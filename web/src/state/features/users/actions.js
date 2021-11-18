@@ -1,4 +1,5 @@
 /* eslint-disable import/no-cycle */
+import { format } from 'date-fns';
 import {
   bulkAdmit,
   getTimeToValueMetric,
@@ -7,9 +8,9 @@ import {
   updateUserStatus,
   exportTimeToValue,
   exportUsersApi,
+  putUser,
 } from './api';
 import * as types from './types';
-import { format } from 'date-fns';
 
 const requestUpdateUserAvailableInvitations = () => ({
   type: types.REQUEST_UPDATE_USER_AVAILABLE_INVITATIONS,
@@ -68,6 +69,18 @@ const requestBulkAdmitUsersError = (errors) => ({
   errors,
 });
 
+const requestUpdateUser = () => ({
+  type: types.UPDATE_USER,
+});
+
+const requestUpdateUserSuccess = () => ({
+  type: types.UPDATE_USER_SUCCESS,
+});
+
+const requestUpdateUserError = () => ({
+  type: types.UPDATE_USER_ERROR,
+});
+
 export const fetchUsers = (params = {}, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUsers());
@@ -110,6 +123,19 @@ export const updateStatus = (params = {}, token) => async (dispatch) => {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestUpdateUserStatusError(errMessage));
+  }
+};
+
+export const updateUser = (id, params = {}) => async (dispatch) => {
+  try {
+    dispatch(requestUpdateUser());
+    await putUser(id, params);
+    dispatch(fetchUsers());
+    dispatch(requestUpdateUserSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestUpdateUserError(errMessage));
   }
 };
 

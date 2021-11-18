@@ -67,6 +67,23 @@ const reducer = (state = initialState, action) => {
       isUpdating: false,
       error: action.errors,
     };
+  case types.UPDATE_USER:
+    return {
+      ...state,
+      isUpdating: true,
+    };
+  case types.UPDATE_USER_SUCCESS:
+    return {
+      ...state,
+      isUpdating: false,
+      error: {},
+    };
+  case types.UPDATE_USER_ERROR:
+    return {
+      ...state,
+      isUpdating: false,
+      error: action.errors,
+    };
   case types.REQUEST_TIME_TO_VALUE_METRIC:
     return {
       ...state,

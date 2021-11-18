@@ -137,6 +137,9 @@ export const exportUsers = async (params) => {
     'CreatedAt': user.createdAt,
     'UpdatedAt': user.updatedAt,
     'Week of signup': user.createdAt ? `${format(user.createdAt, 'yyyy.ww', {firstWeekContainsDate: 4, weekStartsOn: 1})} ` : '',
+    'CompanyName': user.companyName,
+    'Cohort': user.cohort,
+    'Notes': user.notes,
   }));
 
   const { Parser } = Json2CSV;
@@ -164,6 +167,9 @@ export const exportUsers = async (params) => {
     'CreatedAt',
     'UpdatedAt',
     'Week of signup',
+    'CompanyName',
+    'Cohort',
+    'Notes',
   ];
 
   const json2csvParser = new Parser({ fields, delimiter: ',' });

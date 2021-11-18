@@ -17,6 +17,7 @@ import FilterTabs from '../../components/admin/filterTabs';
 import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 import ExportButton from '../../components/admin/exportButton';
 import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
+import InlineEdit from '../../components/inlineEdit';
 
 const {
   fetchUsers,
@@ -24,6 +25,7 @@ const {
   updateStatus,
   bulkAdmitUsers,
   exportUsers,
+  updateUser,
 } = usersOperations;
 
 const { exportSuggestedComments } = suggestCommentsOperations;
@@ -138,6 +140,11 @@ const UsersPage = () => {
     }
   };
 
+  const handleUpdateUser = (obj, user) => {
+    if (!user || !user._id) return;
+    dispatch(updateUser(user._id, obj));
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -173,6 +180,10 @@ const UsersPage = () => {
         Cell: ({ cell: { value } }) => <div className="has-text-centered">{value}</div>,
       },
       {
+        Header: 'Week of signup',
+        accessor: 'weekOfSignUp',
+      },
+      {
         Header: 'Email',
         accessor: 'username',
         sorted: false,
@@ -183,8 +194,28 @@ const UsersPage = () => {
         sorted: false,
       },
       {
-        Header: 'Week of signup',
-        accessor: 'weekOfSignUp',
+        Header: 'Company Name',
+        accessor: 'companyName',
+        sorted: false,
+        Cell: ({ cell: { value }, row: { original } }) => (
+          <InlineEdit onSave={(companyName) => handleUpdateUser({ companyName }, original)} value={value} />
+        ),
+      },
+      {
+        Header: 'Cohort',
+        accessor: 'cohort',
+        sorted: false,
+        Cell: ({ cell: { value }, row: { original } }) => (
+          <InlineEdit onSave={(cohort) => handleUpdateUser({ cohort }, original)} value={value} />
+        ),
+      },
+      {
+        Header: 'Notes',
+        accessor: 'notes',
+        sorted: false,
+        Cell: ({ cell: { value }, row: { original } }) => (
+          <InlineEdit onSave={(notes) => handleUpdateUser({ notes }, original)} value={value} />
+        ),
       },
       {
         Header: () => (
@@ -267,6 +298,9 @@ const UsersPage = () => {
       id: item._id,
       status: getStatus(item),
     },
+    companyName: item.companyName,
+    cohort: item.cohort,
+    notes: item.notes,
   }));
 
   const tabOptions = useMemo(() => {
