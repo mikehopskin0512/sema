@@ -56,7 +56,7 @@ const ActionMenu = ({ comment }) => {
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
                 onClick={updateArchiveStatus}
               >
-                {`${comment.isActive ? 'Unarchive' : 'Archive'} Comment`}
+                {`${comment.isActive ? 'Archive' : 'Unarchive' } Comment`}
               </button>
             </div>
           </div>
