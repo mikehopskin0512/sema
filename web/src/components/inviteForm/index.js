@@ -113,7 +113,7 @@ const InviteForm = ({ onReload }) => {
                 }
               />
               <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('companyName')}>
-                <FontAwesomeIcon icon={faTimes} size="sm"/>
+                <CloseIcon size="small" />
               </span>
             </div>
             <div className="control has-icons-right mb-25">
@@ -129,7 +129,7 @@ const InviteForm = ({ onReload }) => {
                 }
               />
               <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('cohort')}>
-                <FontAwesomeIcon icon={faTimes} size="sm"/>
+                <CloseIcon size="small" />
               </span>
             </div>
             <div className="control has-icons-right mb-25">
@@ -145,7 +145,7 @@ const InviteForm = ({ onReload }) => {
                 }
               />
               <span className="icon is-small is-right is-clickable has-text-dark" onClick={() => clearField('notes')}>
-                <FontAwesomeIcon icon={faTimes} size="sm"/>
+                <CloseIcon size="small" />
               </span>
             </div>
             <div className="is-flex is-justify-content-flex-end">
