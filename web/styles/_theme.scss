@@ -3,9 +3,6 @@
 
 @import "./_colors.module";
 
-// Import font
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
 // Update Bulma global variables
 // Override colors
 $primary: $blue-700;
@@ -92,8 +89,9 @@ $spacing-values: (
   "300": 300px,
   "450": 450px,
 );
-$input-background-color: #e7e8ea;
-$family-sans-serif: "Inter", "Montserrat", sans-serif;
+
+$input-background-color: $gray-300;
+$family-sans-serif: "Inter", sans-serif;
 $family-monospace: sans-serif;
 
 // Badge
