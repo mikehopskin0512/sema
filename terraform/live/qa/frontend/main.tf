@@ -9,6 +9,7 @@ module "alb" {
   env         = "qa"
   name        = "qa-frontend"
   vpc_name    = "vpc-qa"
+  internal    = true
 }
 
 module "web" {
@@ -20,7 +21,7 @@ module "web" {
   env               = "qa"
   domain            = "app-qa.semasoftware.com"
   health_check_path = "/login"
-  image             = "${var.phoenix_image}"
+  image             = var.phoenix_image
   lb_listener_arn   = module.alb.https_listener
   lb_security_group = module.alb.alb_security_group
   memory            = "2048"
@@ -39,7 +40,7 @@ module "api" {
   env               = "qa"
   domain            = "api-qa.semasoftware.com"
   health_check_path = "/health"
-  image             = "${var.apollo_image}"
+  image             = var.apollo_image
   lb_listener_arn   = module.alb.https_listener
   lb_security_group = module.alb.alb_security_group
   memory            = "2048"

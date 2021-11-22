@@ -31,11 +31,12 @@ const createAndJoinOrg = (userId, org, token) => async (dispatch) => {
 
 const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
   try {
-
     const payload = await dispatch(actions.registerUser(user, invitation));
-    const { data: { jwtToken } } = payload;
-    const { user: newUser } = jwtDecode(jwtToken) || {};
-    const { verificationToken } = newUser;
+    if (!payload) { return false; }
+
+    const { data: { jwtToken } = {} } = payload;
+    const { _id: userId, verificationToken } = jwtDecode(jwtToken) || {};
+
     await dispatch(actions.activateUser(verificationToken));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE, { url: PATHS.DASHBOARD });
@@ -43,7 +44,6 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
   } catch (error) {
     const { response: { data: { message } = {}, status, statusText } = {} } = error || '';
     const errMessage = message || `${status} - ${statusText}`;
-
     dispatch(triggerAlert(errMessage, 'error'));
   }
 };

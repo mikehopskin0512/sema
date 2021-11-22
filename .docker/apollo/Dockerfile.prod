@@ -1,10 +1,10 @@
 # ---------- Base ----------
-FROM node:12.15.0-alpine AS base
+FROM node:12.15.0-alpine3.11 AS base
 
 RUN apk add --update --no-cache \
-    python \
-    make \
-    g++
+    python~=2.7 \
+    make~=4.2 \
+    g++~=9.3
 
 RUN mkdir /usr/app/ && chown -R node:node /usr/app/
 WORKDIR /usr/app

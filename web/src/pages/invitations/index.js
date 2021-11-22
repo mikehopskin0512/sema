@@ -95,11 +95,6 @@ const Invite = () => {
   }, [userId, page, perPage]);
 
   useEffect(() => {
-    console.log(pendingInvitationCount, acceptedInvitationCount)
-    console.log(getTotalInvitations());
-  }, [invitations]);
-
-  useEffect(() => {
     if (showAlert === true) {
       dispatch(clearAlert());
     }

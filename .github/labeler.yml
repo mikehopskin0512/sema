@@ -9,3 +9,6 @@ frontend:
 
 requiring-migrations:
 - apollo/migrations/*
+
+terraform: 
+- terraform/**/*

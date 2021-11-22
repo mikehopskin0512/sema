@@ -331,8 +331,8 @@ const bulkCreateSuggestedComments = async (comments, user) => {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
-      author: comment.author ? comment.author : fullName(user.user),
-      enteredBy: user.user._id,
+      author: comment.author ? comment.author : fullName(user),
+      enteredBy: user._id,
       lastModified: new Date(),
     })));
 
@@ -420,7 +420,7 @@ const exportSuggestedComments = async () => {
     },
     { $unwind: { path: '$createdBy', preserveNullAndEmptyArrays: true } },
   ]);
-  
+
   const mappedData = suggestedComments.map((comment) => ({
     'Title': comment.title,
     'Comment': comment.comment,

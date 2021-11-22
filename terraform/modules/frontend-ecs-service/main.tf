@@ -3,7 +3,7 @@
 data "aws_subnet_ids" "private" {
   vpc_id = data.aws_vpc.main.id
   tags = {
-    Name = "vpc-${var.env}_private_*"
+    Name = "*${var.env}*private*"
   }
 }
 
@@ -40,13 +40,13 @@ resource "aws_ecs_task_definition" "service" {
 }
 
 resource "aws_ecs_service" "service" {
-  name             = var.service_name
-  cluster          = data.aws_ecs_cluster.main.id
+  name                   = var.service_name
+  cluster                = data.aws_ecs_cluster.main.id
   enable_execute_command = true
-  task_definition  = aws_ecs_task_definition.service.arn
-  desired_count    = var.task_count
-  launch_type      = "FARGATE"
-  platform_version = "1.4.0"
+  task_definition        = aws_ecs_task_definition.service.arn
+  desired_count          = var.task_count
+  launch_type            = "FARGATE"
+  platform_version       = "1.4.0"
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]

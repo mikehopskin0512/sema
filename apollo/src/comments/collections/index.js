@@ -10,9 +10,9 @@ const route = Router();
 
 export default (app, passport) => {
   app.use(`/${version}/comments/collections`, route);
-  
+
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { body: { collection }, params: { id }, user: { user: { _id }} } = req;
+    const { body: { collection }, params: { id }, user: { _id } } = req;
     try {
       let payload;
       if (collection) {
@@ -28,7 +28,7 @@ export default (app, passport) => {
   });
 
   route.get('/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user: { user: { _id } } } = req;
+    const { user: { _id } } = req;
     try {
       const collections = await getUserCollectionsById(_id);
       return res.status(200).send(collections);
@@ -40,24 +40,24 @@ export default (app, passport) => {
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { collections, team } = req.body;
-    const { user } = req.user;
+    const { _id: userId } = req.user;
 
     try {
-      const newCollections = await createMany(collections, user?.user?._id);
+      const newCollections = await createMany(collections, userId);
       if (!newCollections) {
         throw new errors.BadRequest('Collections create error');
       }
-  
+
       const collectionIds = newCollections.map((col) => col._id);
       if (team) {
         const teamData = await Team.findById(team);
         if (teamData.name === 'Sema Super Team') {
           await populateCollectionsToUsers(collectionIds);
         } else {
-          await populateCollectionsToUsers(collectionIds, user._id);
+          await populateCollectionsToUsers(collectionIds, userId);
         }
       } else {
-        await populateCollectionsToUsers(collectionIds, user._id);
+        await populateCollectionsToUsers(collectionIds, userId);
       }
 
       return res.status(201).send({

@@ -57,13 +57,13 @@ export default (app, passport) => {
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comment, source, tags } = req.body;
-    const { user } = req.user;
+    const { _id: userId } = req.user;
     let title = req.body.title;
     let collectionId = req.body.collectionId;
 
     try {
       if (!collectionId) {
-        const collections = await getUserCollectionsById(user._id);
+        const collections = await getUserCollectionsById(userId);
         // TODO: we should delete my comments later. It's a legacy name
         const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
         const defaultCollection = collections.find((collection) => {

@@ -8,12 +8,14 @@ if [[ -z ${ENV} ]]; then
   exit 1
 fi
 
-if [  "${ENV}" = "localhost" ] ; then
- cp .env.localhost .env
-elif [  "${ENV}" = "qa" ] ; then
- cp .env.qa .env
-elif [  "${ENV}" = "prod" ] ; then
- cp .env.prod .env
+if [ "${ENV}" = "localhost" ]; then
+  cp .env.localhost .env
+elif [ "${ENV}" = "qa" ]; then
+  cp .env.qa .env
+elif [ "${ENV}" = "prod" ]; then
+  cp .env.prod .env
+elif [ "${ENV}" = "staging" ]; then
+  cp .env.staging .env
 fi
 npm ci
 npm run build
