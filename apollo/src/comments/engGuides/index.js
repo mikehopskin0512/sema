@@ -35,7 +35,7 @@ export default (app, passport) => {
     try {
       const { engGuides } = req.body;
 
-      const result = await bulkUpdateEngGuides(engGuides, req.user);
+      const result = await bulkUpdateEngGuides(engGuides);
       return res.status(200).send(result);
     } catch (error) {
       logger.error(error);

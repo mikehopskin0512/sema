@@ -28,11 +28,17 @@ const createUserVoiceIdentityToken = async ({ _id, username, firstName = '', las
   );
 };
 
-export const createAuthToken = async (user) => sign({ user, userVoiceToken: await createUserVoiceIdentityToken(user), exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
+export const createAuthToken = async (user) => {
+  const { _id, isVerified, isWaitlist, verificationToken } = user;
+  return sign({ _id, isVerified, isWaitlist, verificationToken, userVoiceToken: await createUserVoiceIdentityToken(user), exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
+}
 
 export const createIdentityToken = async (identity) => sign({ identity, exp: Math.floor(Date.now() / 1000) + (authTokenMinutes * 60) }, jwtSecret);
 
-export const createRefreshToken = async (user) => sign({ user, exp: Math.floor(Date.now() / 1000) + parseInt(tokenLife, 10) }, refreshSecret);
+export const createRefreshToken = async (user) => {
+  const { _id, isVerified, isWaitlist } = user;
+  return sign({ _id, isVerified, isWaitlist, exp: Math.floor(Date.now() / 1000) + parseInt(tokenLife, 10) }, refreshSecret);
+}
 
 export const validateRefreshToken = async (token) => {
   const payload = await verify(token, refreshSecret);

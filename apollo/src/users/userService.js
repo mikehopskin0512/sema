@@ -6,6 +6,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
 import { checkIfInvited } from '../invitations/invitationService';
+import UserRole from '../roles/userRoleModel';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -167,7 +168,20 @@ export const findById = async (id) => {
       }
     }).exec();
 
-    return user;
+    // If no user found, abort
+    if (!user) {
+      return {};
+    }
+
+    let roles = await UserRole.find({ user: id })
+    .populate('team')
+    .populate('role');
+
+    if (roles) {
+      roles = roles.map((role) => (role.toJSON()));
+    }
+
+    return { ...user, roles };
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

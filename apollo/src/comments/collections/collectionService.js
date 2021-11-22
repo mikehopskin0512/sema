@@ -18,7 +18,7 @@ export const create = async ({
   tags,
   comments,
   author,
-  source: {}
+  source = {}
 }) => {
   try {
     const newCollection = new Collection({

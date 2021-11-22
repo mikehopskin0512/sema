@@ -4,13 +4,12 @@ import jwtDecode from 'jwt-decode';
 import * as types from './types';
 import { toggleActiveCollection } from '../comments/api';
 import {
-  auth, exchangeToken, createUser, putUser, patchUser,
+  auth, exchangeToken, getUser, createUser, putUser, patchUser,
   postUserOrg, verifyUser, resetVerification,
 } from './api';
 
 import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
-import { getUser } from '../selected-user/api';
 import { PATHS } from '../../../utils/constants';
 
 const { triggerAlert, clearAlert } = alertOperations;
@@ -100,10 +99,10 @@ export const authenticate = (username, password) => async (dispatch) => {
   try {
     const res = await auth({ username, password });
     const { data: { jwtToken } } = res;
-    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
-    if (user) {
-      const { _id: userId, isVerified } = user;
+    if (userId) {
+      const user = await dispatch(fetchCurrentUser(userId, jwtToken));
       const orgId = null; // TEMP: Until orgs are linked up
 
       // Only allow store token if isVerified
@@ -145,9 +144,10 @@ const fetchCurrentUser = (id, token) => async (dispatch) => {
   try {
     dispatch(fetchCurrentUserRequest());
     const payload = await getUser(id, token);
-    const { data } = payload;
-    dispatch(fetchCurrentUserSuccess(data));
-    return data;
+    if (!payload) { return false; }
+    const { data: { user } } = payload;
+    dispatch(fetchCurrentUserSuccess(user));
+    return user;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -159,21 +159,25 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
   dispatch(requestRefreshToken());
   try {
     const res = await exchangeToken({ refreshToken });
+    if (!res) { return false; }
     const { data: { jwtToken } } = res;
-    const { user: { _id }, userVoiceToken } = jwtDecode(jwtToken) || {};
-    const user = await dispatch(fetchCurrentUser(_id, jwtToken));
-    const { isVerified } = user;
+    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
-    // Send token to state and hydrate user
+    // Send token to state
     dispatch(requestRefreshTokenSuccess(jwtToken));
-    dispatch(hydrateUser(user, userVoiceToken));
 
-    if (!isVerified) {
+     // Check if user isVerified
+    if (isVerified) {
+      // Fetch and hydrate user
+      const user = await dispatch(fetchCurrentUser(userId, jwtToken));
+      dispatch(hydrateUser(user, userVoiceToken));
+    } else {
       dispatch(triggerAlert('User is not yet verified.', 'error'));
       dispatch(userNotVerifiedError(user));
       // Need server-side check since this is called from sentry
       if (!isServer) { Router.push(PATHS.LOGIN); }
     }
+
     return { isVerified };
   } catch (err) {
     if (err.response) {
@@ -268,7 +272,8 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
     dispatch(requestRegistration());
     const payload = await createUser({ user, invitation });
     const { data: { jwtToken } } = payload;
-    const { user: newUser } = jwtDecode(jwtToken) || {};
+    const { _id: userId } = jwtDecode(jwtToken) || {};
+    const newUser = await dispatch(fetchCurrentUser(userId, jwtToken));
     dispatch(registrationSuccess(jwtToken, newUser));
     return payload;
   } catch (error) {
@@ -308,10 +313,10 @@ export const activateUser = (verifyToken) => async (dispatch) => {
 
     // Auto login user
     const { data: { jwtToken } } = payload;
-    const { user, userVoiceToken } = jwtDecode(jwtToken) || {};
+    const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
-    if (user) {
-      const { _id: userId } = user;
+    if (userId) {
+      const user = await dispatch(fetchCurrentUser(userId, jwtToken));
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
       dispatch(hydrateUser(user, userVoiceToken));

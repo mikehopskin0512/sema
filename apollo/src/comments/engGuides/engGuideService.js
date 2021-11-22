@@ -63,7 +63,7 @@ export const bulkCreateEngGuides = async (engGuides, user) => {
   const guides = await Promise.all(engGuides.map(async (guide) => ({
     ...guide,
     tags: await makeTagsList(guide.tags),
-    author: fullName(user.user),
+    author: fullName(user),
   })));
 
   const result = await EngGuide.create(guides);

@@ -67,7 +67,7 @@ const Header = () => {
     if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
       setBgColor('has-background-white');
     }
-    dispatch(getTeams(token));
+    // dispatch(getTeams(token));
   }, []);
 
   const toggleHamburger = () => {

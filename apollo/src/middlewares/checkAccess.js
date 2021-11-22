@@ -1,6 +1,6 @@
 function checkAccess(team, permission) {
   return (req, res, next) => {
-    const { user } = req.user;
+    const { user } = req;
 
     // TODO this team comparison is temporary for now
     const role = user?.roles?.find((item) => item.role && item.role[permission] && team?.name === 'Sema Super Team');

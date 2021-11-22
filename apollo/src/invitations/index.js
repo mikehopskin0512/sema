@@ -27,7 +27,7 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
-      user: { user: userData },
+      user: userData,
     } = req;
 
     if (!userData.isSemaAdmin && invitation.inviteCount <= 0) {

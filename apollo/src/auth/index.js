@@ -40,22 +40,16 @@ export default (app, passport) => {
         throw new errors.BadRequest('No refresh token found.');
       }
 
-      let refreshPayload = null;
-      try {
-        refreshPayload = await validateRefreshToken(refreshToken);
-      } catch (error) {
-        // Supressing error messages since invalid refresh token will happen often
-        // logger.error(error);
-        throw new errors.BadRequest('Invalid refresh token');
+      const refreshPayload = await validateRefreshToken(refreshToken);
+      const { _id, isVerified } = refreshPayload;
+
+      if (!_id) {
+        throw new errors.BadRequest('No user ID found');
       }
 
-      if (!refreshPayload.user) {
-        throw new errors.BadRequest('No user object found');
-      }
+      const user = await findById(_id);
 
-      const user = await findById(refreshPayload.user._id);
-
-      if (!user) {
+      if (!user?._id) {
         throw new errors.NotFound('No user found');
       }
 
