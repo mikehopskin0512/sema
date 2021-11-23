@@ -51,9 +51,9 @@ const loggedOutElem = () => (
 );
 
 const loggedInElem = (userDetails) => {
-  const {
-    user: { firstName },
-  } = userDetails;
+  const { user = {} } = userDetails;
+  // Temp fix for new JWT bug
+  const { firstName = '' } = user;
   return (
     <div
       className="popup-hero"
