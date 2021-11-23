@@ -70,6 +70,18 @@ const AddSuggestedComment = (props) => {
     setComments([...comments, defaultValues]);
   };
 
+  useEffect(() => {
+    if (collection) {
+      setComments([{
+        ...defaultValues,
+        sourceName: collection.source && collection.source.name,
+        author: collection.author,
+        languages: collection.tags ? collection.tags.filter((item) => item.type === 'language') : [],
+        guides: collection.tags ? collection.tags.filter((item) => item.type !== 'language') : [],
+      }]);
+    }
+  }, [collection]);
+
   const removeComment = (index) => {
     setComments(comments.filter((_comment, idx) => index !== idx));
   };
