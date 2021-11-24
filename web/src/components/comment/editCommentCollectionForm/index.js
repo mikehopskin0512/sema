@@ -95,7 +95,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid =
   return (
     <div className="p-10">
       <div className="mb-25">
-        <label className="label has-text-deep-black">Snippet Collection Title</label>
+        <label className="label has-text-black-950">Snippet Collection Title</label>
         <input
           className="input has-background-white"
           type="text"
@@ -110,7 +110,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid =
       </div>
       <div className="mb-25 is-flex">
         <div className={clsx(styles['three-in-a-row'], "is-flex-grow-1")}>
-          <label className="label has-text-deep-black">Language Labels</label>
+          <label className="label has-text-black-950">Language Labels</label>
           <Select
             {...register(
               'languages',
@@ -205,7 +205,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid =
         </div>
       </div>
       <div className="mb-25">
-        <label className="label has-text-deep-black">Description</label>
+        <label className="label has-text-black-950">Description</label>
         <textarea
           className="textarea has-background-white"
           {...register('description')}
@@ -227,7 +227,4 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid =
   );
 };
 
-
 export default EditCommentCollectionForm;
-
-

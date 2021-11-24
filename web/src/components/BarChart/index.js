@@ -1,13 +1,21 @@
 /* eslint-disable no-return-assign */
 import React, { useEffect, useState } from 'react';
-import { CodeIcon } from '../Icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faArrowUp, faEquals } from '@fortawesome/free-solid-svg-icons';
+import { ArrowDownIcon, ArrowUpIcon, CodeIcon } from '../Icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { format, isValid } from 'date-fns';
 import { EMOJIS } from '../../utils/constants';
+import {
+  black900,
+  green600,
+  green100,
+  red200,
+  red600,
+  gray200,
+  greenAvailable,
+  orange300,
+} from '../../../styles/_colors.module.scss'
 
 
 const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
@@ -159,32 +167,35 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
       }
 
       return (
-        <div className="box has-background-white p-10 border-radius-4px" style={{ width: 300 }}>
-          <div className="is-flex is-justify-content-space-between is-full-width mb-10">
-            <p className="has-text-weight-semibold has-text-black-950 is-size-7">{emoji} {label}</p>
-            <div className="is-size-7 has-text-primary has-text-weight-semibold is-uppercase">{dateString}</div>
+        <div className="box has-background-black p-10 border-radius-4px" style={{ width: 300 }}>
+          <div className="is-flex is-justify-content-space-between is-full-width mb-8">
+            <p className="font-size-14 has-text-weight-semibold has-text-white-50">{emoji} {label}</p>
+            <div className="font-size-12 has-text-primary has-text-blue-300 has-text-weight-semibold is-uppercase">{dateString}</div>
           </div>
-          <p className="is-size-7">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
-          <p className="is-size-7">{totalCommentsLabel}</p>
-          <span className="is-size-7 py-3 px-5 border-radius-4px mt-3" style={{
-            background: percentage === 0 ? '#f0f0f0' : percentage > 0 ? 'rgba(52, 168, 83, 0.1)' : '#F6E0E0',
-            color: percentage === 0 ? '#202020' : percentage > 0 ? '#34A853' : '#DE3617',
-          }}>
-            { percentage === 0 ?
-              <FontAwesomeIcon icon={faEquals} size="sm" className="mr-5" />  :
-              percentage > 0 ? (
-                <FontAwesomeIcon icon={faArrowUp} size="sm" color="#34A853" className="mr-5" />
-              ) : (
-                <FontAwesomeIcon icon={faArrowDown} size="sm" color="#DE3617" className="mr-5" />
-              )
+          <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
+          <p className="font-size-12 line-height-18 has-text-gray-400">{totalCommentsLabel}</p>
+          <div
+            className="is-flex is-align-items-center font-size-10 py-3 px-5 border-radius-4px mt-8"
+            style={{
+              background: percentage === 0 ? gray200 : percentage > 0 ? green600 : red600,
+              color: percentage === 0 ? black900 : percentage > 0 ? green100 : red200,
+            }}
+          >
+            {/* TODO: temp solution since we don't have '=' icon */}
+            {percentage === 0 && <span className="font-size-16">=</span>}
+            {percentage > 0 ?
+              <ArrowUpIcon size="small" /> :
+              <ArrowDownIcon size="small" />
             }
-            {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
-          </span>
+            <span className="ml-4">
+              {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
+            </span>
+          </div>
         </div>
       );
     }
-    return;
   });
+
 
   if (noData) {
     return (
@@ -196,109 +207,106 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
   }
 
   return (
-    <>
-      <ResponsiveBar
-        data={barChartData}
-        keys={EMOJIS.map((item) => item._id)}
-        indexBy="date"
-        margin={{ top: 50, right: 50, bottom: 120, left: 60 }}
-        padding={0.3}
-        valueScale={{ type: 'linear' }}
-        indexScale={{ type: 'band', round: true }}
-        colors={getDataColor}
-        enableLabel={false}
-        defs={[
-          {
-            id: 'dots',
-            type: 'patternDots',
-            background: 'inherit',
-            color: '#a9db5f',
-            size: 4,
-            padding: 1,
-            stagger: true,
+    <ResponsiveBar
+      data={barChartData}
+      keys={EMOJIS.map((item) => item._id)}
+      indexBy="date"
+      margin={{ top: 50, right: 50, bottom: 120, left: 60 }}
+      padding={0.3}
+      valueScale={{ type: 'linear' }}
+      indexScale={{ type: 'band', round: true }}
+      colors={getDataColor}
+      enableLabel={false}
+      defs={[
+        {
+          id: 'dots',
+          type: 'patternDots',
+          background: 'inherit',
+          color: greenAvailable,
+          size: 4,
+          padding: 1,
+          stagger: true,
+        },
+        {
+          id: 'lines',
+          type: 'patternLines',
+          background: 'inherit',
+          color: orange300,
+          rotation: -45,
+          lineWidth: 6,
+          spacing: 10,
+        },
+      ]}
+      fill={[
+        {
+          match: {
+            id: 'fries',
           },
-          {
-            id: 'lines',
-            type: 'patternLines',
-            background: 'inherit',
-            color: '#eed312',
-            rotation: -45,
-            lineWidth: 6,
-            spacing: 10,
+          id: 'dots',
+        },
+        {
+          match: {
+            id: 'sandwich',
           },
-        ]}
-        fill={[
-          {
-            match: {
-              id: 'fries',
-            },
-            id: 'dots',
-          },
-          {
-            match: {
-              id: 'sandwich',
-            },
-            id: 'lines',
-          },
-        ]}
-        borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: 'Date',
-          legendPosition: 'middle',
-          legendOffset: 35,
-        }}
-        tooltip={renderTooltip}
-        maxValue={maxValue}
-        axisLeft={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
-          legendPosition: 'middle',
-          legendOffset: -40,
-        }}
-        labelSkipWidth={12}
-        valueFormat={{ format: ' >-%', enabled: true }}
-        labelSkipHeight={12}
-        labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
-        legends={[
-          {
-            dataFrom: 'keys',
-            data: EMOJIS.map(({ color, _id, label, emoji }) => ({
-              color,
-              label: `${emoji} ${label}`,
-              id: _id,
-            })),
-            anchor: 'bottom',
-            direction: 'row',
-            justify: false,
-            translateX: 0,
-            translateY: 90,
-            itemsSpacing: 5,
-            itemWidth: 100,
-            itemHeight: 20,
-            itemDirection: 'left-to-right',
-            itemOpacity: 0.85,
-            symbolSize: 15,
-            effects: [
-              {
-                on: 'hover',
-                style: {
-                  itemOpacity: 1,
-                },
+          id: 'lines',
+        },
+      ]}
+      borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+      axisTop={null}
+      axisRight={null}
+      axisBottom={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: 'Date',
+        legendPosition: 'middle',
+        legendOffset: 35,
+      }}
+      tooltip={renderTooltip}
+      maxValue={maxValue}
+      axisLeft={{
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
+        legendPosition: 'middle',
+        legendOffset: -40,
+      }}
+      labelSkipWidth={12}
+      valueFormat={{ format: ' >-%', enabled: true }}
+      labelSkipHeight={12}
+      labelTextColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
+      legends={[
+        {
+          dataFrom: 'keys',
+          data: EMOJIS.map(({ color, _id, label, emoji }) => ({
+            color,
+            label: `${emoji} ${label}`,
+            id: _id,
+          })),
+          anchor: 'bottom',
+          direction: 'row',
+          justify: false,
+          translateX: 0,
+          translateY: 90,
+          itemsSpacing: 5,
+          itemWidth: 100,
+          itemHeight: 20,
+          itemDirection: 'left-to-right',
+          itemOpacity: 0.85,
+          symbolSize: 15,
+          effects: [
+            {
+              on: 'hover',
+              style: {
+                itemOpacity: 1,
               },
-            ],
-          },
-        ]}
-        layers={["grid", "axes", "bars", TotalLabels, "markers", "legends"]}
-      />
-    </>
-
+            },
+          ],
+        },
+      ]}
+      layers={["grid", "axes", "bars", TotalLabels, "markers", "legends"]}
+    />
   );
 };
 

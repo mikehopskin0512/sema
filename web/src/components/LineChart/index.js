@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
+import { blue500, blue900, white50 } from '../../../styles/_colors.module.scss'
 
 const LineChart = ({ data = [] }) => {
   const tickValues = data?.[0]?.data?.length || 2;
   return(
       <ResponsiveLine
         data={data}
+        theme={{
+          textColor: white50,
+        }}
         margin={{ top: 10, right: 25, bottom: 25, left: 25 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
@@ -32,10 +36,10 @@ const LineChart = ({ data = [] }) => {
             tickValues: [...Array(tickValues).keys()],
             format: e => Math.floor(e) === e && e
         }}
-        colors="#BFCBD3"
+        colors={blue900}
         lineWidth={1}
         pointSize={5}
-        pointColor="#333333"
+        pointColor={blue500}
         pointBorderWidth={0}
         pointLabelYOffset={-12}
         enableArea={true}

@@ -25,12 +25,15 @@ $custom-colors: (
   "gray-100": $gray-100,
   "gray-200": $gray-200,
   "gray-300": $gray-300,
+  "gray-400": $gray-400,
   "gray-500": $gray-500,
   "gray-700": $gray-700,
   "gray-900": $gray-900,
   "black-900": $black-900,
   "black-950": $black-950,
   "blue-600": $blue-600,
+  "blue-300": $blue-300,
+  "white-50": $white-50,
 );
 
 // Set custom shades
@@ -61,6 +64,7 @@ $spacing-values: (
   "neg8": -8px,
   "neg10": -10px,
   "3": 3px,
+  "4": 4px,
   "5": 5px,
   "8": 8px,
   "10": 10px,
