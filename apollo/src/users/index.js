@@ -84,7 +84,7 @@ export default (app, passport) => {
         redeemInvite(null, userId, invitationId)
       }
 
-      // Add user to Mailchimp and suscribe it to Sema - Newsletters
+      // Add user to Mailchimp and subscribe it to Sema - Newsletters
       const listId = mailchimpAudiences.registeredAndWaitlistUsers;
       const { firstName, lastName, avatarUrl} = newUser;
 
