@@ -1,4 +1,6 @@
+@import "styles/colors.module";
+
 .tooltip-container {
-  border: 1px solid #E3E9EE;
+  border: 1px solid $gray-300;
   box-shadow: 0px 2px 10px 0px #00000012;
 }

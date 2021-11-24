@@ -34,7 +34,7 @@ const CommentCollectionsList = () => {
   const { data = [] , isFetching } = collectionsState;
 
   const [page, setPage] = useState(1);
-  
+
   const isEditable = checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments);
 
   const sortedCollections = useMemo(() => {
@@ -110,7 +110,7 @@ const CommentCollectionsList = () => {
           Snippets from these collections will be suggested as you create code reviews
         </p>
         <CardList collections={activeCollections || []} />
-        <p className="has-text-weight-semibold has-text-deep-black is-size-4 mt-60 p-10">Other Collections</p>
+        <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections</p>
         <CardList collections={otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
           {otherCollections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < otherCollections.length && (

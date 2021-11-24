@@ -1,4 +1,12 @@
 // eslint-disable-next-line import/prefer-default-export
+import {
+  blue100,
+  gray800,
+  blue300,
+  blue500,
+  blue800,
+} from '../../styles/_colors.module.scss';
+
 export const EMOJIS = [
   {
     _id: '607f0d1ed7f45b000ec2ed70',
@@ -6,7 +14,7 @@ export const EMOJIS = [
     label: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
-    color: '#9FE1F5',
+    color: blue100,
   },
   {
     _id: '607f0d1ed7f45b000ec2ed71',
@@ -14,7 +22,7 @@ export const EMOJIS = [
     label: 'Awesome',
     emoji: '🏆',
     github_emoji: ':trophy:',
-    color: '#212B36',
+    color: gray800,
   },
   {
     _id: '607f0d1ed7f45b000ec2ed72',
@@ -22,7 +30,7 @@ export const EMOJIS = [
     label: 'Looks good',
     emoji: '👌',
     github_emoji: ':ok_hand:',
-    color: '#33C2EC',
+    color: blue300,
   },
   {
     _id: '607f0d1ed7f45b000ec2ed73',
@@ -30,7 +38,7 @@ export const EMOJIS = [
     label: 'Question',
     emoji: '❓',
     github_emoji: ':question:',
-    color: '#13A3CD',
+    color: blue500,
   },
   {
     _id: '607f0d1ed7f45b000ec2ed74',
@@ -38,7 +46,7 @@ export const EMOJIS = [
     label: 'Needs a fix',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
-    color: '#006D8D',
+    color: blue800,
   },
 ];
 export const TAGS = [
@@ -139,7 +147,7 @@ export const FACEBOOK_VERIFICATION_META = {
 export const PATHS = {
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
-  SUGGESTED_SNIPPETS: { 
+  SUGGESTED_SNIPPETS: {
     _: '/suggested-snippets',
     EDIT: '/suggested-snippets/edit',
     ADD: '/suggested-snippets/add',

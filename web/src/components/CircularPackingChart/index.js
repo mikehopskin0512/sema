@@ -69,15 +69,15 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
   }, [data]);
 
   const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
-    <div className="box has-background-white p-20 border-radius-4px">
-      <p className="has-text-weight-semibold is-size-7 has-text-black-950">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
+    <div className="box has-background-black-900 p-20 border-radius-4px">
+      <p className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
       {tag.data.length > 0 && (
         <div className={clsx('py-3', styles['line-chart-container'])}>
           <LineChart data={[tag]} />
         </div>
       )}
-      <p className="is-size-7">{value} comments</p>
-      <p className="is-size-7">{formattedValue} of all tags {tagBy}</p>
+      <p className="is-size-7 has-text-white-50">{value} comments</p>
+      <p className="is-size-7 has-text-white-50">{formattedValue} of all tags {tagBy}</p>
     </div>
   ))
 
@@ -85,7 +85,7 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
     return (
       <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
         <CodeIcon size="large" />
-        <p className="is-size-5">No Tags</p>
+        <p className="is-size-5 ">No Tags</p>
       </div>
     );
   }

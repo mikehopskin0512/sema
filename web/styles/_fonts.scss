@@ -6,7 +6,7 @@ $logo-font: 'Inter', monospace;
 $header-font: 'Inter', sans-serif;
 $core-font: 'Inter', sans-serif;
 
-$font-size: "8", "10", "16", "18", "24", "28", "32", "48", "56", "68";
+$font-size: "8", "10", "12", "14", "16", "18", "24", "28", "32", "48", "56", "68";
 
 @each $i in $font-size {
  .font-size-#{$i} {
