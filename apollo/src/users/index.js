@@ -103,14 +103,15 @@ export default (app, passport) => {
       }
 
        // Add user to Intercom
-       await intercom.create('contacts', {
+       // TEMP: Comment out Intercom until variable is fixed in prod
+/*        await intercom.create('contacts', {
          role: 'user',
          external_id: userId,
          name: `${firstName} ${lastName}`.trim(),
          email: username,
          avatar: avatarUrl,
          signed_up_at: new Date(),
-       });
+       }); */
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
