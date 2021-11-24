@@ -5,6 +5,8 @@ import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { validate } from '../credentials/credentialService';
 import { validateAuthToken } from './authService';
 
+import { findById } from '../users/userService';
+
 import logger from '../shared/logger';
 import db from '../shared/mongo';
 
@@ -49,7 +51,9 @@ passport.use(new BearerStrategy(
     // logger.info('BEARER');
 
     try {
-      const user = await validateAuthToken(token);
+      const { _id: userId } = await validateAuthToken(token);
+      const user = await findById(userId);
+
       return done(null, user, { scope: '*' });
     } catch (err) {
       logger.error(err);
