@@ -270,7 +270,7 @@ export default (app, passport) => {
     try {
       const {
         params: { id },
-        user: { user },
+        user,
       } = req;
 
       // Find and check if invite exists and if the requester is the sender of the invitation

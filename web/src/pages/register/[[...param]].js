@@ -320,12 +320,4 @@ const Register = () => {
   );
 };
 
-RegistrationForm.propTypes = {
-  invitation: PropTypes.object,
-};
-
-RegistrationForm.defaultProps = {
-  invitation: {},
-};
-
 export default withLayout(Register);

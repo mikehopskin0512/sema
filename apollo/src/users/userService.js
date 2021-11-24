@@ -240,7 +240,7 @@ export const joinOrg = async (userId, org) => {
   const { id: orgId } = org;
   try {
     const query = User.findOneAndUpdate(
-      { _id: new ObjectId(userId), 'orgaizations.id': { $ne: orgId } },
+      { _id: new ObjectId(userId), 'organizations.id': { $ne: orgId } },
       { $addToSet: { organizations: org } },
       { new: true },
     );
