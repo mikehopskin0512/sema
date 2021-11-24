@@ -271,9 +271,7 @@ export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
     const payload = await createUser({ user, invitation });
-    const { data: { jwtToken } } = payload;
-    const { _id: userId } = jwtDecode(jwtToken) || {};
-    const newUser = await dispatch(fetchCurrentUser(userId, jwtToken));
+    const { data: { jwtToken, user: newUser } } = payload;
     dispatch(registrationSuccess(jwtToken, newUser));
     return payload;
   } catch (error) {
@@ -316,10 +314,12 @@ export const activateUser = (verifyToken) => async (dispatch) => {
     const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
     if (userId) {
-      const user = await dispatch(fetchCurrentUser(userId, jwtToken));
       const orgId = null; // TEMP: Until orgs are linked up
       dispatch(authenticateSuccess(jwtToken));
-      dispatch(hydrateUser(user, userVoiceToken));
+      // No need to hydrate user when only used for registration
+      // User is hydrated via registrationSuccess
+      // May need this again when we bring back email registration/verify
+      // dispatch(hydrateUser(user, userVoiceToken));
       // logHeapAnalytics(userId, orgId);
     }
 

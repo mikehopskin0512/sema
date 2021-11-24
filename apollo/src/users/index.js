@@ -84,7 +84,7 @@ export default (app, passport) => {
         redeemInvite(null, userId, invitationId)
       }
 
-      // Add user to Mailchimp and suscribe it to Sema - Newsletters
+      // Add user to Mailchimp and subscribe it to Sema - Newsletters
       const listId = mailchimpAudiences.registeredAndWaitlistUsers;
       const { firstName, lastName, avatarUrl} = newUser;
 
@@ -103,14 +103,15 @@ export default (app, passport) => {
       }
 
        // Add user to Intercom
-       await intercom.create('contacts', {
+       // TEMP: Comment out Intercom until variable is fixed in prod
+/*        await intercom.create('contacts', {
          role: 'user',
          external_id: userId,
          name: `${firstName} ${lastName}`.trim(),
          email: username,
          avatar: avatarUrl,
          signed_up_at: new Date(),
-       });
+       }); */
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
@@ -128,6 +129,7 @@ export default (app, passport) => {
       delete newUser.collections;
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
+        user: newUser,
       });
     } catch (error) {
       logger.error(error);
