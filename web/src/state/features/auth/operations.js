@@ -35,7 +35,7 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
     if (!payload) { return false; }
 
     const { data: { jwtToken } = {} } = payload;
-    const { _id: userId, verificationToken } = jwtDecode(jwtToken) || {};
+    const { verificationToken } = jwtDecode(jwtToken) || {};
 
     await dispatch(actions.activateUser(verificationToken));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
