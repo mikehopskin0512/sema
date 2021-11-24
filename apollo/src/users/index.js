@@ -128,6 +128,7 @@ export default (app, passport) => {
       delete newUser.collections;
       return res.status(201).send({
         jwtToken: await createAuthToken(newUser),
+        user: newUser,
       });
     } catch (error) {
       logger.error(error);
