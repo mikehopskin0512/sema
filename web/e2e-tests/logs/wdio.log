@@ -1,0 +1,11 @@
+2021-11-22T18:36:05.175Z INFO @wdio/cli:launcher: Run onPrepare hook
+2021-11-22T18:36:05.178Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-11-22T18:36:05.180Z INFO @wdio/local-runner: Start worker 0-0 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-11-22T18:36:08.318Z DEBUG @wdio/local-runner: Runner 0-0 finished with exit code 0
+2021-11-22T18:36:08.321Z INFO @wdio/cli: [0-0] SKIPPED in chrome - /src/features/codeReview.feature
+2021-11-22T18:36:08.321Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-11-22T18:36:08.322Z INFO @wdio/local-runner: Start worker 0-1 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-11-22T18:37:09.757Z DEBUG @wdio/local-runner: Runner 0-1 finished with exit code 0
+2021-11-22T18:37:09.758Z INFO @wdio/cli:launcher: Run onComplete hook
+2021-11-22T18:37:09.815Z INFO @wdio/local-runner: Shutting down spawned worker
+2021-11-22T18:37:10.079Z INFO @wdio/local-runner: Waiting for 0 to shut down gracefully
