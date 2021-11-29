@@ -5,7 +5,7 @@ import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import {
   findById as findUserById,
-  update as updateUser,
+  patch as updateUser,
   findUserCollectionsByUserId,
   populateCollectionsToUsers,
 } from '../../users/userService';
@@ -172,22 +172,22 @@ export const pushCollectionComment = async (collectionId, suggestedCommentId) =>
 
 export const toggleActiveCollection = async (userId, collectionId) => {
   try {
-    const user = await findUserById(userId)
+    const user = await findUserById(userId);
     if (user) {
       const { collections } = user;
       const newCollections = collections.map((item) => {
         if (item.collectionData._id.equals(collectionId)) {
           return {
-            ...item,
+            collectionData: new ObjectId(item.collectionData._id),
             isActive: !item.isActive,
           }
         }
-        return item;
-      })
-      const newUserData = await updateUser({
-        ...user,
-        collections: newCollections,
+        return {
+          collectionData: new ObjectId(item.collectionData._id),
+          isActive: item.isActive,
+        };
       });
+      const newUserData = await updateUser(userId, {collections: newCollections});
       return {
         status: 200,
         message: "User updated!",
