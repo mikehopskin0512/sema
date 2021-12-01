@@ -97,7 +97,7 @@ const TeamInvitePage = () => {
                   className="switch is-rounded"
                 />
                 <label htmlFor="check-suggested">
-                  Add Suggested Snippets to Team profile
+                  Add Snippets to Team profile
                 </label>
               </div>
               <div className="field switch-input" aria-hidden>

@@ -35,7 +35,7 @@ const loggedOutElem = () => (
     <button className="login-primary" onClick={openSema} type="button">
       <FontAwesomeIcon icon={faGithub} className="github" />
       <span className="login-primary-content">
-        Join our Waitlist with Github
+        Join our Waitlist with GitHub
       </span>
     </button>
     <div className="already-account">
@@ -45,7 +45,7 @@ const loggedOutElem = () => (
     </div>
     <button className="login-secondary" onClick={openSema} type="button">
       <FontAwesomeIcon icon={faGithub} className="github" />
-      <span className="login-secondary-content">Sign in with Github</span>
+      <span className="login-secondary-content">Sign in with GitHub</span>
     </button>
   </div>
 );

@@ -64,7 +64,7 @@ const TeamManagementPage = () => {
       className: 'px-20 py-10 has-background-gray-200',
     },
     {
-      Header: () => <div className="is-size-8">Add Suggested Snippets</div>,
+      Header: () => <div className="is-size-8">Add Snippets</div>,
       accessor: 'suggestedComments',
       className: 'px-20 py-10 has-background-gray-200',
       Cell: (props) => <SwitchCell name="suggestedComments" {...props} />,
@@ -167,7 +167,7 @@ const TeamManagementPage = () => {
             </span>
           </div>
           <div className="is-flex is-justify-content-space-between mb-25">
-            <p>The members will have access to the Team's Suggested Snippets and Community Guides</p>
+            <p>The members will have access to the Team's Snippets and Community Guides</p>
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"

@@ -247,7 +247,7 @@ const EngineeringGuidePage = () => {
               </div>
               <div className="is-flex mt-25 is-align-items-center">
                 <p className="is-size-6 has-text-black-950">
-                  <b className="mr-5">Related Suggested Snippets Collection:</b>
+                  <b className="mr-5">Related Snippets Collection:</b>
                   <a href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${_id}`}>
                     <span className="is-underlined has-text-black-950">{name}</span>
                   </a>

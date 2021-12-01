@@ -154,7 +154,7 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              label="Reactions"
+              label="Summaries"
               showCheckbox
             />
           </div>

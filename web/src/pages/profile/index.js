@@ -59,7 +59,7 @@ const Profile = () => {
             <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap', styles.social)}>
               <div className="is-flex is-align-items-center">
                 <GithubIcon size="large" />
-                <p className="has-text-weight-bold is-size-6 has-text-black-950 ml-8 mr-15">Github</p>
+                <p className="has-text-weight-bold is-size-6 has-text-black-950 ml-8 mr-15">GitHub</p>
                 <p className="is-size-6 has-text-black">{identities[0].username}</p>
               </div>
               <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>

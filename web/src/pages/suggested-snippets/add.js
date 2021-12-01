@@ -40,11 +40,11 @@ const AddCollectionPage = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
+              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
               { cid ? (
                 <>
                   <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
-                  <li className="is-active has-text-weight-semibold"><div className="px-5">Add Suggested Snippets</div></li>
+                  <li className="is-active has-text-weight-semibold"><div className="px-5">Add Snippets</div></li>
                 </>
               ) : (<li className="is-active has-text-weight-semibold"><div className="px-5">Add a Snippet Collection</div></li>) }
             </ul>

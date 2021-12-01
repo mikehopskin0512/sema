@@ -51,7 +51,7 @@ const LabelsTableRow = ({ data, token }) => {
               Type: {type}
             </p>
             <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-gray-700 m-0">
-              Suggested Snippets: {suggestedCommentsCount}
+              Snippets: {suggestedCommentsCount}
             </p>
           </div>
         </div>

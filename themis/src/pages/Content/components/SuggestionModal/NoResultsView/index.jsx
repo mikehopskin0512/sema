@@ -7,7 +7,7 @@ function NoResultsView({ searchValue }) {
     <div className="sema-comment-placeholder">
       <img className="sema-comment-placeholder--img" src={noResults} alt="no results" />
       <span className="sema-comment-placeholder--title">
-        No Suggested Snippets found :(
+        No snippets found :(
       </span>
       <a
         className="sema-comment-placeholder--link"

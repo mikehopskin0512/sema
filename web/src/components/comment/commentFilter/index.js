@@ -55,7 +55,7 @@ const CommentFilter = ({ onSearch, tags, languages }) => {
           <div className="control has-icons-left has-icons-right">
             <input
               className="input has-background-white is-small"
-              placeholder="Search suggested snippets"
+              placeholder="Search snippets"
               type="text"
               {...register('search')}
               onChange={onChangeSearch}

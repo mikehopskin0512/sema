@@ -36,7 +36,7 @@ const LoginCard = () => {
         </div>
         <span className="has-text-weight-semibold is-size-16 ">Join our Waitlist with GitHub</span>
       </button>
-      {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with Github</button> */}
+      {/* <button class="button is-black is-fullwidth" href="/api/identities/github">Join the waitlist with GitHub</button> */}
       <p className={styles['through-container']}>
         <span className={styles.line} />
         <span className={styles['text-container']}>

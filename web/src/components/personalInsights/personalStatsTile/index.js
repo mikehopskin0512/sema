@@ -75,7 +75,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
                 </div>
                 <div className="column is-4 is-flex is-flex-direction-column is-justify-content-space-between">
                   <p className="is-size-8 has-text-grey has-text-weight-semibold mb-5">
-                    TOP REACTIONS
+                    TOP SUMMARIES
                   </p>
                   <p className="is-flex is-flex-wrap-wrap pb-3">
                     {renderTopReactions()}

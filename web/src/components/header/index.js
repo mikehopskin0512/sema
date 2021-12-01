@@ -162,7 +162,7 @@ const Header = () => {
                 </Link>
                 <Link href={PATHS.SUGGESTED_SNIPPETS._}>
                   <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SUGGESTED_SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
-                    Suggested Snippets
+                    Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">
@@ -198,7 +198,7 @@ const Header = () => {
                 </Link>
                 <Link href={PATHS.SUGGESTED_SNIPPETS._}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-                    Suggested Snippets
+                    Snippets
                   </a>
                 </Link>
                 {/* <Link href="/guides">

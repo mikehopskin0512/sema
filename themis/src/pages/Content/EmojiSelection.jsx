@@ -94,7 +94,7 @@ const EmojiSelection = ({
                     fireAmplitudeEvent(EVENTS.CLICKED_REACTION, { change_reaction: false, reaction: null, clicked_faq: true });
                   }}
                 >
-                  Learn more about reactions
+                  Learn more about summaries
                 </a>
               </div>
             </div>

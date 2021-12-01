@@ -135,8 +135,8 @@ export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 export const noContactUs = ['/login', '/register/[[...param]]'];
 
 export const SEARCH_CATEGORY_TITLES = {
-  COLLECTIONS: 'suggested snippets collections',
-  SNIPPETS: 'suggested snippets',
+  COLLECTIONS: 'snippets collections',
+  SNIPPETS: 'snippets',
 };
 
 export const FACEBOOK_VERIFICATION_META = {

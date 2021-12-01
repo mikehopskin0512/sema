@@ -30,7 +30,7 @@ export const UserManagementHelmet = {
 };
 
 export const SuggestedSnippetsHelmet = {
-  title: 'Suggested Snippets',
+  title: 'Snippets',
   description: null,
 };
 

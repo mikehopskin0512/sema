@@ -26,7 +26,7 @@ const InviteCard = ({ invitation }) => {
             size="2x"
           />
         </span>
-        <span>Sign in with Github</span>
+        <span>Sign in with GitHub</span>
       </a>
     </>
   );
