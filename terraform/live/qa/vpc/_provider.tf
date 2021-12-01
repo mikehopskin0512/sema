@@ -1,0 +1,16 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.38.0"
+    }
+  }
+}
+
+provider "aws" {
+  region  = "us-east-1"
+  profile = "sema-terraform"
+  default_tags {
+    tags = var.common_tags
+  }
+}
