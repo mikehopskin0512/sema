@@ -61,4 +61,10 @@ resource "aws_ecs_service" "service" {
   }
 
   depends_on = [data.aws_lb_listener.https, aws_iam_role_policy_attachment.ecs_task_execution_role]
+
+  lifecycle {
+    ignore_changes = [
+      desired_count
+    ]
+  }
 }
