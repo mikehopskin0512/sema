@@ -1,6 +1,7 @@
 resource "aws_security_group" "this" {
-  name   = local.sg
-  vpc_id = var.vpc_id
+  name        = local.sg
+  vpc_id      = var.vpc_id
+  description = var.sg_description
 
   egress {
     protocol    = "-1"
