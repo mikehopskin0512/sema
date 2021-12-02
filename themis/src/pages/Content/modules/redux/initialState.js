@@ -1,6 +1,7 @@
 import { GLOBAL_SEMA_SEARCH_ID, SEMA_REMINDER_SESSION_STORAGE_KEY } from '../../constants';
 
 const initialState = {
+  notifications: [],
   isReminderClosed: !!sessionStorage.getItem(SEMA_REMINDER_SESSION_STORAGE_KEY),
   githubMetadata: {
     url: null,

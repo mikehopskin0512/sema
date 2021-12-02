@@ -25,6 +25,10 @@ import {
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
   LAST_USED_SMART_COMMENT,
+  TOGGLE_SNIPPET_FOR_SAVE,
+  CHANGE_SNIPPET_COMMENT,
+  ADD_NOTIFICATION,
+  REMOVE_NOTIFICATION,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -50,6 +54,39 @@ function rootReducer(state = initialState, action) {
   const { payload = {} } = action;
 
   switch (action.type) {
+    case ADD_NOTIFICATION: {
+      return {
+        ...state,
+        notifications: [...state.notifications, payload],
+      };
+    }
+    case REMOVE_NOTIFICATION: {
+      return {
+        ...state,
+        notifications: state.notifications.filter((notification) => notification !== payload),
+      };
+    }
+    case CHANGE_SNIPPET_COMMENT: {
+      const { comment } = payload;
+      return {
+        ...state,
+        snippetComment: comment,
+      };
+    }
+    case TOGGLE_SNIPPET_FOR_SAVE: {
+      const { semabarContainerId } = payload;
+      const semaBar = state.semabars[semabarContainerId];
+      return {
+        ...state,
+        semabars: {
+          ...state.semabars,
+          [semabarContainerId]: {
+            ...semaBar,
+            isSnippetForSave: !semaBar.isSnippetForSave,
+          },
+        },
+      };
+    }
     case ADD_SEMA_COMPONENTS: {
       const { activeElement } = payload;
       const { semabarContainerId, semaSearchContainerId } = getSemaIds(activeElement);
@@ -63,6 +100,7 @@ function rootReducer(state = initialState, action) {
         selectedReaction: initialReaction,
         isReactionDirty: false,
         suggestedTags: [],
+        isSnippetForSave: false,
       };
       const semaSearch = {
         isSearchModalVisible: false,
@@ -424,7 +462,10 @@ function rootReducer(state = initialState, action) {
       if (token) {
         const { _id, isVerified, isWaitlist } = jwt_decode(token);
         newUser = {
-          _id, isVerified, isWaitlist, ...{ isLoggedIn },
+          _id,
+          isVerified,
+          isWaitlist,
+          isLoggedIn,
         };
       } else {
         newUser = { isLoggedIn };

@@ -55,7 +55,7 @@ function JWT() {
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const newAccessTokenTime = ((expirationTimeAccessToken - currentTime) - 60000);
         interval = setInterval(() => {
-          // eslint-disable-next-line no-use-before-define
+          // eslint-disable-next-line no-use-before-define,@typescript-eslint/no-use-before-define
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {

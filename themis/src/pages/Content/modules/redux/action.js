@@ -24,7 +24,31 @@ import {
   CLOSE_LOGIN_REMINDER,
   MUTATION_OBSERVER_EVENT,
   LAST_USED_SMART_COMMENT,
+  TOGGLE_SNIPPET_FOR_SAVE,
+  CHANGE_SNIPPET_COMMENT,
+  REMOVE_NOTIFICATION,
+  ADD_NOTIFICATION,
 } from './actionConstants';
+
+export const removeNotification = (payload) => ({
+  type: REMOVE_NOTIFICATION,
+  payload,
+});
+
+export const addNotification = (payload) => ({
+  type: ADD_NOTIFICATION,
+  payload,
+});
+
+export const changeSnippetComment = (payload) => ({
+  type: CHANGE_SNIPPET_COMMENT,
+  payload,
+});
+
+export const toggleSnippetForSave = (payload) => ({
+  type: TOGGLE_SNIPPET_FOR_SAVE,
+  payload,
+});
 
 export const addSemaComponents = (payload) => ({
   type: ADD_SEMA_COMPONENTS,

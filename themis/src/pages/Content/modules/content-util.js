@@ -21,6 +21,8 @@ import {
   EVENTS,
   SEMA_TEXTAREA_IDENTIFIER,
   SUGGESTED_COMMENTS_URL,
+  COLLECTIONS_URL,
+  TAGS_URL, USERS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -33,6 +35,7 @@ import {
   addMutationObserver,
   removeMutationObserver,
   closeAllEmojiSelection,
+  changeSnippetComment,
 } from './redux/action';
 // TODO: good if we can break cyclic dependencies
 // eslint-disable-next-line import/no-cycle
@@ -224,12 +227,37 @@ const updateSmartComment = async (comment) => {
 };
 
 export const saveSmartComment = async (comment) => {
-  await fetch(`${SUGGESTED_COMMENTS_URL}`, {
+  await fetch(`${SUGGESTED_COMMENTS_URL}/bulk-create`, {
     headers: { 'Content-Type': 'application/json' },
     method: 'POST',
     body: JSON.stringify(comment),
   });
 };
+
+export const getAllCollection = async () => {
+  const response = await fetch(`${COLLECTIONS_URL}/all`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'GET',
+  });
+  return response.json();
+};
+
+export const getCurrentUser = async (id) => {
+  const response = await fetch(`${USERS_URL}/${id}`, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'GET',
+  });
+  return response.json();
+};
+
+export const getAllTags = async () => {
+  const response = await fetch(TAGS_URL, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'GET',
+  });
+  return response.json();
+};
+
 
 export const onConversationMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
@@ -394,7 +422,7 @@ export async function writeSemaToGithub(activeElement) {
     const semabar = $(activeElement).siblings('div.sema')?.[0];
 
     const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
-
+    const { isSnippetForSave } = state.semabars[semabar.id];
     const selectedTags = state.semabars[semabar.id].selectedTags.reduce(
       (acc, tagObj) => {
         const { selected } = tagObj;
@@ -487,6 +515,9 @@ export async function writeSemaToGithub(activeElement) {
 
     createSmartComment(comment).then((smartComment) => {
       store.dispatch(addSmartComment(smartComment));
+      if (isSnippetForSave) {
+        store.dispatch(changeSnippetComment(comment));
+      }
     });
 
     // Evaluate user interactions

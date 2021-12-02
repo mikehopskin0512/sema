@@ -62,6 +62,9 @@ var options = {
         use: [
           {
             loader: 'style-loader',
+            options: {
+              insert: 'html',
+            },
           },
           {
             loader: 'css-loader',

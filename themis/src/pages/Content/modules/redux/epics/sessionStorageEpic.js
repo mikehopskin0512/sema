@@ -6,7 +6,7 @@ import { CLOSE_LOGIN_REMINDER } from '../actionConstants';
 const setsessionStorageEpic = (action$, state$) => action$.pipe(
   ofType(CLOSE_LOGIN_REMINDER),
   withLatestFrom(state$),
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
   map(([_, state]) => {
     const { isReminderClosed } = state;
     sessionStorage.setItem(SEMA_REMINDER_SESSION_STORAGE_KEY, isReminderClosed);
