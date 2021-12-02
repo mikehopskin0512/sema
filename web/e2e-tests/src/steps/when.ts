@@ -1,4 +1,4 @@
-import { When } from '@cucumber/cucumber';
+import {Given, When} from '@cucumber/cucumber';
 
 import clearInputField from '../support/action/clearInputField';
 import clickElement from '../support/action/clickElement';
@@ -9,6 +9,12 @@ import pause from '../support/action/pause';
 import pressButton from '../support/action/pressButton';
 import setCookie from '../support/action/setCookie';
 import setInputField from '../support/action/setInputField';
+import openWebsite from "../support/action/openWebsite";
+
+When(
+    /^I open the (url|site) "([^"]*)?"$/,
+    openWebsite
+);
 
 When(
     /^I focus on "(\d+)" iFrame$/,

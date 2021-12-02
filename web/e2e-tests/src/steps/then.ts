@@ -7,6 +7,11 @@ import isExisting from '../support/check/isExisting';
 import isVisible from '../support/check/isDisplayed';
 import waitForVisible from '../support/action/waitForDisplayed';
 import checkIfElementExists from '../support/lib/checkIfElementExists';
+import checkURLPath from "../support/check/checkURLPath";
+Then(
+    /^I expect that the url is( not)* "([^"]*)?"$/,
+    checkURLPath
+);
 
 Then(
     /^I expect that the title is( not)* "([^"]*)?"$/,
@@ -39,6 +44,6 @@ Then(
 );
 
 Then(
-    /^I expect that element "([^"]*)?" does( not)* exist$/,
+     /^I expect that element "([^"]*)?" does( not)* exist$/,
     isExisting
 );
