@@ -113,7 +113,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 onChange: ((value) => onChangeFilter('reactions', value)),
                 value: filter.reactions,
               }}
-              label="Reactions"
+              label="Summaries"
               showCheckbox
             />
           </div>

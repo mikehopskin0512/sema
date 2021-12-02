@@ -59,7 +59,7 @@ const SmartCommentsMetricPage = () => {
       sorted: false,
     },
     {
-      Header: 'Suggested Snippets',
+      Header: 'Snippets',
       accessor: 'suggestedComment',
       className: 'p-10 is-whitespace-nowrap',
       sorted: false,

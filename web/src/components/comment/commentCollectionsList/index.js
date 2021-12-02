@@ -84,7 +84,7 @@ const CommentCollectionsList = () => {
       <div id="collectionBody">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap p-10">
           <p className="has-text-weight-semibold has-text-black-950 is-size-3">
-            Suggested Snippets
+            Snippets
           </p>
           <div className="is-flex is-align-items-center is-flex-wrap-wrap">
             <div className="mr-10">

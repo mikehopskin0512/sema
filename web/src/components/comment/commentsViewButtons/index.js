@@ -22,7 +22,7 @@ const CommentsViewButtons = () => {
         <button
           className={clsx('button is-small border-radius-4px', styles['button-suggested'], asPath === '/comments' ? 'is-primary' : '')}
           type="button">
-          Suggested Snippets
+          Snippets
         </button>
       </a>
     </div>

@@ -108,7 +108,7 @@ const LabelsManagement = () => {
       ) : filteredData.length > 0 ? (
         <LabelsTable
           data={filteredData}
-          columns={[{ label: 'Label'}, { label: 'Category', isHiddenMobile: true }, { label: 'Suggested Snippets', isHiddenMobile: true }]}
+          columns={[{ label: 'Label'}, { label: 'Category', isHiddenMobile: true }, { label: 'Snippets', isHiddenMobile: true }]}
           renderRow={(tag) => <LabelsTableRow data={tag} key={`tag-${tag.label}`} token={token} />}
         />
       ) : (

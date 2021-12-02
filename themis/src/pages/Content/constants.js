@@ -14,6 +14,9 @@ export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/suggested-snippets`;
 export const SEMA_ENG_GUIDE_UI_URL = `${SEMA_UI_URL}/guides`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
+export const COLLECTIONS_URL = `${SEMA_URL}/v1/comments/collections`;
+export const TAGS_URL = `${SEMA_URL}/v1/comments/tags/suggested-comment`;
+export const USERS_URL = `${SEMA_URL}/v1/users`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';
@@ -256,6 +259,7 @@ export const SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST = `
 
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
+export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
 // TODO: this will need to change. modal is not global
 export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';

@@ -382,7 +382,7 @@ const UsersPage = () => {
             </div>
             <div className="ml-10">
               <ExportButton
-                label="Export All Suggested Snippets"
+                label="Export All Snippets"
                 onExport={() => exportSuggestedComments({}, token)}
               />
             </div>

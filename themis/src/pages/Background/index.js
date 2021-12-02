@@ -9,6 +9,7 @@ import {
   SEMA_COOKIE_DOMAIN,
   SEMA_CLIENT_ID,
   SEMA_CLIENT_SECRET,
+  USERS_URL,
 } from '../Content/constants';
 
 // Dynamic rule to intercept requests to apollo and set the authorization header | Bearer token
@@ -54,7 +55,7 @@ function JWT() {
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const newAccessTokenTime = ((expirationTimeAccessToken - currentTime) - 60000);
         interval = setInterval(() => {
-          // eslint-disable-next-line no-use-before-define
+          // eslint-disable-next-line no-use-before-define,@typescript-eslint/no-use-before-define
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {
@@ -186,11 +187,28 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
+async function fetchUserData(token) {
+  const { _id: userId } = await jwt_decode(token);
+  const res = await fetch(`${USERS_URL}/${userId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'GET',
+  });
+  const { user } = await res.json();
+  return user;
+}
+
 // eslint-disable-next-line consistent-return
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request[WHOAMI]) {
-    getFinalState().then((tokenResponse) => {
-      sendResponse(tokenResponse);
+    getFinalState().then(async ({ token, isLoggedIn }) => {
+      let user = {};
+      if (token) {
+        user = await fetchUserData(token);
+      }
+      sendResponse({ token, isLoggedIn, ...user });
     });
     return true;
   }

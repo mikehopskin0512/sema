@@ -1,0 +1,19 @@
+@import '../../../styles/colors.module';
+
+.button {
+  border-radius: 4px;
+  padding: 12px 16px;
+  background-color: $blue-700;
+  border: 2px solid transparent;
+  color: $white-0;
+  font-weight: 600;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 12px;
+
+  &--secondary {
+    background-color: transparent;
+    color: $blue-700;
+    border-color: $blue-700;
+  }
+}

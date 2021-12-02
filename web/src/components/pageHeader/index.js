@@ -9,7 +9,7 @@ const menus = [
     path: '/repos',
   },
   {
-    name: 'Suggested Snippets',
+    name: 'Snippets',
     path: '/repos',
   },
   {

@@ -144,7 +144,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
+              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
               <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
             </ul>
           </nav>
@@ -155,7 +155,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               {name}
             </p>
             <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-              {comments.length} suggested snippets
+              {comments.length} snippets
             </span>
           </div>
           {
@@ -171,9 +171,6 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               </button>
             )
           }
-          <div style={{ marginLeft: 'auto' }}>
-            <GlobalSearch />
-          </div>
         </div>
         {
           isEditable && selectedComments.length ? (

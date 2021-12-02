@@ -102,7 +102,7 @@ if (!isAuthenticated || user.isWaitlist) {
                             <img src="/img/icons/like_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
-                            <span className="has-text-weight-bold">Suggested Snippets: </span>
+                            <span className="has-text-weight-bold">Snippets: </span>
                             Leave better reviews by inserting pre-written snippets based on best practices.
                           </span>
                         </div>
@@ -113,8 +113,8 @@ if (!isAuthenticated || user.isWaitlist) {
                             <img src="/img/icons/comment_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
-                            <span className="has-text-weight-bold">Comment Reactions: </span>
-                            Quickly summarize your review by choosing from a list of reactions.
+                            <span className="has-text-weight-bold">Comment Summaries: </span>
+                            Quickly summarize your review by choosing from a list of summaries.
                           </span>
                         </div>
                       </li>

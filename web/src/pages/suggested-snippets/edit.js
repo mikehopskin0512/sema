@@ -32,7 +32,7 @@ const EditCollectionPage = () => {
 
   return (
     <div className="has-background-gray-200 hero">
-      <Helmet title={comments ? "Edit suggested snippets" : "Edit snippet collection"} />
+      <Helmet title={comments ? "Edit snippets" : "Edit snippet collection"} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
@@ -40,11 +40,11 @@ const EditCollectionPage = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
+              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
               { comments ? (
                 <>
                   <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
-                  <li className="is-active has-text-weight-semibold"><a>Edit Suggested Snippets</a></li>
+                  <li className="is-active has-text-weight-semibold"><a>Edit Snippets</a></li>
                 </>
               ) : (
                 <li className="is-active has-text-weight-semibold"><a>Edit a Snippet Collection</a></li>

@@ -123,26 +123,29 @@ resource "aws_vpc_peering_connection" "smp" {
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
-  }
-
-  route {
-    cidr_block                = "10.0.0.0/20"
-    vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-  }
-
-  route {
-    cidr_block                = "172.31.0.0/16"
-    vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
-  }
-
   tags = {
     Name      = "vpc-${var.env}_public"
     Env       = var.env
     Terraform = true
   }
+}
+
+resource "aws_route" "public" {
+  route_table_id         = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.gw.id
+}
+
+resource "aws_route" "vpn" {
+  route_table_id            = aws_route_table.public.id
+  destination_cidr_block    = "10.0.0.0/20"
+  vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
+}
+
+resource "aws_route" "smp" {
+  route_table_id            = aws_route_table.public.id
+  destination_cidr_block    = "172.31.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
 }
 
 # Explicitly associate the newly created route table to the public subnets
@@ -179,21 +182,6 @@ resource "aws_nat_gateway" "gw" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.gw.id
-  }
-
-  route {
-    cidr_block                = "10.0.0.0/20"
-    vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-  }
-
-  route {
-    cidr_block                = "172.31.0.0/16"
-    vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
-  }
-
   tags = {
     Name      = "vpc-${var.env}_private"
     Env       = var.env
@@ -201,33 +189,27 @@ resource "aws_route_table" "private" {
   }
 }
 
+resource "aws_route" "private" {
+  nat_gateway_id         = aws_nat_gateway.gw.id
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = aws_route_table.private.id
+}
+
+resource "aws_route" "vpn" {
+  route_table_id            = aws_route_table.private.id
+  destination_cidr_block    = "10.0.0.0/20"
+  vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
+}
+
+resource "aws_route" "smp" {
+  route_table_id            = aws_route_table.private.id
+  destination_cidr_block    = "172.31.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
+}
+
 # Explicitly associate the newly created route tables to the private subnets (so they don't default to the main route table)
 resource "aws_route_table_association" "private" {
   count          = var.az_count
   subnet_id      = element(aws_subnet.private.*.id, count.index)
   route_table_id = element(aws_route_table.private.*.id, count.index)
-}
-
-resource "aws_route" "vpc" {
-
-  # ID of VPC main route table.
-  route_table_id = aws_vpc.main.main_route_table_id
-
-  # CIDR block for VPC 2.
-  destination_cidr_block = "10.0.0.0/20"
-
-  # ID of VPC peering connection.
-  vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-}
-
-resource "aws_route" "vpc_smp" {
-
-  # ID of VPC main route table.
-  route_table_id = aws_vpc.main.main_route_table_id
-
-  # CIDR block for VPC 2.
-  destination_cidr_block = "172.31.0.0/16"
-
-  # ID of VPC peering connection.
-  vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
 }

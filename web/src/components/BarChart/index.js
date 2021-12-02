@@ -201,7 +201,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     return (
       <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
         <CodeIcon size="large" />
-        <p className="is-size-5">No Reactions</p>
+        <p className="is-size-5">No Summaries</p>
       </div>
     );
   }
@@ -268,7 +268,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: yAxisType === 'percentage' ? '%' : 'Total Reactions',
+        legend: yAxisType === 'percentage' ? '%' : 'Total Summaries',
         legendPosition: 'middle',
         legendOffset: -40,
       }}
