@@ -1,0 +1,173 @@
+2021-11-22T18:36:09.483Z INFO @wdio/local-runner: Run worker command: run
+2021-11-22T18:36:09.981Z DEBUG @wdio/config:utils: Found 'ts-node' package, auto-compiling TypeScript files
+2021-11-22T18:36:10.179Z DEBUG @wdio/local-runner:utils: init remote session
+2021-11-22T18:36:11.084Z DEBUG @wdio/local-runner:utils: init remote session
+2021-11-22T18:36:11.125Z INFO devtools:puppeteer: Initiate new session using the DevTools protocol
+2021-11-22T18:36:11.127Z INFO devtools: Launch Google Chrome with flags: --enable-automation --disable-popup-blocking --disable-extensions --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-sync --metrics-recording-only --disable-default-apps --mute-audio --no-first-run --no-default-browser-check --disable-hang-monitor --disable-prompt-on-repost --disable-client-side-phishing-detection --password-store=basic --use-mock-keychain --disable-component-extensions-with-background-pages --disable-breakpad --disable-dev-shm-usage --disable-ipc-flooding-protection --disable-renderer-backgrounding --force-fieldtrials=*BackgroundTracing/default/ --enable-features=NetworkService,NetworkServiceInProcess --disable-features=site-per-process,TranslateUI,BlinkGenPropertyTrees --window-position=0,0 --window-size=1200,900
+2021-11-22T18:36:13.281Z INFO devtools: Connect Puppeteer with browser on port 62689
+2021-11-22T18:36:16.403Z INFO devtools: COMMAND deleteAllCookies()
+2021-11-22T18:36:16.405Z INFO devtools: RESULT null
+2021-11-22T18:36:16.416Z INFO devtools: COMMAND navigateTo("https://app.semasoftware.com/login")
+2021-11-22T18:36:19.709Z INFO devtools: RESULT null
+2021-11-22T18:36:19.870Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:19.883Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-1' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-2' }
+]
+2021-11-22T18:36:19.904Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:19.917Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-3' }
+2021-11-22T18:36:19.947Z INFO devtools: COMMAND elementClick("ELEMENT-3")
+2021-11-22T18:36:20.321Z INFO devtools: RESULT null
+2021-11-22T18:36:25.339Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:25.343Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-4' }
+2021-11-22T18:36:25.350Z INFO devtools: COMMAND elementClear("ELEMENT-4")
+2021-11-22T18:36:25.357Z INFO devtools: RESULT null
+2021-11-22T18:36:25.362Z INFO devtools: COMMAND findElements("css selector", "#login_field")
+2021-11-22T18:36:25.366Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-5' } ]
+2021-11-22T18:36:25.372Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:25.373Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-6' }
+2021-11-22T18:36:25.387Z INFO devtools: COMMAND elementSendKeys("ELEMENT-6", "zicury@semasoftware.com")
+2021-11-22T18:36:25.515Z INFO devtools: RESULT null
+2021-11-22T18:36:25.522Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:25.524Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-7' }
+2021-11-22T18:36:25.530Z INFO devtools: COMMAND elementClear("ELEMENT-7")
+2021-11-22T18:36:25.535Z INFO devtools: RESULT null
+2021-11-22T18:36:25.539Z INFO devtools: COMMAND findElements("css selector", "#password")
+2021-11-22T18:36:25.542Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-8' } ]
+2021-11-22T18:36:25.551Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:25.552Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-9' }
+2021-11-22T18:36:25.561Z INFO devtools: COMMAND elementSendKeys("ELEMENT-9", "7NOkSbk)19")
+2021-11-22T18:36:25.616Z INFO devtools: RESULT null
+2021-11-22T18:36:25.621Z INFO devtools: COMMAND findElements("css selector", ".js-sign-in-button")
+2021-11-22T18:36:25.625Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-10' } ]
+2021-11-22T18:36:25.631Z INFO devtools: COMMAND findElement("css selector", ".js-sign-in-button")
+2021-11-22T18:36:25.632Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-11' }
+2021-11-22T18:36:25.636Z INFO devtools: COMMAND elementClick("ELEMENT-11")
+2021-11-22T18:36:25.666Z INFO devtools: RESULT null
+2021-11-22T18:36:26.364Z INFO devtools: COMMAND getUrl()
+2021-11-22T18:36:26.369Z INFO devtools: RESULT https://github.com/sessions/verified-device
+2021-11-22T18:36:31.386Z INFO devtools: COMMAND deleteAllCookies()
+2021-11-22T18:36:31.406Z INFO devtools: RESULT null
+2021-11-22T18:36:31.410Z INFO devtools: COMMAND navigateTo("https://app.semasoftware.com/login")
+2021-11-22T18:36:32.317Z INFO devtools: RESULT null
+2021-11-22T18:36:32.522Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:32.746Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-12' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-13' }
+]
+2021-11-22T18:36:32.755Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:32.761Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-14' }
+2021-11-22T18:36:32.768Z INFO devtools: COMMAND elementClick("ELEMENT-14")
+2021-11-22T18:36:32.861Z INFO devtools: RESULT null
+2021-11-22T18:36:37.877Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:37.879Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-15' }
+2021-11-22T18:36:37.883Z INFO devtools: COMMAND elementClear("ELEMENT-15")
+2021-11-22T18:36:37.888Z INFO devtools: RESULT null
+2021-11-22T18:36:37.893Z INFO devtools: COMMAND findElements("css selector", "#login_field")
+2021-11-22T18:36:37.897Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-16' } ]
+2021-11-22T18:36:37.902Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:37.904Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-17' }
+2021-11-22T18:36:37.912Z INFO devtools: COMMAND elementSendKeys("ELEMENT-17", "qateam+automationadmin@semasoftware.com")
+2021-11-22T18:36:38.092Z INFO devtools: RESULT null
+2021-11-22T18:36:38.096Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:38.097Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-18' }
+2021-11-22T18:36:38.104Z INFO devtools: COMMAND elementClear("ELEMENT-18")
+2021-11-22T18:36:38.111Z INFO devtools: RESULT null
+2021-11-22T18:36:38.114Z INFO devtools: COMMAND findElements("css selector", "#password")
+2021-11-22T18:36:38.117Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-19' } ]
+2021-11-22T18:36:38.124Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:38.127Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-20' }
+2021-11-22T18:36:38.135Z INFO devtools: COMMAND elementSendKeys("ELEMENT-20", "Automation1Tester2#")
+2021-11-22T18:36:38.229Z INFO devtools: RESULT null
+2021-11-22T18:36:38.234Z INFO devtools: COMMAND findElements("css selector", ".js-sign-in-button")
+2021-11-22T18:36:38.239Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-21' } ]
+2021-11-22T18:36:38.246Z INFO devtools: COMMAND findElement("css selector", ".js-sign-in-button")
+2021-11-22T18:36:38.251Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-22' }
+2021-11-22T18:36:38.262Z INFO devtools: COMMAND elementClick("ELEMENT-22")
+2021-11-22T18:36:38.314Z INFO devtools: RESULT null
+2021-11-22T18:36:39.114Z INFO devtools: COMMAND getUrl()
+2021-11-22T18:36:39.119Z INFO devtools: RESULT https://github.com/sessions/verified-device
+2021-11-22T18:36:44.131Z INFO devtools: COMMAND deleteAllCookies()
+2021-11-22T18:36:44.149Z INFO devtools: RESULT null
+2021-11-22T18:36:44.153Z INFO devtools: COMMAND navigateTo("https://app.semasoftware.com/login")
+2021-11-22T18:36:44.891Z INFO devtools: RESULT null
+2021-11-22T18:36:45.091Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:45.112Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-23' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-24' }
+]
+2021-11-22T18:36:45.223Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:45.323Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-25' }
+2021-11-22T18:36:45.329Z INFO devtools: COMMAND elementClick("ELEMENT-25")
+2021-11-22T18:36:45.414Z INFO devtools: RESULT null
+2021-11-22T18:36:50.431Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:50.434Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-26' }
+2021-11-22T18:36:50.440Z INFO devtools: COMMAND elementClear("ELEMENT-26")
+2021-11-22T18:36:50.444Z INFO devtools: RESULT null
+2021-11-22T18:36:50.447Z INFO devtools: COMMAND findElements("css selector", "#login_field")
+2021-11-22T18:36:50.450Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-27' } ]
+2021-11-22T18:36:50.457Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:36:50.459Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-28' }
+2021-11-22T18:36:50.494Z INFO devtools: COMMAND elementSendKeys("ELEMENT-28", "qateam+automationlibrary@semasoftware.com")
+2021-11-22T18:36:50.880Z INFO devtools: RESULT null
+2021-11-22T18:36:50.891Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:50.893Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-29' }
+2021-11-22T18:36:50.903Z INFO devtools: COMMAND elementClear("ELEMENT-29")
+2021-11-22T18:36:50.913Z INFO devtools: RESULT null
+2021-11-22T18:36:50.925Z INFO devtools: COMMAND findElements("css selector", "#password")
+2021-11-22T18:36:50.932Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-30' } ]
+2021-11-22T18:36:50.944Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:36:50.947Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-31' }
+2021-11-22T18:36:50.955Z INFO devtools: COMMAND elementSendKeys("ELEMENT-31", "Automation2Tester3#")
+2021-11-22T18:36:51.197Z INFO devtools: RESULT null
+2021-11-22T18:36:51.207Z INFO devtools: COMMAND findElements("css selector", ".js-sign-in-button")
+2021-11-22T18:36:51.211Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-32' } ]
+2021-11-22T18:36:51.218Z INFO devtools: COMMAND findElement("css selector", ".js-sign-in-button")
+2021-11-22T18:36:51.222Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-33' }
+2021-11-22T18:36:51.229Z INFO devtools: COMMAND elementClick("ELEMENT-33")
+2021-11-22T18:36:51.279Z INFO devtools: RESULT null
+2021-11-22T18:36:51.957Z INFO devtools: COMMAND getUrl()
+2021-11-22T18:36:51.968Z INFO devtools: RESULT https://github.com/sessions/verified-device
+2021-11-22T18:36:56.979Z INFO devtools: COMMAND deleteAllCookies()
+2021-11-22T18:36:56.999Z INFO devtools: RESULT null
+2021-11-22T18:36:57.003Z INFO devtools: COMMAND navigateTo("https://app.semasoftware.com/login")
+2021-11-22T18:36:57.728Z INFO devtools: RESULT null
+2021-11-22T18:36:57.963Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:58.088Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-34' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-35' }
+]
+2021-11-22T18:36:58.096Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-11-22T18:36:58.103Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-36' }
+2021-11-22T18:36:58.110Z INFO devtools: COMMAND elementClick("ELEMENT-36")
+2021-11-22T18:36:58.247Z INFO devtools: RESULT null
+2021-11-22T18:37:03.264Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:37:03.266Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-37' }
+2021-11-22T18:37:03.272Z INFO devtools: COMMAND elementClear("ELEMENT-37")
+2021-11-22T18:37:03.275Z INFO devtools: RESULT null
+2021-11-22T18:37:03.279Z INFO devtools: COMMAND findElements("css selector", "#login_field")
+2021-11-22T18:37:03.282Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-38' } ]
+2021-11-22T18:37:03.289Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-11-22T18:37:03.290Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-39' }
+2021-11-22T18:37:03.295Z INFO devtools: COMMAND elementSendKeys("ELEMENT-39", "qateam+automationacme@semasoftware.com")
+2021-11-22T18:37:03.674Z INFO devtools: RESULT null
+2021-11-22T18:37:03.678Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:37:03.679Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-40' }
+2021-11-22T18:37:03.688Z INFO devtools: COMMAND elementClear("ELEMENT-40")
+2021-11-22T18:37:03.692Z INFO devtools: RESULT null
+2021-11-22T18:37:03.695Z INFO devtools: COMMAND findElements("css selector", "#password")
+2021-11-22T18:37:03.699Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-41' } ]
+2021-11-22T18:37:03.703Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-11-22T18:37:03.706Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-42' }
+2021-11-22T18:37:03.714Z INFO devtools: COMMAND elementSendKeys("ELEMENT-42", "Automation3Tester4#")
+2021-11-22T18:37:03.849Z INFO devtools: RESULT null
+2021-11-22T18:37:03.859Z INFO devtools: COMMAND findElements("css selector", ".js-sign-in-button")
+2021-11-22T18:37:03.864Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-43' } ]
+2021-11-22T18:37:03.873Z INFO devtools: COMMAND findElement("css selector", ".js-sign-in-button")
+2021-11-22T18:37:03.877Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-44' }
+2021-11-22T18:37:03.890Z INFO devtools: COMMAND elementClick("ELEMENT-44")
+2021-11-22T18:37:03.962Z INFO devtools: RESULT null
+2021-11-22T18:37:04.604Z INFO devtools: COMMAND getUrl()
+2021-11-22T18:37:04.611Z INFO devtools: RESULT https://github.com/sessions/verified-device
+2021-11-22T18:37:09.625Z INFO devtools: COMMAND deleteSession()
+2021-11-22T18:37:09.627Z INFO devtools: RESULT null
