@@ -171,9 +171,6 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               </button>
             )
           }
-          <div style={{ marginLeft: 'auto' }}>
-            <GlobalSearch />
-          </div>
         </div>
         {
           isEditable && selectedComments.length ? (
