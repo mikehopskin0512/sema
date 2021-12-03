@@ -22,6 +22,7 @@ module "phoenix" {
     arn  = aws_ecs_cluster.main.id
     name = aws_ecs_cluster.main.name
   }
+  sg_description            = "allow inbound access from the ALB only"
   task_definition_resources = var.ecs_task_definition_resources
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.phoenix_web_repo_arn
@@ -44,7 +45,7 @@ module "phoenix" {
     lb_security_group = module.alb.alb_security_group
     port              = "3000"
     domain            = "semasoftware.com"
-    domain_prefix     = "app-qa"
+    domain_prefix     = "app"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
@@ -83,7 +84,7 @@ module "apollo" {
     lb_security_group = module.alb.alb_security_group
     port              = "3001"
     domain            = "semasoftware.com"
-    domain_prefix     = "api-qa"
+    domain_prefix     = "api"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }

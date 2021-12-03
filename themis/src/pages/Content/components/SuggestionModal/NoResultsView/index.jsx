@@ -1,11 +1,17 @@
 import React from 'react';
+import { getActiveTheme } from '../../../../../../utils/theme';
 import { SEMA_WEB_COLLECTIONS } from '../../../constants';
+import { NO_RESULTS_ICON } from './constants.ts';
 
 function NoResultsView({ searchValue }) {
-  const noResults = chrome.runtime.getURL('img/no-results-light.svg');
+  const activeTheme = getActiveTheme().toUpperCase();
   return (
     <div className="sema-comment-placeholder">
-      <img className="sema-comment-placeholder--img" src={noResults} alt="no results" />
+      <img
+        className="sema-comment-placeholder--img"
+        src={NO_RESULTS_ICON[activeTheme]}
+        alt="no results"
+      />
       <span className="sema-comment-placeholder--title">
         No snippets found :(
       </span>
