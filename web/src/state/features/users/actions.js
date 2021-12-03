@@ -8,7 +8,7 @@ import {
   updateUserStatus,
   exportTimeToValue,
   exportUsersApi,
-  putUser,
+  patchUser,
 } from './api';
 import * as types from './types';
 
@@ -129,7 +129,7 @@ export const updateStatus = (params = {}, token) => async (dispatch) => {
 export const updateUser = (id, params = {}) => async (dispatch) => {
   try {
     dispatch(requestUpdateUser());
-    await putUser(id, params);
+    await patchUser(id, params);
     dispatch(fetchUsers());
     dispatch(requestUpdateUserSuccess());
   } catch (error) {
