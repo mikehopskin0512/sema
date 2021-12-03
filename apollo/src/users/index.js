@@ -222,6 +222,7 @@ export default (app, passport) => {
       return res.status(200).send({
         response: 'User successfully verified',
         jwtToken: await createAuthToken(user),
+        user,
       });
     } catch (error) {
       logger.error(error);

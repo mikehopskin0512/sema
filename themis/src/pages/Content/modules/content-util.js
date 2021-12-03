@@ -258,7 +258,6 @@ export const getAllTags = async () => {
   return response.json();
 };
 
-
 export const onConversationMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const nodeIndex = [...mutation.addedNodes].findIndex(
