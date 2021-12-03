@@ -116,6 +116,13 @@ const reducer = (state = initialState, action) => {
       isAuthenticated: false,
       error: action.errors,
     };
+  case types.VERIFY_USER_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
   case types.USER_NOT_VERIFIED:
     return {
       ...state,
