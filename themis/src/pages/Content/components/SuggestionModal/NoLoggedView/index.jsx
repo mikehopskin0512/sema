@@ -1,12 +1,17 @@
 import React from 'react';
+import { getActiveTheme } from '../../../../../../utils/theme';
 import { SEMA_WEB_LOGIN } from '../../../constants';
-
-const commentPlaceholder = chrome.runtime.getURL('img/comment-placeholder.png');
+import { PLACEHOLDER_ICON } from '../constants.ts';
 
 function NoLoggedView() {
+  const activeTheme = getActiveTheme().toUpperCase();
   return (
     <div className="sema-comment-placeholder sema-mb-5">
-      <img className="sema-mb-5" src={commentPlaceholder} alt="comment placeholder" />
+      <img
+        className="sema-mb-5"
+        src={PLACEHOLDER_ICON[activeTheme]}
+        alt="comment placeholder"
+      />
       <span className="sema-title sema-is-7 sema-is-block">
         Login to view smart comments
       </span>
