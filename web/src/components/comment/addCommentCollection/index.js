@@ -40,7 +40,7 @@ const AddCommentCollection = () => {
       languages: [],
       others: [],
       comments: [],
-      author: checkAccess({name: 'Sema Super Team'}, EditComments) ? "sema" : github.username,
+      author: '',
       isActive: true,
       sourceName: '',
       sourceLink: '',
