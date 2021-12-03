@@ -10,7 +10,4 @@ terraform {
 provider "aws" {
   region  = "us-east-1"
   profile = "sema-terraform"
-  default_tags {
-    tags = var.common_tags
-  }
 }
