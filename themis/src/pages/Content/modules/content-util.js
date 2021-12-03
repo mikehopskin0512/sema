@@ -21,6 +21,8 @@ import {
   EVENTS,
   SEMA_TEXTAREA_IDENTIFIER,
   SUGGESTED_COMMENTS_URL,
+  SEMA_LANDING_GITHUB,
+  SEMA_LOGO_URL,
   COLLECTIONS_URL,
   TAGS_URL, USERS_URL,
 } from '../constants';
@@ -133,30 +135,31 @@ export const isValidSemaTextBox = (element) => {
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
-export const getSemaGithubText = (selectedEmojiString, selectedTagsString) => {
+export const getSemaGithubText = (selectedEmoji, selectedTags) => {
   // eslint-disable-next-line no-param-reassign
-  selectedEmojiString = selectedEmojiString
+  selectedEmoji = selectedEmoji
     .replaceAll('<b>', '')
     .replaceAll('</b>', '');
 
-  // If no reactions or tags selected, return blank string
-  if (selectedEmojiString.length === 0 && selectedTagsString.length === 0) {
+  if (!selectedEmoji && !selectedTags) {
     return '';
   }
+  let summariesAndTags = '__\n';
+  const semaLogo = `[![sema-logo](${SEMA_LOGO_URL})](${SEMA_LANDING_GITHUB})`;
+  summariesAndTags += semaLogo;
 
-  let semaString = '---\n';
-  if (selectedEmojiString) {
-    semaString += `**Sema Reaction:** ${selectedEmojiString}`;
+  if (selectedEmoji) {
+    summariesAndTags += ` **Summary:** ${selectedEmoji}`;
   }
-  if (selectedEmojiString.length > 0 && selectedTagsString.length > 0) {
-    semaString += ' | ';
+  if (selectedEmoji && selectedTags) {
+    summariesAndTags += ' | ';
   }
-  if (selectedTagsString) {
-    semaString += `**Sema Tags:** ${selectedTagsString}`;
+  if (selectedTags) {
+    summariesAndTags += `**Tags:** ${selectedTags}`;
   }
-  semaString += '\n';
+  summariesAndTags += '\n';
 
-  return semaString;
+  return summariesAndTags;
 };
 
 export const getInitialSemaValues = (textbox) => {

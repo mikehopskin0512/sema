@@ -7,7 +7,9 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
 
+export const SEMA_LOGO_URL = `${SEMA_UI_URL}`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
+export const SEMA_LANDING_GITHUB = `${SEMA_LANDING_URL}/gh`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/suggested-snippets`;
