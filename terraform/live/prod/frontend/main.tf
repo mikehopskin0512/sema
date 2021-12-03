@@ -11,44 +11,6 @@ module "alb" {
   vpc_name    = "vpc-prod"
 }
 
-# module "web" {
-#   source = "../../../modules/frontend-ecs-service"
-
-#   aws_region        = "us-east-1"
-#   cluster_name      = aws_ecs_cluster.main.name
-#   cpu               = "1024"
-#   env               = "prod"
-#   domain            = "app.semasoftware.com"
-#   health_check_path = "/login"
-#   image             = var.phoenix_image
-#   lb_listener_arn   = module.alb.https_listener
-#   lb_security_group = module.alb.alb_security_group
-#   memory            = "2048"
-#   port              = "3000"
-#   service_name      = "phoenix"
-#   task_count        = 3
-#   vpc_name          = "vpc-prod"
-# }
-
-# module "api" {
-#   source = "../../../modules/frontend-ecs-service"
-
-#   aws_region        = "us-east-1"
-#   cluster_name      = aws_ecs_cluster.main.name
-#   cpu               = "1024"
-#   env               = "prod"
-#   domain            = "api.semasoftware.com"
-#   health_check_path = "/health"
-#   image             = var.apollo_image
-#   lb_listener_arn   = module.alb.https_listener
-#   lb_security_group = module.alb.alb_security_group
-#   memory            = "2048"
-#   port              = "3001"
-#   service_name      = "apollo"
-#   task_count        = 3
-#   vpc_name          = "vpc-prod"
-# }
-
 module "phoenix" {
   source = "../../../modules/ecs_task"
 
@@ -60,6 +22,7 @@ module "phoenix" {
     arn  = aws_ecs_cluster.main.id
     name = aws_ecs_cluster.main.name
   }
+  sg_description            = "allow inbound access from the ALB only"
   task_definition_resources = var.ecs_task_definition_resources
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.phoenix_web_repo_arn
@@ -82,7 +45,7 @@ module "phoenix" {
     lb_security_group = module.alb.alb_security_group
     port              = "3000"
     domain            = "semasoftware.com"
-    domain_prefix     = "app-qa"
+    domain_prefix     = "app"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
@@ -121,7 +84,7 @@ module "apollo" {
     lb_security_group = module.alb.alb_security_group
     port              = "3001"
     domain            = "semasoftware.com"
-    domain_prefix     = "api-qa"
+    domain_prefix     = "api"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
