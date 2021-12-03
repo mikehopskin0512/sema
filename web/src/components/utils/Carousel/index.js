@@ -169,7 +169,7 @@ const SuggestedComments = ({ current }) => (
           <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
         </div>
         <div className="tile is-6">
-          <img src={carouselData[2]} alt="suggested-snippets" className="" />
+          <img src={carouselData[2]} alt="snippets" className="" />
         </div>
       </div>
       {/* Mobile View */}
@@ -177,7 +177,7 @@ const SuggestedComments = ({ current }) => (
         <p className="is-size-5-mobile has-text-weight-semibold">Snippets</p>
         <p className="is-size-6-mobile">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity.</p>
         <figure className="image is-4by3 mt-20">
-          <img src={carouselData[2]} alt="suggested-snippets" className={styles['mobile-img']} />
+          <img src={carouselData[2]} alt="snippets" className={styles['mobile-img']} />
         </figure>
       </div>
     </TileAncestor>

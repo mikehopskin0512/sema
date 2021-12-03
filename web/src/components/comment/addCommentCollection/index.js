@@ -71,23 +71,23 @@ const AddCommentCollection = () => {
       },
       tags: [...languages, ...others],
     }
-    
+
     let currentSemaTeamId = null;
     if (data.isPopulate && roles && roles.length > 0) {
       // TODO this hardcoded Sema Super Team will be replaced very soon
       const semaTeam = roles.find(role => role && role.team && role.team.name === 'Sema Super Team');
       if (semaTeam) currentSemaTeamId = semaTeam.team._id;
     }
-    
+
     const collections = await dispatch(createCollections({
       collections: new Array(collection),
       team: currentSemaTeamId
     }, token));
-    
+
     if (collections.length > 0) {
-      await router.push(PATHS.SUGGESTED_SNIPPETS._)
+      await router.push(PATHS.SNIPPETS._)
     }
-    
+
     setLoading(false);
   }
 

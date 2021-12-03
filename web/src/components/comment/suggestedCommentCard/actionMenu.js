@@ -45,7 +45,7 @@ const ActionMenu = ({ comment }) => {
               <button
                 type="button"
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
-                onClick={() => router.push(`/suggested-snippets/edit?cid=${collectionId}&comments=${comment._id}`)}
+                onClick={() => router.push(`/snippets/edit?cid=${collectionId}&comments=${comment._id}`)}
               >
                 Edit Snippet
               </button>

@@ -93,7 +93,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
 
     if (data[0]) {
       await dispatch(bulkUpdateSuggestedComments({ comments: data }, token));
-      await router.push(`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`);
+      await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
     }
   };
 

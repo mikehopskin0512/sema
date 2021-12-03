@@ -87,7 +87,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
     };
 
     const onClickAddComment = () => {
-      router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${_id}`)
+      router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
     };
 
     const onClickArchiveCollection = async () => {
@@ -118,7 +118,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
               <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              { asPath === PATHS.SUGGESTED_SNIPPETS._ && isNotArchived ? (
+              { asPath === PATHS.SNIPPETS._ && isNotArchived ? (
                 <div className="field" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
@@ -181,7 +181,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       </div>
                       <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                         <div className="dropdown-content">
-                          <a href={`${PATHS.SUGGESTED_SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
+                          <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                             Edit Collection
                           </a>
                           <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>

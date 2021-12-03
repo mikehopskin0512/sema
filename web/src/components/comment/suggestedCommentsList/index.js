@@ -85,7 +85,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   };
 
   const goToAddPage = async () => {
-    await router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${collectionId}`);
+    await router.push(`${PATHS.SNIPPETS.ADD}?cid=${collectionId}`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -139,12 +139,12 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
+          <a href={PATHS.SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
             <ArrowLeftIcon color="#000" size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
+              <li><a href={PATHS.SNIPPETS._} className="has-text-grey">Snippets</a></li>
               <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
             </ul>
           </nav>

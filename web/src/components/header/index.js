@@ -160,8 +160,8 @@ const Header = () => {
                     Personal Insights
                   </a>
                 </Link>
-                <Link href={PATHS.SUGGESTED_SNIPPETS._}>
-                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SUGGESTED_SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
+                <Link href={PATHS.SNIPPETS._}>
+                  <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
                     Snippets
                   </a>
                 </Link>
@@ -196,7 +196,7 @@ const Header = () => {
                     Repos
                   </a>
                 </Link>
-                <Link href={PATHS.SUGGESTED_SNIPPETS._}>
+                <Link href={PATHS.SNIPPETS._}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Snippets
                   </a>

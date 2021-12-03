@@ -21,8 +21,8 @@ const SearchItem = ({ item, keyword, isCollection }) => {
 
   const sourceName = item.source?.name || item.sourceName;
 
-  const onClickHandler = async () => { 
-    await router.push(`/suggested-snippets?cid=${isCollection ? item._id : item.collectionId}`);
+  const onClickHandler = async () => {
+    await router.push(`/snippets?cid=${isCollection ? item._id : item.collectionId}`);
   };
 
   return (
