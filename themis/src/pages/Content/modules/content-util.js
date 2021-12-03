@@ -135,31 +135,31 @@ export const isValidSemaTextBox = (element) => {
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
-export const getSemaGithubText = (selectedEmoji, selectedTags) => {
-  // eslint-disable-next-line no-param-reassign
-  selectedEmoji = selectedEmoji
+export const getSemaGithubText = (rawEmojis, tags) => {
+  // TODO: should be fixed after refactoring for emojis / don't use styles <b> in names
+  const emojis = rawEmojis
     .replaceAll('<b>', '')
     .replaceAll('</b>', '');
 
-  if (!selectedEmoji && !selectedTags) {
+  if (!emojis && !tags) {
     return '';
   }
-  let summariesAndTags = '__\n';
+
   const semaLogo = `[![sema-logo](${SEMA_LOGO_URL})](${SEMA_LANDING_GITHUB})`;
-  summariesAndTags += semaLogo;
+  let semaString = `__\n${semaLogo} `;
 
-  if (selectedEmoji) {
-    summariesAndTags += ` **Summary:** ${selectedEmoji}`;
+  if (emojis) {
+    semaString += `**Summary:** ${emojis}`;
   }
-  if (selectedEmoji && selectedTags) {
-    summariesAndTags += ' | ';
+  if (emojis && tags) {
+    semaString += ' | ';
   }
-  if (selectedTags) {
-    summariesAndTags += `**Tags:** ${selectedTags}`;
+  if (tags) {
+    semaString += `**Tags:** ${tags}`;
   }
-  summariesAndTags += '\n';
+  semaString += '\n';
 
-  return summariesAndTags;
+  return semaString;
 };
 
 export const getInitialSemaValues = (textbox) => {
