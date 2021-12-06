@@ -147,10 +147,10 @@ export const FACEBOOK_VERIFICATION_META = {
 export const PATHS = {
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
-  SUGGESTED_SNIPPETS: {
-    _: '/suggested-snippets',
-    EDIT: '/suggested-snippets/edit',
-    ADD: '/suggested-snippets/add',
+  SNIPPETS: {
+    _: '/snippets',
+    EDIT: '/snippets/edit',
+    ADD: '/snippets/add',
   },
   INVITATIONS: '/invitations',
   PROFILE: '/profile',

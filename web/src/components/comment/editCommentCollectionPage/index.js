@@ -79,7 +79,7 @@ const EditCommentCollectionPage = () => {
       collection: collectionData
     }, token));
     if (updatedCollection?._id) {
-      await router.push(PATHS.SUGGESTED_SNIPPETS._);
+      await router.push(PATHS.SNIPPETS._);
     }
     setLoading(false);
   }

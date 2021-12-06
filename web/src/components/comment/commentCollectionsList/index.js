@@ -91,7 +91,7 @@ const CommentCollectionsList = () => {
               <GlobalSearch />
             </div>
             { isEditable && (
-              <a href={PATHS.SUGGESTED_SNIPPETS.ADD}>
+              <a href={PATHS.SNIPPETS.ADD}>
                 <button
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"
                   type="button"

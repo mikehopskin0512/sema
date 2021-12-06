@@ -1,5 +1,5 @@
 provider "aws" {
   version = "~> 3.38.0"
-  region  = var.aws_region
+  region  = "us-east-1"
   profile = "sema-terraform"
 }
