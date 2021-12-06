@@ -1,4 +1,4 @@
-# Module: frontend
+# Module: vpc
 
 `vpc` is the module for creating vpc, subnets and necessary peering connections.
 
