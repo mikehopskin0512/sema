@@ -7,9 +7,9 @@ Feature: To create a new customer
         And   I click on the button "span=Sign in with GitHub"
         And   I pause for 5000ms
         And   I clear the inputfield "#login_field"
-        And   I add "andriy@semasoftware.com" to the inputfield "#login_field"
+        And   I add "*****" to the inputfield "#login_field"
         And   I clear the inputfield "#password"
-        And   I add "semasoftware1" to the inputfield "#password"
+        And   I add "***" to the inputfield "#password"
         And   I click on the button ".js-sign-in-button"
         And   I pause for 30000ms
 
