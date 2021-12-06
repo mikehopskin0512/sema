@@ -85,18 +85,20 @@ export default (app, passport) => {
       }
 
       // Add user to Mailchimp and subscribe it to Sema - Newsletters
-      const listId = mailchimpAudiences.registeredAndWaitlistUsers;
+      const listId = mailchimpAudiences.registeredAndWaitlistUsers || null;
       const { firstName, lastName, avatarUrl} = newUser;
 
       try {
-        await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
-          list_id: listId,
-          merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
-          status: 'subscribed',
-          email_type: 'html',
-          email_address: username,
-          tags: ['Registered and Waitlist Users'],
-        });
+        if (listId) {
+          await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
+            list_id: listId,
+            merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
+            status: 'subscribed',
+            email_type: 'html',
+            email_address: username,
+            tags: ['Registered and Waitlist Users'],
+          });
+        }
       } catch (error) {
         logger.error(error);
         return res.status(400).send(error);
@@ -104,14 +106,19 @@ export default (app, passport) => {
 
        // Add user to Intercom
        // TEMP: Comment out Intercom until variable is fixed in prod
-/*        await intercom.create('contacts', {
-         role: 'user',
-         external_id: userId,
-         name: `${firstName} ${lastName}`.trim(),
-         email: username,
-         avatar: avatarUrl,
-         signed_up_at: new Date(),
-       }); */
+      try {
+        await intercom.create('contacts', {
+          role: 'user',
+          external_id: userId,
+          name: `${firstName} ${lastName}`.trim(),
+          email: username,
+          avatar: avatarUrl,
+          signed_up_at: new Date(),
+        }); 
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
+      }
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
