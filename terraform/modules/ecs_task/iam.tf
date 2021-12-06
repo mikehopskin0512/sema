@@ -65,3 +65,9 @@ resource "aws_iam_role_policy" "external" {
   role   = aws_iam_role.task.id
   policy = element(var.external_iam_policies, count.index)
 }
+
+resource "aws_iam_role_policy" "ssm" {
+  name   = local.task_definition_exec_ssm_policy
+  role   = aws_iam_role.task.id
+  policy = data.aws_iam_policy_document.ssm.json
+}
