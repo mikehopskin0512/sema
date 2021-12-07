@@ -168,3 +168,16 @@ export const PATHS = {
 };
 
 export const SEMA_TEAM_ADMIN_NAME = 'Sema Super Team';
+
+export const SUPPORT_VIDEO_LANGUAGES = [
+  {
+    value: 'english',
+    label: 'English',
+    url: 'https://www.youtube.com/embed/x6FoswLcqxE'
+  },
+  {
+    value: 'russian',
+    label: 'Russian',
+    url: 'https://www.youtube.com/embed/Q7ryQIm2eYY'
+  },
+]

@@ -22,13 +22,6 @@ export const articles = [
     mins: 15,
     link: 'https://simpleprogrammer.com/why-code-reviews-make-better-code-teams/',
   }, {
-    id: 4,
-    author: 'The Overflow',
-    title: 'How to Make Good Code Reviews Better',
-    date: 'Sep 30, 2018',
-    mins: 6,
-    link: 'https://stackoverflow.blog/2019/09/30/how-to-make-good-code-reviews-better/',
-  }, {
     id: 5,
     author: 'Shopify Engineering',
     title: 'Great Code Reviews—The Superpower Your Team Needs',
@@ -49,6 +42,6 @@ export const articles = [
     title: 'Good Code Reviews, Better Code Reviews',
     date: 'Oct 7, 2019',
     mins:15,
-    link: 'https://blog.pragmaticengineer.com/good-code-reviews-better-code-reviews/',
+    link: 'https://stackoverflow.blog/2019/09/30/how-to-make-good-code-reviews-better/',
   },
 ];
