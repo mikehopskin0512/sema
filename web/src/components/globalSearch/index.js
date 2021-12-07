@@ -58,7 +58,9 @@ const GlobalSearch = () => {
 
   useEffect(() => {
     const isAllCollections = true;
-    dispatch(getUserSuggestedComments(searchTerm, user._id, token, isAllCollections));
+    if (searchTerm.trim().length >= 2) {
+      dispatch(getUserSuggestedComments(searchTerm, user._id, token, isAllCollections));
+    }
   }, [searchTerm]);
 
   // TODO: turned off temporary / delete in 2022
