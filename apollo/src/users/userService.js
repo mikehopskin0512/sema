@@ -15,7 +15,7 @@ export const create = async (user) => {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
     identities, terms,
-    isWaitlist, origin,
+    isWaitlist, origin = 'waitlist',
     collections,
   } = user;
 
@@ -28,6 +28,7 @@ export const create = async (user) => {
     const invitation = await checkIfInvited(username);
     if(!!invitation.length) {
       isWaitlist = false;
+      origin = 'invitation';
     }
 
     const newUser = new User({
