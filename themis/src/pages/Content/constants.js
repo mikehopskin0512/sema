@@ -1,4 +1,5 @@
 export const { SEMA_LANDING_URL } = process.env;
+export const { SEMA_PRODUCTION_URL } = process.env;
 export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
@@ -7,7 +8,7 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
 
-export const SEMA_LOGO_URL = `${SEMA_UI_URL}/apple-touch-icon.png`;
+export const SEMA_LOGO_URL = `${SEMA_UI_URL}/img/sema-tray-logo.svg`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
 export const SEMA_LANDING_GITHUB = `${SEMA_LANDING_URL}/gh`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
