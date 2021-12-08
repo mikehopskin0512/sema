@@ -21,7 +21,7 @@ import '../../styles/_calendar_overrides.scss';
 import usePermission from '../hooks/usePermission';
 import NotFound from './404';
 import { permissionsMap } from '../data/permissions';
-import { SEMA_TEAM_ADMIN_NAME } from '../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
@@ -35,7 +35,7 @@ function Layout({ Component, pageProps }) {
 
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
-      const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess({name: SEMA_TEAM_ADMIN_NAME}, permission));
+      const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
       return !unauthorizedAccess;
     }
     return true;

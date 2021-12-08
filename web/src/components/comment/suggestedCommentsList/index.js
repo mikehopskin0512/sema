@@ -11,16 +11,15 @@ import CommentFilter from '../commentFilter';
 import SuggestedCommentCard from '../suggestedCommentCard';
 import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
-import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
-import { EditComments } from '../../../data/permissions';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { isSemaDefaultCollection } from '../../../utils';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -131,7 +130,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments) || name.toLowerCase() === 'my snippets' || name.toLowerCase() === 'custom snippets', [user, name]);
+  const canCreate = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateSnippets') || isSemaDefaultCollection(name), [user, name]);
+  const canEdit = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditSnippets') || isSemaDefaultCollection(name), [user, name]);
 
   return (
     <div>
@@ -159,7 +159,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
             </span>
           </div>
           {
-            isEditable && (
+            canCreate && (
               <button
                 className="button is-small is-primary border-radius-4px"
                 type="button"
@@ -173,7 +173,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           }
         </div>
         {
-          isEditable && selectedComments.length ? (
+          canEdit && selectedComments.length ? (
             <ActionGroup
               selectedComments={selectedComments}
               handleSelectAllChange={handleSelectAllChange}
@@ -194,7 +194,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
             <div className="is-size-5 has-text-black-950 my-120 has-text-centered">
               <img src="/img/empty-page.svg" className={styles['no-comments-img']} />
               <p className="is-size-7 my-25">You don't have any Custom Snippets.</p>
-              { isEditable && (
+              { canCreate && (
                 <button
                   className="button is-small is-primary border-radius-4px has-text-semibold"
                   type="button"
@@ -214,7 +214,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                 collectionId={collectionId}
                 selected={!!selectedComments.find((g) => g === item._id)}
                 onSelectChange={handleSelectChange}
-                isEditable={isEditable}
+                isEditable={canEdit}
               />
             ))
           )

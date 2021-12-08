@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSortBy, useTable, usePagination, useGroupBy } from 'react-table';
+import clsx from 'clsx';
 import styles from './table.module.scss';
 import { getCharCount } from '../../utils';
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons';
@@ -11,6 +12,7 @@ const Table = ({
   pagination,
   loading,
   empty,
+  className,
 }) => {
   const { fetchData, totalCount, page: currentPage, perPage } = pagination || {};
 
@@ -51,7 +53,7 @@ const Table = ({
 
   return (
     <>
-      <div className="table-container">
+      <div className={clsx('table-container', className)}>
         <table {...getTableProps()} className="table is-striped" style={{ width: '100%' }}>
           <thead>
             {headerGroups.map((headerGroup) => (
@@ -122,7 +124,7 @@ const Table = ({
         <div className="is-flex is-align-items-center">
           <div className='mr-10'>Items per page</div>
           <div className="select">
-            <select value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
+            <select className="has-background-white" value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
               {
                 [10, 20, 50, 100].map((item) => (
                   <option key={item} value={item}>{item}</option>
@@ -145,7 +147,7 @@ const Table = ({
                   <li className="is-flex is-align-items-center mx-5">
                     <input
                       id="page-input"
-                      className={`input mr-5 has-text-centered ${styles['page-input']} ${pageValue > pageCount && 'is-danger'}`}
+                      className={`input mr-5 has-background-white has-text-centered ${styles['page-input']} ${pageValue > pageCount && 'is-danger'}`}
                       type="number"
                       defaultValue={pageIndex + 1}
                       onChange={e => {
@@ -179,12 +181,14 @@ Table.propTypes = {
   pagination: PropTypes.object,
   loading: PropTypes.bool,
   empty: PropTypes.any,
+  className: PropTypes.string,
 };
 
 Table.defaultProps = {
   pagination: null,
   loading: false,
   empty: null,
+  className: '',
 };
 
 export default Table;

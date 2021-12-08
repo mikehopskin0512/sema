@@ -18,6 +18,7 @@ export {
   LabelsManagementHelmet,
   TeamCreateHelmet,
   TeamManagementHelmet,
+  TeamInviteHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description, children }) => (

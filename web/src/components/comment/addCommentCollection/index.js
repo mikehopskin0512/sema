@@ -3,22 +3,19 @@ import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import EditCommentCollectionForm from '../editCommentCollectionForm';
 import { CheckOnlineIcon } from '../../Icons';
 import Toaster from '../../toaster';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
-import { PATHS } from '../../../utils/constants';
-import { EditComments } from "../../../data/permissions";
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import usePermission from '../../../hooks/usePermission';
 
 const { clearAlert } = alertOperations;
 const { createCollections } = collectionsOperations;
 
 const AddCommentCollection = () => {
-  const { checkAccess } = usePermission();
+  const { checkAccess, checkTeam } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -29,7 +26,7 @@ const AddCommentCollection = () => {
   }));
   const { showAlert, alertType, alertLabel } = alerts;
   const { user = {}, token } = auth;
-  const { isSemaAdmin, identities = [], roles = [] } = user;
+  const { identities = [] } = user;
 
   const github = identities.find((identity) => identity.provider === 'github');
 
@@ -73,10 +70,8 @@ const AddCommentCollection = () => {
     }
 
     let currentSemaTeamId = null;
-    if (data.isPopulate && roles && roles.length > 0) {
-      // TODO this hardcoded Sema Super Team will be replaced very soon
-      const semaTeam = roles.find(role => role && role.team && role.team.name === 'Sema Super Team');
-      if (semaTeam) currentSemaTeamId = semaTeam.team._id;
+    if (data.isPopulate && checkTeam(SEMA_CORPORATE_TEAM_ID)) {
+      currentSemaTeamId = SEMA_CORPORATE_TEAM_ID;
     }
 
     const collections = await dispatch(createCollections({

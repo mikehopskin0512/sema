@@ -116,9 +116,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (page && typeof page === 'number') {
-      setOnboardingPage(page);
-      setOnboardingProgress({ ...onboardingProgress, page });
-      toggleOnboardingModalActive(true);
+      if (!isOnboarded) {
+        setOnboardingPage(page);
+        setOnboardingProgress({ ...onboardingProgress, page });
+        toggleOnboardingModalActive(true);
+      }
     }
   }, [page]);
 

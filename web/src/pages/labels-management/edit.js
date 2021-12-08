@@ -10,11 +10,10 @@ import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelCommentsRow from '../../components/labels-management/LabelCommentsRow';
-import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
-import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
 
 const { clearAlert } = alertOperations;
@@ -42,7 +41,7 @@ const EditLabel = () => {
   const { token } = auth;
   const { isFetching, tag, tags: existingTags } = tagsState;
 
-  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));

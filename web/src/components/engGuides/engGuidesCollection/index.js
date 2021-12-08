@@ -14,9 +14,8 @@ import Helmet from '../../utils/Helmet';
 import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
-import { EditGuides } from '../../../data/permissions';
 import usePermission from '../../../hooks/usePermission';
-import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getEngGuides } = engGuidesOperations;
@@ -117,7 +116,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
 
-  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditGuides), [checkAccess]);
+  const isEditable = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditSnippets'), [checkAccess]);
 
   if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (

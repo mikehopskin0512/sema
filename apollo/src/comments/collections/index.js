@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version } from '../../config';
+import { semaCorporateTeamId, version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, update } from './collectionService';
@@ -49,13 +49,8 @@ export default (app, passport) => {
       }
 
       const collectionIds = newCollections.map((col) => col._id);
-      if (team) {
-        const teamData = await Team.findById(team);
-        if (teamData.name === 'Sema Super Team') {
-          await populateCollectionsToUsers(collectionIds);
-        } else {
-          await populateCollectionsToUsers(collectionIds, userId);
-        }
+      if (team == semaCorporateTeamId) {
+        await populateCollectionsToUsers(collectionIds);
       } else {
         await populateCollectionsToUsers(collectionIds, userId);
       }

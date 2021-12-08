@@ -1,8 +1,8 @@
 import crypto from 'crypto';
-import { orgDomain } from '../config';
+import { orgDomain, semaCorporateTeamId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
-import UserRole from '../roles/userRoleModel';
+import UserRole from '../roles/userRoles/userRoleModel';
 
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
@@ -63,6 +63,11 @@ export const getTokenData = async (user) => {
 
   return tokenData;
 };
+
+export const isSemaAdmin = (userData) => {
+  const semaAdminRole = userData?.roles?.find((userRole) => userRole?.team?._id == semaCorporateTeamId && userRole?.role?.name === 'Admin');
+  return !!semaAdminRole;
+}
 
 export const mapBooleanValue = (value) => value.toLowerCase() === 'true';
 

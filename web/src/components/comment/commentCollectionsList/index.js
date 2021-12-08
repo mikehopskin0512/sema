@@ -1,18 +1,14 @@
 import { PlusIcon } from '../../Icons';
 import React, { useEffect, useMemo, useState } from 'react';
-import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from './commentCollectionsList.module.scss';
-import AddSuggestedCommentModal from '../addSuggestedCommentModal';
 import CardList from '../cardList';
 import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
 import GlobalSearch from '../../globalSearch';
 import Loader from '../../Loader';
 import Toaster from '../../toaster';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
-import {EditComments} from "../../../data/permissions";
 import usePermission from '../../../hooks/usePermission';
 
 const { clearAlert } = alertOperations;
@@ -22,7 +18,7 @@ const NUM_PER_PAGE = 9;
 
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
-  const { checkAccess } = usePermission();
+  const { checkAccess, isSemaAdmin } = usePermission();
   const { auth, collectionsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
@@ -30,16 +26,15 @@ const CommentCollectionsList = () => {
   }));
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { isSemaAdmin } = user;
   const { data = [] , isFetching } = collectionsState;
 
   const [page, setPage] = useState(1);
 
-  const isEditable = checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments);
+  const canCreate = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
 
   const sortedCollections = useMemo(() => {
     let collections = [...data];
-    if (!isSemaAdmin) {
+    if (!isSemaAdmin()) {
       collections = collections.filter((collection) => collection?.collectionData?.isActive);
     }
     collections = collections.sort((_a, _b) => {
@@ -90,7 +85,7 @@ const CommentCollectionsList = () => {
             <div className="mr-10">
               <GlobalSearch />
             </div>
-            { isEditable && (
+            { canCreate && (
               <a href={PATHS.SNIPPETS.ADD}>
                 <button
                   className="button is-small is-primary border-radius-4px my-10 has-text-weight-semibold"

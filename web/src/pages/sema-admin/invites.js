@@ -12,6 +12,7 @@ import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import InvitationsGrid from '../../components/invitationsGrid';
 import ExportButton from '../../components/admin/exportButton';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import usePermission from '../../hooks/usePermission';
 
 const { clearAlert } = alertOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser, exportInvites } = invitationsOperations;
@@ -34,6 +35,7 @@ const InvitesPage = () => {
     auth: state.authState,
     invitations: state.invitationsState,
   }));
+  const { isSemaAdmin } = usePermission();
 
   const { token, user } = auth;
   const [category, setCategory] = useState('your_invites');
@@ -86,7 +88,7 @@ const InvitesPage = () => {
       case 'table':
         return acceptedInvitationCount + pendingInvitationCount
       case 'label':
-        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
+        return isSemaAdmin() ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
       default:
         return acceptedInvitationCount + pendingInvitationCount
     }

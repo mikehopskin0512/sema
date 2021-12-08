@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef, useState } from 'react';
-import { get } from 'lodash';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,10 +8,9 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
-import {EditComments} from "../../../data/permissions";
 import usePermission from '../../../hooks/usePermission';
 
 const { triggerAlert } = alertOperations;
@@ -41,8 +39,7 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
   const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
 
-  const { isSemaAdmin, organizations } = user;
-  const isEditable = checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments);
+  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -172,30 +169,33 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                       {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
                     </div>
                   )}
-                  { isEditable && (
-                    <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
-                      <div className="dropdown-trigger">
-                        <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
-                          <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
-                        </button>
-                      </div>
-                      <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
-                        <div className="dropdown-content">
-                          <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
-                            Edit Collection
-                          </a>
-                          <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
-                            {isNotArchived ? 'Archive' : 'Unarchive'} Collection
-                          </div>
-                          {!isSemaAdmin && (
-                            <a href="#" className="dropdown-item is-active">
-                              Share with Sema Community
-                            </a>
-                          )}
-                        </div>
+                  <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
+                    <div className="dropdown-trigger">
+                      <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                        <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
+                      </button>
+                    </div>
+                    <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
+                      <div className="dropdown-content">
+                        {
+                          canEdit && (
+                            <>
+                              <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
+                                Edit Collection
+                              </a>
+                              <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                                {isNotArchived ? 'Archive' : 'Unarchive'} Collection
+                              </div>
+                            </>
+                          )
+                        }
+                        
+                        <a href="#" className="dropdown-item is-active">
+                          Share with Sema Community
+                        </a>
                       </div>
                     </div>
-                  ) }
+                  </div>
                 </div>
               </div>
             </div>

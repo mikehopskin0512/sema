@@ -7,26 +7,23 @@ import Link from 'next/link';
 import styles from './header.module.scss';
 import HeaderMenu from './HeaderMenu';
 import TeamMenuItem from './TeamMenuItem';
-import { authOperations } from '../../state/features/auth';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
-import { ViewAdmin } from '../../data/permissions';
 import { teamsOperations } from '../../state/features/teams';
 import Logo from '../Logo';
-import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 
-const { getTeams } = teamsOperations;
+const { fetchTeams } = teamsOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { deauthenticate } = authOperations;
   const [bgColor, setBgColor] = useState('');
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
-  const { checkAccess } = usePermission();
+  const { checkAccess, isSemaAdmin } = usePermission();
 
   // Create REFs for menus
   const burger = useRef(null);
@@ -41,7 +38,6 @@ const Header = () => {
     isVerified = false,
     organizations = [],
     isWaitlist = true,
-    isSemaAdmin = false,
     inviteCount = 0,
     roles = [],
   } = user;
@@ -50,7 +46,6 @@ const Header = () => {
 
   // Use 1st org (for now) and get isAdmin
   // const [currentOrg = { isAdmin: false }] = organizations;
-  // const isAdmin = currentOrg.isAdmin || isSemaAdmin;
 
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
@@ -67,8 +62,8 @@ const Header = () => {
     if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
       setBgColor('has-background-white');
     }
-    // dispatch(getTeams(token));
-  }, []);
+    dispatch(fetchTeams(token));
+  }, [dispatch]);
 
   const toggleHamburger = () => {
     if (menu.current && burger.current) {
@@ -174,7 +169,7 @@ const Header = () => {
                   <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
                     <div className="is-flex is-flex-wrap-wrap">
                       Invitations
-                      <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
+                      <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin() ? 'ꝏ' : inviteCount}</div>
                     </div>
                   </a>
                 </Link>
@@ -209,7 +204,7 @@ const Header = () => {
                 <Link href={PATHS.INVITATIONS}>
                   <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                     Invitations
-                    <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin ? 'ꝏ' : inviteCount}</span>
+                    <span className="badge mr-50 is-right is-success is-flex is-justify-content-center is-align-items-center has-text-white has-text-weight-semibold border-radius-4px">{isSemaAdmin() ? 'ꝏ' : inviteCount}</span>
                   </a>
                 </Link>
 
@@ -224,24 +219,25 @@ const Header = () => {
                   </a>
                 </div> */}
                 <hr className="navbar-divider" />
-                {checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) && (
+                {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
                   <Link href="/sema-admin/users">
                     <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
                       Admin Panel
                     </a>
                   </Link>
                 )}
-                <Link href={PATHS.TEAM}>
-                  <a
-                    aria-hidden="true"
-                    type="button"
-                    className="navbar-item has-text-weight-semibold is-uppercase"
-                    onClick={toggleUserMenu}
-                  >
-                    <span>Create a Team</span>
-                    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
-                  </a>
-                </Link>
+                {/*TODO to enable this after Team feature is merged*/}
+                {/*<Link href={PATHS.TEAM}>*/}
+                {/*  <a*/}
+                {/*    aria-hidden="true"*/}
+                {/*    type="button"*/}
+                {/*    className="navbar-item has-text-weight-semibold is-uppercase"*/}
+                {/*    onClick={toggleUserMenu}*/}
+                {/*  >*/}
+                {/*    <span>Create a Team</span>*/}
+                {/*    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>*/}
+                {/*  </a>*/}
+                {/*</Link>*/}
                 <Link href={PATHS.PROFILE}>
                   <a
                     aria-hidden="true"
@@ -261,6 +257,18 @@ const Header = () => {
                 { roles.map((role, item) => (
                   <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${item}`} />
                 )) }
+                {/*TODO to enable this after Team feature is merged*/}
+                {/*<Link href={PATHS.TEAM}>*/}
+                {/*  <a*/}
+                {/*    aria-hidden="true"*/}
+                {/*    type="button"*/}
+                {/*    className="navbar-item has-text-weight-semibold is-uppercase"*/}
+                {/*    onClick={toggleUserMenu}*/}
+                {/*  >*/}
+                {/*    <span>Create a Team</span>*/}
+                {/*    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>*/}
+                {/*  </a>*/}
+                {/*</Link>*/}
                 <span
                   aria-hidden="true"
                   role="button"

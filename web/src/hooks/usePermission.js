@@ -1,32 +1,30 @@
 import { useSelector } from 'react-redux';
-import { DEFAULT_COLLECTION_NAME } from '../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
 
 function usePermission() {
   const { user } = useSelector((state) => (state.authState));
-  const { collectionState: { collection } } = useSelector((state) => ({
-    collectionState: state.commentsState,
-  }));
 
-  const checkAccess = (team, permission) => {
-    // TODO this will be replaced with more team comparison here in the future
-    if (collection?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME) {
-      return true;
-    }
-
-    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?.name === team.name);
+  const checkAccess = (teamId, permission) => {
+    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?._id == teamId);
 
     return !!role;
   };
 
-  const checkTeam = (name) => {
-    const role = user?.roles?.find((item) => item.team && item.team.name && item.team.name === name);
+  const checkTeam = (teamId) => {
+    const role = user?.roles?.find((item) => item?.team?._id == teamId);
 
     return !!role;
   };
+  
+  const isSemaAdmin = () => {
+    const semaAdminRole = user?.roles?.find((userRole) => userRole?.team?._id == SEMA_CORPORATE_TEAM_ID && userRole?.role?.name === 'Admin');
+    return !!semaAdminRole;
+  }
 
   return {
     checkAccess,
     checkTeam,
+    isSemaAdmin,
   };
 }
 

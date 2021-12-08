@@ -43,4 +43,6 @@ module.exports = {
   },
   chromeExtensionId: process.env.CHROME_EXTENSION_ID,
   iframelyApiKey: process.env.IFRAMELY_API_KEY,
+  semaCorporateTeamName: process.env.SEMA_CORPORATE_TEAM_NAME,
+  semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
 };

@@ -73,3 +73,8 @@ export const TeamManagementHelmet = {
   title: 'Team Management',
   description: null,
 };
+
+export const TeamInviteHelmet = {
+  title: 'Invite Team',
+  description: null,
+};

@@ -12,12 +12,14 @@ import { invitationsOperations } from '../../../state/features/invitations';
 import { alertOperations } from '../../../state/features/alerts';
 import InvitationsGrid from '../../../components/invitationsGrid';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import usePermission from "../../../hooks/usePermission";
 
 const { clearAlert } = alertOperations;
 const { fetchUser } = selectedUserOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const UserDetailPage = () => {
+  const { isSemaAdmin } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const { alerts, auth, selectedUser, invitations } = useSelector((state) => ({
@@ -56,7 +58,7 @@ const UserDetailPage = () => {
       case 'table':
         return acceptedInvitationCount + pendingInvitationCount
       case 'label':
-        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : user.inviteCount + acceptedInvitationCount + pendingInvitationCount;
+        return isSemaAdmin() ? acceptedInvitationCount + pendingInvitationCount : user.inviteCount + acceptedInvitationCount + pendingInvitationCount;
       default:
         return acceptedInvitationCount + pendingInvitationCount
     }
