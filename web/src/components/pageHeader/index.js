@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusIcon } from '@/components/Icons';
+import { PlusIcon } from '../Icons';
 import { useRouter } from 'next/router';
 import usePermission from '../../hooks/usePermission';
 import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
@@ -25,7 +25,7 @@ const PageHeader = () => {
             Sema Corporate
           </p>
         </div>
-  
+
         {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
           <button
             className="button is-small is-primary border-radius-4px"
