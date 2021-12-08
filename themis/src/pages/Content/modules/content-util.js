@@ -146,13 +146,13 @@ export const getSemaGithubText = (rawEmojis, tags) => {
   }
 
   const semaLogo = `[![sema-logo](${SEMA_LOGO_URL})](${SEMA_LANDING_GITHUB})`;
-  let semaString = `__\n${semaLogo} `;
+  let semaString = `__\n${semaLogo}  &nbsp;`;
 
   if (emojis) {
     semaString += `**Summary:** ${emojis}`;
   }
   if (emojis && tags) {
-    semaString += ' | ';
+    semaString += '&nbsp; | &nbsp;';
   }
   if (tags) {
     semaString += `**Tags:** ${tags}`;
