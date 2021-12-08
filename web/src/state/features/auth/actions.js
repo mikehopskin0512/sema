@@ -268,6 +268,16 @@ export const setUser = function (user) {
   };
 };
 
+export const setSelectedTeamSuccess = (selectedTeam) => ({
+  type: types.SET_SELECTED_TEAM,
+  selectedTeam,
+});
+
+export const setSelectedTeam = (selectedTeam) => (dispatch) => {
+  localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
+  dispatch(setSelectedTeamSuccess(selectedTeam));
+};
+
 export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {
     dispatch(requestRegistration());

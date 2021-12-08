@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Helmet from '../../components/utils/Helmet';
 import { commentsOperations } from '../../state/features/comments';
 import withLayout from '../../components/layout';
+import withSnippetsPermission from '../../components/auth/withSnippetsPermission';
 import { ArrowLeftIcon } from '../../components/Icons';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
@@ -62,4 +63,4 @@ const EditCollectionPage = () => {
   );
 };
 
-export default withLayout(EditCollectionPage);
+export default withSnippetsPermission(withLayout(EditCollectionPage), 'canEditSnippets');

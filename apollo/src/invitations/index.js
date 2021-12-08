@@ -17,6 +17,7 @@ import {
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
+import { isSemaAdmin } from "../shared/utils";
 
 const route = Router();
 
@@ -30,7 +31,7 @@ export default (app, passport) => {
       user: userData,
     } = req;
 
-    if (!userData.isSemaAdmin && invitation.inviteCount <= 0) {
+    if (!isSemaAdmin(userData) && invitation.inviteCount <= 0) {
       return res.status(412).send({
         message: 'User does not have enough invites.',
       });
@@ -81,7 +82,7 @@ export default (app, passport) => {
         await sendEmail(message);
       }
 
-      const updatedUser = userData.isSemaAdmin ? userData : await update({
+      const updatedUser = isSemaAdmin(userData) ? userData : await update({
         ...userData,
         inviteCount: invitation.inviteCount - 1,
       });
@@ -281,7 +282,7 @@ export default (app, passport) => {
       if (invite.statusCode > 226) {
         return res.status(invite.statusCode).send(`Error finding invitation: ${invite.name}`);
       }
-      if (!invite.sender.equals(user._id) && !user.isSemaAdmin) {
+      if (!invite.sender.equals(user._id) && !isSemaAdmin(userData)) {
         return res.status(405).send('Unable to delete invitation: Unauthorized.');
       }
 

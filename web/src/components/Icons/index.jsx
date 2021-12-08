@@ -30,6 +30,7 @@ import { ReactComponent as CustomerSvg } from './img/customer.svg';
 import { ReactComponent as DeleteSvg } from './img/delete.svg';
 import { ReactComponent as DeveloperSvg } from './img/developer.svg';
 import { ReactComponent as DotSvg } from './img/dot.svg';
+import { ReactComponent as DotsSvg } from './img/dots.svg';
 import { ReactComponent as DownloadSvg } from './img/download.svg';
 import { ReactComponent as DuplicateSvg } from './img/duplicate.svg';
 import { ReactComponent as EditSvg } from './img/edit.svg';
@@ -289,6 +290,12 @@ export const DeveloperIcon = (props) => (
 export const DotIcon = (props) => (
   <Icon {...props}>
     <DotSvg />
+  </Icon>
+);
+
+export const DotsIcon = (props) => (
+  <Icon {...props}>
+    <DotsSvg />
   </Icon>
 );
 

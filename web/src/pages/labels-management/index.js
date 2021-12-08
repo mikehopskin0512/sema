@@ -9,11 +9,10 @@ import FilterLabels from '../../components/labels-management/FilterLabels';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelsTableRow from '../../components/labels-management/LabelsTableRow';
 import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
-import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { tagsOperations } from '../../state/features/tags';
 import { alertOperations } from '../../state/features/alerts';
-import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
@@ -41,10 +40,10 @@ const LabelsManagement = () => {
   const roleTeam = roles.find((role) => {
     const { team } = role;
     // While teams selection is not implemented
-    return team?.name === SEMA_TEAM_ADMIN_NAME;
+    return team?._id === SEMA_CORPORATE_TEAM_ID;
   });
 
-  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
 
   useEffect(() => {
     if (showAlert === true) {

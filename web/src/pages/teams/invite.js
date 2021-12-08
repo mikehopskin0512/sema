@@ -1,47 +1,90 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
+import Select from 'react-select';
+import Helmet, { TeamInviteHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
-import { teamsOperations } from '../../state/features/teams';
+import withSelectedTeam from '../../components/auth/withSelectedTeam';
 import styles from './teams.module.scss';
-import { CheckOnlineIcon, InfoFilledIcon } from '../../components/Icons';
-import { PATHS } from '../../utils/constants';
+import { useForm } from 'react-hook-form';
+import { ArrowLeftIcon, CheckOnlineIcon } from '../../components/Icons';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { rolesOperations } from '../../state/features/roles';
+import { teamsOperations } from '../../state/features/teams';
+import { fetchUsers } from '../../state/features/users/actions';
+import { filterNonSemaUsers } from '../../utils';
+import useAuthEffect from '../../hooks/useAuthEffect';
 
-const { createTeam } = teamsOperations;
+const { fetchRoles } = rolesOperations;
+const { inviteTeamUsers } = teamsOperations;
 
 const TeamInvitePage = () => {
-  const [team, setTeam] = useState({
-    name: '',
-    description: '',
-    members: '',
-  });
   const router = useRouter();
   const dispatch = useDispatch();
+  const {
+    register, handleSubmit, formState: { errors }, watch, setValue
+  } = useForm();
 
-  const { token } = useSelector((state) => state.authState);
+  const { authState, rolesState, usersState } = useSelector((state) => ({
+    authState: state.authState,
+    teamsState: state.teamsState,
+    rolesState: state.rolesState,
+    usersState: state.usersState
+  }));
 
-  const onSave = async () => {
-    await dispatch(createTeam(team, token));
-    await router.push(PATHS.TEAMS);
-  };
+  const { token } = authState;
+  const { roles } = rolesState;
+  const { users } = usersState;
 
-  const mutate = (obj) => {
-    setTeam({
-      ...team,
-      ...obj,
-    });
+  const rolesOptions = useMemo(() => roles.map((item) => ({
+    value: item._id,
+    label: item.name,
+  })), [roles]);
+
+  useAuthEffect(() => {
+    dispatch(fetchRoles(token));
+    dispatch(fetchUsers({ listAll: true }, token));
+  }, [dispatch]);
+  
+  const onSave = async (data) => {
+    const { emails, role } = data;
+    if (emails && emails.length) {
+      const userIds = emails ? emails.map((item) => item.value) : [];
+
+      if (!userIds.length || !role) return;
+
+      // adding normal users to Sema Corporate Team
+      await dispatch(inviteTeamUsers(SEMA_CORPORATE_TEAM_ID, {
+        users: userIds,
+        role: role ? role.value : '',
+      }, token));
+    }
+
+    await router.push(`${PATHS.TEAMS}/${SEMA_CORPORATE_TEAM_ID}`);
   };
 
   const onCancel = async () => {
     await router.back();
   };
 
+  const userOptions = useMemo(() => filterNonSemaUsers(users).map((item) => ({
+    value: item._id,
+    label: item.username,
+  })), [users]);
+
   return (
-    <div className="has-background-gray-200 hero">
-      <Helmet {...TeamCreateHelmet} />
+    <div className="has-background-gray-100 hero">
+      <Helmet {...TeamInviteHelmet} />
       <div className="hero-body pb-300">
+        <div className="is-flex is-align-items-center px-30 mb-40">
+          <a href={`${PATHS.TEAMS}/${SEMA_CORPORATE_TEAM_ID}`} className="has-text-black-950 is-flex is-align-items-center">
+            <ArrowLeftIcon />
+            <span className="ml-10 has-text-gray-500">Team Organization</span>
+          </a>
+          <div className="has-text-black-950 mx-5">/</div>
+          <div className="has-text-black-950">Invite new members</div>
+        </div>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
@@ -59,7 +102,7 @@ const TeamInvitePage = () => {
             <button
               className="button is-small is-primary border-radius-4px"
               type="button"
-              onClick={onSave}
+              onClick={handleSubmit(onSave)}
             >
               <CheckOnlineIcon size="small" />
               <span className="ml-8">
@@ -68,59 +111,40 @@ const TeamInvitePage = () => {
             </button>
           </div>
         </div>
-        <div className="px-10">
-          <div className={clsx('py-10 px-20', styles.notification)}>
-            <InfoFilledIcon color="#2D74B9" size="small" />
-            <span className="ml-8">
-              You can add multiple team members with same permission
-            </span>
+        <div className="px-10 is-flex is-flex-direction-column">
+          <div className={clsx('mb-25', styles['form-input'])}>
+            <div>Choose User</div>
+            <Select
+              {...register(
+                'emails',
+                {
+                  required: 'User emails are required',
+                },
+              )}
+              options={userOptions}
+              value={watch('emails')}
+              placeholder="Choose Email"
+              onChange={(values) => setValue('emails', values)}
+              isMulti
+              isSearchable
+            />
+            {errors.emails && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.emails.message}</p>)}
           </div>
-          <div>
-            <div className="my-25">
-              <label className="label is-size-7">E-mail</label>
-              <input
-                className="input has-background-white"
-                type="text"
-                placeholder="example@gmail.com"
-                value={team.members}
-                onChange={(e) => mutate({ members: e.target.value })}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="mb-15">Manage permissions</div>
-            <div>
-              <div className="field switch-input" aria-hidden>
-                <input
-                  id="check-suggested"
-                  type="checkbox"
-                  className="switch is-rounded"
-                />
-                <label htmlFor="check-suggested">
-                  Add Snippets to Team profile
-                </label>
-              </div>
-              <div className="field switch-input" aria-hidden>
-                <input
-                  id="check-guide"
-                  type="checkbox"
-                  className="switch is-rounded"
-                />
-                <label htmlFor="check-guide">
-                  Add Community Guides to Team profile
-                </label>
-              </div>
-              <div className="field switch-input" aria-hidden>
-                <input
-                  id="check-library"
-                  type="checkbox"
-                  className="switch is-rounded"
-                />
-                <label htmlFor="check-library">
-                  Library Admin
-                </label>
-              </div>
-            </div>
+          <div className={clsx(styles['form-input'])}>
+            <div>Role</div>
+            <Select
+              {...register(
+                'role',
+                {
+                  required: 'User role is required',
+                },
+              )}
+              options={rolesOptions}
+              value={watch('role')}
+              placeholder="Choose Role"
+              onChange={(value) => setValue('role', value)}
+            />
+            {errors.role && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.role.message}</p>)}
           </div>
         </div>
       </div>
@@ -128,4 +152,4 @@ const TeamInvitePage = () => {
   );
 };
 
-export default withLayout(TeamInvitePage);
+export default withSelectedTeam(withLayout(TeamInvitePage));

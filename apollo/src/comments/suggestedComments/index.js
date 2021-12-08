@@ -12,7 +12,7 @@ import {
   getSuggestedCommentsByIds,
   exportSuggestedComments,
 } from './suggestedCommentService';
-import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
+import { pushCollectionComment, getUserCollectionsById } from '../collections/collectionService';
 
 const route = Router();
 

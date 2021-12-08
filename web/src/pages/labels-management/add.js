@@ -7,11 +7,10 @@ import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
-import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
-import { tagsOperations  } from '../../state/features/tags';
-import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { tagsOperations } from '../../state/features/tags';
+import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
 
 const { clearAlert } = alertOperations;
@@ -62,7 +61,7 @@ const AddLabels = () => {
   const router = useRouter();
   const { checkAccess } = usePermission();
 
-  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,

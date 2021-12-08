@@ -19,7 +19,7 @@ import { getCharCount } from '../../utils';
 import * as analytics from '../../utils/analytics';
 import Logo from '../../components/Logo';
 import useAuthEffect from '../../hooks/useAuthEffect';
-
+import usePermission from "../../hooks/usePermission";
 
 const { clearAlert } = alertOperations;
 const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
@@ -34,6 +34,7 @@ const Invite = () => {
     auth: state.authState,
     invitations: state.invitationsState,
   }));
+  const { isSemaAdmin } = usePermission();
 
   const [recipient, setRecipient] = useState("");
   const [tableHeader] = useState('is better with friends, invite yours 🙌');
@@ -51,7 +52,7 @@ const Invite = () => {
   const { id: orgId, orgName } = currentOrg;
 
   const onSubmit = async (data) => {
-    if (inviteCount > 0 || user.isSemaAdmin) {
+    if (inviteCount > 0 || isSemaAdmin()) {
       const { email } = data;
       // Build invitation data
       const invitation = {
@@ -84,7 +85,7 @@ const Invite = () => {
       case 'table':
         return acceptedInvitationCount + pendingInvitationCount
       case 'label':
-        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
+        return isSemaAdmin() ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
       default:
         return acceptedInvitationCount + pendingInvitationCount
     }
@@ -163,8 +164,8 @@ const Invite = () => {
               </span>
             </div>
             <div className="box column ml-10 px-20 py-30 mb-24">
-              <span className={`${cardStyling} ${getCharCount(user.isSemaAdmin ? 'ꝏ' : inviteCount) > 1 ? '' : 'px-15'} has-background-success`}>
-                {user.isSemaAdmin ? 'ꝏ' : inviteCount}
+              <span className={`${cardStyling} ${getCharCount(isSemaAdmin() ? 'ꝏ' : inviteCount) > 1 ? '' : 'px-15'} has-background-success`}>
+                {isSemaAdmin() ? 'ꝏ' : inviteCount}
               </span>
               <span className="has-text-weight-semibold ml-15">
                 Invites Available
@@ -209,7 +210,7 @@ const Invite = () => {
                             styles.formBtn
                           )}
                           type="submit"
-                          disabled={!user.isSemaAdmin && inviteCount <= 0}
+                          disabled={!isSemaAdmin() && inviteCount <= 0}
                         >
                           Send Invite
                         </button>

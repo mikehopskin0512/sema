@@ -5,6 +5,7 @@ import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
 import { ArrowLeftIcon } from '../../components/Icons';
 import withLayout from '../../components/layout';
+import withSnippetsPermission from '../../components/auth/withSnippetsPermission';
 import AddCommentCollection from '../../components/comment/addCommentCollection';
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
 import { PATHS } from '../../utils/constants';
@@ -60,4 +61,4 @@ const AddCollectionPage = () => {
   );
 };
 
-export default withLayout(AddCollectionPage);
+export default withSnippetsPermission(withLayout(AddCollectionPage), 'canCreateSnippets');
