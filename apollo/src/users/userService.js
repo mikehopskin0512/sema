@@ -202,6 +202,7 @@ export const findUserCollectionsByUserId = async (id) => {
         description: 1,
         author: 1,
         tags: 1,
+        source: 1,
       },
       populate: {
         path: 'comments',

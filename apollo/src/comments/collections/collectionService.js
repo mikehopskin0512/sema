@@ -118,7 +118,7 @@ export const getUserCollectionsById = async (id) => {
           collectionData: {
             ...collectionData,
             commentsCount: comments.length,
-            source: get(comments, '[0].source.name', null),
+            source: collectionData?.source?.name,
             languages,
             guides,
             comments: undefined,
