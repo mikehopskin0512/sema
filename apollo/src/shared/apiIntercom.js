@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import logger from '../shared/logger';
 import { intercomToken } from '../config';
 
 const config = {
@@ -14,9 +15,29 @@ const api = axios.create({
   baseURL: process !== 'undefined' ? host : null,
 });
 
-const get = (endpoint, { id }) => api.get(`${endpoint}/${id}`, config);
-const getAll = (endpoint, { params } = {}) => api.get(endpoint, { params, ...config });
-const create = (endpoint, item) => api.post(endpoint, item, config);
+const get = (endpoint, { id }) => {
+  if (intercomToken) {
+    api.get(`${endpoint}/${id}`, config);
+  } else {
+    logger.error('No Intercom API token present');
+  }
+};
+
+const getAll = (endpoint, { params } = {}) => {
+  if (intercomToken) {
+    api.get(endpoint, { params, ...config });
+  } else {
+    logger.error('No Intercom API token present');
+  }
+}
+
+const create = (endpoint, item) => {
+  if (intercomToken) {
+    api.post(endpoint, item, config);
+  }  else {
+    logger.error('No Intercom API token present');
+  }
+};
 
 module.exports = {
   get,

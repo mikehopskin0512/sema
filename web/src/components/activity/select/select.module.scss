@@ -1,3 +1,6 @@
+
+@import "../../../../styles/_colors.module";
+
 .placeholder {
   color: #394A64 !important;
 }
@@ -6,8 +9,8 @@
   min-width: 150px;
 }
 
-.select-container {
-  width: 230px;
+.select-outlined {
+  border: 1px solid $gray-500;
 }
 
 .control {

@@ -8,7 +8,7 @@ function LoadingView() {
       <img src={loader} alt="loader" />
       <div style={{ margin: '24px 8px' }}>
         <p className="sema-title sema-is-7 sema-is-block">
-          We are working hard to find code examples for you...
+          We&apos;re searching for relevant comment snippets for you…
         </p>
       </div>
     </div>

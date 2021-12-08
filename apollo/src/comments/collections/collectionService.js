@@ -118,7 +118,7 @@ export const getUserCollectionsById = async (id) => {
           collectionData: {
             ...collectionData,
             commentsCount: comments.length,
-            source: get(comments, '[0].source.name', null),
+            source: collectionData?.source?.name,
             languages,
             guides,
             comments: undefined,
@@ -176,14 +176,14 @@ export const toggleActiveCollection = async (userId, collectionId) => {
     if (user) {
       const { collections } = user;
       const newCollections = collections.map((item) => {
-        if (item.collectionData._id.equals(collectionId)) {
+        if (item?.collectionData?._id?.equals(collectionId)) {
           return {
-            collectionData: new ObjectId(item.collectionData._id),
+            collectionData: new ObjectId(item?.collectionData?._id),
             isActive: !item.isActive,
           }
         }
         return {
-          collectionData: new ObjectId(item.collectionData._id),
+          collectionData: new ObjectId(item?.collectionData?._id),
           isActive: item.isActive,
         };
       });
@@ -233,9 +233,4 @@ export const createUserCollection = async (username) => {
     const error = new errors.NotFound(err);
     return error;
   }
-};
-
-export const isEditAllowed = async (user, collectionId) => {
-  const collection = await Collection.findById(collectionId);
-  return collection && (user.isSemaAdmin || collection.name.toLowerCase() === 'my snippets' || collection.name.toLowerCase() === 'custom snippets');
 };

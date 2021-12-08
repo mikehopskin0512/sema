@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React  from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Helmet from '../../components/utils/Helmet';
 import { commentsOperations } from '../../state/features/comments';
 import withLayout from '../../components/layout';
+import withSnippetsPermission from '../../components/auth/withSnippetsPermission';
 import { ArrowLeftIcon } from '../../components/Icons';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
@@ -35,15 +36,15 @@ const EditCollectionPage = () => {
       <Helmet title={comments ? "Edit snippets" : "Edit snippet collection"} />
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
-          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
+          <a href={PATHS.SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
             <ArrowLeftIcon color="#000" size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
+              <li><a href={PATHS.SNIPPETS._} className="has-text-grey">Snippets</a></li>
               { comments ? (
                 <>
-                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
+                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
                   <li className="is-active has-text-weight-semibold"><a>Edit Snippets</a></li>
                 </>
               ) : (
@@ -62,4 +63,4 @@ const EditCollectionPage = () => {
   );
 };
 
-export default withLayout(EditCollectionPage);
+export default withSnippetsPermission(withLayout(EditCollectionPage), 'canEditSnippets');

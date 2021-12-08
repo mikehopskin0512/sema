@@ -27,14 +27,14 @@ export default (app, passport) => {
 
   route.get('/', async (req, res) => {
     try {
-      const { page = 1, perPage = 10, search, status } = req.query;
+      const { page = 1, perPage = 10, search, status, listAll = false } = req.query;
 
       const { users, totalCount } = await listUsers({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
         search,
         status
-      });
+      }, listAll);
       const filterData = await getFilterMetrics();
 
       return res.status(200).json({

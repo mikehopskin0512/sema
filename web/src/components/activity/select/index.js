@@ -8,36 +8,43 @@ import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
 
-const Menu = ({ selectAll, deselectAll, ...p }) => {
+const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
   const { children } = p;
   return (
-    <components.Menu {...p} className={clsx('mt-neg5', styles.menu)}>
-      <div className="mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7">
-        <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
-        <div class="mx-5">|</div>
-        <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
-      </div>
+    <components.Menu {...p} className={clsx('mt-neg5', styles.menu)} style={{ width }}>
+      { isMulti && (
+        <div className={clsx("mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7")} >
+          <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+          <div class="mx-5">|</div>
+          <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+        </div>
+      ) }
       {children}
     </components.Menu>
   );
 };
 
-const Control = ({ children, ...rest }) => (
-  <div className={clsx('', styles.control)}>
-    <div className="py-20 px-12 has-background-white border-radius-4px">
-      <components.Control {...rest}>
-        {children}
-      </components.Control>
+const Control = ({ children, selectProps, ...rest }) => {
+  if (!selectProps.isSearchable) {
+    return null;
+  }
+  return(
+    <div className={clsx('', styles.control)}>
+      <div className="py-20 px-12 has-background-white border-radius-4px">
+        <components.Control {...rest}>
+          {children}
+        </components.Control>
+      </div>
     </div>
-  </div>
-);
+  )
+};
 
 const CustomSelect = (props) => {
   const {
-    label, selectProps, filter, showCheckbox,
+    label, selectProps, filter, showCheckbox, outlined = false, small = false, width = '100%'
   } = props;
 
-  const { value, onChange, options } = selectProps;
+  const { value, onChange, options, isMulti } = selectProps;
 
   const node = useRef();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
@@ -75,7 +82,6 @@ const CustomSelect = (props) => {
   }
 
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
-
 
   const IndicatorSeparator = () => null;
 
@@ -131,20 +137,27 @@ const CustomSelect = (props) => {
   const RenderMenu = useCallback((p) => Menu({
     ...p,
     selectAll,
-    deselectAll
+    deselectAll,
+    isMulti,
+    small,
+    width,
   }), [menuIsOpen]);
 
   return (
-    <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node}>
+    <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node} style={{ width }}>
       <button
         type="button"
         onClick={toggleMenu}
+        style={{ width }}
         className={clsx(
-          'has-background-gray-100 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
+          'border-radius-4px is-flex is-justify-content-space-between is-align-items-center is-clickable',
           styles.select,
+          outlined ? styles['select-outlined'] : 'has-background-gray-100 border-none',
+          outlined ? 'has-background-white' : null,
+          small ? 'py-5 px-10' : 'py-10 px-15'
         )}>
         <div className="is-flex is-align-items-center">
-          <span className={clsx('has-text-weight-semibold is-size-6 mr-10', styles.placeholder)}>{label}</span>
+          <span className={clsx('has-text-weight-semibold mr-10', styles.placeholder, small ? 'is-size-7' : 'is-size-')}>{label}</span>
           {value && value.length > 0 ? (
             <span className={
               clsx(
@@ -161,7 +174,7 @@ const CustomSelect = (props) => {
         </span>
       </button>
       {menuIsOpen && (
-        <div className={clsx('has-background-white is-absolute mt-50', styles['select-container'])}>
+        <div className={clsx('has-background-white is-absolute mt-50')} style={{ width: width === '100%' ? 230 : width }}>
           <Select
             components={{
               Control,
@@ -178,7 +191,14 @@ const CustomSelect = (props) => {
             }}
             menuIsOpen={menuIsOpen}
             blurInputOnSelect
+            width={width}
             {...selectProps}
+            onChange={(data) => {
+              selectProps.onChange(data)
+              if (selectProps.closeMenuOnSelect) {
+                setMenuIsOpen(false);
+              }
+            }}
           />
         </div>
       ) }
@@ -191,6 +211,8 @@ const CustomSelect = (props) => {
 CustomSelect.defaultProps = {
   filter: true,
   showCheckbox: false,
+  small: false,
+  width: '100%'
 };
 
 CustomSelect.propTypes = {
@@ -198,6 +220,8 @@ CustomSelect.propTypes = {
   selectProps: PropTypes.object.isRequired,
   filter: PropTypes.bool,
   showCheckbox: PropTypes.bool,
+  small: PropTypes.bool,
+  width: PropTypes.number
 };
 
 export default React.memo(CustomSelect);

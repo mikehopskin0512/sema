@@ -129,7 +129,7 @@ const AddSuggestedComment = (props) => {
 
     if (data[0]) {
       await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
-      await router.push(`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`);
+      await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
     }
   };
 

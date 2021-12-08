@@ -33,7 +33,7 @@ const ActionGroup = ({
   };
 
   const goToEditPage = async () => {
-    await router.push(`${PATHS.SUGGESTED_SNIPPETS.EDIT}?cid=${collectionId}&comments=${selectedComments}`);
+    await router.push(`${PATHS.SNIPPETS.EDIT}?cid=${collectionId}&comments=${selectedComments}`);
   };
 
   const onArchive = async () => {

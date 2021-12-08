@@ -7,6 +7,7 @@ import { tagsOperations } from '../../../state/features/tags';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import CustomCheckbox from '../../customCheckbox';
 import usePermission from '../../../hooks/usePermission';
+import { SEMA_CORPORATE_TEAM_ID } from "../../../utils/constants";
 
 const { fetchTagList } = tagsOperations;
 
@@ -212,7 +213,7 @@ const EditCommentCollectionForm = ({ register, formState, setValue, watch, cid =
         ></textarea>
       </div>
       {
-        !cid && checkTeam('Sema Super Team') && (
+        !cid && checkTeam(SEMA_CORPORATE_TEAM_ID) && (
           <div>
             <CustomCheckbox
               label="Populate this collection to all users"

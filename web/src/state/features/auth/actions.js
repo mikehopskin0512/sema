@@ -224,8 +224,9 @@ const requestVerifyUser = () => ({
   type: types.REQUEST_VERIFY_USER,
 });
 
-const verifyUserSuccess = () => ({
+const verifyUserSuccess = (user) => ({
   type: types.VERIFY_USER_SUCCESS,
+  user,
 });
 
 const verifyUserError = (errors) => ({
@@ -265,6 +266,16 @@ export const setUser = function (user) {
     type: types.SET_USER,
     user,
   };
+};
+
+export const setSelectedTeamSuccess = (selectedTeam) => ({
+  type: types.SET_SELECTED_TEAM,
+  selectedTeam,
+});
+
+export const setSelectedTeam = (selectedTeam) => (dispatch) => {
+  localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
+  dispatch(setSelectedTeamSuccess(selectedTeam));
 };
 
 export const registerUser = (user, invitation = {}) => async (dispatch) => {
@@ -310,7 +321,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
     const payload = await verifyUser({}, verifyToken);
 
     // Auto login user
-    const { data: { jwtToken } } = payload;
+    const { data: { jwtToken, user }} = payload;
     const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
     if (userId) {
@@ -323,7 +334,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
       // logHeapAnalytics(userId, orgId);
     }
 
-    dispatch(verifyUserSuccess());
+    dispatch(verifyUserSuccess(user));
   } catch (error) {
     dispatch(verifyUserError(error.response));
     dispatch(triggerAlert('Invalid verification token. Please request a new one below.', 'error'));

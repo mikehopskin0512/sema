@@ -50,13 +50,15 @@ const EditCommentCollectionPage = () => {
   useEffect(() => {
     if (collection) {
       const { name, description, tags = [], author, source } = collection;
+      const mappedLanguages = addTags(tags, ['language']).map((item) => ({ type: 'language', tag: item.value, ...item }))
+      const mappedTags = addTags(tags, ['guide', 'other', 'custom']).map((item) => ({ type: 'guide', tag: item.value, ...item }))
       setValue('name', name);
       setValue('description', description);
       setValue('author', author);
       setValue('sourceName', source?.name);
       setValue('sourceLink', source?.url);
-      setValue('languages', addTags(tags, ['language']));
-      setValue('others', addTags(tags, ['guide', 'other', 'custom']));
+      setValue('languages', mappedLanguages);
+      setValue('others', mappedTags);
     }
   }, [collection]);
 
@@ -79,7 +81,7 @@ const EditCommentCollectionPage = () => {
       collection: collectionData
     }, token));
     if (updatedCollection?._id) {
-      await router.push(PATHS.SUGGESTED_SNIPPETS._);
+      await router.push(PATHS.SNIPPETS._);
     }
     setLoading(false);
   }

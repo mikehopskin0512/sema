@@ -4,11 +4,13 @@ const { Schema } = mongoose;
 
 const roleSchema = new Schema({
   name: String,
-  canViewAdmin: Boolean,
+  key: String,
+  canCreateCollections: Boolean,
+  canEditCollections: Boolean,
+  canCreateSnippets: Boolean,
+  canEditSnippets: Boolean,
   canEditUsers: Boolean,
-  canEditComments: Boolean,
-  canEditGuides: Boolean,
-  canManageLinks: Boolean,
+  canViewAdmin: Boolean
 }, { timestamps: true });
 
 module.exports = mongoose.model('Role', roleSchema);

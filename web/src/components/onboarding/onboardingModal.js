@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import AddSuggestedCommentPage from './addSuggestedCommentPage';
 import SmartBankCommentsPage from './smartBankCommentsPage';
 import ContentPage from './contentPage';
+import { isExtensionInstalled } from '../../utils/extension';
 import ExtensionPage from './extensionPage';
 import styles from './onboarding.module.scss';
 
@@ -23,6 +24,10 @@ const OnboardingModal = ({
   setComment,
   onSubmit
 }) => {
+
+  const [isPluginInstalled, togglePluginInstalled] = useState(false);
+  const [isQueryFinished, setQueryFinished] = useState(false);
+
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
     case 1:
@@ -33,6 +38,7 @@ const OnboardingModal = ({
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          isPluginInstalled={isPluginInstalled}
           closeModal={() => toggleModalActive(false)}
         />
       );
@@ -64,8 +70,8 @@ const OnboardingModal = ({
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          isPluginInstalled={isPluginInstalled}
           closeModal={() => toggleModalActive(false)}
-          onSubmit={onSubmit}
         />
       );
     default:
@@ -81,6 +87,17 @@ const OnboardingModal = ({
     }
     setCollection(collection);
   }, [semaCollections]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (isPluginInstalled) {
+        clearInterval(interval);
+      }
+      const res = await isExtensionInstalled();
+      togglePluginInstalled(res);
+      setQueryFinished(true);
+    }, 5000);
+  }, []);
 
   return (
     <div className={clsx('modal', isModalActive && 'is-active')}>

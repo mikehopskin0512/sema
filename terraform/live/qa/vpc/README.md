@@ -1,132 +1,51 @@
-QA VPC
-===============================================
+# Module: frontend
 
-Putting this here in case we need it in the future - how to create a peering connection
+`vpc` is the module for creating vpc, subnets and necessary peering connections.
 
-# # ---------------------------------------------------------------------------------------------------------------------
-# # CREATE THE PEERING CONNECTION TO US-EAST-2 (VPN) VPC
-# # ---------------------------------------------------------------------------------------------------------------------
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-# resource "aws_vpc_peering_connection" "pc" {
-#   peer_vpc_id = "vpc-03eb634f0651b5fb8"
-#   vpc_id      = module.qa_vpc.vpc_id
-#   peer_region = "us-east-2"
+| Name | Version |
+|------|---------|
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.38.0 |
 
-#   # Important: these need to be set manually since peer is in another region
-#   #  accepter {
-#   #    allow_remote_vpc_dns_resolution = true
-#   #  }
+## Providers
 
-#   #  requester {
-#   #    allow_remote_vpc_dns_resolution = true
-#   #  }
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.38.0 |
 
-#   tags = {
-#     Name = "vpc-qa-vpn"
-#   }
-# }
+## Modules
 
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE THE ROUTE TABLE ENTRIES FOR THE PEERED CONNECTION
-# ---------------------------------------------------------------------------------------------------------------------
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_scqp_peering"></a> [scqp\_peering](#module\_scqp\_peering) | ../../../modules/vpc_peering | n/a |
+| <a name="module_vpc_subnet_private"></a> [vpc\_subnet\_private](#module\_vpc\_subnet\_private) | ../../../modules/vpc_subnet | n/a |
+| <a name="module_vpc_subnet_public"></a> [vpc\_subnet\_public](#module\_vpc\_subnet\_public) | ../../../modules/vpc_subnet | n/a |
+| <a name="module_vpn_endpoint_peering"></a> [vpn\_endpoint\_peering](#module\_vpn\_endpoint\_peering) | ../../../modules/vpc_peering | n/a |
+| <a name="module_vpn_peering"></a> [vpn\_peering](#module\_vpn\_peering) | ../../../modules/vpc_peering | n/a |
 
-# resource "aws_route" "private" {
-#   count = 3
+## Resources
 
-#   # IDs of private route tables.
-#   route_table_id = element(module.qa_vpc.private_route_tables, count.index)
+| Name | Type |
+|------|------|
+| [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 
-#   # CIDR block / IP range for VPC 2.
-#   destination_cidr_block = "10.0.0.0/20"
+## Inputs
 
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-# }
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_aws_profile"></a> [aws\_profile](#input\_aws\_profile) | A name of aws profile for provider | `string` | `"sema-terraform"` | no |
+| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | A key - value list of common tags, that is attached to the all resources | `map(string)` | <pre>{<br>  "environment": "qa",<br>  "organization": "sema",<br>  "project": "phoenix",<br>  "terraform": "true"<br>}</pre> | no |
+| <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Name prefix for all resources. | `string` | `"qa"` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | VPC IP CIDR map. | `string` | `"10.50.0.0/16"` | no |
+| <a name="input_vpc_enable_dns_hostnames"></a> [vpc\_enable\_dns\_hostnames](#input\_vpc\_enable\_dns\_hostnames) | Should DNS hostnames support be enabled for VPC? | `bool` | `true` | no |
+| <a name="input_vpc_enable_dns_support"></a> [vpc\_enable\_dns\_support](#input\_vpc\_enable\_dns\_support) | Should DNS support be enabled for VPC? | `bool` | `true` | no |
+| <a name="input_vpc_subnet_private_suffix"></a> [vpc\_subnet\_private\_suffix](#input\_vpc\_subnet\_private\_suffix) | Suffix that is used in private subnet CIDR masks. | `number` | `0` | no |
+| <a name="input_vpc_subnet_public_suffix"></a> [vpc\_subnet\_public\_suffix](#input\_vpc\_subnet\_public\_suffix) | Suffix that is used in public subnet CIDR masks. | `number` | `100` | no |
+| <a name="input_vpc_tags"></a> [vpc\_tags](#input\_vpc\_tags) | A key - value list of additional tags, that is attached to VPC. | `map(string)` | `{}` | no |
 
-# resource "aws_route" "public" {
+## Outputs
 
-#   # ID of public route table.
-#   route_table_id = module.qa_vpc.public_route_table
-
-#   # CIDR block for VPC 2.
-#   destination_cidr_block = "10.0.0.0/20"
-
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-# }
-
-# resource "aws_route" "vpc" {
-
-#   # ID of VPC main route table.
-#   route_table_id = module.qa_vpc.vpc_route_table
-
-#   # CIDR block for VPC 2.
-#   destination_cidr_block = "10.0.0.0/20"
-
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.pc.id
-# }
-
-# # ---------------------------------------------------------------------------------------------------------------------
-# # CREATE THE PEERING CONNECTION TO US-EAST-2 (DEFAULT) VPC...THIS IS WHERE PROD AND QA SMP LIVE
-# # ---------------------------------------------------------------------------------------------------------------------
-
-# resource "aws_vpc_peering_connection" "smp" {
-#   peer_vpc_id = "vpc-d75be4bf"
-#   vpc_id      = module.qa_vpc.vpc_id
-#   peer_region = "us-east-2"
-
-#   # Important: these need to be set manually since peer is in another region
-#   #  accepter {
-#   #    allow_remote_vpc_dns_resolution = true
-#   #  }
-
-#   #  requester {
-#   #    allow_remote_vpc_dns_resolution = true
-#   #  }
-
-#   tags = {
-#     Name = "vpc-qa-smp"
-#   }
-# }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE THE ROUTE TABLE ENTRIES FOR THE PEERED CONNECTION
-# ---------------------------------------------------------------------------------------------------------------------
-
-# resource "aws_route" "private_smp" {
-#   count = 3
-
-#   # IDs of private route tables.
-#   route_table_id = element(module.qa_vpc.private_route_tables, count.index)
-
-#   # CIDR block / IP range for VPC 2.
-#   destination_cidr_block = "172.31.0.0/16"
-
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
-# }
-
-# resource "aws_route" "public_smp" {
-
-#   # ID of public route table.
-#   route_table_id = module.qa_vpc.public_route_table
-
-#   # CIDR block for VPC 2.
-#   destination_cidr_block = "172.31.0.0/16"
-
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
-# }
-
-# resource "aws_route" "vpc_smp" {
-
-#   # ID of VPC main route table.
-#   route_table_id = module.qa_vpc.vpc_route_table
-
-#   # CIDR block for VPC 2.
-#   destination_cidr_block = "172.31.0.0/16"
-
-#   # ID of VPC peering connection.
-#   vpc_peering_connection_id = aws_vpc_peering_connection.smp.id
-# }
+No outputs.
+<!-- END_TF_DOCS -->

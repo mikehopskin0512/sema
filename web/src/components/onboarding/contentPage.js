@@ -7,7 +7,7 @@ import { faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { content } from './content';
 import styles from './onboarding.module.scss';
 
-const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
+const ContentPage = ({ page, nextPage, previousPage, isPluginInstalled, closeModal }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [img, setImg] = useState('');
@@ -75,15 +75,26 @@ const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
               <li className={page === 1 ? styles.active : null}></li>
               <li className={page === 2 ? styles.active : null}></li>
               <li className={page === 3 ? styles.active : null}></li>
-              <li className={page === 4 ? styles.active : null}></li>
+              { !isPluginInstalled ? (<li className={page === 4 ? styles.active : null}></li>) : '' }
             </ul>
-            <button
-              type="button"
-              className={clsx("button is-primary")}
-              onClick={nextPage}
-            >
-              Next
-            </button>
+            {page === 3 && isPluginInstalled ? (
+              <button
+                type="button"
+                className={clsx('button is-primary')}
+                onClick={closeModal}
+              >
+                Done
+              </button>
+
+            ) :
+              <button
+                type="button"
+                className={clsx("button is-primary")}
+                onClick={nextPage}
+              >
+                Next
+              </button>
+            }
           </div>
         </div>
       </div>

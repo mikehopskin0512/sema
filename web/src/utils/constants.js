@@ -130,6 +130,10 @@ export const GITHUB_URL = 'https://github.com';
 
 export const DEFAULT_COLLECTION_NAME = "my snippets";
 
+export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
+
+export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
+
 export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 
 export const noContactUs = ['/login', '/register/[[...param]]'];
@@ -147,10 +151,10 @@ export const FACEBOOK_VERIFICATION_META = {
 export const PATHS = {
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
-  SUGGESTED_SNIPPETS: {
-    _: '/suggested-snippets',
-    EDIT: '/suggested-snippets/edit',
-    ADD: '/suggested-snippets/add',
+  SNIPPETS: {
+    _: '/snippets',
+    EDIT: '/snippets/edit',
+    ADD: '/snippets/add',
   },
   INVITATIONS: '/invitations',
   PROFILE: '/profile',
@@ -165,6 +169,20 @@ export const PATHS = {
   PASSWORD_RESET: '/password-reset',
   TEAMS: '/teams',
   REPORTS: '/reports',
+  TEAM_CREATE: '/teams/add',
+  TEAM_INVITE: '/teams/invite',
+  SEMA_ADMIN: '/sema-admin',
 };
 
-export const SEMA_TEAM_ADMIN_NAME = 'Sema Super Team';
+export const SUPPORT_VIDEO_LANGUAGES = [
+  {
+    value: 'english',
+    label: 'English',
+    url: 'https://www.youtube.com/embed/x6FoswLcqxE'
+  },
+  {
+    value: 'russian',
+    label: 'Russian',
+    url: 'https://www.youtube.com/embed/Q7ryQIm2eYY'
+  },
+]

@@ -35,12 +35,14 @@ module.exports = {
   },
   pgPublicKey: process.env.PG_PUBLIC_KEY,
   userVoiceKey: process.env.USER_VOICE_SECRET_KEY,
-  intercomToken: process.env.INTERCOM_TOKEN,
-  mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX,
-  mailchimpToken: process.env.MAILCHIMP_TOKEN,
+  intercomToken: process.env.INTERCOM_TOKEN || null,
+  mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX || null,
+  mailchimpToken: process.env.MAILCHIMP_TOKEN || null,
   mailchimpAudiences: {
-    registeredAndWaitlistUsers: process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID,
+    registeredAndWaitlistUsers: process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID || null,
   },
   chromeExtensionId: process.env.CHROME_EXTENSION_ID,
   iframelyApiKey: process.env.IFRAMELY_API_KEY,
+  semaCorporateTeamName: process.env.SEMA_CORPORATE_TEAM_NAME,
+  semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
 };

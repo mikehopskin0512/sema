@@ -5,6 +5,7 @@ import { tagsOperations } from '../../state/features/tags';
 import Helmet from '../../components/utils/Helmet';
 import { ArrowLeftIcon } from '../../components/Icons';
 import withLayout from '../../components/layout';
+import withSnippetsPermission from '../../components/auth/withSnippetsPermission';
 import AddCommentCollection from '../../components/comment/addCommentCollection';
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
 import { PATHS } from '../../utils/constants';
@@ -24,7 +25,7 @@ const AddCollectionPage = () => {
   const { cid } = router.query;
   const { token } = auth;
   const { collection } = collectionState;
-  const parentPageUrl = cid ? `${PATHS.SUGGESTED_SNIPPETS._}?cid=${cid}` : PATHS.SUGGESTED_SNIPPETS._;
+  const parentPageUrl = cid ? `${PATHS.SNIPPETS._}?cid=${cid}` : PATHS.SNIPPETS._;
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -40,10 +41,10 @@ const AddCollectionPage = () => {
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Snippets</a></li>
+              <li><a href={PATHS.SNIPPETS._} className="has-text-grey">Snippets</a></li>
               { cid ? (
                 <>
-                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SUGGESTED_SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
+                  <li className="has-text-weight-semibold"><a className="has-text-grey" href={`${PATHS.SNIPPETS._}?cid=${collection._id}`}>{collection.name}</a></li>
                   <li className="is-active has-text-weight-semibold"><div className="px-5">Add Snippets</div></li>
                 </>
               ) : (<li className="is-active has-text-weight-semibold"><div className="px-5">Add a Snippet Collection</div></li>) }
@@ -60,4 +61,4 @@ const AddCollectionPage = () => {
   );
 };
 
-export default withLayout(AddCollectionPage);
+export default withSnippetsPermission(withLayout(AddCollectionPage), 'canCreateSnippets');

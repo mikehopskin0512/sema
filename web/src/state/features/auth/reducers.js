@@ -1,5 +1,5 @@
 import * as types from './types';
-import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types'
+import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types';
 
 const initialState = {
   isFetching: false,
@@ -7,6 +7,7 @@ const initialState = {
   token: null,
   user: {},
   userVoiceToken: null,
+  selectedTeam: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -116,6 +117,13 @@ const reducer = (state = initialState, action) => {
       isAuthenticated: false,
       error: action.errors,
     };
+  case types.VERIFY_USER_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
   case types.USER_NOT_VERIFIED:
     return {
       ...state,
@@ -179,6 +187,11 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       user: {},
       error: action.errors,
+    };
+  case types.SET_SELECTED_TEAM:
+    return {
+      ...state,
+      selectedTeam: action.selectedTeam,
     };
   default:
     return state;
