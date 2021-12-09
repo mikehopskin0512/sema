@@ -214,13 +214,8 @@ export const USER = {
   _id: '6076262a407c64f11499537a',
 };
 
-// eslint-disable-next-line max-len
-/* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
- * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
- */
-export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
-export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
-export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
+export const SEMA_REACTION_REGEX = /\*\*Summary:\*\*([ \w : |])*/s;
+export const SEMA_TAGS_REGEX = /\*\*Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR_LIGHT = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>

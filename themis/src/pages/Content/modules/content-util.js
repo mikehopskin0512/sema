@@ -135,6 +135,14 @@ export const isValidSemaTextBox = (element) => {
   return isTextBox(element) && fileHeaderSibling.length;
 };
 
+const SEMA_TEXT = {
+  START_SEPARATOR: '__',
+  SEPARATOR: '&nbsp; | &nbsp;',
+  SUMMARY: '**Summary:** ',
+  SEMA_LOGO: `[![sema-logo](${SEMA_LOGO_URL})](${SEMA_LANDING_GITHUB}) &nbsp;`,
+  TAGS: '**Tags:** ',
+};
+
 export const getSemaGithubText = (rawEmojis, tags) => {
   // TODO: should be fixed after refactoring for emojis / don't use styles <b> in names
   const emojis = rawEmojis
@@ -145,17 +153,16 @@ export const getSemaGithubText = (rawEmojis, tags) => {
     return '';
   }
 
-  const semaLogo = `[![sema-logo](${SEMA_LOGO_URL})](${SEMA_LANDING_GITHUB})`;
-  let semaString = `__\n${semaLogo}  &nbsp;`;
+  let semaString = `${SEMA_TEXT.START_SEPARATOR}\n${SEMA_TEXT.SEMA_LOGO}`;
 
   if (emojis) {
-    semaString += `**Summary:** ${emojis}`;
+    semaString += `${SEMA_TEXT.SUMMARY}${emojis}`;
   }
   if (emojis && tags) {
-    semaString += '&nbsp; | &nbsp;';
+    semaString += SEMA_TEXT.SEPARATOR;
   }
   if (tags) {
-    semaString += `**Tags:** ${tags}`;
+    semaString += `${SEMA_TEXT.TAGS}${tags}`;
   }
   semaString += '\n';
 
@@ -163,23 +170,21 @@ export const getSemaGithubText = (rawEmojis, tags) => {
 };
 
 export const getInitialSemaValues = (textbox) => {
-  const { value } = textbox;
+  let { value } = textbox;
   let initialReaction = EMOJIS[0];
   let initialTags = TAGS_INIT;
   let githubEmoji; let
     selectedTags;
-  if (value.includes('Sema Reaction')) {
-    const reaction = '**Sema Reaction:** ';
-    const reactionStart = value.indexOf(reaction) + reaction.length;
-    const reactionEnd = value.indexOf('|') > 0
-      ? value.indexOf('|') - 1
+  if (value.includes('Summary')) {
+    const reactionStart = value.indexOf(SEMA_TEXT.SUMMARY) + SEMA_TEXT.SUMMARY.length;
+    const reactionEnd = value.indexOf(SEMA_TEXT.SEPARATOR) > 0
+      ? value.indexOf(SEMA_TEXT.SEPARATOR)
       : value.lastIndexOf(':') + 1;
     const reactionStr = value.substring(reactionStart, reactionEnd);
     githubEmoji = reactionStr.substring(1, reactionStr.lastIndexOf(':'));
   }
-  if (value.includes('Sema Tags')) {
-    const tags = '**Sema Tags:** ';
-    const tagsStart = value.indexOf(tags) + tags.length;
+  if (value.includes('Tags')) {
+    const tagsStart = value.indexOf(SEMA_TEXT.TAGS) + SEMA_TEXT.TAGS.length;
     selectedTags = value
       .substring(tagsStart)
       .trim()
@@ -455,21 +460,14 @@ export async function writeSemaToGithub(activeElement) {
       // eslint-disable-next-line no-underscore-dangle
       (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
     );
-
-    if (
-      textboxValue.includes('Sema Reaction')
-      || textboxValue.includes('Sema Tags')
-    ) {
-      // this textbox already has sema text
-      // this is an edit
-
+    const isValueHasSemaReactions = textboxValue.includes('Summary') || textboxValue.includes('Tags');
+    if (isValueHasSemaReactions) {
       // Use individual REGEX's for reactions and tags
-      // textboxValue = textboxValue.replace(SEMA_GITHUB_REGEX, '');
-      textboxValue = textboxValue.replace('\n---\n', '');
+      textboxValue = textboxValue.replace(`\n${SEMA_TEXT.START_SEPARATOR}\n`, '');
       textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
-      textboxValue = textboxValue.replace(' | ', '');
+      textboxValue = textboxValue.replace(SEMA_TEXT.SEMA_LOGO, '');
+      textboxValue = textboxValue.replace(SEMA_TEXT.SEPARATOR, '');
       textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
-
       // On edit, do not add extra line breaks
       // eslint-disable-next-line no-param-reassign
       activeElement.value = `${textboxValue}${semaString}`;
