@@ -39,6 +39,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const SearchBar = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [isDetailedView, changeIsDetailedView] = useState(false);
   const suggestionModalDropdownRef = useRef(null);
   const { commentBox } = props;
 
@@ -143,7 +144,7 @@ const SearchBar = (props) => {
       </div>
       <div
         ref={suggestionModalDropdownRef}
-        className="sema-dropdown-menu suggestion-modal"
+        className={isDetailedView ? 'sema-dropdown-menu suggestion-modal view-mode' : 'sema-dropdown-menu suggestion-modal'}
         role="menu"
       >
         <div className="sema-dropdown-content">
@@ -156,6 +157,8 @@ const SearchBar = (props) => {
               searchResults={searchResults}
               // eslint-disable-next-line react/destructuring-assignment
               onLastUsedSmartComment={props.onLastUsedSmartComment}
+              changeIsDetailedView={changeIsDetailedView}
+              isDetailedView={isDetailedView}
             />
           </div>
         </div>
