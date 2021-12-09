@@ -10,6 +10,7 @@ import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../..
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
+import Pagination from '../../../components/pagination';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -29,6 +30,8 @@ const CommentCollectionsList = () => {
   const { data = [] , isFetching } = collectionsState;
 
   const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const canCreate = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
 
@@ -64,15 +67,23 @@ const CommentCollectionsList = () => {
     setPage(page + 1);
   };
 
+  const filteredActiveCollections = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * pageSize;
+    const lastPageIndex = firstPageIndex + parseInt(pageSize, 10);
+    // PUT OTHER FILTERS HERE
+    const filteredCollections = activeCollections.slice(firstPageIndex, lastPageIndex);
+    return filteredCollections;
+  }, [currentPage, pageSize, isFetching]);
+
   if (isFetching) {
-    return(
+    return (
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '60vh' }}>
-        <Loader/>
+        <Loader />
       </div>
     )
   }
 
-  return(
+  return (
     <div>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...SnippetCollectionsHelmet} />
@@ -97,22 +108,34 @@ const CommentCollectionsList = () => {
                   </span>
                 </button>
               </a>
-            ) }
+            )}
           </div>
+        </div>
+        <div>
+          {/* Filter */}
         </div>
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections</p>
         <p className="is-size-6 has-text-black-950 my-10 px-10">
           Snippets from these collections will be suggested as you create code reviews
         </p>
-        <CardList collections={activeCollections || []} />
+        <CardList collections={filteredActiveCollections || []} />
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections</p>
-        <CardList collections={otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
+        <CardList type="others" collections={otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
         <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
           {otherCollections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < otherCollections.length && (
             <button onClick={viewMore} className="button has-background-gray-200 is-primary is-outlined has-text-weight-semibold is-size-6 has-text-primary" type="button">
               View More
             </button>
           )}
+        </div>
+        <div className="">
+          <Pagination 
+            currentPage={currentPage}
+            totalCount={activeCollections.length}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+            onPageChange={page => setCurrentPage(page)}
+          />
         </div>
       </div>
     </div>

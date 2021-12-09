@@ -5,13 +5,12 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisV, faPlus } from '@fortawesome/free-solid-svg-icons';
 import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
+import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -26,11 +25,11 @@ const Tag = ({ tag, _id, type }) => (
       )
     }
     key={`${type}-${tag}-${_id}`}>
-      <p>{tag}</p>
+    <p>{tag}</p>
   </div>
 )
 
-const Card = ({ isActive, collectionData, addNewComment }) => {
+const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const { checkAccess } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
@@ -113,10 +112,11 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} aria-hidden="true">
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
-            <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
+            <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
+            <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
               <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              { asPath === PATHS.SNIPPETS._ && isNotArchived ? (
-                <div className="field" onClick={onClickChild} aria-hidden>
+              {asPath === PATHS.SNIPPETS._ && isNotArchived ? (
+                <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
                     type="checkbox"
@@ -127,52 +127,75 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                   />
                   <label htmlFor={`activeSwitch-${_id}`} />
                 </div>
-              ) : <p className="is-size-7 is-italic">archived</p> }
+              ) : <p className="is-size-7 is-italic">archived</p>}
             </div>
             <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
-              <div className="px-12 pt-12 has-text-gray-900 is-size-6 mr-20">
+              <div className="px-25 pb-15 has-text-gray-900 is-size-6 mr-20">
                 <p className={clsx("is-fullwidth", styles.title)}>{description}</p>
-                {!isMyComments && (
+                {/* {!isMyComments && (
                   <div className="mt-10">
                     {source && <p><span className="has-text-weight-semibold">Source:</span> {source}</p>}
                     {author && <p><span className="has-text-weight-semibold">Author:</span> {author}</p>}
                   </div>
-                )}
+                )} */}
               </div>
-              <div className="is-flex is-justify-content-space-between">
-                <div className="p-12 is-flex-grow-3 is-flex">
+              <div className="is-flex is-justify-content-space-between has-background-gray-300">
+                <div className="px-12 is-flex-grow-3 is-flex">
                   <div className={clsx(
-                    'has-background-gray-200 border-radius-8px p-10 is-flex is-align-items-center',
+                    'border-radius-8px p-10 is-flex is-align-items-center',
                   )}>
-                    <p className="is-size-5 has-text-weight-semibold has-text-black mr-8">{commentsCount || comments.length}</p>
-                    <p className={clsx('is-size-8 has-text-weight-semibold has-text-gray-700 is-uppercase')}>comments</p>
+                    <div className="mr-10 is-flex is-align-items-center mr-10">
+                      <CommentsIcon color='has-text-black-900' size='small' />
+                    </div>
+                    <p className="is-size-7 has-text-weight-semibold mr-8 has-text-blue-500">{commentsCount || comments.length}</p>
+                    <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
                   </div>
+
                 </div>
                 <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">
                   {isMyComments ? (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                       <div
-                        className={clsx('button is-primary is-outlined is-clickable is-fullwidth has-text-weight-semibold',
+                        className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',
                           styles['add-button'])}
                         onClick={onClickAddComment}
                         aria-hidden
                       >
-                        <FontAwesomeIcon icon={faPlus} className="mr-10" />
-                        Add a snippet
+                        <div className="mr-10 is-flex is-align-items-center">
+                          <PlusIcon />
+                        </div>
+                        New Snippet
                       </div>
                     </div>
                   ) : (
-                    <div className="is-flex is-flex-grow-1 is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
-                      {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
-                      {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
-                      {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
-                      {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
-                    </div>
+                    <>
+                      <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
+                        <div
+                          className={clsx('button has-text-gray-300 is-ghost is-clickable is-fullwidth has-text-weight-semibold',
+                            styles['add-button'])}
+                          onClick={onClickAddComment}
+                          aria-hidden
+                        >
+                          {/* This is a HACK, in order for it to be responsive together with the `my snippets` card */}
+                          <div className="mr-10 is-flex is-align-items-center">
+                            <PlusIcon />
+                          </div>
+                          New Snippet
+                        </div>
+                      </div>
+                      {/* TODO: In case this would be need in the future, this is the tags of the card (langauges). */}
+                      {/* <div className="is-flex is-flex-grow-1 is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
+                        {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
+                        {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
+                        {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
+                        {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
+                      </div> */}
+                    </>
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     <div className="dropdown-trigger">
-                      <button className="button is-white" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
-                        <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
+                      <button className="button is-ghost has-text-black-900" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                        <OptionsIcon />
                       </button>
                     </div>
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
@@ -183,13 +206,12 @@ const Card = ({ isActive, collectionData, addNewComment }) => {
                               <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                                 Edit Collection
                               </a>
-                              <div href="/" className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                              <a className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
                                 {isNotArchived ? 'Archive' : 'Unarchive'} Collection
-                              </div>
+                              </a>
                             </>
                           )
                         }
-                        
                         <a href="#" className="dropdown-item is-active">
                           Share with Sema Community
                         </a>
@@ -214,3 +236,4 @@ Card.propTypes = {
 };
 
 export default Card;
+

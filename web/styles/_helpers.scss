@@ -1,5 +1,7 @@
+@import "./_colors.module";
+
 .shadow {
-    box-shadow: 0 0em 1em #0a0a0a1a, 0 0px 0 1px #0a0a0a05;
+  box-shadow: 0 0em 1em #0a0a0a1a, 0 0px 0 1px #0a0a0a05;
 }
 
 .border-none {
@@ -7,32 +9,32 @@
 }
 
 .colored-shadow {
-    box-shadow: 8px 8px 0px rgba(229, 42, 145, 0.1);
+  box-shadow: 8px 8px 0px rgba(229, 42, 145, 0.1);
 }
 
 .colored-shadow-small {
-    box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
+  box-shadow: 4px 4px 0px rgba(229, 42, 145, 0.1);
 }
 
 .background-foggy-white {
-    background-color: #FCFCFC;
-};
+  background-color: $gray-100;
+}
 
 .background-gray-white {
-  background-color: #f9f9f9;
+  background-color: $gray-100;
 }
 
 .text-gray-light {
-  color: #7C8188;
+  color: $gray-600;
 }
 
 // Minimum height of the object is the full height of the screen minus the height of the header and the footer
 .is-min-fullheight {
-    min-height: calc(100vh - 152px);
+  min-height: calc(100vh - 152px);
 }
 
 .is-whitespace-nowrap {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .is-full-height {
@@ -41,15 +43,16 @@
 
 .is-full-width {
   width: 100%;
-};
+}
 
 .is-cursor-pointer {
   cursor: pointer;
 }
 
 .outline-none {
-  &:hover, &:focus {
-    outline: none !important;;
+  &:hover,
+  &:focus {
+    outline: none !important;
     box-shadow: none !important;
   }
 }
@@ -70,10 +73,9 @@
   position: absolute;
 }
 
-$positions:
-  "bottom", "top";
+$positions: "bottom", "top";
 
-@each $i in $positions{
+@each $i in $positions {
   .is-absolute-#{$i} {
     position: absolute;
     #{$i}: 0;
@@ -82,7 +84,7 @@ $positions:
 
 $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 
-@each $i in $radius{
+@each $i in $radius {
   .border-radius-#{$i} {
     border-radius: #{$i} !important;
   }
@@ -111,23 +113,26 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 }
 
 .switch-input {
-  .switch[type="checkbox"] + label::after, .switch[type="checkbox"] + label:after {
-    background: #0081A7;
+  .switch[type="checkbox"] + label::after,
+  .switch[type="checkbox"] + label:after {
+    background: $blue-700;
   }
-  .switch[type="checkbox"] + label::before, .switch[type="checkbox"] + label:before {
-    background: #f0f2f4;
-    border: 1px solid #CCCCCC;
+  .switch[type="checkbox"] + label::before,
+  .switch[type="checkbox"] + label:before {
+    background: $gray-200;
+    border: 1px solid $gray-400;
   }
 
-  .switch[type="checkbox"]:checked + label::after, .switch[type="checkbox"]:checked + label:after {
-    background: #ffffff;
+  .switch[type="checkbox"]:checked + label::after,
+  .switch[type="checkbox"]:checked + label:after {
+    background: $white-0;
   }
-  .switch[type="checkbox"]:checked + label::before, .switch[type="checkbox"]:checked + label:before {
-    background: #0081A7;
-    border: 1px solid #0081A7;
+  .switch[type="checkbox"]:checked + label::before,
+  .switch[type="checkbox"]:checked + label:before {
+    background: $blue-700;
+    border: 1px solid $blue-700;
   }
 }
-
 
 .has-footer-margin {
   margin-bottom: 80px;
@@ -141,9 +146,36 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 
 .vertical-divider {
   display: inline-block;
-  border-left: 1px solid #dbdbdb;
+  border-left: 1px solid $gray-400;
   margin: 0 32px;
   height: 50px;
+}
+
+.is-mirrored {
+  transform: scale(-1, 1);
+}
+
+.is-bordered {
+  border: 1px solid $gray-300;
+}
+
+.has-white-input {
+  background-color: $white-0;
+
+  select {
+    background-color: $white-0;
+  }
+
+  input {
+    background-color: $white-0;
+  }
+}
+
+.sema-toggle {
+  label::after {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
 }
 
 .overflow-unset {
