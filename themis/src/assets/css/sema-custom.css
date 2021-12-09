@@ -512,16 +512,8 @@ a.sema-box:active {
 }
 
 .sema-button {
-  background-color: white;
-  border-color: #dbdbdb;
-  border-width: 1px;
-  color: #363636;
   cursor: pointer;
   justify-content: center;
-  padding-bottom: calc(0.5em - 1px);
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: calc(0.5em - 1px);
   text-align: center;
   white-space: nowrap;
 }
@@ -534,8 +526,23 @@ a.sema-box:active {
 .sema-button .sema-icon.sema-is-small,
 .sema-button .sema-icon.sema-is-medium,
 .sema-button .sema-icon.sema-is-large {
-  height: 1.5em;
-  width: 1.5em;
+  height: 1em;
+  width: 1em;
+  color: #0081A7;
+}
+
+.sema-button .sema-icon.viewed {
+  color: #56626E;
+  height: 1em;
+  width: 1em;
+}
+
+.sema-button .buttonText {
+  color: #0081A7;
+}
+
+.sema-icon.viewed ~ .buttonText {
+  color:#56626E;
 }
 
 .sema-button .sema-icon:first-child:not(:last-child) {

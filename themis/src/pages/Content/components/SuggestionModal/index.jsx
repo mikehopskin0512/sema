@@ -12,6 +12,8 @@ function SuggestionModal({
   onLastUsedSmartComment,
   isLoading,
   searchValue,
+  changeIsDetailedView,
+  isDetailedView,
 }) {
   const { isLoggedIn } = useSelector((state) => state.user);
   const isNoResults = searchResults.length === 0;
@@ -31,6 +33,8 @@ function SuggestionModal({
           onLastUsedSmartComment={onLastUsedSmartComment}
           onInsertPressed={onInsertPressed}
           searchResults={searchResults}
+          changeIsDetailedView={changeIsDetailedView}
+          isDetailedView={isDetailedView}
         />
       );
   }
