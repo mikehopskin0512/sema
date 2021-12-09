@@ -170,7 +170,7 @@ export const getSemaGithubText = (rawEmojis, tags) => {
 };
 
 export const getInitialSemaValues = (textbox) => {
-  let { value } = textbox;
+  const { value } = textbox;
   let initialReaction = EMOJIS[0];
   let initialTags = TAGS_INIT;
   let githubEmoji; let
