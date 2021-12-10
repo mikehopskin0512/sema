@@ -173,25 +173,32 @@ const searchComments = async (user, searchQuery, allCollections) => {
   searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
 
   const comments = await getUserSuggestedComments(user, searchResults, allCollections);
-  const returnResults = comments.map(
-    ({
+  const returnResults = await Promise.all(comments.map(async ({
       _id: id,
       title,
       comment,
-      engGuides,
+      engGuides = [],
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
       collectionId = '',
-    }) => ({
-      id,
-      title,
-      comment,
-      sourceName,
-      sourceUrl,
-      engGuides,
-      collectionId,
-    }),
-  );
+      tags = [],
+      author = '',
+    }) => {
+      const metaData = sourceUrl ? await getLinkPreviewData(sourceUrl) : null;
+      return {
+        id,
+        title,
+        comment,
+        sourceName,
+        sourceUrl,
+        engGuides,
+        collectionId,
+        tags,
+        author,
+        sourceIcon: metaData?.icon || '',
+      }
+    }
+  ));
 
   // Store the search case to database
   const newQuery = new Query({

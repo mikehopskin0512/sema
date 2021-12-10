@@ -50,6 +50,13 @@
   --color-reminder-font: #{v.$color-light-reminder-font};
   --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-light-reminder-sign-in-btn-font};
+
+  --color-hover-comment: #{v.$color-dark-reminder-font};
+  --color-sourceUrl-text: #{v.$color-light-tags-header-font};
+  --color-tags-container: #{v.$color-tag-container-light};
+  --color-suggestion-source: #{v.$color-tag-container-dark};
+  --color-suggestion-title: #{v.$color-title-light};
+  --color-comment-text: #{v.$color-title-light};
 }
 
 .theme--dark {
@@ -102,6 +109,13 @@
 
   --color-reminder-github-bg: #{v.$color-dark-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-reminder-sign-in-btn-font};
+
+  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-sourceUrl-text: #{v.$color-dark-tag-font};
+  --color-tags-container: #{v.$color-tag-container-dark};
+  --color-suggestion-source: #{v.$color-source-dark};
+  --color-suggestion-title: #{v.$color-dark-emoji-font};
+  --color-comment-text: #{v.$color-comment-text-dark};
 }
 
 .theme--dark-dimmed {
@@ -154,6 +168,13 @@
 
   --color-reminder-github-bg: #{v.$color-dark-dim-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-dim-reminder-sign-in-btn-font};
+
+  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-sourceUrl-text: #{v.$color-dark-tag-font};
+  --color-tags-container: #{v.$color-tag-container-dark};
+  --color-suggestion-source: #{v.$color-source-dark};
+  --color-suggestion-title: #{v.$color-dark-emoji-font};
+  --color-comment-text: #{v.$color-comment-text-dark};
 }
 
 .theme--dark-high-contrast {
@@ -206,6 +227,13 @@
 
   --color-reminder-github-bg: #{v.$color-dark-high-contrast-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-high-contrast-reminder-sign-in-btn-font};
+
+  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-sourceUrl-text: #{v.$color-dark-tag-font};
+  --color-tags-container: #{v.$color-tag-container-dark};
+  --color-suggestion-source: #{v.$color-source-dark};
+  --color-suggestion-title: #{v.$color-dark-emoji-font};
+  --color-comment-text: #{v.$color-comment-text-dark};
 }
 
 .sema {
@@ -316,9 +344,9 @@ button.sema-reaction-selection {
 }
 
 .suggestion-modal {
-  width: 384px;
-  max-height: 462px;
-  overflow: auto;
+  width: 100%;
+  max-height: 313px;
+  overflow: hidden;
   border: none;
   margin-top: 2px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
@@ -326,6 +354,10 @@ button.sema-reaction-selection {
   color: var(--color-text-input-font);
   border-color: var(--color-text-input-border);
   pointer-events: all;
+
+  &.view-mode {
+    max-height: fit-content;
+  }
 
   .sema-dropdown-content {
     background-color: var(--color-text-input-bg);
@@ -342,33 +374,82 @@ button.sema-reaction-selection {
 
 .suggestion-title {
   display: block;
-  margin-top: 5px;
+  margin: 8px 0 7px;
+  padding-top: 11px;
   overflow: hidden;
-  line-height: 16px;
+  line-height: 20px;
   letter-spacing: -0.15 px;
-  color: var(--color-title);
+  color: var(--color-suggestion-title);
+  position: relative;
+  &.view-mode {
+    padding: 0;
+  }
 }
 
 .suggestion-name {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .suggestion-source {
-  font-weight: 400;
-  font-size: 9px;
-  line-height: 10px;
-  white-space: nowrap;
-  color: var(--color-source-name);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: -0.04em;
+  color: var(--color-suggestion-source);
+  margin-left: 8px;
+}
+
+.suggestion-comment-container {
+  border-bottom: 1px solid var(--color-tags-container);
+  height: 101px;
+}
+
+.suggestion-comment {
+  min-height: 85px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+
+  .active-buttons-container {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--color-hover-comment);
+    border-radius: 4px;
+    cursor: pointer;
+
+    .active-buttons-container {
+      display: block;
+      width: fit-content;
+      position: absolute;
+      top: 3px;
+      right: 10px;
+    }
+  }
+}
+
+.sema-button.sema-is-inverted.sema-is-small:not(.viewed) {
+  background: var(--color-hover-comment);
+}
+
+.suggestion-comment-no-hover {
+  min-height: 85px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
 }
 
 .suggestion-content-truncated-container {
-  padding: 10px;
-  background: #fbfbfb;
-  border: 0.5px solid #c4c4c4;
-  margin-top: 7px;
+  padding-bottom: 8px;
   box-sizing: border-box;
-  border-radius: 4px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 8px;
+  color: var(--color-suggestion-title);
+}
+
+.suggestion-comment-text {
+  color: var(--color-comment-text);
 }
 
 .sema-button.sema-button--save-comment {
@@ -395,12 +476,57 @@ button.sema-reaction-selection {
 .suggestion-content-truncated {
   font-weight: 400;
   font-size: 12px;
-  line-height: 16px;
+  line-height: 20px;
 
   ul {
     list-style-position: outside;
     margin-left: 15px;
   }
+}
+
+.suggestion-author {
+  font-size: 12px; 
+  color: var(--color-suggestion-source);
+  font-weight: 400;
+}
+
+.suggestion-soucreUrl {
+  text-decoration-style: solid; 
+  text-decoration-line: underline; 
+  font-weight: 400; 
+  font-size: 12px; 
+  line-height: 21px;
+  color: var(--color-sourceUrl-text);
+}
+
+.tags-container {
+  height: 23px;
+  background: var(--color-tags-container);
+  border-radius: 4px; 
+  margin-right: 8px; 
+  padding: 4px 8px; 
+  font-weight: 600; 
+  font-size: 10px; 
+  line-height: 15px;
+}
+
+.source-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 16px;
+}
+
+.dashed-line {
+  width: 100%; 
+  height: 1px; 
+  box-sizing: border-box; 
+  border: 0.5px dashed var(--color-tags-container); 
+  margin-bottom: 16px;
+}
+
+.note-icon {
+  width: 15px; 
+  height: 21px;
 }
 
 .suggestion-buttons {
@@ -630,7 +756,7 @@ h6 {
 }
 
 .suggestion-content-truncated-container {
-  background-color: var(--color-text-input-bg);
+  //background-color: var(--color-text-input-bg);
   color: var(--color-content);
   border-color: var(--color-text-input-border);
 }
@@ -753,7 +879,7 @@ h6 {
   margin-bottom: 12px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   .sema-button {
     background-color: var(--color-text-input-bg);
     color: var(--color-text-input-font);

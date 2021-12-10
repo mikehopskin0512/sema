@@ -28,8 +28,6 @@ export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
 export const IS_DIRTY = 'isDirty';
 
-export const MAX_CHARACTER_LENGTH = 88;
-
 export const TAGS_INIT = [
   {
     [POSITIVE]: 'Readable',
