@@ -52,7 +52,7 @@ const AddCollectionPage = () => {
           </nav>
         </div>
         { cid ? (
-          <AddSuggestedComment token={token} />
+          <AddSuggestedComment />
         ) : (
           <AddCommentCollection />
         ) }

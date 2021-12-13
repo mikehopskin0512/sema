@@ -14,9 +14,10 @@ const EditSuggestedCommentForm = ({ comment, onChange, collection, errors = {} }
   const guidesOptions = useMemo(() => addTags(tags, ['guide', 'other']), [tags]);
 
   useEffect(() => {
-    const { tags } = collection
-    const isDefaultTagsExist = !!tags?.length
-    if (isDefaultTagsExist) {
+    const { tags } = collection;
+    const isDefaultTagsExist = !!tags?.length;
+    const isCommentHasTags = comment.tags?.length;
+    if (!isCommentHasTags && isDefaultTagsExist) {
       onChange({
         guides: addTags(tags, ['guide', 'other']),
         languages: addTags(tags, ['language']),
