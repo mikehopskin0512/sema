@@ -11,9 +11,11 @@ import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
 import Pagination from '../../../components/pagination';
+import { commentsOperations } from '../../../state/features/comments';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
+const { getCollectionById } = commentsOperations;
 
 const NUM_PER_PAGE = 9;
 
@@ -34,6 +36,13 @@ const CommentCollectionsList = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const canCreate = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+
+  const setDefaultCollectionAsActive = () => {
+    const collection = data.find((collection) => collection?.collectionData?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME);
+    if(collection?.collectionData?._id) {
+      dispatch(getCollectionById(collection.collectionData._id, token));
+    }
+  };
 
   const sortedCollections = useMemo(() => {
     let collections = [...data];
@@ -56,6 +65,10 @@ const CommentCollectionsList = () => {
   useEffect(() => {
     dispatch(fetchAllUserCollections(token));
   }, []);
+
+  useEffect(() => {
+    setDefaultCollectionAsActive();
+  }, [data]);
 
   useEffect(() => {
     if (showAlert === true) {
