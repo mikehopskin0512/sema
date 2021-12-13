@@ -1,26 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { getCharCount } from '../../utils';
 import styles from './pagination.module.scss';
 import { ChevronLeftIcon, ChevronRightIcon } from '../Icons';
+import { useIsMount } from '../../hooks/useIsMount';
 
 const PAGE_SIZES = [10, 20, 50, 100];
 const PAGE_INPUT_WIDTH = 40;
 
 const Pagination = ({
-  setPageSize, 
+  setPageSize,
   pageSize,
   totalCount,
   currentPage,
   onPageChange
 }) => {
+  const isMount = useIsMount();
   const pageInputRef = useRef(null);
   const [inputWidth, setInputWidth] = useState(PAGE_INPUT_WIDTH)
   const totalPageCount = Math.ceil(totalCount / pageSize);
 
   useEffect(() => {
-    pageInputRef.current.style.width = `${inputWidth}px`;
-    pageInputRef.current.focus();
+    if (!isMount) {
+      pageInputRef.current.style.width = `${inputWidth}px`;
+      pageInputRef.current.focus();
+    }
   }, [inputWidth]);
 
   return (
@@ -40,10 +44,18 @@ const Pagination = ({
         </div>
         <div className="is-flex is-align-items-center">
           <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
-            <button className="pagination-previous button is-ghost" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage <= 1}>
+            <button 
+              className={clsx("pagination-previous button", styles['pagination-buttons'], currentPage <= 1 ? 'is-disabled' : 'is-clickable')}
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+            >
               <ChevronLeftIcon />
             </button>
-            <button className="pagination-next button is-ghost" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPageCount}>
+            <button 
+              className={clsx("pagination-next button", styles['pagination-buttons'], currentPage === totalPageCount ? 'is-disabled' : 'is-clickable')}
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPageCount}
+            >
               <ChevronRightIcon />
             </button>
             <ul className="pagination-list">

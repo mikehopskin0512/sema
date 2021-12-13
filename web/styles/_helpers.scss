@@ -181,3 +181,7 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 .overflow-unset {
   overflow: unset;
 }
+
+.is-disabled {
+  cursor: not-allowed !important;
+}

@@ -7,7 +7,9 @@ import { EVENTS } from '../../../constants';
 import { MAX_CHARACTER_LENGTH } from './constants';
 import { fireAmplitudeEvent } from '../../../modules/content-util';
 
-function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, changeIsDetailedView, isDetailedView }) {
+function CommentsList({
+  searchResults, onLastUsedSmartComment, onInsertPressed, changeIsDetailedView, isDetailedView,
+}) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const onViewPressed = (title, sourceName, suggestion) => {
@@ -42,8 +44,11 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
     const isCopied = copiedId === id;
 
     return (
-      <div key={id} className="suggestion-comment-container"
-        onClick={() => onViewPressed(title, sourceName, searchResult)}>
+      <div
+        key={id}
+        className="suggestion-comment-container"
+        onClick={() => onViewPressed(title, sourceName, searchResult)}
+      >
         <SuggestionComment
           id={id}
           title={truncate(title, MAX_CHARACTER_LENGTH.TITLE)}
@@ -68,7 +73,7 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
     return (
       <>
         <div className="suggestion-header">
-          <div style={{ marginRight: '17px', marginTop: '2px', }}>
+          <div style={{ marginRight: '17px', marginTop: '2px' }}>
             <ControlButton
               icon="fa-arrow-left"
               onClick={onCommentDetailBackPressed}
@@ -76,28 +81,28 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
             />
           </div>
           <div className="suggestion-title view-mode">
-        <span className="suggestion-name">{title}</span>
-        {' '}
-        {sourceIcon && <img src={sourceIcon} className="source-icon" alt="icon" /> }
-        <span className="suggestion-source">{sourceName}</span>
-        {' | '}
-        <span className={"suggestion-author"}>{author}</span>
-        </div>
-        <div style={{ marginLeft: 'auto' }}>
-          <ControlButton
-            title={isCopied ? 'Copied!' : 'Copy'}
-            icon="fa-copy"
+            <span className="suggestion-name">{title}</span>
+            {' '}
+            {sourceIcon && <img src={sourceIcon} className="source-icon" alt="icon" /> }
+            <span className="suggestion-source">{sourceName}</span>
+            {' | '}
+            <span className="suggestion-author">{author}</span>
+          </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <ControlButton
+              title={isCopied ? 'Copied!' : 'Copy'}
+              icon="fa-copy"
             // eslint-disable-next-line max-len
-            onClick={() => onCopyPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
-            isViewed
-          />
-          <ControlButton
-            title="Insert"
-            icon="fa-file-import"
+              onClick={() => onCopyPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
+              isViewed
+            />
+            <ControlButton
+              title="Insert"
+              icon="fa-file-import"
             // eslint-disable-next-line max-len
-            onClick={() => onInsertPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
-            isViewed
-          />
+              onClick={() => onInsertPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
+              isViewed
+            />
           </div>
         </div>
         {title && comment && (
@@ -117,9 +122,11 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
         )}
         <div className="dashed-line" />
         <div className="sema-is-flex">
-          {tags?.map((tag, index) => <div key={index} className="tags-container">
-            {tag.label}
-          </div>)}
+          {tags?.map((tag) => (
+            <div key={`tag-${tag.label}`} className="tags-container">
+              {tag.label}
+            </div>
+          ))}
         </div>
       </>
     );

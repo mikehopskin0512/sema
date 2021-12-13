@@ -8,3 +8,11 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+.pagination-buttons {
+  border: none;
+  background: none;
+  &:disabled {
+    background: none;
+  }
+}

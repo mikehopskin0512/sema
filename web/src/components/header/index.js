@@ -40,7 +40,7 @@ const Header = () => {
     isWaitlist = true,
     inviteCount = 0,
     roles = [],
-  } = user;
+  } = user ?? {};
   // Initials replaced by react-avatar
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';
 
