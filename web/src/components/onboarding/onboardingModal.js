@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import AddSuggestedCommentPage from './addSuggestedCommentPage';
 import SmartBankCommentsPage from './smartBankCommentsPage';
 import ContentPage from './contentPage';
-import { isExtensionInstalled } from '../../utils/extension';
 import ExtensionPage from './extensionPage';
 import styles from './onboarding.module.scss';
 
@@ -22,10 +21,10 @@ const OnboardingModal = ({
   toggleModalActive,
   semaCollections,
   setComment,
-  onSubmit
+  onSubmit,
+  isPluginInstalled,
 }) => {
 
-  const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [isQueryFinished, setQueryFinished] = useState(false);
 
   const renderModalContent = (currentPage) => {
@@ -88,16 +87,17 @@ const OnboardingModal = ({
     setCollection(collection);
   }, [semaCollections]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (isPluginInstalled) {
-        clearInterval(interval);
-      }
-      const res = await isExtensionInstalled();
-      togglePluginInstalled(res);
-      setQueryFinished(true);
-    }, 5000);
-  }, []);
+  // Interval for delay of spinner in Extension Page
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     if (isPluginInstalled) {
+  //       clearInterval(interval);
+  //     }
+  //     const res = await isExtensionInstalled();
+  //     togglePluginInstalled(res);
+  //     setQueryFinished(true);
+  //   }, 5000);
+  // }, []);
 
   return (
     <div className={clsx('modal', isModalActive && 'is-active')}>
@@ -138,6 +138,7 @@ OnboardingModal.propTypes = {
   semaCollections: PropTypes.array.isRequired,
   setComment: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  isPluginInstalled: PropTypes.bool.isRequired,
 };
 
 export default OnboardingModal;
