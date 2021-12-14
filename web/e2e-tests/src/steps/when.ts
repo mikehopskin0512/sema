@@ -14,6 +14,16 @@ import openWebsite from "../support/action/openWebsite";
 import handleModal from '../support/action/handleModal';
 import selectOptionByIndex from '../support/action/selectOptionByIndex';
 import selectOption from '../support/action/selectOption';
+import login from '../support/action/login';
+
+/**
+ * Abstracting some steps by functionality. 
+ * e.g login through github
+ *  */ 
+ When(
+    /^I login with user: "([^"]*)?"$/,
+    login
+);
 
 When(
     /^I open the (url|site) "([^"]*)?"$/,

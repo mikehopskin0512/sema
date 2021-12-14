@@ -1,3 +1,152 @@
-2021-10-29T20:06:34.609Z INFO @wdio/local-runner: Run worker command: run
-2021-10-29T20:06:35.071Z DEBUG @wdio/config:utils: Found 'ts-node' package, auto-compiling TypeScript files
-2021-10-29T20:06:35.243Z DEBUG @wdio/local-runner:utils: init remote session
+2021-12-14T21:28:48.708Z INFO @wdio/local-runner: Run worker command: run
+2021-12-14T21:28:48.821Z DEBUG @wdio/config:utils: Found 'ts-node' package, auto-compiling TypeScript files
+2021-12-14T21:28:48.861Z DEBUG @wdio/local-runner:utils: init remote session
+2021-12-14T21:28:49.015Z DEBUG @wdio/local-runner:utils: init remote session
+2021-12-14T21:28:49.021Z INFO devtools:puppeteer: Initiate new session using the DevTools protocol
+2021-12-14T21:28:49.021Z INFO devtools: Launch Google Chrome with flags: --enable-automation --disable-popup-blocking --disable-extensions --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-sync --metrics-recording-only --disable-default-apps --mute-audio --no-first-run --no-default-browser-check --disable-hang-monitor --disable-prompt-on-repost --disable-client-side-phishing-detection --password-store=basic --use-mock-keychain --disable-component-extensions-with-background-pages --disable-breakpad --disable-dev-shm-usage --disable-ipc-flooding-protection --disable-renderer-backgrounding --force-fieldtrials=*BackgroundTracing/default/ --enable-features=NetworkService,NetworkServiceInProcess --disable-features=site-per-process,TranslateUI,BlinkGenPropertyTrees --window-position=0,0 --window-size=1200,900
+2021-12-14T21:28:50.556Z INFO devtools: Connect Puppeteer with browser on port 50393
+2021-12-14T21:28:51.174Z INFO devtools: COMMAND deleteAllCookies()
+2021-12-14T21:28:51.174Z INFO devtools: RESULT null
+2021-12-14T21:28:51.176Z INFO devtools: COMMAND navigateTo("https://app.semasoftware.com/login")
+2021-12-14T21:28:52.051Z INFO devtools: RESULT null
+2021-12-14T21:28:52.057Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-12-14T21:28:52.059Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-1' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-2' }
+]
+2021-12-14T21:28:52.064Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Sign in with GitHub"]")
+2021-12-14T21:28:52.065Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-3' }
+2021-12-14T21:28:52.068Z INFO devtools: COMMAND elementClick("ELEMENT-3")
+2021-12-14T21:28:52.110Z INFO devtools: RESULT null
+2021-12-14T21:28:54.118Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-12-14T21:28:54.120Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-4' }
+2021-12-14T21:28:54.124Z INFO devtools: COMMAND elementClear("ELEMENT-4")
+2021-12-14T21:28:54.127Z INFO devtools: RESULT null
+2021-12-14T21:28:54.129Z INFO devtools: COMMAND findElements("css selector", "#login_field")
+2021-12-14T21:28:54.131Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-5' } ]
+2021-12-14T21:28:54.134Z INFO devtools: COMMAND findElement("css selector", "#login_field")
+2021-12-14T21:28:54.134Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-6' }
+2021-12-14T21:28:54.140Z INFO devtools: COMMAND elementSendKeys("ELEMENT-6", "<Screenshot[base64]>")
+2021-12-14T21:28:54.177Z INFO devtools: RESULT null
+2021-12-14T21:28:54.178Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-12-14T21:28:54.179Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-7' }
+2021-12-14T21:28:54.181Z INFO devtools: COMMAND elementClear("ELEMENT-7")
+2021-12-14T21:28:54.183Z INFO devtools: RESULT null
+2021-12-14T21:28:54.184Z INFO devtools: COMMAND findElements("css selector", "#password")
+2021-12-14T21:28:54.186Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-8' } ]
+2021-12-14T21:28:54.190Z INFO devtools: COMMAND findElement("css selector", "#password")
+2021-12-14T21:28:54.191Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-9' }
+2021-12-14T21:28:54.193Z INFO devtools: COMMAND elementSendKeys("ELEMENT-9", "f1$#Uc7Bvb3x")
+2021-12-14T21:28:54.210Z INFO devtools: RESULT null
+2021-12-14T21:28:54.211Z INFO devtools: COMMAND findElements("css selector", ".js-sign-in-button")
+2021-12-14T21:28:54.213Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-10' } ]
+2021-12-14T21:28:54.214Z INFO devtools: COMMAND findElement("css selector", ".js-sign-in-button")
+2021-12-14T21:28:54.215Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-11' }
+2021-12-14T21:28:54.216Z INFO devtools: COMMAND elementClick("ELEMENT-11")
+2021-12-14T21:28:54.254Z INFO devtools: RESULT null
+2021-12-14T21:28:57.297Z TRACE devtools: Switching to window handle with id d3527411-0498-4915-8d12-4308c3025de9
+2021-12-14T21:28:59.261Z INFO devtools: COMMAND findElements("xpath", ".//a[contains(., "Snippets")]")
+2021-12-14T21:28:59.263Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-12' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-13' }
+]
+2021-12-14T21:28:59.265Z INFO devtools: COMMAND findElement("xpath", ".//a[contains(., "Snippets")]")
+2021-12-14T21:28:59.266Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-14' }
+2021-12-14T21:28:59.268Z INFO devtools: COMMAND elementClick("ELEMENT-14")
+2021-12-14T21:28:59.289Z INFO devtools: RESULT null
+2021-12-14T21:29:02.301Z INFO devtools: COMMAND findElements("xpath", ".//div[normalize-space() = "New Snippet"]")
+2021-12-14T21:29:02.305Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-15' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-16' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-17' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-18' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-19' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-20' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-21' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-22' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-23' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-24' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-25' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-26' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-27' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-28' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-29' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-30' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-31' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-32' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-33' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-34' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-35' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-36' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-37' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-38' }
+]
+2021-12-14T21:29:02.323Z INFO devtools: COMMAND findElement("xpath", ".//div[normalize-space() = "New Snippet"]")
+2021-12-14T21:29:02.325Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-39' }
+2021-12-14T21:29:02.328Z INFO devtools: COMMAND elementClick("ELEMENT-39")
+2021-12-14T21:29:02.339Z INFO devtools: RESULT null
+2021-12-14T21:29:05.350Z INFO devtools: COMMAND findElements("xpath", "//label[text()='Title']/following-sibling::input")
+2021-12-14T21:29:05.353Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-40' } ]
+2021-12-14T21:29:05.358Z INFO devtools: COMMAND findElement("xpath", "//label[text()='Title']/following-sibling::input")
+2021-12-14T21:29:05.360Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-41' }
+2021-12-14T21:29:05.362Z INFO devtools: COMMAND elementSendKeys("ELEMENT-41", "Test Snippet")
+2021-12-14T21:29:05.440Z INFO devtools: RESULT null
+2021-12-14T21:29:05.441Z INFO devtools: COMMAND findElements("xpath", "//label[text()='Body']/following-sibling::textarea")
+2021-12-14T21:29:05.443Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-42' } ]
+2021-12-14T21:29:05.444Z INFO devtools: COMMAND findElement("xpath", "//label[text()='Body']/following-sibling::textarea")
+2021-12-14T21:29:05.445Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-43' }
+2021-12-14T21:29:05.446Z INFO devtools: COMMAND elementSendKeys("ELEMENT-43", "Body text test")
+2021-12-14T21:29:05.494Z INFO devtools: RESULT null
+2021-12-14T21:29:05.496Z INFO devtools: COMMAND findElements("xpath", "//label[text()='Source Name']/following-sibling::input")
+2021-12-14T21:29:05.497Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-44' } ]
+2021-12-14T21:29:05.498Z INFO devtools: COMMAND findElement("xpath", "//label[text()='Source Name']/following-sibling::input")
+2021-12-14T21:29:05.500Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-45' }
+2021-12-14T21:29:05.501Z INFO devtools: COMMAND elementClear("ELEMENT-45")
+2021-12-14T21:29:05.502Z INFO devtools: RESULT null
+2021-12-14T21:29:05.504Z INFO devtools: COMMAND elementSendKeys("ELEMENT-45", "Source name test")
+2021-12-14T21:29:05.538Z INFO devtools: RESULT null
+2021-12-14T21:29:05.539Z INFO devtools: COMMAND findElements("xpath", "//label[text()='Source Link']/following-sibling::input")
+2021-12-14T21:29:05.540Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-46' } ]
+2021-12-14T21:29:05.542Z INFO devtools: COMMAND findElement("xpath", "//label[text()='Source Link']/following-sibling::input")
+2021-12-14T21:29:05.543Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-47' }
+2021-12-14T21:29:05.544Z INFO devtools: COMMAND elementClear("ELEMENT-47")
+2021-12-14T21:29:05.545Z INFO devtools: RESULT null
+2021-12-14T21:29:05.546Z INFO devtools: COMMAND elementSendKeys("ELEMENT-47", "Source Link test")
+2021-12-14T21:29:05.574Z INFO devtools: RESULT null
+2021-12-14T21:29:05.575Z INFO devtools: COMMAND findElements("xpath", ".//span[normalize-space() = "Save New Snippet"]")
+2021-12-14T21:29:05.576Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-48' } ]
+2021-12-14T21:29:05.578Z INFO devtools: COMMAND findElement("xpath", ".//span[normalize-space() = "Save New Snippet"]")
+2021-12-14T21:29:05.579Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-49' }
+2021-12-14T21:29:05.580Z INFO devtools: COMMAND elementClick("ELEMENT-49")
+2021-12-14T21:29:05.623Z INFO devtools: RESULT null
+2021-12-14T21:29:08.627Z INFO devtools: COMMAND findElements("xpath", ".//a[contains(., "Snippets")]")
+2021-12-14T21:29:08.629Z INFO devtools: RESULT [
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-50' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-51' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-52' },
+  { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-53' }
+]
+2021-12-14T21:29:08.632Z INFO devtools: COMMAND findElement("xpath", ".//a[contains(., "Snippets")]")
+2021-12-14T21:29:08.634Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-54' }
+2021-12-14T21:29:08.636Z INFO devtools: COMMAND elementClick("ELEMENT-54")
+2021-12-14T21:29:08.686Z INFO devtools: RESULT null
+2021-12-14T21:29:11.698Z INFO devtools: COMMAND findElements("xpath", ".//p[normalize-space() = "My Snippets"]")
+2021-12-14T21:29:11.701Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-55' } ]
+2021-12-14T21:29:11.704Z INFO devtools: COMMAND findElement("xpath", ".//p[normalize-space() = "My Snippets"]")
+2021-12-14T21:29:11.706Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-56' }
+2021-12-14T21:29:11.708Z INFO devtools: COMMAND elementClick("ELEMENT-56")
+2021-12-14T21:29:11.734Z INFO devtools: RESULT null
+2021-12-14T21:29:14.743Z INFO devtools: COMMAND findElements("css selector", "[placeholder='Search snippets']")
+2021-12-14T21:29:14.746Z INFO devtools: RESULT [ { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-57' } ]
+2021-12-14T21:29:14.750Z INFO devtools: COMMAND findElement("css selector", "[placeholder='Search snippets']")
+2021-12-14T21:29:14.751Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-58' }
+2021-12-14T21:29:14.753Z INFO devtools: COMMAND elementClear("ELEMENT-58")
+2021-12-14T21:29:14.755Z INFO devtools: RESULT null
+2021-12-14T21:29:14.757Z INFO devtools: COMMAND elementSendKeys("ELEMENT-58", "Test Snippet")
+2021-12-14T21:29:14.854Z INFO devtools: RESULT null
+2021-12-14T21:29:17.860Z INFO devtools: COMMAND findElement("xpath", ".//p[normalize-space() = "Test Snippet"]")
+2021-12-14T21:29:17.862Z INFO devtools: RESULT { 'element-6066-11e4-a52e-4f735466cecf': 'ELEMENT-59' }
+2021-12-14T21:29:17.867Z INFO devtools: COMMAND executeScript(<fn>, <object>)
+2021-12-14T21:29:17.875Z INFO devtools: RESULT true
+2021-12-14T21:29:17.878Z INFO devtools: COMMAND deleteSession()
+2021-12-14T21:29:17.879Z INFO devtools: RESULT null

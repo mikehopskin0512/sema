@@ -1,11 +1,23 @@
-2021-11-22T18:36:05.175Z INFO @wdio/cli:launcher: Run onPrepare hook
-2021-11-22T18:36:05.178Z INFO @wdio/cli:launcher: Run onWorkerStart hook
-2021-11-22T18:36:05.180Z INFO @wdio/local-runner: Start worker 0-0 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
-2021-11-22T18:36:08.318Z DEBUG @wdio/local-runner: Runner 0-0 finished with exit code 0
-2021-11-22T18:36:08.321Z INFO @wdio/cli: [0-0] SKIPPED in chrome - /src/features/codeReview.feature
-2021-11-22T18:36:08.321Z INFO @wdio/cli:launcher: Run onWorkerStart hook
-2021-11-22T18:36:08.322Z INFO @wdio/local-runner: Start worker 0-1 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
-2021-11-22T18:37:09.757Z DEBUG @wdio/local-runner: Runner 0-1 finished with exit code 0
-2021-11-22T18:37:09.758Z INFO @wdio/cli:launcher: Run onComplete hook
-2021-11-22T18:37:09.815Z INFO @wdio/local-runner: Shutting down spawned worker
-2021-11-22T18:37:10.079Z INFO @wdio/local-runner: Waiting for 0 to shut down gracefully
+2021-12-14T21:28:47.246Z INFO @wdio/cli:launcher: Run onPrepare hook
+2021-12-14T21:28:47.247Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-12-14T21:28:47.247Z INFO @wdio/local-runner: Start worker 0-0 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-12-14T21:28:47.865Z DEBUG @wdio/local-runner: Runner 0-0 finished with exit code 0
+2021-12-14T21:28:47.866Z INFO @wdio/cli: [0-0] SKIPPED in chrome - /src/features/smoke_test/codeReview.feature
+2021-12-14T21:28:47.866Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-12-14T21:28:47.867Z INFO @wdio/local-runner: Start worker 0-1 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-12-14T21:28:48.497Z DEBUG @wdio/local-runner: Runner 0-1 finished with exit code 0
+2021-12-14T21:28:48.497Z INFO @wdio/cli: [0-1] SKIPPED in chrome - /src/features/smoke_test/login.feature
+2021-12-14T21:28:48.497Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-12-14T21:28:48.497Z INFO @wdio/local-runner: Start worker 0-2 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-12-14T21:29:17.999Z DEBUG @wdio/local-runner: Runner 0-2 finished with exit code 0
+2021-12-14T21:29:17.999Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-12-14T21:29:18.000Z INFO @wdio/local-runner: Start worker 0-3 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-12-14T21:29:18.642Z DEBUG @wdio/local-runner: Runner 0-3 finished with exit code 0
+2021-12-14T21:29:18.642Z INFO @wdio/cli: [0-3] SKIPPED in chrome - /src/features/smoke_test/web_app.feature
+2021-12-14T21:29:18.642Z INFO @wdio/cli:launcher: Run onWorkerStart hook
+2021-12-14T21:29:18.642Z INFO @wdio/local-runner: Start worker 0-4 with arg: run,wdio.conf.ts,--cucumberOpts.tagExpression=@zicu
+2021-12-14T21:29:19.270Z DEBUG @wdio/local-runner: Runner 0-4 finished with exit code 0
+2021-12-14T21:29:19.270Z INFO @wdio/cli: [0-4] SKIPPED in chrome - /src/features/smoke_test/webPages.feature
+2021-12-14T21:29:19.270Z INFO @wdio/cli:launcher: Run onComplete hook
+2021-12-14T21:29:19.292Z INFO @wdio/local-runner: Shutting down spawned worker
+2021-12-14T21:29:19.549Z INFO @wdio/local-runner: Waiting for 0 to shut down gracefully
