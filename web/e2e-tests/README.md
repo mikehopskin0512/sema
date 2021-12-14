@@ -214,9 +214,10 @@ Check out all predefined snippets. You can see how they get used in [`sampleSnip
 - `I expect that element "([^"]*)?" does( not)* appear exactly "([^"]*)?" times` <br>Checks that the element is on the page a specific number of times
 - `I expect that element "([^"]*)?" is( not)* visible` <br>Check if a certain element is visible
 - `I expect that element "([^"]*)?" becomes( not)* visible` <br>Check if a certain element becomes visible
-- `I expect that element "([^"]*)?" is( not)* within the viewport` <br>Check if a certain element is within the current viewport
 - `I expect that element "([^"]*)?" does( not)* exist` <br>Check if a certain element exists
 - `I expect that element "([^"]*)?"( not)* contains the same text as element "([^"]*)?"` <br>Compare the text of two elements
+- `I expect that the url is( not)* "([^"]*)?"` <br>Check if the the URL of the current browser window/tab is a certain string
+- `I expect that the( css)* attribute "([^"]*)?" from element "([^"]*)?" is( not)* "([^"]*)?"` <br>Check the value of an element's (css) attribute
 
 
 ## When steps
