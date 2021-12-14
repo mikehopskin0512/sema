@@ -13,6 +13,7 @@ import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
+import { white50 } from '../../../../styles/_colors.module.scss';
 
 const { setSelectedTeam } = authOperations;
 
@@ -78,7 +79,7 @@ const HeaderMenu = ({
 
   return (
     <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
-      <div className="navbar-dropdown is-right p-0 border-radius-8px" style={{ border: '1px #f3f3f3 solid', minWidth: 230, background: '#F9F9F9' }}>
+      <div className="navbar-dropdown is-right p-0 border-radius-8px" style={{ border: `1px ${white50} solid`, minWidth: 230, background: white50 }}>
         { semaTeam.map((role) => (
           <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${role}`} />
         )) }

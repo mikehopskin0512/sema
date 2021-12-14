@@ -7,6 +7,7 @@ import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Select, { components } from 'react-select';
 import styles from './select.module.scss';
+import { gray700 } from '../../../../styles/_colors.module.scss';
 
 const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
   const { children } = p;
@@ -170,7 +171,7 @@ const CustomSelect = (props) => {
           ) : (<div className={styles.badge} />)}
         </div>
         <span className="icon is-small pb-5">
-          <FontAwesomeIcon icon={faSortDown} color="#394A64" />
+          <FontAwesomeIcon icon={faSortDown} color={gray700} />
         </span>
       </button>
       {menuIsOpen && (

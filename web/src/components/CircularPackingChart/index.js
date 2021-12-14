@@ -7,6 +7,7 @@ import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
 import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
 import { CodeIcon } from '../Icons';
+import { white0 } from '../../../styles/_colors.module.scss';
 
 const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
   const [circlePackingData, setCirclePackingData] = useState({
@@ -42,7 +43,7 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
     }
     const chartData = {
       name: 'Tags',
-      color: '#FFF',
+      color: white0,
       children,
     };
     return chartData;

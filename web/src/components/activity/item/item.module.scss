@@ -1,5 +1,7 @@
+@import "../../../../styles/_colors.module.scss"; 
+
 .date {
-  color: #606060;
+  color: $gray-700;
 }
 
 .avatar {
@@ -26,7 +28,7 @@
       left: 0;
       width: 1px;
       height: 16px;
-      background: #9B9B9B;
+      background: $gray-600;
     }
   }
 }

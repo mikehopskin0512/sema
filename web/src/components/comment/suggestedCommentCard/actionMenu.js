@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import usePopup from '../../../hooks/usePopup';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
+import { blue700 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { updateSuggestComment } = suggestCommentsOperations;
@@ -36,7 +37,7 @@ const ActionMenu = ({ comment }) => {
             type="button"
             onClick={toggleMenu}
           >
-            <FontAwesomeIcon color="#0081A7" icon={faEllipsisV} />
+            <FontAwesomeIcon color={blue700} icon={faEllipsisV} />
           </button>
         </div>
         <div className="dropdown-menu" role="menu" ref={popupRef}>

@@ -19,7 +19,11 @@ export default (app, passport) => {
         payload = await update({_id: id, ...collection});
       } else {
         payload = await toggleActiveCollection(_id, id);
+        if (payload.status == 400) {
+          return res.status('400').send(payload);
+        }
       }
+
       return res.status(200).send(payload);
     } catch (error) {
       logger.error(error);

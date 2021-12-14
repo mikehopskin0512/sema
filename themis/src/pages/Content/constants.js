@@ -1,4 +1,5 @@
 export const { SEMA_LANDING_URL } = process.env;
+export const { SEMA_PRODUCTION_URL } = process.env;
 export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
@@ -7,7 +8,9 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
 
+export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.svg`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
+export const SEMA_LANDING_GITHUB = `${SEMA_LANDING_URL}/gh`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
 export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/snippets`;
@@ -207,13 +210,8 @@ export const USER = {
   _id: '6076262a407c64f11499537a',
 };
 
-// eslint-disable-next-line max-len
-/* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
- * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
- */
-export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
-export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
-export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
+export const SEMA_REACTION_REGEX = /\*\*Summary:\*\*([ \w : |])*/s;
+export const SEMA_TAGS_REGEX = /\*\*Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR_LIGHT = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>

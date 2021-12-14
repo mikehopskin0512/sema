@@ -15,6 +15,7 @@ import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getDateSub } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import { blue600 } from '../../../styles/_colors.module.scss';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -227,7 +228,7 @@ const PersonalInsights = () => {
               Personal Insights
               <span className="ml-20 is-size-7 has-text-weight-normal">
                 <InfoFilledIcon
-                  color="#2D74BA"
+                  color={blue600}
                   size="small"
                   style={{ verticalAlign: 'text-bottom' }}
                 />

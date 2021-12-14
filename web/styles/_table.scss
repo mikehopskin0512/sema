@@ -1,5 +1,7 @@
+@import "./_colors.module.scss";
+
 .table {
-  border: 1px solid #dbdbdb;
+  border: 1px solid $gray-200;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   background: none;
 
@@ -8,7 +10,7 @@
   }
 
   thead {
-    background: #f2f1f4;
+    background: $white-50;
 
     th {
       vertical-align: inherit;
@@ -26,7 +28,7 @@
     vertical-align: inherit;
     padding: .5rem 1.5rem;
     font-size: 14px;
-    background: white !important;
+    background: $white-0 !important;
 
     &:last-child {
       padding: 0;

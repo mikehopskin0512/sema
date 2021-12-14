@@ -32,8 +32,10 @@ $custom-colors: (
   "black-900": $black-900,
   "black-950": $black-950,
   "blue-600": $blue-600,
+  "blue-500": $blue-500,
   "blue-300": $blue-300,
   "white-50": $white-50,
+  "white-0": $white-0,
 );
 
 // Set custom shades
@@ -41,7 +43,9 @@ $custom-shades: (
   "gray-light": $gray-light,
 );
 
+// set custom switch variables
 $switch-background: $gray-600;
+$switch-paddle-offset: 0.15rem;
 
 // Sizes
 $size-1: 3rem;
@@ -63,6 +67,7 @@ $spacing-values: (
   "neg5": -5px,
   "neg8": -8px,
   "neg10": -10px,
+  "neg12": -12px,
   "3": 3px,
   "4": 4px,
   "5": 5px,

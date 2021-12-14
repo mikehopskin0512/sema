@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .select-wrapper {
   max-width: 380px !important;
   @media only screen and (max-width: 769px) {
@@ -24,7 +26,7 @@
       box-shadow: none;
 
       & > div {
-        background: #ffffff;
+        background: $white-0;
         border-radius: 4px;
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
       }

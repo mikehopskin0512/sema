@@ -10,6 +10,7 @@ import AddCommentCollection from '../../components/comment/addCommentCollection'
 import AddSuggestedComment from '../../components/comment/addSuggestedComment';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import { black950 } from '../../../styles/_colors.module.scss';
 
 const { fetchTagList } = tagsOperations;
 
@@ -37,7 +38,7 @@ const AddCollectionPage = () => {
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={parentPageUrl} className="is-hidden-mobile mr-8 is-flex">
-            <ArrowLeftIcon color="#000" size="small" />
+            <ArrowLeftIcon color={black950} size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
@@ -52,7 +53,7 @@ const AddCollectionPage = () => {
           </nav>
         </div>
         { cid ? (
-          <AddSuggestedComment token={token} />
+          <AddSuggestedComment />
         ) : (
           <AddCommentCollection />
         ) }

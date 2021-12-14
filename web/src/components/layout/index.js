@@ -8,6 +8,7 @@ import Header from '../header';
 import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
 import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
+import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
 
 const widescreenPages = [`${PATHS.REPO}/[repoId]`, PATHS.SUPPORT, PATHS.LOGIN];
 const noHeaderPages = [PATHS.LOGIN];
@@ -38,9 +39,9 @@ const withLayout = (Page) => (props) => {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-        <meta name="msapplication-TileColor" content="#2b5797" />
-        <meta name="theme-color" content="#ffffff" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color={blue200} />
+        <meta name="msapplication-TileColor" content={blue900} />
+        <meta name="theme-color" content={white0} />
         <meta name={FACEBOOK_VERIFICATION_META.NAME} content={FACEBOOK_VERIFICATION_META.CONTENT} />
 
         {/* Heap Analytics */}

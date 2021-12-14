@@ -20,6 +20,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { isSemaDefaultCollection } from '../../../utils';
+import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -140,7 +141,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href={PATHS.SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
-            <ArrowLeftIcon color="#000" size="small" />
+            <ArrowLeftIcon color={black950} size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

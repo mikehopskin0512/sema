@@ -150,9 +150,10 @@ const GlobalSearchbar = (props) => {
             </div>
           </div>
         </div>
-        <div 
+        <div
           className={isDetailedView ? 'sema-dropdown-menu suggestion-modal view-mode' : 'sema-dropdown-menu suggestion-modal'}
-          role="menu">
+          role="menu"
+        >
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <SuggestionModal

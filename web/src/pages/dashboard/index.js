@@ -16,6 +16,7 @@ import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
 import styles from './dashboard.module.scss';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import { isExtensionInstalled } from '../../utils/extension';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor, createCollections } = collectionsOperations;
@@ -30,6 +31,7 @@ const Dashboard = () => {
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
   const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
+  const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
@@ -40,6 +42,11 @@ const Dashboard = () => {
   }));
   const { token, user } = auth;
   const { identities, isOnboarded = null } = user;
+
+  const checkIfExtensionInstalled = async () => {
+    const result = await isExtensionInstalled();
+    return result;
+  };
 
   const logOnboardingAcitvity = (page) => {
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_ONBOARDING_WIZARD, { url: `/onboardingModal/page=${page}` });
@@ -100,6 +107,7 @@ const Dashboard = () => {
   }, [auth, getUserRepos]);
 
   useEffect(() => {
+    togglePluginInstalled(checkIfExtensionInstalled());
     getCollectionsByAuthor('sema');
   }, []);
 
@@ -209,6 +217,7 @@ const Dashboard = () => {
         setComment={setComment}
         semaCollections={semaCollections}
         onSubmit={onboardingOnSubmit}
+        isPluginInstalled={isPluginInstalled}
       />
     </>
   );

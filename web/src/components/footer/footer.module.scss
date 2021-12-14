@@ -1,5 +1,7 @@
+@import "../../../styles/_colors.module.scss";
+
 .footer {
-    background-color: #2D2A2E;
+    background-color: $gray-900;
 }
 
 .tile {

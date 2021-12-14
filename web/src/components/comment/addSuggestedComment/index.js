@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { CheckOnlineIcon, CloseIcon } from '../../Icons';
+import { CheckOnlineIcon } from '../../Icons';
 import EditSuggestedCommentForm from '../editSuggestedCommentForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
 import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { useValidateCommentForm } from '../helpers';
+import { gray300 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { bulkCreateSuggestedComments } = suggestCommentsOperations;
@@ -24,41 +26,17 @@ const defaultValues = {
   relatedLinks: '',
 };
 
-const requiredFields = {
-  title: 'Title is required',
-  languages: 'At least one language is required',
-  guides: 'At least one guide is required',
-  sourceName: 'Source Name is required',
-  sourceLink: 'Source Link is required',
-  author: 'Author is required',
-  comment: 'Body is required'
-};
-
-export const validateData = (data, setErrors) => {
-  const errorFields = {};
-  const keys = Object.keys(requiredFields);
-  keys.filter((key) => !data[key] || data[key].length < 1).forEach((key) => {
-    errorFields[key] = {
-      message: requiredFields[key],
-    };
-  });
-  if (Object.keys(errorFields).length > 0) {
-    setErrors(errorFields);
-    return false;
-  }
-  return true;
-};
-
-const AddSuggestedComment = (props) => {
+const AddSuggestedComment = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { token } = props;
-  const [comments, setComments] = useState([defaultValues]);
-  const [errors, setErrors] = useState({});
-  const { collectionState } = useSelector((state) => ({
+  const {
+    auth: { token },
+    collectionState,
+  } = useSelector((state) => ({
+    auth: state.authState,
     collectionState: state.commentsState,
   }));
-
+  const router = useRouter();
+  const [comment, setComment] = useState({ ...defaultValues });
   const { cid: collectionId } = router.query;
   const { collection } = collectionState;
 
@@ -66,73 +44,51 @@ const AddSuggestedComment = (props) => {
     dispatch(getCollectionById(collectionId, token));
   }, [collectionId]);
 
-  const addComment = () => {
-    setComments([...comments, defaultValues]);
-  };
-
   useEffect(() => {
     if (collection) {
-      setComments([{
-        ...defaultValues,
+      setComment({
+        ...comment,
         sourceName: collection.source && collection.source.name,
         author: collection.author,
         languages: collection.tags ? collection.tags.filter((item) => item.type === 'language') : [],
         guides: collection.tags ? collection.tags.filter((item) => item.type !== 'language') : [],
-      }]);
+      });
     }
   }, [collection]);
-
-  const removeComment = (index) => {
-    setComments(comments.filter((_comment, idx) => index !== idx));
-  };
-
-  const onChange = (value, index) => {
-    setComments(comments.map((comment, i) => i === index ? ({
-      ...comment,
-      ...value,
-    }) : comment));
-  };
-
+  const { isValid, errors, validate } = useValidateCommentForm(comment);
   const onCancel = async () => {
     await router.back();
   };
-
-  const onSave = async () => {
-    setErrors({});
-    const data = comments.map((comment) => {
-      const isDataValid = validateData(comment, setErrors);
-
-      if (!isDataValid) {
-        return;
-      }
-
-      const re = new RegExp("^(http|https)://", "i");
-      if (!re.test(comment.sourceLink)) {
-        setErrors({
-          sourceLink: {
-            message: 'Source should be a URL'
-          }
-        });
-        return;
-      }
-
-      return isDataValid ? {
-        ...comment,
-        source: {
-          name: comment.sourceName,
-          url: comment.sourceLink,
-        },
-        tags: makeTagsList([...comment.languages, ...comment.guides]),
-        relatedLinks: parseRelatedLinks(comment.relatedLinks),
-      } : null;
+  const onChange = (value) => {
+    setComment({
+      ...comment,
+      ...value,
     });
-
-    if (data[0]) {
-      await dispatch(bulkCreateSuggestedComments({ comments: data, collectionId }, token));
-      await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
+  };
+  const save = async () => {
+    const comments = [{
+      ...comment,
+      source: {
+        name: comment.sourceName,
+        url: comment.sourceLink,
+      },
+      tags: makeTagsList([...comment.languages, ...comment.guides]),
+      relatedLinks: parseRelatedLinks(comment.relatedLinks),
+    }];
+    await dispatch(bulkCreateSuggestedComments({ comments, collectionId }, token));
+    await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
+  };
+  const onSubmit = async () => {
+    validate();
+    if (!isValid) {
+      return;
+    }
+    try {
+      await save();
+    } catch (e) {
+      // TODO: add a notification / after BE error fixes
     }
   };
-
   return (
     <>
       <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
@@ -152,7 +108,7 @@ const AddSuggestedComment = (props) => {
           <button
             className="button is-small is-primary border-radius-4px"
             type="button"
-            onClick={onSave}
+            onClick={onSubmit}
           >
             <CheckOnlineIcon size="small" />
             <span className="ml-8">
@@ -162,40 +118,17 @@ const AddSuggestedComment = (props) => {
         </div>
       </div>
       <div className="px-10">
-        {
-          comments.map((item, index) => (
-            <div key={item._id || index} style={{ borderBottom: '1px solid #dbdbdb' }} className="mb-25 pb-25">
-              <EditSuggestedCommentForm
-                comment={item}
-                onChange={(e) => onChange(e, index)}
-                collection={collection}
-                errors={errors}
-              />
-              { index > 0 && (
-                <div className="is-flex is-justify-content-flex-end">
-                  <button
-                    className="button is-small is-danger is-outlined border-radius-4px"
-                    type="button"
-                    onClick={() => removeComment(index)}
-                  >
-                    <CloseIcon size="small" />
-                    <span className="ml-8">
-                      Remove snippet
-                    </span>
-                  </button>
-                </div>
-              ) }
-            </div>
-          ))
-        }
-        {/* <button
-          className="button is-small is-outlined is-primary border-radius-4px"
-          type="button"
-          onClick={addComment}
+        <div
+          style={{ borderBottom: `1px solid ${gray300}` }}
+          className="mb-25 pb-25"
         >
-          <FontAwesomeIcon icon={faPlus} className="mr-10" />
-          Add another comment
-        </button> */}
+          <EditSuggestedCommentForm
+            comment={comment}
+            onChange={onChange}
+            collection={collection}
+            errors={errors}
+          />
+        </div>
       </div>
     </>
   );

@@ -1,5 +1,7 @@
+@import "../../../styles/_colors.module.scss";
+
 .onboarding-container {
-    background-color: #E5E5E5;
+    background-color: $white-50;
 }
 
 .modal {

@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
 import { getActiveThemeClass } from '../../../../../../utils/theme';
 import SuggestionComment from './SuggestionComment';
-import { engGuidesToStr, truncate } from '../helpers';
+import { sourceUrlToLink, truncate } from '../helpers';
 import ControlButton from './ControlButton';
 import { EVENTS } from '../../../constants';
 import { MAX_CHARACTER_LENGTH } from './constants';
 import { fireAmplitudeEvent } from '../../../modules/content-util';
 
-function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, changeIsDetailedView, isDetailedView }) {
+function CommentsList({
+  searchResults,
+  onLastUsedSmartComment,
+  onInsertPressed,
+  changeIsDetailedView,
+  isDetailedView,
+}) {
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const onViewPressed = (title, sourceName, suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
     changeIsDetailedView(true);
-    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'view', comment_source: sourceName, comment_used: title });
+    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+      comment_bar_action: 'view',
+      comment_source: sourceName,
+      comment_used: title,
+    });
   };
   const [copiedId, setCopiedId] = useState(null);
   const onCopyPressed = (id, title, sourceName, suggestion) => {
@@ -22,7 +32,11 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
       () => {
         setCopiedId(id);
         onLastUsedSmartComment(suggestion);
-        fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'copy', comment_source: sourceName, comment_used: title });
+        fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+          comment_bar_action: 'copy',
+          comment_source: sourceName,
+          comment_used: title,
+        });
       },
       () => {
         // eslint-disable-next-line no-console
@@ -37,13 +51,23 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
   };
   const AllComments = () => searchResults.map((searchResult) => {
     const {
-      comment, sourceName, title, id, engGuides, author, sourceUrl, sourceIcon,
+      comment,
+      sourceName,
+      title,
+      id,
+      engGuides,
+      author,
+      sourceUrl,
+      sourceIcon,
     } = searchResult;
     const isCopied = copiedId === id;
 
     return (
-      <div key={id} className="suggestion-comment-container"
-        onClick={() => onViewPressed(title, sourceName, searchResult)}>
+      <div
+        key={id}
+        className="suggestion-comment-container"
+        onClick={() => onViewPressed(title, sourceName, searchResult)}
+      >
         <SuggestionComment
           id={id}
           title={truncate(title, MAX_CHARACTER_LENGTH.TITLE)}
@@ -62,13 +86,21 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
   });
   const Comment = () => {
     const {
-      comment, sourceName, engGuides, title, id, tags, author, sourceUrl, sourceIcon,
+      comment,
+      sourceName,
+      engGuides,
+      title,
+      id,
+      tags,
+      author,
+      sourceUrl,
+      sourceIcon,
     } = currentSuggestion || {};
     const isCopied = copiedId === id;
     return (
       <>
         <div className="suggestion-header">
-          <div style={{ marginRight: '17px', marginTop: '2px', }}>
+          <div style={{ marginRight: '17px', marginTop: '2px' }}>
             <ControlButton
               icon="fa-arrow-left"
               onClick={onCommentDetailBackPressed}
@@ -76,28 +108,40 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
             />
           </div>
           <div className="suggestion-title view-mode">
-        <span className="suggestion-name">{title}</span>
-        {' '}
-        {sourceIcon && <img src={sourceIcon} className="source-icon" alt="icon" /> }
-        <span className="suggestion-source">{sourceName}</span>
-        {' | '}
-        <span className={"suggestion-author"}>{author}</span>
-        </div>
-        <div style={{ marginLeft: 'auto' }}>
-          <ControlButton
-            title={isCopied ? 'Copied!' : 'Copy'}
-            icon="fa-copy"
-            // eslint-disable-next-line max-len
-            onClick={() => onCopyPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
-            isViewed
-          />
-          <ControlButton
-            title="Insert"
-            icon="fa-file-import"
-            // eslint-disable-next-line max-len
-            onClick={() => onInsertPressed(id, title, sourceName, comment + engGuidesToStr(engGuides))}
-            isViewed
-          />
+            <span className="suggestion-name">{title}</span>
+            {' '}
+            {sourceIcon && (
+              <img src={sourceIcon} className="source-icon" alt="icon" />
+            )}
+            <span className="suggestion-source">{sourceName}</span>
+            {' | '}
+            <span className="suggestion-author">{author}</span>
+          </div>
+          <div style={{ marginLeft: 'auto' }}>
+            <ControlButton
+              title={isCopied ? 'Copied!' : 'Copy'}
+              icon="fa-copy"
+              // eslint-disable-next-line max-len
+              onClick={() => onCopyPressed(
+                id,
+                title,
+                sourceName,
+                comment + sourceUrlToLink(sourceName, sourceUrl),
+              )}
+              isViewed
+            />
+            <ControlButton
+              title="Insert"
+              icon="fa-file-import"
+              // eslint-disable-next-line max-len
+              onClick={() => onInsertPressed(
+                id,
+                title,
+                sourceName,
+                comment + sourceUrlToLink(sourceName, sourceUrl),
+              )}
+              isViewed
+            />
           </div>
         </div>
         {title && comment && (
@@ -117,9 +161,11 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
         )}
         <div className="dashed-line" />
         <div className="sema-is-flex">
-          {tags?.map((tag, index) => <div key={index} className="tags-container">
-            {tag.label}
-          </div>)}
+          {tags?.map((tag) => (
+            <div key={tag.id} className="tags-container">
+              {tag.label}
+            </div>
+          ))}
         </div>
       </>
     );
@@ -128,13 +174,17 @@ function CommentsList({ searchResults, onLastUsedSmartComment, onInsertPressed, 
   return (
     <div
       className="sema-is-flex overflow-hidden"
-      style={isDetailedView ? {
-        width: wrapperWidth,
-        maxHeight: '200px',
-      } : {
-        width: wrapperWidth,
-        height: '313px',
-      }}
+      style={
+        isDetailedView
+          ? {
+            width: wrapperWidth,
+            maxHeight: '200px',
+          }
+          : {
+            width: wrapperWidth,
+            height: '313px',
+          }
+      }
     >
       <div
         className="sema-is-flex sema-is-flex-direction-column sema-is-relative"

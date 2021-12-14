@@ -187,11 +187,12 @@ export const toggleActiveCollection = async (userId, collectionId) => {
           isActive: item.isActive,
         };
       });
-      const newUserData = await updateUser(userId, {collections: newCollections});
+      await updateUser(userId, {collections: newCollections});
+      const newUser = await findUserById(userId);
       return {
         status: 200,
         message: "User updated!",
-        user: newUserData,
+        user: newUser,
       };
     }
     return {
