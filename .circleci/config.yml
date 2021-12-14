@@ -66,11 +66,12 @@ jobs:
           name: auto-restore db
           command: |
             if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
-              aws lambda invoke \
+              if aws lambda invoke \
                 --function-name staging-backups-auto-restore-lambda \
                 --invocation-type RequestResponse \
                 --payload "{ \"connection_string\": \"${STAGING_MONGOOSE_URI}\",\"database_name\":\"${STAGING_MONGODB_NAME}\",\"db_webserver_password\":\"${BACKUP_SERVER_PASS}\",\"db_webserver_user\":\"${BACKUP_SERVER_USER}\"}" \
-                /dev/stdout
+                /dev/stdout; then 
+              fi
             fi
       - slack/notify:
           event: fail

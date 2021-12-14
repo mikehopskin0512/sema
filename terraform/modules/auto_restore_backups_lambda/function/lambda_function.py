@@ -1,12 +1,10 @@
-import collections
-from time import sleep
 import os
 import tarfile
 import bson
 import requests
 from datetime import datetime
-from collections import OrderedDict
 from bs4 import BeautifulSoup
+from time import sleep
 
 
 def drop_old_documents(conn):
@@ -93,18 +91,19 @@ def get_database(connection_string, database_name):
 
 
 def lambda_handler(event, context):
-    status_code = 200
-
     url = 'http://10.1.3.25/mongo'
     connection_string = event["connection_string"]
     auth = (event["db_webserver_user"], event["db_webserver_password"])
     database_name = event["database_name"]
     extracted_backup_path = "/tmp/phoenix"
 
-    db = get_database(connection_string, database_name)
-    drop_old_documents(db)
-    backup_path = download_latest_backup(url, auth)
-    extract_tar(f'{backup_path}', "/tmp")
-    db_restore(extracted_backup_path, db, database_name)
+    try:
+        db = get_database(connection_string, database_name)
+        drop_old_documents(db)
+        backup_path = download_latest_backup(url, auth)
+        extract_tar(f'{backup_path}', "/tmp")
+        db_restore(extracted_backup_path, db, database_name)
+    except:
+        return 1
 
-    return status_code
+    return 0
