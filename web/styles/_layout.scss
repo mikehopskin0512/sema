@@ -1,3 +1,4 @@
+@import "./_colors.module.scss";
 /* Layout navbar-start yles */
 
 Header {
@@ -11,7 +12,7 @@ Header {
     margin-top: 0.6rem;
 
     path {
-      fill: #000;
+      fill: $black-950;
     }
   }
 
@@ -55,7 +56,7 @@ Footer {
   min-height: 100vh;
   position: relative;
   width: 100%;
-  background-color: #f7f7f7;
+  background-color: $white-50;
 }
 
 .navbar {

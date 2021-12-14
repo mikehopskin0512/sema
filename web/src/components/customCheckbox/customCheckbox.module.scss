@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 /* Customize the label (the container) */
 .container {
   display: block;
@@ -18,11 +20,11 @@
   }
 
   :hover input ~ .checkmark {
-    background-color: #ccc;
+    background-color: $gray-300;
   }
 
   input:checked ~ .checkmark {
-    background-color: #0081A7;
+    background-color: $blue-700;
   }
   
   input:checked ~ .checkmark:after {
@@ -39,7 +41,7 @@
   height: 20px;
   width: 20px;
   border-radius: 3px;
-  background-color: #eee;
+  background-color: $gray-200;
 }
 
 .checkmark:after {
@@ -53,7 +55,7 @@
   top: 1px;
   width: 8px;
   height: 14px;
-  border: solid white;
+  border: solid $white-0;
   border-width: 0 2px 2px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

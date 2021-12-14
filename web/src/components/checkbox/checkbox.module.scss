@@ -1,7 +1,9 @@
+@import "../../../styles/_colors.module.scss";
+
 .wrapper {
   width: 20px;
   height: 20px;
   border-radius: 3px;
-  border: 1px solid #bcbcbc;
+  border: 1px solid $gray-400;
   box-shadow: inset 0 0.0625em 0.125em rgba(32, 32, 32, 0.05)
 }

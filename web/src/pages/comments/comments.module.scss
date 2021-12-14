@@ -1,4 +1,6 @@
+@import "../../../styles/_colors.module.scss";
+
 .filter-container {
-  border: 1px solid #E3E9EE;
+  border: 1px solid $white-50;
   box-shadow: 1px 3px 6px rgba(149, 165, 177, 0.1);
 }

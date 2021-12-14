@@ -15,6 +15,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
+import { black950 } from '../../../styles/_colors.module.scss';
 
 const { clearAlert } = alertOperations;
 const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
@@ -107,7 +108,7 @@ const EditLabel = () => {
       <Helmet title="Edit label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
         <a href="/labels-management" className="mr-8 is-flex">
-          <ArrowLeftIcon color="#000" size="small" />
+          <ArrowLeftIcon color={black950} size="small" />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>

@@ -1,5 +1,7 @@
+@import "../../../../styles/_colors.module.scss";
+
 .avatar {
-  border: 1px solid #E3E9EE;
+  border: 1px solid $gray-300;
   height: 32px;
   width: 32px;
   margin-left: -10px;
@@ -10,13 +12,13 @@
 }
 
 .user-count {
-  border: 1px solid #CDEFF9;
+  border: 1px solid $blue-50;
   height: 32px;
   width: 32px;
   z-index: 10;
-  background-color: #CDEFF9;
+  background-color: $blue-50;
 
   p {
-    color: #212B36 !important;
+    color: $gray-800 !important;
   }
 }

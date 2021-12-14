@@ -10,6 +10,7 @@ import EditSuggestedCommentPage from '../../components/comment/editSuggestedComm
 import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import { black950 } from '../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 
@@ -37,7 +38,7 @@ const EditCollectionPage = () => {
       <div className="hero-body pb-250">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={PATHS.SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
-            <ArrowLeftIcon color="#000" size="small" />
+            <ArrowLeftIcon color={black950} size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

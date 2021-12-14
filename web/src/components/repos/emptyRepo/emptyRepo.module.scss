@@ -1,8 +1,10 @@
+@import "../../../../styles/_colors.module.scss";
+
 .subtitle {
 }
 
 .tile {
-    background-color: #F4F4F4;
+    background-color: $white-50;
     height: 510px;
     margin: 0 0 50px 0 !important;
     @media only screen and (max-width: 980px) {

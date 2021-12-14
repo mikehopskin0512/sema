@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { blue400 } from '../../styles/_colors.module.scss';
 
 const links = [
   { href: 'https://zeit.co/now', label: 'ZEIT' },
@@ -45,7 +46,7 @@ const Nav = () => (
         padding: 6px 8px;
       }
       a {
-        color: #067df7;
+        color: ${blue400};
         text-decoration: none;
         font-size: 13px;
       }

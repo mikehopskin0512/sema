@@ -11,6 +11,7 @@ import { PATHS } from '../../../utils/constants';
 import { useValidateCommentForm } from '../../../components/comment/helpers';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { addTags } from '../../../utils';
+import { gray400 } from '../../../../styles/_colors.module.scss';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -117,7 +118,7 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
       </div>
       <div className="px-10">
         <div
-          style={{ borderBottom: '1px solid #dbdbdb' }}
+          style={{ borderBottom: `1px solid ${gray400}` }}
           className="mb-50 pb-50"
         >
           <EditSuggestedCommentForm

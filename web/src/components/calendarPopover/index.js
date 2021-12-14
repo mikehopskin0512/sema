@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faCalendarAlt, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import Calendar from './calendar';
 import styles from './calendarPopover.module.scss';
+import { black900 } from '../../../styles/_colors.module.scss';
 
 const DATE_RANGES = {
   last7Days: {
@@ -195,7 +196,7 @@ const CalendarPopover = ({ setDate }) => {
                     value={format(new Date(dateRange.startDate), 'MM/dd/yyyy')}
                   />
                   <div className="px-10">
-                    <FontAwesomeIcon icon={faArrowRight} color="#19181A" />
+                    <FontAwesomeIcon icon={faArrowRight} color={black900} />
                   </div>
                   <input
                     className={clsx('input is-size-7 has-text-centered', styles['date-input'])}

@@ -9,6 +9,7 @@ import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
+import { gray700 } from '../../../styles/_colors.module.scss';
 
 console.warn = console.error = () => {};
 
@@ -118,7 +119,7 @@ const DateRangeSelector = (props) => {
                 { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
               </span>
               <span className="icon is-small pb-5">
-                <FontAwesomeIcon icon={faSortDown} color="#394A64" />
+                <FontAwesomeIcon icon={faSortDown} color={gray700} />
               </span>
             </button>
           </div>

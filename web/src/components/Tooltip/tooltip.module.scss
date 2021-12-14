@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .tooltip {
   display: flex;
   position: relative;
@@ -8,8 +10,8 @@
     left: 50%;
     transform: translate(-50%, 0);
     top: -38px;
-    color: #F4F4F4;
-    background: #202020;
+    color: $white-50;
+    background: $black-900;
     padding: 6px 8px;
     border-radius: 4px;
     font-size: 12px;

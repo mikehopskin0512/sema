@@ -15,7 +15,7 @@ import {
   gray200,
   greenAvailable,
   orange300,
-} from '../../../styles/_colors.module.scss'
+} from '../../../styles/_colors.module.scss';
 
 
 const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
@@ -110,7 +110,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
             textAnchor="middle"
             alignmentBaseline="central"
             style={{
-              fill: '#202020',
+              fill: black900,
               fontSize: '14px'
             }}
           >

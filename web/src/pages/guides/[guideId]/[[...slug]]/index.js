@@ -21,6 +21,7 @@ import Loader from '../../../../components/Loader';
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 import { PATHS } from '../../../../utils/constants';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
+import { black950, blue700 } from '../../../../styles/_colors.module.scss';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -175,7 +176,7 @@ const EngineeringGuidePage = () => {
           <>
             <div className="is-flex is-align-items-center px-10 mb-15" onClick={() => router.back()}>
               <a className="is-hidden-mobile">
-                <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+                <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color={black950} />
               </a>
               <nav className="breadcrumb" aria-label="breadcrumbs">
                 <ul>
@@ -203,16 +204,16 @@ const EngineeringGuidePage = () => {
                   </p>
                   <div className="is-flex is-justify-content-flex-end mt-15">
                     <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`} target="_blank" rel="noreferrer">
-                      <FontAwesomeIcon icon={faLinkedinIn} size="lg" color="#0081A7" />
+                      <FontAwesomeIcon icon={faLinkedinIn} size="lg" color={blue700} />
                     </a>
                     <a href={`https://www.facebook.com/sharer.php?u=${url}`} target="_blank" rel="noreferrer" className="ml-20">
-                      <FontAwesomeIcon icon={faFacebook} size="lg" color="#0081A7"  />
+                      <FontAwesomeIcon icon={faFacebook} size="lg" color={blue700}  />
                     </a>
                     <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
-                      <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
+                      <FontAwesomeIcon icon={faTwitter} size="lg" color={blue700}  />
                     </a>
                     <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
-                      <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
+                      <FontAwesomeIcon icon={faEnvelope} size="lg" color={blue700}  />
                     </a>
                   </div>
                 </div>
@@ -228,16 +229,16 @@ const EngineeringGuidePage = () => {
                 </p>
                 <div className="is-flex mt-5">
                   <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${url}`} target="_blank" rel="noreferrer">
-                    <FontAwesomeIcon icon={faLinkedinIn} size="lg" color="#0081A7" />
+                    <FontAwesomeIcon icon={faLinkedinIn} size="lg" color={blue700} />
                   </a>
                   <a href={`https://www.facebook.com/sharer.php?u=${url}`} target="_blank" rel="noreferrer" className="ml-20">
-                    <FontAwesomeIcon icon={faFacebook} size="lg" color="#0081A7"  />
+                    <FontAwesomeIcon icon={faFacebook} size="lg" color={blue700}  />
                   </a>
                   <a href={`https://twitter.com/intent/tweet?url=${url}`} target="_blank" rel="noreferrer" className="ml-20">
-                    <FontAwesomeIcon icon={faTwitter} size="lg" color="#0081A7"  />
+                    <FontAwesomeIcon icon={faTwitter} size="lg" color={blue700}  />
                   </a>
                   <a href={`mailto:?body=${`Hello!%0dCheck%20this%20Engineering%20Guide%20from%20Sema%20Software!%0d${url}`}&subject=Engineering%20Guide%20from%20Sema%20Software`} className="ml-20">
-                    <FontAwesomeIcon icon={faEnvelope} size="lg" color="#0081A7"  />
+                    <FontAwesomeIcon icon={faEnvelope} size="lg" color={blue700}  />
                   </a>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
+import { white0 } from '../../../../styles/_colors.module.scss';
 
 const EngGuideForm = ({ engGuide, onChange }) => {
   const { tagState, authState } = useSelector((state) => ({
@@ -48,7 +49,7 @@ const EngGuideForm = ({ engGuide, onChange }) => {
   })), [collections]);
 
   return (
-    <div className="mb-25 pb-20" style={{ borderBottom: '1px solid #EEE' }}>
+    <div className="mb-25 pb-20" style={{ borderBottom: `1px solid ${white0}` }}>
       <div className="columns mb-0">
         <div className="mr-10 mb-10 column">
           <label className="label">Document Name</label>

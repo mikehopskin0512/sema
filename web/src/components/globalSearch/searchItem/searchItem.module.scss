@@ -1,9 +1,10 @@
+@import "../../../../styles/_colors.module.scss";
 
 .search-item {
   display: flex;
   align-items: flex-start;
   padding: 16px 20px;
-  border-bottom: 1px solid #E3E9EE;
+  border-bottom: 1px solid $gray-300;
   cursor: pointer;
 
   &:nth-last-of-type(1) {
@@ -11,7 +12,7 @@
   }
 
   strong {
-    background: #CDEFF9;
+    background: $blue-50;
     font-weight: normal;
   }
 

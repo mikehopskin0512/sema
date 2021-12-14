@@ -17,6 +17,7 @@ import { engGuidesOperations } from '../../../state/features/engGuides';
 import usePermission from '../../../hooks/usePermission';
 import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -131,7 +132,7 @@ const CollectionEngGuides = ({ collectionId }) => {
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href={PATHS.GUIDES} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color={black950} />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

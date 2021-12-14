@@ -9,6 +9,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import styles from './calendarPopover.module.scss';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { black900 } from '../../../styles/_colors.module.scss';
 
 registerLocale('enUs', enUs);
 
@@ -204,11 +205,11 @@ const CustomHeader = ({
         onClick={prevMonth}
         disabled={disabledPrev}
       >
-        <FontAwesomeIcon icon={faChevronLeft} color="#19181A" size="xs" />
+        <FontAwesomeIcon icon={faChevronLeft} color={black900} size="xs" />
       </button>
       <div className="has-text-weight-semibold has-text-black-950">{months[getMonth(date)]} {getYear(date)}</div>
       <button disabled={disabledNext} className="button is-white" type="button" onClick={nextMonth}>
-        <FontAwesomeIcon icon={faChevronRight} color="#19181A" size="xs" />
+        <FontAwesomeIcon icon={faChevronRight} color={black900} size="xs" />
       </button>
     </div>
   );

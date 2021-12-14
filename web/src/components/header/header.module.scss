@@ -1,3 +1,4 @@
+@import "../../../styles/_colors.module.scss";
 
 .burger {
   background: none;
@@ -11,7 +12,7 @@
 }
 
 .divider {
-  background: #F3F3F3;
+  background: $white-50;
 }
 
 .team {
