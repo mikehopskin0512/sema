@@ -68,7 +68,7 @@ jobs:
             if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               aws lambda invoke \
                 --function-name staging-backups-auto-restore-lambda \
-                --invocation-type Event \
+                --invocation-type RequestResponse \
                 --payload "{ \"connection_string\": \"${STAGING_MONGOOSE_URI}\",\"database_name\":\"${STAGING_MONGODB_NAME}\",\"db_webserver_password\":\"${BACKUP_SERVER_PASS}\",\"db_webserver_user\":\"${BACKUP_SERVER_USER}\"}" \
                 /dev/stdout
             fi
