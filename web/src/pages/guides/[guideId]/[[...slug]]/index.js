@@ -21,7 +21,7 @@ import Loader from '../../../../components/Loader';
 import { engGuidesOperations } from '../../../../state/features/engGuides';
 import { PATHS } from '../../../../utils/constants';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
-import { black950, blue700 } from '../../../../styles/_colors.module.scss';
+import { black950, blue700 } from '../../../../../styles/_colors.module.scss';
 
 const { getEngGuides } = engGuidesOperations;
 
