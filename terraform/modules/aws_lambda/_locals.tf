@@ -5,6 +5,8 @@ locals {
   lambda_function_vpc_policy        = "${local.lambda_function}-vpc-policy"
   lambda_function_external_policy   = "${local.lambda_function}-external-policy"
   sg                                = "${local.lambda_function}-sg"
+  packages_s3                       = "${local.lambda_function}-packages"
+  lambda_package_layer              = "${local.lambda_function}-packages-layer"
 }
 
 locals {

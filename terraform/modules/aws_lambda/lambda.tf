@@ -25,5 +25,7 @@ resource "aws_lambda_function" "this" {
     }
   }
 
+  layers = [aws_lambda_layer_version.packages.arn]
+
   tags = local.tags
 }

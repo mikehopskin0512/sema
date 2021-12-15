@@ -7,6 +7,7 @@ cd "${path_cwd}" || exit
 # Installing python dependencies...
 FILE="${path_cwd}/requirements.txt"
 DIR="${path_cwd}/packages"
+
 if [ -d "${DIR}" ]; then
     rm -rf "${DIR}"
 fi

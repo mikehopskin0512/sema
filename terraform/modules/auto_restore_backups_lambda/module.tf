@@ -10,7 +10,7 @@ module "this" {
   publish            = var.publish
   cloudwatch_kms_key = var.cloudwatch_kms_key
 
-  lambda_function_src   = "${path.module}/function"
+  lambda_function_src   = "${path.module}/function/lambda_function.py"
   lambda_handler        = "lambda_function.lambda_handler"
   environment_variables = {}
   external_iam_policies = []

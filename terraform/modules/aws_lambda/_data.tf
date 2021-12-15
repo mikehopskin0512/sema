@@ -54,6 +54,6 @@ data "aws_iam_policy_document" "vpc" {
 
 data "archive_file" "function" {
   type        = "zip"
-  source_dir  = var.lambda_function_src
+  source_file = var.lambda_function_src
   output_path = local.lambda_function_zip
 }

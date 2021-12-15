@@ -62,6 +62,18 @@ variable "external_iam_policies" {
   default     = []
 }
 
+variable "package_s3_acl" {
+  type        = string
+  description = "The canned ACL to apply"
+  default     = "private"
+}
+
+variable "packages_s3_key" {
+  type        = string
+  description = "S3 key of an object containing the function's deployment package."
+  default     = "lambda_layer_payload.zip"
+}
+
 ###################
 # CloudWatch Logs #
 ###################
