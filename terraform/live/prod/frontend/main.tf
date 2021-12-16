@@ -29,6 +29,7 @@ module "phoenix" {
     kms_key = ""
   }
 
+  datadog_api_key   = local.datadog_phoenix_api_key
   image             = var.phoenix_image
   health_check_path = "/login"
   ecs_secrets       = local.phoenix_ecs_secrets
@@ -67,6 +68,7 @@ module "apollo" {
     kms_key = ""
   }
 
+  datadog_api_key   = local.datadog_apollo_api_key
   sg_description    = "allow inbound access from the ALB only"
   image             = var.apollo_image
   health_check_path = "/health"

@@ -2,6 +2,10 @@
 
 `ecs` is a terraform module that creates an ECS task and service and configures additional resources for it.
 
+## Datadog
+
+You can enable datadog forwarder logs through setting variable `datadog api_key` and that's all that you need.
+
 # Module structure
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

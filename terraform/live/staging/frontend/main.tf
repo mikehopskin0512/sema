@@ -29,6 +29,7 @@ module "phoenix" {
     kms_key = ""
   }
 
+  datadog_api_key   = local.datadog_phoenix_api_key
   image             = var.phoenix_image
   health_check_path = "/login"
   ecs_secrets       = local.phoenix_ecs_secrets
@@ -66,7 +67,7 @@ module "apollo" {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
     kms_key = ""
   }
-
+  datadog_api_key   = local.datadog_apollo_api_key
   image             = var.apollo_image
   health_check_path = "/health"
   ecs_secrets       = local.apollo_ecs_secrets

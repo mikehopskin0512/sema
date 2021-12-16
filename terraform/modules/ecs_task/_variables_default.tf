@@ -112,6 +112,16 @@ variable "sg_tags" {
   default     = {}
 }
 
+variable "datadog_api_key" {
+  type        = string
+  description = "An API key for configuring forwarding logs to datadog"
+  default     = null
+  validation {
+    condition     = var.datadog_api_key != ""
+    error_message = "An datadog api key must not be empty."
+  }
+}
+
 variable "sg_description" {
   type        = string
   description = "Security group description."
