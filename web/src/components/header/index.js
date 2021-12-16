@@ -280,7 +280,7 @@ const Header = () => {
                   Sign out
                 </span>
               </div>
-              <div className="navbar-end is-hidden-mobile is-hidden-tablet-only is-flex is-align-items-center">
+              <div className="navbar-end is-hidden-touch is-flex is-align-items-center">
                 {/* Right icon menu - desktop */}
                 {!isWaitlist ? (
                   <HeaderMenu

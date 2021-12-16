@@ -49,7 +49,7 @@ const ContentPage = ({ page, nextPage, previousPage, isPluginInstalled, closeMod
           </div>
         </div>
         <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
-          <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-mobile">
+          <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-touch">
             <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">Here's how it works</p>
             <button className="button is-white" onClick={closeModal}>
               <FontAwesomeIcon className="is-clickable" icon={faTimes} />

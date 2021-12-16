@@ -133,19 +133,19 @@ if (!isAuthenticated || user.isWaitlist) {
                   </div>
                 </div>
               </div>
-              <div className="is-hidden-mobile" style={{ minWidth: 50 }} />
+              <div className="is-hidden-touch" style={{ minWidth: 50 }} />
               <div className="is-flex-grow-2">
                 {/** Show on Desktop */}
                 <div
                   className={clsx(
-                    'colored-shadow has-text-centered is-hidden-mobile px-50 py-80',
+                    'colored-shadow has-text-centered is-hidden-touch px-50 py-80',
                     styles['login-tile'],
                   )}
                 >
                   {renderCard()}
                 </div>
                 {/** Show on Mobile */}
-                <div className="is-hidden-desktop p-20">
+                <div className="is-hidden-desktop p-20 pb-200">
                   <div
                     className={clsx(
                       'colored-shadow has-text-centered px-20 py-50',

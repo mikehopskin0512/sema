@@ -55,7 +55,7 @@ const HelpAndSupport = () => {
         </div>
       </div>
       <div className="pb-50">
-        <div className="pt-50 has-text-centered px-120 is-hidden-mobile container">
+        <div className="pt-50 has-text-centered px-120 is-hidden-touch container">
           {renderBestPractices()}
         </div>
         <div className="pt-50 has-text-centered px-20 is-hidden-desktop container">
