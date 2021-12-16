@@ -48,7 +48,7 @@ module "scqp_peering" {
 
 }
 
-module "qa_peering" {
+module "vpn_peering" {
   source = "../../../modules/vpc_peering"
 
   name_prefix = local.scqp_peering_prefix
@@ -57,6 +57,6 @@ module "qa_peering" {
   vpc_id           = aws_vpc.this.id
   vpc_route_tables = concat(module.vpc_subnet_public.rt_id, module.vpc_subnet_private.rt_id)
 
-  peer_vpc_id = "vpc-0b06a5cf6ae74ca1d" // qa vpc id
+  peer_vpc_id = "vpc-0b06a5cf6ae74ca1d" // vpn vpc id
 
 }
