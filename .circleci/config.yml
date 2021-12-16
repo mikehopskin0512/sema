@@ -62,6 +62,21 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
+      - run: 
+          name: auto-restore db
+          command: |
+            if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              aws lambda invoke \
+                  --function-name staging-backups-auto-restore-lambda \
+                  --log-type Tail \
+                  --invocation-type RequestResponse \
+                  --payload '{ "connection_string": "'"${STAGING_MONGOOSE_URI}"'","database_name":"'"${STAGING_MONGODB_NAME}"'","db_webserver_password":"'"${BACKUP_SERVER_PASS}"'","db_webserver_user":"'"${BACKUP_SERVER_USER}"'"}' \
+                  outputfile.txt
+              LAMBDA_STATUS_CODE=$(<outputfile.txt)
+              if [ "${LAMBDA_STATUS_CODE}" -eq 1 ]; then  
+                 exit 1
+              fi
+            fi
       - slack/notify:
           event: fail
           template: basic_fail_1

@@ -96,7 +96,7 @@ const TileAncestor = ({ children, active, className }) => (
   <>
     {/* <div className={clsx('tile is-ancestor mt-50', active ? 'slid active' : 'slid')}> */}
     {/* Desktop View */}
-    <div className={`tile is-ancestor mt-50 slide is-hidden-mobile ${active ? 'active' : ''}`}>
+    <div className={`tile is-ancestor mt-50 slide is-hidden-touch ${active ? 'active' : ''}`}>
       {children}
     </div>
     {/* Mobile View */}
@@ -110,7 +110,7 @@ const Reactions = ({ current }) => (
   <>
     <TileAncestor active={current === 0}>
       {/* Desktop View */}
-      <div className="tile is-horizontal is-12 is-hidden-mobile">
+      <div className="tile is-horizontal is-12 is-hidden-touch">
         <div className="tile is-1" />
         <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
           <p className="title">Summaries</p>
@@ -136,7 +136,7 @@ const Tags = ({ current }) => (
   <>
     <TileAncestor active={current == 1}>
       {/* Desktop View */}
-      <div className="tile is-horizontal is-12 is-hidden-mobile">
+      <div className="tile is-horizontal is-12 is-hidden-touch">
         <div className="tile is-1" />
         <div className="tile is-7">
           <img src={carouselData[1]} alt="tags" className="" />

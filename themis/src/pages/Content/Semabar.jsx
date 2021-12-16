@@ -12,7 +12,7 @@ import {
 } from './modules/redux/action';
 
 import {
-  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
+  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ_TAGS,
 } from './constants';
 import LoginBar from './LoginBar';
 import { fireAmplitudeEvent } from './modules/content-util';
@@ -169,7 +169,7 @@ const Semabar = (props) => {
             <div className="learn-more-link">
               All Tags
               <a
-                href={SEMA_LANDING_FAQ}
+                href={SEMA_LANDING_FAQ_TAGS}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {

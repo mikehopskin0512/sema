@@ -1,7 +1,6 @@
 @import "../../../styles/_colors.module.scss";
 
 .hero {
-  padding-bottom: 10rem;
 }
 
 .title {
@@ -56,15 +55,6 @@
 
 .container {
   background: $white-0;
-  @media only screen and (min-width: 769px) {
-    height: 100%;
-  }
-  @media screen and (max-width: 1023px) {
-    padding-bottom: 250px
-  }
-  @media only screen and (max-width: 768px) {
-    padding-bottom: 30px !important;
-  }
 }
 
 .bg {

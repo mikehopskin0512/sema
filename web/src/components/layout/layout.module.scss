@@ -3,7 +3,8 @@
   bottom: 0;
   width: 100%;
 
-  @media only screen and (max-width: 1025px) {
+  @media only screen and (max-width: 1024px) {
     position: relative !important;
+    margin-top: -250px !important;
   }
 }

@@ -29,6 +29,7 @@ module "phoenix" {
     kms_key = ""
   }
 
+  datadog_api_key   = local.datadog_phoenix_api_key
   image             = var.phoenix_image
   health_check_path = "/login"
   ecs_secrets       = local.phoenix_ecs_secrets
@@ -66,7 +67,7 @@ module "apollo" {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
     kms_key = ""
   }
-
+  datadog_api_key   = local.datadog_apollo_api_key
   image             = var.apollo_image
   health_check_path = "/health"
   ecs_secrets       = local.apollo_ecs_secrets
@@ -86,4 +87,12 @@ module "apollo" {
     domain_prefix     = "api-staging"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
+}
+
+module "auto_restore_backup_lambda" {
+  source = "../../../modules/auto_restore_backups_lambda"
+
+  name_prefix = "${var.name_prefix}-backups-auto-restore"
+  vpc_id      = data.aws_vpc.this.id
+  subnet_ids  = data.aws_subnet_ids.private.ids
 }

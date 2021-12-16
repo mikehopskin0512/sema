@@ -128,7 +128,7 @@ const Invite = () => {
     <>
       <Helmet {...InvitesHelmet} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
-      <section className={clsx("hero mb-40 pb-300", styles.container)}>
+      <section className={clsx("hero mb-40", styles.container)}>
         <div>
           <div className="is-flex is-align-items-center is-justify-content-center mt-60 mb-30">
             <Logo shape="horizontal" width={100} height={34} />
