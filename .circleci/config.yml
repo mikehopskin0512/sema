@@ -62,7 +62,7 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
-     - run: 
+      - run: 
           name: auto-restore db
           command: |
             if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
