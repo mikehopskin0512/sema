@@ -145,7 +145,7 @@ const Header = () => {
               <div
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
-                <Link href="/">
+                <Link href={PATHS.DASHBOARD}>
                   <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
                     Repos
                   </a>
