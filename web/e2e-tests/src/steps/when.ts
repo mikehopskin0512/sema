@@ -40,6 +40,10 @@ When(
     clickElement
 );
 
+// When(
+//    /^I save the name of collection$/,
+//
+// );
 
 When(
     /^I (add|set) "([^"]*)?" to the inputfield "([^"]*)?"$/,
