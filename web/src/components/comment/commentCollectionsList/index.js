@@ -23,8 +23,6 @@ const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
 const { getCollectionById } = commentsOperations;
 
-const NUM_PER_PAGE = 9;
-
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
   const { checkAccess, isSemaAdmin } = usePermission();
@@ -212,7 +210,7 @@ const CommentCollectionsList = () => {
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections</p>
         {view === 'grid' ? (
           <>
-            <CardList type="others" collections={otherCollections.slice(0, NUM_PER_PAGE * page) || []} />
+            <CardList type="others" collections={otherCollections.slice(0, pageSize * page) || []} />
             {/* <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth my-50">
               {otherCollections.length > NUM_PER_PAGE && NUM_PER_PAGE * page < otherCollections.length && (
                 <button onClick={viewMore} className="button has-background-gray-200 is-primary is-outlined has-text-weight-semibold is-size-6 has-text-primary" type="button">
