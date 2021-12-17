@@ -170,6 +170,7 @@ export default (app, passport) => {
         await sendEmail(message);
 
         // Add user to Intercom
+        const { firstName, lastName, avatarUrl } = user;
         await intercom.create('contacts', {
           role: 'user',
           external_id: id,
@@ -178,6 +179,7 @@ export default (app, passport) => {
           avatar: avatarUrl,
           signed_up_at: new Date(),
         });
+        return res.status(200).json();
       }
 
       return res.status(200).json();
