@@ -186,3 +186,6 @@ export const SUPPORT_VIDEO_LANGUAGES = [
     url: 'https://www.youtube.com/embed/Q7ryQIm2eYY'
   },
 ]
+
+export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
+export const NUM_PER_PAGE = 10;

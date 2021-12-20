@@ -13,6 +13,10 @@
   border: 1px solid $gray-500;
 }
 
+.select-container {
+  z-index: 10;
+}
+
 .control {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
 }
@@ -32,12 +36,12 @@
 }
 
 .badge {
+  min-width: 20px;
   height: 20px;
-  width: 20px;
   border-radius: 10px;
 }
 
 .value-container {
-  max-height: 70px;
+  max-height: 200px;
   overflow: auto !important;
 }
