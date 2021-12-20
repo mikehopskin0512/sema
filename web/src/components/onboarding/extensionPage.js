@@ -39,7 +39,7 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
     return (
       <div className="is-flex is-align-items-center mt-25">
         <FontAwesomeIcon icon={faCheckCircle} className="has-text-primary mr-10" size="lg" />
-        <p>Extension Installed</p>
+        <p>Extension Added</p>
       </div>
     );
   };
