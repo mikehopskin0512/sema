@@ -398,7 +398,9 @@ const isReply = (textarea) => {
 };
 
 export async function writeSemaToGithub(activeElement) {
-  if (activeElement) {
+  const { _id: userId, isLoggedIn } = store.getState().user;
+
+  if (isLoggedIn && activeElement) {
     let comment = {};
     let inLineMetada = {};
 
@@ -478,7 +480,6 @@ export async function writeSemaToGithub(activeElement) {
     }
 
     const { githubMetadata, lastUserSmartComment } = store.getState();
-    const { _id: userId } = store.getState().user;
 
     let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
     if (!fileExtention) {
