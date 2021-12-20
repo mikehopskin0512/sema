@@ -65,7 +65,7 @@ const Table = ({
                       { className: column.className },
                     ],
                   )}>
-                    <div className={column.isSorted && 'is-flex is-align-items-center'}>
+                    <div className={column.isSorted ? 'is-flex is-align-items-center' : ''}>
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
                       <span
@@ -86,9 +86,11 @@ const Table = ({
           <tbody {...getTableBodyProps()}>
             {
               loading ? (
-                <td colSpan={columns.length}>
-                  <div className="is-flex is-align-items-center is-justify-content-center" style={{ minHeight: 400 }}>Loading...</div>
-                </td>
+                <tr>
+                  <td colSpan={columns.length}>
+                    <div className="is-flex is-align-items-center is-justify-content-center" style={{ minHeight: 400 }}>Loading...</div>
+                  </td>
+                </tr>
               ) : (
                 data.length ? (
                   <>
@@ -111,9 +113,11 @@ const Table = ({
                     )}
                   </>
                 ) : (
-                  <td colSpan={columns.length}>
-                    {empty}
-                  </td>
+                  <tr>
+                    <td colSpan={columns.length}>
+                      {empty}
+                    </td>
+                  </tr>
                 )
               )
             }

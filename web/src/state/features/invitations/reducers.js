@@ -1,4 +1,5 @@
 import * as types from './types';
+import { unshift } from '../../../utils'
 
 const initialState = {
   isFetching: false,
@@ -19,6 +20,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
+        data: unshift(state.data, action.invitation),
         error: {},
       };
     case types.REQUEST_CREATE_INVITE_ERROR:

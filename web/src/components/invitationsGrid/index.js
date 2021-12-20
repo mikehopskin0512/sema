@@ -7,7 +7,7 @@ import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 import { CloseIcon, UndoIcon } from '../Icons';
 
-const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isLoading, fetchData, totalInvites = 0 }) => {
+const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isFetching, fetchData, totalInvites = 0 }) => {
 
   const getHeaderClass = (accessor) => {
     switch (accessor) {
@@ -149,14 +149,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         ),
       sender: (
         <>
-          <img
-            src={item.sender && item.sender.avatarUrl}
-            alt="avatar"
-            width={32}
-            height={32}
-            className="mr-10 is-radius-full"
-          />
-          {fullName(item.sender)}
+          {item.senderName}
         </>
       ),
       sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
@@ -166,7 +159,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       notes: item.notes,
       actions: item,
     })) : [];
-  }, [invites]);
+  }, [invites, isFetching]);
 
   return (
     <div>
@@ -186,7 +179,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
           perPage,
           totalCount: totalInvites,
           fetchData,
-          loading: isLoading
+          loading: isFetching
         }}
       />
     </div>
@@ -201,7 +194,7 @@ InvitationsGrid.propTypes = {
   fetchData: PropTypes.func.isRequired,
   perPage: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,
-  isLoading: PropTypes.bool.isRequired
+  isFetching: PropTypes.bool.isRequired
 };
 
 export default InvitationsGrid;

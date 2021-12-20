@@ -1,18 +1,18 @@
+import { CloseIcon } from '../../components/Icons';
+import InputField from '../../components/inputs/InputField';
+import SupportForm from '../../components/supportForm';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { isEmpty } from "lodash";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import withLayout from '../../components/layout';
 import Helmet, { InvitesHelmet } from '../../components/utils/Helmet';
 import Toaster from '../../components/toaster';
-
+import * as yup from 'yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 import { invitationsOperations } from '../../state/features/invitations';
 import { alertOperations } from '../../state/features/alerts';
-
 import styles from './invitations.module.scss';
 import InvitationsGrid from '../../components/invitationsGrid';
 import { getCharCount } from '../../utils';
@@ -25,10 +25,21 @@ const { clearAlert } = alertOperations;
 const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const Invite = () => {
+  const schema = yup.object().shape({
+    email: yup
+      .string()
+      .email('Invalid email format')
+      .required('Email is required'),
+  });
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState, reset, setError } = useForm();
+  const defaultValues = {
+    email: '',
+  }
+  const { handleSubmit, formState, reset, setError, control } = useForm({
+    defaultValues,
+    resolver: yupResolver(schema),
+  });
   const { errors } = formState;
-  // Import state vars
   const { alerts, auth, invitations } = useSelector((state) => ({
     alerts: state.alertsState,
     auth: state.authState,
@@ -41,42 +52,42 @@ const Invite = () => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const cardStyling = 'is-size-5 has-text-weight-semibold p-10 border-radius-4px'
-
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user, userVoiceToken } = auth;
-  const { data = [], isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
-
+  const { token, user } = auth;
+  const { isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
   const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0 } = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
+  const isInviteBtnDisabled = !isSemaAdmin() && inviteCount <= 0;
+  const [isSupportModalActive, setSupportModalActive] = useState(false);
 
   const onSubmit = async (data) => {
-    if (inviteCount > 0 || isSemaAdmin()) {
-      const { email } = data;
-      // Build invitation data
-      const invitation = {
-        recipient: email,
-        orgId,
-        orgName,
-        sender: userId,
-        senderName: fullName,
-        senderEmail,
-        inviteCount
-      };
-      // Send invite & reset form
-      setRecipient(email);
-      const response = await dispatch(createInviteAndHydrateUser(invitation, token));
-      analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
-      if (response.status === 201) {
-        reset();
-      } else {
-        setError("email", {
-          type: "manual",
-          message: response.data.message
-        });
-      }
-      await dispatch(getInvitesBySender({ userId, page, perPage }, token));
+    if (isInviteBtnDisabled) {
+      return;
+    }
+    // Build invitation data
+    const { email } = data;
+    const invitation = {
+      recipient: email,
+      orgId,
+      orgName,
+      sender: userId,
+      senderName: fullName,
+      senderEmail,
+      inviteCount
+    };
+    setRecipient(email);
+    const response = await dispatch(createInviteAndHydrateUser(invitation, token));
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
+    const isSent = response.status === 201;
+    if (isSent) {
+      reset(defaultValues);
+    } else {
+      setError("email", {
+        type: "manual",
+        message: response.data.message
+      });
     }
   };
 
@@ -117,6 +128,7 @@ const Invite = () => {
       }
       return error;
     }
+    return null;
   };
 
   const fetchData = useCallback(({ pageSize, pageIndex }) => {
@@ -128,6 +140,10 @@ const Invite = () => {
     <>
       <Helmet {...InvitesHelmet} />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+      <SupportForm
+        active={isSupportModalActive}
+        closeForm={() => setSupportModalActive(false)}
+      />
       <section className={clsx("hero mb-40", styles.container)}>
         <div>
           <div className="is-flex is-align-items-center is-justify-content-center mt-60 mb-30">
@@ -176,49 +192,66 @@ const Invite = () => {
           <div className="tile is-ancestor">
             <div className="tile is-parent is-vertical">
               <div className={clsx(styles['sema-tile'], styles['sema-is-child'], 'mb-0')}>
+                {isInviteBtnDisabled && (
+                  <div className="has-background-blue-50 has-text-blue-700 py-8 px-32 is-size-8">
+                    <b>
+                      You do not have any invitations left. Please contact{" "}
+                        <span
+                          onClick={() => setSupportModalActive(true)}
+                          className="has-text-blue-700 is-clickable is-underlined"
+                        >Support
+                        </span>
+                      {" "}to request more invites.
+                    </b>
+                  </div>
+                )}
                 <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className={styles.tableForm}>
+                  <div className={clsx(
+                    'has-background-gray-300 pt-16 px-12 pb-24',
+                    isInviteBtnDisabled && 'has-background-gray-200')}>
                     <div className={`is-fullwidth px-20`}>
                       <div className="field is-flex-mobile is-flex-direction-column">
-                        <label className="label">Who would you like to invite?</label>
-                        <div className={clsx("control has-icons-right is-inline-block mr-25 ", styles['invite-input'])}>
-                          <input
-                            className={clsx(
-                              `input mr-25 has-background-white`,
-                              errors?.email && 'is-danger',
-                            )}
-                            type="email"
-                            placeholder="tony@starkindustries.com"
-                            {
-                            ...register(`email`,
-                              {
-                                required: 'Email is required',
-                                pattern: {
-                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-                                  message: 'Invaild email format'
-                                },
-                              })
-                            }
-                          />
-                          <span className="icon is-small is-right is-clickable has-text-dark is-4" onClick={reset}>
-                            <FontAwesomeIcon icon={faTimes} size="sm" />
-                          </span>
-                        </div>
-                        <button
+                        <label
                           className={clsx(
-                            'button is-primary has-text-centered has-text-white',
-                            styles.formBtn
-                          )}
-                          type="submit"
-                          disabled={!isSemaAdmin() && inviteCount <= 0}
-                        >
-                          Send Invite
-                        </button>
-                        <article className={clsx("message is-danger mt-20", isEmpty(errors) && "is-hidden", styles['invite-input'])}>
-                          <div className="message-body">
-                            {renderErrorMessage()}
-                          </div>
-                        </article>
+                            'label',
+                            isInviteBtnDisabled && 'has-text-gray-600')
+                          }>Who would you like to invite?
+                        </label>
+                        <div className={clsx(
+                          'is-full-width is-flex',
+                          styles['invite-form'])
+                        }>
+                          <Controller
+                            control={control}
+                            name='email'
+                            render={({ field: { onChange, value } }) => (
+                              <InputField
+                                value={value}
+                                onChange={onChange}
+                                disabled={isInviteBtnDisabled}
+                                placeholder="tony@starkindustries.com"
+                                error={renderErrorMessage()}
+                                iconRight={isInviteBtnDisabled ?
+                                  null :
+                                  <CloseIcon
+                                    size="small"
+                                    onClick={() => reset(defaultValues)}
+                                  />
+                                }
+                              />
+                            )}
+                          />
+                          <button
+                            className={clsx(
+                              'button is-primary has-text-centered has-text-white',
+                              styles.formBtn
+                            )}
+                            type="submit"
+                            disabled={isInviteBtnDisabled || errors?.email}
+                          >
+                            Send Invite
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -234,7 +267,7 @@ const Invite = () => {
                   fetchData={fetchData}
                   page={page}
                   perPage={perPage}
-                  isLoading={isFetching}
+                  isFetching={isFetching}
                 />
               </div>
             </div>
