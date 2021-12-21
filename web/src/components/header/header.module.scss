@@ -20,3 +20,9 @@
     max-height: none !important;
   }
 }
+
+.menu-item-container {
+  border: 1px $gray-200 solid;
+  min-width: 230px;
+  background: $gray-100;
+}

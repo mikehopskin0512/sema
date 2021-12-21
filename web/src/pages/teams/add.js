@@ -62,6 +62,7 @@ const TeamEditPage = () => {
       position: 'top-right',
       duration: 4000,
     });
+    await dispatch(fetchTeamsOfUser(token));
 
     await router.push(PATHS.TEAMS);
   };

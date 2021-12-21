@@ -15,9 +15,9 @@ const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
     <components.Menu {...p} className={clsx('mt-neg5', styles.menu)} style={{ width }}>
       { isMulti && (
         <div className={clsx("mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7")} >
-          <div class="is-clickable has-text-link" onClick={selectAll}>Select all</div>
-          <div class="mx-5">|</div>
-          <div class="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+          <div className="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+          <div className="mx-5">|</div>
+          <div className="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
         </div>
       ) }
       {children}
@@ -29,7 +29,7 @@ const Control = ({ children, selectProps, ...rest }) => {
   if (!selectProps.isSearchable) {
     return null;
   }
-  return(
+  return (
     <div className={clsx('', styles.control)}>
       <div className="py-20 px-12 has-background-white border-radius-4px">
         <components.Control {...rest}>
@@ -58,7 +58,7 @@ const CustomSelect = (props) => {
   };
 
   const handleKeypress = (e) => {
-    if (e.charCode == 13) {
+    if (e.charCode === 13) {
       setMenuIsOpen(false);
     }
   };
@@ -130,8 +130,8 @@ const CustomSelect = (props) => {
   const ValueContainer = (p) => (
     <components.ValueContainer
       {...p}
-      style={{ width: 300, ...p.style }}
-      className={clsx("is-flex is-fullwidth", styles['value-container'], p.class)}
+      style={{ ...p.style }}
+      className={clsx('is-flex is-fullwidth', styles['value-container'], p.class)}
     />
   );
 
@@ -145,7 +145,7 @@ const CustomSelect = (props) => {
   }), [menuIsOpen]);
 
   return (
-    <div className="is-flex is-flex-direction-column is-align-items-stretch" ref={node} style={{ width }}>
+    <div className="is-flex is-flex-direction-column is-align-items-stretch is-relative" ref={node}>
       <button
         type="button"
         onClick={toggleMenu}
@@ -162,7 +162,7 @@ const CustomSelect = (props) => {
           {value && value.length > 0 ? (
             <span className={
               clsx(
-                'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center',
+                'is-size-8 has-text-weight-semibold has-background-primary has-text-white is-flex is-align-items-center is-justify-content-center px-5 is-radius-full',
                 styles.badge,
               )
             }>
@@ -174,8 +174,9 @@ const CustomSelect = (props) => {
           <FontAwesomeIcon icon={faSortDown} color={gray700} />
         </span>
       </button>
+
       {menuIsOpen && (
-        <div className={clsx('has-background-white is-absolute mt-50')} style={{ width: width === '100%' ? 230 : width }}>
+        <div className={clsx('has-background-white is-absolute mt-50 is-full-width', styles['select-container'])}>
           <Select
             components={{
               Control,
@@ -187,7 +188,7 @@ const CustomSelect = (props) => {
               MultiValueRemove,
               IndicatorsContainer,
               Menu: RenderMenu,
-              // ValueContainer,
+              ValueContainer,
               // Input,
             }}
             menuIsOpen={menuIsOpen}

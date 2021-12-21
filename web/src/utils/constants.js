@@ -151,6 +151,7 @@ export const FACEBOOK_VERIFICATION_META = {
 export const PATHS = {
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
+  LABELS_MANAGEMENT: '/labels-management',
   SNIPPETS: {
     _: '/snippets',
     EDIT: '/snippets/edit',
@@ -160,15 +161,22 @@ export const PATHS = {
   PROFILE: '/profile',
   OVERVIEW: '/overview',
   REPO: '/repo',
+  REPOS: '/repos',
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAM: '/team',
+  TEAM: {
+    _: '/team',
+    EDIT: '/team/edit',
+    ADD: '/team/add',
+    INVITE: '/team/invite'
+  },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
   TEAMS: '/teams',
   REPORTS: '/reports',
+  SETTINGS: '/settings',
   TEAM_CREATE: '/teams/add',
   TEAM_INVITE: '/teams/invite',
   SEMA_ADMIN: '/sema-admin',
@@ -186,3 +194,14 @@ export const SUPPORT_VIDEO_LANGUAGES = [
     url: 'https://www.youtube.com/embed/Q7ryQIm2eYY'
   },
 ]
+
+export const TEAM_MENU_HEADERS = [
+  {
+    name: 'Team Management',
+    path: '/settings',
+    pathname: `${PATHS.TEAM._}/[teamId]`,
+  },
+]
+
+export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
+export const NUM_PER_PAGE = 10;

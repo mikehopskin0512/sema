@@ -10,6 +10,26 @@
   }
 }
 
+.card-width-3c {
+  width: calc(100%/3);
+  max-width: calc(100%/3);
+  @media only screen and (max-width: 769px) {
+    min-width: 100% !important;
+    flex: 1;
+    min-height: auto !important;
+  }
+}
+
+.card-width-2c {
+  width: calc(100%/2);
+  max-width: calc(100%/2);
+  @media only screen and (max-width: 769px) {
+    min-width: 100% !important;
+    flex: 1;
+    min-height: auto !important;
+  }
+}
+
 .stat {
   width: calc(95%/4);
   @media only screen and (max-width: 769px) {

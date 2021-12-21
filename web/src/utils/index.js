@@ -4,6 +4,11 @@ import {
   SEMA_CORPORATE_TEAM_ID
 } from './constants';
 
+export const unshift = (arr, newval) => {
+  arr.unshift(newval);
+  return arr;
+};
+
 export const upsert = (arr, key, newval) => {
   const match = arr.find((item) => item._id === key);
   if (match) {

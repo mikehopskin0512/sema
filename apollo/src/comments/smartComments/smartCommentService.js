@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty, uniq, uniqBy } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -626,4 +626,12 @@ export const getTotalTagsOfComments = (smartComments = []) => {
       }
       return acc
     }, {})
+};
+
+export const _getSmartCommentersCount = (smartComments = []) => {
+  return uniqBy(smartComments, (item) => item.userId?.valueOf() || 0).length || 0;
+};
+
+export const _getPullRequests = (smartComments = []) => {
+  return uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
 };

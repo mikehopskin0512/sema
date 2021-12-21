@@ -32,16 +32,13 @@
   background-color: $gray-700;
 }
 
-.tableForm {
-  background-color: $blue-700;
-  padding: 1.5rem 0.75rem !important;
-}
-
 .formBtn {
-  // margin-left: 20px !important;
-  // color: #3582a7 !important;
-  @media only screen and (max-width: 1332px) {
+  width: fit-content;
+  margin-left: 24px;
+
+  @media only screen and (max-width: 768px) {
     margin-top: 10px;
+    margin-left: 0;
     text-align: center;
     width: 100%;
   }
@@ -83,20 +80,17 @@
 }
 
 .container {
-  // height: 100%;
   background-position: top;
   background-repeat: no-repeat;
   background-size: auto;
-  // background-image: url("/img/lines-background.png");
   @media only screen and (min-width: 769px) {
     padding: 0 10px;
   }
 }
 
-.invite-input {
-  width: 80%;
-  @media only screen and (max-width: 1332px) {
-    width: 100%;
+.invite-form {
+  @media only screen and (max-width: 768px) {
+   flex-wrap: wrap;
   }
 }
 

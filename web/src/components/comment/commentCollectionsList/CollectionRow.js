@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
-import { PATHS, DEFAULT_COLLECTION_NAME } from '../../../utils/constants';
-import { PlusIcon } from '../../../components/Icons';
+import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PlusIcon } from '../../Icons';
+import ActionMenu from '../actionMenu';
+import usePermission from '../../../hooks/usePermission';
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 
@@ -14,7 +16,8 @@ const CollectionRow = ({ data }) => {
   const router = useRouter();
   const { token } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
-  const { _id, name, description, source, author, commentsCount } = collectionData;
+  const { _id, name, description, source, author, commentsCount, isActive: isNotArchived } = collectionData;
+  const { checkAccess } = usePermission();
 
   const onChangeToggle = (e) => {
     e.stopPropagation();
@@ -27,33 +30,41 @@ const CollectionRow = ({ data }) => {
 
   const onClickAddComment = (e) => {
     e.stopPropagation();
-    router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${_id}`)
+    router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
   };
-
+  
+  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
+  
   return (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">
         <td className="py-15 has-background-white px-10" width={80}>
-          <div className="is-flex is-flex-direction-column is-justify-content-center" onClickChild>
-            <div className="field" aria-hidden onClick={onClickChild}>
-              <input
-                id={`activeSwitch-${_id}`}
-                type="checkbox"
-                onChange={onChangeToggle}
-                name={`activeSwitch-${_id}`}
-                className="switch is-rounded"
-                checked={isActive}
-              />
-              <label htmlFor={`activeSwitch-${_id}`} />
-            </div>
+          <div className="is-flex is-flex-direction-column is-justify-content-center">
+            {
+              isNotArchived ? (
+                <div className="field" aria-hidden onClick={onClickChild}>
+                  <input
+                    id={`activeSwitch-${_id}`}
+                    type="checkbox"
+                    onChange={onChangeToggle}
+                    name={`activeSwitch-${_id}`}
+                    className="switch is-rounded"
+                    checked={isActive}
+                  />
+                  <label htmlFor={`activeSwitch-${_id}`} />
+                </div>
+              ) : (
+                <p className="is-size-7 is-italic">archived</p>
+              )
+            }
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
-          <div className="is-flex is-align-items-center is-justify-content-space-between" onClick={onClickChild}>
-            <p className={"is-size-7 has-text-weight-semibold"} style={{ width: name.toLowerCase() === DEFAULT_COLLECTION_NAME && 150 }}>
+          <div className="is-flex is-align-items-center is-justify-content-space-between" style={{ width: 300 }}>
+            <p className={"is-size-7 has-text-weight-semibold"}>
               {name}
             </p>
-            {name.toLowerCase() === DEFAULT_COLLECTION_NAME && (
+            { name.toLowerCase() === DEFAULT_COLLECTION_NAME && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}
@@ -95,10 +106,15 @@ const CollectionRow = ({ data }) => {
             </p>
           </div>
         </td>
+        { canEdit && (
+          <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+            <ActionMenu collectionData={collectionData} />
+          </td>
+        ) }
       </tr>
     </Link>
   )
-}
+};
 
 CollectionRow.propTypes = {
   data: PropTypes.object.isRequired,

@@ -218,7 +218,7 @@ export const aggregateRepositories = async (externalIds, includeSmartComments, d
       })) || [];
       // Tally stats
       const repositories = repoRaw.map((repo) => {
-        const { _id, externalId = '', name = '', createdAt, smartComments = [], repoStats = { userIds: [] } } = repo;
+        const { _id, externalId = '', name = '', createdAt, updatedAt, smartComments = [], repoStats = { userIds: [] } } = repo;
         const totalSmartComments = smartComments.length || 0;
         const totalSmartCommenters = _.uniqBy(smartComments, (item) => item.userId?.valueOf() || 0).length || 0;
         const totalPullRequests = _.uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
@@ -235,6 +235,7 @@ export const aggregateRepositories = async (externalIds, includeSmartComments, d
           name,
           createdAt,
           users: repoStats.userIds,
+          updatedAt,
         };
         if (includeSmartComments) {
           data.smartcomments = smartComments;
@@ -415,6 +416,21 @@ export const getSemaUsersOfRepo = async (externalId) => {
   try {
     const users = await Users.find({ 'identities.repositories': { $elemMatch: { id: externalId } } }).exec();
     return users;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
+  try {
+    const query = Repositories.find({ 'repoStats.userIds': { $in: userIds } })
+    if (populateUsers) {
+      query.populate({ path: 'repoStats.userIds', model: 'User' });
+    }
+    const repositories = await query.sort({ updatedAt: -1 }).exec();
+    return repositories;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

@@ -107,7 +107,7 @@ export const getInvitationsBySender = async (params) => {
     }
     query.skip((page - 1) * perPage).limit(perPage)
 
-    const invites = await query.populate('sender').lean().exec();
+    const invites = await query.lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
@@ -231,7 +231,7 @@ export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
   const mappedData = invites.map((item) => ({
     Sender_Email: item.senderEmail,
-    Sender: fullName(item.sender),
+    Sender: item.senderName,
     Recipient: item.isPending ? item.recipient : fullName(item.user),
     Status: item.isPending ? 'Pending Invite' : 'Accepted',
     Invitations_Available: item.numAvailable,

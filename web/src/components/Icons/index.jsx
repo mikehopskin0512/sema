@@ -86,7 +86,7 @@ import { ReactComponent as VerifiedOutlineSvg } from './img/verified-outline.svg
 import { ReactComponent as WarningFilledSvg } from './img/warning-filled.svg';
 import { ReactComponent as WarningOutlineSvg } from './img/warning-outline.svg';
 
-const Icon = ({ size = 'medium', color = 'currentColor', style, children }) => {
+const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...props }) => {
   const sizes = {
     small: '16px',
     medium: '24px',
@@ -98,6 +98,7 @@ const Icon = ({ size = 'medium', color = 'currentColor', style, children }) => {
     height: sizes[size],
     color,
     style,
+    ...props,
   });
 };
 

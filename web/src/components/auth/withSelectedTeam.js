@@ -13,8 +13,10 @@ const withSelectedTeam = (WrappedComponent) => {
       if (!selectedTeam || !selectedTeam.team) {
         Router.push(PATHS.DASHBOARD);
         return null;
+      } else if (Router.pathname.search('teamId') === -1) {
+        Router.push(`${PATHS.TEAM}/${selectedTeam.team._id}`);
+        return null
       }
-
       return <WrappedComponent {...props} />;
     }
 

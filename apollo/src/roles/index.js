@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { version } from '../../config';
-import logger from '../../shared/logger';
+import { version } from '../config';
+import logger from '../shared/logger';
 import { getRoles } from './roleService';
 
 const route = Router();

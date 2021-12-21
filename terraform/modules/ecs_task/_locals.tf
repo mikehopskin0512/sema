@@ -87,7 +87,7 @@ locals {
   ecs_container_definitions = local.datadog_enabled ? jsonencode(concat(local.ecs_main_container, [
     {
       name         = "log_router",
-      image        = "amazon/aws-for-fluent-bit:latest"
+      image        = "public.ecr.aws/aws-observability/aws-for-fluent-bit:latest"
       essential    = true
       cpu          = 124
       memory       = 124

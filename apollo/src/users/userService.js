@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 import _ from 'lodash';
+import { semaCorporateTeamId } from '../config'
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
 import { checkIfInvited } from '../invitations/invitationService';
-import UserRole from '../roles/userRoles/userRoleModel';
-import { semaCorporateTeamId } from '../config';
+import UserRole from '../userRoles/userRoleModel';
 
 const { Types: { ObjectId } } = mongoose;
 

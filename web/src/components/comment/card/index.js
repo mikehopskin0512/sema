@@ -11,6 +11,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
+import { isSemaDefaultCollection } from '../../../utils';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -206,9 +207,13 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                               <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                                 Edit Collection
                               </a>
-                              <a className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
-                                {isNotArchived ? 'Archive' : 'Unarchive'} Collection
-                              </a>
+                              {
+                                !isSemaDefaultCollection(name) && (
+                                  <a className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                                    {isNotArchived ? 'Archive' : 'Unarchive'} Collection
+                                  </a>
+                                )
+                              }
                             </>
                           )
                         }

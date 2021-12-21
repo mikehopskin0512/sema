@@ -1,6 +1,7 @@
 /* eslint-disable no-return-assign */
 import React, { useEffect, useState } from 'react';
-import { ArrowDownIcon, ArrowUpIcon, CodeIcon } from '../Icons';
+import NoChartData from '../noChartData';
+import { ArrowDownIcon, ArrowUpIcon } from '../Icons';
 import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
@@ -196,13 +197,11 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     }
   });
 
-
   if (noData) {
     return (
-      <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
-        <CodeIcon size="large" />
-        <p className="is-size-5">No Summaries</p>
-      </div>
+      <NoChartData>
+        No summaries yet. Once you start reviewing <br /> code, you can view your stats here.
+      </NoChartData>
     );
   }
 

@@ -8,10 +8,11 @@ import styles from './reposView.module.scss';
 
 const NUM_PER_PAGE = 9;
 
-const ReposView = () => {
-  const { githubUser, repositories } = useSelector((state) => ({
+const ReposView = ({ type = 'user' }) => {
+  const { githubUser, repositories, teams } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
-    repositories: state.repositoriesState.data.repositories
+    repositories: state.repositoriesState.data.repositories,
+    teams: state.teamsState
   }));
   const [repos, setRepos] = useState({
     favorites: [],
@@ -21,7 +22,7 @@ const ReposView = () => {
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
 
   useEffect(() => {
-    if (githubUser) {
+    if (githubUser && type === 'user') {
       const favoriteRepoIds = githubUser.repositories.filter((repo) => repo.isFavorite).map((repo) => repo.id);
       const otherRepos = [...repositories];
       const favoriteRepos = remove(otherRepos, (repo) => favoriteRepoIds.includes(repo.externalId));
@@ -32,15 +33,33 @@ const ReposView = () => {
     }
   }, [repositories]);
 
-  if (!repositories.length && !repositories.isFetching) {
-    return <EmptyRepo />
+  useEffect(() => {
+    if (teams && type === 'team') {
+      const repos = teams.repos;
+      setRepos({
+        favorites: [],
+        other: repos
+      });
+    }
+  }, [teams]);
+
+  if (type === 'user') {
+    if ((!repositories.length && !repositories.isFetching)) {
+      return <EmptyRepo />
+    }
+  }
+
+  if  (type === 'team') {
+    if (!teams.isFetching && !teams.repos.length) {
+      return <EmptyRepo />
+    }
   }
 
   return ( !repositories.isFetching &&
     <>
       <div className={clsx('my-40', styles['repos-container'])}>
         <RepoList type="FAVORITES" repos={repos.favorites} />
-        <RepoList type="MY_REPOS" repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
+        <RepoList type={type === 'team' ? 'REPOS' : 'MY_REPOS'} repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
         {isMoreReposAvailable && (

@@ -13,7 +13,6 @@ import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
-import { white50 } from '../../../../styles/_colors.module.scss';
 
 const { setSelectedTeam } = authOperations;
 
@@ -26,16 +25,22 @@ const HeaderMenu = ({
     firstName = '',
     lastName = '',
     roles = [],
+    avatarUrl: userAvatar
   } = user;
   const fullName = `${firstName} ${lastName}`;
-  const { selectedTeam } = useSelector((state) => state.authState);
+  const { auth: { selectedTeam }, teams } = useSelector(
+    (state) => ({
+      auth: state.authState,
+      teams: state.teamsState
+    }),
+  );
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkTeam } = usePermission();
 
   useEffect(() => {
     const accountData = localStorage.getItem('sema_selected_team');
-    if (accountData && checkTeam(SEMA_CORPORATE_TEAM_ID)) {
+    if (accountData) {
       dispatch(setSelectedTeam(JSON.parse(accountData)));
     }
   }, [dispatch]);
@@ -65,7 +70,13 @@ const HeaderMenu = ({
     }
     return user.avatarUrl;
   }, [selectedTeam, user]);
-  
+
+  const renderTeamMenu = useMemo(() => {
+    return teams.teams.map((team) => (
+      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} />
+    ))
+  }, [teams])
+
   // TODO need to list all teams when the Teams feature is finished
   const semaTeam = useMemo(() => {
     return roles.filter(role => role.team?._id == SEMA_CORPORATE_TEAM_ID);
@@ -77,17 +88,25 @@ const HeaderMenu = ({
     router.push(PATHS.DASHBOARD);
   };
 
+  const getAvatarName = useMemo(() => {
+    let name = fullName
+    if (selectedTeam?.team?.name) {
+      name = selectedTeam.team.name;
+    }
+    return name;
+  }, [selectedTeam, user])
+
   return (
     <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
-      <div className="navbar-dropdown is-right p-0 border-radius-8px" style={{ border: `1px ${white50} solid`, minWidth: 230, background: white50 }}>
-        { semaTeam.map((role) => (
-          <TeamMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${role}`} />
-        )) }
+      {/* Menu Items */}
+      <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
+        {renderTeamMenu}
         <div className="has-background-white p-15">
           <div onClick={changeAccount}>
             <div className={clsx('is-flex is-flex-wrap-wrap is-align-items-center py-5', styles.team)}>
               <Avatar
                 name={fullName}
+                src={userAvatar || null}
                 size="35"
                 round
                 textSizeRatio={2.5}
@@ -101,20 +120,18 @@ const HeaderMenu = ({
             </div>
           </div>
         </div>
-        {/*TODO to enable this after Team feature is merged*/}
-        {/*<Link href={PATHS.TEAM}>*/}
-        {/*  <a*/}
-        {/*    aria-hidden="true"*/}
-        {/*    type="button"*/}
-        {/*    className="navbar-item has-text-weight-semibold px-15 py-20"*/}
-        {/*    onClick={toggleUserMenu}*/}
-        {/*  >*/}
-        {/*    <span>Create a Team</span>*/}
-        {/*    <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>*/}
-        {/*  </a>*/}
-        {/*</Link>*/}
-        <hr className={clsx('navbar-divider m-0', styles.divider)} />
-
+        <hr className={clsx("navbar-divider m-0", styles.divider)} />
+        <div className="has-background-white p-15">
+          <Link href={`${PATHS.TEAM.ADD}`}>
+            <span className="is-line-height-1 is-flex is-align-items-center">
+              Create a Team
+              <span className='has-text-blue-600 is-size-8 has-text-weight-semibold ml-5'>
+                (NEW)
+              </span>
+            </span>
+          </Link>
+        </div>
+        <hr className={clsx("navbar-divider m-0", styles.divider)} />
         <Link href={PATHS.PROFILE}>
           <span
             role="button"
@@ -141,7 +158,7 @@ const HeaderMenu = ({
       <a aria-hidden="true" className="navbar-link is-arrowless mx-20" onClick={toggleUserMenu} ref={userMenu}>
         <div className="is-flex is-align-items-center">
           <Avatar
-            name={fullName}
+            name={getAvatarName}
             src={avatarUrl || null}
             size="30"
             round

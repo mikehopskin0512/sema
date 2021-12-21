@@ -1,22 +1,25 @@
 import {
   addTeam,
-  getTeams,
   getTeamMembers,
+  getTeamMetrics,
+  getTeamRepos,
+  getTeams,
   postInviteUsersToTeam,
+  updateTeam,
 } from './api';
 import * as types from './types';
 
-const fetchTeamsRequest = () => ({
-  type: types.FETCH_TEAMS,
+const requestFetchTeamsOfUser = () => ({
+  type: types.REQUEST_FETCH_TEAMS_OF_USER,
 });
 
-const fetchTeamsSuccess = (teams) => ({
-  type: types.FETCH_TEAMS_SUCCESS,
+const requestFetchTeamsOfUserSuccess = (teams) => ({
+  type: types.REQUEST_FETCH_TEAMS_OF_USER_SUCCESS,
   teams,
 });
 
-const fetchTeamsError = (errors) => ({
-  type: types.FETCH_TEAMS_ERROR,
+const requestFetchTeamsOfUserError = (errors) => ({
+  type: types.REQUEST_FETCH_TEAMS_OF_USER_ERROR,
   errors,
 });
 
@@ -33,17 +36,44 @@ const createTeamError = (errors) => ({
   errors,
 });
 
-const fetchTeamMembersRequest = () => ({
-  type: types.FETCH_TEAM_MEMBERS,
+const requestFetchTeamMembers = () => ({
+  type: types.REQUEST_FETCH_TEAM_MEMBERS
 });
 
-const fetchTeamMembersSuccess = (data) => ({
-  type: types.FETCH_TEAM_MEMBERS_SUCCESS,
-  data,
+const requestFetchTeamMembersSuccess = (members, membersCount) => ({
+  type: types.REQUEST_FETCH_TEAM_MEMBERS_SUCCESS,
+  members,
+  membersCount,
 });
 
-const fetchTeamMembersError = () => ({
-  type: types.FETCH_TEAM_MEMBERS_ERROR,
+const requestFetchTeamMembersError = () => ({
+  type: types.REQUEST_FETCH_TEAM_MEMBERS_ERROR
+});
+
+const requestFetchTeamMetrics = () => ({
+  type: types.REQUEST_FETCH_TEAM_METRICS
+});
+
+const requestFetchTeamMetricsSuccess = (metrics) => ({
+  type: types.REQUEST_FETCH_TEAM_METRICS_SUCCESS,
+  metrics
+});
+
+const requestFetchTeamMetricsError = () => ({
+  type: types.REQUEST_FETCH_TEAM_METRICS_ERROR
+});
+
+const requestFetchTeamRepos = () => ({
+  type: types.REQUEST_FETCH_TEAM_REPOS
+});
+
+const requestFetchTeamReposSuccess = (repos) => ({
+  type: types.REQUEST_FETCH_TEAM_REPOS_SUCCESS,
+  repos
+});
+
+const requestFetchTeamReposError = () => ({
+  type: types.REQUEST_FETCH_TEAM_REPOS_ERROR
 });
 
 const inviteTeamUsersRequest = () => ({
@@ -58,16 +88,29 @@ const inviteTeamUsersError = () => ({
   type: types.INVITE_TEAM_USERS_ERROR,
 });
 
-export const fetchTeams = (token) => async (dispatch) => {
+const requestEditTeam = () => ({
+  type: types.REQUEST_EDIT_TEAM
+});
+
+const requestEditTeamSuccess = () => ({
+  type: types.REQUEST_EDIT_TEAM_SUCCESS
+});
+
+const requestEditTeamError = (errors) => ({
+  type: types.REQUEST_EDIT_TEAM_ERROR,
+  errors,
+});
+
+export const fetchTeamsOfUser = (token) => async (dispatch) => {
   try {
-    dispatch(fetchTeamsRequest());
+    dispatch(requestFetchTeamsOfUser());
     const payload = await getTeams(token);
     const { data } = payload;
-    dispatch(fetchTeamsSuccess(data));
+    dispatch(requestFetchTeamsOfUserSuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(fetchTeamsError(errMessage));
+    dispatch(requestFetchTeamsOfUserError(errMessage));
   }
 };
 
@@ -85,18 +128,59 @@ export const createTeam = (body, token) => async (dispatch) => {
   }
 };
 
-export const fetchTeamMembers = (id, params, token) => async (dispatch) => {
+export const editTeam = (body, token) => async (dispatch) => {
   try {
-    dispatch(fetchTeamMembersRequest());
-    const { data } = await getTeamMembers(id, params, token);
-    dispatch(fetchTeamMembersSuccess(data));
+    dispatch(requestEditTeam());
+    const payload = await updateTeam(body, token);
+    const { data } = payload;
+    dispatch(requestEditTeamSuccess(data));
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(fetchTeamMembersError(errMessage));
+    dispatch(requestEditTeamError(errMessage));
   }
 };
+
+export const fetchTeamMembers = (id, params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamMembers());
+    const { data } = await getTeamMembers(id, params, token);
+    dispatch(requestFetchTeamMembersSuccess(data?.members, data?.totalCount));
+    return data;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamMembersError(errMessage));
+  }
+};
+
+
+export const fetchTeamMetrics = (teamId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamMetrics());
+    const payload = await getTeamMetrics(teamId, token);
+    const { data } = payload;
+    dispatch(requestFetchTeamMetricsSuccess(data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamMetricsError(errMessage));
+  }
+}
+
+export const fetchTeamRepos = (teamId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamRepos());
+    const payload = await getTeamRepos(teamId, token);
+    const { data } = payload;
+    dispatch(requestFetchTeamReposSuccess(data));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamReposError(errMessage));
+  }
+}
 
 export const inviteTeamUsers = (teamId, body, token) => async (dispatch) => {
   try {

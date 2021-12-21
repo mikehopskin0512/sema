@@ -45,7 +45,7 @@ export default (app, passport) => {
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
     if (userInvitation) {
       if (userInvitation.sender.toString() === invitation.sender) {
-        return res.status(401).send({ message: 'You’ve already invited this user. Either revoke or resend the invitation to continue.' });
+        return res.status(401).send({ message: `You've already invited this user. Either revoke or resend the invitation to continue.` });
       }
       return res.status(401).send({ message: `${invitation.recipient} has already been invited by another user.` });
     }
@@ -88,6 +88,7 @@ export default (app, passport) => {
       });
 
       return res.status(201).send({
+        invitation: newInvitation,
         user: updatedUser,
         response: 'Invitation sent successfully',
       });
