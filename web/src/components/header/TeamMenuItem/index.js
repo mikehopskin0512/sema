@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Avatar from 'react-avatar';
@@ -15,23 +15,21 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkTeam, checkAccess } = usePermission();
-  
+
   const isSemaCorporateTeam = checkTeam(SEMA_CORPORATE_TEAM_ID);
 
   const goToTeamDetailPage = async () => {
-    if (!isSemaCorporateTeam) return;
-    await router.push(`${PATHS.TEAMS}/${role?.team?._id}`);
+    await router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
   };
-  
+
   const handleClick = () => {
-    if (!isSemaCorporateTeam) return;
     dispatch(setSelectedTeam(role));
   };
 
   return (
     <>
       <div className="has-background-white p-15" onClick={handleClick}>
-        <div>
+        <div onClick={goToTeamDetailPage}>
           <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.team)}>
             <Avatar
               name={role?.team?.name || "Team"}
@@ -49,7 +47,7 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
           </div>
         </div>
         {
-          checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+          role.team._id === SEMA_CORPORATE_TEAM_ID && checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
             <a
               className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
               href={`${PATHS.SEMA_ADMIN}/users`}
@@ -59,22 +57,33 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
             </a>
           )
         }
-        <div className="is-flex">
-          {/* TODO Hide this until Team management feature is merged */}
-          {/*<a*/}
-          {/*  className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"*/}
-          {/*  href="#"*/}
-          {/*  style={{ textDecoration: 'none' }}*/}
-          {/*>*/}
-          {/*  Settings*/}
-          {/*</a>*/}
+        <div className="is-flex is-align-items-center">
           <a
             className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
+            href={`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}`}
+            style={{ textDecoration: 'none' }}
+            onClick={toggleUserMenu}
+          >
+            Settings
+          </a>
+          <a
+            className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small mr-20 ml-5 p-5"
             style={{ textDecoration: 'none' }}
             onClick={goToTeamDetailPage}
           >
             Team
           </a>
+          {/* TODO: Activate when Label Managements with teams is working. */}
+          {/* {checkAccess({name: role?.team?.name}, ViewAdmin) && (
+            <a
+              className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
+              href="/labels-management"
+              style={{ textDecoration: 'none' }}
+              onClick={toggleUserMenu}
+            >
+              Manage Labels
+            </a>
+          )} */}
         </div>
       </div>
       <hr className={clsx('navbar-divider m-0', styles.divider)} />

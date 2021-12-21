@@ -151,6 +151,22 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
   height: 50px;
 }
 
+.sema-wide-container {
+  max-width: 1500px;
+  flex-grow: 1;
+  margin: 0 auto;
+  position: relative;
+  width: auto;
+}
+
+.is-bordered {
+  border: 1px solid $gray-400;
+}
+
+.is-circular {
+  border-radius: 25px;
+}
+
 .is-mirrored {
   transform: scale(-1, 1);
 }

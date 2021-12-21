@@ -15,7 +15,9 @@ import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 import { suggest } from '../../comments/suggestedComments/commentSuggestions';
 import Reaction from '../../comments/reaction/reactionModel';
-import UserRole from '../../roles/userRoles/userRoleModel';
+import UserRole from '../../userRoles/userRoleModel';
+import Team from '../../teams/teamModel';
+import Role from '../../roles/roleModel';
 
 export const listUsers = async (params, listAll = false) => {
   const { page, perPage, search, status } = params;

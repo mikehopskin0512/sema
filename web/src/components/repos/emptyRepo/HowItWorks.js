@@ -24,7 +24,7 @@ const HowItWorks = () => {
           Learn more about <Link href={`${SEMA_FAQ_URL}#what-do-summaries-mean`}><span className="has-text-primary is-clickable is-underlined">Summaries and Tags</span></Link>
         </span>
       </div>
-      <div class="is-divider" />
+      <div className="is-divider" />
       <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
         <p className="is-size-7 mr-10">Video Language</p>
         <Select
@@ -43,7 +43,7 @@ const HowItWorks = () => {
         />
       </div>
       <div className={styles['video-container']}>
-        <iframe src={language.url} key={language.url} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe src={language.url} key={language.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       </div>
       <div className="has-text-centered is-flex is-flex-direction-column is-align-items-center mt-50">
         <p>Have more questions or want to get a personal demo?</p>

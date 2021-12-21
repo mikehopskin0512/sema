@@ -1,11 +1,16 @@
 import { Router } from 'express';
 import { version } from '../config';
+import { aggregateRepositories } from '../repositories/repositoryService';
 import logger from '../shared/logger';
 import {
   getTeams,
   createTeam,
   getTeamMembers,
   addTeamMembers,
+  getTeamMetrics,
+  getTeamRepos,
+  getTeamsByUser,
+  updateTeam
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
 import { semaCorporateTeamId } from '../config';
@@ -18,7 +23,7 @@ export default (app, passport) => {
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { _id } = req.user;
-      const teams = await getTeams(_id);
+      const teams = await getTeamsByUser(_id);
 
       return res.status(200).send(teams);
     } catch (error) {
@@ -37,6 +42,43 @@ export default (app, passport) => {
       });
 
       return res.status(200).send(team);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.put('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const teamData = req.body
+      const team = await updateTeam(teamData);
+      return res.status(200).send(team);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
+  route.get('/:teamId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+        const { teamId } = req.params;
+      const repos = await getTeamRepos(teamId);
+      const repoExternalIds = repos.map((repo) => {
+        return repo.externalId;
+      });
+      const detailedRepos = await aggregateRepositories(repoExternalIds);
+      return res.status(200).send(detailedRepos);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:teamId/metrics', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { teamId } = req.params;
+      const metrics = await getTeamMetrics(teamId);
+      return res.status(200).send(metrics);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

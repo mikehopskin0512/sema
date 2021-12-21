@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { orgDomain, semaCorporateTeamId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
-import UserRole from '../roles/userRoles/userRoleModel';
+import UserRole from '../userRoles/userRoleModel';
 
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
@@ -50,6 +50,7 @@ export const getTokenData = async (user) => {
     .populate('team')
     .populate('role');
 
+  // user fields on jwt.
   const tokenData = {
     _id: user._id,
     firstName: user.firstName,
@@ -58,6 +59,7 @@ export const getTokenData = async (user) => {
     isVerified: user.isVerified,
     isWaitlist: user.isWaitlist,
     isSemaAdmin: user.isSemaAdmin,
+    lastLogin: user.lastLogin,
     roles,
   };
 

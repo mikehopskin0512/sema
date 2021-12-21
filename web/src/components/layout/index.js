@@ -10,7 +10,7 @@ import ExtensionStatus from '../extensionStatus';
 import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
 import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
 
-const widescreenPages = [`${PATHS.REPO}/[repoId]`, PATHS.SUPPORT, PATHS.LOGIN];
+const widescreenPages = [`${PATHS.REPO}/[repoId]`, PATHS.SUPPORT, PATHS.LOGIN, `${PATHS.TEAM._}/[teamId]/${PATHS.DASHBOARD}`, `${PATHS.TEAM._}/[teamId]/settings`];
 const noHeaderPages = [PATHS.LOGIN];
 
 const withLayout = (Page) => (props) => {

@@ -74,7 +74,22 @@ export const TeamManagementHelmet = {
   description: null,
 };
 
+export const TeamDashboardHelmet = {
+  title: 'Team Dashboard',
+  description: null,
+};
+
+export const TeamReposHelmet = {
+  title: 'Team Repository',
+  description: null,
+};
+
 export const TeamInviteHelmet = {
   title: 'Invite Team',
+  description: null,
+};
+
+export const TeamUpdateHelmet = {
+  title: 'Update Team',
   description: null,
 };

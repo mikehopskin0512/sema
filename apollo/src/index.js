@@ -18,8 +18,8 @@ import adminUsers from './admin/users';
 import searchQueries from './admin/searchQueries';
 import support from './support';
 import team from './teams';
-import roles from './roles/roles';
-import userRoles from './roles/userRoles';
+import roles from './roles';
+import userRoles from './userRoles';
 
 function attachRoutes(app, passport) {
   analysis(app, passport);

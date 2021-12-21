@@ -31,14 +31,15 @@ $custom-colors: (
   "gray-500": $gray-500,
   "gray-600": $gray-600,
   "gray-700": $gray-700,
+  "gray-800": $gray-800,
   "gray-900": $gray-900,
   "black-900": $black-900,
   "black-950": $black-950,
+  "blue-50": $blue-50,
+  "blue-300": $blue-300,
+  "blue-500": $blue-500,
   "blue-600": $blue-600,
   "blue-700": $blue-700,
-  "blue-500": $blue-500,
-  "blue-300": $blue-300,
-  "blue-50": $blue-50,
   "white-50": $white-50,
   "white-0": $white-0,
 );
@@ -113,7 +114,6 @@ $input-disabled-color: $gray-500;
 $input-disabled-border-color: $gray-500;
 $input-focus-border-color: $gray-700;
 $input-focus-box-shadow-size: 0;
-
 
 $family-sans-serif: "Inter", sans-serif;
 $family-monospace: sans-serif;

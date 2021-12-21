@@ -4,4 +4,5 @@ export const permissionsMap = {
   '/sema-admin/reports': ['canViewAdmin'],
   '/sema-admin/invites': ['canViewAdmin'],
   '/teams/invite': ['canEditUsers'],
+  '/labels-management': ['canEditUsers'],
 };

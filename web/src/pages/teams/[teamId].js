@@ -32,6 +32,7 @@ const TeamManagementPage = () => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
+  const [userRole, setUserRole] = useState({});
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -97,6 +98,25 @@ const TeamManagementPage = () => {
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   }, [dispatch, page, perPage, token, user]);
 
+  useEffect(() => {
+    if (user.roles.length) {
+      const activeRole = _.find(user.roles, function (o) {
+        return o.team._id === teamId
+      });
+      if (activeRole) {
+        setUserRole(activeRole)
+      }
+    }
+  }, [user]);
+
+  const menus = [
+    {
+      name: 'Team Management',
+      path: '/settings',
+      pathname: `${PATHS.TEAM._}/[teamId]`,
+    },
+  ];
+
   const columns = useMemo(() => [
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
@@ -111,15 +131,17 @@ const TeamManagementPage = () => {
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Email</div>,
+      isVisible: false,
       accessor: 'email',
       className: 'pl-20 pr-50 py-10 has-background-gray-100',
     },
-    ...!canModifyRoles && canViewUserRoles ? [{
+    {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'roleName',
+      toggleHidden: true,
       className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
-    }] : [],
-    ...canModifyRoles ? [{
+    },
+    {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'role',
       className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
@@ -133,24 +155,38 @@ const TeamManagementPage = () => {
           onChange={(newValue) => handleChangeRole(newValue, row)}
         />
       ),
-    }, {
+    }, 
+    {
       Header: '',
       accessor: 'actions',
       className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
       Cell: ({ row }) => <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>,
-    }] : [],
-  ], [canModifyRoles, canViewUserRoles, rolesOptions, handleChangeRole, onRemoveMember]);
+    },
+  ], [rolesOptions, handleChangeRole, onRemoveMember]);
 
   const fetchData = useCallback(({ pageIndex, pageSize }) => {
     setPage(pageIndex + 1);
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
 
+  const initialState = useMemo(() => {
+    let defaultHidden = []
+    if (canModifyRoles) {
+      defaultHidden = ['roleName']
+    } else if (canViewUserRoles) {
+      defaultHidden = ['role', 'actions']
+    }
+    const initState = {
+      hiddenColumns: [...defaultHidden]
+    }
+    return initState
+  }, [canModifyRoles, canViewUserRoles, rolesOptions, handleChangeRole, onRemoveMember])
+
   return (
     <div className="has-background-gray-100 hero">
       <Helmet {...TeamManagementHelmet} />
       <div className="hero-body pb-300">
-        <PageHeader />
+        <PageHeader userRole={userRole} menus={menus} />
         <div className="content-container px-20">
           <div className={styles['table-wrapper']}>
             <Table
@@ -163,6 +199,7 @@ const TeamManagementPage = () => {
                 totalCount: membersCount,
                 fetchData,
               }}
+              initialState={initialState}
             />
           </div>
         </div>
