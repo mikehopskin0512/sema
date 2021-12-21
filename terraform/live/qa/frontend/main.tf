@@ -90,3 +90,11 @@ module "apollo" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 }
+
+module "auto_restore_backup_lambda" {
+  source = "../../../modules/auto_restore_backups_lambda"
+
+  name_prefix = "${var.name_prefix}-backups-auto-restore"
+  vpc_id      = data.aws_vpc.this.id
+  subnet_ids  = data.aws_subnet_ids.private.ids
+}

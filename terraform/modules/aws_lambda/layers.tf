@@ -4,4 +4,8 @@ resource "aws_lambda_layer_version" "packages" {
   layer_name = local.lambda_package_layer
 
   compatible_runtimes = [var.runtime]
+
+  depends_on = [
+    aws_s3_bucket.packages
+  ]
 }
