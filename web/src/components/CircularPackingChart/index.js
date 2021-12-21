@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { find, isEmpty, round } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
+import NoChartData from '../noChartData';
 import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
 import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
-import { CodeIcon } from '../Icons';
 import { white0 } from '../../../styles/_colors.module.scss';
 
 const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
@@ -84,10 +84,9 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
 
   if (noData) {
     return (
-      <div className="is-flex is-flex-direction-column is-justify-content-center is-full-height is-align-items-center is-flex-wrap-wrap">
-        <CodeIcon size="large" />
-        <p className="is-size-5 ">No Tags</p>
-      </div>
+      <NoChartData>
+        No tags yet. Once you start reviewing <br /> code, you can view your stats here.
+      </NoChartData>
     );
   }
 
