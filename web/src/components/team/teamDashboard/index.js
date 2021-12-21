@@ -41,8 +41,8 @@ const TeamDashboard = ({ metrics, members, repos }) => {
         </div>
         <div className="">
           <div className="mt-20 pb-10 columns m-0">
-            {teamMetrics.map(({ title, value, key }) => {
-              return <MetricsCard key={key} title={title} value={value} />
+            {teamMetrics.map(({ title, value, key, tooltip }) => {
+              return <MetricsCard key={key} title={title} value={value} tooltip={tooltip}/>
             })}
           </div>
         </div>
