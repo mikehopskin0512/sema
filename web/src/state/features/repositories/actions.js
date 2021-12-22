@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import * as types from './types';
-import { 
+import {
   getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getDashboardRepositories, getRepositoryOverview
 } from './api';
 import { alertOperations } from '../alerts';
@@ -248,9 +248,7 @@ export const fetchRepoDashboard = (externalIds, token) => async (dispatch) => {
   try {
     dispatch(requestFetchDashboardRepos());
     const { data: { repositories = [] } } = await getDashboardRepositories({ externalIds: JSON.stringify(externalIds) }, token);
-    if (Array.isArray(repositories)) {
-      dispatch(requestFetchDashboardReposSuccess(repositories));
-    }
+    dispatch(requestFetchDashboardReposSuccess(repositories));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

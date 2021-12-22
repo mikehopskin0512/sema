@@ -136,6 +136,11 @@ export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 
+export const SEMA_FAQ_SLUGS = {
+  LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
+  SUMMARIES: 'what-do-summaries-mean',
+};
+
 export const noContactUs = ['/login', '/register/[[...param]]'];
 
 export const SEARCH_CATEGORY_TITLES = {

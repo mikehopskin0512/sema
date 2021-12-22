@@ -98,15 +98,9 @@ export const fireAmplitudeEvent = (event, opts) => {
 };
 
 export const initAmplitude = ({
-  // Temp fix for new jwt bug
-  _id, isVerified, isWaitlist, isLoggedIn, roles = [{}],
-  // _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = [{}],
+  _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = [{}],
 }) => {
   if (AMPLITUDE_API_KEY) {
-    // Temp fix for new jwt bug
-    const firstName = 'TempFName';
-    const lastName = 'TempLName';
-    const username = 'TempUsername';
     const [{ role = null, team = null }] = roles;
     amplitude.getInstance().init(AMPLITUDE_API_KEY, username);
     amplitude.getInstance().setUserProperties({
