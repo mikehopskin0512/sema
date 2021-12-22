@@ -12,7 +12,7 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR, SEMA_FAQ_URL } from '../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getDateSub } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { blue600 } from '../../../styles/_colors.module.scss';
@@ -235,7 +235,7 @@ const PersonalInsights = () => {
                 <span className="ml-8">
                   Only you can see this page.
                 </span>
-                <a href={SEMA_FAQ_URL}>
+                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`}>
                   <span className="is-underlined ml-5">
                     Learn More
                   </span>
