@@ -33,11 +33,12 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
-    repositories: state.repositoriesState,
+    repositories: state.repositoriesState.data.repositories,
   }));
-  const isUserReposLoaded = repositories.data.repositories.length;
   const { token, user } = auth;
   const { identities, isOnboarded = null } = user;
+  const userRepos = identities.length ? identities[0].repositories : [];
+  const isLoaded = !userRepos.length || (userRepos.length && repositories.length);
 
   const logOnboardingAcitvity = (page) => {
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_ONBOARDING_WIZARD, { url: `/onboardingModal/page=${page}` });
@@ -85,12 +86,11 @@ const Dashboard = () => {
   };
 
   useAuthEffect(() => {
-    const userRepos = identities.length ? identities[0].repositories : [];
     if (userRepos.length) {
       const externalIds = userRepos.map((repo) => repo.id);
       dispatch(fetchRepoDashboard(externalIds, token));
     }
-  }, [auth]);
+  }, [userRepos]);
 
   useEffect(() => {
     (async () => {
@@ -137,7 +137,7 @@ const Dashboard = () => {
 
   return (
     <>
-      {repositories.isFetching && !isUserReposLoaded ? (
+      {!isLoaded ? (
         <LoaderScreen />
       ) : (
         <div>
@@ -145,6 +145,7 @@ const Dashboard = () => {
           <ReposView />
         </div>
       )}
+      {/* TODO: we have to put almost all the props to modal  */}
       <OnboardingModal
         isModalActive={isOnboardingModalActive}
         toggleModalActive={toggleOnboardingModal}

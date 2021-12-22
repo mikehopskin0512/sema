@@ -4,9 +4,8 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, getSemaUsersOfRepo, aggregateRepositories
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories,
 } from './repositoryService';
-import { getPullRequestsByExternalId, getSmartCommentersByExternalId, getSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 
 const route = Router();
 
@@ -86,7 +85,7 @@ export default (app, passport) => {
       });
     } catch (error) {
       logger.error(error);
-      return res.status(error.statusCode).send(error);
+      return res.status(error?.statusCode || 500).send(error);
     }
   });
 

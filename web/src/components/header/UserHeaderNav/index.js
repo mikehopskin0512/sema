@@ -15,7 +15,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
   const renderDesktopNav = () => {
     return (
       <>
-        <Link href="/">
+        <Link href={PATHS.DASHBOARD}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
             Repos
           </a>
@@ -31,12 +31,12 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
           </a>
         </Link>
         {/* TODO: Activate if we ever need Community Engineering Guides again */}
-        {/* 
+        {/*
         <Link href="/guides">
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes('/guides') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
             Community Eng Guides
           </a>
-        </Link> 
+        </Link>
         */}
         <Link href={PATHS.INVITATIONS}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
@@ -61,12 +61,12 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
           )
         }
         {/* TODO: Activate if we ever need Support form */}
-        {/* 
+        {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
           <a aria-hidden="true" className="navbar-item has-text-black-950 mr-15" onClick={toggleHamburger}>
             Support
           </a>
-        </div> 
+        </div>
         */}
       </>
     )
@@ -75,7 +75,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
   const renderMobileNav = () => {
     return (
       <>
-        <Link href="/">
+        <Link href={PATHS.DASHBOARD}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Repos
           </a>
@@ -91,12 +91,12 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
           </a>
         </Link>
         {/* TODO: Activate if we ever need Community Engineering Guides again */}
-        {/* 
+        {/*
         <Link href="/guides">
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Community Engineering Guides
           </a>
-        </Link> 
+        </Link>
         */}
         <Link href={PATHS.INVITATIONS}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
@@ -119,7 +119,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
           )
         }
         {/* TODO: Activate if we ever need Support Forms */}
-        {/* 
+        {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Support
