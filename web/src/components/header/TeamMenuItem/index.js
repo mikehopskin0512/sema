@@ -57,7 +57,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
           </div>
         </div>
         {
-          role.team._id === SEMA_CORPORATE_TEAM_ID && checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+          checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
             <a
               className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
               href={`${PATHS.SEMA_ADMIN}/users`}
