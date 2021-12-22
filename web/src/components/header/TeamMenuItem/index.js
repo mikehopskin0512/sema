@@ -11,7 +11,7 @@ import usePermission from '../../../hooks/usePermission';
 
 const { setSelectedTeam } = authOperations;
 
-const TeamMenuItem = ({ role, toggleUserMenu }) => {
+const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkTeam, checkAccess } = usePermission();
@@ -21,15 +21,17 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
   const goToTeamDetailPage = async () => {
     await router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
   };
-
-  const handleClick = () => {
+  
+  const handleOnTeamClick = () => {
     dispatch(setSelectedTeam(role));
   };
 
+  const isFirstTeam = (index) => index === 0;
+
   return (
     <>
-      <div className="has-background-white p-15" onClick={handleClick}>
-        <div onClick={goToTeamDetailPage}>
+      <div className={`${isFirstTeam(index) ? 'has-background-white' : ''} p-15`} onClick={handleOnTeamClick}>
+        <div>
           <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.team)}>
             <Avatar
               name={role?.team?.name || "Team"}
@@ -46,17 +48,6 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
             </div>
           </div>
         </div>
-        {
-          role.team._id === SEMA_CORPORATE_TEAM_ID && checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
-            <a
-              className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
-              href={`${PATHS.SEMA_ADMIN}/users`}
-              style={{ textDecoration: 'none' }}
-            >
-              Admin Panel
-            </a>
-          )
-        }
         <div className="is-flex is-align-items-center">
           <a
             className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
@@ -86,7 +77,7 @@ const TeamMenuItem = ({ role, toggleUserMenu }) => {
           )} */}
         </div>
       </div>
-      <hr className={clsx('navbar-divider m-0', styles.divider)} />
+      <hr className="navbar-divider m-0 has-background-gray-300" />
     </>
   )
 };
