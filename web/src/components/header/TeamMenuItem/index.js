@@ -3,27 +3,34 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { useDispatch } from 'react-redux';
 import { authOperations } from '../../../state/features/auth';
 import { useRouter } from 'next/router';
 import usePermission from '../../../hooks/usePermission';
+import { setProfileViewMode } from '../../../state/features/auth/actions';
 
 const { setSelectedTeam } = authOperations;
 
 const TeamMenuItem = ({ role, toggleUserMenu }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkTeam, checkAccess } = usePermission();
-
-  const isSemaCorporateTeam = checkTeam(SEMA_CORPORATE_TEAM_ID);
+  const { checkAccess } = usePermission();
 
   const goToTeamDetailPage = async () => {
     await router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
   };
 
   const handleClick = () => {
+    let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
+    if (role?.team?._id === SEMA_CORPORATE_TEAM_ID) {
+      viewMode = PROFILE_VIEW_MODE.SEMA_TEAM_VIEW;
+    } else if (!!role?.team?._id) {
+      viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
+    }
+    
     dispatch(setSelectedTeam(role));
+    dispatch(setProfileViewMode(viewMode));
   };
 
   return (

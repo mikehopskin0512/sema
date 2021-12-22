@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
 import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 
-const { setSelectedTeam } = authOperations;
+const { setSelectedTeam, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
   handleLogout,
@@ -82,8 +82,9 @@ const HeaderMenu = ({
     return roles.filter(role => role.team?._id == SEMA_CORPORATE_TEAM_ID);
   }, [roles]);
 
-  const changeAccount = () => {
+  const onSwitchPersonalAccount = () => {
     dispatch(setSelectedTeam({}));
+    dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     toggleUserMenu(false);
     router.push(PATHS.DASHBOARD);
   };
@@ -102,7 +103,7 @@ const HeaderMenu = ({
       <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
         {renderTeamMenu}
         <div className="has-background-white p-15">
-          <div onClick={changeAccount}>
+          <div onClick={onSwitchPersonalAccount}>
             <div className={clsx('is-flex is-flex-wrap-wrap is-align-items-center py-5', styles.team)}>
               <Avatar
                 name={fullName}

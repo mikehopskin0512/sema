@@ -203,5 +203,11 @@ export const TEAM_MENU_HEADERS = [
   },
 ]
 
+export const PROFILE_VIEW_MODE = {
+  INDIVIDUAL_VIEW: 'individual_view',
+  TEAM_VIEW: 'team_view',
+  SEMA_TEAM_VIEW: 'sema_team_view'
+}
+
 export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
 export const NUM_PER_PAGE = 10;
