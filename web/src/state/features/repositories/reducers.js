@@ -63,9 +63,6 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: {
-        ...state.data,
-      },
       error: action.errors,
     };
   case types.REQUEST_FETCH_REPO:
@@ -243,10 +240,6 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      data: {
-        ...state.data,
-        repositories: [],
-      },
       error: action.errors,
     };
   default:

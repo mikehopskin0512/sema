@@ -36,7 +36,7 @@ const HeaderMenu = ({
   );
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkTeam } = usePermission();
+  const { checkTeam, checkAccess } = usePermission();
 
   useEffect(() => {
     const accountData = localStorage.getItem('sema_selected_team');
@@ -72,10 +72,10 @@ const HeaderMenu = ({
   }, [selectedTeam, user]);
 
   const renderTeamMenu = useMemo(() => {
-    return teams.teams.map((team) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} />
+    return teams.teams.map((team, index) => (
+      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index}/>
     ))
-  }, [teams])
+  }, [teams]);
 
   // TODO need to list all teams when the Teams feature is finished
   const semaTeam = useMemo(() => {
@@ -101,7 +101,7 @@ const HeaderMenu = ({
       {/* Menu Items */}
       <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
         {renderTeamMenu}
-        <div className="has-background-white p-15">
+        <div className={`p-15 ${teams.teams[0] ? '' : 'has-background-white'}`}>
           <div onClick={changeAccount}>
             <div className={clsx('is-flex is-flex-wrap-wrap is-align-items-center py-5', styles.team)}>
               <Avatar
@@ -120,18 +120,35 @@ const HeaderMenu = ({
             </div>
           </div>
         </div>
-        <hr className={clsx("navbar-divider m-0", styles.divider)} />
-        <div className="has-background-white p-15">
-          <Link href={`${PATHS.TEAM.ADD}`}>
-            <span className="is-line-height-1 is-flex is-align-items-center">
-              Create a Team
-              <span className='has-text-blue-600 is-size-8 has-text-weight-semibold ml-5'>
-                (NEW)
-              </span>
-            </span>
-          </Link>
-        </div>
-        <hr className={clsx("navbar-divider m-0", styles.divider)} />
+        <hr className="navbar-divider m-0 has-background-gray-300" />
+        <Link href={PATHS.TEAM_CREATE}>
+         <a
+           aria-hidden="true"
+           type="button"
+           className="navbar-item px-15 py-20"
+           onClick={toggleUserMenu}
+         >
+           <span>Create a Team</span>
+           <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+         </a>
+        </Link>
+        <hr className="navbar-divider m-0 has-background-gray-300" />
+
+        {
+          checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+            <>
+        <Link href={`${PATHS.SEMA_ADMIN}/users`}>
+          <span
+            role="button"
+            className="navbar-item px-15 py-20"
+            onClick={toggleUserMenu}
+            aria-hidden="true"
+          >
+            Admin Panel
+          </span>
+        </Link>
+        <hr className="navbar-divider m-0 has-background-gray-300" />
+        </>)}
         <Link href={PATHS.PROFILE}>
           <span
             role="button"
@@ -142,11 +159,10 @@ const HeaderMenu = ({
             Profile
           </span>
         </Link>
-        <hr className={clsx("navbar-divider m-0", styles.divider)} />
+        <hr className="navbar-divider m-0 has-background-gray-300" />
         <span
           role="button"
-          className="navbar-item has-text-red px-15 py-20"
-          style={{ cursor: 'pointer' }}
+          className="navbar-item has-text-red-500 px-15 py-20"
           onClick={handleLogout}
           tabIndex={0}
           aria-hidden="true"

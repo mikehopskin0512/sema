@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './emptyRepo.module.scss';
 import SupportForm from '../../supportForm';
 import Select from '../../activity/select';
-import { SUPPORT_VIDEO_LANGUAGES, SEMA_FAQ_URL } from '../../../utils/constants';
+import { SUPPORT_VIDEO_LANGUAGES, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../utils/constants';
 
 const HowItWorks = () => {
   const [language, setLanguage] = useState(SUPPORT_VIDEO_LANGUAGES[0]);
@@ -21,7 +21,7 @@ const HowItWorks = () => {
         <p>Sema supercharges your GitHub snippets with snippets, summaries, and tags.</p>
         <img src="/img/no-repos.svg" className="mt-60" />
         <span className="has-text-weight-semibold">
-          Learn more about <Link href={`${SEMA_FAQ_URL}#what-do-summaries-mean`}><span className="has-text-primary is-clickable is-underlined">Summaries and Tags</span></Link>
+          Learn more about <Link href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.SUMMARIES}`}><span className="has-text-primary is-clickable is-underlined">Summaries and Tags</span></Link>
         </span>
       </div>
       <div className="is-divider" />
