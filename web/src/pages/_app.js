@@ -49,10 +49,7 @@ function Layout({ Component, pageProps }) {
   useEffect(() => {
     const accountData = localStorage.getItem('sema_selected_team');
     const selectedTeam = accountData ? JSON.parse(accountData) : null;
-    if (selectedTeam?.team?._id === SEMA_CORPORATE_TEAM_ID) {
-      // sema team view
-      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.SEMA_TEAM_VIEW));
-    } else if (!!selectedTeam?.team?._id) {
+    if (!!selectedTeam?.team?._id) {
       // team view mode
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
     } else {

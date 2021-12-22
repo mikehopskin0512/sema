@@ -22,7 +22,7 @@ function usePermission() {
   
   const isSemaAdmin = () => {
     // need to check first if current view mode is Sema Corporate Team
-    if (profileViewMode !== PROFILE_VIEW_MODE.SEMA_TEAM_VIEW) return false;
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
     const semaAdminRole = selectedTeam?.team?._id == SEMA_CORPORATE_TEAM_ID && selectedTeam?.role?.name === 'Admin';
     return !!semaAdminRole;
   }

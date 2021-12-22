@@ -23,9 +23,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
 
   const handleOnTeamClick = () => {
     let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
-    if (role?.team?._id === SEMA_CORPORATE_TEAM_ID) {
-      viewMode = PROFILE_VIEW_MODE.SEMA_TEAM_VIEW;
-    } else if (!!role?.team?._id) {
+    if (!!role?.team?._id) {
       viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
     }
     
