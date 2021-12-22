@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import EditSuggestedCommentForm from '../editSuggestedCommentForm';
-import { makeTagsList, parseRelatedLinks } from '../../../utils';
+import SnippetForm from '../snippetForm';
 import { tagsOperations } from '../../../state/features/tags';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { PATHS } from '../../../utils/constants';
-import { useValidateCommentForm } from '../../../components/comment/helpers';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { addTags } from '../../../utils';
-import { gray400 } from '../../../../styles/_colors.module.scss';
 
 const { fetchTagList } = tagsOperations;
 const { bulkUpdateSuggestedComments, getAllSuggestComments } = suggestCommentsOperations;
@@ -54,82 +49,25 @@ const EditSuggestedCommentPage = ({ commentIds }) => {
     });
   }, [suggestedComments]);
 
-  const onChange = (value) => {
-    setComment({
-      ...comment,
-      ...value,
-    });
-  };
 
   const onCancel = async () => {
     await router.back();
   };
-  const { isValid, errors, validate } = useValidateCommentForm(comment);
-  const update = async () => {
-    const comments = [{
-      ...comment,
-      source: {
-        name: comment.sourceName,
-        url: comment.sourceLink,
-      },
-      tags: makeTagsList([...comment.languages, ...comment.guides]),
-      relatedLinks: comment.relatedLinks ? parseRelatedLinks(comment.relatedLinks.toString()) : '',
-    }];
-    await dispatch(bulkUpdateSuggestedComments({ comments }, token));
-    await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
-  };
-  const onSubmit = async () => {
-    validate();
-    if (!isValid) {
-      return;
-    }
+  const onSubmit = async (comments) => {
     try {
-      await update();
+      await dispatch(bulkUpdateSuggestedComments({ comments }, token));
+      await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
     } catch (e) {
       // TODO: add a notification / after BE error fixes
     }
   };
-
   return (
-    <>
-      <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
-        <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-            Edit Snippet
-          </p>
-        </div>
-        <div className="is-flex">
-          <button
-            className="button is-small is-outlined is-primary border-radius-4px mr-10"
-            type="button"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={onSubmit}
-          >
-            <FontAwesomeIcon icon={faCheck} className="mr-10" />
-            Save Snippet
-          </button>
-        </div>
-      </div>
-      <div className="px-10">
-        <div
-          style={{ borderBottom: `1px solid ${gray400}` }}
-          className="mb-50 pb-50"
-        >
-          <EditSuggestedCommentForm
-            comment={comment}
-            onChange={onChange}
-            collection={collection}
-            errors={errors}
-          />
-        </div>
-      </div>
-    </>
+    <SnippetForm
+      comment={comment}
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      collection={collection}
+    />
   );
 };
 

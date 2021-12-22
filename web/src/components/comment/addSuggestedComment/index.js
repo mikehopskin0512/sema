@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { CheckOnlineIcon } from '../../Icons';
-import EditSuggestedCommentForm from '../editSuggestedCommentForm';
+import SnippetForm from '../snippetForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
-import { makeTagsList, parseRelatedLinks } from '../../../utils';
 import { PATHS } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { useValidateCommentForm } from '../helpers';
-import { gray300 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { bulkCreateSuggestedComments } = suggestCommentsOperations;
@@ -48,89 +44,33 @@ const AddSuggestedComment = () => {
     if (collection) {
       setComment({
         ...comment,
-        sourceName: collection.source && collection.source.name,
+        sourceName: collection.source?.name,
         author: collection.author,
-        languages: collection.tags ? collection.tags.filter((item) => item.type === 'language') : [],
-        guides: collection.tags ? collection.tags.filter((item) => item.type !== 'language') : [],
+        languages: collection.tags?.filter((item) => item.type === 'language') || [],
+        guides: collection.tags?.filter((item) => item.type !== 'language') || [],
       });
     }
   }, [collection]);
-  const { isValid, errors, validate } = useValidateCommentForm(comment);
   const onCancel = async () => {
     await router.back();
   };
-  const onChange = (value) => {
-    setComment({
-      ...comment,
-      ...value,
-    });
-  };
-  const save = async () => {
-    const comments = [{
-      ...comment,
-      source: {
-        name: comment.sourceName,
-        url: comment.sourceLink,
-      },
-      tags: makeTagsList([...comment.languages, ...comment.guides]),
-      relatedLinks: parseRelatedLinks(comment.relatedLinks),
-    }];
-    await dispatch(bulkCreateSuggestedComments({ comments, collectionId }, token));
-    await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
-  };
-  const onSubmit = async () => {
-    validate();
-    if (!isValid) {
-      return;
-    }
+
+  const onSubmit = async (comments) => {
     try {
-      await save();
+      await dispatch(bulkCreateSuggestedComments({ comments, collectionId }, token));
+      await router.push(`${PATHS.SNIPPETS._}?cid=${collection._id}`);
     } catch (e) {
-      // TODO: add a notification / after BE error fixes
+      // TODO: add an error notificaiton
     }
   };
   return (
-    <>
-      <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
-        <div className="is-flex is-flex-wrap-wrap is-align-items-center">
-          <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-            Create New Snippet
-          </p>
-        </div>
-        <div className="is-flex">
-          <button
-            className="button is-small is-outlined is-primary border-radius-4px mr-10"
-            type="button"
-            onClick={onCancel}
-          >
-            Cancel
-          </button>
-          <button
-            className="button is-small is-primary border-radius-4px"
-            type="button"
-            onClick={onSubmit}
-          >
-            <CheckOnlineIcon size="small" />
-            <span className="ml-8">
-              Save New Snippet
-            </span>
-          </button>
-        </div>
-      </div>
-      <div className="px-10">
-        <div
-          style={{ borderBottom: `1px solid ${gray300}` }}
-          className="mb-25 pb-25"
-        >
-          <EditSuggestedCommentForm
-            comment={comment}
-            onChange={onChange}
-            collection={collection}
-            errors={errors}
-          />
-        </div>
-      </div>
-    </>
+    <SnippetForm
+      isNewSnippet
+      comment={comment}
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      collection={collection}
+    />
   );
 };
 
