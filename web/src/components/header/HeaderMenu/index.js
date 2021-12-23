@@ -36,14 +36,7 @@ const HeaderMenu = ({
   );
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkTeam, checkAccess } = usePermission();
-
-  useEffect(() => {
-    const accountData = localStorage.getItem('sema_selected_team');
-    if (accountData) {
-      dispatch(setSelectedTeam(JSON.parse(accountData)));
-    }
-  }, [dispatch]);
+  const { checkAccess } = usePermission();
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -65,8 +58,8 @@ const HeaderMenu = ({
   useOutsideClick(userMenu, onClickOutside);
 
   const avatarUrl = useMemo(() => {
-    if (selectedTeam.team) {
-      return selectedTeam.team.avatarUrl;
+    if (selectedTeam?.team) {
+      return selectedTeam?.team?.avatarUrl;
     }
     return user.avatarUrl;
   }, [selectedTeam, user]);
@@ -76,11 +69,6 @@ const HeaderMenu = ({
       <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index}/>
     ))
   }, [teams]);
-
-  // TODO need to list all teams when the Teams feature is finished
-  const semaTeam = useMemo(() => {
-    return roles.filter(role => role.team?._id == SEMA_CORPORATE_TEAM_ID);
-  }, [roles]);
 
   const onSwitchPersonalAccount = () => {
     dispatch(setSelectedTeam({}));
@@ -92,7 +80,7 @@ const HeaderMenu = ({
   const getAvatarName = useMemo(() => {
     let name = fullName
     if (selectedTeam?.team?.name) {
-      name = selectedTeam.team.name;
+      name = selectedTeam?.team.name;
     }
     return name;
   }, [selectedTeam, user])
@@ -183,7 +171,7 @@ const HeaderMenu = ({
           />
           {
             selectedTeam?.team?.name && (
-              <div className="ml-10 has-text-black">{selectedTeam.team.name}</div>
+              <div className="ml-10 has-text-black">{selectedTeam?.team?.name}</div>
             )
           }
           <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />

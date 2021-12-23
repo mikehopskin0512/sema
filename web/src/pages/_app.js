@@ -57,7 +57,7 @@ function Layout({ Component, pageProps }) {
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     
-    dispatch(setSelectedTeam(selectedTeam));
+    dispatch(setSelectedTeam(selectedTeam || {}));
   }, []);
 
   return (
