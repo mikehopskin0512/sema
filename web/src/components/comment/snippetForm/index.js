@@ -22,7 +22,8 @@ const SnippetForm = ({ comment, collection, onSubmit, onCancel, isNewSnippet = f
   useEffect(() => {
     reset(comment)
   }, [comment])
-  const mapCommentsToSubmit = () => {
+  
+  const mapCommentsToSubmit = (data) => {
     const comments = [{
       ...data,
       source: {
