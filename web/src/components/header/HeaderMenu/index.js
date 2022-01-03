@@ -10,11 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
 import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 
-const { setSelectedTeam } = authOperations;
+const { setSelectedTeam, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
   handleLogout,
@@ -36,14 +36,7 @@ const HeaderMenu = ({
   );
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkTeam, checkAccess } = usePermission();
-
-  useEffect(() => {
-    const accountData = localStorage.getItem('sema_selected_team');
-    if (accountData) {
-      dispatch(setSelectedTeam(JSON.parse(accountData)));
-    }
-  }, [dispatch]);
+  const { checkAccess } = usePermission();
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -65,8 +58,8 @@ const HeaderMenu = ({
   useOutsideClick(userMenu, onClickOutside);
 
   const avatarUrl = useMemo(() => {
-    if (selectedTeam.team) {
-      return selectedTeam.team.avatarUrl;
+    if (selectedTeam?.team) {
+      return selectedTeam?.team?.avatarUrl;
     }
     return user.avatarUrl;
   }, [selectedTeam, user]);
@@ -77,13 +70,9 @@ const HeaderMenu = ({
     ))
   }, [teams]);
 
-  // TODO need to list all teams when the Teams feature is finished
-  const semaTeam = useMemo(() => {
-    return roles.filter(role => role.team?._id == SEMA_CORPORATE_TEAM_ID);
-  }, [roles]);
-
-  const changeAccount = () => {
+  const onSwitchPersonalAccount = () => {
     dispatch(setSelectedTeam({}));
+    dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     toggleUserMenu(false);
     router.push(PATHS.DASHBOARD);
   };
@@ -91,7 +80,7 @@ const HeaderMenu = ({
   const getAvatarName = useMemo(() => {
     let name = fullName
     if (selectedTeam?.team?.name) {
-      name = selectedTeam.team.name;
+      name = selectedTeam?.team.name;
     }
     return name;
   }, [selectedTeam, user])
@@ -102,7 +91,7 @@ const HeaderMenu = ({
       <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
         {renderTeamMenu}
         <div className={`p-15 ${teams.teams[0] ? '' : 'has-background-white'}`}>
-          <div onClick={changeAccount}>
+          <div onClick={onSwitchPersonalAccount}>
             <div className={clsx('is-flex is-flex-wrap-wrap is-align-items-center py-5', styles.team)}>
               <Avatar
                 name={fullName}
@@ -182,7 +171,7 @@ const HeaderMenu = ({
           />
           {
             selectedTeam?.team?.name && (
-              <div className="ml-10 has-text-black">{selectedTeam.team.name}</div>
+              <div className="ml-10 has-text-black">{selectedTeam?.team?.name}</div>
             )
           }
           <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
