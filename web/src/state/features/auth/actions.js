@@ -273,20 +273,10 @@ export const setSelectedTeamSuccess = (selectedTeam) => ({
   selectedTeam,
 });
 
-export const setProfileViewModeSuccess = (profileViewMode) => ({
-  type: types.SET_PROFILE_VIEW_MODE,
-  profileViewMode,
-})
-
 export const setSelectedTeam = (selectedTeam) => (dispatch) => {
   localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
   dispatch(setSelectedTeamSuccess(selectedTeam));
 };
-
-export const setProfileViewMode = (profileViewMode) => (dispatch) => {
-  localStorage.setItem('sema_profile_view_mode', profileViewMode);
-  dispatch(setProfileViewModeSuccess(profileViewMode));
-}
 
 export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {

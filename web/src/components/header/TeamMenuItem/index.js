@@ -3,33 +3,27 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import Avatar from 'react-avatar';
 import styles from '../header.module.scss';
-import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { useDispatch } from 'react-redux';
 import { authOperations } from '../../../state/features/auth';
 import { useRouter } from 'next/router';
 import usePermission from '../../../hooks/usePermission';
-import { setProfileViewMode } from '../../../state/features/auth/actions';
 
 const { setSelectedTeam } = authOperations;
 
 const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkAccess } = usePermission();
+  const { checkTeam, checkAccess } = usePermission();
+
+  const isSemaCorporateTeam = checkTeam(SEMA_CORPORATE_TEAM_ID);
 
   const goToTeamDetailPage = async () => {
     await router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
   };
-
+  
   const handleOnTeamClick = () => {
-    let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
-    if (!!role?.team?._id) {
-      viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
-    }
-    
     dispatch(setSelectedTeam(role));
-    dispatch(setProfileViewMode(viewMode));
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
   };
 
   const isFirstTeam = (index) => index === 0;
@@ -54,17 +48,6 @@ const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
             </div>
           </div>
         </div>
-        {
-          checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') && (
-            <a
-              className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
-              href={`${PATHS.SEMA_ADMIN}/users`}
-              style={{ textDecoration: 'none' }}
-            >
-              Admin Panel
-            </a>
-          )
-        }
         <div className="is-flex is-align-items-center">
           <a
             className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
