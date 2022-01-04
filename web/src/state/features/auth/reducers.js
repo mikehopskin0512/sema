@@ -1,6 +1,5 @@
 import * as types from './types';
 import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types';
-import { PROFILE_VIEW_MODE } from '../../../utils/constants';
 
 const initialState = {
   isFetching: false,
@@ -9,7 +8,6 @@ const initialState = {
   user: {},
   userVoiceToken: null,
   selectedTeam: {},
-  profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW
 };
 
 const reducer = (state = initialState, action) => {
@@ -195,11 +193,6 @@ const reducer = (state = initialState, action) => {
       ...state,
       selectedTeam: action.selectedTeam,
     };
-  case types.SET_PROFILE_VIEW_MODE:
-    return {
-      ...state,
-      profileViewMode: action.profileViewMode,
-    }
   default:
     return state;
   }
