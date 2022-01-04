@@ -1,5 +1,5 @@
 /* eslint react/no-danger: 0, max-len: 0 */
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -20,7 +20,7 @@ const withLayout = (Page) => (props) => {
   const isWideScreen = widescreenPages.includes(pathname);
   const hasNoHeader = noHeaderPages.includes(pathname);
 
-  return(
+  return (
     <div className="Layout">
       {/* Styling for full height width */}
       <style global jsx>{`

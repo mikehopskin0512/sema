@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './extensionStatus.module.scss';
 import { CodeIcon } from '../Icons';
@@ -9,9 +10,8 @@ import { PATHS } from '../../utils/constants';
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
 const ExtensionStatus = () => {
+  const [isActive, setActive] = useLocalStorage('sema_extension_active', 'true');
   const { route } = useRouter();
-  const [extensionStatus, setExtensionInstalled] = useState(true);
-
   const buttonAction = () => {
     window.open(EXTENSION_LINK, '_blank');
   };
@@ -24,29 +24,27 @@ const ExtensionStatus = () => {
         hidden = false;
       }
     });
-    return hidden;
+    return hidden || isActive;
   };
-
   useEffect(() => {
-    let interval;
-    interval = setInterval(async () => {
-      if (extensionStatus) {
-        clearInterval(interval);
-      }
-      const result = await isExtensionInstalled();
-      setExtensionInstalled(result);
-    }, 5000);
-  }, [extensionStatus]);
-
-  useEffect(() => {
-    (async () => {
-      const result = await isExtensionInstalled();
-      setExtensionInstalled(result);
-    })();
+    let unmounted = false;
+    function checkExtensionStatus() {
+      isExtensionInstalled().then((res) => {
+        if (!unmounted) {
+          setActive(res);
+        }
+      });
+    }
+    checkExtensionStatus();
+    const interval = setInterval(checkExtensionStatus, 5000);
+    return () => {
+      unmounted = true;
+      clearInterval(interval);
+    };
   }, []);
 
   return (
-    <div className={clsx(styles['status-container'], isHidden() && 'is-hidden', extensionStatus && 'is-hidden')}>
+    <div className={clsx(styles['status-container'], isHidden() && 'is-hidden')}>
       <div className="hero content-container">
         <div className="hero-body py-15">
           <div className="is-flex m-0 is-align-items-center is-flex-wrap-wrap is-justify-content-space-between">
