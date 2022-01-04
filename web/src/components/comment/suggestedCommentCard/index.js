@@ -62,14 +62,11 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
               </>
             )}
             { isEmpty(source?.name) ? null : (
-              <p className="has-text-black-950 is-size-6"><b>Source: </b> {source?.name}</p>
+              <a href={source?.url} target="_blank" rel="noreferrer">
+                <button className="button is-text p-0 has-text-black-950" type="button">{source?.name}</button>
+              </a>
             ) }
           </div>
-          { isEmpty(source?.name) ? null : (
-            <a href={source?.url} target="_blank" rel="noreferrer">
-              <button className="button is-text is-small p-0 has-text-black-950" type="button">{source?.name}</button>
-            </a>
-          )}
         </div>
       ) }
       <p className={clsx("has-text-black-950 is-size-6 my-20", styles['comment-container'])}>

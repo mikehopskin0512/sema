@@ -146,20 +146,33 @@ const searchIndex = async (searchQuery) => {
     const results = await SuggestedComment.aggregate([
       {
         $search: {
-          index: 'suggestedComments',
-          text: {
-            query: searchQuery,
-            path: { wildcard: '*', },
-            fuzzy: { maxEdits: 2, prefixLength: 3 },
+          index: 'suggestedCommentsAutocomplete',
+          compound: {
+            should: [
+              {
+                autocomplete: {
+                  query: searchQuery,
+                  path: 'title',
+                  fuzzy: { maxEdits: 2, prefixLength: 3 },
+                },
+              },
+              {
+                autocomplete: {
+                  query: searchQuery,
+                  path: 'comment',
+                  fuzzy: { maxEdits: 2, prefixLength: 3 },
+                },
+              },
+            ],
           },
-        },
+        }
       },
       {
         $group: {
           _id: 'searchResults',
-          searchResults: { $push: '$_id' }
-        }
-      }
+          searchResults: { $push: '$_id' },
+        },
+      },
     ]);
     const isNoResults = !results.length
     return isNoResults ? [] : results[0].searchResults;

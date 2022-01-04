@@ -460,9 +460,12 @@ function rootReducer(state = initialState, action) {
       const { token, isLoggedIn } = payload;
       let newUser;
       if (token) {
-        const { _id, isVerified, isWaitlist } = jwt_decode(token);
+        const { _id, firstName, lastName, username, isVerified, isWaitlist } = jwt_decode(token);
         newUser = {
           _id,
+          firstName,
+          lastName,
+          username,
           isVerified,
           isWaitlist,
           isLoggedIn,
