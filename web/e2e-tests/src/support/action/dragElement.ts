@@ -1,4 +1,5 @@
 import { Selector } from 'webdriverio';
+import webElements = require('../sema_web_elements.json');
 
 /**
  * Drag a element to a given destination
@@ -6,6 +7,12 @@ import { Selector } from 'webdriverio';
  * @param  {String}   destination The selector for the destination element
  */
 export default async (selector: Selector, destination: Selector) => {
+    /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+    const parsedSelector = webElements[selector];
+
     const target = await $(destination);
-    await $(selector).dragAndDrop(target);
+    await $(parsedSelector).dragAndDrop(target);
 };

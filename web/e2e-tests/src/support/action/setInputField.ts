@@ -1,6 +1,7 @@
 import type { Selector } from 'webdriverio';
 
 import checkIfElementExists from '../lib/checkIfElementExists';
+import webElements = require('../sema_web_elements.json');
 
 /**
  * Set the value of the given input field to a new value or add a value to the
@@ -11,6 +12,12 @@ import checkIfElementExists from '../lib/checkIfElementExists';
  */
 export default async (method: string, value: string, selector: Selector) => {
     /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+     const parsedSelector = webElements[selector];
+
+    /**
      * The command to perform on the browser object (addValue or setValue)
      * @type {String}
      */
@@ -18,11 +25,11 @@ export default async (method: string, value: string, selector: Selector) => {
 
     let checkValue = value;
 
-    await checkIfElementExists(selector, false, 1);
+    await checkIfElementExists(parsedSelector, false, 1);
 
     if (!value) {
         checkValue = '';
     }
 
-    await $(selector)[command](checkValue);
+    await $(parsedSelector)[command](checkValue);
 };

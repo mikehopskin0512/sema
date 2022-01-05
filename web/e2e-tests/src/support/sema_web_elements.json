@@ -1,0 +1,11 @@
+{
+    "########### GLOBAL LOCAOTORS #############" : "All the locators that are common for all pages",
+    
+
+    "########## LOGIN LOCATORS ###############" : "",
+    "signinWithGithubBtn" : "span=Sign in with GitHub",
+    "loginInput"          : "#login_field",
+    "passwordInput"       : "#password",
+    "signinBtn"           : ".js-sign-in-button",
+    ""                    : ""
+}

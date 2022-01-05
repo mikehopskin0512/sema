@@ -1,5 +1,7 @@
 import { Selector } from 'webdriverio';
 
+import webElements = require('../sema_web_elements.json');
+
 /**
  * Select an option of a select element
  * @param  {String}   selectionType  Type of method to select by (name, value or
@@ -48,5 +50,11 @@ export default async (
         }
     }
 
-    await $(selector)[command](...commandArguments as [string, string]);
+    /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+     const parsedSelector = webElements[selector];
+
+    await $(parsedSelector)[command](...commandArguments as [string, string]);
 };
