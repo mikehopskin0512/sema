@@ -1,5 +1,7 @@
 import { Selector } from 'webdriverio';
 
+import webElements = require('../sema_web_elements.json');
+
 /**
  * Select a option from a select element by it's index
  * @param  {String}   index      The index of the option
@@ -14,10 +16,16 @@ export default async (
     selector: Selector
 ) => {
     /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+     const parsedSelector = webElements[selector];
+
+    /**
      * The index of the option to select
      * @type {Int}
      */
     const optionIndex = parseInt(index, 10);
 
-    await $(selector).selectByIndex(optionIndex);
+    await $(parsedSelector).selectByIndex(optionIndex);
 };

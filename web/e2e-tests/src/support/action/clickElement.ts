@@ -1,6 +1,7 @@
 import { Selector } from 'webdriverio';
 
 import checkIfElementExists from '../lib/checkIfElementExists';
+import webElements = require('../sema_web_elements.json');
 
 /**
  * Perform an click action on the given element
@@ -14,10 +15,16 @@ export default async (
     selector: Selector
 ) => {
     /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+    const parsedSelector = webElements[selector];
+
+    /**
      * Element to perform the action on
      * @type {String}
      */
-    const selector2 = (type === 'link') ? `=${selector}` : selector;
+    const selector2 = (type === 'link') ? `=${parsedSelector}` : parsedSelector;
 
     /**
      * The method to call on the browser object

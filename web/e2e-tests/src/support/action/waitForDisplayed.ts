@@ -1,5 +1,7 @@
 import type { Selector } from 'webdriverio';
 
+import webElements = require('../sema_web_elements.json');
+
 /**
  * Wait for the given element to become visible
  * @param  {String}   selector      Element selector
@@ -14,7 +16,13 @@ export default async (selector: Selector, falseCase: any) => {
      */
     const ms = 100000;
 
-    await $(selector).waitForDisplayed({
+    /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+     const parsedSelector = webElements[selector];
+
+    await $(parsedSelector).waitForDisplayed({
         timeout: ms,
         reverse: Boolean(falseCase),
     });

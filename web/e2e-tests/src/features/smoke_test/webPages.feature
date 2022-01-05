@@ -28,7 +28,7 @@ Feature: To navigate tab menus
         And I expect that the title is "Personal Insights"
         And I expect that element ".columns.is-vcentered" does exist
 
-    @andriy  @C1725  @snippets
+    @andriy  @C1725  @snippets_1
     Scenario: Navigate to Suggested Snippets menu
         When I click on the button ".navbar-menu a[href='/snippets'].has-text-black-950"
         And I pause for 3000ms

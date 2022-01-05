@@ -1,29 +1,5 @@
 {
-  "author": "Christian Bromann <christian@saucelabs.com>",
-  "license": "MIT",
-  "name": "cucumber-boilerplate",
-  "version": "2.0.0",
-  "description": "Boilerplate project to run WebdriverIO tests with Cucumber",
-  "homepage": "https://github.com/webdriverio/cucumber-boilerplate",
-  "contributors": [
-    "W. van Kuipers <github@pwnd.nl>"
-  ],
-  "repository": {
-    "type": "git",
-    "getUrl": "https://github.com/webdriverio/cucumber-boilerplate.git"
-  },
-  "bugs": {
-    "getUrl": "https://github.com/webdriverio/cucumber-boilerplate/issues"
-  },
-  "keywords": [
-    "wdio",
-    "webdriver",
-    "webdriverio",
-    "cucumber",
-    "test",
-    "boilerplate",
-    "selenium"
-  ],
+  "name": "e2e_testing",   
   "scripts": {
     "clean": "read -p \"Are you sure you want to clean the project? [y/n] \" REPLY; if [[ $REPLY =~ ^[Yy]$ ]]; then rm -R .git .github demo-app test .codeclimate.yml .travis.yml jest.json wdio.BUILD.conf.js src/features/**; fi",
     "test": "run-s test:*",

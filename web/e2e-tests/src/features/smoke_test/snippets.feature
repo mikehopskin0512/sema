@@ -4,13 +4,13 @@ Feature: User is able to interact with snippets properly
     Scenario: Login successfully
         Given I delete all cookies
         And   I open the url "https://app.semasoftware.com/login"
-        And   I click on the button "span=Sign in with GitHub"
+        And   I click on the button "signinWithGithubBtn"
         And   I pause for 2000ms
-        And   I clear the inputfield "#login_field"
-        When  I add "semacodereviewtester1000" to the inputfield "#login_field"
-        And   I clear the inputfield "#password"
-        And   I add "f1$#Uc7Bvb3x" to the inputfield "#password"        
-        And   I click on the button ".js-sign-in-button"
+        And   I clear the inputfield "loginInput"
+        When  I add "semacodereviewtester1000" to the inputfield "loginInput"
+        And   I clear the inputfield "passwordInput"
+        And   I add "f1$#Uc7Bvb3x" to the inputfield "passwordInput"        
+        And   I click on the button "signinBtn"
         And   I pause for 5000ms
         Then  I expect that the url is "/dashboard"
         And   I pause for 3000ms
