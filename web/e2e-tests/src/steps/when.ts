@@ -15,6 +15,8 @@ import handleModal from '../support/action/handleModal';
 import selectOptionByIndex from '../support/action/selectOptionByIndex';
 import selectOption from '../support/action/selectOption';
 import login from '../support/action/login';
+import {getElement} from "webdriverio/build/utils/getElementObject";
+import getElementText from '../support/action/getElementText';
 
 /**
  * Abstracting some steps by functionality. 
@@ -92,6 +94,7 @@ When(
 
 When(
     /^I select the (\d+)(st|nd|rd|th) option for element "([^"]*)?"$/,
+    // @ts-ignore
     selectOptionByIndex
 );
 
@@ -99,3 +102,8 @@ When(
     /^I select the option with the (name|value|text) "([^"]*)?" for element "([^"]*)?"$/,
     selectOption
 );
+
+When(
+    /^I save the name of collection "([^"]*)?"$/,
+    getElementText
+)

@@ -14,13 +14,13 @@ export default async (method: string, selector: Selector) => {
      */
     const command = (method === 'get') ? 'getValue' : 'getParam';
 
-    let checkValue = value;
+    // let checkValue = value;
 
     await checkIfElementExists(selector, false, 1);
 
-    if (!value) {
-        checkValue = '';
-    }
-
-    // await $(selector)[command](checkValue);
+    // if (!value) {
+    //     checkValue = '';
+    // }
+    //
+    // // await $(selector)[command](checkValue);
 };

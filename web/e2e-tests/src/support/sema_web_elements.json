@@ -1,11 +1,65 @@
 {
-    "########### GLOBAL LOCAOTORS #############" : "All the locators that are common for all pages",
-    
+    "########### GLOBAL LOCATORS #############" : "All the locators that are common for all pages",
+    "dashboard"                     : ".navbar-brand",
+    "reposTab"                      : ".navbar-menu a[href='/dashboard'].has-text-black-950",
+    "personalInsightsTab"           : ".navbar-menu a[href='/personal-insights'].has-text-black-950",
+    "snippetsTab"                   : ".navbar-menu a[href='/snippets'].has-text-black-950",
+    "invitationsTab"                : ".navbar-menu a[href='/invitations'].has-text-black-950",
+    "supportTab"                    : ".navbar-menu a[href='/support'].has-text-black-950",
+    "labelsManagementTab"           : ".navbar-menu a[href='/labels-management'].has-text-black-950",
+
+    "userLogo1"                     : "//div[contains(@class,'has-dropdown') and contains(@class,'navbar-item')]//div[@class=' sb-avatar sb-avatar--src']",
+    "userLogo"                      : ".navbar-menu>.navbar-end",
+    "signOutBtn"                    : "//span[not(contains(@class,'is-hidden-desktop'))  and text()='Sign out']",
+    "confirmationModal"             : "//div[@class='modal-content px-10']/div",
+    "confirmBtn"                    : "//button[normalize-space()='Yes, log me out']",
 
     "########## LOGIN LOCATORS ###############" : "",
-    "signinWithGithubBtn" : "span=Sign in with GitHub",
-    "loginInput"          : "#login_field",
-    "passwordInput"       : "#password",
-    "signinBtn"           : ".js-sign-in-button",
-    ""                    : ""
+    "signInWithGithubBtn"           : "span=Sign in with GitHub",
+    "loginInput"                    : "#login_field",
+    "passwordInput"                 : "#password",
+    "signinBtn"                     : ".js-sign-in-button",
+    ""                              : "",
+
+    "########### REPOS LOCATORS ###############" : "",
+    "reposContainer"                : "div.reposView_repos-container__2oRmp",
+
+    "########## SNIPPETS LOCATORS #############" : "",
+    "collectionArea"                : "//div[@id='collectionBody']",
+    "firstInActiveCollectionName"   : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]/../..//p[contains(@class,'pr-10')]",
+    "firstActiveCollectionName"     : "//div[contains(@class,'is-clickable')][1]//input[@checked]/../..//p[contains(@class,'pr-10')]",
+    "firstInActiveCollectionToggle" : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]",
+    "firstActiveCollectionToggle"   : "//div[contains(@class,'is-clickable')][1]//input[@checked]",
+    "mySnippetsCollection"          : "//p[text()='My Snippets']",
+    "testSnippet"                   : "//p[text()='Test Snippet']",
+
+    "addNewSnippetBtn"              : "//div[contains(@class,'card_add-button__2DgQw') and not(contains(@class, 'is-ghost'))]",
+    "newSnippetTitleInput"          : "//label[text()='Title']/following-sibling::div/input",
+    "newSnippetBodyInput"           : "//label[text()='Body']/following-sibling::div/textarea",
+    "newSnippetSourceNameInput"     : "//label[text()='Source Name']/following-sibling::div/input",
+    "newSnippetSourceLinkInput"     : "//label[text()='Source Link']/following-sibling::div/input",
+    "saveNewSnippetBtn"             : "//button/span[text()='Save New Snippet']",
+
+    "addNewCollectionBtn"           : "//a[@href='/snippets/add']/button",
+    "newCollectionTitleInput"       : "//input[@name='name']",
+    "newCollectionBodyInput"        : "//textarea[@name='description']",
+    "newCollectionSourceNameInput"  : "//input[@name='sourceName']",
+    "newCollectionSourceLinkInput"  : "//input[@name='sourceLink']",
+    "saveNewCollectionBtn"          : "//button/span[text()='Save']",
+
+    "searchSnippetInput"            : "[placeholder='Search snippets']",
+
+
+    "########## PERSONAL INSIGHTS LOCATORS #############" : "",
+    "personalInsightsHeader"        : "//div[@class='tile']",
+
+    "########## INVITES LOCATORS #############" : "",
+    "invitesSection"                : "//section[contains(@class,'invitations_container__2fSJy')]",
+
+    "########## SUPPORT LOCATORS #############" : "",
+    "supportSection"                : "//div[contains(@class,'emptyRepo_container__2lqfU')]",
+
+    "########## LABEL MANAGEMENT LOCATORS #############" : "",
+    "labelManagementSection"        : "//div[@class='my-50 px-10']"
+
 }
