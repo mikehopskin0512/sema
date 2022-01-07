@@ -12,7 +12,6 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
-  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -28,6 +27,10 @@ import {
   CHANGE_SNIPPET_COMMENT,
   REMOVE_NOTIFICATION,
   ADD_NOTIFICATION,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_SUCCESS,
+  FETCH_CURRENT_USER_ERROR,
+  UPDATE_CURRENT_USER,
 } from './actionConstants';
 
 export const removeNotification = (payload) => ({
@@ -113,11 +116,6 @@ export const updateTextareaState = (payload) => ({
   payload,
 });
 
-export const updateSemaUser = (payload) => ({
-  type: UPDATE_SEMA_USER,
-  payload,
-});
-
 export const addSuggestedComments = (payload) => ({
   type: ADD_SUGGESTED_COMMENTS,
   payload,
@@ -167,5 +165,24 @@ export const closeLoginReminder = () => ({
 
 export const usedSmartComment = (payload) => ({
   type: LAST_USED_SMART_COMMENT,
+  payload,
+});
+
+export const fetchCurrentUserRequest = () => ({
+  type: FETCH_CURRENT_USER,
+});
+
+export const fetchCurrentUserSuccess = (payload) => ({
+  type: FETCH_CURRENT_USER_SUCCESS,
+  payload,
+});
+
+export const fetchCurrentUserError = (error) => ({
+  type: FETCH_CURRENT_USER_ERROR,
+  error,
+});
+
+export const updateCurrentUser = (payload) => ({
+  type: UPDATE_CURRENT_USER,
   payload,
 });

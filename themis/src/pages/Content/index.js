@@ -24,6 +24,7 @@ import {
   setTextareaSemaIdentifier,
   checkSubmitButton,
   fireAmplitudeEvent,
+  fetchCurrentUser,
 } from './modules/content-util';
 
 import {
@@ -50,7 +51,7 @@ import {
   addSemaComponents,
   toggleGlobalSearchModal,
   updateTextareaState,
-  updateSemaUser,
+  updateCurrentUser,
   addGithubMetada,
   updateSelectedEmoji,
   toggleSnippetForSave,
@@ -65,14 +66,14 @@ chrome.runtime.onMessage.addListener((request) => {
     fireAmplitudeEvent(request.event);
   }
   if (request?.isUserUpdated) {
-    store.dispatch(updateSemaUser({ ...request }));
+    store.dispatch(updateCurrentUser({ ...request }));
   }
 });
 
-const checkLoggedIn = async (cb) => {
+const checkLoggedIn = (cb) => {
   try {
-    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, (response) => {
-      store.dispatch(updateSemaUser({ ...response }));
+    chrome.runtime.sendMessage({ [WHOAMI]: WHOAMI }, async (response) => {
+      await fetchCurrentUser({ ...response });
       cb(response);
     });
   } catch (error) {
