@@ -56,6 +56,16 @@ const Table = ({
     }
   }, [pageIndex, pageSize, fetchData, perPage]);
 
+  const backOnClick = () => {
+    setPageValue(pageValue - 1);
+    previousPage();
+  };
+
+  const nextOnClick = () => {
+    setPageValue(pageValue + 1);
+    nextPage();
+  };
+
   return (
     <>
       <div className={clsx('table-container', className)}>
@@ -149,10 +159,10 @@ const Table = ({
             !!pagination && (
               <div className="is-flex is-align-items-center">
                 <nav className="pagination is-centered mb-0 mr-15" role="navigation" aria-label="pagination">
-                  <button className="pagination-previous button is-ghost" onClick={previousPage} disabled={!canPreviousPage}>
+                  <button className="pagination-previous button is-ghost" onClick={backOnClick} disabled={!canPreviousPage}>
                     <ChevronLeftIcon />
                   </button>
-                  <button className="pagination-next button is-ghost" onClick={nextPage} disabled={!canNextPage}>
+                  <button className="pagination-next button is-ghost" onClick={nextOnClick} disabled={!canNextPage}>
                     <ChevronRightIcon />
                   </button>
                   <ul className="pagination-list">
@@ -161,16 +171,20 @@ const Table = ({
                         id="page-input"
                         className={`input mr-5 has-background-white has-text-centered ${styles['page-input']} ${pageValue > pageCount && 'is-danger'}`}
                         type="number"
-                        defaultValue={pageIndex + 1}
+                        value={pageValue}
                         onChange={e => {
                           // TODO: Implement this in react way
-                          const len = getCharCount(e.target.value);
-                          const width = len === 0 ? 40 : 30 + (len * 10);
-                          const input = document.getElementById('page-input');
-                          input.style.width = `${width}px`;
-                          const page = e.target.value ? Number(e.target.value) - 1 : 0
-                          gotoPage(page)
-                          setPageValue(page + 1)
+                          if (e.target.value) {
+                            const len = getCharCount(e.target.value);
+                            const width = len === 0 ? 40 : 30 + (len * 10);
+                            const input = document.getElementById('page-input');
+                            input.style.width = `${width}px`;
+                            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                            gotoPage(page);
+                            setPageValue(page + 1);
+                          } else {
+                            setPageValue('');
+                          }
                         }}
                         required
                       />
