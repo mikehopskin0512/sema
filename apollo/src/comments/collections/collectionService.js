@@ -1,14 +1,12 @@
 import mongoose from 'mongoose';
-import { get } from 'lodash';
-import Collection from './collectionModel';
-import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import logger from '../../shared/logger';
 import {
   findById as findUserById,
-  patch as updateUser,
   findUserCollectionsByUserId,
-  populateCollectionsToUsers,
+  patch as updateUser,
 } from '../../users/userService';
+import Collection from './collectionModel';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -229,6 +227,23 @@ export const createUserCollection = async (username) => {
     };
     const userCollection = await create(defaultCollection);
     return userCollection
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const createTeamCollection = async (team) => {
+  try {
+    const collection = {
+      name: team.name,
+      description: team.description,
+      author: team.name,
+      isActive: true,
+      comments: [],
+    };
+    return await create(collection);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

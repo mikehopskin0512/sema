@@ -55,12 +55,12 @@ const TeamManagementPage = () => {
     }
   }, [user, dispatch, page, perPage, teamId]);
 
-  const rolesOptions = useMemo(() => roles.map((role) => ({
+  const rolesOptions = useMemo(() => roles?.map((role) => ({
     value: role._id,
     label: role.name,
-  })), [roles]);
+  })) || [], [roles]);
 
-  const dataSource = useMemo(() => members.map((member) => ({
+  const dataSource = useMemo(() => members?.map((member) => ({
     _id: member._id,
     userInfo: {
       userId: member.user?._id,
@@ -71,7 +71,7 @@ const TeamManagementPage = () => {
     role: member.role ? member.role._id : null,
     roleName: member.role ? member.role.name : null,
     disableEdit: member.user?._id === user._id,
-  })), [members]);
+  })) || [], [members]);
 
   const handleChangeRole = useCallback((newValue, row) => {
     setIsOpen(true);
@@ -149,7 +149,7 @@ const TeamManagementPage = () => {
           onChange={(newValue) => handleChangeRole(newValue, row)}
         />
       ),
-    }, 
+    },
     {
       Header: '',
       accessor: 'actions',
