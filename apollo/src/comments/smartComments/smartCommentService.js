@@ -556,8 +556,8 @@ export const getSmartCommentsByExternalId = async (externalId) => {
 
 export const getPullRequestsByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.url').exec();
-    return smartComments;
+    const pullRequests = await SmartComment.distinct('githubMetadata.pull_number', { 'githubMetadata.repo_id': externalId }).lean();
+    return pullRequests;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
