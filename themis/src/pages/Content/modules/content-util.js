@@ -1,5 +1,6 @@
 import $ from 'cash-dom';
-
+// eslint-disable-next-line camelcase
+import jwt_decode from 'jwt-decode';
 import amplitude from 'amplitude-js';
 
 import {
@@ -24,7 +25,8 @@ import {
   SEMA_LANDING_GITHUB,
   SEMA_LOGO_URL,
   COLLECTIONS_URL,
-  TAGS_URL, USERS_URL,
+  TAGS_URL,
+  USERS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -38,6 +40,9 @@ import {
   removeMutationObserver,
   closeAllEmojiSelection,
   changeSnippetComment,
+  fetchCurrentUserRequest,
+  fetchCurrentUserSuccess,
+  fetchCurrentUserError,
 } from './redux/action';
 // TODO: good if we can break cyclic dependencies
 // eslint-disable-next-line import/no-cycle
@@ -238,14 +243,6 @@ export const saveSmartComment = async (comment) => {
 
 export const getAllCollection = async () => {
   const response = await fetch(`${COLLECTIONS_URL}/all`, {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'GET',
-  });
-  return response.json();
-};
-
-export const getCurrentUser = async (id) => {
-  const response = await fetch(`${USERS_URL}/${id}`, {
     headers: { 'Content-Type': 'application/json' },
     method: 'GET',
   });
@@ -827,4 +824,30 @@ export const setTextareaSemaIdentifier = (activeElement) => {
   const { id } = activeElement;
   const semaIdentifier = `sema-${id}-${Date.now()}`;
   $(activeElement).attr(SEMA_TEXTAREA_IDENTIFIER, semaIdentifier);
+};
+
+export const fetchCurrentUser = async ({ token = null, isLoggedIn }) => {
+  try {
+    store.dispatch(fetchCurrentUserRequest());
+    if (token) {
+      const { _id: userId = null } = jwt_decode(token);
+      let response = {};
+
+      if (userId) {
+        const res = await fetch(`${USERS_URL}/${userId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            // eslint-disable-next-line quote-props
+            'Authorization': `Bearer ${token}`,
+          },
+          method: 'GET',
+        });
+        response = await res.json();
+      }
+
+      store.dispatch(fetchCurrentUserSuccess({ ...response.user, isLoggedIn }));
+    }
+  } catch (error) {
+    store.dispatch(fetchCurrentUserError(error));
+  }
 };

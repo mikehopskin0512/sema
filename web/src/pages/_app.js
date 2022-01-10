@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
@@ -21,7 +22,8 @@ import '../../styles/_calendar_overrides.scss';
 import usePermission from '../hooks/usePermission';
 import NotFound from './404';
 import { permissionsMap } from '../data/permissions';
-import { SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
+import { PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
+import { authOperations } from '../state/features/auth';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
@@ -29,10 +31,13 @@ library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 );
 
+const { setProfileViewMode, setSelectedTeam } = authOperations;
+
 function Layout({ Component, pageProps }) {
   const { checkAccess } = usePermission();
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
       const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
@@ -40,6 +45,20 @@ function Layout({ Component, pageProps }) {
     }
     return true;
   };
+  
+  useEffect(() => {
+    const accountData = localStorage.getItem('sema_selected_team');
+    const selectedTeam = accountData ? JSON.parse(accountData) : null;
+    if (!!selectedTeam?.team?._id) {
+      // team view mode
+      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+    } else {
+      // individual view mode
+      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
+    }
+    
+    dispatch(setSelectedTeam(selectedTeam || {}));
+  }, []);
 
   return (
     checkPermission() ? <Component {...pageProps} /> : <NotFound />

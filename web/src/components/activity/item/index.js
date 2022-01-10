@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
+import Emoji from "react-emoji-render";
 
 const ActivityItem = (props) => {
   const {
@@ -58,11 +59,11 @@ const ActivityItem = (props) => {
   }
 
   const renderEmoji = () => {
-    const { emoji, title: emojiTitle } = find(EMOJIS, { _id: reaction });
+    const { title: emojiTitle, github_emoji } = find(EMOJIS, { _id: reaction });
     return (
       <>
-        <span className="mr-8">{emoji}</span>
-        <div dangerouslySetInnerHTML={{ __html: emojiTitle }} />
+        <Emoji className="mr-8" text={github_emoji} />
+        <div className="has-text-black-950 has-text-weight-semibold" dangerouslySetInnerHTML={{ __html: emojiTitle }} />
       </>
     );
   };
@@ -88,7 +89,7 @@ const ActivityItem = (props) => {
           <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
         </div>
         <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
-          <div className="has-text-black-950 has-text-weight-semibold is-size-5 is-size-7-mobile is-flex">
+          <div className="is-size-5 is-size-7-mobile is-flex">
             {renderEmoji()}
           </div>
           { tags.length > 0 ? (

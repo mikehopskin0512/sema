@@ -16,7 +16,7 @@ const statLabels = {
 
 const RepoCard = (props) => {
   const {
-    name, externalId, stats, users, column = 3
+    name, externalId, stats, users = [], column = 3
   } = props;
 
   const onClickRepo = () => {
@@ -36,7 +36,7 @@ const RepoCard = (props) => {
   return (
     <div
       className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
-      onClick={onClickRepo} 
+      onClick={onClickRepo}
       aria-hidden
     >
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">

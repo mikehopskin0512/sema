@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import styles from './emptyRepo.module.scss';
 import SupportForm from '../../supportForm';
 import Select from '../../activity/select';
+
 import { SUPPORT_VIDEO_LANGUAGES, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../utils/constants';
+import * as analytics from '../../../utils/analytics';
 
 const HowItWorks = () => {
   const [language, setLanguage] = useState(SUPPORT_VIDEO_LANGUAGES[0]);
   const [supportForm, setSupportForm] = useState(false);
 
-  const openSupportForm = () =>  setSupportForm(true);
+  const openSupportForm = () =>  {
+    setSupportForm(true);
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_CONTACT_SUPPORT, {});
+  };
   const closeSupportForm = () => setSupportForm(false);
+
+  const openSemaDocs = () => {
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_LEARN_MORE_ABOUT_SUMMARIES_AND_TAGS, {});
+  };
+  
+  useEffect(() => {
+    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO, { language: language.label });
+  }, [language]);
 
   return(
     <div className={clsx("has-background-white border-radius-4px p-40 mb-50", styles.container)}>

@@ -143,7 +143,10 @@ const UsersPage = () => {
 
   const handleUpdateUser = (obj, user) => {
     if (!user || !user._id) return;
-    dispatch(updateUser(user._id, obj));
+    const status = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
+    dispatch(updateUser(user._id, obj, { page, perPage, status }));
   };
 
   const columns = useMemo(

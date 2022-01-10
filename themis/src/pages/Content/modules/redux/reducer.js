@@ -1,6 +1,3 @@
-// eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
-
 import initialState from './initialState';
 import {
   ADD_SEMA_COMPONENTS,
@@ -15,7 +12,6 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
-  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -29,6 +25,10 @@ import {
   CHANGE_SNIPPET_COMMENT,
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_SUCCESS,
+  FETCH_CURRENT_USER_ERROR,
+  UPDATE_CURRENT_USER,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -456,26 +456,42 @@ function rootReducer(state = initialState, action) {
         },
       };
     }
-    case UPDATE_SEMA_USER: {
+    case FETCH_CURRENT_USER: {
+      return {
+        ...state,
+        isFetching: true,
+        user: { isLoggedIn: false },
+      };
+    }
+    case FETCH_CURRENT_USER_SUCCESS: {
+      const user = payload;
+      return {
+        ...state,
+        isFetching: false,
+        user,
+        error: {},
+      };
+    }
+    case FETCH_CURRENT_USER_ERROR: {
+      const error = payload;
+      return {
+        ...state,
+        isFetching: false,
+        user: { isLoggedIn: false },
+        error,
+      };
+    }
+    case UPDATE_CURRENT_USER: {
       const { token, isLoggedIn } = payload;
-      let newUser;
+      let user;
       if (token) {
-        const { _id, firstName, lastName, username, isVerified, isWaitlist } = jwt_decode(token);
-        newUser = {
-          _id,
-          firstName,
-          lastName,
-          username,
-          isVerified,
-          isWaitlist,
-          isLoggedIn,
-        };
+        user = { ...state.user, isLoggedIn };
       } else {
-        newUser = { isLoggedIn };
+        user = { isLoggedIn };
       }
       return {
         ...state,
-        user: newUser,
+        user,
       };
     }
     default: {
