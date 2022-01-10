@@ -33,7 +33,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"          
+          channel: "phoenix-circleci-notifications"          
   deploy-apollo:
     environment:
       AWS_REGION: us-east-1
@@ -80,7 +80,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"
+          channel: "phoenix-circleci-notifications"
   build-chrome-extension:
     docker:
       - image: cimg/node:15.14.0
@@ -114,7 +114,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"      
+          channel: "phoenix-circleci-notifications"      
   phoenix-notify:
     docker:
         - image: cimg/base:2020.01
