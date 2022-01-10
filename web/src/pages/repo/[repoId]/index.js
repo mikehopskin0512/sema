@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import ActivityPage from '../../../components/activity/page';
@@ -29,12 +29,13 @@ const RepoPage = () => {
     query: { repoId },
   } = useRouter();
 
+  const firstUpdate = useRef(true);
   const [selectedTab, setSelectedTab] = useState('activity');
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
-    startDate: null,
-    endDate: null,
+    startDate,
+    endDate,
   });
 
   useAuthEffect(() => {
@@ -47,6 +48,11 @@ const RepoPage = () => {
 
   // Prevent from doing multiple calls while user is selecting dates
   useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
     if (startDate && endDate) {
       setDates({ startDate, endDate });
     }

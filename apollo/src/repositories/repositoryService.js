@@ -151,57 +151,6 @@ export const findByExternalIds = async (externalIds, populateUsers) => {
 
 export const aggregateRepositories = async (externalIds, includeSmartComments, date) => {
   try {
-    // const repoRaw = await Repositories.aggregate([
-    //   {
-    //     $match: {
-    //       externalId: {
-    //         $in: externalIds
-    //       }
-    //     }
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: 'smartComments',
-    //       as: 'smartComments',
-    //       let: { externalId: '$externalId' },
-    //       pipeline: [
-    //         {
-    //           $match: {
-    //             $expr: {
-    //               $eq: [ '$githubMetadata.repo_id', '$$externalId' ]
-    //             }
-    //           }
-    //         },
-    //         {
-    //           $lookup: {
-    //             from: 'users',
-    //             as: 'user',
-    //             localField: 'userId',
-    //             foreignField: '_id'
-    //           }
-    //         },
-    //         {
-    //           $lookup: {
-    //             from: 'tags',
-    //             as: 'tags',
-    //             localField: 'tags',
-    //             foreignField: '_id'
-    //           }
-    //         },
-    //         {
-    //           $unwind: '$user', 
-    //         },
-    //         {
-    //           $project: {
-    //             'user.collections': 0,
-    //             'user.identities': 0,
-    //           }, 
-    //         },
-    //       ]
-    //     }
-    //   },
-    // ]);
-
     // Get Repos by externalId
     const repos = await findByExternalIds(externalIds, true);
     if (repos.length > 0) {
