@@ -70,7 +70,7 @@ const ActivityItem = (props) => {
 
   return (
     <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
-      <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-mobile", styles.avatar)} src={avatarUrl} alt="user_icon" />
+      <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-touch", styles.avatar)} src={avatarUrl} alt="user_icon" />
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
@@ -86,7 +86,7 @@ const ActivityItem = (props) => {
               {` by ${requester}`}
             </p>
           </div>
-          <p className={clsx('is-size-8 is-hidden-mobile', styles.date)}>{dateCreated}</p>
+          <p className={clsx('is-size-8 is-hidden-touch', styles.date)}>{dateCreated}</p>
         </div>
         <div className="mt-8 is-flex is-align-items-center is-flex-wrap-wrap">
           <div className="is-size-5 is-size-7-mobile is-flex">
