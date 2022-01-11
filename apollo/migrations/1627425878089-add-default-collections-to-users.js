@@ -58,7 +58,6 @@ exports.down = async (next) => {
   const users = userCollection.map(({ userId }) => (new ObjectId(userId)));
   const usersMyCollection = userCollection.map(({ myCollection }) => (new ObjectId(myCollection)));
   try {
-    await mongoose.connection.collection('users').updateMany({ _id: { $in: users } }, { $unset: { collections: [] } });
     await mongoose.connection.collection('collections').deleteMany({ _id: { $in: usersMyCollection } });
   } catch (error) {
     next(error);
