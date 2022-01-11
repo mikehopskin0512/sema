@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { Provider } from 'react-redux';
@@ -37,6 +37,7 @@ function Layout({ Component, pageProps }) {
   const { checkAccess } = usePermission();
   const router = useRouter();
   const dispatch = useDispatch();
+  const [dataLoaded, setDataLoaded] = useState(false);
   
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
@@ -47,6 +48,7 @@ function Layout({ Component, pageProps }) {
   };
   
   useEffect(() => {
+    setDataLoaded(false);
     const accountData = localStorage.getItem('sema_selected_team');
     const selectedTeam = accountData ? JSON.parse(accountData) : null;
     if (!!selectedTeam?.team?._id) {
@@ -57,11 +59,13 @@ function Layout({ Component, pageProps }) {
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     
+    setDataLoaded(true);
+    
     dispatch(setSelectedTeam(selectedTeam || {}));
   }, []);
 
   return (
-    checkPermission() ? <Component {...pageProps} /> : <NotFound />
+    dataLoaded && checkPermission() ? <Component {...pageProps} /> : <NotFound />
   );
 }
 

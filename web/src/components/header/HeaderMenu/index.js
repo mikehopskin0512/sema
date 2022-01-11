@@ -145,7 +145,7 @@ const HeaderMenu = ({
             onClick={toggleUserMenu}
             aria-hidden="true"
           >
-            Profile
+            Account
           </span>
         </Link>
         <hr className="navbar-divider m-0 has-background-gray-300" />
@@ -169,11 +169,6 @@ const HeaderMenu = ({
             round
             textSizeRatio={2.5}
           />
-          {
-            selectedTeam?.team?.name && (
-              <div className="ml-10 has-text-black">{selectedTeam?.team?.name}</div>
-            )
-          }
           <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
         </div>
       </a>

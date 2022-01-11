@@ -3,28 +3,52 @@ import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Link from 'next/link';
 import styles from "../header.module.scss";
-import { PATHS, SEMA_CORPORATE_TEAM_NAME } from '../../../utils/constants';
+import { PATHS } from '../../../utils/constants';
 import usePermission from '../../../hooks/usePermission';
-import { ViewAdmin } from '../../../data/permissions';
+import { isEmpty } from 'lodash';
 
-
-const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) => {
+const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedTeam }) => {
   const { pathname } = useRouter();
   const { isSemaAdmin } = usePermission();
 
   const renderDesktopNav = () => {
     return (
       <>
-        <Link href={PATHS.DASHBOARD}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
-            Repos
-          </a>
-        </Link>
+        {
+          !isEmpty(selectedTeam) ? (
+            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+              <a
+                aria-hidden="true"
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
+              >
+                Dashboard
+              </a>
+            </Link>
+          ) : (
+            <Link href={PATHS.DASHBOARD}>
+              <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.DASHBOARD && 'has-text-weight-semibold'}`}>
+                Repos
+              </a>
+            </Link>
+          )
+        }
         <Link href={PATHS.PERSONAL_INSIGHTS}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
             Personal Insights
           </a>
         </Link>
+        {
+          !isEmpty(selectedTeam) && (
+            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+              <a
+                aria-hidden="true"
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+              >
+                Repos
+              </a>
+            </Link>
+          )
+        }
         <Link href={PATHS.SNIPPETS._}>
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname.includes(PATHS.SNIPPETS._) || pathname.includes('/comments') ? 'has-text-weight-semibold' : ''}`} onClick={toggleHamburger}>
             Snippets
@@ -51,15 +75,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
             Support
           </a>
         </Link>
-        {
-          isSemaAdmin() && (
-            <Link href={PATHS.LABELS_MANAGEMENT}>
-              <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.LABELS_MANAGEMENT && 'has-text-weight-semibold'}`}>
-                Labels Management
-              </a>
-            </Link>
-          )
-        }
         {/* TODO: Activate if we ever need Support form */}
         {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
@@ -75,16 +90,41 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
   const renderMobileNav = () => {
     return (
       <>
-        <Link href={PATHS.DASHBOARD}>
-          <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
-            Repos
-          </a>
-        </Link>
+        {
+          !isEmpty(selectedTeam) ? (
+            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+              <a
+                aria-hidden="true"
+                className="navbar-item has-text-weight-semibold is-uppercase"
+              >
+                Dashboard
+              </a>
+            </Link>
+          ) : (
+            <Link href={PATHS.DASHBOARD}>
+              <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
+                Repos
+              </a>
+            </Link>
+          )
+        }
         <Link href={PATHS.PERSONAL_INSIGHTS}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Personal Insights
           </a>
         </Link>
+        {
+          !isEmpty(selectedTeam) && (
+            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+              <a
+                aria-hidden="true"
+                className="navbar-item has-text-weight-semibold is-uppercase"
+              >
+                Repos
+              </a>
+            </Link>
+          )
+        }
         <Link href={PATHS.SNIPPETS._}>
           <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase" onClick={toggleHamburger}>
             Snippets
@@ -109,15 +149,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0 }) =
             Support
           </a>
         </Link>
-        {
-          isSemaAdmin() && (
-            <Link href={PATHS.LABELS_MANAGEMENT}>
-              <a aria-hidden="true" className="navbar-item has-text-weight-semibold is-uppercase">
-                Labels Management
-              </a>
-            </Link>
-          )
-        }
         {/* TODO: Activate if we ever need Support Forms */}
         {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">
