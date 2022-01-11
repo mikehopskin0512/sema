@@ -9,16 +9,17 @@ import { fullName } from '../../shared/utils';
 import { fetchMetadata } from "../../shared/preview";
 import * as Json2CSV from 'json2csv';
 import { format } from 'date-fns';
+import UserRole from "../../userRoles/userRoleModel";
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
-const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
+const SNIPPETS_TO_DISPLAY = 4;
 const { Parser } = Json2CSV;
 
 
-const getUserSuggestedComments = async (userId, searchResults = [], allCollections) => {
-  const userActiveCommentsQuery = [
+const getUserSnippets = async (userId, searchResults = [], allCollections) => {
+  const userActiveSnippetsQuery = [
     {
       $match: { _id: new ObjectId(userId) },
     },
@@ -76,11 +77,11 @@ const getUserSuggestedComments = async (userId, searchResults = [], allCollectio
         from: 'suggestedComments',
         localField: 'comments',
         foreignField: '_id',
-        as: 'comments',
+        as: 'snippets',
       },
     },
   ];
-  const allUserCommentsQuery = [
+  const allUserSnippetsQuery = [
     {
       $match: { _id: new ObjectId(userId) },
     },
@@ -127,16 +128,78 @@ const getUserSuggestedComments = async (userId, searchResults = [], allCollectio
         from: 'suggestedComments',
         localField: 'comments',
         foreignField: '_id',
-        as: 'comments',
+        as: 'snippets',
       },
     },
   ];
 
-  const commentsQuery = allCollections ? allUserCommentsQuery : userActiveCommentsQuery;
-  const commentsData = await User.aggregate(commentsQuery);
-  if (!commentsData || commentsData.length === 0) return [];
-  const [{ comments }] = commentsData;
-  return comments;
+  const snippetsQuery = allCollections ? allUserSnippetsQuery : userActiveSnippetsQuery;
+  const snippetsData = await User.aggregate(snippetsQuery);
+  if (!snippetsData || snippetsData.length === 0) return [];
+  const [{ snippets }] = snippetsData;
+  return snippets;
+};
+
+const getTeamSnippets = async(userId, teamId, searchResults = []) => {
+  const teamActiveSnippetsQuery = [
+    {
+      $match: { user: new ObjectId(userId), team: new ObjectId(teamId) }
+    }, {
+      $lookup: {
+        from: 'teams',
+        localField: 'team',
+        foreignField : '_id',
+        as: 'team'
+      }
+    }, {
+      $lookup: {
+        from: 'collections',
+        localField: 'team.collections',
+        foreignField: '_id',
+        as: 'collections'
+      }
+    }, {
+      $project: {
+        collections: {
+          $filter: {
+            input: '$collections',
+            as: 'collection',
+            cond: { $eq: ['$$collection.isActive', true] }
+          }
+        }
+      }
+    }, {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: {$setUnion: ['$$value', '$$this']}
+                }
+              }
+            },
+            in: {$setIntersection: ['$$userComments', searchResults]}
+          }
+        }
+      }
+    }, {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'snippets'
+      }
+    }
+  ];
+
+  const snippetsData = await UserRole.aggregate(teamActiveSnippetsQuery);
+  if (!snippetsData || snippetsData.length === 0) return [];
+  const [{ snippets }] = snippetsData;
+  return snippets;
 };
 
 const searchIndex = async (searchQuery) => {
@@ -179,14 +242,15 @@ const searchIndex = async (searchQuery) => {
   }
 };
 
-const searchComments = async (user, searchQuery, allCollections) => {
+const searchComments = async (user, team = null, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
 
   // The number of suggested comments to list
-  searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
+  searchResults.slice(0, SNIPPETS_TO_DISPLAY);
 
-  const comments = await getUserSuggestedComments(user, searchResults, allCollections);
-  const returnResults = await Promise.all(comments.map(async ({
+  const snippets = team ? await getTeamSnippets(user, team, searchResults) : await getUserSnippets(user, searchResults, allCollections);
+
+  const returnResults = await Promise.all(snippets.map(async ({
       _id: id,
       title,
       comment,
