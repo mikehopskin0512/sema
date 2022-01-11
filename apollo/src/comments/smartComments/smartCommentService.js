@@ -473,9 +473,9 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
     }
     const query = SmartComment.find(findQuery);
     if (populate) {
-      query.populate('userId').populate('tags');
+      query.populate({ select: ['firstName', 'lastName', 'avatarUrl'], path: 'userId' });
     }
-    const comments = await query.sort({ createdAt: -1 }).exec();
+    const comments = await query.sort({ createdAt: -1 }).lean();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -556,8 +556,8 @@ export const getSmartCommentsByExternalId = async (externalId) => {
 
 export const getPullRequestsByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.url').exec();
-    return smartComments;
+    const pullRequests = await SmartComment.distinct('githubMetadata.pull_number', { 'githubMetadata.repo_id': externalId }).lean();
+    return pullRequests;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

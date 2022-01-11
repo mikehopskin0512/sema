@@ -55,7 +55,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
 
   useAuthEffect(() => {
     getUserRepos(auth.user);
-  }, [auth]);
+  }, []);
 
   useEffect(() => {
     if (smartcomments) {

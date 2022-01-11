@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
-import { isEmpty } from 'lodash';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
 import styles from './header.module.scss';
@@ -15,9 +13,8 @@ import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { teamsOperations } from '../../state/features/teams';
 import Logo from '../Logo';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
-import TeamHeaderNav from './TeamHeaderNav';
 import UserHeaderNav from './UserHeaderNav';
 
 const { fetchTeamsOfUser } = teamsOperations;
@@ -150,23 +147,23 @@ const Header = () => {
               <div
                 className="navbar-start is-hidden-mobile is-hidden-tablet-only is-flex-grow-1 mx-30"
               >
-                {
-                  !isEmpty(selectedTeam) ? (
-                    <TeamHeaderNav teamId={selectedTeam.team._id} type='desktop' />
-                  ) : (
-                    <UserHeaderNav toggleHamburger={toggleHamburger} isSemaAdmin={isSemaAdmin} type='desktop' inviteCount={inviteCount} />
-                  )
-                }
+                <UserHeaderNav
+                  toggleHamburger={toggleHamburger}
+                  isSemaAdmin={isSemaAdmin}
+                  type='desktop'
+                  inviteCount={inviteCount}
+                  selectedTeam={selectedTeam}
+                />
               </div>
               {/* Hamburger menu (mobile & tablet) */}
               <div className="navbar-start is-hidden-desktop">
-                {
-                  !isEmpty(selectedTeam) ? (
-                    <TeamHeaderNav teamId={selectedTeam.team._id} type='mobile' />
-                  ) : (
-                    <UserHeaderNav toggleHamburger={toggleHamburger} isSemaAdmin={isSemaAdmin} type='mobile' inviteCount={inviteCount} />
-                  )
-                }
+                <UserHeaderNav
+                  toggleHamburger={toggleHamburger}
+                  isSemaAdmin={isSemaAdmin}
+                  type='mobile'
+                  inviteCount={inviteCount}
+                  selectedTeam
+                />
                 <hr className="navbar-divider" />
                 <Link href={PATHS.TEAM._}>
                   <a
