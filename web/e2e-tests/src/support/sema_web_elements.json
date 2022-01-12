@@ -31,6 +31,7 @@
     "firstInActiveCollectionToggle" : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]",
     "firstActiveCollectionToggle"   : "//div[contains(@class,'is-clickable')][1]//input[@checked]",
     "mySnippetsCollection"          : "//p[text()='My Snippets']",
+    "philosophiesCollection"        : "//p[text()='Philosophies']",
     "2ndExistingCollection"         : "//div[contains(@class,'is-justify-content-flex-start')][1]//div[2]/div[contains(@class,'box')]",
     "testSnippet"                   : "//p[text()='Test Snippet']",
     "searchSnippetsResult"          : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",

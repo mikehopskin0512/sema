@@ -4,16 +4,16 @@ Feature: Login with different user roles
     Background: To go github login page
         Given I delete all cookies
         # When I login with user: "admin"
-        When  I open the url "https://app.semasoftware.com/login"
+        And   I open the url "https://app-staging.semasoftware.com/login"
         And   I click on the button "signInWithGithubBtn"
         And   I pause for 2000ms
 
     @C1724
     Scenario: Normal user can be logged in and logged out successfully
         And   I clear the inputfield "loginInput"
-        When  I add "semacodereviewtester1000" to the inputfield "loginInput"
+        When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
         And   I clear the inputfield "passwordInput"
-        And   I add "f1$#Uc7Bvb3x" to the inputfield "passwordInput"
+        And   I add "Automation1Tester2#" to the inputfield "passwordInput"
         And   I click on the button "signinBtn"
 #        And   I pause for 10000ms
         Then  I expect that the url is "/dashboard"
@@ -39,7 +39,7 @@ Feature: Login with different user roles
         And   I pause for 5000ms
 
         Examples:
-            | user | password |
-            | **** | ***      |
-            | **** | ***      |
-            | **** | ***      |
+            | user                                      | password            |
+            | qateam+automationadmin@semasoftware.com   | Automation1Tester2# |
+            | qateam+automationlibrary@semasoftware.com | Automation2Tester3# |
+            | qateam+automationacme@semasoftware.com    | Automation3Tester4# |
