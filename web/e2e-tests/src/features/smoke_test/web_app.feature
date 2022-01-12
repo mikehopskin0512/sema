@@ -35,7 +35,7 @@ Feature: Web tabs should contains all functionality items
         And  I pause for 3000ms
         Then I expect that the url is "/dashboard"
         And  I expect that the title is "Sema Dashboard"
-        And  I expect that element "reposContainer" becomes displayed
+#        And  I expect that element "reposContainer" becomes displayed
 
         When I click on the button "personalInsightsTab"
         And  I pause for 3000ms
