@@ -1,0 +1,55 @@
+@import '../../styles/colors.module';
+
+.wrapper {
+  max-width: 200px;
+}
+
+.list {
+  background: var(--color-sema-bg);
+  border-radius: 8px;
+  border: 1px solid $gray-300;
+  box-shadow: 2px 3px 7px rgba(149, 165, 177, 0.5);
+}
+
+.list-option {
+  padding-left: 16px;
+  margin-top: 16px;
+
+  &:hover {
+    color: $blue-700;
+  }
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  white-space: nowrap;
+}
+
+.trigger-button {
+  color: $gray-300;
+
+  &--active {
+    color: $blue-700;
+  }
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  white-space: nowrap;
+}
+
+.theme--dark {
+  .list {
+    box-shadow: 2px 3px 7px rgba(37, 37, 37, 0.5);
+    border: 1px solid $gray-800;
+  }
+}
+
+.theme--dark-dimmed {
+  .list {
+    box-shadow: 2px 3px 7px rgba(37, 37, 37, 0.5);
+    border: 1px solid $gray-800;
+  }
+}

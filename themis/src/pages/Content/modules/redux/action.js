@@ -27,6 +27,8 @@ import {
   CHANGE_SNIPPET_COMMENT,
   REMOVE_NOTIFICATION,
   ADD_NOTIFICATION,
+  UPDATE_PROFILE,
+  UPDATE_TEAMS,
   FETCH_CURRENT_USER,
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
@@ -40,6 +42,16 @@ export const removeNotification = (payload) => ({
 
 export const addNotification = (payload) => ({
   type: ADD_NOTIFICATION,
+  payload,
+});
+
+export const updateProfile = (payload) => ({
+  type: UPDATE_PROFILE,
+  payload,
+});
+
+export const updateTeams = (payload) => ({
+  type: UPDATE_TEAMS,
   payload,
 });
 
@@ -145,7 +157,7 @@ export const mutationObserverEvent = (payload) => ({
   payload,
 });
 
-export const updatetSearchBarInputValue = (payload) => ({
+export const updateSearchBarInputValue = (payload) => ({
   type: UPDATE_SEARCH_BAR_INPUT_VALUE,
   payload,
 });

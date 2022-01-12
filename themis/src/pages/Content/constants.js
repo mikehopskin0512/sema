@@ -21,6 +21,7 @@ export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
 export const COLLECTIONS_URL = `${SEMA_URL}/v1/comments/collections`;
 export const TAGS_URL = `${SEMA_URL}/v1/comments/tags/suggested-comment`;
 export const USERS_URL = `${SEMA_URL}/v1/users`;
+export const TEAMS_URL = `${SEMA_URL}/v1/teams`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';

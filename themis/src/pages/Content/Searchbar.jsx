@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { debounce } from 'lodash/function';
+import ProfileSwitcher from './components/ProfileSwitcher';
 import SuggestionModal from './components/SuggestionModal';
 import { EVENTS, SUGGESTION_URL } from './constants';
 import { fireAmplitudeEvent } from './modules/content-util';
@@ -8,52 +9,33 @@ import { fireAmplitudeEvent } from './modules/content-util';
 import {
   toggleSearchModal,
   addSuggestedComments,
-  updatetSearchBarInputValue,
+  updateSearchBarInputValue,
   usedSmartComment,
 } from './modules/redux/action';
 
-// TODO: replace with useSelector
-const mapStateToProps = (state, ownProps) => {
-  const { semasearches, user } = state;
-  const semaSearchState = semasearches[ownProps.id];
-
-  return {
-    isSearchModalVisible: semaSearchState.isSearchModalVisible,
-    searchValue: semaSearchState.searchValue,
-    // eslint-disable-next-line no-underscore-dangle
-    userId: user?._id,
-  };
-};
-// TODO: replace with dispatch
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { id } = ownProps;
-  return {
-    toggleSearchModal: ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen })),
-    // eslint-disable-next-line max-len
-    selectedSuggestedComments: (suggestedComment) => dispatch(addSuggestedComments({ id, suggestedComment })),
-    handleChange: (searchValue) => dispatch(updatetSearchBarInputValue({ id, searchValue })),
-    onLastUsedSmartComment: (payload) => dispatch(usedSmartComment(payload)),
-  };
-};
-
-const SearchBar = (props) => {
+const SearchBar = ({ id, commentBox, onTextPaste }) => {
+  const dispatch = useDispatch();
+  const { isSearchModalVisible, searchValue } = useSelector((state) => state.semasearches[id]);
+  const { user, selectedProfile } = useSelector((state) => state);
+  const toggleModal = ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen }));
+  const onLastUsedSmartComment = (payload) => dispatch(usedSmartComment(payload));
   const [isLoading, setIsLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [isDetailedView, changeIsDetailedView] = useState(false);
   const suggestionModalDropdownRef = useRef(null);
-  const { commentBox } = props;
 
-  const getSemaSuggestions = (value, userId) => {
+  const getSemaSuggestions = (value, profile) => {
     setIsLoading(true);
-    const URL = `${SUGGESTION_URL}${value}&user=${userId}`;
+    const teamQuery = profile._id ? `&team=${profile._id}` : '';
+    const URL = `${SUGGESTION_URL}${value}&user=${user?._id}${teamQuery}`;
     fetch(URL)
       .then((response) => response.json())
       .then((data) => {
         setSearchResults(data?.searchResults?.result || []);
-        props.toggleSearchModal({ isOpen: true });
+        toggleModal({ isOpen: true });
       })
       .catch(() => {
-        props.toggleSearchModal({ isOpen: false });
+        toggleModal({ isOpen: false });
       })
       .finally(() => {
         setIsLoading(false);
@@ -65,30 +47,34 @@ const SearchBar = (props) => {
   const onInputChanged = (event) => {
     event.preventDefault();
     const { value } = event.target;
-    props.handleChange(value);
+    dispatch(updateSearchBarInputValue({ id, searchValue: value }));
     if (value) {
-      getSuggestionsDebounced.current(value, props.userId);
+      getSuggestionsDebounced.current(value, selectedProfile);
     } else {
       getSuggestionsDebounced.current.cancel();
     }
   };
 
-  const onInsertPressed = (id, title, sourceName, suggestion) => {
+  const onInsertPressed = (suggestedComment, title, sourceName, suggestion) => {
     const value = commentBox.value ? `${commentBox.value}\n` : '';
     // eslint-disable-next-line no-param-reassign
     commentBox.value = `${value}${suggestion}`;
-    props.selectedSuggestedComments(id);
-    props.toggleSearchModal({ isOpen: false });
-    props.onLastUsedSmartComment(suggestion);
+    dispatch(addSuggestedComments({ id, suggestedComment }));
+    toggleModal({ isOpen: false });
+    onLastUsedSmartComment(suggestion);
     commentBox.dispatchEvent(new Event('change', { bubbles: true }));
-    props.onTextPaste();
-    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
+    onTextPaste();
+    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+      comment_bar_action: 'insert',
+      comment_source: sourceName,
+      comment_used: title,
+    });
   };
 
   const resetSearch = () => {
-    props.handleChange('');
+    dispatch(updateSearchBarInputValue({ id, searchValue: '' }));
     setSearchResults([]);
-    props.toggleSearchModal({ isOpen: false });
+    toggleModal({ isOpen: false });
   };
 
   const handleKeyPress = (event) => {
@@ -99,67 +85,72 @@ const SearchBar = (props) => {
       resetSearch();
     } else if (isEnterKey) {
       event.preventDefault();
-      props.toggleSearchModal({ isOpen: true });
+      toggleModal({ isOpen: true });
     }
   };
-
-  const { isSearchModalVisible, searchValue } = props;
-  const containerClasses = `sema-dropdown${isSearchModalVisible ? ' sema-is-active' : ''}`;
-  const inputControlClasses = `sema-control sema-has-icons-left${isLoading ? ' sema-is-loading' : ''}`;
 
   useEffect(() => {
     if (suggestionModalDropdownRef) {
       suggestionModalDropdownRef.current.scrollTop = 0;
     }
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [props.isSearchModalVisible]);
+  }, [isSearchModalVisible]);
+  useEffect(() => {
+    if (searchValue) {
+      getSuggestionsDebounced.current(searchValue, selectedProfile);
+    }
+  }, [selectedProfile]);
 
   return (
-    <div className={containerClasses} style={{ width: '100%' }}>
-      <div
-        className="sema-dropdown-trigger"
-        style={{
-          width: '100%',
-          display: 'flex',
-          flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <div className="sema-field" style={{ flex: 1 }}>
-          <div className={inputControlClasses}>
-            <input
-              className="sema-input sema-is-small"
-              type="text"
-              placeholder="Search comment library"
-              value={searchValue}
-              onChange={onInputChanged}
-              onKeyDown={handleKeyPress}
-            />
-            <span className="sema-icon sema-is-small sema-is-left">
-              <i className="fas fa-search" />
-            </span>
-          </div>
+    <div>
+      <div className="sema-is-flex sema-is-flex-wrap-nowrap sema-is-align-items-center">
+        <div
+          className={`sema-control sema-mr-4 sema-has-icons-left${
+            isLoading ? ' sema-is-loading' : ''
+          }`}
+          style={{ width: '100%' }}
+        >
+          <input
+            className="sema-input sema-is-small"
+            type="text"
+            placeholder="Search comment library"
+            value={searchValue}
+            onChange={onInputChanged}
+            onKeyDown={handleKeyPress}
+          />
+          <span className="sema-icon sema-is-small sema-is-left">
+            <i className="fas fa-search" />
+          </span>
         </div>
+        <ProfileSwitcher />
       </div>
       <div
-        ref={suggestionModalDropdownRef}
-        className={isDetailedView ? 'sema-dropdown-menu suggestion-modal view-mode' : 'sema-dropdown-menu suggestion-modal'}
-        role="menu"
+        className={`sema-dropdown sema-is-flex ${
+          isSearchModalVisible ? 'sema-is-active' : ''
+        }`}
+        style={{ width: '100%' }}
       >
-        <div className="sema-dropdown-content">
-          <div className="sema-dropdown-item">
-            <SuggestionModal
-              searchValue={searchValue}
-              isLoading={isLoading}
-              key={`${isSearchModalVisible}${isLoading}${searchValue}`}
-              onInsertPressed={onInsertPressed}
-              searchResults={searchResults}
-              // eslint-disable-next-line react/destructuring-assignment
-              onLastUsedSmartComment={props.onLastUsedSmartComment}
-              changeIsDetailedView={changeIsDetailedView}
-              isDetailedView={isDetailedView}
-            />
+        <div
+          ref={suggestionModalDropdownRef}
+          className={
+            isDetailedView
+              ? 'sema-dropdown-menu suggestion-modal view-mode'
+              : 'sema-dropdown-menu suggestion-modal'
+          }
+          role="menu"
+        >
+          <div className="sema-dropdown-content">
+            <div className="sema-dropdown-item">
+              <SuggestionModal
+                searchValue={searchValue}
+                isLoading={isLoading}
+                key={`${isSearchModalVisible}${isLoading}${searchValue}`}
+                onInsertPressed={onInsertPressed}
+                searchResults={searchResults}
+                onLastUsedSmartComment={onLastUsedSmartComment}
+                changeIsDetailedView={changeIsDetailedView}
+                isDetailedView={isDetailedView}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -167,4 +158,4 @@ const SearchBar = (props) => {
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar);
+export default SearchBar;

@@ -27,6 +27,7 @@ import {
   COLLECTIONS_URL,
   TAGS_URL,
   USERS_URL,
+  TEAMS_URL,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -38,7 +39,6 @@ import {
   addSmartComment,
   addMutationObserver,
   removeMutationObserver,
-  closeAllEmojiSelection,
   changeSnippetComment,
   fetchCurrentUserRequest,
   fetchCurrentUserSuccess,
@@ -47,7 +47,6 @@ import {
 // TODO: good if we can break cyclic dependencies
 // eslint-disable-next-line import/no-cycle
 import store from './redux/store';
-
 import phrases from './highlightPhrases';
 
 // FIXME: no need for the function to accept 'document'
@@ -239,6 +238,11 @@ export const saveSmartComment = async (comment) => {
     method: 'POST',
     body: JSON.stringify(comment),
   });
+};
+
+export const fetchTeams = async () => {
+  const res = await fetch(TEAMS_URL);
+  return res.json();
 };
 
 export const getAllCollection = async () => {
@@ -529,6 +533,7 @@ export async function writeSemaToGithub(activeElement) {
   }
 }
 
+// TODO: should be deleted after outsideClick refactoring
 function closeSemaOpenElements(event) {
   const { target } = event;
   const dropdownParents = $(target).parents('.sema-dropdown');
@@ -541,13 +546,6 @@ function closeSemaOpenElements(event) {
     if (openDropdown[0] !== dropdownParents[0]) {
       store.dispatch(closeAllDropdowns());
     }
-  }
-
-  const selectingEmojiParents = $(target).parents(
-    '.reaction-selection-wrapper',
-  );
-  if (!selectingEmojiParents.length) {
-    store.dispatch(closeAllEmojiSelection());
   }
 }
 

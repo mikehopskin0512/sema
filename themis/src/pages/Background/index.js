@@ -29,7 +29,7 @@ const setRequestRule = (token) => {
             },
           ],
         },
-        condition: { urlFilter: 'comments', domains: ['github.com'] },
+        condition: { domains: ['github.com'] },
       },
     ],
   });
