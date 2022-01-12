@@ -30,7 +30,7 @@ exports.up = async (next) => {
     const tags = await colTags.insertMany(tagsData);
     fs.writeFileSync(`${process.cwd()}/data/tags.json`, JSON.stringify(tags.ops));
   } catch (error) {
-    next(error);
+     console.log('error___', error)
   }
   mongoose.connection.close();
 };
@@ -41,7 +41,7 @@ exports.down = async (next) => {
     const colTags = mongoose.connection.db.collection('tags');
     await colTags.deleteMany({ _id: { $in: tagsIds } });
   } catch (error) {
-    next(error);
+    console.log('error___', error)
   }
   mongoose.connection.close();
 };
