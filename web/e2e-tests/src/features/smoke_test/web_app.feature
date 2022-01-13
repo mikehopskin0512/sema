@@ -1,19 +1,19 @@
 @webapp
 Feature: Web tabs should contains all functionality items
 
-    Background:
-        Given I delete all cookies
-        And   I open the url "https://app-staging.semasoftware.com/login"
-        And   I click on the button "signInWithGithubBtn"
-        And   I pause for 2000ms
-        And   I clear the inputfield "loginInput"
-        When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-        And   I clear the inputfield "passwordInput"
-        And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-        And   I click on the button "signinBtn"
-        And   I pause for 5000ms
-        Then  I expect that the url is "/dashboard"
-        And   I pause for 3000ms
+#    Background:
+#        Given I delete all cookies
+#        And   I open the url "https://app-staging.semasoftware.com/login"
+#        And   I click on the button "signInWithGithubBtn"
+#        And   I pause for 2000ms
+#        And   I clear the inputfield "loginInput"
+#        When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
+#        And   I clear the inputfield "passwordInput"
+#        And   I add "Automation1Tester2#" to the inputfield "passwordInput"
+#        And   I click on the button "signinBtn"
+#        And   I pause for 5000ms
+#        Then  I expect that the url is "/dashboard"
+#        And   I pause for 3000ms
 
     Scenario: Login successfully
         Given I delete all cookies

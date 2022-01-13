@@ -31,6 +31,8 @@
     "firstActiveCollectionName"     : "//div[contains(@class,'is-clickable')][1]//input[@checked]/../..//p[contains(@class,'pr-10')]",
     "firstInActiveCollectionToggle" : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]",
     "firstActiveCollectionToggle"   : "//div[contains(@class,'is-clickable')][1]//input[@checked]",
+    "createdTestCollectionToggle"   : "//p[text()='Test Collection']/following-sibling::div/input[@checked]",
+
     "mySnippetsCollection"          : "//p[text()='My Snippets']",
     "philosophiesCollection"        : "//p[text()='Philosophies']",
     "2ndExistingCollection"         : "//div[contains(@class,'is-justify-content-flex-start')][1]//div[2]/div[contains(@class,'box')]",

@@ -14,6 +14,7 @@ import checkProperty from '../support/check/checkProperty';
 import checkFontProperty from '../support/check/checkFontProperty';
 import checkSelected from '../support/check/checkSelected';
 import waitFor from '../support/action/waitFor';
+import checkNumberOfElementsExists from "../support/lib/checkNumberOfElementsExists";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -31,7 +32,8 @@ Then(
 
 Then(
     /^I expect that element "([^"]*)?" does( not)* appear exactly "([^"]*)?" times$/,
-    checkIfElementExists
+    // checkIfElementExists
+    checkNumberOfElementsExists
 );
 
 Then(
