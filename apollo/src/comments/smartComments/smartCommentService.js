@@ -474,6 +474,7 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
     const query = SmartComment.find(findQuery);
     if (populate) {
       query.populate({ select: ['firstName', 'lastName', 'avatarUrl'], path: 'userId' });
+      query.populate({ select: ['label'], path: 'tags' });
     }
     const comments = await query.sort({ createdAt: -1 }).lean();
     return comments;
