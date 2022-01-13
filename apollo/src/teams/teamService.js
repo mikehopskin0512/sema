@@ -53,7 +53,6 @@ export const createTeam = async (data) => {
 
 export const updateTeam = async (data) => {
   try {
-    console.log(data);
     const { _id } = data;
     if (!_id) {
       throw({ status: 401, msg: 'No Team ID' })

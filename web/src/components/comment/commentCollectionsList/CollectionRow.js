@@ -64,7 +64,7 @@ const CollectionRow = ({ data }) => {
             <p className={"is-size-7 has-text-weight-semibold"}>
               {name}
             </p>
-            { name.toLowerCase() === DEFAULT_COLLECTION_NAME && (
+            { name?.toLowerCase() === DEFAULT_COLLECTION_NAME && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}
@@ -88,7 +88,7 @@ const CollectionRow = ({ data }) => {
         <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
             <p className="is-size-7 has-text-weight-semibold">
-              {source}
+              {source?.name || ''}
             </p>
           </div>
         </td>

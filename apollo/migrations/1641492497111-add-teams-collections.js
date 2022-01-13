@@ -27,10 +27,11 @@ module.exports.up = async (next) => {
           name: '',
           url: '',
         },
+        isActive: true
       });
       collections.push(collection.insertedId);
       await mongoose.connection.collection('teams')
-        .findOneAndUpdate({ _id: new ObjectId(team._id) }, { $set: { collections: [collection.insertedId] } });
+        .findOneAndUpdate({ _id: new ObjectId(team._id) }, { $set: { collections: [{ isActive: true, collectionData: collection.insertedId}] } });
     }));
     fs.writeFileSync(`${process.cwd()}/data/teamsCollections.json`, JSON.stringify(collections));
 

@@ -9,12 +9,15 @@ import styles from './card.module.scss';
 import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
+import { teamsOperations } from '../../../state/features/teams';
 import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
+import { isEmpty } from 'lodash';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
+const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
 
 const Tag = ({ tag, _id, type }) => (
   <div
@@ -34,7 +37,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const { checkAccess } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
-  const { token, user } = useSelector((state) => state.authState);
+  const { token, user, selectedTeam } = useSelector((state) => state.authState);
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
@@ -77,10 +80,17 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
 
   if (collectionData) {
     const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [], isActive: isNotArchived } = collectionData;
+
+    const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+      if (!isEmpty(selectedTeam)) {
+        dispatch(updateTeamCollectionIsActiveAndFetchCollections(selectedTeam.team, _id, token))
+      } else {
+        dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+      }
     };
 
     const onClickAddComment = () => {
@@ -154,7 +164,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
 
                 </div>
                 <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">
-                  {isMyComments ? (
+                  {isMyComments || isTeamSnippet ? (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
                       <div
                         className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',

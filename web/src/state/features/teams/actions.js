@@ -107,6 +107,7 @@ export const fetchTeamsOfUser = (token) => async (dispatch) => {
     const payload = await getTeams(token);
     const { data } = payload;
     dispatch(requestFetchTeamsOfUserSuccess(data));
+    return data
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

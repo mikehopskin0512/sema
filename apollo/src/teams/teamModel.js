@@ -8,8 +8,8 @@ const teamSchema = new Schema({
   avatarUrl: String,
   description: String,
   collections: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Collection',
+    collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
+    isActive: { type: Boolean, default: true },
   }],
   createdBy: {
     type: Schema.Types.ObjectId,
@@ -20,7 +20,7 @@ const teamSchema = new Schema({
 teamSchema.pre('save', async function save(next) {
   try {
     const teamCollection = await createTeamCollection(this);
-    this.collections = [teamCollection];
+    this.collections = [{ isActive: true, collectionData: teamCollection }];
     return next();
   } catch (err) {
     return next(err);
