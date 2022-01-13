@@ -8,6 +8,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      - ./adonis:/usr/app/adonis
       - ./web:/usr/app
       - /usr/app/node_modules
     container_name: phoenix.web.sema.local

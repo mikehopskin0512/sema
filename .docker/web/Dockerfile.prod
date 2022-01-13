@@ -5,6 +5,7 @@ RUN apk add --update --no-cache \
     make~=4.2 \
     g++~=9.3
 
+COPY ./adonis /adonis
 COPY . /src
 WORKDIR /src
 

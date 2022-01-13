@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
 import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
+import {getPullRequestsByExternalId} from "./smartCommentService";
 
 const { Schema } = mongoose;
 

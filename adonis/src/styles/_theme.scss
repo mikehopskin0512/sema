@@ -1,0 +1,135 @@
+
+// v0.1
+// Import initial variables
+@import "node_modules/bulma/sass/utilities/initial-variables";
+@import "./_colors.module";
+
+// Update Bulma global variables
+// Override colors
+$primary: $blue-700;
+$link: $blue;
+$info: $blue-200;
+$success: $green-available;
+$danger: $pink-400;
+$success-dark: $green-500;
+$success-light: $green-50;
+$warning-light: $orange-50;
+$danger-light: $red-50;
+$black: $black-900;
+$white: $white-0;
+$gray-light: $gray-300;
+$white-gray: $gray-100;
+$gray-dark: $gray-500;
+
+// Set custom colors
+$custom-colors: (
+  "red-50": $red-50,
+  "red-500": $red-500,
+  "gray-100": $gray-100,
+  "gray-200": $gray-200,
+  "gray-300": $gray-300,
+  "gray-400": $gray-400,
+  "gray-500": $gray-500,
+  "gray-600": $gray-600,
+  "gray-700": $gray-700,
+  "gray-800": $gray-800,
+  "gray-900": $gray-900,
+  "black-900": $black-900,
+  "black-950": $black-950,
+  "blue-50": $blue-50,
+  "blue-300": $blue-300,
+  "blue-500": $blue-500,
+  "blue-600": $blue-600,
+  "blue-700": $blue-700,
+  "white-50": $white-50,
+  "white-0": $white-0,
+);
+
+// Set custom shades
+$custom-shades: (
+  "gray-light": $gray-light,
+);
+
+// set custom switch variables
+$switch-background: $gray-600;
+$switch-paddle-offset: 0.15rem;
+
+// Sizes
+$size-1: 3rem;
+$size-2: 2.5rem;
+$size-3: 2rem;
+$size-4: 1.5rem;
+$size-5: 1.25rem;
+$size-6: 1rem;
+$size-7: 0.875rem;
+$size-8: 0.75rem;
+$size-9: 0.5625rem;
+
+$sizes: $size-1 $size-2 $size-3 $size-4 $size-5 $size-6 $size-7 $size-8 $size-9;
+$spacing-values: (
+  "auto": auto,
+  "0": 0,
+  "1r": 1rem,
+  "2r": 2rem,
+  "neg5": -5px,
+  "neg8": -8px,
+  "neg10": -10px,
+  "neg12": -12px,
+  "3": 3px,
+  "4": 4px,
+  "5": 5px,
+  "8": 8px,
+  "10": 10px,
+  "12": 12px,
+  "15": 15px,
+  "16": 16px,
+  "20": 20px,
+  "24": 24px,
+  "25": 25px,
+  "30": 30px,
+  "32": 32px,
+  "35": 35px,
+  "40": 40px,
+  "50": 50px,
+  "60": 60px,
+  "70": 70px,
+  "80": 80px,
+  "90": 90px,
+  "95": 95px,
+  "100": 100px,
+  "110": 110px,
+  "120": 120px,
+  "150": 150px,
+  "180": 180px,
+  "200": 200px,
+  "250": 250px,
+  "300": 300px,
+  "450": 450px,
+);
+
+// input styles
+$input-background-color: $white-0;
+$input-border-color: $gray-500;
+$input-hover-border-color: $gray-700;
+$input-disabled-color: $gray-500;
+$input-disabled-border-color: $gray-500;
+$input-focus-border-color: $gray-700;
+$input-focus-box-shadow-size: 0;
+
+$family-sans-serif: "Inter", sans-serif;
+$family-monospace: sans-serif;
+
+// Badge
+$badge-font-size: 20px;
+$badge-height: 30px;
+
+@import "node_modules/bulma/bulma.sass";
+// Sample of individual module import - in case we want to optimize modules
+// @import "../node_modules/bulma/sass/grid/columns.sass";
+
+// Import bulma-extensions
+@import "node_modules/bulma-extensions/src/sass/index.sass";
+
+// 3rd party components  (for CSS imports omit extension)
+@import "node_modules/bulma-social/bin/bulma-social.min";
+//@import "@creativebulma/bulma-badge";

@@ -25,6 +25,8 @@ import {
   CHANGE_SNIPPET_COMMENT,
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION,
+  UPDATE_PROFILE,
+  UPDATE_TEAMS,
   FETCH_CURRENT_USER,
   FETCH_CURRENT_USER_SUCCESS,
   FETCH_CURRENT_USER_ERROR,
@@ -54,6 +56,18 @@ function rootReducer(state = initialState, action) {
   const { payload = {} } = action;
 
   switch (action.type) {
+    case UPDATE_TEAMS: {
+      return {
+        ...state,
+        teams: payload,
+      };
+    }
+    case UPDATE_PROFILE: {
+      return {
+        ...state,
+        selectedProfile: payload,
+      };
+    }
     case ADD_NOTIFICATION: {
       return {
         ...state,

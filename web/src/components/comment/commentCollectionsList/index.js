@@ -17,7 +17,7 @@ import { ListIcon, GridIcon } from '../../../components/Icons';
 import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
-import { uniqBy } from 'lodash';
+import { find, isEmpty, uniqBy } from 'lodash';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -41,7 +41,8 @@ const CommentCollectionsList = () => {
     query: '',
   });
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;
+  const { token, user, selectedTeam } = auth;
+
   const { data = [], isFetching } = collectionsState;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -89,6 +90,9 @@ const CommentCollectionsList = () => {
         if (filter.query) {
           filterBool = filterBool && queryBool;
         }
+        if (!isEmpty(selectedTeam)) {
+          filterBool = item?.collectionData?.name?.toLowerCase() !== DEFAULT_COLLECTION_NAME
+        }
         return filterBool;
       }
       return true;
@@ -99,8 +103,13 @@ const CommentCollectionsList = () => {
       if (b === DEFAULT_COLLECTION_NAME) return 1;
       return a >= b ? 1 : -1
     });
+    if (!isEmpty(selectedTeam)) {      
+      const teamSnippet = find(selectedTeam.team.collections, { collectionData: collectionsState.collection._id })
+      const teamCollection = { isActive: teamSnippet?.isActive , collectionData: collectionsState.collection, }
+      collections.splice(0, 0, teamCollection)
+    }
     return uniqBy(collections, 'collectionData._id');
-  }, [data, filter]);
+  }, [data, filter, selectedTeam]);
 
   const paginatedInactiveCollections = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize;
@@ -123,8 +132,19 @@ const CommentCollectionsList = () => {
   }, []);
 
   useEffect(() => {
-    setDefaultCollectionAsActive();
+    if (isEmpty(selectedTeam)) {
+      setDefaultCollectionAsActive();
+    }
   }, [data]);
+
+  useEffect(() => {
+    if (!isEmpty(selectedTeam)) {
+      const [ teamCollection ] = selectedTeam.team.collections;
+      if (!isEmpty(teamCollection)) {
+        dispatch(getCollectionById(teamCollection.collectionData, token));
+      }
+    }
+  }, [data, filter]);
 
   useEffect(() => {
     if (showAlert === true) {

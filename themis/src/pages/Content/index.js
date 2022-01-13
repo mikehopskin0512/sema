@@ -7,6 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
+import 'adonis/src/styles/styles.css';
 import { debounce } from 'lodash';
 import CreateSnippetModal from './components/CreateSnippetModal';
 import Notification from './components/Notification';
@@ -24,6 +25,7 @@ import {
   setTextareaSemaIdentifier,
   checkSubmitButton,
   fireAmplitudeEvent,
+  fetchTeams,
   fetchCurrentUser,
 } from './modules/content-util';
 
@@ -55,6 +57,7 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
   toggleSnippetForSave,
+  updateTeams,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
@@ -260,7 +263,6 @@ const onLoginChecked = () => {
       // Render searchbar
       const searchBarNode = document.getElementById(semaSearchContainerId);
       ReactDOM.render(
-        // eslint-disable-next-line react/jsx-filename-extension
         <Provider store={store}>
           <Searchbar
             id={semaSearchContainerId}
@@ -387,6 +389,10 @@ const onLoginChecked = () => {
     $('div.sema').removeClass('sema-is-form-bordered');
   },
   true);
+
+  fetchTeams().then((teams) => {
+    store.dispatch(updateTeams(teams));
+  });
 };
 
 checkLoggedIn(onLoginChecked);

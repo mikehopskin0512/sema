@@ -1,7 +1,8 @@
 /* eslint-disable react/no-danger */
-import React from 'react';
+import React, { useRef } from 'react';
 import Lottie from 'react-lottie-player';
 import $ from 'cash-dom';
+import useOutsideClick from './helpers/useOutsideClick';
 
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
@@ -30,8 +31,10 @@ const EmojiSelection = ({
   const showCalculate = semabarActiveElementSibling === activeElement;
   const isCalculating = showCalculate && isTyping && !isSelectingEmoji && !isReactionDirty;
 
+  const emojiList = useRef(null);
+  useOutsideClick(emojiList, () => isSelectingEmoji && toggleIsSelectingEmoji());
   return (
-    <div>
+    <div ref={emojiList}>
       <div className="reaction-selection-wrapper">
         <div className={`sema-dropdown${isSelectingEmoji ? ' sema-is-active' : ''}`}>
           <div className="sema-dropdown-trigger">
