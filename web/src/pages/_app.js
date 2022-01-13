@@ -38,7 +38,7 @@ function Layout({ Component, pageProps }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const [dataLoaded, setDataLoaded] = useState(false);
-  
+
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
       const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
@@ -46,7 +46,7 @@ function Layout({ Component, pageProps }) {
     }
     return true;
   };
-  
+
   useEffect(() => {
     setDataLoaded(false);
     const accountData = localStorage.getItem('sema_selected_team');
@@ -58,14 +58,14 @@ function Layout({ Component, pageProps }) {
       // individual view mode
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
-    
+
     setDataLoaded(true);
-    
+
     dispatch(setSelectedTeam(selectedTeam || {}));
   }, []);
 
   return (
-    dataLoaded && checkPermission() ? <Component {...pageProps} /> : <NotFound />
+    dataLoaded && checkPermission() ? <Component {...pageProps} /> : null
   );
 }
 
