@@ -35,13 +35,9 @@
 
     "mySnippetsCollection"          : "//p[text()='My Snippets']",
     "philosophiesCollection"        : "//p[text()='Philosophies']",
+    "testTagCollection"             : "//p[text()='Test Collection FOR TAGS']",
     "2ndExistingCollection"         : "//div[contains(@class,'is-justify-content-flex-start')][1]//div[2]/div[contains(@class,'box')]",
     "testSnippet"                   : "//p[text()='Test Snippet']",
-    "searchSnippetsResult"          : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
-    "searchSnippetTagInput"         : "//select[contains(@name,'tag')]",
-    "searchSnippetLanguageInput"    : "//select[contains(@name,'language')]",
-    "viewMoreBtn"                   : "//button[text()='View More']",
-    "clearSearchResultBtn"          : "//div[text()='Clear search results']",
     "arrowBackBtn"                  : "//div/a[@href='/snippets']/*",
     "snippetsLibraryLinkBtn"        : "//li/a[@href='/snippets']",
 
@@ -53,8 +49,10 @@
     "newSnippetSourceLinkInput"     : "//label[text()='Source Link']/following-sibling::div/input",
     "newSnippetLanguagesInput"      : "//input[@id='react-select-2-input']",
     "newSnippetTagsInput"           : "//input[@id='react-select-3-input']",
+    "newSnippetAuthorNameInput"     : "//label[text()='Author Name']/following-sibling::div/input",
     "saveNewSnippetBtn"             : "//button/span[text()='Save New Snippet']",
-
+    "selectedLeadershipTag"         : "//div[@class='control']//div[text()='Leadership']",
+    "selectedTypeScriptLanguage"    : "//div[@class='control']//div[text()='TypeScript']",
 
     "addNewCollectionBtn"           : "//a[@href='/snippets/add']/button",
     "newCollectionTitleInput"       : "//input[@name='name']",
@@ -67,7 +65,13 @@
     "saveNewCollectionBtn"          : "//button/span[text()='Save']",
 
     "searchSnippetInput"            : "[placeholder='Search snippets']",
+    "searchSnippetsResult"          : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
+    "searchSnippetTagInput"         : "//select[contains(@name,'tag')]",
+    "searchSnippetLanguageInput"    : "//select[contains(@name,'language')]",
+    "viewMoreBtn"                   : "//button[text()='View More']",
+    "clearSearchResultBtn"          : "//div[text()='Clear search results']",
 
+    "searchCollectionInput"         : "//div[@id='collectionBody']//input[@placeholder]",
 
     "########## PERSONAL INSIGHTS LOCATORS #############" : "",
     "personalInsightsHeader"        : "//div[@class='tile']",

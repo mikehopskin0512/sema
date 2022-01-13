@@ -1,20 +1,20 @@
 @snippets
 Feature: User is able to interact with snippets properly
 
-#    Background:
-#      Given I delete all cookies
-#      And   I open the url "https://app-staging.semasoftware.com/login"
-#      And   I pause for 5000ms
-#      And   I click on the button "signInWithGithubBtn"
-#      And   I pause for 2000ms
-#      And   I clear the inputfield "loginInput"
-#      When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-#      And   I clear the inputfield "passwordInput"
-#      And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-#      And   I click on the button "signinBtn"
-#      And   I pause for 5000ms
-#      Then  I expect that the url is "/dashboard"
-#      And   I pause for 3000ms
+    Background:
+      Given I delete all cookies
+      And   I open the url "https://app-staging.semasoftware.com/login"
+      And   I pause for 5000ms
+      And   I click on the button "signInWithGithubBtn"
+      And   I pause for 2000ms
+      And   I clear the inputfield "loginInput"
+      When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
+      And   I clear the inputfield "passwordInput"
+      And   I add "Automation1Tester2#" to the inputfield "passwordInput"
+      And   I click on the button "signinBtn"
+      And   I pause for 5000ms
+      Then  I expect that the url is "/dashboard"
+      And   I pause for 3000ms
 
     @snippet
     Scenario: Login successfully
@@ -32,7 +32,8 @@ Feature: User is able to interact with snippets properly
       And   I pause for 3000ms
 
     @C1704  @snippet
-    Scenario: Snippets can be turned on and turned off
+    Scenario: Snippets collection can be turned on and turned off
+#    C2787
       When I click on the element "snippetsTab"
       And  I pause for 5000ms
       Then I expect that element "collectionArea" becomes displayed
@@ -40,13 +41,14 @@ Feature: User is able to interact with snippets properly
       When I click on the element "firstInActiveCollectionToggle"
       And  I pause for 3000ms
 #        Then  I expect that collection is enabled    #here check name from global variable
-
+#    C2788
 #         And  I save the name of collection "firstActiveCollectionName"
       When I click on the element "firstActiveCollectionToggle"
       And  I pause for 3000ms
 #        Then  I expect that collection is disabled    #here check name from global variable
 
     @C2797  @snippet
+#      C2798
     Scenario: Adding new snippet to "My Snippets" collection
       When I click on the element "snippetsTab"
       Then I pause for 3000ms
@@ -182,7 +184,7 @@ Feature: User is able to interact with snippets properly
 #      Then  I expect that new collection is added       #here check name from global variable
 
     @C1714  @snippet
-    Scenario:  "View more" snippets shows
+    Scenario: "View more" snippets shows
       And  I pause for 5000ms
       When I click on the element "snippetsTab"
       And  I pause for 3000ms
@@ -192,3 +194,46 @@ Feature: User is able to interact with snippets properly
       And  I expect that element "searchSnippetsResult" does appear exactly "10" times
       When I click on the element "viewMoreBtn"
       Then I expect that element "searchSnippetsResult" does appear exactly "20" times
+
+    @C2442  @snippet
+    Scenario: The default tags for collection is added to snippet
+      #temporary solution
+      When I click on the element "userLogo"
+      When I click on the element "semaCorporateTeamLogo"
+      #------------------
+
+      When I click on the element "snippetsTab"
+      And  I pause for 3000ms
+      And  I click on the element "addNewCollectionBtn"
+      And  I pause for 5000ms
+      And  I set "Test Collection FOR TAGS" to the inputfield "newCollectionTitleInput"
+      And  I set "This collection is for creating snippets with same tag in as here" to the inputfield "newCollectionDescriptionInput"
+      And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+      And  I click on the element "newCollectionLanguagesInput"
+      And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+      And  I press "Enter"
+      And  I click on the element "newCollectionOtherLabelInput"
+      And  I set "Leadership" to the inputfield "newCollectionOtherLabelInput"
+      And  I press "Enter"
+
+      And  I click on the button "saveNewCollectionBtn"
+      And  I pause for 5000ms
+
+      And  I set "Test Collection FOR TAGS" to the inputfield "searchCollectionInput"
+      And  I click on the element "testTagCollection"
+      And  I pause for 3000ms
+      And  I click on the element "addNewSnippetInCollectionBtn"
+      Then I expect that element "selectedLeadershipTag" becomes displayed
+      And  I expect that element "selectedTypeScriptLanguage" becomes displayed
+
+      When I set "Test Snippet with default tags" to the inputfield "newSnippetTitleInput"
+      And  I set "default tags" to the inputfield "newSnippetBodyInput"
+      And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
+
+      And  I click on the button "saveNewSnippetBtn"
+      And  I pause for 3000ms
+#      verify new snippet
+
+
