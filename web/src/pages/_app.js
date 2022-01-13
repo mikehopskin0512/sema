@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
+import 'adonis/src/styles/styles.css';
 import '@fortawesome/fontawesome-svg-core/styles.css'; // Import the CSS
 import {
   faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
@@ -37,8 +38,7 @@ function Layout({ Component, pageProps }) {
   const { checkAccess } = usePermission();
   const router = useRouter();
   const dispatch = useDispatch();
-  const [dataLoaded, setDataLoaded] = useState(false);
-
+const [dataLoaded, setDataLoaded] = useState(false);
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
       const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
@@ -58,9 +58,7 @@ function Layout({ Component, pageProps }) {
       // individual view mode
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
-
     setDataLoaded(true);
-
     dispatch(setSelectedTeam(selectedTeam || {}));
   }, []);
 

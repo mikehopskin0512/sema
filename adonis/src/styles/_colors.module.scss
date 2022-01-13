@@ -1,0 +1,164 @@
+
+// v0.1
+// use colors with bulma styles: 'has-text-gray-900' - need to be added in custom-colors in _theme.scss
+// use as scss variables: $gray-900
+// use as pure value in JS: 'colors.gray900' - need to import 'import colors from '../styles/_color.module.scss''
+// don't use any other colors. If you need a new color - ask to add it in Figma then add it here.
+
+// neutral
+$black-950: #161616;
+$black-900: #202020;
+$gray-900: #192129;
+$gray-800: #212B36;
+$gray-700: #56626E;
+$gray-600: #909AA4;
+$gray-500: #B7C0C6;
+$gray-400: #BFCBD3;
+$gray-300: #E3E9EE;
+$gray-200: #F0F2F4;
+$gray-100: #FAFAFC;
+$white-50: #F4F4F4;
+$white-0: #FFFFFF;
+
+// Info
+$blue-900: #02556D;
+$blue-800: #006D8D;
+$blue-700: #0081A7;
+$blue-600: #1394BA;
+$blue-500: #13A3CD;
+$blue-400: #10B2E1;
+$blue-300: #33C1EC;
+$blue-200: #6ECEEB;
+$blue-100: #9FE1F5;
+$blue-50: #CDEEF9;
+$blue-0: #E3F2F8;
+
+// Success
+$green-900: #042F1D;
+$green-800: #1F3D2C;
+$green-700:#29603D;
+$green-600: #21733F;
+$green-500: #0A8150;
+$green-400: #5C8F6C;
+$green-300: #7BA184;
+$green-200: #99B69F;
+$green-100: #BBD0C0;
+$green-50: #DEECE6;
+$green-0: #EFF6F3;
+$green-available: #A9DB5F;
+
+// Error
+$red-900: #2E0B05;
+$red-800: #46170A;
+$red-700: #702010;
+$red-600: #A92914;
+$red-500: #DE3617;
+$red-400: #DA552F;
+$red-300: #EC7D57;
+$red-200: #F1BBA8;
+$red-100: #F6D5CA;
+$red-50: #F6E0E0;
+
+// Warning
+$orange-900: #372407;
+$orange-800: #70470F;
+$orange-700: #8E5C16;
+$orange-600: #BD7817;
+$orange-500: #FFA20F;
+$orange-400: #F1A231;
+$orange-300: #F6B657;
+$orange-200: #FFD598;
+$orange-100: #FFDFAD;
+$orange-50: #FFEACB;
+
+// Pink
+$pink-900: #840959;
+$pink-800: #AA0963;
+$pink-700: #C00A69;
+$pink-600: #D6086F;
+$pink-500: #E80673;
+$pink-400: #E93B89;
+$pink-300: #EC60A0;
+$pink-200: #F08EBB;
+$pink-100: #F5BBD6;
+$pink-50: #FBE4EE;
+
+:export {
+  // neutral
+  black950: $black-950;
+  black900: $black-900;
+  gray900: $gray-900;
+  gray800: $gray-800;
+  gray700: $gray-700;
+  gray600: $gray-600;
+  gray500: $gray-500;
+  gray400: $gray-400;
+  gray300: $gray-300;
+  gray200: $gray-200;
+  gray100: $gray-100;
+  white50: $white-50;
+  white0: $white-0;
+
+  // Info
+  blue900: $blue-900;
+  blue800: $blue-800;
+  blue700: $blue-700;
+  blue600: $blue-600;
+  blue500: $blue-500;
+  blue400: $blue-400;
+  blue300: $blue-300;
+  blue200: $blue-200;
+  blue100: $blue-100;
+  blue50: $blue-50;
+  blue0: $blue-0;
+
+  // Success
+  green900: $green-900;
+  green800: $green-800;
+  green700: $green-700;
+  green600: $green-600;
+  green500: $green-500;
+  green400: $green-400;
+  green300: $green-300;
+  green200: $green-200;
+  green100: $green-100;
+  green50: $green-50;
+  green0: $green-0;
+  greenAvailable: $green-available;
+
+  // Error
+  red900: $red-900;
+  red800: $red-800;
+  red700: $red-700;
+  red600: $red-600;
+  red500: $red-500;
+  red400: $red-400;
+  red300: $red-300;
+  red200: $red-200;
+  red100: $red-100;
+  red50: $red-50;
+
+  // Warning
+  orange900: $orange-900;
+  orange800: $orange-800;
+  orange700: $orange-700;
+  orange600: $orange-600;
+  orange500: $orange-500;
+  orange400: $orange-400;
+  orange300: $orange-300;
+  orange200: $orange-200;
+  orange100: $orange-100;
+  orange50: $orange-50;
+
+  // Pink
+  pink900: $pink-900;
+  pink800: $pink-800;
+  pink700: $pink-700;
+  pink600: $pink-600;
+  pink500: $pink-500;
+  pink400: $pink-400;
+  pink300: $pink-300;
+  pink200: $pink-200;
+  pink100: $pink-100;
+  pink50: $pink-50;
+}

@@ -24,6 +24,7 @@
     "@nivo/circle-packing": "^0.73.0",
     "@nivo/core": "^0.73.0",
     "@nivo/line": "^0.73.0",
+    "adonis": "file:../adonis",
     "amplitude-js": "^8.8.0",
     "axios": "^0.19.2",
     "bulma": "^0.9.0",
