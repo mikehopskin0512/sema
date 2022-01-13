@@ -114,7 +114,7 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[reactionIndex][comment.reaction].current += 1;
     }
     comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByWeek[tag._id].data, { date: weekRange[itemRange]?.date });
+      const tagsIndex = findIndex(tagsByWeek[tag._id]?.data, { date: weekRange[itemRange]?.date });
       if (tagsIndex > -1) {
         tagsByWeek[tag._id].total += 1;
         const tagData = tagsByWeek[tag._id].data[tagsIndex];
@@ -299,7 +299,7 @@ const parseTagsAndReactions = (
       reactionsArr[reactionIndex][comment.reaction].current += 1;
     }
     comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tags[tag._id].data, { x: formattedDate });
+      const tagsIndex = findIndex(tags[tag._id]?.data, { x: formattedDate });
       if (tagsIndex > -1) {
         tags[tag._id].total += 1;
         const tagData = tags[tag._id].data[tagsIndex];
