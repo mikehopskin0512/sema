@@ -203,8 +203,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: '/settings',
-    pathname: `${PATHS.TEAM._}/[teamId]`,
+    path: `${PATHS.TEAM._}/[teamId]/edit`,
   },
 ]
 
@@ -215,3 +214,15 @@ export const PROFILE_VIEW_MODE = {
 
 export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
 export const NUM_PER_PAGE = 10;
+
+export const SEMA_ROLES = {
+  admin: 'Admin',
+  libraryEditor: 'Library Editor',
+  member: 'Member'
+}
+
+export const TAB = {
+  info: 'info',
+  management: 'management',
+  labels: 'labels'
+};

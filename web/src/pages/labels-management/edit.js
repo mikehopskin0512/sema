@@ -11,6 +11,7 @@ import Helmet from '../../components/utils/Helmet';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelCommentsRow from '../../components/labels-management/LabelCommentsRow';
 import usePermission from '../../hooks/usePermission';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
 import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
@@ -24,6 +25,7 @@ const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
+  const [accountData] = useLocalStorage('sema_selected_team');
 
   const { query } = router;
   const { id } = query;
@@ -77,6 +79,7 @@ const EditLabel = () => {
   };
 
   const onSubmit = () => {
+    const {team: {_id: teamId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags, tag);
     if (tagsErrors) {
@@ -85,6 +88,10 @@ const EditLabel = () => {
     }
     if (tags.length > 0) {
       dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
+      router.push({
+        pathname: `/team/${teamId}/settings`,
+        query: { tab: 'labels' },
+      });
     }
   };
 

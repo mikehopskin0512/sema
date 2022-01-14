@@ -2,26 +2,24 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import Helmet, { TeamManagementHelmet } from '../../../components/utils/Helmet';
-import withLayout from '../../../components/layout';
-import PageHeader from '../../../components/pageHeader';
-import styles from './team.module.scss';
-import Table from '../../../components/table';
+import { useRouter } from 'next/router';
+import styles from './TeamManagement.module.scss';
+import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
+import Table from '../../table';
+import withSelectedTeam from '../../auth/withSelectedTeam';
+import RoleChangeModal from '../roleChangeModal';
+import ActionMenu from '../ActionMenu';
 import { teamsOperations } from '../../../state/features/teams';
 import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
-import withSelectedTeam from '../../../components/auth/withSelectedTeam';
-import RoleChangeModal from '../../../components/team/roleChangeModal';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
-import ActionMenu from '../../../components/team/ActionMenu';
-import { useRouter } from 'next/router';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
-const TeamManagementPage = () => {
+const TeamManagement = () => {
   const router = useRouter();
   const { checkAccess, checkTeam } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
@@ -103,14 +101,6 @@ const TeamManagementPage = () => {
     }
   }, [team]);
 
-  const menus = [
-    {
-      name: 'Team Management',
-      path: '/',
-      pathname: `${PATHS.TEAM._}/[teamId]`,
-    },
-  ];
-
   const columns = useMemo(() => [
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
@@ -177,11 +167,10 @@ const TeamManagementPage = () => {
   }, [canModifyRoles, canViewUserRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   return (
-    <div className="has-background-gray-100 hero">
+    <div className="has-background-gray-100 hero mx-20">
       <Helmet {...TeamManagementHelmet} />
-      <div className="hero-body pb-300">
-        <PageHeader userRole={userRole} menus={menus} />
-        <div className="content-container px-20">
+      <div className="hero-body py-0 px-0">
+        <div className="content-container px-0">
           <div className={styles['table-wrapper']}>
             <Table
               className="overflow-unset"
@@ -208,4 +197,4 @@ const TeamManagementPage = () => {
   );
 };
 
-export default withSelectedTeam(withLayout(TeamManagementPage));
+export default withSelectedTeam(TeamManagement);

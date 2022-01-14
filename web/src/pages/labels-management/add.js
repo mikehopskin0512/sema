@@ -13,6 +13,7 @@ import { tagsOperations } from '../../state/features/tags';
 import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
 import { black950 } from '../../../styles/_colors.module.scss';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const { clearAlert } = alertOperations;
 const { createTags, fetchTagList } = tagsOperations;
@@ -60,6 +61,7 @@ export const validateTags = (tags, existingTags = [], currentTag = false) => {
 const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [accountData] = useLocalStorage('sema_selected_team');
   const { checkAccess } = usePermission();
 
   const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
@@ -113,6 +115,7 @@ const AddLabels = () => {
   }
 
   const onSubmit = () => {
+    const {team: {_id: teamId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags);
     if (tagsErrors) {
@@ -121,7 +124,10 @@ const AddLabels = () => {
     }
     const data = dispatch(createTags(tags, token));
     if (data) {
-      router.push('/labels-management');
+      router.push({
+        pathname: `/team/${teamId}/settings`,
+        query: { tab: 'labels' },
+      });
     }
   };
 
