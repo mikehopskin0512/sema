@@ -35,6 +35,7 @@ jobs:
           template: basic_fail_1
           channel: "phoenix-circleci-notifications"
   test-web:
+    working_directory: web/e2e-tests
     environment:
       AWS_REGION: us-east-1
     docker:
