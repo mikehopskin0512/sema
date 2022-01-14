@@ -38,7 +38,7 @@ jobs:
     environment:
       AWS_REGION: us-east-1
     docker:
-      - image: cimg/node:15.14.0
+      - image: cimg/node:15.14.0-browsers
     steps:
       - checkout
       - run: git checkout test-automation
@@ -63,7 +63,7 @@ jobs:
               echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run: 
-          name: Waiting until web and apollo get stable
+          name: waiting until web and apollo get stable
           command: |
             aws ecs wait services-stable --profile phoenix --cluster "${ENV}-frontend" \
                 --services apollo phoenix
