@@ -75,7 +75,7 @@ jobs:
       - run: 
           name: run tests
           command: |
-            npm run wdio -- --cucumberOpts.tagExpression='@parser'
+            npm run wdio
           working_directory: web/e2e-tests
       - slack/notify:
           event: fail
