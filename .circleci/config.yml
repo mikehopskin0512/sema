@@ -59,13 +59,13 @@ jobs:
               echo 'export ENV=qa' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
+            elif [[ "$CIRCLE_BRANCH" == "DVPS-125" ]]; then
+              echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run: 
           name: Waiting until web and apollo get stable
           command: |
-            export CLUSTER_NAME="${ENV}-frontend"
-            echo "${CLUSTER_NAME}"
-            aws ecs wait services-stable --cluster "${CLUSTER_NAME}" \
+            aws ecs wait services-stable --cluster "${ENV}-frontend" \
                 --services apollo phoenix
       - run: 
           name: install dependencies
