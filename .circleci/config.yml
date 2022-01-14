@@ -38,7 +38,7 @@ jobs:
     environment:
       AWS_REGION: us-east-1
     docker:
-      - image: cimg/node:15.14.0-browsers
+      - image: circleci/node:15.14.0-browsers
     steps:
       - checkout
       - run: git checkout test-automation
