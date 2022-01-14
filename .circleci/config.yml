@@ -63,7 +63,7 @@ jobs:
       - run: 
           name: Waiting until web and apollo get stable
           command: |
-            CLUSTER_NAME="${ENV}-frontend"
+            export CLUSTER_NAME="${ENV}-frontend"
             aws ecs wait services-stable --cluster ${CLUSTER_NAME} \
                 --services apollo phoenix
       - run: 
