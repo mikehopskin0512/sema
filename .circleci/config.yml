@@ -35,7 +35,6 @@ jobs:
           template: basic_fail_1
           channel: "phoenix-circleci-notifications"
   test-web:
-    working_directory: web/e2e-tests
     environment:
       AWS_REGION: us-east-1
     docker:
@@ -71,12 +70,13 @@ jobs:
       - run: 
           name: install dependencies
           command: |
-            cd web/e2e-tests || exit 1 
             npm install
+          working_directory: web/e2e-tests
       - run: 
           name: run tests
           command: |
             npm run wdio -- --cucumberOpts.tagExpression='@parser'
+          working_directory: web/e2e-tests
       - slack/notify:
           event: fail
           template: basic_fail_1
