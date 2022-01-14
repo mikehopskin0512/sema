@@ -237,7 +237,7 @@ export const createUserCollection = async (username) => {
 export const createTeamCollection = async (team) => {
   try {
     const collection = {
-      name: team.name,
+      name: `${team.name}'s Snippets`,
       description: team.description,
       author: team.name,
       isActive: true,
