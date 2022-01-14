@@ -33,7 +33,50 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "phoenix-circleci-notifications"          
+          channel: "phoenix-circleci-notifications"
+  test-web:
+    environment:
+      AWS_REGION: us-east-1
+      docker:
+        - image: cimg/node:15.14.0
+    steps:
+      - run: git checkout test-automation
+      - run:
+          name: install utilities
+          command: sudo apt-get update -y && sudo apt-get install awscli -y
+      - setup_remote_docker:
+          version: 18.09.3
+      - run:
+          name: create phoenix profile for aws cli
+          command: printf "%s\n%s\n"${AWS_REGION}"\njson" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" | aws configure --profile phoenix
+      - run:
+          name: set deployment environment
+          command: |
+            if [ $CIRCLE_BRANCH = "master" ]; then
+              echo 'export ENV=prod' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa" ]; then
+              echo 'export ENV=qa' >> $BASH_ENV
+            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              echo 'export ENV=staging' >> $BASH_ENV
+            fi
+      - run: 
+          name: Waiting until web and apollo get stable
+          command: | 
+            aws ecs wait services-stable  --cluster qa-frontend --services apollo phoenix
+      - run: 
+          name: install dependencies
+          command: |
+            cd web/e2e-tests || exit 1 
+            npm install
+      - run: 
+          name: run tests
+          command: |
+            npm run wdio -- --cucumberOpts.tagExpression='@parser'
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          channel: "phoenix-circleci-notifications"
+
   deploy-apollo:
     environment:
       AWS_REGION: us-east-1
@@ -148,6 +191,12 @@ workflows:
                 - qa
                 - master
                 - /release-.*/
+      - test-web:
+          filters:
+            branches:
+              only:
+                - /release-.*/
+                - DVPS-125
       - phoenix-notify:
           context: 
            - slack-secrets
