@@ -1,6 +1,8 @@
 import path from 'path';
 import { hooks } from './src/support/hooks';
 
+const fs = require('fs');
+
 export const config: WebdriverIO.Config = {
     //
     // ====================
@@ -54,12 +56,20 @@ export const config: WebdriverIO.Config = {
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
         maxInstances: 3,
+        
         //
         browserName: 'chrome',
-        // If outputDir is provided WebdriverIO can capture driver session logs
-        // it is possible to configure which logTypes to include/exclude.
-        // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-        // excludeDriverLogs: ['bugreport', 'server'],
+        // 'goog:chromeOptions': {            
+        //     extensions: [(function () {
+        //         try {
+        //             const webExt = fs.readFileSync('./extension.zip').toString('base64');
+        //             return webExt;
+        //         } catch (e) {
+        //             console.log(e, 'An error occurred while to parse extension zip file!');
+        //         }
+        //     })()],
+        //     args: ['--headless', '--disable-gpu']
+        // },
     }],
     //
     // ===================
@@ -129,7 +139,11 @@ export const config: WebdriverIO.Config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter.html
-    reporters: ['spec'],
+    reporters: [['allure', {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+    }]],
     //
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {

@@ -19,8 +19,7 @@
     "signInWithGithubBtn"           : "span=Sign in with GitHub",
     "loginInput"                    : "#login_field",
     "passwordInput"                 : "#password",
-    "signinBtn"                     : ".js-sign-in-button",
-    ""                              : "",
+    "signinBtn"                     : ".js-sign-in-button",    
 
     "########### REPOS LOCATORS ###############" : "",
     "reposContainer"                : "div.reposView_repos-container__2oRmp",

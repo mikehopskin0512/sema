@@ -1,40 +1,9 @@
 @snippets
 Feature: User is able to interact with snippets properly
-
-#    Background:
-#      Given I delete all cookies
-#      And   I open the url "https://app-staging.semasoftware.com/login"
-#      And   I pause for 5000ms
-#      And   I click on the button "signInWithGithubBtn"
-#      And   I pause for 2000ms
-#      And   I clear the inputfield "loginInput"
-#      When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-#      And   I clear the inputfield "passwordInput"
-#      And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-#      And   I click on the button "signinBtn"
-#      And   I pause for 5000ms
-#      Then  I expect that the url is "/dashboard"
-#      And   I pause for 3000ms
-
-    @snippet
-    Scenario: Login successfully
-      Given I delete all cookies
-      And   I open the url "https://app-staging.semasoftware.com/login"
-      And   I click on the button "signInWithGithubBtn"
-      And   I pause for 2000ms
-      And   I clear the inputfield "loginInput"
-      When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-      And   I clear the inputfield "passwordInput"
-      And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-      And   I click on the button "signinBtn"
-      And   I pause for 5000ms
-      Then  I expect that the url is "/dashboard"
-      And   I pause for 3000ms
-
     @C1704  @snippet
     Scenario: Snippets can be turned on and turned off
       When I click on the element "snippetsTab"
-      And  I pause for 5000ms
+      
       Then I expect that element "collectionArea" becomes displayed
 #         And  I save the name of collection "firstInActiveCollectionName"
       When I click on the element "firstInActiveCollectionToggle"

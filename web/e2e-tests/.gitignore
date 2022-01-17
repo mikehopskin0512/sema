@@ -1,2 +1,6 @@
 node_modules
 .vscode
+logs
+allure-report
+allure-results
+../../.vscode/settings.json
