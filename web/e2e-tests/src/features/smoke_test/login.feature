@@ -19,7 +19,7 @@ Feature: Login with different user roles
         Then  I expect that the url is "/dashboard"
         And   I pause for 5000ms
         Then  I expect that element "userLogo" becomes displayed
-
+#    C1730
         When  I click on the element "userLogo"
         Then  I expect that element "signOutBtn" becomes displayed
         When  I click on the element "signOutBtn"

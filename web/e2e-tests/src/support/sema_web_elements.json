@@ -49,7 +49,7 @@
     "newSnippetSourceLinkInput"     : "//label[text()='Source Link']/following-sibling::div/input",
     "newSnippetLanguagesInput"      : "//input[@id='react-select-2-input']",
     "newSnippetTagsInput"           : "//input[@id='react-select-3-input']",
-    "newSnippetAuthorNameInput"     : "//label[text()='Author Name']/following-sibling::div/input",
+    "newSnippetAuthorNameInput"     : "//label[text()='']/following-sibling::div/input",
     "saveNewSnippetBtn"             : "//button/span[text()='Save New Snippet']",
     "selectedLeadershipTag"         : "//div[@class='control']//div[text()='Leadership']",
     "selectedTypeScriptLanguage"    : "//div[@class='control']//div[text()='TypeScript']",

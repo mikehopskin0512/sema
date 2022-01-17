@@ -33,22 +33,24 @@ Feature: User is able to interact with snippets properly
 
     @C1704  @snippet
     Scenario: Snippets collection can be turned on and turned off
-#    C2787
+#    C2787  C1737
       When I click on the element "snippetsTab"
       And  I pause for 5000ms
       Then I expect that element "collectionArea" becomes displayed
-#         And  I save the name of collection "firstInActiveCollectionName"
+      And  I pause for 3000ms
+      And  I save the name of collection "firstInActiveCollectionName"
       When I click on the element "firstInActiveCollectionToggle"
       And  I pause for 3000ms
-#        Then  I expect that collection is enabled    #here check name from global variable
-#    C2788
-#         And  I save the name of collection "firstActiveCollectionName"
-      When I click on the element "firstActiveCollectionToggle"
-      And  I pause for 3000ms
+      Then I expect that selected collection is enabled
+          #here check name from global variable
+##    C2788
+##         And  I save the name of collection "firstActiveCollectionName"
+#      When I click on the element "firstActiveCollectionToggle"
+#      And  I pause for 3000ms
 #        Then  I expect that collection is disabled    #here check name from global variable
 
     @C2797  @snippet
-#      C2798
+#      C2798  C1737
     Scenario: Adding new snippet to "My Snippets" collection
       When I click on the element "snippetsTab"
       Then I pause for 3000ms

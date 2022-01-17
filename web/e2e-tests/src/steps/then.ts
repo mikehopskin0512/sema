@@ -90,3 +90,8 @@ Then(
     },
     waitFor
 );
+
+// Then(
+//     /^I expect that selected collection is enabled$/,
+//     checkCollectionActivated
+// )
