@@ -1,15 +1,15 @@
 import type { Selector } from 'webdriverio';
+// @ts-ignore
+import webElements = require('../sema_web_elements.json');
 
 /**
  * Check if the given elements text is the same as the given text
- * @param  {String}   elementType   Element type (element or button)
- * @param  {String}   selector      Element selector
+ * @param  {String}   selector      Elements selector
  * @param  {String}   falseCase     Whether to check if the content equals the
  *                                  given text or not
  * @param  {String}   expectedText  The text to validate against
  */
 export default async (
-    elementType: 'element' | 'button',
     selector: Selector,
     falseCase: boolean,
     expectedText: string
@@ -18,14 +18,7 @@ export default async (
      * The command to execute on the browser object
      * @type {String}
      */
-    let command: 'getText' | 'getValue' = 'getValue';
-
-    if (
-        elementType === 'button'
-        || (await $(selector).getAttribute('value')) === null
-    ) {
-        command = 'getText';
-    }
+    let command = 'getText';
 
     /**
      * The expected text to validate against
@@ -51,6 +44,29 @@ export default async (
         boolFalseCase = true;
     }
 
+    const parsedSelector = webElements[selector];
+    const elements = await $$(selector);
+
+    if (falseCase) {
+        expect(elements).toHaveLength(
+            0,
+            // @ts-expect-error
+            `Expected element "${selector}" not to exist`
+        );
+    } else {
+        expect(elements.length).toBeGreaterThan(
+            0,
+            // @ts-expect-error
+            `Expected element "${selector}" to exist`
+        );
+    }
+
+
+
+
+
+
+    // @ts-ignore
     const text = await $(selector)[command]();
 
     if (boolFalseCase) {

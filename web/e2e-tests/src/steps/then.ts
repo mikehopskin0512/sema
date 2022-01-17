@@ -15,6 +15,7 @@ import checkFontProperty from '../support/check/checkFontProperty';
 import checkSelected from '../support/check/checkSelected';
 import waitFor from '../support/action/waitFor';
 import checkNumberOfElementsExists from "../support/lib/checkNumberOfElementsExists";
+import checkEqualTextForElements from "../support/check/checkEqualTextForElements";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -91,7 +92,7 @@ Then(
     waitFor
 );
 
-// Then(
-//     /^I expect that selected collection is enabled$/,
-//     checkCollectionActivated
-// )
+Then(
+    /^I expect that selected collection is enabled$/,
+    checkEqualTextForElements
+)
