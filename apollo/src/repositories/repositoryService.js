@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import _ from "lodash";
 import { endOfDay, toDate, differenceInCalendarDays, format, sub } from "date-fns";
 import Repositories from './repositoryModel';
@@ -124,9 +123,20 @@ export const findByExternalId = async (externalId) => {
 export const getRepository = async (_id) => {
   try {
     const query = Repositories.findOne({ _id });
-    const repository = await query.lean().exec();
+    return await query.exec();
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
 
-    return repository;
+export const getRepositories = async (ids) => {
+  try {
+    const repos = await Repositories
+      .find({ _id: { $in: ids } })
+      .exec();
+    return repos;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -157,14 +167,14 @@ export const aggregateRepositories = async (externalIds, includeSmartComments, d
       // Tally stats
       const repositories = Promise.all(repos.map(async (repo) => {
         const { _id, externalId = '', name = '', createdAt, updatedAt,
-          repoStats: { smartComments: totalSmartComments = 0, smartCommenters: totalSmartCommenters = 0, smartCodeReviews: totalPullRequests = 0, semaUsers: totalSemaUsers = 0 },
+          repoStats: { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0 },
           repoStats = { userIds: [] } } = repo;
         const data = {
-          stats: {
-            totalSmartComments,
-            totalSmartCommenters,
-            totalPullRequests,
-            totalSemaUsers,
+          repoStats: {
+            smartComments,
+            smartCommenters,
+            smartCodeReviews,
+            semaUsers,
           },
           _id,
           externalId,
@@ -218,8 +228,8 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
                 "$filter": {
                   "input": "$repoStats.reactions",
                   "as": "el",
-                  // "cond": { 
-                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ] 
+                  // "cond": {
+                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ]
                   // },
                   "cond": condition
                 }
@@ -295,8 +305,8 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
                 "$filter": {
                   "input": "$repoStats.tags",
                   "as": "el",
-                  // "cond": { 
-                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ] 
+                  // "cond": {
+                  //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ]
                   // },
                   "cond": condition
                 }

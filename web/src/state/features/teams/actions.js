@@ -5,7 +5,7 @@ import {
   getTeamRepos,
   getTeams,
   postInviteUsersToTeam,
-  updateTeam,
+  updateTeam, updateTeamRepos,
 } from './api';
 import * as types from './types';
 
@@ -156,6 +156,16 @@ export const fetchTeamMembers = (id, params, token) => async (dispatch) => {
   }
 };
 
+export const editTeamRepos = (teamId, repos, token) => async (dispatch) => {
+  try {
+    await updateTeamRepos(teamId, repos, token);
+    return repos;
+  } catch (e) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamReposError(errMessage));
+  }
+}
 
 export const fetchTeamMetrics = (teamId, token) => async (dispatch) => {
   try {

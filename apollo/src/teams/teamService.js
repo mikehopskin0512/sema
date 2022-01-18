@@ -1,15 +1,15 @@
-import { format } from 'date-fns'
+import mongoose from 'mongoose';
 import Team from './teamModel';
 import errors from '../shared/errors';
 import logger from '../shared/logger';
 import UserRole from '../userRoles/userRoleModel';
-import Repositories from '../repositories/repositoryModel';
-import { getRepoByUserIds } from '../repositories/repositoryService';
+import { getRepositories } from '../repositories/repositoryService';
 import { getSmartCommentsByExternalId, _getPullRequests, _getSmartCommentersCount } from '../comments/smartComments/smartCommentService';
 import { uniq } from 'lodash';
 import { createUserRole } from '../userRoles/userRoleService';
 import { getAdminRole } from '../roles/roleService';
 import { semaCorporateTeamName } from '../config';
+const { Types: { ObjectId } } = mongoose;
 
 export const getTeams = async (userId) => {
   const teams = await Team.find({ createdBy: userId });
@@ -66,14 +66,29 @@ export const updateTeam = async (data) => {
   }
 };
 
+export const updateTeamRepos = async (teamId, repoIds) => {
+  try {
+    const team = await Team.findOneAndUpdate(
+      { _id: teamId },
+      { $set: { repos: repoIds.map((id) => new ObjectId(id)) } }
+    ).exec();
+    return team;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+
 export const getTeamRepos = async (teamId) => {
   try {
-    const { members } = await getTeamMembers(teamId, {}, 'all');
-    const memberIds = members.map((member) => {
-      return member.user._id
-    });
-    const repositories = await getRepoByUserIds(memberIds);
-    return repositories;
+    const [team] = await Team
+      .find({ _id: teamId })
+      .select('repos')
+      .exec();
+    const ids = team?.repos.map(repo => repo._id.toString()) || [];
+    return getRepositories(ids);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -105,7 +120,7 @@ export const getTeamMetrics = async (teamId) => {
     return totalMetrics;
     // TODO: Implementation of metrics chart.
     // For metrics chart
-    // const smartCommentsByDate = {} 
+    // const smartCommentsByDate = {}
     // smartComments.forEach((comment) => {
     //   const formattedDate = format(new Date(comment.createdAt), 'yyyy-MM-dd')
     //   if (smartCommentsByDate[formattedDate]) {

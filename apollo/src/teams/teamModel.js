@@ -11,6 +11,10 @@ const teamSchema = new Schema({
     collectionData: { type: mongoose.Schema.Types.ObjectId, ref: 'Collection' },
     isActive: { type: Boolean, default: true },
   }],
+  repos: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Repository',
+  }],
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
