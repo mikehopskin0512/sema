@@ -88,9 +88,11 @@ jobs:
       - run: 
           name: run tests
           command: |
-            npm run wdio
+            npm run wdio -- --cucumberOpts.tagExpression='@parser' 
             ping -c 5 app-staging.semasoftware.com
           working_directory: web/e2e-tests
+      - store_test_results:
+          path: web/e2e-tests/allure-results
       - slack/notify:
           event: fail
           template: basic_fail_1
