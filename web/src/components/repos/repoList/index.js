@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { RepoType } from './types';
+import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
+import TeamReposList from '../../../components/teamReposList';
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
-import { ListIcon, GridIcon } from '../../Icons';
+import { ListIcon, GridIcon, PlusIcon } from '../../Icons';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
   MY_REPOS: 'My Repos',
-  REPOS: 'Repos'
+  REPOS: 'Repos',
 };
 
 const filterOptions = [
@@ -25,7 +26,7 @@ const RepoList = ({ type, repos = [] }) => {
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState(filterOptions[0]);
   const [filteredRepos, setFilteredRepos] = useState([]);
-
+  const { isTeamAdmin } = usePermission();
   const sortRepos = async () => {
     setFilteredRepos([]);
     let sortedRepos = [];
@@ -72,12 +73,18 @@ const RepoList = ({ type, repos = [] }) => {
     setFilteredRepos(repos);
     sortRepos();
   }, [])
-
+  const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
     repos.length > 0 ? (
       <div className="mb-50">
+        {isTeamAdmin && (
+          <TeamReposList
+            isActive={isRepoListOpen}
+            onClose={() => setRepoListOpen(false)}
+          />
+        )}
         <div className="is-flex is-justify-content-space-between">
-          <div>
+          <div className="is-flex">
             <p className="is-inline-block has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
             {
               type === 'REPOS' &&
@@ -93,8 +100,18 @@ const RepoList = ({ type, repos = [] }) => {
                 options={filterOptions}
               />)
             }
+            {isTeamAdmin && (
+              <button
+                type="button"
+                className="ml-16 button is-primary"
+                onClick={() => setRepoListOpen(true)}
+              >
+                <PlusIcon size="small" />
+                <span className="ml-8">Add a Repo</span>
+              </button>
+            )}
           </div>
-          { type !== 'REPOS' &&
+          { type !== 'REPOS' && (
             <div className="is-flex">
               <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
                 <ListIcon />
@@ -103,7 +120,7 @@ const RepoList = ({ type, repos = [] }) => {
                 <GridIcon />
               </button>
             </div>
-          }
+          )}
         </div>
         {view === 'grid' ? (
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">

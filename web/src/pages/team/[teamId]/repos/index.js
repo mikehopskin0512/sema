@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux'
-import { Helmet } from 'react-helmet'
-import { TeamReposHelmet } from '../../../../components/utils/Helmet'
-import Loader from '../../../../components/Loader'
-import ReposView from '../../../../components/repos/reposView'
+import { useSelector, useDispatch } from 'react-redux';
+import { Helmet } from 'react-helmet';
+import { TeamReposHelmet } from '../../../../components/utils/Helmet';
+import Loader from '../../../../components/Loader';
+import ReposView from '../../../../components/repos/reposView';
 import { teamsOperations } from '../../../../state/features/teams';
 import withLayout from '../../../../components/layout';
 

@@ -9,35 +9,35 @@ const initialState = {
   user: {},
   userVoiceToken: null,
   selectedTeam: {},
-  profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW
+  profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
-      const collections = state.user.collections.map((collection) => {
-        if (action.collectionId !== collection.collectionData._id) {
-          return collection
-        }
-        return {
-          ...collection,
-          collectionData: {
-            ...collection.collectionData,
-            comments: [
-              ...collection.collectionData.comments,
-              action.suggestedComment
-            ]
-          }
-        };
-      })
+  case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
+    const collections = state.user.collections.map((collection) => {
+      if (action.collectionId !== collection.collectionData._id) {
+        return collection;
+      }
       return {
-        ...state,
-        user: {
-          ...state.user,
-          collections,
+        ...collection,
+        collectionData: {
+          ...collection.collectionData,
+          comments: [
+            ...collection.collectionData.comments,
+            action.suggestedComment,
+          ],
         },
       };
-    }
+    });
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        collections,
+      },
+    };
+  }
   case types.AUTHENTICATE_REQUEST:
     return {
       ...state,
@@ -168,7 +168,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      users: [],
+      // users: [],
       error: action.errors,
     };
   case types.FETCH_CURRENT_USER:
@@ -199,7 +199,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       profileViewMode: action.profileViewMode,
-    }
+    };
   default:
     return state;
   }

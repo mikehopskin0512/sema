@@ -86,7 +86,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      if (!isEmpty(selectedTeam)) {
+      if (!isEmpty(selectedTeam) && isTeamSnippet) {
         dispatch(updateTeamCollectionIsActiveAndFetchCollections(selectedTeam.team, _id, token))
       } else {
         dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
@@ -98,7 +98,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     };
 
     const onClickArchiveCollection = async () => {
-      const collection = await dispatch(updateCollection(_id, { collection: { isActive: false } }, token));
+      const collection = await dispatch(updateCollection(_id, { collection: { isActive: false, author } }, token));
       if (collection) {
         dispatch(triggerAlert('Collection archived!', 'success'));
         dispatch(fetchAllUserCollections(token));
@@ -108,7 +108,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     }
 
     const onClickUnarchiveCollection = async () => {
-      const collection = await dispatch(updateCollection(_id, { collection: { isActive: true } }, token));
+      const collection = await dispatch(updateCollection(_id, { collection: { isActive: true, author } }, token));
       if (collection) {
         dispatch(triggerAlert('Collection unarchived!', 'success'));
         dispatch(fetchAllUserCollections(token));

@@ -24,7 +24,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index }) => {
     
     dispatch(setSelectedTeam(role));
     dispatch(setProfileViewMode(viewMode));
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}`);
+    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}`);
   };
 
   const isFirstTeam = (index) => index === 0;

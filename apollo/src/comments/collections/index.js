@@ -5,6 +5,7 @@ import errors from '../../shared/errors';
 import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, update } from './collectionService';
 import Team from "../../teams/teamModel";
 import { populateCollectionsToUsers } from "../../users/userService";
+import { _checkPermission } from '../../shared/utils';
 
 const route = Router();
 
@@ -12,12 +13,24 @@ export default (app, passport) => {
   app.use(`/${version}/comments/collections`, route);
 
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { body: { collection }, params: { id }, user: { _id } } = req;
+    const { body: { collection }, params: { id }, user } = req;
+    const { _id } = user;
     try {
       let payload;
       if (collection) {
-        payload = await update({_id: id, ...collection});
+        if (collection?.author === 'sema') {
+          if (!(_checkPermission(semaCorporateTeamId, 'canEditCollections', user))) {
+            throw new errors.Unauthorized('User does not have permission');
+          }
+        }
+        payload = await update({ _id: id, ...collection });
       } else {
+        const collectionData = await findById(id)
+        if (collectionData?.author === 'sema') {
+          if (!(_checkPermission(semaCorporateTeamId, 'canEditCollections', user))) {
+            throw new errors.Unauthorized('User does not have permission');
+          }
+        }
         payload = await toggleActiveCollection(_id, id);
         if (payload.status == 400) {
           return res.status('400').send(payload);

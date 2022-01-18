@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
@@ -38,7 +38,8 @@ function Layout({ Component, pageProps }) {
   const { checkAccess } = usePermission();
   const router = useRouter();
   const dispatch = useDispatch();
-const [dataLoaded, setDataLoaded] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const { authState: { user = null } } = useSelector(state => state);
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
       const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));
@@ -50,12 +51,15 @@ const [dataLoaded, setDataLoaded] = useState(false);
   useEffect(() => {
     setDataLoaded(false);
     const accountData = localStorage.getItem('sema_selected_team');
-    const selectedTeam = accountData ? JSON.parse(accountData) : null;
-    if (!!selectedTeam?.team?._id) {
+    let selectedTeam = accountData ? JSON.parse(accountData) : null;
+
+    if (!!selectedTeam?.team?._id && user._id === selectedTeam?.user) {
       // team view mode
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
     } else {
       // individual view mode
+      selectedTeam = null;
+      localStorage.removeItem('sema_selected_team')
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     setDataLoaded(true);
@@ -93,7 +97,7 @@ const Application = ({ Component, pageProps, store }) => {
 
   return (
     <Provider store={store}>
-      <Layout Component={Component} pageProps={pageProps} />
+      <Layout Component={Component} pageProps={pageProps}/>
     </Provider>
   );
 };

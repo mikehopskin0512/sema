@@ -16,7 +16,7 @@ const ActionMenu = ({ collectionData }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const dispatch = useDispatch();
-  const { _id = '', isActive, name } = collectionData || {};
+  const { _id = '', isActive, name, author } = collectionData || {};
   const { token } = useSelector((state) => state.authState);
 
   const onClickChild = (e) => {
@@ -24,7 +24,7 @@ const ActionMenu = ({ collectionData }) => {
   };
 
   const toggleArchiveCollection = async (activeStatus) => {
-    const collection = await dispatch(updateCollection(_id, { collection: { isActive: activeStatus } }, token));
+    const collection = await dispatch(updateCollection(_id, { collection: { isActive: activeStatus, author } }, token));
     if (collection) {
       dispatch(triggerAlert(activeStatus ? 'Collection unarchived!' : 'Collection archived!', 'success'));
       dispatch(fetchAllUserCollections(token));

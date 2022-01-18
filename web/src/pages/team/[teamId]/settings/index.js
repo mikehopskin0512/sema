@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash'
-import clsx from 'clsx';
-import Avatar from 'react-avatar';
 import { Helmet } from 'react-helmet';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
-import { PlusIcon } from '../../../../components/Icons';
-import styles from './settings.module.scss';
-import { PATHS } from '../../../../utils/constants';
 import { teamsOperations } from '../../../../state/features/teams';
+import TeamInfo from '../../../../components/team/TeamInfo';
+import LabelsManagement from '../../../../components/team/LabelsManagement';
+import TeamManagement from '../../../../components/team/TeamManagement';
+import usePermission from '../../../../hooks/usePermission';
+import { TAB } from '../../../../utils/constants';
 
 const { fetchTeamMembers } = teamsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
   const router = useRouter();
   const {
-    query: { teamId },
-  } = useRouter();
+    query: { teamId, tab },
+  } = router;
+
   const { auth, teams } = useSelector(
     (state) => ({
       auth: state.authState,
@@ -28,11 +30,17 @@ const TeamSettings = () => {
     }),
   );
   const { token, user } = auth;
-
   const [userRole, setUserRole] = useState({});
 
+  const setDefaultTag = () => {
+    router.push({
+      pathname: `/team/${teamId}/settings`,
+      query: { tab: 'info' },
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, {} ,token));
+    dispatch(fetchTeamMembers(teamId, {}, token));
   }, [teamId])
 
   useEffect(() => {
@@ -46,12 +54,26 @@ const TeamSettings = () => {
     }
   }, [teams]);
 
+  useEffect(() => {
+    !tab && setDefaultTag();
+  }, []);
+
   const menus = [
     {
       name: 'Team Info',
-      path: '/settings',
-      pathname: `${PATHS.TEAM._}/[teamId]/settings`,
+      path: `/team/${teamId}/settings`,
+      tab: TAB.info,
     },
+    {
+      name: 'Team Management',
+      path: `/team/${teamId}/settings`,
+      tab: TAB.management,
+    },
+    (isTeamAdminOrLibraryEditor() && {
+      name: 'Labels Management',
+      path: `/team/${teamId}/settings`,
+      tab: TAB.labels,
+    }),
   ];
 
   return (
@@ -60,33 +82,9 @@ const TeamSettings = () => {
         <Helmet {...TeamDashboardHelmet} />
         <div className="hero-body pb-300">
           <PageHeader menus={menus} userRole={userRole} />
-          <div className="content-container px-20">
-            <div className='is-flex is-align-items-center is-justify-content-space-between'>
-              <div className="is-flex is-align-items-center mb-15">
-                <Avatar
-                  name={userRole?.team?.name || "Team"}
-                  src={userRole?.team?.avatarUrl}
-                  size="35"
-                  round
-                  textSizeRatio={2.5}
-                  className=""
-                  maxInitials={2}
-                />
-                <p className="has-text-weight-semibold has-text-black-950 is-size-5 ml-20">
-                  {userRole?.team?.name}
-                </p>
-                <span
-                  className={clsx('ml-15 p-15 tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-primary', styles.tag)}
-                >
-                  {teams.membersCount === 1 ? `${teams.membersCount} member` : `${teams.membersCount} members`}
-                </span>
-              </div>
-              <button class="button is-primary is-outlined is-pulled-right has-text-weight-semibold" onClick={() => router.push(`/team/${teamId}/edit`)}>Edit</button>
-            </div>
-            <div className={clsx(styles['team-description'], `has-text-gray-800 is-flex is-justify-content-space-between mb-25 is-flex-wrap-wrap`)}>
-              <p>{`${userRole?.team?.description || ''}`}</p>
-            </div>
-          </div>
+          {tab === 'info' && <TeamInfo userRole={userRole} teams={teams} teamId={teamId}  />}
+          {tab === 'management' && <TeamManagement />}
+          {tab === 'labels' && <LabelsManagement />}
         </div>
       </div>
     </>

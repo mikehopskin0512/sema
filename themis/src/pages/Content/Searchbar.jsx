@@ -4,19 +4,21 @@ import { debounce } from 'lodash/function';
 import ProfileSwitcher from './components/ProfileSwitcher';
 import SuggestionModal from './components/SuggestionModal';
 import { EVENTS, SUGGESTION_URL } from './constants';
-import { fireAmplitudeEvent } from './modules/content-util';
+import { fetchTeams, fireAmplitudeEvent } from './modules/content-util';
 
 import {
   toggleSearchModal,
   addSuggestedComments,
   updateSearchBarInputValue,
   usedSmartComment,
+  updateTeams,
 } from './modules/redux/action';
 
 const SearchBar = ({ id, commentBox, onTextPaste }) => {
   const dispatch = useDispatch();
   const { isSearchModalVisible, searchValue } = useSelector((state) => state.semasearches[id]);
   const { user, selectedProfile } = useSelector((state) => state);
+  const { isLoggedIn } = user;
   const toggleModal = ({ isOpen }) => dispatch(toggleSearchModal({ id, isOpen }));
   const onLastUsedSmartComment = (payload) => dispatch(usedSmartComment(payload));
   const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +101,13 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
       getSuggestionsDebounced.current(searchValue, selectedProfile);
     }
   }, [selectedProfile]);
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchTeams().then((teams) => {
+        dispatch(updateTeams(teams));
+      });
+    }
+  }, [isLoggedIn]);
 
   return (
     <div>
@@ -121,7 +130,9 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
             <i className="fas fa-search" />
           </span>
         </div>
-        <ProfileSwitcher />
+        {isLoggedIn && (
+          <ProfileSwitcher />
+        )}
       </div>
       <div
         className={`sema-dropdown sema-is-flex ${

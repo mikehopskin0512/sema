@@ -25,7 +25,6 @@ import {
   setTextareaSemaIdentifier,
   checkSubmitButton,
   fireAmplitudeEvent,
-  fetchTeams,
   fetchCurrentUser,
 } from './modules/content-util';
 
@@ -57,7 +56,6 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
   toggleSnippetForSave,
-  updateTeams,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
@@ -80,7 +78,7 @@ const checkLoggedIn = (cb) => {
       cb(response);
     });
   } catch (error) {
-    // console.log('Sema Code Assistant extension is disabled');
+    console.error('Sema Code Assistant extension is disabled');
   }
 };
 
@@ -108,7 +106,6 @@ const onLoginChecked = () => {
     initAmplitude(user);
     showLogoutToaster();
   });
-
   /**
        * Listening to click event for:
        * 1. if github button is pressed then put sema comments in the textarea
@@ -389,10 +386,6 @@ const onLoginChecked = () => {
     $('div.sema').removeClass('sema-is-form-bordered');
   },
   true);
-
-  fetchTeams().then((teams) => {
-    store.dispatch(updateTeams(teams));
-  });
 };
 
 checkLoggedIn(onLoginChecked);

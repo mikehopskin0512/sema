@@ -142,7 +142,7 @@ const Table = ({
         </table>
       </div>
       {!minimal &&
-        <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center">
+        <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center pl-20">
           <div className="is-flex is-align-items-center">
             <div className='mr-10'>Items per page</div>
             <div className="select">

@@ -8,15 +8,15 @@ import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 
 const statLabels = {
-  totalPullRequests: 'Smart Code Reviews',
-  totalSmartComments: 'Smart Comments',
-  totalSmartCommenters: 'Smart Commenters',
-  totalSemaUsers: 'Sema User',
+  smartCodeReviews: 'Smart Code Reviews',
+  smartComments: 'Smart Comments',
+  smartCommenters: 'Smart Commenters',
+  semaUsers: 'Sema User',
 };
 
 const RepoCard = (props) => {
   const {
-    name, externalId, stats, users = [], column = 3
+    name, externalId, repoStats, users = [], column = 3
   } = props;
 
   const onClickRepo = () => {
@@ -48,7 +48,7 @@ const RepoCard = (props) => {
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">
             {Object.keys(statLabels).map((item, i) => (
               <div className={clsx('my-12 is-flex', styles.stat)} key={i}>
-                {renderStats(statLabels[item], stats?.[item])}
+                {renderStats(statLabels[item], repoStats?.[item])}
               </div>
             ))}
           </div>

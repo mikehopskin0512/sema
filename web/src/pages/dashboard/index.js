@@ -37,7 +37,7 @@ const Dashboard = () => {
   }));
   const { token, user } = auth;
   const { identities, isOnboarded = null } = user;
-  const userRepos = identities.length ? identities[0].repositories : [];
+  const userRepos = identities?.length ? identities[0].repositories : [];
   const isLoaded = !userRepos.length || (userRepos.length && repositories.length);
 
   const logOnboardingAcitvity = (page) => {
