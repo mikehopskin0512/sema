@@ -9,7 +9,7 @@ import withSelectedTeam from '../../../components/auth/withSelectedTeam';
 import styles from './teamInvite.module.scss';
 import { useForm } from 'react-hook-form';
 import { ArrowLeftIcon, CheckOnlineIcon } from '../../../components/Icons';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_TEAM_ID, TAB } from '../../../utils/constants';
 import { rolesOperations } from '../../../state/features/roles';
 import { teamsOperations } from '../../../state/features/teams';
 import { fetchUsers } from '../../../state/features/users/actions';
@@ -61,7 +61,7 @@ const TeamInvitePage = () => {
       }, token));
     }
 
-    await router.push(`${PATHS.TEAM._}/${SEMA_CORPORATE_TEAM_ID}`);
+    await router.push(`${PATHS.TEAM._}/${SEMA_CORPORATE_TEAM_ID}${PATHS.SETTINGS}?tab=${TAB.management}`);
   };
 
   const onCancel = async () => {
@@ -72,6 +72,16 @@ const TeamInvitePage = () => {
     value: item._id,
     label: item.username,
   })), [users]);
+
+  const checkForSelectedTeam = () => {
+    if (!authState.selectedTeam || !authState.selectedTeam.team) {
+      return router.push(PATHS.DASHBOARD);
+    }
+  }
+
+  useEffect(() => {
+    checkForSelectedTeam();
+  }, []);
 
   return (
     <div className="has-background-gray-100 hero">
@@ -152,4 +162,4 @@ const TeamInvitePage = () => {
   );
 };
 
-export default withSelectedTeam(withLayout(TeamInvitePage));
+export default withLayout(TeamInvitePage);

@@ -62,9 +62,9 @@ const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [accountData] = useLocalStorage('sema_selected_team');
-  const { checkAccess } = usePermission();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
 
-  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
+  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,

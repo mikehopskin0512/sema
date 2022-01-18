@@ -24,7 +24,7 @@ const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
 const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkAccess } = usePermission();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
   const [accountData] = useLocalStorage('sema_selected_team');
 
   const { query } = router;
@@ -44,7 +44,7 @@ const EditLabel = () => {
   const { token } = auth;
   const { isFetching, tag, tags: existingTags } = tagsState;
 
-  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
+  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
