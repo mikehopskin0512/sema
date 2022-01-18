@@ -40,7 +40,6 @@ jobs:
       AWS_REGION: us-east-1
     machine:
       image: ubuntu-2004:202111-02
-    resource_class: small
     steps:
       - checkout
       - run: git checkout test-automation
@@ -53,10 +52,11 @@ jobs:
       - run:
           name: Connect to VPN
           command: |
-            sudo openvpn --config config.ovpn --askpass vpn.login & 
+            sudo openvpn --config config.ovpn --askpass vpn.login > openvpn.log 2>&1 &
             while [ -n "$(ip addr show tun0 2>&1 > /dev/null)" ]; do
               sleep 0.1;
             done
+            cat openvpn.log
       - run:
           name: install utilities
           command: sudo apt-get update -y && sudo apt-get install awscli -y
@@ -88,7 +88,7 @@ jobs:
       - run: 
           name: run tests
           command: |
-            # npm run wdio
+            npm run wdio
             ping -c 5 app-staging.semasoftware.com
           working_directory: web/e2e-tests
       - slack/notify:
