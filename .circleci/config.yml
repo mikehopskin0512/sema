@@ -38,8 +38,8 @@ jobs:
   test-web:
     environment:
       AWS_REGION: us-east-1
-    docker:
-      - image: circleci/node:15.14.0-browsers
+    machine:
+      image: ubuntu-2004:202111-02
     steps:
       - checkout
       - run: git checkout test-automation
