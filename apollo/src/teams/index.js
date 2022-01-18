@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { version } from '../config';
 import logger from '../shared/logger';
+import errors from '../shared/errors';
 import {
   createTeam,
   getTeamMembers,
@@ -13,6 +14,8 @@ import {
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
 import { semaCorporateTeamId } from '../config';
+import { findById } from '../comments/collections/collectionService';
+import { _checkPermission } from '../shared/utils';
 
 const route = Router();
 
@@ -48,8 +51,15 @@ export default (app, passport) => {
   });
 
   route.put('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { user } = req;
     try {
-      const teamData = req.body
+      const { action, ...teamData } = req.body
+      if (action === 'toggleTeamCollection') {
+        // This is toggle option
+        if (!(_checkPermission(teamData._id, 'canEditCollections', user))) {
+          throw new errors.Unauthorized('User does not have permission');
+        }
+      }
       const team = await updateTeam(teamData);
       return res.status(200).send(team);
     } catch (error) {

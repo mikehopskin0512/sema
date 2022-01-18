@@ -4,24 +4,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
+import { teamsOperations } from '../../../state/features/teams';
 import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
+import { isEmpty } from 'lodash';
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
+const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
 
 const CollectionRow = ({ data }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { token } = useSelector((state) => state.authState);
+  const { token, selectedTeam } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
   const { _id, name, description, source, author, commentsCount, isActive: isNotArchived } = collectionData;
   const { checkAccess } = usePermission();
 
+  const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+
   const onChangeToggle = (e) => {
     e.stopPropagation();
-    dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+    // TODO: would be great to add error handling here in case of network error
+    if (!isEmpty(selectedTeam) && isTeamSnippet) {
+      dispatch(updateTeamCollectionIsActiveAndFetchCollections(selectedTeam.team, _id, token))
+    } else {
+      dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
+    }
   };
 
   const onClickChild = (e) => {
@@ -64,7 +74,7 @@ const CollectionRow = ({ data }) => {
             <p className={"is-size-7 has-text-weight-semibold"}>
               {name}
             </p>
-            { name?.toLowerCase() === DEFAULT_COLLECTION_NAME && (
+            { (name?.toLowerCase() === DEFAULT_COLLECTION_NAME || isTeamSnippet) && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}

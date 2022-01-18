@@ -77,7 +77,7 @@ const toggleUserCollectionActiveSuccess = (user) => ({
 });
 
 const toggleUserCollectionActiveError = (errors) => ({
-  type: types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS,
+  type: types.TOGGLE_USER_COLLECTION_ACTIVE_ERROR,
   errors,
 });
 
@@ -402,9 +402,11 @@ export const setActiveUserCollections = (id, token) => async (dispatch) => {
     const response = await toggleActiveCollection(id, token);
     const { data: { user } } = response;
     dispatch(toggleUserCollectionActiveSuccess(user));
+    return response.status || 200;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(toggleUserCollectionActiveError(errMessage));
+    return status || '401';
   }
 };

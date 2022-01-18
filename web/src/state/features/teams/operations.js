@@ -21,6 +21,7 @@ export const updateTeamCollectionIsActiveAndFetchCollections = (body, collection
 
     });
     updatedTeam.collections = newCollections;
+    updatedTeam.action = 'toggleTeamCollection'
     await dispatch(actions.editTeam(updatedTeam, token));
     const roles = await dispatch(actions.fetchTeamsOfUser(token))
     const activeTeam = find(roles, function(o) {
