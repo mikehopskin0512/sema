@@ -40,6 +40,7 @@ jobs:
       AWS_REGION: us-east-1
     machine:
       image: ubuntu-2004:202111-02
+    resource_class: small
     steps:
       - checkout
       - run: git checkout test-automation
@@ -52,7 +53,7 @@ jobs:
       - run:
           name: Connect to VPN
           command: |
-            sudo openvpn --config config.ovpn --askpass vpn.login
+            sudo openvpn --config config.ovpn --askpass vpn.login & 
             while [ -n "$(ip addr show tun0 2>&1 > /dev/null)" ]; do
               sleep 0.1;
             done
