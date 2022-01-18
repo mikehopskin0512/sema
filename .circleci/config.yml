@@ -44,6 +44,7 @@ jobs:
       - checkout
       - run: git checkout test-automation
       - openvpn/install
+      - openvpn/connect
       - run:
           name: install utilities
           command: sudo apt-get update -y && sudo apt-get install awscli -y
@@ -77,7 +78,8 @@ jobs:
       - run: 
           name: run tests
           command: |
-            npm run wdio
+            # npm run wdio
+            ping -c 5 app-staging.semasoftware.com
           working_directory: web/e2e-tests
       - slack/notify:
           event: fail
