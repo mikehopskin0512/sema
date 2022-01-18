@@ -1,26 +1,24 @@
 @snippets
 Feature: User is able to interact with snippets properly
-    @C1704  @snippet
+    @admin  @C1704  @snippet
     Scenario: Snippets collection can be turned on and turned off
 #    C2787  C1737
       When I click on the element "snippetsTab"
       
       Then I expect that element "collectionArea" becomes displayed
-#         And  I save the name of collection "firstInActiveCollectionName"
       When I click on the element "firstInActiveCollectionToggle"
+      Then I expect that element "firstInActiveCollectionName" becomes displayed
+      When I save the name of collection "firstInActiveCollectionName"
+      And  I click on the element "firstInActiveCollectionToggle"
       And  I pause for 3000ms
-      And  I save the name of collection "firstInActiveCollectionName"
-      When I click on the element "firstInActiveCollectionToggle"
-      And  I pause for 3000ms
-      Then I expect that selected collection is enabled
-          #here check name from global variable
+      Then I expect that selected collection element "activeCollectionsNames" is enabled
 ##    C2788
-##         And  I save the name of collection "firstActiveCollectionName"
-#      When I click on the element "firstActiveCollectionToggle"
-#      And  I pause for 3000ms
-#        Then  I expect that collection is disabled    #here check name from global variable
+      When I save the name of collection "firstActiveCollectionName"
+      And  I click on the element "firstActiveCollectionToggle"
+      And  I pause for 3000ms
+      Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
-    @C2797  @snippet
+    @admin  @C2797  @snippet
 #      C2798  C1737
     Scenario: Adding new snippet to "My Snippets" collection
       When I click on the element "snippetsTab"
@@ -40,20 +38,20 @@ Feature: User is able to interact with snippets properly
       And  I click on the button "saveNewSnippetBtn"
 #        Then  I expect that new snippet is added       #here check name from global variable
 
-    @C2814  @snippet
-        #only for admin and library users    todo
+    @admin  @C2814  @snippet
+        #only for admin and library users
     Scenario: Adding new snippet to already existing collection
       When I click on the element "snippetsTab"
       Then I expect that element "2ndExistingCollection" becomes displayed
       When I click on the element "2ndExistingCollection"
-      Then I expect that element "addNewSnippetInCollectionBtn" is displayed
+      Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
 
       When I click on the element "addNewSnippetInCollectionBtn"
       Then I expect that element "newSnippetTitleInput" becomes displayed
       When I set "Test Snippet in existing collection" to the inputfield "newSnippetTitleInput"
       And  I set "Body text test" to the inputfield "newSnippetBodyInput"
       And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
-      And  I set "Source Link test" to the inputfield "newSnippetSourceLinkInput"
+      And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
 
       And  I click on the element "newSnippetLanguagesInput"
       And  I set "Java" to the inputfield "newSnippetLanguagesInput"

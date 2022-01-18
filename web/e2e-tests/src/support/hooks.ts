@@ -48,10 +48,10 @@ export const hooks = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: async function (capabilities, specs) {        
-        await browser.url('https://app.semasoftware.com/login');
+        await browser.url('https://app-staging.semasoftware.com/login');
         await $('span=Sign in with GitHub').click();
-        await $('#login_field').setValue('zicury@semasoftware.com');
-        await $('#password').setValue('change me!');
+        await $('#login_field').setValue('qateam+automationadmin@semasoftware.com');
+        await $('#password').setValue('Automation1Tester2#');
         await $('.js-sign-in-button').click();
 
         //TODO: if message appears, we should click it to skip

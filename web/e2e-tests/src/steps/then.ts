@@ -93,6 +93,6 @@ Then(
 );
 
 Then(
-    /^I expect that selected collection is enabled$/,
+    /^I expect that selected collection element "([^"]*)?" is( not)* (enabled|disabled)$/,
     checkEqualTextForElements
 )

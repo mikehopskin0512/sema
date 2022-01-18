@@ -19,7 +19,7 @@
     "signInWithGithubBtn"           : "span=Sign in with GitHub",
     "loginInput"                    : "#login_field",
     "passwordInput"                 : "#password",
-    "signinBtn"                     : ".js-sign-in-button",    
+    "signinBtn"                     : ".js-sign-in-button",
 
     "########### REPOS LOCATORS ###############" : "",
     "reposContainer"                : "div.reposView_repos-container__2oRmp",
@@ -32,6 +32,9 @@
     "firstActiveCollectionToggle"   : "//div[contains(@class,'is-clickable')][1]//input[@checked]",
     "createdTestCollectionToggle"   : "//p[text()='Test Collection']/following-sibling::div/input[@checked]",
 
+    "allCollectionsNames"           : "//div[@id='collectionBody']//p[contains(@class,'has-text-black-900')]",
+    "activeCollectionsNames"        : "//div[contains(@class,'is-justify-content-flex-start')][1]//p[contains(@class,'has-text-black-900')]",
+    "inactiveCollectionsNames"      : "//div[contains(@class,'is-justify-content-flex-start')][2]//p[contains(@class,'has-text-black-900')]",
     "mySnippetsCollection"          : "//p[text()='My Snippets']",
     "philosophiesCollection"        : "//p[text()='Philosophies']",
     "testTagCollection"             : "//p[text()='Test Collection FOR TAGS']",

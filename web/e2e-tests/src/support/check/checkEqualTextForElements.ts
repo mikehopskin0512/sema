@@ -1,18 +1,19 @@
-import type { Selector } from 'webdriverio';
+import type {Selector} from 'webdriverio';
 // @ts-ignore
 import webElements = require('../sema_web_elements.json');
+import {GlobalVars} from "../GlobalVars";
 
 /**
  * Check if the given elements text is the same as the given text
  * @param  {String}   selector      Elements selector
  * @param  {String}   falseCase     Whether to check if the content equals the
  *                                  given text or not
- * @param  {String}   expectedText  The text to validate against
+ * @param  {String}   state         The state of the collection
  */
 export default async (
     selector: Selector,
     falseCase: boolean,
-    expectedText: string
+    state: boolean
 ) => {
     /**
      * The command to execute on the browser object
@@ -24,7 +25,7 @@ export default async (
      * The expected text to validate against
      * @type {String}
      */
-    let parsedExpectedText = expectedText;
+    let parsedExpectedText = GlobalVars.globalCollectionName;
 
     /**
      * Whether to check if the content equals the given text or not
@@ -44,34 +45,18 @@ export default async (
         boolFalseCase = true;
     }
 
-    const parsedSelector = webElements[selector];
     const elements = await $$(selector);
 
-    if (falseCase) {
-        expect(elements).toHaveLength(
-            0,
-            // @ts-expect-error
-            `Expected element "${selector}" not to exist`
-        );
-    } else {
-        expect(elements.length).toBeGreaterThan(
-            0,
-            // @ts-expect-error
-            `Expected element "${selector}" to exist`
-        );
-    }
-
-
-
-
-
-
-    // @ts-ignore
-    const text = await $(selector)[command]();
-
-    if (boolFalseCase) {
-        expect(parsedExpectedText).not.toBe(text);
-    } else {
-        expect(parsedExpectedText).toBe(text);
+    for (let i = 0; i < elements.length; i++) {
+        // @ts-ignore
+        const text = await $(elements[i])[command]();
+        if (!boolFalseCase) {
+            if (parsedExpectedText === text) {
+                expect(parsedExpectedText).toBe(text);
+                break;
+            }
+        } else {
+            expect(parsedExpectedText).not.toBe(text);
+        }
     }
 };

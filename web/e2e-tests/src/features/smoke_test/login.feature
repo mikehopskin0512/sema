@@ -1,7 +1,7 @@
 @login
 Feature: Login with different user roles
 
-    @C1724
+    @admin  @C1724
     Scenario: Normal user can be logged in and logged out successfully                      
         Then  I expect that the url is "/dashboard"        
         And   I expect that element "userLogo" becomes displayed

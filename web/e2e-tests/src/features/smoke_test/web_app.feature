@@ -6,7 +6,7 @@ Feature: Web tabs should contains all functionality items
         Then I expect that the url is "/dashboard"
         When I click on the button "reposTab"        
         Then I expect that the url is "/dashboard"
-        And  I expect that the title is "Sema23d Dashboard"        
+        And  I expect that the title is "Sema Dashboard"
 
         When I click on the button "personalInsightsTab"
         And  I expect that element "personalInsightsHeader" becomes displayed
