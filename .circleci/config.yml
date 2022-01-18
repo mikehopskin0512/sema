@@ -44,7 +44,20 @@ jobs:
       - checkout
       - run: git checkout test-automation
       - openvpn/install
-      - openvpn/connect
+      - run:
+          name: Init VPN
+          command: |
+            echo ${<<VPN_CONFIG>>:?} | base64 --decode >> config.ovpn
+            echo ${<<VPN_LOGIN>>:?} | base64 --decode >> vpn.login
+      - run:
+          name: Connect to VPN
+          command: |
+            wget -qO- http://checkip.amazonaws.com | tee initial.ip
+            sudo openvpn --config config.ovpn --askpass vpn.login > openvpn.log 2>&1 &
+            while [ -n "$(ip addr show tun0 2>&1 > /dev/null)" ]; do
+              sleep 0.1;
+            done
+            cat openvpn.log
       - run:
           name: install utilities
           command: sudo apt-get update -y && sudo apt-get install awscli -y
