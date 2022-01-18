@@ -1,3 +1,0 @@
-2021-10-29T20:09:00.533Z INFO @wdio/local-runner: Run worker command: run
-2021-10-29T20:09:00.982Z DEBUG @wdio/config:utils: Found 'ts-node' package, auto-compiling TypeScript files
-2021-10-29T20:09:01.155Z DEBUG @wdio/local-runner:utils: init remote session

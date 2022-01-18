@@ -6,7 +6,12 @@
 // enhance it and build services around it. You can either apply a single function to it or
 // an array of methods. If one of them returns with a promise,
 // WebdriverIO will wait until that promise is resolved to continue.
+
 //
+
+const allure = require('allure-commandline');
+//import users = require('users.json');
+
 export const hooks = {
     /**
      * Gets executed once before all workers get launched.
@@ -42,14 +47,23 @@ export const hooks = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: async function (capabilities, specs) {        
+        await browser.url('https://app.semasoftware.com/login');
+        await $('span=Sign in with GitHub').click();
+        await $('#login_field').setValue('zicury@semasoftware.com');
+        await $('#password').setValue('change me!');
+        await $('.js-sign-in-button').click();
+
+        //TODO: if message appears, we should click it to skip
+
+        browser.pause(20000);        
+    },
     /**
      * Gets executed before the suite starts.
      * @param {Object} suite suite details
      */
-    // beforeSuite: function (suite) {
-    // },
+    //beforeSuite: async function () {             
+    //},
     /**
      * This hook gets executed _before_ every hook within the suite starts.
      * (For example, this runs before calling `before`, `beforeEach`, `after`)
@@ -124,8 +138,26 @@ export const hooks = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    // onComplete: function (exitCode, config, capabilities, results) {
-    // },
+     onComplete: function () {
+        const reportError = new Error('Could not generate Allure report')
+        const generation = allure(['generate', 'allure-results', '--clean'])
+        return new Promise((resolve, reject) => {
+            const generationTimeout = setTimeout(
+                () => reject(reportError),
+                5000)
+
+            generation.on('exit', function(exitCode) {
+                clearTimeout(generationTimeout)
+
+                if (exitCode !== 0) {
+                    return reject(reportError)
+                }
+
+                console.log('Allure report successfully generated')
+                resolve();
+            })
+        })
+     },
     /**
      * Gets executed when a refresh happens.
      * @param {String} oldSessionId session ID of the old session
@@ -142,8 +174,11 @@ export const hooks = {
     // },
     // beforeStep: function ({uri, feature, step}, context) {
     // },
-    // afterStep: function ({uri, feature, step}, context, {error, result, duration, passed}) {
-    // },
+    afterStep: function ({uri, feature, step}, context, {error, result, duration, passed}) {
+        if (error) {
+            browser.takeScreenshot();
+          }
+    },
     // afterScenario: function (uri, feature, scenario, result, sourceLocation) {
     // },
     // afterFeature: function (uri, feature, scenarios) {

@@ -1,41 +1,12 @@
 @webapp
 Feature: Web tabs should contains all functionality items
 
-#    Background:
-#        Given I delete all cookies
-#        And   I open the url "https://app-staging.semasoftware.com/login"
-#        And   I click on the button "signInWithGithubBtn"
-#        And   I pause for 2000ms
-#        And   I clear the inputfield "loginInput"
-#        When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-#        And   I clear the inputfield "passwordInput"
-#        And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-#        And   I click on the button "signinBtn"
-#        And   I pause for 5000ms
-#        Then  I expect that the url is "/dashboard"
-#        And   I pause for 3000ms
-
-    Scenario: Login successfully
-        Given I delete all cookies
-        And   I open the url "https://app-staging.semasoftware.com/login"
-        And   I click on the button "signInWithGithubBtn"
-        And   I pause for 2000ms
-        And   I clear the inputfield "loginInput"
-        When  I add "qateam+automationadmin@semasoftware.com" to the inputfield "loginInput"
-        And   I clear the inputfield "passwordInput"
-        And   I add "Automation1Tester2#" to the inputfield "passwordInput"
-        And   I click on the button "signinBtn"
-        And   I pause for 5000ms
-        Then  I expect that the url is "/dashboard"
-        And   I pause for 3000ms
-
     @C1725
-    Scenario: Navigate throught tab web pages
-        When I click on the button "reposTab"
-        And  I pause for 3000ms
+    Scenario: Navigate throught tab web pages    
         Then I expect that the url is "/dashboard"
-        And  I expect that the title is "Sema Dashboard"
-#        And  I expect that element "reposContainer" becomes displayed
+        When I click on the button "reposTab"        
+        Then I expect that the url is "/dashboard"
+        And  I expect that the title is "Sema23d Dashboard"        
 
         When I click on the button "personalInsightsTab"
         And  I expect that element "personalInsightsHeader" becomes displayed
