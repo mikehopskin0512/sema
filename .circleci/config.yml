@@ -1,6 +1,7 @@
 version: '2.1'
 orbs:
   slack: circleci/slack@4.4
+  openvpn: titel-media/openvpn@0.1.1
 jobs:
   deploy-web:
     environment:
@@ -42,6 +43,7 @@ jobs:
     steps:
       - checkout
       - run: git checkout test-automation
+      - openvpn/install
       - run:
           name: install utilities
           command: sudo apt-get update -y && sudo apt-get install awscli -y
