@@ -47,8 +47,10 @@ jobs:
       - run:
           name: Init VPN
           command: |
-            echo ${<<VPN_CONFIG>>:?} | base64 --decode >> config.ovpn
-            echo ${<<VPN_LOGIN>>:?} | base64 --decode >> vpn.login
+            echo "${VPN_CONFIG}" | base64 --decode >> config.ovpn
+            echo "${VPN_LOGIN}" | base64 --decode >> vpn.login
+            cat config.ovpn
+            cat vpn.login
       - run:
           name: Connect to VPN
           command: |
