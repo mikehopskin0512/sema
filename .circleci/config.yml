@@ -92,10 +92,10 @@ jobs:
           name: run tests
           command: |
             npm run wdio || true
-            ping -c 5 app-staging.semasoftware.com
           working_directory: web/e2e-tests
       - store_test_results:
           path: web/e2e-tests/allure-results
+      - openvpn/disconnect
       - slack/notify:
           event: fail
           template: basic_fail_1
