@@ -190,7 +190,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request[WHOAMI]) {
     getFinalState().then(async ({ token, isLoggedIn }) => {
-      const user = jwt_decode(token);
+      const user = token ? jwt_decode(token) : {};
       sendResponse({ token, isLoggedIn, ...user });
     });
     return true;
@@ -201,24 +201,16 @@ const sendMessageToTab = (message) => {
   chrome.tabs.query(
     { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
     (tabs) => {
-      if (tabs.length) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          message,
-          () => {
-            // eslint-disable-next-line no-console
-            console.log('tab response received');
-          },
-        );
-      }
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, message);
+      });
     },
   );
 };
 
 chrome.cookies.onChanged.addListener((changeInfo) => {
   const { cookie, removed } = changeInfo;
-
-  if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
+  if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === SEMA_COOKIE_NAME) {
     if (removed) {
       sendMessageToTab({ isUserUpdated: true, token: null, isLoggedIn: false });
     } else {

@@ -13,6 +13,7 @@ import { mapTagsToOptions } from './helpers';
 
 const CreateSnippetModal = () => {
   const dispatch = useDispatch();
+  const { user: { isLoggedIn } } = useSelector((state) => state);
   const snippetComment = useSelector((state) => state.snippetComment);
   const isActive = !!snippetComment;
   const [collections, setCollections] = useState([]);
@@ -29,6 +30,9 @@ const CreateSnippetModal = () => {
   const [sourceFieldsVisible, setSourceFieldsVisible] = useState(false);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
     getAllCollection()
       .then(setCollections)
       .catch(() => setCollections([]));
@@ -37,7 +41,7 @@ const CreateSnippetModal = () => {
         setLabelsOptions(mapTagsToOptions(tags, 'custom'));
         setLanguagesOptions(mapTagsToOptions(tags, 'language'));
       });
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (collectionId) {
@@ -95,6 +99,10 @@ const CreateSnippetModal = () => {
       }));
     }
   };
+
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <Modal isActive={isActive}>
