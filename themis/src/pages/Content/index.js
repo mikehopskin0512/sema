@@ -62,12 +62,15 @@ import LogOutToaster from './components/LogOutToaster';
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(async (request) => {
   if (request?.amplitude) {
     fireAmplitudeEvent(request.event);
   }
   if (request?.isUserUpdated) {
     store.dispatch(updateCurrentUser({ ...request }));
+    if (request.token) {
+      await fetchCurrentUser({ ...request });
+    }
   }
 });
 
