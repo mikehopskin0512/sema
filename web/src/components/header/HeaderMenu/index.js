@@ -13,6 +13,7 @@ import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
+import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
 
 const { setSelectedTeam, setProfileViewMode } = authOperations;
@@ -101,6 +102,10 @@ const HeaderMenu = ({
   }, [orderedTeams]);
 
   return (
+    <>
+    <div className={clsx('has-background-gray-200 is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+      <TrophyIcon />
+    </div>
     <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
       {/* Menu Items */}
       <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
@@ -155,7 +160,7 @@ const HeaderMenu = ({
         </span>
       </div>
       {/* User menu */}
-      <a aria-hidden="true" className="navbar-link is-arrowless mx-20" onClick={toggleUserMenu} ref={userMenu}>
+      <a aria-hidden="true" className="navbar-link is-arrowless mx-24 px-0" onClick={toggleUserMenu} ref={userMenu}>
         <div className="is-flex is-align-items-center">
           <Avatar
             name={getAvatarName}
@@ -164,10 +169,12 @@ const HeaderMenu = ({
             round
             textSizeRatio={2.5}
           />
+          <span className="is-size-7 has-text-weight-semibold mx-3">{getAvatarName}</span>
           <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
         </div>
       </a>
     </div>
+    </>
   );
 }
 
