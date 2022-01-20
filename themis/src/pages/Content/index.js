@@ -357,7 +357,7 @@ const onLoginChecked = () => {
     }
 
     // add default reaction for approval comment
-    const isReviewChangesContainer = semabarContainerId === 'semabar_pull_request_review_body';
+    const isReviewChangesContainer = semabarContainerId.includes('semabar_sema-pull_request_review_body');
     if (isReviewChangesContainer) {
       const barState = store.getState().semabars[semabarContainerId];
       const { isReactionDirty } = barState;
