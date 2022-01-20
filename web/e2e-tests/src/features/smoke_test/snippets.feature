@@ -10,12 +10,10 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "firstInActiveCollectionName" becomes displayed
       When I save the name of collection "firstInActiveCollectionName"
       And  I click on the element "firstInActiveCollectionToggle"
-      And  I pause for 3000ms
       Then I expect that selected collection element "activeCollectionsNames" is enabled
 ##    C2788
       When I save the name of collection "firstActiveCollectionName"
       And  I click on the element "firstActiveCollectionToggle"
-      And  I pause for 3000ms
       Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
     @admin  @C2797  @snippet
@@ -25,21 +23,24 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "addNewSnippetBtn" becomes displayed
       When I click on the element "addNewSnippetBtn"
       Then I expect that element "newSnippetTitleInput" becomes displayed
-      When I set "Test Snippet" to the inputfield "newSnippetTitleInput"
+      When I set "Test Snippet" with timestamp to the inputfield "newSnippetTitleInput"
       And  I set "Body text test" to the inputfield "newSnippetBodyInput"
-      And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
-      And  I set "http://sourceLinktest.com" to the inputfield "newSnippetSourceLinkInput"
-      And  I click on the element "newSnippetLanguagesInput"
+      Then I expect that element "newSnippetLanguagesInput" becomes displayed
+      When I click on the element "newSnippetLanguagesInput"
       And  I set "Java" to the inputfield "newSnippetLanguagesInput"
       And  I press "Enter"
-      And  I click on the element "newSnippetTagsInput"
+      Then I expect that element "newSnippetTagsInput" becomes displayed
+      When I click on the element "newSnippetTagsInput"
       And  I set "Naming" to the inputfield "newSnippetTagsInput"
       And  I press "Enter"
-      And  I click on the button "saveNewSnippetBtn"
-#        Then  I expect that new snippet is added       #here check name from global variable
+      Then I expect that element "newSnippetSourceNameInput" becomes displayed
+      And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
+      And  I set "http://sourceLinktest.com" to the inputfield "newSnippetSourceLinkInput"
+      Then I expect that element "saveNewSnippetBtn" becomes displayed
+      When I click on the button "saveNewSnippetBtn"
+      Then I expect that new item "allSnippetsNames" is added to snippets
 
     @admin  @C2814  @snippet
-        #only for admin and library users
     Scenario: Adding new snippet to already existing collection
       When I click on the element "snippetsTab"
       Then I expect that element "2ndExistingCollection" becomes displayed
@@ -48,60 +49,61 @@ Feature: User is able to interact with snippets properly
 
       When I click on the element "addNewSnippetInCollectionBtn"
       Then I expect that element "newSnippetTitleInput" becomes displayed
-      When I set "Test Snippet in existing collection" to the inputfield "newSnippetTitleInput"
+      When I set "Test Snippet in existing collection" with timestamp to the inputfield "newSnippetTitleInput"
       And  I set "Body text test" to the inputfield "newSnippetBodyInput"
-      And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
-      And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
 
-      And  I click on the element "newSnippetLanguagesInput"
+      When I click on the element "newSnippetLanguagesInput"
       And  I set "Java" to the inputfield "newSnippetLanguagesInput"
       And  I press "Enter"
       And  I click on the element "newSnippetTagsInput"
       And  I set "Naming" to the inputfield "newSnippetTagsInput"
       And  I press "Enter"
-      And  I click on the button "saveNewSnippetBtn"
-#        Then  I expect that new snippet is added       #here check name from global variable
+      And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
 
-    @C1706  @snip
+      Then I expect that element "saveNewSnippetBtn" becomes displayed
+      When I click on the button "saveNewSnippetBtn"
+      Then I expect that new item "allSnippetsNames" is added to snippets
+
+    @admin  @C1706  @snip
     Scenario: Search for existing snippet works
       When I click on the element "snippetsTab"
       Then I expect that element "philosophiesCollection" becomes displayed
       When I click on the element "philosophiesCollection"
-      Then I expect that element "searchSnippetsResult" becomes displayed
-      And  I expect that element "searchSnippetsResult" does appear exactly "10" times
+      Then I expect that element "searchedSnippetsResult" becomes displayed
+      And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
       When I set "log" to the inputfield "searchSnippetInput"
-#      Then  I expect that element "testSnippet" becomes displayed
-      Then I expect that element "searchSnippetsResult" does appear exactly "5" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
 #    @C1707
       When I select the option with the value "Practices" for element "searchSnippetTagInput"
-      Then I expect that element "searchSnippetsResult" does appear exactly "3" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "3" times
 #    @C1708
       When I select the option with the value "Go" for element "searchSnippetLanguageInput"
-      Then I expect that element "searchSnippetsResult" is not displayed
+      Then I expect that element "searchedSnippetsResult" is not displayed
 
       When I clear the inputfield "searchSnippetInput"
       And  I set "enf" to the inputfield "searchSnippetInput"
       And  I select the option with the value "Strategic" for element "searchSnippetTagInput"
       And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-      Then I expect that element "searchSnippetsResult" does appear exactly "1" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
 #    C1709
       When I click on the element "clearSearchResultBtn"
       And  I select the option with the value "Individual" for element "searchSnippetTagInput"
       And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-      Then I expect that element "searchSnippetsResult" does appear exactly "2" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "2" times
 #    C1711
       When I select the option with the text "Label" for element "searchSnippetTagInput"
       And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-      Then I expect that element "searchSnippetsResult" does appear exactly "10" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
       And  I expect that element "viewMoreBtn" becomes displayed
 #    C1710
       When I select the option with the value "Team" for element "searchSnippetTagInput"
       And  I select the option with the text "Language" for element "searchSnippetLanguageInput"
-      Then I expect that element "searchSnippetsResult" does appear exactly "5" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
       And  I expect that element "viewMoreBtn" is not displayed
 #    C1712
       When I click on the element "clearSearchResultBtn"
-      Then I expect that element "searchSnippetsResult" does appear exactly "10" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
       And  I expect that element "viewMoreBtn" becomes displayed
       And  I expect that element "clearSearchResultBtn" is not displayed
 
@@ -119,32 +121,31 @@ Feature: User is able to interact with snippets properly
       When I click on the element "snippetsLibraryLinkBtn"
       Then I expect that element "arrowBackBtn" is not displayed
 
-    @C2790  @snippet
-        #only for admin and library users
+    @admin  @C2790  @snippet
     Scenario: Adding new snippet collection
       #temporary solution
       When I click on the element "userLogo"
       When I click on the element "semaCorporateTeamLogo"
       #------------------
-
       When I click on the element "snippetsTab"
       Then I expect that element "addNewCollectionBtn" becomes displayed
       When I click on the element "addNewCollectionBtn"
       Then I expect that element "newCollectionTitleInput" becomes displayed
-      When I set "Test Collection" to the inputfield "newCollectionTitleInput"
-      And  I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-      And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-      And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-      And  I click on the element "newCollectionLanguagesInput"
+      When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
+      When I click on the element "newCollectionLanguagesInput"
       And  I set "Type" to the inputfield "newCollectionLanguagesInput"
       And  I press "Enter"
-      And  I click on the element "newCollectionOtherLabelInput"
+      Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+      When I click on the element "newCollectionOtherLabelInput"
       And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
       And  I press "Enter"
-
-      And  I click on the button "saveNewCollectionBtn"
-#      Then  I expect that new collection is added       #here check name from global variable
+      When I set "test author name" to the inputfield "newCollectionAuthorInput"
+      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+      Then I expect that element "saveNewCollectionBtn" becomes displayed
+      When I click on the button "saveNewCollectionBtn"
+      Then I expect that new item "allSnippetsNames" is added to collections
 
     @C1714  @snippet
     Scenario:  "View more" snippets shows
@@ -152,22 +153,21 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "philosophiesCollection" becomes displayed
       When I click on the element "philosophiesCollection"
       Then I expect that element "viewMoreBtn" becomes displayed
-      And  I expect that element "searchSnippetsResult" does appear exactly "10" times
+      And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
       When I click on the element "viewMoreBtn"
-      Then I expect that element "searchSnippetsResult" does appear exactly "20" times
+      Then I expect that element "searchedSnippetsResult" does appear exactly "20" times
 
-    @C2442  @snippet
+    @admin  @C2442  @snippet
     Scenario: The default tags for collection is added to snippet
       #temporary solution
       When I click on the element "userLogo"
       When I click on the element "semaCorporateTeamLogo"
       #------------------
-
       When I click on the element "snippetsTab"
       Then I expect that element "addNewCollectionBtn" becomes displayed
       When I click on the element "addNewCollectionBtn"
       Then I expect that element "newCollectionTitleInput" becomes displayed
-      When I set "Test Collection FOR TAGS" to the inputfield "newCollectionTitleInput"
+      When I set "Test Collection FOR TAGS" with timestamp to the inputfield "newCollectionTitleInput"
       And  I set "This collection is for creating snippets with same tag in as here" to the inputfield "newCollectionDescriptionInput"
       And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
       And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
@@ -182,18 +182,20 @@ Feature: User is able to interact with snippets properly
       And  I click on the button "saveNewCollectionBtn"
       Then I expect that element "searchCollectionInput" becomes displayed
 
-      When I set "Test Collection FOR TAGS" to the inputfield "searchCollectionInput"
-      And  I click on the element "testTagCollection"
+      When I search created collection "searchCollectionInput"
+      And  I click on the element "firstInActiveCollectionName"
       Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
       When I click on the element "addNewSnippetInCollectionBtn"
       Then I expect that element "selectedLeadershipTag" becomes displayed
       And  I expect that element "selectedTypeScriptLanguage" becomes displayed
 
-      When I set "Test Snippet with default tags" to the inputfield "newSnippetTitleInput"
+      When I set "Test Snippet with default tags" with timestamp to the inputfield "newSnippetTitleInput"
       And  I set "default tags" to the inputfield "newSnippetBodyInput"
       And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
-
       And  I click on the button "saveNewSnippetBtn"
-#      verify new snippet
+      Then I expect that element "allSnippetsNames" becomes displayed
+      When I search created snippet "searchSnippetInput"
 
-
+      Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
+      And  I expect that element "snippetsLanguage" matches the text "Leadership"
+      And  I expect that element "snippetsLabel" matches the text "TypeScript"

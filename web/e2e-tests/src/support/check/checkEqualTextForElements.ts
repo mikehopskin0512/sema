@@ -25,15 +25,15 @@ export default async (
      * The expected text to validate against
      * @type {String}
      */
-    let parsedExpectedText = GlobalVars.globalCollectionName;
-
+    let parsedExpectedText = GlobalVars.globalName;
+    console.log(parsedExpectedText)
     /**
      * Whether to check if the content equals the given text or not
      * @type {Boolean}
      */
     let boolFalseCase = !!falseCase;
 
-    // Check for empty element
+// Check for empty element
     if (typeof parsedExpectedText === 'function') {
         parsedExpectedText = '';
 
@@ -59,4 +59,5 @@ export default async (
             expect(parsedExpectedText).not.toBe(text);
         }
     }
-};
+}
+;

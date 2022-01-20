@@ -15,8 +15,9 @@ import handleModal from '../support/action/handleModal';
 import selectOptionByIndex from '../support/action/selectOptionByIndex';
 import selectOption from '../support/action/selectOption';
 import login from '../support/action/login';
-import {getElement} from "webdriverio/build/utils/getElementObject";
 import getElementText from '../support/action/getElementText';
+import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimestamp";
+import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
 
 /**
  * Abstracting some steps by functionality. 
@@ -42,14 +43,25 @@ When(
     clickElement
 );
 
-// When(
-//    /^I save the name of collection$/,
-//
-// );
-
 When(
     /^I (add|set) "([^"]*)?" to the inputfield "([^"]*)?"$/,
     setInputField
+);
+
+When(
+    /^I (add|set) "([^"]*)?" with timestamp to the inputfield "([^"]*)?"$/,
+    setInputFieldWithTimestamp
+);
+
+// @ts-ignore
+When(
+    /^I search created collection "([^"]*)?"$/,
+    setGlobalParamIntoSearchField
+);
+
+When(
+    /^I search created snippet "([^"]*)?"/,
+    setGlobalParamIntoSearchField
 );
 
 When(

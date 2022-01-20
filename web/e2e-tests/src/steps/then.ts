@@ -96,3 +96,8 @@ Then(
     /^I expect that selected collection element "([^"]*)?" is( not)* (enabled|disabled)$/,
     checkEqualTextForElements
 )
+
+Then(
+    /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections)$/,
+    checkEqualTextForElements
+)

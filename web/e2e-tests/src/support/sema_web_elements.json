@@ -63,11 +63,15 @@
     "newCollectionSourceLinkInput"  : "//input[@name='sourceLink']",
     "newCollectionLanguagesInput"   : "//input[@id='react-select-2-input']",
     "newCollectionOtherLabelInput"  : "//input[@id='react-select-3-input']",
-    "newCollectionAuthorInput"      :  "//input[@name='author']",
+    "newCollectionAuthorInput"      : "//input[@name='author']",
     "saveNewCollectionBtn"          : "//button/span[text()='Save']",
 
+    "allSnippetsNames"              : "//div[contains(@class,'suggestedCommentCard_title__1fTLb')]//p",
+    "searchedSnippetsResult"        : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
+    "snippetsLanguage"              : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][1]",
+    "snippetsLabel"                 : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][2]",
+
     "searchSnippetInput"            : "[placeholder='Search snippets']",
-    "searchSnippetsResult"          : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
     "searchSnippetTagInput"         : "//select[contains(@name,'tag')]",
     "searchSnippetLanguageInput"    : "//select[contains(@name,'language')]",
     "viewMoreBtn"                   : "//button[text()='View More']",

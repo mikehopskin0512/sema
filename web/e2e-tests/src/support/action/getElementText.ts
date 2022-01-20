@@ -19,5 +19,5 @@ export default async (selector: Selector) => {
     const parsedSelector = webElements[selector];
     await checkIfElementExists(parsedSelector, false, 1);
 
-    GlobalVars.globalCollectionName = await $(parsedSelector).getText();
+    GlobalVars.globalName = await $(parsedSelector).getText();
 };
