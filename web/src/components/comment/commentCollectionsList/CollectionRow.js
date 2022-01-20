@@ -98,7 +98,7 @@ const CollectionRow = ({ data }) => {
         <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
             <p className="is-size-7 has-text-weight-semibold">
-              {source?.name || ''}
+              {source || ''}
             </p>
           </div>
         </td>

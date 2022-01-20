@@ -92,7 +92,7 @@ export const getUserCollectionsById = async (id) => {
     if (user) {
       const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData = { comments: [] } } = collection;
-        const { comments, tags } = collectionData;
+        const { comments, tags, source = null } = collectionData;
         let languages = [];
         let guides = [];
         if (tags?.length > 0) {
@@ -116,7 +116,7 @@ export const getUserCollectionsById = async (id) => {
           collectionData: {
             ...collectionData,
             commentsCount: comments.length,
-            source: collectionData?.source?.name,
+            source: source ? source.name : '',
             languages,
             guides,
             comments: undefined,
