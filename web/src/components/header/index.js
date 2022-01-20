@@ -21,7 +21,6 @@ const { fetchTeamsOfUser } = teamsOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
-  const [bgColor, setBgColor] = useState('');
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
   const { checkAccess, isSemaAdmin } = usePermission();
@@ -61,9 +60,6 @@ const Header = () => {
   ));
 
   useAuthEffect(() => {
-    if (window.location.pathname === PATHS.LOGIN || window.location.pathname === PATHS.SUPPORT) {
-      setBgColor('has-background-white');
-    }
     dispatch(fetchTeamsOfUser(token));
   }, [dispatch]);
 
@@ -110,7 +106,7 @@ const Header = () => {
   const onCloseSignOutModal = () => setSignOutModal(false);
 
   return (
-    <header className={bgColor}>
+    <header className='has-background-white'>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav

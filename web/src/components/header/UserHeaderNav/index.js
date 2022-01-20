@@ -69,7 +69,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
           <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 pr-20 ${pathname === PATHS.INVITATIONS && 'has-text-weight-semibold'}`}>
             <div className="is-flex is-flex-wrap-wrap">
               Invitations
-              <div className={clsx("ml-3 has-background-success is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-4px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
+              <div className={clsx("ml-3 has-background-blue-700 is-size-9 has-text-white has-text-centered has-text-weight-semibold border-radius-8px", styles.badge)}>{isSemaAdmin ? 'ꝏ' : inviteCount}</div>
             </div>
           </a>
         </Link>

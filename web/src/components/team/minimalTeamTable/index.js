@@ -72,7 +72,7 @@ const MinimalTeamTable = ({ members }) => {
       <div className='is-bordered'>
         <div className={clsx('is-flex is-align-items-center is-justify-content-space-between', styles['custom-header'])}>
           <p className="has-text-deep-black has-text-weight-semibold is-size-6 px-15 ml-15">{dataSource.length} members</p>
-          <button class="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}>View All</button>
+          <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}>View All</button>
         </div>
         <Table
           columns={columns}

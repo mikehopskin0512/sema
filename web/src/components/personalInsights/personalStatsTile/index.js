@@ -35,7 +35,7 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
       const label = Object.keys(tag);
       return (
         <>
-          <span class="tag is-rounded is-primary is-light has-text-weight-semibold mr-5 mb-5 is-uppercase is-size-8">{label}</span>
+          <span className="tag is-rounded is-primary is-light has-text-weight-semibold mr-5 mb-5 is-uppercase is-size-8">{label}</span>
         </>
       )
     })

@@ -144,7 +144,7 @@ const CommentCollectionsList = () => {
         dispatch(getCollectionById(teamCollection.collectionData, token));
       }
     }
-  }, [data, filter]);
+  }, [data]);
 
   useEffect(() => {
     if (showAlert === true) {

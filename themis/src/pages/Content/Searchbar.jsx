@@ -121,7 +121,7 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
           <input
             className="sema-input sema-is-small"
             type="text"
-            placeholder="Search comment library"
+            placeholder="Search Snippet library"
             value={searchValue}
             onChange={onInputChanged}
             onKeyDown={handleKeyPress}

@@ -395,142 +395,142 @@ const isReply = (textarea) => {
 export async function writeSemaToGithub(activeElement) {
   const { _id: userId, isLoggedIn } = store.getState().user;
 
-  if (isLoggedIn && activeElement) {
-    let comment = {};
-    let inLineMetada = {};
-
-    const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
-    const onFilesTab = document.URL.split('/').pop().includes('files');
-
-    const location = onFilesTab ? 'files changed' : 'conversation';
-
-    if (location === 'conversation') {
-      store.dispatch(addMutationObserver({
-        selector: 'div.pull-discussion-timeline .js-discussion',
-        config: { childList: true, subtree: true },
-        onMutationEvent: onConversationMutationObserver,
-      }));
-    } else {
-      store.dispatch(addMutationObserver({
-        selector: 'div#files',
-        config: { childList: true, subtree: true },
-        onMutationEvent: onFilesChangedMutationObserver,
-      }));
-      inLineMetada = getGithubInlineMetadata(activeElement.id);
-    }
-
-    const state = store.getState();
-
-    const semaSearchId = $(activeElement).siblings('div.sema-search')?.[0]?.id;
-
-    const semabar = $(activeElement).siblings('div.sema')?.[0];
-
-    const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
-    const { isSnippetForSave } = state.semabars[semabar.id];
-    const selectedTags = state.semabars[semabar.id].selectedTags.reduce(
-      (acc, tagObj) => {
-        const { selected } = tagObj;
-        if (selected) {
-          acc.push(tagObj[selected]);
-        }
-        return acc;
-      },
-      [],
-    );
-
-    const selectedEmojiString = selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
-      ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
-      : '';
-
-    const selectedTagsString = selectedTags.join(', ');
-
-    const semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
-
-    let textboxValue = activeElement.value;
-
-    const { selectedSuggestedComments } = store.getState().semasearches[
-      semaSearchId
-    ];
-
-    // TODO: Momentary implementation, for Tags retrieved from MongoDB
-    const tags = selectedTags.map(
-      // eslint-disable-next-line no-underscore-dangle
-      (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
-    );
-    const isValueHasSemaReactions = textboxValue.includes('Summary') || textboxValue.includes('Tags');
-    if (isValueHasSemaReactions) {
-      // Use individual REGEX's for reactions and tags
-      textboxValue = textboxValue.replace(`\n${SEMA_TEXT.START_SEPARATOR}\n`, '');
-      textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
-      textboxValue = textboxValue.replace(SEMA_TEXT.SEMA_LOGO, '');
-      textboxValue = textboxValue.replace(SEMA_TEXT.SEPARATOR, '');
-      textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
-      // On edit, do not add extra line breaks
-      // eslint-disable-next-line no-param-reassign
-      activeElement.value = `${textboxValue}${semaString}`;
-    } else {
-      // On initial submit, 2 line breaks break up the markdown correctly
-      // eslint-disable-next-line no-param-reassign
-      activeElement.value = `${textboxValue}\n\n${semaString}`;
-    }
-
-    const { githubMetadata, lastUserSmartComment } = store.getState();
-
-    let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
-    if (!fileExtention) {
-      const url = $(activeElement)
-        .parents('.file')
-        .children('.file-header')
-        .children('.Link--primary')
-        .attr('title');
-      fileExtention = url
-        ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
-        : null;
-    }
-
-    comment = {
-      githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
-      userId,
-      comment: textboxValue,
-      location,
-      suggestedComments: selectedSuggestedComments,
-      // eslint-disable-next-line no-underscore-dangle
-      reaction: selectedEmojiObj._id,
-      tags,
-    };
-
-    if (isPullRequestReview) {
-      store.dispatch(removeMutationObserver());
-      const pullRequestReviewId = activeElement?.id.split('_').pop();
-      const commentDiv = document.querySelector(
-        `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
-      );
-      comment.githubMetadata.commentId = commentDiv?.id;
-      createSmartComment(comment);
-    }
-
-    createSmartComment(comment).then((smartComment) => {
-      store.dispatch(addSmartComment(smartComment));
-      if (isSnippetForSave) {
-        store.dispatch(changeSnippetComment(comment));
-      }
-    });
-
-    // Evaluate user interactions
-    const opts = {
-      location,
-      is_sema_bar_used: false,
-      is_reply: isReply(activeElement),
-      is_suggested_comment_used: activeElement.value.includes(lastUserSmartComment),
-    };
-    if (typeof semaString === 'string' && semaString.length) {
-      opts.is_sema_bar_used = true;
-    }
-
-    fireAmplitudeEvent(EVENTS.CREATE_SMART_COMMENT, opts);
-    const semaIds = getSemaIds(activeElement);
-    store.dispatch(resetSemaStates(semaIds));
+  if (!isLoggedIn || !activeElement) {
+    return;
   }
+
+  let comment = {};
+  let inLineMetada = {};
+
+  const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
+  const onFilesTab = document.URL.split('/').pop().includes('files');
+
+  const location = onFilesTab ? 'files changed' : 'conversation';
+
+  if (location === 'conversation') {
+    store.dispatch(addMutationObserver({
+      selector: 'div.pull-discussion-timeline .js-discussion',
+      config: { childList: true, subtree: true },
+      onMutationEvent: onConversationMutationObserver,
+    }));
+  } else {
+    store.dispatch(addMutationObserver({
+      selector: 'div#files',
+      config: { childList: true, subtree: true },
+      onMutationEvent: onFilesChangedMutationObserver,
+    }));
+    inLineMetada = getGithubInlineMetadata(activeElement.id);
+  }
+
+  const state = store.getState();
+
+  const semaSearchId = $(activeElement).siblings('div.sema-search')?.[0]?.id;
+
+  const semabar = $(activeElement).siblings('div.sema')?.[0];
+
+  const selectedEmojiObj = state.semabars[semabar.id].selectedReaction;
+  const { isSnippetForSave } = state.semabars[semabar.id];
+  const selectedTags = state.semabars[semabar.id].selectedTags.reduce(
+    (acc, tagObj) => {
+      const { selected } = tagObj;
+      if (selected) {
+        acc.push(tagObj[selected]);
+      }
+      return acc;
+    },
+    [],
+  );
+
+  const selectedEmojiString = selectedEmojiObj?.title && selectedEmojiObj?.title !== 'No reaction'
+    ? `${selectedEmojiObj?.github_emoji} ${selectedEmojiObj?.title}`
+    : '';
+
+  const selectedTagsString = selectedTags.join(', ');
+
+  const semaString = getSemaGithubText(selectedEmojiString, selectedTagsString);
+
+  let textboxValue = activeElement.value;
+
+  const { selectedSuggestedComments } = store.getState().semasearches[semaSearchId];
+
+  // TODO: Momentary implementation, for Tags retrieved from MongoDB
+  const tags = selectedTags.map(
+    // eslint-disable-next-line no-underscore-dangle
+    (tag) => TAGS_ON_DB.find(({ label }) => label === tag)._id,
+  );
+  const isValueHasSemaReactions = textboxValue.includes('Summary') || textboxValue.includes('Tags');
+  if (isValueHasSemaReactions) {
+    // Use individual REGEX's for reactions and tags
+    textboxValue = textboxValue.replace(`\n${SEMA_TEXT.START_SEPARATOR}\n`, '');
+    textboxValue = textboxValue.replace(SEMA_REACTION_REGEX, '');
+    textboxValue = textboxValue.replace(SEMA_TEXT.SEMA_LOGO, '');
+    textboxValue = textboxValue.replace(SEMA_TEXT.SEPARATOR, '');
+    textboxValue = textboxValue.replace(SEMA_TAGS_REGEX, '');
+    // On edit, do not add extra line breaks
+    // eslint-disable-next-line no-param-reassign
+    activeElement.value = `${textboxValue}${semaString}`;
+  } else {
+    // On initial submit, 2 line breaks break up the markdown correctly
+    // eslint-disable-next-line no-param-reassign
+    activeElement.value = `${textboxValue}\n\n${semaString}`;
+  }
+
+  const { githubMetadata, lastUserSmartComment } = store.getState();
+
+  let fileExtention = $(activeElement)?.parents('.file')?.attr('data-file-type');
+  if (!fileExtention) {
+    const url = $(activeElement)
+      .parents('.file')
+      .children('.file-header')
+      .children('.Link--primary')
+      .attr('title');
+    fileExtention = url
+      ? `.${url?.split(/[#?]/)[0]?.split('.')?.pop()?.trim()}`
+      : null;
+  }
+
+  comment = {
+    githubMetadata: { ...githubMetadata, ...inLineMetada, file_extension: fileExtention },
+    userId,
+    comment: textboxValue,
+    location,
+    suggestedComments: selectedSuggestedComments,
+    // eslint-disable-next-line no-underscore-dangle
+    reaction: selectedEmojiObj._id,
+    tags,
+  };
+
+  if (isPullRequestReview) {
+    store.dispatch(removeMutationObserver());
+    const pullRequestReviewId = activeElement?.id.split('_').pop();
+    const commentDiv = document.querySelector(
+      `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
+    );
+    comment.githubMetadata.commentId = commentDiv?.id;
+    createSmartComment(comment);
+  }
+
+  createSmartComment(comment).then((smartComment) => {
+    store.dispatch(addSmartComment(smartComment));
+    if (isSnippetForSave) {
+      store.dispatch(changeSnippetComment(comment));
+    }
+  });
+
+  // Evaluate user interactions
+  const opts = {
+    location,
+    is_sema_bar_used: false,
+    is_reply: isReply(activeElement),
+    is_suggested_comment_used: activeElement.value.includes(lastUserSmartComment),
+  };
+  if (typeof semaString === 'string' && semaString.length) {
+    opts.is_sema_bar_used = true;
+  }
+
+  fireAmplitudeEvent(EVENTS.CREATE_SMART_COMMENT, opts);
+  const semaIds = getSemaIds(activeElement);
+  store.dispatch(resetSemaStates(semaIds));
 }
 
 // TODO: should be deleted after outsideClick refactoring

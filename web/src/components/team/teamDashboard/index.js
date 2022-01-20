@@ -37,7 +37,7 @@ const TeamDashboard = ({ metrics, members, repos }) => {
         <div className='is-flex is-align-items-center is-justify-content-space-between'>
           <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Metrics</p>
           {/* TODO: If metrics page for teams is added, we would activate this button */}
-          {/* <button class="button is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push('')}>View All</button> */}
+          {/* <button className="button is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push('')}>View All</button> */}
         </div>
         <div className="">
           <div className="mt-20 pb-10 columns m-0">
@@ -51,7 +51,7 @@ const TeamDashboard = ({ metrics, members, repos }) => {
         <div className="column is-8">
           <div className='is-flex is-align-items-center is-justify-content-space-between'>
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Recent Repos</p>
-            <button class="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}/${PATHS.REPOS}`)}>View All</button>
+            <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}/${PATHS.REPOS}`)}>View All</button>
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
             {repos.map((child, i) => (
@@ -64,7 +64,7 @@ const TeamDashboard = ({ metrics, members, repos }) => {
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Team Members</p>
             {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') &&
               <>
-                <button class="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM.INVITE}`)}>
+                <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM.INVITE}`)}>
                   <div className="mr-5 is-flex is-align-items-center">
                     <PlusIcon size="small" />
                   </div>

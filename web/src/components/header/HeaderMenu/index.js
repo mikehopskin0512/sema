@@ -13,6 +13,8 @@ import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
+import { TrophyIcon } from '../../Icons';
+import UserMenuItem from '../UserMenuItem';
 
 const { setSelectedTeam, setProfileViewMode } = authOperations;
 
@@ -31,12 +33,13 @@ const HeaderMenu = ({
   const { auth: { selectedTeam }, teams } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState
+      teams: state.teamsState.teams
     }),
   );
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
+  const orderedTeams = Object.values(teams);
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -64,12 +67,6 @@ const HeaderMenu = ({
     return user.avatarUrl;
   }, [selectedTeam, user]);
 
-  const renderTeamMenu = useMemo(() => {
-    return teams.teams.map((team, index) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index}/>
-    ))
-  }, [teams]);
-
   const onSwitchPersonalAccount = () => {
     dispatch(setSelectedTeam({}));
     dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
@@ -85,31 +82,34 @@ const HeaderMenu = ({
     return name;
   }, [selectedTeam, user])
 
+  const renderMenuItems = useMemo(() => {
+    // Sort teams, first one should be the selected team.
+    const selectedTeamIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.team._id === selectedTeam?.team?._id), 1)[0];
+    selectedTeamIndex && orderedTeams.unshift(selectedTeamIndex);
+
+    const menuItems = orderedTeams.map((team, index) => (
+      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team._id === selectedTeam?.team?._id}/>
+    ))
+
+    const userMenu = 
+      <>
+        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedTeam).length === 0} />
+        <hr className="navbar-divider m-0 has-background-gray-300" />
+      </>
+
+    Object.keys(selectedTeam).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
+    return menuItems;
+  }, [orderedTeams]);
+
   return (
+    <>
+    <div className={clsx('has-background-gray-200 is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+      <TrophyIcon />
+    </div>
     <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
       {/* Menu Items */}
       <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
-        {renderTeamMenu}
-        <div className={`p-15 ${teams.teams[0] ? '' : 'has-background-white'}`}>
-          <div onClick={onSwitchPersonalAccount}>
-            <div className={clsx('is-flex is-flex-wrap-wrap is-align-items-center py-5', styles.team)}>
-              <Avatar
-                name={fullName}
-                src={userAvatar || null}
-                size="35"
-                round
-                textSizeRatio={2.5}
-                className="mr-10"
-                maxInitials={2}
-              />
-              <div>
-                <p className="has-text-black-950 has-text-weight-semibold">{fullName}</p>
-                <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Personal Account</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <hr className="navbar-divider m-0 has-background-gray-300" />
+        {renderMenuItems}
         <Link href={PATHS.TEAM_CREATE}>
          <a
            aria-hidden="true"
@@ -160,7 +160,7 @@ const HeaderMenu = ({
         </span>
       </div>
       {/* User menu */}
-      <a aria-hidden="true" className="navbar-link is-arrowless mx-20" onClick={toggleUserMenu} ref={userMenu}>
+      <a aria-hidden="true" className="navbar-link is-arrowless mx-24 px-0" onClick={toggleUserMenu} ref={userMenu}>
         <div className="is-flex is-align-items-center">
           <Avatar
             name={getAvatarName}
@@ -169,10 +169,12 @@ const HeaderMenu = ({
             round
             textSizeRatio={2.5}
           />
+          <span className="is-size-7 has-text-weight-semibold mx-3">{getAvatarName}</span>
           <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
         </div>
       </a>
     </div>
+    </>
   );
 }
 
