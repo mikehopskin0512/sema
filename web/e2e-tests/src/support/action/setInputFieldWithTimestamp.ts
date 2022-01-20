@@ -13,7 +13,7 @@ import {GlobalVars} from "../GlobalVars";
  * @param  {String}   falseCase Whether to set timestamp to value or not
  * @param  {String}   selector  Element selector
  */
-export default async (method: string, value: string, timestampCase: boolean, selector: Selector) => {
+export default async (method: string, value: string, selector: Selector) => {
     /**
      * Parsing string common name to  actual Selector
      * @param selector to be translated
@@ -25,15 +25,7 @@ export default async (method: string, value: string, timestampCase: boolean, sel
      * @type {String}
      */
     const command = (method === 'add') ? 'addValue' : 'setValue';
-    let checkValue = '';
-    if (timestampCase){
-        let d = new Date();
-        let timestamp = d.getTime();
-        checkValue = value + timestamp;
-
-    } else {
-        checkValue = value;
-    }
+    let checkValue = value + Date.now();
     GlobalVars.globalName = checkValue;
 
     await checkIfElementExists(parsedSelector, false, 1);
