@@ -75,11 +75,11 @@ exports.up = async (next) => {
 exports.down = async (next) => {
   await mongoose.connect(mongooseUri, options);
   try {
-    addCollections(removableCollections);
-    removeCollections(globalCollections);
+    await addCollections(removableCollections);
+    await removeCollections(globalCollections);
   } catch (error) {
     console.log(error);
     next(error);
   }
-  mongoose.connection.close();
+  await mongoose.connection.close();
 };
