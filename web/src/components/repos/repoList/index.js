@@ -77,7 +77,7 @@ const RepoList = ({ type, repos = [] }) => {
   return (
     repos.length > 0 ? (
       <div className="mb-50">
-        {isTeamAdmin && (
+        {isTeamAdmin() && (
           <TeamReposList
             isActive={isRepoListOpen}
             onClose={() => setRepoListOpen(false)}
@@ -100,7 +100,7 @@ const RepoList = ({ type, repos = [] }) => {
                 options={filterOptions}
               />)
             }
-            {isTeamAdmin && (
+            {isTeamAdmin() && (
               <button
                 type="button"
                 className="ml-16 button is-primary"
