@@ -4,6 +4,7 @@ import { findIndex, uniqBy, isEmpty } from 'lodash';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import ActivityItem from '../item';
 import CustomSelect from '../select';
+import SnapshotBar from '../../snapshots/snapshotBar';
 import DateRangeSelector from '../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../data/activity';
 import { SearchIcon } from '../../Icons';
@@ -187,6 +188,9 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
             />
           </div>
         </div>
+      </div>
+      <div className="my-8">
+        <SnapshotBar hasActionButton />
       </div>
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`} >

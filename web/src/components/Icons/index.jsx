@@ -80,6 +80,7 @@ import { ReactComponent as VerifiedFilledSvg } from './img/verified-filled.svg';
 import { ReactComponent as VerifiedOutlineSvg } from './img/verified-outline.svg';
 import { ReactComponent as WarningFilledSvg } from './img/warning-filled.svg';
 import { ReactComponent as WarningOutlineSvg } from './img/warning-outline.svg';
+import { ReactComponent as CameraSvg } from './img/camera.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -102,6 +103,12 @@ const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...pro
 export const ActivityLogIcon = (props) => (
   <Icon {...props}>
     <ActivityLogSvg />
+  </Icon>
+);
+
+export const CameraIcon = (props) => (
+  <Icon {...props}>
+    <CameraSvg />
   </Icon>
 );
 
