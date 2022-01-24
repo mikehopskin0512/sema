@@ -66,7 +66,9 @@ const RepoList = ({ type, repos = [] }) => {
   }
 
   useEffect(() => {
-    sortRepos();
+    if (repos?.length > 1) {
+      sortRepos();
+    }
   }, [sort, repos]);
 
   useEffect(() => {
