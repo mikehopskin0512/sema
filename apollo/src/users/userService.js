@@ -193,6 +193,7 @@ export const findById = async (id) => {
 export const findUserCollectionsByUserId = async (id) => {
   try {
     const query = User.findOne({ _id: id });
+    // TODO: we have to delete that populate / it slows down /snippet page
     const user = await query.lean().populate({
       path: 'collections.collectionData',
       model: 'Collection',

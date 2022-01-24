@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { addTags, makeTagsList, parseRelatedLinks } from '../../../utils';
+import { TAG_TYPE } from '../../../utils/constants';
 import schema from './schema';
 
 const SnippetForm = ({ comment, collection, onSubmit, onCancel, isNewSnippet = false }) => {
@@ -16,13 +17,13 @@ const SnippetForm = ({ comment, collection, onSubmit, onCancel, isNewSnippet = f
   const { control, formState: { errors }, reset, handleSubmit  } = useForm({
     resolver: yupResolver(schema),
   })
-  const languagesOptions = useMemo(() => addTags(tags, ['language']), [tags]);
-  const guidesOptions = useMemo(() => addTags(tags, ['guide', 'other']), [tags]);
+  const languagesOptions = useMemo(() => addTags(tags, [TAG_TYPE.LANGUAGE]), [tags]);
+  const guidesOptions = useMemo(() => addTags(tags, [TAG_TYPE.GUIDE, TAG_TYPE.CUSTOM]), [tags]);
 
   useEffect(() => {
     reset(comment)
   }, [comment])
-  
+
   const mapCommentsToSubmit = (data) => {
     const comments = [{
       ...data,

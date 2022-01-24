@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { addTags } from '../../../utils';
 import SnippetForm from '../snippetForm';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
-import { PATHS } from '../../../utils/constants';
+import { PATHS, TAG_TYPE } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getCollectionById } = commentsOperations;
@@ -27,8 +28,10 @@ const AddSuggestedComment = () => {
   const {
     auth: { token },
     collectionState,
+    tags,
   } = useSelector((state) => ({
     auth: state.authState,
+    tags: state.tagsState.tags,
     collectionState: state.commentsState,
   }));
   const router = useRouter();
@@ -46,8 +49,8 @@ const AddSuggestedComment = () => {
         ...comment,
         sourceName: collection.source?.name,
         author: collection.author,
-        languages: collection.tags?.filter((item) => item.type === 'language') || [],
-        guides: collection.tags?.filter((item) => item.type !== 'language') || [],
+        languages: addTags(collection.tags, [TAG_TYPE.LANGUAGE]),
+        guides: addTags(collection.tags, [TAG_TYPE.GUIDE, TAG_TYPE.CUSTOM]),
       });
     }
   }, [collection]);
