@@ -34,6 +34,7 @@ exports.up = async (next) => {
   try{
     await colUsers.insertOne(adminUser);
   } catch (error) {
+    console.log('error___', error)
     console.log("adminUser already exists");
   }
 
@@ -41,6 +42,7 @@ exports.up = async (next) => {
   try{
     await colClients.insertMany(clients);
   } catch (error) {
+    console.log('error___', error)
     console.log("clients already exist");
   }
   mongoose.connection.close();

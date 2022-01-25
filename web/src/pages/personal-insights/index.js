@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx'
 import { findIndex, isEmpty, uniqBy } from 'lodash';
+import SnapshotBar from '../../components/snapshots/snapshotBar';
 import { InfoFilledIcon } from '../../components/Icons';
 import { isWithinInterval } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
@@ -255,6 +256,7 @@ const PersonalInsights = () => {
         </div>
         <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
         <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
+        <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} />
           <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} />

@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
-import Emoji from "react-emoji-render";
 
 const ActivityItem = (props) => {
   const {
@@ -59,10 +58,10 @@ const ActivityItem = (props) => {
   }
 
   const renderEmoji = () => {
-    const { title: emojiTitle, github_emoji } = find(EMOJIS, { _id: reaction });
+    const { title: emojiTitle, Icon } = find(EMOJIS, { _id: reaction });
     return (
       <>
-        <Emoji className="mr-8" text={github_emoji} />
+        <Icon className="mr-8" />
         <div className="has-text-black-950 has-text-weight-semibold" dangerouslySetInnerHTML={{ __html: emojiTitle }} />
       </>
     );

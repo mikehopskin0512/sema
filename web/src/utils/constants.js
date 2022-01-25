@@ -218,11 +218,17 @@ export const NUM_PER_PAGE = 10;
 export const SEMA_ROLES = {
   admin: 'Admin',
   libraryEditor: 'Library Editor',
-  member: 'Member'
-}
+  member: 'Member',
+};
 
 export const TAB = {
   info: 'info',
   management: 'management',
-  labels: 'labels'
+  labels: 'labels',
+};
+
+export const TAG_TYPE = {
+  LANGUAGE: 'language',
+  GUIDE: 'guide',
+  CUSTOM: 'custom',
 };
