@@ -1,7 +1,6 @@
 import md5 from 'md5';
 import { Router } from 'express';
-import { version, orgDomain } from '../config';
-import { mailchimpAudiences } from '../config';
+import { version, orgDomain, mailchimpAudiences } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import intercom from '../shared/apiIntercom';
@@ -16,6 +15,7 @@ import {
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
+import { getPortfoliosByUser } from '../portfolios/portfolioService';
 
 const route = Router();
 
@@ -81,12 +81,12 @@ export default (app, passport) => {
       const [hasInvite] = await checkIfInvited(username);
       if (hasInvite) {
         const { _id: invitationId } = hasInvite;
-        redeemInvite(null, userId, invitationId)
+        redeemInvite(null, userId, invitationId);
       }
 
       // Add user to Mailchimp and subscribe it to Sema - Newsletters
       const listId = mailchimpAudiences.registeredAndWaitlistUsers || null;
-      const { firstName, lastName, avatarUrl} = newUser;
+      const { firstName, lastName, avatarUrl } = newUser;
 
       try {
         if (listId) {
@@ -104,8 +104,8 @@ export default (app, passport) => {
         return res.status(400).send(error);
       }
 
-       // Add user to Intercom
-       // TEMP: Comment out Intercom until variable is fixed in prod
+      // Add user to Intercom
+      // TEMP: Comment out Intercom until variable is fixed in prod
       try {
         await intercom.create('contacts', {
           role: 'user',
@@ -114,7 +114,7 @@ export default (app, passport) => {
           email: username,
           avatar: avatarUrl,
           signed_up_at: new Date(),
-        }); 
+        });
       } catch (error) {
         logger.error(error);
         return res.status(400).send(error);
@@ -314,6 +314,17 @@ export default (app, passport) => {
       return res.status(200).send({
         user,
       });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:id/portfolios', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const userPortfolios = await getPortfoliosByUser(id);
+      return res.status(200).send(userPortfolios);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

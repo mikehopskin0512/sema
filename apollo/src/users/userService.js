@@ -547,3 +547,8 @@ export const populateCollections = async (collectionIds = [], user) => {
     throw (error);
   }
 }
+
+export const getUserMetadata = async(id) => {
+  const user = await User.findById(id).select({ firstName: 1, lastName: 1, avatarUrl: 1 }).exec();
+  return user;
+};
