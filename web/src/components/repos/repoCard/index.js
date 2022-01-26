@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-regular-svg-icons';
-import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
+import usePermission from '../../../hooks/usePermission';
+import DeleteRepoModal from '../repoCard/deleteRepoModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { triggerAlert } from '../../../state/features/alerts/actions';
+import { editTeamRepos, fetchTeamRepos } from '../../../state/features/teams/actions';
+import { OptionsIcon } from '../../Icons';
+import DropDownMenu from '../../dropDownMenu';
 import styles from './repoCard.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
@@ -16,13 +20,15 @@ const statLabels = {
 
 const RepoCard = (props) => {
   const {
-    name, externalId, repoStats, users = [], column = 3
+    name, externalId, _id: repoId, repoStats, users = [], column = 3
   } = props;
-
+  const { token, selectedTeam } = useSelector((state) => state.authState)
+  const dispatch = useDispatch();
   const onClickRepo = () => {
     // Change Redirect link when overview is done!
     window.location = `${PATHS.REPO}/${externalId}`;
   };
+  const { isTeamAdmin } = usePermission();
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -32,6 +38,19 @@ const RepoCard = (props) => {
       <p className="is-size-4 has-text-weight-semibold has-text-black">{value}</p>
     </div>
   );
+  const [isDeleteRepoModalOpen, setDeleteRepoModalOpen] = useState(false);
+  const removeRepo = async (e) => {
+    e.stopPropagation();
+    const repos = selectedTeam.team.repos.filter(id => id !== repoId);
+    try {
+      await dispatch(editTeamRepos(selectedTeam.team._id, { repos }, token));
+      setDeleteRepoModalOpen(false);
+      dispatch(triggerAlert('Repo has been deleted', 'success'));
+      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+    } catch (e) {
+      dispatch(triggerAlert('Unable to delete repo', 'error'));
+    }
+  };
 
   return (
     <div
@@ -39,7 +58,7 @@ const RepoCard = (props) => {
       onClick={onClickRepo}
       aria-hidden
     >
-      <div className="box has-background-white is-full-width p-0 border-radius-2px is-clipped is-flex is-flex-direction-column">
+      <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
         <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-900 has-text-weight-semibold is-size-5">{name}</p>
           <RepoUsers users={users} />
@@ -53,7 +72,26 @@ const RepoCard = (props) => {
             ))}
           </div>
         </div>
+        {isTeamAdmin && (
+          <div className="has-background-gray-300 is-flex py-8 pr-12">
+            <DropDownMenu
+              options={[{ label: 'Remove from Team', onClick: () => setDeleteRepoModalOpen(true) }]}
+              trigger={(
+                <div className="is-clickable is-flex">
+                  <OptionsIcon />
+                </div>
+              )}
+            />
+          </div>
+        )}
       </div>
+      {isTeamAdmin && (
+        <DeleteRepoModal
+          isOpen={isDeleteRepoModalOpen}
+          onCancel={() => setDeleteRepoModalOpen(false)}
+          onConfirm={removeRepo}
+        />
+      )}
     </div>
   );
 };

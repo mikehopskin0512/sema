@@ -29,6 +29,9 @@ const RepoList = ({ type, repos = [] }) => {
   const { isTeamAdmin } = usePermission();
   const sortRepos = async () => {
     setFilteredRepos([]);
+    if (!repos?.length) {
+      return []
+    }
     let sortedRepos = [];
     switch (sort.value) {
       case 'a-z':
@@ -66,9 +69,7 @@ const RepoList = ({ type, repos = [] }) => {
   }
 
   useEffect(() => {
-    if (repos?.length > 1) {
       sortRepos();
-    }
   }, [sort, repos]);
 
   useEffect(() => {
