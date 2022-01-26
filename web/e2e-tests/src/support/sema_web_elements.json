@@ -66,6 +66,14 @@
     "newCollectionAuthorInput"      : "//input[@name='author']",
     "saveNewCollectionBtn"          : "//button/span[text()='Save']",
 
+    "snippetCollectionTitleError"       : "//label[text()='Snippet Collection Title']/following-sibling::p[contains(@class,'has-text-danger')]",
+    "snippetCollectionLanguageError"    : "//label[text()='Language Labels']/following-sibling::p[contains(@class,'has-text-danger')]",
+    "snippetCollectionOtherError"       : "",
+    "snippetCollectionAuthorError"      : "",
+    "snippetCollectionSourceNameError"  : "",
+    "snippetCollectionLinkError"        : "",
+
+
     "allSnippetsNames"              : "//div[contains(@class,'suggestedCommentCard_title__1fTLb')]//p",
     "searchedSnippetsResult"        : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
     "snippetsLanguage"              : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][1]",
@@ -78,6 +86,11 @@
     "clearSearchResultBtn"          : "//div[text()='Clear search results']",
 
     "searchCollectionInput"         : "//div[@id='collectionBody']//input[@placeholder]",
+
+    "searchedCollectionsResultGlob" : "",
+    "searchedSnippetsResultGlob"    : "",
+
+
 
     "########## PERSONAL INSIGHTS LOCATORS #############" : "",
     "personalInsightsHeader"        : "//div[@class='tile']",

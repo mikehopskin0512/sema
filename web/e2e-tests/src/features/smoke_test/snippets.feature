@@ -199,3 +199,106 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
       And  I expect that element "snippetsLanguage" matches the text "Leadership"
       And  I expect that element "snippetsLabel" matches the text "TypeScript"
+
+    @admin  @C2469
+#    after SCR-768
+    Scenario: Global search by items of turned off collection are clickable
+      When I click on the element "snippetsTab"
+      Then I expect that element "collectionArea" becomes displayed
+      When I turn off all collections
+      When I set "Philosophies" to the inputfield "searchCollectionInput"
+      Then I expect that element "philosophiesCollection" becomes displayed
+      When I click on the element "firstInActiveCollectionToggle"
+      Then I expect that element "philosophiesCollection" becomes displayed
+      When I set "Iterate in Thens" to the inputfield "searchCollectionInput"
+      Then "snippet" snippet should be found in "collection"
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I click on the element "firstActiveCollectionToggle"
+      Then I expect that element "philosophiesCollection" becomes displayed
+      When I set "Iterate in Thens" to the inputfield "searchCollectionInput"
+      Then "snippet" snippet should be found in "collection"
+
+    @admin  @C2480
+        #    after SCR-768
+    Scenario: Global search with non-alphanumeric characters
+      When I click on the element "snippetsTab"
+      Then I expect that element "collectionArea" becomes displayed
+      When I set "+" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I set "$" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I set "++" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I set "/" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I set "&" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+      When I clear the inputfield "searchCollectionInput"
+      And  I set "%" to the inputfield "searchCollectionInput"
+      Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
+
+    @admin  @C2730
+#       after SCR-768
+    Scenario: Global search results are clickable
+      When I click on the element "snippetsTab"
+      Then I expect that element "collectionArea" becomes displayed
+      When I set "Philosophies" to the inputfield "searchCollectionInput"
+      Then I expect that element "philosophiesCollection" becomes displayed
+      When I click on the element "philosophiesCollection"
+      Then I expect that element "allSnippetsNames" becomes displayed
+
+      When I click on the element "snippetsTab"
+      Then I expect that element "collectionArea" becomes displayed
+
+      When I set "Logic is the beginning" to the inputfield "searchCollectionInput"
+      Then "snippet" snippet should be found in "collection"
+      When I click on the element "searchedSnippetsResultGlob"
+      Then I expect that element "openedSnippetTODO" becomes displayed
+
+
+    @admin  @C2741  @snippet
+#      C2741  C2742
+    Scenario: Field validation for creating collection
+        #temporary solution
+      When I click on the element "userLogo"
+      When I click on the element "semaCorporateTeamLogo"
+        #------------------
+      When I click on the element "snippetsTab"
+      Then I expect that element "addNewCollectionBtn" becomes displayed
+      When I click on the element "addNewCollectionBtn"
+      Then I expect that element "newCollectionTitleInput" becomes displayed
+      And  I expect that element "saveNewCollectionBtn" becomes displayed
+      When I click on the button "saveNewCollectionBtn"
+
+      Then I expect that element "([^"]*)?" matches the text "Title is required"
+      And  I expect that element "([^"]*)?" matches the text "At least one tag is required"
+      And  I expect that element "([^"]*)?" matches the text "At least one tag is required"
+      And  I expect that element "([^"]*)?" matches the text "Author is required"
+      And  I expect that element "([^"]*)?" matches the text "Source name is required"
+      And  I expect that element "([^"]*)?" matches the text "Source link is required"
+
+      When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
+      When I click on the element "newCollectionLanguagesInput"
+      And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+      And  I press "Enter"
+      Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+      When I click on the element "newCollectionOtherLabelInput"
+      And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+      And  I press "Enter"
+      When I set "test author name" to the inputfield "newCollectionAuthorInput"
+      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+      Then I expect that element "saveNewCollectionBtn" becomes displayed
+      When I click on the button "saveNewCollectionBtn"
+      Then I expect that new item "allSnippetsNames" is added to collections
