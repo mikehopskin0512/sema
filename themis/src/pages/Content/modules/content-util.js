@@ -51,7 +51,7 @@ import phrases from './highlightPhrases';
 
 // FIXME: no need for the function to accept 'document'
 export const getGithubMetadata = (document) => {
-  const url = document.querySelector('meta[property="og:url"]')?.content || '';
+  const url = window.location.href || '';
   const decoupleUrl = url.split('/');
   // eslint-disable-next-line camelcase
   const repo_id = document.querySelector('input[name="repository_id"]')?.value;
