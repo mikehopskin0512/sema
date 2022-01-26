@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
 import { InfoFilledIcon } from '../../components/Icons';
-import { isWithinInterval } from 'date-fns';
+import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import PersonalStatsTile from '../../components/personalInsights/personalStatsTile';
@@ -14,7 +14,7 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getDateSub } from '../../utils/parsing';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { blue600 } from '../../../styles/_colors.module.scss';
 
@@ -60,14 +60,17 @@ const PersonalInsights = () => {
   const getUserSummary = async (username) => {
     const params = {
       user: username,
-    };//this
+    };
     dispatch(fetchSmartCommentSummary(params, token))
   };
 
   const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
-    const { startDate, endDate, search } = filter;
-    const params = {}
+    const { startDate, endDate } = filter;
+    const params = {
+      startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
+      endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
+    }
     if (commentView === 'given') {
       params.reviewer = username
     } else {
@@ -122,7 +125,7 @@ const PersonalInsights = () => {
         dateDiff,
         groupBy,
         startDate: new Date(startDay),
-        endDate: endDay
+        endDate: endDay,
       })
     }
   }, [comments, filter]);
@@ -202,12 +205,20 @@ const PersonalInsights = () => {
 
   const filterComments = (overview) => {
     if (overview && overview.smartComments) {
-      const { startDate, endDate } = dateData;
-      const filtered = filterSmartComments({ filter, smartComments: overview.smartComments, startDate, endDate });
-      const outOfRangeCommentsFilter = overview.smartComments.filter((comment) => !isWithinInterval(new Date(comment.createdAt), {
-        start: new Date(startDate),
-        end: new Date(endDate)
-      }));
+      const { startDate, endDate} = filter;
+      const filtered = filterSmartComments({
+        filter,
+        smartComments: overview.smartComments,
+        startDate: startDate,
+        endDate: endDate,
+      });
+      const isDateRange = startDate && endDate;
+      const outOfRangeCommentsFilter = isDateRange ? overview.smartComments.filter((comment) => {
+        return !isWithinInterval(new Date(comment.createdAt), {
+          start: startOfDay(new Date(startDate)),
+          end: endOfDay(new Date(endDate)),
+        })
+      }) : [];
       setFilteredComments(filtered);
       setOutOfRangeComments(outOfRangeCommentsFilter);
     }

@@ -1,5 +1,17 @@
 import { find, findIndex, isEmpty } from 'lodash';
-import { differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarWeeks, differenceInCalendarYears, format, subWeeks, subMonths, subYears, isWithinInterval } from 'date-fns';
+import {
+  differenceInCalendarDays,
+  differenceInCalendarMonths,
+  differenceInCalendarWeeks,
+  differenceInCalendarYears,
+  format,
+  subWeeks,
+  subMonths,
+  subYears,
+  isWithinInterval,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
 import { EMOJIS, TAGS } from './constants';
 import { generateChartDataByDays, generateChartDataByWeeks, generateChartDataByMonths, generateChartDataByYears } from './codeStats';
 
@@ -147,8 +159,8 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
   ) {
     filtered = smartComments.filter((item) => {
       const isWithinDateRange = startDate && endDate ? isWithinInterval(new Date(item.createdAt), {
-        start: new Date(startDate),
-        end: new Date(endDate)
+        start: startOfDay(new Date(startDate)),
+        end: endOfDay(new Date(endDate)),
       }) : false;
       const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
       const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;
