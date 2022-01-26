@@ -14,6 +14,36 @@ import {
 import { findIndex } from 'lodash';
 import { EMOJIS, TAGS } from './constants';
 
+const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
+  const endOfMonth = {
+    true: format(endDay, 'MMM dd'),
+    false: endWeekDay
+  }
+  return endOfMonth[format(startDay, 'MMM') !== format(endDay, 'MMM')];
+}
+
+const mergeTwoData = (reactions, type) => {
+  let chart = [];
+  reactions.reduce((previousValue, currentValue, currentIndex) => {
+    if (currentIndex % 2) {
+      const item = {
+        ...type == 'd' && {date: `${currentValue.date}-${format(new Date(previousValue.date), 'dd')}`},
+        ...type == 'm' && {date: `${currentValue.date}/${previousValue.date}`},
+        ...type == 'w' && {date: `${currentValue.date.split(" ")[0]} ${currentValue.date.split(" ")[1].split("-")[0]}-${previousValue.date.split("-")[1]}`}
+      };
+      EMOJIS.forEach((emoji) => {
+        item[emoji._id] = {
+          current: currentValue[emoji._id].current + previousValue[emoji._id].current,
+          previous: currentValue[emoji._id].previous + previousValue[emoji._id].previous,
+        };
+      });
+      chart.push(item);
+    }
+    return currentValue;
+  });
+  return chart;
+}
+
 export const generateChartDataByDays = (smartcomments, diff, startDate, endDate) => {
   let reactionsByDay = [];
   const tagsArr = [];
@@ -23,7 +53,7 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   while (day < countedDays) {
     const thisDay = subDays(new Date(endDate), day);
     const item = {
-      date: format(thisDay, 'MM/dd')
+      date: format(thisDay, 'MMM dd')
     };
     // Set Reaction Ids as object keys
     EMOJIS.forEach((reaction) => {
@@ -34,23 +64,26 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     });
     reactionsByDay.push(item);
     tagsArr.push({
-        x: format(thisDay, 'MM/dd'),
+        x: format(thisDay, 'MMM dd'),
         y: 0,
     });
     day += 1;
   }
   const tagsByDay = createTags(tagsArr);
-  const {
+  let {
     reactions,
     tags
   } = parseTagsAndReactions(
     smartcomments,
-    "MM/dd",
+    "MMM dd",
     reactionsByDay,
     tagsByDay,
     startDate,
     endDate,
   );
+  if (diff > 6) {
+    reactions = mergeTwoData(reactions, 'd');
+  }
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
@@ -61,11 +94,13 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   });
   let reactionsByWeek = [];
   const tagsArr = [];
-  const weekRange = weeks.map((week, index) => {
+  let weekRange = [];
+  weekRange = weeks.map((week, index) => {
     const startDay = new Date(week);
     const endDay = endOfWeek(new Date(week));
-    const startWeekDay = format(startDay, 'MM/dd');
-    const endWeekDay = format(endDay, 'MM/dd');
+    const startWeekDay = format(startDay, 'MMM dd');
+    let endWeekDay = format(endDay, 'dd');
+    endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
     const item = {
       date: `${startWeekDay}-${endWeekDay}`,
     };
@@ -87,6 +122,7 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       endDay
     };
   });
+
   const tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
   const filteredComments = smartcomments.filter((comment) => isWithinInterval(
@@ -135,6 +171,10 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[index][comment.reaction].previous += 1;
     }
   });
+
+  if (weeks.length > 13) {
+    reactionsByWeek = mergeTwoData(reactionsByWeek, 'w');
+  }
   return { reactionsByWeek, tagsByWeek };
 }
 
@@ -164,7 +204,7 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
   });
   // Set TagId as object keys
   const tagsByMonth = createTags(tagsArr);
-  const {
+  let {
     reactions,
     tags
   } = parseTagsAndReactions(
@@ -174,7 +214,8 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
     tagsByMonth,
     startDate,
     endDate,
-  )
+    )
+  reactions = mergeTwoData(reactions, 'm');
   return { reactionsByMonth: reactions, tagsByMonth: tags };
 }
 

@@ -67,7 +67,7 @@ const PersonalInsights = () => {
   const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
     const { startDate, endDate, search } = filter;
-    const params = startDate && endDate ? getDateSub(startDate, endDate) : {}
+    const params = {}
     if (commentView === 'given') {
       params.reviewer = username
     } else {

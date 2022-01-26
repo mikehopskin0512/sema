@@ -89,16 +89,16 @@ export const getDateRangeGroup = (startDate, endDate) => {
   const weeks = differenceInCalendarWeeks(endDay, startDay);
   const months = differenceInCalendarMonths(endDay, startDay);
   const years = differenceInCalendarYears(endDay, startDay);
-  if (days > 0 && weeks < 1) {
+  if (days < 7 || days < 15 && weeks <= 2) {
     return 'day';
   }
-  if (weeks > 0 && months < 1) {
+  if (days >= 15 && weeks >= 2 && months <= 3) {
     return 'week';
   }
-  if (months > 0 && years < 1) {
+  if (months > 3 && years <= 1) {
     return 'month';
   }
-  if (years > 0) {
+  if (years >= 1) {
     return 'year';
   }
 }

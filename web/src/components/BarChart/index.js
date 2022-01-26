@@ -122,6 +122,14 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     });
   };
 
+  const checkIfDateHasMonth = (date1, date2) => {
+    const hasMonth = {
+      true: date2,
+      false: `${date1.split(" ")[0]} ${date2}`,
+    }
+    return hasMonth[date2.includes(" ")];
+  }
+
   const renderTooltip = React.memo((itemData) => {
     const { id, value, indexValue, data: colData } = itemData;
     const { emoji, label } = find(EMOJIS, { _id: id });
@@ -132,7 +140,8 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
       // Parse date format
       let dateString = indexValue;
       if (indexValue.search('-') !== -1) {
-        const [date1, date2] = indexValue.split('-');
+        let [date1, date2] = indexValue.split('-');
+        date2 = checkIfDateHasMonth(date1, date2);
         const parsedDate1 = format(new Date(date1), 'LLL d');
         const parsedDate2 = format(new Date(date2), 'LLL d');
         dateString = `${parsedDate1} - ${parsedDate2}`;
@@ -257,9 +266,6 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Date',
-        legendPosition: 'middle',
-        legendOffset: 35,
       }}
       tooltip={renderTooltip}
       maxValue={maxValue}
