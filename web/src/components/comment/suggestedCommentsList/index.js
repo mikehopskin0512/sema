@@ -19,7 +19,7 @@ import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { isSemaDefaultCollection } from '../../../utils';
+import {isSemaDefaultCollection, isTeamDefaultCollection} from '../../../utils';
 import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
@@ -36,7 +36,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
     alerts: state.alertsState,
   }));
 
-  const { token, user } = auth;
+  const { token, user, selectedTeam } = auth;
   const { collection: { name = '', comments = [], _id } } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
@@ -45,7 +45,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
-  const { checkAccess } = usePermission();
+  const { checkAccess, checkTeamPermission } = usePermission();
   const [isParsing, setIsParsing] = useState(true);
 
   useAuthEffect(() => {
@@ -131,8 +131,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const canCreate = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateSnippets') || isSemaDefaultCollection(name), [user, name]);
-  const canEdit = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditSnippets') || isSemaDefaultCollection(name), [user, name]);
+  const canCreate = useMemo(() => checkTeamPermission('canCreateSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
+  const canEdit = useMemo(() => checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
 
   return (
     <div>

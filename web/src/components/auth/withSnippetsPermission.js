@@ -2,27 +2,27 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
-import { isSemaDefaultCollection } from '../../utils';
+import { isSemaDefaultCollection, isTeamDefaultCollection } from '../../utils';
 import usePermission from '../../hooks/usePermission';
 
 const withSnippetsPermission = (WrappedComponent, permission) => {
   return (props) => {
     if (typeof window !== 'undefined') {
       const router = useRouter();
-      const { checkAccess } = usePermission();
+      const { checkTeamPermission } = usePermission();
       const { cid } = router.query;
   
-      const { collectionState } = useSelector((state) => ({
-        auth: state.authState,
+      const { authState, collectionState } = useSelector((state) => ({
+        authState: state.authState,
         collectionState: state.commentsState,
       }));
   
+      const { selectedTeam } = authState;
       const { collection } = collectionState;
       
-      if (!checkAccess(SEMA_CORPORATE_TEAM_ID, permission)) {
+      if (!checkTeamPermission(permission)) {
         if (cid && collection) {
-          if (!isSemaDefaultCollection(collection?.name)) {
+          if (!isSemaDefaultCollection(collection?.name) && !isTeamDefaultCollection(selectedTeam, collection)) {
             router.back();
             return null;
           }

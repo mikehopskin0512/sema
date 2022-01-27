@@ -10,6 +10,7 @@ import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
 import { isEmpty } from 'lodash';
+import {isSemaDefaultCollection, isTeamDefaultCollection} from "../../../utils";
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
@@ -20,7 +21,7 @@ const CollectionRow = ({ data }) => {
   const { token, selectedTeam } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
   const { _id, name, description, source, author, commentsCount, isActive: isNotArchived } = collectionData;
-  const { checkAccess } = usePermission();
+  const { checkAccess, checkTeamPermission } = usePermission();
 
   const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
 
@@ -28,7 +29,7 @@ const CollectionRow = ({ data }) => {
     e.stopPropagation();
     // TODO: would be great to add error handling here in case of network error
     if (!isEmpty(selectedTeam) && isTeamSnippet) {
-      dispatch(updateTeamCollectionIsActiveAndFetchCollections(selectedTeam.team, _id, token))
+      dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
     } else {
       dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
     }
@@ -44,6 +45,7 @@ const CollectionRow = ({ data }) => {
   };
   
   const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
+  const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
   
   return (
     <Link href={`?cid=${_id}`}>
@@ -74,7 +76,7 @@ const CollectionRow = ({ data }) => {
             <p className={"is-size-7 has-text-weight-semibold"}>
               {name}
             </p>
-            { (name?.toLowerCase() === DEFAULT_COLLECTION_NAME || isTeamSnippet) && (
+            { canEditSnippets && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}

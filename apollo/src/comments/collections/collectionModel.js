@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { bulkUpdateUserCollections } from '../../users/userService';
+import { bulkUpdateTeamCollections } from '../../teams/teamService';
 import { autoIndex } from '../../config';
 
 const { Schema } = mongoose;
@@ -29,10 +30,13 @@ collectionSchema.index({ name: 1 });
 collectionSchema.post('insertMany', async (doc) => {
   doc.forEach(async (document) => {
     if (document.author === 'sema') {
-      bulkUpdateUserCollections(document)
+      bulkUpdateUserCollections(document);
+      bulkUpdateTeamCollections(document);
     }
+    // assign the collection only to the creator
     if (document.createdBy) {
       bulkUpdateUserCollections(document, [document.createdBy])
+      bulkUpdateTeamCollections(document, [document.createdBy]);
     }
   })
 });

@@ -9,7 +9,14 @@ import Helmet, { SnippetCollectionsHelmet } from '../../utils/Helmet';
 import Loader from '../../Loader';
 import Toaster from '../../toaster';
 import Table from '../../labels-management/LabelsTable';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID, SEMA_COLLECTIONS_VIEW_MODE, NUM_PER_PAGE } from '../../../utils/constants';
+import {
+  DEFAULT_COLLECTION_NAME,
+  PATHS,
+  SEMA_CORPORATE_TEAM_ID,
+  SEMA_COLLECTIONS_VIEW_MODE,
+  NUM_PER_PAGE,
+  PROFILE_VIEW_MODE
+} from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
@@ -18,6 +25,7 @@ import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
 import { find, isEmpty, uniqBy } from 'lodash';
+import { fetchTeamCollections } from "../../../state/features/teams/actions";
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -26,10 +34,11 @@ const { getCollectionById } = commentsOperations;
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
   const { checkAccess, isSemaAdmin } = usePermission();
-  const { auth, collectionsState, alerts } = useSelector((state) => ({
+  const { auth, collectionsState, alerts, teamsState } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
     alerts: state.alertsState,
+    teamsState: state.teamsState
   }));
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState({
@@ -41,7 +50,8 @@ const CommentCollectionsList = () => {
     query: '',
   });
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user, selectedTeam } = auth;
+  const { token, profileViewMode, selectedTeam } = auth;
+  const { teamCollections } = teamsState;
 
   const { data = [], isFetching } = collectionsState;
 
@@ -58,7 +68,7 @@ const CommentCollectionsList = () => {
   };
 
   const sortedCollections = useMemo(() => {
-    let collections = [...data];
+    let collections = profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW ? [...teamCollections] : [...data];
     if (!isSemaAdmin()) {
       collections = collections.filter((collection) => collection?.collectionData?.isActive);
     }
@@ -91,7 +101,7 @@ const CommentCollectionsList = () => {
           filterBool = filterBool && queryBool;
         }
         if (!isEmpty(selectedTeam)) {
-          filterBool = item?.collectionData?.name?.toLowerCase() !== DEFAULT_COLLECTION_NAME
+          filterBool = filterBool && (item?.collectionData?.name?.toLowerCase() !== DEFAULT_COLLECTION_NAME)
         }
         return filterBool;
       }
@@ -103,13 +113,8 @@ const CommentCollectionsList = () => {
       if (b === DEFAULT_COLLECTION_NAME) return 1;
       return a >= b ? 1 : -1
     });
-    if (!isEmpty(selectedTeam)) {      
-      const teamSnippet = find(selectedTeam.team.collections, { collectionData: collectionsState.collection._id })
-      const teamCollection = { isActive: teamSnippet?.isActive , collectionData: collectionsState.collection, }
-      collections.splice(0, 0, teamCollection)
-    }
     return uniqBy(collections, 'collectionData._id');
-  }, [data, filter, selectedTeam]);
+  }, [data, teamCollections, filter, selectedTeam]);
 
   const paginatedInactiveCollections = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize;
@@ -117,34 +122,29 @@ const CommentCollectionsList = () => {
     // PUT OTHER FILTERS HERE
     const filteredCollections = sortedCollections.filter((collection) => !collection.isActive).slice(firstPageIndex, lastPageIndex);
     return filteredCollections;
-  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data]);
+  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
   
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
 
   useEffect(() => {
-    dispatch(fetchAllUserCollections(token));
+    if (profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW && selectedTeam?.team?._id) {
+      dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+    } else {
+      dispatch(fetchAllUserCollections(token));
+    }
 
     const viewMode = localStorage.getItem(SEMA_COLLECTIONS_VIEW_MODE);
 
     if (viewMode) {
       setView(viewMode);
     }
-  }, []);
+  }, [selectedTeam]);
 
   useEffect(() => {
     if (isEmpty(selectedTeam)) {
       setDefaultCollectionAsActive();
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (!isEmpty(selectedTeam)) {
-      const [ teamCollection ] = selectedTeam.team.collections;
-      if (!isEmpty(teamCollection)) {
-        dispatch(getCollectionById(teamCollection.collectionData, token));
-      }
-    }
-  }, [data]);
+  }, [data, teamCollections]);
 
   useEffect(() => {
     if (showAlert === true) {

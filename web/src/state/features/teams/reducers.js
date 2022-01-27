@@ -12,6 +12,7 @@ const initialState = {
     smartComments: 0,
   },
   isFetching: false,
+  teamCollections: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -117,6 +118,23 @@ const reducer = (state = initialState, action) => {
       error: {},
     };
   case types.REQUEST_EDIT_TEAM_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
+  case types.FETCH_TEAM_COLLECTIONS:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.FETCH_TEAM_COLLECTIONS_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      teamCollections: action.collections,
+    };
+  case types.FETCH_TEAM_COLLECTIONS_ERROR:
     return {
       ...state,
       isFetching: false,

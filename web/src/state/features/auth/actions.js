@@ -399,7 +399,7 @@ export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch
 export const setActiveUserCollections = (id, token) => async (dispatch) => {
   try {
     dispatch(toggleUserCollectionActive());
-    const response = await toggleActiveCollection(id, token);
+    const response = await toggleActiveCollection(id, {}, token);
     const { data: { user } } = response;
     dispatch(toggleUserCollectionActiveSuccess(user));
     return response.status || 200;
