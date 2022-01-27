@@ -1,5 +1,17 @@
 import { find, findIndex, isEmpty } from 'lodash';
-import { differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarWeeks, differenceInCalendarYears, format, subWeeks, subMonths, subYears, isWithinInterval } from 'date-fns';
+import {
+  differenceInCalendarDays,
+  differenceInCalendarMonths,
+  differenceInCalendarWeeks,
+  differenceInCalendarYears,
+  format,
+  subWeeks,
+  subMonths,
+  subYears,
+  isWithinInterval,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
 import { EMOJIS, TAGS } from './constants';
 import { generateChartDataByDays, generateChartDataByWeeks, generateChartDataByMonths, generateChartDataByYears } from './codeStats';
 
@@ -89,16 +101,16 @@ export const getDateRangeGroup = (startDate, endDate) => {
   const weeks = differenceInCalendarWeeks(endDay, startDay);
   const months = differenceInCalendarMonths(endDay, startDay);
   const years = differenceInCalendarYears(endDay, startDay);
-  if (days > 0 && weeks < 1) {
+  if (days < 7 || days < 15 && weeks <= 2) {
     return 'day';
   }
-  if (weeks > 0 && months < 1) {
+  if (days >= 15 && weeks >= 2 && months <= 3) {
     return 'week';
   }
-  if (months > 0 && years < 1) {
+  if (months > 3 && years <= 1) {
     return 'month';
   }
-  if (years > 0) {
+  if (years >= 1) {
     return 'year';
   }
 }
@@ -147,8 +159,8 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
   ) {
     filtered = smartComments.filter((item) => {
       const isWithinDateRange = startDate && endDate ? isWithinInterval(new Date(item.createdAt), {
-        start: new Date(startDate),
-        end: new Date(endDate)
+        start: startOfDay(new Date(startDate)),
+        end: endOfDay(new Date(endDate)),
       }) : false;
       const fromIndex = item?.userId ? findIndex(filter.from, { value: item.userId._id }) : -1;
       const toIndex = item?.githubMetadata ? findIndex(filter.to, { value: item?.githubMetadata?.requester }) : -1;

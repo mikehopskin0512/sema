@@ -2,10 +2,10 @@ import errors from '../shared/errors';
 import logger from '../shared/logger';
 import Role from './roleModel';
 
-export const getAdminRole = async () => {
+export const getRoleByName = async (name) => {
   try {
-    const adminRole = await Role.findOne({ name: 'Admin' });
-    return adminRole;
+    const role = await Role.findOne({ name });
+    return role;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

@@ -78,7 +78,7 @@ const LabelsManagement = () => {
   }
 
   return(
-    <div className="px-20">
+    <div className="px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...LabelsManagementHelmet} />
       <FilterLabels setFilters={setFilters} filters={filters} teamId={teamId} />

@@ -76,8 +76,8 @@ const TeamReposList = ({ isActive, onClose }) => {
       isActive: true,
       id: repo._id,
     },
-    lastCommentDate: format(new Date(repo.updatedAt), 'yyyy-MM-dd'),
-    totalComments: repo.repoStats.smartComments,
+    lastCommentDate: repo.updatedAt ? format(new Date(repo.updatedAt), 'yyyy-MM-dd') : '-',
+    totalComments: repo.repoStats?.smartComments || '-',
   })), [repositories]);
   const addRepos = async () => {
     try {

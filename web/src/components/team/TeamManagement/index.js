@@ -167,7 +167,7 @@ const TeamManagement = () => {
   }, [canModifyRoles, canViewUserRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   return (
-    <div className="has-background-gray-100 hero mx-20">
+    <div className="has-background-gray-100 hero mx-10">
       <Helmet {...TeamManagementHelmet} />
       <div className="hero-body py-0 px-0">
         <div className="content-container px-0">

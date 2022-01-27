@@ -51,7 +51,7 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
   }
 
   return (
-    <div className="content-container px-20 mb-25">
+    <div className="content-container px-10 mb-25">
       <div className='is-flex is-justify-content-space-between'>
         <div className="is-flex mb-25">
           <Avatar

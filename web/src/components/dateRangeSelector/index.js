@@ -65,6 +65,10 @@ const DateRangeSelector = (props) => {
       })
     }, [selectedRange]);
 
+    useEffect(() => {
+      setSelectedRange('last30Days');
+    }, []);
+
     const setDates = ({ startDate, endDate }) => {
       setSelectedRange('custom');
       setStartDate(startDate);
@@ -86,7 +90,6 @@ const DateRangeSelector = (props) => {
                 <li><a className={clsx("px-25", selectedRange === 'last3Months' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('last3Months')}>Last 3 months</a></li>
                 <li><a className={clsx("px-25", selectedRange === 'last12Months' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('last12Months')}>Last 12 months</a></li>
                 <li><a className={clsx("px-25", selectedRange === 'allTime' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('allTime')}>All time</a></li>
-                <li><a className={clsx("px-25", selectedRange === 'custom' ? "has-text-primary has-text-weight-semibold" : null)} onClick={() => setSelectedRange('custom')}>Custom</a></li>
             </ul>
         </div>
     )

@@ -9,7 +9,7 @@ const TeamInfo = ({ userRole, teams, teamId }) => {
   const { isTeamAdmin } = usePermission();
   const router = useRouter();
   return (
-    <div className="content-container px-20">
+    <div className="content-container px-10">
       <div className='is-flex is-align-items-center is-justify-content-space-between'>
         <div className="is-flex is-align-items-center mb-15">
           <Avatar
