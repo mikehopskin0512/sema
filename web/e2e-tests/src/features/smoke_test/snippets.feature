@@ -145,7 +145,7 @@ Feature: User is able to interact with snippets properly
       When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
       Then I expect that element "saveNewCollectionBtn" becomes displayed
       When I click on the button "saveNewCollectionBtn"
-      Then I expect that new item "allSnippetsNames" is added to collections
+      Then I expect that new item "allCollectionsNames" is added to collections
 
     @C1714  @snippet
     Scenario:  "View more" snippets shows
@@ -309,3 +309,102 @@ Feature: User is able to interact with snippets properly
       When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
       Then I expect that element "snippetCollectionLinkError" becomes not displayed
 
+
+    @admin  @C2786  @snippet
+    Scenario: Populate this collection to all users checkbox is marked
+        #temporary solution
+      When I click on the element "userLogo"
+      When I click on the element "semaCorporateTeamLogo"
+        #------------------
+      When I click on the element "snippetsTab"
+      Then I expect that element "addNewCollectionBtn" becomes displayed
+      When I click on the element "addNewCollectionBtn"
+      Then I expect that element "newCollectionTitleInput" becomes displayed
+      When I set "Test Collection with marked" with timestamp to the inputfield "newCollectionTitleInput"
+      When I click on the element "newCollectionLanguagesInput"
+      And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+      And  I press "Enter"
+      Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+      When I click on the element "newCollectionOtherLabelInput"
+      And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+      And  I press "Enter"
+      When I set "test author name" to the inputfield "newCollectionAuthorInput"
+      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+      Then I expect that checkbox "newCollectionPopulateCheckBox" is checked
+
+      Then I expect that element "saveNewCollectionBtn" becomes displayed
+      When I click on the button "saveNewCollectionBtn"
+      Then I expect that new item "allCollectionsNames" is added to collections
+#      logout
+      When I click on the element "userLogo"
+      Then I expect that element "signOutBtn" becomes displayed
+      When I click on the element "signOutBtn"
+      Then I expect that element "confirmBtn" becomes displayed
+      And  I click on the element "confirmBtn"
+      Then I expect that element "signInWithGithubBtn" becomes displayed
+#       login with acme
+      When I click on the button "signInWithGithubBtn"
+      And  I pause for 2000ms
+      And  I clear the inputfield "loginInput"
+      When I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+      And  I clear the inputfield "passwordInput"
+      And  I add "Automation3Tester4#" to the inputfield "passwordInput"
+      And  I click on the button "signinBtn"
+      Then I expect that element "snippetsTab" becomes displayed
+#      check added collection
+      When I click on the element "snippetsTab"
+      And  I search created collection "searchCollectionInput"
+      Then I expect that new item "allCollectionsNames" is added to collections
+
+    @admin  @C2786  @snippet
+    Scenario: Populate this collection to all users checkbox is not marked
+          #temporary solution
+      When I click on the element "userLogo"
+      When I click on the element "semaCorporateTeamLogo"
+          #------------------
+      When I click on the element "snippetsTab"
+      Then I expect that element "addNewCollectionBtn" becomes displayed
+      When I click on the element "addNewCollectionBtn"
+      Then I expect that element "newCollectionTitleInput" becomes displayed
+      When I set "Test Collection with unmarked" with timestamp to the inputfield "newCollectionTitleInput"
+      When I click on the element "newCollectionLanguagesInput"
+      And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+      And  I press "Enter"
+      Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+      When I click on the element "newCollectionOtherLabelInput"
+      And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+      And  I press "Enter"
+      When I set "test author name" to the inputfield "newCollectionAuthorInput"
+      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+#      unmark checkbox
+      Then I expect that checkbox "newCollectionPopulateCheckBox" is checked
+      When I click on the element "newCollectionPopulateCheckBox"
+      Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
+
+      Then I expect that element "saveNewCollectionBtn" becomes displayed
+      When I click on the button "saveNewCollectionBtn"
+      Then I expect that new item "allCollectionsNames" is added to collections
+#        logout
+      When I click on the element "userLogo"
+      Then I expect that element "signOutBtn" becomes displayed
+      When I click on the element "signOutBtn"
+      Then I expect that element "confirmBtn" becomes displayed
+      And  I click on the element "confirmBtn"
+      Then I expect that element "signInWithGithubBtn" becomes displayed
+#         login with acme
+      When I click on the button "signInWithGithubBtn"
+      And  I pause for 2000ms
+      And  I clear the inputfield "loginInput"
+      When I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+      And  I clear the inputfield "passwordInput"
+      And  I add "Automation3Tester4#" to the inputfield "passwordInput"
+      And  I click on the button "signinBtn"
+      Then I expect that element "snippetsTab" becomes displayed
+#        check added collection
+      When I click on the element "snippetsTab"
+      And  I search created collection "searchCollectionInput"
+      Then I expect that new item "allCollectionsNames" is not added to collections

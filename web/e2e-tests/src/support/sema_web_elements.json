@@ -64,6 +64,7 @@
     "newCollectionLanguagesInput"   : "//input[@id='react-select-2-input']",
     "newCollectionOtherLabelInput"  : "//input[@id='react-select-3-input']",
     "newCollectionAuthorInput"      : "//input[@name='author']",
+    "newCollectionPopulateCheckBox" : "//span[@class='customCheckbox_checkmark__33aEh']",
     "saveNewCollectionBtn"          : "//button/span[text()='Save']",
 
     "snippetCollectionTitleError"       : "//label[text()='Snippet Collection Title']/following-sibling::p[contains(@class,'has-text-danger')]",
