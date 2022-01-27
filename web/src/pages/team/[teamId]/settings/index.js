@@ -80,7 +80,7 @@ const TeamSettings = () => {
     <>
       <div className="has-background-gray-200 hero">
         <Helmet {...TeamDashboardHelmet} />
-        <div className="hero-body pb-300">
+        <div className="hero-body pb-300 px-0">
           <PageHeader menus={menus} userRole={userRole} />
           {tab === 'info' && <TeamInfo userRole={userRole} teams={teams} teamId={teamId}  />}
           {tab === 'management' && <TeamManagement />}
