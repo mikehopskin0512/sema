@@ -25,7 +25,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      teams: action.teams,
+      teams: [...action.teams],
     };
   case types.REQUEST_FETCH_TEAMS_OF_USER_ERROR:
     return {

@@ -7,9 +7,28 @@ import { getRepositories } from '../repositories/repositoryService';
 import { getSmartCommentsByExternalId, _getPullRequests, _getSmartCommentersCount } from '../comments/smartComments/smartCommentService';
 import { uniq } from 'lodash';
 import { createUserRole } from '../userRoles/userRoleService';
-import { getAdminRole } from '../roles/roleService';
+import { getRoleByName } from '../roles/roleService';
 import { semaCorporateTeamName } from '../config';
+import { findByUsername } from '../users/userService';
 const { Types: { ObjectId } } = mongoose;
+
+export const ROLE_NAMES = {
+  ADMIN: 'Admin',
+  LIBRARY_EDITOR: 'Library Editor',
+  MEMBER: 'Member',
+};
+
+export const createMembersRoles = async (members, teamId) => {
+  const memberRole = await getRoleByName(ROLE_NAMES.MEMBER);
+  members.split(',').forEach(async (member) => {
+    const user = await findByUsername(member.trim());
+    await createUserRole({
+      user: user._id,
+      team: teamId,
+      role: memberRole._id,
+    });
+  });
+}
 
 export const getTeams = async (userId) => {
   const teams = await Team.find({ createdBy: userId });
@@ -34,15 +53,22 @@ export const createTeam = async (data) => {
     if (data.name === semaCorporateTeamName) {
       throw `The ${semaCorporateTeamName} name is reserved`;
     }
+    const { members } = data;
     const team = new Team(data);
     await team.save();
-    const adminRole = await getAdminRole();
+
+    const adminRole = await getRoleByName(ROLE_NAMES.ADMIN);
     const userRoleBody = {
       user: data.createdBy,
       team: team._id,
       role: adminRole._id,
     }
     await createUserRole(userRoleBody);
+
+    if (members) {
+      createMembersRoles(members, team._id);
+    }
+
     return team;
   } catch (err) {
     logger.error(err);
@@ -53,9 +79,12 @@ export const createTeam = async (data) => {
 
 export const updateTeam = async (data) => {
   try {
-    const { _id } = data;
+    const { _id, members } = data;
     if (!_id) {
       throw({ status: 401, msg: 'No Team ID' })
+    }
+    if (members) {
+      createMembersRoles(members, _id);
     }
     const query = await Team.findOneAndUpdate({ _id }, data, { new: true, upsert: false, setDefaultsOnInsert: true });
     return query;

@@ -8,7 +8,7 @@ import { teamsOperations } from '../../state/features/teams';
 import { CheckFilledIcon, CheckOnlineIcon, CloseIcon } from '../../components/Icons';
 import { PATHS } from '../../utils/constants' ;
 
-const { createTeam } = teamsOperations;
+const { createTeam, fetchTeamsOfUser } = teamsOperations;
 
 const TeamEditPage = () => {
   const [team, setTeam] = useState({
@@ -35,7 +35,7 @@ const TeamEditPage = () => {
       return;
     }
 
-    const data = await dispatch(createTeam(team, token));
+    const { _id } = await dispatch(createTeam(team, token));
 
     toaster.notify(({ onClose }) => (
       <div className="message is-success shadow mt-60">
@@ -52,8 +52,8 @@ const TeamEditPage = () => {
               You've successfully created the team
             </div>
             <div>
-              <span className="has-text-black has-text-weight-semibold">{ data.name }.</span>
-              <a href={PATHS.TEAMS} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
+              <a href={`${PATHS.TEAM._}/${_id}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -62,9 +62,9 @@ const TeamEditPage = () => {
       position: 'top-right',
       duration: 4000,
     });
-    await dispatch(fetchTeamsOfUser(token));
 
-    await router.push(PATHS.TEAMS);
+    await dispatch(fetchTeamsOfUser(token));
+    await router.push(`${PATHS.TEAM._}/${_id}${PATHS.SETTINGS}`);
   };
 
   const mutate = (obj) => {

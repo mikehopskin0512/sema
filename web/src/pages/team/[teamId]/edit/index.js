@@ -54,6 +54,10 @@ const TeamEditPage = () => {
     }
   }, [teams]);
 
+  useEffect(() => {
+    dispatch(fetchTeamsOfUser(token));
+  }, []);
+
   const onUpdate = async () => {
     // validation
     if (!team.name || !team.description) {
@@ -64,11 +68,7 @@ const TeamEditPage = () => {
       return;
     }
 
-    const data = await dispatch(editTeam(team, token));
-    if (data.statusCode === 404) {
-      return;
-    }
-    const { _id: teamId } = data;
+    await dispatch(editTeam(team, token));
 
     toaster.notify(({ onClose }) => (
       <div className="message is-success shadow mt-60">
@@ -76,7 +76,7 @@ const TeamEditPage = () => {
           <CheckFilledIcon size="small" />
           <div>
             <div className="is-flex is-justify-content-space-between mb-15">
-              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">Team Created</span>
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">Team Updated</span>
               <div onClick={onClose}>
                 <CloseIcon size="small" />
               </div>
@@ -85,8 +85,8 @@ const TeamEditPage = () => {
               You've successfully updated the team
             </div>
             <div>
-              <span className="has-text-black has-text-weight-semibold">{ data.name }.</span>
-              <a href={`${PATHS.TEAM._}/${teamId}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
+              <a href={`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -96,8 +96,7 @@ const TeamEditPage = () => {
       duration: 4000,
     });
 
-    mutate(team)
-    await dispatch(fetchTeamsOfUser(token));
+    mutate(team);
     await router.push(`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}`);
   };
 
@@ -173,7 +172,7 @@ const TeamEditPage = () => {
             />
             { errors.description && <p className="has-text-danger is-size-7 is-italic">{errors.description}</p> }
           </div>
-          {/* <div className="mt-40">
+          <div className="mt-40">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mb-15">
               Invite members
             </p>
@@ -190,7 +189,7 @@ const TeamEditPage = () => {
                 onChange={(e) => mutate({ members: e.target.value })}
               />
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
