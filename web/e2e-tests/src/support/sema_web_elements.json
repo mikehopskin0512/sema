@@ -68,11 +68,10 @@
 
     "snippetCollectionTitleError"       : "//label[text()='Snippet Collection Title']/following-sibling::p[contains(@class,'has-text-danger')]",
     "snippetCollectionLanguageError"    : "//label[text()='Language Labels']/following-sibling::p[contains(@class,'has-text-danger')]",
-    "snippetCollectionOtherError"       : "",
-    "snippetCollectionAuthorError"      : "",
-    "snippetCollectionSourceNameError"  : "",
-    "snippetCollectionLinkError"        : "",
-
+    "snippetCollectionOtherError"       : "//label[text()='Other Labels']/following-sibling::p[contains(@class,'has-text-danger')]",
+    "snippetCollectionAuthorError"      : "//label[text()='Author']/following-sibling::p[contains(@class,'has-text-danger')]",
+    "snippetCollectionSourceNameError"  : "//label[text()='Source Name']/following-sibling::p[contains(@class,'has-text-danger')]",
+    "snippetCollectionLinkError"        : "//label[text()='Source Link']/following-sibling::p[contains(@class,'has-text-danger')]",
 
     "allSnippetsNames"              : "//div[contains(@class,'suggestedCommentCard_title__1fTLb')]//p",
     "searchedSnippetsResult"        : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",

@@ -280,12 +280,12 @@ Feature: User is able to interact with snippets properly
       And  I expect that element "saveNewCollectionBtn" becomes displayed
       When I click on the button "saveNewCollectionBtn"
 
-      Then I expect that element "([^"]*)?" matches the text "Title is required"
-      And  I expect that element "([^"]*)?" matches the text "At least one tag is required"
-      And  I expect that element "([^"]*)?" matches the text "At least one tag is required"
-      And  I expect that element "([^"]*)?" matches the text "Author is required"
-      And  I expect that element "([^"]*)?" matches the text "Source name is required"
-      And  I expect that element "([^"]*)?" matches the text "Source link is required"
+      Then I expect that element "snippetCollectionTitleError" matches the text "Title is required"
+      And  I expect that element "snippetCollectionLanguageError" matches the text "At least one tag is required"
+      And  I expect that element "snippetCollectionOtherError" matches the text "At least one tag is required"
+      And  I expect that element "snippetCollectionAuthorError" matches the text "Author is required"
+      And  I expect that element "snippetCollectionSourceNameError" matches the text "Source name is required"
+      And  I expect that element "snippetCollectionLinkError" matches the text "Source link is required"
 
       When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
       When I click on the element "newCollectionLanguagesInput"
@@ -295,10 +295,17 @@ Feature: User is able to interact with snippets properly
       When I click on the element "newCollectionOtherLabelInput"
       And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
       And  I press "Enter"
-      When I set "test author name" to the inputfield "newCollectionAuthorInput"
-      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-      Then I expect that element "saveNewCollectionBtn" becomes displayed
-      When I click on the button "saveNewCollectionBtn"
-      Then I expect that new item "allSnippetsNames" is added to collections
+      And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+      And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"
+
+      Then I expect that element "snippetCollectionTitleError" becomes not displayed
+      And  I expect that element "snippetCollectionLanguageError" becomes not displayed
+      And  I expect that element "snippetCollectionOtherError" becomes not displayed
+      And  I expect that element "snippetCollectionAuthorError" becomes not displayed
+      And  I expect that element "snippetCollectionSourceNameError" becomes not displayed
+      And  I expect that element "snippetCollectionLinkError" matches the text "Invalid URL"
+
+      When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
+      Then I expect that element "snippetCollectionLinkError" becomes not displayed
+
