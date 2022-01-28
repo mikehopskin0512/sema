@@ -32,28 +32,29 @@ const RepoList = ({ type, repos = [] }) => {
     if (!repos?.length) {
       return []
     }
-    let sortedRepos = [];
+    const sortedRepos = [...repos];
+    const getSortValue = (a, b) => a !== b ? (a > b ? 1 : -1) : 0;
     switch (sort.value) {
       case 'a-z':
-        sortedRepos = repos.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0))
+        sortedRepos.sort((a, b) => getSortValue(a.name.toLowerCase(), b.name.toLowerCase()))
         break;
       case 'z-a':
-        sortedRepos = repos.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? -1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? 1 : 0))
+        sortedRepos.sort((a, b) => getSortValue(b.name.toLowerCase(), a.name.toLowerCase()))
         break;
       case 'recentlyUpdated':
-        sortedRepos = repos.sort((a, b) => (new Date(a.updatedAt) - new Date(b.updatedAt) > 1) ? -1 : ((new Date(b.updatedAt) - new Date(a.updatedAt) > 1) ? 1 : 0))
+        sortedRepos.sort((a, b) => getSortValue(new Date(b.updatedAt), new Date(a.updatedAt)))
         break;
       case 'mostActive':
-        sortedRepos = repos.sort((a, b) => {
+        sortedRepos.sort((a, b) => {
           let totalStatsA = 0;
           let totalStatsB = 0;
-          for (const [key, value] of Object.entries(a.stats)) {
+          for (const [key, value] of Object.entries(a.repoStats)) {
             totalStatsA += value
           }
-          for (const [key, value] of Object.entries(b.stats)) {
+          for (const [key, value] of Object.entries(b.repoStats)) {
             totalStatsB += value
           }
-          return ((totalStatsA > totalStatsB) ? -1 : (totalStatsB > totalStatsA) ? 1 : 0)
+          return getSortValue(totalStatsA, totalStatsB);
         })
         break;
       default:
@@ -72,10 +73,6 @@ const RepoList = ({ type, repos = [] }) => {
       sortRepos();
   }, [sort, repos]);
 
-  useEffect(() => {
-    setFilteredRepos(repos);
-    sortRepos();
-  }, [])
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   return (
     repos.length > 0 ? (
@@ -92,7 +89,7 @@ const RepoList = ({ type, repos = [] }) => {
             {
               type === 'REPOS' &&
               (<Select
-                onChange={(v) => setSort(v)}
+                onChange={setSort}
                 value={sort}
                 className={clsx("ml-20 is-inline-block", styles['filter-select'])}
                 defaultValue={filterOptions[0]}
