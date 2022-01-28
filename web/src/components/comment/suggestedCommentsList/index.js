@@ -13,7 +13,7 @@ import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
@@ -30,14 +30,14 @@ const NUM_PER_PAGE = 10;
 const SuggestedCommentCollection = ({ collectionId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { alerts, auth, collectionState, isFetching } = useSelector((state) => ({
+  const { alerts, auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
     alerts: state.alertsState,
   }));
 
   const { token, user, selectedTeam } = auth;
-  const { collection: { name = '', comments = [], _id } } = collectionState;
+  const { collection: { name = '', comments = [], _id,  }, isFetching } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
   const [page, setPage] = useState(1);
@@ -146,21 +146,21 @@ const SuggestedCommentCollection = ({ collectionId }) => {
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
               <li><a href={PATHS.SNIPPETS._} className="has-text-grey">Snippets</a></li>
-              <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
+              <li className="is-active has-text-weight-semibold"><a>{isFetching ? '' : name}</a></li>
             </ul>
           </nav>
         </div>
         <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-space-between">
           <div className="is-flex is-align-items-center p-10">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-              {name}
+              {isFetching ? '' : name}
             </p>
             <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-              {comments.length} snippets
+              {isFetching ? '' : `${comments.length} snippets`}
             </span>
           </div>
           {
-            canCreate && (
+            !isFetching && canCreate && (
               <button
                 className="button is-small is-primary border-radius-4px"
                 type="button"
