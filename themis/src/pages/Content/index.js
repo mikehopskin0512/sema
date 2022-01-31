@@ -40,6 +40,8 @@ import {
   EMOJIS_ID,
   SEMA_REMINDER_ROOT_ID,
   SEMA_TEXTAREA_IDENTIFIER,
+  DEFAULT_PROFILE_NAME,
+  STORAGE_ITEMS,
 } from './constants';
 
 import Semabar from './Semabar';
@@ -56,6 +58,7 @@ import {
   addGithubMetada,
   updateSelectedEmoji,
   toggleSnippetForSave,
+  updateProfile,
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
@@ -102,8 +105,12 @@ const showLogoutToaster = () => {
     );
   }
 };
-
+const setSavedProfile = () => {
+  const profile = JSON.parse(localStorage.getItem(STORAGE_ITEMS.PROFILE));
+  store.dispatch(updateProfile(profile || { name: DEFAULT_PROFILE_NAME }));
+};
 const onLoginChecked = () => {
+  setSavedProfile();
   $(() => {
     const { user } = store.getState();
     initAmplitude(user);

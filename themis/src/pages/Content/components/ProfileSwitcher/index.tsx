@@ -6,6 +6,8 @@ import styles from './profileSwitcher.module.scss';
 import useOutsideClick from '../../helpers/useOutsideClick';
 // @ts-ignore
 import { getActiveThemeClass } from '../../../../../utils/theme';
+// @ts-ignore
+import { DEFAULT_PROFILE_NAME, STORAGE_ITEMS } from '../../constants';
 
 const ProfileSwitcher = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ const ProfileSwitcher = () => {
   // @ts-ignore
   function onChangeProfile(profile: { name: string }) {
     dispatch(updateProfile(profile));
+    localStorage.setItem(STORAGE_ITEMS.PROFILE, JSON.stringify(profile));
     setOpen(false);
   }
   useOutsideClick(menu, () => setOpen(false));
@@ -64,10 +67,10 @@ const ProfileSwitcher = () => {
         </div>
         <div className="mt-3">
           <span className="sema-is-uppercase">
-            <b>Personal</b>
+            <b>{DEFAULT_PROFILE_NAME}</b>
           </span>
           <div
-            onClick={() => onChangeProfile({ name: 'Personal' })}
+            onClick={() => onChangeProfile({ name: DEFAULT_PROFILE_NAME })}
             className={styles['list-option']}
           >
             Personal account
