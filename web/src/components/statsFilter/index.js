@@ -8,7 +8,7 @@ import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
 import { groupBy, isEmpty } from 'lodash';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
   const [filter, setFilter] = useState({
@@ -40,7 +40,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    const formatDate = (date) => date ? format(new Date(date), `yyyy-MM-dd`) : null
+    const formatDate = (date) => date ? format(addDays(new Date(date), 1), `yyyy-MM-dd`) : null
     setFilter({
       ...filter,
       startDate: formatDate(startDate),
