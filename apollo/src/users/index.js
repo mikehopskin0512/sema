@@ -323,7 +323,7 @@ export default (app, passport) => {
   route.get('/:id/portfolios', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     try {
-      const userPortfolios = await getPortfoliosByUser(id);
+      const userPortfolios = await getPortfoliosByUser(id, true);
       return res.status(200).send(userPortfolios);
     } catch (error) {
       logger.error(error);

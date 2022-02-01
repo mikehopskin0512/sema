@@ -48,7 +48,7 @@ const snapshotSchema = new Schema({
 snapshotSchema.post('save', async (doc, next) => {
   try {
     const { _id: snapshotId, userId } = doc;
-    const userPorfolios = await getPortfoliosByUser(userId);
+    const userPorfolios = await getPortfoliosByUser(userId, false);
     // User does not have a portfolio
     if (userPorfolios?.length === 0) {
       const user = await getUserMetadata(userId);

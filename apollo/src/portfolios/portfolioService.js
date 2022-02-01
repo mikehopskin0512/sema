@@ -8,11 +8,14 @@ import { getSnapshotsByPortfolio } from '../snapshots/snapshotService';
 const { Types: { ObjectId } } = mongoose;
 
 const structurePortfolio = ({
-  _id = null, userId = null, headline = null, imageUrl = null, overview = null, type = null, snapshots = [],
+  _id = null, userId = null, firstName = null, lastName = null,
+  headline = null, imageUrl = null, overview = null, type = null, snapshots = [],
 }) => (
   {
     _id: new ObjectId(_id),
     userId: new ObjectId(userId),
+    firstName,
+    lastName,
     headline,
     imageUrl,
     overview,
@@ -33,10 +36,13 @@ export const create = async (portfolio) => {
   }
 };
 
-export const getPortfoliosByUser = async (userId) => {
+export const getPortfoliosByUser = async (userId, populate = true) => {
   try {
-    const portfolios = await Portfolio.find({ userId }).exec();
-    return portfolios;
+    const portfolios = Portfolio.find({ userId });
+    if (populate) {
+      portfolios.populate({ path: 'snapshots.id' });
+    }
+    return await portfolios.lean();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -70,10 +76,13 @@ export const deleteOne = async (portfolioId) => {
   }
 };
 
-export const getPortfolioById = async (portfolioId) => {
+export const getPortfolioById = async (portfolioId, populate = true) => {
   try {
-    const portfolio = await Portfolio.findById(new ObjectId(portfolioId)).lean();
-    return portfolio;
+    const portfolio = Portfolio.findById(new ObjectId(portfolioId));
+    if (populate) {
+      portfolio.populate({ path: 'snapshots.id' });
+    }
+    return await portfolio.lean();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -83,7 +92,7 @@ export const getPortfolioById = async (portfolioId) => {
 
 export const addSnapshot = async (portfolioId, snapshotId) => {
   try {
-    const portfolio = await getPortfolioById(portfolioId);
+    const portfolio = await getPortfolioById(portfolioId, false);
     const snapshots = portfolio.snapshots.map(({ id, sort }) => {
       const position = sort + 1;
       return { id, sort: position };

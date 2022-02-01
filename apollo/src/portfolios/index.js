@@ -2,12 +2,23 @@ import { Router } from 'express';
 
 import { version } from '../config';
 import logger from '../shared/logger';
-import { create, update, deleteOne } from './portfolioService';
+import { create, update, deleteOne, getPortfolioById } from './portfolioService';
 
 const route = Router();
 
 export default (app, passport) => {
   app.use(`/${version}/portfolios`, route);
+
+  route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const portfolio = await getPortfolioById(id);
+      return res.status(201).send(portfolio);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const portfolio = req.body;
