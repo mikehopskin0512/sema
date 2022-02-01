@@ -69,7 +69,7 @@ const Table = ({
   return (
     <>
       <div className={clsx('table-container', className)}>
-        <table {...getTableProps()} className={clsx("table", striped && "is-striped")} style={{ width: '100%' }}>
+        <table {...getTableProps()} className={clsx("table", striped && "is-striped", styles['table-container'])} style={{ width: '100%' }}>
           {hasHeader &&
             <thead>
               {headerGroups.map((headerGroup) => (

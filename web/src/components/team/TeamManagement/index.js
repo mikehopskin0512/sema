@@ -14,14 +14,13 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const TeamManagement = () => {
   const router = useRouter();
-  const { checkAccess, checkTeam } = usePermission();
+  const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
     name: '',
@@ -42,8 +41,7 @@ const TeamManagement = () => {
   const { roles } = role;
 
   const dispatch = useDispatch();
-  const canModifyRoles = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers');
-  const canViewUserRoles = checkTeam(SEMA_CORPORATE_TEAM_ID);
+  const canModifyRoles = isTeamAdmin();
   const { teamId } = router.query;
 
   useAuthEffect(() => {
@@ -121,30 +119,21 @@ const TeamManagement = () => {
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
-      accessor: 'roleName',
-      toggleHidden: true,
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
-    },
-    {
-      Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'role',
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
-      Cell: ({ cell: { value }, row }) => row.original.disableEdit ? (
-        <span>{row.original.roleName}</span>
+      className: clsx('px-20 py-10 has-background-gray-100 is-full-width '),
+      Cell: ({ cell: { value }, row }) => canModifyRoles ? (
+        <div className={clsx('is-flex')}>
+          <Select
+            className={`${styles.status} is-flex-grow-1`}
+            options={rolesOptions}
+            value={rolesOptions.find((item) => item.value === value)}
+            onChange={(newValue) => handleChangeRole(newValue, row)}
+          />
+          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
+        </div>
       ) : (
-        <Select
-          className={styles.status}
-          options={rolesOptions}
-          value={rolesOptions.find((item) => item.value === value)}
-          onChange={(newValue) => handleChangeRole(newValue, row)}
-        />
+        <span>{row.original.roleName}</span>
       ),
-    },
-    {
-      Header: '',
-      accessor: 'actions',
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width'),
-      Cell: ({ row }) => <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>,
     },
   ], [rolesOptions, handleChangeRole, onRemoveMember]);
 
@@ -155,16 +144,14 @@ const TeamManagement = () => {
 
   const initialState = useMemo(() => {
     let defaultHidden = []
-    if (canModifyRoles) {
-      defaultHidden = ['roleName']
-    } else if (canViewUserRoles) {
-      defaultHidden = ['role', 'actions']
+    if (!canModifyRoles) {
+      defaultHidden = ['actions']
     }
     const initState = {
       hiddenColumns: [...defaultHidden]
     }
     return initState
-  }, [canModifyRoles, canViewUserRoles, rolesOptions, handleChangeRole, onRemoveMember])
+  }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   return (
     <div className="has-background-gray-100 hero mx-10">

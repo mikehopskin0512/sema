@@ -8,3 +8,10 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+.table-container {
+  table-layout: fixed;
+  th {
+    width: 33%;
+  }
+}
