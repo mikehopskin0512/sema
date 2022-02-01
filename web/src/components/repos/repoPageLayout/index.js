@@ -40,10 +40,10 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
     const totalPullRequests = uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
     const totalSemaUsers = users.length || 0;
     return [
-      { title: 'smart code reviews', value: totalPullRequests, tooltip: 'Smart code review is a pull request that is reviewed uses Sema product'},
-      { title: 'smart comments', value: totalSmartComments, tooltip: 'Smart Comment is a part of Smart Code Review'},
-      { title: 'smart commenters', value: totalSmartCommenters, tooltip: 'Smart commenter is a reviewer that uses Sema'},
-      { title: 'sema users', value: totalSemaUsers, tooltip: 'Sema user is a code reviewer who uses Sema, or a code author that has a Sema account'},
+      { title: 'sema code reviews', value: totalPullRequests, tooltip: 'Pull Request reviewed using Sema'},
+      { title: 'sema comments', value: totalSmartComments, tooltip: 'Comment made in a Code Review using Sema'},
+      { title: 'sema commenters', value: totalSmartCommenters, tooltip: 'Number of Code Reviewers using Sema'},
+      { title: 'sema users', value: totalSemaUsers, tooltip: 'Number of people with a Sema account'},
     ]
   }, [overview]);
 
