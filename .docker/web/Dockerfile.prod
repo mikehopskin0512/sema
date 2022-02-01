@@ -7,9 +7,13 @@ RUN apk add --update --no-cache \
 
 COPY ./adonis /adonis
 COPY . /src
-WORKDIR /src
 
-RUN npm ci
+WORKDIR /adonis 
+RUN npm ci 
+RUN npm run build
+
+WORKDIR /src
+RUN npm ci 
 RUN npm run build
 # Should be one RUN because npm prune depends on layers above
 RUN npm prune --production 

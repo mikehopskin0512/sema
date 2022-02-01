@@ -38,7 +38,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
     const totalSmartComments = smartComments.length || 0;
     const totalSmartCommenters = uniqBy(smartComments, (item) => item.userId?._id?.valueOf() || 0).length || 0;
     const totalPullRequests = uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
-    const totalSemaUsers = users.length || 0;
+    const totalSemaUsers = users && users.length || 0;
     return [
       { title: 'sema code reviews', value: totalPullRequests, tooltip: 'Pull Request reviewed using Sema'},
       { title: 'sema comments', value: totalSmartComments, tooltip: 'Comment made in a Code Review using Sema'},
