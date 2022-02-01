@@ -143,7 +143,7 @@ const TeamEditPage = () => {
               Invite members
             </p>
             <p className="is-size-7">
-              You can add multiple team members by adding comas
+              You can add multiple team members by adding commas
             </p>
             <div className="mt-20 mb-50">
               <label className="label is-size-7">E-mail</label>
