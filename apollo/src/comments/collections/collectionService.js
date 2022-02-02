@@ -89,7 +89,7 @@ export const findById = async (id) => {
 
 export const getUserCollectionsById = async (id, teamId = null) => {
   try {
-    const parent = teamId ? await findTeamById(teamId) : await findUserById(id);
+    const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
     if (parent) {
       const collections = parent.collections?.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData : { comments, tags, source = null } } = collection;
