@@ -6,6 +6,7 @@ import {
   findUserCollectionsByUserId,
   patch as updateUser,
 } from '../../users/userService';
+import { getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
 
 const { Types: { ObjectId } } = mongoose;
@@ -86,21 +87,20 @@ export const findById = async (id) => {
   }
 };
 
-export const getUserCollectionsById = async (id) => {
+export const getUserCollectionsById = async (id, teamId = null) => {
   try {
-    const user = await findUserCollectionsByUserId(id);
-    if (user) {
-      const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
-        const { collectionData = { comments: [] } } = collection;
-        const { comments, tags, source = null } = collectionData;
+    const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
+    if (parent) {
+      const collections = parent.collections?.filter((collection) => collection.collectionData).map((collection) => {
+        const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
         let guides = [];
         if (tags?.length > 0) {
           languages = tags.filter((tag) => tag.type === 'language').map((tag) => tag.label);
           guides = tags.filter((tag) => tag.type === 'guide').map((tag) => tag.label);
         } else {
-          comments.forEach((comment) => {
-            comment.tags.forEach((tagItem) => {
+          comments?.forEach((comment) => {
+            comment.tags?.forEach((tagItem) => {
               const { tag } = tagItem;
               if (tag?.type === 'language' && !languages.includes(tag.label)) {
                 languages.push(tag.label)
@@ -114,9 +114,9 @@ export const getUserCollectionsById = async (id) => {
         return {
           ...collection,
           collectionData: {
-            ...collectionData,
-            commentsCount: comments.length,
-            source: source ? source.name : '',
+            ...collection.collectionData,
+            commentsCount: comments?.length,
+            source: source?.name,
             languages,
             guides,
             comments: undefined,
@@ -197,6 +197,38 @@ export const toggleActiveCollection = async (userId, collectionId) => {
       status: 400,
       message: "User not found.",
       user: null,
+    };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
+export const toggleTeamsActiveCollection = async (teamId, collectionId) => {
+  try {
+    const team = await findTeamById(teamId);
+    if (team) {
+      const { collections } = team;
+      const newCollections = collections.map((item) => {
+        const isNeedUpdate = item?.collectionData?._id?.equals(collectionId);
+        return {
+          collectionData: new ObjectId(item?.collectionData?._id),
+          isActive: isNeedUpdate ? !item.isActive : item.isActive,
+        }
+      });
+      await updateTeam({...team, collections: newCollections});
+      const newTeam = await findTeamById(teamId);
+      return {
+        status: 200,
+        message: "Team has been updated!",
+        team: newTeam,
+      };
+    }
+    return {
+      status: 400,
+      message: "Team not found.",
+      team: null,
     };
   } catch (err) {
     logger.error(err);

@@ -16,10 +16,10 @@ const TeamDashboard = ({ metrics, members, repos }) => {
     query: { teamId },
   } = useRouter();
   const [teamMetrics, setTeamMetrics] = useState([
-    { key: 'smartCodeReviews', title: 'smart code reviews', value: 0, tooltip: 'Smart code review is a pull request that is reviewed uses Sema product' },
-    { key: 'smartComments', title: 'smart comments', value: 0, tooltip: 'Smart Comment is a part of Smart Code Review' },
-    { key: 'smartCommenters', title: 'smart commenters', value: 0, tooltip: 'Smart commenter is a reviewer that uses Sema' },
-    { key: 'semaUsers', title: 'sema users', value: 0, tooltip: 'Sema user is a code reviewer who uses Sema, or a code author that has a Sema account' },
+    { key: 'smartCodeReviews', title: 'sema code reviews', value: 0, tooltip: 'Pull Request reviewed using Sema' },
+    { key: 'smartComments', title: 'sema comments', value: 0, tooltip: 'Comment made in a Code Review using Sema' },
+    { key: 'smartCommenters', title: 'sema commenters', value: 0, tooltip: 'Number of Code Reviewers using Sema' },
+    { key: 'semaUsers', title: 'sema users', value: 0, tooltip: 'Number of people with a Sema account' },
   ]);
 
   useEffect(() => {

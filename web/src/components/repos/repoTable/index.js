@@ -11,9 +11,9 @@ const RepoTable = ({ data }) => (
         <tr>
           <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Repo</th>
           <th className="is-uppercase has-text-weight-semibold is-size-8 p-10">Description</th>
-          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Smart code<br/>reviews</th>
-          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Smart<br/>comments</th>
-          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Smart<br/>commenters</th>
+          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema code reviews</th>
+          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema comments</th>
+          <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema commenters</th>
           <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema Users</th>
           <th></th>
         </tr>

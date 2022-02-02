@@ -27,13 +27,21 @@ const Pagination = ({
     }
   }, [inputWidth]);
 
+  const onSelectChange = (e) => {
+    setPageSize(parseInt(e.target.value, 10));
+    const newMaxPage = Math.ceil(totalCount / e.target.value);
+    if(currentPage > newMaxPage) {
+      onPageChange(newMaxPage);
+    }
+  };
+
   return (
     <>
       <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center is-bordered p-15 has-background-white-0">
         <div className="is-flex is-align-items-center">
           <div className='mr-10'>Items per page</div>
           <div className={clsx("select", 'has-white-input')}>
-            <select value={pageSize} onChange={(e) => setPageSize(parseInt(e.target.value, 10))}>
+            <select value={pageSize} onChange={onSelectChange}>
               {
                 PAGE_SIZES.map((item) => (
                   <option key={item} value={item}>{item}</option>

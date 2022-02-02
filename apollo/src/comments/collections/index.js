@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { semaCorporateTeamId, version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, update } from './collectionService';
-import Team from "../../teams/teamModel";
+import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleTeamsActiveCollection, update } from './collectionService';
 import { populateCollectionsToUsers } from "../../users/userService";
 import { _checkPermission } from '../../shared/utils';
 
@@ -13,7 +12,7 @@ export default (app, passport) => {
   app.use(`/${version}/comments/collections`, route);
 
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { body: { collection }, params: { id }, user } = req;
+    const { body: { collection, teamId }, params: { id }, user } = req;
     const { _id } = user;
     try {
       let payload;
@@ -31,7 +30,8 @@ export default (app, passport) => {
             throw new errors.Unauthorized('User does not have permission');
           }
         }
-        payload = await toggleActiveCollection(_id, id);
+      
+        payload = teamId ? await toggleTeamsActiveCollection(teamId, id) : await toggleActiveCollection(_id, id);
         if (payload.status == 400) {
           return res.status('400').send(payload);
         }
@@ -45,9 +45,9 @@ export default (app, passport) => {
   });
 
   route.get('/all', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user: { _id } } = req;
+    const { user: { _id }, query: { teamId } } = req;
     try {
-      const collections = await getUserCollectionsById(_id);
+      const collections = await getUserCollectionsById(_id, teamId);
       return res.status(200).send(collections);
     } catch (error) {
       logger.error(error);

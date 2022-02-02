@@ -48,6 +48,32 @@ export const getTeamsByUser = async (userId) => {
   }
 };
 
+export const getTeamById = async (id) => {
+  try {
+    const query = Team.findOne({ _id: new ObjectId(id) });
+    const team = await query.lean().populate({
+      path: 'collections.collectionData',
+      model: 'Collection',
+      select: {
+        _id: 1,
+        isActive: 1,
+        name: 1,
+        description: 1,
+        author: 1,
+        tags: 1,
+        source: 1,
+        comments: 1
+      }
+    }).exec();
+    
+    return team || {};
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
 export const createTeam = async (data) => {
   try {
     if (data.name === semaCorporateTeamName) {
@@ -201,3 +227,26 @@ export const addTeamMembers = async (team, users, role) => {
     return error;
   }
 };
+
+export const bulkUpdateTeamCollections = async (collectionData, ids) => {
+  try {
+    const filter = ids ? {
+      _id: { $in: ids }
+    } : {};
+    await Team.updateMany(
+      filter,
+      {
+        $push: {
+          "collections": {
+            isActive: false,
+            collectionData,
+          }
+        }
+      }
+    )
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+}

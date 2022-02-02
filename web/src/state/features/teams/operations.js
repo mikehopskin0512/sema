@@ -1,31 +1,14 @@
 import * as actions from './actions';
-import { getCollectionById } from '../comments/actions';
 import { setSelectedTeam } from '../auth/actions';
 import { find } from 'lodash';
+import { setActiveTeamCollections } from './actions';
 
-export const updateTeamCollectionIsActiveAndFetchCollections = (body, collectionId, token) => async (dispatch) => {
+export const updateTeamCollectionIsActiveAndFetchCollections = (collectionId, teamId, token) => async (dispatch) => {
   try {
-    const updatedTeam = { ...body }
-    const { collections } = body;
-    const newCollections = collections.map((item) => {
-      if (item?.collectionData === collectionId) {
-        return {
-          collectionData: item?.collectionData,
-          isActive: !item.isActive,
-        }
-      }
-      return {
-        collectionData: item?.collectionData,
-        isActive: item.isActive,
-      };
-
-    });
-    updatedTeam.collections = newCollections;
-    updatedTeam.action = 'toggleTeamCollection'
-    await dispatch(actions.editTeam(updatedTeam, token));
+    await dispatch(setActiveTeamCollections(collectionId, teamId, token));
     const roles = await dispatch(actions.fetchTeamsOfUser(token))
     const activeTeam = find(roles, function(o) {
-      return o.team._id === updatedTeam._id
+      return o.team._id === teamId
     })
     if (activeTeam) {
       await dispatch(setSelectedTeam(activeTeam))

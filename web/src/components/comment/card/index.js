@@ -14,10 +14,10 @@ import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
+import {updateTeamCollectionIsActiveAndFetchCollections} from "../../../state/features/teams/operations";
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
-const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
 
 const Tag = ({ tag, _id, type }) => (
   <div
@@ -86,8 +86,8 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const onChangeToggle = (e) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
-      if (!isEmpty(selectedTeam) && isTeamSnippet) {
-        dispatch(updateTeamCollectionIsActiveAndFetchCollections(selectedTeam.team, _id, token))
+      if (!isEmpty(selectedTeam)) {
+        dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
       } else {
         dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
       }

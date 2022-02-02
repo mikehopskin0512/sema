@@ -8,32 +8,39 @@ import { addSnapshot } from '../portfolios/portfolioService';
 
 const { Types: { ObjectId } } = mongoose;
 
+const structureSmartComment = ({
+  smartCommentId = null, user = null, comment = null, reaction = null, tags = null, githubMetadata = {}, createdAt = null,
+}) => ({
+  smartCommentId: new ObjectId((smartCommentId)),
+  userId: new ObjectId(user),
+  comment,
+  reaction: new ObjectId(reaction),
+  tags: tags.map((id) => (new ObjectId(id))),
+  githubMetadata,
+  createdAt,
+});
+
+const structureComponentData = ({
+  smartComments = null, groupBy = null, yAxisType = null, dateDiff = null, startDate = null, endDate = null,
+}) => ({
+  smartComments: smartComments.map((smartComment) => (structureSmartComment(smartComment))),
+  groupBy,
+  yAxisType,
+  dateDiff: parseInt(dateDiff, 10),
+  startDate: new Date(startDate),
+  endDate: new Date(endDate),
+});
+
 const structureSnapshot = ({
   _id = null, userId = null, title = null, description = null, componentType = null, componentData = null,
-}) => {
-  const components = {
-    comments: (data) => {
-      data.user = new ObjectId(data.user);
-      return { comments: data, summaries: {}, tags: {} };
-    },
-    summaries: (data) => {
-      data.reactions = data.reactions.map((id) => (new ObjectId(id)));
-      return { comments: {}, summaries: data, tags: {} };
-    },
-    tags: (data) => {
-      data.tags = data.tags.map((id) => (new ObjectId(id)));
-      return { comments: {}, summaries: {}, tags: data };
-    },
-  };
-  return {
-    _id: new ObjectId(_id),
-    userId: new ObjectId(userId),
-    title,
-    description,
-    componentType,
-    componentData: components[componentType](componentData),
-  };
-};
+}) => ({
+  _id: new ObjectId(_id),
+  userId: new ObjectId(userId),
+  title,
+  description,
+  componentType,
+  componentData: structureComponentData(componentData),
+});
 
 export const create = async (snapshot, portfolioId) => {
   try {

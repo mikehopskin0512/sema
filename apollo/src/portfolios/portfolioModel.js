@@ -4,6 +4,8 @@ const { Schema } = mongoose;
 
 const portfolioSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  firstName: String,
+  lastName: String,
   headline: String,
   imageUrl: String,
   overview: String,

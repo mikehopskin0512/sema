@@ -3,38 +3,33 @@ import mongoose from 'mongoose';
 import { create as createPortfolio, getPortfoliosByUser } from '../portfolios/portfolioService';
 import { getUserMetadata } from '../users/userService';
 
-const { Schema, Types: { ObjectId } } = mongoose;
+const { Schema } = mongoose;
+
+const smartCommentSchema = new Schema({
+  smartCommentId: { type: Schema.Types.ObjectId, ref: 'SmartComments' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  comment: String,
+  reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
+  tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
+  githubMetadata: {
+    url: String,
+    repo: String,
+    user: {
+      login: String,
+    },
+    pull_number: String,
+    requester: String,
+  },
+  createdAt: Date,
+}, { _id: false });
 
 const componentDataSchema = new Schema({
-  comments: {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-    comment: String,
-    reaction: String,
-    tags: [{ type: String }],
-    createdAt: Date,
-    githubMetadata: {
-      title: String,
-      url: String,
-      user: {
-        login: String,
-      },
-      pull_number: String,
-      commentId: String,
-      requester: String,
-    },
-  },
-  summaries: {
-    reactions: [{ type: Schema.Types.ObjectId, ref: 'Reaction' }],
-    chartType: { type: String, enum: ['line', 'bar', 'pie', 'bubble'] },
-    yAxisType: String,
-    groupBy: { type: String, enum: ['day', 'week', 'month', 'quarter', 'year'] },
-  },
-  tags: {
-    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
-    chartType: { type: String, enum: ['line', 'bar', 'pie', 'bubble'] },
-    groupBy: { type: String, enum: ['day', 'week', 'month', 'quarter', 'year'] },
-    tagBy: String,
-  },
+  smartComments: [smartCommentSchema],
+  groupBy: { type: String, enum: ['day', 'week', 'month', 'quarter', 'year'] },
+  yAxisType: String,
+  dateDiff: Number,
+  startDate: Date,
+  endDate: Date,
 }, { _id: false });
 
 const snapshotSchema = new Schema({
@@ -53,7 +48,7 @@ const snapshotSchema = new Schema({
 snapshotSchema.post('save', async (doc, next) => {
   try {
     const { _id: snapshotId, userId } = doc;
-    const userPorfolios = await getPortfoliosByUser(userId);
+    const userPorfolios = await getPortfoliosByUser(userId, false);
     // User does not have a portfolio
     if (userPorfolios?.length === 0) {
       const user = await getUserMetadata(userId);

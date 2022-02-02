@@ -1,5 +1,11 @@
 @import "./_colors.module.scss";
 
+.no-border {
+  .table, th, td {
+    border: none;
+  }
+}
+
 .table {
   border: 1px solid $gray-200;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);

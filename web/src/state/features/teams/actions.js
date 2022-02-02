@@ -6,7 +6,9 @@ import {
   getTeams,
   postInviteUsersToTeam,
   updateTeam, updateTeamRepos,
+  getAllTeamCollections,
 } from './api';
+import { toggleActiveCollection } from '../comments/api';
 import * as types from './types';
 
 const requestFetchTeamsOfUser = () => ({
@@ -98,6 +100,33 @@ const requestEditTeamSuccess = () => ({
 
 const requestEditTeamError = (errors) => ({
   type: types.REQUEST_EDIT_TEAM_ERROR,
+  errors,
+});
+
+const requestToggleTeamCollection = () => ({
+  type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION
+});
+
+const requestToggleTeamCollectionSuccess = () => ({
+  type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION_SUCCESS
+});
+
+const requestToggleTeamCollectionError = (errors) => ({
+  type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION_ERROR,
+  errors,
+});
+
+const requestFetchTeamCollectionsRequest = () => ({
+  type: types.FETCH_TEAM_COLLECTIONS,
+});
+
+const requestFetchTeamCollectionsSuccess = (collections) => ({
+  type: types.FETCH_TEAM_COLLECTIONS_SUCCESS,
+  collections,
+});
+
+const requestFetchTeamCollectionsError = (errors) => ({
+  type: types.FETCH_TEAM_COLLECTIONS_ERROR,
   errors,
 });
 
@@ -204,3 +233,30 @@ export const inviteTeamUsers = (teamId, body, token) => async (dispatch) => {
     dispatch(inviteTeamUsersError(errMessage));
   }
 };
+
+export const setActiveTeamCollections = (id, teamId, token) => async (dispatch) => {
+  try {
+    dispatch(requestToggleTeamCollection());
+    await toggleActiveCollection(id, { teamId }, token);
+    dispatch(requestToggleTeamCollectionSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestToggleTeamCollectionError(errMessage));
+  }
+}
+
+export const fetchTeamCollections = (teamId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamCollectionsRequest());
+    const collections = await getAllTeamCollections(teamId, token);
+    if (collections?.status === 200) {
+      dispatch(requestFetchTeamCollectionsSuccess(collections.data));
+    }
+    return false;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamCollectionsError(errMessage));
+  }
+}

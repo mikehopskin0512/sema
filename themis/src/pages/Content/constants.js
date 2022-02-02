@@ -296,3 +296,7 @@ export const EVENTS = {
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';
+export const DEFAULT_PROFILE_NAME = 'Personal';
+export const STORAGE_ITEMS = {
+  PROFILE: 'profile',
+};

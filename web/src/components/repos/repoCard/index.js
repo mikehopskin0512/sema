@@ -12,9 +12,9 @@ import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 
 const statLabels = {
-  smartCodeReviews: 'Smart Code Reviews',
-  smartComments: 'Smart Comments',
-  smartCommenters: 'Smart Commenters',
+  smartCodeReviews: 'Sema Code Reviews',
+  smartComments: 'Sema Comments',
+  smartCommenters: 'Sema Commenters',
   semaUsers: 'Sema User',
 };
 
