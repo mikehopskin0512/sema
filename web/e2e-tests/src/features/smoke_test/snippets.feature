@@ -161,7 +161,9 @@ Feature: User is able to interact with snippets properly
     Scenario: The default tags for collection is added to snippet
       #temporary solution
       When I click on the element "userLogo"
+      Then I expect that element "semaCorporateTeamLogo" becomes displayed
       When I click on the element "semaCorporateTeamLogo"
+      Then I expect that element "snippetsTab" becomes displayed
       #------------------
       When I click on the element "snippetsTab"
       Then I expect that element "addNewCollectionBtn" becomes displayed
@@ -172,10 +174,12 @@ Feature: User is able to interact with snippets properly
       And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
       And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
       And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-      And  I click on the element "newCollectionLanguagesInput"
+      Then I expect that element "newCollectionLanguagesInput" becomes displayed
+      When I click on the element "newCollectionLanguagesInput"
       And  I set "Type" to the inputfield "newCollectionLanguagesInput"
       And  I press "Enter"
-      And  I click on the element "newCollectionOtherLabelInput"
+      Then I expect that element "newCollectionTitleInput" becomes displayed
+      When I click on the element "newCollectionTitleInput"
       And  I set "Leadership" to the inputfield "newCollectionOtherLabelInput"
       And  I press "Enter"
 
@@ -314,6 +318,7 @@ Feature: User is able to interact with snippets properly
     Scenario: Populate this collection to all users checkbox is marked
         #temporary solution
       When I click on the element "userLogo"
+      Then I expect that element "semaCorporateTeamLogo" becomes displayed
       When I click on the element "semaCorporateTeamLogo"
         #------------------
       When I click on the element "snippetsTab"
@@ -362,6 +367,7 @@ Feature: User is able to interact with snippets properly
     Scenario: Populate this collection to all users checkbox is not marked
           #temporary solution
       When I click on the element "userLogo"
+      Then I expect that element "semaCorporateTeamLogo" becomes displayed
       When I click on the element "semaCorporateTeamLogo"
           #------------------
       When I click on the element "snippetsTab"
@@ -408,3 +414,34 @@ Feature: User is able to interact with snippets properly
       When I click on the element "snippetsTab"
       And  I search created collection "searchCollectionInput"
       Then I expect that new item "allCollectionsNames" is not added to collections
+
+    @admin @C2795
+    Scenario: Snippet collection can be edited
+      #temporary solution
+      When I click on the element "userLogo"
+      When I click on the element "semaCorporateTeamLogo"
+      #------------------
+      When I click on the element "snippetsTab"
+      Then I expect that element "firstActiveCollectionName" becomes displayed
+      When I save the name of collection "firstActiveCollectionName"
+       And I click on the "1st" element "threeDotsCollectionBtn"
+      Then I expect that element "editCollectionBtn" becomes displayed
+      When I click on the element "editCollectionBtn"
+
+      Then I expect that element "newCollectionTitleInput" becomes displayed
+      When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
+      When I click on the element "newCollectionLanguagesInput"
+      And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+      And  I press "Enter"
+      Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+      When I click on the element "newCollectionOtherLabelInput"
+      And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+      And  I press "Enter"
+      When I set "test author name" to the inputfield "newCollectionAuthorInput"
+      When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+      And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+      When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+      Then I expect that element "saveNewCollectionBtn" becomes displayed
+#      When I click on the button "saveNewCollectionBtn"
+      Then I expect that new item "allCollectionsNames" is added to collections
+

@@ -10,7 +10,7 @@
 
     "userLogo1"                     : "//div[contains(@class,'has-dropdown') and contains(@class,'navbar-item')]//div[@class=' sb-avatar sb-avatar--src']",
     "userLogo"                      : ".navbar-menu>.navbar-end>*>a",
-    "semaCorporateTeamLogo"         : "//div[contains(@class,'header_team__1lzV6')]/p[text()='Sema Corporate Team']",
+    "semaCorporateTeamLogo"         : "//div[contains(@class,'navbar-dropdown')]//p[normalize-space()='Sema Corporate Team']",
     "signOutBtn"                    : "//span[not(contains(@class,'is-hidden-desktop'))  and text()='Sign out']",
     "confirmationModal"             : "//div[@class='modal-content px-10']/div",
     "confirmBtn"                    : "//button[normalize-space()='Yes, log me out']",
@@ -89,6 +89,11 @@
 
     "searchedCollectionsResultGlob" : "",
     "searchedSnippetsResultGlob"    : "",
+
+    "threeDotsCollectionBtn"        : "//div[@class='dropdown-trigger']//button//*[name()='svg']",
+    "editCollectionBtn"             : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item'][normalize-space()='Edit Collection']",
+    "archiveCollectionBtn"          : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item is-clickable'][normalize-space()='Archive Collection']",
+    "shareCollectionBtn"            : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item is-active'][normalize-space()='Share with Sema Community']",
 
 
 

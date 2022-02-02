@@ -18,6 +18,7 @@ import login from '../support/action/login';
 import getElementText from '../support/action/getElementText';
 import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimestamp";
 import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
+import clickElementIndex from "../support/action/clickElementIndex";
 
 /**
  * Abstracting some steps by functionality. 
@@ -41,6 +42,11 @@ When(
 When(
     /^I (click|doubleclick) on the (link|button|element) "([^"]*)?"$/,
     clickElement
+);
+
+When(
+    /^I (click|doubleclick) on the "(\d+(?:st|nd|rd|th))" (link|button|element) "([^"]*)?"$/,
+    clickElementIndex
 );
 
 When(
