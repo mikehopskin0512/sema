@@ -22,6 +22,7 @@ FROM node:12.15.0-alpine3.11
 
 WORKDIR /usr/app
 
+COPY --from=build /adonis /usr/adonis
 COPY --from=build /src/node_modules /usr/app/node_modules
 COPY --from=build /src/package.json /usr/app/package.json
 COPY --from=build /src/public /usr/app/public
