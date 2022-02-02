@@ -24,17 +24,21 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
     
     dispatch(setSelectedTeam(role));
     dispatch(setProfileViewMode(viewMode));
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.info}`);
+    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.DASHBOARD}`);
     toggleUserMenu();
   };
+
+  const handleSettingsClick = () => {
+    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.info}`);
+  }
 
   const isFirstTeam = (index) => index === 0;
 
   return (
     <>
-      <div className={`${isSelected ? 'has-background-white' : ''} p-15 is-relative`} onClick={handleOnTeamClick}>
+      <div className={`${isSelected ? 'has-background-white' : ''} p-15 is-relative`}>
         <div>
-          <div className={clsx(`is-flex ${isSelected ? 'is-flex-direction-column' : 'is-flex-wrap-wrap'} is-align-items-center py-5`, styles.team)}>
+          <div className={clsx(`is-flex ${isSelected ? 'is-flex-direction-column' : 'is-flex-wrap-wrap'} is-align-items-center py-5`, styles.team)} onClick={handleOnTeamClick}>
             <Avatar
               name={role?.team?.name || "Team"}
               src={role?.team?.avatarUrl}
@@ -60,7 +64,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
             className="is-absolute has-text-primary is-top-right p-10"
             style={{ textDecoration: 'none' }}
           >
-            <SettingsIcon size="small" />
+            <SettingsIcon size="small" onClick={handleSettingsClick} />
           </a>
           {/* TODO: Activate when Label Managements with teams is working. */}
           {/* {checkAccess({name: role?.team?.name}, ViewAdmin) && (
