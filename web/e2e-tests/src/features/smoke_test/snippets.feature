@@ -403,9 +403,9 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "signInWithGithubBtn" becomes displayed
 #         login with acme
       When I click on the button "signInWithGithubBtn"
-      And  I pause for 2000ms
-      And  I clear the inputfield "loginInput"
-      When I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+      Then I expect that element "loginInput" becomes displayed
+      When I clear the inputfield "loginInput"
+      And  I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
       And  I clear the inputfield "passwordInput"
       And  I add "Automation3Tester4#" to the inputfield "passwordInput"
       And  I click on the button "signinBtn"
@@ -417,16 +417,8 @@ Feature: User is able to interact with snippets properly
 
     @admin @C2795
     Scenario: Snippet collection can be edited
-      #temporary solution
-      Then I expect that element "userLogo" becomes displayed
-      When I click on the element "userLogo"
-      Then I expect that element "semaCorporateTeamLogo" becomes displayed
-      When I click on the element "semaCorporateTeamLogo"
-      Then I expect that element "snippetsTab" becomes displayed
-      #------------------
       When I click on the element "snippetsTab"
       Then I expect that element "threeDotsCollectionBtn" becomes displayed
-      And I pause for 5000ms
       When I click on the "1st" element "threeDotsCollectionBtn"
       Then I expect that element "editCollectionBtn" becomes displayed
       When I click on the element "editCollectionBtn"
@@ -447,4 +439,28 @@ Feature: User is able to interact with snippets properly
       Then I expect that element "saveNewCollectionBtn" becomes displayed
       When I click on the button "saveNewCollectionBtn"
       Then I expect that new item "allCollectionsNames" is added to collections
+
+      @admin  @C2326  @acme
+      Scenario: Context menu is not visible for common user
+#        @C2326 temporary solution
+      When I click on the element "snippetsTab"
+      Then I expect that element "threeDotsCollectionBtn" becomes displayed
+#        logout
+      When I click on the element "userLogo"
+      Then I expect that element "signOutBtn" becomes displayed
+      When I click on the element "signOutBtn"
+      Then I expect that element "confirmBtn" becomes displayed
+      And  I click on the element "confirmBtn"
+      Then I expect that element "signInWithGithubBtn" becomes displayed
+#        login with acme
+      When I click on the button "signInWithGithubBtn"
+      Then I expect that element "loginInput" becomes displayed
+      When I clear the inputfield "loginInput"
+      And  I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+      And  I clear the inputfield "passwordInput"
+      And  I add "Automation3Tester4#" to the inputfield "passwordInput"
+      And  I click on the button "signinBtn"
+      Then I expect that element "snippetsTab" becomes displayed
+#     C2326   check context menu for common user collection
+      And  I expect that element "threeDotsCollectionBtn" becomes not displayed
 
