@@ -88,7 +88,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);
-    window.location = pathname.replace('[repoId]', obj.value);
+    router.push(pathname.replace('[repoId]', obj.value));
   };
 
   return (

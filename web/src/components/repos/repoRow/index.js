@@ -2,6 +2,7 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
@@ -11,12 +12,9 @@ const RepoRow = (props) => {
     externalId = '', name = '', body = '', repoStats, users = []
   } = props;
 
-  const onClickRow = () => {
-    window.location = `${PATHS.REPO}/${externalId}`;
-  };
-
   return (
-    <tr className="has-background-white my-10 is-clickable" onClick={onClickRow}>
+  <Link href={`${PATHS.REPO}/${externalId}`}>
+    <tr className="has-background-white my-10 is-clickable" >
       <td className={clsx('py-15 has-background-white px-10', styles.document)}>
         <div className="is-flex is-align-items-center">
           {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
@@ -54,6 +52,7 @@ const RepoRow = (props) => {
         <RepoUsers users={users} />
       </td>
     </tr>
+  </Link>
   );
 };
 

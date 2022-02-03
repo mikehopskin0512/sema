@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+import { PATHS } from '../../../utils/constants';
 
 const InviteCard = ({ invitation }) => {
   const { data: { senderName = '', token } } = invitation;
@@ -18,7 +19,7 @@ const InviteCard = ({ invitation }) => {
       <a
         type="button"
         className="button p-25 is-primary is-outlined mt-15"
-        href={`/api/identities/github?token=${token}`}
+        href={`${PATHS.IDENTITIES}?token=${token}`}
       >
         <span className="icon is-large mr-20">
           <FontAwesomeIcon

@@ -95,7 +95,7 @@ const Login = () => {
                         <a
                           type="button"
                           className="button is-fullwidth is-github"
-                          href="/api/identities/github">
+                          href={PATHS.IDENTITIES}>
                           <span className="icon">
                             <FontAwesomeIcon icon={['fab', 'github']} />
                           </span>

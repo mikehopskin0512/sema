@@ -2,6 +2,7 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import styles from './engGuideRow.module.scss';
 import Checkbox from '../../checkbox';
 import { PATHS } from '../../../utils/constants';
@@ -29,12 +30,9 @@ const EngGuideRow = (props) => {
     return 'No Tags';
   };
 
-  const onClickRow = () => {
-    window.location = `${PATHS.GUIDES}/${_id}/${slug}`;
-  };
-
   return (
-    <tr className="has-background-white my-10 is-clickable" onClick={onClickRow}>
+  <Link href={`${PATHS.GUIDES}/${_id}/${slug}`}>
+    <tr className="has-background-white my-10 is-clickable">
       <td className={clsx('py-15 has-background-white px-10')}>
         <div className="is-flex is-align-items-center">
           <div className="mr-10">
@@ -73,6 +71,7 @@ const EngGuideRow = (props) => {
         </div>
       </td>
     </tr>
+  </Link>
   );
 };
 
