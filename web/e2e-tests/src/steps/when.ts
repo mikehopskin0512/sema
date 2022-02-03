@@ -18,7 +18,7 @@ import login from '../support/action/login';
 import getElementText from '../support/action/getElementText';
 import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimestamp";
 import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
-import clickElementIndex from "../support/action/clickElementIndex";
+import clickElementByIndex from "../support/action/clickElementByIndex";
 
 /**
  * Abstracting some steps by functionality. 
@@ -45,8 +45,9 @@ When(
 );
 
 When(
-    /^I (click|doubleclick) on the "(\d+(?:st|nd|rd|th))" (link|button|element) "([^"]*)?"$/,
-    clickElementIndex
+    /^I (click|doubleclick) on the "(\d+)(st|nd|rd|th)" (link|button|element) "([^"]*)?"$/,
+// @ts-ignore
+    clickElementByIndex
 );
 
 When(
@@ -59,7 +60,6 @@ When(
     setInputFieldWithTimestamp
 );
 
-// @ts-ignore
 When(
     /^I search created collection "([^"]*)?"$/,
     setGlobalParamIntoSearchField

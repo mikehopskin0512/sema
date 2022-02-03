@@ -418,13 +418,16 @@ Feature: User is able to interact with snippets properly
     @admin @C2795
     Scenario: Snippet collection can be edited
       #temporary solution
+      Then I expect that element "userLogo" becomes displayed
       When I click on the element "userLogo"
+      Then I expect that element "semaCorporateTeamLogo" becomes displayed
       When I click on the element "semaCorporateTeamLogo"
+      Then I expect that element "snippetsTab" becomes displayed
       #------------------
       When I click on the element "snippetsTab"
-      Then I expect that element "firstActiveCollectionName" becomes displayed
-      When I save the name of collection "firstActiveCollectionName"
-       And I click on the "1st" element "threeDotsCollectionBtn"
+      Then I expect that element "threeDotsCollectionBtn" becomes displayed
+      And I pause for 5000ms
+      When I click on the "1st" element "threeDotsCollectionBtn"
       Then I expect that element "editCollectionBtn" becomes displayed
       When I click on the element "editCollectionBtn"
 
@@ -442,6 +445,6 @@ Feature: User is able to interact with snippets properly
       And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
       When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
       Then I expect that element "saveNewCollectionBtn" becomes displayed
-#      When I click on the button "saveNewCollectionBtn"
+      When I click on the button "saveNewCollectionBtn"
       Then I expect that new item "allCollectionsNames" is added to collections
 
