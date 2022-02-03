@@ -3,6 +3,7 @@ import React from 'react';
 import { blue500 } from '../../../../styles/_colors.module.scss';
 import { CameraIcon, SaveIcon } from '../../Icons';
 import { SEMA_FAQ_URL } from '../../../utils/constants';
+import SnapshotButton from '../snapshotButton';
 
 const DEFAULT_TEXT = 'Save this as a snapshot on your Portfolio.';
 const SnapshotBar = ({ hasActionButton = false, onClick, text = DEFAULT_TEXT }) => {
@@ -24,14 +25,7 @@ const SnapshotBar = ({ hasActionButton = false, onClick, text = DEFAULT_TEXT }) 
         className="is-size-7 is-underlined has-text-primary">
         Learn more about Snapshots.
       </a>
-      {hasActionButton && (
-        <div className="ml-auto has-background-white">
-          <button onClick={onClick} type="button" className="button is-primary is-outlined">
-            <SaveIcon size="small" />
-            <span className="ml-8 has-text-weight-semibold">Snapshot for Portfolio</span>
-          </button>
-        </div>
-      )}
+      {hasActionButton && <SnapshotButton onClick={onClick} />}
     </div>
   );
 };

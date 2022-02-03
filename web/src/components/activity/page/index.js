@@ -10,6 +10,7 @@ import { ReactionList, TagList } from '../../../data/activity';
 import { SearchIcon } from '../../Icons';
 
 import { filterSmartComments } from '../../../utils/parsing';
+import SnapshotModal from '../../snapshots/modalWindow';
 
 const ActivityPage = ({ startDate, endDate, onDateChange }) => {
   const { repositories } = useSelector((state) => ({
@@ -30,6 +31,8 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (!overview?.smartcomments?.length) {
@@ -190,8 +193,9 @@ const ActivityPage = ({ startDate, endDate, onDateChange }) => {
         </div>
       </div>
       <div className="my-8">
-        <SnapshotBar hasActionButton />
+        <SnapshotBar hasActionButton onClick={() => setIsOpen(true)}/>
       </div>
+      {isOpen && <SnapshotModal active={isOpen} onClose={()=>setIsOpen(false)} snapshotData={[...filteredComments]}/>}
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`} >
           <ActivityItem {...item} />
