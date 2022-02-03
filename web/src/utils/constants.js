@@ -185,6 +185,7 @@ export const PATHS = {
   TEAM_CREATE: '/teams/add',
   TEAM_INVITE: '/teams/invite',
   SEMA_ADMIN: '/sema-admin',
+  IDENTITIES: '/api/identities/github',
 };
 
 export const SUPPORT_VIDEO_LANGUAGES = [

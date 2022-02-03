@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
+import Link from 'next/link';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,10 +25,6 @@ const RepoCard = (props) => {
   } = props;
   const { token, selectedTeam } = useSelector((state) => state.authState)
   const dispatch = useDispatch();
-  const onClickRepo = () => {
-    // Change Redirect link when overview is done!
-    window.location = `${PATHS.REPO}/${externalId}`;
-  };
   const { isTeamAdmin } = usePermission();
 
   const renderStats = (label, value) => (
@@ -53,9 +50,9 @@ const RepoCard = (props) => {
   };
 
   return (
+  <Link href={`${PATHS.REPO}/${externalId}`}>
     <div
       className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', column === 3 && styles['card-width-3c'], column === 2 && styles['card-width-2c'])}
-      onClick={onClickRepo}
       aria-hidden
     >
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
@@ -93,6 +90,7 @@ const RepoCard = (props) => {
         />
       )}
     </div>
+  </Link>
   );
 };
 

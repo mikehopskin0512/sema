@@ -17,6 +17,7 @@ import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/consta
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { blue600 } from '../../../styles/_colors.module.scss';
+import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -56,6 +57,9 @@ const PersonalInsights = () => {
     endDate: null,
     dateDiff: 0,
   });
+
+  const [openReactionsModal, setOpenReactionsModal] = useState(false);
+  const [openTagsModal, setOpenTagsModal] = useState(false);
 
   const getUserSummary = async (username) => {
     const params = {
@@ -267,11 +271,13 @@ const PersonalInsights = () => {
         </div>
         <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
         <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
-        <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
+        <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio."/>
         <div className="is-flex is-flex-wrap-wrap my-20">
-          <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} />
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} />
+          <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)}/>
         </div>
+        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{reactionChartData, groupBy: dateData.groupBy}}/>}
+        {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{tagsChartData, groupBy: dateData.groupBy}}/>}
         <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
         <ActivityItemList comments={filteredComments} />
       </div>

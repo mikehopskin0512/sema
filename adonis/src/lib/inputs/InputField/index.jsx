@@ -12,6 +12,8 @@ const InputField = ({
   iconLeft,
   iconRight,
   placeholder = '',
+  isMultiLine = false,
+  textSizeClassName ='',
 }) => {
   return (
     <div className="aui-is-full-width">
@@ -26,17 +28,31 @@ const InputField = ({
         iconRight && 'aui-has-icons-right',
         iconLeft && 'aui-has-icons-left',
       )}>
+        {isMultiLine ? (
+          <textarea
+            disabled={disabled}
+            className={clsx(
+              'aui-textarea',
+              textSizeClassName,
+              error && 'aui-has-text-red-500 aui-has-background-red-50 aui-is-red-500',
+            )}
+            value={value}
+            onChange={({ target }) => onChange(target.value)}
+            placeholder={placeholder}
+          />
+        ) : (
         <input
           type={type}
           disabled={disabled}
           className={clsx(
             'aui-input',
+            textSizeClassName,
             error && 'aui-has-text-red-500 aui-has-background-red-50 aui-is-red-500',
           )}
           value={value}
           onChange={({ target }) => onChange(target.value)}
           placeholder={placeholder}
-        />
+        />)}
         {iconLeft && (
           <span className={clsx(
             'aui-icon aui-is-small aui-is-left aui-is-clickable',

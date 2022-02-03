@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx';
 import BarChart from '../../BarChart'
 import styles from './reactionChart.module.scss'
+import SnapshotButton from '../../snapshots/snapshotButton';
 
-const ReactionChart = ({reactions, className, yAxisType = 'percentage', groupBy}) => {
+const ReactionChart = ({reactions, className, yAxisType = 'percentage', groupBy, isSnapshot, onClick}) => {
+  const containerStyles = useMemo(() => isSnapshot ? styles.snapshotContainer : styles.containers , [isSnapshot]);
   return (
     <>
-      <div className={clsx(`is-flex-grow-1 px-10 mb-20 ${className}`, styles.containers)}>
+      <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)}>
         <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-          <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
+          <div className="is-flex">
+            <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
+            {!isSnapshot && <SnapshotButton onClick={onClick}/> }
+          </div>
           <BarChart data={reactions} yAxisType={yAxisType} groupBy={groupBy}/>
         </div>
       </div>
@@ -21,7 +26,9 @@ ReactionChart.defaultProps = {
   reactions: [],
   className: '',
   yAxisType: 'percentage',
-  groupBy: 'day'
+  groupBy: 'day',
+  isSnapshot: false,
+  onClick: () => {},
 };
 
 ReactionChart.PropTypes = {
@@ -29,6 +36,8 @@ ReactionChart.PropTypes = {
   className: PropTypes.string,
   yAxisType: PropTypes.string,
   groupBy: PropTypes.string,
+  isSnapshot: PropTypes.bool,
+  onClick: PropTypes.bool,
 };
 
 export default ReactionChart

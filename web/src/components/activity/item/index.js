@@ -25,6 +25,7 @@ const ActivityItem = (props) => {
       commentId = '',
       requester = 'Github User',
     },
+    isSnapshot = false,
   } = props;
 
   const {
@@ -68,7 +69,7 @@ const ActivityItem = (props) => {
   };
 
   return (
-    <div className="has-background-white py-20 px-25 border-radius-4px is-flex">
+    <div className={`has-background-white py-20 ${isSnapshot ? 'px-10 mr-15' : 'px-25'} border-radius-4px is-flex`}>
       <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-touch", styles.avatar)} src={avatarUrl} alt="user_icon" />
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
@@ -100,9 +101,9 @@ const ActivityItem = (props) => {
                 ))}
               </div>
             </>
-          ) : <div className="py-25" />}
+          ) : <div className={isSnapshot ? '' : 'py-25'} />}
         </div>
-        <div className={clsx("my-8", styles['item-comment'])}>
+        <div className={clsx(isSnapshot ? 'my-3' : 'my-8', styles['item-comment'])}>
           <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-black-950" />
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
