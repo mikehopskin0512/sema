@@ -1,28 +1,37 @@
+import { PlusIcon } from '../../Icons';
 import React, { useMemo } from 'react'
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
+import Avatar from 'react-avatar';
+import usePermission from '../../../hooks/usePermission';
 import Table from '../../table';
 import styles from './minimalTeamTable.module.scss'
-import { DEFAULT_AVATAR, PATHS } from '../../../utils/constants';
+import { DEFAULT_AVATAR, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import { differenceInCalendarDays, differenceInHours } from 'date-fns';
 
-const MinimalTeamTable = ({ members }) => {
+const MAX_MEMBERS = 6;
+
+const MinimalTeamTable = ({ members, count }) => {
   const router = useRouter();
-  const {
-    query: { teamId },
-  } = useRouter();
+  const { checkAccess } = usePermission();
   const columns = useMemo(
     () => [
       {
         Header: 'USER',
         accessor: 'name',
-        className: 'border-none',
+        className: 'border-none pt-12',
         Cell: ({ cell: { value }, row: {original: { role, avatarUrl }} }) => (
-          <div className='is-flex is-align-items-center py-20'>
-            <img className={clsx('ml-10 mr-20 is-circularr')} src={avatarUrl || DEFAULT_AVATAR} alt={''} width='32px' />
-            <div>
+          <div className='is-flex is-align-items-center'>
+            <div style={{ minWeight: 52 }}>
+              <Avatar
+                src={avatarUrl || DEFAULT_AVATAR}
+                round
+                size={52}
+              />
+            </div>
+            <div  className="ml-20">
               <p className='has-text-weight-semibold'> {value}</p>
-              <p className='has-text-primary has-text-weight-semibold'>{role || 'Member'}</p>
+              <p className='is-uppercase has-text-primary has-text-weight-semibold'>{role || 'Member'}</p>
             </div>
           </div>
         ),
@@ -32,7 +41,7 @@ const MinimalTeamTable = ({ members }) => {
         accessor: 'lastLogin',
         className: 'border-none',
         Cell: ({ cell: { value } }) => (
-          <div className="is-flex is-align-items-center has-text-weight-semibold">
+          <div className="is-justify-content-end pr-24 is-size-8 is-flex is-align-items-center has-text-weight-semibold">
             {value}
           </div>
         ),
@@ -71,12 +80,20 @@ const MinimalTeamTable = ({ members }) => {
     <>
       <div className='is-bordered'>
         <div className={clsx('is-flex is-align-items-center is-justify-content-space-between', styles['custom-header'])}>
-          <p className="has-text-deep-black has-text-weight-semibold is-size-6 px-15 ml-15">{dataSource.length} members</p>
-          <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}>View All</button>
+          <p className="has-text-deep-black has-text-weight-semibold is-size-6 px-15 ml-15">{count} members</p>
+          {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+            <button
+              className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
+              onClick={() => router.push(PATHS.INVITATIONS)}
+            >
+              <PlusIcon size="small" />
+              <span className="ml-8">Invite new members</span>
+            </button>
+          )}
         </div>
         <Table
           columns={columns}
-          data={dataSource.slice(0,6)}
+          data={dataSource.slice(0, MAX_MEMBERS)}
           hasHeader={false}
           minimal={true}
           striped={false}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import TeamDashboard from '../../../../components/team/teamDashboard';
 import withLayout from '../../../../components/layout';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
+import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';
 import styles from './dashboard.module.scss';
 import { teamsOperations } from '../../../../state/features/teams';
 import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
@@ -15,6 +17,7 @@ const { fetchTeamMembers, fetchTeamMetrics, fetchTeamRepos } = teamsOperations;
 const Dashboard = () => {
   const dispatch = useDispatch();
   const {
+    push,
     query: { teamId },
   } = useRouter();
   const { auth, teams } = useSelector(
@@ -24,7 +27,7 @@ const Dashboard = () => {
     }),
   );
   const { token } = auth;
-  
+
   useEffect(() => {
     dispatch(fetchTeamMembers(teamId, { page: 1, perPage: 6 }, token));
     dispatch(fetchTeamMetrics(teamId, token));
@@ -35,20 +38,31 @@ const Dashboard = () => {
     <>
       <Helmet title={TeamDashboardHelmet.title} />
       <div className='sema-wide-container'>
-        <TeamDashboard metrics={teams.metrics} repos={teams.repos} members={teams.members} />
-        <div className='is-flex is-align-items-center is-justify-content-space-between py-40 px-35 mb-50 has-background-blue-0'>
+        <TeamDashboard team={teams} />
+        <div className='is-flex is-align-items-center is-justify-content-space-between py-40 px-35 mb-50 has-background-blue-50'>
           <div>
             <p className='is-size-4 has-text-weight-semibold'>
               Encourage consistent best practices amongst your team
             </p>
             <p className='is-size-6'>
-              Be sure to review and update your suggested comments library. &nbsp;
-              <a className='is-text is-underlined'>Tell me more.</a>
+              Be sure to review and update your snippets library. &nbsp;
+              <a
+                target="_blank"
+                className='is-text'
+                href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.SNIPPETS}`}
+              >
+                Tell me more.
+              </a>
             </p>
           </div>
-          <button className={clsx('button p-25 is-primary is-outlined colored-shadow-small is-medium', styles.button)}>
-            Update Your Team Suggest Comments
-          </button>
+          <div className="has-background-white">
+            <button
+              onClick={() => push(PATHS.SNIPPETS._)}
+              className={clsx('button p-25 is-primary is-outlined is-medium', styles.button)}
+            >
+              Update Your Team Snippets
+            </button>
+          </div>
         </div>
       </div>
     </>
