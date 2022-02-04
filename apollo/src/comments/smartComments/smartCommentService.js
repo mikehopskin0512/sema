@@ -58,7 +58,7 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate, user }) => {
+export const filterSmartComments = async ({ reviewer, author, repoIds, startDate, endDate, user }) => {
   try {
     let filter = {}
     let dateFilter = { createdAt: {} }
@@ -68,8 +68,8 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     if (author) {
       filter = Object.assign(filter, { "githubMetadata.requester": author });
     }
-    if (repoId) {
-      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
+    if (repoIds) {
+      filter = Object.assign(filter, { "githubMetadata.repo_id": { $in: repoIds } });
     }
     if (user) {
       filter = Object.assign(filter, { $or: [{ "githubMetadata.requester": user }, { "githubMetadata.user.login": user }] });
@@ -577,9 +577,9 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate, user }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user }) => {
   try {
-    const filter = { reviewer, author, repoId, startDate, endDate, user };
+    const filter = { reviewer, author, repoIds, startDate, endDate, user };
     const smartComments = await filterSmartComments(filter);
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);

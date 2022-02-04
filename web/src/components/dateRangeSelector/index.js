@@ -118,10 +118,10 @@ const DateRangeSelector = (props) => {
               onClick={toggleMenu}
               {...buttonProps}
             >
-              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-6", styles.placeholder)}>
+              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-7", styles.placeholder)}>
                 { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
               </span>
-              <span className="icon is-small pb-5">
+              <span className="is-small pb-5 pl-10">
                 <FontAwesomeIcon icon={faSortDown} color={gray700} />
               </span>
             </button>

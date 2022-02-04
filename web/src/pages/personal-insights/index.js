@@ -44,11 +44,13 @@ const PersonalInsights = () => {
     reactions: [],
     tags: [],
     pr: [],
+    repo: [],
   });
-  const [commentView, setCommentView] = useState('received')
+  const [commentView, setCommentView] = useState('received');
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
+  const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
   const [dateData, setDateData] = useState({
@@ -70,7 +72,7 @@ const PersonalInsights = () => {
 
   const getCommentsOverview = async (filter) => {
     const { username } = githubUser;
-    const { startDate, endDate } = filter;
+    const { startDate, endDate, repo } = filter;
     const params = {
       startDate: startDate ? startOfDay(new Date(startDate)) : undefined,
       endDate: endDate ? endOfDay(new Date(endDate)) : undefined,
@@ -79,6 +81,12 @@ const PersonalInsights = () => {
       params.reviewer = username
     } else {
       params.requester = username
+    }
+    if(repo.length > 0) {
+      params.externalIds = '';
+      repo.forEach((item, index) => {
+        params.externalIds += index === 0 ? item.value : `-${item.value}`;
+      });
     }
     if ((startDate && endDate) || (!startDate && !endDate)) {
       dispatch(fetchSmartCommentOverview(params, token));
@@ -151,11 +159,21 @@ const PersonalInsights = () => {
   }, [auth]);
 
   useEffect(() => {
+    const reposList = githubUser.repositories?.map(item => (
+      {  
+        name: item.fullName, 
+        label: item.fullName, 
+        value: item.id,
+      })) || [];
+    setFilterRepoList([...reposList]);
+  }, [githubUser]);
+
+  useEffect(() => {
     const { summary, overview } = comments;
     getTopReactions(summary.reactions);
     getTopTags(summary.tags);
     setTotalSmartComments(summary?.smartComments?.length)
-  }, [comments])
+  }, [comments]);
 
   useEffect(() => {
     getCommentsOverview(filter);
@@ -270,8 +288,8 @@ const PersonalInsights = () => {
           </div>
         </div>
         <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
-        <StatsFilter filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
-        <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio."/>
+        <StatsFilter filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
+        <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
           <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)}/>
