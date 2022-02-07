@@ -139,6 +139,7 @@ export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 export const SEMA_FAQ_SLUGS = {
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
+  SNIPPETS: 'what-are-snippets',
 };
 
 export const noContactUs = ['/login', '/register/[[...param]]'];
@@ -174,7 +175,7 @@ export const PATHS = {
     _: '/team',
     EDIT: '/team/edit',
     ADD: '/team/add',
-    INVITE: '/team/invite'
+    INVITE: (id) => `/team/${id}/invite`,
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',

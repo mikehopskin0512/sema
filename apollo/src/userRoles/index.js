@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { version, semaCorporateTeamId } from '../config';
+import { version } from '../config';
 import logger from '../shared/logger';
 import checkAccess from '../middlewares/checkAccess';
 import { createUserRole, updateRole, deleteUserRole } from './userRoleService';
@@ -24,12 +24,12 @@ export default (app, passport) => {
   route.patch(
     '/:userRoleId',
     passport.authenticate(['bearer'], { session: false }),
-    checkAccess(semaCorporateTeamId, 'canEditUsers'),
+    checkAccess('canEditUsers'),
     async (req, res) => {
       try {
         const { userRoleId } = req.params;
         const result = await updateRole(userRoleId, req.body);
-        
+
         return res.status(200).send(result);
       } catch (error) {
         logger.error(error);
@@ -37,15 +37,15 @@ export default (app, passport) => {
       }
     },
   );
-  
+
+  // TODO: need to be refactored to get teamId
   route.delete(
     '/:userRoleId',
+    checkAccess('canEditUsers'),
     passport.authenticate(['bearer'], { session: false }),
-    checkAccess(semaCorporateTeamId, 'canEditUsers'),
     async (req, res) => {
       try {
         const { userRoleId } = req.params;
-        
         const result = await deleteUserRole(userRoleId);
         return res.status(200).send(result);
       } catch (error) {

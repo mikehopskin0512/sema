@@ -114,7 +114,32 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "phoenix-circleci-notifications"      
+          channel: "phoenix-circleci-notifications"
+      - slack/notify:
+          branch_pattern: "release.*"
+          event: pass
+          channel: "release-management"
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Looks like the release candidate of $CIRCLE_BRANCH was deployed to the staging. Now you can perform testing.",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "image",
+                  "image_url": "https://media.giphy.com/media/0DYipdNqJ5n4GYATKL/giphy.gif",
+                  "alt_text": "ready"
+                }
+              ]
+            } 
   phoenix-notify:
     docker:
         - image: cimg/base:2020.01

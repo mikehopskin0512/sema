@@ -79,7 +79,7 @@ const TeamManagement = () => {
   }, []);
 
   const updateRole = async (userRoleId, newRole) => {
-    await dispatch(updateUserRole(userRoleId, { role: newRole }, token));
+    await dispatch(updateUserRole(userRoleId, { role: newRole, teamId }, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   };
 

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import clsx from 'clsx'
-import styles from './teamDashboard.module.scss'
 import MetricsCard from '../metricsCard';
 import RepoCard from '../../repos/repoCard';
 import MinimalTeamTable from '../minimalTeamTable';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
-import usePermission from '../../../hooks/usePermission';
-import { PlusIcon } from '../../Icons';
+import { PATHS } from '../../../utils/constants';
 
-const TeamDashboard = ({ metrics, members, repos }) => {
+const MAX_REPOS = 6;
+
+const TeamDashboard = ({ team }) => {
+  const { metrics, members, repos, membersCount } = team;
   const router = useRouter();
-  const { checkAccess } = usePermission();
   const {
     query: { teamId },
   } = useRouter();
@@ -54,17 +52,17 @@ const TeamDashboard = ({ metrics, members, repos }) => {
             <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}/${PATHS.REPOS}`)}>View All</button>
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
-            {repos.map((child, i) => (
+            {repos.slice(0, MAX_REPOS).map((child, i) => (
               <RepoCard {...child} key={`card-${i}`} column={2} />
             ))}
           </div>
         </div>
         <div className="column is-4">
-          <div className='is-flex is-align-items-center is-justify-content-space-between mb-10'>
+          <div className="is-flex is-align-items-center is-justify-content-space-between mb-10">
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Team Members</p>
-            {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') &&
+            {checkAccess(teamId, 'canEditUsers') &&
               <>
-                <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM.INVITE}`)}>
+                <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM.INVITE(teamId)}`)}>
                   <div className="mr-5 is-flex is-align-items-center">
                     <PlusIcon size="small" />
                   </div>
@@ -72,8 +70,14 @@ const TeamDashboard = ({ metrics, members, repos }) => {
                 </button>
               </>
             }
+              <button
+                className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
+                onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}
+              >
+                View All
+              </button>
           </div>
-          <MinimalTeamTable members={members} />
+          <MinimalTeamTable members={members} count={membersCount} />
         </div>
       </div>
     </>

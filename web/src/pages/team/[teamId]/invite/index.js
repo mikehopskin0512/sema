@@ -1,26 +1,26 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import Helmet, { TeamInviteHelmet } from '../../../components/utils/Helmet';
-import withLayout from '../../../components/layout';
-import withSelectedTeam from '../../../components/auth/withSelectedTeam';
+import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
+import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
-import { useForm } from 'react-hook-form';
-import { ArrowLeftIcon, CheckOnlineIcon } from '../../../components/Icons';
-import { PATHS, SEMA_CORPORATE_TEAM_ID, TAB } from '../../../utils/constants';
-import { rolesOperations } from '../../../state/features/roles';
-import { teamsOperations } from '../../../state/features/teams';
-import { fetchUsers } from '../../../state/features/users/actions';
-import { filterNonSemaUsers } from '../../../utils';
-import useAuthEffect from '../../../hooks/useAuthEffect';
+import { ArrowLeftIcon, CheckOnlineIcon } from '../../../../components/Icons';
+import { PATHS, TAB } from '../../../../utils/constants';
+import { rolesOperations } from '../../../../state/features/roles';
+import { teamsOperations } from '../../../../state/features/teams';
+import { fetchUsers } from '../../../../state/features/users/actions';
+import { filterNonSemaUsers } from '../../../../utils';
+import useAuthEffect from '../../../../hooks/useAuthEffect';
 
 const { fetchRoles } = rolesOperations;
 const { inviteTeamUsers } = teamsOperations;
 
 const TeamInvitePage = () => {
   const router = useRouter();
+  const { query: { teamId } } = router;
   const dispatch = useDispatch();
   const {
     register, handleSubmit, formState: { errors }, watch, setValue
@@ -46,7 +46,7 @@ const TeamInvitePage = () => {
     dispatch(fetchRoles(token));
     dispatch(fetchUsers({ listAll: true }, token));
   }, [dispatch]);
-  
+
   const onSave = async (data) => {
     const { emails, role } = data;
     if (emails && emails.length) {
@@ -55,13 +55,13 @@ const TeamInvitePage = () => {
       if (!userIds.length || !role) return;
 
       // adding normal users to Sema Corporate Team
-      await dispatch(inviteTeamUsers(SEMA_CORPORATE_TEAM_ID, {
+      await dispatch(inviteTeamUsers(teamId, {
         users: userIds,
         role: role ? role.value : '',
       }, token));
     }
 
-    await router.push(`${PATHS.TEAM._}/${SEMA_CORPORATE_TEAM_ID}${PATHS.SETTINGS}?tab=${TAB.management}`);
+    await router.push(`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`);
   };
 
   const onCancel = async () => {
@@ -82,13 +82,12 @@ const TeamInvitePage = () => {
   useEffect(() => {
     checkForSelectedTeam();
   }, []);
-
   return (
     <div className="has-background-gray-100 hero">
       <Helmet {...TeamInviteHelmet} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={`${PATHS.TEAM._}/${SEMA_CORPORATE_TEAM_ID}`} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={`${PATHS.TEAM._}/${teamId}`} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-500">Team Organization</span>
           </a>

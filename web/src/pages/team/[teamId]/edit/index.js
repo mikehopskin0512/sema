@@ -44,8 +44,8 @@ const TeamEditPage = () => {
       });
       const activeTeam = {
         _id: teamId,
-        name: activeRole.team.name,
-        description: activeRole.team.description,
+        name: activeRole?.team?.name,
+        description: activeRole?.team?.description,
       }
       if (activeRole) {
         setUserRole(activeRole)
