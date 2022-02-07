@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { find, isEmpty } from 'lodash';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { ResponsiveCirclePacking } from '@nivo/circle-packing';
+import { TooltipWrapper } from '@nivo/tooltip';
 import NoChartData from '../noChartData';
 import styles from './circularPackingChart.module.scss';
 import LineChart from '../LineChart';
 import { TAGS, CIRCULAR_PACKING_COLORS } from '../../utils/constants';
 import { white0 } from '../../../styles/_colors.module.scss';
 
-const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
+const CircularPacking = ({ data, groupBy = 'week', tagBy = '', tooltipPosition }) => {
   const [circlePackingData, setCirclePackingData] = useState({
     children: [],
   });
   const [noData, setNoData] = useState(false);
+  const [customTooltipPosition, setCustomTooltipPosition] = useState("top");
 
   const parseData = (rawData) => {
     let children = [];
@@ -69,17 +71,23 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '' }) => {
     }
   }, [data]);
 
+  useEffect(() => {
+    setCustomTooltipPosition(tooltipPosition);
+  }, [tooltipPosition]);
+
   const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
-    <div className="box has-background-black-900 p-20 border-radius-4px">
-      <p className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
-      {tag.data.length > 0 && (
-        <div className={clsx('py-3', styles['line-chart-container'])}>
-          <LineChart data={[tag]} />
-        </div>
-      )}
-      <p className="is-size-7 has-text-white-50">{value} comments</p>
-      <p className="is-size-7 has-text-white-50">{formattedValue} of all tags {tagBy}</p>
-    </div>
+    <TooltipWrapper anchor={tooltipPosition} position={[0, 0]}>
+      <div className={clsx("box has-background-black-900 p-20 border-radius-4px", styles.tooltip)}>
+        <p className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
+        {tag.data.length > 0 && (
+          <div className={clsx('py-3', styles['line-chart-container'])}>
+            <LineChart data={[tag]} />
+          </div>
+        )}
+        <p className="is-size-7 has-text-white-50">{value} comments</p>
+        <p className="is-size-7 has-text-white-50">{formattedValue} of all tags {tagBy}</p>
+      </div>
+    </TooltipWrapper>
   ))
 
   if (noData) {

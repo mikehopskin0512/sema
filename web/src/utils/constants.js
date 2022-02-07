@@ -234,3 +234,6 @@ export const TAG_TYPE = {
   GUIDE: 'guide',
   CUSTOM: 'custom',
 };
+
+export const BAR_CHART_MIN_TOP = 132;
+export const CIRCLE_CHART_MIN_TOP = 275;
