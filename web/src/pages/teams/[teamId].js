@@ -47,7 +47,7 @@ const TeamManagementPage = () => {
   const canModifyRoles = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers');
   const canViewUserRoles = checkTeam(SEMA_CORPORATE_TEAM_ID);
   const { teamId } = router.query;
-  
+
   useEffect(() => {
     if (!canViewUserRoles) {
       router.push(PATHS.DASHBOARD);
@@ -89,7 +89,7 @@ const TeamManagementPage = () => {
   }, []);
 
   const updateRole = async (userRoleId, newRole) => {
-    await dispatch(updateUserRole(userRoleId, { role: newRole }, token));
+    await dispatch(updateUserRole(userRoleId, { role: newRole, teamId }, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   };
 
@@ -155,7 +155,7 @@ const TeamManagementPage = () => {
           onChange={(newValue) => handleChangeRole(newValue, row)}
         />
       ),
-    }, 
+    },
     {
       Header: '',
       accessor: 'actions',

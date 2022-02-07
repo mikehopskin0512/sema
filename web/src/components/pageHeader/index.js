@@ -34,13 +34,14 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
   const router = useRouter();
   const { pathname: routerpathname, query: { tab } } = router;
   const { checkAccess } = usePermission();
-  
+  const { team } = userRole;
+
   const isActive = (item) => {
     return tab ? item.tab === tab : item.path === routerpathname;
   }
 
   const goToInvitePage = () => {
-    router.push(PATHS.TEAM.INVITE);
+    router.push(PATHS.TEAM.INVITE(team?._id));
   };
 
   const handleTabClick = (item) => {
@@ -55,18 +56,18 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
       <div className='is-flex is-justify-content-space-between'>
         <div className="is-flex mb-25">
           <Avatar
-            name={userRole?.team?.name || "Team"}
-            src={userRole?.team?.avatarUrl}
+            name={team?.name || "Team"}
+            src={team?.avatarUrl}
             size="35"
             round
             textSizeRatio={2.5}
             maxInitials={2}
           />
           <p className="has-text-weight-semibold has-text-black-950 is-size-5 ml-20">
-            {userRole?.team?.name || ''}
+            {team?.name || ''}
           </p>
         </div>
-        {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && type === 'normal' && (
+        {checkAccess(team?._id, 'canEditUsers') && type === 'normal' && (
             <div className='is-flex'>
               <button
                 className="button is-small is-primary border-radius-4px"

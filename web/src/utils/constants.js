@@ -175,7 +175,7 @@ export const PATHS = {
     _: '/team',
     EDIT: '/team/edit',
     ADD: '/team/add',
-    INVITE: '/team/invite'
+    INVITE: (id) => `/team/${id}/invite`,
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
