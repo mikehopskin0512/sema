@@ -49,7 +49,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
 
   useAuthEffect(() => {
     const { repositories: userRepos } = auth.user.identities[0] || {};
-    if (userRepos?.length && !repositories.data.repositories.length) {
+    if (userRepos?.length && !repositories?.data?.repositories?.length) {
       dispatch(getUserRepositories(userRepos, token));
     }
   }, [auth.user.identities]);
