@@ -1,11 +1,13 @@
 /* eslint-disable no-return-assign */
 import React, { useEffect, useState } from 'react';
-import NoChartData from '../noChartData';
-import { ArrowDownIcon, ArrowUpIcon } from '../Icons';
-import { ResponsiveBar } from '@nivo/bar';
 import { reverse, find, round } from 'lodash';
 import PropTypes from 'prop-types';
 import { format, isValid } from 'date-fns';
+import { ResponsiveBar } from '@nivo/bar';
+import { TooltipWrapper } from '@nivo/tooltip';
+import clsx from 'clsx';
+import NoChartData from '../noChartData';
+import { ArrowDownIcon, ArrowUpIcon } from '../Icons';
 import { EMOJIS } from '../../utils/constants';
 import {
   black900,
@@ -17,12 +19,13 @@ import {
   greenAvailable,
   orange300,
 } from '../../../styles/_colors.module.scss';
+import styles from './barChart.module.scss';
 
-
-const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
+const NivoBarChart = ({ data = [], groupBy, yAxisType, tooltipPosition }) => {
   const [barChartData, setBarChartData] = useState([]);
   const [noData, setNoData] = useState(false);
   const [maxValue, setMaxValue] = useState(0);
+  const [customTooltipPosition, setCustomTooltipPosition] = useState("top");
 
   useEffect(() => {
     if (yAxisType === "total") {
@@ -130,6 +133,10 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
     return hasMonth[date2.includes(" ")];
   }
 
+  useEffect(() => {
+    setCustomTooltipPosition(tooltipPosition);
+  }, [tooltipPosition]);
+
   const renderTooltip = React.memo((itemData) => {
     const { id, value, indexValue, data: colData } = itemData;
     const { emoji, label } = find(EMOJIS, { _id: id });
@@ -177,31 +184,33 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType }) => {
       }
 
       return (
-        <div className="box has-background-black p-10 border-radius-4px" style={{ width: 300 }}>
-          <div className="is-flex is-justify-content-space-between is-full-width mb-8">
-            <p className="font-size-14 has-text-weight-semibold has-text-white-50">{emoji} {label}</p>
-            <div className="font-size-12 has-text-primary has-text-blue-300 has-text-weight-semibold is-uppercase">{dateString}</div>
+        <TooltipWrapper anchor={customTooltipPosition} position={[0, 0]}>
+          <div className={clsx('box has-background-black p-10 border-radius-4px tooltip-container', styles.tooltip)}>
+            <div className="is-flex is-justify-content-space-between is-full-width mb-8">
+              <p className="font-size-14 has-text-weight-semibold has-text-white-50">{emoji} {label}</p>
+              <div className="font-size-12 has-text-primary has-text-blue-300 has-text-weight-semibold is-uppercase">{dateString}</div>
+            </div>
+            <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
+            <p className="font-size-12 line-height-18 has-text-gray-400">{totalCommentsLabel}</p>
+            <div
+              className="is-flex is-align-items-center font-size-10 py-3 px-5 border-radius-4px mt-8"
+              style={{
+                background: percentage === 0 ? gray200 : percentage > 0 ? green600 : red600,
+                color: percentage === 0 ? black900 : percentage > 0 ? green100 : red200,
+              }}
+            >
+              {/* TODO: temp solution since we don't have '=' icon */}
+              {percentage === 0 && <span className="font-size-16">=</span>}
+              {percentage > 0 ?
+                <ArrowUpIcon size="small" /> :
+                <ArrowDownIcon size="small" />
+              }
+              <span className="ml-4">
+                {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
+              </span>
+            </div>
           </div>
-          <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
-          <p className="font-size-12 line-height-18 has-text-gray-400">{totalCommentsLabel}</p>
-          <div
-            className="is-flex is-align-items-center font-size-10 py-3 px-5 border-radius-4px mt-8"
-            style={{
-              background: percentage === 0 ? gray200 : percentage > 0 ? green600 : red600,
-              color: percentage === 0 ? black900 : percentage > 0 ? green100 : red200,
-            }}
-          >
-            {/* TODO: temp solution since we don't have '=' icon */}
-            {percentage === 0 && <span className="font-size-16">=</span>}
-            {percentage > 0 ?
-              <ArrowUpIcon size="small" /> :
-              <ArrowDownIcon size="small" />
-            }
-            <span className="ml-4">
-              {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
-            </span>
-          </div>
-        </div>
+        </TooltipWrapper>
       );
     }
   });
