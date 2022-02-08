@@ -47,15 +47,12 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
     ]
   }, [overview]);
 
-  const getUserRepos = async (user) => {
-    const { identities } = user;
-    const githubUser = identities?.[0];
-    await dispatch(getUserRepositories(githubUser?.repositories, token));
-  };
-
   useAuthEffect(() => {
-    getUserRepos(auth.user);
-  }, []);
+    const { repositories: userRepos } = auth.user.identities[0] || {};
+    if (userRepos?.length && !repositories.data.repositories.length) {
+      dispatch(getUserRepositories(userRepos, token));
+    }
+  }, [auth.user.identities]);
 
   useEffect(() => {
     if (smartcomments) {
@@ -72,7 +69,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
   };
 
   useEffect(() => {
-    if (repositories && repositories.data && repositories.data.repositories) {
+    if (repositories.data?.repositories) {
       const selected = find(repositories.data.repositories, { externalId: repoId });
       formatOptions(repositories.data.repositories);
       if (selected) {
@@ -83,8 +80,6 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
       }
     }
   }, [repositories]);
-
-  const IndicatorSeparator = () => null;
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);

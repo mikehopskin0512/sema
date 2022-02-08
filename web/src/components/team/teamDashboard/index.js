@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import usePermission from '../../../hooks/usePermission';
 import MetricsCard from '../metricsCard';
 import RepoCard from '../../repos/repoCard';
 import MinimalTeamTable from '../minimalTeamTable';
+import { PlusIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
 
 const MAX_REPOS = 6;
@@ -10,6 +12,7 @@ const MAX_REPOS = 6;
 const TeamDashboard = ({ team }) => {
   const { metrics, members, repos, membersCount } = team;
   const router = useRouter();
+  const { checkAccess } = usePermission();
   const {
     query: { teamId },
   } = useRouter();
