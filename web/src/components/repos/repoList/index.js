@@ -36,10 +36,10 @@ const RepoList = ({ type, repos = [] }) => {
     const getSortValue = (a, b) => a !== b ? (a > b ? 1 : -1) : 0;
     switch (sort.value) {
       case 'a-z':
-        sortedRepos.sort((a, b) => getSortValue(a.name.toLowerCase(), b.name.toLowerCase()))
+        sortedRepos.sort((a, b) => getSortValue(a.name?.toLowerCase(), b.name?.toLowerCase()))
         break;
       case 'z-a':
-        sortedRepos.sort((a, b) => getSortValue(b.name.toLowerCase(), a.name.toLowerCase()))
+        sortedRepos.sort((a, b) => getSortValue(b.name?.toLowerCase(), a.name?.toLowerCase()))
         break;
       case 'recentlyUpdated':
         sortedRepos.sort((a, b) => getSortValue(new Date(b.updatedAt), new Date(a.updatedAt)))

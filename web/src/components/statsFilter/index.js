@@ -10,7 +10,7 @@ import { ReactionList, TagList } from '../../data/activity';
 import { groupBy, isEmpty } from 'lodash';
 import { addDays, format } from 'date-fns';
 
-const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
+const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
   const [filter, setFilter] = useState({
     startDate: null,
     endDate: null,
@@ -20,6 +20,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
     reactions: [],
     tags: [],
     pr: [],
+    repo: [],
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -53,7 +54,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
     <div className="tile my-20">
       <div className="tile has-background-white border-radius-4px is-flex is-flex-wrap-wrap box">
         <div className="field is-flex-grow-1 px-5 my-5">
-          <p className="control has-icons-left">
+          <div className="control has-icons-left is-flex">
             <input
               className="input has-background-white"
               type="text"
@@ -64,20 +65,21 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
             <span className="icon is-small is-left">
               <FontAwesomeIcon icon={faSearch} />
             </span>
-          </p>
+            <div className={clsx("mx-5 is-flex", styles['filter-container'])}>
+              <DateRangeSelector
+                start={startDate}
+                end={endDate}
+                onChange={onDateChange}
+                isRight
+              />
+            </div>
+          </div>
         </div>
         <div
           className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
           style={{zIndex: 2}}
         >
-          <div className={clsx("m-5", styles['filter-container'])}>
-            <DateRangeSelector
-              start={startDate}
-              end={endDate}
-              onChange={onDateChange}
-            />
-          </div>
-          <div className={clsx("m-5", styles['filter-container'])}>
+          <div className={clsx("my-5 ml-5 mr-10", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterUserList,
@@ -90,7 +92,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
               showCheckbox
             />
           </div>
-          <div className={clsx("m-5", styles['filter-container'])}>
+          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterRequesterList,
@@ -103,7 +105,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
               showCheckbox
             />
           </div>
-          <div className={clsx("m-5", styles['filter-container'])}>
+          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: ReactionList,
@@ -117,7 +119,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
               showCheckbox
             />
           </div>
-          <div className={clsx("m-5", styles['filter-container'])}>
+          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: TagList,
@@ -131,7 +133,7 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
               showCheckbox
             />
           </div>
-          <div  className={clsx("m-5", styles['filter-container'])}>
+          <div  className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterPRList,
@@ -141,6 +143,19 @@ const StatsFilter = ({ filterUserList, filterRequesterList, filterPRList, handle
                 value: filter.pr,
               }}
               label="Pull requests"
+              showCheckbox
+            />
+          </div>
+          <div className={clsx("my-5 ml-5", styles['filter-container'])}>
+            <CustomSelect
+              selectProps={{
+                options: filterRepoList,
+                placeholder: '',
+                isMulti: true,
+                onChange: ((value) => onChangeFilter('repo', value)),
+                value: filter.repo,
+              }}
+              label="Repos"
               showCheckbox
             />
           </div>

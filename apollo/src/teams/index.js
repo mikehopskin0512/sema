@@ -126,7 +126,7 @@ export default (app, passport) => {
   route.post(
     '/:teamId/invite',
     passport.authenticate(['bearer'], { session: false }),
-    checkAccess(semaCorporateTeamId, 'canEditUsers'),
+    checkAccess('canEditUsers'),
     async (req, res) => {
       try {
         const { teamId } = req.params;
