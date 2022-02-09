@@ -42,7 +42,7 @@
     "lodash": "^4.17.15",
     "md5": "^2.3.0",
     "method-override": "^3.0.0",
-    "migrate": "^1.7.0",
+    "migrate-mongo": "^8.2.3",
     "mongoose": "^5.9.15",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
@@ -50,10 +50,10 @@
     "passport-http-bearer": "^1.0.1",
     "pg": "^8.2.1",
     "request": "^2.88.2",
+    "speakingurl": "^14.0.1",
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
-    "xlsx": "^0.15.5",
-    "speakingurl": "^14.0.1"
+    "xlsx": "^0.15.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
@@ -63,7 +63,6 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "migrate": "^1.7.0",
     "nodemon": "^2.0.4"
   }
 }
