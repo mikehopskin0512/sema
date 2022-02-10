@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import clsx from 'clsx';
+import { findIndex, isEmpty, uniqBy } from 'lodash';
 import ActivityPage from '../../../components/activity/page';
 import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
@@ -8,6 +10,10 @@ import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
+import StatsView from '../../../components/repos/repoPageLayout/components/StatsView';
+import { DEFAULT_AVATAR } from '../../../utils/constants';
+import styles from './styles.module.scss';
 
 const { fetchRepositoryOverview } = repositoriesOperations;
 
@@ -38,6 +44,18 @@ const RepoPage = () => {
     endDate,
   });
 
+  const [filter, setFilter] = useState({
+    from: [],
+    to: [],
+    reactions: [],
+    tags: [],
+    search: '',
+    pr: [],
+  });
+  const [filterUserList, setFilterUserList] = useState([]);
+  const [filterRequesterList, setFilterRequesterList] = useState([]);
+  const [filterPRList, setFilterPRList] = useState([]);
+
   useAuthEffect(() => {
     if (
       (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
@@ -64,20 +82,102 @@ const RepoPage = () => {
     }
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    if (!overview?.smartcomments?.length) {
+      return;
+    }
+    const requesters = overview.smartcomments
+      .filter((item) => item.githubMetadata.requester)
+      .map((({ githubMetadata }) => {
+        return {
+          label: githubMetadata.requester,
+          value: githubMetadata.requester,
+          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
+        }
+      }))
+    const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
+      const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
+      return {
+        label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
+        value: _id,
+        img: avatarUrl || DEFAULT_AVATAR,
+      };
+    });
+    const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
+      const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
+      const prName = title || head || 'Pull Request';
+      return {
+        label: `${prName} (#${pullNum || '0'})`,
+        value: pullNum,
+        name: prName,
+      };
+    });
+    let filteredPRs = []
+    prs.forEach((item) => {
+      const index = findIndex(filteredPRs, { value: item.value });
+      if (index !== -1) {
+        if (isEmpty(filteredPRs[index].prName)) {
+          filteredPRs[index] = item;
+        }
+      } else {
+        filteredPRs.push(item);
+      }
+    });
+    setFilterRequesterList(uniqBy(requesters, 'value'))
+    setFilterUserList(uniqBy(users, 'value'));
+    setFilterPRList(filteredPRs);
+  }, [overview]);
+
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
   }
+
+  const onChangeFilter = (type, value) => {
+    setFilter({
+      ...filter,
+      [type]: value,
+    });
+  };
 
   return (
     <RepoPageLayout
       setSelectedTab={setSelectedTab}
       selectedTab={selectedTab}
       dates={dates}
+      onDateChange={onDateChange}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
-      { selectedTab === 'activity' && <ActivityPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
-      { selectedTab === 'stats' && <StatsPage startDate={startDate} endDate={endDate} onDateChange={onDateChange} /> }
+
+      <div className={styles.wrapper}>
+        <FilterBar
+          filter={filter}
+          startDate={startDate}
+          endDate={endDate}
+          filterUserList={filterUserList}
+          filterRequesterList={filterRequesterList}
+          filterPRList={filterPRList}
+          onChangeFilter={onChangeFilter}
+          onDateChange={onDateChange}
+          tab={selectedTab}
+        />
+
+        <div className={clsx(styles.divider, 'mb-20 mx-10')} />
+
+        <StatsView overview={overview} dates={dates} />
+      </div>
+      {
+        selectedTab === 'activity' && (
+          <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />
+        )
+      }
+      {
+        selectedTab === 'stats' && (
+          <div className={styles.wrapper}>
+            <StatsPage startDate={startDate} endDate={endDate} />
+          </div>
+        )
+      }
     </RepoPageLayout>
   );
 };

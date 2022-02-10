@@ -117,7 +117,7 @@ jobs:
           channel: "phoenix-circleci-notifications"
       - slack/notify:
           branch_pattern: "release.*"
-          event: pass
+          event: "pass"
           channel: "release-management"
           custom: |
             {

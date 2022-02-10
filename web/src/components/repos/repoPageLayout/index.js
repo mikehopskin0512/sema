@@ -10,7 +10,6 @@ import Loader from '../../Loader';
 import styles from './repoPageLayout.module.scss';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import HoverSelect from '../../../components/select/hoverSelect';
-import StatCard from './components/StatCard';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 
 const { getUserRepositories } = repositoriesOperations;
@@ -95,8 +94,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
           </div>
         ) : (
           <>
-            <div
-              className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
+            <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
               <div className={'is-flex-grow-1'}>
                 {repoOptions.length > 1 ? (
                   <HoverSelect
@@ -113,25 +111,15 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
                 )}
               </div>
             </div>
-            <div className={clsx(styles['card-container'], 'px-20')}>
-              <div className="container">
-                <div className="mt-40 pb-10 columns m-0">
-                  {reposStats.map(({ title, value, tooltip }) => (
-                    <StatCard
-                      title={title}
-                      value={value}
-                      tooltip={tooltip}
-                    />
-                  ))}
+            <div className="container mt-10">
+              <Sidebar {...sidebarProps} />
+            </div>
+            <div className="has-background-gray-200 pt-20">
+              <div className="pb-50 container px-20">
+                <div>
+                  {children}
                 </div>
               </div>
-            </div>
-            <div className="has-background-gray-200">
-              <Sidebar {...sidebarProps}>
-                <>
-                  {children}
-                </>
-              </Sidebar>
             </div>
           </>
         )

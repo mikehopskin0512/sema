@@ -47,7 +47,7 @@ const DATE_RANGES = {
   };
 
 const DateRangeSelector = (props) => {
-    const { start, end, onChange, isRight = false, buttonProps = {} } = props;
+    const { start, end, onChange, isRight = false, buttonProps = {}, outlined } = props;
     const popupRef = useRef(null);
     const [selectedRange, setSelectedRange] = useState('allTime');
     const [focusedInput, setFocusedInput] = useState('startDate');
@@ -108,12 +108,14 @@ const DateRangeSelector = (props) => {
 
     return (
       <>
-        <div className={clsx("dropdown is-flex is-justify-content-stretch is-align-items-stretch", isOpen ? "is-active" : null, isRight ? "is-right": null)}>
-          <div className="dropdown-trigger is-flex-grow-1">
+        <div className={clsx('dropdown is-flex is-justify-content-stretch is-align-items-stretch', isOpen ? "is-active" : null, isRight ? "is-right": null)}>
+          <div className="dropdown-trigger is-flex-grow-1 is-flex">
             <button
               className={clsx(
-                "has-background-gray-100 border-radius-4px border-none is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable",
-                styles.button
+                'border-radius-4px is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
+                outlined ? 'has-background-white' : 'has-background-gray-100',
+                outlined ? styles.outlined : 'border-none',
+                styles.button,
               )}
               onClick={toggleMenu}
               {...buttonProps}
