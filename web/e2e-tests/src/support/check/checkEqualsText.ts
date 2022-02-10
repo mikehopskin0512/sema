@@ -1,5 +1,8 @@
 import type { Selector } from 'webdriverio';
+// @ts-ignore
+import webElements = require('../sema_web_elements.json');
 
+// @ts-ignore
 /**
  * Check if the given elements text is the same as the given text
  * @param  {String}   elementType   Element type (element or button)
@@ -20,9 +23,11 @@ export default async (
      */
     let command: 'getText' | 'getValue' = 'getValue';
 
+    const parsedSelector = webElements[selector];
+
     if (
         elementType === 'button'
-        || (await $(selector).getAttribute('value')) === null
+        || (await $(parsedSelector).getAttribute('value')) === null
     ) {
         command = 'getText';
     }
@@ -32,26 +37,23 @@ export default async (
      * @type {String}
      */
     let parsedExpectedText = expectedText;
-
     /**
      * Whether to check if the content equals the given text or not
      * @type {Boolean}
      */
     let boolFalseCase = !!falseCase;
-
     // Check for empty element
+
     if (typeof parsedExpectedText === 'function') {
         parsedExpectedText = '';
-
         boolFalseCase = !boolFalseCase;
     }
-
     if (parsedExpectedText === undefined && falseCase === undefined) {
         parsedExpectedText = '';
         boolFalseCase = true;
     }
 
-    const text = await $(selector)[command]();
+    const text = await $(parsedSelector)[command]();
 
     if (boolFalseCase) {
         expect(parsedExpectedText).not.toBe(text);

@@ -1,4 +1,6 @@
 import type { Selector } from 'webdriverio';
+// @ts-ignore
+import webElements = require('../sema_web_elements.json');
 
 /**
  * Check if the given selector is enabled
@@ -11,8 +13,8 @@ export default async (selector: Selector, falseCase: boolean) => {
      * The enabled state of the given selector
      * @type {Boolean}
      */
-    const isEnabled = await $(selector).isEnabled();
-
+    const parsedSelector = webElements[selector];
+    const isEnabled = await $(parsedSelector).isEnabled();
     if (falseCase) {
         expect(isEnabled).not.toEqual(
             true,

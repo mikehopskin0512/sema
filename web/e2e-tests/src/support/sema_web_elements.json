@@ -109,6 +109,9 @@
     "supportSection"                : "//div[contains(@class,'emptyRepo_container__2lqfU')]",
 
     "########## LABEL MANAGEMENT LOCATORS #############" : "",
-    "labelManagementSection"        : "//div[@class='my-50 px-10']"
+    "labelManagementSection"        : "//div[@class='my-50 px-10']",
 
+
+    "########## REAUTHORIZATION VERIFICATION LOCATORS #############" : "",
+    "authorizeSemaSoftwareBtn"      : "//button[@id='js-oauth-authorize-btn']"
 }

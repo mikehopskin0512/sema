@@ -16,6 +16,7 @@ import checkSelected from '../support/check/checkSelected';
 import waitFor from '../support/action/waitFor';
 import checkNumberOfElementsExists from "../support/lib/checkNumberOfElementsExists";
 import checkEqualTextForElements from "../support/check/checkEqualTextForElements";
+import isEnabled from "../support/check/isEnabled";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -79,7 +80,7 @@ Then(
 
 Then(
     /^I expect that checkbox "([^"]*)?" is( not)* checked$/,
-    checkSelected
+    isEnabled
 );
 
 Then(
