@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { InputField } from 'adonis';
 import { SearchIcon } from '../../../../Icons';
-import styles from './searchFilter.module.scss';
+import styles from './SearchFilter.module.scss';
 
 const SearchFilter = ({ value, onChange, className }) => {
   const [isOpen, setIsOpen] = useState(false);
