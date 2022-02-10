@@ -77,8 +77,8 @@ export const hooks = {
 
         await browser.url('https://app-staging.semasoftware.com/login');
         await $('span=Sign in with GitHub').click();
-        await $('#login_field').setValue('zicury@semasoftware.com');
-        await $('#password').setValue('7NOkSbk)19');
+        await $('#login_field').setValue('qateam+automationadmin@semasoftware.com');
+        await $('#password').setValue('Automation1Tester2#');
         await $('.js-sign-in-button').click();
         await $('#otp').setValue(otp);
         await $('button*=Verify');        
