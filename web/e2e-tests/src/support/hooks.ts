@@ -8,8 +8,11 @@
 // WebdriverIO will wait until that promise is resolved to continue.
 
 //
+import { generateToken } from 'authenticator';
 
-const allure = require('allure-commandline');
+import { ReportAggregator, HtmlReporter } from 'wdio-html-nice-reporter';
+let reportAggregator: ReportAggregator;
+
 //import users = require('users.json');
 
 export const hooks = {
@@ -18,8 +21,17 @@ export const hooks = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+    onPrepare: function (config, capabilities) {
+        reportAggregator = new ReportAggregator({
+            outputDir: './reports/html-reports/',
+            filename: 'master-report.html',
+            reportTitle: 'Master Report',
+            browserName: capabilities.browserName,
+            collapseTests: true
+        });
+        reportAggregator.clean();
+    },
+
     /**
      * Gets executed before a worker process is spawned & can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -47,16 +59,37 @@ export const hooks = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    before: async function (capabilities, specs) {        
+    before: async function (capabilities, specs) {
+        // await browser.url('https://app-staging.semasoftware.com/login');
+        // await $('span=Sign in with GitHub').click();
+        // await $('#login_field').setValue('qateam+automationadmin@semasoftware.com');
+        // await $('#password').setValue('Automation1Tester2#');
+        // await $('.js-sign-in-button').click();
+
+        // //TODO: if message appears, we should click it to skip
+
+        // browser.pause(20000); 
+        // This secret should be changed once we have defined which device to use 
+        const SECRET_KEY = 'AXISDW77DODT233C';
+        const otp = generateToken(SECRET_KEY);
+
+        console.log(otp);
+
         await browser.url('https://app-staging.semasoftware.com/login');
         await $('span=Sign in with GitHub').click();
-        await $('#login_field').setValue('qateam+automationadmin@semasoftware.com');
-        await $('#password').setValue('Automation1Tester2#');
+        await $('#login_field').setValue('zicury@semasoftware.com');
+        await $('#password').setValue('7NOkSbk)19');
         await $('.js-sign-in-button').click();
+        await $('#otp').setValue(otp);
+        await $('button*=Verify');        
 
-        //TODO: if message appears, we should click it to skip
-
-        browser.pause(20000);        
+        if(await ($$('button*=Authorize Smart Code Reviews')).length > 0) {
+            console.log(`Authorizing Smart Code Reviews...`);
+            await browser.pause(2000);
+            await $('button*=Authorize Smart Code Reviews').click();
+            await browser.pause(2000);
+        } 
+        await browser.pause(2000);
     },
     /**
      * Gets executed before the suite starts.
@@ -138,26 +171,11 @@ export const hooks = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-     onComplete: function () {
-        const reportError = new Error('Could not generate Allure report')
-        const generation = allure(['generate', 'allure-results', '--clean'])
-        return new Promise((resolve, reject) => {
-            const generationTimeout = setTimeout(
-                () => reject(reportError),
-                5000)
-
-            generation.on('exit', function(exitCode) {
-                clearTimeout(generationTimeout)
-
-                if (exitCode !== 0) {
-                    return reject(reportError)
-                }
-
-                console.log('Allure report successfully generated')
-                resolve();
-            })
-        })
-     },
+    onComplete: function (exitCode, config, capabilities, results) {
+        (async () => {
+            await reportAggregator.createReport();
+        })();
+    },
     /**
      * Gets executed when a refresh happens.
      * @param {String} oldSessionId session ID of the old session
@@ -174,10 +192,10 @@ export const hooks = {
     // },
     // beforeStep: function ({uri, feature, step}, context) {
     // },
-    afterStep: function ({uri, feature, step}, context, {error, result, duration, passed}) {
+    afterStep: function ({ uri, feature, step }, context, { error, result, duration, passed }) {
         if (error) {
             browser.takeScreenshot();
-          }
+        }
     },
     // afterScenario: function (uri, feature, scenario, result, sourceLocation) {
     // },

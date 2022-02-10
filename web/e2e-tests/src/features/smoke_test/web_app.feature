@@ -1,10 +1,12 @@
 @webapp
 Feature: Web tabs should contains all functionality items
 
+    Background: Wait for page to be displayed
+        When I wait on element "userLogo" for 10000ms to be displayed
+
     @C1725
-    Scenario: Navigate throught tab web pages    
-        Then I expect that the url is "/dashboard"
-        When I click on the button "reposTab"        
+    Scenario: Navigate throught tab web pages
+        When I click on the button "reposTab"
         Then I expect that the url is "/dashboard"
         And  I expect that the title is "Sema Dashboard"
 

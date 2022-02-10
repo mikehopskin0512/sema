@@ -1,4 +1,6 @@
 import type { Selector } from 'webdriverio';
+// @ts-ignore
+import webElements = require('../sema_web_elements.json');
 
 type WaitForCommands = 'waitForClickable' | 'waitForDisplayed' | 'waitForEnabled' | 'waitForExist';
 
@@ -55,7 +57,13 @@ export default async (
         boolFalseState = false;
     }
 
-    await $(selector)[command]({
+    /**
+     * Parsing string common name to  actual Selector
+     * @param selector to be translated
+     */
+     const parsedSelector = webElements[selector];
+
+    await $(parsedSelector)[command]({
         timeout: intMs,
         reverse: boolFalseState,
     });

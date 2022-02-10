@@ -1,24 +1,26 @@
 @snippets
 Feature: User is able to interact with snippets properly
 
+  Background: Wait for page to be displayed
+    When I wait on element "userLogo" for 10000ms to be displayed
+
   @admin  @C1704  @snippet
   Scenario: Snippets collection can be turned on and turned off
-#    C2787  C1737
+    #    C2787  C1737
     When I click on the element "snippetsTab"
-
     Then I expect that element "collectionArea" becomes displayed
     When I click on the element "firstInActiveCollectionToggle"
     Then I expect that element "firstInActiveCollectionName" becomes displayed
     When I save the name of collection "firstInActiveCollectionName"
     And  I click on the element "firstInActiveCollectionToggle"
     Then I expect that selected collection element "activeCollectionsNames" is enabled
-##    C2788
+    ##    C2788
     When I save the name of collection "firstActiveCollectionName"
     And  I click on the element "firstActiveCollectionToggle"
     Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
   @admin  @C2797  @snippet
-#      C2798  C1737
+  #      C2798  C1737
   Scenario: Adding new snippet to "My Snippets" collection
     When I click on the element "snippetsTab"
     Then I expect that element "addNewSnippetBtn" becomes displayed
@@ -75,10 +77,10 @@ Feature: User is able to interact with snippets properly
     And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
     When I set "log" to the inputfield "searchSnippetInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
-#    @C1707
+    #    @C1707
     When I select the option with the value "Practices" for element "searchSnippetTagInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "3" times
-#    @C1708
+    #    @C1708
     When I select the option with the value "Go" for element "searchSnippetLanguageInput"
     Then I expect that element "searchedSnippetsResult" is not displayed
 
@@ -87,22 +89,22 @@ Feature: User is able to interact with snippets properly
     And  I select the option with the value "Strategic" for element "searchSnippetTagInput"
     And  I select the option with the value "All" for element "searchSnippetLanguageInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
-#    C1709
+    #    C1709
     When I click on the element "clearSearchResultBtn"
     And  I select the option with the value "Individual" for element "searchSnippetTagInput"
     And  I select the option with the value "All" for element "searchSnippetLanguageInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "2" times
-#    C1711
+    #    C1711
     When I select the option with the text "Label" for element "searchSnippetTagInput"
     And  I select the option with the value "All" for element "searchSnippetLanguageInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
     And  I expect that element "viewMoreBtn" becomes displayed
-#    C1710
+    #    C1710
     When I select the option with the value "Team" for element "searchSnippetTagInput"
     And  I select the option with the text "Language" for element "searchSnippetLanguageInput"
     Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
     And  I expect that element "viewMoreBtn" is not displayed
-#    C1712
+    #    C1712
     When I click on the element "clearSearchResultBtn"
     Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
     And  I expect that element "viewMoreBtn" becomes displayed
@@ -124,10 +126,10 @@ Feature: User is able to interact with snippets properly
 
   @admin  @C2790  @snippet
   Scenario: Adding new snippet collection
-      #temporary solution
+    #temporary solution
     When I click on the element "userLogo"
     When I click on the element "semaCorporateTeamLogo"
-      #------------------
+    #------------------
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
     When I click on the element "addNewCollectionBtn"
@@ -160,12 +162,12 @@ Feature: User is able to interact with snippets properly
 
   @admin  @C2442  @snippet
   Scenario: The default tags for collection is added to snippet
-      #temporary solution
+    #temporary solution
     When I click on the element "userLogo"
     Then I expect that element "semaCorporateTeamLogo" becomes displayed
     When I click on the element "semaCorporateTeamLogo"
     Then I expect that element "snippetsTab" becomes displayed
-      #------------------
+    #------------------
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
     When I click on the element "addNewCollectionBtn"
@@ -206,7 +208,7 @@ Feature: User is able to interact with snippets properly
     And  I expect that element "snippetsLabel" matches the text "TypeScript"
 
   @admin  @C2469
-#    after SCR-768
+  #    after SCR-768
   Scenario: Global search by items of turned off collection are clickable
     When I click on the element "snippetsTab"
     Then I expect that element "collectionArea" becomes displayed
@@ -225,7 +227,7 @@ Feature: User is able to interact with snippets properly
     Then "snippet" snippet should be found in "collection"
 
   @admin  @C2480
-        #    after SCR-768
+  #    after SCR-768
   Scenario: Global search with non-alphanumeric characters
     When I click on the element "snippetsTab"
     Then I expect that element "collectionArea" becomes displayed
@@ -253,7 +255,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
 
   @admin  @C2730
-#       after SCR-768
+  #       after SCR-768
   Scenario: Global search results are clickable
     When I click on the element "snippetsTab"
     Then I expect that element "collectionArea" becomes displayed
@@ -272,12 +274,12 @@ Feature: User is able to interact with snippets properly
 
 
   @admin  @C2741  @snippet
-#      C2741  C2742
+  #      C2741  C2742
   Scenario: Field validation for creating collection
-        #temporary solution
+    #temporary solution
     When I click on the element "userLogo"
     When I click on the element "semaCorporateTeamLogo"
-        #------------------
+    #------------------
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
     When I click on the element "addNewCollectionBtn"
@@ -317,11 +319,11 @@ Feature: User is able to interact with snippets properly
 
   @admin  @C2786  @snippet
   Scenario: Populate this collection to all users checkbox is marked
-        #temporary solution
+    #temporary solution
     When I click on the element "userLogo"
     Then I expect that element "semaCorporateTeamLogo" becomes displayed
     When I click on the element "semaCorporateTeamLogo"
-        #------------------
+    #------------------
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
     When I click on the element "addNewCollectionBtn"
@@ -343,14 +345,14 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "saveNewCollectionBtn" becomes displayed
     When I click on the button "saveNewCollectionBtn"
     Then I expect that new item "allCollectionsNames" is added to collections
-#      logout
+    #      logout
     When I click on the element "userLogo"
     Then I expect that element "signOutBtn" becomes displayed
     When I click on the element "signOutBtn"
     Then I expect that element "confirmBtn" becomes displayed
     And  I click on the element "confirmBtn"
     Then I expect that element "signInWithGithubBtn" becomes displayed
-#       login with acme
+    #       login with acme
     When I click on the button "signInWithGithubBtn"
     And  I pause for 2000ms
     And  I clear the inputfield "loginInput"
@@ -359,18 +361,18 @@ Feature: User is able to interact with snippets properly
     And  I add "Automation3Tester4#" to the inputfield "passwordInput"
     And  I click on the button "signinBtn"
     Then I expect that element "snippetsTab" becomes displayed
-#      check added collection
+    #      check added collection
     When I click on the element "snippetsTab"
     And  I search created collection "searchCollectionInput"
     Then I expect that new item "allCollectionsNames" is added to collections
 
   @admin  @C2786000  @snippet
   Scenario: Populate this collection to all users checkbox is not marked
-          #temporary solution
+    #temporary solution
     When I click on the element "userLogo"
     Then I expect that element "semaCorporateTeamLogo" becomes displayed
     When I click on the element "semaCorporateTeamLogo"
-          #------------------
+    #------------------
     When I click on the element "snippetsTab"
     Then I expect that element "addNewCollectionBtn" becomes displayed
     When I click on the element "addNewCollectionBtn"
@@ -379,19 +381,19 @@ Feature: User is able to interact with snippets properly
     And  I click on the element "newCollectionLanguagesInput"
     And  I set "java" to the inputfield "newCollectionLanguagesInput"
     Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-#    And  I pause for 3000ms
+    #    And  I pause for 3000ms
     And  I press "Enter"
     Then I expect that element "newCollectionOtherLabelInput" becomes displayed
     When I click on the element "newCollectionOtherLabelInput"
     And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
     Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-#    And  I pause for 3000ms
+    #    And  I pause for 3000ms
     And  I press "Enter"
     When I set "test author name" to the inputfield "newCollectionAuthorInput"
     When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
     And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
     When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-#      unmark checkbox
+    #      unmark checkbox
     And  I expect that checkbox "newCollectionPopulateCheckBox" is checked
     When I click on the element "newCollectionPopulateCheckBox"
     Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
@@ -399,7 +401,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "saveNewCollectionBtn" becomes displayed
     When I click on the button "saveNewCollectionBtn"
     Then I expect that new item "allCollectionsNames" is added to collections
-#        logout
+    #        logout
     When I click on the element "userLogo"
     Then I expect that element "signOutBtn" becomes displayed
     When I click on the element "signOutBtn"
@@ -407,7 +409,7 @@ Feature: User is able to interact with snippets properly
     And  I click on the element "confirmBtn"
     Then I expect that element "signInWithGithubBtn" becomes displayed
     When I delete all cookies
-#         login with acme
+    #         login with acme
     And  I click on the button "signInWithGithubBtn"
     Then I expect that element "loginInput" becomes displayed
     When I clear the inputfield "loginInput"
@@ -416,7 +418,7 @@ Feature: User is able to interact with snippets properly
     And  I add "Automation3Tester4#" to the inputfield "passwordInput"
     And  I click on the button "signinBtn"
     Then I expect that element "snippetsTab" becomes displayed
-#        check added collection
+    #        check added collection
     When I click on the element "snippetsTab"
     And  I search created collection "searchCollectionInput"
     Then I expect that new item "allCollectionsNames" is not added to collections
@@ -425,7 +427,7 @@ Feature: User is able to interact with snippets properly
   Scenario: Snippet collection can be edited
     When I click on the element "snippetsTab"
     Then I expect that element "threeDotsCollectionBtn" becomes displayed
-#  C2324
+    #  C2324
     When I click on the "1st" element "threeDotsCollectionBtn"
     Then I expect that element "editCollectionBtn" becomes displayed
     When I click on the element "editCollectionBtn"
@@ -450,6 +452,6 @@ Feature: User is able to interact with snippets properly
   @acme  @C2326
   Scenario: Context menu is not visible for common user
     When I click on the element "snippetsTab"
-#     C2326   check context menu for common user collection
+    #     C2326   check context menu for common user collection
     Then I expect that element "threeDotsCollectionBtn" becomes not displayed
 

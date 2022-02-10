@@ -1,5 +1,6 @@
 {
   "name": "e2e_testing",
+  "description": "To run e2e tests over Sema Code Reviews UI",
   "scripts": {
     "clean": "read -p \"Are you sure you want to clean the project? [y/n] \" REPLY; if [[ $REPLY =~ ^[Yy]$ ]]; then rm -R .git .github demo-app test .codeclimate.yml .travis.yml jest.json wdio.BUILD.conf.js src/features/**; fi",
     "test": "run-s test:*",
@@ -36,6 +37,7 @@
     "webdriverio": "^7.0.7"
   },
   "dependencies": {
-    "allure-commandline": "^2.17.2"
+    "authenticator": "^1.1.5",
+    "wdio-html-nice-reporter": "^7.9.1"
   }
 }

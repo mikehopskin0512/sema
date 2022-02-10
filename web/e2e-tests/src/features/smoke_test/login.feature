@@ -3,7 +3,7 @@ Feature: Login with different user roles
 
     @admin  @C1724
     Scenario: Normal user can be logged in and logged out successfully                      
-        Then  I expect that the url is "/dashboard"        
+        When  I wait on element "userLogo" for 10000ms to be displayed        
         And   I expect that element "userLogo" becomes displayed
         When  I click on the element "userLogo"
         Then  I expect that element "signOutBtn" becomes displayed

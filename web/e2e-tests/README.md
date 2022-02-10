@@ -17,21 +17,7 @@ Also this project doesn't cover setting up a proper test environment. You need t
 
 Choose one of the following options:
 
-1. Download the latest stable release [here] or clone the git repo — 
-
-2. Then:
-- Copy the files to your project into a directory like `/integrationtests` (note the hidden files!)
-
-3. Clean the project (Optional):
-- *On OSX/Linux:*
--- Run `yarn run clean`
-
-- *On Windows:*
--- Remove the directories `/.git`, `/.github`, `/demo-app` & `/test`
--- Remove the files `.travis.yml`, `jest.json` & `wdio.BUILD.conf.js`
--- Remove all the demo features from the `/src/features` directory
-
-4. Install the dependencies (`yarn install`)
+1. Install the dependencies (`npm install`)
 
 Now you are ready to write your own features.
 
@@ -75,16 +61,10 @@ query after doing a search. As you can see, it is pretty simple and understandab
 
 # How to run the test
 
-Start the local web server:
-
-```sh
-$ yarn run test
-```
-
 To run your tests just call the [WDIO runner](http://webdriver.io/guide/testrunner/gettingstarted.html):
 
 ```sh
-$ yarn run wdio
+$ npm run wdio
 ```
 
 _please note_ The WDIO runner uses the configuration file `wdio.conf.js` by default.
@@ -119,7 +99,7 @@ Your environment-specific config file will get merged into the default config fi
 To run a test in a specific environment just add the desired configuration file as the first parameter:
 
 ```sh
-$ yarn run wdio wdio.STAGING.conf.js
+$ npm run wdio wdio.STAGING.conf.js
 ```
 
 # Running single feature
@@ -192,11 +172,6 @@ Scenario: check if username is present
     Given I login as "roboter" with password "test123"
     Then the username "roboter" should be present in the header
 ```
-
-# List of predefined steps
-
-Check out all predefined snippets. You can see how they get used in [`sampleSnippets.feature`](https://github.com/webdriverio/cucumber-boilerplate/blob/main/src/features/sampleSnippets.feature).
-
 ## Given steps
 
 - `I open the (url|site) "([^"]*)?"` <br>Open a site in the current browser window/tab
