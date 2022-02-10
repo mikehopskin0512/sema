@@ -7,7 +7,7 @@
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  display: block; 
+  display: block;
   // max-width: 200px;
 }
 
@@ -24,7 +24,6 @@
 }
 
 .menu-item {
-  padding: 7px 10px;
   font-size: 14px;
   color: $gray-600;
   text-decoration: none;
@@ -38,6 +37,7 @@
   // background: #3f2852;
   color: $blue-700;
   outline: none;
+  border-bottom: 2px solid $blue-700;
 }
 
 .bottom {

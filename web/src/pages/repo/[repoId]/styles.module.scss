@@ -1,0 +1,10 @@
+@import "../../../../styles/colors.module";
+
+.wrapper {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.divider {
+  border-bottom: 1px solid $gray-500;
+}

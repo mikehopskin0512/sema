@@ -11,6 +11,7 @@ import {
   isWithinInterval,
   startOfDay,
   endOfDay,
+  subDays,
 } from 'date-fns';
 import { EMOJIS, TAGS } from './constants';
 import { generateChartDataByDays, generateChartDataByWeeks, generateChartDataByMonths, generateChartDataByYears } from './codeStats';

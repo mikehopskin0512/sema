@@ -18,3 +18,12 @@
 .date-picker-container {
   z-index: 999;
 }
+
+.wrapper {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.divider {
+  border-bottom: 1px solid $gray-500;
+}
