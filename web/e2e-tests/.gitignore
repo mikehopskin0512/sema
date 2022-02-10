@@ -4,3 +4,4 @@ logs
 allure-report
 allure-results
 ../../.vscode/settings.json
+package-lock.json
