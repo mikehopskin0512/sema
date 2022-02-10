@@ -70,7 +70,8 @@ export const hooks = {
 
         // browser.pause(20000); 
         // This secret should be changed once we have defined which device to use 
-        const SECRET_KEY = 'AXISDW77DODT233C';
+        // const SECRET_KEY = 'AXISDW77DODT233C';
+        const SECRET_KEY = 'CFUL2XGHWAMAVAQS';
         const otp = generateToken(SECRET_KEY);
 
         console.log(otp);
