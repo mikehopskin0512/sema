@@ -1,4 +1,8 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -17,8 +21,10 @@ import {
 } from './invitationService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
-import { isSemaAdmin } from "../shared/utils";
+import { isSemaAdmin } from '../shared/utils';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -37,7 +43,7 @@ export default (app, passport) => {
       });
     }
 
-    let userRecipient = await findByUsername(invitation.recipient);
+    const userRecipient = await findByUsername(invitation.recipient);
     if (userRecipient) {
       userRecipient.isWaitlist = false;
       await update(userRecipient);
@@ -45,7 +51,7 @@ export default (app, passport) => {
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
     if (userInvitation) {
       if (userInvitation.sender.toString() === invitation.sender) {
-        return res.status(401).send({ message: `You've already invited this user. Either revoke or resend the invitation to continue.` });
+        return res.status(401).send({ message: 'You\'ve already invited this user. Either revoke or resend the invitation to continue.' });
       }
       return res.status(401).send({ message: `${invitation.recipient} has already been invited by another user.` });
     }
@@ -66,7 +72,9 @@ export default (app, passport) => {
         await redeemInvite(newInvitation.token, userRecipient._id);
       } else {
         // Send invitation
-        const { recipient, token, orgName, senderName, senderEmail } = newInvitation;
+        const {
+          recipient, token, orgName, senderName, senderEmail,
+        } = newInvitation;
         const message = {
           recipient,
           url: `${orgDomain}/login?token=${token}`,
@@ -76,8 +84,8 @@ export default (app, passport) => {
           email: senderEmail,
           sender: {
             name: `${senderName} via Sema`,
-            email: "invites@semasoftware.io",
-          }
+            email: 'invites@semasoftware.io',
+          },
         };
         await sendEmail(message);
       }
@@ -100,16 +108,16 @@ export default (app, passport) => {
 
   // Fetch all invitation by senderId
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { senderId, search, page = 1, perPage = 10 } = req.query
+    const { senderId, search, page = 1, perPage = 10 } = req.query;
     try {
       const invites = await getInvitationsBySender({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
         search,
-        senderId
+        senderId,
       });
-      const pendingInvites = await getInvitationCountByUserId(senderId, 'pending')
-      const acceptedInvites = await getInvitationCountByUserId(senderId, 'accepted')
+      const pendingInvites = await getInvitationCountByUserId(senderId, 'pending');
+      const acceptedInvites = await getInvitationCountByUserId(senderId, 'accepted');
 
       if (invites.statusCode === 404) {
         if (invites.name === 'Not Found') {
@@ -121,7 +129,7 @@ export default (app, passport) => {
       return res.status(200).send({
         invitations: invites,
         pendingInvites,
-        acceptedInvites
+        acceptedInvites,
       });
     } catch (error) {
       logger.error(error);
@@ -222,7 +230,9 @@ export default (app, passport) => {
       }
 
       // Send invitation
-      const { recipient, token, orgName, senderName, senderEmail } = userInvitation;
+      const {
+        recipient, token, orgName, senderName, senderEmail,
+      } = userInvitation;
       const message = {
         recipient,
         url: `${orgDomain}/login?token=${token}`,
@@ -232,8 +242,8 @@ export default (app, passport) => {
         email: senderEmail,
         sender: {
           name: `${senderName} via Sema`,
-          email: "invites@semasoftware.io",
-        }
+          email: 'invites@semasoftware.io',
+        },
       };
       await sendEmail(message);
 
@@ -255,7 +265,7 @@ export default (app, passport) => {
     try {
       const userInvitation = await redeemInvite(token, userId);
       if (!userInvitation) {
-        return res.status(401).send({ message: `Invitation redemption error` });
+        return res.status(401).send({ message: 'Invitation redemption error' });
       }
 
       return res.status(201).send({
@@ -300,4 +310,7 @@ export default (app, passport) => {
       return res.status(err.statusCode).send(err);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/invitations-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

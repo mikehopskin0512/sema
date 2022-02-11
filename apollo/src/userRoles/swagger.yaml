@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: User Role's API
+  description: User roles
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRole:
+      properties:
+        user:
+          type: string
+        team:
+          type: string
+        role:
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/user-roles:
+    post:
+      summary: create a portfolio
+      operationId: createUserRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: created user role
+        400:
+          description: bad input parameter
+  /v1/user-roles/{id}:
+    patch:
+      summary: update a user role
+      operationId: updateRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRole'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+          description: updated user role
+        400:
+          description: bad input parameter
+    delete:
+      summary: delete a user role
+      operationId: deleteUserRole
+      responses:
+        200:
+          description: deleted user role
+        400:
+          description: bad input parameter

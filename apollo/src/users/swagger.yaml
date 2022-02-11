@@ -1,0 +1,426 @@
+openapi: 3.0.0
+info:
+  title: User's API
+  description: User
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        avatarUrl:
+          type: string
+        cohort:
+          type: string
+        collections:
+          items:
+            properties:
+              collectionData:
+                type: string
+              isActive:
+                type: boolean
+            required: [ ]
+            type: object
+          type: array
+        company:
+          type: string
+        companyName:
+          type: string
+        firstName:
+          type: string
+        identities:
+          items:
+            properties:
+              avatarUrl:
+                type: string
+              email:
+                type: string
+              emails:
+                items:
+                  properties: { }
+                  required: [ ]
+                  type: object
+                type: array
+              firstName:
+                type: string
+              lastName:
+                type: string
+              profileUrl:
+                type: string
+              provider:
+                type: string
+              repositories:
+                items:
+                  properties:
+                    fullName:
+                      type: string
+                    githubUrl:
+                      type: string
+                    isFavorite:
+                      type: boolean
+                    name:
+                      type: string
+                  required: [ ]
+                  type: object
+                type: array
+              username:
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        inviteCount:
+          type: number
+        isActive:
+          type: boolean
+        isOnboarded:
+          format: date-time
+          type: string
+        isSemaAdmin:
+          type: boolean
+        isVerified:
+          type: boolean
+        isWaitlist:
+          type: boolean
+        jobTitle:
+          type: string
+        lastLogin:
+          format: date-time
+          type: string
+        lastName:
+          type: string
+        notes:
+          type: string
+        organizations:
+          items:
+            properties:
+              createdAt:
+                format: date-time
+                type: string
+              invitedBy:
+                type: string
+              isActive:
+                type: boolean
+              isAdmin:
+                type: boolean
+              orgName:
+                type: string
+              updatedAt:
+                format: date-time
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        origin:
+          enum:
+            - invitation
+            - waitlist
+            - signup
+          type: string
+        password:
+          type: string
+        resetExpires:
+          format: date-time
+          type: string
+        resetToken:
+          type: string
+        termsAccepted:
+          type: boolean
+        termsAcceptedAt:
+          format: date-time
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        verificationExpires:
+          format: date-time
+          type: string
+        verificationToken:
+          type: string
+    Portfolio:
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        headline:
+          type: string
+        imageUrl:
+          type: string
+        overview:
+          type: string
+        type:
+          enum:
+            - public
+            - private
+          type: string
+        snapshots:
+          items:
+            properties:
+              sort:
+                type: number
+            required: [ ]
+            type: object
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/users:
+    post:
+      summary: create an user
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: created user
+        400:
+          description: bad input parameter
+  /v1/users/{id}:
+    get:
+      summary: get user by id
+      operationId: findById
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+    put:
+      summary: update an user
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: updated portfolio
+        400:
+          description: bad input parameter
+    patch:
+      summary: update an user
+      operationId: patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: updated portfolio
+        400:
+          description: bad input parameter`
+  /v1/users/{id}/organizations:
+    post:
+      tags:
+        - organizations
+      summary: create an user
+      operationId: joinOrg
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                org:
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                  jwtToken:
+                    type: string
+          description: joined organization
+        400:
+          description: bad input parameter
+  /v1/users/verification/{token}:
+    get:
+      tags:
+        - verification
+      summary: verify user
+      operationId: verifyUser
+      parameters:
+        - in: path
+          name: token
+          description: auth token verification
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+                  jwtToken:
+                    type: string
+          description: user auth token verification
+        400:
+          description: bad input parameter
+  /v1/users/verification:
+    post:
+      tags:
+        - verification
+      summary: reset verification
+      operationId: resetVerification
+      parameters:
+        - in: path
+          name: token
+          description: auth token verification
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+          description: verificaiton sent via email
+        400:
+          description: bad input parameter
+  /v1/users/password-reset:
+    post:
+      tags:
+        - password
+      summary: password reset
+      operationId: initiatePasswordReset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+          description: password reset sent via email
+        400:
+          description: bad input parameter
+  /v1/users/password-reset/{token}:
+    get:
+      tags:
+        - password
+      summary: validate password reset
+      operationId: validatePasswordReset
+      parameters:
+        - in: path
+          name: token
+          description: auth token verification
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: user password reset validated
+        400:
+          description: bad input parameter
+  /v1/users/password:
+    post:
+      tags:
+        - password
+      summary: password reset
+      operationId: resetPassword
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  response:
+                    type: string
+          description: password has been updated
+        400:
+          description: bad input parameter
+  /v1/users/{id}/portfolios:
+    get:
+      tags:
+        - portfolios
+      summary: get portfolios by user id
+      operationId: getPortfoliosByUser
+      parameters:
+        - in: path
+          name: id
+          description: user id
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+          description: array of portfolios
+        400:
+          description: bad input parameter

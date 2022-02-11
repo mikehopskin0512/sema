@@ -1,9 +1,15 @@
 import { Router } from 'express';
-import { version } from '../config';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
+import { version, semaCorporateTeamId } from '../config';
 import logger from '../shared/logger';
 import checkAccess from '../middlewares/checkAccess';
 import { createUserRole, updateRole, deleteUserRole } from './userRoleService';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -12,7 +18,7 @@ export default (app, passport) => {
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const userRole = await createUserRole({
-        ...req.body
+        ...req.body,
       });
       return res.status(200).send(userRole);
     } catch (error) {
@@ -54,4 +60,7 @@ export default (app, passport) => {
       }
     },
   );
+
+  // Swagger route
+  app.use(`/${version}/user-roles-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

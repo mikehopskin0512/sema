@@ -1,0 +1,99 @@
+openapi: 3.0.0
+info:
+  title: Source's API
+  description: Source
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Source:
+      properties:
+        _id:
+          type: string
+        externalSourceId:
+          type: string
+        orgId:
+          type: string
+        type:
+          enum:
+            - github
+            - bitbucket
+            - direct
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - orgId
+        - externalSourceId
+        - type
+      title: Source
+
+security:
+  - bearerAuth: []
+paths:
+  /v1/sources:
+    post:
+      summary: create a portfolio
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Source'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+          description: created source
+        400:
+          description: bad input parameter
+    get:
+      summary: get source by id
+      operationId: findByOrg
+      parameters:
+        - in: query
+          name: orgId
+          description: external id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/sources/{sourceId}/repositories:
+    get:
+      summary: get portfolio by id
+      operationId: fetchRepositoriesGithub
+      parameters:
+        - in: path
+          name: sourceId
+          description: source id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Source'
+          description: search results matching criteria
+        400:
+          description: bad input parameter

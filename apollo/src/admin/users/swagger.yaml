@@ -1,0 +1,383 @@
+openapi: 3.0.0
+info:
+  title: Admin Users' API
+  description: Admin Users
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      properties:
+        _id:
+          type: string
+        username:
+          type: string
+        avatarUrl:
+          type: string
+        cohort:
+          type: string
+        collections:
+          items:
+            properties:
+              collectionData:
+                type: string
+              isActive:
+                type: boolean
+            required: [ ]
+            type: object
+          type: array
+        company:
+          type: string
+        companyName:
+          type: string
+        firstName:
+          type: string
+        identities:
+          items:
+            properties:
+              avatarUrl:
+                type: string
+              email:
+                type: string
+              emails:
+                items:
+                  properties: { }
+                  required: [ ]
+                  type: object
+                type: array
+              firstName:
+                type: string
+              lastName:
+                type: string
+              profileUrl:
+                type: string
+              provider:
+                type: string
+              repositories:
+                items:
+                  properties:
+                    fullName:
+                      type: string
+                    githubUrl:
+                      type: string
+                    isFavorite:
+                      type: boolean
+                    name:
+                      type: string
+                  required: [ ]
+                  type: object
+                type: array
+              username:
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        inviteCount:
+          type: number
+        isActive:
+          type: boolean
+        isOnboarded:
+          format: date-time
+          type: string
+        isSemaAdmin:
+          type: boolean
+        isVerified:
+          type: boolean
+        isWaitlist:
+          type: boolean
+        jobTitle:
+          type: string
+        lastLogin:
+          format: date-time
+          type: string
+        lastName:
+          type: string
+        notes:
+          type: string
+        organizations:
+          items:
+            properties:
+              createdAt:
+                format: date-time
+                type: string
+              invitedBy:
+                type: string
+              isActive:
+                type: boolean
+              isAdmin:
+                type: boolean
+              orgName:
+                type: string
+              updatedAt:
+                format: date-time
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        origin:
+          enum:
+            - invitation
+            - waitlist
+            - signup
+          type: string
+        password:
+          type: string
+        resetExpires:
+          format: date-time
+          type: string
+        resetToken:
+          type: string
+        termsAccepted:
+          type: boolean
+        termsAcceptedAt:
+          format: date-time
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        verificationExpires:
+          format: date-time
+          type: string
+        verificationToken:
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/admin/users:
+    get:
+      summary: get user list
+      operationId: listUsers
+      parameters:
+        - in: query
+          name: page
+          description: page number
+          required: true
+        - in: query
+          name: perPage
+          description: how many per page
+          required: true
+        - in: query
+          name: search
+          description: search term
+          required: true
+        - in: query
+          name: status
+          description: status
+          required: true
+        - in: query
+          name: listAll
+          description: boolean
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+               properties:
+                 users:
+                   type: array
+                 totalCount:
+                   type: number
+                 page:
+                  type: string
+                 filterData:
+                  type: object
+          description: get user list
+        400:
+          description: bad input parameter
+  /v1/admin/users/export:
+    post:
+      tags:
+        - exports
+      summary: export users csv
+      operationId: listUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                page:
+                  type: string
+                perPage:
+                  type: string
+                search:
+                  type: string
+                status:
+                  type: string
+                listAll:
+                  type: boolean
+      responses:
+        200:
+          description: exported users csv file
+        400:
+          description: bad input parameter
+  /v1/admin/users/time-to-value:
+    get:
+      summary: get user list
+      operationId: getTimeToValueMetric
+      parameters:
+        - in: query
+          name: range
+          description: search term
+          required: true
+        - in: query
+          name: page
+          description: page number
+          required: true
+        - in: query
+          name: perPage
+          description: how many per page
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  metric:
+                    type: object
+                  totalCount:
+                    type: number
+                  totalCount:
+                    type: number
+          description: time to value mmetric
+        400:
+          description: bad input parameter
+  /v1/admin/users/time-to-value/export:
+    post:
+      tags:
+        - exports
+      summary: export time to value metric
+      operationId: exportTimeToValueMetric
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                page:
+                  type: string
+                perPage:
+                  type: string
+                range:
+                  type: string
+      responses:
+        200:
+          description: exported time to value metric csv file
+        400:
+          description: bad input parameter
+  /v1/admin/users/{id}:
+    get:
+      tags:
+        - users
+      summary: get user
+      operationId: findUser
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: get user list
+        400:
+          description: bad input parameter
+    patch:
+      tags:
+        - users
+      summary: update user
+      operationId: updateUser
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: updated user
+        400:
+          description: bad input parameter
+  /v1/admin/users/{id}/invitations:
+    post:
+      tags:
+        - invitations
+      summary: update user's available invites count
+      operationId: updateUserAvailableInvitesCount
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                amount:
+                  type: number
+      responses:
+        200:
+          description: updated user's available invites count
+        400:
+          description: bad input parameter
+  /v1/admin/users/{id}/status:
+    patch:
+      tags:
+        - status
+      summary: updateUserStatus
+      operationId: updateUser
+      parameters:
+        - in: path
+          name: id
+          description: user id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: updated user's status
+        400:
+          description: bad input parameter
+  /v1/admin/users/bulk-admit:
+    post:
+      summary: bulk admit users
+      operationId: bulkAdmitUsers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                bulkCount:
+                  type: number
+      responses:
+        200:
+          description: users admitted
+        400:
+          description: bad input parameter

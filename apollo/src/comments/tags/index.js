@@ -1,9 +1,17 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { create, findSuggestedCommentTags, getAllTags, deleteTag, updateTag, getTagsById } from './tagService';
+import {
+  create, findSuggestedCommentTags, getAllTags, deleteTag, updateTag, getTagsById,
+} from './tagService';
+import checkEnv from '../../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -73,5 +81,6 @@ export default (app, passport) => {
     }
   });
 
-
+  // Swagger route
+  app.use(`/${version}/comments/tags-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

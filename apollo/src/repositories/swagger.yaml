@@ -1,0 +1,318 @@
+openapi: 3.0.0
+info:
+  title: Repository's API
+  description: User's repository
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Repository:
+      properties:
+        _id:
+          type: string
+        cloneUrl:
+          type: string
+        description:
+          type: string
+        externalId:
+          type: string
+        language:
+          type: string
+        legacyId:
+          type: string
+        name:
+          type: string
+        orgId:
+          type: string
+        repoStats:
+          properties:
+            reactions:
+              items:
+                properties:
+                  _id:
+                    type: string
+                  createdAt:
+                    format: date-time
+                    type: string
+                  reactionId:
+                    type: string
+                  smartCommentId:
+                    type: string
+                required:
+                  - reactionId
+                  - smartCommentId
+                type: object
+              type: array
+            semaUsers:
+              type: number
+            smartCodeReviews:
+              type: number
+            smartCommenters:
+              type: number
+            smartComments:
+              type: number
+            tags:
+              items:
+                properties:
+                  _id:
+                    type: string
+                  createdAt:
+                    format: date-time
+                    type: string
+                  smartCommentId:
+                    type: string
+                  tagsId:
+                    items:
+                      type: string
+                    type: array
+                required:
+                  - smartCommentId
+                type: object
+              type: array
+            userIds:
+              items:
+                type: string
+              type: array
+          type: object
+        repositoryCreatedAt:
+          format: date-time
+          type: string
+        repositoryUpdatedAt:
+          format: date-time
+          type: string
+        sourceId:
+          type: string
+        type:
+          enum:
+            - github
+            - bitbucket
+            - direct
+          type: string
+      required:
+        - externalId
+        - type
+      title: Repository
+security:
+  - bearerAuth: []
+paths:
+  /v1/repositories:
+    post:
+      summary: create a portfolio
+      operationId: createMany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Repository'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+          description: created repository
+        400:
+          description: bad input parameter
+    get:
+      summary: get repository by organization id
+      operationId: findByOrg
+      parameters:
+        - in: query
+          name: orgId
+          description: organization id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/repositories/search/{id}:
+    get:
+      summary: get repository by external id
+      operationId: findByExternalId
+      parameters:
+        - in: path
+          name: id
+          description: external id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/repositories/sema-repositories:
+   get:
+     summary: get repository by external ids
+     operationId: findByExternalIds
+     parameters:
+       - in: query
+         name: externalIds
+         description: external ids
+         required: true
+     responses:
+       200:
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/Repository'
+         description: search results matching criteria
+       400:
+         description: bad input parameter
+  /v1/repositories/dashboard:
+    get:
+      summary: get repository by external ids
+      operationId: aggregateRepositories
+      parameters:
+        - in: query
+          name: externalIds
+          description: external ids
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  smartComments:
+                    type: number
+                  smartCommenters:
+                    type: number
+                  smartCodeReviews:
+                    type: number
+                  semaUsers:
+                    type: array
+                  _id:
+                    type: string
+                  externalId:
+                    type: string
+                  users:
+                    type: array
+                  createdAt:
+                    format: date-time
+                    type: string
+                  updatedAt:
+                    format: date-time
+                    type: string
+
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/repositories/reactions:
+    get:
+      summary: get repository by external ids
+      operationId: aggregateReactions
+      parameters:
+        - in: query
+          name: externalId
+          description: external id
+          required: true
+        - in: query
+          name: dateFrom
+          description: date from
+          required: true
+        - in: query
+          name: dateTo
+          description: date to
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  reactions:
+                    type: object
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/repositories/tags:
+    get:
+      summary: get repository by external ids
+      operationId: aggregateTags
+      parameters:
+        - in: query
+          name: externalId
+          description: external id
+          required: true
+        - in: query
+          name: dateFrom
+          description: date from
+          required: true
+        - in: query
+          name: dateTo
+          description: date to
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  tags:
+                    type: object
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/repositories/overview:
+    get:
+      summary: get repository by external ids
+      operationId: aggregateRepositories
+      parameters:
+        - in: query
+          name: externalId
+          description: external id
+          required: true
+        - in: query
+          name: dateFrom
+          description: date from
+          required: true
+        - in: query
+          name: dateTo
+          description: date to
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  smartComments:
+                    type: number
+                  smartCommenters:
+                    type: number
+                  smartCodeReviews:
+                    type: number
+                  semaUsers:
+                    type: array
+                  _id:
+                    type: string
+                  externalId:
+                    type: string
+                  users:
+                    type: array
+                  createdAt:
+                    format: date-time
+                    type: string
+                  updatedAt:
+                    format: date-time
+                    type: string
+          description: search results matching criteria
+        400:
+          description: bad input parameter

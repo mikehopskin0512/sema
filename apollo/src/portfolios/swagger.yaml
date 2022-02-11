@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: Portfolio's API
+  description: User's portfolios
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Portfolio:
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        headline:
+          type: string
+        imageUrl:
+          type: string
+        overview:
+          type: string
+        type:
+          enum:
+            - public
+            - private
+          type: string
+        snapshots:
+          items:
+            properties:
+              sort:
+                type: number
+            required: [ ]
+            type: object
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/portfolios:
+    post:
+      summary: create a portfolio
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Portfolio'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+          description: created portfolio
+        400:
+          description: bad input parameter
+  /v1/portfolios/{id}:
+    get:
+      summary: get portfolio by id
+      operationId: getPortfolioById
+      parameters:
+        - in: path
+          name: id
+          description: portfolio id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+    put:
+      summary: update a portfolio
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          description: portfolio id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Portfolio'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+          description: updated portfolio
+        400:
+          description: bad input parameter
+    delete:
+      summary: delete a portfolio
+      operationId: deleteOne
+      parameters:
+        - in: path
+          name: id
+          description: portfolio id
+          required: true
+      responses:
+        200:
+          description: deleted portfolio
+        400:
+          description: bad input parameter

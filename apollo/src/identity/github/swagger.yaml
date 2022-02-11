@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: Github's Idendity API
+  description: Github's Idendity
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /v1/identities/github:
+    get:
+      summary: get redirect uri
+      parameters:
+        - in: header
+          name: x-forwarded-proto
+          description: protocol
+          required: true
+        - in: header
+          name: x-forwarded-host
+          description: host
+          required: true
+      responses:
+        200:
+          description: redierct url
+        400:
+          description: bad input parameter
+  /v1/identities/github/cb/:inviteToken?:
+    get:
+      summary: get redirect uri
+      parameters:
+        - in: path
+          name: inviteToken
+          description: invite token
+          required: true
+      responses:
+        200:
+          description: redierct dashboard
+        400:
+          description: bad input parameter

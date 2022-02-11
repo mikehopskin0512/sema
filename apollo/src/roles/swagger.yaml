@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Role's API
+  description: Roles
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Role:
+      properties:
+        name:
+          type: string
+        key:
+          type: string
+        canCreateCollections:
+          type: boolean
+        canEditCollections:
+          type: boolean
+        canCreateSnippets:
+          type: boolean
+        canEditSnippets:
+          type: boolean
+        canEditUsers:
+          type: boolean
+        canViewAdmin:
+          type: boolean
+security:
+  - bearerAuth: []
+paths:
+  /v1/roles:
+    get:
+      summary: get roles
+      operationId: getRoles
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+          description: array of all roles
+        400:
+          description: bad input parameter

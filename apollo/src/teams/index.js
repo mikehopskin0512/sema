@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { version } from '../config';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
+import { version, semaCorporateTeamId } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
@@ -13,10 +17,12 @@ import {
   updateTeamRepos,
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
-import { semaCorporateTeamId } from '../config';
+
 import { findById } from '../comments/collections/collectionService';
 import { _checkPermission } from '../shared/utils';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -53,7 +59,7 @@ export default (app, passport) => {
   route.put('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { user } = req;
     try {
-      const { action, ...teamData } = req.body
+      const { action, ...teamData } = req.body;
       if (action === 'toggleTeamCollection') {
         // This is toggle option
         if (!(_checkPermission(teamData._id, 'canEditCollections', user))) {
@@ -140,4 +146,7 @@ export default (app, passport) => {
       }
     },
   );
+
+  // Swagger route
+  app.use(`/${version}/teams-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };
