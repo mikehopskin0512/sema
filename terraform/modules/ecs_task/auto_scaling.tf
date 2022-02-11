@@ -6,8 +6,8 @@ resource "aws_appautoscaling_target" "service" {
   service_namespace  = "ecs"
   resource_id        = "service/${var.ecs_cluster.name}/${aws_ecs_service.this.name}"
   scalable_dimension = "ecs:service:DesiredCount"
-  min_capacity       = 3
-  max_capacity       = 6
+  min_capacity       = var.min_capacity
+  max_capacity       = var.max_capacity
 }
 
 # Automatically scale capacity up by one
@@ -91,5 +91,5 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
   }
 
   alarm_description = "This metric monitors ${var.name_prefix}-${var.application} autoscaling down policy"
-  alarm_actions = [aws_appautoscaling_policy.service_in.arn]
+  alarm_actions     = [aws_appautoscaling_policy.service_in.arn]
 }

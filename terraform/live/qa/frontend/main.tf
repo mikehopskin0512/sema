@@ -49,6 +49,9 @@ module "phoenix" {
     domain_prefix     = "app-qa"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
+
+  min_capacity = 1
+  max_capacity = 3
 }
 
 module "apollo" {
@@ -89,6 +92,9 @@ module "apollo" {
     domain_prefix     = "api-qa"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
+
+  min_capacity = 1
+  max_capacity = 3
 }
 
 module "auto_restore_backup_lambda" {
