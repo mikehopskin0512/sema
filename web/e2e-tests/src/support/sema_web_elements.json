@@ -66,7 +66,7 @@
     "newCollectionOtherLabelInput"  : "//input[@id='react-select-3-input']",
     "firstOptionForOtherLabelInput" : "//div[contains(@class,'editCommentCollectionForm_three-in-a-row__Qz5X')][2]//div[@class=' css-2b097c-container']//div[@id][1]",
     "newCollectionAuthorInput"      : "//input[@name='author']",
-    "newCollectionPopulateCheckBox" : "//input[@name='isPopulate']",
+    "newCollectionPopulateCheckBox" : "//span[@class='customCheckbox_checkmark__33aEh']",
     "saveNewCollectionBtn"          : "//button/span[text()='Save']",
 
     "snippetCollectionTitleError"       : "//label[text()='Snippet Collection Title']/following-sibling::p[contains(@class,'has-text-danger')]",

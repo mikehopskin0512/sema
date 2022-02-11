@@ -6,3 +6,5 @@ allure-results
 ../../.vscode/settings.json
 package-lock.json
 reports
+reports/html-reports/master-report.html
+reports/html-reports/master-report.json

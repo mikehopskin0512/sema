@@ -2,9 +2,9 @@
 Feature: User is able to interact with snippets properly
 
 
-  Background: Wait for page to be displayed
-    Given User click on the element "authorizeSemaSoftwareBtn" if visible
-    When I wait on element "userLogo" for 10000ms
+#  Background: Wait for page to be displayed
+#    Given User click on the element "authorizeSemaSoftwareBtn" if visible
+#    When I wait on element "userLogo" for 10000ms
 
   @admin  @C1704  @snippet
   Scenario: Snippets collection can be turned on and turned off
@@ -408,7 +408,9 @@ Feature: User is able to interact with snippets properly
     When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
 #      unmark checkbox
     And  I expect that checkbox "newCollectionPopulateCheckBox" is checked
+    And I pause for 5000ms
     When I click on the element "newCollectionPopulateCheckBox"
+    And I pause for 100000ms
     Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
 
     Then I expect that element "saveNewCollectionBtn" becomes displayed
