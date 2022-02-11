@@ -408,9 +408,7 @@ Feature: User is able to interact with snippets properly
     When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
 #      unmark checkbox
     And  I expect that checkbox "newCollectionPopulateCheckBox" is checked
-    And I pause for 5000ms
     When I click on the element "newCollectionPopulateCheckBox"
-    And I pause for 100000ms
     Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
 
     Then I expect that element "saveNewCollectionBtn" becomes displayed
