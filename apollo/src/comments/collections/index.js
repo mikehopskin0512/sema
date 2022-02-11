@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { semaCorporateTeamId, version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import { bulkUpdateTeamCollections } from '../../teams/teamService';
 import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleTeamsActiveCollection, update } from './collectionService';
 import { populateCollectionsToUsers } from "../../users/userService";
 import { _checkPermission } from '../../shared/utils';
@@ -30,7 +31,7 @@ export default (app, passport) => {
             throw new errors.Unauthorized('User does not have permission');
           }
         }
-      
+
         payload = teamId ? await toggleTeamsActiveCollection(teamId, id) : await toggleActiveCollection(_id, id);
         if (payload.status == 400) {
           return res.status('400').send(payload);
@@ -67,6 +68,7 @@ export default (app, passport) => {
 
       const collectionIds = newCollections.map((col) => col._id);
       if (team == semaCorporateTeamId) {
+        await bulkUpdateTeamCollections(collectionIds, semaCorporateTeamId)
         await populateCollectionsToUsers(collectionIds);
       } else {
         await populateCollectionsToUsers(collectionIds, userId);
