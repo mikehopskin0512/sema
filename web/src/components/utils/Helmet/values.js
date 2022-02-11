@@ -93,3 +93,8 @@ export const TeamUpdateHelmet = {
   title: 'Update Team',
   description: null,
 };
+
+export const PortfolioHelmet = {
+  title: 'Portfolio',
+  description: null,
+};

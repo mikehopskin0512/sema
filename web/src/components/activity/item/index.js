@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { get, find, isEmpty } from 'lodash';
+import { find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
@@ -10,6 +10,7 @@ import styles from './item.module.scss';
 
 const ActivityItem = (props) => {
   const {
+    className,
     comment = '',
     reaction = '',
     tags = [],
@@ -42,21 +43,21 @@ const ActivityItem = (props) => {
     if (!isEmpty(pr_name)) {
       prName = pr_name;
     } else {
-      prName = 'Pull Request'
+      prName = 'Pull Request';
     }
     if (!isEmpty(pull_num)) {
       prName += ` (#${pull_num})`;
     }
     return prName;
-  }
+  };
 
   const getPRUrl = () => {
     let prUrl = url;
     if (!isEmpty(commentId)) {
-      prUrl += `#${commentId}`
+      prUrl += `#${commentId}`;
     }
     return prUrl;
-  }
+  };
 
   const renderEmoji = () => {
     const { title: emojiTitle, Icon } = find(EMOJIS, { _id: reaction });
@@ -69,14 +70,14 @@ const ActivityItem = (props) => {
   };
 
   return (
-    <div className={`has-background-white py-20 ${isSnapshot ? 'px-10 mr-15' : 'px-25'} border-radius-4px is-flex`}>
+    <div className={clsx(`has-background-white py-20 ${isSnapshot ? 'px-10 mr-15' : 'px-25'} border-radius-4px is-flex`, className)}>
       <img className={clsx("is-rounded border-radius-35px mr-10 is-hidden-touch", styles.avatar)} src={avatarUrl} alt="user_icon" />
       <div className="is-flex-grow-1">
         <div className="is-flex is-justify-content-space-between is-flex-wrap-wrap">
           <div className="is-flex is-flex-wrap-no-wrap is-align-items-center">
             <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
             <p className="is-size-7 has-text-black-950">
-              { !isEmpty(firstName) ?
+              {!isEmpty(firstName) ?
                 <a href={`https://github.com/${login}`} className="has-text-black-950 is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
                 <span className="has-text-black-950 is-underlined">{username.split('@')[0] || 'User'}</span>}
               {' reviewed '}
@@ -92,9 +93,9 @@ const ActivityItem = (props) => {
           <div className="is-size-5 is-size-7-mobile is-flex">
             {renderEmoji()}
           </div>
-          { tags.length > 0 ? (
+          {tags.length > 0 ? (
             <>
-              <div className={styles.['item-comment_divider']} />
+              <div className={styles['item-comment_divider']} />
               <div className="is-flex is-flex-wrap-wrap">
                 {tags.map(({ label }) => (
                   <span key={`tag-${label}`} className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{label}</span>
@@ -113,6 +114,7 @@ const ActivityItem = (props) => {
 };
 
 ActivityItem.defaultProps = {
+  className: '',
   tags: [],
   user: {
     firstName: '',
@@ -123,15 +125,19 @@ ActivityItem.defaultProps = {
     title: '',
     url: '',
   },
+  isSnapshot: false,
 };
 
 ActivityItem.propTypes = {
+  className: PropTypes.string,
   comment: PropTypes.string.isRequired,
   reaction: PropTypes.string.isRequired,
   tags: PropTypes.array,
   createdAt: PropTypes.string.isRequired,
   user: PropTypes.object,
   githubMetadata: PropTypes.object,
+  userId: PropTypes.string.isRequired,
+  isSnapshot: PropTypes.bool,
 };
 
 export default ActivityItem;

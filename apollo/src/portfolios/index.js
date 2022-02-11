@@ -9,7 +9,7 @@ const route = Router();
 export default (app, passport) => {
   app.use(`/${version}/portfolios`, route);
 
-  route.get('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/:id', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { id } = req.params;
     try {
       const portfolio = await getPortfolioById(id);

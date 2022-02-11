@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ActivityItem from '../item';
-import { filterSmartComments } from '../../../utils/parsing';
+import { filterSmartComments, parseSnapshotData } from '../../../utils/parsing';
+
 import SnapshotModal from '../../snapshots/modalWindow';
 
 const ActivityPage = ({ startDate, endDate, filter }) => {
@@ -14,18 +15,19 @@ const ActivityPage = ({ startDate, endDate, filter }) => {
   const [filteredComments, setFilteredComments] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [componentData, setComponentData] = useState({});
 
   useEffect(() => {
     if (overview && overview.smartcomments) {
       const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments, startDate, endDate });
       setFilteredComments(filtered);
+      setComponentData({ smartComments: parseSnapshotData(filtered) , startDate, endDate });
     }
   }, [overview, filter, startDate, endDate]);
 
   return (
     <>
-      {isOpen && <SnapshotModal active={isOpen} onClose={() => setIsOpen(false)} snapshotData={[...filteredComments]} />}
-
+      {isOpen && <SnapshotModal active={isOpen} onClose={()=>setIsOpen(false)} snapshotData={{ componentData }} />}
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`}>
           <ActivityItem {...item} />

@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import usePopup from '../../hooks/usePopup';
 import useOutsideClick from '../../utils/useOutsideClick';
 
-const DropDownMenu = ({ trigger, options = [] }) => {
+const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   useOutsideClick(popupRef, () => {
@@ -11,7 +11,7 @@ const DropDownMenu = ({ trigger, options = [] }) => {
   });
   return (
     <div
-      className={clsx('ml-auto dropdown ', isOpen ? 'is-active' : '')}
+      className={clsx('ml-auto dropdown ', isOpen ? 'is-active' : '', isRight && 'is-right', isUp && 'is-up')}
       ref={popupRef}
       onClick={(event) => event.stopPropagation()}
     >

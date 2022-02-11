@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 import { create as createPortfolio, getPortfoliosByUser } from '../portfolios/portfolioService';
 import { getUserMetadata } from '../users/userService';
 
@@ -52,8 +51,15 @@ snapshotSchema.post('save', async (doc, next) => {
     // User does not have a portfolio
     if (userPorfolios?.length === 0) {
       const user = await getUserMetadata(userId);
+      const identities = user.identities.map((d) => {
+        const { repositories, ...rest } = d;
+        return { ...rest };
+      });
       await createPortfolio({
         userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        identities: identities,
         headline: `${user.firstName} ${user.lastName}`.trim(),
         imageUrl: user.avatarUrl,
         overview: '',

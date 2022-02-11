@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 import Portfolio from './portfolioModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -8,7 +7,7 @@ import { getSnapshotsByPortfolio } from '../snapshots/snapshotService';
 const { Types: { ObjectId } } = mongoose;
 
 const structurePortfolio = ({
-  _id = null, userId = null, firstName = null, lastName = null,
+  _id = null, userId = null, firstName = null, lastName = null, identities = [],
   headline = null, imageUrl = null, overview = null, type = null, snapshots = [],
 }) => (
   {
@@ -18,9 +17,10 @@ const structurePortfolio = ({
     lastName,
     headline,
     imageUrl,
+    identities,
     overview,
     type,
-    snapshots: snapshots.map(({ id, sort }) => ({ id: new ObjectId(id), sort })),
+    snapshots: snapshots.map(({ id: snapshot, sort }) => ({ id: new ObjectId(snapshot._id), sort })),
   }
 );
 
@@ -40,7 +40,13 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
   try {
     const portfolios = Portfolio.find({ userId });
     if (populate) {
-      portfolios.populate({ path: 'snapshots.id' });
+      portfolios.populate({
+        path: 'snapshots.id',
+        populate: {
+          path: 'componentData.smartComments.tags',
+          model: 'Tag',
+        }
+      })
     }
     return await portfolios.lean();
   } catch (err) {
@@ -52,11 +58,20 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
 
 export const update = async (portfolioId, portfolio) => {
   try {
-    const updatedPortfolio = await Portfolio.findOneAndUpdate(
-      { _id: new ObjectId(portfolioId) },
-      { $set: structurePortfolio(portfolio) },
-      { new: true },
-    ).exec();
+    const updatedPortfolio = await Portfolio
+      .findOneAndUpdate(
+        { _id: new ObjectId(portfolioId) },
+        { $set: structurePortfolio(portfolio) },
+        { new: true },
+      )
+      .populate({
+        path: 'snapshots.id',
+        populate: {
+          path: 'componentData.smartComments.tags',
+          model: 'Tag',
+        }
+      })
+      .exec();
     return updatedPortfolio;
   } catch (err) {
     const error = new errors.NotFound(err);
@@ -80,7 +95,13 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
   try {
     const portfolio = Portfolio.findById(new ObjectId(portfolioId));
     if (populate) {
-      portfolio.populate({ path: 'snapshots.id' });
+      portfolio.populate({
+        path: 'snapshots.id',
+        populate: {
+          path: 'componentData.smartComments.tags',
+          model: 'Tag',
+        }
+      })
     }
     return await portfolio.lean();
   } catch (err) {
@@ -102,6 +123,29 @@ export const addSnapshot = async (portfolioId, snapshotId) => {
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },
     ).exec();
+    return updatedPortfolio;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
+  try {
+    const portfolio = await getPortfolioById(portfolioId, false);
+    const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId)
+    const updatedPortfolio = await Portfolio.findOneAndUpdate(
+      { _id: new ObjectId(portfolioId) },
+      { $set: { snapshots } },
+      { new: true },
+    ).populate({
+      path: 'snapshots.id',
+      populate: {
+        path: 'componentData.smartComments.tags',
+        model: 'Tag',
+      }
+    }).exec();
     return updatedPortfolio;
   } catch (err) {
     const error = new errors.BadRequest(err);
