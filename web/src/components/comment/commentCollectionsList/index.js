@@ -123,7 +123,7 @@ const CommentCollectionsList = () => {
     const filteredCollections = sortedCollections.filter((collection) => !collection.isActive).slice(firstPageIndex, lastPageIndex);
     return filteredCollections;
   }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
-  
+
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
 
   useEffect(() => {
@@ -141,7 +141,7 @@ const CommentCollectionsList = () => {
   }, [selectedTeam]);
 
   useEffect(() => {
-    if (isEmpty(selectedTeam)) {
+    if (isEmpty(selectedTeam) && data) {
       setDefaultCollectionAsActive();
     }
   }, [data, teamCollections]);

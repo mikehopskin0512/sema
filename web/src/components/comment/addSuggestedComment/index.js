@@ -44,7 +44,7 @@ const AddSuggestedComment = () => {
   }, [collectionId]);
 
   useEffect(() => {
-    if (collection) {
+    if (collection._id) {
       setComment({
         ...comment,
         sourceName: collection.source?.name,
