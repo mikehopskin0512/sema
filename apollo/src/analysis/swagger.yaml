@@ -8,6 +8,7 @@ servers:
     description: Local Dev
   - url: https://api-qa.semasoftware.com
     description: QA
+  - url: https://api-staging.semasoftware.com
 components:
   securitySchemes:
     bearerAuth:
