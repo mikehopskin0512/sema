@@ -1,15 +1,20 @@
 @dashboard
 Feature: Dashboard options
 
-  @admin  @PTA-25
-  Scenario: Snippets collection can be turned on and turned off
-    When I click on the element "snippetsTab"
-    Then I expect that element "collectionArea" becomes displayed
-    When I click on the element "firstInActiveCollectionToggle"
-    Then I expect that element "firstInActiveCollectionName" becomes displayed
-    When I save the name of collection "firstInActiveCollectionName"
-    And  I click on the element "firstInActiveCollectionToggle"
-    Then I expect that selected collection element "activeCollectionsNames" is enabled
-    When I save the name of collection "firstActiveCollectionName"
-    And  I click on the element "firstActiveCollectionToggle"
-    Then I expect that selected collection element "inactiveCollectionsNames" is enabled
+  @admin  @PTA25
+  Scenario: User profile elements are displayed
+      Then I expect that element "userLogo" becomes displayed
+      And  I expect that element "userLogo" does appear exactly "1" times
+      When I click on the element "userLogo"
+      Then I expect that element "semaCorporateTeamLogo" becomes displayed
+      And  I expect that element "semaCorporateTeamLogo" does appear exactly "1" times
+      And  I expect that element "userLogo" does appear exactly "1" times
+#
+#      And  I expect that element "semaSmartCodeReviewsLogo" becomes displayed
+#      And  I expect that element "semaSmartCodeReviewsLogo" does appear exactly "1" times
+
+      And  I expect that element "createTeamBtn" becomes displayed
+      And  I expect that element "createTeamBtn" does appear exactly "1" times
+
+      And  I expect that element "accountBtn" becomes displayed
+      And  I expect that element "accountBtn" does appear exactly "1" times
