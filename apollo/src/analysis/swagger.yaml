@@ -9,6 +9,7 @@ servers:
   - url: https://api-qa.semasoftware.com
     description: QA
   - url: https://api-staging.semasoftware.com
+    description: staging
 components:
   securitySchemes:
     bearerAuth:
