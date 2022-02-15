@@ -284,7 +284,6 @@ Feature: User is able to interact with snippets properly
 
   @admin  @C2741  @snippet
 #      C2741  C2742
-#  https://semalab.atlassian.net/browse/SCR-797     todo
   Scenario: Field validation for creating collection
         #temporary solution
     When I click on the element "userLogo"

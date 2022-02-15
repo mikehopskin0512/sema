@@ -18,6 +18,12 @@
     "confirmationModal"             : "//div[@class='modal-content px-10']/div",
     "confirmBtn"                    : "//button[normalize-space()='Yes, log me out']",
 
+    "footerTerms&ConditionsBtn"     : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Terms & Conditions']",
+    "footerSendFeedbackBtn"         : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Send Feedback']",
+    "footerIdeaBoardBtn"            : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Idea Board']",
+    "footerReleaseNoteBtn"          : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Release Notes']",
+    "footerSupportBtn"              : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Support']",
+
     "########## LOGIN LOCATORS ###############" : "",
     "signInWithGithubBtn"           : "//div[contains(@class,'is-hidden-touch')]//span[text()='Sign in with GitHub']",
     "loginInput"                    : "#login_field",
@@ -110,6 +116,16 @@
 
     "########## SUPPORT LOCATORS #############" : "",
     "supportSection"                : "//div[contains(@class,'emptyRepo_container__2lqfU')]",
+    "contactSupportBtn"             : "//button[normalize-space()='Contact Support']",
+    "supportModal"                  : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']",
+    "supportModalTitleInput"        : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//input[@id='title']",
+    "supportModalTypeSelect"        : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//select[@name='type']",
+    "supportModalDetailInput"       : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//textarea[@id='message']",
+    "supportModalEmailInput"        : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//input[@id='email']",
+    "supportModalCancelBtn"         : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//button[normalize-space()='Cancel']",
+    "supportModalSubmitBtn"         : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//button[normalize-space()='Submit']",
+    "supportModalEmailError"        : "//p[normalize-space()='Email is required']",
+    "supportModalTitleError"        : "//p[normalize-space()='Title is required']",
 
     "########## LABEL MANAGEMENT LOCATORS #############" : "",
     "labelManagementSection"        : "//div[@class='my-50 px-10']",
