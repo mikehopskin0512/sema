@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import EditCommentCollectionForm from '../editCommentCollectionForm';
-import { CheckOnlineIcon } from '../../Icons';
-import Toaster from '../../toaster';
-import { alertOperations } from '../../../state/features/alerts';
-import { collectionsOperations } from '../../../state/features/collections';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
-import usePermission from '../../../hooks/usePermission';
+import EditCommentCollectionForm from '../editCollectionForm';
+import { CheckOnlineIcon } from '../../../Icons';
+import Toaster from '../../../toaster';
+import { alertOperations } from '../../../../state/features/alerts';
+import { collectionsOperations } from '../../../../state/features/collections';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../../utils/constants';
+import usePermission from '../../../../hooks/usePermission';
+import schema from '../schema';
 
 const { clearAlert } = alertOperations;
 const { createCollections } = collectionsOperations;
 
 const AddCommentCollection = () => {
-  const { checkAccess, checkTeam } = usePermission();
+  const { checkTeam } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -25,14 +27,9 @@ const AddCommentCollection = () => {
     alerts: state.alertsState,
   }));
   const { showAlert, alertType, alertLabel } = alerts;
-  const { user = {}, token } = auth;
-  const { identities = [] } = user;
+  const { token } = auth;
 
-  const github = identities.find((identity) => identity.provider === 'github');
-
-  const {
-    register, handleSubmit, formState, setValue, watch,
-  } = useForm({
+  const { handleSubmit, formState, control } = useForm({
     defaultValues: {
       languages: [],
       others: [],
@@ -45,6 +42,7 @@ const AddCommentCollection = () => {
       description: '',
       isPopulate: true,
     },
+    resolver: yupResolver(schema),
   });
 
   useEffect(() => {
@@ -64,7 +62,7 @@ const AddCommentCollection = () => {
       description,
       source: {
         name: sourceName,
-        url: sourceLink
+        url: sourceLink,
       },
       tags: [...languages, ...others],
     }
@@ -104,18 +102,22 @@ const AddCommentCollection = () => {
             Cancel
           </button>
           <button
-            className={clsx("button is-small is-primary border-radius-4px", loading && "is-loading")}
+            className={clsx(
+              "button is-small is-primary border-radius-4px",
+              loading && "is-loading"
+            )}
             type="button"
             onClick={handleSubmit(onSubmit)}
           >
             <CheckOnlineIcon size="small" />
-            <span className="ml-8">
-              Save
-            </span>
+            <span className="ml-8">Save</span>
           </button>
         </div>
       </div>
-      <EditCommentCollectionForm register={register} formState={formState} setValue={setValue} watch={watch} />
+      <EditCommentCollectionForm
+        errors={formState.errors}
+        control={control}
+      />
     </>
   );
 }

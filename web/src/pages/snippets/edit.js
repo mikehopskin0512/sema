@@ -7,7 +7,7 @@ import withLayout from '../../components/layout';
 import withSnippetsPermission from '../../components/auth/withSnippetsPermission';
 import { ArrowLeftIcon } from '../../components/Icons';
 import EditSuggestedCommentPage from '../../components/comment/editSuggestedCommentPage';
-import EditCommentCollectionPage from '../../components/comment/editCommentCollectionPage';
+import EditCommentCollectionPage from '../../components/comment/collectionForm/editCollection';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { black950 } from '../../../styles/_colors.module.scss';
