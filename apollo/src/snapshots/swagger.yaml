@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Snapshot's API
+  description: Portfolio's snapshots
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Snapshot:
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        componentType:
+          enum:
+            - comments
+            - summaries
+            - tags
+          type: string
+        componentData:
+          properties:
+            startDate:
+              format: date-time
+              type: string
+            endDate:
+              format: date-time
+              type: string
+            dateDiff:
+              type: number
+            groupBy:
+              enum:
+                - day
+                - week
+                - month
+                - quarter
+                - year
+              type: string
+            smartComments:
+              items:
+                properties:
+                  smartCommentId:
+                    type: string
+                  userId:
+                    type: string
+                  comment:
+                    type: string
+                  githubMetadata:
+                    properties:
+                      pull_number:
+                        type: string
+                      repo:
+                        type: string
+                      requester:
+                        type: string
+                      url:
+                        type: string
+                      user:
+                        properties:
+                          login:
+                            type: string
+                        type: object
+                    type: object
+                  reaction:
+                    type: string
+                  tags:
+                    items:
+                      type: string
+                    type: array
+                  createdAt:
+                    format: date-time
+                    type: string
+                required: [ ]
+                type: object
+              type: array
+            yAxisType:
+              type: string
+          type: object
+        description:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - componentType
+      title: Snapshot
+security:
+  - bearerAuth: []
+paths:
+  /v1/snapshots:
+    post:
+      summary: create a snapshot
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snapshot'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snapshot'
+          description: created snapshot
+        400:
+          description: bad input parameter
+  /v1/snapshots/{id}:
+    put:
+      summary: update a snapshot
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Snapshot'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Snapshot'
+          description: updated snapshot
+        400:
+          description: bad input parameter
+    delete:
+      summary: delete a snapshot
+      operationId: deleteOne
+      responses:
+        200:
+          description: deleted snapshot
+        400:
+          description: bad input parameter

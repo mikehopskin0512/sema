@@ -10,7 +10,15 @@ import ExtensionStatus from '../extensionStatus';
 import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
 import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
 
-const widescreenPages = [`${PATHS.REPO}/[repoId]`, PATHS.SUPPORT, PATHS.LOGIN, `${PATHS.TEAM._}/[teamId]/${PATHS.DASHBOARD}`];
+const widescreenPages = [
+  `${PATHS.REPO}/[repoId]`,
+  PATHS.SUPPORT,
+  PATHS.LOGIN,
+  `${PATHS.TEAM._}/[teamId]/${PATHS.DASHBOARD}`,
+  `${PATHS.PORTFOLIOS}/[portfolioId]`,
+  PATHS.PORTFOLIOS,
+];
+
 const noHeaderPages = [PATHS.LOGIN];
 
 const withLayout = (Page) => (props) => {
@@ -61,14 +69,14 @@ const withLayout = (Page) => (props) => {
       </Head>
       <ExtensionStatus />
       {!hasNoHeader && (<Header />) }
-      <div className={clsx(!isWideScreen && "container",!noContactUs.includes(pathname) && "pb-250")}>
+      <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>
       <div className={styles.footer}>
         <Footer />
       </div>
     </div>
-  )
+  );
 };
 
 export default withLayout;

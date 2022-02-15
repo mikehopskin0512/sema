@@ -115,6 +115,14 @@ jobs:
           event: fail
           template: basic_fail_1
           channel: "phoenix-circleci-notifications"
+  phoenix-notify:
+    docker:
+        - image: cimg/base:2020.01
+    steps: 
+      - checkout
+      - slack/notify:
+          event: pass
+          template: basic_success_1
       - slack/notify:
           branch_pattern: "release.*"
           event: "pass"
@@ -140,14 +148,6 @@ jobs:
                 }
               ]
             } 
-  phoenix-notify:
-    docker:
-        - image: cimg/base:2020.01
-    steps: 
-      - checkout
-      - slack/notify:
-          event: pass
-          template: basic_success_1
 workflows:
   version: 2
   primary:

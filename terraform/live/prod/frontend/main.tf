@@ -49,6 +49,9 @@ module "phoenix" {
     domain_prefix     = "app"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
+
+  min_capacity = 2
+  max_capacity = 6
 }
 
 module "apollo" {
@@ -89,4 +92,7 @@ module "apollo" {
     domain_prefix     = "api"
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
+
+  min_capacity = 2
+  max_capacity = 6
 }

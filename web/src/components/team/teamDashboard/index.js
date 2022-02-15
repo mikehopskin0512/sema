@@ -63,22 +63,12 @@ const TeamDashboard = ({ team }) => {
         <div className="column is-4">
           <div className="is-flex is-align-items-center is-justify-content-space-between mb-10">
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Team Members</p>
-            {checkAccess(teamId, 'canEditUsers') &&
-              <>
-                <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM.INVITE(teamId)}`)}>
-                  <div className="mr-5 is-flex is-align-items-center">
-                    <PlusIcon size="small" />
-                  </div>
-                  Invite new members
-                </button>
-              </>
-            }
-              <button
-                className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-                onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}
-              >
-                View All
-              </button>
+            <button
+              className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
+              onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}
+            >
+              View All
+            </button>
           </div>
           <MinimalTeamTable members={members} count={membersCount} />
         </div>

@@ -12,12 +12,14 @@ import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
 import { teamsOperations } from '../../state/features/teams';
+import { portfoliosOperations } from '../../state/features/portfolios';
 import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
 
 const { fetchTeamsOfUser } = teamsOperations;
+const { fetchPortfoliosOfUser } = portfoliosOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -61,6 +63,7 @@ const Header = () => {
 
   useAuthEffect(() => {
     dispatch(fetchTeamsOfUser(token));
+    dispatch(fetchPortfoliosOfUser(user._id, token));
   }, [dispatch]);
 
   const toggleHamburger = () => {

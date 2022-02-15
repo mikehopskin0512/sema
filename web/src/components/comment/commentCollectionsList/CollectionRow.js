@@ -28,7 +28,7 @@ const CollectionRow = ({ data }) => {
   const onChangeToggle = (e) => {
     e.stopPropagation();
     // TODO: would be great to add error handling here in case of network error
-    if (!isEmpty(selectedTeam) && isTeamSnippet) {
+    if (!isEmpty(selectedTeam)) {
       dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
     } else {
       dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));

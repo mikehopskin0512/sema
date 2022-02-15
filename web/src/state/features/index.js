@@ -18,3 +18,5 @@ export { default as smartCommentsState } from './smart-comments';
 export { default as teamsState } from './teams';
 export { default as rolesState } from './roles';
 export { default as selectedUserState } from './selected-user';
+export { default as portfoliosState } from './portfolios';
+export { default as snapshotsState } from './snapshots';

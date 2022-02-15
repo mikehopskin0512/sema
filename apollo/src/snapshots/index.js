@@ -1,9 +1,15 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
 
 import { version } from '../config';
+import { removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
 import logger from '../shared/logger';
 import { create, update, deleteOne } from './snapshotService';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -11,9 +17,9 @@ export default (app, passport) => {
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const snapshot = req.body;
-    const { portfolioId = null } = req.query;
+    const { portfolioId = null, ...rest } = snapshot;
     try {
-      const newSnapshot = await create(snapshot, portfolioId);
+      const newSnapshot = await create(rest, portfolioId);
       return res.status(201).send(newSnapshot);
     } catch (error) {
       logger.error(error);
@@ -43,4 +49,19 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  route.put('/remove/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { snapshotId, portfolioId } = req.body;
+    try {
+      const portfolio = await removeSnapshotFromPortfolio(portfolioId, snapshotId);
+      const deletedSnapshot = await deleteOne(snapshotId);
+      return res.status(200).send({ deletedSnapshot, portfolio });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
+  // Swagger route
+  app.use(`/${version}/snapshots-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

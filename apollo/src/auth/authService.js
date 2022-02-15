@@ -5,6 +5,7 @@ import {
   userVoiceKey,
 } from '../config';
 import { updateLastLogin } from '../users/userService';
+import errors from '../shared/errors';
 
 import RefreshToken from './refreshTokenModel';
 const nodeEnv = process.env.NODE_ENV || 'development';
@@ -46,8 +47,14 @@ export const validateRefreshToken = async (token) => {
 };
 
 export const validateAuthToken = async (token) => {
-  const payload = await verify(token, jwtSecret);
-  return payload;
+  try {
+    const payload = await verify(token, jwtSecret);
+    return payload;
+  } catch(e) {
+    if (e.name === 'TokenExpiredError' || e.name === 'JsonWebTokenError') {
+      throw new errors.Unauthorized(e.message);
+    } else throw e;
+  }
 };
 
 export const setRefreshToken = async (response, user, token) => {

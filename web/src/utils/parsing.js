@@ -196,3 +196,19 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
   }
   return filtered;
 }
+
+export const parseSnapshotData = (snapshotData) => {
+  const result = [...snapshotData];
+  return result.map(smartComment => {
+    const mappedSmartComment = {...smartComment};
+    if (mappedSmartComment._id) {
+      mappedSmartComment.smartCommentId = smartComment._id;
+      delete mappedSmartComment._id;
+    }
+    if (mappedSmartComment.userId?._id) {
+      mappedSmartComment.user = mappedSmartComment.userId._id;
+      delete mappedSmartComment.userId;
+    }
+    return mappedSmartComment;
+  });
+}

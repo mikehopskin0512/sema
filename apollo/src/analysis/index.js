@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
 import { version } from '../config';
 
 import logger from '../shared/logger';
@@ -8,7 +11,9 @@ import { findByProject, createRun, updateProjectWithCreds } from '../shared/scqp
 import { fetchGithubToken } from '../identity/github/utils';
 import { create, sendNotification } from './analysisService';
 import { get as getRepository } from '../repositories/repositoryService';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -60,4 +65,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/analysis-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

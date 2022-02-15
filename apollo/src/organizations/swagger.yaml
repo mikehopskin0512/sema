@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  title: Organizations's API
+  description: Organization
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Organization:
+      properties:
+        _id:
+          type: string
+        legacyId:
+          type: string
+        orgName:
+          type: string
+        slug:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+    Repository:
+      properties:
+        _id:
+          type: string
+        cloneUrl:
+          type: string
+        description:
+          type: string
+        externalId:
+          type: string
+        language:
+          type: string
+        legacyId:
+          type: string
+        name:
+          type: string
+        orgId:
+          type: string
+        repoStats:
+          properties:
+            reactions:
+              items:
+                properties:
+                  _id:
+                    type: string
+                  createdAt:
+                    format: date-time
+                    type: string
+                  reactionId:
+                    type: string
+                  smartCommentId:
+                    type: string
+                required:
+                  - reactionId
+                  - smartCommentId
+                type: object
+              type: array
+            semaUsers:
+              type: number
+            smartCodeReviews:
+              type: number
+            smartCommenters:
+              type: number
+            smartComments:
+              type: number
+            tags:
+              items:
+                properties:
+                  _id:
+                    type: string
+                  createdAt:
+                    format: date-time
+                    type: string
+                  smartCommentId:
+                    type: string
+                  tagsId:
+                    items:
+                      type: string
+                    type: array
+                required:
+                  - smartCommentId
+                type: object
+              type: array
+            userIds:
+              items:
+                type: string
+              type: array
+          type: object
+        repositoryCreatedAt:
+          format: date-time
+          type: string
+        repositoryUpdatedAt:
+          format: date-time
+          type: string
+        sourceId:
+          type: string
+        type:
+          enum:
+            - github
+            - bitbucket
+            - direct
+          type: string
+      required:
+        - externalId
+        - type
+security:
+  - bearerAuth: []
+paths:
+  /v1/organizations:
+    post:
+      summary: create an organization
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: created organization
+        400:
+          description: bad input parameter
+    get:
+      summary: get organization by organization id and slug
+      operationId: findBySlug
+      parameters:
+        - in: query
+          name: orgId
+          description: organization id
+          required: true
+        - in: query
+          name: slug
+          description: url slug
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/organizations/{id}/repositories:
+    get:
+      summary: get organization's repositories by organization id
+      operationId: selectRepositoriesByOrg
+      parameters:
+        - in: path
+          name: orgId
+          description: organization id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+          description: array of repositories
+        400:
+          description: bad input parameter
+  /v1/organizations/{id}/contributors:
+    get:
+      summary: get organization's repositories by organization id
+      operationId: selectContributors
+      parameters:
+        - in: path
+          name: orgId
+          description: organization id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  committers:
+                    type: array
+          description: array of committers
+        400:
+          description: bad input parameter
+  /v1/organizations/{id}/fileTypes:
+    get:
+      summary: get organization's file types by organization id
+      operationId: selectFileTypesByOrg
+      parameters:
+        - in: path
+          name: orgId
+          description: organization id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  committers:
+                    type: array
+          description: array of files
+        400:
+          description: bad input parameter

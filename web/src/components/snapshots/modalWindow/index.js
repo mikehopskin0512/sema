@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
@@ -9,11 +9,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import ActivityItem from '../../activity/item';
 import { CloseIcon } from '../../Icons';
 import { black900 } from '../../../../styles/_colors.module.scss';
-import ReactionChart from '../../stats/reactionChart';
-import TagsChart from '../../stats/tagsChart';
 import { postSnapshots } from '../../../state/features/snapshots/api';
 import { InputField } from 'adonis';
 import styles from './modalWindow.module.scss';
+import { isEmpty } from 'lodash';
+import SnapshotChartContainer from '../snapshotChartContainer';
+import { portfoliosOperations } from '../../../state/features/portfolios';
+
+const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 
 const schema = yup.object().shape({
   title: yup
@@ -35,60 +38,57 @@ export const SNAPSHOT_DATA_TYPES = {
   TAGS: 'tags',
 };
 
-const SnapshotModal = ({ active, onClose, snapshotData, type, dataType }) => {
-
-  const { control, formState: { errors }, reset, handleSubmit } = useForm({
+const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDate, endDate }) => {
+  const dispatch = useDispatch();
+  const { control, formState: { errors }, reset, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const { auth, comments } = useSelector((state) => ({
+  const { auth, portfolios } = useSelector((state) => ({
     auth: state.authState,
-    comments: state.commentsState,
+    portfolios: state.portfoliosState.data.portfolios,
   }));
 
   const { token, user } = auth;
+  const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
-
-  const configureComponentData = () => {
-    switch(dataType) {
-      //ToDo: fix some values for real
-      case SNAPSHOT_DATA_TYPES.SUMMARIES:
-        return {
-          groupBy: snapshotData.groupBy,
-          yAxisType: 'total',
-          chartType: 'bar',
-          reactions: Object.keys(comments.summary.reactions),
-        };
-      case SNAPSHOT_DATA_TYPES.TAGS:
-        return {
-          groupBy: snapshotData.groupBy,
-          chartType: 'bar',
-          tagBy: '',
-          tags: Object.keys(comments.summary.tags),
-        };
-      case SNAPSHOT_DATA_TYPES.ACTIVITY:
-        return snapshotData;
-    }
-  }
 
   const onSubmit = async (data) => {
     const snapshotDataForSave = {
       userId: user._id,
       title: data.title,
       description: data.description,
-      commentType: dataType,
-      componentData: configureComponentData(),
+      componentType: dataType,
+      componentData: snapshotData.componentData,
     }
-    //ToDO: add edit snapshot request if type === SNAPSHOT_MODAL_TYPES.EDIT
     try {
-      await postSnapshots(snapshotDataForSave, token);
-    } catch(e) {
+      if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
+        const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
+        if (payload.status === 200) {
+          onClose();
+        }
+      } else {
+        if (!portfolioId) {
+          await dispatch(fetchPortfoliosOfUser(user._id, token));
+        }
+        await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+      }
+    } catch (e) {
       console.log(e);
     }
     reset();
     onClose();
   };
+
+  useEffect(() => {
+    if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
+      reset({
+        title: snapshotData.title,
+        description: snapshotData.description
+      });
+    }
+  }, [])
 
   return (
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
@@ -131,22 +131,18 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType }) => {
                 )}
               />
             </div>
-            <div className="has-background-gray-300 pb-5 pt-15 pl-20 pr-5 mb-20">
-            {dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (snapshotData.length ? snapshotData.slice(0, 3).map((item) => (
-              <div className="mb-10" key={`activity-${item._id}`} >
-                <ActivityItem {...item} isSnapshot />
-              </div>
-              )) : (
-              <div className="my-10 p-20 has-background-white">
-                <p>No activity found!</p>
-              </div>
-            ))}
-            {dataType === SNAPSHOT_DATA_TYPES.SUMMARIES && 
-              <ReactionChart isSnapshot className="ml-neg10" reactions={snapshotData.reactionChartData} yAxisType='total' groupBy={snapshotData.groupBy} />
-            }
-            {dataType === SNAPSHOT_DATA_TYPES.TAGS && 
-              <TagsChart isSnapshot className="ml-neg10" tags={snapshotData.tagsChartData} groupBy={snapshotData.groupBy} />
-            }
+            <div className="has-background-gray-300 p-10 mb-20">
+              {
+                dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (
+                  snapshotData?.componentData?.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width' isSnapshot />)
+                )
+              }
+              {dataType === SNAPSHOT_DATA_TYPES.SUMMARIES &&
+                <SnapshotChartContainer chartType="reactions" {...snapshotData.componentData} />
+              }
+              {dataType === SNAPSHOT_DATA_TYPES.TAGS &&
+                <SnapshotChartContainer chartType="tags" {...snapshotData.componentData} />
+              }
             </div>
             <div className="is-flex is-justify-content-right">
               <button className="button has-text-weight-semibold is-size-7 mx-10" onClick={() => onClose()} type="button">Cancel</button>

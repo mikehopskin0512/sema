@@ -1,0 +1,101 @@
+openapi: 3.0.0
+info:
+  title: Report's API
+  description: Reports - Metrics
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /v1/reports/{id}:
+    get:
+      summary: get report by id
+      operationId: buildModeReportUri
+      parameters:
+        - in: path
+          name: id
+          description: report id
+          required: true
+        - in: query
+          name: orgId
+          description: organization id
+          required: true
+        - in: query
+          name: urlParams
+          description: url params
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  requestUri:
+                    type: string
+          description: returns a request uri
+        400:
+          description: bad input parameter
+  /v1/reports/{id}/pdf:
+    get:
+      summary: get report by id
+      operationId: generatePdf
+      parameters:
+        - in: path
+          name: id
+          description: report id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  requestUri:
+                    type: string
+          description: pdf buffer
+        400:
+          description: bad input parameter
+  /v1/reports/{id}/export/{token}/pdf:
+    get:
+      summary: get mode pdf
+      operationId: fetchModePdf
+      parameters:
+        - in: path
+          name: id
+          description: report id
+          required: true
+        - in: path
+          name: token
+          description: report token
+          required: true
+      responses:
+        200:
+          description: pdf doc
+        400:
+          description: bad input parameter
+  /v1/reports/space/{id}:
+    get:
+      summary: get mode pdf
+      operationId: getModeSpace
+      parameters:
+        - in: path
+          name: id
+          description: space token
+          required: true
+      responses:
+        200:
+          description: sending reports list to client
+        400:
+          description: bad input parameter

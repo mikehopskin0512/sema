@@ -39,7 +39,7 @@ function Layout({ Component, pageProps }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const [dataLoaded, setDataLoaded] = useState(false);
-  const { authState: { user = null } } = useSelector(state => state);
+  const { authState: { user = null, token } } = useSelector(state => state);
   const checkPermission = () => {
     if (permissionsMap[router.pathname]) {
       const unauthorizedAccess = permissionsMap[router.pathname].find((permission) => !checkAccess(SEMA_CORPORATE_TEAM_ID, permission));

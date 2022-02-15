@@ -1,0 +1,262 @@
+openapi: 3.0.0
+info:
+  title: Invitation's API
+  description: User's Invitations
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Invitation:
+      properties:
+        _id:
+          type: string
+        cohort:
+          type: string
+        companyName:
+          type: string
+        isPending:
+          type: boolean
+        notes:
+          type: string
+        numAvailable:
+          type: number
+        orgId:
+          required: false
+          type: string
+        orgName:
+          type: string
+        recipient:
+          type: string
+        redemptions:
+          items:
+            properties:
+              createdAt:
+                format: date-time
+                type: string
+              user:
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        sender:
+          type: string
+        senderEmail:
+          type: string
+        senderName:
+          type: string
+        token:
+          type: string
+        tokenExpires:
+          format: date-time
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/invitations:
+    post:
+      summary: create invitation
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Invitation'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+          description: created/sent invitation
+        400:
+          description: bad input parameter
+    get:
+      summary: get invitation by sender id
+      operationId: getInvitationsBySender
+      parameters:
+        - in: query
+          name: senderId
+          description: sender user id
+          required: true
+        - in: query
+          name: search
+          description: search term
+          required: true
+        - in: query
+          name: page
+          description: page number
+          required: true
+        - in: query
+          name: perPage
+          description: how many per page
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  invitations:
+                    type: array
+                  pendingInvites:
+                    type: array
+                  acceptedInvites:
+                    type: array
+          description: user's invitations per status
+        400:
+          description: bad input parameter
+  /v1/invitations/export:
+    post:
+      tags:
+        - exports
+      summary: export invitations
+      operationId: exportInvitations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                senderId:
+                  type: string
+                search:
+                  type: string
+                page:
+                  type: string
+                perPage:
+                  type: string
+      responses:
+        200:
+          description: exported invitations csv file
+        400:
+          description: bad input parameter
+  /v1/invitations/metric/export:
+    post:
+      tags:
+        - exports
+      summary: export invite metrics
+      operationId: exportInviteMetrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  type: string
+                timeRange:
+                  type: string
+      responses:
+        200:
+          description: exported invite metrics csv file
+        400:
+          description: bad input parameter
+  /v1/invitations/metric:
+    get:
+      tags:
+        - metrics
+      summary: get invite metrics
+      operationId: getInviteMetrics
+      parameters:
+        - in: query
+          name: type
+          required: true
+        - in: query
+          name: timeRange
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  invites:
+                    type: array
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/invitations/{token}:
+    get:
+      tags:
+        - token
+      summary: get invitation by token
+      operationId: findByToken
+      parameters:
+        - in: path
+          name: token
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invitation'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/invitations/send:
+    post:
+      tags:
+        - send
+      summary: send invitation
+      operationId: sendEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                recipient:
+                  type: string
+                  description: user's username
+      responses:
+        201:
+          description: invitation sent successfully
+        401:
+          description: recipient is already an active member
+  /v1/invitations/{token}/reedem:
+    post:
+      tags:
+        - token
+      summary: reedem token invite
+      operationId: redeemInvite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                recipient:
+                  type: string
+                  description: user's username
+      responses:
+        201:
+          description: invitation successfully redeemed
+        401:
+          description: invitation redemption error
+  /v1/invitations/{id}:
+    delete:
+      summary: delete an invitation
+      operationId: deleteInvitation
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        200:
+          description: deleted invitation
+        400:
+          description: bad input parameter

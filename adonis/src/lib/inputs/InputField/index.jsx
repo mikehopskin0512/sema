@@ -14,9 +14,11 @@ const InputField = ({
   placeholder = '',
   isMultiLine = false,
   textSizeClassName ='',
+  rows = 3,
+  className = ''
 }) => {
   return (
-    <div className="aui-is-full-width">
+    <div className={clsx("aui-is-full-width", className)}>
       {title && (
         <label className="aui-label aui-mb-4">
           {title}
@@ -30,6 +32,7 @@ const InputField = ({
       )}>
         {isMultiLine ? (
           <textarea
+            rows={rows}
             disabled={disabled}
             className={clsx(
               'aui-textarea',

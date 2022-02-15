@@ -1,5 +1,6 @@
 import {
   DEFAULT_COLLECTION_NAME,
+  GITHUB_URL,
   SEARCH_CATEGORY_TITLES,
   SEMA_CORPORATE_TEAM_ID
 } from './constants';
@@ -100,4 +101,13 @@ export const addTags = (tags, types) => tags
 
 export const filterNonSemaUsers = (users) => {
   return users ? users.filter((user) => !user.teams || !user.teams.length || user.teams.every((team) => team._id !== SEMA_CORPORATE_TEAM_ID)) : [];
+}
+
+export const getPlatformLink = (username, type) => {
+  switch (type) {
+    case 'github':
+      return `${GITHUB_URL}/${username}`;
+    default:
+      return `${GITHUB_URL}/${username}`;
+  }
 }

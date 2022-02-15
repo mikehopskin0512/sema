@@ -1,0 +1,22 @@
+.modal {
+  width: 400px;
+}
+
+.modal-body {
+  max-height: 400px;
+}
+
+.modal-head {
+  border-bottom: none;
+  padding: 20px 20px 0px 20px;
+}
+
+.modal-title {
+  width: 250px;
+}
+
+.close-btn {
+  position: 'absolute';
+  top: 20;
+  right: 30;
+}

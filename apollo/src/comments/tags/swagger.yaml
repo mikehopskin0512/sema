@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: Tag's API
+  description: Smart Comment's Tags
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Tag:
+      properties:
+        _id:
+          type: string
+        isActive:
+          type: boolean
+        label:
+          type: string
+        sentiment:
+          enum:
+            - positive
+            - negative
+          type: string
+        type:
+          enum:
+            - language
+            - guide
+            - smartComment
+            - custom
+            - other
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/comments/tags:
+    post:
+      summary: create a tag
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: created tag
+        400:
+          description: bad input parameter
+  /v1/comments/tags/{id}:
+    get:
+      summary: get tags by id
+      operationId: getTagsById
+      parameters:
+        - in: path
+          name: id
+          description: tag id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  tags:
+                    type: array
+          description: array of tags
+        400:
+          description: bad input parameter
+    put:
+      summary: update a tag
+      operationId: updateTag
+      parameters:
+        - in: path
+          name: id
+          description: tag id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: updated tag
+        400:
+          description: bad input parameter
+    delete:
+      summary: delete a tag
+      operationId: deleteTag
+      parameters:
+        - in: path
+          name: id
+          description: tag id
+          required: true
+      responses:
+        200:
+          description: deleted tag
+        400:
+          description: bad input parameter
+  /v1/comments/tags/all:
+    get:
+      summary: get tags by id
+      operationId: getAllTags
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  tags:
+                    type: array
+          description: array of tags
+        400:
+          description: bad input parameter
+  /v1/comments/tags/suggested-comment:
+    get:
+      summary: get tags from snippet
+      operationId: findSuggestedCommentTags
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  tags:
+                    type: array
+          description: array of tags
+        400:
+          description: bad input parameter

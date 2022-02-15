@@ -127,3 +127,15 @@ variable "sg_description" {
   description = "Security group description."
   default     = "Managed by Terraform"
 }
+
+variable "min_capacity" {
+  type        = number
+  description = "The min capacity of the scalable target."
+  default     = 3
+}
+
+variable "max_capacity" {
+  type        = number
+  description = "The max capacity of the scalable target."
+  default     = 6
+}

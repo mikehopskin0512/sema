@@ -1,11 +1,17 @@
 import { Router } from 'express';
 
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { buildModeReportUri, generatePdf, fetchModePdf, getModeSpace } from './reportsService';
 import { version, modeReportId } from '../config';
 import { delay } from '../shared/utils';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -92,4 +98,8 @@ export default (app, passport) => {
       }
     }
   });
+
+  // Swagger route
+
+  app.use(`/${version}/reports-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

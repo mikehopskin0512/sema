@@ -22,6 +22,7 @@ export {
   TeamReposHelmet,
   TeamInviteHelmet,
   TeamUpdateHelmet,
+  PortfolioHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description, children }) => (

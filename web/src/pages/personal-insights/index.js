@@ -14,7 +14,7 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, parseSnapshotData } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { blue600 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
@@ -62,6 +62,7 @@ const PersonalInsights = () => {
 
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
+  const [componentData, setComponentData] = useState({ yAxisType: 'total' });
 
   const getUserSummary = async (username) => {
     const params = {
@@ -138,7 +139,7 @@ const PersonalInsights = () => {
         groupBy,
         startDate: new Date(startDay),
         endDate: endDay,
-      })
+      });
     }
   }, [comments, filter]);
 
@@ -151,6 +152,7 @@ const PersonalInsights = () => {
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
+      setComponentData({ smartComments: parseSnapshotData([...filteredComments, ...outOfRangeComments]), ...dateData });
     }
   }, [dateData, filteredComments]);
 
@@ -294,8 +296,8 @@ const PersonalInsights = () => {
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
           <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)}/>
         </div>
-        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{reactionChartData, groupBy: dateData.groupBy}}/>}
-        {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{tagsChartData, groupBy: dateData.groupBy}}/>}
+        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
+        {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
         <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
         <ActivityItemList comments={filteredComments} />
       </div>

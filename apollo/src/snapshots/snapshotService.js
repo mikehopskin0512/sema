@@ -15,13 +15,13 @@ const structureSmartComment = ({
   userId: new ObjectId(user),
   comment,
   reaction: new ObjectId(reaction),
-  tags: tags.map((id) => (new ObjectId(id))),
+  tags,
   githubMetadata,
   createdAt,
 });
 
 const structureComponentData = ({
-  smartComments = null, groupBy = null, yAxisType = null, dateDiff = null, startDate = null, endDate = null,
+  smartComments = null, groupBy = 'day', yAxisType = '', dateDiff = 0, startDate = null, endDate = null,
 }) => ({
   smartComments: smartComments.map((smartComment) => (structureSmartComment(smartComment))),
   groupBy,
@@ -34,7 +34,7 @@ const structureComponentData = ({
 const structureSnapshot = ({
   _id = null, userId = null, title = null, description = null, componentType = null, componentData = null,
 }) => ({
-  _id: new ObjectId(_id),
+  _id: _id ? new ObjectId(_id) : new ObjectId(),
   userId: new ObjectId(userId),
   title,
   description,
@@ -63,7 +63,12 @@ export const update = async (snapshotId, snapshot) => {
       { _id: new ObjectId(snapshotId) },
       { $set: structureSnapshot(snapshot) },
       { new: true },
-    ).exec();
+    )
+    .populate({
+      path: 'componentData.smartComments.tags',
+      model: 'Tag',
+    })
+    .exec();
     return updatedSnapshot;
   } catch (err) {
     const error = new errors.NotFound(err);
