@@ -68,7 +68,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
   return (
     <>
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
-      <div className="portfolio-content mb-50">
+      <div className="portfolio-content mb-50 container">
         <div className={clsx(styles['user-summary'])}>
           <div className={clsx(styles['user-image'], '')}>
             <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
@@ -106,7 +106,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
           </div>
         </div>
       </div>
-      <div className="snapshot-container">
+      <div className="snapshot-container container">
         <div className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</div>
         {snapshots.map((s) => <Snapshot snapshotData={s} portfolioId={portfolio._id} />)}
       </div>
