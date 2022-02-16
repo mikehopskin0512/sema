@@ -143,7 +143,7 @@ export const getTeamRepos = async (teamId) => {
       .select('repos')
       .exec();
     const ids = team?.repos.map(repo => repo._id.toString()) || [];
-    return getRepositories(ids);
+    return getRepositories(ids, true);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

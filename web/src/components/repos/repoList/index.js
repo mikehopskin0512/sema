@@ -65,7 +65,7 @@ const RepoList = ({ type, repos = [] }) => {
 
   const renderCards = (repos) => {
     return repos.map((child, i) => (
-      <RepoCard {...child} isFavorite={type === 'FAVORITES'} key={i} />
+      <RepoCard {...child} isTeamView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} />
     ))
   }
 
