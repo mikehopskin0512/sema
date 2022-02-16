@@ -152,7 +152,7 @@ const PersonalInsights = () => {
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
-      setComponentData({ smartComments: parseSnapshotData([...filteredComments, ...outOfRangeComments]), ...dateData });
+      setComponentData((oldState) => ({ ...oldState, smartComments: parseSnapshotData([...filteredComments, ...outOfRangeComments]), ...dateData }));
     }
   }, [dateData, filteredComments]);
 
