@@ -46,6 +46,7 @@ TagsChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.func,
+  isTeamView: PropTypes.bool,
 };
 
 export default TagsChart;

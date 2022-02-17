@@ -1,48 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faSortDown } from '@fortawesome/free-solid-svg-icons';
-import styles from './statsFilter.module.scss';
+import styles from './teamStatsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
-import { groupBy, isEmpty } from 'lodash';
 import { addDays, format } from 'date-fns';
+import { gray400, black900 } from '../../../styles/_colors.module.scss';
+import { SearchIcon } from '../Icons';
 
-const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
-  const [filter, setFilter] = useState({
-    startDate: null,
-    endDate: null,
-    search: '',
-    from: [],
-    to: [],
-    reactions: [],
-    tags: [],
-    pr: [],
-    repo: [],
-  });
+const TeamStatsFilter = ({ filter, individualFilter, commentView, filterRepoList, filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
   const onChangeFilter = (type, value) => {
-    setFilter({
+    handleFilter({
       ...filter,
       [type]: value,
     });
   };
 
-  useEffect(() => {
-    if (!isEmpty(filter)) {
-      handleFilter(filter);
-    }
-  }, [filter]);
-
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
     const formatDate = (date) => date ? format(addDays(new Date(date), 1), `yyyy-MM-dd`) : null
-    setFilter({
+    handleFilter({
       ...filter,
       startDate: formatDate(startDate),
       endDate: formatDate(endDate),
@@ -51,35 +33,20 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
 
   return (
     <>
-    <div className="tile my-20">
-      <div className="tile has-background-white border-radius-4px is-flex is-flex-wrap-wrap box">
-        <div className="field is-flex-grow-1 px-5 my-5">
-          <div className="control has-icons-left is-flex">
-            <input
-              className="input has-background-white"
-              type="text"
-              placeholder="Search"
-              onChange={(e) => onChangeFilter('search', e.target.value)}
-              value={filter.search}
-            />
-            <span className="icon is-small is-left">
-              <FontAwesomeIcon icon={faSearch} />
-            </span>
-            <div className={clsx("mx-5 is-flex", styles['filter-container'])}>
-              <DateRangeSelector
-                start={startDate}
-                end={endDate}
-                onChange={onDateChange}
-                isRight
-              />
-            </div>
-          </div>
-        </div>
+    <div className="tile my-20 has-background-gray-200">
+      <div className="tile border-radius-4px is-flex is-flex-wrap-wrap has-background-gray-200">
         <div
           className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
           style={{zIndex: 2}}
         >
-          <div className={clsx("my-5 ml-5 mr-10", styles['filter-container'])}>
+          <div className={clsx("my-5 mr-10", styles['filter-container'])}>
+              <DateRangeSelector
+                start={startDate}
+                end={endDate}
+                onChange={onDateChange}
+              />
+          </div>
+          {commentView === 'received' && individualFilter && <div className={clsx("my-5 ml-40 mr-10", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterUserList,
@@ -91,8 +58,8 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               label="From"
               showCheckbox
             />
-          </div>
-          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
+          </div>}
+          {commentView === 'given' && individualFilter && <div className={clsx("my-5 mr-10 ml-40", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterRequesterList,
@@ -104,8 +71,8 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               label="To"
               showCheckbox
             />
-          </div>
-          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
+          </div>}
+          <div className={clsx(`my-5 mr-10 ${individualFilter ? 'ml-5' : 'ml-40'}`, styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: ReactionList,
@@ -119,7 +86,7 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               showCheckbox
             />
           </div>
-          <div className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
+          <div className={clsx("my-5 mr-10 ml-5 has-background-white", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: TagList,
@@ -133,20 +100,7 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               showCheckbox
             />
           </div>
-          <div  className={clsx("my-5 mr-10 ml-5", styles['filter-container'])}>
-            <CustomSelect
-              selectProps={{
-                options: filterPRList,
-                placeholder: '',
-                isMulti: true,
-                onChange: ((value) => onChangeFilter('pr', value)),
-                value: filter.pr,
-              }}
-              label="Pull requests"
-              showCheckbox
-            />
-          </div>
-          <div className={clsx("my-5 ml-5", styles['filter-container'])}>
+          <div className={clsx("my-5 ml-5 mr-10 has-background-white", styles['filter-container'])}>
             <CustomSelect
               selectProps={{
                 options: filterRepoList,
@@ -159,26 +113,58 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               showCheckbox
             />
           </div>
+          <div  className={clsx("my-5 ml-5 has-background-white", styles['filter-container'])}>
+            <CustomSelect
+              selectProps={{
+                options: filterPRList,
+                placeholder: '',
+                isMulti: true,
+                onChange: ((value) => onChangeFilter('pr', value)),
+                value: filter.pr,
+              }}
+              label="Pull requests"
+              showCheckbox
+            />
+          </div>
+          <div className="pt-15 pl-15 mr-40">
+            <SearchIcon size="small" color={black900} />
+          </div>
         </div>
+        <div className=" px-5 my-5 is-fullwidth field is-flex-grow-2" style={{width: '100%'}}>
+          <div className="control is-flex is-fullwidth">
+            <input
+              className="input has-no-border has-background-gray-200"
+              style={{boxShadow: 'none', outline: 'none', borderBottom: `1px solid ${gray400}`}}
+              type="text"
+              placeholder=""
+              onChange={(e) => onChangeFilter('search', e.target.value)}
+              value={filter.search}
+            />
+          </div>
+        </div> 
       </div>
     </div>
     </>
   );
 }
-StatsFilter.defaultProps = {
+TeamStatsFilter.defaultProps = {
   filterUserList: [],
   filterRequesterList: [],
   filterPRList: [],
   filteredComments: [],
   filterRepoList: [],
+  commentView: 'received',
+  individualFilter: true,
 };
 
-StatsFilter.propTypes = {
+TeamStatsFilter.propTypes = {
   filterUserList: PropTypes.array.isRequired,
   filterRequesterList: PropTypes.array.isRequired,
   filterPRList: PropTypes.array.isRequired,
   filteredComments: PropTypes.array.isRequired,
   filterRepoList: PropTypes.array.isRequired,
+  commentView: PropTypes.string,
+  individualFilter: PropTypes.bool,
 };
 
-export default StatsFilter;
+export default TeamStatsFilter;

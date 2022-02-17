@@ -35,19 +35,30 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
             </Link>
           )
         }
-        <Link href={PATHS.PERSONAL_INSIGHTS}>
-          <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
-            Personal Insights
-          </a>
-        </Link>
         {
-          !isEmpty(selectedTeam) && (
+          !isEmpty(selectedTeam) ? (
+          <>
             <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+            <a
+              aria-hidden="true"
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+            >
+              Repos
+            </a>
+            </Link>
+            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.TEAM_INSIGHTS}`}>
               <a
                 aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
               >
-                Repos
+              Team Insights
+              </a>
+            </Link>
+          </>
+          ) : (
+            <Link href={PATHS.PERSONAL_INSIGHTS}>
+              <a aria-hidden="true" className={`navbar-item has-text-black-950 mx-10 ${pathname === PATHS.PERSONAL_INSIGHTS && 'has-text-weight-semibold'}`}>
+                Personal Insights
               </a>
             </Link>
           )

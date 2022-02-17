@@ -8,7 +8,7 @@ import {
   updateTeam, updateTeamRepos,
   getAllTeamCollections,
 } from './api';
-import { toggleActiveCollection } from '../comments/api';
+import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
 import * as types from './types';
 
 const requestFetchTeamsOfUser = () => ({
@@ -128,6 +128,32 @@ const requestFetchTeamCollectionsSuccess = (collections) => ({
 const requestFetchTeamCollectionsError = (errors) => ({
   type: types.FETCH_TEAM_COLLECTIONS_ERROR,
   errors,
+});
+
+const requestFetchTeamSmartCommentSummary = () => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY
+});
+
+const requestFetchTeamSmartCommentSummarySuccess = (summary) => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_SUCCESS,
+  summary
+});
+
+const requestFetchTeamSmartCommentSummaryError = () => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_ERROR
+});
+
+const requestFetchTeamSmartCommentOverview = () => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW
+});
+
+const requestFetchTeamSmartCommentOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_SUCCESS,
+  overview
+});
+
+const requestFetchTeamSmartCommentOverviewError = () => ({
+  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_ERROR
 });
 
 export const fetchTeamsOfUser = (token) => async (dispatch) => {
@@ -260,3 +286,27 @@ export const fetchTeamCollections = (teamId, token) => async (dispatch) => {
     dispatch(requestFetchTeamCollectionsError(errMessage));
   }
 }
+
+export const fetchTeamSmartCommentSummary = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamSmartCommentSummary())
+    const { data: { summary } } = await getSmartCommentSummary(params, token);
+    dispatch(requestFetchTeamSmartCommentSummarySuccess(summary));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamSmartCommentSummaryError(errMessage));
+  }
+};
+
+export const fetchTeamSmartCommentOverview = (params, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchTeamSmartCommentOverview())
+    const { data: { overview } } = await getSmartCommentOverview(params, token);
+    dispatch(requestFetchTeamSmartCommentOverviewSuccess(overview));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestFetchTeamSmartCommentOverviewError(errMessage));
+  }
+};

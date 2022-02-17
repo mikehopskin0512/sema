@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
+import { uniq } from 'lodash';
 import Team from './teamModel';
 import errors from '../shared/errors';
 import logger from '../shared/logger';
 import UserRole from '../userRoles/userRoleModel';
 import { getRepositories } from '../repositories/repositoryService';
 import { getSmartCommentsByExternalId, _getPullRequests, _getSmartCommentersCount } from '../comments/smartComments/smartCommentService';
-import { uniq } from 'lodash';
 import { createUserRole } from '../userRoles/userRoleService';
 import { getRoleByName } from '../roles/roleService';
 import { semaCorporateTeamName } from '../config';

@@ -27,6 +27,14 @@ const TeamHeaderNav = ({ teamId = '', type = 'desktop' }) => {
               Repos
             </a>
           </Link>
+          <Link href={`${PATHS.TEAM._}/${teamId}${PATHS.TEAM_INSIGHTS}`}>
+            <a
+              aria-hidden="true"
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
+            >
+              Team Insights
+            </a>
+          </Link>
         </>
       )
     }

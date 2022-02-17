@@ -11,6 +11,7 @@ import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
 import { fullName } from '../../shared/utils';
+import { getTeamRepos } from '../../teams/teamService';
 
 const { Types: { ObjectId } } = mongoose;
 const { Parser } = Json2CSV;
@@ -577,10 +578,22 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user, teamId }) => {
   try {
     const filter = { reviewer, author, repoIds, startDate, endDate, user };
-    const smartComments = await filterSmartComments(filter);
+    let smartComments = await filterSmartComments(filter);
+    if(teamId) {
+      const teamRepos = await getTeamRepos (teamId);
+      const repoExternalIds = teamRepos.map((repo) => {
+        return repo.externalId;
+      });
+      let teamSmartComments = await Promise.all(repoExternalIds.map(async (id) => {
+        return await getSmartCommentsByExternalId(id);
+      }));
+      teamSmartComments = teamSmartComments.flat();
+      const teamSmartCommentsIds = new Set(teamSmartCommentsIds);
+      smartComments = smartComments.filter(comment => teamSmartCommentsIds.has(comment._id.toString()));
+    }
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);
     return { smartComments, reactions: totalReactions, tags: totalTags };

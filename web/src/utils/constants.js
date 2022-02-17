@@ -139,6 +139,7 @@ export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
 export const SEMA_FAQ_SLUGS = {
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
+  TEAM_INSIGHTS: 'team-insights-who-can-see-what',
   MARKDOWN: 'whats-markdown-and-how-do-i-use-it',
   SNIPPETS: 'what-are-snippets',
 };
@@ -189,6 +190,7 @@ export const PATHS = {
   SEMA_ADMIN: '/sema-admin',
   PORTFOLIOS: '/portfolios',
   IDENTITIES: '/api/identities/github',
+  TEAM_INSIGHTS: '/team-insights',
 };
 
 export const SUPPORT_VIDEO_LANGUAGES = [
