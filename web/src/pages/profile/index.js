@@ -16,8 +16,8 @@ const Profile = () => {
   const onClose = () => setEditModalIsOpen(false);
 
   const { user: {
-    firstName,
-    lastName,
+    firstName = '',
+    lastName = '',
     username,
     avatarUrl,
     identities = [{
