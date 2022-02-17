@@ -62,9 +62,7 @@ Feature: Dashboard options
         Then I expect that element "supportModalEmailError" becomes displayed
         And  I expect that element "supportModalEmailError" matches the text "Email is required"
 
-
         When I set "invalidEmail" to the inputfield "supportModalEmailInput"
-        And I pause for 20000ms
         Then I expect that element "supportModalEmailError" becomes displayed
         And  I expect that element "supportModalEmailError" matches the text "Entered value does not match email format"
 
@@ -72,5 +70,5 @@ Feature: Dashboard options
         And  I clear the inputfield "supportModalEmailInput"
         And  I set "invalidEmail@gmail.com" with timestamp to the inputfield "supportModalEmailInput"
         And  I set "test title" with timestamp to the inputfield "supportModalTitleInput"
-        Then I expect that element "supportModalTitleError" becomes displayed
-        And  I expect that element "supportModalEmailError" becomes displayed
+        Then I expect that element "supportModalTitleError" becomes not displayed
+        And  I expect that element "supportModalEmailError" becomes not displayed
