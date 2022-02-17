@@ -14,7 +14,7 @@ const SearchFilter = ({ value, onChange, className }) => {
         isOpen ? (
           <p className="control has-icons-left">
             <InputField
-              className="input has-background-white"
+              className="has-background-white"
               type="text"
               placeholder="Search"
               onChange={onChange}
