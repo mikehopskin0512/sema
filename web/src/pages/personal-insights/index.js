@@ -14,10 +14,11 @@ import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, parseSnapshotData } from '../../utils/parsing';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { blue600 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
+import SnapshotButton from '../../components/snapshots/snapshotButton';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -62,6 +63,7 @@ const PersonalInsights = () => {
 
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
+  const [openCommentsModal, setOpenCommentsModal] = useState(false);
   const [componentData, setComponentData] = useState({ yAxisType: 'total' });
 
   const getUserSummary = async (username) => {
@@ -152,7 +154,7 @@ const PersonalInsights = () => {
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
-      setComponentData((oldState) => ({ ...oldState, smartComments: parseSnapshotData([...filteredComments, ...outOfRangeComments]), ...dateData }));
+      setComponentData((oldState) => ({ ...oldState, smartComments: [...filteredComments, ...outOfRangeComments], ...dateData }));
     }
   }, [dateData, filteredComments]);
 
@@ -298,7 +300,13 @@ const PersonalInsights = () => {
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
-        <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
+        {openCommentsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={openCommentsModal} onClose={()=> setOpenCommentsModal(false)} snapshotData={{ componentData }}/>}
+        <div className="is-flex is-align-items-center mb-20">
+          <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">Comments {commentView}</p>
+          <div>
+            <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
+          </div>
+        </div>
         <ActivityItemList comments={filteredComments} />
       </div>
     </>

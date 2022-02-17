@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ActivityItem from '../item';
-import { filterSmartComments, parseSnapshotData } from '../../../utils/parsing';
-import SnapshotModal from '../../snapshots/modalWindow';
+import { filterSmartComments } from '../../../utils/parsing';
+import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../snapshots/modalWindow';
+import SnapshotBar from '../../snapshots/snapshotBar';
 
 const ActivityPage = ({ startDate, endDate, filter }) => {
   const { repositories } = useSelector((state) => ({
@@ -20,13 +21,14 @@ const ActivityPage = ({ startDate, endDate, filter }) => {
     if (overview && overview.smartcomments) {
       const filtered = filterSmartComments({ filter, smartComments: overview.smartcomments, startDate, endDate });
       setFilteredComments(filtered);
-      setComponentData((oldState) => ({ ...oldState, smartComments: parseSnapshotData(filtered), startDate, endDate }));
+      setComponentData((oldState) => ({ ...oldState, smartComments: filtered, startDate, endDate }));
     }
   }, [overview, filter, startDate, endDate]);
 
   return (
     <>
-      {isOpen && <SnapshotModal active={isOpen} onClose={()=> setIsOpen(false)} snapshotData={{ componentData }} />}
+      {isOpen && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={isOpen} onClose={() => setIsOpen(false)} snapshotData={{ componentData }} />}
+      <SnapshotBar text="Save this as a snapshot on your Portfolio." hasActionButton onClick={() => setIsOpen(true)} />
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`}>
           <ActivityItem {...item} />

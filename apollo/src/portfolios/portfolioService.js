@@ -42,10 +42,16 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
     if (populate) {
       portfolios.populate({
         path: 'snapshots.id',
-        populate: {
-          path: 'componentData.smartComments.tags',
-          model: 'Tag',
-        }
+        populate: [
+          {
+            path: 'componentData.smartComments.tags',
+            model: 'Tag',
+          },
+          {
+            path: 'componentData.smartComments.userId',
+            model: 'User',
+          }
+        ]
       })
     }
     return await portfolios.lean();
@@ -66,10 +72,16 @@ export const update = async (portfolioId, portfolio) => {
       )
       .populate({
         path: 'snapshots.id',
-        populate: {
-          path: 'componentData.smartComments.tags',
-          model: 'Tag',
-        }
+        populate: [
+          {
+            path: 'componentData.smartComments.tags',
+            model: 'Tag',
+          },
+          {
+            path: 'componentData.smartComments.userId',
+            model: 'User',
+          }
+        ]
       })
       .exec();
     return updatedPortfolio;
@@ -97,10 +109,16 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
     if (populate) {
       portfolio.populate({
         path: 'snapshots.id',
-        populate: {
-          path: 'componentData.smartComments.tags',
-          model: 'Tag',
-        }
+        populate: [
+          {
+            path: 'componentData.smartComments.tags',
+            model: 'Tag',
+          },
+          {
+            path: 'componentData.smartComments.userId',
+            model: 'User',
+          }
+        ]
       })
     }
     return await portfolio.lean();
@@ -141,10 +159,16 @@ export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
       { new: true },
     ).populate({
       path: 'snapshots.id',
-      populate: {
-        path: 'componentData.smartComments.tags',
-        model: 'Tag',
-      }
+      populate: [
+        {
+          path: 'componentData.smartComments.tags',
+          model: 'Tag',
+        },
+        {
+          path: 'componentData.smartComments.userId',
+          model: 'User',
+        }
+      ]
     }).exec();
     return updatedPortfolio;
   } catch (err) {
