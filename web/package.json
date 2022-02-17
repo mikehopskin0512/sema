@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@creativebulma/bulma-badge": "^1.0.1",
+    "@creativebulma/bulma-tagsinput": "^1.0.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@fortawesome/free-regular-svg-icons": "^5.15.3",
@@ -31,6 +32,7 @@
     "bulma-extensions": "^6.2.7",
     "bulma-social": "^1.1.1",
     "bulma-switch": "^2.0.0",
+    "bulma-tagsinput": "^2.0.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.10.0",
     "dotenv": "^8.2.0",

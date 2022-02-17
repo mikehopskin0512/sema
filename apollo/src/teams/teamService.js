@@ -213,8 +213,11 @@ export const getTeamMembers = async (teamId, { page, perPage }, type = 'paginate
 
 export const addTeamMembers = async (team, users, role) => {
   try {
-    await Promise.all(users.map(async (user) => {
-      const isExist = await UserRole.exists({ team, user });
+    let allUsers = await Promise.all(users.map( async (user) => (await findByUsername(user))));
+    allUsers = allUsers.map(user => user?._id);
+    await Promise.all(allUsers.map(async (user) => {
+      if(!user) return;
+      const isExist = await UserRole.exists({ team, user});
       if (isExist) {
         await UserRole.updateOne({ team, user }, { role });
       } else {
