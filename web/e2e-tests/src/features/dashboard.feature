@@ -34,7 +34,6 @@ Feature: Dashboard options
         And  I expect that element "supportModalTypeSelect" becomes displayed
         And  I expect that element "supportModalDetailInput" becomes displayed
         And  I expect that element "supportModalEmailInput" becomes displayed
-        And  I expect that element "supportModalEmailInput" contains any text
         And  I expect that element "supportModalCancelBtn" becomes displayed
         And  I expect that element "supportModalSubmitBtn" becomes displayed
 
@@ -57,14 +56,15 @@ Feature: Dashboard options
         And  I expect that element "supportModalEmailInput" becomes displayed
         And  I click on the element "supportModalEmailInput"
         And  I clear the inputfield "supportModalEmailInput"
+        When I click on the element "supportModalSubmitBtn"
+        Then I expect that element "supportModalTitleError" becomes displayed
+        And  I expect that element "supportModalTitleError" matches the text "Title is required"
         Then I expect that element "supportModalEmailError" becomes displayed
         And  I expect that element "supportModalEmailError" matches the text "Email is required"
 
-        When I click on the element "supportModalSubmitBtn"
-        Then I expect that element "supportModalTitleError" becomes displayed
-        And  I expect that element "supportModalTitleError" matches the text "Email is required"
 
-        When I set "invalidEmail" with timestamp to the inputfield "supportModalEmailInput"
+        When I set "invalidEmail" to the inputfield "supportModalEmailInput"
+        And I pause for 20000ms
         Then I expect that element "supportModalEmailError" becomes displayed
         And  I expect that element "supportModalEmailError" matches the text "Entered value does not match email format"
 

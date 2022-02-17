@@ -124,8 +124,8 @@
     "supportModalEmailInput"        : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//input[@id='email']",
     "supportModalCancelBtn"         : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//button[normalize-space()='Cancel']",
     "supportModalSubmitBtn"         : "//div[@class='modal is-active']//p[text()='We’d love to hear from you!']//following-sibling::form//button[normalize-space()='Submit']",
-    "supportModalEmailError"        : "//p[normalize-space()='Email is required']",
-    "supportModalTitleError"        : "//p[normalize-space()='Title is required']",
+    "supportModalEmailError"        : "//input[@id='email'][contains(@class,'is-danger')]/following-sibling::p",
+    "supportModalTitleError"        : "//input[@id='title'][contains(@class,'is-danger')]/following-sibling::p",
 
     "########## LABEL MANAGEMENT LOCATORS #############" : "",
     "labelManagementSection"        : "//div[@class='my-50 px-10']",
