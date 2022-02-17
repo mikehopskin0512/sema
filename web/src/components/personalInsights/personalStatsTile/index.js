@@ -8,8 +8,8 @@ const PersonalStatsTile = ({ topTags, topReactions, totalSmartComments }) => {
   const auth = useSelector((state) => state.authState);
   const {
     user: {
-      firstName,
-      lastName,
+      firstName = '',
+      lastName = '',
       username,
       avatarUrl,
       identities = []

@@ -54,7 +54,7 @@ const Invite = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
   const { isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
-  const { _id: userId, firstName, lastName, username: senderEmail, organizations = [], inviteCount = 0 } = user;
+  const { _id: userId, firstName = '', lastName = '', username: senderEmail, organizations = [], inviteCount = 0 } = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;

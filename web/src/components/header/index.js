@@ -43,8 +43,8 @@ const Header = () => {
     inviteCount = 0,
     roles = [],
     avatarUrl,
-    firstName,
-    lastName
+    firstName = '',
+    lastName = '',
   } = user ?? {};
   // Initials replaced by react-avatar
   // const userInitials = (user) ? `${firstName.charAt(0)}${lastName.charAt(0)}` : '';

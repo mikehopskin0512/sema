@@ -40,7 +40,7 @@ const Admin = () => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { _id: userId, firstName, lastName, organizations = [] } = user;
+  const { _id: userId, firstName = '', lastName = '', organizations = [] } = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
   const [currentOrg = {}] = organizations;
   const { id: orgId, orgName } = currentOrg;
@@ -97,11 +97,11 @@ const Admin = () => {
                             placeholder="tony@starkindustries.com"
                             // name={`emails[${index}].value`}
                             {
-                              ...register(`emails[${index}].value`, { 
-                                required: 'Email is required', 
-                                pattern: { 
-                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i, 
-                                  message: 'Invaild email format' 
+                              ...register(`emails[${index}].value`, {
+                                required: 'Email is required',
+                                pattern: {
+                                  value: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                                  message: 'Invaild email format'
                                 },
                               })
                             }

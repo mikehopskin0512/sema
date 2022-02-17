@@ -52,11 +52,11 @@ const TeamDashboard = ({ team }) => {
         <div className="column is-8">
           <div className='is-flex is-align-items-center is-justify-content-space-between'>
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Recent Repos</p>
-            <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}/${PATHS.REPOS}`)}>View All</button>
+            <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.TEAM._}/${teamId}${PATHS.REPOS}`)}>View All</button>
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
             {repos.slice(0, MAX_REPOS).map((child, i) => (
-              <RepoCard {...child} key={`card-${i}`} column={2} />
+              <RepoCard {...child} isTeamView key={`card-${i}`} column={2} />
             ))}
           </div>
         </div>

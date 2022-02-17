@@ -131,12 +131,14 @@ export const getRepository = async (_id) => {
   }
 };
 
-export const getRepositories = async (ids) => {
+export const getRepositories = async (ids, populateUsers) => {
   try {
-    const repos = await Repositories
-      .find({ _id: { $in: ids } })
-      .exec();
-    return repos;
+    const query = Repositories.find({ _id: { $in: ids } });
+    if (populateUsers) {
+      query.populate({ path: 'repoStats.userIds', select: 'avatarUrl', model: 'User' });
+    }
+    const repositories = await query.lean();
+    return repositories;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

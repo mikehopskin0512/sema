@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
+import * as bulmaTagsinput from 'bulma-tagsinput';
 import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
@@ -12,7 +13,6 @@ import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
 import { teamsOperations } from '../../../../state/features/teams';
 import { fetchUsers } from '../../../../state/features/users/actions';
-import { filterNonSemaUsers } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 
 const { fetchRoles } = rolesOperations;
@@ -25,17 +25,20 @@ const TeamInvitePage = () => {
   const {
     register, handleSubmit, formState: { errors }, watch, setValue
   } = useForm();
+  const inputTagsRef = useRef(null);
 
-  const { authState, rolesState, usersState } = useSelector((state) => ({
+  useEffect(() => {
+    bulmaTagsinput.attach();
+  }, []);
+
+  const { authState, rolesState } = useSelector((state) => ({
     authState: state.authState,
     teamsState: state.teamsState,
     rolesState: state.rolesState,
-    usersState: state.usersState
   }));
 
   const { token } = authState;
   const { roles } = rolesState;
-  const { users } = usersState;
 
   const rolesOptions = useMemo(() => roles.map((item) => ({
     value: item._id,
@@ -48,15 +51,13 @@ const TeamInvitePage = () => {
   }, [dispatch]);
 
   const onSave = async (data) => {
-    const { emails, role } = data;
+    const emails = inputTagsRef?.current?.value?.split(',').map(email => email.trim());
+    const { role } = data;
     if (emails && emails.length) {
-      const userIds = emails ? emails.map((item) => item.value) : [];
+      if(!role) return;
 
-      if (!userIds.length || !role) return;
-
-      // adding normal users to Sema Corporate Team
       await dispatch(inviteTeamUsers(teamId, {
-        users: userIds,
+        users: emails,
         role: role ? role.value : '',
       }, token));
     }
@@ -68,11 +69,6 @@ const TeamInvitePage = () => {
     await router.back();
   };
 
-  const userOptions = useMemo(() => filterNonSemaUsers(users).map((item) => ({
-    value: item._id,
-    label: item.username,
-  })), [users]);
-
   const checkForSelectedTeam = () => {
     if (!authState.selectedTeam || !authState.selectedTeam.team) {
       return router.push(PATHS.DASHBOARD);
@@ -82,6 +78,7 @@ const TeamInvitePage = () => {
   useEffect(() => {
     checkForSelectedTeam();
   }, []);
+
   return (
     <div className="has-background-gray-100 hero">
       <Helmet {...TeamInviteHelmet} />
@@ -115,29 +112,15 @@ const TeamInvitePage = () => {
             >
               <CheckOnlineIcon size="small" />
               <span className="ml-8">
-                Save
+                Invite
               </span>
             </button>
           </div>
         </div>
         <div className="px-10 is-flex is-flex-direction-column">
           <div className={clsx('mb-25', styles['form-input'])}>
-            <div>Choose User</div>
-            <Select
-              {...register(
-                'emails',
-                {
-                  required: 'User emails are required',
-                },
-              )}
-              options={userOptions}
-              value={watch('emails')}
-              placeholder="Choose Email"
-              onChange={(values) => setValue('emails', values)}
-              isMulti
-              isSearchable
-            />
-            {errors.emails && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.emails.message}</p>)}
+            <div>Invite Users by Email</div>
+            <input type="tags" class="input" placeholder=" " ref={inputTagsRef}/>
           </div>
           <div className={clsx(styles['form-input'])}>
             <div>Role</div>

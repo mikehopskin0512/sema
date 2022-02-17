@@ -126,7 +126,7 @@ const TeamReposList = ({ isActive, onClose }) => {
           <p className="is-size-7 mb-15">Remember, adding the selected repos will give your team full access to code review information</p>
           <div className="control mb-10">
             <InputField
-              className="input has-background-white is-small border-radius-4px"
+              className="has-background-white is-small border-radius-4px"
               type="input"
               placeholder="Search the repo"
               value={searchTerm}

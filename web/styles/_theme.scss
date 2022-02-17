@@ -144,6 +144,7 @@ $badge-height: 30px;
 @import "../node_modules/react-datepicker/dist/react-datepicker.css";
 
 @import "@creativebulma/bulma-badge";
+@import "@creativebulma/bulma-tagsinput";
 
 // Additional SCSS files
 @import "./fonts";
@@ -154,4 +155,5 @@ $badge-height: 30px;
 @import "./toaster";
 @import "./transitions";
 @import "./helpers";
+@import "./tags_input";
 @import "./table";

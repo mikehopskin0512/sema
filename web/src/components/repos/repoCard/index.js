@@ -21,7 +21,7 @@ const statLabels = {
 
 const RepoCard = (props) => {
   const {
-    name, externalId, _id: repoId, repoStats, users = [], column = 3
+    name, externalId, _id: repoId, repoStats, users = [], column = 3, isTeamView = false,
   } = props;
   const { token, selectedTeam } = useSelector((state) => state.authState)
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const RepoCard = (props) => {
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
         <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
           <p className="has-text-black-900 has-text-weight-semibold is-size-5">{name}</p>
-          <RepoUsers users={users} />
+          <RepoUsers users={isTeamView ? repoStats.userIds : users} />
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="px-12 is-flex is-justify-content-space-between is-flex-wrap-wrap">

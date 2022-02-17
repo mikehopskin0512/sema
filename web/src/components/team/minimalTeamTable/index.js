@@ -52,7 +52,7 @@ const MinimalTeamTable = ({ members, count }) => {
 
   const dataSource = useMemo(() => {
     return members.map((member) => {
-      const { user: { firstName, lastName, identities, lastLogin }, role } = member;
+      const { user: { firstName = '', lastName = '', identities, lastLogin }, role } = member;
       const field = {
         lastLogin: ''
       }

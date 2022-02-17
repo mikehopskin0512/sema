@@ -84,7 +84,7 @@ const TeamManagement = () => {
   };
 
   const onRemoveMember = useCallback(async (userRoleId) => {
-    await dispatch(removeUserRole(userRoleId, token));
+    await dispatch(removeUserRole(teamId, userRoleId, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   }, [dispatch, page, perPage, token, user]);
 

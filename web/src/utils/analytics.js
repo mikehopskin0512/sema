@@ -28,7 +28,7 @@ export const initAmplitude = (user) => {
   if (amplitudeApiKey) {
     if (process.browser) {
 
-      const { _id, username, firstName, lastName, isVerified, isWaitlist, roles = [] } = user;
+      const { _id, username, firstName = '', lastName = '', isVerified, isWaitlist, roles = [] } = user;
 
       // ## REFACTORING NEEDED ##
       // Roles is an array (ie. users can have several roles and teams)

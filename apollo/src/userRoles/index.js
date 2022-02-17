@@ -46,9 +46,9 @@ export default (app, passport) => {
 
   // TODO: need to be refactored to get teamId
   route.delete(
-    '/:userRoleId',
-    checkAccess('canEditUsers'),
+    '/:teamId/:userRoleId',
     passport.authenticate(['bearer'], { session: false }),
+    checkAccess('canEditUsers'),
     async (req, res) => {
       try {
         const { userRoleId } = req.params;
