@@ -98,7 +98,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
       <div className="modal-background" />
       <div className={clsx('modal-content px-10', styles.modalWindowContent)}>
-        <div className="px-15 py-10 has-background-white">
+        <div className="px-25 py-15 has-background-white border-radius-4px">
           <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
             {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save snapshot to Portfolio' : 'Edit snapshot'}
           </p>
