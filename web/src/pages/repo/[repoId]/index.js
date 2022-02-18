@@ -174,7 +174,7 @@ const RepoPage = () => {
       {
         selectedTab === 'stats' && (
           <div className={styles.wrapper}>
-            <StatsPage startDate={startDate} endDate={endDate} />
+            <StatsPage startDate={startDate} endDate={endDate} filter={filter}/>
           </div>
         )
       }
