@@ -92,9 +92,7 @@ const CircularPacking = ({ data, groupBy = 'week', tagBy = '', tooltipPosition }
 
   if (noData) {
     return (
-      <NoChartData>
-        No tags yet. Once you start reviewing <br /> code, you can view your stats here.
-      </NoChartData>
+      <NoChartData type="Tags" />
     );
   }
 

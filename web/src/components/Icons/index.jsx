@@ -87,6 +87,7 @@ const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
 const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...props }) => {
   const sizes = {
+    tiny: '8px',
     small: '16px',
     medium: '24px',
     large: '32px',

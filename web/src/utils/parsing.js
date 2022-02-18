@@ -21,6 +21,11 @@ export const getEmoji = (id) => {
   return emoji;
 };
 
+export const getEmojiLabel = (id) => {
+  const { label } = find(EMOJIS, { _id: id });
+  return label;
+};
+
 export const getTagLabel = (id) => {
   const { label } = find(TAGS, { _id: id });
   return label;

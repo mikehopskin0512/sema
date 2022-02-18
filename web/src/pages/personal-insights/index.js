@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx'
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import SnapshotBar from '../../components/snapshots/snapshotBar';
-import { InfoFilledIcon } from '../../components/Icons';
+import { InfoOutlineIcon } from '../../components/Icons';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Helmet, { PersonalInsightsHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
@@ -13,12 +13,14 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
+import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS, EMOJIS } from '../../utils/constants';
+import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getEmojiLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
-import { blue600 } from '../../../styles/_colors.module.scss';
+import { gray500 } from '../../../styles/_colors.module.scss';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../components/snapshots/modalWindow';
 import SnapshotButton from '../../components/snapshots/snapshotButton';
+import styles from "./personal-insights.module.scss";
+import Avatar from 'react-avatar';
 
 const { fetchSmartCommentSummary, fetchSmartCommentOverview } = commentsOperations;
 
@@ -96,32 +98,33 @@ const PersonalInsights = () => {
     }
   };
 
-  const getTopReactions = async (reactions) => {
+  const getTopReactions = (reactions) => {
     let data = [];
     if (reactions) {
       const sorted = Object.keys(reactions).sort(function (a, b) { return reactions[b] - reactions[a] })
-      data = await Promise.all(sorted.filter((_, index) => index <= 2).map(async (reaction, index) => {
-        if (index <= 2) {
-          const emoji = await getEmoji(reaction)
-          return {
-            [emoji]: reactions[reaction]
-          }
+      data = sorted.map((reaction) => {
+        const emoji = getEmoji(reaction)
+        const label = getEmojiLabel(reaction)
+        return {
+          emoji: emoji,
+          reactions: reactions[reaction],
+          label,
         }
-      }));
+      });
     }
     setTopReactions(data);
   };
 
-  const getTopTags = async (tags) => {
+  const getTopTags = (tags) => {
     let data = [];
     if (tags) {
       const sorted = Object.keys(tags).sort(function (a, b) { return tags[b] - tags[a] })
-      data = await Promise.all(sorted.filter((_, index) => index <= 2).map(async (tag) => {
+      data = sorted.map((tag) => {
         const label = getTagLabel(tag);
         return {
           [label]: tags[tag]
         }
-      }));
+      });
     }
     setTopTags(data);
   };
@@ -256,42 +259,93 @@ const PersonalInsights = () => {
     setFilterValues(overview);
   }, [comments, filter]);
 
+  const renderTopReactions = () => {
+    const iterate = topReactions.length >= 1 ? topReactions : EMOJIS;
+    return iterate.map((reaction) => {
+      const { emoji, reactions = 0, label } = reaction;
+      return (
+        <>
+          <div className='has-background-gray-100 is-flex is-align-items-center mr-8 my-4 px-8 py-0 border-radius-4px'>
+            <span className='is-size-8 has-text-gray-700 has-text-weight-semibold is-flex is-align-items-center'><span className='is-size-6 mr-8'>{emoji}</span> {label.toUpperCase()} <strong className='is-size-5 ml-8'>{reactions}</strong></span>
+          </div>
+        </>
+      )
+    })
+  };
+
+  const renderTopTags = () => {
+    if (topTags.length >= 1) {
+      return topTags.map((tag) => {
+        const label = Object.keys(tag);
+        return (
+          <>
+            <div>
+              <span className="tag has-text-blue-700 is-primary is-light has-text-weight-semibold mr-5 mb-5 is-uppercase is-size-8 py-16 px-10">{label}</span>
+            </div>
+          </>
+        )
+      })
+    }
+    return (
+      <span className='is-size-8 has-text-gray-500'>No tags for now</span>
+    )
+  };
+
   return (
     <>
       <Helmet {...PersonalInsightsHelmet} />
-      <div className="my-40 is-hidden-mobile">
-        <div className="mb-15">
+      <div className={`is-hidden-mobile ${styles['page-wrapper']}`} >
+        <div className={`has-background-white mb-24 pt-20 ${styles.wrapper}`}>
           <div className="is-flex is-justify-content-space-between">
-            <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">
+            <p className="is-flex is-justify-content-center is-align-items-center has-text-black-950 has-text-weight-semibold is-size-3 mb-20 px-15">
+              <Avatar
+                src={user.avatarUrl || DEFAULT_AVATAR}
+                round
+                size={40}
+                className="mr-20"
+              />
               Personal Insights
-              <span className="ml-20 is-size-7 has-text-weight-normal">
-                <InfoFilledIcon
-                  color={blue600}
-                  size="small"
-                  style={{ verticalAlign: 'text-bottom' }}
+              <span className="ml-20 is-size-7 has-text-weight-normal is-flex is-align-items-center">
+                <InfoOutlineIcon
+                  color={gray500}
+                  size="medium"
                 />
-                <span className="ml-8">
+                <span className="is-size-6 ml-8 has-text-gray-700">
                   Only you can see this page.
                 </span>
                 <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`}>
-                  <span className="is-underlined ml-5">
+                  <span className="ml-5 has-text-weight-semibold has-text-blue-700">
                     Learn More
                   </span>
                 </a>
               </span>
             </p>
-
-            <div className="is-flex">
-              <button className={clsx("button border-radius-0 is-small", commentView === 'received' ? 'is-primary' : '')} onClick={() => setCommentView('received')}>
-                Comments received
-              </button>
-              <button className={clsx("button border-radius-0 is-small", commentView === 'given' ? 'is-primary' : '')} onClick={() => setCommentView('given')}>
-                Comments given
-              </button>
+          </div>
+          <div className='is-flex is-justify-content-space-between p-16'>
+            <div className={`${styles['comment-wrapper']}`} >
+              <p className='is-size-8 has-text-weight-semibold mb-8 has-text-gray-700'>TOTAL COMMENTS</p>
+              <span className='is-size-5 has-text-weight-semibold has-text-black-900'>{totalSmartComments}</span>
+            </div>
+            <div className={`is-flex is-flex-grow-1 is-flex-direction-column ${styles['summaries-wrapper']}`} >
+              <p className='is-size-8 has-text-weight-semibold has-text-gray-700'>TOTAL SUMMARIES</p>
+              <div className='is-flex is-flex-wrap-wrap'>{renderTopReactions()}</div>
+            </div>
+            <div className={`is-flex is-flex-grow-1 is-flex-direction-column ${styles['summaries-wrapper']}`} >
+              <p className='is-size-8 has-text-weight-semibold has-text-gray-700'>COMMON TAGS</p>
+              <div className='is-flex is-flex-wrap-wrap mt-4'>{renderTopTags()}</div>
+            </div>
+            <div className='is-flex is-flex-grow-1 is-flex-direction-column is-justify-content-center'>
+              <div className="is-flex">
+                <button className={clsx("button border-radius-0 is-small has-text-weight-semibold", commentView === 'received' ? 'is-primary' : '')} onClick={() => setCommentView('received')}>
+                  Comments received
+                </button>
+                <button className={clsx("button border-radius-0 is-small has-text-weight-semibold", commentView === 'given' ? 'is-primary' : '')} onClick={() => setCommentView('given')}>
+                  Comments given
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <PersonalStatsTile topTags={topTags} topReactions={topReactions} totalSmartComments={totalSmartComments} />
         <StatsFilter filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">

@@ -162,7 +162,7 @@ const RepoPage = () => {
           tab={selectedTab}
         />
 
-        <div className={clsx(styles.divider, 'mb-20 mx-10')} />
+        <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
         <StatsView overview={overview} dates={dates} />
       </div>

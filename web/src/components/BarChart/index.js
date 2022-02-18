@@ -217,9 +217,7 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType, tooltipPosition }) => {
 
   if (noData) {
     return (
-      <NoChartData>
-        No summaries yet. Once you start reviewing <br /> code, you can view your stats here.
-      </NoChartData>
+      <NoChartData type="Summaries" />
     );
   }
 

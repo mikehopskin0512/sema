@@ -153,7 +153,7 @@ const CustomSelect = (props) => {
         className={clsx(
           'border-radius-4px is-flex is-justify-content-space-between is-align-items-center is-clickable',
           styles.select,
-          outlined ? styles['select-outlined'] : 'has-background-gray-100 border-none',
+          outlined ? styles['select-outlined'] : 'has-background-white border-none',
           outlined ? 'has-background-white' : null,
           small ? 'py-5 px-10' : 'py-10 px-15'
         )}>
