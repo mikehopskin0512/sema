@@ -134,7 +134,7 @@ Feature: Dashboard options
 
     @admin  @PTA41
     Scenario: Footer's social media links are present on a buttons
-#        Then I expect that element "footerIdeaBoardBtn" becomes displayed
-#        When I click on the button "footerIdeaBoardBtn"
-#        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
-#        And  I expect that element "createIdeaInput" becomes displayed
+        Then I expect that element "footerLinkedInBtn" becomes displayed
+        Then I expect that element "footerInstagramBtn" becomes displayed
+        Then I expect that element "footerFacebookBtn" becomes displayed
+        Then I expect that element "footerTwitterBtn" becomes displayed

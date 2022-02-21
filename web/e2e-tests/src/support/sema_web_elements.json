@@ -27,6 +27,11 @@
     "emailBtn"                      : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/button[text()='Email']",
     "ideaBoardBtn"                  : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/a[text()='Idea Board']",
 
+    "footerLinkedInBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.linkedin.com/company/11298026']",
+    "footerInstagramBtn"            : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.instagram.com/se_ma1743/']",
+    "footerFacebookBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://business.facebook.com/semasoftware/']",
+    "footerTwitterBtn"              : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://twitter.com/semasoftware1']",
+
     "########## LOGIN LOCATORS ###############" : "",
     "signInWithGithubBtn"           : "//div[contains(@class,'is-hidden-touch')]//span[text()='Sign in with GitHub']",
     "loginInput"                    : "#login_field",
