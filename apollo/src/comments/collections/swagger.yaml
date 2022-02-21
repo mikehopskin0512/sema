@@ -21,6 +21,8 @@ components:
       properties:
         _id:
           type: string
+        type:
+          type: string
         author:
           type: string
         comments:
@@ -66,7 +68,7 @@ paths:
               properties:
                 collection:
                   $ref: '#/components/schemas/Collection'
-                team:
+                teamId:
                   type: string
       responses:
         201:

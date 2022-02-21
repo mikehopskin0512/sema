@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { createTeamCollection } from '../comments/collections/collectionService';
+import { createTeamCollection, findByAuthor } from '../comments/collections/collectionService';
+import { semaCorporateTeamName } from '../config';
 
 const { Schema } = mongoose;
 

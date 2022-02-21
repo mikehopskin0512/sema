@@ -85,14 +85,14 @@ const HeaderMenu = ({
 
   const renderMenuItems = useMemo(() => {
     // Sort teams, first one should be the selected team.
-    const selectedTeamIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.team._id === selectedTeam?.team?._id), 1)[0];
+    const selectedTeamIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.team?._id === selectedTeam?.team?._id), 1)[0];
     selectedTeamIndex && orderedTeams.unshift(selectedTeamIndex);
 
     const menuItems = orderedTeams.map((team, index) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team._id === selectedTeam?.team?._id}/>
+      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team?._id === selectedTeam?.team?._id}/>
     ))
 
-    const userMenu = 
+    const userMenu =
       <>
         <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedTeam).length === 0} />
         <hr className="navbar-divider m-0 has-background-gray-300" />

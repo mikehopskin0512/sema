@@ -120,6 +120,13 @@ export const CIRCULAR_PACKING_COLORS = {
   NEGATIVE: '#E8E8E8',
 };
 
+export const COLLECTION_TYPE = {
+  COMMUNITY: 'community',
+  PERSONAL: 'personal',
+  TEAM: 'team',
+};
+
+
 export const DAYS_IN_WEEK = 7;
 export const DAYS_IN_MONTH = 30;
 export const DAYS_IN_YEAR = 365;

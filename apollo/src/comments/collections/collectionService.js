@@ -4,32 +4,43 @@ import logger from '../../shared/logger';
 import {
   findById as findUserById,
   findUserCollectionsByUserId,
-  patch as updateUser,
+  patch as updateUser, populateCollectionsToUsers,
 } from '../../users/userService';
-import { getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
+import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
+import { COLLECTION_TYPE } from './constants';
 
 const { Types: { ObjectId } } = mongoose;
 
-export const create = async ({
-  name,
-  description,
-  tags,
-  comments,
-  author,
-  source = {}
-}) => {
+export const create = async (collection, userId, teamId) => {
   try {
     const newCollection = new Collection({
-      name,
-      description,
-      tags,
-      comments,
-      author,
-      source,
-    })
-    const savedCollection = await newCollection.save();
-    return savedCollection;
+      ...collection,
+      tags: collection.tags.map((tag) => ({
+        ...tag,
+        tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
+      })),
+      createdBy: ObjectId(userId),
+    });
+    const createdCollection = await newCollection.save();
+
+    const collectionIds = [createdCollection._id];
+    switch (collection.type) {
+      case COLLECTION_TYPE.COMMUNITY:
+        await populateCollectionsToUsers(collectionIds);
+        await bulkUpdateTeamCollections(collectionIds)
+        break;
+      case COLLECTION_TYPE.TEAM:
+        await bulkUpdateTeamCollections(collectionIds, teamId)
+        break;
+      case COLLECTION_TYPE.PERSONAL:
+        await populateCollectionsToUsers(collectionIds, userId);
+        break;
+      default:
+        return;
+    }
+
+    return createdCollection;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -37,9 +48,8 @@ export const create = async ({
   }
 };
 
-export const createMany = async (collections, userId) => {
+export const createMany = async (collections, type, userId, teamId) => {
   try {
-    // Should we add a field for which team this collection is for once teams feature is implemented?
     const cols = collections.map((collection) => ({
       ...collection,
       tags: collection.tags.map((tag) => {
@@ -255,6 +265,7 @@ export const createUserCollection = async (username) => {
       description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
       author: username,
       isActive: true,
+      type: COLLECTION_TYPE.PERSONAL,
       comments: [],
     };
     const userCollection = await create(defaultCollection);
@@ -273,6 +284,7 @@ export const createTeamCollection = async (team) => {
       description: team.description,
       author: team.name,
       isActive: true,
+      type: COLLECTION_TYPE.TEAM,
       comments: [],
     };
     return await create(collection);
