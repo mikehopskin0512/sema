@@ -32,6 +32,7 @@ Feature: Dashboard options
         Then I expect that element "supportModal" becomes displayed
         And  I expect that element "supportModalTitleInput" becomes displayed
         And  I expect that element "supportModalTypeSelect" becomes displayed
+        And  I expect that option "Support" is selected in the dropdown "supportModalTypeSelect"
         And  I expect that element "supportModalDetailInput" becomes displayed
         And  I expect that element "supportModalEmailInput" becomes displayed
         And  I expect that element "supportModalCancelBtn" becomes displayed
@@ -72,3 +73,68 @@ Feature: Dashboard options
         And  I set "test title" with timestamp to the inputfield "supportModalTitleInput"
         Then I expect that element "supportModalTitleError" becomes not displayed
         And  I expect that element "supportModalEmailError" becomes not displayed
+
+    @admin  @PTA34
+    Scenario: Footer action Release Notes leads to info page
+        Then I expect that element "footerReleaseNoteBtn" becomes displayed
+        When I click on the button "footerReleaseNoteBtn"
+        And  I expect that the url is "/release-notes"
+        And  I expect that the title is "Release Notes"
+        And  I expect that element "releaseNoteList" becomes displayed
+
+    @admin  @PTA35
+    Scenario: Footer action Terms and Conditions leads to info page
+        Then I expect that element "footerTermsAndConditionsBtn" becomes displayed
+        When I click on the button "footerTermsAndConditionsBtn"
+        And  I expect that the url is "/terms-and-conditions"
+        And  I expect that the title is "Terms and Conditions"
+        And  I expect that element "termsAndConditionSection" becomes displayed
+
+    @admin  @PTA37
+    Scenario: Footer action Send Feedback leads to info page
+        Then I expect that element "footerSendFeedbackBtn" becomes displayed
+        When I click on the button "footerSendFeedbackBtn"
+        Then I expect that element "supportModal" becomes displayed
+        And  I expect that element "supportModalTitleInput" becomes displayed
+        And  I expect that element "supportModalTypeSelect" becomes displayed
+        And  I expect that option "Feedback" is selected in the dropdown "supportModalTypeSelect"
+        And  I expect that element "supportModalDetailInput" becomes displayed
+        And  I expect that element "supportModalEmailInput" becomes displayed
+        And  I expect that element "supportModalCancelBtn" becomes displayed
+        And  I expect that element "supportModalSubmitBtn" becomes displayed
+
+    @admin  @PTA38
+    Scenario: Footer action Idea Board leads to info page
+        Then I expect that element "footerIdeaBoardBtn" becomes displayed
+        When I click on the button "footerIdeaBoardBtn"
+        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
+        And  I expect that element "createIdeaInput" becomes displayed
+
+    @admin  @PTA39
+    Scenario: Footer Email button opens the support modal
+        Then I expect that element "emailBtn" becomes displayed
+        When I click on the button "emailBtn"
+        Then I expect that element "supportModal" becomes displayed
+        And  I expect that element "supportModalTitleInput" becomes displayed
+        And  I expect that element "supportModalTypeSelect" becomes displayed
+        And  I expect that option "Support" is selected in the dropdown "supportModalTypeSelect"
+        And  I expect that element "supportModalDetailInput" becomes displayed
+        And  I expect that element "supportModalEmailInput" becomes displayed
+        And  I expect that element "supportModalCancelBtn" becomes displayed
+        And  I expect that element "supportModalSubmitBtn" becomes displayed
+
+    @admin  @PTA40
+    Scenario: Footer Idea Board button opens the board in a new tab
+        Then I expect that element "ideaBoardBtn" becomes displayed
+        When I click on the button "ideaBoardBtn"
+        And  I pause for 2000ms
+        And  I switch to opened tab
+        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
+        And  I expect that element "createIdeaInput" becomes displayed
+
+    @admin  @PTA41
+    Scenario: Footer's social media links are present on a buttons
+#        Then I expect that element "footerIdeaBoardBtn" becomes displayed
+#        When I click on the button "footerIdeaBoardBtn"
+#        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
+#        And  I expect that element "createIdeaInput" becomes displayed

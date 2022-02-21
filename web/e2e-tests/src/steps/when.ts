@@ -19,6 +19,7 @@ import getElementText from '../support/action/getElementText';
 import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimestamp";
 import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
 import clickElementByIndex from "../support/action/clickElementByIndex";
+import switchTab from '../support/action/switchTab';
 
 /**
  * Abstracting some steps by functionality. 
@@ -124,4 +125,9 @@ When(
 When(
     /^I save the name of collection "([^"]*)?"$/,
     getElementText
+)
+
+When(
+    /^I switch to opened tab$/,
+    switchTab
 )

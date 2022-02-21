@@ -17,9 +17,17 @@ import waitFor from '../support/action/waitFor';
 import checkNumberOfElementsExists from "../support/lib/checkNumberOfElementsExists";
 import checkEqualTextForElements from "../support/check/checkEqualTextForElements";
 import isEnabled from "../support/check/isEnabled";
+import isSelected from 'webdriverio/build/commands/element/isSelected';
+import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
+import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
+);
+
+Then(
+    /^I expect that the absolute url is( not)* "([^"]*)?"$/,
+    checkAbsoluteURLPath
 );
 
 Then(
@@ -81,6 +89,11 @@ Then(
 Then(
     /^I expect that checkbox "([^"]*)?" is( not)* checked$/,
     isEnabled
+);
+
+Then(
+    /^I expect that option "([^"]*)?" is( not)* selected in the dropdown "([^"]*)?"$/,
+    checkSelectedDropDownOption
 );
 
 Then(
