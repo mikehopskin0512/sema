@@ -131,7 +131,7 @@ jobs:
           template: basic_success_1
       - slack/notify:
           branch_pattern: "release.*"
-          event: pass
+          event: "pass"
           channel: "release-management"
           custom: |
             {
