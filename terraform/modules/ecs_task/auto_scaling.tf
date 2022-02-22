@@ -63,7 +63,26 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   namespace           = "AWS/ECS"
   period              = "60"
   statistic           = "Average"
-  threshold           = "85"
+  threshold           = "70"
+
+  dimensions = {
+    ClusterName = var.ecs_cluster.name
+    ServiceName = aws_ecs_service.this.name
+  }
+
+  alarm_description = "This metric monitors ${var.name_prefix}-${var.application} autoscaling up policy"
+  alarm_actions     = [aws_appautoscaling_policy.service_out.arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "service_memory_high" {
+  alarm_name          = "${var.name_prefix}-${var.application}_memory_utilization_high"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "MemoryUtilization"
+  namespace           = "AWS/ECS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "70"
 
   dimensions = {
     ClusterName = var.ecs_cluster.name
