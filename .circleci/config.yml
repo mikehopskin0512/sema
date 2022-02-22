@@ -1,4 +1,4 @@
-version: '2.1'
+version: 2.1
 orbs:
   slack: circleci/slack@4.4
   openvpn: titel-media/openvpn@0.1.1
