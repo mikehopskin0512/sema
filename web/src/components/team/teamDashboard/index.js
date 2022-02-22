@@ -4,8 +4,7 @@ import usePermission from '../../../hooks/usePermission';
 import MetricsCard from '../metricsCard';
 import RepoCard from '../../repos/repoCard';
 import MinimalTeamTable from '../minimalTeamTable';
-import { PlusIcon } from '../../Icons';
-import { PATHS } from '../../../utils/constants';
+import { PATHS, TAB } from '../../../utils/constants';
 
 const MAX_REPOS = 6;
 
@@ -65,7 +64,7 @@ const TeamDashboard = ({ team }) => {
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Team Members</p>
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(`${PATHS.TEAM._}/${teamId}`)}
+              onClick={() => router.push(`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`)}
             >
               View All
             </button>
