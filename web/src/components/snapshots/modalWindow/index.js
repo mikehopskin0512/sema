@@ -83,7 +83,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     onClose();
   };
 
-  const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments.slice(0, 3) || [], [snapshotData])
+  const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData])
 
   useEffect(() => {
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
@@ -92,7 +92,9 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
         description: snapshotData.description
       });
     }
-  }, [])
+  }, []);
+
+  const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px'} : null, [dataType, activityTypeData]);
 
   return (
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
@@ -135,7 +137,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
                 )}
               />
             </div>
-            <div className="has-background-gray-300 p-10 mb-20">
+            <div className="has-background-gray-300 p-10 mb-20" style={containerStyle}>
               {
                 dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (
                   activityTypeData.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />)
