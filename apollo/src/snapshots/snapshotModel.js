@@ -4,21 +4,33 @@ import { getUserMetadata } from '../users/userService';
 
 const { Schema } = mongoose;
 
+const githubMetadataSchema = new Schema({
+  url: String,
+  pull_number: String,
+  repo_id: String,
+  repo: String,
+  head: String,
+  base: String,
+  requester: String,
+  requesterAvatarUrl: String,
+  commentId: String,
+  clone_url: String,
+  user: { id: String, login: String },
+  filename: { type: String, default: null },
+  file_extension: { type: String, default: null },
+  line_numbers: { type: Array, default: [] },
+  title: String,
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+});
+
 const smartCommentSchema = new Schema({
   smartCommentId: { type: Schema.Types.ObjectId, ref: 'SmartComments' },
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   comment: String,
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
-  githubMetadata: {
-    url: String,
-    repo: String,
-    user: {
-      login: String,
-    },
-    pull_number: String,
-    requester: String,
-  },
+  githubMetadata: githubMetadataSchema,
   createdAt: Date,
 }, { _id: false });
 

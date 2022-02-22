@@ -24,6 +24,8 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
@@ -56,6 +58,8 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
@@ -96,6 +100,8 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
@@ -156,6 +162,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -163,6 +170,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -170,6 +178,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -179,6 +188,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/

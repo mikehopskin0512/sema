@@ -46,6 +46,7 @@ ReactionChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.bool,
+  isTeamView: PropTypes.bool,
 };
 
 export default ReactionChart;

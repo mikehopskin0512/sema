@@ -152,21 +152,21 @@ const getTeamSnippets = async(userId, teamId, searchResults = []) => {
         as: 'team'
       }
     }, {
-      $lookup: {
-        from: 'collections',
-        localField: 'team.collections',
-        foreignField: '_id',
-        as: 'collections'
-      }
-    }, {
       $project: {
         collections: {
           $filter: {
-            input: '$collections',
+            input: { $first: '$team.collections' },
             as: 'collection',
             cond: { $eq: ['$$collection.isActive', true] }
           }
         }
+      }
+    }, {
+      $lookup: {
+        from: 'collections',
+        localField: 'collections.collectionData',
+        foreignField: '_id',
+        as: 'collections'
       }
     }, {
       $project: {

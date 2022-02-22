@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
+import { DotIcon } from '../../Icons';
 
 const ActivityItem = (props) => {
   const {
@@ -78,10 +79,10 @@ const ActivityItem = (props) => {
             <img className={clsx('is-rounded border-radius-24px is-hidden-desktop mr-5', styles.avatar)} src={avatarUrl} alt="user_icon" />
             <p className="is-size-7 has-text-black-950">
               {!isEmpty(firstName) ?
-                <a href={`https://github.com/${login}`} className="has-text-black-950 is-underlined" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
-                <span className="has-text-black-950 is-underlined">{username.split('@')[0] || 'User'}</span>}
-              {' reviewed '}
-              <a href={getPRUrl()} className="has-text-black-950 is-underlined" target="_blank" rel="noreferrer">
+                <a href={`https://github.com/${login}`} className="has-text-black-950 has-text-weight-semibold" target="_blank" rel="noreferrer">{firstName} {lastName}</a> :
+                <span className="has-text-black-950 has-text-weight-semibold">{username.split('@')[0] || 'User'}</span>}
+              <span className='has-text-gray-700'>{' reviewed '}</span>
+              <a href={getPRUrl()} className="has-text-black-950 has-text-weight-semibold" target="_blank" rel="noreferrer">
                 {getPRName(pull_number, title)}
               </a>
               {` by ${requester}`}
@@ -95,10 +96,10 @@ const ActivityItem = (props) => {
           </div>
           {tags.length > 0 ? (
             <>
-              <div className={styles['item-comment_divider']} />
+              <DotIcon size="tiny" className="mx-24 has-text-black-950" />
               <div className="is-flex is-flex-wrap-wrap">
                 {tags.map(({ label }) => (
-                  <span key={`tag-${label}`} className="tag is-dark is-rounded is-italic has-text-weight-bold is-size-8 mr-5 my-2">{label}</span>
+                  <span key={`tag-${label}`} className="tag has-background-gray-200 has-text-black-950 has-text-weight-bold is-size-7 mr-5 my-2 py-16">{label}</span>
                 ))}
               </div>
             </>

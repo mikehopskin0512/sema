@@ -10,6 +10,7 @@ import usePopup from '../../hooks/usePopup';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
 import { gray700 } from '../../../styles/_colors.module.scss';
+import { CalendarOutlineIcon } from '../Icons';
 
 console.warn = console.error = () => {};
 
@@ -112,7 +113,7 @@ const DateRangeSelector = (props) => {
           <div className="dropdown-trigger is-flex-grow-1 is-flex">
             <button
               className={clsx(
-                'border-radius-4px is-flex is-justify-content-space-between is-align-items-center py-10 px-15 is-clickable',
+                'border-radius-4px is-flex is-justify-content-space-between is-align-items-center p-8 is-clickable',
                 outlined ? 'has-background-white' : 'has-background-gray-100',
                 outlined ? styles.outlined : 'border-none',
                 styles.button,
@@ -120,8 +121,11 @@ const DateRangeSelector = (props) => {
               onClick={toggleMenu}
               {...buttonProps}
             >
-              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-7", styles.placeholder)}>
-                { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
+              <span className={clsx("has-text-weight-semibold is-fullwidth is-size-7 is-flex is-align-items-center", styles.placeholder)}>
+                <CalendarOutlineIcon className={`${styles.icon}`} />
+                <span>
+                  { buttonProps.placeholder ? buttonProps.placeholder : start && end ? `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}` : 'Date range'}
+                </span>
               </span>
               <span className="is-small pb-5 pl-10">
                 <FontAwesomeIcon icon={faSortDown} color={gray700} />
@@ -129,7 +133,7 @@ const DateRangeSelector = (props) => {
             </button>
           </div>
           <div className={"dropdown-menu"} id="dropdown-menu" role="menu" ref={popupRef}>
-            <div className={clsx("dropdown-content", styles['dropdown-container'])}>
+            <div className={clsx("dropdown-content p-0 mt-4", styles['dropdown-container'])}>
               <DayPickerRangeController
                 startDate={start}
                 endDate={end}

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -15,6 +15,7 @@ import styles from './modalWindow.module.scss';
 import { isEmpty } from 'lodash';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { parseSnapshotData } from '../../../utils/parsing';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 
@@ -62,6 +63,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
       componentType: dataType,
       componentData: snapshotData.componentData,
     }
+    snapshotDataForSave.componentData.smartComments = parseSnapshotData(snapshotDataForSave.componentData.smartComments)
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
         const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
@@ -81,6 +83,8 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     onClose();
   };
 
+  const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments.slice(0, 3) || [], [snapshotData])
+
   useEffect(() => {
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
       reset({
@@ -94,7 +98,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
       <div className="modal-background" />
       <div className={clsx('modal-content px-10', styles.modalWindowContent)}>
-        <div className="px-15 py-10 has-background-white">
+        <div className="px-25 py-15 has-background-white border-radius-4px">
           <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
             {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save snapshot to Portfolio' : 'Edit snapshot'}
           </p>
@@ -134,7 +138,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
             <div className="has-background-gray-300 p-10 mb-20">
               {
                 dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (
-                  snapshotData?.componentData?.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width' isSnapshot />)
+                  activityTypeData.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />)
                 )
               }
               {dataType === SNAPSHOT_DATA_TYPES.SUMMARIES &&

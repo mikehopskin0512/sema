@@ -64,11 +64,17 @@ export const update = async (snapshotId, snapshot) => {
       { $set: structureSnapshot(snapshot) },
       { new: true },
     )
-    .populate({
-      path: 'componentData.smartComments.tags',
-      model: 'Tag',
-    })
-    .exec();
+      .populate([
+        {
+          path: 'componentData.smartComments.tags',
+          model: 'Tag',
+        },
+        {
+          path: 'componentData.smartComments.userId',
+          model: 'User',
+        }
+      ])
+      .exec();
     return updatedSnapshot;
   } catch (err) {
     const error = new errors.NotFound(err);

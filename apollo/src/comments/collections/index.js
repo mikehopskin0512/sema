@@ -6,11 +6,10 @@ import path from "path";
 import { semaCorporateTeamId, version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { bulkUpdateTeamCollections } from '../../teams/teamService';
-import { createMany, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleTeamsActiveCollection, update } from './collectionService';
-import { populateCollectionsToUsers } from "../../users/userService";
+import { create, findByAuthor, findById, getUserCollectionsById, toggleActiveCollection, toggleTeamsActiveCollection, update } from './collectionService';
 import { _checkPermission } from '../../shared/utils';
 import checkEnv from "../../middlewares/checkEnv";
+import { COLLECTION_TYPE } from './constants';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -63,25 +62,22 @@ export default (app, passport) => {
   });
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { collections, team } = req.body;
+    const { collection, teamId } = req.body;
     const { _id: userId } = req.user;
 
     try {
-      const newCollections = await createMany(collections, userId);
-      if (!newCollections) {
+      if (!Object.values(COLLECTION_TYPE).includes(collection.type)) {
+        const error = new errors.BadRequest('Wrong collection type')
+        return res.status(error.statusCode).send(error);
+      }
+
+      const createdCollection = await create(collection, userId, teamId);
+      if (!createdCollection) {
         throw new errors.BadRequest('Collections create error');
       }
 
-      const collectionIds = newCollections.map((col) => col._id);
-      if (team == semaCorporateTeamId) {
-        await bulkUpdateTeamCollections(collectionIds, semaCorporateTeamId)
-        await populateCollectionsToUsers(collectionIds);
-      } else {
-        await populateCollectionsToUsers(collectionIds, userId);
-      }
-
       return res.status(201).send({
-        collections: newCollections
+        createdCollection
       });
     } catch (error) {
       logger.error(error);

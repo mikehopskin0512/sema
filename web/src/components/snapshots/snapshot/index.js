@@ -29,7 +29,7 @@ const Snapshot = ({ snapshotData, portfolioId }) => {
     if (componentData) {
       switch (type) {
         case 'comments':
-          return componentData?.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width' isSnapshot />);
+          return componentData?.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />);
         case 'summaries':
           return (<SnapshotChartContainer chartType="reactions" {...componentData} />);
         case 'tags':

@@ -12,6 +12,8 @@ if [ "${ENV}" = "localhost" ]; then
   cp .env.localhost .env
 elif [ "${ENV}" = "qa" ]; then
   cp .env.qa .env
+elif [ "${ENV}" = "qa1" ]; then
+  cp .env.qa1 .env
 elif [ "${ENV}" = "prod" ]; then
   cp .env.prod .env
 elif [ "${ENV}" = "staging" ]; then

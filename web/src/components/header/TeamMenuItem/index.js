@@ -21,7 +21,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
     if (!!role?.team?._id) {
       viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
     }
-    
+
     dispatch(setSelectedTeam(role));
     dispatch(setProfileViewMode(viewMode));
     router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.DASHBOARD}`);
@@ -50,12 +50,12 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
             />
             {isSelected ? (
               <>
-                <p className={`has-text-black-950 has-text-weight-semibold mb-5`}>{role.team.name}</p>
+                <p className={`has-text-black-950 has-text-weight-semibold mb-5`}>{role.team?.name}</p>
                 <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Team Account</p>
               </>
             ) : (
               <div>
-                <p className={`has-text-black-950 has-text-weight-semibold`}>{role.team.name}</p>
+                <p className={`has-text-black-950 has-text-weight-semibold`}>{role.team?.name}</p>
                 <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Team Account</p>
               </div>
             )}

@@ -9,15 +9,13 @@ import { CheckOnlineIcon } from '../../../Icons';
 import Toaster from '../../../toaster';
 import { alertOperations } from '../../../../state/features/alerts';
 import { collectionsOperations } from '../../../../state/features/collections';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../../utils/constants';
-import usePermission from '../../../../hooks/usePermission';
+import { COLLECTION_TYPE, PATHS, PROFILE_VIEW_MODE } from '../../../../utils/constants';
 import schema from '../schema';
 
 const { clearAlert } = alertOperations;
 const { createCollections } = collectionsOperations;
 
 const AddCommentCollection = () => {
-  const { checkTeam } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -40,7 +38,7 @@ const AddCommentCollection = () => {
       sourceLink: '',
       name: '',
       description: '',
-      isPopulate: true,
+      isCommunityCollection: true,
     },
     resolver: yupResolver(schema),
   });
@@ -52,12 +50,15 @@ const AddCommentCollection = () => {
   }, [showAlert, dispatch]);
 
   const onSubmit = async (data) => {
+    const isTeamView = auth.profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW;
+    const collectionType = isTeamView ? COLLECTION_TYPE.TEAM : COLLECTION_TYPE.PERSONAL;
     setLoading(true);
     const { languages, others, comments, author, isActive, sourceName, sourceLink, name, description } = data;
     const collection = {
       isActive,
       author,
       comments,
+      type: data.isCommunityCollection ? COLLECTION_TYPE.COMMUNITY : collectionType,
       name,
       description,
       source: {
@@ -65,24 +66,18 @@ const AddCommentCollection = () => {
         url: sourceLink,
       },
       tags: [...languages, ...others],
+    };
+
+    try {
+      await dispatch(createCollections({
+        collection,
+        teamId: auth.selectedTeam ? auth.selectedTeam._id : null,
+      }, token));
+      await router.push(PATHS.SNIPPETS._);
+    } finally {
+      setLoading(false);
     }
-
-    let currentSemaTeamId = null;
-    if (data.isPopulate && checkTeam(SEMA_CORPORATE_TEAM_ID)) {
-      currentSemaTeamId = SEMA_CORPORATE_TEAM_ID;
-    }
-
-    const collections = await dispatch(createCollections({
-      collections: new Array(collection),
-      team: currentSemaTeamId
-    }, token));
-
-    if (collections.length > 0) {
-      await router.push(PATHS.SNIPPETS._)
-    }
-
-    setLoading(false);
-  }
+  };
 
   return (
     <>

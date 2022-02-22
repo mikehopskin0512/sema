@@ -14,7 +14,7 @@
 }
 
 .placeholder {
-  color: $blue-900 !important;
+  color: $gray-600;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -23,3 +23,8 @@
 .outlined {
   border: 1px solid $gray-500;
 }
+
+.icon {
+  margin-right: 6px;
+  min-width: 24px;
+} 

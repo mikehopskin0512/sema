@@ -218,11 +218,11 @@ const EditCommentCollectionForm = ({ errors, cid = null, control }) => {
       </div>
       {!cid && checkTeam(SEMA_CORPORATE_TEAM_ID) && (
         <Controller
-          name="isPopulate"
+          name="isCommunityCollection"
           control={control}
           render={({ field: { value, onChange } }) => (
             <CustomCheckbox
-              label="Populate this collection to all users"
+              label="Populate this collection to all users and teams"
               checked={value}
               onChange={(e) => onChange(e.target.checked)}
             />
