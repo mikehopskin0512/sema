@@ -9,12 +9,14 @@ import Select, { components } from 'react-select';
 import styles from './select.module.scss';
 import { gray700 } from '../../../../styles/_colors.module.scss';
 
-const Menu = ({ selectAll, deselectAll, isMulti, small, width, ...p }) => {
+const Menu = ({
+  selectAll, deselectAll, isMulti, small, width, ...p
+}) => {
   const { children } = p;
   return (
     <components.Menu {...p} className={clsx('mt-neg5', styles.menu)} style={{ width }}>
       { isMulti && (
-        <div className={clsx("mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7")} >
+        <div className={clsx('mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7')}>
           <div className="is-clickable has-text-link" onClick={selectAll}>Select all</div>
           <div className="mx-5">|</div>
           <div className="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
@@ -37,12 +39,12 @@ const Control = ({ children, selectProps, ...rest }) => {
         </components.Control>
       </div>
     </div>
-  )
+  );
 };
 
 const CustomSelect = (props) => {
   const {
-    label, selectProps, filter, showCheckbox, outlined = false, small = false, width = '100%'
+    label, selectProps, filter, showCheckbox, outlined = false, small = false, width = '100%',
   } = props;
 
   const { value, onChange, options, isMulti } = selectProps;
@@ -76,11 +78,11 @@ const CustomSelect = (props) => {
 
   const selectAll = () => {
     onChange(options);
-  }
+  };
 
   const deselectAll = () => {
     onChange([]);
-  }
+  };
 
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
 
@@ -116,16 +118,21 @@ const CustomSelect = (props) => {
   //   <components.Input className="p-0 is-size-8 has-text-weight-semibold has-text-black-950 is-fullwidth" {...p} />
   // );
 
-  const MultiValue = (p) => (
-    <components.MultiValue
-      {...p}
-      className="px-5 py-2 is-size-8 has-text-weight-semibold has-text-black-950 has-background-gray-100"
-    />
-  );
-
   const MultiValueRemove = () => null;
 
   const IndicatorsContainer = () => null;
+
+  const removeSelectedValue = (e, id) => {
+    e.stopPropagation();
+    onChange(value.filter(({ value: itemId }) => itemId !== id));
+  };
+
+  const MultiValue = (p) => (
+    <div className="tag px-5 py-2 is-size-8 has-text-weight-semibold has-text-black-950 has-background-gray-100">
+      {p.data.label}
+      <button className="delete is-small" onClick={(e) => (removeSelectedValue(e, p.data.value))} />
+    </div>
+  );
 
   const ValueContainer = (p) => (
     <components.ValueContainer
@@ -142,7 +149,7 @@ const CustomSelect = (props) => {
     isMulti,
     small,
     width,
-  }), [menuIsOpen]);
+  }), [deselectAll, isMulti, selectAll, small, width]);
 
   return (
     <div className="is-flex is-flex-direction-column is-align-items-stretch is-relative" ref={node}>
@@ -155,7 +162,7 @@ const CustomSelect = (props) => {
           styles.select,
           outlined ? styles['select-outlined'] : 'has-background-white border-none',
           outlined ? 'has-background-white' : null,
-          small ? 'py-5 px-10' : 'py-10 px-15'
+          small ? 'py-5 px-10' : 'py-10 px-15',
         )}>
         <div className="is-flex is-align-items-center">
           <span className={clsx('has-text-weight-semibold mr-10', styles.placeholder, small ? 'is-size-7' : 'is-size-')}>{label}</span>
@@ -196,7 +203,7 @@ const CustomSelect = (props) => {
             width={width}
             {...selectProps}
             onChange={(data) => {
-              selectProps.onChange(data)
+              selectProps.onChange(data);
               if (selectProps.closeMenuOnSelect) {
                 setMenuIsOpen(false);
               }
@@ -214,7 +221,7 @@ CustomSelect.defaultProps = {
   filter: true,
   showCheckbox: false,
   small: false,
-  width: '100%'
+  width: '100%',
 };
 
 CustomSelect.propTypes = {
@@ -223,7 +230,7 @@ CustomSelect.propTypes = {
   filter: PropTypes.bool,
   showCheckbox: PropTypes.bool,
   small: PropTypes.bool,
-  width: PropTypes.number
+  width: PropTypes.number,
 };
 
 export default React.memo(CustomSelect);
