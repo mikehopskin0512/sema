@@ -40,6 +40,12 @@
 
     "########### REPOS LOCATORS ###############" : "",
     "reposContainer"                : "div.reposView_repos-container__2oRmp",
+    "reposCards"                    : "div.repoCard_card-width-3c__xixuL",
+    "reposListRows"                 : "tr.is-clickable",
+    "inactiveViewBtn"               : "//button[@class='button border-radius-0 is-small']//*[name()='svg']/..",
+    "activeViewBtn"                 : "//button[@class='button border-radius-0 is-small is-primary']//*[name()='svg']/..",
+    "repoListViewBtn"               : "//div[contains(@class,'reposView_repos-container__2oRmp')]/div/div/div/button[1]",
+    "repoCardViewBtn"               : "//div[contains(@class,'reposView_repos-container__2oRmp')]/div/div/div/button[2]",
 
     "########## SNIPPETS LOCATORS #############" : "",
     "collectionArea"                : "//div[@id='collectionBody']",
