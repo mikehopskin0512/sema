@@ -115,7 +115,6 @@
     "shareCollectionBtn"            : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item is-active'][normalize-space()='Share with Sema Community']",
 
 
-
     "########## PERSONAL INSIGHTS LOCATORS #############" : "",
     "personalInsightsHeader"        : "//div[@class='tile']",
 
@@ -137,7 +136,6 @@
 
     "########## LABEL MANAGEMENT LOCATORS #############" : "",
     "labelManagementSection"        : "//div[@class='my-50 px-10']",
-
 
     "########## REAUTHORIZATION VERIFICATION LOCATORS #############" : "",
     "authorizeSemaSoftwareBtn"      : "//button[@id='js-oauth-authorize-btn']",
