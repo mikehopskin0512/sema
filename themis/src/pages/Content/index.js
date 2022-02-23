@@ -355,11 +355,11 @@ const onLoginChecked = () => {
 
       // Add Sema icon before Markdown icon
       const SEMA_ICON = getSemaIconTheme(getActiveTheme()) || SEMA_ICON_ANCHOR_LIGHT;
-      const markdownIcon = $(activeElement)
-        .parent()
-        .siblings('label')
-        .children('.tooltipped.tooltipped-nw');
-
+      /*
+        TODO: Need to find a dynamic way of getting the markdownIcon reference,
+        it gets changed by github time to time
+      */
+      const markdownIcon = $('.Link--muted.position-relative.d-inline');
       $(markdownIcon).after(SEMA_ICON);
     }
 
