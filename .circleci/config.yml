@@ -94,7 +94,7 @@ jobs:
             npm run wdio || true
           working_directory: web/e2e-tests
       - store_test_results:
-          path: web/e2e-tests/reports/html-reports
+          path: web/e2e-tests/test/results
       - openvpn/disconnect
       - slack/notify:
           event: fail
