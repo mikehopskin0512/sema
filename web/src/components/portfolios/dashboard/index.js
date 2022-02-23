@@ -95,7 +95,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
                 !isPublic && (
                   <button
                     type="button"
-                    className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10')}
+                    className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
                     onClick={() => toggleEditModal(true)}
                   >
                     <EditIcon />
