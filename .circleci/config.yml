@@ -92,8 +92,8 @@ jobs:
           name: run tests
           command: |
             npm run wdio || true
-            sed -i 's/<failure\/>//g' web/e2e-tests/test/results/results-0-0.xml
-            sed -i 's/<error message/<failure message/g' web/e2e-tests/test/results/results-0-0.xml
+            sed -i 's/<failure\/>//g' e2e-tests/test/results/results-0-0.xml
+            sed -i 's/<error message/<failure message/g' e2e-tests/test/results/results-0-0.xml
           working_directory: web/e2e-tests
       - store_test_results:
           path: web/e2e-tests/test/results
