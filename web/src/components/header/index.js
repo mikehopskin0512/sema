@@ -113,7 +113,7 @@ const Header = () => {
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <SignOutModal active={signOutModal} onClose={onCloseSignOutModal} />
       <nav
-        className="navbar is-transparent container"
+        className="navbar is-transparent container pt-16"
         role="navigation"
         aria-label="main navigation"
       >

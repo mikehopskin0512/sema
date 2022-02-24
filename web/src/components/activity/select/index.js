@@ -101,7 +101,7 @@ const CustomSelect = (props) => {
             <input type="checkbox" className="mr-8" checked={isSelected} />
             {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} /> }
             <span className="is-size-7 mr-5">{emoji ? `${emoji} ` : ''}</span>
-            <span className="is-size-7 has-text-weight-semibold has-text-black-950"><div dangerouslySetInnerHTML={{ __html: optionLabel }} /></span>
+            <span className={`is-size-7 has-text-weight-semibold has-text-black-950 ${styles['item-label']}`}>{optionLabel}</span>
           </label>
         ) : (
           <div className="is-flex is-align-items-center">

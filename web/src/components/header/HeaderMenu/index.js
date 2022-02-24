@@ -15,6 +15,7 @@ import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
+import Tooltip from '../../Tooltip';
 const { setSelectedTeam, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
@@ -104,10 +105,11 @@ const HeaderMenu = ({
 
   return (
     <>
-
-      <div onClick={() => router.push(`${PATHS.PORTFOLIOS}`)} className={clsx('has-background-gray-200 is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
-        <TrophyIcon />
-      </div>
+      <Tooltip text={'Here is your Developer Portfolio'}>
+        <div onClick={() => router.push(`${PATHS.PORTFOLIOS}`)} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+          <TrophyIcon />
+        </div>
+      </Tooltip>
       <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
