@@ -14,6 +14,9 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { ArrowDrowdownIcon, PlusIcon } from '../../Icons';
+import { PATHS } from '../../../utils/constants';
+import Badge from '../../badge/badge';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
@@ -67,6 +70,7 @@ const TeamManagement = () => {
     role: member.role ? member.role._id : null,
     roleName: member.role ? member.role.name : null,
     disableEdit: member.user?._id === user._id,
+    status: 'Active',
   })) || [], [members]);
 
   const handleChangeRole = useCallback((newValue, row) => {
@@ -88,6 +92,14 @@ const TeamManagement = () => {
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   }, [dispatch, page, perPage, token, user]);
 
+  const getBadgeColor = useCallback((label) => {
+    if (label === 'Active') return 'success';
+    if (label === 'Invited') return 'warning';
+    if (label === 'Invite Expired') return 'error';
+
+    return 'primary';
+  }, []);
+
   useEffect(() => {
     if (team.teams.length) {
       const activeRole = _.find(team.teams, function (o) {
@@ -103,7 +115,7 @@ const TeamManagement = () => {
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
       accessor: 'userInfo',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
+      className: 'pl-20 pr-50 py-10 has-background-white-50',
       Cell: ({ cell: { value } }) => (
         <div className="is-flex is-align-items-center is-cursor-pointer">
           <img src={value.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
@@ -115,12 +127,12 @@ const TeamManagement = () => {
       Header: () => <div className="is-size-8 is-uppercase">Email</div>,
       isVisible: false,
       accessor: 'email',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
+      className: 'pl-20 pr-50 py-10 has-background-gray-200',
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'role',
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width '),
+      className: clsx('px-20 py-10 has-background-white-50 is-full-width '),
       Cell: ({ cell: { value }, row }) => canModifyRoles ? (
         <div className={clsx('is-flex')}>
           <Select
@@ -128,14 +140,46 @@ const TeamManagement = () => {
             options={rolesOptions}
             value={rolesOptions.find((item) => item.value === value)}
             onChange={(newValue) => handleChangeRole(newValue, row)}
+            components={{
+              IndicatorSeparator: () => null,
+              DropdownIndicator: () => <ArrowDrowdownIcon className="mr-5" />
+            }}
           />
-          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
         </div>
       ) : (
         <span>{row.original.roleName}</span>
       ),
     },
-  ], [rolesOptions, handleChangeRole, onRemoveMember]);
+    {
+      Header: () => <div className="is-size-8 is-uppercase">Status</div>,
+      isVisible: false,
+      accessor: 'status',
+      className: 'pl-20 pr-50 py-10 has-background-white-50',
+      Cell: ({ cell: { value } }) => (
+        <div className="is-flex is-align-items-center">
+          <Badge label={value} color={getBadgeColor(value)} />
+          {
+            value !== 'Active' && (
+              <button className="button border-none has-text-primary">Re-invite</button>
+            )
+          }
+        </div>
+      ),
+    },
+    {
+      Header: "",
+      isVisible: false,
+      accessor: 'action',
+      className: 'pl-20 py-10 has-background-white-50',
+      Cell: ({ cell: { value }, row }) => canModifyRoles ? (
+        <div className="is-flex is-justify-content-flex-end">
+          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
+        </div>
+      ) : (
+        <div />
+      ),
+    },
+  ], [rolesOptions, handleChangeRole, onRemoveMember, getBadgeColor]);
 
   const fetchData = useCallback(({ pageIndex, pageSize }) => {
     setPage(pageIndex + 1);
@@ -153,12 +197,27 @@ const TeamManagement = () => {
     return initState
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
+  const goToInvitePage = () => {
+    router.push(PATHS.TEAM.INVITE(teamId));
+  };
+
   return (
-    <div className="has-background-gray-100 hero mx-10">
+    <div className="hero mx-10">
       <Helmet {...TeamManagementHelmet} />
+      <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
+        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+        <button
+          className="button is-primary border-radius-4px"
+          type="button"
+          onClick={goToInvitePage}
+        >
+          <PlusIcon size="small" />
+          <span className="ml-10">Invite New Members</span>
+        </button>
+      </div>
       <div className="hero-body py-0 px-0">
         <div className="content-container px-0">
-          <div className={styles['table-wrapper']}>
+          <div className={clsx('has-background-gray-300 pb-15', styles['table-wrapper'])}>
             <Table
               className="overflow-unset"
               data={dataSource}

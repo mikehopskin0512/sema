@@ -9,7 +9,7 @@ const ActionMenu = ({ member, onRemove, disabled = false }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const [modalOpen, setModalOpen] = useState(false);
-  
+
   useOutsideClick(popupRef, () => {
     if (isOpen) closeMenu();
   });
@@ -40,7 +40,7 @@ const ActionMenu = ({ member, onRemove, disabled = false }) => {
                 className="button is-small px-0 is-ghost has-background-white has-text-black outline-none"
                 onClick={() => setModalOpen(true)}
               >
-                <span className="has-text-danger mr-10">
+                <span className="has-text-red-500 mr-10">
                   <TrashIcon />
                 </span>
                 Remove member
