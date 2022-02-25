@@ -157,9 +157,7 @@ export const config: WebdriverIO.Config = {
     [
       "junit",
       {
-        outputDir: "./test/results",
-        suiteNameFormat: /[^a-zA-Z0-9@]+/,
-        addFileAttribute: true,
+        outputDir: "./test/results",                
         outputFileFormat: function (options) {
           // optional
           return `results-${options.cid}.xml`;
