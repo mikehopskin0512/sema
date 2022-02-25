@@ -1,221 +1,16 @@
 /* eslint-disable no-return-assign */
-import React, { useEffect, useState } from 'react';
-import { reverse, find, round } from 'lodash';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { format, isValid } from 'date-fns';
 import { ResponsiveBar } from '@nivo/bar';
-import { TooltipWrapper } from '@nivo/tooltip';
-import clsx from 'clsx';
 import NoChartData from '../noChartData';
-import { ArrowDownIcon, ArrowUpIcon } from '../Icons';
 import { EMOJIS } from '../../utils/constants';
 import {
-  black900,
-  green600,
-  green100,
-  red200,
-  red600,
-  gray200,
   greenAvailable,
   orange300,
 } from '../../../styles/_colors.module.scss';
-import styles from './barChart.module.scss';
 
-const NivoBarChart = ({ data = [], groupBy, yAxisType, tooltipPosition }) => {
-  const [barChartData, setBarChartData] = useState([]);
-  const [noData, setNoData] = useState(false);
-  const [maxValue, setMaxValue] = useState(0);
-  const [customTooltipPosition, setCustomTooltipPosition] = useState("top");
-
-  useEffect(() => {
-    if (yAxisType === "total") {
-      const totalArr = barChartData.filter((chartData) => chartData.total).map((chartData) => chartData.total);
-      setMaxValue(Math.max(...totalArr));
-    } else {
-      setMaxValue(100);
-    }
-  }, [barChartData])
-
-  const parseData = (rawData) => {
-    if (rawData.length) {
-      return rawData.map((item) => {
-        const keys = Object.keys(item);
-        const total = keys.reduce((acc, val) => {
-          if (val === 'date') {
-            return acc;
-          }
-          return acc + item[val].current;
-        }, 0);
-        if (total > 0) {
-          const obj = keys.reduce((acc, curr) => {
-            if (curr === 'date') {
-              return acc[curr] = item[curr], acc;
-            }
-            if (yAxisType === 'total') {
-              return acc[curr] = item[curr].current, acc;
-            }
-            return acc[curr] = round((item[curr].current * 100) / total, 2), acc;
-          }, {});
-          return {
-            total,
-            ...obj,
-          }
-        }
-        return {
-          date: item.date,
-        };
-      });
-    }
-    return [];
-  };
-
-  const getTotalReactions = () => {
-    let total = 0;
-    data.forEach((item) => {
-      let totalItem = 0;
-      EMOJIS.forEach((emoji) => {
-        totalItem += item[emoji._id].current
-      })
-      total += totalItem;
-    });
-    return total;
-  }
-
-  useEffect(() => {
-    const total = getTotalReactions();
-    if (total > 0) {
-      const parsedData = parseData(data);
-      setBarChartData(reverse(parsedData));
-      setNoData(false);
-    } else {
-      setNoData(true);
-    }
-  }, [data]);
-
-  const getDataColor = ({ id }) => {
-    const emoji = find(EMOJIS, { _id: id });
-    return emoji.color;
-  };
-
-  const TotalLabels = ({ bars, yScale }) => {
-    const labelMargin = 20;
-    return bars.map(({ data: { data, indexValue }, x, width }, i) => {
-      const total = data?.total
-
-      return (
-        <g
-          transform={`translate(${x}, ${yAxisType === 'percentage' ? -labelMargin : yScale(total) - labelMargin})`}
-          key={`${indexValue}-${i}`}
-        >
-          <text
-            className="bar-total-label"
-            x={width / 2}
-            y={labelMargin / 2}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            style={{
-              fill: black900,
-              fontSize: '14px'
-            }}
-          >
-            {total >= 1 && total}
-          </text>
-        </g>
-      );
-    });
-  };
-
-  const checkIfDateHasMonth = (date1, date2) => {
-    const hasMonth = {
-      true: date2,
-      false: `${date1.split(" ")[0]} ${date2}`,
-    }
-    return hasMonth[date2.includes(" ")];
-  }
-
-  useEffect(() => {
-    setCustomTooltipPosition(tooltipPosition);
-  }, [tooltipPosition]);
-
-  const renderTooltip = React.memo((itemData) => {
-    const { id, value, indexValue, data: colData } = itemData;
-    const { emoji, label } = find(EMOJIS, { _id: id });
-    const completeData = find(data, { date: indexValue });
-    if (completeData) {
-      const thisReactionData = completeData[id];
-
-      // Parse date format
-      let dateString = indexValue;
-      if (indexValue.search('-') !== -1) {
-        let [date1, date2] = indexValue.split('-');
-        date2 = checkIfDateHasMonth(date1, date2);
-        const parsedDate1 = format(new Date(date1), 'LLL d');
-        const parsedDate2 = format(new Date(date2), 'LLL d');
-        dateString = `${parsedDate1} - ${parsedDate2}`;
-      } else {
-        const parsedDate = new Date(indexValue);
-        const dateValid = isValid(parsedDate);
-        if (dateValid) {
-          dateString = format(new Date(indexValue), 'LLLL d');
-        }
-      }
-
-      // Create dynamic totalCommentsLabel
-      const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
-      const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / colData.total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
-        `% of total comments ${groupBy && totalCommentRange}`;
-
-      // Increase/decrease percentage
-      const { current, previous } = completeData[id] ?? {};
-      const valDifference = current - previous;
-      const percentage = previous ? (valDifference/previous)*100 : 100;
-
-      const lastPeriod = (groupBy) => {
-        switch (groupBy) {
-          case 'day':
-            return 'week';
-          case 'week':
-            return 'month';
-          case 'month':
-            return 'year';
-          case 'year':
-            return 'decade'; // Needs confirmation
-        }
-      }
-
-      return (
-        <TooltipWrapper anchor={customTooltipPosition} position={[0, 0]}>
-          <div className={clsx('box has-background-black p-10 border-radius-4px tooltip-container', styles.tooltip)}>
-            <div className="is-flex is-justify-content-space-between is-full-width mb-8">
-              <p className="font-size-14 has-text-weight-semibold has-text-white-50">{emoji} {label}</p>
-              <div className="font-size-12 has-text-primary has-text-blue-300 has-text-weight-semibold is-uppercase">{dateString}</div>
-            </div>
-            <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
-            <p className="font-size-12 line-height-18 has-text-gray-400">{totalCommentsLabel}</p>
-            <div
-              className="is-flex is-align-items-center font-size-10 py-3 px-5 border-radius-4px mt-8"
-              style={{
-                background: percentage === 0 ? gray200 : percentage > 0 ? green600 : red600,
-                color: percentage === 0 ? black900 : percentage > 0 ? green100 : red200,
-              }}
-            >
-              {/* TODO: temp solution since we don't have '=' icon */}
-              {percentage === 0 && <span className="font-size-16">=</span>}
-              {percentage > 0 ?
-                <ArrowUpIcon size="small" /> :
-                <ArrowDownIcon size="small" />
-              }
-              <span className="ml-4">
-                {percentage ? `${Math.abs(Math.round(percentage*100)/100)}%` : 'No changes'} from same {groupBy} last {lastPeriod(groupBy)}
-              </span>
-            </div>
-          </div>
-        </TooltipWrapper>
-      );
-    }
-  });
-
-  if (noData) {
+const NivoBarChart = ({ yAxisType, emptyChart, barChartData, getDataColor, renderTooltip, maxValue, TotalLabels }) => {
+  if (emptyChart) {
     return (
       <NoChartData type="Summaries" />
     );
@@ -322,13 +117,14 @@ const NivoBarChart = ({ data = [], groupBy, yAxisType, tooltipPosition }) => {
   );
 };
 
-NivoBarChart.defaultProps = {
-  groupBy: null,
-};
-
 NivoBarChart.propTypes = {
-  data: PropTypes.array.isRequired,
-  groupBy: PropTypes.string,
+  yAxisType: PropTypes.string.isRequired,
+  emptyChart: PropTypes.bool.isRequired,
+  barChartData: PropTypes.array.isRequired,
+  getDataColor: PropTypes.func.isRequired,
+  renderTooltip: PropTypes.element.isRequired,
+  maxValue: PropTypes.number.isRequired,
+  TotalLabels: PropTypes.func.isRequired,
 };
 
 export default NivoBarChart;
