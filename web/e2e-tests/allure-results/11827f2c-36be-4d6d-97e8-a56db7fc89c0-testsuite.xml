@@ -1,0 +1,128 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803734062' stop='1645803736135'>
+    <name>Dashboard options: Footer Idea Board button opens the board in a new tab</name>
+    <title>Dashboard options: Footer Idea Board button opens the board in a new tab</title>
+    <test-cases>
+        <test-case start='1645803734062' status='passed' stop='1645803734062'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803734062' status='passed' stop='1645803734068'>
+            <name>Then I expect that element "ideaBoardBtn" becomes displayed</name>
+            <title>Then I expect that element "ideaBoardBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803734068' status='passed' stop='1645803734113'>
+            <name>When I click on the button "ideaBoardBtn"</name>
+            <title>When I click on the button "ideaBoardBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803734113' status='passed' stop='1645803736116'>
+            <name>And I pause for 2000ms</name>
+            <title>And I pause for 2000ms</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803736116' status='broken' stop='1645803736135'>
+            <name>And I switch to opened tab</name>
+            <title>And I switch to opened tab</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+            <failure>
+                <message>Error: No window found with title, url or name matching "https://sema.uservoice.com/forums/934797-sema"</message>
+                <stack-trace>Error: No window found with title, url or name matching "https://sema.uservoice.com/forums/934797-sema"
+                    at Browser.switchWindow (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/commands/browser/switchWindow.js:71:11)
+                    at runMicrotasks (&lt;anonymous>)
+                    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+                    at Browser.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at World.exports.default (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/src/support/action/switchTab.ts:11:5)</stack-trace>
+            </failure>
+        </test-case>
+        <test-case start='1645803736135' status='pending' stop='1645803736135'>
+            <name>And I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"</name>
+            <title>And I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803736135' status='pending' stop='1645803736135'>
+            <name>And I expect that element "createIdeaInput" becomes displayed</name>
+            <title>And I expect that element "createIdeaInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803736135' status='passed' stop='1645803736135'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

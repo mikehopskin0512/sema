@@ -1,0 +1,315 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803777925' stop='1645803778899'>
+    <name>User is able to interact with snippets properly: Adding new snippet to "My Snippets" collection</name>
+    <title>User is able to interact with snippets properly: Adding new snippet to "My Snippets" collection</title>
+    <test-cases>
+        <test-case start='1645803777925' status='passed' stop='1645803777925'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777926' status='passed' stop='1645803777969'>
+            <name>When I click on the element "snippetsTab"</name>
+            <title>When I click on the element "snippetsTab"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777969' status='passed' stop='1645803777973'>
+            <name>Then I expect that element "addNewSnippetBtn" becomes displayed</name>
+            <title>Then I expect that element "addNewSnippetBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777973' status='passed' stop='1645803778011'>
+            <name>When I click on the element "addNewSnippetBtn"</name>
+            <title>When I click on the element "addNewSnippetBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778011' status='passed' stop='1645803778529'>
+            <name>Then I expect that element "newSnippetTitleInput" becomes displayed</name>
+            <title>Then I expect that element "newSnippetTitleInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778529' status='passed' stop='1645803778571'>
+            <name>When I set "Test Snippet" with timestamp to the inputfield "newSnippetTitleInput"</name>
+            <title>When I set "Test Snippet" with timestamp to the inputfield "newSnippetTitleInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778571' status='passed' stop='1645803778595'>
+            <name>And I set "Body text test" to the inputfield "newSnippetBodyInput"</name>
+            <title>And I set "Body text test" to the inputfield "newSnippetBodyInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778595' status='passed' stop='1645803778601'>
+            <name>Then I expect that element "newSnippetLanguagesInput" becomes displayed</name>
+            <title>Then I expect that element "newSnippetLanguagesInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778601' status='passed' stop='1645803778650'>
+            <name>When I click on the element "newSnippetLanguagesInput"</name>
+            <title>When I click on the element "newSnippetLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778650' status='passed' stop='1645803778680'>
+            <name>And I set "Java" to the inputfield "newSnippetLanguagesInput"</name>
+            <title>And I set "Java" to the inputfield "newSnippetLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778680' status='passed' stop='1645803778686'>
+            <name>And I press "Enter"</name>
+            <title>And I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778686' status='passed' stop='1645803778692'>
+            <name>Then I expect that element "newSnippetTagsInput" becomes displayed</name>
+            <title>Then I expect that element "newSnippetTagsInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778692' status='passed' stop='1645803778733'>
+            <name>When I click on the element "newSnippetTagsInput"</name>
+            <title>When I click on the element "newSnippetTagsInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778733' status='passed' stop='1645803778771'>
+            <name>And I set "Naming" to the inputfield "newSnippetTagsInput"</name>
+            <title>And I set "Naming" to the inputfield "newSnippetTagsInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778771' status='passed' stop='1645803778777'>
+            <name>And I press "Enter"</name>
+            <title>And I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778777' status='passed' stop='1645803778781'>
+            <name>Then I expect that element "newSnippetSourceNameInput" becomes displayed</name>
+            <title>Then I expect that element "newSnippetSourceNameInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778781' status='passed' stop='1645803778820'>
+            <name>And I set "Source name test" to the inputfield "newSnippetSourceNameInput"</name>
+            <title>And I set "Source name test" to the inputfield "newSnippetSourceNameInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778820' status='passed' stop='1645803778856'>
+            <name>And I set "http://sourceLinktest.com" to the inputfield "newSnippetSourceLinkInput"</name>
+            <title>And I set "http://sourceLinktest.com" to the inputfield "newSnippetSourceLinkInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778856' status='passed' stop='1645803778860'>
+            <name>Then I expect that element "saveNewSnippetBtn" becomes displayed</name>
+            <title>Then I expect that element "saveNewSnippetBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778860' status='passed' stop='1645803778895'>
+            <name>When I click on the button "saveNewSnippetBtn"</name>
+            <title>When I click on the button "saveNewSnippetBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778895' status='passed' stop='1645803778898'>
+            <name>Then I expect that new item "allSnippetsNames" is added to snippets</name>
+            <title>Then I expect that new item "allSnippetsNames" is added to snippets</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803778898' status='passed' stop='1645803778899'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

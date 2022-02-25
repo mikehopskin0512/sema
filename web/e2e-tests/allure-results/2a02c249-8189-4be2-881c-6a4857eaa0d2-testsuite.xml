@@ -1,0 +1,425 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803867337' stop='1645803879141'>
+    <name>User is able to interact with snippets properly: Snippet collection can be edited</name>
+    <title>User is able to interact with snippets properly: Snippet collection can be edited</title>
+    <test-cases>
+        <test-case start='1645803867337' status='passed' stop='1645803867337'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867337' status='passed' stop='1645803867359'>
+            <name>When I click on the element "userLogo"</name>
+            <title>When I click on the element "userLogo"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867359' status='passed' stop='1645803867368'>
+            <name>Then I expect that element "semaCorporateTeamLogo" becomes displayed</name>
+            <title>Then I expect that element "semaCorporateTeamLogo" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867369' status='passed' stop='1645803867426'>
+            <name>When I click on the element "semaCorporateTeamLogo"</name>
+            <title>When I click on the element "semaCorporateTeamLogo"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867426' status='passed' stop='1645803867455'>
+            <name>Then I expect that element "snippetsTab" becomes displayed</name>
+            <title>Then I expect that element "snippetsTab" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867455' status='passed' stop='1645803867489'>
+            <name>When I click on the element "snippetsTab"</name>
+            <title>When I click on the element "snippetsTab"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803867489' status='passed' stop='1645803868531'>
+            <name>Then I expect that element "threeDotsCollectionBtn" becomes displayed</name>
+            <title>Then I expect that element "threeDotsCollectionBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803868531' status='passed' stop='1645803868570'>
+            <name>When I click on the "1st" element "threeDotsCollectionBtn"</name>
+            <title>When I click on the "1st" element "threeDotsCollectionBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803868570' status='passed' stop='1645803868574'>
+            <name>Then I expect that element "editCollectionBtn" becomes displayed</name>
+            <title>Then I expect that element "editCollectionBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803868574' status='passed' stop='1645803868606'>
+            <name>When I click on the element "editCollectionBtn"</name>
+            <title>When I click on the element "editCollectionBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803868606' status='broken' stop='1645803879135'>
+            <name>Then I expect that element "newCollectionTitleInput" becomes displayed</name>
+            <title>Then I expect that element "newCollectionTitleInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+            <failure>
+                <message>Error: element ("//input[@name='name']") still not displayed after 10000ms</message>
+                <stack-trace>Error: element ("//input[@name='name']") still not displayed after 10000ms
+                    at /Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/commands/browser/waitUntil.js:66:23
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.elementErrorHandlerCallbackFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/middlewares.js:24:32)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.elementErrorHandlerCallbackFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/middlewares.js:24:32)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at World.exports.default (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/src/support/action/waitForDisplayed.ts:26:5)</stack-trace>
+            </failure>
+        </test-case>
+        <test-case start='1645803879136' status='pending' stop='1645803879136'>
+            <name>When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"</name>
+            <title>When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879136' status='pending' stop='1645803879136'>
+            <name>When I click on the element "newCollectionLanguagesInput"</name>
+            <title>When I click on the element "newCollectionLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879136' status='pending' stop='1645803879136'>
+            <name>And I set "java" to the inputfield "newCollectionLanguagesInput"</name>
+            <title>And I set "java" to the inputfield "newCollectionLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879137' status='pending' stop='1645803879137'>
+            <name>Then I expect that element "firstOptionForLanguagesInput" becomes displayed</name>
+            <title>Then I expect that element "firstOptionForLanguagesInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879137' status='pending' stop='1645803879137'>
+            <name>When I press "Enter"</name>
+            <title>When I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879137' status='pending' stop='1645803879137'>
+            <name>Then I expect that element "newCollectionOtherLabelInput" becomes displayed</name>
+            <title>Then I expect that element "newCollectionOtherLabelInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879137' status='pending' stop='1645803879137'>
+            <name>When I click on the element "newCollectionOtherLabelInput"</name>
+            <title>When I click on the element "newCollectionOtherLabelInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879137' status='pending' stop='1645803879137'>
+            <name>And I set "Syntax" to the inputfield "newCollectionOtherLabelInput"</name>
+            <title>And I set "Syntax" to the inputfield "newCollectionOtherLabelInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879138'>
+            <name>Then I expect that element "firstOptionForOtherLabelInput" becomes displayed</name>
+            <title>Then I expect that element "firstOptionForOtherLabelInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879138'>
+            <name>When I press "Enter"</name>
+            <title>When I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879138'>
+            <name>And I set "test author name" to the inputfield "newCollectionAuthorInput"</name>
+            <title>And I set "test author name" to the inputfield "newCollectionAuthorInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879138'>
+            <name>And I set "Source name test" to the inputfield "newCollectionSourceNameInput"</name>
+            <title>And I set "Source name test" to the inputfield "newCollectionSourceNameInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879138'>
+            <name>And I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"</name>
+            <title>And I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879138' status='pending' stop='1645803879139'>
+            <name>When I set "Body text test" to the inputfield "newCollectionDescriptionInput"</name>
+            <title>When I set "Body text test" to the inputfield "newCollectionDescriptionInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879139' status='pending' stop='1645803879139'>
+            <name>Then I expect that element "saveNewCollectionBtn" becomes displayed</name>
+            <title>Then I expect that element "saveNewCollectionBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879139' status='pending' stop='1645803879139'>
+            <name>When I click on the button "saveNewCollectionBtn"</name>
+            <title>When I click on the button "saveNewCollectionBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879139' status='pending' stop='1645803879139'>
+            <name>Then I expect that new item "allCollectionsNames" is added to collections</name>
+            <title>Then I expect that new item "allCollectionsNames" is added to collections</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803879139' status='passed' stop='1645803879140'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

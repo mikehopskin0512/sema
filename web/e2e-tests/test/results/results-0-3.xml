@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Login with different user roles" timestamp="2022-02-25T09:42:42" time="0.72" tests="1" failures="0" errors="0" skipped="0">
+    <properties>
+      <property name="specId" value="0"/>
+      <property name="featureName" value="Login with different user roles"/>
+      <property name="capabilities" value="chrome.98_0_4758_109.darwin"/>
+      <property name="featureFile" value="./src/features/smoke_test/login.feature"/>
+    </properties>
+    <testcase classname="CucumberJUnitReport-chrome.98_0_4758_109.darwin.Login with different user roles" name="Normal user can be logged in and logged out successfully" time="0.7" file="./src/features/smoke_test/login.feature">
+      <system-out><![CDATA[
+✅ When I wait on element "userLogo" for 10000ms to be displayed✅ And I expect that element "userLogo" becomes displayed✅ When I click on the element "userLogo"✅ Then I expect that element "signOutBtn" becomes displayed✅ When I click on the element "signOutBtn"✅ Then I expect that element "confirmBtn" becomes displayed✅ And I click on the element "confirmBtn"✅ Then I expect that element "signInWithGithubBtn" becomes displayed
+]]></system-out>
+    </testcase>
+  </testsuite>
+</testsuites>

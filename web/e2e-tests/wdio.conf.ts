@@ -158,11 +158,18 @@ export const config: WebdriverIO.Config = {
       "junit",
       {
         outputDir: "./test/results",
+        suiteNameFormat: /[^a-zA-Z0-9@]+/,
+        addFileAttribute: true,
         outputFileFormat: function (options) {
           // optional
           return `results-${options.cid}.xml`;
         },
-      },
+        errorOptions: {
+            error: 'message',
+            failure: 'message',
+            stacktrace: 'stack'
+        },        
+      }
     ],
     [
       "html-nice",
@@ -176,8 +183,12 @@ export const config: WebdriverIO.Config = {
         collapseTests: false,
         //to turn on screenshots after every test
         useOnAfterCommandForScreenshot: false,
-      },
+      }
     ],
+    ['allure', {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,        
+    }]   
   ],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.

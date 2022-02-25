@@ -1,0 +1,551 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803833200' stop='1645803844534'>
+    <name>User is able to interact with snippets properly: Field validation for creating collection</name>
+    <title>User is able to interact with snippets properly: Field validation for creating collection</title>
+    <test-cases>
+        <test-case start='1645803833200' status='passed' stop='1645803833201'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833201' status='passed' stop='1645803833224'>
+            <name>When I click on the element "userLogo"</name>
+            <title>When I click on the element "userLogo"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833224' status='passed' stop='1645803833259'>
+            <name>When I click on the element "semaCorporateTeamLogo"</name>
+            <title>When I click on the element "semaCorporateTeamLogo"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833259' status='passed' stop='1645803833325'>
+            <name>When I click on the element "snippetsTab"</name>
+            <title>When I click on the element "snippetsTab"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833325' status='passed' stop='1645803833838'>
+            <name>Then I expect that element "addNewCollectionBtn" becomes displayed</name>
+            <title>Then I expect that element "addNewCollectionBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833839' status='passed' stop='1645803833882'>
+            <name>When I click on the element "addNewCollectionBtn"</name>
+            <title>When I click on the element "addNewCollectionBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803833882' status='broken' stop='1645803844526'>
+            <name>Then I expect that element "newCollectionTitleInput" becomes displayed</name>
+            <title>Then I expect that element "newCollectionTitleInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+            <failure>
+                <message>Error: element ("//input[@name='name']") still not displayed after 10000ms</message>
+                <stack-trace>Error: element ("//input[@name='name']") still not displayed after 10000ms
+                    at /Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/commands/browser/waitUntil.js:66:23
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.elementErrorHandlerCallbackFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/middlewares.js:24:32)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at Element.elementErrorHandlerCallbackFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/webdriverio/build/middlewares.js:24:32)
+                    at Element.wrapCommandFn (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/node_modules/@wdio/utils/build/shim.js:106:29)
+                    at World.exports.default (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/src/support/action/waitForDisplayed.ts:26:5)</stack-trace>
+            </failure>
+        </test-case>
+        <test-case start='1645803844526' status='pending' stop='1645803844526'>
+            <name>And I expect that element "saveNewCollectionBtn" becomes displayed</name>
+            <title>And I expect that element "saveNewCollectionBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>When I click on the button "saveNewCollectionBtn"</name>
+            <title>When I click on the button "saveNewCollectionBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>Then I expect that element "snippetCollectionTitleError" becomes displayed</name>
+            <title>Then I expect that element "snippetCollectionTitleError" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>And I expect that element "snippetCollectionTitleError" matches the text "Title is required"</name>
+            <title>And I expect that element "snippetCollectionTitleError" matches the text "Title is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>And I expect that element "snippetCollectionLanguageError" matches the text "At least one tag is required"</name>
+            <title>And I expect that element "snippetCollectionLanguageError" matches the text "At least one tag is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>And I expect that element "snippetCollectionOtherError" matches the text "At least one tag is required"</name>
+            <title>And I expect that element "snippetCollectionOtherError" matches the text "At least one tag is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844527' status='pending' stop='1645803844527'>
+            <name>And I expect that element "snippetCollectionAuthorError" matches the text "Author is required"</name>
+            <title>And I expect that element "snippetCollectionAuthorError" matches the text "Author is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>And I expect that element "snippetCollectionSourceNameError" matches the text "Source name is required"</name>
+            <title>And I expect that element "snippetCollectionSourceNameError" matches the text "Source name is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>And I expect that element "snippetCollectionLinkError" matches the text "Source link is required"</name>
+            <title>And I expect that element "snippetCollectionLinkError" matches the text "Source link is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"</name>
+            <title>When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>When I click on the element "newCollectionLanguagesInput"</name>
+            <title>When I click on the element "newCollectionLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>And I set "java" to the inputfield "newCollectionLanguagesInput"</name>
+            <title>And I set "java" to the inputfield "newCollectionLanguagesInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844528' status='pending' stop='1645803844528'>
+            <name>Then I expect that element "firstOptionForLanguagesInput" becomes displayed</name>
+            <title>Then I expect that element "firstOptionForLanguagesInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844529'>
+            <name>When I press "Enter"</name>
+            <title>When I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844529'>
+            <name>Then I expect that element "newCollectionOtherLabelInput" becomes displayed</name>
+            <title>Then I expect that element "newCollectionOtherLabelInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844529'>
+            <name>When I click on the element "newCollectionOtherLabelInput"</name>
+            <title>When I click on the element "newCollectionOtherLabelInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844529'>
+            <name>And I set "Syntax" to the inputfield "newCollectionOtherLabelInput"</name>
+            <title>And I set "Syntax" to the inputfield "newCollectionOtherLabelInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844529'>
+            <name>Then I expect that element "firstOptionForOtherLabelInput" becomes displayed</name>
+            <title>Then I expect that element "firstOptionForOtherLabelInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844529' status='pending' stop='1645803844530'>
+            <name>When I press "Enter"</name>
+            <title>When I press "Enter"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844530' status='pending' stop='1645803844530'>
+            <name>And I set "test author name" to the inputfield "newCollectionAuthorInput"</name>
+            <title>And I set "test author name" to the inputfield "newCollectionAuthorInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844531'>
+            <name>And I set "Source name test" to the inputfield "newCollectionSourceNameInput"</name>
+            <title>And I set "Source name test" to the inputfield "newCollectionSourceNameInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844531'>
+            <name>And I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"</name>
+            <title>And I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844531'>
+            <name>Then I expect that element "snippetCollectionTitleError" becomes not displayed</name>
+            <title>Then I expect that element "snippetCollectionTitleError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844531'>
+            <name>And I expect that element "snippetCollectionLanguageError" becomes not displayed</name>
+            <title>And I expect that element "snippetCollectionLanguageError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844531'>
+            <name>And I expect that element "snippetCollectionOtherError" becomes not displayed</name>
+            <title>And I expect that element "snippetCollectionOtherError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844531' status='pending' stop='1645803844532'>
+            <name>And I expect that element "snippetCollectionAuthorError" becomes not displayed</name>
+            <title>And I expect that element "snippetCollectionAuthorError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844532' status='pending' stop='1645803844532'>
+            <name>And I expect that element "snippetCollectionSourceNameError" becomes not displayed</name>
+            <title>And I expect that element "snippetCollectionSourceNameError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844532' status='pending' stop='1645803844532'>
+            <name>And I expect that element "snippetCollectionLinkError" matches the text "Invalid URL"</name>
+            <title>And I expect that element "snippetCollectionLinkError" matches the text "Invalid URL"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844532' status='pending' stop='1645803844532'>
+            <name>When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"</name>
+            <title>When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844532' status='pending' stop='1645803844532'>
+            <name>Then I expect that element "snippetCollectionLinkError" becomes not displayed</name>
+            <title>Then I expect that element "snippetCollectionLinkError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803844532' status='passed' stop='1645803844533'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

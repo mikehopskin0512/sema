@@ -1,0 +1,147 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803763004' stop='1645803763705'>
+    <name>Login with different user roles: Normal user can be logged in and logged out successfully</name>
+    <title>Login with different user roles: Normal user can be logged in and logged out successfully</title>
+    <test-cases>
+        <test-case start='1645803763005' status='passed' stop='1645803763006'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763006' status='passed' stop='1645803763016'>
+            <name>When I wait on element "userLogo" for 10000ms to be displayed</name>
+            <title>When I wait on element "userLogo" for 10000ms to be displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763016' status='passed' stop='1645803763021'>
+            <name>And I expect that element "userLogo" becomes displayed</name>
+            <title>And I expect that element "userLogo" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763021' status='passed' stop='1645803763066'>
+            <name>When I click on the element "userLogo"</name>
+            <title>When I click on the element "userLogo"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763066' status='passed' stop='1645803763079'>
+            <name>Then I expect that element "signOutBtn" becomes displayed</name>
+            <title>Then I expect that element "signOutBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763079' status='passed' stop='1645803763127'>
+            <name>When I click on the element "signOutBtn"</name>
+            <title>When I click on the element "signOutBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763127' status='passed' stop='1645803763133'>
+            <name>Then I expect that element "confirmBtn" becomes displayed</name>
+            <title>Then I expect that element "confirmBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763133' status='passed' stop='1645803763180'>
+            <name>And I click on the element "confirmBtn"</name>
+            <title>And I click on the element "confirmBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763181' status='passed' stop='1645803763704'>
+            <name>Then I expect that element "signInWithGithubBtn" becomes displayed</name>
+            <title>Then I expect that element "signInWithGithubBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803763704' status='passed' stop='1645803763704'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-3'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

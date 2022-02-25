@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Repo" timestamp="2022-02-25T09:42:29" time="0.163" tests="1" failures="0" errors="0" skipped="0">
+    <properties>
+      <property name="specId" value="0"/>
+      <property name="featureName" value="Repo"/>
+      <property name="capabilities" value="chrome.98_0_4758_109.darwin"/>
+      <property name="featureFile" value="./src/features/repo.feature"/>
+    </properties>
+    <testcase classname="CucumberJUnitReport-chrome.98_0_4758_109.darwin.Repo" name="My Repos can change card view to list view" time="0.145" file="./src/features/repo.feature">
+      <system-out><![CDATA[
+✅ Then I expect that element "reposContainer" becomes displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "repoListViewBtn" becomes displayed✅ And I expect that element "repoCardViewBtn" becomes displayed✅ When I click on the element "repoListViewBtn"✅ Then I expect that element "reposCards" becomes not displayed✅ And I expect that element "reposListRows" becomes displayed✅ When I click on the element "repoCardViewBtn"✅ Then I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed
+]]></system-out>
+    </testcase>
+  </testsuite>
+</testsuites>
