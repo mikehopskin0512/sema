@@ -96,7 +96,7 @@ jobs:
             #sed -i 's/<error message/<failure message/g' test/results/results-0-0.xml
           working_directory: web/e2e-tests
       - store_test_results:
-          path: web/e2e-tests/test/results
+          path: web/e2e-tests/test/allure-results
       - openvpn/disconnect
       - slack/notify:
           event: fail
