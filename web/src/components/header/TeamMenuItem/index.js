@@ -29,7 +29,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
   };
 
   const handleSettingsClick = () => {
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.info}`);
+    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
   }
 
   const isFirstTeam = (index) => index === 0;

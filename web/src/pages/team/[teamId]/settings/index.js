@@ -35,7 +35,7 @@ const TeamSettings = () => {
   const setDefaultTag = () => {
     router.push({
       pathname: `/team/${teamId}/settings`,
-      query: { tab: 'info' },
+      query: { tab: TAB.management },
     });
   };
 
