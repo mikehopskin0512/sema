@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import Avatar from 'react-avatar';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -16,7 +17,6 @@ import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { ArrowDrowdownIcon, PlusIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
-import Badge from '../../badge/badge';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
@@ -32,7 +32,6 @@ const TeamManagement = () => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
-  const [userRole, setUserRole] = useState({});
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -59,7 +58,7 @@ const TeamManagement = () => {
     label: role.name,
   })) || [], [roles]);
 
-  const dataSource = useMemo(() => members?.map((member) => ({
+  const dataSource = useMemo(() => members ? members.map((member) => ({
     _id: member._id,
     userInfo: {
       userId: member.user?._id,
@@ -70,8 +69,8 @@ const TeamManagement = () => {
     role: member.role ? member.role._id : null,
     roleName: member.role ? member.role.name : null,
     disableEdit: member.user?._id === user._id,
-    status: 'Active',
-  })) || [], [members]);
+    status: 'Invited',
+  })).sort((member1, member2) => member1.userInfo.name.localeCompare(member2.userInfo.name)) : [], [members]);
 
   const handleChangeRole = useCallback((newValue, row) => {
     setIsOpen(true);
@@ -92,25 +91,6 @@ const TeamManagement = () => {
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   }, [dispatch, page, perPage, token, user]);
 
-  const getBadgeColor = useCallback((label) => {
-    if (label === 'Active') return 'success';
-    if (label === 'Invited') return 'warning';
-    if (label === 'Invite Expired') return 'error';
-
-    return 'primary';
-  }, []);
-
-  useEffect(() => {
-    if (team.teams.length) {
-      const activeRole = _.find(team.teams, function (o) {
-        return o.team._id === teamId
-      });
-      if (activeRole) {
-        setUserRole(activeRole)
-      }
-    }
-  }, [team]);
-
   const columns = useMemo(() => [
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
@@ -118,8 +98,8 @@ const TeamManagement = () => {
       className: 'pl-20 pr-50 py-10 has-background-white-50',
       Cell: ({ cell: { value } }) => (
         <div className="is-flex is-align-items-center is-cursor-pointer">
-          <img src={value.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
-          <span className="is-whitespace-nowrap">{ value.name }</span>
+          <Avatar src={value.avatarUrl} size="32" round />
+          <span className="is-whitespace-nowrap ml-10">{ value.name }</span>
         </div>
       ),
     },
@@ -151,27 +131,11 @@ const TeamManagement = () => {
       ),
     },
     {
-      Header: () => <div className="is-size-8 is-uppercase">Status</div>,
-      isVisible: false,
-      accessor: 'status',
-      className: 'pl-20 pr-50 py-10 has-background-white-50',
-      Cell: ({ cell: { value } }) => (
-        <div className="is-flex is-align-items-center">
-          <Badge label={value} color={getBadgeColor(value)} />
-          {
-            value !== 'Active' && (
-              <button className="button border-none has-text-primary">Re-invite</button>
-            )
-          }
-        </div>
-      ),
-    },
-    {
       Header: "",
       isVisible: false,
       accessor: 'action',
       className: 'pl-20 py-10 has-background-white-50',
-      Cell: ({ cell: { value }, row }) => canModifyRoles ? (
+      Cell: ({ row }) => canModifyRoles ? (
         <div className="is-flex is-justify-content-flex-end">
           <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
         </div>
@@ -179,7 +143,7 @@ const TeamManagement = () => {
         <div />
       ),
     },
-  ], [rolesOptions, handleChangeRole, onRemoveMember, getBadgeColor]);
+  ], [rolesOptions, handleChangeRole, onRemoveMember]);
 
   const fetchData = useCallback(({ pageIndex, pageSize }) => {
     setPage(pageIndex + 1);
