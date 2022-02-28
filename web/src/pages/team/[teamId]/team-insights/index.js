@@ -78,6 +78,7 @@ const TeamInsights = () => {
     const params = {
       user: username,
       teamId: selectedTeam?.team?._id || '',
+      individual: isActive,
     };
     dispatch(fetchTeamSmartCommentSummary(params, token));
   };
@@ -172,7 +173,7 @@ const TeamInsights = () => {
 
   useAuthEffect(() => {
     getUserSummary(githubUser?.username);
-  }, [auth]);
+  }, [auth, isActive]);
 
   useEffect(() => {
     const reposList = githubUser.repositories?.map(item => (
