@@ -1,0 +1,15 @@
+name: Creating release candidate
+on:
+  schedule:
+    - cron: '0 12 * * 0' # At 12:00 PM, only on Sunday. UTC 
+  workflow_dispatch: 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git branch --list "release-*" | sed /\*/d
+
