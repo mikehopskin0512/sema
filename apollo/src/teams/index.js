@@ -15,12 +15,14 @@ import {
   getTeamsByUser,
   updateTeam,
   updateTeamRepos,
+  updateTeamAvatar,
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
 
 import { findById } from '../comments/collections/collectionService';
 import { _checkPermission } from '../shared/utils';
 import checkEnv from '../middlewares/checkEnv';
+import multer from '../multer';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -68,6 +70,20 @@ export default (app, passport) => {
       }
       const team = await updateTeam(teamData);
       return res.status(200).send(team);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/:teamId/upload', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
+    try {
+      const { teamId } = req.params;
+      const { _id: userId } = req.user;
+
+      const userRole = await updateTeamAvatar(teamId, userId, req.file);
+
+      return res.status(200).send(userRole);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

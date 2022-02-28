@@ -5,11 +5,14 @@ import {
   getTeamRepos,
   getTeams,
   postInviteUsersToTeam,
-  updateTeam, updateTeamRepos,
+  updateTeam,
+  updateTeamRepos,
   getAllTeamCollections,
+  uploadAvatar,
 } from './api';
 import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
 import * as types from './types';
+import { setSelectedTeam } from '../auth/actions';
 
 const requestFetchTeamsOfUser = () => ({
   type: types.REQUEST_FETCH_TEAMS_OF_USER,
@@ -310,3 +313,14 @@ export const fetchTeamSmartCommentOverview = (params, token) => async (dispatch)
     dispatch(requestFetchTeamSmartCommentOverviewError(errMessage));
   }
 };
+
+export const uploadTeamAvatar = (teamId, body, token) => async (dispatch) => {
+  try {
+    const res = await uploadAvatar(teamId, body, token);
+
+    dispatch(setSelectedTeam(res.data));
+    dispatch(fetchTeamsOfUser(token));
+  } catch (error) {
+    console.error(error);
+  }
+}

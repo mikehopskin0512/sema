@@ -9,6 +9,7 @@ import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon 
 import { PATHS } from '../../../../utils/constants' ;
 import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
 import UploadFile from '../../../../components/team/UploadFile';
+import { uploadTeamAvatar } from "../../../../state/features/teams/actions";
 
 const { editTeam, fetchTeamsOfUser } = teamsOperations;
 
@@ -62,6 +63,13 @@ const TeamEditPage = () => {
     dispatch(fetchTeamsOfUser(token));
   }, []);
 
+  const uploadAvatar = async (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    dispatch(uploadTeamAvatar(teamId, formData, token));
+  };
+
   const onUpdate = async () => {
     // validation
     if (!team.name || !team.description) {
@@ -72,7 +80,13 @@ const TeamEditPage = () => {
       return;
     }
 
-    await dispatch(editTeam(team, token));
+    const { avatarUrl, ...teamData } = team;
+
+    if (avatarUrl) {
+      await uploadAvatar(avatarUrl);
+    }
+
+    await dispatch(editTeam(teamData, token));
 
     toaster.notify(({ onClose }) => (
       <div className="message is-success shadow mt-60">

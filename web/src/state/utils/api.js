@@ -69,6 +69,18 @@ export const download = (endpoint, { params }, token = '') => {
   return api.get(endpoint, { params, ...config });
 };
 
+export const upload = (endpoint, data, token = '') => {
+  const config = {};
+  if (token) {
+    config.headers = {
+      Authorization: `Bearer ${token}`,
+      'content-type': 'multipart/form-data',
+    };
+  }
+
+  return api.post(endpoint, data, config);
+};
+
 export const create = (endpoint, item, token = '') => {
   const config = {};
   if (token) {
