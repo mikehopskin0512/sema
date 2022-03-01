@@ -91,3 +91,19 @@ export const googleAnalyticsPageView = (url) => {
 export const googleAnalyticsEvent = ({ action, params }) => {
   window.gtag('event', action, params);
 };
+
+// Segement
+
+export const identifyUserSegment = (user) => {
+  const { _id, username, firstName = '', lastName = '' } = user;
+  global.analytics.identify(_id, {
+    name: `${firstName} ${lastName}`.trim(),
+    email: username
+  });
+};
+
+export const trackActionSegment = (action, opts) => {
+  global.analytics.track(action, {
+    ...opts,
+  });
+};

@@ -1,6 +1,25 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+import * as snippet from '@segment/snippet';
+
+const { SEGMENT_API_KEY, NODE_ENV } = process.env;
 
 export default class MyDocument extends Document {
+  renderSnippet() {
+    const opts = {
+      apiKey: SEGMENT_API_KEY,
+      page: true,
+    };
+    if (NODE_ENV === 'development') {
+      return snippet.max(opts);
+    }
+    return snippet.min(opts);
+  }
+
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
+  }
+
   render() {
     return (
       <Html>
@@ -34,6 +53,7 @@ export default class MyDocument extends Document {
               `,
             }}
           />
+          <script dangerouslySetInnerHTML={{ __html: this.renderSnippet() }} />
         </Head>
         <body>
           <Main />
