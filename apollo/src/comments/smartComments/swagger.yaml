@@ -316,15 +316,16 @@ paths:
         - summary
       summary: get smart comments tags and reactions
       operationId: getSmartCommentsTagsReactions
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                search:
-                  type: string
-                sortDesc:
-                  type: string
+      parameters:
+        - in: query
+          name: user
+          required: true
+        - in: query
+          name: teamId
+          required: true
+        - in: query
+          name: individual
+          required: false
       responses:
         201:
           description: exported suggested metrics csv file

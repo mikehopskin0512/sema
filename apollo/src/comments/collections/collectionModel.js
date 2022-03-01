@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+
 import { autoIndex } from '../../config';
 import { COLLECTION_TYPE } from './constants';
+import updateSnippetCollections from '../suggestedComments/suggestedCommentService';
 
 const { Schema } = mongoose;
 
@@ -29,5 +31,18 @@ const collectionSchema = new Schema({
 
 collectionSchema.set('autoIndex', autoIndex);
 collectionSchema.index({ name: 1 });
+
+collectionSchema.post('save', async (doc, next) => {
+  try {
+    const { _id: collectionId, name, comments: snippets } = doc;
+    await Promise.all(snippets.map(async (id) => {
+      const collection = { collectionId, name };
+      await updateSnippetCollections(id, collection);
+    }));
+  } catch (error) {
+    next(error);
+  }
+  next();
+});
 
 module.exports = mongoose.model('Collection', collectionSchema);

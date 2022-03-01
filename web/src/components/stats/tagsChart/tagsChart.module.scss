@@ -20,3 +20,30 @@
   box-shadow: 0px 0px 4.80607px rgba(0, 0, 0, 0.1);
   height: 100%;
 }
+
+.line-chart-container {
+  width: 280px;
+  height: 150px;
+}
+
+.tooltip {
+  -webkit-animation: fade-in 250ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: fade-in 250ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
+  @-webkit-keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
