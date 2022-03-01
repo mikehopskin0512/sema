@@ -17,7 +17,7 @@ jobs:
           
           for k in $(git branch --list "release-*" | sed /\*/d); do 
           if [ -z "$(git log -1 --before='1 week ago' -s $k)" ]; then
-            echo $k
+            echo "$k"
           fi
           done
         shell: bash {0}
