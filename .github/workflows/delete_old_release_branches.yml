@@ -20,4 +20,4 @@ jobs:
             echo $k
           fi
           done
-        shell: bash -x {0}
+        shell: bash {0}
