@@ -8,13 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: delete
-        name: delete old release branches
+      - name: delete old release branches
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git branch --list "release-*" | sed /\*/d
         shell: bash
-    outputs:
-      output1: ${{ steps.delete.outputs }}
-
