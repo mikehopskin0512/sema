@@ -94,7 +94,7 @@ export const googleAnalyticsEvent = ({ action, params }) => {
 
 // Segement
 
-export const identifyUserSegment = (user) => {
+export const segmentIdentify = (user) => {
   const { _id, username, firstName = '', lastName = '' } = user;
   global.analytics.identify(_id, {
     name: `${firstName} ${lastName}`.trim(),
@@ -102,8 +102,8 @@ export const identifyUserSegment = (user) => {
   });
 };
 
-export const trackActionSegment = (action, opts) => {
+export const segmentTrack = (action, properties) => {
   global.analytics.track(action, {
-    ...opts,
+    ...properties,
   });
 };
