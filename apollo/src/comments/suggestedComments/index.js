@@ -14,7 +14,7 @@ import {
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
-  exportSuggestedComments,
+  exportSuggestedComments, updateSnippetCollections,
 } from './suggestedCommentService';
 import { pushCollectionComment, getUserCollectionsById } from '../collections/collectionService';
 import checkEnv from "../../middlewares/checkEnv";
@@ -68,10 +68,11 @@ export default (app, passport) => {
     let collectionId = req.body.collectionId;
 
     try {
+      const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
+
       if (!collectionId) {
         const collections = await getUserCollectionsById(userId);
         // TODO: we should delete my comments later. It's a legacy name
-        const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
         const defaultCollection = collections.find((collection) => {
           return collection.collectionData.name.toLowerCase() === defaultCollectionName;
         });
@@ -88,7 +89,7 @@ export default (app, passport) => {
         source: { name: '', url: source },
         tags,
         enteredBy: user._id,
-        collectionId,
+        collections: [{ collectionId, name: defaultCollectionName }]
       });
 
       if (!newSuggestedComment) {
@@ -125,7 +126,7 @@ export default (app, passport) => {
   route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comments, collectionId } = req.body;
     try {
-      const result = await bulkCreateSuggestedComments(comments, req.user);
+      const result = await bulkCreateSuggestedComments(comments, collectionId, req.user);
 
       if (collectionId) {
         await Promise.all(result.map(async (comment) => {

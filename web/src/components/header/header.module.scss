@@ -26,4 +26,8 @@
 .portfolio-container {
   width: 40px;
   height: 40px;
+  background-color: $gray-200;
+  &:hover {
+    background-color: $gray-300;
+  }
 }

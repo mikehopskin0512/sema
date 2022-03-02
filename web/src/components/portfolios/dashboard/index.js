@@ -52,6 +52,8 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
         ...rest,
         overview: profile,
       };
+
+      body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === 200) {
         toggleEditModal(false);
@@ -95,7 +97,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
                 !isPublic && (
                   <button
                     type="button"
-                    className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10')}
+                    className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
                     onClick={() => toggleEditModal(true)}
                   >
                     <EditIcon />

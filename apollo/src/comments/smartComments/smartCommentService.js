@@ -59,7 +59,7 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoIds, startDate, endDate, user }) => {
+export const filterSmartComments = async ({ reviewer, author, repoIds, startDate, endDate, user, individual }) => {
   try {
     let filter = {}
     let dateFilter = { createdAt: {} }
@@ -72,7 +72,7 @@ export const filterSmartComments = async ({ reviewer, author, repoIds, startDate
     if (repoIds) {
       filter = Object.assign(filter, { "githubMetadata.repo_id": { $in: repoIds } });
     }
-    if (user) {
+    if (user && individual === true) {
       filter = Object.assign(filter, { $or: [{ "githubMetadata.requester": user }, { "githubMetadata.user.login": user }] });
     }
     if (startDate) {
@@ -578,22 +578,18 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user, teamId }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user, teamId, individual }) => {
   try {
-    const filter = { reviewer, author, repoIds, startDate, endDate, user };
-    let smartComments = await filterSmartComments(filter);
+    const filter = { reviewer, author, repoIds, startDate, endDate, user, individual: typeof individual === 'string' ? JSON.parse(individual) : individual };
+
     if(teamId) {
       const teamRepos = await getTeamRepos (teamId);
-      const repoExternalIds = teamRepos.map((repo) => {
+      filter.repoIds= teamRepos.map((repo) => {
         return repo.externalId;
       });
-      let teamSmartComments = await Promise.all(repoExternalIds.map(async (id) => {
-        return await getSmartCommentsByExternalId(id);
-      }));
-      teamSmartComments = teamSmartComments.flat();
-      const teamSmartCommentsIds = new Set(teamSmartCommentsIds);
-      smartComments = smartComments.filter(comment => teamSmartCommentsIds.has(comment._id.toString()));
     }
+
+    const smartComments = await filterSmartComments(filter);
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);
     return { smartComments, reactions: totalReactions, tags: totalTags };

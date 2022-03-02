@@ -83,7 +83,7 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     onClose();
   };
 
-  const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData])
+  const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
 
   useEffect(() => {
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {

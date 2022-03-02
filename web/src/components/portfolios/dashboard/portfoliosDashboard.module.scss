@@ -1,3 +1,5 @@
+@import "../../../../styles/colors.module";
+
 .user-summary {
   position: relative;
 }
@@ -33,4 +35,13 @@
   position: absolute;
   top: 0px;
   right: 0px;
+  &:hover {
+    background-color: $gray-100;
+    svg {
+      color: $black-900;
+    }
+  }
+  svg {
+    color: $gray-600;
+  }
 }

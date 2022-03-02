@@ -5,7 +5,7 @@ import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import { InfoFilledIcon } from '../../../../components/Icons';
-import Helmet, { PersonalInsightsHelmet } from '../../../../components/utils/Helmet';
+import Helmet, { TeamInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import ReactionChart from '../../../../components/stats/reactionChart';
@@ -17,6 +17,8 @@ import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartD
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
 import { AuthorIcon, TeamIcon } from '../../../../components/Icons';
+import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
+import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 
 const { fetchTeamSmartCommentSummary, fetchTeamSmartCommentOverview } = teamsOperations;
 
@@ -53,6 +55,10 @@ const TeamInsights = () => {
   const [filterRepoList, setFilterRepoList] = useState([]);
   const [filteredComments, setFilteredComments] = useState([]);
   const [outOfRangeComments, setOutOfRangeComments] = useState([]);
+  const [openReactionsModal, setOpenReactionsModal] = useState(false);
+  const [openTagsModal, setOpenTagsModal] = useState(false);
+  const [openCommentsModal, setOpenCommentsModal] = useState(false);
+  const [componentData, setComponentData] = useState({ yAxisType: 'total' });
   const [dateData, setDateData] = useState({
     groupBy: '',
     startDate: null,
@@ -72,6 +78,7 @@ const TeamInsights = () => {
     const params = {
       user: username,
       teamId: selectedTeam?.team?._id || '',
+      individual: isActive,
     };
     dispatch(fetchTeamSmartCommentSummary(params, token));
   };
@@ -160,12 +167,13 @@ const TeamInsights = () => {
       });
       setReactionChartData(reactionsChartData);
       setTagsChartData(tagsChartData);
+      setComponentData((oldState) => ({ ...oldState, smartComments: [...filteredComments, ...outOfRangeComments], ...dateData }));
     }
   }, [dateData, filteredComments]);
 
   useAuthEffect(() => {
     getUserSummary(githubUser?.username);
-  }, [auth]);
+  }, [auth, isActive]);
 
   useEffect(() => {
     const reposList = githubUser.repositories?.map(item => (
@@ -287,7 +295,7 @@ const TeamInsights = () => {
 
   return (
     <div className="has-background-gray-200">
-      <Helmet {...PersonalInsightsHelmet} />
+      <Helmet {...TeamInsightsHelmet} />
       <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400"/>
       <div className="pb-40 is-hidden-mobile">
         <div>
@@ -401,10 +409,18 @@ const TeamInsights = () => {
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400"/>
         <TeamStatsFilter filter={filter} individualFilter={isActive} commentView={commentView} filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <div className="is-flex is-flex-wrap-wrap my-20">
-          <ReactionChart isTeamView className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy}/>
-          <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} />
+          <ReactionChart isTeamView className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} />
+          <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} />
         </div>
-        <p className="has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">Comments {commentView}</p>
+        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
+        {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
+        {openCommentsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={openCommentsModal} onClose={()=> setOpenCommentsModal(false)} snapshotData={{ componentData }}/>}
+        <div className="is-flex is-align-items-center mb-20">
+          <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">Comments {commentView}</p>
+          <div>
+            <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
+          </div>
+        </div>
         <ActivityItemList comments={filteredComments} />
       </div>
     </div>)

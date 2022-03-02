@@ -358,7 +358,7 @@ const PersonalInsights = () => {
         <div className="is-flex is-align-items-center mb-20">
           <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">Comments {commentView}</p>
           <div>
-            <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
+            {filteredComments.length > 0 && <SnapshotButton onClick={() => setOpenCommentsModal(true)} />}
           </div>
         </div>
         <ActivityItemList comments={filteredComments} />

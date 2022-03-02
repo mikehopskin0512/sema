@@ -35,6 +35,10 @@ const suggestedCommentSchema = new Schema({
     name: String,
     url: String,
   },
+  collections: [{
+    collectionId: { type: Schema.Types.ObjectId, ref: 'Collection' },
+    name: String,
+  }],
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
     name: String,
@@ -52,7 +56,6 @@ const suggestedCommentSchema = new Schema({
     icon: String,
     thumbnail: String,
   },
-  collectionId: { type: String }
 }, {
   timestamps: true,
   collection: 'suggestedComments',

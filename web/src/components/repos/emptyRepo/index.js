@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 import usePermission from '../../../hooks/usePermission';
+import { PROFILE_VIEW_MODE } from '../../../utils/constants';
 import HowItWorks from './HowItWorks';
 import * as analytics from '../../../utils/analytics';
 import TeamReposList from '../../../components/teamReposList';
@@ -12,9 +14,16 @@ const openGithub = () => {
 const EmptyRepo = () => {
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   const { isTeamAdmin } = usePermission();
+  const {
+    teamsState: { teams },
+    authState: { profileViewMode },
+  } = useSelector((state) => state);
+  const isTeamView = profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW;
+  const isAddRepoEnable = isTeamView && isTeamAdmin && teams.length;
+
   return (
     <div className="container">
-      {isTeamAdmin && (
+      {isAddRepoEnable && (
         <TeamReposList
           onClose={() => setRepoListOpen(false)}
           isActive={isRepoListOpen}
@@ -24,7 +33,7 @@ const EmptyRepo = () => {
         <p className="has-text-weight-semibold is-size-5">No Repos Yet!</p>
         <p className="mt-15 mb-15">Make some code reviews on GitHub with the Sema Plugin installed <br/>and your Repos will appear here.</p>
         <div className="mx-auto">
-          {isTeamAdmin && (
+          {isAddRepoEnable && (
             <button
               type="button"
               className="button is-primary mb-20 has-text-weight-semibold is-fullwidth"
