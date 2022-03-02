@@ -10,6 +10,8 @@ import { fetchMetadata } from "../../shared/preview";
 import * as Json2CSV from 'json2csv';
 import { format } from 'date-fns';
 import UserRole from "../../userRoles/userRoleModel";
+import suggestedComments from "./index";
+import { getCollectionMetadata } from "../collections/collectionService";
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
@@ -257,7 +259,7 @@ const searchComments = async (user, team = null, searchQuery, allCollections) =>
       engGuides = [],
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
-      collectionId = '',
+      collections = [],
       tags = [],
       author = '',
     }) => {
@@ -269,7 +271,7 @@ const searchComments = async (user, team = null, searchQuery, allCollections) =>
         sourceName,
         sourceUrl,
         engGuides,
-        collectionId,
+        collections,
         tags,
         author,
         sourceIcon: metaData?.icon || '',
@@ -410,13 +412,30 @@ const update = async (id, body) => {
   }
 };
 
-const bulkCreateSuggestedComments = async (comments, user) => {
+const updateSnippetCollections = async (id, collection) => {
   try {
+    const snippet = await suggestedComments.updateOne({ _id: new ObjectId(id) }, { $addToSet: { collections: collection } });
+    return snippet;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
+const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
+  try {
+    let collection = null;
+    if (collectionId) {
+      collection = await getCollectionMetadata(collectionId);
+    }
+
+    const { name: collectionName = '' } = collection
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user),
       enteredBy: user._id,
+      collections: collection ? [{ collectionId: new ObjectId(collectionId), name: collectionName }] : [],
       lastModified: new Date(),
     })));
 
@@ -548,6 +567,7 @@ module.exports = {
   suggestCommentsInsertCount,
   create,
   update,
+  updateSnippetCollections,
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,

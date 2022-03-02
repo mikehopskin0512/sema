@@ -9,6 +9,7 @@ import {
 import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
 import { COLLECTION_TYPE } from './constants';
+import User from "../../users/userModel";
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -288,6 +289,17 @@ export const createTeamCollection = async (team) => {
       comments: [],
     };
     return await create(collection);
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getCollectionMetadata = async (id) => {
+  try {
+    const collection = await Collection.findById(id).select({ name: 1, description: 1, type: 1}).lean().exec();
+    return collection;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
