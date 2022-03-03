@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import usePermission from '../../../hooks/usePermission';
@@ -11,6 +11,7 @@ import DropDownMenu from '../../dropDownMenu';
 import styles from './repoCard.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
+import { isElementOverflow } from '../../../utils';
 
 const statLabels = {
   smartCodeReviews: 'Sema Code Reviews',
@@ -20,6 +21,7 @@ const statLabels = {
 };
 
 const RepoCard = (props) => {
+  const titleRef = useRef(null);
   const {
     name, externalId, _id: repoId, repoStats, users = [], column = 3, isTeamView = false,
   } = props;
@@ -49,6 +51,17 @@ const RepoCard = (props) => {
     }
   };
 
+  const renderTitle = useCallback(() => {
+    if (titleRef.current && isElementOverflow(titleRef.current)) {
+      return (
+        <Tooltip text={name} isActive={isElementOverflow(titleRef.current)}>
+          <p className={clsx("has-text-black-900 has-text-weight-semibold is-size-5", styles.title)}>{name}</p>
+        </Tooltip>
+      )
+    }
+    return <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)} data-tooltip={name}>{name}</p>
+  }, [titleRef])
+
   return (
   <Link href={`${PATHS.REPO}/${externalId}`}>
     <div
@@ -57,7 +70,7 @@ const RepoCard = (props) => {
     >
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
         <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
-          <p className="has-text-black-900 has-text-weight-semibold is-size-5">{name}</p>
+          {renderTitle()}
           <RepoUsers users={isTeamView ? repoStats.userIds : users} />
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">

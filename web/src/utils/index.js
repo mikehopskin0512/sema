@@ -111,3 +111,7 @@ export const getPlatformLink = (username, type) => {
       return `${GITHUB_URL}/${username}`;
   }
 }
+
+export const isElementOverflow = (element) => {
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}

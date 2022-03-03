@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -12,9 +12,10 @@ import { collectionsOperations } from '../../../state/features/collections';
 import { teamsOperations } from '../../../state/features/teams';
 import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
-import { isSemaDefaultCollection } from '../../../utils';
+import { isElementOverflow, isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
-import {updateTeamCollectionIsActiveAndFetchCollections} from "../../../state/features/teams/operations";
+import { updateTeamCollectionIsActiveAndFetchCollections } from "../../../state/features/teams/operations";
+import Tooltip from '../../Tooltip';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -34,6 +35,7 @@ const Tag = ({ tag, _id, type }) => (
 )
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
+  const titleRef = useRef(null);
   const { checkAccess } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
@@ -117,6 +119,17 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       dispatch(triggerAlert('Unable to unarchived collection', 'error'));
     }
 
+    const renderTitle = useCallback(() => {
+      if (titleRef.current && isElementOverflow(titleRef.current)) {
+        return (
+          <Tooltip text={name} isActive={isElementOverflow(titleRef.current)}>
+            <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)} data-tooltip={name}>{name}</p>
+          </Tooltip>
+        )
+      }
+      return <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)} data-tooltip={name}>{name}</p>
+    }, [titleRef])
+
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
 
     return (
@@ -125,7 +138,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
-              <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
+              {renderTitle()}
               {asPath === PATHS.SNIPPETS._ && isNotArchived ? (
                 <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
                   <input

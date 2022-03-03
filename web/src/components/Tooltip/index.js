@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from './tooltip.module.scss';
 
 const Tooltip = ({
-  children, direction, text, showDelay, hideDelay,
+  isActive, children, direction, text, showDelay, hideDelay, className
 }) => {
   let timeout;
   const [active, setActive] = useState(false);
@@ -28,7 +28,7 @@ const Tooltip = ({
     >
       {/* Wrapping */}
       {children}
-      {active && (
+      {isActive && active && (
         <div className={clsx(styles['Tooltip-Tip'], styles[direction])}>
           {/* Content */}
           {text}
@@ -42,6 +42,8 @@ Tooltip.defaultProps = {
   showDelay: 400,
   hideDelay: 0,
   direction: 'top',
+  isActive: true,
+  className: '',
 };
 
 Tooltip.propTypes = {
@@ -50,6 +52,8 @@ Tooltip.propTypes = {
   direction: PropTypes.string,
   showDelay: PropTypes.number,
   hideDelay: PropTypes.number,
+  isActive: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default Tooltip;
