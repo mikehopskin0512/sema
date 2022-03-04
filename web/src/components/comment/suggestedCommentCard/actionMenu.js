@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -57,7 +57,7 @@ const ActionMenu = ({ comment }) => {
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
                 onClick={updateArchiveStatus}
               >
-                {`${comment.isActive ? 'Archive' : 'Unarchive' } Comment`}
+                {`${comment.isActive ? 'Archive' : 'Unarchive'} Snippet`}
               </button>
             </div>
           </div>
