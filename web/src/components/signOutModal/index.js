@@ -15,6 +15,7 @@ const SignOutModal = ({ active, onClose }) => {
     setLoading(true);
     dispatch(deauthenticate());
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOG_OUT, { url: '/logout' });
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
   };
 
   return (

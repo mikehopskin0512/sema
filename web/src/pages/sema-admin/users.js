@@ -19,6 +19,7 @@ import ExportButton from '../../components/admin/exportButton';
 import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 import InlineEdit from '../../components/inlineEdit';
 import { gray300 } from '../../../styles/_colors.module.scss';
+import * as analytics from '../../utils/analytics';
 
 const {
   fetchUsers,
@@ -58,7 +59,7 @@ const UsersPage = () => {
       .map((item) => item[0]);
 
     dispatch(fetchUsers({ search: debounceSearchTerm, status: statusQuery, page, perPage }));
-  }, [dispatch, fetchUsers, debounceSearchTerm, statusFilters, page, perPage]);
+  }, [dispatch, debounceSearchTerm, statusFilters, page, perPage]);
 
   const onExport = useCallback(async () => {
     const statusQuery = Object.entries(statusFilters)
@@ -69,20 +70,21 @@ const UsersPage = () => {
 
   useEffect(() => {
     getUsers();
-  }, [debounceSearchTerm, statusFilters, page, perPage]);
+  }, [debounceSearchTerm, statusFilters, page, perPage, getUsers]);
 
   const handleUpdateUserInvitations = useCallback(async (userId, amount) => {
     await dispatch(updateUserAvailableInvitationsCount(userId, amount));
     getUsers();
-  }, [dispatch, updateUserAvailableInvitationsCount, getUsers]);
+  }, [dispatch, getUsers]);
 
-  const handleAdmitUser = useCallback(async (userId) => {
+  const handleAdmitUser = useCallback(async (userId, email) => {
     await dispatch(updateStatus(userId, {
       key: 'isWaitlist',
       value: false,
     }));
     getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_ACCEPTED, { email });
+  }, [dispatch, getUsers]);
 
   const handleBlockOrDisableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
@@ -90,7 +92,7 @@ const UsersPage = () => {
       value: false,
     }));
     getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+  }, [dispatch, getUsers]);
 
   const handleEnableUser = useCallback(async (userId) => {
     await dispatch(updateStatus(userId, {
@@ -98,7 +100,7 @@ const UsersPage = () => {
       value: true,
     }));
     getUsers();
-  }, [dispatch, updateStatus, getUsers]);
+  }, [dispatch, getUsers]);
 
   const getBadgeColor = (value) => {
     if (value === 'Waitlisted') return 'primary';
@@ -109,35 +111,35 @@ const UsersPage = () => {
   };
 
   const renderActionCell = (userStatus) => {
-    const { id, status } = userStatus;
+    const { id, status, email } = userStatus;
     switch (status) {
-      case 'Registered':
-        return (
-          <div className="is-flex">
-            <a onClick={() => handleBlockOrDisableUser(id)}>Disable</a>
-          </div>
-        );
-      case 'Waitlisted':
-        return (
-          <div className="is-flex">
-            <a className="mr-5" onClick={() => handleAdmitUser(id)}>Admit</a>
-            <a onClick={() => handleBlockOrDisableUser(id)}>Block</a>
-          </div>
-        );
-      case 'Disabled':
-        return (
-          <div className="is-flex">
-            <a onClick={() => handleEnableUser(id)}>Enable</a>
-          </div>
-        );
-      case 'Blocked':
-        return (
-          <div className="is-flex">
-            <a onClick={() => handleEnableUser(id)}>Unblock</a>
-          </div>
-        );
-      default:
-        return null;
+    case 'Registered':
+      return (
+        <div className="is-flex">
+          <a onClick={() => handleBlockOrDisableUser(id)}>Disable</a>
+        </div>
+      );
+    case 'Waitlisted':
+      return (
+        <div className="is-flex">
+          <a className="mr-5" onClick={() => handleAdmitUser(id, email)}>Admit</a>
+          <a onClick={() => handleBlockOrDisableUser(id)}>Block</a>
+        </div>
+      );
+    case 'Disabled':
+      return (
+        <div className="is-flex">
+          <a onClick={() => handleEnableUser(id)}>Enable</a>
+        </div>
+      );
+    case 'Blocked':
+      return (
+        <div className="is-flex">
+          <a onClick={() => handleEnableUser(id)}>Unblock</a>
+        </div>
+      );
+    default:
+      return null;
     }
   };
 
@@ -156,16 +158,16 @@ const UsersPage = () => {
         accessor: 'userInfo',
         sorted: false,
         Cell: ({ cell: { value } }) => (
-          <div className='is-flex is-align-items-center is-cursor-pointer' onClick={() => Router.push(`/sema-admin/users/${value.id}`)}>
-            <img src={value.avatarUrl} alt="avatar" width={32} height={32} className='mr-10' style={{ borderRadius: '100%' }}/>
+          <div className="is-flex is-align-items-center is-cursor-pointer" onClick={() => Router.push(`/sema-admin/users/${value.id}`)}>
+            <img src={value.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
             { value.name }
           </div>
         ),
       },
       {
         Header: () => (
-          <div className='is-flex'>
-            <div className='mr-2'>Status</div>
+          <div className="is-flex">
+            <div className="mr-2">Status</div>
             <StatusFilter value={statusFilters} onChange={setStatusFilters} />
           </div>
         ),
@@ -223,20 +225,20 @@ const UsersPage = () => {
       },
       {
         Header: () => (
-          <div className='has-text-centered pt-10' style={{ background: gray300 }}>
+          <div className="has-text-centered pt-10" style={{ background: gray300 }}>
             <div>Invite</div>
-            <div className='is-flex py-10' style={{ background: gray300 }}>
-              <div className='has-text-left px-15 py-0 column'>Available</div>
-              <div className='has-text-left px-15 py-0 column'>Pending</div>
-              <div className='has-text-left px-15 py-0 column'>Accepted</div>
+            <div className="is-flex py-10" style={{ background: gray300 }}>
+              <div className="has-text-left px-15 py-0 column">Available</div>
+              <div className="has-text-left px-15 py-0 column">Pending</div>
+              <div className="has-text-left px-15 py-0 column">Accepted</div>
             </div>
           </div>
         ),
         accessor: 'invites',
         tooltip: 'Sort is based on total invites sent, pending and accepted',
         Cell: ({ cell: { value } }) => (
-          <div className='is-flex py-10'>
-            <div className='is-whitespace-nowrap has-text-left px-15 py-0 column'>
+          <div className="is-flex py-10">
+            <div className="is-whitespace-nowrap has-text-left px-15 py-0 column">
               { value.available }
               <button
                 type="button"
@@ -253,8 +255,8 @@ const UsersPage = () => {
                 -
               </button>
             </div>
-            <div className='has-text-left px-15 py-0 column'>{ value.pending }</div>
-            <div className='has-text-left px-15 py-0 column'>{ value.accepted }</div>
+            <div className="has-text-left px-15 py-0 column">{ value.pending }</div>
+            <div className="has-text-left px-15 py-0 column">{ value.accepted }</div>
           </div>
         ),
       },
@@ -264,7 +266,7 @@ const UsersPage = () => {
         Cell: ({ cell: { value } }) => renderActionCell(value),
       },
     ],
-    [debounceSearchTerm, handleUpdateUserInvitations, statusFilters],
+    [handleUpdateUser, handleUpdateUserInvitations, renderActionCell, statusFilters],
   );
 
   const getStatus = (user) => {
@@ -278,8 +280,8 @@ const UsersPage = () => {
   const getDays = (createdAt) => {
     if (!createdAt) return '';
     const days = formatDistanceToNowStrict(new Date(createdAt), { unit: 'day' });
-    return days.replace(/ days?/, '')
-  }
+    return days.replace(/ days?/, '');
+  };
 
   const dataSource = users.map((item) => ({
     ...item,
@@ -297,40 +299,39 @@ const UsersPage = () => {
       id: item._id,
     },
     lastLogin: item.lastLogin ? format(new Date(item.lastLogin), 'yyyy-MM-dd hh:mm:ss') : '',
-    weekOfSignUp: item.createdAt ? format(new Date(item.createdAt), 'yyyy.ww', {firstWeekContainsDate: 4, weekStartsOn: 1}) : '',
+    weekOfSignUp: item.createdAt ? format(new Date(item.createdAt), 'yyyy.ww', { firstWeekContainsDate: 4, weekStartsOn: 1 }) : '',
     actionStatus: {
       id: item._id,
       status: getStatus(item),
+      email: item.username,
     },
     companyName: item.companyName,
     cohort: item.cohort,
     notes: item.notes,
   }));
 
-  const tabOptions = useMemo(() => {
-    return [
-      {
-        label: `All (${analytic.total ? analytic.total : 0})`,
-        value: 'all',
-      },
-      {
-        label: `Registered Users (${analytic.active ? analytic.active : 0})`,
-        value: 'registered',
-      },
-      {
-        label: `On the waitlist (${analytic.waitlist ? analytic.waitlist : 0})`,
-        value: 'waitlist',
-      },
-      {
-        label: `Blocked (${analytic.blocked ? analytic.blocked : 0})`,
-        value: 'blocked',
-      },
-      {
-        label: `Disabled (${analytic.disabled ? analytic.disabled : 0})`,
-        value: 'disabled',
-      },
-    ]
-  }, [analytic]);
+  const tabOptions = useMemo(() => [
+    {
+      label: `All (${analytic.total ? analytic.total : 0})`,
+      value: 'all',
+    },
+    {
+      label: `Registered Users (${analytic.active ? analytic.active : 0})`,
+      value: 'registered',
+    },
+    {
+      label: `On the waitlist (${analytic.waitlist ? analytic.waitlist : 0})`,
+      value: 'waitlist',
+    },
+    {
+      label: `Blocked (${analytic.blocked ? analytic.blocked : 0})`,
+      value: 'blocked',
+    },
+    {
+      label: `Disabled (${analytic.disabled ? analytic.disabled : 0})`,
+      value: 'disabled',
+    },
+  ], [analytic]);
 
   const [activeTab, setActiveTab] = useState('all');
 
@@ -338,21 +339,21 @@ const UsersPage = () => {
     setActiveTab(value);
 
     switch (value) {
-      case 'waitlist':
-        setStatusFilters({ ...initFilters, Waitlisted: true });
-        break;
-      case 'registered':
-        setStatusFilters({ ...initFilters, Registered: true });
-        break;
-      case 'blocked':
-        setStatusFilters({ ...initFilters, Blocked: true });
-        break;
-      case 'disabled':
-        setStatusFilters({ ...initFilters, Disabled: true });
-        break;
-      default:
-        setStatusFilters(initFilters);
-        break;
+    case 'waitlist':
+      setStatusFilters({ ...initFilters, Waitlisted: true });
+      break;
+    case 'registered':
+      setStatusFilters({ ...initFilters, Registered: true });
+      break;
+    case 'blocked':
+      setStatusFilters({ ...initFilters, Blocked: true });
+      break;
+    case 'disabled':
+      setStatusFilters({ ...initFilters, Disabled: true });
+      break;
+    default:
+      setStatusFilters(initFilters);
+      break;
     }
   };
 
@@ -369,15 +370,15 @@ const UsersPage = () => {
   return (
     <>
       <Helmet {...UserManagementHelmet} />
-      <div className='is-flex is-justify-content-space-between'>
+      <div className="is-flex is-justify-content-space-between">
         <div>
-          <h1 className='has-text-black has-text-weight-bold is-size-3'>User Management</h1>
-          <p className='mb-15 is-size-6 text-gray-light'>Manage your users at a glance</p>
+          <h1 className="has-text-black has-text-weight-bold is-size-3">User Management</h1>
+          <p className="mb-15 is-size-6 text-gray-light">Manage your users at a glance</p>
         </div>
         <BulkAdmitForm onSubmit={onBulkAdmitUsers} />
       </div>
-      <div className='p-20 is-flex-grow-1 has-background-white' style={{ borderRadius: 10 }}>
-        <div className='is-flex is-justify-content-space-between'>
+      <div className="p-20 is-flex-grow-1 has-background-white" style={{ borderRadius: 10 }}>
+        <div className="is-flex is-justify-content-space-between">
           <FilterTabs tabs={tabOptions} onChange={onChangeTab} value={activeTab} />
           <div className="is-flex">
             <SearchInput value={searchTerm} onChange={setSearchTerm} />
@@ -400,7 +401,7 @@ const UsersPage = () => {
             perPage,
             totalCount,
             fetchData,
-            loading: isFetching
+            loading: isFetching,
           }}
         />
       </div>

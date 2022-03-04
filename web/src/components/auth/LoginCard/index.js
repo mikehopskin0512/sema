@@ -8,7 +8,7 @@ const LoginCard = () => {
   const githubLogin = () => {
     window.location.href = '/api/identities/github';
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOGIN, { url: '/login' });
-    analytics.segmentTrack('CLICKED_LOGIN', { isWorking: true });
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGIN, {});
   };
 
   return (
