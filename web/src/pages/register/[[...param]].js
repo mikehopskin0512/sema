@@ -16,6 +16,7 @@ import { alertOperations } from '../../state/features/alerts';
 import { authOperations } from '../../state/features/auth';
 import { invitationsOperations } from '../../state/features/invitations';
 import { PATHS } from '../../utils/constants';
+import * as analytics from '../../utils/analytics';
 
 const { clearAlert } = alertOperations;
 const { registerAndAuthUser, partialUpdateUser } = authOperations;
@@ -73,6 +74,8 @@ const RegistrationForm = (props) => {
       dispatch(redeemInvite(inviteToken, userId, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
       router.push(PATHS.DASHBOARD);
+      const { firstName: first_name = '', lastName: last_name = '', username: email = '' } = data;
+      analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_ACCEPTED, { first_name, last_name, email });
     } else {
       // New user
       // If no invite, set to waitlist
@@ -80,6 +83,8 @@ const RegistrationForm = (props) => {
       const newUser = { ...user, ...data, avatarUrl, isWaitlist };
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));
+      const { firstName: first_name = '', lastName: last_name = '', username: email = '' } = newUser;
+      analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_SIGNUP, { first_name, last_name, email });
     }
   };
 
