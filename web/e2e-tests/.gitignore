@@ -3,6 +3,7 @@ reports
 .vscode
 logs
 allure-report
-allure-results
+./allure-results
 ../../.vscode/settings.json
 package-lock.json
+./test/results

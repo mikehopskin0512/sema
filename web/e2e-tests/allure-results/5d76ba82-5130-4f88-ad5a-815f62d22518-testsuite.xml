@@ -1,0 +1,186 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803776231' stop='1645803777921'>
+    <name>User is able to interact with snippets properly: Snippets collection can be turned on and turned off</name>
+    <title>User is able to interact with snippets properly: Snippets collection can be turned on and turned off</title>
+    <test-cases>
+        <test-case start='1645803776231' status='passed' stop='1645803776232'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803776233' status='passed' stop='1645803776281'>
+            <name>When I click on the element "snippetsTab"</name>
+            <title>When I click on the element "snippetsTab"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803776282' status='passed' stop='1645803777842'>
+            <name>Then I expect that element "collectionArea" becomes displayed</name>
+            <title>Then I expect that element "collectionArea" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777842' status='passed' stop='1645803777863'>
+            <name>When I click on the element "firstInActiveCollectionToggle"</name>
+            <title>When I click on the element "firstInActiveCollectionToggle"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777863' status='passed' stop='1645803777868'>
+            <name>Then I expect that element "firstInActiveCollectionName" becomes displayed</name>
+            <title>Then I expect that element "firstInActiveCollectionName" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777868' status='passed' stop='1645803777875'>
+            <name>When I save the name of collection "firstInActiveCollectionName"</name>
+            <title>When I save the name of collection "firstInActiveCollectionName"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777875' status='passed' stop='1645803777913'>
+            <name>And I click on the element "firstInActiveCollectionToggle"</name>
+            <title>And I click on the element "firstInActiveCollectionToggle"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777913' status='passed' stop='1645803777915'>
+            <name>Then I expect that selected collection element "activeCollectionsNames" is enabled</name>
+            <title>Then I expect that selected collection element "activeCollectionsNames" is enabled</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777915' status='failed' stop='1645803777919'>
+            <name>When I save the name of collection "firstActiveCollectionName"</name>
+            <title>When I save the name of collection "firstActiveCollectionName"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+            <failure>
+                <message>Error: expect(received).toHaveLength(expected)</message>
+                <stack-trace>Error: expect(received).toHaveLength(expected)
+                
+                Expected length: 1
+                Received length: 0
+                Received array:  []
+                    at exports.default (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/src/support/lib/checkIfElementExists.ts:28:30)
+                    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+                    at World.exports.default (/Users/zicury/Documents/SEMA/phoenix/web/e2e-tests/src/support/action/getElementText.ts:20:5)</stack-trace>
+            </failure>
+        </test-case>
+        <test-case start='1645803777919' status='pending' stop='1645803777919'>
+            <name>And I click on the element "firstActiveCollectionToggle"</name>
+            <title>And I click on the element "firstActiveCollectionToggle"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777919' status='pending' stop='1645803777920'>
+            <name>Then I expect that selected collection element "inactiveCollectionsNames" is enabled</name>
+            <title>Then I expect that selected collection element "inactiveCollectionsNames" is enabled</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803777920' status='passed' stop='1645803777920'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-4'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

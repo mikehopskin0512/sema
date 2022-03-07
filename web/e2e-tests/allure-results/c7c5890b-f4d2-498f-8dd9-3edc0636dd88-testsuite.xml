@@ -1,0 +1,329 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1645803732697' stop='1645803733768'>
+    <name>Dashboard options: Error messages works on contact support modal</name>
+    <title>Dashboard options: Error messages works on contact support modal</title>
+    <test-cases>
+        <test-case start='1645803732697' status='passed' stop='1645803732698'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803732698' status='passed' stop='1645803732702'>
+            <name>Then I expect that element "footerSupportBtn" becomes displayed</name>
+            <title>Then I expect that element "footerSupportBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803732702' status='passed' stop='1645803732746'>
+            <name>When I click on the button "footerSupportBtn"</name>
+            <title>When I click on the button "footerSupportBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803732746' status='passed' stop='1645803733248'>
+            <name>And I expect that element "contactSupportBtn" becomes displayed</name>
+            <title>And I expect that element "contactSupportBtn" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733248' status='passed' stop='1645803733299'>
+            <name>When I click on the element "contactSupportBtn"</name>
+            <title>When I click on the element "contactSupportBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733299' status='passed' stop='1645803733332'>
+            <name>And I expect that element "supportModalEmailInput" becomes displayed</name>
+            <title>And I expect that element "supportModalEmailInput" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733332' status='passed' stop='1645803733378'>
+            <name>And I click on the element "supportModalEmailInput"</name>
+            <title>And I click on the element "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733378' status='passed' stop='1645803733391'>
+            <name>And I clear the inputfield "supportModalEmailInput"</name>
+            <title>And I clear the inputfield "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733391' status='passed' stop='1645803733463'>
+            <name>When I click on the element "supportModalSubmitBtn"</name>
+            <title>When I click on the element "supportModalSubmitBtn"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733463' status='passed' stop='1645803733469'>
+            <name>Then I expect that element "supportModalTitleError" becomes displayed</name>
+            <title>Then I expect that element "supportModalTitleError" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733469' status='passed' stop='1645803733478'>
+            <name>And I expect that element "supportModalTitleError" matches the text "Title is required"</name>
+            <title>And I expect that element "supportModalTitleError" matches the text "Title is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733478' status='passed' stop='1645803733486'>
+            <name>Then I expect that element "supportModalEmailError" becomes displayed</name>
+            <title>Then I expect that element "supportModalEmailError" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733486' status='passed' stop='1645803733498'>
+            <name>And I expect that element "supportModalEmailError" matches the text "Email is required"</name>
+            <title>And I expect that element "supportModalEmailError" matches the text "Email is required"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733498' status='passed' stop='1645803733531'>
+            <name>When I set "invalidEmail" to the inputfield "supportModalEmailInput"</name>
+            <title>When I set "invalidEmail" to the inputfield "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733531' status='passed' stop='1645803733540'>
+            <name>Then I expect that element "supportModalEmailError" becomes displayed</name>
+            <title>Then I expect that element "supportModalEmailError" becomes displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733540' status='passed' stop='1645803733550'>
+            <name>And I expect that element "supportModalEmailError" matches the text "Entered value does not match email format"</name>
+            <title>And I expect that element "supportModalEmailError" matches the text "Entered value does not match email format"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733550' status='passed' stop='1645803733578'>
+            <name>When I click on the element "supportModalEmailInput"</name>
+            <title>When I click on the element "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733578' status='passed' stop='1645803733582'>
+            <name>And I clear the inputfield "supportModalEmailInput"</name>
+            <title>And I clear the inputfield "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733582' status='passed' stop='1645803733682'>
+            <name>And I set "invalidEmail@gmail.com" with timestamp to the inputfield "supportModalEmailInput"</name>
+            <title>And I set "invalidEmail@gmail.com" with timestamp to the inputfield "supportModalEmailInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733683' status='passed' stop='1645803733751'>
+            <name>And I set "test title" with timestamp to the inputfield "supportModalTitleInput"</name>
+            <title>And I set "test title" with timestamp to the inputfield "supportModalTitleInput"</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733751' status='passed' stop='1645803733759'>
+            <name>Then I expect that element "supportModalTitleError" becomes not displayed</name>
+            <title>Then I expect that element "supportModalTitleError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733759' status='passed' stop='1645803733767'>
+            <name>And I expect that element "supportModalEmailError" becomes not displayed</name>
+            <title>And I expect that element "supportModalEmailError" becomes not displayed</title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1645803733768' status='passed' stop='1645803733768'>
+            <name></name>
+            <title></title>
+            <labels>
+                <label name='language' value='javascript'/>
+                <label name='framework' value='wdio'/>
+                <label name='thread' value='0-0'/>
+            </labels>
+            <parameters>
+                <parameter kind='argument' name='browser' value='Chrome-98.0.4758.109'/>
+            </parameters>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>
