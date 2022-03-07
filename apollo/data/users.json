@@ -286,5 +286,41 @@
       }
     ],
     "_id": "6076262a408c64f11499537b"
+  },
+  {
+    "isActive": false,
+    "isVerified": true,
+    "isWaitlist": true,
+    "termsAccepted": true,
+    "username": "artdimitrov@gmail.com",
+    "password": null,
+    "firstName": "Art",
+    "lastName": "D",
+    "jobTitle": "Engineer",
+    "avatarUrl": "https://avatars.githubusercontent.com/u/16142827?v=4",
+    "identities": [
+      {
+        "provider": "github",
+        "id": "16142827",
+        "username": "jameshetfield",
+        "email": "artdimitrov@gmail.com",
+        "firstName": "Artem",
+        "lastName": "D",
+        "profileUrl": "https://api.github.com/users/artdimitrov",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/16142827?v=4"
+      }
+    ],
+    "verificationToken": null,
+    "verificationExpires": null,
+    "termsAcceptedAt": "2020-04-12T13:53:10.734Z",
+    "organizations": [
+      {
+        "isActive": true,
+        "isAdmin": true,
+        "id": "82075564",
+        "orgName": "Sema"
+      }
+    ],
+    "_id": "6076262a408c64f11499537b"
   }
 ]
