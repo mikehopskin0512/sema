@@ -205,7 +205,7 @@ const getTeamSnippets = async(userId, teamId, searchResults = []) => {
 };
 
 const searchIndex = async (searchQuery) => {
-  if (nodeEnv === 'development') {
+  if (nodeEnv === 'developmentx') {
     return [];
   } else {
     const results = await SuggestedComment.aggregate([
@@ -246,11 +246,12 @@ const searchIndex = async (searchQuery) => {
 
 export const searchComments = async (user, team = null, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
+  const userId = user?.toString();
 
   // The number of suggested comments to list
   searchResults.slice(0, SNIPPETS_TO_DISPLAY);
 
-  const snippets = team ? await getTeamSnippets(user, team, searchResults) : await getUserSnippets(user, searchResults, allCollections);
+  const snippets = team ? await getTeamSnippets(userId, team, searchResults) : await getUserSnippets(userId, searchResults, allCollections);
 
   const returnResults = await Promise.all(snippets.map(async ({
       _id: id,
