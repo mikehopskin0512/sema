@@ -1,6 +1,6 @@
 module.exports = {
   async up(db) {
-    function getUpdatedUserCollections(collections, communityCollectionsIds) {
+    function getUpdatedCollections(collections, communityCollectionsIds) {
       return collections.map((collection) => {
         const collectionId = collection.collectionData && collection.collectionData.toString();
         const isCommunityCollection = communityCollectionsIds.has(collectionId);
@@ -9,6 +9,18 @@ module.exports = {
           isActive: !isCommunityCollection,
         };
       });
+    }
+
+    async function updateCollections(collectionName, items, communityCollectionsIds) {
+      await Promise.all(items.map(async (it) => {
+        const collections = getUpdatedCollections(it.collections, communityCollectionsIds);
+        await db
+          .collection(collectionName)
+          .findOneAndUpdate(
+            { _id: it._id },
+            { $set: { collections } },
+          );
+      }));
     }
 
     try {
@@ -20,17 +32,14 @@ module.exports = {
         .collection('users')
         .find({})
         .toArray();
+      const teams = await db
+        .collection('teams')
+        .find({})
+        .toArray();
       const communityCollectionsIds = new Set(communityCollections.map((collection) => collection._id.toString()));
 
-      await Promise.all(users.map(async (user) => {
-        const collections = getUpdatedUserCollections(user.collections, communityCollectionsIds);
-        await db
-          .collection('users')
-          .findOneAndUpdate(
-            { _id: user._id },
-            { $set: { collections } },
-          );
-      }));
+      await updateCollections('users', users, communityCollectionsIds);
+      await updateCollections('teams', teams, communityCollectionsIds);
     } catch (e) {
       console.log('error', e);
     }
