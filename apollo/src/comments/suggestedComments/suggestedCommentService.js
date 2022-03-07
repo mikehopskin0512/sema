@@ -205,7 +205,7 @@ const getTeamSnippets = async(userId, teamId, searchResults = []) => {
 };
 
 const searchIndex = async (searchQuery) => {
-  if (nodeEnv === 'developmentx') {
+  if (nodeEnv === 'development') {
     return [];
   } else {
     const results = await SuggestedComment.aggregate([
