@@ -47,28 +47,22 @@ const CollectionRow = ({ data }) => {
   const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
   const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
   
-  return (
+  return isNotArchived ? (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">
         <td className="py-15 has-background-white px-10" width={80}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            {
-              isNotArchived ? (
-                <div className="field" aria-hidden onClick={onClickChild}>
-                  <input
-                    id={`activeSwitch-${_id}`}
-                    type="checkbox"
-                    onChange={onChangeToggle}
-                    name={`activeSwitch-${_id}`}
-                    className="switch is-rounded"
-                    checked={isActive}
-                  />
-                  <label htmlFor={`activeSwitch-${_id}`} />
-                </div>
-              ) : (
-                <p className="is-size-7 is-italic">archived</p>
-              )
-            }
+            <div className="field" aria-hidden onClick={onClickChild}>
+              <input
+                id={`activeSwitch-${_id}`}
+                type="checkbox"
+                onChange={onChangeToggle}
+                name={`activeSwitch-${_id}`}
+                className="switch is-rounded"
+                checked={isActive}
+              />
+              <label htmlFor={`activeSwitch-${_id}`} />
+            </div>
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
@@ -125,7 +119,7 @@ const CollectionRow = ({ data }) => {
         ) }
       </tr>
     </Link>
-  )
+  ) : null;
 };
 
 CollectionRow.propTypes = {

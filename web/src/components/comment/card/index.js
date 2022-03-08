@@ -15,6 +15,7 @@ import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
 import {updateTeamCollectionIsActiveAndFetchCollections} from "../../../state/features/teams/operations";
+import { fetchTeamCollections } from '../../../state/features/teams/actions';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -102,6 +103,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       if (collection) {
         dispatch(triggerAlert('Collection archived!', 'success'));
         dispatch(fetchAllUserCollections(token));
+        dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
         return;
       }
       dispatch(triggerAlert('Unable to archive collection', 'error'));
@@ -119,26 +121,24 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
 
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
 
-    return (
+    return isNotArchived ? (
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} aria-hidden="true">
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
               <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              {asPath === PATHS.SNIPPETS._ && isNotArchived ? (
-                <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
-                  <input
-                    id={`activeSwitch-${_id}`}
-                    type="checkbox"
-                    onChange={onChangeToggle}
-                    name={`activeSwitch-${_id}`}
-                    className="switch is-rounded"
-                    checked={isActive}
-                  />
-                  <label htmlFor={`activeSwitch-${_id}`} />
-                </div>
-              ) : <p className="is-size-7 is-italic">archived</p>}
+              <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
+                <input
+                  id={`activeSwitch-${_id}`}
+                  type="checkbox"
+                  onChange={onChangeToggle}
+                  name={`activeSwitch-${_id}`}
+                  className="switch is-rounded"
+                  checked={isActive}
+                />
+                <label htmlFor={`activeSwitch-${_id}`} />
+              </div>
             </div>
             <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
               <div className="px-25 pb-15 has-text-gray-900 is-size-6 mr-20">
@@ -212,7 +212,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
           </div>
         </div>
       </Link>
-    );
+    ) : null;
   }
   return null;
 };
