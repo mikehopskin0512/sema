@@ -24,18 +24,18 @@ export const create = async (collection, userId, teamId) => {
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
+    const isActiveCollection = collection.type !== COLLECTION_TYPE.COMMUNITY;
 
-    const collectionIds = [createdCollection._id];
     switch (collection.type) {
       case COLLECTION_TYPE.COMMUNITY:
-        await populateCollectionsToUsers(collectionIds);
-        await bulkUpdateTeamCollections(collectionIds)
+        await populateCollectionsToUsers([createdCollection._id]);
+        await bulkUpdateTeamCollections(createdCollection._id, null, isActiveCollection);
         break;
       case COLLECTION_TYPE.TEAM:
-        await bulkUpdateTeamCollections(collectionIds, teamId)
+        await bulkUpdateTeamCollections(createdCollection._id, teamId, isActiveCollection)
         break;
       case COLLECTION_TYPE.PERSONAL:
-        await populateCollectionsToUsers(collectionIds, userId);
+        await populateCollectionsToUsers([createdCollection._id], userId);
         break;
       default:
         return;
