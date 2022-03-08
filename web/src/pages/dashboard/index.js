@@ -17,7 +17,7 @@ import { isExtensionInstalled } from '../../utils/extension';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
-const { updateUser } = authOperations;
+const { updateUser, updateUserHasExtension } = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
@@ -36,7 +36,7 @@ const Dashboard = () => {
     repositories: state.repositoriesState.data.repositories,
   }));
   const { token, user } = auth;
-  const { identities, isOnboarded = null } = user;
+  const { identities, isOnboarded = null, hasExtension = null } = user;
   const userRepos = identities?.length ? identities[0].repositories : [];
   const isLoaded = !userRepos.length || (userRepos.length && repositories.length);
 
@@ -95,6 +95,10 @@ const Dashboard = () => {
   useEffect(() => {
     (async () => {
       const result = await isExtensionInstalled();
+      if (hasExtension !== result) {
+        const updatedUser = { ...user, ...{ hasExtension: result } };
+        dispatch(updateUserHasExtension(updatedUser, token));
+      }
       togglePluginInstalled(result);
     })();
     getCollectionsByAuthor('sema');
