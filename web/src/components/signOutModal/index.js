@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { authOperations } from '../../state/features/auth';
 import * as analytics from '../../utils/analytics';
 
-const { deauthenticate } = authOperations;
+const { deauthenticate, trackUserLogout } = authOperations;
 
 const SignOutModal = ({ active, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const SignOutModal = ({ active, onClose }) => {
     setLoading(true);
     dispatch(deauthenticate());
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_LOG_OUT, { url: '/logout' });
-    analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
+    trackUserLogout();
   };
 
   return (

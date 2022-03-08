@@ -38,6 +38,8 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
     const { verificationToken } = jwtDecode(jwtToken) || {};
 
     await dispatch(actions.activateUser(verificationToken));
+    const { firstName: first_name = '', lastName: last_name = '', username: email = '' } = user;
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_SIGNUP, { first_name, last_name, email });
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE, { url: PATHS.DASHBOARD });
     Router.push(PATHS.DASHBOARD);
@@ -56,4 +58,14 @@ const updateUserHasExtension = (user, token) => async (dispatch) => {
   analytics.segmentTrack(segmentEvent, { isExtensionEnabled: hasExtension });
 };
 
-export default { ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension };
+const trackUserLogin = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGIN, {});
+};
+
+const trackUserLogout = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
+};
+
+export default {
+  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout,
+};
