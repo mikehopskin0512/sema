@@ -48,4 +48,12 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
   }
 };
 
-export default { ...actions, createAndJoinOrg, registerAndAuthUser };
+const updateUserHasExtension = (user, token) => async (dispatch) => {
+  const { hasExtension, segmentEvent = hasExtension
+    ? analytics.SEGMENT_EVENTS.EXTENSION_INSTALLED
+    : analytics.SEGMENT_EVENTS.EXTENSION_UNINSTALLED } = user;
+  await dispatch(actions.updateUser(user, token));
+  analytics.segmentTrack(segmentEvent, { isExtensionEnabled: hasExtension });
+};
+
+export default { ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension };
