@@ -35,7 +35,7 @@ const Tag = ({ tag, _id, type }) => (
 )
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
-  const { checkAccess } = usePermission();
+  const { isTeamAdmin } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
   const { token, user, selectedTeam } = useSelector((state) => state.authState);
@@ -43,7 +43,6 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
 
-  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -185,7 +184,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
                         {
-                          canEdit && (
+                          isTeamAdmin() && (
                             <>
                               <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                                 Edit Collection

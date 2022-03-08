@@ -282,7 +282,7 @@ export const createTeamCollection = async (team) => {
   try {
     const collection = {
       name: `${team.name}'s Snippets`,
-      description: team.description,
+      description: '',
       author: team.name,
       isActive: true,
       type: COLLECTION_TYPE.TEAM,
