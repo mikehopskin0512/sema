@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash'
 import { Helmet } from 'react-helmet';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -30,7 +29,7 @@ const TeamSettings = () => {
     }),
   );
   const { token, user } = auth;
-  const [userRole, setUserRole] = useState({});
+  const [activeTeam, setActiveTeam] = useState({});
 
   const setDefaultTag = () => {
     router.push({
@@ -40,19 +39,19 @@ const TeamSettings = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, {}, token));
-  }, [teamId])
+    dispatch(fetchTeamMembers(activeTeam._id, {}, token));
+  }, [teamId]);
 
   useEffect(() => {
     if (teams.teams.length) {
-      const activeRole = _.find(teams.teams, function (o) {
-        return o.team._id === teamId
+      const team = teams.teams.find(({ team }) => {
+        return (team?.url === teamId) || (team?._id === teamId)
       });
-      if (activeRole) {
-        setUserRole(activeRole)
+      if (team) {
+        setActiveTeam(team);
       }
     }
-  }, [teams]);
+  }, [teams, teamId]);
 
   useEffect(() => {
     !tab && setDefaultTag();
@@ -64,11 +63,11 @@ const TeamSettings = () => {
       path: `/team/${teamId}/settings`,
       tab: TAB.info,
     },
-    {
+    (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.management,
-    },
+    }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
       path: `/team/${teamId}/settings`,
@@ -81,10 +80,10 @@ const TeamSettings = () => {
       <div className="has-background-gray-200 hero">
         <Helmet {...TeamDashboardHelmet} />
         <div className="hero-body pb-300 px-0">
-          <PageHeader menus={menus} userRole={userRole} />
-          {tab === 'info' && <TeamInfo userRole={userRole} teams={teams} teamId={teamId}  />}
-          {tab === 'management' && <TeamManagement />}
-          {tab === 'labels' && <LabelsManagement />}
+          <PageHeader menus={menus} userRole={activeTeam} />
+          {tab === 'info' && <TeamInfo activeTeam={activeTeam} teams={teams} />}
+          {tab === 'management' && <TeamManagement activeTeam={activeTeam} />}
+          {tab === 'labels' && <LabelsManagement activeTeam={activeTeam} />}
         </div>
       </div>
     </>

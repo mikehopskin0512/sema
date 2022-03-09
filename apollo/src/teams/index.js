@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 
-import { version, semaCorporateTeamId } from '../config';
+import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
@@ -14,11 +14,10 @@ import {
   getTeamRepos,
   getTeamsByUser,
   updateTeam,
-  updateTeamRepos,
+  updateTeamRepos, getTeamByUrl,
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
 
-import { findById } from '../comments/collections/collectionService';
 import { _checkPermission } from '../shared/utils';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -40,14 +39,39 @@ export default (app, passport) => {
     }
   });
 
+  route.get('/check-url/:url', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { url } = req.params;
+      const team = await getTeamByUrl(url.toLowerCase());
+      return res.status(200).send({ isAvailable: !team });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { _id } = req.user;
+      const { members, url } = req.body;
+
+      if (url) {
+        const team = await getTeamByUrl(url.toLowerCase());
+        if (team) {
+          return res.status(400).send({
+            message: 'this url is already allocated',
+          });
+        }
+      }
 
       const team = await createTeam({
         ...req.body,
         createdBy: _id,
       });
+
+      if (members?.length) {
+        await addTeamMembers(team._id, req.body.members, 'member');
+      }
 
       return res.status(200).send(team);
     } catch (error) {
