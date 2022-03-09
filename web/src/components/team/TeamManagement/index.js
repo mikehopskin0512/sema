@@ -44,7 +44,7 @@ const TeamManagement = ({ activeTeam }) => {
 
   const dispatch = useDispatch();
   const canModifyRoles = isTeamAdmin();
-  const teamId = activeTeam?._id;
+  const teamId = activeTeam?.team?._id;
 
   useAuthEffect(() => {
     if (teamId) {

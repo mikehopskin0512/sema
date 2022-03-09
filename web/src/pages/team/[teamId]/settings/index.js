@@ -39,10 +39,6 @@ const TeamSettings = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(activeTeam._id, {}, token));
-  }, [teamId]);
-
-  useEffect(() => {
     if (teams.teams.length) {
       const team = teams.teams.find(({ team }) => {
         return (team?.url === teamId) || (team?._id === teamId)
