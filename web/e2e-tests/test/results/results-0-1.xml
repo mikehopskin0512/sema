@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Repo" timestamp="2022-02-25T09:42:29" time="0.163" tests="1" failures="0" errors="0" skipped="0">
+  <testsuite name="Repo" timestamp="2022-03-07T18:52:48" time="31.029" tests="1" failures="0" errors="0" skipped="0">
     <properties>
       <property name="specId" value="0"/>
       <property name="featureName" value="Repo"/>
-      <property name="capabilities" value="chrome.98_0_4758_109.darwin"/>
-      <property name="featureFile" value="./src/features/repo.feature"/>
+      <property name="capabilities" value="chrome.99_0_4844_51.win32"/>
+      <property name="featureFile" value=".\src\features\repo.feature"/>
     </properties>
-    <testcase classname="CucumberJUnitReport-chrome.98_0_4758_109.darwin.Repo" name="My Repos can change card view to list view" time="0.145" file="./src/features/repo.feature">
+    <testcase classname="CucumberJUnitReport-chrome.99_0_4844_51.win32.Repo" name="Activity log elements are displayed for repo" time="30.835">
       <system-out><![CDATA[
-✅ Then I expect that element "reposContainer" becomes displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "repoListViewBtn" becomes displayed✅ And I expect that element "repoCardViewBtn" becomes displayed✅ When I click on the element "repoListViewBtn"✅ Then I expect that element "reposCards" becomes not displayed✅ And I expect that element "reposListRows" becomes displayed✅ When I click on the element "repoCardViewBtn"✅ Then I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed
+✅ Then I expect that element "reposContainer" becomes displayed✅ And I expect that element "reposCards" becomes displayed✅ When I click on the element "1stReposCard"✅ And I pause for 30000ms
+✅ And I expect that element "activityLogTabBtn" becomes displayed✅ And I expect that element "codeStatsTabBtn" becomes displayed✅ And I expect that element "dateRangeFilter" becomes displayed✅ And I expect that element "fromFilter" becomes displayed✅ And I expect that element "toFilter" becomes displayed✅ And I expect that element "summariesFilter" becomes displayed✅ And I expect that element "tagsFilter" becomes displayed✅ And I expect that element "pullRequestsFilter" becomes displayed✅ And I expect that element "smartCodeReviewsIndicator" becomes displayed✅ And I expect that element "smartCommentsIndicator" becomes displayed✅ And I expect that element "smartCommentersIndicator" becomes displayed✅ And I expect that element "snapshotBtn" becomes displayed
 ]]></system-out>
     </testcase>
   </testsuite>
