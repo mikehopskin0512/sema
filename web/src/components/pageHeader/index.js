@@ -2,10 +2,10 @@ import React from 'react';
 import Avatar from 'react-avatar';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
-import { PlusIcon } from '../Icons';
+import { EditIcon } from '../Icons';
 import styles from './pageHeader.module.scss';
 import usePermission from '../../hooks/usePermission';
-import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { PATHS } from '../../utils/constants';
 
 const defaultMenus = [
   {
@@ -40,8 +40,8 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
     return tab ? item.tab === tab : item.path === routerpathname;
   }
 
-  const goToInvitePage = () => {
-    router.push(PATHS.TEAM.INVITE(team?._id));
+  const goToEditPage = () => {
+    router.push(PATHS.TEAM.EDIT(team?._id));
   };
 
   const handleTabClick = (item) => {
@@ -63,22 +63,25 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
             textSizeRatio={2.5}
             maxInitials={2}
           />
-          <p className="has-text-weight-semibold has-text-black-950 is-size-5 ml-20">
-            {team?.name || ''}
-          </p>
+          <div className="ml-20">
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 mb-5">
+              {team?.name || ''}
+            </p>
+            <div className="has-text-gray-600">{team?.description}</div>
+          </div>
         </div>
         {checkAccess(team?._id, 'canEditUsers') && type === 'normal' && (
-            <div className='is-flex'>
-              <button
-                className="button is-small is-primary border-radius-4px"
-                type="button"
-                onClick={goToInvitePage}
-              >
-                <PlusIcon size="small" />
-                <span className="ml-10">Invite new members</span>
-              </button>
-            </div>
-          )}
+          <div className='is-flex'>
+            <button
+              className="button has-background-white has-text-primary border-none border-radius-4px outline-none"
+              type="button"
+              onClick={goToEditPage}
+            >
+              <EditIcon size="small" />
+              <span className="ml-10">Edit Team Profile</span>
+            </button>
+          </div>
+        )}
       </div>
       <div>
         <div className="tabs">
@@ -86,7 +89,10 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
             {
               menus.map((item) => (
                 <li key={item.name} className={isActive(item) ? 'is-active' : ''} onClick={() => handleTabClick(item)}>
-                  <a className={clsx(isActive(item) ? styles.active : '', styles.listItem)}>{item.name}</a>
+                  <a className={clsx('is-size-6 has-text-weight-semibold is-flex is-align-items-center mr-20 px-0 py-4', isActive(item) ? styles.active : 'border-none', styles.listItem)}>
+                    {item.icon}
+                    <span className="ml-8">{item.name}</span>
+                  </a>
                 </li>
               ))
             }

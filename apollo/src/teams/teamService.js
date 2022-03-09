@@ -65,7 +65,7 @@ export const getTeamById = async (id) => {
         comments: 1
       }
     }).exec();
-    
+
     return team || {};
   } catch (err) {
     logger.error(err);
@@ -252,4 +252,18 @@ export const bulkUpdateTeamCollections = async (collectionData, ids) => {
     logger.error(error);
     throw (error);
   }
+}
+
+export const updateTeamAvatar = async (teamId, userId, file) => {
+  const team = await Team.findById(teamId);
+
+  team.avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${file.filename}`;
+  await team.save();
+
+  const role = await UserRole.findOne({
+    team: teamId,
+    user: userId,
+  }).populate('team').populate('role');
+
+  return role;
 }
