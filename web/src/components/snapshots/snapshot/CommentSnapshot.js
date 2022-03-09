@@ -13,30 +13,16 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { removeSnapshot } = portfoliosOperations;
 
-const Snapshot = ({ snapshotData, portfolioId }) => {
+const CommentSnapshot = ({ snapshotData, portfolioId }) => {
   const dispatch = useDispatch();
-  const { auth } = useSelector(
-    (state) => ({
-      auth: state.authState,
-    }),
-  );
-  const { token } = auth;
+  const { token } = useSelector((state) => state.authState);
   const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
-  const renderComponentSnapshot = (type) => {
+  const renderCommentSnapshot = () => {
     if (componentData) {
-      switch (type) {
-        case 'comments':
-          return componentData?.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />);
-        case 'summaries':
-          return (<SnapshotChartContainer chartType="reactions" {...componentData} />);
-        case 'tags':
-          return (<SnapshotChartContainer chartType="tags" {...componentData} />);
-        default:
-          return '';
-      }
+      return componentData.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />);
     }
     return '';
   };
@@ -78,13 +64,13 @@ const Snapshot = ({ snapshotData, portfolioId }) => {
           />
         </div>
         <div className="columns is-multiline mt-25">
-          <div className={clsx('column', componentType === 'comments' && 'is-full')}>
+          <div className={clsx('column is-full')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>{description}</div>
           </div>
-          <div className={clsx('column', componentType === 'comments' && 'is-full')}>
+          <div className={clsx('column is-full')}>
             <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300">
-              {renderComponentSnapshot(componentType)}
+              {renderCommentSnapshot()}
             </div>
           </div>
         </div>
@@ -93,9 +79,9 @@ const Snapshot = ({ snapshotData, portfolioId }) => {
   );
 };
 
-Snapshot.propTypes = {
+CommentSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,
   portfolioId: PropTypes.string.isRequired,
 };
 
-export default Snapshot;
+export default CommentSnapshot;
