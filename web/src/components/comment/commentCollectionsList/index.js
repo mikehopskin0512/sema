@@ -125,6 +125,7 @@ const CommentCollectionsList = () => {
   }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
+  const inactiveCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {
     if (profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW && selectedTeam?.team?._id) {
@@ -198,13 +199,13 @@ const CommentCollectionsList = () => {
             </div>
           </div>
         </div>
-        <div className="px-20">
+        <div className="px-10">
           <SnippetCollectionFilter
             setFilter={setFilter}
             filter={filter}
           />
         </div>
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections</p>
+        <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
         <p className="is-size-6 has-text-black-950 mb-15 px-10">
           Snippets from these collections will be suggested as you create code reviews
         </p>
@@ -220,7 +221,7 @@ const CommentCollectionsList = () => {
             emptyMessage="No results"
           />
         )}
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections</p>
+        <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections ({inactiveCollections.length})</p>
         {view === 'grid' ? (
           <>
             <CardList type="others" collections={paginatedInactiveCollections.slice(0, pageSize * currentPage) || []} />
