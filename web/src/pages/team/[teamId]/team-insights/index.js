@@ -12,6 +12,7 @@ import ReactionChart from '../../../../components/stats/reactionChart';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
 import { teamsOperations } from "../../../../state/features/teams";
+import { repositoriesOperations } from "../../../../state/features/repositories";
 import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
@@ -20,13 +21,15 @@ import { AuthorIcon, TeamIcon } from '../../../../components/Icons';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 
-const { fetchTeamSmartCommentSummary, fetchTeamSmartCommentOverview } = teamsOperations;
+const { fetchTeamSmartCommentSummary, fetchTeamSmartCommentOverview, fetchTeamRepos } = teamsOperations;
+const { fetchReposByIds } = repositoriesOperations;
 
 const TeamInsights = () => {
   const dispatch = useDispatch();
-  const { auth, teams } = useSelector((state) => ({
+  const { auth, teams, repositories } = useSelector((state) => ({
     auth: state.authState,
     teams: state.teamsState,
+    repositories: state.repositoriesState,
   }));
   const { token, user, selectedTeam } = auth;
   const githubUser = user.identities?.[0];
@@ -175,15 +178,21 @@ const TeamInsights = () => {
     getUserSummary(githubUser?.username);
   }, [auth, isActive]);
 
+  useAuthEffect(() => {
+    if(!isEmpty(selectedTeam)){
+      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+    }
+  }, []);
+
   useEffect(() => {
-    const reposList = githubUser.repositories?.map(item => (
+    const reposList = teams?.repos.map(item => (
       {  
-        name: item.fullName, 
-        label: item.fullName, 
-        value: item.id,
+        name: item.name, 
+        label: item.name, 
+        value: item.externalId,
       })) || [];
     setFilterRepoList([...reposList]);
-  }, [githubUser]);
+  }, [teams]);
 
   useEffect(() => {
     const { summary } = teams;
@@ -193,9 +202,16 @@ const TeamInsights = () => {
   }, [teams]);
 
   useEffect(() => {
-    console.log(filter);
     getCommentsOverview(filter);
   }, [filter, commentView, isActive]);
+
+  useAuthEffect(() => {
+    const { repos } = selectedTeam.team;
+    if (repos?.length) {
+      const idsParamString = repos.join('-');
+      dispatch(fetchReposByIds(idsParamString, token));
+    }
+  }, [selectedTeam]);
 
   const setFilterValues = (overview) => {
     if (!overview?.smartComments?.length) {

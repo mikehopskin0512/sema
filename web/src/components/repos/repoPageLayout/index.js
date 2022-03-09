@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isWithinInterval } from 'date-fns';
-import { find, uniqBy } from 'lodash';
+import { find, uniqBy, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Sidebar from '../../sidebar';
@@ -12,19 +12,20 @@ import { repositoriesOperations } from '../../../state/features/repositories';
 import HoverSelect from '../../../components/select/hoverSelect';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 
-const { getUserRepositories } = repositoriesOperations;
+const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
-const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
+const RepoPageLayout = ({ children, dates, isTeamRepo, ...sidebarProps }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { auth, repositories } = useSelector((state) => ({
+  const { auth, repositories, teams } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
+    teams: state.teamsState,
   }));
   const { data: { overview = {} } } = repositories;
   const { name = '', smartcomments = [], users = [] } = overview;
   const { query: { repoId = '' }, pathname = '' } = router;
-  const { token } = auth;
+  const { token, selectedTeam } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -47,11 +48,19 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
   }, [overview]);
 
   useAuthEffect(() => {
-    const { repositories: userRepos } = auth.user.identities[0] || {};
-    if (userRepos?.length && !repositories?.data?.repositories?.length) {
-      dispatch(getUserRepositories(userRepos, token));
+    if (!isTeamRepo) {
+      const { repositories: userRepos } = auth.user.identities[0] || {};
+      if (userRepos?.length && !repositories?.data?.repositories?.length) {
+        dispatch(getUserRepositories(userRepos, token));
+      }
+    } else {
+      const { repos } = selectedTeam.team;
+      if (repos?.length) {
+        const idsParamString = repos.join('-');
+        dispatch(fetchReposByIds(idsParamString, token));
+      }
     }
-  }, [auth.user.identities]);
+  }, [isTeamRepo]);
 
   useEffect(() => {
     if (smartcomments) {
@@ -68,17 +77,19 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
   };
 
   useEffect(() => {
-    if (repositories.data?.repositories) {
-      const selected = find(repositories.data.repositories, { externalId: repoId });
-      formatOptions(repositories.data.repositories);
-      if (selected) {
-        setSelectedRepo({
-          label: selected.name,
-          value: selected.externalId,
-        });
-      }
+    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+  }, []);
+
+  useEffect(() => {
+    const selected = find(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos, { externalId: repoId });
+    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+    if (selected) {
+      setSelectedRepo({
+        label: selected.name,
+        value: selected.externalId,
+      });
     }
-  }, [repositories]);
+  }, [repositories, teams]);
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);
