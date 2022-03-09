@@ -22,6 +22,7 @@ const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const TeamManagement = ({ activeTeam }) => {
+  const router = useRouter();
   const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
