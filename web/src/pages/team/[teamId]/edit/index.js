@@ -44,7 +44,7 @@ const TeamEditPage = () => {
   useEffect(() => {
     if (teams.teams.length) {
       const activeRole = _.find(teams.teams, function (o) {
-        return o.team._id === teamId
+        return o.team?._id === teamId
       });
       const activeTeam = {
         _id: teamId,

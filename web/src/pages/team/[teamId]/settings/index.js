@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash'
 import { Helmet } from 'react-helmet';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
@@ -30,7 +29,7 @@ const TeamSettings = () => {
     }),
   );
   const { token, user } = auth;
-  const [userRole, setUserRole] = useState({});
+  const [activeTeam, setActiveTeam] = useState({});
 
   const setDefaultTag = () => {
     router.push({
@@ -40,31 +39,31 @@ const TeamSettings = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, {}, token));
-  }, [teamId])
+    dispatch(fetchTeamMembers(activeTeam._id, {}, token));
+  }, [teamId]);
 
   useEffect(() => {
     if (teams.teams.length) {
-      const activeRole = _.find(teams.teams, function (o) {
-        return o.team._id === teamId
+      const team = teams.teams.find(({ team }) => {
+        return (team?.url === teamId) || (team?._id === teamId)
       });
-      if (activeRole) {
-        setUserRole(activeRole)
+      if (team) {
+        setActiveTeam(team);
       }
     }
-  }, [teams]);
+  }, [teams, teamId]);
 
   useEffect(() => {
     !tab && setDefaultTag();
   }, []);
 
   const menus = [
-    {
+    (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.management,
       icon: <TeamIcon width={20} />,
-    },
+    }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
       path: `/team/${teamId}/settings`,
@@ -78,14 +77,14 @@ const TeamSettings = () => {
       <div className="has-background-white">
         <div className="container pt-40">
           <Helmet {...TeamDashboardHelmet} />
-          <PageHeader menus={menus} userRole={userRole} />
+          <PageHeader menus={menus} userRole={activeTeam} />
         </div>
       </div>
       <div className="container">
         <div className="has-background-white-50">
           <div className="hero-body pt-0 pb-100 px-0">
-            {tab === 'management' && <TeamManagement />}
-            {tab === 'labels' && <LabelsManagement />}
+            {tab === 'management' && <TeamManagement activeTeam={activeTeam}/>}
+            {tab === 'labels' && <LabelsManagement activeTeam={activeTeam}/>}
           </div>
         </div>
       </div>

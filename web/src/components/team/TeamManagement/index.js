@@ -21,8 +21,7 @@ import { PATHS } from '../../../utils/constants';
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
-const TeamManagement = () => {
-  const router = useRouter();
+const TeamManagement = ({ activeTeam }) => {
   const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
@@ -44,7 +43,7 @@ const TeamManagement = () => {
 
   const dispatch = useDispatch();
   const canModifyRoles = isTeamAdmin();
-  const { teamId } = router.query;
+  const teamId = activeTeam?._id;
 
   useAuthEffect(() => {
     if (teamId) {

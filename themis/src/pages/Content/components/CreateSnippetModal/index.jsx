@@ -11,6 +11,10 @@ import styles from './createSnippetModal.module.scss';
 import { fireAmplitudeEvent, getAllCollection, getAllTags, saveSmartComment } from '../../modules/content-util';
 import { mapTagsToOptions } from './helpers';
 
+const semaLogo = chrome.runtime.getURL(
+  'img/sema-logo.svg',
+);
+
 const CreateSnippetModal = () => {
   const dispatch = useDispatch();
   const { user: { isLoggedIn } } = useSelector((state) => state);
@@ -204,6 +208,11 @@ const CreateSnippetModal = () => {
           </div>
         </main>
         <div className={styles.controls}>
+          <img
+            src={semaLogo}
+            className={styles.logo}
+            alt="sema-logo"
+          />
           <Button
             onClick={onClose}
             style={{ marginRight: '16px' }}

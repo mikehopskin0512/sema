@@ -101,7 +101,7 @@ const TeamManagementPage = () => {
   useEffect(() => {
     if (user.roles.length) {
       const activeRole = _.find(user.roles, function (o) {
-        return o.team._id === teamId
+        return o.team?._id === teamId
       });
       if (activeRole) {
         setUserRole(activeRole)

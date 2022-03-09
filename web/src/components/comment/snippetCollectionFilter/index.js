@@ -1,12 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
+import { InputField } from 'adonis';
 import { SearchIcon } from '../../Icons';
 import CustomSelect from '../../activity/select';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { tagsOperations } from '../../../state/features/tags';
 import { addTags } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
-import clsx from 'clsx';
+import styles from './snippetCollectionFilter.module.scss';
+import {gray500} from '../../../../styles/_colors.module.scss'
 
 const { fetchTagList } = tagsOperations;
 
@@ -57,23 +60,15 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
     });
   };
 
+  const [toggleSearch, setToggleSearch] = useState(false);
+
+  const handleSearchToggle = () => {
+    setToggleSearch(toggle => !toggle);
+  }
+
   return (
     <>
-      <div className="has-background-white shadow p-10 mx-neg12 mt-neg12 mb-12 columns is-multiline is-vcentered">
-        <div className={clsx('column', isSemaAdmin() ? 'is-full' : 'is-one-third')}>
-          <div className="control has-icons-left has-icons-right">
-            <input
-              value={filter.query}
-              onChange={(e) => onChangeFilter('query', e.target.value)}
-              className="input has-background-white"
-              type="input"
-              placeholder="Search Collections and Snippets"
-            />
-            <span className="icon is-small is-left">
-              <SearchIcon size="small" />
-            </span>
-          </div>
-        </div>
+      <div className="p-0 mb-0 columns is-multiline is-vcentered">
         <div className="column">
           <CustomSelect
             selectProps={{
@@ -150,7 +145,21 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
             </>
           )
         }
+        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+          <SearchIcon color={gray500} size="medium" className="is-clickable" onClick={handleSearchToggle} />
+        </div>
       </div>
+      {toggleSearch && <div className={clsx(`field mt-0 is-flex-grow-1 ${styles['search-bar']}`)}>
+        <InputField
+          className="has-background-white"
+          type="text"
+          placeholder="Search Collections and Snippets"
+          onChange={(value) => onChangeFilter('query', value)}
+          value={filter.query}
+          iconLeft={<SearchIcon />}
+        />
+      </div>}
+      <hr className={`has-background-gray-400 is-full-width ${styles.separator}`} />
     </>
   )
 }

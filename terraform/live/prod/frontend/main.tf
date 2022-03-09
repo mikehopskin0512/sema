@@ -50,8 +50,8 @@ module "phoenix" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
-  min_capacity = 2
-  max_capacity = 6
+  min_capacity = 6
+  max_capacity = 12
 }
 
 module "apollo" {
@@ -93,6 +93,6 @@ module "apollo" {
     dns_zone_id       = "Z1758VYBWE4JHY"
   }
 
-  min_capacity = 2
-  max_capacity = 6
+  min_capacity = 6
+  max_capacity = 12
 }
