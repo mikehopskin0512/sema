@@ -19,7 +19,6 @@ import ExportButton from '../../components/admin/exportButton';
 import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 import InlineEdit from '../../components/inlineEdit';
 import { gray300 } from '../../../styles/_colors.module.scss';
-import * as analytics from '../../utils/analytics';
 
 const {
   fetchUsers,
@@ -28,6 +27,7 @@ const {
   bulkAdmitUsers,
   exportUsers,
   updateUser,
+  trackWaitlistAccepted,
 } = usersOperations;
 
 const { exportSuggestedComments } = suggestCommentsOperations;
@@ -83,7 +83,7 @@ const UsersPage = () => {
       value: false,
     }));
     getUsers();
-    analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_ACCEPTED, { email });
+    trackWaitlistAccepted(email);
   }, [dispatch, getUsers]);
 
   const handleBlockOrDisableUser = useCallback(async (userId) => {

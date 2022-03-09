@@ -13,7 +13,6 @@ import { alertOperations } from '../../state/features/alerts';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import * as analytics from '../../utils/analytics';
 
 const { createInvite } = invitationsOperations;
 const { clearAlert } = alertOperations;
@@ -69,7 +68,7 @@ const Admin = () => {
 
     // Send invite & reset form
     await Promise.allSettled(allInvitationsPromises);
-    analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_SENT, { emails});
+
     reset();
   };
 
