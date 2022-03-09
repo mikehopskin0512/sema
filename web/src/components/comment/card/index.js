@@ -150,22 +150,19 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   </div>
                 )} */}
               </div>
-              <div className="is-flex is-justify-content-space-between has-background-gray-300">
-                <div className="px-12 is-flex-grow-3 is-flex">
-                  <div className={clsx(
-                    'border-radius-8px p-10 is-flex is-align-items-center',
-                  )}>
-                    <div className="mr-10 is-flex is-align-items-center mr-10">
-                      <CommentsIcon color='has-text-black-900' size='small' />
-                    </div>
-                    <p className="is-size-7 has-text-weight-semibold mr-8 has-text-blue-500">{commentsCount || comments.length}</p>
-                    <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
+              <div className={`is-flex is-justify-content-space-between is-align-items-center has-background-gray-300 ${styles['card-bottom-section']} ${(isMyComments || isTeamSnippet) && 'is-flex-wrap-wrap'}`}>
+                <div className={clsx(
+                  'border-radius-8px p-10 is-flex is-align-items-center',
+                )}>
+                  <div className="mr-10 is-flex is-align-items-center mr-10">
+                    <CommentsIcon color='has-text-black-900' size='small' />
                   </div>
-
+                  <p className="is-size-7 has-text-weight-semibold mr-8 has-text-blue-500">{commentsCount || comments.length}</p>
+                  <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
                 </div>
-                <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">
-                  {isMyComments || isTeamSnippet ? (
-                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
+                <div className='is-flex is-align-items-center'>
+                  {(isMyComments || isTeamSnippet) && (
+                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden >
                       <div
                         className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',
                           styles['add-button'])}
@@ -178,34 +175,10 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                         New Snippet
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
-                        <div
-                          className={clsx('button has-text-gray-300 is-ghost is-clickable is-fullwidth has-text-weight-semibold',
-                            styles['add-button'])}
-                          onClick={onClickAddComment}
-                          aria-hidden
-                        >
-                          {/* This is a HACK, in order for it to be responsive together with the `my snippets` card */}
-                          <div className="mr-10 is-flex is-align-items-center">
-                            <PlusIcon />
-                          </div>
-                          New Snippet
-                        </div>
-                      </div>
-                      {/* TODO: In case this would be need in the future, this is the tags of the card (langauges). */}
-                      {/* <div className="is-flex is-flex-grow-1 is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
-                        {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
-                        {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
-                        {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
-                        {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
-                      </div> */}
-                    </>
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     <div className="dropdown-trigger">
-                      <button className="button is-ghost has-text-black-900" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                      <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                         <OptionsIcon />
                       </button>
                     </div>
