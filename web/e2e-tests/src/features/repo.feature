@@ -22,7 +22,6 @@ Feature: Repo
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
       When I click on the element "1stReposCard"
-      And I pause for 30000ms
 #      Then I expect that element "reposDropDownList" becomes displayed
       And  I expect that element "activityLogTabBtn" becomes displayed
       And  I expect that element "codeStatsTabBtn" becomes displayed
@@ -32,10 +31,15 @@ Feature: Repo
       And  I expect that element "summariesFilter" becomes displayed
       And  I expect that element "tagsFilter" becomes displayed
       And  I expect that element "pullRequestsFilter" becomes displayed
-#      And  I expect that element "search" becomes displayed
+      And  I expect that element "searchFilterBtn" becomes displayed
+      And  I expect that element "searchFilterInput" becomes not displayed
       And  I expect that element "smartCodeReviewsIndicator" becomes displayed
       And  I expect that element "smartCommentsIndicator" becomes displayed
       And  I expect that element "smartCommentersIndicator" becomes displayed
 #      And  I expect that element "semaUsersIndicator" becomes displayed
 #      And  I expect that element "commentsList" becomes displayed
+      And  I expect that element "noCommentsList" becomes displayed
       And  I expect that element "snapshotBtn" becomes displayed
+
+      When I click on the element "searchFilterBtn"
+      Then I expect that element "searchFilterInput" becomes displayed
