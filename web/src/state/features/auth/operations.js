@@ -66,6 +66,10 @@ const trackUserLogout = () => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
 };
 
+const trackOnboardingCompleted = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.ONBOARDING_COMPLETED, {});
+};
+
 export default {
-  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout,
+  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout, trackOnboardingCompleted
 };

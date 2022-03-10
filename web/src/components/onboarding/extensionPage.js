@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './onboarding.module.scss';
+import { authOperations } from '../../state/features/auth';
+const { trackOnboardingCompleted } = authOperations;
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
@@ -43,6 +45,11 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
       </div>
     );
   };
+
+  const handleOnClick = () => {
+    trackOnboardingCompleted();
+    closeModal();
+  }
 
   return (
     <>
@@ -94,7 +101,7 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
             <button
               type="button"
               className={clsx('button is-primary is-outlined')}
-              onClick={closeModal}
+              onClick={handleOnClick}
             >
               Done
             </button>
