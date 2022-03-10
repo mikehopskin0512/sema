@@ -50,6 +50,8 @@
 
     "########### REPOS LOCATORS ###############" : "",
     "reposDropDownList"             : "//div[contains(@class,'css-1uccc91-singleValue')]",
+    "repoDropDownOption1"           : "//div[@id='react-select-5-option-0']",
+    "phoenixRepoDropDownOption"     : "//div[@id='react-select-5-option-0'][text()='phoenix']",
     "activityLogTabBtn"             : "//span[normalize-space()='Activity Logs']",
     "codeStatsTabBtn"               : "//span[normalize-space()='Code Stats']",
     "dateRangeFilter"               : "//button[contains(@class,'dateRangeSelector_button__35SUY')]",
@@ -74,6 +76,18 @@
     "saveSnapshotCommentsList"      : "//form//div[contains(@class,'has-background-white')]/img[contains(@class,'item_avatar__2a3IQ')]",
     "saveSnapshotCancelBtn"         : "//form//div[contains(@class,'is-justify-content-right')]/button[text()='Cancel']",
     "saveSnapshotSaveBtn"           : "//form//div[contains(@class,'is-justify-content-right')]/button[text()='Save']",
+
+    "codeStatsSummaries"            : "//div[contains(@class,'reactionChart_containers__18CGO')]/div",
+    "codeStatsTags"                 : "//div[contains(@class,'tagsChart_containers__1M6Ih')]/div",
+    "codeStatsSummariesSnapshotBtn" : "//div[contains(@class,'reactionChart_containers__18CGO')]//button/span[text()='Snapshot for Portfolio']",
+    "codeStatsTagsSnapshotBtn"      : "//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']",
+
+    "last7DaysDateRange"            : "//a[text()='Last 7 days']",
+    "last14DaysDateRange"           : "//a[text()='Last 14 days']",
+    "last30DaysDateRange"           : "//a[text()='Last 30 days']",
+    "last3MonthsDateRange"          : "//a[text()='Last 3 months']",
+    "last12MonthsDateRange"         : "//a[text()='Last 12 months']",
+    "allTimeDateRange"              : "//a[text()='All time']",
 
     "########## SNIPPETS LOCATORS #############" : "",
     "collectionArea"                : "//div[@id='collectionBody']",
