@@ -45,3 +45,20 @@
     color: $gray-600;
   }
 }
+
+.snaps-container {
+  .chart-wrap {
+    @media only screen and (min-width: 1440px) {
+      width: 50%;
+      display: inline-flex;
+      flex-direction: column;
+    }
+  }
+  section:nth-of-type(odd) {
+    div {
+      @media only screen and (min-width: 1440px) {
+        margin-right: 16px;
+      }
+    }
+  }
+}

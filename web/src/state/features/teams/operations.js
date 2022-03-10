@@ -8,7 +8,7 @@ export const updateTeamCollectionIsActiveAndFetchCollections = (collectionId, te
     await dispatch(setActiveTeamCollections(collectionId, teamId, token));
     const roles = await dispatch(actions.fetchTeamsOfUser(token))
     const activeTeam = find(roles, function(o) {
-      return o.team._id === teamId
+      return o.team?._id === teamId
     })
     if (activeTeam) {
       await dispatch(setSelectedTeam(activeTeam))

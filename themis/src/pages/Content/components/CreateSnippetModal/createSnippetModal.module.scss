@@ -33,6 +33,13 @@
   margin-top: 40px;
   display: flex;
   justify-content: end;
+  align-items: center;
+}
+
+.logo {
+  margin-right: auto;
+  width: 28px;
+  height: 28px;
 }
 
 .source-field-switcher {

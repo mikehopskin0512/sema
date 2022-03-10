@@ -98,6 +98,17 @@ export const findById = async (id) => {
   }
 };
 
+export const findByType = async (type) => {
+  try {
+    const collections = Collection.find({ type }).exec();
+    return collections;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
 export const getUserCollectionsById = async (id, teamId = null) => {
   try {
     const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
@@ -282,7 +293,7 @@ export const createTeamCollection = async (team) => {
   try {
     const collection = {
       name: `${team.name}'s Snippets`,
-      description: team.description,
+      description: '',
       author: team.name,
       isActive: true,
       type: COLLECTION_TYPE.TEAM,

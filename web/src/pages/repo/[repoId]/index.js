@@ -8,6 +8,7 @@ import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
+import { teamsOperations } from '../../../state/features/teams';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
@@ -15,7 +16,8 @@ import StatsView from '../../../components/repos/repoPageLayout/components/Stats
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 
-const { fetchRepositoryOverview } = repositoriesOperations;
+const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
+const { fetchTeamRepos } = teamsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
@@ -28,7 +30,7 @@ const RepoPage = () => {
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
-  const { token } = auth;
+  const { token, selectedTeam } = auth;
   const { data: { overview } } = repositories;
 
   const {
@@ -55,6 +57,27 @@ const RepoPage = () => {
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
+  const [isTeamRepo, setIsTeamRepo] = useState(!isEmpty(selectedTeam));
+
+  useEffect(() => {
+    setIsTeamRepo(!isEmpty(selectedTeam));
+  }, [selectedTeam]);
+
+  useAuthEffect(() => {
+    if(!isEmpty(selectedTeam)){
+      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+    }
+  }, []);
+
+  useAuthEffect(() => {
+    if (isTeamRepo) {
+      const { repos } = selectedTeam.team;
+      if (repos?.length) {
+        const idsParamString = repos.join('-');
+        dispatch(fetchReposByIds(idsParamString, token));
+      }
+    }
+  }, []);
 
   useAuthEffect(() => {
     if (
@@ -146,6 +169,7 @@ const RepoPage = () => {
       selectedTab={selectedTab}
       dates={dates}
       onDateChange={onDateChange}
+      isTeamRepo={isTeamRepo}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 

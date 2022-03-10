@@ -15,11 +15,11 @@ import { SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
 
-const LabelsManagement = () => {
+const LabelsManagement = ({ activeTeam }) => {
   const dispatch = useDispatch();
   const { isTeamAdminOrLibraryEditor } = usePermission();
   const router = useRouter();
-  const { teamId } = router.query;
+  const teamId = activeTeam?._id;
   const { auth, tagsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     tagsState: state.tagsState,
@@ -32,16 +32,8 @@ const LabelsManagement = () => {
   const [filteredData, setFilteredData] = useState([]);
 
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, user } = auth;
-  const { roles } = user ?? { roles: [] };
+  const { token } = auth;
   const { tags = [], isFetching } = tagsState;
-
-  const roleTeam = roles.find((role) => {
-    const { team } = role;
-    // While teams selection is not implemented
-    return team?._id === SEMA_CORPORATE_TEAM_ID;
-  });
-
   const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   useEffect(() => {
@@ -64,10 +56,10 @@ const LabelsManagement = () => {
   }, [tags, filters]);
 
   useEffect(() => {
-    if (!isAuthorized) {
+    if (activeTeam && !isAuthorized) {
       router.replace('/');
     }
-  }, []);
+  }, [activeTeam]);
 
   if (!isAuthorized) {
     return(

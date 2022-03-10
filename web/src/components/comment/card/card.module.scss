@@ -1,14 +1,24 @@
 .card {
-  width: calc(100%/3);
-  max-width: calc(100%/3);
-  @media only screen and (max-width: 769px) {
+  @media only screen and (max-width: 779px) {
     max-width: 100% !important;
     width: 100% !important;
     flex: 1;
     min-height: auto !important;
     height: auto;
   }
-  overflow: visible;
+  @media only screen and (min-width: 780px) {
+    width: calc(100%/2);
+    max-width: 540px;
+    overflow: visible; 
+  }
+  @media only screen and (min-width: 1216px) {
+    width: calc(100%/3);
+    max-width: calc(100%/3);
+    overflow: visible; 
+  }
+  .card-bottom-section {
+    min-height: 64px;
+  }
 }
 
 .stat {
