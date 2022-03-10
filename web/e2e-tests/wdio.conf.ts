@@ -50,24 +50,8 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-      // grid with only 5 firefox instances available you can make sure that not more than
-      // 5 instances get started at a time.
-      maxInstances: 1,
-
-      //
+      maxInstances: 5,
       browserName: "chrome",
-      // 'goog:chromeOptions': {
-      //     extensions: [(function () {
-      //         try {
-      //             const webExt = fs.readFileSync('./extension.zip').toString('base64');
-      //             return webExt;
-      //         } catch (e) {
-      //             console.log(e, 'An error occurred while to parse extension zip file!');
-      //         }
-      //     })()],
-      //     args: ['--headless', '--disable-gpu']
-      // },
     },
   ],
   //
@@ -119,8 +103,16 @@ export const config: WebdriverIO.Config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: [],
-  //
+  user: process.env.BROWSERSTACK_USERNAME,
+  key: process.env.BROWSERSTACK_ACCESS_KEY,
+  services: [
+    [
+      "browserstack",
+      {
+        browserstackLocal: true,
+      },
+    ],
+  ],
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -153,40 +145,13 @@ export const config: WebdriverIO.Config = {
   //     ]
   // ],
   reporters: [
-    'dot',
     [
-      "junit",
+      "allure",
       {
-        outputDir: "./test/results",                
-        outputFileFormat: function (options) {
-          // optional
-          return `results-${options.cid}.xml`;
-        },
-        errorOptions: {
-            error: 'message',
-            failure: 'message',
-            stacktrace: 'stack'
-        },        
-      }
+        outputDir: "allure-results",
+        disableWebdriverStepsReporting: true,
+      },
     ],
-    [
-      "html-nice",
-      {
-        outputDir: "./reports/html-reports/",
-        filename: "report.html",
-        reportTitle: "Test Report Title",
-        linkScreenshots: true,
-        //to show the report in a browser when done
-        showInBrowser: true,
-        collapseTests: false,
-        //to turn on screenshots after every test
-        useOnAfterCommandForScreenshot: false,
-      }
-    ],
-    ['allure', {
-        outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,        
-    }]   
   ],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
