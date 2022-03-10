@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -18,8 +17,7 @@ import useAuthEffect from '../../../hooks/useAuthEffect';
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
-const TeamManagement = () => {
-  const router = useRouter();
+const TeamManagement = ({ activeTeam }) => {
   const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
@@ -29,7 +27,6 @@ const TeamManagement = () => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
-  const [userRole, setUserRole] = useState({});
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -42,7 +39,7 @@ const TeamManagement = () => {
 
   const dispatch = useDispatch();
   const canModifyRoles = isTeamAdmin();
-  const { teamId } = router.query;
+  const teamId = activeTeam?._id;
 
   useAuthEffect(() => {
     if (teamId) {
@@ -87,17 +84,6 @@ const TeamManagement = () => {
     await dispatch(removeUserRole(teamId, userRoleId, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
   }, [dispatch, page, perPage, token, user]);
-
-  useEffect(() => {
-    if (team.teams.length) {
-      const activeRole = _.find(team.teams, function (o) {
-        return o.team._id === teamId
-      });
-      if (activeRole) {
-        setUserRole(activeRole)
-      }
-    }
-  }, [team]);
 
   const columns = useMemo(() => [
     {

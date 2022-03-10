@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { createTeamCollection, findByAuthor } from '../comments/collections/collectionService';
-import { semaCorporateTeamName } from '../config';
+import { createTeamCollection, findByType } from '../comments/collections/collectionService';
+import { COLLECTION_TYPE } from '../comments/collections/constants';
 
 const { Schema } = mongoose;
 
@@ -16,6 +16,10 @@ const teamSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Repository',
   }],
+  url: {
+    type: String,
+    unique: true,
+  },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -25,7 +29,14 @@ const teamSchema = new Schema({
 teamSchema.pre('save', async function save(next) {
   try {
     const teamCollection = await createTeamCollection(this);
-    this.collections = [{ isActive: true, collectionData: teamCollection }];
+    const collections = await findByType(COLLECTION_TYPE.COMMUNITY);
+    this.collections = [
+      { isActive: true, collectionData: teamCollection },
+      ...collections,
+    ];
+    if (!this.url) {
+      this.url = this._id;
+    }
     return next();
   } catch (err) {
     return next(err);

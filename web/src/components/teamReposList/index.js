@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '../../components/checkbox';
-import { fetchRepoDashboard } from '../../state/features/repositories/actions';
+import { fetchRepoDashboard, fetchReposByIds } from '../../state/features/repositories/actions';
 import { editTeamRepos, fetchTeamRepos } from '../../state/features/teams/actions';
 import Loader from '../../components/Loader';
 import Table from '../table';

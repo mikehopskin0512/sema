@@ -7,10 +7,10 @@ function usePermission() {
   const checkAccess = (teamId, permission) => {
     // need to check first if current view mode is Team view
     if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
-    const role = selectedTeam?.role[permission] && selectedTeam?.team?._id == teamId;
+    const role = selectedTeam?.role?.[permission] && selectedTeam?.team?._id == teamId;
     return !!role;
   };
-  
+
   const checkTeamPermission = (permission) => {
     // need to check first if current view mode is Team view
     if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
@@ -23,7 +23,7 @@ function usePermission() {
     const role = selectedTeam?.team?._id == teamId;
     return !!role;
   };
-  
+
   const isSemaAdmin = () => {
     // need to check first if current view mode is Sema Corporate Team
     if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;

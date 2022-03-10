@@ -8,7 +8,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories,
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories, getRepositories,
 } from './repositoryService';
 import checkEnv from "../middlewares/checkEnv";
 
@@ -54,11 +54,14 @@ export default (app, passport) => {
   });
 
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { orgId } = req.query;
+    const { orgId, Ids } = req.query;
+    const idsArray = Ids?.split('-');
 
     try {
-      const repositories = await findByOrg(orgId);
-      if (!repositories) { throw new errors.NotFound('No repositories found for this organization'); }
+      const repositories = Ids ? await getRepositories(idsArray) : await findByOrg(orgId);
+      if (!repositories) { 
+        throw new errors.NotFound(Ids ? 'No repositories found' : 'No repositories found for this organization'); 
+      }
 
       return res.status(201).send({
         repositories,

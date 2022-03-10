@@ -102,6 +102,7 @@ const HeaderMenu = ({
     Object.keys(selectedTeam).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
     return menuItems;
   }, [orderedTeams]);
+  const isNoTeams = !teams.length;
 
   return (
     <>
@@ -118,11 +119,13 @@ const HeaderMenu = ({
           <a
             aria-hidden="true"
             type="button"
-            className="navbar-item px-15 py-20"
+            className="navbar-item px-15 py-20 is-flex"
             onClick={toggleUserMenu}
           >
-            <span>Create a Team</span>
-            <span className="is-line-height-1 is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+            <div>
+              <span>{isNoTeams ? 'Create a Team' : 'Add a Team'}</span>
+              <span className="is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
+            </div>
           </a>
           </Link>
           <hr className="navbar-divider m-0 has-background-gray-300" />
