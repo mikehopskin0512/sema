@@ -105,7 +105,7 @@ export const googleAnalyticsEvent = ({ action, params }) => {
   window.gtag('event', action, params);
 };
 
-// Segement
+// Segment
 
 export const segmentIdentify = (user) => {
   const { _id, username, firstName = '', lastName = '' } = user;
@@ -119,4 +119,8 @@ export const segmentTrack = (action, properties) => {
   global.analytics.track(action, {
     ...properties,
   });
+};
+
+export const segmentReset = () => {
+  global.analytics.reset();
 };

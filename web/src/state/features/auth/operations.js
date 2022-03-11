@@ -64,6 +64,7 @@ const trackUserLogin = () => {
 
 const trackUserLogout = () => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
+  analytics.segmentReset();
 };
 
 const trackOnboardingCompleted = () => {
