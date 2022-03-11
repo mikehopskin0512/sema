@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="Repo" timestamp="2022-03-10T18:14:33" time="12.168" tests="1" failures="1" errors="1" skipped="0">
+  <testsuite name="Repo" timestamp="2022-03-11T15:24:39" time="30.64" tests="1" failures="0" errors="0" skipped="0">
     <properties>
       <property name="specId" value="0"/>
       <property name="featureName" value="Repo"/>
       <property name="capabilities" value="chrome.99_0_4844_51.win32"/>
       <property name="featureFile" value=".\src\features\repo.feature"/>
     </properties>
-    <testcase classname="CucumberJUnitReport-chrome.99_0_4844_51.win32.Repo" name="Code stats elements are displayed for repo with selected date range" time="11.992">
-      <failure message="Error: element (&quot;//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']&quot;) still not displayed after 10000ms"><![CDATA[Error: element ("//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']") still not displayed after 10000ms
-    at C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\commands\browser\waitUntil.js:66:23
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.elementErrorHandlerCallbackFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\middlewares.js:24:32)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.elementErrorHandlerCallbackFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\middlewares.js:24:32)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at World.exports.default (C:\SemaSoftware\phoenix\web\e2e-tests\src\support\action\waitForDisplayed.ts:26:5)]]></failure>
-      <error message="Error: element (&quot;//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']&quot;) still not displayed after 10000ms"/>
+    <testcase classname="CucumberJUnitReport-chrome.99_0_4844_51.win32.Repo" name="My Repos can change card view to list view" time="30.519">
       <system-out><![CDATA[
-✅ Then I expect that element "reposContainer" becomes displayed✅ And I expect that element "reposCards" becomes displayed✅ When I click on the element "1stReposCard"✅ Then I expect that element "codeStatsTabBtn" becomes displayed✅ When I click on the element "codeStatsTabBtn"✅ Then I expect that element "dateRangeFilter" becomes displayed✅ When I click on the element "dateRangeFilter"✅ Then I expect that element "last7DaysDateRange" becomes displayed✅ And I expect that element "last14DaysDateRange" becomes displayed✅ And I expect that element "last30DaysDateRange" becomes displayed✅ And I expect that element "last3MonthsDateRange" becomes displayed✅ And I expect that element "last12MonthsDateRange" becomes displayed✅ And I expect that element "allTimeDateRange" becomes displayed✅ When I click on the element "allTimeDateRange"✅ And I click on the element "dateRangeFilter"✅ And I expect that element "summariesFilter" becomes displayed✅ And I expect that element "tagsFilter" becomes displayed✅ And I expect that element "pullRequestsFilter" becomes displayed✅ And I expect that element "searchFilterBtn" becomes displayed✅ And I expect that element "searchFilterInput" becomes not displayed✅ And I expect that element "smartCodeReviewsIndicator" becomes displayed✅ And I expect that element "smartCommentsIndicator" becomes displayed✅ And I expect that element "smartCommentersIndicator" becomes displayed✅ And I expect that element "semaUsersIndicator" becomes displayed✅ And I expect that element "codeStatsSummaries" becomes displayed✅ And I expect that element "codeStatsTags" becomes displayed✅ And I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed❗ And I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
+✅ Then I expect that element "reposContainer" becomes displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed✅ And I expect that element "reposCards" becomes displayed✅ And I expect that element "repoListViewBtn" becomes displayed✅ And I expect that element "repoCardViewBtn" becomes displayed✅ When I click on the element "repoListViewBtn"✅ Then I expect that element "reposCards" becomes not displayed✅ And I expect that element "reposListRows" becomes displayed✅ And I pause for 30000ms
+✅ When I click on the element "repoCardViewBtn"✅ Then I expect that element "reposCards" becomes displayed✅ And I expect that element "reposListRows" becomes not displayed
 ]]></system-out>
-      <system-err><![CDATA[
-Error: element ("//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']") still not displayed after 10000ms
-    at C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\commands\browser\waitUntil.js:66:23
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.elementErrorHandlerCallbackFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\middlewares.js:24:32)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at Element.elementErrorHandlerCallbackFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\webdriverio\build\middlewares.js:24:32)
-    at Element.wrapCommandFn (C:\SemaSoftware\phoenix\web\e2e-tests\node_modules\@wdio\utils\build\shim.js:106:29)
-    at World.exports.default (C:\SemaSoftware\phoenix\web\e2e-tests\src\support\action\waitForDisplayed.ts:26:5)
-]]></system-err>
     </testcase>
   </testsuite>
 </testsuites>
