@@ -26,6 +26,11 @@ export const create = async (collection, userId, teamId) => {
     const createdCollection = await newCollection.save();
     const isActiveCollection = collection.type !== COLLECTION_TYPE.COMMUNITY;
 
+    const isDefaultUserCollection = collection.name.toLowerCase() === process.env.DEFAULT_COLLECTION_NAME
+    if (isDefaultUserCollection) {
+      return createdCollection;
+    }
+
     switch (collection.type) {
       case COLLECTION_TYPE.COMMUNITY:
         await populateCollectionsToUsers([createdCollection._id]);
