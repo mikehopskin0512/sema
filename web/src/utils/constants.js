@@ -185,7 +185,7 @@ export const PATHS = {
   LOGIN: '/login',
   TEAM: {
     _: '/team',
-    EDIT: '/team/edit',
+    EDIT: (id) => `/team/${id}/edit`,
     ADD: '/team/add',
     INVITE: (id) => `/team/${id}/invite`,
   },

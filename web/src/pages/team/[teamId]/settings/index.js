@@ -6,11 +6,11 @@ import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
 import { teamsOperations } from '../../../../state/features/teams';
-import TeamInfo from '../../../../components/team/TeamInfo';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
 import { TAB } from '../../../../utils/constants';
+import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
 const { fetchTeamMembers } = teamsOperations;
 
@@ -34,13 +34,9 @@ const TeamSettings = () => {
   const setDefaultTag = () => {
     router.push({
       pathname: `/team/${teamId}/settings`,
-      query: { tab: 'info' },
+      query: { tab: TAB.management },
     });
   };
-
-  useEffect(() => {
-    dispatch(fetchTeamMembers(activeTeam._id, {}, token));
-  }, [teamId]);
 
   useEffect(() => {
     if (teams.teams.length) {
@@ -58,32 +54,34 @@ const TeamSettings = () => {
   }, []);
 
   const menus = [
-    {
-      name: 'Team Info',
-      path: `/team/${teamId}/settings`,
-      tab: TAB.info,
-    },
     (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.management,
+      icon: <TeamIcon width={20} />,
     }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.labels,
+      icon: <TagIcon />,
     }),
   ];
 
   return (
     <>
-      <div className="has-background-gray-200 hero">
-        <Helmet {...TeamDashboardHelmet} />
-        <div className="hero-body pb-300 px-0">
+      <div className="has-background-white">
+        <div className="container pt-40">
+          <Helmet {...TeamDashboardHelmet} />
           <PageHeader menus={menus} userRole={activeTeam} />
-          {tab === 'info' && <TeamInfo activeTeam={activeTeam} teams={teams} />}
-          {tab === 'management' && <TeamManagement activeTeam={activeTeam} />}
-          {tab === 'labels' && <LabelsManagement activeTeam={activeTeam} />}
+        </div>
+      </div>
+      <div className="container">
+        <div className="has-background-white-50">
+          <div className="hero-body pt-0 pb-100 px-0">
+            {tab === 'management' && <TeamManagement activeTeam={activeTeam}/>}
+            {tab === 'labels' && <LabelsManagement activeTeam={activeTeam}/>}
+          </div>
         </div>
       </div>
     </>
