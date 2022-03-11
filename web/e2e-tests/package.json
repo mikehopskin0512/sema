@@ -7,7 +7,9 @@
     "test:lint": "eslint 'src/**/*.ts' 'test/**/*.js!(setup.js)'",
     "test:unit": "jest --config=jest.config.js --detectOpenHandles",
     "test:features": "wdio run wdio.BUILD.conf.ts",
-    "wdio": "wdio run wdio.conf.ts"
+    "wdio": "wdio run wdio.conf.ts",
+    "wdio-bs": "wdio run wdio.conf-bs.ts"
+
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",

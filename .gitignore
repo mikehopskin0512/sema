@@ -26,3 +26,8 @@ apollo/.env
 secrets.*.js
 
 .idea/
+
+#e2e
+web/e2e-tests/test/results/
+web/e2e-tests/allure-results/
+web/e2e-tests/package-lock.json

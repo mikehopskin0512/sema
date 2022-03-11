@@ -7,5 +7,8 @@
     "dev:apollo": "",
     "dev:hermes": "",
     "dev:web": "cd web && npm run dev"
+  },
+  "devDependencies": {
+    "@wdio/devtools-service": "^7.17.4"
   }
 }
