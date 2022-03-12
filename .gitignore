@@ -32,3 +32,4 @@ web/e2e-tests/test/results/
 web/e2e-tests/allure-results/
 web/e2e-tests/package-lock.json
 web/e2e-tests/local.log
+web/e2e-tests/driver-logs/

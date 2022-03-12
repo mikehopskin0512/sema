@@ -50,24 +50,12 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-      // grid with only 5 firefox instances available you can make sure that not more than
-      // 5 instances get started at a time.
       maxInstances: 1,
-
-      //
       browserName: "chrome",
-      // 'goog:chromeOptions': {
-      //     extensions: [(function () {
-      //         try {
-      //             const webExt = fs.readFileSync('./extension.zip').toString('base64');
-      //             return webExt;
-      //         } catch (e) {
-      //             console.log(e, 'An error occurred while to parse extension zip file!');
-      //         }
-      //     })()],
-      //     args: ['--headless', '--disable-gpu']
-      // },
+      "goog:chromeOptions": {
+        args: ["--disable-gpu"],
+      },
+      acceptInsecureCerts: true,
     },
   ],
   //
@@ -119,7 +107,16 @@ export const config: WebdriverIO.Config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: [],
+  services: [
+    [
+      "chromedriver",
+      {
+        logFileName: "wdio-chromedriver.log",
+        outputDir: "driver-logs",
+        args: ["--silent"],
+      },
+    ],
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -152,12 +149,7 @@ export const config: WebdriverIO.Config = {
   //     }
   //     ]
   // ],
-  reporters: [
-    ['allure', {
-        outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,
-    }]
-  ],
+  reporters: [["allure", { outputDir: "allure-results" }]],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
