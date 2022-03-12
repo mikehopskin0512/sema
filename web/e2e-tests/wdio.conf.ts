@@ -41,9 +41,7 @@ export const config: WebdriverIO.Config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: process.env.MAX_INSTANCES
-    ? parseInt(process.env.MAX_INSTANCES)
-    : 1,
+  maxInstances: parseInt(process.env.MAX_INSTANCES) || 1,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -64,7 +62,7 @@ export const config: WebdriverIO.Config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: "debug",
+  logLevel: process.env.LOG_LEVEL || "info",
   // outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
