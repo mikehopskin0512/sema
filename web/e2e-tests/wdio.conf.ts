@@ -11,7 +11,7 @@ export const config: WebdriverIO.Config = {
   //
   // WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
   // on a remote machine).
-  runner: "local",
+  //runner: "local",
   //
   // ==================
   // Specify Test Files
@@ -50,12 +50,11 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      maxInstances: 1,
+      maxInstances: 5,
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: ["--disable-gpu"],
+        args: ["--disable-dev-shm-usage", "--disable-gpu", "--no-sandbox"],
       },
-      acceptInsecureCerts: true,
     },
   ],
   //
@@ -66,7 +65,7 @@ export const config: WebdriverIO.Config = {
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
   logLevel: "trace",
-  outputDir: path.join(__dirname, "/logs"),
+  // outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
   // loggers:
@@ -107,17 +106,8 @@ export const config: WebdriverIO.Config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    [
-      "chromedriver",
-      {
-        logFileName: "wdio-chromedriver.log",
-        outputDir: "driver-logs",
-        args: ["--silent"],
-      },
-    ],
-  ],
-  //
+  services: ["chromedriver"],
+
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -150,6 +140,7 @@ export const config: WebdriverIO.Config = {
   //     ]
   // ],
   reporters: [["allure", { outputDir: "allure-results" }]],
+
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {
