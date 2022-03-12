@@ -1,4 +1,3 @@
-import path from "path";
 import { hooks } from "./src/support/hooks";
 
 //const fs = require("fs");
@@ -42,7 +41,9 @@ export const config: WebdriverIO.Config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 1,
+  maxInstances: process.env.MAX_INSTANCES
+    ? parseInt(process.env.MAX_INSTANCES)
+    : 1,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -50,10 +51,9 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
-      maxInstances: 1,
       browserName: "chrome",
       "goog:chromeOptions": {
-        args: ["--disable-dev-shm-usage", "--disable-gpu", "--no-sandbox"],
+        args: ["--disable-gpu", "--no-sandbox"],
       },
     },
   ],
@@ -64,7 +64,7 @@ export const config: WebdriverIO.Config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: "trace",
+  logLevel: "debug",
   // outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
@@ -90,7 +90,8 @@ export const config: WebdriverIO.Config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: "https://app.semasoftware.com/dashboard",
+  baseUrl:
+    process.env.BASE_URL || "https://app-staging.semasoftware.com/dashboard",
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 100000,
