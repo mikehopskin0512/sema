@@ -7,7 +7,7 @@ readonly AWS_ACCOUNT="091235034633"
 readonly AWS_REGION="us-east-1"
 
 if [[ -z ${VERSION} ]]; then
-    printf "environment name (prod,qa etc) must me specified, e.g. ./build-and-deploy.sh 1.3.1.1 \n"
+    printf "version number must me specified, e.g. ./build-and-deploy.sh 1.3.1.1 \n"
     exit 1
 fi
 
