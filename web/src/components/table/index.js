@@ -142,9 +142,9 @@ const Table = ({
         </table>
       </div>
       {!minimal &&
-        <div className="is-flex mb-20 is-justify-content-space-between is-align-items-center pl-20">
+        <div className="is-flex is-justify-content-space-between is-align-items-center pl-20">
           <div className="is-flex is-align-items-center">
-            <div className='mr-10'>Items per page</div>
+            <div className='mr-10 is-uppercase is-size-8 has-text-weight-semibold'>Items per page</div>
             <div className="select">
               <select className="has-background-white" value={pageSize} onChange={(e) => setPageSize(e.target.value)}>
                 {
@@ -188,7 +188,7 @@ const Table = ({
                         }}
                         required
                       />
-                      <span className='mx-5'>
+                      <span className='mx-5 is-uppercase is-size-8 has-text-weight-semibold'>
                         of {pageCount === 0 ? '1' : pageCount}
                       </span>
                     </li>

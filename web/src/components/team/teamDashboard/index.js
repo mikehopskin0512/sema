@@ -69,7 +69,7 @@ const TeamDashboard = ({ team }) => {
               View All
             </button>
           </div>
-          <MinimalTeamTable members={members} count={membersCount} />
+          <MinimalTeamTable members={members} count={membersCount} teamId={teamId} />
         </div>
       </div>
     </>

@@ -61,7 +61,7 @@ export default (app, passport) => {
     }
 
     try {
-      let newUser = await create(user);
+      let newUser = await create(user, invitation?.token);
       newUser = newUser.toJSON();
       if (!newUser) {
         throw new errors.BadRequest('User create error');

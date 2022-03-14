@@ -5,11 +5,15 @@ import {
   getTeamRepos,
   getTeams,
   postInviteUsersToTeam,
-  updateTeam, updateTeamRepos,
+  updateTeam,
+  updateTeamRepos,
+  postTeamInvitationEmailValidation,
   getAllTeamCollections,
+  uploadAvatar,
 } from './api';
 import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
 import * as types from './types';
+import { setSelectedTeam } from '../auth/actions';
 
 const requestFetchTeamsOfUser = () => ({
   type: types.REQUEST_FETCH_TEAMS_OF_USER,
@@ -88,6 +92,19 @@ const inviteTeamUsersSuccess = () => ({
 
 const inviteTeamUsersError = () => ({
   type: types.INVITE_TEAM_USERS_ERROR,
+});
+
+const requestTeamInvitationEmailValidationRequest = () => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION,
+});
+
+const requestTeamInvitationEmailValidationSuccess = (invalidEmails) => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION_SUCCESS,
+  invalidEmails,
+});
+
+const requestTeamInvitationEmailValidationError = () => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION_ERROR,
 });
 
 const requestEditTeam = () => ({
@@ -260,6 +277,19 @@ export const inviteTeamUsers = (teamId, body, token) => async (dispatch) => {
   }
 };
 
+export const validateTeamInvitationEmails = (teamId, body, token) => async (dispatch) => {
+  try {
+    dispatch(requestTeamInvitationEmailValidationRequest());
+    const payload = await postTeamInvitationEmailValidation(teamId, body, token);
+    const { data } = payload;
+    dispatch(requestTeamInvitationEmailValidationSuccess(data?.invalidEmails));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestTeamInvitationEmailValidationError(errMessage));
+  }
+};
+
 export const setActiveTeamCollections = (id, teamId, token) => async (dispatch) => {
   try {
     dispatch(requestToggleTeamCollection());
@@ -310,3 +340,14 @@ export const fetchTeamSmartCommentOverview = (params, token) => async (dispatch)
     dispatch(requestFetchTeamSmartCommentOverviewError(errMessage));
   }
 };
+
+export const uploadTeamAvatar = (teamId, body, token) => async (dispatch) => {
+  try {
+    const res = await uploadAvatar(teamId, body, token);
+
+    dispatch(setSelectedTeam(res.data));
+    dispatch(fetchTeamsOfUser(token));
+  } catch (error) {
+    console.error(error);
+  }
+}

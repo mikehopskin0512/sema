@@ -18,7 +18,9 @@ import {
   redeemInvite,
   exportInvitations,
   getInvitationCountByUserId,
+  checkIfInvitedByToken
 } from './invitationService';
+import { createUserRole } from '../userRoles/userRoleService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 import { isSemaAdmin } from '../shared/utils';
@@ -131,6 +133,23 @@ export default (app, passport) => {
         pendingInvites,
         acceptedInvites,
       });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+  
+  route.post('/accept/:inviteToken', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const {
+        params: { inviteToken },
+        user,
+      } = req;
+  
+      const invitation = await checkIfInvitedByToken(inviteToken);
+      await createUserRole({ team: invitation.team, user: user._id, role: invitation.role });
+      await deleteInvitation(invitation._id);
+      return res.sendStatus(200);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

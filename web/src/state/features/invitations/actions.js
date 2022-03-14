@@ -4,6 +4,7 @@ import {
   getInvite, postInvite, getInvitations,
   patchRedeemInvite, postResendInvite, deleteInvite,
   getInvitationsMetric, exportInvitationsMetric, exportInvitations,
+  postAcceptInvite
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -108,6 +109,19 @@ const requestFetchInviteMetricsError = (errors) => ({
   errors,
 });
 
+const requestAcceptInvitation = () => ({
+  type: types.REQUEST_ACCEPT_INVITATION,
+});
+
+const requestAcceptInvitationSuccess = (invitation) => ({
+  type: types.REQUEST_ACCEPT_INVITATION_SUCCESS,
+});
+
+const requestAcceptInvitationError = (errors) => ({
+  type: types.REQUEST_ACCEPT_INVITATION_ERROR,
+  errors,
+});
+
 export const createInvite = (invitationData, token) => async (dispatch) => {
   const { recipient } = invitationData;
   try {
@@ -201,6 +215,18 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestDeleteInviteError(errMessage));
+  }
+};
+
+export const acceptInvite = (invitationToken, token) => async (dispatch) => {
+  try {
+    dispatch(requestAcceptInvitation());
+    await postAcceptInvite(invitationToken, { }, token);
+    dispatch(requestAcceptInvitationSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestAcceptInvitationError(errMessage));
   }
 };
 

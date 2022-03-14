@@ -265,3 +265,17 @@ export const bulkUpdateTeamCollections = async (collectionData, ids) => {
     throw (error);
   }
 }
+
+export const updateTeamAvatar = async (teamId, userId, file) => {
+  const team = await Team.findById(teamId);
+
+  team.avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${file.filename}`;
+  await team.save();
+
+  const role = await UserRole.findOne({
+    team: teamId,
+    user: userId,
+  }).populate('team').populate('role');
+
+  return role;
+}

@@ -359,7 +359,7 @@ const TeamInsights = () => {
                 <span className="ml-8">
                   Only you can see this page.
                 </span>
-                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.TEAM_INSIGHTS}`}>
+                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`} target="_blank" rel="noreferrer noopener">
                   <span className="is-underlined ml-5">
                     Learn More
                   </span>
