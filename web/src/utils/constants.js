@@ -184,10 +184,11 @@ export const PATHS = {
   GUIDES: '/guides',
   LOGIN: '/login',
   TEAM: {
-    _: '/team',
-    EDIT: (id) => `/team/${id}/edit`,
-    ADD: '/team/add',
-    INVITE: (id) => `/team/${id}/invite`,
+    _: '/teams',
+    EDIT: (id) => `/teams/${id}/edit`,
+    ADD: '/teams/add',
+    INVITE: (id) => `/teams/${id}/invite`,
+    SETTINGS: (id) => `/teams/${id}/settings`
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',

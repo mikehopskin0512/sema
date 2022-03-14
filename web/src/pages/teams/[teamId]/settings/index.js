@@ -9,7 +9,7 @@ import { teamsOperations } from '../../../../state/features/teams';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
-import { TAB } from '../../../../utils/constants';
+import {PATHS, TAB} from '../../../../utils/constants';
 import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
 const { fetchTeamMembers } = teamsOperations;
@@ -37,7 +37,7 @@ const TeamSettings = () => {
 
   const setDefaultTag = () => {
     router.push({
-      pathname: `/team/${teamId}/settings`,
+      pathname: PATHS.TEAM.SETTINGS(teamId),
       query: { tab: TAB.management },
     });
   };
@@ -60,13 +60,13 @@ const TeamSettings = () => {
   const menus = [
     (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
-      path: `/team/${teamId}/settings`,
+      path: PATHS.TEAM.SETTINGS(teamId),
       tab: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
-      path: `/team/${teamId}/settings`,
+      path: PATHS.TEAM.SETTINGS(teamId),
       tab: TAB.labels,
       icon: <TagIcon />,
     }),

@@ -7,11 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from 'adonis';
 import toaster from 'toasted-notes';
 import * as yup from 'yup';
-import TagsInput from '../../components/tagsInput';
-import Helmet, { TeamCreateHelmet } from '../../components/utils/Helmet';
-import withLayout from '../../components/layout';
-import { setProfileViewMode } from '../../state/features/auth/actions';
-import { teamsOperations } from '../../state/features/teams';
+import TagsInput from '../../../../components/tagsInput';
+import Helmet, { TeamCreateHelmet } from '../../../../components/utils/Helmet';
+import withLayout from '../../../../components/layout';
+import { setProfileViewMode } from '../../../../state/features/auth/actions';
+import { teamsOperations } from '../../../../state/features/teams';
 import {
   AlertFilledIcon,
   AlertOutlineIcon,
@@ -19,9 +19,9 @@ import {
   CheckOnlineIcon,
   CloseIcon,
   LoadingBlueIcon,
-} from '../../components/Icons';
-import { getAll } from '../../state/utils/api';
-import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../utils/constants';
+} from '../../../../components/Icons';
+import { getAll } from '../../../../state/utils/api';
+import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../../../utils/constants';
 
 const { createTeam, fetchTeamsOfUser } = teamsOperations;
 const URL_STATUS = {
@@ -199,7 +199,7 @@ const TeamEditPage = () => {
                   )}
                 />
                 <span className="is-size-8 has-text-weight-semibold">
-                  {SEMA_APP_URL}/team/{url}
+                  {SEMA_APP_URL}/teams/{url}
                 </span>
               </div>
               <button className="ml-16 button" onClick={checkUrl}>

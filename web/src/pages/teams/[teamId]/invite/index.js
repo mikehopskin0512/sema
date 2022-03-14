@@ -135,7 +135,7 @@ const TeamInvitePage = () => {
       <Helmet {...TeamInviteHelmet} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={`${PATHS.TEAM._}/${teamId}`} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.TEAM.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-500">Team Management</span>
           </a>

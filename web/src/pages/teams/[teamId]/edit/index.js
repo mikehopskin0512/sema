@@ -134,7 +134,7 @@ const TeamEditPage = () => {
       <Helmet {...TeamUpdateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={`${PATHS.TEAM._}/${teamId}`} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.TEAM.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-600">Team Management</span>
           </a>
