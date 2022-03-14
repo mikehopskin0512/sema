@@ -30,6 +30,10 @@ const TeamSettings = () => {
   );
   const { token, user } = auth;
   const [activeTeam, setActiveTeam] = useState({});
+  
+  useEffect(() => {
+    dispatch(fetchTeamMembers(teamId, {}, token));
+  }, [teamId]);
 
   const setDefaultTag = () => {
     router.push({

@@ -11,7 +11,7 @@ import { differenceInCalendarDays, differenceInHours } from 'date-fns';
 
 const MAX_MEMBERS = 6;
 
-const MinimalTeamTable = ({ members, count }) => {
+const MinimalTeamTable = ({ members, count, teamId }) => {
   const router = useRouter();
   const { checkAccess } = usePermission();
   const columns = useMemo(
@@ -84,7 +84,7 @@ const MinimalTeamTable = ({ members, count }) => {
           {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(PATHS.INVITATIONS)}
+              onClick={() => router.push(PATHS.TEAM.INVITE(teamId))}
             >
               <PlusIcon size="small" />
               <span className="ml-8">Invite new members</span>

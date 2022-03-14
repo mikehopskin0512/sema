@@ -211,3 +211,11 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
   flex-basis: 100%;
   height: 0;
 }
+
+.has-border-red-500 {
+  border-color: $red-500 !important;
+}
+
+.shadow-none {
+  box-shadow: none !important;
+}

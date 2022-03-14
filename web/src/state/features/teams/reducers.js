@@ -16,6 +16,7 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
+  invalidEmails: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -177,6 +178,18 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.error
+    }
+  case types.REQUEST_INVITATION_EMAIL_VALIDATION_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      invalidEmails: []
+    }
+  case types.REQUEST_INVITATION_EMAIL_VALIDATION_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      invalidEmails: action.invalidEmails || []
     }
   default:
     return state;

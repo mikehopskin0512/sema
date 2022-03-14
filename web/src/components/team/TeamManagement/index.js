@@ -15,7 +15,7 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { ArrowDrowdownIcon, PlusIcon } from '../../Icons';
+import { ArrowDropdownIcon, PlusIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
 
 const { fetchTeamMembers } = teamsOperations;
@@ -89,7 +89,7 @@ const TeamManagement = ({ activeTeam }) => {
   const onRemoveMember = useCallback(async (userRoleId) => {
     await dispatch(removeUserRole(teamId, userRoleId, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
-  }, [dispatch, page, perPage, token, user]);
+  }, [dispatch, page, perPage, token, user, teamId]);
 
   const columns = useMemo(() => [
     {
@@ -122,7 +122,7 @@ const TeamManagement = ({ activeTeam }) => {
             onChange={(newValue) => handleChangeRole(newValue, row)}
             components={{
               IndicatorSeparator: () => null,
-              DropdownIndicator: () => <ArrowDrowdownIcon className="mr-5" />
+              DropdownIndicator: () => <ArrowDropdownIcon className="mr-5" />
             }}
           />
         </div>

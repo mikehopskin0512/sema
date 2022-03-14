@@ -5,12 +5,12 @@ import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
-import { checkIfInvited } from '../invitations/invitationService';
+import { checkIfInvitedByToken } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
 const { Types: { ObjectId } } = mongoose;
 
-export const create = async (user) => {
+export const create = async (user, inviteToken) => {
   let {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
@@ -25,8 +25,8 @@ export const create = async (user) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
-    const invitation = await checkIfInvited(username);
-    if(!!invitation.length) {
+    const invitation = await checkIfInvitedByToken(inviteToken);
+    if(!!invitation) {
       isWaitlist = false;
       origin = 'invitation';
     }
@@ -48,6 +48,11 @@ export const create = async (user) => {
       collections,
     });
     const savedUser = await newUser.save();
+
+    if (!!invitation && invitation.team) {
+      await UserRole.create({ team: invitation.team, user: savedUser._id, role: invitation.role });
+    }
+
     return savedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);

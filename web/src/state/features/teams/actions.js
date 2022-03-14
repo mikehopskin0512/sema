@@ -7,6 +7,7 @@ import {
   postInviteUsersToTeam,
   updateTeam,
   updateTeamRepos,
+  postTeamInvitationEmailValidation,
   getAllTeamCollections,
   uploadAvatar,
 } from './api';
@@ -91,6 +92,19 @@ const inviteTeamUsersSuccess = () => ({
 
 const inviteTeamUsersError = () => ({
   type: types.INVITE_TEAM_USERS_ERROR,
+});
+
+const requestTeamInvitationEmailValidationRequest = () => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION,
+});
+
+const requestTeamInvitationEmailValidationSuccess = (invalidEmails) => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION_SUCCESS,
+  invalidEmails,
+});
+
+const requestTeamInvitationEmailValidationError = () => ({
+  type: types.REQUEST_INVITATION_EMAIL_VALIDATION_ERROR,
 });
 
 const requestEditTeam = () => ({
@@ -260,6 +274,19 @@ export const inviteTeamUsers = (teamId, body, token) => async (dispatch) => {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(inviteTeamUsersError(errMessage));
+  }
+};
+
+export const validateTeamInvitationEmails = (teamId, body, token) => async (dispatch) => {
+  try {
+    dispatch(requestTeamInvitationEmailValidationRequest());
+    const payload = await postTeamInvitationEmailValidation(teamId, body, token);
+    const { data } = payload;
+    dispatch(requestTeamInvitationEmailValidationSuccess(data?.invalidEmails));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestTeamInvitationEmailValidationError(errMessage));
   }
 };
 

@@ -1,44 +1,45 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import * as bulmaTagsinput from 'bulma-tagsinput';
 import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
-import { ArrowLeftIcon, CheckOnlineIcon } from '../../../../components/Icons';
+import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon } from '../../../../components/Icons';
 import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
 import { teamsOperations } from '../../../../state/features/teams';
 import { fetchUsers } from '../../../../state/features/users/actions';
+import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
+import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
+import EmailsInput from "../../../../components/team/EmailsInput";
 
 const { fetchRoles } = rolesOperations;
-const { inviteTeamUsers } = teamsOperations;
+const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
 
 const TeamInvitePage = () => {
   const router = useRouter();
   const { query: { teamId } } = router;
   const dispatch = useDispatch();
   const {
-    register, handleSubmit, formState: { errors }, watch, setValue
+    register, handleSubmit, formState: { errors }, watch, setValue,
   } = useForm();
-  const inputTagsRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    bulmaTagsinput.attach();
-  }, []);
-
-  const { authState, rolesState } = useSelector((state) => ({
+  const { authState, rolesState, usersState, teamsState } = useSelector((state) => ({
     authState: state.authState,
     teamsState: state.teamsState,
     rolesState: state.rolesState,
+    usersState: state.usersState
   }));
 
   const { token } = authState;
   const { roles } = rolesState;
+  const { users } = usersState;
+  const { invalidEmails } = teamsState;
 
   const rolesOptions = useMemo(() => roles.map((item) => ({
     value: item._id,
@@ -51,23 +52,34 @@ const TeamInvitePage = () => {
   }, [dispatch]);
 
   const onSave = async (data) => {
-    const emails = inputTagsRef?.current?.value?.split(',').map(email => email.trim());
-    const { role } = data;
+    const { emails, role } = data;
     if (emails && emails.length) {
-      if(!role) return;
+      const userIds = emails ? emails.map((item) => item.label) : [];
 
+      if (!userIds.length || !role) return;
+
+      // adding normal users to Sema Corporate Team
       await dispatch(inviteTeamUsers(teamId, {
-        users: emails,
+        users: userIds,
         role: role ? role.value : '',
       }, token));
     }
 
+    setModalOpen(true);
+  };
+
+  const handleClose = async () => {
     await router.push(`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`);
   };
 
   const onCancel = async () => {
     await router.back();
   };
+
+  const userOptions = useMemo(() => users.map((item) => ({
+    value: item._id,
+    label: item.username,
+  })), [users]);
 
   const checkForSelectedTeam = () => {
     if (!authState.selectedTeam || !authState.selectedTeam.team) {
@@ -79,6 +91,45 @@ const TeamInvitePage = () => {
     checkForSelectedTeam();
   }, []);
 
+  const DropdownIndicator = () => (
+    <div className="is-flex is-align-items-center text-gray-700 mr-5">
+      <ArrowDropdownIcon />
+    </div>
+  );
+
+  const IndicatorSeparator = () => null;
+
+  const handleChangeEmails = (values, event) => {
+    let newEmails = [];
+    if (event.action === 'create-option') {
+      const lastValue = values.pop();
+      newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
+    } else {
+      newEmails = values;
+    }
+
+    setValue('emails', newEmails);
+
+    // validate emails
+    dispatch(validateTeamInvitationEmails(teamId, {
+      users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
+    }, token));
+  };
+
+  const blockedEmailsError = useMemo(() => {
+    const blockedEmails = invalidEmails.filter(item => item?.reason === 'blocked').map(item => item.email);
+    return blockedEmails && blockedEmails.length > 0
+      ? `The following user account(s) are not able to be added to this team: ${blockedEmails.join(', ')}. \n Contact support@semasoftware.com for more info`
+      : null;
+  }, [invalidEmails]);
+
+  const existingEmailsError = useMemo(() => {
+    const existingEmails = invalidEmails.filter(item => item?.reason === 'existing').map(item => item.email);
+    return existingEmails && existingEmails.length > 0
+      ? `The following user account(s) are already in this team: ${existingEmails.join(', ')}.`
+      : null;
+  }, [invalidEmails]);
+
   return (
     <div className="has-background-gray-100 hero">
       <Helmet {...TeamInviteHelmet} />
@@ -86,10 +137,11 @@ const TeamInvitePage = () => {
         <div className="is-flex is-align-items-center px-30 mb-40">
           <a href={`${PATHS.TEAM._}/${teamId}`} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
-            <span className="ml-10 has-text-gray-500">Team Organization</span>
+            <span className="ml-10 has-text-gray-500">Team Management</span>
           </a>
           <div className="has-text-black-950 mx-5">/</div>
-          <div className="has-text-black-950">Invite new members</div>
+          <div className="has-text-black-950 mr-5">Invite new members</div>
+          <InviteIcon size="small" />
         </div>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
@@ -119,11 +171,34 @@ const TeamInvitePage = () => {
         </div>
         <div className="px-10 is-flex is-flex-direction-column">
           <div className={clsx('mb-25', styles['form-input'])}>
-            <div>Invite Users by Email</div>
-            <input type="tags" class="input" placeholder=" " ref={inputTagsRef}/>
+            <div className="has-text-weight-semibold is-size-7 mb-5">Invite Users by Email</div>
+            <EmailsInput
+              {...register(
+                'emails',
+                {
+                  required: 'User emails are required',
+                },
+              )}
+              value={watch('emails')}
+              placeholder="Choose Email"
+              onChange={handleChangeEmails}
+              options={userOptions}
+              error={errors.emails?.message || blockedEmailsError || existingEmailsError}
+            />
+            {errors.emails && (<p className="has-text-error is-size-8 is-italized mt-5">{errors.emails.message}</p>)}
+            {blockedEmailsError && (
+              <p className="has-text-error is-size-8 is-italized mt-5">
+                {blockedEmailsError}
+              </p>
+            )}
+            {existingEmailsError && (
+              <p className="has-text-error is-size-8 is-italized mt-5">
+                {existingEmailsError}
+              </p>
+            )}
           </div>
           <div className={clsx(styles['form-input'])}>
-            <div>Role</div>
+            <div className="has-text-weight-semibold is-size-7 mb-5">Role</div>
             <Select
               {...register(
                 'role',
@@ -135,11 +210,16 @@ const TeamInvitePage = () => {
               value={watch('role')}
               placeholder="Choose Role"
               onChange={(value) => setValue('role', value)}
+              components={{
+                DropdownIndicator,
+                IndicatorSeparator,
+              }}
             />
             {errors.role && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.role.message}</p>)}
           </div>
         </div>
       </div>
+      <InviteSentConfirmModal onClose={handleClose} open={modalOpen} />
     </div>
   );
 };

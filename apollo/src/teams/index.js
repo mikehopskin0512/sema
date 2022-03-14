@@ -3,11 +3,11 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 
-import { version } from '../config';
+import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import {
-  createTeam,
+  createTeam, getTeamById,
   getTeamMembers,
   addTeamMembers,
   getTeamMetrics,
@@ -20,8 +20,12 @@ import {
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
 
-import { _checkPermission } from '../shared/utils';
+import { _checkPermission, fullName } from '../shared/utils';
 import checkEnv from '../middlewares/checkEnv';
+import { findByUsername } from '../users/userService';
+import UserRole from '../userRoles/userRoleModel';
+import { create } from '../invitations/invitationService';
+import { sendEmail } from '../shared/emailService';
 import multer from '../multer';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -171,6 +175,46 @@ export default (app, passport) => {
   );
 
   route.post(
+    '/:teamId/invite/validate-emails',
+    passport.authenticate(['bearer'], { session: false }),
+    checkAccess('canEditUsers'),
+    async (req, res) => {
+    try {
+      const { teamId } = req.params;
+      const { users } = req.body;
+
+      const result = await Promise.all(users.map(async (email) => {
+        const semaUser = await findByUsername(email);
+        // blocked status
+        if (semaUser && !semaUser.isActive) {
+          return {
+            email,
+            reason: 'blocked'
+          };
+        }
+
+        if (semaUser) {
+          const isTeamMember = await UserRole.exists({ team: teamId, user: semaUser._id });
+          // already team member
+          if (isTeamMember) {
+            return {
+              email,
+              reason: 'existing'
+            };
+          }
+        }
+
+        return null;
+      }));
+
+      return res.status(200).send({ invalidEmails: result.filter(item => !!item) });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post(
     '/:teamId/invite',
     passport.authenticate(['bearer'], { session: false }),
     checkAccess('canEditUsers'),
@@ -178,9 +222,76 @@ export default (app, passport) => {
       try {
         const { teamId } = req.params;
         const { users, role } = req.body;
+        
+        const team = await getTeamById(teamId);
 
-        const result = await addTeamMembers(teamId, users, role);
-        return res.status(200).send(result);
+        const result = await Promise.all(users.map(async (email) => {
+          let templateName = 'inviteNewUserToTeam';
+          const semaUser = await findByUsername(email);
+
+          // blocked status
+          if (semaUser && !semaUser.isActive) {
+            return {
+              email,
+              reason: 'blocked',
+            };
+          }
+
+          if (semaUser) {
+            const isTeamMember = await UserRole.exists({ team: teamId, user: semaUser._id });
+
+            // already team member
+            if (isTeamMember) {
+              return {
+                email,
+                reason: 'existing',
+              };
+            }
+
+            if (semaUser.isActive && !isTeamMember) {
+              templateName = 'inviteExistingUserToTeam';
+            }
+          }
+
+          const newInvitation = await create({
+            recipient: email,
+            senderName: fullName(req.user),
+            senderEmail: req.user.username,
+            sender: req.user._id,
+            team: teamId,
+            role,
+          });
+
+          const {
+            recipient, token, orgName, senderName, senderEmail,
+          } = newInvitation;
+
+          const message = {
+            recipient,
+            url: `${orgDomain}/login?token=${token}`,
+            templateName,
+            orgName,
+            teamName: team?.name,
+            fullName: senderName,
+            email: senderEmail,
+            sender: {
+              name: `${senderName} via Sema`,
+              email: 'invites@semasoftware.io',
+            },
+          };
+
+          const result = await sendEmail(message);
+          if (!result?.status) {
+            return {
+              email,
+              reason: 'invalid',
+            };
+          }
+
+          return null;
+        }));
+
+        return res.status(200).send({ invalidEmails: result.filter(item => !!item) });
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);

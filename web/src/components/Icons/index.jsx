@@ -146,7 +146,7 @@ export const ArrowDownIcon = (props) => (
   </Icon>
 );
 
-export const ArrowDrowdownIcon = (props) => (
+export const ArrowDropdownIcon = (props) => (
   <Icon {...props}>
     <ArrowDrowdownSvg />
   </Icon>

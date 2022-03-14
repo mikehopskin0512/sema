@@ -13,7 +13,8 @@ import {
   create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser,
 } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
-import { findByToken, redeemInvite } from '../../invitations/invitationService';
+import { checkIfInvitedByToken, deleteInvitation } from '../../invitations/invitationService';
+import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
 
@@ -100,6 +101,13 @@ export default (app) => {
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
+        // Join the user to the selected team
+        if (inviteToken) {
+          const invitation = await checkIfInvitedByToken(inviteToken);
+          await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
+          await deleteInvitation(invitation._id);
+        }
+        
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
