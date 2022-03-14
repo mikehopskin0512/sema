@@ -47,22 +47,23 @@ const CollectionRow = ({ data }) => {
   const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
   const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
   
-  return isNotArchived ? (
+  return (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">
         <td className="py-15 has-background-white px-10" width={80}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            <div className="field" aria-hidden onClick={onClickChild}>
-              <input
-                id={`activeSwitch-${_id}`}
-                type="checkbox"
-                onChange={onChangeToggle}
-                name={`activeSwitch-${_id}`}
-                className="switch is-rounded"
-                checked={isActive}
-              />
-              <label htmlFor={`activeSwitch-${_id}`} />
-            </div>
+          <div className="field switch-input" aria-hidden onClick={onClickChild}>
+            <input
+              id={`activeSwitch-${_id}`}
+              type="checkbox"
+              onChange={onChangeToggle}
+              name={`activeSwitch-${_id}`}
+              className="switch is-rounded"
+              checked={isActive}
+              disabled={!isNotArchived}
+            />
+            <label htmlFor={`activeSwitch-${_id}`} />
+          </div>
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
@@ -112,14 +113,21 @@ const CollectionRow = ({ data }) => {
             </p>
           </div>
         </td>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+          <div className="is-flex is-flex-direction-column is-justify-content-center">
+            <p className="is-size-7 has-text-weight-semibold">
+            { isNotArchived ? 'Available' : 'Archived' }
+            </p>
+          </div>
+        </td>
         { canEdit && (
           <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
-            <ActionMenu collectionData={collectionData} />
+            <ActionMenu collectionData={collectionData} collectionActive={isActive} />
           </td>
         ) }
       </tr>
     </Link>
-  ) : null;
+  );
 };
 
 CollectionRow.propTypes = {

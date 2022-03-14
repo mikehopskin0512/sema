@@ -115,7 +115,7 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 .switch-input {
   .switch[type="checkbox"] + label::after,
   .switch[type="checkbox"] + label:after {
-    background: $blue-700;
+    background: $gray-700;
   }
   .switch[type="checkbox"] + label::before,
   .switch[type="checkbox"] + label:before {
@@ -125,7 +125,7 @@ $radius: "0", "2px", "4px", "8px", "10px", "14px", "16px", "24px", "35px";
 
   .switch[type="checkbox"]:checked + label::after,
   .switch[type="checkbox"]:checked + label:after {
-    background: $white-0;
+    background: $white-0 !important;
   }
   .switch[type="checkbox"]:checked + label::before,
   .switch[type="checkbox"]:checked + label:before {

@@ -8,27 +8,33 @@ import { alertOperations } from '../../../state/features/alerts';
 import { isSemaDefaultCollection } from '../../../utils';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import usePopup from "../../../hooks/usePopup";
+import { fetchTeamCollections } from '../../../state/features/teams/actions';
+import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
 
 const { triggerAlert } = alertOperations;
 const { updateCollection, fetchAllUserCollections } = collectionsOperations;
 
-const ActionMenu = ({ collectionData }) => {
+const ActionMenu = ({ collectionData, collectionActive }) => {
   const popupRef = useRef(null);
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const dispatch = useDispatch();
-  const { _id = '', isActive, name, author } = collectionData || {};
-  const { token } = useSelector((state) => state.authState);
+  const { _id = '', isActive, name } = collectionData || {};
+  const { token, selectedTeam } = useSelector((state) => state.authState);
 
   const onClickChild = (e) => {
     e.stopPropagation();
   };
 
   const toggleArchiveCollection = async (activeStatus) => {
-    const collection = await dispatch(updateCollection(_id, { collection: { isActive: activeStatus, author } }, token));
-    if (collection) {
+    try {
+      await dispatch(updateCollection(_id, { collection: { isActive: activeStatus } }, token));
+      if(collectionActive) {
+        dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+      }
       dispatch(triggerAlert(activeStatus ? 'Collection unarchived!' : 'Collection archived!', 'success'));
       dispatch(fetchAllUserCollections(token));
-    } else {
+      dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+    } catch (error) {
       dispatch(triggerAlert(activeStatus ? 'Unable to unarchived collection' : 'Unable to archive collection', 'error'));
     }
   };
