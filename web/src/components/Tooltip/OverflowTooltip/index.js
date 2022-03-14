@@ -28,7 +28,6 @@ const OverflowTooltip = forwardRef(({ text, children }, ref) => {
 OverflowTooltip.propTypes = {
   children: PropTypes.node.isRequired,
   text: PropTypes.string.isRequired,
-  childRef: PropTypes.object.isRequired,
 };
 
 export default OverflowTooltip;
