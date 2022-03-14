@@ -20,7 +20,7 @@ const RepoRow = (props) => {
       <td className={clsx('py-15 has-background-white px-10', styles.document)}>
         <div className="is-flex is-align-items-center">
           {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
-          <OverflowTooltip childRef={titleRef} text={name}>
+          <OverflowTooltip ref={titleRef} text={name}>
             <p ref={titleRef} className={clsx("has-text-weight-semibold is-size-6", styles.body)}>{name}</p>
           </OverflowTooltip>
         </div>

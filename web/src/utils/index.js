@@ -113,5 +113,6 @@ export const getPlatformLink = (username, type) => {
 }
 
 export const isElementOverflow = (element) => {
+  if (!element) return false;
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }

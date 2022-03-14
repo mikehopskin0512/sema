@@ -1,26 +1,29 @@
-import React, { useCallback } from 'react';
+import React, { useEffect, useState, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import { isElementOverflow } from '../../../utils';
 import Tooltip from '../index';
 
-const OverflowTooltip = ({ text, children, childRef }) => {
-  const renderComponent = useCallback(() => {
-    if (childRef.current && isElementOverflow(childRef.current)) {
-      return (
-        <Tooltip text={text} isActive={isElementOverflow(childRef.current)}>
-          {children}
-        </Tooltip>
-      );
+const OverflowTooltip = forwardRef(({ text, children }, ref) => {
+  const [refState, setRefState] = useState(null);
+
+  useEffect(() => {
+    /* 
+      The state is needed here because some features of our app removes the DOM and renders it again
+      and we need to save the state of the reference on first render so the tooltip could work.
+    */
+    if (ref?.current) {
+      setRefState(ref.current);
     }
-    return children;
-  }, [children, childRef, text]);
+  }, [ref])
 
   return (
     <>
-      {renderComponent()}
+      <Tooltip text={text} isActive={isElementOverflow(refState)}>
+        {children}
+      </Tooltip>
     </>
-  );
-};
+  )
+});
 
 OverflowTooltip.propTypes = {
   children: PropTypes.node.isRequired,

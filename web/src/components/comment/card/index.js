@@ -128,7 +128,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
-              <OverflowTooltip childRef={titleRef} text={name}>
+              <OverflowTooltip ref={titleRef} text={name}>
                 <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
               </OverflowTooltip>
               <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
