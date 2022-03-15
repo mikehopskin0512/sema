@@ -1,7 +1,10 @@
 import md5 from 'md5';
 import { Router } from 'express';
-import { version, orgDomain } from '../config';
-import { mailchimpAudiences } from '../config';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
+import { version, orgDomain, mailchimpAudiences } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import intercom from '../shared/apiIntercom';
@@ -16,7 +19,10 @@ import {
 import { setRefreshToken, createRefreshToken, createAuthToken } from '../auth/authService';
 import { redeemInvite, checkIfInvited } from '../invitations/invitationService';
 import { sendEmail } from '../shared/emailService';
+import { getPortfoliosByUser } from '../portfolios/portfolioService';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -55,7 +61,7 @@ export default (app, passport) => {
     }
 
     try {
-      let newUser = await create(user);
+      let newUser = await create(user, invitation?.token);
       newUser = newUser.toJSON();
       if (!newUser) {
         throw new errors.BadRequest('User create error');
@@ -81,37 +87,44 @@ export default (app, passport) => {
       const [hasInvite] = await checkIfInvited(username);
       if (hasInvite) {
         const { _id: invitationId } = hasInvite;
-        redeemInvite(null, userId, invitationId)
+        redeemInvite(null, userId, invitationId);
       }
 
       // Add user to Mailchimp and subscribe it to Sema - Newsletters
-      const listId = mailchimpAudiences.registeredAndWaitlistUsers;
-      const { firstName, lastName, avatarUrl} = newUser;
+      const listId = mailchimpAudiences.registeredAndWaitlistUsers || null;
+      const { firstName, lastName, avatarUrl } = newUser;
 
       try {
-        await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
-          list_id: listId,
-          merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
-          status: 'subscribed',
-          email_type: 'html',
-          email_address: username,
-          tags: ['Registered and Waitlist Users'],
-        });
+        if (listId) {
+          await mailchimp.update(`lists/${listId}/members/${md5(username)}`, {
+            list_id: listId,
+            merge_fields: { SEMA_ID: userId.toString(), FNAME: firstName, LNAME: lastName },
+            status: 'subscribed',
+            email_type: 'html',
+            email_address: username,
+            tags: ['Registered and Waitlist Users'],
+          });
+        }
       } catch (error) {
         logger.error(error);
         return res.status(400).send(error);
       }
 
-       // Add user to Intercom
-       // TEMP: Comment out Intercom until variable is fixed in prod
-/*        await intercom.create('contacts', {
-         role: 'user',
-         external_id: userId,
-         name: `${firstName} ${lastName}`.trim(),
-         email: username,
-         avatar: avatarUrl,
-         signed_up_at: new Date(),
-       }); */
+      // Add user to Intercom
+      // TEMP: Comment out Intercom until variable is fixed in prod
+      try {
+        await intercom.create('contacts', {
+          role: 'user',
+          external_id: userId,
+          name: `${firstName} ${lastName}`.trim(),
+          email: username,
+          avatar: avatarUrl,
+          signed_up_at: new Date(),
+        });
+      } catch (error) {
+        logger.error(error);
+        return res.status(400).send(error);
+      }
 
       // Check if first login then send welcome email
       await checkAndSendEmail(newUser);
@@ -222,6 +235,7 @@ export default (app, passport) => {
       return res.status(200).send({
         response: 'User successfully verified',
         jwtToken: await createAuthToken(user),
+        user,
       });
     } catch (error) {
       logger.error(error);
@@ -311,4 +325,18 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  route.get('/:id/portfolios', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const userPortfolios = await getPortfoliosByUser(id, true);
+      return res.status(200).send(userPortfolios);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  // Swagger route
+  app.use(`/${version}/users-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

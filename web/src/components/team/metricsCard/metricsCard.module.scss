@@ -1,0 +1,22 @@
+@import "../../../../styles/colors.module";
+
+.card {
+  background-color: $gray-100;
+  box-shadow: 0px 2px 10px 0px #00000012;
+  padding: 12px 19px;
+}
+
+// TODO: ask for color, color is not in the design document.
+.card-title {
+  display: flex;
+  align-items: center;
+  color: #73839c;
+  font-size: 10px;
+  line-height: 12px;
+}
+
+.card-subtitle {
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+}

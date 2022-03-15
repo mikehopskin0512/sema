@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .right-button {
   position: absolute;
   right: 0;
@@ -12,8 +14,17 @@
 }
 
 .placeholder {
-  color: #394A64 !important;
+  color: $gray-600;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.outlined {
+  border: 1px solid $gray-500;
+}
+
+.icon {
+  margin-right: 6px;
+  min-width: 24px;
+} 

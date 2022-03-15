@@ -1,0 +1,372 @@
+openapi: 3.0.0
+info:
+  title: Smartcomments's API
+  description: Smartcomments
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SmartComment:
+      properties:
+        _id:
+          type: string
+        comment:
+          type: string
+        githubMetadata:
+          properties:
+            _id:
+              type: string
+            base:
+              type: string
+            clone_url:
+              type: string
+            commentId:
+              type: string
+            created_at:
+              format: date-time
+              type: string
+            file_extension:
+              type: string
+            filename:
+              type: string
+            head:
+              type: string
+            line_numbers:
+              items:
+                properties: { }
+                required: [ ]
+                type: object
+              type: array
+            pull_number:
+              type: string
+            repo:
+              type: string
+            repo_id:
+              type: string
+            requester:
+              type: string
+            requesterAvatarUrl:
+              type: string
+            title:
+              type: string
+            updated_at:
+              format: date-time
+              type: string
+            url:
+              type: string
+            user:
+              properties:
+                login:
+                  type: string
+              type: object
+          type: object
+        location:
+          enum:
+            - conversation
+            - "files changed"
+          type: string
+        reaction:
+          type: string
+        suggestedComments:
+          items:
+            type: string
+          type: array
+        tags:
+          items:
+            type: string
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        userId:
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/comments/smart:
+    post:
+      summary: create a smart comment
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmartComment'
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartComment'
+          description: created smart comment
+        400:
+          description: bad input parameter
+    get:
+      summary: get smart comments by id requester, reviewer and externalId
+      operationId: getPortfolioById
+      parameters:
+        - in: path
+          name: requester
+          description: pr requester
+          required: true
+        - in: path
+          name: reviewer
+          description: pr requester
+          required: true
+        - in: path
+          name: externalId
+          description: pr requester
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SmartComment'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/comments/smart/{id}:
+    put:
+      summary: update smart comment
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          description: smart comment id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartComment'
+          description: updated smart comment
+        400:
+          description: bad input parameter
+  /v1/comments/smart/user-activities/export:
+    post:
+      tags:
+        - user activities
+      summary: export user activity change metrics
+      operationId: exportUserActivityChangeMetrics
+      responses:
+        200:
+          description: exported user activity change metrics csv file
+        400:
+          description: bad input parameter
+  /v1/comments/smart/user-activities:
+    get:
+      tags:
+        - user activities
+      summary: get user activity change metrics
+      operationId: getUserActivityChangeMetrics
+      responses:
+        200:
+          description: user activity change metrics
+        400:
+          description: bad input parameter
+  /v1/comments/smart/metric:
+    get:
+      tags:
+        - metrics
+      summary: get sow metrics
+      operationId: getSowMetrics
+      parameters:
+        - in: query
+          name: category
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SmartComment'
+          description: array smart comments
+        400:
+          description: bad input parameter
+  /v1/comments/smart/metric/export:
+    post:
+      tags:
+        - metrics
+      summary: export sow metrics
+      operationId: exportSowMetrics
+      parameters:
+        - in: query
+          name: category
+          required: true
+      responses:
+        200:
+          description: export sow metrics csv file
+        400:
+          description: bad input parameter
+  /v1/comments/smart/growth-repository:
+    get:
+      tags:
+        - growth repository
+      summary: get growth repository metrics
+      operationId: getGrowthRepositoryMetrics
+      parameters:
+        - in: query
+          name: category
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  growthOfRepository:
+                    type: array
+                    items:
+                      type: object
+          description: array smart comments growth repository metrics
+        400:
+          description: bad input parameter
+  /v1/comments/smart/growth-repository/export:
+    post:
+      tags:
+        - growth repository
+      summary: export growth repository metrics
+      operationId: exportGrowthRepositoryMetrics
+      responses:
+        200:
+          description: export growth repository metrics csv file
+        400:
+          description: bad input parameter
+  /v1/comments/smart/suggested:
+    get:
+      tags:
+        - suggested
+      summary: get suggested metrics
+      operationId: getSuggestedMetrics
+      parameters:
+        - in: query
+          name: page
+          required: true
+        - in: query
+          name: perPage
+          required: true
+        - in: query
+          name: search
+          required: true
+        - in: query
+          name: sortDesc
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SmartComment'
+                  totalCount:
+                    type: number
+          description: suggested metrics
+        400:
+          description: bad input parameter
+  /v1/comments/smart/suggested/export:
+    post:
+      tags:
+        - suggested
+      summary: export suggested metrics
+      operationId: exportSuggestedMetrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                search:
+                  type: string
+                sortDesc:
+                  type: string
+      responses:
+        200:
+          description: exported suggested metrics csv file
+        400:
+          description: bad input parameter
+  /v1/comments/smart/summary:
+    get:
+      tags:
+        - summary
+      summary: get smart comments tags and reactions
+      operationId: getSmartCommentsTagsReactions
+      parameters:
+        - in: query
+          name: user
+          required: true
+        - in: query
+          name: teamId
+          required: true
+        - in: query
+          name: individual
+          required: false
+      responses:
+        201:
+          description: exported suggested metrics csv file
+          content:
+            application/json:
+              schema:
+                properties:
+                  summary:
+                    type: object
+        400:
+          description: bad input parameter
+  /v1/comments/smart/overview:
+    get:
+      tags:
+        - summary
+      summary: get smart comments tags and reactions
+      operationId: getSmartCommentsTagsReactions
+      parameters:
+        - in: query
+          name: requester
+          required: true
+        - in: query
+          name: reviewer
+          required: true
+        - in: query
+          name: externalId
+          required: true
+        - in: query
+          name: startDate
+          required: true
+        - in: query
+          name: endtDate
+          required: true
+      responses:
+        201:
+          description: exported suggested metrics csv file
+          content:
+            application/json:
+              schema:
+                properties:
+                  overview:
+                    type: object
+        400:
+          description: bad input parameter

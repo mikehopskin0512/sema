@@ -12,7 +12,6 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
-  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -24,7 +23,47 @@ import {
   CLOSE_LOGIN_REMINDER,
   MUTATION_OBSERVER_EVENT,
   LAST_USED_SMART_COMMENT,
+  TOGGLE_SNIPPET_FOR_SAVE,
+  CHANGE_SNIPPET_COMMENT,
+  REMOVE_NOTIFICATION,
+  ADD_NOTIFICATION,
+  UPDATE_PROFILE,
+  UPDATE_TEAMS,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_SUCCESS,
+  FETCH_CURRENT_USER_ERROR,
+  UPDATE_CURRENT_USER,
 } from './actionConstants';
+
+export const removeNotification = (payload) => ({
+  type: REMOVE_NOTIFICATION,
+  payload,
+});
+
+export const addNotification = (payload) => ({
+  type: ADD_NOTIFICATION,
+  payload,
+});
+
+export const updateProfile = (payload) => ({
+  type: UPDATE_PROFILE,
+  payload,
+});
+
+export const updateTeams = (payload) => ({
+  type: UPDATE_TEAMS,
+  payload,
+});
+
+export const changeSnippetComment = (payload) => ({
+  type: CHANGE_SNIPPET_COMMENT,
+  payload,
+});
+
+export const toggleSnippetForSave = (payload) => ({
+  type: TOGGLE_SNIPPET_FOR_SAVE,
+  payload,
+});
 
 export const addSemaComponents = (payload) => ({
   type: ADD_SEMA_COMPONENTS,
@@ -89,11 +128,6 @@ export const updateTextareaState = (payload) => ({
   payload,
 });
 
-export const updateSemaUser = (payload) => ({
-  type: UPDATE_SEMA_USER,
-  payload,
-});
-
 export const addSuggestedComments = (payload) => ({
   type: ADD_SUGGESTED_COMMENTS,
   payload,
@@ -123,7 +157,7 @@ export const mutationObserverEvent = (payload) => ({
   payload,
 });
 
-export const updatetSearchBarInputValue = (payload) => ({
+export const updateSearchBarInputValue = (payload) => ({
   type: UPDATE_SEARCH_BAR_INPUT_VALUE,
   payload,
 });
@@ -143,5 +177,24 @@ export const closeLoginReminder = () => ({
 
 export const usedSmartComment = (payload) => ({
   type: LAST_USED_SMART_COMMENT,
+  payload,
+});
+
+export const fetchCurrentUserRequest = () => ({
+  type: FETCH_CURRENT_USER,
+});
+
+export const fetchCurrentUserSuccess = (payload) => ({
+  type: FETCH_CURRENT_USER_SUCCESS,
+  payload,
+});
+
+export const fetchCurrentUserError = (error) => ({
+  type: FETCH_CURRENT_USER_ERROR,
+  error,
+});
+
+export const updateCurrentUser = (payload) => ({
+  type: UPDATE_CURRENT_USER,
   payload,
 });

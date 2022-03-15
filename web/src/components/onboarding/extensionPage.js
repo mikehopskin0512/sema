@@ -8,19 +8,20 @@ import styles from './onboarding.module.scss';
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
 
-const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
-  const [isPluginInstalled, togglePluginInstalled] = useState(false);
-  const [isQueryFinished, setQueryFinished] = useState(false);
+const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) => {
+  // const [isQueryFinished, setQueryFinished] = useState(false);
 
   const renderExtensionState = () => {
-    if (!isQueryFinished) {
-      return (
-        <div className="is-flex is-align-item-center mt-25">
-          <img src="/img/onboarding/logo_loader.gif" alt="loader" className={clsx("mr-10", styles.loader)} />
-          <p>Searching for the Extension...</p>
-        </div>
-      );
-    }
+    // Spinner
+    // if (!isQueryFinished) {
+    //   return (
+    //     <div className="is-flex is-align-item-center mt-25">
+    //       <img src="/img/onboarding/logo_loader.gif" alt="loader" className={clsx("mr-10", styles.loader)} />
+    //       <p>Searching for the Extension...</p>
+    //     </div>
+    //   );
+    // }
+
     if (!isPluginInstalled) {
       return (
         <>
@@ -30,7 +31,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             onClick={() => window.open(EXTENSION_LINK, '_blank')}
           >
             <img src="/img/onboarding/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
-            Install Extension Here
+            Add Extension Here
           </button>
         </>
       );
@@ -38,21 +39,10 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
     return (
       <div className="is-flex is-align-items-center mt-25">
         <FontAwesomeIcon icon={faCheckCircle} className="has-text-primary mr-10" size="lg" />
-        <p>Extension Installed</p>
+        <p>Extension Added</p>
       </div>
     );
   };
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (isPluginInstalled) {
-        clearInterval(interval);
-      }
-      const res = await isExtensionInstalled();
-      togglePluginInstalled(res);
-      setQueryFinished(true);
-    }, 5000);
-  }, []);
 
   return (
     <>
@@ -77,7 +67,7 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
           </div>
           <div className={styles.info}>
             <p className="has-text-black-950 is-size-7 mb-5">One last step</p>
-            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950')}>Install the Sema Extension!</p>
+            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950')}>Add the Sema Extension!</p>
             <p className={clsx('mt-20')}>
               The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.
             </p>
@@ -103,11 +93,8 @@ const ExtensionPage = ({ page, previousPage, closeModal, onSubmit }) => {
             </ul>
             <button
               type="button"
-              className={clsx('button is-primary')}
-              onClick={async () => {
-                await onSubmit();
-                closeModal();
-              }}
+              className={clsx('button is-primary is-outlined')}
+              onClick={closeModal}
             >
               Done
             </button>
@@ -122,7 +109,6 @@ ExtensionPage.propTypes = {
   page: PropTypes.number.isRequired,
   previousPage: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ExtensionPage;

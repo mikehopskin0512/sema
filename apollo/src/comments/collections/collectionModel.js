@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
-import { bulkUpdateUserCollections } from '../../users/userService';
+
 import { autoIndex } from '../../config';
+import { COLLECTION_TYPE } from './constants';
+import updateSnippetCollections from '../suggestedComments/suggestedCommentService';
 
 const { Schema } = mongoose;
 
@@ -12,6 +14,10 @@ const collectionSchema = new Schema({
     type: String,
     label: String,
   }],
+  type: {
+    $type: String,
+    enum: Object.values(COLLECTION_TYPE),
+  },
   comments: [{ $type: Schema.Types.ObjectId, ref: 'suggestedComment' }],
   author: { $type: String },
   isActive: { $type: Boolean, default: true },
@@ -20,21 +26,23 @@ const collectionSchema = new Schema({
     url: String,
   },
   createdAt: { $type: Date, default: Date.now },
-  createdBy: { $type: Schema.Types.ObjectId, ref: 'User' }
+  createdBy: { $type: Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true, collection: 'collections', typeKey: '$type' });
 
 collectionSchema.set('autoIndex', autoIndex);
 collectionSchema.index({ name: 1 });
 
-collectionSchema.post('insertMany', async (doc) => {
-  doc.forEach(async (document) => {
-    if (document.author === 'sema') {
-      bulkUpdateUserCollections(document)
-    }
-    if (document.createdBy) {
-      bulkUpdateUserCollections(document, [document.createdBy])
-    }
-  })
+collectionSchema.post('save', async (doc, next) => {
+  try {
+    const { _id: collectionId, name, comments: snippets } = doc;
+    await Promise.all(snippets.map(async (id) => {
+      const collection = { collectionId, name };
+      await updateSnippetCollections(id, collection);
+    }));
+  } catch (error) {
+    next(error);
+  }
+  next();
 });
 
 module.exports = mongoose.model('Collection', collectionSchema);

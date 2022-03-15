@@ -1,0 +1,23 @@
+@import "./_colors.module";
+
+.tagsinput {
+  input {
+    border-color: transparent;
+    box-shadow: none;
+    display: inline-block;
+    flex: 1 0 auto;
+    height: 1.4rem;
+    margin: 0;
+    width: auto;
+    outline: 0px;
+  }
+  .tag {
+    height: 1.4rem;
+    background-color: $gray-200;
+    color: $black-900;
+  }
+  .tag.is-active {
+    background-color: $gray-200;
+    color: $black-900;
+  }
+}

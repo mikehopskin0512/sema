@@ -1,13 +1,13 @@
+@import "../../../styles/_colors.module.scss";
 
 .hero {
-  padding-bottom: 10rem;
 }
 
 .title {
   font-size: 40px;
   font-weight: bold;
   line-height: 48px;
-  color: #000000;
+  color: $black-950;
   align-self: flex-start;
   max-width: 500px;
 }
@@ -19,13 +19,13 @@
 }
 
 .through-text {
-  background-color: #f4f4f4;;
+  background-color: $white-50;
   padding: 0 20px;
-  color: #999898;
+  color: $gray-600;
 }
 
 .through-container {
-  color: #696c6f;
+  color: $gray-700;
   text-align: center;
   margin: 35px 0px;
   position: relative;
@@ -35,13 +35,14 @@
   display: inline-block;
   width: 100%;
   height: 1px;
-  background: #cdcfd2;
+  background: $gray-500;
   vertical-align: middle;
 }
 
 .login-tile {
-  background-color: rgba(244, 244, 244, 0.8);
+  background-color: $white-50;
   border-radius: 12px;
+  opacity: 0.8;
 }
 
 .head-text {
@@ -53,16 +54,7 @@
 }
 
 .container {
-  background: #fcfcfc;
-  @media only screen and (min-width: 769px) {
-    height: 100%;
-  }
-  @media screen and (max-width: 1023px) {
-    padding-bottom: 250px
-  }
-  @media only screen and (max-width: 768px) {
-    padding-bottom: 30px !important;
-  }
+  background: $white-0;
 }
 
 .bg {
@@ -74,7 +66,7 @@
 }
 
 .subtitles {
-  color: #3E3E3E;
+  color: $gray-800;
 }
 
 .fa-container {
@@ -85,7 +77,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 22.5px;
-  background: #F2F2F2;
+  background: $white-50;
   img {
     height: 25px;
     width: 25px;

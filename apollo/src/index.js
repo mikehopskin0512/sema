@@ -10,14 +10,18 @@ import github from './identity/github';
 import health from './shared/health';
 import invitations from './invitations';
 import organizations from './organizations';
+import portfolios from './portfolios';
 import reports from './reports';
 import repositories from './repositories';
 import sources from './sources';
 import users from './users';
 import adminUsers from './admin/users';
 import searchQueries from './admin/searchQueries';
+import snapshots from './snapshots';
 import support from './support';
 import team from './teams';
+import roles from './roles';
+import userRoles from './userRoles';
 
 function attachRoutes(app, passport) {
   analysis(app, passport);
@@ -32,14 +36,18 @@ function attachRoutes(app, passport) {
   health(app);
   invitations(app, passport);
   organizations(app, passport);
+  portfolios(app, passport);
   reports(app, passport);
   repositories(app, passport);
   sources(app, passport);
   users(app, passport);
   adminUsers(app, passport);
   searchQueries(app, passport);
+  snapshots(app, passport);
   support(app, passport);
   team(app, passport);
+  roles(app, passport);
+  userRoles(app, passport);
 }
 
 module.exports.attachRoutes = attachRoutes;

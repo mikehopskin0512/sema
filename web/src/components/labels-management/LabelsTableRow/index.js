@@ -6,6 +6,7 @@ import Tag from '../../tag';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { tagsOperations } from '../../../state/features/tags';
+import { blue700 } from '../../../../styles/_colors.module.scss';
 
 const { deleteTagAndFetchTags } = tagsOperations;
 
@@ -51,7 +52,7 @@ const LabelsTableRow = ({ data, token }) => {
               Type: {type}
             </p>
             <p className="is-uppercase has-text-weight-semibold is-size-8 has-text-gray-700 m-0">
-              Suggested Snippets: {suggestedCommentsCount}
+              Snippets: {suggestedCommentsCount}
             </p>
           </div>
         </div>
@@ -75,7 +76,7 @@ const LabelsTableRow = ({ data, token }) => {
           <div className={clsx("dropdown is-right", menuIsOpen && "is-active")}>
             <div className="dropdown-trigger">
               <button className="button is-text" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
-                <FontAwesomeIcon icon={faEllipsisV} color="#0081A7" />
+                <FontAwesomeIcon icon={faEllipsisV} color={blue700} />
               </button>
             </div>
             <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>

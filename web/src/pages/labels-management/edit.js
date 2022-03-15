@@ -10,12 +10,13 @@ import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
 import LabelsTable from '../../components/labels-management/LabelsTable';
 import LabelCommentsRow from '../../components/labels-management/LabelCommentsRow';
-import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
-import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
+import { black950 } from '../../../styles/_colors.module.scss';
 
 const { clearAlert } = alertOperations;
 const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
@@ -23,7 +24,8 @@ const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
 const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkAccess } = usePermission();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const [accountData] = useLocalStorage('sema_selected_team');
 
   const { query } = router;
   const { id } = query;
@@ -42,7 +44,7 @@ const EditLabel = () => {
   const { token } = auth;
   const { isFetching, tag, tags: existingTags } = tagsState;
 
-  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
@@ -77,6 +79,7 @@ const EditLabel = () => {
   };
 
   const onSubmit = () => {
+    const {team: {_id: teamId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags, tag);
     if (tagsErrors) {
@@ -85,6 +88,10 @@ const EditLabel = () => {
     }
     if (tags.length > 0) {
       dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
+      router.push({
+        pathname: `/team/${teamId}/settings`,
+        query: { tab: 'labels' },
+      });
     }
   };
 
@@ -108,7 +115,7 @@ const EditLabel = () => {
       <Helmet title="Edit label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
         <a href="/labels-management" className="mr-8 is-flex">
-          <ArrowLeftIcon color="#000" size="small" />
+          <ArrowLeftIcon color={black950} size="small" />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>

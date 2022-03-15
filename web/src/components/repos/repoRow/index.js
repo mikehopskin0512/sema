@@ -2,24 +2,19 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-regular-svg-icons';
-import { faStar as faStarSolid } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 
 const RepoRow = (props) => {
   const {
-    externalId = '', name = '', body = '', stats, users = []
+    externalId = '', name = '', body = '', repoStats, users = []
   } = props;
 
-  const onClickRow = () => {
-    window.location = `${PATHS.REPO}/${externalId}`;
-  };
-
   return (
-    <tr className="has-background-white my-10 is-clickable" onClick={onClickRow}>
+  <Link href={`${PATHS.REPO}/${externalId}`}>
+    <tr className="has-background-white my-10 is-clickable" >
       <td className={clsx('py-15 has-background-white px-10', styles.document)}>
         <div className="is-flex is-align-items-center">
           {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
@@ -35,28 +30,29 @@ const RepoRow = (props) => {
       </td>
       <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
-          {stats?.totalPullRequests || 0}
+          {repoStats?.smartCodeReviews || 0}
         </p>
       </td>
       <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
-          {stats?.totalSmartComments || 0}
+          {repoStats?.smartComments || 0}
         </p>
       </td>
       <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
-          {stats?.totalSmartCommenters || 0}
+          {repoStats?.smartCommenters || 0}
         </p>
       </td>
       <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
-          {stats?.totalSemaUsers || 0}
+          {repoStats?.semaUsers || 0}
         </p>
       </td>
       <td className={clsx('py-15 has-background-white px-10 is-flex is-justify-content-center')}>
         <RepoUsers users={users} />
       </td>
     </tr>
+  </Link>
   );
 };
 

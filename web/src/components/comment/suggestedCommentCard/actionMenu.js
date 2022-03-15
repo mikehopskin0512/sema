@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import usePopup from '../../../hooks/usePopup';
 import { suggestCommentsOperations } from '../../../state/features/suggest-snippets';
 import { commentsOperations } from '../../../state/features/comments';
+import { blue700 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { updateSuggestComment } = suggestCommentsOperations;
@@ -36,7 +37,7 @@ const ActionMenu = ({ comment }) => {
             type="button"
             onClick={toggleMenu}
           >
-            <FontAwesomeIcon color="#0081A7" icon={faEllipsisV} />
+            <FontAwesomeIcon color={blue700} icon={faEllipsisV} />
           </button>
         </div>
         <div className="dropdown-menu" role="menu" ref={popupRef}>
@@ -45,7 +46,7 @@ const ActionMenu = ({ comment }) => {
               <button
                 type="button"
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
-                onClick={() => router.push(`/suggested-snippets/edit?cid=${collectionId}&comments=${comment._id}`)}
+                onClick={() => router.push(`/snippets/edit?cid=${collectionId}&comments=${comment._id}`)}
               >
                 Edit Snippet
               </button>
@@ -56,7 +57,7 @@ const ActionMenu = ({ comment }) => {
                 className="button is-small is-ghost has-background-white has-text-black outline-none"
                 onClick={updateArchiveStatus}
               >
-                {`${comment.isActive ? 'Archive' : 'Unarchive' } Comment`}
+                {`${comment.isActive ? 'Archive' : 'Unarchive'} Snippet`}
               </button>
             </div>
           </div>

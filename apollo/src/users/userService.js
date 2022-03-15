@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
 import _ from 'lodash';
+import { semaCorporateTeamId } from '../config'
 import User from './userModel';
-import Invitation from '../invitations/invitationModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken } from '../shared/utils';
-import { checkIfInvited } from '../invitations/invitationService';
-import UserRole from '../roles/userRoleModel';
+import { checkIfInvitedByToken } from '../invitations/invitationService';
+import UserRole from '../userRoles/userRoleModel';
 
 const { Types: { ObjectId } } = mongoose;
 
-export const create = async (user) => {
+export const create = async (user, inviteToken) => {
   let {
     password = null, username = '', firstName, lastName,
     jobTitle = '', avatarUrl = '',
     identities, terms,
-    isWaitlist, origin,
+    isWaitlist, origin = 'waitlist',
     collections,
   } = user;
 
@@ -25,9 +25,10 @@ export const create = async (user) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
-    const invitation = await checkIfInvited(username);
-    if(!!invitation.length) {
+    const invitation = await checkIfInvitedByToken(inviteToken);
+    if(!!invitation) {
       isWaitlist = false;
+      origin = 'invitation';
     }
 
     const newUser = new User({
@@ -47,6 +48,11 @@ export const create = async (user) => {
       collections,
     });
     const savedUser = await newUser.save();
+
+    if (!!invitation && invitation.team) {
+      await UserRole.create({ team: invitation.team, user: savedUser._id, role: invitation.role });
+    }
+
     return savedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -192,6 +198,7 @@ export const findById = async (id) => {
 export const findUserCollectionsByUserId = async (id) => {
   try {
     const query = User.findOne({ _id: id });
+    // TODO: we have to delete that populate / it slows down /snippet page
     const user = await query.lean().populate({
       path: 'collections.collectionData',
       model: 'Collection',
@@ -202,6 +209,7 @@ export const findUserCollectionsByUserId = async (id) => {
         description: 1,
         author: 1,
         tags: 1,
+        source: 1,
       },
       populate: {
         path: 'comments',
@@ -544,3 +552,8 @@ export const populateCollections = async (collectionIds = [], user) => {
     throw (error);
   }
 }
+
+export const getUserMetadata = async(id) => {
+  const user = await User.findById(id).select({ firstName: 1, lastName: 1, avatarUrl: 1, identities: 1 }).lean().exec();
+  return user;
+};

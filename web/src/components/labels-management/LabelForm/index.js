@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import CustomRadio from '../../radio';
 import { TrashIcon } from '../../Icons';
+import { gray400 } from '../../../../styles/_colors.module.scss';
 
 export const initialValues = {
   label: '',
@@ -12,7 +13,7 @@ const LabelForm = ({ onChangeData, id, data, errors, onRemove }) => {
   const index = useMemo(() => id, []);
 
   return (
-    <div className="columns" style={{ borderBottom: '1px solid #dbdbdb' }}>
+    <div className="columns" style={{ borderBottom: `1px solid ${gray400}` }}>
       <div className="column">
         <label className="has-text-black-950">Label name</label>
         <input

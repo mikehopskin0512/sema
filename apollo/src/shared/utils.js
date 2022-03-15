@@ -1,8 +1,9 @@
 import crypto from 'crypto';
-import { orgDomain } from '../config';
+import { orgDomain, semaCorporateTeamId } from '../config';
 import { sendEmail } from './emailService';
 import Tag from '../comments/tags/tagModel';
-import UserRole from '../roles/userRoleModel';
+import UserRole from '../userRoles/userRoleModel';
+import { isEmpty } from 'lodash';
 
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
@@ -50,6 +51,7 @@ export const getTokenData = async (user) => {
     .populate('team')
     .populate('role');
 
+  // user fields on jwt.
   const tokenData = {
     _id: user._id,
     firstName: user.firstName,
@@ -58,11 +60,17 @@ export const getTokenData = async (user) => {
     isVerified: user.isVerified,
     isWaitlist: user.isWaitlist,
     isSemaAdmin: user.isSemaAdmin,
+    lastLogin: user.lastLogin,
     roles,
   };
 
   return tokenData;
 };
+
+export const isSemaAdmin = (userData) => {
+  const semaAdminRole = userData?.roles?.find((userRole) => userRole?.team?._id == semaCorporateTeamId && userRole?.role?.name === 'Admin');
+  return !!semaAdminRole;
+}
 
 export const mapBooleanValue = (value) => value.toLowerCase() === 'true';
 
@@ -94,3 +102,21 @@ export const mapTags = async (tagsString) => {
 
   return mappedTags;
 };
+
+export const _checkPermission = (teamId = '', permission, user) => {
+  if (teamId && permission) {
+    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?._id == teamId);
+    if (role) {
+      return true
+    }
+  }
+  if (permission) {
+    if (!isEmpty(user.roles.team)) {
+      const role = user?.roles?.find((item) => item.role && item.role[permission]);
+      if (role) {
+        return true
+      }
+    }
+  }
+  return false
+}

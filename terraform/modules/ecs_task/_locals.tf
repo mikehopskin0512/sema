@@ -46,17 +46,56 @@ locals {
   ecs_external_access_enabled = var.ecs_external_access != null ? true : false
   ecs_port_mappings           = local.ecs_external_access_enabled ? [{ containerPort = var.ecs_external_access.port }] : []
   ecs_command                 = var.ecs_command != null ? var.ecs_command : []
-  ecs_container_definitions = jsonencode([
+  datadog_enabled             = length(compact([null, "", var.datadog_api_key])) > 0 ? true : false
+  ecs_main_container_cpu      = local.datadog_enabled ? var.task_definition_resources.cpu - 124 : var.task_definition_resources.cpu
+  ecs_main_container_memory   = local.datadog_enabled ? var.task_definition_resources.memory - 124 : var.task_definition_resources.memory
+
+  logConfiguration = local.datadog_enabled ? jsonencode({
+    logDriver = "awsfirelens",
+    options = {
+      Name       = "datadog",
+      apiKey     = var.datadog_api_key,
+      dd_service = "${var.name_prefix}-${var.application}-service",
+      dd_source  = "${var.name_prefix}-${var.application}",
+      dd_tags    = "Env:${var.name_prefix}",
+      TLS        = "on",
+      provider   = "ecs"
+    } }) : jsonencode({
+    logDriver     = "awslogs",
+    secretOptions = null,
+    options = {
+      awslogs-group         = aws_cloudwatch_log_group.this.name,
+      awslogs-region        = data.aws_region.current.name,
+      awslogs-stream-prefix = "ecs"
+    }
+  })
+  ecs_main_container = [
     {
-      name         = var.application,
-      image        = "${var.image}",
-      cpu          = var.task_definition_resources.cpu,
-      memory       = var.task_definition_resources.memory,
-      essential    = true,
-      portMappings = local.ecs_port_mappings,
-      environment  = var.ecs_envs,
-      secrets      = local.ecs_secrets,
-      command      = local.ecs_command,
+      name             = var.application,
+      image            = "${var.image}",
+      cpu              = local.ecs_main_container_cpu,
+      memory           = local.ecs_main_container_memory,
+      essential        = true,
+      portMappings     = local.ecs_port_mappings,
+      environment      = var.ecs_envs,
+      secrets          = local.ecs_secrets,
+      command          = local.ecs_command,
+      logConfiguration = jsondecode(local.logConfiguration)
+    }
+  ]
+
+  ecs_container_definitions = local.datadog_enabled ? jsonencode(concat(local.ecs_main_container, [
+    {
+      name         = "log_router",
+      image        = "public.ecr.aws/aws-observability/aws-for-fluent-bit:stable"
+      essential    = true
+      cpu          = 124
+      memory       = 124
+      environment  = []
+      mountPoints  = []
+      portMappings = []
+      volumesFrom  = []
+      user         = "0"
       logConfiguration = {
         logDriver     = "awslogs",
         secretOptions = null,
@@ -66,8 +105,16 @@ locals {
           awslogs-stream-prefix = "ecs"
         }
       }
+      firelensConfiguration = {
+        type = "fluentbit",
+        options = {
+          enable-ecs-log-metadata = "true"
+        }
+      }
     }
-  ])
+    ]
+  )) : jsonencode(local.ecs_main_container)
+
 }
 
 locals {

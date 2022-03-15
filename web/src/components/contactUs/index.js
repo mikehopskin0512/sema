@@ -16,11 +16,11 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
         </div>
       </div>
 
-      <div className={clsx("is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-mobile", styles['contact-us-desktop'])}>
+      <div className={clsx("is-flex is-flex-direction-row is-justify-content-center is-align-content-center is-hidden-touch", styles['contact-us-desktop'])}>
         <button onClick={openSupportForm} className={clsx('button is-gray-100 has-text-primary is-medium mr-20 my-5 px-50', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
-            className={clsx('button is-gray-100 has-text-primary has-text-weight-semibold is-medium mx-20 my-5 px-50', styles.button)}
+            className={clsx('button is-gray-100 has-text-primary is-medium mx-20 my-5 px-50', styles.button)}
             href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
             target="_blank"
             rel="noreferrer">
@@ -30,10 +30,10 @@ const ContactUs = ({ userVoiceToken, openSupportForm }) => {
       </div>
 
       <div className="is-hidden-desktop is-full-width is-flex is-flex-direction-column is-align-items-center mt-20">
-        <button onClick={openSupportForm} className={clsx('button is-gray-100 has-text-primary has-text-weight-semibold is-medium my-10', styles.button)} type="button">Email</button>
+        <button onClick={openSupportForm} className={clsx('button is-gray-100 has-text-primary is-medium my-10', styles.button)} type="button">Email</button>
         { userVoiceToken && (
           <a
-            className={clsx('button is-gray-100 has-text-primary has-text-weight-semibold is-medium my-10', styles.button)}
+            className={clsx('button is-gray-100 has-text-primary is-medium my-10', styles.button)}
             href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}
             target="_blank"
             rel="noreferrer">

@@ -1,5 +1,9 @@
 import { Router } from 'express';
 import { format } from 'date-fns';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -19,7 +23,9 @@ import {
   getSmartCommentsTagsReactions,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
+import checkEnv from '../../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -40,9 +46,9 @@ export default (app, passport) => {
   });
 
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { requester: author, reviewer: reviewer, externalId: repoId } = req.query;
+    const { requester: author, reviewer, externalId: repoId } = req.query;
     try {
-      const comments = await filterSmartComments({author, reviewer, repoId});
+      const comments = await filterSmartComments({ author, reviewer, repoId });
       return res.status(201).send({
         comments,
       });
@@ -173,9 +179,9 @@ export default (app, passport) => {
   });
 
   route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { user } = req.query;
+    const { user, teamId = '', individual = false } = req.query;
     try {
-      const summary = await getSmartCommentsTagsReactions({ user });
+      const summary = await getSmartCommentsTagsReactions({ user, teamId, individual });
       return res.status(201).send({
         summary,
       });
@@ -186,9 +192,14 @@ export default (app, passport) => {
   });
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { requester: author, reviewer, externalId: repoId, startDate, endDate, } = req.query;
+    const {
+      requester: author, reviewer, externalIds, startDate, endDate,
+    } = req.query;
     try {
-      const overview = await getSmartCommentsTagsReactions({ author, reviewer, repoId, startDate, endDate });
+      const repoIds = externalIds && externalIds.split('-');
+      const overview = await getSmartCommentsTagsReactions({
+        author, reviewer, repoIds, startDate, endDate,
+      });
       return res.status(201).send({
         overview,
       });
@@ -197,4 +208,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/comments/smart-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

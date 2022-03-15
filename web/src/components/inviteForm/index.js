@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fullName } from '../../utils';
 import * as analytics from '../../utils/analytics';
 import { CloseIcon } from '../Icons';
+import { white50 } from '../../../styles/_colors.module.scss';
 
 const { resendInvite, createInviteAndHydrateUser } = invitationsOperations;
 
@@ -72,7 +73,7 @@ const InviteForm = ({ onReload }) => {
   };
 
   return (
-    <div className="py-25 px-50" style={{ background: '#f2f1f4' }}>
+    <div className="py-25 px-50" style={{ background: `${white50}` }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
           <label className="label">Who would you like to invite?</label>

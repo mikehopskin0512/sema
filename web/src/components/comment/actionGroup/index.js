@@ -33,7 +33,7 @@ const ActionGroup = ({
   };
 
   const goToEditPage = async () => {
-    await router.push(`${PATHS.SUGGESTED_SNIPPETS.EDIT}?cid=${collectionId}&comments=${selectedComments}`);
+    await router.push(`${PATHS.SNIPPETS.EDIT}?cid=${collectionId}&comments=${selectedComments}`);
   };
 
   const onArchive = async () => {
@@ -64,7 +64,7 @@ const ActionGroup = ({
           >
             <AlertFilledIcon size="small" />
             <span className="ml-8">
-              Archive {unarchiveComments.length} Suggested Snippets
+              Archive {unarchiveComments.length} Snippets
             </span>
           </button>
         ) : ''
@@ -78,7 +78,7 @@ const ActionGroup = ({
           >
             <AlertFilledIcon size="small" />
             <span className="ml-8">
-              UnArchive {archiveComments.length} Suggested Snippets
+              UnArchive {archiveComments.length} Snippets
             </span>
           </button>
         ) : ''

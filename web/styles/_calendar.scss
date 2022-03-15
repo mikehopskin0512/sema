@@ -1,10 +1,12 @@
+@import "./_colors.module.scss";
+
 .react-datepicker__header {
-  background: white !important;
+  background: $white-0 !important;
   border-bottom: none !important;
 }
 
 .react-datepicker__day-name {
-  color: #19181A;
+  color: $gray-900;
   font-weight: 600;
   font-size: 13px;
   line-height: 24px;
@@ -28,36 +30,36 @@
 .react-datepicker__day--selected {
   flex-grow: 1;
   margin: 0px 0px;
-  color: white !important;
+  color: $white-0 !important;
   margin: 0;
   border-radius: 8px !important;
-  background: #0081A7 !important;
+  background: $blue-700 !important;
   font-weight: 600;
 }
 
 .react-datepicker__day--in-range {
   border-radius: 0 !important;
-  background: #F8F7FA !important;
-  color: #0081A7 !important;
+  background: $white-50 !important;
+  color: $blue-700 !important;
   font-weight: 600;
 }
 
 .react-datepicker__day--range-start {
   border-radius: 8px 0px 0px 8px !important;
-  background: #0081A7 !important;
-  color: white !important;
+  background: $blue-700 !important;
+  color: $white-0 !important;
   font-weight: 600;
 }
 
 .react-datepicker__day--range-end {
   border-radius: 0px 8px 8px 0px !important;
-  background: #0081A7 !important;
-  color: white !important;
+  background: $blue-700 !important;
+  color: $white-0 !important;
   font-weight: 600;
 }
 
 .prev-month {
-  color: #a3a3a3 !important;
+  color: $gray-600 !important;
 
 }
 

@@ -13,6 +13,7 @@ import {
 } from '../Icons';
 import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
+import { white0 } from '../../../styles/_colors.module.scss';
 
 const MenuItem = ({ pathName, icon, name }) => {
   const router = useRouter();
@@ -48,27 +49,27 @@ const AdminSidebar = () => {
     {
       name: 'Dashboard (coming)',
       pathName: PATHS.DASHBOARD,
-      icon: <GridIcon color="#ffffff" size="small" />,
+      icon: <GridIcon color={white0} size="small" />,
     },
     {
       name: 'User Management',
       pathName: '/sema-admin/users',
-      icon: <AuthorIcon color="#ffffff" size="small" />,
+      icon: <AuthorIcon color={white0} size="small" />,
     },
     {
       name: 'Invites',
       pathName: '/sema-admin/invites',
-      icon: <MailIcon color="#ffffff" size="small" />,
+      icon: <MailIcon color={white0} size="small" />,
     },
     {
       name: 'Reports',
       pathName: '/sema-admin/reports',
-      icon: <FileIcon color="#ffffff" size="small" />,
+      icon: <FileIcon color={white0} size="small" />,
     },
     {
       name: 'Smart Comment Metrics',
       pathName: '/sema-admin/smart-comments',
-      icon: <CodeStatsIcon color="#ffffff" size="small" />,
+      icon: <CodeStatsIcon color={white0} size="small" />,
     },
   ];
   return (

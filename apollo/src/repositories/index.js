@@ -1,13 +1,18 @@
 import { Router } from 'express';
+import swaggerUi from "swagger-ui-express";
+import yaml from "yamljs";
+import path from "path";
+
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 
 import {
-  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, getSemaUsersOfRepo, aggregateRepositories
+  createMany, findByOrg, sendNotification, findByExternalIds, findByExternalId, aggregateReactions, aggregateTags, aggregateRepositories, getRepositories,
 } from './repositoryService';
-import { getPullRequestsByExternalId, getSmartCommentersByExternalId, getSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
+import checkEnv from "../middlewares/checkEnv";
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -49,11 +54,14 @@ export default (app, passport) => {
   });
 
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { orgId } = req.query;
+    const { orgId, Ids } = req.query;
+    const idsArray = Ids?.split('-');
 
     try {
-      const repositories = await findByOrg(orgId);
-      if (!repositories) { throw new errors.NotFound('No repositories found for this organization'); }
+      const repositories = Ids ? await getRepositories(idsArray) : await findByOrg(orgId);
+      if (!repositories) { 
+        throw new errors.NotFound(Ids ? 'No repositories found' : 'No repositories found for this organization'); 
+      }
 
       return res.status(201).send({
         repositories,
@@ -86,7 +94,7 @@ export default (app, passport) => {
       });
     } catch (error) {
       logger.error(error);
-      return res.status(error.statusCode).send(error);
+      return res.status(error?.statusCode || 500).send(error);
     }
   });
 
@@ -135,4 +143,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/repositories-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

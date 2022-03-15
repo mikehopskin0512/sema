@@ -1,4 +1,3 @@
-.overflow-hidden {
-  max-height: calc(100%-325px);
-  overflow: hidden !important;
+.overflow-unset {
+  overflow: unset !important;
 }

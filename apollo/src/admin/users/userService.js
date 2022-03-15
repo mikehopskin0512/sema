@@ -15,11 +15,11 @@ import User from '../../users/userModel';
 import { fullName } from '../../shared/utils';
 import { suggest } from '../../comments/suggestedComments/commentSuggestions';
 import Reaction from '../../comments/reaction/reactionModel';
-import UserRole from '../../roles/userRoleModel';
+import UserRole from '../../userRoles/userRoleModel';
 import Team from '../../teams/teamModel';
 import Role from '../../roles/roleModel';
 
-export const listUsers = async (params, isExport = false) => {
+export const listUsers = async (params, listAll = false) => {
   const { page, perPage, search, status } = params;
 
   const pipeline = [];
@@ -59,15 +59,7 @@ export const listUsers = async (params, isExport = false) => {
       });
     }
   }
-
-  pipeline.push({
-    $lookup: {
-      from: 'invitations',
-      localField: '_id',
-      foreignField: 'sender',
-      as: 'invitations',
-    }
-  });
+  
   const totalCount = await User.aggregate([
     ...pipeline,
     { $count: 'total' }
@@ -75,6 +67,30 @@ export const listUsers = async (params, isExport = false) => {
 
   const users = await User.aggregate([
     ...pipeline,
+    {
+      $lookup: {
+        from: 'invitations',
+        localField: '_id',
+        foreignField: 'sender',
+        as: 'invitations',
+      }
+    },
+    {
+      $lookup: {
+        from: 'userroles',
+        localField: '_id',
+        foreignField: 'user',
+        as: 'userRole',
+      }
+    },
+    {
+      $lookup: {
+        from: 'teams',
+        localField: 'userRole.team',
+        foreignField: '_id',
+        as: 'teams',
+      }
+    },
     {
       $addFields: {
         invitedCount: { $size: '$invitations' },
@@ -99,7 +115,7 @@ export const listUsers = async (params, isExport = false) => {
       }
     },
     { $sort: { invitedCount: -1 } },
-    ...!isExport ? [
+    ...!listAll ? [
       { $skip: (page - 1) * perPage },
       { $limit: perPage },
     ] : [],

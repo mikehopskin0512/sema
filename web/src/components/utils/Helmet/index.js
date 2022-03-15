@@ -18,6 +18,12 @@ export {
   LabelsManagementHelmet,
   TeamCreateHelmet,
   TeamManagementHelmet,
+  TeamDashboardHelmet,
+  TeamReposHelmet,
+  TeamInsightsHelmet,
+  TeamInviteHelmet,
+  TeamUpdateHelmet,
+  PortfolioHelmet,
 } from './values';
 
 const HelmetComponent = ({ title, description, children }) => (

@@ -12,12 +12,15 @@ import { invitationsOperations } from '../../../state/features/invitations';
 import { alertOperations } from '../../../state/features/alerts';
 import InvitationsGrid from '../../../components/invitationsGrid';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import usePermission from "../../../hooks/usePermission";
+import { gray600, blue900 } from '../../../../styles/_colors.module.scss';
 
 const { clearAlert } = alertOperations;
 const { fetchUser } = selectedUserOperations;
 const { getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
 
 const UserDetailPage = () => {
+  const { isSemaAdmin } = usePermission();
   const dispatch = useDispatch();
   const router = useRouter();
   const { alerts, auth, selectedUser, invitations } = useSelector((state) => ({
@@ -56,7 +59,7 @@ const UserDetailPage = () => {
       case 'table':
         return acceptedInvitationCount + pendingInvitationCount
       case 'label':
-        return user.isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : user.inviteCount + acceptedInvitationCount + pendingInvitationCount;
+        return isSemaAdmin() ? acceptedInvitationCount + pendingInvitationCount : user.inviteCount + acceptedInvitationCount + pendingInvitationCount;
       default:
         return acceptedInvitationCount + pendingInvitationCount
     }
@@ -80,9 +83,9 @@ const UserDetailPage = () => {
           <div className='loading' />
         ) : (
           <>
-            <p className='my-15 is-size-6' style={{ color: '#9198a4' }}>
+            <p className='my-15 is-size-6' style={{ color: gray600 }}>
               User Management
-              <span style={{ color: '#203353' }}> / {fullName(user)}</span>
+              <span style={{ color: blue900 }}> / {fullName(user)}</span>
             </p>
             <div className='column is-12 p-25 has-text-black has-background-white mb-20' style={{ borderRadius: 10 }}>
               <div className='is-flex p-10'>
@@ -92,7 +95,7 @@ const UserDetailPage = () => {
                   src={user?.avatarUrl || null}
                   size="50"
                   round
-                  color='#888888'
+                  color={gray600}
                   textSizeRatio={2.5}
                 />
                 <div className='mr-20'>
@@ -116,11 +119,11 @@ const UserDetailPage = () => {
                 </div>
                 <div className='is-flex'>
                   <div className='is-flex is-align-items-center mr-25'>
-                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: '#888888' }}>{user?.inviteCount}</span>
+                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: gray600 }}>{user?.inviteCount}</span>
                     <div>Invites Available</div>
                   </div>
                   <div className='is-flex is-align-items-center'>
-                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: '#888888' }}>{getTotalInvitations('label')}</span>
+                    <span className='tag mr-10 is-size-5 has-text-white' style={{ background: gray600 }}>{getTotalInvitations('label')}</span>
                     <div>Invites Used</div>
                   </div>
                 </div>

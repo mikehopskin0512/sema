@@ -1,5 +1,7 @@
+@import "../../../../styles/_colors.module.scss"; 
+
 .date {
-  color: #606060;
+  color: $gray-700;
 }
 
 .avatar {
@@ -13,20 +15,4 @@
 
 .item-comment {
   word-break: break-all;
-
-  &_divider {
-    position: relative;
-    height: 16px;
-    margin: 0 8px;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1px;
-      height: 16px;
-      background: #9B9B9B;
-    }
-  }
 }

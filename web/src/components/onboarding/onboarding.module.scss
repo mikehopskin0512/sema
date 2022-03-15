@@ -1,5 +1,7 @@
+@import "../../../styles/_colors.module.scss";
+
 .onboarding-container {
-    background-color: #E5E5E5;
+    background-color: $gray-300;
 }
 
 .modal {
@@ -68,10 +70,10 @@
 .ul{
     list-style-type:none;
     li{
-        color: #C4C4C4;
+        color: $gray-500;
         position: relative;
         display: inline-block;
-        background-color: #C4C4C4;
+        background-color: $gray-500;
         border-radius: 100px;
         vertical-align: middle;
         min-width: 12px;
@@ -90,7 +92,7 @@
 .active{
     min-width: 15px !important;
     min-height: 15px !important;
-    background-color: #1394BA !important;
+    background-color: $blue-600 !important;
     &:hover{
         opacity:1;
     }

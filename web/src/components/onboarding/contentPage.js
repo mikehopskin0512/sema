@@ -7,7 +7,7 @@ import { faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { content } from './content';
 import styles from './onboarding.module.scss';
 
-const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
+const ContentPage = ({ page, nextPage, previousPage, isPluginInstalled, closeModal }) => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [img, setImg] = useState('');
@@ -49,7 +49,7 @@ const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
           </div>
         </div>
         <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
-          <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-mobile">
+          <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-touch">
             <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">Here's how it works</p>
             <button className="button is-white" onClick={closeModal}>
               <FontAwesomeIcon className="is-clickable" icon={faTimes} />
@@ -75,15 +75,26 @@ const ContentPage = ({ page, nextPage, previousPage, closeModal }) => {
               <li className={page === 1 ? styles.active : null}></li>
               <li className={page === 2 ? styles.active : null}></li>
               <li className={page === 3 ? styles.active : null}></li>
-              <li className={page === 4 ? styles.active : null}></li>
+              { !isPluginInstalled ? (<li className={page === 4 ? styles.active : null}></li>) : '' }
             </ul>
-            <button
-              type="button"
-              className={clsx("button is-primary")}
-              onClick={nextPage}
-            >
-              Next
-            </button>
+            {page === 3 && isPluginInstalled ? (
+              <button
+                type="button"
+                className={clsx('button is-primary')}
+                onClick={closeModal}
+              >
+                Done
+              </button>
+
+            ) :
+              <button
+                type="button"
+                className={clsx("button is-primary")}
+                onClick={nextPage}
+              >
+                Next
+              </button>
+            }
           </div>
         </div>
       </div>

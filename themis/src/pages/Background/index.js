@@ -29,7 +29,7 @@ const setRequestRule = (token) => {
             },
           ],
         },
-        condition: { urlFilter: 'comments', domains: ['github.com'] },
+        condition: { domains: ['github.com'] },
       },
     ],
   });
@@ -54,7 +54,7 @@ function JWT() {
         const expirationTimeAccessToken = decodedAccessToken.exp * 1000;
         const newAccessTokenTime = ((expirationTimeAccessToken - currentTime) - 60000);
         interval = setInterval(() => {
-          // eslint-disable-next-line no-use-before-define
+          // eslint-disable-next-line no-use-before-define,@typescript-eslint/no-use-before-define
           getFinalState();
         }, newAccessTokenTime);
       } catch (err) {
@@ -176,7 +176,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     const [tab] = await chrome.tabs.query(queryOptions);
     const { id } = tab;
     chrome.tabs.update(id, {
-      url: `${SEMA_UI_URL}/dashboard?step=1`,
+      url: `${SEMA_UI_URL}/dashboard?step=4`,
       active: true,
     });
   } else if (details.reason === 'update') {
@@ -189,8 +189,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 // eslint-disable-next-line consistent-return
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request[WHOAMI]) {
-    getFinalState().then((tokenResponse) => {
-      sendResponse(tokenResponse);
+    getFinalState().then(async ({ token, isLoggedIn }) => {
+      const user = token ? jwt_decode(token) : {};
+      sendResponse({ token, isLoggedIn, ...user });
     });
     return true;
   }
@@ -200,24 +201,16 @@ const sendMessageToTab = (message) => {
   chrome.tabs.query(
     { url: ['*://github.com/*/pull/*', '*://*.github.com/*/pull/*'] },
     (tabs) => {
-      if (tabs.length) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          message,
-          () => {
-            // eslint-disable-next-line no-console
-            console.log('tab response received');
-          },
-        );
-      }
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, message);
+      });
     },
   );
 };
 
 chrome.cookies.onChanged.addListener((changeInfo) => {
   const { cookie, removed } = changeInfo;
-
-  if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === '_phoenix') {
+  if (cookie.domain === SEMA_COOKIE_DOMAIN && cookie.name === SEMA_COOKIE_NAME) {
     if (removed) {
       sendMessageToTab({ isUserUpdated: true, token: null, isLoggedIn: false });
     } else {

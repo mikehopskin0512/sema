@@ -14,10 +14,10 @@ import Helmet from '../../utils/Helmet';
 import Loader from '../../Loader';
 
 import { engGuidesOperations } from '../../../state/features/engGuides';
-import { EditGuides } from '../../../data/permissions';
 import usePermission from '../../../hooks/usePermission';
-import { PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getEngGuides } = engGuidesOperations;
 
@@ -117,7 +117,7 @@ const CollectionEngGuides = ({ collectionId }) => {
   const unarchiveGuides = useMemo(() => engGuideFilter.filter((item) => selectedGuides
     .indexOf(item._id) !== -1 && item.isActive), [selectedGuides, engGuideFilter]);
 
-  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditGuides), [checkAccess]);
+  const isEditable = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditSnippets'), [checkAccess]);
 
   if (engGuideState.isFetching && auth.isFetching && !engGuide) {
     return (
@@ -132,7 +132,7 @@ const CollectionEngGuides = ({ collectionId }) => {
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-15">
           <a href={PATHS.GUIDES} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color={black950} />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
@@ -146,7 +146,7 @@ const CollectionEngGuides = ({ collectionId }) => {
             {engGuide.name}
           </p>
           <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-            {engGuide.comments.length} suggested snippets
+            {engGuide.comments.length} snippets
           </span>
           <div style={{ marginLeft: 'auto' }}>
             <GlobalSearch />

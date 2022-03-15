@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isWithinInterval } from 'date-fns';
-import { find, uniqBy } from 'lodash';
+import { find, uniqBy, isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Sidebar from '../../sidebar';
@@ -10,22 +10,22 @@ import Loader from '../../Loader';
 import styles from './repoPageLayout.module.scss';
 import { repositoriesOperations } from '../../../state/features/repositories';
 import HoverSelect from '../../../components/select/hoverSelect';
-import StatCard from './components/StatCard';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 
-const { getUserRepositories } = repositoriesOperations;
+const { getUserRepositories, fetchReposByIds } = repositoriesOperations;
 
-const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
+const RepoPageLayout = ({ children, dates, isTeamRepo, ...sidebarProps }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { auth, repositories } = useSelector((state) => ({
+  const { auth, repositories, teams } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
+    teams: state.teamsState,
   }));
   const { data: { overview = {} } } = repositories;
   const { name = '', smartcomments = [], users = [] } = overview;
   const { query: { repoId = '' }, pathname = '' } = router;
-  const { token } = auth;
+  const { token, selectedTeam } = auth;
   const [selectedRepo, setSelectedRepo] = useState({});
   const [repoOptions, setRepoOptions] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -38,24 +38,29 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
     const totalSmartComments = smartComments.length || 0;
     const totalSmartCommenters = uniqBy(smartComments, (item) => item.userId?._id?.valueOf() || 0).length || 0;
     const totalPullRequests = uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
-    const totalSemaUsers = users.length || 0;
+    const totalSemaUsers = users && users.length || 0;
     return [
-      { title: 'smart code reviews', value: totalPullRequests, tooltip: 'Smart code review is a pull request that is reviewed uses Sema product'},
-      { title: 'smart comments', value: totalSmartComments, tooltip: 'Smart Comment is a part of Smart Code Review'},
-      { title: 'smart commenters', value: totalSmartCommenters, tooltip: 'Smart commenter is a reviewer that uses Sema'},
-      { title: 'sema users', value: totalSemaUsers, tooltip: 'Sema user is a code reviewer who uses Sema, or a code author that has a Sema account'},
+      { title: 'sema code reviews', value: totalPullRequests, tooltip: 'Pull Request reviewed using Sema'},
+      { title: 'sema comments', value: totalSmartComments, tooltip: 'Comment made in a Code Review using Sema'},
+      { title: 'sema commenters', value: totalSmartCommenters, tooltip: 'Number of Code Reviewers using Sema'},
+      { title: 'sema users', value: totalSemaUsers, tooltip: 'Number of people with a Sema account'},
     ]
   }, [overview]);
 
-  const getUserRepos = async (user) => {
-    const { identities } = user;
-    const githubUser = identities?.[0];
-    await dispatch(getUserRepositories(githubUser?.repositories, token));
-  };
-
   useAuthEffect(() => {
-    getUserRepos(auth.user);
-  }, [auth]);
+    if (!isTeamRepo) {
+      const { repositories: userRepos } = auth.user.identities[0] || {};
+      if (userRepos?.length && !repositories?.data?.repositories?.length) {
+        dispatch(getUserRepositories(userRepos, token));
+      }
+    } else {
+      const { repos } = selectedTeam.team;
+      if (repos?.length) {
+        const idsParamString = repos.join('-');
+        dispatch(fetchReposByIds(idsParamString, token));
+      }
+    }
+  }, [isTeamRepo]);
 
   useEffect(() => {
     if (smartcomments) {
@@ -72,23 +77,23 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
   };
 
   useEffect(() => {
-    if (repositories && repositories.data && repositories.data.repositories) {
-      const selected = find(repositories.data.repositories, { externalId: repoId });
-      formatOptions(repositories.data.repositories);
-      if (selected) {
-        setSelectedRepo({
-          label: selected.name,
-          value: selected.externalId,
-        });
-      }
-    }
-  }, [repositories]);
+    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+  }, []);
 
-  const IndicatorSeparator = () => null;
+  useEffect(() => {
+    const selected = find(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos, { externalId: repoId });
+    formatOptions(isEmpty(selectedTeam) ? repositories.data?.repositories : teams?.repos);
+    if (selected) {
+      setSelectedRepo({
+        label: selected.name,
+        value: selected.externalId,
+      });
+    }
+  }, [repositories, teams]);
 
   const onChangeSelect = (obj) => {
     setSelectedRepo(obj);
-    window.location = pathname.replace('[repoId]', obj.value);
+    router.push(pathname.replace('[repoId]', obj.value));
   };
 
   return (
@@ -100,8 +105,7 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
           </div>
         ) : (
           <>
-            <div
-              className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
+            <div className="is-flex is-justify-content-space-between is-align-items-center container pt-25 is-flex-wrap-wrap">
               <div className={'is-flex-grow-1'}>
                 {repoOptions.length > 1 ? (
                   <HoverSelect
@@ -118,25 +122,15 @@ const RepoPageLayout = ({ children, dates, ...sidebarProps }) => {
                 )}
               </div>
             </div>
-            <div className={clsx(styles['card-container'], 'px-20')}>
-              <div className="container">
-                <div className="mt-40 pb-10 columns m-0">
-                  {reposStats.map(({ title, value, tooltip }) => (
-                    <StatCard
-                      title={title}
-                      value={value}
-                      tooltip={tooltip}
-                    />
-                  ))}
+            <div className="container mt-10">
+              <Sidebar {...sidebarProps} />
+            </div>
+            <div className="has-background-gray-200 pt-20">
+              <div className="pb-50 container px-20">
+                <div>
+                  {children}
                 </div>
               </div>
-            </div>
-            <div className="has-background-gray-200">
-              <Sidebar {...sidebarProps}>
-                <>
-                  {children}
-                </>
-              </Sidebar>
             </div>
           </>
         )

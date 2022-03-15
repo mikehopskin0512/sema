@@ -1,3 +1,4 @@
+@import "../../../styles/_colors.module.scss";
 
 .burger {
   background: none;
@@ -10,12 +11,23 @@
   padding: 1px;
 }
 
-.divider {
-  background: #F3F3F3;
-}
-
 .team {
   img, p {
     max-height: none !important;
+  }
+}
+
+.menu-item-container {
+  border: 1px $gray-200 solid;
+  min-width: 230px;
+  background: $gray-100;
+}
+
+.portfolio-container {
+  width: 40px;
+  height: 40px;
+  background-color: $gray-200;
+  &:hover {
+    background-color: $gray-300;
   }
 }

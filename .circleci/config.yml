@@ -24,6 +24,8 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
@@ -33,7 +35,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"          
+          channel: "phoenix-circleci-notifications"          
   deploy-apollo:
     environment:
       AWS_REGION: us-east-1
@@ -56,16 +58,33 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
+      - run: 
+          name: auto-restore db
+          command: |
+            if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
+              aws lambda invoke \
+                  --function-name staging-backups-auto-restore-lambda \
+                  --log-type Tail \
+                  --invocation-type RequestResponse \
+                  --payload '{ "connection_string": "'"${STAGING_MONGOOSE_URI}"'","database_name":"'"${STAGING_MONGODB_NAME}"'","db_webserver_password":"'"${BACKUP_SERVER_PASS}"'","db_webserver_user":"'"${BACKUP_SERVER_USER}"'"}' \
+                  outputfile.txt
+              LAMBDA_STATUS_CODE=$(<outputfile.txt)
+              if [ "${LAMBDA_STATUS_CODE}" -eq 1 ]; then  
+                 exit 1
+              fi
+            fi
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"
+          channel: "phoenix-circleci-notifications"
   build-chrome-extension:
     docker:
       - image: cimg/node:15.14.0
@@ -81,6 +100,8 @@ jobs:
               echo 'export ENV=prod' >> $BASH_ENV
             elif [ $CIRCLE_BRANCH = "qa" ]; then
               echo 'export ENV=qa' >> $BASH_ENV
+            elif [ $CIRCLE_BRANCH = "qa1" ]; then
+              echo 'export ENV=qa1' >> $BASH_ENV
             elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
@@ -99,7 +120,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "support"      
+          channel: "phoenix-circleci-notifications"
   phoenix-notify:
     docker:
         - image: cimg/base:2020.01
@@ -108,6 +129,31 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
+      - slack/notify:
+          branch_pattern: "release.*"
+          event: "pass"
+          channel: "release-management"
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Looks like the release candidate of $CIRCLE_BRANCH was deployed to the staging. Now you can perform testing.",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "image",
+                  "image_url": "https://media.giphy.com/media/0DYipdNqJ5n4GYATKL/giphy.gif",
+                  "alt_text": "ready"
+                }
+              ]
+            } 
 workflows:
   version: 2
   primary:
@@ -116,6 +162,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -123,6 +170,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -130,6 +178,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/
@@ -139,6 +188,7 @@ workflows:
           filters:
             branches:
               only:
+                - qa1
                 - qa
                 - master
                 - /release-.*/

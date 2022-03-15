@@ -30,7 +30,7 @@ export const UserManagementHelmet = {
 };
 
 export const SuggestedSnippetsHelmet = {
-  title: 'Suggested Snippets',
+  title: 'Snippets',
   description: null,
 };
 
@@ -71,5 +71,35 @@ export const TeamCreateHelmet = {
 
 export const TeamManagementHelmet = {
   title: 'Team Management',
+  description: null,
+};
+
+export const TeamDashboardHelmet = {
+  title: 'Team Dashboard',
+  description: null,
+};
+
+export const TeamReposHelmet = {
+  title: 'Team Repository',
+  description: null,
+};
+
+export const TeamInsightsHelmet = {
+  title: 'Team Insights',
+  description: null,
+};
+
+export const TeamInviteHelmet = {
+  title: 'Invite Team',
+  description: null,
+};
+
+export const TeamUpdateHelmet = {
+  title: 'Update Team',
+  description: null,
+};
+
+export const PortfolioHelmet = {
+  title: 'Portfolio',
   description: null,
 };

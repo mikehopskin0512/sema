@@ -12,6 +12,7 @@ import { engGuidesOperations } from '../../state/features/engGuides';
 import { makeTagsList } from '../../utils';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
+import { black950 } from '../../../styles/_colors.module.scss';
 
 const { fetchTagList } = tagsOperations;
 const { bulkCreateEngGuides } = engGuidesOperations;
@@ -92,7 +93,7 @@ const AddEngGuidesPage = () => {
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-10 mb-25">
           <a href={`${PATHS.GUIDES}?cid=${collection._id}`} className="is-hidden-mobile">
-            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color="#000" />
+            <FontAwesomeIcon icon={faArrowLeft} className="mr-10" color={black950} />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>

@@ -1,36 +1,47 @@
 import mongoose from 'mongoose';
-import { get } from 'lodash';
-import Collection from './collectionModel';
-import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import logger from '../../shared/logger';
 import {
   findById as findUserById,
-  patch as updateUser,
   findUserCollectionsByUserId,
-  populateCollectionsToUsers,
+  patch as updateUser, populateCollectionsToUsers,
 } from '../../users/userService';
+import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
+import Collection from './collectionModel';
+import { COLLECTION_TYPE } from './constants';
+import User from "../../users/userModel";
 
 const { Types: { ObjectId } } = mongoose;
 
-export const create = async ({
-  name,
-  description,
-  tags,
-  comments,
-  author,
-  source = {}
-}) => {
+export const create = async (collection, userId, teamId) => {
   try {
     const newCollection = new Collection({
-      name,
-      description,
-      tags,
-      comments,
-      author,
-      source,
-    })
-    const savedCollection = await newCollection.save();
-    return savedCollection;
+      ...collection,
+      tags: collection.tags ? collection.tags.map((tag) => ({
+        ...tag,
+        tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
+      })) : [],
+      createdBy: ObjectId(userId),
+    });
+    const createdCollection = await newCollection.save();
+
+    const collectionIds = [createdCollection._id];
+    switch (collection.type) {
+      case COLLECTION_TYPE.COMMUNITY:
+        await populateCollectionsToUsers(collectionIds);
+        await bulkUpdateTeamCollections(collectionIds)
+        break;
+      case COLLECTION_TYPE.TEAM:
+        await bulkUpdateTeamCollections(collectionIds, teamId)
+        break;
+      case COLLECTION_TYPE.PERSONAL:
+        await populateCollectionsToUsers(collectionIds, userId);
+        break;
+      default:
+        return;
+    }
+
+    return createdCollection;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -38,9 +49,8 @@ export const create = async ({
   }
 };
 
-export const createMany = async (collections, userId) => {
+export const createMany = async (collections, type, userId, teamId) => {
   try {
-    // Should we add a field for which team this collection is for once teams feature is implemented?
     const cols = collections.map((collection) => ({
       ...collection,
       tags: collection.tags.map((tag) => {
@@ -88,21 +98,31 @@ export const findById = async (id) => {
   }
 };
 
-export const getUserCollectionsById = async (id) => {
+export const findByType = async (type) => {
   try {
-    const user = await findUserCollectionsByUserId(id);
-    if (user) {
-      const collections = user.collections.filter((collection) => collection.collectionData).map((collection) => {
-        const { collectionData = { comments: [] } } = collection;
-        const { comments, tags } = collectionData;
+    const collections = Collection.find({ type }).exec();
+    return collections;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getUserCollectionsById = async (id, teamId = null) => {
+  try {
+    const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
+    if (parent) {
+      const collections = parent.collections?.filter((collection) => collection.collectionData).map((collection) => {
+        const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
         let guides = [];
         if (tags?.length > 0) {
           languages = tags.filter((tag) => tag.type === 'language').map((tag) => tag.label);
           guides = tags.filter((tag) => tag.type === 'guide').map((tag) => tag.label);
         } else {
-          comments.forEach((comment) => {
-            comment.tags.forEach((tagItem) => {
+          comments?.forEach((comment) => {
+            comment.tags?.forEach((tagItem) => {
               const { tag } = tagItem;
               if (tag?.type === 'language' && !languages.includes(tag.label)) {
                 languages.push(tag.label)
@@ -116,9 +136,9 @@ export const getUserCollectionsById = async (id) => {
         return {
           ...collection,
           collectionData: {
-            ...collectionData,
-            commentsCount: comments.length,
-            source: get(comments, '[0].source.name', null),
+            ...collection.collectionData,
+            commentsCount: comments?.length,
+            source: source?.name,
             languages,
             guides,
             comments: undefined,
@@ -176,28 +196,61 @@ export const toggleActiveCollection = async (userId, collectionId) => {
     if (user) {
       const { collections } = user;
       const newCollections = collections.map((item) => {
-        if (item.collectionData._id.equals(collectionId)) {
+        if (item?.collectionData?._id?.equals(collectionId)) {
           return {
-            collectionData: new ObjectId(item.collectionData._id),
+            collectionData: new ObjectId(item?.collectionData?._id),
             isActive: !item.isActive,
           }
         }
         return {
-          collectionData: new ObjectId(item.collectionData._id),
+          collectionData: new ObjectId(item?.collectionData?._id),
           isActive: item.isActive,
         };
       });
-      const newUserData = await updateUser(userId, {collections: newCollections});
+      await updateUser(userId, {collections: newCollections});
+      const newUser = await findUserById(userId);
       return {
         status: 200,
         message: "User updated!",
-        user: newUserData,
+        user: newUser,
       };
     }
     return {
       status: 400,
       message: "User not found.",
       user: null,
+    };
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
+export const toggleTeamsActiveCollection = async (teamId, collectionId) => {
+  try {
+    const team = await findTeamById(teamId);
+    if (team) {
+      const { collections } = team;
+      const newCollections = collections.map((item) => {
+        const isNeedUpdate = item?.collectionData?._id?.equals(collectionId);
+        return {
+          collectionData: new ObjectId(item?.collectionData?._id),
+          isActive: isNeedUpdate ? !item.isActive : item.isActive,
+        }
+      });
+      await updateTeam({...team, collections: newCollections});
+      const newTeam = await findTeamById(teamId);
+      return {
+        status: 200,
+        message: "Team has been updated!",
+        team: newTeam,
+      };
+    }
+    return {
+      status: 400,
+      message: "Team not found.",
+      team: null,
     };
   } catch (err) {
     logger.error(err);
@@ -224,6 +277,7 @@ export const createUserCollection = async (username) => {
       description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
       author: username,
       isActive: true,
+      type: COLLECTION_TYPE.PERSONAL,
       comments: [],
     };
     const userCollection = await create(defaultCollection);
@@ -235,7 +289,31 @@ export const createUserCollection = async (username) => {
   }
 };
 
-export const isEditAllowed = async (user, collectionId) => {
-  const collection = await Collection.findById(collectionId);
-  return collection && (user.isSemaAdmin || collection.name.toLowerCase() === 'my snippets' || collection.name.toLowerCase() === 'custom snippets');
+export const createTeamCollection = async (team) => {
+  try {
+    const collection = {
+      name: `${team.name}'s Snippets`,
+      description: '',
+      author: team.name,
+      isActive: true,
+      type: COLLECTION_TYPE.TEAM,
+      comments: [],
+    };
+    return await create(collection);
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getCollectionMetadata = async (id) => {
+  try {
+    const collection = await Collection.findById(id).select({ name: 1, description: 1, type: 1}).lean().exec();
+    return collection;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
 };

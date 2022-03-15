@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .sidebar {
   width: 200px;
   min-width: 200px;
@@ -5,7 +7,7 @@
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  display: block; 
+  display: block;
   // max-width: 200px;
 }
 
@@ -22,9 +24,8 @@
 }
 
 .menu-item {
-  padding: 7px 10px;
   font-size: 14px;
-  color: #828282;
+  color: $gray-600;
   text-decoration: none;
   // &:hover, &:focus {
   //   background: #3f2852;
@@ -34,8 +35,9 @@
 
 .active {
   // background: #3f2852;
-  color: #0081A7;
+  color: $blue-700;
   outline: none;
+  border-bottom: 2px solid $blue-700;
 }
 
 .bottom {

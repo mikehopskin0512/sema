@@ -1,3 +1,4 @@
+import path from "path";
 import { hooks } from "./src/support/hooks";
 
 //const fs = require("fs");
@@ -88,8 +89,7 @@ export const config: WebdriverIO.Config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl:
-    process.env.BASE_URL || "https://app-staging.semasoftware.com/dashboard",
+  baseUrl:  process.env.BASE_URL || "https://app-staging.semasoftware.com/dashboard",
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 100000,
@@ -106,7 +106,7 @@ export const config: WebdriverIO.Config = {
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
   services: ["chromedriver"],
-
+  //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -138,8 +138,12 @@ export const config: WebdriverIO.Config = {
   //     }
   //     ]
   // ],
-  reporters: [["allure", { outputDir: "allure-results" }]],
-
+  reporters: [
+    ['allure', {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+    }]
+  ],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.
   cucumberOpts: {

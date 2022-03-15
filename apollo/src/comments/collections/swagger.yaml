@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: Collection's API
+  description: Collection of Snippets
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Collection:
+      properties:
+        _id:
+          type: string
+        type:
+          type: string
+        author:
+          type: string
+        comments:
+          items:
+            type: string
+          type: array
+        description:
+          type: string
+        isActive:
+          type: boolean
+        name:
+          type: string
+        source:
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+          type: object
+        tags:
+          items:
+            type: string
+          type: array
+        createdBy:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/comments/collections:
+    post:
+      summary: create a collection
+      operationId: createMany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                collection:
+                  $ref: '#/components/schemas/Collection'
+                teamId:
+                  type: string
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Collection'
+          description: created collectiom
+        400:
+          description: bad input parameter
+  /v1/comments/collections/{id}:
+    get:
+      summary: get collection by id
+      operationId: findById
+      parameters:
+        - in: path
+          name: id
+          description: collection id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+    put:
+      summary: update a collection
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          description: collection id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                collection:
+                  $ref: '#/components/schemas/Collection'
+                team:
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: updated collection
+        400:
+          description: bad input parameter
+  /v1/comments/collections/all:
+    get:
+      summary: get collections by user id and team id
+      operationId: getUserCollectionsById
+      parameters:
+        - in: query
+          name: teamId
+          description: team id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  collections:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        collection:
+                          $ref: '#/components/schemas/Collection'
+          description: array of collections
+        400:
+          description: bad input parameter
+  /v1/comments/collections/author/{author}:
+    get:
+      summary: get collections by author id
+      operationId: findByAuthor
+      parameters:
+        - in: query
+          name: author
+          description: author id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  collections:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        collection:
+                          $ref: '#/components/schemas/Collection'
+          description: array of collections
+        400:
+          description: bad input parameter

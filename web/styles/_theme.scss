@@ -22,18 +22,33 @@ $gray-dark: $gray-500;
 
 // Set custom colors
 $custom-colors: (
+  "red-50": $red-50,
+  "red-200": $red-200,
+  "red-500": $red-500,
+  "red-600": $red-600,
   "gray-100": $gray-100,
   "gray-200": $gray-200,
   "gray-300": $gray-300,
   "gray-400": $gray-400,
   "gray-500": $gray-500,
+  "gray-600": $gray-600,
   "gray-700": $gray-700,
+  "gray-800": $gray-800,
   "gray-900": $gray-900,
+  "green-500": $green-500,
+  "green-100": $green-100,
+  "green-600": $green-600,
   "black-900": $black-900,
   "black-950": $black-950,
-  "blue-600": $blue-600,
+  "blue-0": $blue-0,
+  "blue-50": $blue-50,
   "blue-300": $blue-300,
+  "blue-500": $blue-500,
+  "blue-600": $blue-600,
+  "blue-700": $blue-700,
   "white-50": $white-50,
+  "white-0": $white-0,
+  "error": $red-500,
 );
 
 // Set custom shades
@@ -41,7 +56,9 @@ $custom-shades: (
   "gray-light": $gray-light,
 );
 
+// set custom switch variables
 $switch-background: $gray-600;
+$switch-paddle-offset: 0.15rem;
 
 // Sizes
 $size-1: 3rem;
@@ -63,6 +80,7 @@ $spacing-values: (
   "neg5": -5px,
   "neg8": -8px,
   "neg10": -10px,
+  "neg12": -12px,
   "3": 3px,
   "4": 4px,
   "5": 5px,
@@ -75,6 +93,7 @@ $spacing-values: (
   "24": 24px,
   "25": 25px,
   "30": 30px,
+  "32": 32px,
   "35": 35px,
   "40": 40px,
   "50": 50px,
@@ -89,12 +108,26 @@ $spacing-values: (
   "150": 150px,
   "180": 180px,
   "200": 200px,
+  "210": 210px,
+  "220": 220px,
+  "230": 230px,
+  "240": 240px,
   "250": 250px,
+  "260": 260px,
+  "270": 270px,
   "300": 300px,
   "450": 450px,
 );
 
-$input-background-color: $gray-300;
+// input styles
+$input-background-color: $white-0;
+$input-border-color: $gray-500;
+$input-hover-border-color: $gray-700;
+$input-disabled-color: $gray-500;
+$input-disabled-border-color: $gray-500;
+$input-focus-border-color: $gray-700;
+$input-focus-box-shadow-size: 0;
+
 $family-sans-serif: "Inter", sans-serif;
 $family-monospace: sans-serif;
 
@@ -116,6 +149,7 @@ $badge-height: 30px;
 @import "../node_modules/react-datepicker/dist/react-datepicker.css";
 
 @import "@creativebulma/bulma-badge";
+@import "@creativebulma/bulma-tagsinput";
 
 // Additional SCSS files
 @import "./fonts";
@@ -126,4 +160,5 @@ $badge-height: 30px;
 @import "./toaster";
 @import "./transitions";
 @import "./helpers";
+@import "./tags_input";
 @import "./table";

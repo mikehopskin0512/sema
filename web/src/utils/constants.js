@@ -117,8 +117,15 @@ export const TAGS = [
 
 export const CIRCULAR_PACKING_COLORS = {
   POSITIVE: '#9FE1F5',
-  NEGATIVE: '#E8E8E8'
-}
+  NEGATIVE: '#E8E8E8',
+};
+
+export const COLLECTION_TYPE = {
+  COMMUNITY: 'community',
+  PERSONAL: 'personal',
+  TEAM: 'team',
+};
+
 
 export const DAYS_IN_WEEK = 7;
 export const DAYS_IN_MONTH = 30;
@@ -128,15 +135,30 @@ export const DEFAULT_AVATAR = '/img/default-avatar.jpg';
 
 export const GITHUB_URL = 'https://github.com';
 
-export const DEFAULT_COLLECTION_NAME = "my snippets";
+export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
-export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
+export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
+
+export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
+
+export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
+
+export const SEMA_APP_URL = 'https://app.semasoftware.com';
+
+export const SEMA_FAQ_SLUGS = {
+  LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
+  SUMMARIES: 'what-do-summaries-mean',
+  TEAM_INSIGHTS: 'team-insights-who-can-see-what',
+  MARKDOWN: 'whats-markdown-and-how-do-i-use-it',
+  SNIPPETS: 'what-are-snippets',
+  SNAPSHOTS: 'what-are-snapshots',
+};
 
 export const noContactUs = ['/login', '/register/[[...param]]'];
 
 export const SEARCH_CATEGORY_TITLES = {
-  COLLECTIONS: 'suggested snippets collections',
-  SNIPPETS: 'suggested snippets',
+  COLLECTIONS: 'snippets collections',
+  SNIPPETS: 'snippets',
 };
 
 export const FACEBOOK_VERIFICATION_META = {
@@ -147,24 +169,85 @@ export const FACEBOOK_VERIFICATION_META = {
 export const PATHS = {
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
-  SUGGESTED_SNIPPETS: {
-    _: '/suggested-snippets',
-    EDIT: '/suggested-snippets/edit',
-    ADD: '/suggested-snippets/add',
+  LABELS_MANAGEMENT: '/labels-management',
+  SNIPPETS: {
+    _: '/snippets',
+    EDIT: '/snippets/edit',
+    ADD: '/snippets/add',
   },
   INVITATIONS: '/invitations',
   PROFILE: '/profile',
   OVERVIEW: '/overview',
   REPO: '/repo',
+  REPOS: '/repos',
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAM: '/team',
+  TEAM: {
+    _: '/team',
+    EDIT: (id) => `/team/${id}/edit`,
+    ADD: '/team/add',
+    INVITE: (id) => `/team/${id}/invite`,
+  },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
   TEAMS: '/teams',
   REPORTS: '/reports',
+  SETTINGS: '/settings',
+  TEAM_CREATE: '/teams/add',
+  TEAM_INVITE: '/teams/invite',
+  SEMA_ADMIN: '/sema-admin',
+  PORTFOLIOS: '/portfolios',
+  IDENTITIES: '/api/identities/github',
+  TEAM_INSIGHTS: '/team-insights',
 };
 
-export const SEMA_TEAM_ADMIN_NAME = 'Sema Super Team';
+export const SUPPORT_VIDEO_LANGUAGES = [
+  {
+    value: 'english',
+    label: 'English',
+    url: 'https://www.youtube.com/embed/x6FoswLcqxE',
+  },
+  {
+    value: 'russian',
+    label: 'Russian',
+    url: 'https://www.youtube.com/embed/Q7ryQIm2eYY',
+  },
+];
+
+export const TEAM_MENU_HEADERS = [
+  {
+    name: 'Team Management',
+    path: `${PATHS.TEAM._}/[teamId]/edit`,
+  },
+];
+
+export const PROFILE_VIEW_MODE = {
+  INDIVIDUAL_VIEW: 'individual_view',
+  TEAM_VIEW: 'team_view',
+};
+
+export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
+export const NUM_PER_PAGE = 10;
+
+export const SEMA_ROLES = {
+  admin: 'Admin',
+  libraryEditor: 'Library Editor',
+  member: 'Member',
+};
+
+export const TAB = {
+  info: 'info',
+  management: 'management',
+  labels: 'labels',
+};
+
+export const TAG_TYPE = {
+  LANGUAGE: 'language',
+  GUIDE: 'guide',
+  CUSTOM: 'custom',
+};
+
+export const BAR_CHART_MIN_TOP = 132;
+export const CIRCLE_CHART_MIN_TOP = 275;

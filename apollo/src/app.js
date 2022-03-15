@@ -33,6 +33,8 @@ app.use(methodOverride());
 app.use(passport.initialize());
 app.disable('x-powered-by');
 
+app.use('/static', express.static('./uploads'));
+
 // Attach routes
 routes.attachRoutes(app, passport);
 
@@ -43,11 +45,11 @@ app.all('*', (req, res, next) => {
 
 app.use((error, req, res, next) => {
   // Sets HTTP status code
-  res.status(error.status || 500);
+  res.status(error.status || error.statusCode || 500);
 
   // Sends response
   res.json({
-    status: error.status,
+    status: error.status || error.statusCode,
     message: error.message,
     stack: error.stack,
   });

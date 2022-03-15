@@ -3,7 +3,7 @@ import {
 } from 'date-fns';
 import mongoose from 'mongoose';
 import * as Json2CSV from 'json2csv';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty, uniq, uniqBy } from 'lodash';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 import SmartComment from './smartCommentModel';
@@ -11,6 +11,7 @@ import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
 import { fullName } from '../../shared/utils';
+import { getTeamRepos } from '../../teams/teamService';
 
 const { Types: { ObjectId } } = mongoose;
 const { Parser } = Json2CSV;
@@ -58,7 +59,7 @@ export const getSmartComments = async ({ repo }) => {
   }
 };
 
-export const filterSmartComments = async ({ reviewer, author, repoId, startDate, endDate, user }) => {
+export const filterSmartComments = async ({ reviewer, author, repoIds, startDate, endDate, user, individual }) => {
   try {
     let filter = {}
     let dateFilter = { createdAt: {} }
@@ -68,10 +69,10 @@ export const filterSmartComments = async ({ reviewer, author, repoId, startDate,
     if (author) {
       filter = Object.assign(filter, { "githubMetadata.requester": author });
     }
-    if (repoId) {
-      filter = Object.assign(filter, { "githubMetadata.repo_id": repoId.toString() });
+    if (repoIds) {
+      filter = Object.assign(filter, { "githubMetadata.repo_id": { $in: repoIds } });
     }
-    if (user) {
+    if (user && individual === true) {
       filter = Object.assign(filter, { $or: [{ "githubMetadata.requester": user }, { "githubMetadata.user.login": user }] });
     }
     if (startDate) {
@@ -473,9 +474,10 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
     }
     const query = SmartComment.find(findQuery);
     if (populate) {
-      query.populate('userId').populate('tags');
+      query.populate({ select: ['firstName', 'lastName', 'avatarUrl'], path: 'userId' });
+      query.populate({ select: ['label'], path: 'tags' });
     }
-    const comments = await query.sort({ createdAt: -1 }).exec();
+    const comments = await query.sort({ createdAt: -1 }).lean();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -556,8 +558,8 @@ export const getSmartCommentsByExternalId = async (externalId) => {
 
 export const getPullRequestsByExternalId = async (externalId) => {
   try {
-    const smartComments = SmartComment.find({ 'githubMetadata.repo_id': externalId }).distinct('githubMetadata.url').exec();
-    return smartComments;
+    const pullRequests = await SmartComment.distinct('githubMetadata.pull_number', { 'githubMetadata.repo_id': externalId }).lean();
+    return pullRequests;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -576,9 +578,17 @@ export const getSmartCommentersByExternalId = async (externalId) => {
   }
 };
 
-export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoId, startDate, endDate, user }) => {
+export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds, startDate, endDate, user, teamId, individual }) => {
   try {
-    const filter = { reviewer, author, repoId, startDate, endDate, user };
+    const filter = { reviewer, author, repoIds, startDate, endDate, user, individual: typeof individual === 'string' ? JSON.parse(individual) : individual };
+
+    if(teamId) {
+      const teamRepos = await getTeamRepos (teamId);
+      filter.repoIds= teamRepos.map((repo) => {
+        return repo.externalId;
+      });
+    }
+
     const smartComments = await filterSmartComments(filter);
     const totalReactions = getTotalReactionsOfComments(smartComments);
     const totalTags = getTotalTagsOfComments(smartComments);
@@ -626,4 +636,12 @@ export const getTotalTagsOfComments = (smartComments = []) => {
       }
       return acc
     }, {})
+};
+
+export const _getSmartCommentersCount = (smartComments = []) => {
+  return uniqBy(smartComments, (item) => item.userId?.valueOf() || 0).length || 0;
+};
+
+export const _getPullRequests = (smartComments = []) => {
+  return uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
 };

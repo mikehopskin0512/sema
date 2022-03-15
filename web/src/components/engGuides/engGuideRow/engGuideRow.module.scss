@@ -1,5 +1,7 @@
+@import "../../../../styles/_colors.module.scss";
+
 .tag {
-  background: #d7ebf1 !important;
+  background: $blue-50 !important;
 }
 
 .document {

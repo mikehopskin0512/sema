@@ -7,15 +7,13 @@
     "test:lint": "eslint 'src/**/*.ts' 'test/**/*.js!(setup.js)'",
     "test:unit": "jest --config=jest.config.js --detectOpenHandles",
     "test:features": "wdio run wdio.BUILD.conf.ts",
-    "wdio": "wdio run wdio.conf.ts",
-    "wdio-bs": "wdio run wdio.conf-bs.ts"
+    "wdio": "wdio run wdio.conf.ts"
   },
   "devDependencies": {
     "@types/jest": "^26.0.21",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "@wdio/allure-reporter": "^7.16.13",
-    "@wdio/browserstack-service": "^7.17.4",
     "@wdio/cli": "^7.2.3",
     "@wdio/config": "^7.2.1",
     "@wdio/cucumber-framework": "^7.2.1",

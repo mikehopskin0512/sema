@@ -13,8 +13,8 @@ $ npm start
 # project will be available on http://localhost:3001
 # files will automatically rebuild and refresh the browser as you make changes
 # in a separate terminal, run db migrations
-$ migrate down
-$ migrate up
+$ migrate-mongo down
+$ migrate-mongo up
 ```
 
 ### Directory Layout

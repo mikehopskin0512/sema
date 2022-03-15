@@ -1,7 +1,9 @@
+@import "../../../styles/_colors.module.scss";
+
 .language {
-  background: #CDEFF9 !important;
+  background: $blue-50 !important;
 }
 
 .guide {
-  background: #E3E9EE !important;
+  background: $gray-300 !important;
 }

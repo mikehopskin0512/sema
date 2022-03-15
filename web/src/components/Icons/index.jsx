@@ -30,6 +30,7 @@ import { ReactComponent as CustomerSvg } from './img/customer.svg';
 import { ReactComponent as DeleteSvg } from './img/delete.svg';
 import { ReactComponent as DeveloperSvg } from './img/developer.svg';
 import { ReactComponent as DotSvg } from './img/dot.svg';
+import { ReactComponent as DotsSvg } from './img/dots.svg';
 import { ReactComponent as DownloadSvg } from './img/download.svg';
 import { ReactComponent as DuplicateSvg } from './img/duplicate.svg';
 import { ReactComponent as EditSvg } from './img/edit.svg';
@@ -53,15 +54,12 @@ import { ReactComponent as LoadingGreenSvg } from './img/loading-green.svg';
 import { ReactComponent as LoadingRedSvg } from './img/loading-red.svg';
 import { ReactComponent as MailSvg } from './img/mail.svg';
 import { ReactComponent as MinusSvg } from './img/minus.svg';
-import { ReactComponent as NoReactionSvg } from './img/no-reaction.svg';
-import { ReactComponent as OkSvg } from './img/ok.svg';
 import { ReactComponent as OptionsSvg } from './img/options.svg';
 import { ReactComponent as OverviewSvg } from './img/overview.svg';
 import { ReactComponent as PhotoSvg } from './img/photo.svg';
 import { ReactComponent as PlaySvg } from './img/play.svg';
 import { ReactComponent as PlusSvg } from './img/plus.svg';
 import { ReactComponent as ProductSvg } from './img/product.svg';
-import { ReactComponent as QuestionSvg } from './img/question.svg';
 import { ReactComponent as RefreshSvg } from './img/refresh.svg';
 import { ReactComponent as ResendSvg } from './img/resend.svg';
 import { ReactComponent as SaveSvg } from './img/save.svg';
@@ -74,9 +72,7 @@ import { ReactComponent as SourceSvg } from './img/source.svg';
 import { ReactComponent as StarFilledSvg } from './img/star-filled.svg';
 import { ReactComponent as StarOutlineSvg } from './img/star-outline.svg';
 import { ReactComponent as SwipeSvg } from './img/swipe.svg';
-import { ReactComponent as ToolSvg } from './img/tool.svg';
 import { ReactComponent as TrashSvg } from './img/trash.svg';
-import { ReactComponent as TrophySvg } from './img/trophy.svg';
 import { ReactComponent as TwitterSvg } from './img/twitter.svg';
 import { ReactComponent as UndoSvg } from './img/undo.svg';
 import { ReactComponent as UploadSvg } from './img/upload.svg';
@@ -84,9 +80,16 @@ import { ReactComponent as VerifiedFilledSvg } from './img/verified-filled.svg';
 import { ReactComponent as VerifiedOutlineSvg } from './img/verified-outline.svg';
 import { ReactComponent as WarningFilledSvg } from './img/warning-filled.svg';
 import { ReactComponent as WarningOutlineSvg } from './img/warning-outline.svg';
+import { ReactComponent as CameraSvg } from './img/camera.svg';
+import { ReactComponent as TeamSvg } from './img/team.svg';
+import { ReactComponent as TagSvg } from './img/tag.svg';
+import { ReactComponent as InviteSvg } from './img/invite.svg';
 
-const Icon = ({ size = 'medium', color = 'currentColor', style, children }) => {
+const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
+
+const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...props }) => {
   const sizes = {
+    tiny: '8px',
     small: '16px',
     medium: '24px',
     large: '32px',
@@ -97,12 +100,19 @@ const Icon = ({ size = 'medium', color = 'currentColor', style, children }) => {
     height: sizes[size],
     color,
     style,
+    ...props,
   });
 };
 
 export const ActivityLogIcon = (props) => (
   <Icon {...props}>
     <ActivityLogSvg />
+  </Icon>
+);
+
+export const CameraIcon = (props) => (
+  <Icon {...props}>
+    <CameraSvg />
   </Icon>
 );
 
@@ -136,7 +146,7 @@ export const ArrowDownIcon = (props) => (
   </Icon>
 );
 
-export const ArrowDrowdownIcon = (props) => (
+export const ArrowDropdownIcon = (props) => (
   <Icon {...props}>
     <ArrowDrowdownSvg />
   </Icon>
@@ -292,6 +302,12 @@ export const DotIcon = (props) => (
   </Icon>
 );
 
+export const DotsIcon = (props) => (
+  <Icon {...props}>
+    <DotsSvg />
+  </Icon>
+);
+
 export const DownloadIcon = (props) => (
   <Icon {...props}>
     <DownloadSvg />
@@ -443,13 +459,13 @@ export const MinusIcon = (props) => (
 
 export const NoReactionIcon = (props) => (
   <Icon {...props}>
-    <NoReactionSvg />
+    <img src={getIconUrl('noreaction')} alt="no reaction icon" />
   </Icon>
 );
 
 export const OkIcon = (props) => (
   <Icon {...props}>
-    <OkSvg />
+    <img src={getIconUrl('ok')} alt="ok icon" />
   </Icon>
 );
 
@@ -482,7 +498,7 @@ export const ProductIcon = (props) => (
 );
 export const QuestionIcon = (props) => (
   <Icon {...props}>
-    <QuestionSvg />
+    <img src={getIconUrl('question')} alt="question icon" />
   </Icon>
 );
 
@@ -547,7 +563,7 @@ export const SwipeIcon = (props) => (
 
 export const ToolIcon = (props) => (
   <Icon {...props}>
-    <ToolSvg />
+    <img src={getIconUrl('tool')} alt="fix icon" />
   </Icon>
 );
 
@@ -559,7 +575,7 @@ export const TrashIcon = (props) => (
 
 export const TrophyIcon = (props) => (
   <Icon {...props}>
-    <TrophySvg />
+    <img src={getIconUrl('trophy')} alt="trophy" />
   </Icon>
 );
 
@@ -603,5 +619,23 @@ export const WarningOutlineIcon = (props) => (
 export const StarOutlineIcon = (props) => (
   <Icon {...props}>
     <StarOutlineSvg />
+  </Icon>
+);
+
+export const TeamIcon = (props) => (
+  <Icon {...props}>
+    <TeamSvg />
+  </Icon>
+);
+
+export const TagIcon = (props) => (
+  <Icon {...props}>
+    <TagSvg />
+  </Icon>
+);
+
+export const InviteIcon = (props) => (
+  <Icon {...props}>
+    <InviteSvg />
   </Icon>
 );

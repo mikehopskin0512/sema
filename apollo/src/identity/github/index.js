@@ -1,15 +1,24 @@
 import { Router } from 'express';
 import querystring from 'querystring';
+import { createOAuthAppAuth } from '@octokit/auth';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
-import { createOAuthAppAuth } from '@octokit/auth';
 import { github, orgDomain, version } from '../../config';
 import { getProfile, getUserEmails, getRepositoryList } from './utils';
-import { create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser } from '../../users/userService';
+import {
+  create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser,
+} from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
-import { findByToken, redeemInvite } from '../../invitations/invitationService';
+import { checkIfInvitedByToken, deleteInvitation } from '../../invitations/invitationService';
+import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
+import checkEnv from '../../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app) => {
@@ -92,6 +101,13 @@ export default (app) => {
         // Auth Sema
         await setRefreshToken(res, tokenData, await createRefreshToken(tokenData));
 
+        // Join the user to the selected team
+        if (inviteToken) {
+          const invitation = await checkIfInvitedByToken(inviteToken);
+          await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
+          await deleteInvitation(invitation._id);
+        }
+        
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
@@ -108,8 +124,11 @@ export default (app) => {
 
       return res.redirect(registerRedirect);
     } catch (error) {
-      console.log("Error ", error);
+      console.log('Error ', error);
     }
     return res.redirect(`${orgDomain}/dashboard`);
   });
+
+  // Swagger route
+  app.use(`/${version}/identities/github-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

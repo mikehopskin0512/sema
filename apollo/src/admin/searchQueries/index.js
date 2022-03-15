@@ -1,10 +1,16 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
 
-import {exportSearchQueries, getLastQueries} from './searchQueryService';
+import { exportSearchQueries, getLastQueries } from './searchQueryService';
+import checkEnv from '../../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -21,7 +27,7 @@ export default (app, passport) => {
 
       return res.status(200).json({
         totalCount,
-        queries
+        queries,
       });
     } catch (err) {
       const error = new errors.InternalServer(err);
@@ -44,4 +50,7 @@ export default (app, passport) => {
       throw error;
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/admin/search-queries-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

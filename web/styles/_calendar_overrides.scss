@@ -1,3 +1,4 @@
+@import "./_colors.module.scss";
 @import './theme';
 
 .DateRangePicker_picker {
@@ -13,7 +14,7 @@
 
 // Will edit everything selected including everything between a range of dates
 .CalendarDay__selected_span {
-  background: #F8F7FA !important; //background
+  background: $white-50 !important; //background
   color: $primary !important; //text
   font-weight: bold;
   border: none !important; //default styles include a border
@@ -35,7 +36,7 @@
 // is not yet selected. Edits the dates between your mouse and said date
 .CalendarDay__hovered_span:hover,
 .CalendarDay__hovered_span {
-  background: #F8F7FA !important;
+  background: $white-50 !important;
 }
 
 .DateInput {
@@ -49,7 +50,7 @@
 }
 
 .DateInput_input__focused {
-  background: #F8F7FA !important;
+  background: $white-50 !important;
   border-bottom: 2px solid $primary !important;
   color: $primary !important;
 }
@@ -63,5 +64,5 @@
 }
 
 .DayPicker_wrapper__horizontal, .DayPicker_wrapper__horizontal_1 {
-  border-left: 1px solid #EEEDF0 !important;
+  border-left: 1px solid $gray-200 !important;
 }

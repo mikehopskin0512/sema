@@ -1,4 +1,4 @@
-import { oneOf } from 'prop-types';
+import { any, objectOf, oneOf } from 'prop-types';
 import React from 'react';
 import { ReactComponent as HorizontalLightSvg } from './img/logo-horizontal-light.svg';
 import { ReactComponent as PillLightSvg } from './img/logo-pill-light.svg';
@@ -26,8 +26,8 @@ const logos = {
 
 const Logo = (
   {
-    shape,
-    theme,
+    shape = 'symbol',
+    theme = 'light',
     width,
     height,
     style,
@@ -43,17 +43,12 @@ const Logo = (
   );
 };
 
-Logo.defaultProps = {
-  shape: 'symbol',
-  theme: 'light',
-};
-
 Logo.propTypes = {
   shape: oneOf(['horizontal', 'pill', 'square', 'symbol']),
   theme: oneOf(['light', 'dark']),
   width: Number,
   height: Number,
-  style: Object,
+  style: objectOf(any),
 };
 
 export default Logo;

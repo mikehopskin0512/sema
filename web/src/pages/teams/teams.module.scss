@@ -1,14 +1,16 @@
+@import "../../../styles/_colors.module.scss";
+
 .tag {
-  background-color: #CDEFF9 !important;
-  color: #0081A7 !important;
+  background-color: $white-50 !important;
+  color: $blue-700 !important;
 }
 
 .notification {
   display: flex;
   align-items: center;
-  background-color: #CADCEE;
-  border: 1px solid #2D74B9;
-  color: black;
+  background-color: $white-50;
+  border: 1px solid $blue-600;
+  color: $black-950;
   border-radius: 5px;
 }
 
@@ -20,4 +22,9 @@
 
 .status {
   min-width: 150px;
+  max-width: 250px;
+}
+
+.form-input {
+  max-width: 500px;
 }

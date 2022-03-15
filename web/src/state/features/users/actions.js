@@ -126,11 +126,11 @@ export const updateStatus = (params = {}, token) => async (dispatch) => {
   }
 };
 
-export const updateUser = (id, params = {}) => async (dispatch) => {
+export const updateUser = (id, params = {}, fetchUserParams = {}) => async (dispatch) => {
   try {
     dispatch(requestUpdateUser());
     await patchUser(id, params);
-    dispatch(fetchUsers());
+    dispatch(fetchUsers(fetchUserParams));
     dispatch(requestUpdateUserSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;

@@ -1,32 +1,63 @@
 import { useSelector } from 'react-redux';
-import { DEFAULT_COLLECTION_NAME } from '../utils/constants';
+import { SEMA_CORPORATE_TEAM_ID, PROFILE_VIEW_MODE, SEMA_ROLES } from '../utils/constants';
 
 function usePermission() {
-  const { user } = useSelector((state) => (state.authState));
-  const { collectionState: { collection } } = useSelector((state) => ({
-    collectionState: state.commentsState,
-  }));
+  const { selectedTeam, profileViewMode } = useSelector((state) => (state.authState));
 
-  const checkAccess = (team, permission) => {
-    // TODO this will be replaced with more team comparison here in the future
-    if (collection?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME) {
-      return true;
-    }
-
-    const role = user?.roles?.find((item) => item.role && item.role[permission] && item?.team?.name === team.name);
-
+  const checkAccess = (teamId, permission) => {
+    // need to check first if current view mode is Team view
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    const role = selectedTeam?.role?.[permission] && selectedTeam?.team?._id == teamId;
     return !!role;
   };
 
-  const checkTeam = (name) => {
-    const role = user?.roles?.find((item) => item.team && item.team.name && item.team.name === name);
+  const checkTeamPermission = (permission) => {
+    // need to check first if current view mode is Team view
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    return !!selectedTeam?.role[permission];
+  };
 
+  const checkTeam = (teamId) => {
+    // need to check first if current view mode is Team view
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    const role = selectedTeam?.team?._id == teamId;
     return !!role;
   };
+
+  const isSemaAdmin = () => {
+    // need to check first if current view mode is Sema Corporate Team
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    const semaAdminRole = selectedTeam?.team?._id == SEMA_CORPORATE_TEAM_ID && selectedTeam?.role?.name === SEMA_ROLES.admin;
+    return !!semaAdminRole;
+  }
+
+  const isTeamAdmin = () => {
+    // need to check first if current view mode is Sema Corporate Team
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    const teamAdminRole = selectedTeam?.role?.name === SEMA_ROLES.admin;
+    return !!teamAdminRole;
+  }
+
+  const IsTeamLibraryEditor = () => {
+    // need to check first if current view mode is Sema Corporate Team
+    if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedTeam) return false;
+    const libraryEditor = selectedTeam?.role?.name === SEMA_ROLES.libraryEditor;
+    return !!libraryEditor;
+  }
+
+  const isTeamAdminOrLibraryEditor = () => {
+    const adminOrEditor = isTeamAdmin() || IsTeamLibraryEditor();
+    return !!adminOrEditor;
+  }
 
   return {
     checkAccess,
+    checkTeamPermission,
     checkTeam,
+    isSemaAdmin,
+    isTeamAdmin,
+    IsTeamLibraryEditor,
+    isTeamAdminOrLibraryEditor,
   };
 }
 

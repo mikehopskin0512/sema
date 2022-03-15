@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+import Link from 'next/link';
 import styles from './profile.module.scss';
 import withLayout from '../../components/layout';
 import EditModal from '../../components/profile/editModal';
 import Helmet, { ProfileHelmet } from '../../components/utils/Helmet';
 import { EditIcon, GithubIcon, RefreshIcon } from '../../components/Icons';
+import { PATHS } from '../../utils/constants';
 
 const Profile = () => {
   const auth = useSelector((state) => state.authState);
@@ -14,18 +16,14 @@ const Profile = () => {
   const onClose = () => setEditModalIsOpen(false);
 
   const { user: {
-    firstName,
-    lastName,
+    firstName = '',
+    lastName = '',
     username,
     avatarUrl,
     identities = [{
       username: '',
     }],
   } } = auth;
-
-  const onClickRefresh = () => {
-    window.location.href = '/api/identities/github';
-  };
 
   return (
     <div>
@@ -59,15 +57,17 @@ const Profile = () => {
             <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center is-flex-wrap-wrap', styles.social)}>
               <div className="is-flex is-align-items-center">
                 <GithubIcon size="large" />
-                <p className="has-text-weight-bold is-size-6 has-text-black-950 ml-8 mr-15">Github</p>
+                <p className="has-text-weight-bold is-size-6 has-text-black-950 ml-8 mr-15">GitHub</p>
                 <p className="is-size-6 has-text-black">{identities[0].username}</p>
               </div>
-              <button className="button is-white is-size-7 has-text-black" type="button" onClick={onClickRefresh}>
-                <RefreshIcon size="small" />
-                <span className="ml-8">
-                  Refresh
-                </span>
-              </button>
+              <Link href={PATHS.IDENTITIES}>
+                <button className="button is-white is-size-7 has-text-black" type="button">
+                  <RefreshIcon size="small" />
+                  <span className="ml-8">
+                    Refresh
+                  </span>
+                </button>
+              </Link>
             </div>
             <div>
               <div className={clsx('is-flex p-25 is-justify-content-space-between is-align-items-center', styles.social, styles.upcoming)}>

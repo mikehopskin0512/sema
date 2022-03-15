@@ -8,7 +8,7 @@ import carouselData from './data';
 
 const Carousel = () => {
   const [current, setCurrent] = useState(0);
-  const [screens] = useState(['Reactions', 'Tags', 'Suggested Snippets', 'Developer Insights', 'Social Graph']);
+  const [screens] = useState(['Summaries', 'Tags', 'Snippets', 'Developer Insights', 'Social Graph']);
   const buttonProps = (index) => ({
     onClick: () => setCurrent(index),
     className: clsx('is-uppercase is-size-5 has-text-weight-semibold tab mx-25', current === index ? clsx('has-text-primary', styles['is-active']) : clsx('is-ghost has-text-black', styles['is-inactive'])),
@@ -29,7 +29,7 @@ const Carousel = () => {
         <ul className="is-hidden-mobile">
           <li>
             <a {...buttonProps(0)}>
-              Reactions
+              Summaries
             </a>
           </li>
           <li>
@@ -39,7 +39,7 @@ const Carousel = () => {
           </li>
           <li>
             <a {...buttonProps(2)}>
-              Suggested Snippets
+              Snippets
             </a>
           </li>
           <li>
@@ -96,7 +96,7 @@ const TileAncestor = ({ children, active, className }) => (
   <>
     {/* <div className={clsx('tile is-ancestor mt-50', active ? 'slid active' : 'slid')}> */}
     {/* Desktop View */}
-    <div className={`tile is-ancestor mt-50 slide is-hidden-mobile ${active ? 'active' : ''}`}>
+    <div className={`tile is-ancestor mt-50 slide is-hidden-touch ${active ? 'active' : ''}`}>
       {children}
     </div>
     {/* Mobile View */}
@@ -110,22 +110,22 @@ const Reactions = ({ current }) => (
   <>
     <TileAncestor active={current === 0}>
       {/* Desktop View */}
-      <div className="tile is-horizontal is-12 is-hidden-mobile">
+      <div className="tile is-horizontal is-12 is-hidden-touch">
         <div className="tile is-1" />
         <div className="tile is-4 is-parent is-vertical mt-70 pl-70">
-          <p className="title">Reactions</p>
+          <p className="title">Summaries</p>
           <p className="subtitle">Provide a simple, clear summary of the review -- if you want to.</p>
         </div>
         <div className="tile is-7">
-          <img src={carouselData[0]} alt="reactions" />
+          <img src={carouselData[0]} alt="summaries" />
         </div>
       </div>
       {/* Mobile View */}
       <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
-        <p className="is-size-5-mobile has-text-weight-semibold">Reactions</p>
+        <p className="is-size-5-mobile has-text-weight-semibold">Summaries</p>
         <p className="is-size-6-mobile">Provide a simple, clear summary of the review -- if you want to.</p>
         <figure className="image is-4by3 mt-20">
-          <img src={carouselData[0]} alt="reactions" className={styles['mobile-img']} />
+          <img src={carouselData[0]} alt="summaries" className={styles['mobile-img']} />
         </figure>
       </div>
     </TileAncestor>
@@ -136,7 +136,7 @@ const Tags = ({ current }) => (
   <>
     <TileAncestor active={current == 1}>
       {/* Desktop View */}
-      <div className="tile is-horizontal is-12 is-hidden-mobile">
+      <div className="tile is-horizontal is-12 is-hidden-touch">
         <div className="tile is-1" />
         <div className="tile is-7">
           <img src={carouselData[1]} alt="tags" className="" />
@@ -165,19 +165,19 @@ const SuggestedComments = ({ current }) => (
       <div className="tile is-horizontal is-12 is-hidden-mobile">
         <div className="tile is-1" />
         <div className="tile is-5 is-parent is-vertical mt-70 pr-20">
-          <p className="title">Suggested Snippets</p>
+          <p className="title">Snippets</p>
           <p className="subtitle">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity. </p>
         </div>
         <div className="tile is-6">
-          <img src={carouselData[2]} alt="suggested-snippets" className="" />
+          <img src={carouselData[2]} alt="snippets" className="" />
         </div>
       </div>
       {/* Mobile View */}
       <div className="is-hidden-desktop is-flex is-flex-direction-column px-50">
-        <p className="is-size-5-mobile has-text-weight-semibold">Suggested Snippets</p>
+        <p className="is-size-5-mobile has-text-weight-semibold">Snippets</p>
         <p className="is-size-6-mobile">Use pre-written comments from some of the world’s best sources of coding knowledge -- to save time and improve clarity.</p>
         <figure className="image is-4by3 mt-20">
-          <img src={carouselData[2]} alt="suggested-snippets" className={styles['mobile-img']} />
+          <img src={carouselData[2]} alt="snippets" className={styles['mobile-img']} />
         </figure>
       </div>
     </TileAncestor>

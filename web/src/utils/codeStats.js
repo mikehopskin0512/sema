@@ -1,4 +1,4 @@
-import { 
+import {
   format,
   eachWeekOfInterval,
   eachMonthOfInterval,
@@ -10,9 +10,41 @@ import {
   addMonths,
   addYears,
   startOfWeek,
+  endOfDay,
+  startOfDay,
 } from 'date-fns';
 import { findIndex } from 'lodash';
 import { EMOJIS, TAGS } from './constants';
+
+const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
+  const endOfMonth = {
+    true: format(endDay, 'MMM dd'),
+    false: endWeekDay
+  }
+  return endOfMonth[format(startDay, 'MMM') !== format(endDay, 'MMM')];
+}
+
+const mergeTwoData = (reactions, type) => {
+  let chart = [];
+  reactions.reduce((previousValue, currentValue, currentIndex) => {
+    if (currentIndex % 2) {
+      const item = {
+        ...type == 'd' && {date: `${currentValue.date}-${format(new Date(previousValue.date), 'dd')}`},
+        ...type == 'm' && {date: `${currentValue.date}/${previousValue.date}`},
+        ...type == 'w' && {date: `${currentValue.date.split(" ")[0]} ${currentValue.date.split(" ")[1].split("-")[0]}-${previousValue.date.split("-")[1]}`}
+      };
+      EMOJIS.forEach((emoji) => {
+        item[emoji._id] = {
+          current: currentValue[emoji._id].current + previousValue[emoji._id].current,
+          previous: currentValue[emoji._id].previous + previousValue[emoji._id].previous,
+        };
+      });
+      chart.push(item);
+    }
+    return currentValue;
+  });
+  return chart;
+}
 
 export const generateChartDataByDays = (smartcomments, diff, startDate, endDate) => {
   let reactionsByDay = [];
@@ -21,9 +53,9 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   const countedDays = diff + 1;
   // Create Array of data for the BarChart
   while (day < countedDays) {
-    const thisDay = subDays(new Date(endDate), day);
+    const thisDay = subDays(endOfDay(new Date(endDate)), day);
     const item = {
-      date: format(thisDay, 'MM/dd')
+      date: format(thisDay, 'MMM dd')
     };
     // Set Reaction Ids as object keys
     EMOJIS.forEach((reaction) => {
@@ -34,38 +66,43 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     });
     reactionsByDay.push(item);
     tagsArr.push({
-        x: format(thisDay, 'MM/dd'),
+        x: format(thisDay, 'MMM dd'),
         y: 0,
     });
     day += 1;
   }
   const tagsByDay = createTags(tagsArr);
-  const {
+  let {
     reactions,
     tags
   } = parseTagsAndReactions(
     smartcomments,
-    "MM/dd",
+    "MMM dd",
     reactionsByDay,
     tagsByDay,
     startDate,
     endDate,
   );
+  if (diff > 6) {
+    reactions = mergeTwoData(reactions, 'd');
+  }
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   const weeks = eachWeekOfInterval({
-    start: new Date(startDate),
-    end: new Date(endDate)
+    start: startOfDay(new Date(startDate)),
+    end: endOfDay(new Date(endDate)),
   });
   let reactionsByWeek = [];
   const tagsArr = [];
-  const weekRange = weeks.map((week, index) => {
+  let weekRange = [];
+  weekRange = weeks.map((week, index) => {
     const startDay = new Date(week);
     const endDay = endOfWeek(new Date(week));
-    const startWeekDay = format(startDay, 'MM/dd');
-    const endWeekDay = format(endDay, 'MM/dd');
+    const startWeekDay = format(startDay, 'MMM dd');
+    let endWeekDay = format(endDay, 'dd');
+    endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
     const item = {
       date: `${startWeekDay}-${endWeekDay}`,
     };
@@ -87,20 +124,21 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       endDay
     };
   });
+
   const tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
   const filteredComments = smartcomments.filter((comment) => isWithinInterval(
     new Date(comment.createdAt),
     {
-      start: new Date(startDate),
-      end: new Date(endDate)
+      start: startOfDay(new Date(startDate)),
+      end: endOfDay(new Date(endDate)),
     }
   ));
   const outOfRangeComments = smartcomments.filter((comment) => !isWithinInterval(
     new Date(comment.createdAt),
     {
-      start: new Date(startDate),
-      end: new Date(endDate)
+      start: startOfDay(new Date(startDate)),
+      end: endOfDay(new Date(endDate)),
     }
   ));
   // Count reactions and tags within time range
@@ -114,7 +152,7 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[reactionIndex][comment.reaction].current += 1;
     }
     comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tagsByWeek[tag._id].data, { date: weekRange[itemRange]?.date });
+      const tagsIndex = findIndex(tagsByWeek[tag._id]?.data, { date: weekRange[itemRange]?.date });
       if (tagsIndex > -1) {
         tagsByWeek[tag._id].total += 1;
         const tagData = tagsByWeek[tag._id].data[tagsIndex];
@@ -135,13 +173,17 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[index][comment.reaction].previous += 1;
     }
   });
+
+  if (weeks.length > 13) {
+    reactionsByWeek = mergeTwoData(reactionsByWeek, 'w');
+  }
   return { reactionsByWeek, tagsByWeek };
 }
 
 export const generateChartDataByMonths = (smartcomments, startDate, endDate) => {
   const months = eachMonthOfInterval({
-    start: new Date(startDate),
-    end: new Date(endDate)
+    start: startOfDay(new Date(startDate)),
+    end: endOfDay(new Date(endDate)),
   });
   let reactionsByMonth = [];
   const tagsArr = [];
@@ -164,7 +206,7 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
   });
   // Set TagId as object keys
   const tagsByMonth = createTags(tagsArr);
-  const {
+  let {
     reactions,
     tags
   } = parseTagsAndReactions(
@@ -174,14 +216,15 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
     tagsByMonth,
     startDate,
     endDate,
-  )
+    )
+  reactions = mergeTwoData(reactions, 'm');
   return { reactionsByMonth: reactions, tagsByMonth: tags };
 }
 
 export const generateChartDataByYears = (smartcomments, startDate, endDate) => {
   const years = eachYearOfInterval({
-    start: new Date(startDate),
-    end: new Date(endDate)
+    start: startOfDay(new Date(startDate)),
+    end: endOfDay(new Date(endDate)),
   });
   let reactionsByYear = [];
   const tagsArr = [];
@@ -280,15 +323,15 @@ const parseTagsAndReactions = (
   const filteredComments = smartComments.filter((comment) => isWithinInterval(
     new Date(comment.createdAt),
     {
-      start: new Date(startDate),
-      end: new Date(endDate)
+      start: startOfDay(new Date(startDate)),
+      end: endOfDay(new Date(endDate)),
     }
   ));
   const outOfRangeComments = smartComments.filter((comment) => !isWithinInterval(
     new Date(comment.createdAt),
     {
-      start: new Date(startDate),
-      end: new Date(endDate)
+      start: startOfDay(new Date(startDate)),
+      end: endOfDay(new Date(endDate)),
     }
   ));
   // Count reactions and tags within the time range
@@ -299,7 +342,7 @@ const parseTagsAndReactions = (
       reactionsArr[reactionIndex][comment.reaction].current += 1;
     }
     comment.tags.forEach((tag) => {
-      const tagsIndex = findIndex(tags[tag._id].data, { x: formattedDate });
+      const tagsIndex = findIndex(tags[tag._id]?.data, { x: formattedDate });
       if (tagsIndex > -1) {
         tags[tag._id].total += 1;
         const tagData = tags[tag._id].data[tagsIndex];

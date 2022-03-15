@@ -1,8 +1,10 @@
+@import "../../../styles/_colors.module.scss";
+
 .tag {
-  background: #d7ebf1 !important;
+  background: $white-50 !important;
 }
 
 .body-container {
-  border: 1px solid #E3E9EE;
+  border: 1px solid $gray-100;
   box-sizing: border-box;
 }

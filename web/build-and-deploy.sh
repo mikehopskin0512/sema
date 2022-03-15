@@ -28,6 +28,11 @@ aws configure set default.region "${AWS_REGION}"
 
 # Authenticate against our Docker registry
 aws --profile phoenix ecr get-login-password | docker login --username AWS --password-stdin https://091235034633.dkr.ecr.us-east-1.amazonaws.com
+# copy temp dir
+if [ -d ../adonis ]; then
+  cp -r ../adonis ./adonis
+fi
+
 # Build and push the image
 echo "Building image..."
 docker build -f $DOCKER_FILE -t $NAME:$VERSION . --no-cache
@@ -49,6 +54,6 @@ NEW_TASK_DEFINITION_ARN=$(aws --profile phoenix ecs register-task-definition --c
 
 echo "Updating ECS with new task definition..."
 # force update to use new task definition and redeploy
-aws --profile phoenix ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $NAME --task-definition $NEW_TASK_DEFINITION_ARN > /dev/null
+aws --profile phoenix ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $NAME --task-definition $NEW_TASK_DEFINITION_ARN >/dev/null
 
 echo "done :)"

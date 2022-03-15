@@ -19,7 +19,7 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditGuides'), async (req, res) => {
+  route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { engGuides } = req.body;
 
@@ -31,7 +31,7 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/bulk-update', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditGuides'), async (req, res) => {
+  route.post('/bulk-update', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { engGuides } = req.body;
 
@@ -43,7 +43,7 @@ export default (app, passport) => {
     }
   });
 
-  route.post('/', passport.authenticate(['bearer'], { session: false }), checkAccess({name: 'Sema Super Team'}, 'canEditGuides'), async (req, res) => {
+  route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { engGuide } = req.body;
 
     try {

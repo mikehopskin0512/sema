@@ -1,0 +1,5 @@
+# ---------- Base ----------
+ARG VERSION
+FROM 091235034633.dkr.ecr.us-east-1.amazonaws.com/hephaestus:${VERSION}
+COPY tag_* /models/
+COPY summaries /models/

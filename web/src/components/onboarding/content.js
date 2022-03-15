@@ -4,22 +4,22 @@ import animationComments from './animationComments.json';
 
 export const content = [
   {
-    title: 'Smart Reactions',
-    subtitle: 'Provide more actionable feedback with Sema’s auto-suggested smart reactions. As you type, Sema will calculate the right reaction for you. Click to override at any time.',
+    title: 'Snippets',
+    subtitle: `Leave better reviews by inserting pre-written snippets based on the world's top sources of coding knowledge + internal best pratices.`,
+    img: '/img/suggested-comments.png',
+    animationData: animationComments,
+  },
+  {
+    title: 'Summaries',
+    subtitle: 'Quickly summarize your review by choosing from a list of reactions. E.g. Awesome, Looks good, needs a fix, I have a question.',
     img: '/img/onboarding/onboarding-reactions.png',
     animationData: animationReactions,
   },
   {
-    title: 'Smart Tags',
-    subtitle: 'Quickly summarize your feedback with a carefully selected set of mutually exclusive tags. As you type, Sema will calculate the right tags for you or explore your own.',
+    title: 'Tags',
+    subtitle: 'Quickly categorize your comments with clear, mutually exclusive tags. E.g. Elegant, Secure, Readable',
     img: '/img/tags.png',
     animationData: animationTags,
-  },
-  {
-    title: 'Suggested Snippets',
-    subtitle: 'Write great comments faster by quickly searching for and inserting pre-written comments from some of the best knowledge bases in the world, and add your own!',
-    img: '/img/suggested-comments.png',
-    animationData: animationComments,
   },
 ];
 

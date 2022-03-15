@@ -6,8 +6,8 @@ resource "aws_appautoscaling_target" "service" {
   service_namespace  = "ecs"
   resource_id        = "service/${var.ecs_cluster.name}/${aws_ecs_service.this.name}"
   scalable_dimension = "ecs:service:DesiredCount"
-  min_capacity       = 3
-  max_capacity       = 6
+  min_capacity       = var.min_capacity
+  max_capacity       = var.max_capacity
 }
 
 # Automatically scale capacity up by one
@@ -63,7 +63,26 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   namespace           = "AWS/ECS"
   period              = "60"
   statistic           = "Average"
-  threshold           = "85"
+  threshold           = "70"
+
+  dimensions = {
+    ClusterName = var.ecs_cluster.name
+    ServiceName = aws_ecs_service.this.name
+  }
+
+  alarm_description = "This metric monitors ${var.name_prefix}-${var.application} autoscaling up policy"
+  alarm_actions     = [aws_appautoscaling_policy.service_out.arn]
+}
+
+resource "aws_cloudwatch_metric_alarm" "service_memory_high" {
+  alarm_name          = "${var.name_prefix}-${var.application}_memory_utilization_high"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "MemoryUtilization"
+  namespace           = "AWS/ECS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "70"
 
   dimensions = {
     ClusterName = var.ecs_cluster.name
@@ -91,5 +110,5 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_low" {
   }
 
   alarm_description = "This metric monitors ${var.name_prefix}-${var.application} autoscaling down policy"
-  alarm_actions = [aws_appautoscaling_policy.service_in.arn]
+  alarm_actions     = [aws_appautoscaling_policy.service_in.arn]
 }

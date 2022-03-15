@@ -1,15 +1,19 @@
 output "vpc_cidr" {
-  value = module.prod_vpc.vpc_cidr
+  description = "VPC cird block"
+  value       = aws_vpc.this.cidr_block
 }
 
 output "vpc_id" {
-  value = module.prod_vpc.vpc_name
+  description = "VPC id"
+  value       = aws_vpc.this.id
 }
 
 output "public_route_table" {
-  value = module.prod_vpc.public_route_table
+  description = "VPC public route table id"
+  value       = module.vpc_subnet_public.rt_id
 }
 
 output "private_route_table" {
-  value = module.prod_vpc.private_route_table
+  description = "VPC private route table id"
+  value       = module.vpc_subnet_private.rt_id
 }

@@ -1,0 +1,36 @@
+.user-summary {
+  position: relative;
+}
+
+.username {
+  height: 135px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.user-overview {
+  min-height: 150px;
+  height: auto;
+}
+
+.user-image {
+  border-radius: 100px;
+  width: 180px;
+  height: 180px;
+  margin: 0;
+  position: absolute;
+  top: 15%;
+  left: 25px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+}
+
+.edit-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

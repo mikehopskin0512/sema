@@ -19,12 +19,12 @@ import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
-const { fetchInvite } = invitationsOperations;
+const { fetchInvite, acceptInvite } = invitationsOperations;
 
 const Login = () => {
   const router = useRouter();
   const {
-    query: { token },
+    query: { token: inviteToken },
   } = router;
 
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const Login = () => {
     invitations: state.invitationsState,
   }));
 
-  const { user, isAuthenticated } = auth;
+  const { user, isAuthenticated, token } = auth;
   const { showAlert, alertType, alertLabel } = alerts;
 
   // Check for updated state in selectedTag
@@ -48,7 +48,7 @@ const Login = () => {
 
   // Redirect if user is already logged in
   useEffect(() => {
-    if (isAuthenticated && !user.isWaitlist) {
+    if (isAuthenticated && !user.isWaitlist && !invitations.isAcceptingInvite) {
       router.replace('/');
     }
   }, [isAuthenticated]);
@@ -59,7 +59,7 @@ const Login = () => {
   };
 
   const renderCard = () => {
-    if (token) {
+    if (inviteToken) {
       if (!isEmpty(invitations.data)) {
         return <InviteCard  invitation={invitations} />
       }
@@ -72,8 +72,9 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (token) {
-      dispatch(fetchInvite(token));
+    if (inviteToken) {
+      dispatch(fetchInvite(inviteToken));
+      dispatch(acceptInvite(inviteToken, token));
     }
   }, [])
 
@@ -102,7 +103,7 @@ if (!isAuthenticated || user.isWaitlist) {
                             <img src="/img/icons/like_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
-                            <span className="has-text-weight-bold">Suggested Snippets: </span>
+                            <span className="has-text-weight-bold">Snippets: </span>
                             Leave better reviews by inserting pre-written snippets based on best practices.
                           </span>
                         </div>
@@ -113,8 +114,8 @@ if (!isAuthenticated || user.isWaitlist) {
                             <img src="/img/icons/comment_vector.png" />
                           </div>
                           <span className={clsx(styles.subtitles, "is-size-1r")}>
-                            <span className="has-text-weight-bold">Comment Reactions: </span>
-                            Quickly summarize your review by choosing from a list of reactions.
+                            <span className="has-text-weight-bold">Comment Summaries: </span>
+                            Quickly summarize your review by choosing from a list of summaries.
                           </span>
                         </div>
                       </li>
@@ -133,19 +134,19 @@ if (!isAuthenticated || user.isWaitlist) {
                   </div>
                 </div>
               </div>
-              <div className="is-hidden-mobile" style={{ minWidth: 50 }} />
+              <div className="is-hidden-touch" style={{ minWidth: 50 }} />
               <div className="is-flex-grow-2">
                 {/** Show on Desktop */}
                 <div
                   className={clsx(
-                    'colored-shadow has-text-centered is-hidden-mobile px-50 py-80',
+                    'colored-shadow has-text-centered is-hidden-touch px-50 py-80',
                     styles['login-tile'],
                   )}
                 >
                   {renderCard()}
                 </div>
                 {/** Show on Mobile */}
-                <div className="is-hidden-desktop p-20">
+                <div className="is-hidden-desktop p-20 pb-200">
                   <div
                     className={clsx(
                       'colored-shadow has-text-centered px-20 py-50',

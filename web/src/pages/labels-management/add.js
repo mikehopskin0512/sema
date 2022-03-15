@@ -7,12 +7,13 @@ import withLayout from '../../components/layout';
 import Loader from '../../components/Loader';
 import Toaster from '../../components/toaster';
 import Helmet from '../../components/utils/Helmet';
-import { ViewAdmin } from '../../data/permissions';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
-import { tagsOperations  } from '../../state/features/tags';
-import { SEMA_TEAM_ADMIN_NAME } from '../../utils/constants';
+import { tagsOperations } from '../../state/features/tags';
+import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
+import { black950 } from '../../../styles/_colors.module.scss';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 const { clearAlert } = alertOperations;
 const { createTags, fetchTagList } = tagsOperations;
@@ -60,9 +61,10 @@ export const validateTags = (tags, existingTags = [], currentTag = false) => {
 const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { checkAccess } = usePermission();
+  const [accountData] = useLocalStorage('sema_selected_team');
+  const { isTeamAdminOrLibraryEditor } = usePermission();
 
-  const isAuthorized = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, ViewAdmin) || false, []);
+  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,
@@ -113,6 +115,7 @@ const AddLabels = () => {
   }
 
   const onSubmit = () => {
+    const {team: {_id: teamId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags);
     if (tagsErrors) {
@@ -121,7 +124,10 @@ const AddLabels = () => {
     }
     const data = dispatch(createTags(tags, token));
     if (data) {
-      router.push('/labels-management');
+      router.push({
+        pathname: `/team/${teamId}/settings`,
+        query: { tab: 'labels' },
+      });
     }
   };
 
@@ -145,7 +151,7 @@ const AddLabels = () => {
       <Helmet title="Add label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
         <a href="/labels-management" className="mr-8 is-flex">
-          <ArrowLeftIcon size="small" color="#000" />
+          <ArrowLeftIcon size="small" color={black950} />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>

@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .padded {
   display: inline-block;
   width: 85%;
@@ -5,8 +7,8 @@
 
 .circular {
   border-radius: 25px;
-  background-color: black;
-  color: white;
+  background-color: $black-950;
+  color: $white-0;
   display: inline-block;
   width: 30px;
   text-align: center;
@@ -27,19 +29,16 @@
   height: 150px;
   display: block;
   flex-basis: auto;
-  background-color: #d4d0d04f;
-}
-
-.tableForm {
-  background-color: #0081A71A;
-  padding: 1.5rem 0.75rem !important;
+  background-color: $gray-700;
 }
 
 .formBtn {
-  // margin-left: 20px !important;
-  // color: #3582a7 !important;
-  @media only screen and (max-width: 1332px) {
+  width: fit-content;
+  margin-left: 24px;
+
+  @media only screen and (max-width: 768px) {
     margin-top: 10px;
+    margin-left: 0;
     text-align: center;
     width: 100%;
   }
@@ -48,7 +47,7 @@
 .table {
   margin-top: -1.5rem;
   thead {
-    background-color: #f0f7fa;
+    background-color: $white-50;
   }
   th {
     padding: 1em;
@@ -81,25 +80,22 @@
 }
 
 .container {
-  // height: 100%;
   background-position: top;
   background-repeat: no-repeat;
   background-size: auto;
-  // background-image: url("/img/lines-background.png");
   @media only screen and (min-width: 769px) {
     padding: 0 10px;
   }
 }
 
-.invite-input {
-  width: 80%;
-  @media only screen and (max-width: 1332px) {
-    width: 100%;
+.invite-form {
+  @media only screen and (max-width: 768px) {
+   flex-wrap: wrap;
   }
 }
 
 .invite-mobile {
-  border-bottom: 1px solid #AFADAA;
+  border-bottom: 1px solid $gray-600;
 }
 
 .invite-mobile:last-child {
@@ -129,6 +125,6 @@
 }
 
 .card {
-  background-color: #ffffff;
+  background-color: $white-0;
   box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.15);
 }

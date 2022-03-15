@@ -1,6 +1,3 @@
-// eslint-disable-next-line camelcase
-import jwt_decode from 'jwt-decode';
-
 import initialState from './initialState';
 import {
   ADD_SEMA_COMPONENTS,
@@ -15,7 +12,6 @@ import {
   ON_INPUT_GLOBAL_SEARCH,
   RESET_SEMA_STATES,
   UPDATE_GITHUB_TEXTAREA,
-  UPDATE_SEMA_USER,
   ADD_SUGGESTED_COMMENTS,
   ADD_GITHUB_METADATA,
   ADD_SMART_COMMENT,
@@ -25,6 +21,16 @@ import {
   CLOSE_ALL_SELECTING_EMOJI,
   CLOSE_LOGIN_REMINDER,
   LAST_USED_SMART_COMMENT,
+  TOGGLE_SNIPPET_FOR_SAVE,
+  CHANGE_SNIPPET_COMMENT,
+  ADD_NOTIFICATION,
+  REMOVE_NOTIFICATION,
+  UPDATE_PROFILE,
+  UPDATE_TEAMS,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_SUCCESS,
+  FETCH_CURRENT_USER_ERROR,
+  UPDATE_CURRENT_USER,
 } from './actionConstants';
 
 // TODO: good if we can break cyclic dependencies
@@ -50,6 +56,51 @@ function rootReducer(state = initialState, action) {
   const { payload = {} } = action;
 
   switch (action.type) {
+    case UPDATE_TEAMS: {
+      return {
+        ...state,
+        teams: payload,
+      };
+    }
+    case UPDATE_PROFILE: {
+      return {
+        ...state,
+        selectedProfile: payload,
+      };
+    }
+    case ADD_NOTIFICATION: {
+      return {
+        ...state,
+        notifications: [...state.notifications, payload],
+      };
+    }
+    case REMOVE_NOTIFICATION: {
+      return {
+        ...state,
+        notifications: state.notifications.filter((notification) => notification !== payload),
+      };
+    }
+    case CHANGE_SNIPPET_COMMENT: {
+      const { comment } = payload;
+      return {
+        ...state,
+        snippetComment: comment,
+      };
+    }
+    case TOGGLE_SNIPPET_FOR_SAVE: {
+      const { semabarContainerId } = payload;
+      const semaBar = state.semabars[semabarContainerId];
+      return {
+        ...state,
+        semabars: {
+          ...state.semabars,
+          [semabarContainerId]: {
+            ...semaBar,
+            isSnippetForSave: !semaBar.isSnippetForSave,
+          },
+        },
+      };
+    }
     case ADD_SEMA_COMPONENTS: {
       const { activeElement } = payload;
       const { semabarContainerId, semaSearchContainerId } = getSemaIds(activeElement);
@@ -63,6 +114,7 @@ function rootReducer(state = initialState, action) {
         selectedReaction: initialReaction,
         isReactionDirty: false,
         suggestedTags: [],
+        isSnippetForSave: false,
       };
       const semaSearch = {
         isSearchModalVisible: false,
@@ -418,20 +470,42 @@ function rootReducer(state = initialState, action) {
         },
       };
     }
-    case UPDATE_SEMA_USER: {
+    case FETCH_CURRENT_USER: {
+      return {
+        ...state,
+        isFetching: true,
+        user: { isLoggedIn: false },
+      };
+    }
+    case FETCH_CURRENT_USER_SUCCESS: {
+      const user = payload;
+      return {
+        ...state,
+        isFetching: false,
+        user,
+        error: {},
+      };
+    }
+    case FETCH_CURRENT_USER_ERROR: {
+      const error = payload;
+      return {
+        ...state,
+        isFetching: false,
+        user: { isLoggedIn: false },
+        error,
+      };
+    }
+    case UPDATE_CURRENT_USER: {
       const { token, isLoggedIn } = payload;
-      let newUser;
+      let user;
       if (token) {
-        const { _id, isVerified, isWaitlist } = jwt_decode(token);
-        newUser = {
-          _id, isVerified, isWaitlist, ...{ isLoggedIn },
-        };
+        user = { ...state.user, isLoggedIn };
       } else {
-        newUser = { isLoggedIn };
+        user = { isLoggedIn };
       }
       return {
         ...state,
-        user: newUser,
+        user,
       };
     }
     default: {

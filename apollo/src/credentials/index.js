@@ -1,9 +1,15 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version } from '../config';
 import errors from '../shared/errors';
+import checkEnv from '../middlewares/checkEnv';
 
 const { create, get } = require('./credentialService');
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -43,4 +49,7 @@ export default (app, passport) => {
       return next(error);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/credentials-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

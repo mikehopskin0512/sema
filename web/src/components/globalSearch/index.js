@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SearchItem from "../../components/globalSearch/searchItem";
 import { useDispatch, useSelector } from "react-redux";
+import useDebounce from '../../hooks/useDebounce';
 import { getUserSuggestedComments } from "../../state/features/comments/actions";
 import clsx from "clsx";
 import { SearchIcon } from '../Icons';
 import styles from './globalSearch.module.scss';
-// TODO: turned off temporary / delete in 2022
-// import { getEngGuides } from "../../state/features/engGuides/actions";
 import useOutsideClick from '../../utils/useOutsideClick';
 import { SEARCH_CATEGORY_TITLES } from '../../utils/constants';
 import { isSuggestedCollectionTitle } from '../../utils';
@@ -20,34 +19,19 @@ const isFieldIncludes = (searchTerm, fieldName) => {
 
 const GlobalSearch = () => {
   const dispatch = useDispatch();
-  // TODO: turned off temporary / delete in 2022
-  // const { engGuides } = useSelector((state) => state.engGuidesState);
   const { user, token } = useSelector((state) => state.authState);
   const { collections: userCollections } = user
   const { suggestedComments } = useSelector((state) => state.commentsState);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const searchTermDebounced = useDebounce(searchTerm, 600);
   const wrapper = useRef(null);
-  // TODO: turned off temporary / delete in 2022
-  // const engGuidesComments = useMemo(() => {
-  //   const guideComments = engGuides.flatMap(({ collectionData }) => collectionData.comments);
-  //   return searchTerm ? guideComments.filter(isFieldIncludes(searchTerm, 'title')) : guideComments;
-  // },[engGuides, searchTerm]);
-  // const engGuidesCollections = useMemo(() => {
-  //   const collections = engGuides.map(({ collectionData }) => collectionData);
-  //   return searchTerm ? collections.filter(isFieldIncludes(searchTerm, 'name')) : collections;
-  // },[engGuides, searchTerm]);
   const suggestedCollections = useMemo(() => {
     const _collections = userCollections?.map(({ collectionData }) => collectionData);
     return searchTerm ? _collections?.filter(isFieldIncludes(searchTerm, 'name')) : _collections;
   },[userCollections, searchTerm]);
-
   const categories = [
     { title: SEARCH_CATEGORY_TITLES.COLLECTIONS, items: suggestedCollections },
     { title: SEARCH_CATEGORY_TITLES.SNIPPETS, items: suggestedComments },
-    // TODO: turned off temporary / delete in 2022
-    // { title: "community engineering guide collections", items: engGuidesCollections },
-    // { title: "community engineering guide", items: engGuidesComments },
   ]
   const onSearchInputChange = (e) => {
     setSearchTerm(e.target.value);
@@ -56,17 +40,13 @@ const GlobalSearch = () => {
 
   useOutsideClick(wrapper, clearSearch)
 
+  const isSearchTermSufficient = searchTerm.trim().length > 1;
   useEffect(() => {
-    const isAllCollections = true;
-    dispatch(getUserSuggestedComments(searchTerm, user._id, token, isAllCollections));
-  }, [searchTerm]);
-
-  // TODO: turned off temporary / delete in 2022
-  // useEffect(() => {
-  //   if (!engGuides.length) {
-  //     dispatch(getEngGuides(token));
-  //   }
-  // }, [dispatch, token]);
+    if (isSearchTermSufficient) {
+      const isAllCollections = true;
+      dispatch(getUserSuggestedComments(searchTermDebounced, user._id, token, isAllCollections));
+    }
+  }, [searchTermDebounced]);
 
   return (
     <div className="is-flex is-relative" ref={wrapper}>
@@ -77,13 +57,13 @@ const GlobalSearch = () => {
           value={searchTerm}
           className={clsx(styles['global-search_input'], "input has-background-white")}
           type="input"
-          placeholder="Search Collections and Suggested Snippets"
+          placeholder="Search Collections and Snippets"
         />
         <span className="icon is-small is-left">
           <SearchIcon size="small" />
         </span>
       </div>
-      {searchTerm && (
+      {isSearchTermSufficient && (
         <div className={clsx(styles['global-search'])}>
           {categories.map((category) => (
             <div className={styles['global-search_category']} key={category.title}>

@@ -1,4 +1,14 @@
-import { SEARCH_CATEGORY_TITLES } from './constants';
+import {
+  DEFAULT_COLLECTION_NAME,
+  GITHUB_URL,
+  SEARCH_CATEGORY_TITLES,
+  SEMA_CORPORATE_TEAM_ID
+} from './constants';
+
+export const unshift = (arr, newval) => {
+  arr.unshift(newval);
+  return arr;
+};
 
 export const upsert = (arr, key, newval) => {
   const match = arr.find((item) => item._id === key);
@@ -81,6 +91,30 @@ export const shortenUrl = (url) => {
 
 export const isSuggestedCollectionTitle = (title) => title === SEARCH_CATEGORY_TITLES.COLLECTIONS;
 
+export const isSemaDefaultCollection = (name) => name?.toLowerCase() === DEFAULT_COLLECTION_NAME;
+
+export const isTeamDefaultCollection = (team, collection) => `${team?.name}'s Snippets` === collection?.name;
+
 export const addTags = (tags, types) => tags
   .filter((tag) => types.some((type) => type === tag.type))
   .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
+
+export const filterNonSemaUsers = (users) => {
+  return users ? users.filter((user) => !user.teams || !user.teams.length || user.teams.every((team) => team._id !== SEMA_CORPORATE_TEAM_ID)) : [];
+}
+
+export const getPlatformLink = (username, type) => {
+  switch (type) {
+    case 'github':
+      return `${GITHUB_URL}/${username}`;
+    default:
+      return `${GITHUB_URL}/${username}`;
+  }
+}
+
+export const parseEmails = (str) => {
+  return str.split(/,|\|| /g).map((item) => {
+    const match = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/.exec(item);
+    return match ? match[1] : match;
+  }).filter((item) => !!item);
+}

@@ -79,7 +79,7 @@ const LogOutToaster = () => {
         >
           <FontAwesomeIcon icon={faGithub} style={{ width: '32px' }} />
           <span>
-            Sign in with Github
+            Sign in with GitHub
           </span>
         </button>
         <a target="_blank" href={SEMA_LANDING_FAQ} rel="noreferrer">Have Questions?</a>

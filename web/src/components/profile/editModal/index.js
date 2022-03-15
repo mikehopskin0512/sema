@@ -21,7 +21,7 @@ const EditModal = ({ onClose }) => {
 
   const { showAlert, alertType, alertLabel } = alerts;
   const { user, token } = auth;
-  const { firstName, lastName, username, identities } = user;
+  const { firstName = '', lastName = '', username, identities } = user;
 
   const {
     register, handleSubmit, formState, reset, setError,

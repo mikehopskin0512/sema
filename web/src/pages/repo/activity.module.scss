@@ -1,8 +1,10 @@
+@import "../../../styles/_colors.module.scss";
+
 .card-container {
-    background: linear-gradient(180deg, #FFF 50%, #f4f4f4 50%);
+    background: linear-gradient(180deg, $white-0 50%, $white-50 50%);
 }
 
 .card {
-    background-color: #FBFBFB;
+    background-color: $white-50;
     box-shadow: 0px 2px 10px 0px #00000012;
 }

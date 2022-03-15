@@ -16,9 +16,13 @@ const reactionsScheme = new mongoose.Schema({
 }, {} );
 
 const repoStatsSchema = new mongoose.Schema({
+  userIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   reactions: [reactionsScheme],
   tags: [tagsScheme],
-  userIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  smartCodeReviews: { type: Number, default: 0 },
+  smartComments: { type: Number, default: 0 },
+  smartCommenters: { type: Number, default: 0 },
+  semaUsers: { type: Number, default: 0 },
 }, { _id: false });
 
 const repositoriesSchema = new mongoose.Schema({

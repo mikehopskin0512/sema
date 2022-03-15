@@ -1,7 +1,9 @@
 import * as types from './types';
+import { unshift } from '../../../utils'
 
 const initialState = {
   isFetching: false,
+  isAcceptingInvite: false,
   data: [],
   acceptedInvitationCount: 0,
   pendingInvitationCount: 0,
@@ -19,6 +21,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isFetching: false,
+        data: unshift(state.data, action.invitation),
         error: {},
       };
     case types.REQUEST_CREATE_INVITE_ERROR:
@@ -101,6 +104,23 @@ const reducer = (state = initialState, action) => {
         ...state,
         isFetching: false,
         inviteMetrics: {},
+        error: action.errors,
+      };
+    case types.REQUEST_ACCEPT_INVITATION:
+      return {
+        ...state,
+        isAcceptingInvite: true,
+      };
+    case types.REQUEST_ACCEPT_INVITATION_SUCCESS:
+      return {
+        ...state,
+        isAcceptingInvite: false,
+        error: {},
+      };
+    case types.REQUEST_ACCEPT_INVITATION_ERROR:
+      return {
+        ...state,
+        isAcceptingInvite: false,
         error: action.errors,
       };
     default:

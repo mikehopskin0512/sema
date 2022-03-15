@@ -1,25 +1,51 @@
-.tooltip {
-  display: flex;
+@import "../../../styles/_colors.module.scss";
+
+$text-color: $white-50;
+$background-color: $black-900;
+$margin: 20px;
+
+.tooltip-Wrapper {
+  display: inline-block;
   position: relative;
+}
 
-  &_text {
-    display: none;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-    top: -38px;
-    color: #F4F4F4;
-    background: #202020;
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    line-height: 16px;
-    white-space: nowrap;
+.Tooltip-Tip {
+  position: absolute;
+  border-radius: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px;
+  color: $text-color;
+  background: $background-color;
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1;
+  z-index: 100;
+  white-space: nowrap;
+  top: calc(#{$margin} * -1);
+  &::before {
+    top: 100%;
+    border-top-color: $background-color;
   }
+}
 
-  &:hover {
-    .tooltip_text {
-      display: flex;
-    }
-  }
+.top {
+  top: calc(#{$margin} * -1);
+}
+
+.right {
+  left: calc(100% + #{$margin});
+  top: 50%;
+  transform: translateX(0) translateY(-50%);
+}
+
+.bottom {
+  bottom: calc(#{$margin} * -1);
+}
+
+.left {
+  left: auto;
+  right: calc(100% + #{$margin});
+  top: 50%;
+  transform: translateX(0) translateY(-50%);
 }

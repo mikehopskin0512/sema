@@ -1,4 +1,5 @@
 export const { SEMA_LANDING_URL } = process.env;
+export const { SEMA_PRODUCTION_URL } = process.env;
 export const { SEMA_URL } = process.env;
 export const { SEMA_UI_URL } = process.env;
 export const { SEMA_COOKIE_NAME } = process.env;
@@ -7,13 +8,20 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
 
+export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.svg`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
+export const SEMA_LANDING_FAQ_TAGS = `${SEMA_LANDING_FAQ}#what-do-tags-mean`;
+export const SEMA_LANDING_GITHUB = `${SEMA_LANDING_URL}/gh`;
 export const SUGGESTION_URL = `${SEMA_URL}/v1/comments/suggested?q=`;
 export const SEMA_WEB_LOGIN = `${SEMA_UI_URL}/login`;
-export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/suggested-snippets`;
+export const SEMA_WEB_COLLECTIONS = `${SEMA_UI_URL}/snippets`;
 export const SEMA_ENG_GUIDE_UI_URL = `${SEMA_UI_URL}/guides`;
 export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
+export const COLLECTIONS_URL = `${SEMA_URL}/v1/comments/collections`;
+export const TAGS_URL = `${SEMA_URL}/v1/comments/tags/suggested-comment`;
+export const USERS_URL = `${SEMA_URL}/v1/users`;
+export const TEAMS_URL = `${SEMA_URL}/v1/teams`;
 export const ADD_OP = 'ADD_OP';
 export const DELETE_OP = 'DELETE_OP';
 export const TOGGLE_OP = 'TOGGLE_OP';
@@ -21,8 +29,6 @@ export const POSITIVE = 'positive';
 export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
 export const IS_DIRTY = 'isDirty';
-
-export const MAX_CHARACTER_LENGTH = 88;
 
 export const TAGS_INIT = [
   {
@@ -206,17 +212,12 @@ export const USER = {
   _id: '6076262a407c64f11499537a',
 };
 
-// eslint-disable-next-line max-len
-/* "SEMA_GITHUB_REGEX" is closely tied to "getSemaGithubText". This regex is used to edit any existing sema comment.
- * Don't forget to change both "SEMA_GITHUB_REGEX" & "getSemaGithubText" when you change anyone
- */
-export const SEMA_GITHUB_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*\*\*Sema Tags:\*\*([ \w : | ,])*/s;
-export const SEMA_REACTION_REGEX = /\*\*Sema Reaction:\*\*([ \w : |])*/s;
-export const SEMA_TAGS_REGEX = /\*\*Sema Tags:\*\*([ \w : | ,])*/s;
+export const SEMA_REACTION_REGEX = /\*\*Summary:\*\*([ \w : |])*/s;
+export const SEMA_TAGS_REGEX = /\*\*Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR_LIGHT = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
-    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#586069"/>
       </svg>
@@ -226,7 +227,7 @@ export const SEMA_ICON_ANCHOR_LIGHT = `
 
 export const SEMA_ICON_ANCHOR_DARK = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
-    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#8b949e"/>
       </svg>
@@ -236,7 +237,7 @@ export const SEMA_ICON_ANCHOR_DARK = `
 
 export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
-    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#768390"/>
       </svg>
@@ -246,7 +247,7 @@ export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
 
 export const SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST = `
   <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
-    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/' target='_blank' aria-label='Learn about Sema smart comments'>
+    <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#f0f3f6"/>
       </svg>
@@ -256,6 +257,7 @@ export const SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST = `
 
 export const SEMABAR_CLASS = 'sema';
 export const SEMA_SEARCH_CLASS = 'sema-search';
+export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
 // TODO: this will need to change. modal is not global
 export const GLOBAL_SEMA_SEARCH_ID = 'globalSemaSearch';
@@ -294,3 +296,7 @@ export const EVENTS = {
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';
+export const DEFAULT_PROFILE_NAME = 'Personal';
+export const STORAGE_ITEMS = {
+  PROFILE: 'profile',
+};

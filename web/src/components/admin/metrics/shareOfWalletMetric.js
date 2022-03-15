@@ -53,7 +53,7 @@ const ShareOfWalletMetric = () => {
         ),
       }] : [],
       {
-        Header: 'Reactions(%)',
+        Header: 'Summaries(%)',
         accessor: 'reactions',
         className: 'p-10',
       },
@@ -63,7 +63,7 @@ const ShareOfWalletMetric = () => {
         className: 'p-10',
       },
       {
-        Header: 'Suggested Snippets(%)',
+        Header: 'Snippets(%)',
         accessor: 'suggestedComments',
         className: 'p-10',
       },

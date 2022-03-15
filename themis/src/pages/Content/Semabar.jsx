@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import $ from 'cash-dom';
 
 import TagsModal from './components/TagsModal';
 import EmojiSelection from './EmojiSelection';
@@ -13,10 +12,10 @@ import {
 } from './modules/redux/action';
 
 import {
-  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ,
+  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ_TAGS,
 } from './constants';
 import LoginBar from './LoginBar';
-import { fireAmplitudeEvent, saveSmartComment } from './modules/content-util';
+import { fireAmplitudeEvent } from './modules/content-util';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -49,7 +48,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     ),
     // eslint-disable-next-line max-len
     updateSelectedTags: (operation) => dispatch(updateSelectedTags({ id, operation, isDirty: true })),
-
     toggleIsSelectingEmoji: () => dispatch(toggleIsSelectingEmoji({ id })),
   };
 };
@@ -58,15 +56,9 @@ const Semabar = (props) => {
   const {
     isLoggedIn,
     isWaitlist,
-    id,
   } = props;
   const [isHover, setHover] = useState(false);
-  const [lastSavedComment, setLastSavedComment] = useState(null);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
-  const activeElement = $(`#${id}`).prev().get(0);
-
-  const activeElementValue = activeElement?.value;
-  const isCommentSaved = lastSavedComment === activeElementValue;
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -177,7 +169,7 @@ const Semabar = (props) => {
             <div className="learn-more-link">
               All Tags
               <a
-                href={SEMA_LANDING_FAQ}
+                href={SEMA_LANDING_FAQ_TAGS}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
@@ -203,22 +195,12 @@ const Semabar = (props) => {
       </div>
     );
   };
-  const saveComment = async () => {
-    try {
-      fireAmplitudeEvent(EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
-      await saveSmartComment({ comment: activeElementValue });
-      setLastSavedComment(activeElementValue);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('error', e);
-    }
-  };
 
   // eslint-disable-next-line react/destructuring-assignment
   if (isLoggedIn && !isWaitlist) {
     return (
       <>
-        <div className="sema-emoji-container">
+        <div className="sema-emoji-container sema-is-flex sema-is-flex-direction-column">
           <EmojiSelection
             allEmojis={EMOJIS}
             selectedReaction={props.selectedReaction}
@@ -244,20 +226,6 @@ const Semabar = (props) => {
         >
           <div className="sema-tags-content">{createActiveTags()}</div>
           {createAddTags()}
-          <div className="sema-login-bar--separator" />
-          {isCommentSaved ? (
-            <span style={{ color: '#909AA4' }}>Saved!</span>
-          ) : (
-            <button
-              type="button"
-              disabled={!activeElementValue}
-              className="sema-button sema-is-small sema-button--save-comment"
-              onClick={saveComment}
-            >
-              <span>+</span>
-              Save
-            </button>
-          )}
         </div>
       </>
     );

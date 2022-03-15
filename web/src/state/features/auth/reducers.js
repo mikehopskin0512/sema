@@ -1,5 +1,6 @@
 import * as types from './types';
-import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types'
+import { REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS } from '../suggest-snippets/types';
+import { PROFILE_VIEW_MODE } from '../../../utils/constants';
 
 const initialState = {
   isFetching: false,
@@ -7,34 +8,36 @@ const initialState = {
   token: null,
   user: {},
   userVoiceToken: null,
+  selectedTeam: {},
+  profileViewMode: PROFILE_VIEW_MODE.INDIVIDUAL_VIEW,
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
-      const collections = state.user.collections.map((collection) => {
-        if (action.collectionId !== collection.collectionData._id) {
-          return collection
-        }
-        return {
-          ...collection,
-          collectionData: {
-            ...collection.collectionData,
-            comments: [
-              ...collection.collectionData.comments,
-              action.suggestedComment
-            ]
-          }
-        };
-      })
+  case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
+    const collections = state.user.collections.map((collection) => {
+      if (action.collectionId !== collection.collectionData._id) {
+        return collection;
+      }
       return {
-        ...state,
-        user: {
-          ...state.user,
-          collections,
+        ...collection,
+        collectionData: {
+          ...collection.collectionData,
+          comments: [
+            ...collection.collectionData.comments,
+            action.suggestedComment,
+          ],
         },
       };
-    }
+    });
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        collections,
+      },
+    };
+  }
   case types.AUTHENTICATE_REQUEST:
     return {
       ...state,
@@ -116,6 +119,13 @@ const reducer = (state = initialState, action) => {
       isAuthenticated: false,
       error: action.errors,
     };
+  case types.VERIFY_USER_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      user: action.user,
+      error: {},
+    };
   case types.USER_NOT_VERIFIED:
     return {
       ...state,
@@ -158,7 +168,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      users: [],
+      // users: [],
       error: action.errors,
     };
   case types.FETCH_CURRENT_USER:
@@ -179,6 +189,16 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       user: {},
       error: action.errors,
+    };
+  case types.SET_SELECTED_TEAM:
+    return {
+      ...state,
+      selectedTeam: action.selectedTeam,
+    };
+  case types.SET_PROFILE_VIEW_MODE:
+    return {
+      ...state,
+      profileViewMode: action.profileViewMode,
     };
   default:
     return state;

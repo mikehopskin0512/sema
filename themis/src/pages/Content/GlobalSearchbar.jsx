@@ -42,6 +42,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const GlobalSearchbar = (props) => {
   const [searchResults, setSearchResults] = useState([]);
+  const [isDetailedView, changeIsDetailedView] = useState(false);
 
   const onInputChanged = (event) => {
     event.preventDefault();
@@ -118,7 +119,7 @@ const GlobalSearchbar = (props) => {
         className={containerClasses}
         style={{
           position: 'absolute',
-          width: '384px',
+          width: '760px',
           top: props.position.top,
           left: props.position.left,
         }}
@@ -149,7 +150,10 @@ const GlobalSearchbar = (props) => {
             </div>
           </div>
         </div>
-        <div className="sema-dropdown-menu suggestion-modal" role="menu">
+        <div
+          className={isDetailedView ? 'sema-dropdown-menu suggestion-modal view-mode' : 'sema-dropdown-menu suggestion-modal'}
+          role="menu"
+        >
           <div className="sema-dropdown-content">
             <div className="sema-dropdown-item">
               <SuggestionModal
@@ -157,6 +161,8 @@ const GlobalSearchbar = (props) => {
                 onInsertPressed={onInsertPressed}
                 searchResults={searchResults}
                 onLastUsedSmartComment={props.onLastUsedSmartComment}
+                changeIsDetailedView={changeIsDetailedView}
+                isDetailedView={isDetailedView}
               />
             </div>
           </div>

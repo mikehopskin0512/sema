@@ -1,0 +1,288 @@
+openapi: 3.0.0
+info:
+  title: Snippets's API
+  description: Smart Comments's Snippets
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SuggestedComment:
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        collectionId:
+          type: string
+        comment:
+          type: string
+        displayId:
+          type: string
+        engGuides:
+          items:
+            properties:
+              engGuide:
+                type: string
+              name:
+                type: string
+              slug:
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        enteredBy:
+          type: string
+        isActive:
+          type: boolean
+        lastModified:
+          format: date-time
+          type: string
+        link:
+          type: string
+        relatedLinks:
+          items:
+            type: string
+          type: array
+        source:
+          properties:
+            name:
+              type: string
+            url:
+              type: string
+          type: object
+        sourceMetadata:
+          properties:
+            icon:
+              type: string
+            thumbnail:
+              type: string
+            title:
+              type: string
+          type: object
+        tags:
+          items:
+            properties:
+              label:
+                type: string
+              tag:
+                type: string
+              type:
+                type: string
+            required: [ ]
+            type: object
+          type: array
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /v1/comments/suggested:
+    post:
+      summary: create a snippet
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                snippets:
+                  $ref: '#/components/schemas/SuggestedComment'
+                collectionId:
+                  type: string
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestedComment'
+          description: created Snippet
+        400:
+          description: bad input parameter
+    get:
+      summary: get snippet
+      operationId: searchComments
+      parameters:
+        - in: query
+          name: user
+          description: user id
+          required: true
+        - in: query
+          name: team
+          description: team id
+          required: true
+        - in: query
+          name: q
+          description: search term
+          required: true
+        - in: query
+          name: allCollections
+          description: boolean
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  searchResults:
+                    type: array
+          description: search results matching criteria
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/{id}:
+    patch:
+      summary: update a snippet
+      operationId: update
+      parameters:
+        - in: path
+          name: id
+          description: snippet id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuggestedComment'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestedComment'
+          description: updated snippet
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/all-by-ids:
+    get:
+      summary: get snippet
+      operationId: searchComments
+      parameters:
+        - in: query
+          name: comments
+          description: array of snippets ids
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  searchResults:
+                    type: array
+          description: array of snippets
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/reports:
+    get:
+      tags:
+        - reports
+      summary: report of snippet usage
+      operationId: suggestCommentsInsertCount
+      parameters:
+        - in: query
+          name: page
+          description: page number
+          required: true
+        - in: query
+          name: perPage
+          description: how many snippets per page
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  searchResults:
+                    type: array
+                  totalCount:
+                    type: number
+          description: array of snippets
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/bulk-create:
+    post:
+      tags:
+        - bulk operations
+      summary: bulk creation
+      operationId: bulkCreateSuggestedComments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                snippets:
+                  $ref: '#/components/schemas/SuggestedComment'
+                collectionId:
+                  type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestedComment'
+          description: bulk creation of snippets
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/bulk-update:
+    post:
+      tags:
+        - bulk operations
+      summary: bulk upddate
+      operationId: bulkUpdateSuggestedComments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                comments:
+                 type: array
+                 items:
+                  $ref: '#/components/schemas/SuggestedComment'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuggestedComment'
+          description: bulk creation of snippets
+        400:
+          description: bad input parameter
+  /v1/comments/suggested/export:
+    post:
+      tags:
+        - export
+      summary: export snippets
+      operationId: exportSuggestedComments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                comments:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/SuggestedComment'
+      responses:
+        200:
+          content:
+          description: snipetts csv file
+        400:
+          description: bad input parameter

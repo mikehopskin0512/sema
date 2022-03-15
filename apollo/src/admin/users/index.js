@@ -1,4 +1,8 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version, orgDomain } from '../../config';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
@@ -19,7 +23,9 @@ import {
 
 import { checkIfInvited, deleteInvitation } from '../../invitations/invitationService';
 import { revokeInvitation, patch as updateUser } from '../../users/userService';
+import checkEnv from '../../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -27,21 +33,23 @@ export default (app, passport) => {
 
   route.get('/', async (req, res) => {
     try {
-      const { page = 1, perPage = 10, search, status } = req.query;
+      const {
+        page = 1, perPage = 10, search, status, listAll = false,
+      } = req.query;
 
       const { users, totalCount } = await listUsers({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
         search,
-        status
-      });
+        status,
+      }, listAll);
       const filterData = await getFilterMetrics();
 
       return res.status(200).json({
         users,
         totalCount,
         page,
-        filters: filterData
+        filters: filterData,
       });
     } catch (err) {
       const error = new errors.InternalServer(err);
@@ -153,7 +161,7 @@ export default (app, passport) => {
 
       const { key, value } = body;
 
-      if (key === "isWaitlist" && value === false) {
+      if (key === 'isWaitlist' && value === false) {
         const { username } = user;
         const [invitation] = await checkIfInvited(username);
         if (invitation) {
@@ -170,6 +178,7 @@ export default (app, passport) => {
         await sendEmail(message);
 
         // Add user to Intercom
+        const { firstName, lastName, avatarUrl } = user;
         await intercom.create('contacts', {
           role: 'user',
           external_id: id,
@@ -178,6 +187,7 @@ export default (app, passport) => {
           avatar: avatarUrl,
           signed_up_at: new Date(),
         });
+        return res.status(200).json();
       }
 
       return res.status(200).json();
@@ -201,4 +211,7 @@ export default (app, passport) => {
       throw error;
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/admin/users-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import { Router } from 'express';
+import swaggerUi from "swagger-ui-express";
+import yaml from "yamljs";
+import path from "path";
+
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import {
@@ -10,19 +14,21 @@ import {
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
-  exportSuggestedComments,
+  exportSuggestedComments, updateSnippetCollections,
 } from './suggestedCommentService';
-import { pushCollectionComment, isEditAllowed, getUserCollectionsById } from '../collections/collectionService';
+import { pushCollectionComment, getUserCollectionsById } from '../collections/collectionService';
+import checkEnv from "../../middlewares/checkEnv";
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
   app.use(`/${version}/comments/suggested`, route);
 
   route.get('/', async (req, res) => {
-    const { user = null, q = '', allCollections = false } = req.query;
+    const { user = null, team = null, q = '', allCollections = false } = req.query;
     try {
-      const topResult = await searchComments(user, q, allCollections);
+      const topResult = await searchComments(user, team, q, allCollections);
       return res.status(201).send({ searchResults: topResult });
     } catch (error) {
       logger.error(error);
@@ -62,10 +68,11 @@ export default (app, passport) => {
     let collectionId = req.body.collectionId;
 
     try {
+      const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
+
       if (!collectionId) {
         const collections = await getUserCollectionsById(userId);
         // TODO: we should delete my comments later. It's a legacy name
-        const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
         const defaultCollection = collections.find((collection) => {
           return collection.collectionData.name.toLowerCase() === defaultCollectionName;
         });
@@ -82,7 +89,7 @@ export default (app, passport) => {
         source: { name: '', url: source },
         tags,
         enteredBy: user._id,
-        collectionId,
+        collections: [{ collectionId, name: defaultCollectionName }]
       });
 
       if (!newSuggestedComment) {
@@ -119,7 +126,7 @@ export default (app, passport) => {
   route.post('/bulk-create', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { comments, collectionId } = req.body;
     try {
-      const result = await bulkCreateSuggestedComments(comments, req.user);
+      const result = await bulkCreateSuggestedComments(comments, collectionId, req.user);
 
       if (collectionId) {
         await Promise.all(result.map(async (comment) => {
@@ -161,4 +168,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+  // Swagger route
+  app.use(`/${version}/comments/suggested-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

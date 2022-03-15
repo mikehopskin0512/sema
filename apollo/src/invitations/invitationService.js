@@ -17,6 +17,8 @@ export const create = async (invitation) => {
       sender,
       senderName,
       senderEmail,
+      team,
+      role,
     } = invitation;
 
     // Generate token and expiration data (2 weeks from now)
@@ -38,6 +40,8 @@ export const create = async (invitation) => {
       senderEmail,
       token,
       tokenExpires,
+      team: team || null,
+      role: role || null,
     });
     const savedInvite = await newInvite.save();
     return savedInvite;
@@ -62,6 +66,11 @@ export const findById = async (id) => {
 
 export const checkIfInvited = async (recipient) => {
   const invitation = await Invitation.find({ recipient });
+  return invitation;
+};
+
+export const checkIfInvitedByToken = async (token) => {
+  const invitation = await Invitation.findOne({ token });
   return invitation;
 };
 
@@ -107,7 +116,7 @@ export const getInvitationsBySender = async (params) => {
     }
     query.skip((page - 1) * perPage).limit(perPage)
 
-    const invites = await query.populate('sender').lean().exec();
+    const invites = await query.lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
@@ -231,7 +240,7 @@ export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
   const mappedData = invites.map((item) => ({
     Sender_Email: item.senderEmail,
-    Sender: fullName(item.sender),
+    Sender: item.senderName,
     Recipient: item.isPending ? item.recipient : fullName(item.user),
     Status: item.isPending ? 'Pending Invite' : 'Accepted',
     Invitations_Available: item.numAvailable,

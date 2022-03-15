@@ -18,6 +18,7 @@ import BulkAdmitForm from '../../components/admin/bulkAdmitForm';
 import ExportButton from '../../components/admin/exportButton';
 import { suggestCommentsOperations } from '../../state/features/suggest-snippets';
 import InlineEdit from '../../components/inlineEdit';
+import { gray300 } from '../../../styles/_colors.module.scss';
 
 const {
   fetchUsers,
@@ -142,7 +143,10 @@ const UsersPage = () => {
 
   const handleUpdateUser = (obj, user) => {
     if (!user || !user._id) return;
-    dispatch(updateUser(user._id, obj));
+    const status = Object.entries(statusFilters)
+      .filter((item) => item[1])
+      .map((item) => item[0]);
+    dispatch(updateUser(user._id, obj, { page, perPage, status }));
   };
 
   const columns = useMemo(
@@ -219,9 +223,9 @@ const UsersPage = () => {
       },
       {
         Header: () => (
-          <div className='has-text-centered pt-10' style={{ background: '#E9E1F0' }}>
+          <div className='has-text-centered pt-10' style={{ background: gray300 }}>
             <div>Invite</div>
-            <div className='is-flex py-10' style={{ background: '#E3D6EF' }}>
+            <div className='is-flex py-10' style={{ background: gray300 }}>
               <div className='has-text-left px-15 py-0 column'>Available</div>
               <div className='has-text-left px-15 py-0 column'>Pending</div>
               <div className='has-text-left px-15 py-0 column'>Accepted</div>
@@ -382,7 +386,7 @@ const UsersPage = () => {
             </div>
             <div className="ml-10">
               <ExportButton
-                label="Export All Suggested Snippets"
+                label="Export All Snippets"
                 onExport={() => exportSuggestedComments({}, token)}
               />
             </div>

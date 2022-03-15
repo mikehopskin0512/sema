@@ -34,11 +34,10 @@ const initialize = async (ctx) => {
     ({ isVerified } = (jwt) ? jwtDecode(jwt) : {});
   }
 
-  // console.log("user waitlist", ctx.store.getState().authState.user.isWaitlist)
-  // console.log("jwt", jwt)
   // Redirects w/ exclusions
   if (
     !(ctx.pathname).includes(PATHS.LOGIN) &&
+    !(ctx.pathname).includes(`${PATHS.PORTFOLIOS}/[portfolioId]`) &&
     !(ctx.pathname).includes(PATHS.ONBOARDING) &&
     !(ctx.pathname).includes(PATHS.GUIDES) &&
     !(ctx.pathname).includes(PATHS.REGISTER) &&

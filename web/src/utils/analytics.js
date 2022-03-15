@@ -10,12 +10,17 @@ export const AMPLITUDE_EVENTS = {
   VIEWED_PAGE: 'VIEWED_PAGE',
   VIEWED_DASHBOARD_PAGE: 'VIEWED_DASHBOARD_PAGE',
   VIEWED_PERSONAL_INSIGHTS_PAGE: 'VIEWED_PERSONAL_INSIGHTS_PAGE',
-  VIEWED_SUGGESTED_SNIPPETS_PAGE: 'VIEWED_SUGGESTED_SNIPPETS_PAGE',
+  VIEWED_SNIPPETS_PAGE: 'VIEWED_SNIPPETS_PAGE',
   VIEWED_REPOS_PAGE: 'VIEWED_REPOS_PAGE',
   VIEWED_INVITATIONS_PAGE: 'VIEWED_INVITATIONS_PAGE',
   VIEWED_PROFILE_PAGE: 'VIEWED_PROFILE_PAGE',
   VIEWED_ONBOARDING_WIZARD: 'VIEWED_ONBOARDING_WIZARD',
-  CLICKED_SEND_INVITATION: 'CLICKED_SEND_INVITATION'
+  CLICKED_SEND_INVITATION: 'CLICKED_SEND_INVITATION',
+  ESR_CLICKED_START_REVIEWING_CODE_ON_GITHUB: 'ESR_CLICKED_START_REVIEWING_CODE_ON_GITHUB',
+  ESR_CLICKED_LEARN_MORE_ABOUT_SUMMARIES_AND_TAGS: 'ESR_CLICKED_LEARN_MORE_ABOUT_SUMMARIES_AND_TAGS',
+  ESR_CLICKED_CONTACT_SUPPORT: 'ESR_CLICKED_CONTACT_SUPPORT',
+  ESR_CLICK_ON_VIDEO: 'ESR_CLICK_ON_VIDEO',
+  ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO: 'ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO'
 };
 
 // Conditional import and init amplitude only on the browser side
@@ -23,7 +28,7 @@ export const initAmplitude = (user) => {
   if (amplitudeApiKey) {
     if (process.browser) {
 
-      const { _id, username, firstName, lastName, isVerified, isWaitlist, roles = [] } = user;
+      const { _id, username, firstName = '', lastName = '', isVerified, isWaitlist, roles = [] } = user;
 
       // ## REFACTORING NEEDED ##
       // Roles is an array (ie. users can have several roles and teams)
@@ -58,8 +63,8 @@ export const fireAmplitudeEvent = (event, opts) => {
         event = AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE;
       } else if (url === PATHS.PERSONAL_INSIGHTS) {
         event = AMPLITUDE_EVENTS.VIEWED_PERSONAL_INSIGHTS_PAGE;
-      } else if (url === PATHS.SUGGESTED_SNIPPETS._) {
-        event = AMPLITUDE_EVENTS.VIEWED_SUGGESTED_SNIPPETS_PAGE;
+      } else if (url === PATHS.SNIPPETS._) {
+        event = AMPLITUDE_EVENTS.VIEWED_SNIPPETS_PAGE;
       }  else if (url === PATHS.DASHBOARD) {
         event = AMPLITUDE_EVENTS.VIEWED_REPOS_PAGE;
       }  else if (url === PATHS.INVITATIONS) {

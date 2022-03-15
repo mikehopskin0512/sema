@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faMinus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './checkbox.module.scss';
+import { white0 } from '../../../styles/_colors.module.scss';
 
 const Checkbox = ({ value, onChange, intermediate }) => {
   const handleClick = (e) => {
@@ -18,10 +19,10 @@ const Checkbox = ({ value, onChange, intermediate }) => {
       onClick={handleClick}
     >
       {
-        intermediate ? (<FontAwesomeIcon icon={faMinus} size="xs" color="#fff" />) : (
+        intermediate ? (<FontAwesomeIcon icon={faMinus} size="xs" color={white0} />) : (
           <>
             {
-              value && <FontAwesomeIcon icon={faCheck} size="xs" color="#fff" />
+              value && <FontAwesomeIcon icon={faCheck} size="xs" color={white0} />
             }
           </>
         )

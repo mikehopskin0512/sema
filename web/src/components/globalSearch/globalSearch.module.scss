@@ -1,3 +1,4 @@
+@import "../../../styles/_colors.module.scss";
 
 .global-search {
   max-height: calc(100vh - 400px);
@@ -7,14 +8,14 @@
   top: 48px;
   right: 0;
   width: 630px;
-  background: #FFFFFF;
-  border: 1px solid #E3E9EE;
+  background: $white-0;
+  border: 1px solid $gray-300;
   box-shadow: 2px 3px 7px rgba(149, 165, 177, 0.5);
   border-radius: 8px;
   z-index: 99;
 
   &_category {
-    border-bottom: 1px solid #BFCBD3;
+    border-bottom: 1px solid $gray-400;
 
     &:nth-last-of-type(1) {
       border-bottom: none;
@@ -24,7 +25,7 @@
   &_category-title {
     padding: 20px 20px 0;
     text-transform: uppercase;
-    color: #0081A7;
+    color: $blue-700;
     font-size: 10px;
     line-height: 12px;
     font-weight: bold;

@@ -1,10 +1,16 @@
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+import path from 'path';
+
 import { version } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { selectRepositoriesByOrg, selectContributors, selectFileTypesByOrg } from '../shared/scqp';
 import { create, findBySlug, sendNotification } from './organizationService';
+import checkEnv from '../middlewares/checkEnv';
 
+const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
 
 export default (app, passport) => {
@@ -117,4 +123,7 @@ export default (app, passport) => {
       }
     },
   );
+
+  // Swagger route
+  app.use(`/${version}/organizations-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };

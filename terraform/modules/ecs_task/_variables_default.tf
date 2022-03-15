@@ -67,7 +67,7 @@ variable "external_iam_policies" {
 variable "cw_retention_in_days" {
   type        = number
   description = "Number of days is needed to retain log events in the log group."
-  default     = 0
+  default     = 30
   validation {
     condition     = can(index([0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653], var.cw_retention_in_days))
     error_message = "Only [0, 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653] values are allowed for cw_retention_in_days variable."
@@ -110,4 +110,32 @@ variable "sg_tags" {
   type        = map(string)
   description = "A key - value list of additional tags, that is attached to security group."
   default     = {}
+}
+
+variable "datadog_api_key" {
+  type        = string
+  description = "An API key for configuring forwarding logs to datadog"
+  default     = null
+  validation {
+    condition     = var.datadog_api_key != ""
+    error_message = "An datadog api key must not be empty."
+  }
+}
+
+variable "sg_description" {
+  type        = string
+  description = "Security group description."
+  default     = "Managed by Terraform"
+}
+
+variable "min_capacity" {
+  type        = number
+  description = "The min capacity of the scalable target."
+  default     = 3
+}
+
+variable "max_capacity" {
+  type        = number
+  description = "The max capacity of the scalable target."
+  default     = 6
 }

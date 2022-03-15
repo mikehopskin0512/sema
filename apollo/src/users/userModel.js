@@ -29,7 +29,7 @@ const identitySchema = mongoose.Schema({
   lastName: String,
   profileUrl: String,
   avatarUrl: String,
-  repositories: [repositoryScheme]
+  repositories: [repositoryScheme],
 }, { _id: false });
 
 const userSchema = mongoose.Schema({
@@ -80,15 +80,15 @@ userSchema.pre('save', async function save(next) {
     // Creates default user collection
     const personalCollection = await createUserCollection(username);
     const semaCollections = await findByAuthor('sema');
-    let userCollections = semaCollections.map((c) => {
-      const collection = { isActive: false, collectionData: c._id}
+    const userCollections = semaCollections.map((c) => {
+      const collection = { isActive: false, collectionData: c._id };
       if (defaultSemaCollections.includes(c.name)) {
-        collection.isActive = true
+        collection.isActive = true;
       }
       return collection;
     });
     userCollections.push({ collectionData: personalCollection._id, isActive: true });
-    this.collections = userCollections
+    this.collections = userCollections;
 
     // Allow null password (don't hash if password is null)
     if (this.password) {
@@ -149,4 +149,4 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
 userSchema.index({ username: 1, 'identities.id': 1 });
 userSchema.index({ orgId: 1 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

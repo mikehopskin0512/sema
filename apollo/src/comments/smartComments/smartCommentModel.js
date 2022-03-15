@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
 import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
-import { buildReactionsEmptyObject, incrementReactions } from '../reaction/reactionService';
-import { buildTagsEmptyObject, incrementTags } from '../tags/tagService';
+import {getPullRequestsByExternalId} from "./smartCommentService";
+
 const { Schema } = mongoose;
 
 const githubMetadataSchema = new Schema({
@@ -38,7 +38,7 @@ const smartCommentSchema = new Schema({
 smartCommentSchema.post('save', async function (doc, next) {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { githubMetadata: { repo_id: externalId, url, requester }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
+    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
 
     if (externalId) {
       const user = await findById(userId);
@@ -47,13 +47,13 @@ smartCommentSchema.post('save', async function (doc, next) {
       let repository = await findByExternalId(externalId);
       const reaction = {
         smartCommentId: mongoose.Types.ObjectId(_id),
-        reactionId: mongoose.Types.ObjectId(reactionId)
+        reactionId: mongoose.Types.ObjectId(reactionId),
       };
 
       const tags = {
         smartCommentId: mongoose.Types.ObjectId(_id),
-        tagsId: tagsIds
-      }
+        tagsId: tagsIds,
+      };
 
       if (repository) {
         // It already exists in the database, use the object for this one and upsert the reactions
@@ -62,16 +62,28 @@ smartCommentSchema.post('save', async function (doc, next) {
         repoReactions.push(reaction);
         repoTags.push(tags);
 
+        const repoPullRequests = await getPullRequestsByExternalId(externalId);
+        if (!repoPullRequests?.includes(pull_number)) {
+          repository.repoStats.smartCodeReviews += 1;
+        }
+
         const repoUserIds = repository.repoStats.userIds.map((id) => id.toString());
         if (!repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
+          repository.repoStats.smartCommenters += 1;
+          repository.repoStats.semaUsers += 1;
         }
 
         if (requesterId) {
           if (!repoUserIds.includes(requesterId.toString())) {
             repository.repoStats.userIds.push(requesterId);
+            repository.repoStats.smartCommenters += 1;
+            repository.repoStats.semaUsers += 1;
           }
         }
+
+        repository.repoStats.smartComments += 1;
+
       } else {
         repository = {
           externalId,
@@ -92,6 +104,10 @@ smartCommentSchema.post('save', async function (doc, next) {
             userIds: [
               userId
             ] || [],
+            smartCodeReviews: 1,
+            smartComments: 1,
+            smartCommenters: 1,
+            semaUsers: 1,
           }
         }
         if (requesterId) {
@@ -100,7 +116,8 @@ smartCommentSchema.post('save', async function (doc, next) {
       }
 
       const newRepository = await createOrUpdate(repository);
-      const repoData = { name: repo, id: externalId, fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')), githubUrl: url.slice(0, url.search('/pull/')) }
+      // eslint-disable-next-line max-len
+      const repoData = { name: repo, id: externalId, fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')), githubUrl: url.slice(0, url.search('/pull/')) };
       await addRepositoryToIdentity(user, repoData);
     }
     return next();

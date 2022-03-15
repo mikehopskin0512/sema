@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -21,8 +21,12 @@ const OnboardingModal = ({
   toggleModalActive,
   semaCollections,
   setComment,
-  onSubmit
+  onSubmit,
+  isPluginInstalled,
 }) => {
+
+  const [isQueryFinished, setQueryFinished] = useState(false);
+
   const renderModalContent = (currentPage) => {
     switch (currentPage) {
     case 1:
@@ -33,6 +37,7 @@ const OnboardingModal = ({
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          isPluginInstalled={isPluginInstalled}
           closeModal={() => toggleModalActive(false)}
         />
       );
@@ -64,8 +69,8 @@ const OnboardingModal = ({
           page={page}
           nextPage={() => nextPage(currentPage)}
           previousPage={() => previousPage(currentPage)}
+          isPluginInstalled={isPluginInstalled}
           closeModal={() => toggleModalActive(false)}
-          onSubmit={onSubmit}
         />
       );
     default:
@@ -81,6 +86,18 @@ const OnboardingModal = ({
     }
     setCollection(collection);
   }, [semaCollections]);
+
+  // Interval for delay of spinner in Extension Page
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     if (isPluginInstalled) {
+  //       clearInterval(interval);
+  //     }
+  //     const res = await isExtensionInstalled();
+  //     togglePluginInstalled(res);
+  //     setQueryFinished(true);
+  //   }, 5000);
+  // }, []);
 
   return (
     <div className={clsx('modal', isModalActive && 'is-active')}>
@@ -121,6 +138,7 @@ OnboardingModal.propTypes = {
   semaCollections: PropTypes.array.isRequired,
   setComment: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  isPluginInstalled: PropTypes.bool.isRequired,
 };
 
 export default OnboardingModal;

@@ -1,17 +1,17 @@
 /* eslint react/no-danger: 0, max-len: 0 */
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { PATHS, SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import usePermission from '../../hooks/usePermission';
 
 const withSemaAdmin = (WrappedComponent) => {
   return (props) => {
     if (typeof window !== 'undefined') {
       const Router = useRouter();
-      const { user } = useSelector((state) => state.authState);
-      const isSemaAdmin = () => user && user.isSemaAdmin;
+      const { checkAccess } = usePermission();
 
-      if (!isSemaAdmin()) {
-        Router.push('/admin');
+      if (!checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers')) {
+        Router.push(PATHS.DASHBOARD);
         return null;
       }
 

@@ -11,16 +11,16 @@ import CommentFilter from '../commentFilter';
 import SuggestedCommentCard from '../suggestedCommentCard';
 import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
-import GlobalSearch from "../../globalSearch";
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_TEAM_ADMIN_NAME } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';
 import usePermission from '../../../hooks/usePermission';
-import { EditComments } from '../../../data/permissions';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import {isSemaDefaultCollection, isTeamDefaultCollection} from '../../../utils';
+import { black950 } from '../../../../styles/_colors.module.scss';
 
 const { getCollectionById } = commentsOperations;
 const { clearAlert } = alertOperations;
@@ -30,14 +30,14 @@ const NUM_PER_PAGE = 10;
 const SuggestedCommentCollection = ({ collectionId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { alerts, auth, collectionState, isFetching } = useSelector((state) => ({
+  const { alerts, auth, collectionState } = useSelector((state) => ({
     auth: state.authState,
     collectionState: state.commentsState,
     alerts: state.alertsState,
   }));
 
-  const { token, user } = auth;
-  const { collection: { name = '', comments = [], _id } } = collectionState;
+  const { token, user, selectedTeam } = auth;
+  const { collection: { name = '', comments = [], _id,  }, isFetching } = collectionState;
   const { showAlert, alertType, alertLabel } = alerts;
 
   const [page, setPage] = useState(1);
@@ -45,7 +45,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const [tagFilters, setTagFilters] = useState([]);
   const [languageFilters, setLanguageFilters] = useState([]);
   const [selectedComments, setSelectedComments] = useState([]);
-  const { checkAccess } = usePermission();
+  const { checkAccess, checkTeamPermission } = usePermission();
   const [isParsing, setIsParsing] = useState(true);
 
   useAuthEffect(() => {
@@ -85,7 +85,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   };
 
   const goToAddPage = async () => {
-    await router.push(`${PATHS.SUGGESTED_SNIPPETS.ADD}?cid=${collectionId}`);
+    await router.push(`${PATHS.SNIPPETS.ADD}?cid=${collectionId}`);
   };
 
   const onSearch = ({ search, tag, language }) => {
@@ -131,7 +131,8 @@ const SuggestedCommentCollection = ({ collectionId }) => {
   const unarchiveComments = useMemo(() => commentsFiltered.filter((item) => selectedComments
     .indexOf(item._id) !== -1 && item.isActive), [selectedComments, commentsFiltered]);
 
-  const isEditable = useMemo(() => checkAccess({name: SEMA_TEAM_ADMIN_NAME}, EditComments) || name.toLowerCase() === 'my snippets' || name.toLowerCase() === 'custom snippets', [user, name]);
+  const canCreate = useMemo(() => checkTeamPermission('canCreateSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
+  const canEdit = useMemo(() => checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name }), [user, name]);
 
   return (
     <div>
@@ -139,27 +140,27 @@ const SuggestedCommentCollection = ({ collectionId }) => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div>
         <div className="is-flex is-align-items-center px-10 mb-15">
-          <a href={PATHS.SUGGESTED_SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
-            <ArrowLeftIcon color="#000" size="small" />
+          <a href={PATHS.SNIPPETS._} className="is-hidden-mobile mr-8 is-flex">
+            <ArrowLeftIcon color={black950} size="small" />
           </a>
           <nav className="breadcrumb" aria-label="breadcrumbs">
             <ul>
-              <li><a href={PATHS.SUGGESTED_SNIPPETS._} className="has-text-grey">Suggested Snippets</a></li>
-              <li className="is-active has-text-weight-semibold"><a>{name}</a></li>
+              <li><a href={PATHS.SNIPPETS._} className="has-text-grey">Snippets</a></li>
+              <li className="is-active has-text-weight-semibold"><a>{isFetching ? '' : name}</a></li>
             </ul>
           </nav>
         </div>
         <div className="is-flex is-flex-wrap-wrap is-align-items-center is-justify-content-space-between">
           <div className="is-flex is-align-items-center p-10">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-              {name}
+              {isFetching ? '' : name}
             </p>
             <span className="tag is-rounded is-uppercase has-text-weight-semibold is-size-8 is-light">
-              {comments.length} suggested snippets
+              {isFetching ? '' : `${comments.length} snippets`}
             </span>
           </div>
           {
-            isEditable && (
+            !isFetching && canCreate && (
               <button
                 className="button is-small is-primary border-radius-4px"
                 type="button"
@@ -171,12 +172,9 @@ const SuggestedCommentCollection = ({ collectionId }) => {
               </button>
             )
           }
-          <div style={{ marginLeft: 'auto' }}>
-            <GlobalSearch />
-          </div>
         </div>
         {
-          isEditable && selectedComments.length ? (
+          canEdit && selectedComments.length ? (
             <ActionGroup
               selectedComments={selectedComments}
               handleSelectAllChange={handleSelectAllChange}
@@ -197,7 +195,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
             <div className="is-size-5 has-text-black-950 my-120 has-text-centered">
               <img src="/img/empty-page.svg" className={styles['no-comments-img']} />
               <p className="is-size-7 my-25">You don't have any Custom Snippets.</p>
-              { isEditable && (
+              { canCreate && (
                 <button
                   className="button is-small is-primary border-radius-4px has-text-semibold"
                   type="button"
@@ -217,7 +215,7 @@ const SuggestedCommentCollection = ({ collectionId }) => {
                 collectionId={collectionId}
                 selected={!!selectedComments.find((g) => g === item._id)}
                 onSelectChange={handleSelectChange}
-                isEditable={isEditable}
+                isEditable={canEdit}
               />
             ))
           )

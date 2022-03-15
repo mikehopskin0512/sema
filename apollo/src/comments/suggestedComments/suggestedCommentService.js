@@ -9,16 +9,19 @@ import { fullName } from '../../shared/utils';
 import { fetchMetadata } from "../../shared/preview";
 import * as Json2CSV from 'json2csv';
 import { format } from 'date-fns';
+import UserRole from "../../userRoles/userRoleModel";
+import suggestedComments from "./index";
+import { getCollectionMetadata } from "../collections/collectionService";
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 
 const { Types: { ObjectId } } = mongoose;
-const SUGGESTED_COMMENTS_TO_DISPLAY = 4;
+const SNIPPETS_TO_DISPLAY = 4;
 const { Parser } = Json2CSV;
 
 
-const getUserSuggestedComments = async (userId, searchResults = [], allCollections) => {
-  const userActiveCommentsQuery = [
+const getUserSnippets = async (userId, searchResults = [], allCollections) => {
+  const userActiveSnippetsQuery = [
     {
       $match: { _id: new ObjectId(userId) },
     },
@@ -76,11 +79,11 @@ const getUserSuggestedComments = async (userId, searchResults = [], allCollectio
         from: 'suggestedComments',
         localField: 'comments',
         foreignField: '_id',
-        as: 'comments',
+        as: 'snippets',
       },
     },
   ];
-  const allUserCommentsQuery = [
+  const allUserSnippetsQuery = [
     {
       $match: { _id: new ObjectId(userId) },
     },
@@ -127,16 +130,78 @@ const getUserSuggestedComments = async (userId, searchResults = [], allCollectio
         from: 'suggestedComments',
         localField: 'comments',
         foreignField: '_id',
-        as: 'comments',
+        as: 'snippets',
       },
     },
   ];
 
-  const commentsQuery = allCollections ? allUserCommentsQuery : userActiveCommentsQuery;
-  const commentsData = await User.aggregate(commentsQuery);
-  if (!commentsData || commentsData.length === 0) return [];
-  const [{ comments }] = commentsData;
-  return comments;
+  const snippetsQuery = allCollections ? allUserSnippetsQuery : userActiveSnippetsQuery;
+  const snippetsData = await User.aggregate(snippetsQuery);
+  if (!snippetsData || snippetsData.length === 0) return [];
+  const [{ snippets }] = snippetsData;
+  return snippets;
+};
+
+const getTeamSnippets = async(userId, teamId, searchResults = []) => {
+  const teamActiveSnippetsQuery = [
+    {
+      $match: { user: new ObjectId(userId), team: new ObjectId(teamId) }
+    }, {
+      $lookup: {
+        from: 'teams',
+        localField: 'team',
+        foreignField : '_id',
+        as: 'team'
+      }
+    }, {
+      $project: {
+        collections: {
+          $filter: {
+            input: { $first: '$team.collections' },
+            as: 'collection',
+            cond: { $eq: ['$$collection.isActive', true] }
+          }
+        }
+      }
+    }, {
+      $lookup: {
+        from: 'collections',
+        localField: 'collections.collectionData',
+        foreignField: '_id',
+        as: 'collections'
+      }
+    }, {
+      $project: {
+        _id: 0,
+        comments: {
+          $let: {
+            vars: {
+              userComments: {
+                $reduce: {
+                  input: '$collections.comments',
+                  initialValue: [],
+                  in: {$setUnion: ['$$value', '$$this']}
+                }
+              }
+            },
+            in: {$setIntersection: ['$$userComments', searchResults]}
+          }
+        }
+      }
+    }, {
+      $lookup: {
+        from: 'suggestedComments',
+        localField: 'comments',
+        foreignField: '_id',
+        as: 'snippets'
+      }
+    }
+  ];
+
+  const snippetsData = await UserRole.aggregate(teamActiveSnippetsQuery);
+  if (!snippetsData || snippetsData.length === 0) return [];
+  const [{ snippets }] = snippetsData;
+  return snippets;
 };
 
 const searchIndex = async (searchQuery) => {
@@ -146,52 +211,74 @@ const searchIndex = async (searchQuery) => {
     const results = await SuggestedComment.aggregate([
       {
         $search: {
-          index: 'suggestedComments',
-          text: {
-            query: searchQuery,
-            path: { wildcard: '*', },
-            fuzzy: { maxEdits: 2, prefixLength: 3 },
+          index: 'suggestedCommentsAutocomplete',
+          compound: {
+            should: [
+              {
+                autocomplete: {
+                  query: searchQuery,
+                  path: 'title',
+                  fuzzy: { maxEdits: 2, prefixLength: 3 },
+                },
+              },
+              {
+                autocomplete: {
+                  query: searchQuery,
+                  path: 'comment',
+                  fuzzy: { maxEdits: 2, prefixLength: 3 },
+                },
+              },
+            ],
           },
-        },
+        }
       },
       {
         $group: {
           _id: 'searchResults',
-          searchResults: { $push: '$_id' }
-        }
-      }
+          searchResults: { $push: '$_id' },
+        },
+      },
     ]);
     const isNoResults = !results.length
     return isNoResults ? [] : results[0].searchResults;
   }
 };
 
-const searchComments = async (user, searchQuery, allCollections) => {
+export const searchComments = async (user, team = null, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
+  const userId = user?.toString();
 
   // The number of suggested comments to list
-  searchResults.slice(0, SUGGESTED_COMMENTS_TO_DISPLAY);
+  searchResults.slice(0, SNIPPETS_TO_DISPLAY);
 
-  const comments = await getUserSuggestedComments(user, searchResults, allCollections);
-  const returnResults = comments.map(
-    ({
+  const snippets = team ? await getTeamSnippets(userId, team, searchResults) : await getUserSnippets(userId, searchResults, allCollections);
+
+  const returnResults = await Promise.all(snippets.map(async ({
       _id: id,
       title,
       comment,
-      engGuides,
+      engGuides = [],
       source: { name: sourceName } = '',
       source: { url: sourceUrl } = '',
-      collectionId = '',
-    }) => ({
-      id,
-      title,
-      comment,
-      sourceName,
-      sourceUrl,
-      engGuides,
-      collectionId,
-    }),
-  );
+      collections = [],
+      tags = [],
+      author = '',
+    }) => {
+      const metaData = sourceUrl ? await getLinkPreviewData(sourceUrl) : null;
+      return {
+        id,
+        title,
+        comment,
+        sourceName,
+        sourceUrl,
+        engGuides,
+        collections,
+        tags,
+        author,
+        sourceIcon: metaData?.icon || '',
+      }
+    }
+  ));
 
   // Store the search case to database
   const newQuery = new Query({
@@ -209,7 +296,7 @@ const searchComments = async (user, searchQuery, allCollections) => {
   };
 };
 
-const suggestCommentsInsertCount = async ({ page, perPage }) => {
+export const suggestCommentsInsertCount = async ({ page, perPage }) => {
   const query = [
     {
       $lookup: {
@@ -267,7 +354,7 @@ const makeTagsList = async (tags) => {
   return suggestedCommentTags;
 };
 
-const create = async (suggestedComment) => {
+export const create = async (suggestedComment) => {
   try {
     const { title, comment, source, tags, enteredBy, collectionId } = suggestedComment;
     let suggestedCommentTags = [];
@@ -299,7 +386,7 @@ const create = async (suggestedComment) => {
   }
 };
 
-const update = async (id, body) => {
+export const update = async (id, body) => {
   try {
     const { tags } = body;
     if (tags) {
@@ -326,13 +413,30 @@ const update = async (id, body) => {
   }
 };
 
-const bulkCreateSuggestedComments = async (comments, user) => {
+export const updateSnippetCollections = async (id, collection) => {
   try {
+    const snippet = await suggestedComments.updateOne({ _id: new ObjectId(id) }, { $addToSet: { collections: collection } });
+    return snippet;
+  } catch (error) {
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
+  try {
+    let collection = null;
+    if (collectionId) {
+      collection = await getCollectionMetadata(collectionId);
+    }
+
+    const { name: collectionName = '' } = collection
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user),
       enteredBy: user._id,
+      collections: collection ? [{ collectionId: new ObjectId(collectionId), name: collectionName }] : [],
       lastModified: new Date(),
     })));
 
@@ -351,7 +455,7 @@ const bulkCreateSuggestedComments = async (comments, user) => {
   }
 };
 
-const bulkUpdateSuggestedComments = async (comments) => {
+export const bulkUpdateSuggestedComments = async (comments) => {
   try {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
@@ -370,7 +474,7 @@ const bulkUpdateSuggestedComments = async (comments) => {
   }
 };
 
-const getSuggestedCommentsByIds = async (params) => {
+export const getSuggestedCommentsByIds = async (params) => {
   const query = SuggestedComment.find();
 
   if (params.comments) {
@@ -382,7 +486,7 @@ const getSuggestedCommentsByIds = async (params) => {
   return { suggestedComments, totalCount };
 };
 
-const getLinkPreviewData = async (url)=> {
+export const getLinkPreviewData = async (url)=> {
   try {
     const { data: metadata } = await fetchMetadata(url);
 
@@ -399,7 +503,7 @@ const getLinkPreviewData = async (url)=> {
   }
 }
 
-const exportSuggestedComments = async () => {
+export const exportSuggestedComments = async () => {
   const suggestedComments = await SuggestedComment.aggregate([
     {
       $lookup: {
@@ -459,14 +563,3 @@ const exportSuggestedComments = async () => {
   return csv;
 };
 
-module.exports = {
-  searchComments,
-  suggestCommentsInsertCount,
-  create,
-  update,
-  bulkCreateSuggestedComments,
-  bulkUpdateSuggestedComments,
-  getSuggestedCommentsByIds,
-  getLinkPreviewData,
-  exportSuggestedComments,
-};
