@@ -35,7 +35,7 @@ export const hooks = {
   onPrepare: function (config, capabilities) {
     // directory path
     const dirJunit = "./test/results";
-    const dirAllureRes = './allure-results';     
+    const dirAllureRes = './allure-results';
 
     // delete directory recursively
     try {
