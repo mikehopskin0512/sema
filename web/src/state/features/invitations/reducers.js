@@ -3,6 +3,7 @@ import { unshift } from '../../../utils'
 
 const initialState = {
   isFetching: false,
+  isAcceptingInvite: false,
   data: [],
   acceptedInvitationCount: 0,
   pendingInvitationCount: 0,
@@ -103,6 +104,23 @@ const reducer = (state = initialState, action) => {
         ...state,
         isFetching: false,
         inviteMetrics: {},
+        error: action.errors,
+      };
+    case types.REQUEST_ACCEPT_INVITATION:
+      return {
+        ...state,
+        isAcceptingInvite: true,
+      };
+    case types.REQUEST_ACCEPT_INVITATION_SUCCESS:
+      return {
+        ...state,
+        isAcceptingInvite: false,
+        error: {},
+      };
+    case types.REQUEST_ACCEPT_INVITATION_ERROR:
+      return {
+        ...state,
+        isAcceptingInvite: false,
         error: action.errors,
       };
     default:

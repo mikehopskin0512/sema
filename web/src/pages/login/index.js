@@ -19,12 +19,12 @@ import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
-const { fetchInvite } = invitationsOperations;
+const { fetchInvite, acceptInvite } = invitationsOperations;
 
 const Login = () => {
   const router = useRouter();
   const {
-    query: { token },
+    query: { token: inviteToken },
   } = router;
 
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const Login = () => {
     invitations: state.invitationsState,
   }));
 
-  const { user, isAuthenticated } = auth;
+  const { user, isAuthenticated, token } = auth;
   const { showAlert, alertType, alertLabel } = alerts;
 
   // Check for updated state in selectedTag
@@ -48,7 +48,7 @@ const Login = () => {
 
   // Redirect if user is already logged in
   useEffect(() => {
-    if (isAuthenticated && !user.isWaitlist) {
+    if (isAuthenticated && !user.isWaitlist && !invitations.isAcceptingInvite) {
       router.replace('/');
     }
   }, [isAuthenticated]);
@@ -59,7 +59,7 @@ const Login = () => {
   };
 
   const renderCard = () => {
-    if (token) {
+    if (inviteToken) {
       if (!isEmpty(invitations.data)) {
         return <InviteCard  invitation={invitations} />
       }
@@ -72,8 +72,9 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (token) {
-      dispatch(fetchInvite(token));
+    if (inviteToken) {
+      dispatch(fetchInvite(inviteToken));
+      dispatch(acceptInvite(inviteToken, token));
     }
   }, [])
 

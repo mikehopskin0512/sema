@@ -244,13 +244,14 @@ const searchIndex = async (searchQuery) => {
   }
 };
 
-const searchComments = async (user, team = null, searchQuery, allCollections) => {
+export const searchComments = async (user, team = null, searchQuery, allCollections) => {
   const searchResults = await searchIndex(searchQuery);
+  const userId = user?.toString();
 
   // The number of suggested comments to list
   searchResults.slice(0, SNIPPETS_TO_DISPLAY);
 
-  const snippets = team ? await getTeamSnippets(user, team, searchResults) : await getUserSnippets(user, searchResults, allCollections);
+  const snippets = team ? await getTeamSnippets(userId, team, searchResults) : await getUserSnippets(userId, searchResults, allCollections);
 
   const returnResults = await Promise.all(snippets.map(async ({
       _id: id,
@@ -295,7 +296,7 @@ const searchComments = async (user, team = null, searchQuery, allCollections) =>
   };
 };
 
-const suggestCommentsInsertCount = async ({ page, perPage }) => {
+export const suggestCommentsInsertCount = async ({ page, perPage }) => {
   const query = [
     {
       $lookup: {
@@ -353,7 +354,7 @@ const makeTagsList = async (tags) => {
   return suggestedCommentTags;
 };
 
-const create = async (suggestedComment) => {
+export const create = async (suggestedComment) => {
   try {
     const { title, comment, source, tags, enteredBy, collectionId } = suggestedComment;
     let suggestedCommentTags = [];
@@ -385,7 +386,7 @@ const create = async (suggestedComment) => {
   }
 };
 
-const update = async (id, body) => {
+export const update = async (id, body) => {
   try {
     const { tags } = body;
     if (tags) {
@@ -412,7 +413,7 @@ const update = async (id, body) => {
   }
 };
 
-const updateSnippetCollections = async (id, collection) => {
+export const updateSnippetCollections = async (id, collection) => {
   try {
     const snippet = await suggestedComments.updateOne({ _id: new ObjectId(id) }, { $addToSet: { collections: collection } });
     return snippet;
@@ -422,7 +423,7 @@ const updateSnippetCollections = async (id, collection) => {
   }
 };
 
-const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
+export const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
   try {
     let collection = null;
     if (collectionId) {
@@ -454,7 +455,7 @@ const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
   }
 };
 
-const bulkUpdateSuggestedComments = async (comments) => {
+export const bulkUpdateSuggestedComments = async (comments) => {
   try {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
@@ -473,7 +474,7 @@ const bulkUpdateSuggestedComments = async (comments) => {
   }
 };
 
-const getSuggestedCommentsByIds = async (params) => {
+export const getSuggestedCommentsByIds = async (params) => {
   const query = SuggestedComment.find();
 
   if (params.comments) {
@@ -485,7 +486,7 @@ const getSuggestedCommentsByIds = async (params) => {
   return { suggestedComments, totalCount };
 };
 
-const getLinkPreviewData = async (url)=> {
+export const getLinkPreviewData = async (url)=> {
   try {
     const { data: metadata } = await fetchMetadata(url);
 
@@ -502,7 +503,7 @@ const getLinkPreviewData = async (url)=> {
   }
 }
 
-const exportSuggestedComments = async () => {
+export const exportSuggestedComments = async () => {
   const suggestedComments = await SuggestedComment.aggregate([
     {
       $lookup: {
@@ -562,15 +563,3 @@ const exportSuggestedComments = async () => {
   return csv;
 };
 
-module.exports = {
-  searchComments,
-  suggestCommentsInsertCount,
-  create,
-  update,
-  updateSnippetCollections,
-  bulkCreateSuggestedComments,
-  bulkUpdateSuggestedComments,
-  getSuggestedCommentsByIds,
-  getLinkPreviewData,
-  exportSuggestedComments,
-};

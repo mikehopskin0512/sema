@@ -209,6 +209,23 @@ paths:
           description: search results matching criteria
         400:
           description: bad input parameter
+
+  /v1/invitations/accept/{inviteToken}:
+    post:
+      tags:
+        - acceptInvitation
+      summary: accept team invitations when user is already sema user
+      operationId: acceptInvitations
+      parameters:
+        - in: path
+          name: inviteToken
+          required: true
+      responses:
+        200:
+          description: successfully accepted invitation
+        400:
+          description: invalid token
+
   /v1/invitations/send:
     post:
       tags:

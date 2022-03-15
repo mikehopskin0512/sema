@@ -17,10 +17,10 @@ export const create = async (collection, userId, teamId) => {
   try {
     const newCollection = new Collection({
       ...collection,
-      tags: collection.tags.map((tag) => ({
+      tags: collection.tags ? collection.tags.map((tag) => ({
         ...tag,
         tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
-      })),
+      })) : [],
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
@@ -91,6 +91,17 @@ export const findById = async (id) => {
       }
     }).sort({ createdAt: -1 }).exec();
     return collection;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const findByType = async (type) => {
+  try {
+    const collections = Collection.find({ type }).exec();
+    return collections;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -282,7 +293,7 @@ export const createTeamCollection = async (team) => {
   try {
     const collection = {
       name: `${team.name}'s Snippets`,
-      description: team.description,
+      description: '',
       author: team.name,
       isActive: true,
       type: COLLECTION_TYPE.TEAM,

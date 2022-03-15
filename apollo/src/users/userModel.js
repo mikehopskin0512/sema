@@ -150,4 +150,4 @@ userSchema.methods.validatePassword = async function validatePassword(data) {
 userSchema.index({ username: 1, 'identities.id': 1 });
 userSchema.index({ orgId: 1 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

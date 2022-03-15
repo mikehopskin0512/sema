@@ -17,6 +17,7 @@ const widescreenPages = [
   `${PATHS.TEAM._}/[teamId]/${PATHS.DASHBOARD}`,
   `${PATHS.PORTFOLIOS}/[portfolioId]`,
   PATHS.PORTFOLIOS,
+  `${PATHS.TEAM._}/[teamId]${PATHS.SETTINGS}`,
 ];
 
 const noHeaderPages = [PATHS.LOGIN];

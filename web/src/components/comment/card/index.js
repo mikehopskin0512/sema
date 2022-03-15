@@ -15,6 +15,7 @@ import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
 import {updateTeamCollectionIsActiveAndFetchCollections} from "../../../state/features/teams/operations";
+import { fetchTeamCollections } from '../../../state/features/teams/actions';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -34,7 +35,7 @@ const Tag = ({ tag, _id, type }) => (
 )
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
-  const { checkAccess } = usePermission();
+  const { isTeamAdmin } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
   const { token, user, selectedTeam } = useSelector((state) => state.authState);
@@ -42,7 +43,6 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const [showMenu, setShowMenu] = useState(false);
   const { asPath } = router;
 
-  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
 
   const renderStats = (label, value) => (
     <div className={clsx(
@@ -98,20 +98,25 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     };
 
     const onClickArchiveCollection = async () => {
-      const collection = await dispatch(updateCollection(_id, { collection: { isActive: false, author } }, token));
-      if (collection) {
+      try {
+        await dispatch(updateCollection(_id, { collection: { isActive: false } }, token));
+        if(isActive) {
+          dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+        }
         dispatch(triggerAlert('Collection archived!', 'success'));
         dispatch(fetchAllUserCollections(token));
-        return;
+        dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+      } catch (error) {
+        dispatch(triggerAlert('Unable to archive collection', 'error'));
       }
-      dispatch(triggerAlert('Unable to archive collection', 'error'));
     }
 
     const onClickUnarchiveCollection = async () => {
-      const collection = await dispatch(updateCollection(_id, { collection: { isActive: true, author } }, token));
+      const collection = await dispatch(updateCollection(_id, { collection: { isActive: true } }, token));
       if (collection) {
         dispatch(triggerAlert('Collection unarchived!', 'success'));
         dispatch(fetchAllUserCollections(token));
+        dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
         return;
       }
       dispatch(triggerAlert('Unable to unarchived collection', 'error'));
@@ -121,13 +126,13 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
 
     return (
       <Link href={`?cid=${_id}`}>
-        <div className={clsx('p-10 is-flex is-flex-grow-1 is-clickable', styles.card)} aria-hidden="true">
+        <div className={clsx('p-10 is-flex is-clickable', styles.card)} aria-hidden="true">
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
             <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
               <p className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
-              {asPath === PATHS.SNIPPETS._ && isNotArchived ? (
-                <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
+              {asPath === PATHS.SNIPPETS._ && (
+                <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
                     type="checkbox"
@@ -135,10 +140,11 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     name={`activeSwitch-${_id}`}
                     className="switch is-rounded"
                     checked={isActive}
+                    disabled={!isNotArchived}
                   />
                   <label htmlFor={`activeSwitch-${_id}`} />
                 </div>
-              ) : <p className="is-size-7 is-italic">archived</p>}
+              )}
             </div>
             <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
               <div className="px-25 pb-15 has-text-gray-900 is-size-6 mr-20">
@@ -150,22 +156,19 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   </div>
                 )} */}
               </div>
-              <div className="is-flex is-justify-content-space-between has-background-gray-300">
-                <div className="px-12 is-flex-grow-3 is-flex">
-                  <div className={clsx(
-                    'border-radius-8px p-10 is-flex is-align-items-center',
-                  )}>
-                    <div className="mr-10 is-flex is-align-items-center mr-10">
-                      <CommentsIcon color='has-text-black-900' size='small' />
-                    </div>
-                    <p className="is-size-7 has-text-weight-semibold mr-8 has-text-blue-500">{commentsCount || comments.length}</p>
-                    <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
+              <div className={`is-flex is-justify-content-space-between is-align-items-center has-background-gray-300 ${styles['card-bottom-section']} ${(isMyComments || isTeamSnippet) && 'is-flex-wrap-wrap'}`}>
+                <div className={clsx(
+                  'border-radius-8px p-10 is-flex is-align-items-center',
+                )}>
+                  <div className="mr-10 is-flex is-align-items-center mr-10">
+                    <CommentsIcon color='has-text-black-900' size='small' />
                   </div>
-
+                  <p className="is-size-7 has-text-weight-semibold mr-8 has-text-blue-500">{commentsCount || comments.length}</p>
+                  <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
                 </div>
-                <div className="is-flex is-align-items-center mr-10 is-flex-grow-1 is-justify-content-flex-end">
-                  {isMyComments || isTeamSnippet ? (
-                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
+                <div className='is-flex is-align-items-center'>
+                  {(isMyComments || isTeamSnippet) && (
+                    <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden >
                       <div
                         className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',
                           styles['add-button'])}
@@ -178,41 +181,22 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                         New Snippet
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden>
-                        <div
-                          className={clsx('button has-text-gray-300 is-ghost is-clickable is-fullwidth has-text-weight-semibold',
-                            styles['add-button'])}
-                          onClick={onClickAddComment}
-                          aria-hidden
-                        >
-                          {/* This is a HACK, in order for it to be responsive together with the `my snippets` card */}
-                          <div className="mr-10 is-flex is-align-items-center">
-                            <PlusIcon />
-                          </div>
-                          New Snippet
-                        </div>
-                      </div>
-                      {/* TODO: In case this would be need in the future, this is the tags of the card (langauges). */}
-                      {/* <div className="is-flex is-flex-grow-1 is-flex-wrap-wrap is-align-items-center is-justify-content-flex-end is-hidden-mobile">
-                        {languages.slice(0, 2).map((language) => <Tag tag={language} _id={_id} type="language" />)}
-                        {languages.length > 2 && (<Tag tag={`${languages.length-2}+`} _id={_id} type="language" />)}
-                        {guides.slice(0, 2).map((guide) => <Tag tag={guide} _id={_id} type="guide" />)}
-                        {guides.length > 2 && (<Tag tag={`${guides.length-2}+`} _id={_id} type="guide" />)}
-                      </div> */}
-                    </>
+                  )}
+                  {asPath === PATHS.SNIPPETS._ && !isNotArchived && (
+                    <div className='is-italic pr-24'>
+                      Archived
+                    </div>
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     <div className="dropdown-trigger">
-                      <button className="button is-ghost has-text-black-900" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                      <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                         <OptionsIcon />
                       </button>
                     </div>
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
                         {
-                          canEdit && (
+                          isTeamAdmin() && (
                             <>
                               <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
                                 Edit Collection

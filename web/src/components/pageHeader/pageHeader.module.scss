@@ -5,15 +5,13 @@
 }
 
 .active {
-  color: $blue-300 !important;
-  border-bottom: 2px solid $blue-300 !important;
+  color: $blue-700 !important;
+  border-bottom: 2px solid $blue-700 !important;
 }
 
 .listItem {
-  padding: 3px !important;
-  margin-right: 20px;
   &:hover {
-    color: $blue-300 !important;
-    border-bottom: 2px solid $blue-300 !important;
+    color: $blue-700 !important;
+    border-bottom: 2px solid $blue-700 !important;
   }
 }

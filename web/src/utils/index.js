@@ -111,3 +111,10 @@ export const getPlatformLink = (username, type) => {
       return `${GITHUB_URL}/${username}`;
   }
 }
+
+export const parseEmails = (str) => {
+  return str.split(/,|\|| /g).map((item) => {
+    const match = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/.exec(item);
+    return match ? match[1] : match;
+  }).filter((item) => !!item);
+}

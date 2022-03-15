@@ -6,10 +6,11 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { GithubIcon, EditIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
-import Snapshot from '../../snapshots/snapshot';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
+import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 
 const { updatePortfolio } = portfoliosOperations;
 
@@ -52,6 +53,8 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
         ...rest,
         overview: profile,
       };
+
+      body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === 200) {
         toggleEditModal(false);
@@ -106,9 +109,17 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
           </div>
         </div>
       </div>
-      <div className="snapshot-container container">
-        <div className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</div>
-        {snapshots.map((s) => <Snapshot snapshotData={s} portfolioId={portfolio._id} />)}
+      <div className={clsx('container', styles['snaps-container'])}>
+        <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
+        {snapshots.map((s) =>
+            s.componentType === 'comments' ? (
+              <CommentSnapshot snapshotData={s} portfolioId={portfolio._id} />
+            ) : (
+              <section className={clsx(styles['chart-wrap'])}>
+                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} />
+              </section>
+            )
+        )}
       </div>
     </>
   )

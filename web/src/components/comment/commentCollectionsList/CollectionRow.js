@@ -52,23 +52,18 @@ const CollectionRow = ({ data }) => {
       <tr className="has-background-white my-10 is-clickable">
         <td className="py-15 has-background-white px-10" width={80}>
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-            {
-              isNotArchived ? (
-                <div className="field" aria-hidden onClick={onClickChild}>
-                  <input
-                    id={`activeSwitch-${_id}`}
-                    type="checkbox"
-                    onChange={onChangeToggle}
-                    name={`activeSwitch-${_id}`}
-                    className="switch is-rounded"
-                    checked={isActive}
-                  />
-                  <label htmlFor={`activeSwitch-${_id}`} />
-                </div>
-              ) : (
-                <p className="is-size-7 is-italic">archived</p>
-              )
-            }
+          <div className="field switch-input" aria-hidden onClick={onClickChild}>
+            <input
+              id={`activeSwitch-${_id}`}
+              type="checkbox"
+              onChange={onChangeToggle}
+              name={`activeSwitch-${_id}`}
+              className="switch is-rounded"
+              checked={isActive}
+              disabled={!isNotArchived}
+            />
+            <label htmlFor={`activeSwitch-${_id}`} />
+          </div>
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
@@ -118,14 +113,21 @@ const CollectionRow = ({ data }) => {
             </p>
           </div>
         </td>
+        <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
+          <div className="is-flex is-flex-direction-column is-justify-content-center">
+            <p className="is-size-7 has-text-weight-semibold">
+            { isNotArchived ? 'Available' : 'Archived' }
+            </p>
+          </div>
+        </td>
         { canEdit && (
           <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
-            <ActionMenu collectionData={collectionData} />
+            <ActionMenu collectionData={collectionData} collectionActive={isActive} />
           </td>
         ) }
       </tr>
     </Link>
-  )
+  );
 };
 
 CollectionRow.propTypes = {

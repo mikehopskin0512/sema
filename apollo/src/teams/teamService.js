@@ -20,7 +20,9 @@ export const ROLE_NAMES = {
 
 export const createMembersRoles = async (members, teamId) => {
   const memberRole = await getRoleByName(ROLE_NAMES.MEMBER);
-  members.split(',').forEach(async (member) => {
+  // TODO: need a refactoring to Array
+  const _members = Array.isArray(members) ? members : members.split(',');
+  _members.forEach(async (member) => {
     const user = await findByUsername(member.trim());
     await createUserRole({
       user: user._id,
@@ -48,6 +50,17 @@ export const getTeamsByUser = async (userId) => {
   }
 };
 
+export const getTeamByUrl = async (url) => {
+  try {
+    const team = await Team.findOne({ url }).exec();
+    return team || null;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+}
+
 export const getTeamById = async (id) => {
   try {
     const query = Team.findOne({ _id: new ObjectId(id) });
@@ -65,7 +78,7 @@ export const getTeamById = async (id) => {
         comments: 1
       }
     }).exec();
-    
+
     return team || {};
   } catch (err) {
     logger.error(err);
@@ -134,7 +147,6 @@ export const updateTeamRepos = async (teamId, repoIds) => {
     return error;
   }
 };
-
 
 export const getTeamRepos = async (teamId) => {
   try {
@@ -252,4 +264,18 @@ export const bulkUpdateTeamCollections = async (collectionData, ids) => {
     logger.error(error);
     throw (error);
   }
+}
+
+export const updateTeamAvatar = async (teamId, userId, file) => {
+  const team = await Team.findById(teamId);
+
+  team.avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${file.filename}`;
+  await team.save();
+
+  const role = await UserRole.findOne({
+    team: teamId,
+    user: userId,
+  }).populate('team').populate('role');
+
+  return role;
 }

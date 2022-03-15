@@ -1,17 +1,16 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import _ from 'lodash'
 import { Helmet } from 'react-helmet';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
 import { teamsOperations } from '../../../../state/features/teams';
-import TeamInfo from '../../../../components/team/TeamInfo';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
 import { TAB } from '../../../../utils/constants';
+import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
 const { fetchTeamMembers } = teamsOperations;
 
@@ -30,61 +29,63 @@ const TeamSettings = () => {
     }),
   );
   const { token, user } = auth;
-  const [userRole, setUserRole] = useState({});
+  const [activeTeam, setActiveTeam] = useState({});
+  
+  useEffect(() => {
+    dispatch(fetchTeamMembers(teamId, {}, token));
+  }, [teamId]);
 
   const setDefaultTag = () => {
     router.push({
       pathname: `/team/${teamId}/settings`,
-      query: { tab: 'info' },
+      query: { tab: TAB.management },
     });
   };
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, {}, token));
-  }, [teamId])
-
-  useEffect(() => {
     if (teams.teams.length) {
-      const activeRole = _.find(teams.teams, function (o) {
-        return o.team._id === teamId
+      const team = teams.teams.find(({ team }) => {
+        return (team?.url === teamId) || (team?._id === teamId)
       });
-      if (activeRole) {
-        setUserRole(activeRole)
+      if (team) {
+        setActiveTeam(team);
       }
     }
-  }, [teams]);
+  }, [teams, teamId]);
 
   useEffect(() => {
     !tab && setDefaultTag();
   }, []);
 
   const menus = [
-    {
-      name: 'Team Info',
-      path: `/team/${teamId}/settings`,
-      tab: TAB.info,
-    },
-    {
+    (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.management,
-    },
+      icon: <TeamIcon width={20} />,
+    }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
       path: `/team/${teamId}/settings`,
       tab: TAB.labels,
+      icon: <TagIcon />,
     }),
   ];
 
   return (
     <>
-      <div className="has-background-gray-200 hero">
-        <Helmet {...TeamDashboardHelmet} />
-        <div className="hero-body pb-300 px-0">
-          <PageHeader menus={menus} userRole={userRole} />
-          {tab === 'info' && <TeamInfo userRole={userRole} teams={teams} teamId={teamId}  />}
-          {tab === 'management' && <TeamManagement />}
-          {tab === 'labels' && <LabelsManagement />}
+      <div className="has-background-white">
+        <div className="container pt-40">
+          <Helmet {...TeamDashboardHelmet} />
+          <PageHeader menus={menus} userRole={activeTeam} />
+        </div>
+      </div>
+      <div className="container">
+        <div className="has-background-white-50">
+          <div className="hero-body pt-0 pb-100 px-0">
+            {tab === 'management' && <TeamManagement activeTeam={activeTeam}/>}
+            {tab === 'labels' && <LabelsManagement activeTeam={activeTeam}/>}
+          </div>
         </div>
       </div>
     </>

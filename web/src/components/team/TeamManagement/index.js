@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import Avatar from 'react-avatar';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -14,11 +15,13 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { ArrowDropdownIcon, PlusIcon } from '../../Icons';
+import { PATHS } from '../../../utils/constants';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
-const TeamManagement = () => {
+const TeamManagement = ({ activeTeam }) => {
   const router = useRouter();
   const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +32,6 @@ const TeamManagement = () => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
-  const [userRole, setUserRole] = useState({});
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -42,7 +44,7 @@ const TeamManagement = () => {
 
   const dispatch = useDispatch();
   const canModifyRoles = isTeamAdmin();
-  const { teamId } = router.query;
+  const teamId = activeTeam?.team?._id;
 
   useAuthEffect(() => {
     if (teamId) {
@@ -56,7 +58,7 @@ const TeamManagement = () => {
     label: role.name,
   })) || [], [roles]);
 
-  const dataSource = useMemo(() => members?.map((member) => ({
+  const dataSource = useMemo(() => members ? members.map((member) => ({
     _id: member._id,
     userInfo: {
       userId: member.user?._id,
@@ -67,7 +69,8 @@ const TeamManagement = () => {
     role: member.role ? member.role._id : null,
     roleName: member.role ? member.role.name : null,
     disableEdit: member.user?._id === user._id,
-  })) || [], [members]);
+    status: 'Invited',
+  })).sort((member1, member2) => member1.userInfo.name.localeCompare(member2.userInfo.name)) : [], [members]);
 
   const handleChangeRole = useCallback((newValue, row) => {
     setIsOpen(true);
@@ -86,28 +89,17 @@ const TeamManagement = () => {
   const onRemoveMember = useCallback(async (userRoleId) => {
     await dispatch(removeUserRole(teamId, userRoleId, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
-  }, [dispatch, page, perPage, token, user]);
-
-  useEffect(() => {
-    if (team.teams.length) {
-      const activeRole = _.find(team.teams, function (o) {
-        return o.team._id === teamId
-      });
-      if (activeRole) {
-        setUserRole(activeRole)
-      }
-    }
-  }, [team]);
+  }, [dispatch, page, perPage, token, user, teamId]);
 
   const columns = useMemo(() => [
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
       accessor: 'userInfo',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
+      className: 'pl-20 pr-50 py-10 has-background-white-50',
       Cell: ({ cell: { value } }) => (
         <div className="is-flex is-align-items-center is-cursor-pointer">
-          <img src={value.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
-          <span className="is-whitespace-nowrap">{ value.name }</span>
+          <Avatar src={value.avatarUrl} size="32" round />
+          <span className="is-whitespace-nowrap ml-10">{ value.name }</span>
         </div>
       ),
     },
@@ -115,12 +107,12 @@ const TeamManagement = () => {
       Header: () => <div className="is-size-8 is-uppercase">Email</div>,
       isVisible: false,
       accessor: 'email',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
+      className: 'pl-20 pr-50 py-10 has-background-gray-200',
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'role',
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width '),
+      className: clsx('px-20 py-10 has-background-white-50 is-full-width '),
       Cell: ({ cell: { value }, row }) => canModifyRoles ? (
         <div className={clsx('is-flex')}>
           <Select
@@ -128,11 +120,27 @@ const TeamManagement = () => {
             options={rolesOptions}
             value={rolesOptions.find((item) => item.value === value)}
             onChange={(newValue) => handleChangeRole(newValue, row)}
+            components={{
+              IndicatorSeparator: () => null,
+              DropdownIndicator: () => <ArrowDropdownIcon className="mr-5" />
+            }}
           />
-          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
         </div>
       ) : (
         <span>{row.original.roleName}</span>
+      ),
+    },
+    {
+      Header: "",
+      isVisible: false,
+      accessor: 'action',
+      className: 'pl-20 py-10 has-background-white-50',
+      Cell: ({ row }) => canModifyRoles ? (
+        <div className="is-flex is-justify-content-flex-end">
+          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
+        </div>
+      ) : (
+        <div />
       ),
     },
   ], [rolesOptions, handleChangeRole, onRemoveMember]);
@@ -153,12 +161,27 @@ const TeamManagement = () => {
     return initState
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
+  const goToInvitePage = () => {
+    router.push(PATHS.TEAM.INVITE(teamId));
+  };
+
   return (
-    <div className="has-background-gray-100 hero mx-10">
+    <div className="hero mx-10">
       <Helmet {...TeamManagementHelmet} />
+      <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
+        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+        <button
+          className="button is-primary border-radius-4px"
+          type="button"
+          onClick={goToInvitePage}
+        >
+          <PlusIcon size="small" />
+          <span className="ml-10">Invite New Members</span>
+        </button>
+      </div>
       <div className="hero-body py-0 px-0">
         <div className="content-container px-0">
-          <div className={styles['table-wrapper']}>
+          <div className={clsx('has-background-gray-300 pb-15', styles['table-wrapper'])}>
             <Table
               className="overflow-unset"
               data={dataSource}
