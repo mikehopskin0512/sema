@@ -21,3 +21,6 @@ customScripts/css-prefix/node_modules
 
 # secrets
 secrets.*.js
+
+# eslint
+.husky/pre-commit
