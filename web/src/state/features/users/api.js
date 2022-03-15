@@ -1,4 +1,4 @@
-import { getAll, create, update, get, exportItem } from '../../utils/api';
+import { getAll, create, patch, get, exportItem, update } from '../../utils/api';
 
 export const getUsers = (params) => getAll('/api/proxy/admin/users', { params });
 export const updateUserInvitations = (userId, params) => create(`/api/proxy/admin/users/${userId}/invitations`, params);

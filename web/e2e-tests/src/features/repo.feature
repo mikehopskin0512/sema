@@ -66,7 +66,7 @@ Feature: Repo
         And  I expect that element "last3MonthsDateRange" becomes displayed
         And  I expect that element "last12MonthsDateRange" becomes displayed
         And  I expect that element "allTimeDateRange" becomes displayed
-
+        
         When I click on the element "allTimeDateRange"
         And  I click on the element "dateRangeFilter"
         Then I expect that element "fromFilter" becomes displayed
