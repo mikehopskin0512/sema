@@ -121,6 +121,12 @@ export const segmentTrack = (action, properties) => {
   });
 };
 
+export const segmentGroup = (groupId, traits) => {
+  global.analytics.group(groupId, {
+    ...traits,
+  });
+};
+
 export const segmentReset = () => {
   global.analytics.reset();
 };

@@ -268,7 +268,7 @@ export default (app, passport) => {
 
           const message = {
             recipient,
-            url: `${orgDomain}/login?token=${token}`,
+            url: `${orgDomain}/login?token=${token}&team=${teamId}`,
             templateName,
             orgName,
             teamName: team?.name,
