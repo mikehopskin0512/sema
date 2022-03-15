@@ -37,7 +37,7 @@ const TeamSettings = () => {
 
   const setDefaultTag = () => {
     router.push({
-      pathname: PATHS.TEAM.SETTINGS(teamId),
+      pathname: PATHS.TEAMS.SETTINGS(teamId),
       query: { tab: TAB.management },
     });
   };
@@ -60,13 +60,13 @@ const TeamSettings = () => {
   const menus = [
     (isTeamAdminOrLibraryEditor() && {
       name: 'Team Management',
-      path: PATHS.TEAM.SETTINGS(teamId),
+      path: PATHS.TEAMS.SETTINGS(teamId),
       tab: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
     (isTeamAdminOrLibraryEditor() && {
       name: 'Labels Management',
-      path: PATHS.TEAM.SETTINGS(teamId),
+      path: PATHS.TEAMS.SETTINGS(teamId),
       tab: TAB.labels,
       icon: <TagIcon />,
     }),

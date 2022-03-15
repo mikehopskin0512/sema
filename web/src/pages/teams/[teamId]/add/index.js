@@ -114,7 +114,7 @@ const TeamEditPage = () => {
       if (team) {
         showNotification(team);
         await dispatch(fetchTeamsOfUser(token));
-        await router.push(`${PATHS.TEAM._}/${team.url}${PATHS.SETTINGS}?tab=${TAB.info}`);
+        await router.push(`${PATHS.TEAMS._}/${team.url}${PATHS.SETTINGS}?tab=${TAB.info}`);
       }
     } catch (e) {
       showNotification(null);

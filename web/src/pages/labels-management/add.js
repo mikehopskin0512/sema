@@ -125,7 +125,7 @@ const AddLabels = () => {
     const data = dispatch(createTags(tags, token));
     if (data) {
       router.push({
-        pathname: PATHS.TEAM.SETTINGS(teamId),
+        pathname: PATHS.TEAMS.SETTINGS(teamId),
         query: { tab: 'labels' },
       });
     }

@@ -183,7 +183,7 @@ export const PATHS = {
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAM: {
+  TEAMS: {
     _: '/teams',
     EDIT: (id) => `/teams/${id}/edit`,
     ADD: '/teams/add',
@@ -193,7 +193,6 @@ export const PATHS = {
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
-  TEAMS: '/teams',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   TEAM_CREATE: '/teams/add',
@@ -220,7 +219,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: `${PATHS.TEAM._}/[teamId]/edit`,
+    path: `${PATHS.TEAMS._}/[teamId]/edit`,
   },
 ];
 

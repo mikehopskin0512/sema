@@ -89,7 +89,7 @@ const EditLabel = () => {
     if (tags.length > 0) {
       dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
       router.push({
-        pathname: PATHS.TEAM.SETTINGS(teamId),
+        pathname: PATHS.TEAMS.SETTINGS(teamId),
         query: { tab: 'labels' },
       });
     }

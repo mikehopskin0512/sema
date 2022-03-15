@@ -41,7 +41,7 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
   }
 
   const goToEditPage = () => {
-    router.push(PATHS.TEAM.EDIT(team?._id));
+    router.push(PATHS.TEAMS.EDIT(team?._id));
   };
 
   const handleTabClick = (item) => {

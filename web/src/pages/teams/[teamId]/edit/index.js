@@ -104,7 +104,7 @@ const TeamEditPage = () => {
             </div>
             <div>
               <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
-              <a href={`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <a href={`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ const TeamEditPage = () => {
     });
 
     mutate(team);
-    await router.push(`${PATHS.TEAM._}/${teamId}${PATHS.SETTINGS}`);
+    await router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
   };
 
   const mutate = (obj) => {
@@ -134,7 +134,7 @@ const TeamEditPage = () => {
       <Helmet {...TeamUpdateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={PATHS.TEAM.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.TEAMS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-600">Team Management</span>
           </a>
