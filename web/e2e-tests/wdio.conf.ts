@@ -70,7 +70,7 @@ export const config: WebdriverIO.Config = {
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
   logLevel: process.env.LOG_LEVEL || "trace",
-  outputDir: path.join(__dirname, "/logs"),
+  // outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
   // loggers:
