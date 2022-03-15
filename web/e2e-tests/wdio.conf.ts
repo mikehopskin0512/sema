@@ -11,7 +11,7 @@ export const config: WebdriverIO.Config = {
   //
   // WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
   // on a remote machine).
-  //runner: "local",
+  runner: "local",
   //
   // ==================
   // Specify Test Files
@@ -50,6 +50,12 @@ export const config: WebdriverIO.Config = {
   //
   capabilities: [
     {
+      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+      // grid with only 5 firefox instances available you can make sure that not more than
+      // 5 instances get started at a time.
+      maxInstances: 1,
+
+      //
       browserName: "chrome",
       "goog:chromeOptions": {
         args: ["--disable-gpu", "--no-sandbox"],
@@ -64,7 +70,7 @@ export const config: WebdriverIO.Config = {
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
   logLevel: process.env.LOG_LEVEL || "info",
-  // outputDir: path.join(__dirname, "/logs"),
+  outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
   // loggers:
