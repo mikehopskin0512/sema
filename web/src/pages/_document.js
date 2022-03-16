@@ -1,12 +1,12 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import * as snippet from '@segment/snippet';
 
-const { NEXT_SEGMENT_API_KEY, NODE_ENV } = process.env;
+const { NEXT_PUBLIC_SEGMENT_API_KEY, NODE_ENV } = process.env;
 
 export default class MyDocument extends Document {
   renderSnippet() {
     const opts = {
-      apiKey: NEXT_SEGMENT_API_KEY,
+      apiKey: NEXT_PUBLIC_SEGMENT_API_KEY,
       page: true,
     };
     if (NODE_ENV === 'development') {
