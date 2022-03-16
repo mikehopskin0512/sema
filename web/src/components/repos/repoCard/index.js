@@ -69,7 +69,7 @@ const RepoCard = (props) => {
             ))}
           </div>
         </div>
-        {isTeamAdmin && (
+        {isTeamAdmin() && (
           <div className="has-background-gray-300 is-flex py-8 pr-12">
             <DropDownMenu
               options={[{ label: 'Remove from Team', onClick: () => setDeleteRepoModalOpen(true) }]}
@@ -82,7 +82,7 @@ const RepoCard = (props) => {
           </div>
         )}
       </div>
-      {isTeamAdmin && (
+      {isTeamAdmin() && (
         <DeleteRepoModal
           isOpen={isDeleteRepoModalOpen}
           onCancel={() => setDeleteRepoModalOpen(false)}
