@@ -22,7 +22,7 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
   }));
   const { tags } = tagState;
   const { token } = auth;
-  const { isSemaAdmin } = usePermission();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -49,8 +49,8 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
   }, [collectionState]);
 
   const statusOptions = [
-    { value: false, 'label': 'Inactive' },
-    { value: true, 'label': 'Active' }
+    { value: true, 'label': 'Available' },
+    { value: false, 'label': 'Archived' },
   ];
 
   const onChangeFilter = (type, value) => {
@@ -112,7 +112,7 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
           />
         </div>
         {
-          isSemaAdmin() && (
+          isTeamAdminOrLibraryEditor() && (
             <>
               <div className="column">
                 <CustomSelect
