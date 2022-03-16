@@ -142,9 +142,9 @@ export const fetchSmartComments = (params, token) => async (dispatch) => {
 
 export const fetchSmartCommentSummary = (params, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchSmartCommentSummary())
-    const { data: { summary } } = await getSmartCommentSummary(params, token);
-    dispatch(requestFetchSmartCommentSummarySuccess(summary));
+    dispatch(requestFetchSmartCommentSummary());
+    const { data } = await getSmartCommentSummary(params, token);
+    dispatch(requestFetchSmartCommentSummarySuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

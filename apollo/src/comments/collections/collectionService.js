@@ -17,6 +17,7 @@ export const create = async (collection, userId, teamId) => {
   try {
     const newCollection = new Collection({
       ...collection,
+      isActive: true,
       tags: collection.tags ? collection.tags.map((tag) => ({
         ...tag,
         tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
