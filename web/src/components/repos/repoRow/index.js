@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { isEmpty } from 'lodash';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -6,8 +6,10 @@ import Link from 'next/link';
 import styles from './repoRow.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
+import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
 const RepoRow = (props) => {
+  const titleRef = useRef(null);
   const {
     externalId = '', name = '', body = '', repoStats, users = []
   } = props;
@@ -18,7 +20,9 @@ const RepoRow = (props) => {
       <td className={clsx('py-15 has-background-white px-10', styles.document)}>
         <div className="is-flex is-align-items-center">
           {/* <FontAwesomeIcon icon={faStarSolid} color="#FFA20F" className="mr-20" /> */}
-          <p className={clsx("has-text-weight-semibold is-size-6", styles.body)}>{name}</p>
+          <OverflowTooltip ref={titleRef} text={name}>
+            <p ref={titleRef} className={clsx("has-text-weight-semibold is-size-6", styles.body)}>{name}</p>
+          </OverflowTooltip>
         </div>
       </td>
       <td className="py-15 has-background-white px-10">
