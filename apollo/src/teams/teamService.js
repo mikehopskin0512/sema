@@ -243,18 +243,16 @@ export const addTeamMembers = async (team, users, role) => {
   }
 };
 
-export const bulkUpdateTeamCollections = async (collectionData, ids) => {
+export const bulkUpdateTeamCollections = async (collectionId, teamId, isActive) => {
   try {
-    const filter = ids ? {
-      _id: { $in: ids }
-    } : {};
+    const filter = teamId ? { _id: new ObjectId(teamId) } : {};
     await Team.updateMany(
       filter,
       {
         $push: {
           "collections": {
-            isActive: false,
-            collectionData,
+            isActive,
+            collectionData: collectionId,
           }
         }
       }
