@@ -162,7 +162,7 @@ const TeamManagement = ({ activeTeam }) => {
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   const goToInvitePage = () => {
-    router.push(PATHS.TEAM.INVITE(teamId));
+    router.push(PATHS.TEAMS.INVITE(teamId));
   };
 
   return (

@@ -19,10 +19,10 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
       <>
         {
           !isEmpty(selectedTeam) ? (
-            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
               <a
                 aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
               >
                 Dashboard
               </a>
@@ -38,18 +38,18 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
         {
           !isEmpty(selectedTeam) ? (
           <>
-            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
             <a
               aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
             >
               Repos
             </a>
             </Link>
-            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.TEAM_INSIGHTS}`}>
+            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.TEAM_INSIGHTS}`}>
               <a
                 aria-hidden="true"
-                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAM._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
+                className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
               >
               Team Insights
               </a>
@@ -106,7 +106,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
       <>
         {
           !isEmpty(selectedTeam) ? (
-            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
+            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
               <a
                 aria-hidden="true"
                 className="navbar-item has-text-weight-semibold is-uppercase"
@@ -129,7 +129,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
         </Link>
         {
           !isEmpty(selectedTeam) && (
-            <Link href={`${PATHS.TEAM._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
+            <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.REPOS}`}>
               <a
                 aria-hidden="true"
                 className="navbar-item has-text-weight-semibold is-uppercase"

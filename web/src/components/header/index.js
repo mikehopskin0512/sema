@@ -164,7 +164,7 @@ const Header = () => {
                   selectedTeam
                 />
                 <hr className="navbar-divider" />
-                <Link href={PATHS.TEAM._}>
+                <Link href={PATHS.TEAMS._}>
                   <a
                     aria-hidden="true"
                     type="button"
