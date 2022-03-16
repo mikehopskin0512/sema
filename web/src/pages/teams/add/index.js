@@ -7,11 +7,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from 'adonis';
 import toaster from 'toasted-notes';
 import * as yup from 'yup';
-import TagsInput from '../../../../components/tagsInput';
-import Helmet, { TeamCreateHelmet } from '../../../../components/utils/Helmet';
-import withLayout from '../../../../components/layout';
-import { setProfileViewMode } from '../../../../state/features/auth/actions';
-import { teamsOperations } from '../../../../state/features/teams';
+import TagsInput from '../../../components/tagsInput';
+import Helmet, { TeamCreateHelmet } from '../../../components/utils/Helmet';
+import withLayout from '../../../components/layout';
+import { teamsOperations } from '../../../state/features/teams';
 import {
   AlertFilledIcon,
   AlertOutlineIcon,
@@ -19,9 +18,9 @@ import {
   CheckOnlineIcon,
   CloseIcon,
   LoadingBlueIcon,
-} from '../../../../components/Icons';
-import { getAll } from '../../../../state/utils/api';
-import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../../../utils/constants';
+} from '../../../components/Icons';
+import { getAll } from '../../../state/utils/api';
+import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../../utils/constants';
 
 const { createTeam, fetchTeamsOfUser } = teamsOperations;
 const URL_STATUS = {
