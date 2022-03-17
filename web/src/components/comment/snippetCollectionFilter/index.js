@@ -111,23 +111,22 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
             outlined
           />
         </div>
+        <div className="column">
+          <CustomSelect
+            selectProps={{
+              options: authors,
+              placeholder: '',
+              isMulti: true,
+              onChange: ((value) => onChangeFilter('authors', value)),
+              value: filter.authors,
+            }}
+            label="Author"
+            showCheckbox
+            outlined
+          />
+        </div>
         {
           isTeamAdminOrLibraryEditor() && (
-            <>
-              <div className="column">
-                <CustomSelect
-                  selectProps={{
-                    options: authors,
-                    placeholder: '',
-                    isMulti: true,
-                    onChange: ((value) => onChangeFilter('authors', value)),
-                    value: filter.authors,
-                  }}
-                  label="Author"
-                  showCheckbox
-                  outlined
-                />
-              </div>
               <div className="column">
                 <CustomSelect
                   selectProps={{
@@ -142,7 +141,6 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
                   outlined
                 />
               </div>
-            </>
           )
         }
         <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
