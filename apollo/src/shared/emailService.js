@@ -19,12 +19,14 @@ const templates = {
   waitlisted: 'd-9154f0015308439fb7b996530edc355f',
   feedbackSupportAdmin: 'd-28ac6f741ee2423489e633725ded543b',
   feedbackSupportUser: 'd-785a1306aaa446f29518af0ff76a4644',
+  inviteNewUserToTeam: 'd-ef3a58b2008c446883b97ef25b171b79',
+  inviteExistingUserToTeam: 'd-553144b867684cbc99cb68316686c25f'
 };
 
 export const sendEmail = async (messageData) => {
   const {
     templateName, sender = defaultSender, recipient,
-    firstName = '', fullName = '', orgName = '', url = '', email = '', title = '', type = '', message = ''
+    firstName = '', fullName = '', orgName = '', url = '', email = '', title = '', type = '', message = '', teamName = ''
   } = messageData;
 
   const msg = {
@@ -41,17 +43,26 @@ export const sendEmail = async (messageData) => {
       title,
       type,
       message,
+      teamName
     },
   };
 
   (async () => {
     try {
       await sgMail.send(msg);
+      return {
+        status: true,
+        message: 'Successfully sent email'
+      }
     } catch (error) {
       logger.error(error);
 
       if (error.response) {
         logger.error(error.response.body);
+        return {
+          status: false,
+          message: error.response.body?.errors && error.response.body?.errors.length > 0 ? error.response.body?.errors[0].message : 'Sending emails failed'
+        }
       }
     }
   })();

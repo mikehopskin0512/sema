@@ -214,7 +214,7 @@ const CommentCollectionsList = () => {
         ) : (
           <Table
             data={activeCollections}
-            columns={[{ label: 'State' }, { label: 'Collection' }, { label: 'Description' }, { label: 'Source' }, { label: 'Author' }, { label: 'Snippets', textAlign: 'center' }]}
+            columns={[{ label: 'State' }, { label: 'Collection' }, { label: 'Description' }, { label: 'Source' }, { label: 'Author' }, { label: 'Snippets', textAlign: 'center' }, { label: 'Status' }]}
             renderRow={(collection) => <CollectionRow data={collection} />}
             pagination={false}
             className={clsx("px-10", styles['overflow-unset'])}
@@ -229,7 +229,7 @@ const CommentCollectionsList = () => {
         ) : (
           <Table
             data={paginatedInactiveCollections}
-            columns={[{ label: 'State' }, { label: 'Collection' }, { label: 'Description' }, { label: 'Source' }, { label: 'Author' }, { label: 'Snippets' }]}
+            columns={[{ label: 'State' }, { label: 'Collection' }, { label: 'Description' }, { label: 'Source' }, { label: 'Author' }, { label: 'Snippets', textAlign: 'center' }, { label: 'Status' }]}
             renderRow={(collection) => <CollectionRow data={collection} />}
             pagination={false}
             className={clsx("px-10", styles['overflow-unset'])}

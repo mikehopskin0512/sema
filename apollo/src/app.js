@@ -33,6 +33,8 @@ app.use(methodOverride());
 app.use(passport.initialize());
 app.disable('x-powered-by');
 
+app.use('/static', express.static('./uploads'));
+
 // Attach routes
 routes.attachRoutes(app, passport);
 

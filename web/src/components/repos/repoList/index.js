@@ -70,7 +70,7 @@ const RepoList = ({ type, repos = [] }) => {
   }
 
   useEffect(() => {
-      sortRepos();
+    sortRepos();
   }, [sort, repos]);
 
   const [isRepoListOpen, setRepoListOpen] = useState(false);
@@ -111,7 +111,7 @@ const RepoList = ({ type, repos = [] }) => {
               </button>
             )}
           </div>
-          { type !== 'REPOS' && (
+          {type !== 'REPOS' && (
             <div className="is-flex">
               <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
                 <ListIcon />

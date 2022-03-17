@@ -313,7 +313,7 @@ const PersonalInsights = () => {
                 <span className="is-size-6 ml-8 has-text-gray-700">
                   Only you can see this page.
                 </span>
-                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`}>
+                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`} target="_blank" rel="noreferrer noopener">
                   <span className="ml-5 has-text-weight-semibold has-text-blue-700">
                     Learn More
                   </span>

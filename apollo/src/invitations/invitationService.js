@@ -17,6 +17,8 @@ export const create = async (invitation) => {
       sender,
       senderName,
       senderEmail,
+      team,
+      role,
     } = invitation;
 
     // Generate token and expiration data (2 weeks from now)
@@ -38,6 +40,8 @@ export const create = async (invitation) => {
       senderEmail,
       token,
       tokenExpires,
+      team: team || null,
+      role: role || null,
     });
     const savedInvite = await newInvite.save();
     return savedInvite;
@@ -62,6 +66,11 @@ export const findById = async (id) => {
 
 export const checkIfInvited = async (recipient) => {
   const invitation = await Invitation.find({ recipient });
+  return invitation;
+};
+
+export const checkIfInvitedByToken = async (token) => {
+  const invitation = await Invitation.findOne({ token });
   return invitation;
 };
 

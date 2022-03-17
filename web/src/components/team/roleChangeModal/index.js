@@ -16,19 +16,19 @@ const RoleChangeModal = ({ open, onClose, member, onSubmit }) => {
       <div className="modal-content px-10">
         <div className="p-40 has-background-white border-radius-4px">
           <p className="has-text-black has-text-weight-bold is-size-5 mb-10">
-            Please confirm role change
+            Please Confirm Role Change
           </p>
-          <p className="mb-30">
+          <p className="mb-30 has-text-gray-700">
             {'You are about to change '}
             <b>{member ? member.name : ''}</b>
-            {' \'s role to '}
+            {'\'s role to '}
             <b>{(member && member.newRole) ? member.newRole.label : ''}</b>.
-            {' Are you sure you would like to make this change?'}
+            {' Are you sure to proceed?'}
           </p>
           <div className="is-flex is-justify-content-flex-end">
             <div className="px-10">
               <button
-                className="button is-fullwidth is-outlined is-primary has-text-weight-semibold is-size-7 px-40"
+                className="button is-fullwidth is-outlined is-primary is-size-7 px-40"
                 onClick={onClose}
                 type="button"
               >
@@ -37,7 +37,7 @@ const RoleChangeModal = ({ open, onClose, member, onSubmit }) => {
             </div>
             <div>
               <button
-                className={clsx('button is-primary is-fullwidth has-text-weight-semibold is-size-7 px-40')}
+                className={clsx('button is-primary is-fullwidth is-size-7 px-40')}
                 type="button"
                 onClick={handleSubmit}
               >

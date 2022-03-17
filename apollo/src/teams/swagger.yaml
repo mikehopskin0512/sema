@@ -280,7 +280,7 @@ paths:
         400:
           description: bad input parameter
   /v1/teams/{teamId}/invite:
-    get:
+    post:
       summary: invite user to join team
       operationId: addTeamMembers
       parameters:
@@ -288,8 +288,61 @@ paths:
           name: teamId
           description: team id
           required: true
+          example: '614f2f6fab9fd21a74213644'
+
+        - in: body
+          name: users
+          description: array of emails to invite
+          required: true
+          example: ['aslan@semasoftware.com', 'guillermo@hell.io']
+
+        - in: body
+          name: role
+          description: roleId to invite to
+          required: true
+          example: '614f2f6fab9fd21a7421364c'
+
       responses:
         200:
-          description: user inivited
+          description: user inivited, returning an array of invalid emails failed for invitation
+          content:
+            application/json:
+              schema:
+                properties:
+                  invalidEmails:
+                    type: array
+              example:
+                invalidEmails: [{ email: 'aslan', reason: 'blocked' }]
+        400:
+          description: bad input parameter
+
+  /v1/teams/{teamId}/invite/validate-email:
+    post:
+      summary: validate emails on server before inviting to team
+      operationId: validateTeamInvitationEmails
+      parameters:
+        - in: path
+          name: teamId
+          description: team id
+          required: true
+          example: '614f2f6fab9fd21a74213644'
+
+        - in: body
+          name: users
+          description: array of emails to validate
+          required: true
+          example: [ 'aslan@semasoftware.com', 'guillermo@hell.io' ]
+
+      responses:
+        200:
+          description: user inivited, returning an array of invalid emails failed for invitation
+          content:
+            application/json:
+              schema:
+                properties:
+                  invalidEmails:
+                    type: array
+              example:
+                invalidEmails: [ { email: 'guillermo@hell.io', reason: 'blocked' } ]
         400:
           description: bad input parameter

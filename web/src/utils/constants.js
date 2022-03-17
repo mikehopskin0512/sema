@@ -141,7 +141,7 @@ export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
 
 export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
 
-export const SEMA_FAQ_URL = 'https://semasoftware.com/faq';
+export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
 
 export const SEMA_APP_URL = 'https://app.semasoftware.com';
 
@@ -151,6 +151,7 @@ export const SEMA_FAQ_SLUGS = {
   TEAM_INSIGHTS: 'team-insights-who-can-see-what',
   MARKDOWN: 'whats-markdown-and-how-do-i-use-it',
   SNIPPETS: 'what-are-snippets',
+  SNAPSHOTS: 'what-are-snapshots',
 };
 
 export const noContactUs = ['/login', '/register/[[...param]]'];
@@ -182,16 +183,16 @@ export const PATHS = {
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAM: {
-    _: '/team',
-    EDIT: '/team/edit',
-    ADD: '/team/add',
-    INVITE: (id) => `/team/${id}/invite`,
+  TEAMS: {
+    _: '/teams',
+    EDIT: (id) => `/teams/${id}/edit`,
+    ADD: '/teams/add',
+    INVITE: (id) => `/teams/${id}/invite`,
+    SETTINGS: (id) => `/teams/${id}/settings`
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
-  TEAMS: '/teams',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   TEAM_CREATE: '/teams/add',
@@ -218,7 +219,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: `${PATHS.TEAM._}/[teamId]/edit`,
+    path: `${PATHS.TEAMS._}/[teamId]/edit`,
   },
 ];
 

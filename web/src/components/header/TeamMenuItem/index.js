@@ -24,12 +24,12 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
 
     dispatch(setSelectedTeam(role));
     dispatch(setProfileViewMode(viewMode));
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.DASHBOARD}`);
+    router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.DASHBOARD}`);
     toggleUserMenu();
   };
 
   const handleSettingsClick = () => {
-    router.push(`${PATHS.TEAM._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.info}`);
+    router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
   }
 
   const isFirstTeam = (index) => index === 0;

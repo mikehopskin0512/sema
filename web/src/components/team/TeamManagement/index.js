@@ -1,7 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import Avatar from 'react-avatar';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -13,11 +15,15 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
+import { ArrowDropdownIcon, PlusIcon } from '../../Icons';
+import { PATHS } from '../../../utils/constants';
+import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const TeamManagement = ({ activeTeam }) => {
+  const router = useRouter();
   const { isTeamAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
@@ -39,7 +45,7 @@ const TeamManagement = ({ activeTeam }) => {
 
   const dispatch = useDispatch();
   const canModifyRoles = isTeamAdmin();
-  const teamId = activeTeam?._id;
+  const teamId = activeTeam?.team?._id;
 
   useAuthEffect(() => {
     if (teamId) {
@@ -53,7 +59,7 @@ const TeamManagement = ({ activeTeam }) => {
     label: role.name,
   })) || [], [roles]);
 
-  const dataSource = useMemo(() => members?.map((member) => ({
+  const dataSource = useMemo(() => members ? members.map((member) => ({
     _id: member._id,
     userInfo: {
       userId: member.user?._id,
@@ -64,7 +70,8 @@ const TeamManagement = ({ activeTeam }) => {
     role: member.role ? member.role._id : null,
     roleName: member.role ? member.role.name : null,
     disableEdit: member.user?._id === user._id,
-  })) || [], [members]);
+    status: 'Invited',
+  })).sort((member1, member2) => member1.userInfo.name.localeCompare(member2.userInfo.name)) : [], [members]);
 
   const handleChangeRole = useCallback((newValue, row) => {
     setIsOpen(true);
@@ -83,30 +90,43 @@ const TeamManagement = ({ activeTeam }) => {
   const onRemoveMember = useCallback(async (userRoleId) => {
     await dispatch(removeUserRole(teamId, userRoleId, token));
     await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
-  }, [dispatch, page, perPage, token, user]);
+  }, [dispatch, page, perPage, token, user, teamId]);
 
   const columns = useMemo(() => [
     {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
       accessor: 'userInfo',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
-      Cell: ({ cell: { value } }) => (
-        <div className="is-flex is-align-items-center is-cursor-pointer">
-          <img src={value.avatarUrl} alt="avatar" width={32} height={32} className="mr-10" style={{ borderRadius: '100%' }} />
-          <span className="is-whitespace-nowrap">{ value.name }</span>
-        </div>
-      ),
+      className: 'pl-20 pr-50 py-10 has-background-white-50',
+      Cell: ({ cell: { value } }) => {
+        const nameRef = useRef(null);
+        return (
+          <div className={clsx("is-flex is-align-items-center is-cursor-pointer",)}>
+            <Avatar src={value.avatarUrl} size="32" round />
+            <OverflowTooltip ref={nameRef} text={value.name}>
+              <p ref={nameRef} className={clsx("ml-10 has-overflow-ellipsis", styles.name)}>{value.name}</p>
+            </OverflowTooltip>
+          </div>
+        )
+      },
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Email</div>,
       isVisible: false,
       accessor: 'email',
-      className: 'pl-20 pr-50 py-10 has-background-gray-100',
+      className: 'pl-20 pr-50 py-10 has-background-gray-200',
+      Cell: ({ cell: { value } }) => {
+        const emailRef = useRef(null);
+        return (
+          <OverflowTooltip ref={emailRef} text={value}>
+            <p ref={emailRef} className={clsx("has-overflow-ellipsis", styles.email)}>{value}</p>
+          </OverflowTooltip>
+        )
+      },
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
       accessor: 'role',
-      className: clsx('px-20 py-10 has-background-gray-100 is-full-width '),
+      className: clsx('px-20 py-10 has-background-white-50 is-full-width '),
       Cell: ({ cell: { value }, row }) => canModifyRoles ? (
         <div className={clsx('is-flex')}>
           <Select
@@ -114,11 +134,27 @@ const TeamManagement = ({ activeTeam }) => {
             options={rolesOptions}
             value={rolesOptions.find((item) => item.value === value)}
             onChange={(newValue) => handleChangeRole(newValue, row)}
+            components={{
+              IndicatorSeparator: () => null,
+              DropdownIndicator: () => <ArrowDropdownIcon className="mr-5" />
+            }}
           />
-          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
         </div>
       ) : (
         <span>{row.original.roleName}</span>
+      ),
+    },
+    {
+      Header: "",
+      isVisible: false,
+      accessor: 'action',
+      className: 'pl-20 py-10 has-background-white-50',
+      Cell: ({ row }) => canModifyRoles ? (
+        <div className="is-flex is-justify-content-flex-end">
+          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit} />
+        </div>
+      ) : (
+        <div />
       ),
     },
   ], [rolesOptions, handleChangeRole, onRemoveMember]);
@@ -139,12 +175,27 @@ const TeamManagement = ({ activeTeam }) => {
     return initState
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
+  const goToInvitePage = () => {
+    router.push(PATHS.TEAMS.INVITE(teamId));
+  };
+
   return (
-    <div className="has-background-gray-100 hero mx-10">
+    <div className="hero mx-10">
       <Helmet {...TeamManagementHelmet} />
+      <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
+        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+        <button
+          className="button is-primary border-radius-4px"
+          type="button"
+          onClick={goToInvitePage}
+        >
+          <PlusIcon size="small" />
+          <span className="ml-10">Invite New Members</span>
+        </button>
+      </div>
       <div className="hero-body py-0 px-0">
         <div className="content-container px-0">
-          <div className={styles['table-wrapper']}>
+          <div className={clsx('has-background-gray-300 pb-15', styles['table-wrapper'])}>
             <Table
               className="overflow-unset"
               data={dataSource}
