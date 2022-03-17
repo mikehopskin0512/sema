@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
-
 import Snapshot from './snapshotModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-
-import { addSnapshot } from '../portfolios/portfolioService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -42,13 +39,10 @@ const structureSnapshot = ({
   componentData: structureComponentData(componentData),
 });
 
-export const create = async (snapshot, portfolioId) => {
+export const create = async (snapshot) => {
   try {
     const newSnapshot = new Snapshot(structureSnapshot(snapshot));
     const savedSnapshot = await newSnapshot.save();
-    if (portfolioId) {
-      await addSnapshot(portfolioId, savedSnapshot._id);
-    }
     return savedSnapshot;
   } catch (err) {
     const error = new errors.BadRequest(err);

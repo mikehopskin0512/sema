@@ -2,9 +2,8 @@ import { Router } from 'express';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
-
 import { version } from '../config';
-import { removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
+import { addSnapshot, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
 import logger from '../shared/logger';
 import { create, update, deleteOne } from './snapshotService';
 import checkEnv from '../middlewares/checkEnv';
@@ -19,8 +18,11 @@ export default (app, passport) => {
     const snapshot = req.body;
     const { portfolioId = null, ...rest } = snapshot;
     try {
-      const newSnapshot = await create(rest, portfolioId);
-      return res.status(201).send(newSnapshot);
+      const savedSnapshot = await create(rest);
+      if (portfolioId) {
+        await addSnapshot(portfolioId, savedSnapshot._id);
+      }
+      return res.status(201).send(savedSnapshot);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -61,7 +63,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   // Swagger route
   app.use(`/${version}/snapshots-docs`, checkEnv(), swaggerUi.serveFiles(swaggerDocument, {}), swaggerUi.setup(swaggerDocument));
 };
