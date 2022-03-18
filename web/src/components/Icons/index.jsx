@@ -82,6 +82,7 @@ import { ReactComponent as WarningFilledSvg } from './img/warning-filled.svg';
 import { ReactComponent as WarningOutlineSvg } from './img/warning-outline.svg';
 import { ReactComponent as CameraSvg } from './img/camera.svg';
 import { ReactComponent as TeamSvg } from './img/team.svg';
+import { ReactComponent as LinkSvg } from './img/link.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 
@@ -625,6 +626,12 @@ export const StarOutlineIcon = (props) => (
 export const TeamIcon = (props) => (
   <Icon {...props}>
     <TeamSvg />
+  </Icon>
+);
+
+export const LinkIcon = (props) => (
+  <Icon {...props}>
+    <LinkSvg />
   </Icon>
 );
 
