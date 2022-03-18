@@ -183,7 +183,8 @@ export default (app, passport) => {
     try {
       const summary = await getSmartCommentsTagsReactions({ user, teamId, individual });
       return res.status(201).send({
-        summary,
+        ...summary,
+        smartComments: summary.smartComments.map((comment) => comment._id),
       });
     } catch (error) {
       logger.error(error);

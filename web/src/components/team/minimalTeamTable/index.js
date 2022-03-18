@@ -84,7 +84,7 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
           {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(PATHS.TEAM.INVITE(teamId))}
+              onClick={() => router.push(PATHS.TEAMS.INVITE(teamId))}
             >
               <PlusIcon size="small" />
               <span className="ml-8">Invite new members</span>

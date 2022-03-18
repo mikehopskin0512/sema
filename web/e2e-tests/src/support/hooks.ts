@@ -35,7 +35,7 @@ export const hooks = {
   onPrepare: function (config, capabilities) {
     // directory path
     const dirJunit = "./test/results";
-    const dirAllureRes = './allure-results';     
+    const dirAllureRes = './allure-results';
 
     // delete directory recursively
     try {
@@ -87,7 +87,7 @@ export const hooks = {
 
     console.log(otp);
 
-    await browser.url("https://app-staging.semasoftware.com/login");
+    await browser.url(`${await browser.options.baseUrl}/login`);
     await $("span=Sign in with GitHub").click();
     await $("#login_field").setValue("qateam+automationadmin@semasoftware.com");
     await $("#password").setValue("Automation1Tester2#");

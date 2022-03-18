@@ -11,7 +11,7 @@ export const config: WebdriverIO.Config = {
   //
   // WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
   // on a remote machine).
-  runner: "local",
+  //runner: "local",
   //
   // ==================
   // Specify Test Files
@@ -42,7 +42,7 @@ export const config: WebdriverIO.Config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 3,
+  maxInstances: parseInt(process.env.MAX_INSTANCES) || 3,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -53,21 +53,13 @@ export const config: WebdriverIO.Config = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 1,
+      //maxInstances: 1,
 
       //
       browserName: "chrome",
-      // 'goog:chromeOptions': {
-      //     extensions: [(function () {
-      //         try {
-      //             const webExt = fs.readFileSync('./extension.zip').toString('base64');
-      //             return webExt;
-      //         } catch (e) {
-      //             console.log(e, 'An error occurred while to parse extension zip file!');
-      //         }
-      //     })()],
-      //     args: ['--headless', '--disable-gpu']
-      // },
+      "goog:chromeOptions": {
+        args: ["--disable-gpu", "--no-sandbox"],
+      },
     },
   ],
   //
@@ -77,8 +69,8 @@ export const config: WebdriverIO.Config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: "trace",
-  outputDir: path.join(__dirname, "/logs"),
+  logLevel: process.env.LOG_LEVEL || "trace",
+  // outputDir: path.join(__dirname, "/logs"),
   //
   // Set specific log levels per logger
   // loggers:
@@ -103,7 +95,7 @@ export const config: WebdriverIO.Config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: "https://app.semasoftware.com/dashboard",
+  baseUrl:  process.env.BASE_URL || "https://app-staging.semasoftware.com/dashboard",
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 100000,
@@ -119,7 +111,7 @@ export const config: WebdriverIO.Config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: [],
+  services: ["chromedriver"],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -153,40 +145,10 @@ export const config: WebdriverIO.Config = {
   //     ]
   // ],
   reporters: [
-    'dot',
-    [
-      "junit",
-      {
-        outputDir: "./test/results",                
-        outputFileFormat: function (options) {
-          // optional
-          return `results-${options.cid}.xml`;
-        },
-        errorOptions: {
-            error: 'message',
-            failure: 'message',
-            stacktrace: 'stack'
-        },        
-      }
-    ],
-    [
-      "html-nice",
-      {
-        outputDir: "./reports/html-reports/",
-        filename: "report.html",
-        reportTitle: "Test Report Title",
-        linkScreenshots: true,
-        //to show the report in a browser when done
-        showInBrowser: true,
-        collapseTests: false,
-        //to turn on screenshots after every test
-        useOnAfterCommandForScreenshot: false,
-      }
-    ],
     ['allure', {
         outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,        
-    }]   
+        disableWebdriverStepsReporting: true,
+    }]
   ],
   //
   // If you are using Cucumber you need to specify the location of your step definitions.

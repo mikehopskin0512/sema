@@ -19,6 +19,7 @@ const teamSchema = new Schema({
   url: {
     type: String,
     unique: true,
+    sparse: true,
   },
   createdBy: {
     type: Schema.Types.ObjectId,
