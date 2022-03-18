@@ -84,6 +84,7 @@ import { ReactComponent as CameraSvg } from './img/camera.svg';
 import { ReactComponent as TeamSvg } from './img/team.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
+import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -558,6 +559,12 @@ export const StarOutlineScg = (props) => (
 export const SwipeIcon = (props) => (
   <Icon {...props}>
     <SwipeSvg />
+  </Icon>
+);
+
+export const Trophy2Icon = (props) => (
+  <Icon {...props}>
+    <Trophy2Svg />
   </Icon>
 );
 
