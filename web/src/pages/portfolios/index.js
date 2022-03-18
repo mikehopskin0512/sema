@@ -16,6 +16,7 @@ const { fetchPortfoliosOfUser } = portfoliosOperations;
 const Portfolios = () => {
   const dispatch = useDispatch();
   const { authState, portfoliosState } = useSelector((state) => state);
+  const { data: { portfolios } } = portfoliosState;
   const { user: userData, token } = authState;
   const { _id: userId = '' } = userData;
   const router = useRouter();
@@ -26,13 +27,11 @@ const Portfolios = () => {
     dispatch(fetchPortfoliosOfUser(userId, token));
   }, [userId]);
 
-  useEffect(() => {
-    const { data, error } = portfoliosState;
-    if (isEmpty(error) && data.portfolios.length) {
-      console.log(data.portfolios);
-      // setPortfolio(firstPortfolio);
+  useAuthEffect(() => {
+    if (portfolios.length > 1) {
+      router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     }
-  }, [portfoliosState]);
+  }, [portfolios]);
 
   const tabs = [
     {
