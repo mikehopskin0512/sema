@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PortfolioHelmet } from '../../components/utils/Helmet';
 import withLayout from '../../components/layout';
 import PortfolioDashboard from '../../components/portfolios/dashboard';
+import useAuthEffect from '../../hooks/useAuthEffect';
 import { portfoliosOperations } from '../../state/features/portfolios';
 
 const { fetchPortfoliosOfUser } = portfoliosOperations;
@@ -21,13 +22,9 @@ const Portfolios = () => {
   const { _id: userId = '' } = userData;
   const [portfolio, setPortfolio] = useState({});
 
-  const getUserPortfolio = useCallback(async () => {
-    await dispatch(fetchPortfoliosOfUser(userId, token));
-  }, [dispatch, userId, token]);
-
-  useEffect(() => {
-    getUserPortfolio();
-  }, [userId, token, getUserPortfolio]);
+  useAuthEffect(() => {
+    dispatch(fetchPortfoliosOfUser(userId, token));
+  }, [userId]);
 
   useEffect(() => {
     const { data, error } = portfolios;
