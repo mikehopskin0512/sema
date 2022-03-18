@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import { version } from '../config';
-import { addSnapshot, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
+import { addSnapshotToPortfolio, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
 import logger from '../shared/logger';
 import { create, update, deleteOne } from './snapshotService';
 import checkEnv from '../middlewares/checkEnv';
@@ -18,9 +18,13 @@ export default (app, passport) => {
     const snapshot = req.body;
     const { portfolioId = null, ...rest } = snapshot;
     try {
-      const savedSnapshot = await create(rest);
+      const savedSnapshot = await create({
+        ...rest,
+        userId: req.user._id,
+        portfolios: portfolioId ? [portfolioId] : [],
+      });
       if (portfolioId) {
-        await addSnapshot(portfolioId, savedSnapshot._id);
+        await addSnapshotToPortfolio(portfolioId, savedSnapshot._id);
       }
       return res.status(201).send(savedSnapshot);
     } catch (error) {
@@ -45,19 +49,10 @@ export default (app, passport) => {
     const { id } = req.params;
     try {
       const deletedSnapshot = await deleteOne(id);
+      await Promise.all(deletedSnapshot.portfolios.map(async (portfolioId) => {
+        await removeSnapshotFromPortfolio(portfolioId, id);
+      }));
       return res.status(200).send(deletedSnapshot);
-    } catch (error) {
-      logger.error(error);
-      return res.status(error.statusCode).send(error);
-    }
-  });
-
-  route.put('/remove/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { snapshotId, portfolioId } = req.body;
-    try {
-      const portfolio = await removeSnapshotFromPortfolio(portfolioId, snapshotId);
-      const deletedSnapshot = await deleteOne(snapshotId);
-      return res.status(200).send({ deletedSnapshot, portfolio });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

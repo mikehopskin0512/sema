@@ -5,7 +5,15 @@ import path from 'path';
 
 import { version } from '../config';
 import logger from '../shared/logger';
-import { create, update, deleteOne, getPortfolioById } from './portfolioService';
+import { addPortfolioToSnapshot, removePortfolioFromSnapshot } from '../snapshots/snapshotService';
+import {
+  create,
+  update,
+  deleteOne,
+  getPortfolioById,
+  addSnapshotToPortfolio,
+  removeSnapshotFromPortfolio,
+} from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -49,10 +57,43 @@ export default (app, passport) => {
   });
 
   route.delete('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { id } = req.params;
+    const { id: portfolioId } = req.params;
     try {
-      const deletedPortfolio = await deleteOne(id);
+      const deletedPortfolio = await deleteOne(portfolioId);
+      await Promise.all(deletedPortfolio.snapshots.map(async (snapshot) => {
+        await removePortfolioFromSnapshot(snapshot.id, portfolioId);
+      }));
       return res.status(200).send(deletedPortfolio);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { snapshots } = req.body;
+    const { id: portfolioId } = req.params;
+    try {
+      await Promise.all(snapshots.map(async (snapshotId) => {
+        await addSnapshotToPortfolio(portfolioId, snapshotId);
+        await addPortfolioToSnapshot(snapshotId, portfolioId);
+      }));
+      return res.status(201).send({});
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.delete('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { snapshots } = req.body;
+    const { id: portfolioId } = req.params;
+    try {
+      await Promise.all(snapshots.map(async (snapshotId) => {
+        await removeSnapshotFromPortfolio(portfolioId, snapshotId);
+        await removePortfolioFromSnapshot(snapshotId, portfolioId);
+      }));
+      return res.status(201).send({});
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
