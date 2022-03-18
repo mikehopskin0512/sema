@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
@@ -10,12 +11,15 @@ import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
 import { isEmpty } from 'lodash';
-import {isSemaDefaultCollection, isTeamDefaultCollection} from "../../../utils";
+import { isSemaDefaultCollection, isTeamDefaultCollection } from "../../../utils";
+import OverflowTooltip from '../../Tooltip/OverflowTooltip';
+import styles from "./commentCollectionsList.module.scss";
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
 const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
 
 const CollectionRow = ({ data }) => {
+  const titleRef = useRef();
   const dispatch = useDispatch();
   const router = useRouter();
   const { token, selectedTeam } = useSelector((state) => state.authState);
@@ -43,7 +47,7 @@ const CollectionRow = ({ data }) => {
     e.stopPropagation();
     router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
   };
-  
+
   const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
   const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
   
@@ -67,11 +71,13 @@ const CollectionRow = ({ data }) => {
           </div>
         </td>
         <td className="py-15 has-background-white px-10 is-hidden-mobile">
-          <div className="is-flex is-align-items-center is-justify-content-space-between" style={{ width: 300 }}>
-            <p className={"is-size-7 has-text-weight-semibold"}>
-              {name}
-            </p>
-            { canEditSnippets && (
+          <div className="is-flex is-align-items-center is-justify-content-space-between">
+            <OverflowTooltip ref={titleRef} text={name}>
+              <p ref={titleRef} className={clsx("is-size-7 has-text-weight-semibold has-overflow-ellipsis", styles.title)}>
+                {name}
+              </p>
+            </OverflowTooltip>
+            {canEditSnippets && (
               <div
                 className={'button is-primary is-outlined is-clickable has-text-weight-semibold is-size-7'}
                 onClick={onClickAddComment}
@@ -124,7 +130,7 @@ const CollectionRow = ({ data }) => {
           <td className="py-15 has-background-white px-10 is-hidden-mobile" width={100}>
             <ActionMenu collectionData={collectionData} collectionActive={isActive} />
           </td>
-        ) }
+        )}
       </tr>
     </Link>
   );

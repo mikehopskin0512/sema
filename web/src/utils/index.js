@@ -112,6 +112,11 @@ export const getPlatformLink = (username, type) => {
   }
 }
 
+export const isElementOverflow = (element) => {
+  if (!element) return false;
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+
 export const parseEmails = (str) => {
   return str.split(/,|\|| /g).map((item) => {
     const match = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/.exec(item);

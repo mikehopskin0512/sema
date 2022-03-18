@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import styles from './TeamInfo.module.scss';
 import usePermission from '../../../hooks/usePermission';
+import {PATHS} from "../../../utils/constants";
 
 const TeamInfo = ({ activeTeam, teams }) => {
   const { isTeamAdmin } = usePermission();
@@ -29,7 +30,7 @@ const TeamInfo = ({ activeTeam, teams }) => {
             {teams.membersCount === 1 ? `${teams.membersCount} member` : `${teams.membersCount} members`}
           </span>
         </div>
-        {isTeamAdmin() && <button className="button is-primary is-outlined is-pulled-right has-text-weight-semibold" onClick={() => router.push(`/team/${activeTeam._id}/edit`)}>Edit</button>}
+        {isTeamAdmin() && <button className="button is-primary is-outlined is-pulled-right has-text-weight-semibold" onClick={() => router.push(PATHS.TEAMS.EDIT(activeTeam._id))}>Edit</button>}
       </div>
       <div className={clsx(styles['team-description'], `has-text-gray-800 is-flex is-justify-content-space-between mb-25 is-flex-wrap-wrap`)}>
         <p>{`${activeTeam?.team?.description || ''}`}</p>
