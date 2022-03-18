@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -8,6 +9,9 @@ import TeamReposList from '../../../components/teamReposList';
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import { ListIcon, GridIcon, PlusIcon } from '../../Icons';
+import { triggerAlert } from '../../../state/features/alerts/actions';
+import { fetchTeamRepos } from '../../../state/features/teams/actions';
+import { updateTeamRepositories } from '../../../state/features/teams/operations';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -23,10 +27,25 @@ const filterOptions = [
 ]
 
 const RepoList = ({ type, repos = [] }) => {
+  const dispatch = useDispatch();
+  const { token, selectedTeam } = useSelector((state) => state.authState);
+  
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState(filterOptions[0]);
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isTeamAdmin } = usePermission();
+  
+  const removeRepo = async (repoId) => {
+    try {
+      const newRepos = repos.filter(repo => repo?._id !== repoId).map(repo => repo._id);
+      await dispatch(updateTeamRepositories(selectedTeam.team._id, { repos: newRepos }, token));
+      dispatch(triggerAlert('Repo has been deleted', 'success'));
+      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+    } catch (e) {
+      dispatch(triggerAlert('Unable to delete repo', 'error'));
+    }
+  }
+  
   const sortRepos = async () => {
     setFilteredRepos([]);
     if (!repos?.length) {
@@ -65,7 +84,7 @@ const RepoList = ({ type, repos = [] }) => {
 
   const renderCards = (repos) => {
     return repos.map((child, i) => (
-      <RepoCard {...child} isTeamView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} />
+      <RepoCard {...child} isTeamView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} onRemoveRepo={removeRepo}/>
     ))
   }
 

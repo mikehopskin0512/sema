@@ -19,4 +19,15 @@ export const updateTeamCollectionIsActiveAndFetchCollections = (collectionId, te
   }
 };
 
-export default { ...actions, updateTeamCollectionIsActiveAndFetchCollections };
+export const updateTeamRepositories = (teamId, repos, token) => async (dispatch) => {
+  await dispatch(actions.editTeamRepos(teamId, repos, token));
+  const teams = await dispatch(actions.fetchTeamsOfUser(token))
+  const activeTeam = find(teams, (o) => {
+    return o.team?._id === teamId
+  })
+  if (activeTeam) {
+    await dispatch(setSelectedTeam(activeTeam))
+  }
+}
+
+export default { ...actions, updateTeamCollectionIsActiveAndFetchCollections, updateTeamRepositories };
