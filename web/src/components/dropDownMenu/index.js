@@ -11,7 +11,7 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
   });
   return (
     <div
-      className={clsx('ml-auto dropdown ', isOpen ? 'is-active' : '', isRight && 'is-right', isUp && 'is-up')}
+      className={clsx('dropdown ', isOpen ? 'is-active' : '', isRight && 'is-right', isUp && 'is-up')}
       ref={popupRef}
       onClick={(event) => event.stopPropagation()}
     >
