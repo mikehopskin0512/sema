@@ -1,13 +1,13 @@
+import React from 'react';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
 import { Helmet } from 'react-helmet';
 import PageTabs from '../../components/pageTabs';
 import { ListIcon, Trophy2Icon } from '../../components/Icons';
 import withLayout from '../../components/layout';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { portfoliosOperations } from '../../state/features/portfolios';
+import { fetchUserSnapshots } from '../../state/features/snapshots/actions';
 import { PATHS } from '../../utils/constants';
 import PortfolioList from './components/portfolioList';
 import SnapshotList from './components/snapshotList';
@@ -22,14 +22,15 @@ const Portfolios = () => {
   const { _id: userId = '' } = userData;
   const router = useRouter();
   const { query: { tab } } = router;
-  // const [portfolio, setPortfolio] = useState({});
 
   useAuthEffect(() => {
     dispatch(fetchPortfoliosOfUser(userId, token));
+    dispatch(fetchUserSnapshots(userId, token));
   }, [userId]);
 
   useAuthEffect(() => {
-    if (portfolios.length > 1) {
+    // TODO: logic will be changed
+    if (portfolios.length > 1 && tab !== 'snapshots') {
       router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     }
   }, [portfolios]);

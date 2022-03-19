@@ -8,19 +8,19 @@ import Table from '../../../../components/table';
 
 const snapshotList = () => {
   // const dispatch = useDispatch();
-  const { portfoliosState } = useSelector((state) => state);
+  const { snapshotsState } = useSelector((state) => state);
   const {
-    data: { portfolios },
-  } = portfoliosState;
+    data: { snapshots },
+  } = snapshotsState;
   const addToPortfolio = () => {
   //  TODO: add to portfolio
   };
 
-  const tableData = portfolios.map((portfolio, i) => ({
+  console.log(snapshots);
+  const tableData = snapshots.map((snapshot, i) => ({
     // TODO: will be fixed in portfolio name ticket
-    title: `Portfolio ${i}`,
-    updatedAt: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
-    type: portfolio.type,
+    title: `Snapshot ${i}`,
+    updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
   }));
 
   const columns = [

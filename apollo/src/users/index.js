@@ -10,6 +10,7 @@ import errors from '../shared/errors';
 import intercom from '../shared/apiIntercom';
 import mailchimp from '../shared/apiMailchimp';
 import { checkAndSendEmail } from '../shared/utils';
+import { getSnapshotsByUserId } from '../snapshots/snapshotService';
 import {
   create, update, patch, findByUsername, findById,
   verifyUser, resetVerification,
@@ -331,6 +332,17 @@ export default (app, passport) => {
     try {
       const userPortfolios = await getPortfoliosByUser(id, true);
       return res.status(200).send(userPortfolios);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    try {
+      const snapshots = await getSnapshotsByUserId(id);
+      return res.status(200).send(snapshots);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
