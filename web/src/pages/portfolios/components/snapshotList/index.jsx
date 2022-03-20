@@ -13,24 +13,23 @@ const snapshotList = () => {
   const {
     data: { snapshots },
   } = snapshotsState;
+  const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
+  const isModalActive = !!snapshotIdForPortfolio;
 
-  const [isActive, setIsActive] = useState(false);
-  const [snapshotId, setSnapshotId] = useState('');
-
-  const addToPortfolio = () => {
-  //  TODO: add to portfolio
-    setSnapshotId('ID'); //fix when list of snapshots will be finished
-    setIsActive(true);
-  };
-
-  console.log(snapshots);
   const tableData = snapshots.map((snapshot, i) => ({
+    id: snapshot._id,
     // TODO: will be fixed in portfolio name ticket
     title: `Snapshot ${i}`,
     updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
   }));
 
   const columns = [
+    {
+      Header: '',
+      isVisible: false,
+      accessor: 'id',
+      className: 'is-hidden',
+    },
     {
       Header: 'Title',
       accessor: 'title',
@@ -55,7 +54,7 @@ const snapshotList = () => {
               isPublic && 'is-cursor-pointer',
             )}>
               <button
-                onClick={addToPortfolio}
+                onClick={() => setSnapshotIdForPortfolio(row.values.id)}
                 type="button"
                 className="button is-transparent"
               >+ Add to Portfolio
@@ -93,11 +92,18 @@ const snapshotList = () => {
       <div className="is-flex is-justify-content-space-between">
         <p className="title is-size-4">Snapshot Library</p>
       </div>
-      <Table data={tableData} columns={columns} />
-      {isActive && <AddSnapshotModal active={isActive} snapshotId={snapshotId} onClose={() => setIsActive(false)} 
-      //type="snapshots"
-      type="portfolios"
-      />}
+      <Table
+        data={tableData}
+        columns={columns}
+      />
+      {isModalActive && (
+        <AddSnapshotModal
+          active={isModalActive}
+          snapshotId={snapshotIdForPortfolio}
+          onClose={() => setSnapshotIdForPortfolio(null)}
+        />
+      )}
+      {/*type="snapshots" type="portfolios"*/}
     </div>
   );
 };
