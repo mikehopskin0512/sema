@@ -36,6 +36,7 @@ import { ReactComponent as DuplicateSvg } from './img/duplicate.svg';
 import { ReactComponent as EditSvg } from './img/edit.svg';
 import { ReactComponent as ExternalLinkSvg } from './img/external-link.svg';
 import { ReactComponent as EyeSvg } from './img/eye.svg';
+import { ReactComponent as EyeOffSvg } from './img/eye-off.svg';
 import { ReactComponent as FacebookSvg } from './img/facebook.svg';
 import { ReactComponent as FileSvg } from './img/file.svg';
 import { ReactComponent as FilterSvg } from './img/filter.svg';
@@ -367,6 +368,12 @@ export const ExternalLinkIcon = (props) => (
 export const EyeIcon = (props) => (
   <Icon {...props}>
     <EyeSvg />
+  </Icon>
+);
+
+export const EyeOffIcon = (props) => (
+  <Icon {...props}>
+    <EyeOffSvg />
   </Icon>
 );
 

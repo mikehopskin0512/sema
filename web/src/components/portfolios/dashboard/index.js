@@ -9,10 +9,14 @@ import { fullName, getPlatformLink } from '../../../utils';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import AddSnapshotModal from '../../portfolios/addSnapshotModal';
+import useAuthEffect from 'src/hooks/useAuthEffect';
 
 const { updatePortfolio } = portfoliosOperations;
+const { fetchUserSnapshots } = snapshotsOperations;
 
 const PortfolioDashboard = ({ portfolio, isPublic }) => {
   const dispatch = useDispatch();
@@ -21,7 +25,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
       auth: state.authState,
     }),
   );
-  const { token = '' } = auth;
+  const { user: userData, token = '' } = auth;
   const [user, setUser] = useState({
     fullName: '',
     avatar: DEFAULT_AVATAR,
@@ -30,6 +34,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
   });
   const [snapshots, setSnapshots] = useState([]);
   const [isEditModalOpen, toggleEditModal] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const parsePortfolio = (portfolio) => {
     if (!isEmpty(portfolio)) {
@@ -68,8 +73,20 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
     parsePortfolio(portfolio);
   }, [portfolio]);
 
+  useAuthEffect(() => {
+    dispatch(fetchUserSnapshots(userData._id, token));
+  }, [userData]);
+
   return (
     <>
+      <button
+        onClick={() => setIsActive(true)}
+        type="button"
+        className="button is-transparent"
+      >
+        + Add Snapshot
+      </button>
+      {isActive && <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type="snapshots" />}
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <div className="portfolio-content mb-50 container">
         <div className={clsx(styles['user-summary'])}>

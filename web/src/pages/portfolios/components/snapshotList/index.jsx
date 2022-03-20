@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { OptionsIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
+import AddSnapshotModal from '../../../../components/portfolios/addSnapshotModal';
 
 const snapshotList = () => {
   // const dispatch = useDispatch();
@@ -12,8 +13,14 @@ const snapshotList = () => {
   const {
     data: { snapshots },
   } = snapshotsState;
+
+  const [isActive, setIsActive] = useState(false);
+  const [snapshotId, setSnapshotId] = useState('');
+
   const addToPortfolio = () => {
   //  TODO: add to portfolio
+    setSnapshotId('ID'); //fix when list of snapshots will be finished
+    setIsActive(true);
   };
 
   console.log(snapshots);
@@ -87,6 +94,10 @@ const snapshotList = () => {
         <p className="title is-size-4">Snapshot Library</p>
       </div>
       <Table data={tableData} columns={columns} />
+      {isActive && <AddSnapshotModal active={isActive} snapshotId={snapshotId} onClose={() => setIsActive(false)} 
+      //type="snapshots"
+      type="portfolios"
+      />}
     </div>
   );
 };
