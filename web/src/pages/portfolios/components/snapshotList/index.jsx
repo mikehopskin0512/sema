@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
@@ -6,9 +6,35 @@ import { OptionsIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
 import AddSnapshotModal from '../../../../components/portfolios/addSnapshotModal';
+import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../components/Icons';
+import toaster from 'toasted-notes';
 
 const snapshotList = () => {
-  // const dispatch = useDispatch();
+  const showNotification = (isError) => {
+    toaster.notify(({ onClose }) => (
+      <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
+        <div className="message-body has-background-white is-flex">
+          {isError ?
+            <AlertFilledIcon size="small" /> :
+            <CheckFilledIcon size="small" />
+          }
+          <div>
+            <div className="is-flex is-justify-content-space-between mb-15">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
+                {isError ? 'Snapshot was not added.' : 'Snapshot was added to your portfolio'}
+              </span>
+              <div onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: 4000,
+    });
+  };
   const { snapshotsState } = useSelector((state) => state);
   const {
     data: { snapshots },
@@ -101,9 +127,10 @@ const snapshotList = () => {
           active={isModalActive}
           snapshotId={snapshotIdForPortfolio}
           onClose={() => setSnapshotIdForPortfolio(null)}
+          showNotification={showNotification}
+          type="portfolios"
         />
       )}
-      {/*type="snapshots" type="portfolios"*/}
     </div>
   );
 };

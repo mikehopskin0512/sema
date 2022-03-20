@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio } from './api';
+import { getPortfolio, putPortfolio, getUserPortfolio, postSnapshotToPortfolio } from './api';
 import { deleteSnapshot, putSnapshot } from '../snapshots/api';
 
 const requestFetchUserPortfolio = () => ({
@@ -69,6 +69,19 @@ const requestRemoveSnapshotSuccess = (portfolio) => ({
 
 const requestRemoveSnapshotError = (errors) => ({
   type: types.REQUEST_REMOVE_SNAPSHOT_ERROR,
+  errors,
+});
+
+const requestPostSnapshotToPortfolio = () => ({
+  type: types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO,
+});
+
+const requestPostSnapshotToPortfolioSuccess = () => ({
+  type: types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_SUCCESS,
+});
+
+const requestPostSnapshotToPortfolioError = (errors) => ({
+  type: types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_ERROR,
   errors,
 });
 
@@ -143,3 +156,19 @@ export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatc
     return error.response;
   }
 };
+
+export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
+  try {
+    dispatch(requestPostSnapshotToPortfolio());
+    const payload = await postSnapshotToPortfolio(portfolioId, body, token);
+    //const { data } = payload; 
+    //Fix this after backend will be ready
+    dispatch(requestPostSnapshotToPortfolioSuccess());
+    return payload;
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestPostSnapshotToPortfolioError(errMessage));
+    return error.response;
+  }
+}

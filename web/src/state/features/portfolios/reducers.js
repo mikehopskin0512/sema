@@ -131,6 +131,27 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      // data: {
+      //   ...state.data,
+      //   portfolio: action.portfolio,
+      // },
+      // Fix this after backend will be ready
+    };
+  case types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

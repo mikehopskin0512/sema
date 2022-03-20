@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon } from '../../Icons';
+import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
@@ -13,12 +13,39 @@ import { snapshotsOperations } from '../../../state/features/snapshots';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import AddSnapshotModal from '../../portfolios/addSnapshotModal';
-import useAuthEffect from 'src/hooks/useAuthEffect';
+import useAuthEffect from '../../../hooks/useAuthEffect';
+import toaster from 'toasted-notes';
 
 const { updatePortfolio } = portfoliosOperations;
 const { fetchUserSnapshots } = snapshotsOperations;
 
 const PortfolioDashboard = ({ portfolio, isPublic }) => {
+  const showNotification = (isError) => {
+    toaster.notify(({ onClose }) => (
+      <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
+        <div className="message-body has-background-white is-flex">
+          {isError ?
+            <AlertFilledIcon size="small" /> :
+            <CheckFilledIcon size="small" />
+          }
+          <div>
+            <div className="is-flex is-justify-content-space-between mb-15">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
+                {isError ? 'Snapshots were not added.' : 'Snapshots were added to this portfolio'}
+              </span>
+              <div onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: 4000,
+    });
+  };
+
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -86,7 +113,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
       >
         + Add Snapshot
       </button>
-      {isActive && <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type="snapshots" />}
+      {isActive && <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type="snapshots" showNotification={showNotification}/>}
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <div className="portfolio-content mb-50 container">
         <div className={clsx(styles['user-summary'])}>

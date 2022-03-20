@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import Table from '../../table';
 
-const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
+const { updateSnapshot, fetchPortfoliosOfUser, addSnapshotToPortfolio } = portfoliosOperations;
 
 
 export const SNAPSHOT_MODAL_TYPES = {
@@ -20,7 +20,7 @@ export const SNAPSHOT_MODAL_TYPES = {
   EDIT: 'edit',
 };
 
-const AddSnapshotModal = ({ active, onClose, type, snapshotId }) => {
+const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification }) => {
   const dispatch = useDispatch();
 
   const { snapshotsState, portfoliosState, authState } = useSelector((state) => state);
@@ -91,16 +91,24 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId }) => {
     // }
 
   const onSubmit = async (data) => {
-    let body = [];
-    if (type === 'snapshots') {
-      body = [...idsArray];
-      console.log(portfolio._id, body);
-      //await dispatch(postSnapshotToPortfolio(portfolio._id, body, token));
-    } else {
-      body.push(snapshotId);
-      console.log(activePortfolio, body);
-      //await dispatch(postSnapshotToPortfolio(activePortfolio, body, token));
+    try {
+      let body = [];
+      if (type === 'snapshots') {
+        body = [...idsArray];
+        await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
+      } else {
+        body.push(snapshotId);
+        await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
+      }
+      if (portfoliosState.error) {
+        showNotification(true);
+      } else {
+        showNotification(false);
+      }
+    } catch (error) {
+      showNotification(true);
     }
+    onClose();
   }
 
   return (
