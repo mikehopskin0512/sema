@@ -17,7 +17,7 @@ module "ecs_ec2_provider" {
 
   vpc_subnet_ids         = data.aws_subnet_ids.private.ids
   name_prefix            = var.name_prefix
-  ecs_cluster_name       = aws_ecs_cluster.main.name // TODO get name from cluster resource
+  ecs_cluster_name       = aws_ecs_cluster.main.name
   instance_type          = "p2.xlarge"
   root_block_volume_size = 200
 }
