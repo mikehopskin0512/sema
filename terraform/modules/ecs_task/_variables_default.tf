@@ -157,3 +157,9 @@ variable "ephemeral_storage" {
   description = "This is a number of ephemeral storage size"
   default     = null
 }
+
+variable "gpu" {
+  type        = string
+  description = "Number of required gpu"
+  default     = null
+}
