@@ -1,7 +1,6 @@
+import React from 'react';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
 import { Helmet } from 'react-helmet';
 import PageTabs from '../../components/pageTabs';
 import { ListIcon, Trophy2Icon } from '../../components/Icons';
@@ -21,7 +20,6 @@ const Portfolios = () => {
   const { _id: userId = '' } = userData;
   const router = useRouter();
   const { query: { tab } } = router;
-  // const [portfolio, setPortfolio] = useState({});
 
   useAuthEffect(() => {
     dispatch(fetchPortfoliosOfUser(userId, token));
