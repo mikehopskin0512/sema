@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { format } from 'date-fns';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -6,19 +6,22 @@ import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
 import { CloseIcon, EyeIcon, EyeOffIcon } from '../../Icons';
-import { black900, gray300, red600, green500 } from '../../../../styles/_colors.module.scss';
+import { black900, red600, green500 } from '../../../../styles/_colors.module.scss';
 import styles from './addSnapshotModal.module.scss';
-import { isEmpty } from 'lodash';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import Table from '../../table';
+import Checkbox from '../../checkbox';
+import CustomRadio from '../../radio';
 
-const { updateSnapshot, fetchPortfoliosOfUser, addSnapshotToPortfolio } = portfoliosOperations;
+const { addSnapshotToPortfolio } = portfoliosOperations;
 
 
-export const SNAPSHOT_MODAL_TYPES = {
-  CREATE: 'create',
-  EDIT: 'edit',
+export const ADD_SNAPSHOT_MODAL_TYPES = {
+  SNAPSHOTS: 'snapshots',
+  PORTFOLIOS: 'portfolios',
 };
+
+export const isSnapshotsModalType = (type) => type === ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS;
 
 const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification }) => {
   const dispatch = useDispatch();
@@ -34,7 +37,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   const [idsArray, changeIdsArray] = useState([]);
   const [activePortfolio, changeActivePortfolio] = useState('');
 
-  const data = type === 'snapshots' ? 
+  const data = isSnapshotsModalType(type) ? 
     snapshots.map(snapshot => ({
       title: snapshot.title,
       date: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
@@ -55,45 +58,82 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       };
     });
 
-    // const columns = [
-    //     {
-    //       Header: type === 'portfolios' ? 'Portfolio' : 'Snapshot',
-    //       accessor: 'title',
-    //       className: 'pl-20 has-text-weight-semibold',
-    //     },
-    //     {
-    //       Header: 'Date of last change',
-    //       accessor: 'date',
-    //       className: 'p-16',
-    //     },
-    //     {
-    //         Header: '',
-    //         isVisible: false,
-    //         accessor: 'action',
-    //         className: 'pb-10',
-    //         Cell: ({ row }) => {
-    //           return <input type={type === 'portfolios' ? 'radio' : 'checkbox'} style={{position: 'absolute', left: '40px', paddingBottom: '10px'}}/>
-    //         }
-    //     },
-    //     // type !== 'snapshots' && {
-    //     //   Header: 'Visibility',
-    //     //   accessor: 'type',
-    //     //   className: 'pl-20 py-10 has-background-white-50',
-    //     // },
-    // ];
+  const columns = [
+    {
+      Header: () => (
+        <div className="py-8 my-12 is-flex is-align-items-center">
+          <div className="is-uppercase is-size-8 is-line-height-1 ml-8">{!isSnapshotsModalType(type) ? 'Portfolio' : 'Snapshot'}</div>
+        </div>
+        ),
+      accessor: 'title',
+      className: 'px-8 has-text-weight-bold is-size-7',
+      Cell: ({ row, cell }) => (
+        <div className="is-flex px-8 my-12">
+          {isSnapshotsModalType(type) ?
+          <Checkbox
+            value={idsArray.includes(row.values.id)}
+            onChange={() => {
+              if (idsArray.includes(row.values.id)) {
+                const result = idsArray.filter(id => id !== row.values.id);
+                changeIdsArray([...result]);
+              } else {
+                changeIdsArray([...idsArray, row.values.id]);
+              }
+            }}
+          /> :
+          <CustomRadio
+            checked={row.values.id === activePortfolio}
+            onChange={() => changeActivePortfolio(row.values.id)}
+          />
+          }
+          <span className={`${isSnapshotsModalType(type) ? 'pl-10' : ''}`}>{cell.value}</span>
+        </div>
+        ),
+          sorted: true,
+      },
+      {
+        Header: () => <div className="ml-40 is-uppercase is-line-height-1 is-size-8">Date of last change</div>,
+        accessor: 'date',
+        className: 'has-text-weight-bold is-size-7',
+        Cell: ({ cell }) => (
+          <div className="ml-40">
+            {cell.value}
+          </div>
+          ),
+      },
+      {
+        Header: '',
+        isVisible: false,
+        accessor: 'id',
+        className: 'is-hidden',
+      },
+    ];
 
-    // if (type === 'portfolios') {
-    //   columns.splice(2, 0, {
-    //     Header: 'Visibility',
-    //     accessor: 'type',
-    //     className: 'p-16',
-    //   })
-    // }
+  if (!isSnapshotsModalType(type)) {
+    columns.splice(2, 0, {
+      Header: () => <div className="is-uppercase is-line-height-1 is-size-8">Visibility</div>,
+      accessor: 'type',
+      Cell: ({ row }) => {
+        return (
+          <div style={{maxWidth: '90px'}} className={`is-flex border-radius-24px ${row.values.type === 'public' ? 'has-background-green-50 has-text-green-500' : 'has-background-red-100 has-text-red-600'}`}>
+            <div className="px-5 pt-8">
+              {row.values.type === 'public' ? 
+                <EyeIcon size="small" color={green500}/> :
+                <EyeOffIcon size="small" color={red600}/>
+              }
+            </div>
+            <div className="p-5">
+              {row.values.type}
+            </div>
+          </div>)
+      }
+    })
+  }
 
   const onSubmit = async (data) => {
     try {
       let body = [];
-      if (type === 'snapshots') {
+      if (isSnapshotsModalType(type)) {
         body = [...idsArray];
         await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
       } else {
@@ -117,58 +157,21 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       <div className={clsx('modal-content px-10', styles.modalWindowContent)}>
         <div className="px-25 py-15 has-background-white border-radius-4px">
           <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
-            {type === 'portfolios' ? 'Add to portfolio' : 'Add Snapshot(s) to Portfolio'}
+            {!isSnapshotsModalType(type) ? 'Add to portfolio' : 'Add Snapshot(s) to Portfolio'}
           </p>
           <div onClick={onClose} className="is-clickable" style={{ position: 'absolute', top: 20, right: 30 }}>
             <CloseIcon size="medium" color={black900} />
           </div>
-          <div className="has-background-gray-300 px-10 py-10 is-flex border-radius-8px is-justify-content-space-between">
-              <p className="pl-16">Portfolio</p>
-              <p className="pl-100 has-text-align-left">Date of last change</p>
-              <p className="mr-100">{type === 'portfolios' ? 'Visibility' : ''}</p>
-          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* <Table data={data} columns={columns} /> */}
-            {data.map(item => 
-              <div style={{ borderBottom: `1px solid ${gray300}` }} className={`is-flex p-16 is-justify-content-space-between`}>
-                <input className="mt-5" name={item.id} 
-                  onChange={(e) => {
-                    if (type === 'snapshots') {
-                      if (idsArray.includes(e.target.name)) {
-                        const result = idsArray.filter(id => id !== e.target.name);
-                        changeIdsArray([...result]);
-                      } else {
-                        changeIdsArray([...idsArray, e.target.name]);
-                      }
-                    } else {
-                      changeActivePortfolio(e.target.name);
-                    }
-                  }} 
-                  type={type === 'portfolios' ? 'radio' : 'checkbox'} style={{ position: 'absolute', left: '40px', paddingBottom: '10px' }}/>
-                <p className="pl-10">{item.title}</p>
-                <p className={`has-text-align-left ${type === 'snapshots' ? 'ml-20' : ''}`}>{item.date}</p>
-                <div className={`mr-80 mt-13 is-flex border-radius-24px ${item.type === 'public' ? 'has-background-green-50 has-text-green-500' : 'has-background-red-100 has-text-red-600'}`}>
-                  {type==='portfolios' && <>
-                  <div className="pl-5 pt-3">
-                    {item.type === 'public' ? 
-                      <EyeIcon size="small" color={green500}/> :
-                      <EyeOffIcon size="small" color={red600}/>
-                    }
-                  </div>
-                  <div className="px-10">
-                    {item.type}
-                  </div>
-                  </>}
-                </div>
-              </div>
-            )}
+            <Table data={data} columns={columns} minimal/>
             <div className="is-flex is-justify-content-right mt-20">
               <button className="button has-text-weight-semibold is-size-7 mx-10" onClick={() => onClose()} type="button">Cancel</button>
               <button
                 className={clsx('button is-primary has-text-weight-semibold is-size-7 mx-10')}
                 type="submit"
+                disabled={!isSnapshotsModalType(type) ? !activePortfolio : !idsArray.length}
               >
-                {type === 'portfolios' ? 'Add to portfolio' : `Add ${idsArray.length} snapshots`}
+                {!isSnapshotsModalType(type) ? 'Add to portfolio' : `Add ${idsArray.length} snapshots`}
               </button>
             </div>
           </form>
@@ -179,9 +182,15 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
 };
 
 AddSnapshotModal.propTypes = {
+  active: PropTypes.bool.isRequired, 
+  onClose: PropTypes.func.isRequired, 
+  type: PropTypes.string.isRequired, 
+  snapshotId: PropTypes.string, 
+  showNotification: PropTypes.func,
 };
 
 AddSnapshotModal.defaultProps = {
+  showNotification: () => {},
 };
 
 export default AddSnapshotModal;

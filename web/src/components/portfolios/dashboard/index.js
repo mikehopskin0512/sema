@@ -12,7 +12,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 import { snapshotsOperations } from '../../../state/features/snapshots';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
-import AddSnapshotModal from '../../portfolios/addSnapshotModal';
+import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import toaster from 'toasted-notes';
 
@@ -113,7 +113,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
       >
         + Add Snapshot
       </button>
-      {isActive && <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type="snapshots" showNotification={showNotification}/>}
+      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <div className="portfolio-content mb-50 container">
         <div className={clsx(styles['user-summary'])}>

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { OptionsIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
-import AddSnapshotModal from '../../../../components/portfolios/addSnapshotModal';
+import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../../../components/portfolios/addSnapshotModal';
 import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../components/Icons';
 import toaster from 'toasted-notes';
 
@@ -122,15 +122,13 @@ const snapshotList = () => {
         data={tableData}
         columns={columns}
       />
-      {isModalActive && (
         <AddSnapshotModal
           active={isModalActive}
           snapshotId={snapshotIdForPortfolio}
           onClose={() => setSnapshotIdForPortfolio(null)}
           showNotification={showNotification}
-          type="portfolios"
+          type={ADD_SNAPSHOT_MODAL_TYPES.PORTFOLIOS}
         />
-      )}
     </div>
   );
 };
