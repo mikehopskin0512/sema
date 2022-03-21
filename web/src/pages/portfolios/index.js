@@ -26,6 +26,9 @@ const Portfolios = () => {
   }, [userId]);
 
   useAuthEffect(() => {
+    if (portfolios.length === 1) {
+      router.push(PATHS.PORTFOLIO.VIEW(portfolios[0]._id));
+    }
     if (portfolios.length > 1) {
       router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     }

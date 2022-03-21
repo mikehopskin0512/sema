@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { OptionsIcon, PlusIcon, ShareIcon } from '../../../../components/Icons';
@@ -32,7 +33,12 @@ const portfolioList = () => {
     {
       Header: 'Title',
       accessor: 'title',
-      className: 'p-16 has-text-weight-semibold',
+      className: 'p-16 has-text-weight-semibold has-text-black-900',
+      Cell: ({ row }) => (
+        <Link href={PATHS.PORTFOLIO.VIEW(row.values.id)}>
+          <span className="is-clickable has-text-black-900">{row.values.title}</span>
+        </Link>
+      ),
     },
     {
       Header: '',
