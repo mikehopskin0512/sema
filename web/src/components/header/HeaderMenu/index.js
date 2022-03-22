@@ -107,7 +107,7 @@ const HeaderMenu = ({
   return (
     <>
       <Tooltip text={'Here is your Developer Portfolio'}>
-        <div onClick={() => router.push(`${PATHS.PORTFOLIOS}`)} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+        <div onClick={() => router.push(`${PATHS.PORTFOLIO._}`)} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
           <TrophyIcon />
         </div>
       </Tooltip>
