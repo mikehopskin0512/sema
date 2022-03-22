@@ -9,6 +9,7 @@ import {
   updateTeamRepos,
   postTeamInvitationEmailValidation,
   getAllTeamCollections,
+  inviteToTeam,
   uploadAvatar,
 } from './api';
 import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
@@ -341,6 +342,19 @@ export const fetchTeamSmartCommentOverview = (params, token) => async (dispatch)
   }
 };
 
+/* Invite a single member */
+export const inviteTeamUser = (teamId, token) => async (dispatch) => {
+  try {
+    dispatch(inviteTeamUsersRequest());
+    await inviteToTeam(teamId, token);
+    dispatch(inviteTeamUsersSuccess());
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(inviteTeamUsersError(errMessage));
+  }
+};
+
 export const uploadTeamAvatar = (teamId, body, token) => async (dispatch) => {
   try {
     const res = await uploadAvatar(teamId, body, token);
@@ -350,4 +364,5 @@ export const uploadTeamAvatar = (teamId, body, token) => async (dispatch) => {
   } catch (error) {
     console.error(error);
   }
-}
+};
+

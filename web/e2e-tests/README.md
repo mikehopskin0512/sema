@@ -207,3 +207,20 @@ Scenario: check if username is present
 - `I delete the cookie "([^"]*)?"` <br>Delete the cookie with the given name
 
 building...
+
+## Parametrized build
+
+There are few parameters that can be passed to build by setting environment variables.
+
+BASE_URL - application url. When not provided default value of https://app-staging.semasoftware.com is used.
+LOG_LEVEL - trace by default. 
+MAX_INSTANCES - 3 by default.
+
+Environment variable can be set with command (example works in Linux shell and Mac):
+```
+export LOG_LEVEL='warn'
+```
+Value of variable can be checked with:
+```
+echo $LOG_LEVEL
+```

@@ -16,7 +16,7 @@ const { fetchTeamMembers } = teamsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const router = useRouter();
   const {
     query: { teamId, tab },
@@ -64,7 +64,7 @@ const TeamSettings = () => {
       id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
-    (isTeamAdminOrLibraryEditor() && {
+    (isSemaAdmin() && {
       label: 'Labels Management',
       path: PATHS.TEAMS.LABELS(teamId),
       id: TAB.labels,

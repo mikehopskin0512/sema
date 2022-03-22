@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
-import { InfoFilledIcon } from '../../../../components/Icons';
 import Helmet, { TeamInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
@@ -17,7 +16,7 @@ import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../../utils/
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
-import { AuthorIcon, TeamIcon } from '../../../../components/Icons';
+import { AuthorIcon, TeamIcon, InfoFilledIcon } from '../../../../components/Icons';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 

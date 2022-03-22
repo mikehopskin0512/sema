@@ -7,7 +7,7 @@ import Select from 'react-select';
 import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
-import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon } from '../../../../components/Icons';
+import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
 import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
 import { teamsOperations } from '../../../../state/features/teams';
@@ -23,6 +23,7 @@ const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
 const TeamInvitePage = () => {
   const router = useRouter();
   const { query: { teamId } } = router;
+  const [copyTooltip, toggleCopyTooltip] = useState(false);
   const dispatch = useDispatch();
   const {
     register, handleSubmit, formState: { errors }, watch, setValue,
@@ -85,6 +86,13 @@ const TeamInvitePage = () => {
     if (!authState.selectedTeam || !authState.selectedTeam.team) {
       return router.push(PATHS.DASHBOARD);
     }
+  }
+
+  const copyInviteLink = async (e) => {
+    const { origin } = window.location
+    await navigator.clipboard.writeText(`${origin}${PATHS.TEAMS._}/invite/${teamId}`);
+    toggleCopyTooltip(true);
+    setTimeout(() => toggleCopyTooltip(false), 3000);
   }
 
   useEffect(() => {
@@ -216,6 +224,14 @@ const TeamInvitePage = () => {
               }}
             />
             {errors.role && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.role.message}</p>)}
+          </div>
+          <div className='is-divider' />
+          <div className={clsx(styles['copy-invite'])}>
+            {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />}
+            <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}>
+              <LinkIcon size="small" className={clsx('mr-5')} />
+              Copy Invitation Link
+            </button>
           </div>
         </div>
       </div>

@@ -84,6 +84,7 @@ const checkLoggedIn = (cb) => {
       cb(response);
     });
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Sema Code Assistant extension is disabled');
   }
 };
