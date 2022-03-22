@@ -11,6 +11,7 @@ import { fetchUserSnapshots } from '../../state/features/snapshots/actions';
 import { PATHS } from '../../utils/constants';
 import PortfolioList from './components/portfolioList';
 import SnapshotList from './components/snapshotList';
+import { gray400, gray200 } from '../../../styles/_colors.module.scss';
 
 const { fetchPortfoliosOfUser } = portfoliosOperations;
 
@@ -29,8 +30,10 @@ const Portfolios = () => {
   }, [userId]);
 
   useAuthEffect(() => {
-    // TODO: logic will be changed
-    if (portfolios.length > 1 && tab !== 'snapshots') {
+    if (portfolios.length === 1) {
+      router.push(PATHS.PORTFOLIO.VIEW(portfolios[0]._id));
+    }
+    if (portfolios.length > 1) {
       router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     }
   }, [portfolios]);
@@ -59,8 +62,8 @@ const Portfolios = () => {
       <div
         className="has-background-white"
         style={{
-          boxShadow: 'inset 0px -1px 0px #BFCBD3',
-          borderTop: '1px solid #F0F2F4',
+          boxShadow: `inset 0px -1px 0px ${gray400}`,
+          borderTop: `1px solid ${gray200}`,
         }}
       >
         <div className="container pt-32">

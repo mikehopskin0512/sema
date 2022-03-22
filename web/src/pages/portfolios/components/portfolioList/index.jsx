@@ -1,22 +1,30 @@
 import clsx from 'clsx';
-import { format } from "date-fns";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { format } from 'date-fns';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { OptionsIcon, PlusIcon, ShareIcon } from '../../../../components/Icons';
-import DropDownMenu from "../../../../components/dropDownMenu";
-import Table from "../../../../components/table";
+import DropDownMenu from '../../../../components/dropDownMenu';
+import Table from '../../../../components/table';
+import Tooltip from '../../../../components/Tooltip';
+import { PATHS, SEMA_APP_URL } from '../../../../utils/constants';
 
 const portfolioList = () => {
-  // const dispatch = useDispatch();
   const { portfoliosState } = useSelector((state) => state);
   const {
     data: { portfolios },
   } = portfoliosState;
+  const [copiedToClipboard, setCopiedToClipboard] = useState('');
   const addPortfolio = () => {};
+  const copyToClipboard = (id) => {
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
+    setCopiedToClipboard(id);
+  };
 
   const tableData = portfolios.map((portfolio, i) => ({
     // TODO: will be fixed in portfolio name ticket
     title: `Portfolio ${i}`,
+    id: portfolio._id,
     updatedAt: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
     type: portfolio.type,
   }));
@@ -25,7 +33,17 @@ const portfolioList = () => {
     {
       Header: 'Title',
       accessor: 'title',
-      className: 'p-16 has-text-weight-semibold',
+      className: 'p-16 has-text-weight-semibold has-text-black-900',
+      Cell: ({ row }) => (
+        <Link href={PATHS.PORTFOLIO.VIEW(row.values.id)}>
+          <span className="is-clickable has-text-black-900">{row.values.title}</span>
+        </Link>
+      ),
+    },
+    {
+      Header: '',
+      accessor: 'id',
+      className: 'is-hidden',
     },
     {
       Header: 'Date of last change',
@@ -36,7 +54,7 @@ const portfolioList = () => {
       Header: 'Visibility',
       accessor: 'type',
       className: 'p-16',
-      // TODO: visibility badge component
+      // TODO: visibility badge component / will be done in ETCR-1029
       Cell: ({ value }) => <div>{value}</div>,
     },
     {
@@ -46,32 +64,42 @@ const portfolioList = () => {
       className: 'pl-20 py-10 has-background-white-50',
       Cell: ({ row }) => {
         const isPublic = row.values.type === 'public';
+        const isCopiedToClipboard = copiedToClipboard === row.values.id;
+        const tooltipText = {
+          private: 'If you want to share, please change status to "Public”.',
+          public: isCopiedToClipboard ? 'Copied to clipboard' : 'Click to copy to clipboard',
+        };
         return (
-          <div className="is-flex is-justify-content-flex-end">
-            <div className={clsx(
-              'is-flex mr-20',
-              isPublic && 'is-cursor-pointer',
-            )}>
-              {/* TODO: copy to clipboard */}
-              <ShareIcon />
-            </div>
-            {/* TODO: fix menu */}
+          <div className="is-flex is-justify-content-flex-end has-text-gray-600">
+            <Tooltip text={isPublic ? tooltipText.public : tooltipText.private}>
+              <div
+                onClick={() => isPublic && copyToClipboard(row.values.id)}
+                className={clsx(
+                  'is-flex mr-24',
+                  isPublic ? 'is-cursor-pointer' : 'has-text-gray-300',
+                )}
+              >
+                <ShareIcon />
+              </div>
+            </Tooltip>
             <DropDownMenu
               isRight
               options={[
                 {
+                  // TODO: add Duplicate - ETCR-1030
                   label: 'Duplicate Portfolio',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
                 {
+                  // TODO: add Save as PDF ETCR-688
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
-                // TODO: delete function
+                // TODO: add delete function ETCR-1044
                 { label: 'Delete', onClick: () => console.log(1) },
               ]}
               trigger={
-                <div className="is-clickable is-flex mr-20">
+                <div className="is-clickable is-flex mr-24">
                   <OptionsIcon />
                 </div>
               }
@@ -91,11 +119,16 @@ const portfolioList = () => {
           className="button is-primary"
           onClick={addPortfolio}
         >
-          <PlusIcon size="small" />
-          <span>Add New Portfolio</span>
+          <PlusIcon />
+          <span className="ml-16 has-text-weight-semibold">Add New Portfolio</span>
         </button>
       </div>
-      <Table data={tableData} columns={columns} />
+      <Table
+        minimal
+        className="overflow-unset shadow-none"
+        data={tableData}
+        columns={columns}
+      />
     </div>
   );
 };

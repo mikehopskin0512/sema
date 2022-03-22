@@ -1,8 +1,8 @@
-import PageTabs from '@/components/pageTabs';
 import React from 'react';
 import Avatar from 'react-avatar';
 import { useRouter } from 'next/router';
 import { EditIcon } from '../Icons';
+import PageTabs from '../pageTabs';
 import usePermission from '../../hooks/usePermission';
 import { PATHS } from '../../utils/constants';
 
