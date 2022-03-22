@@ -9,6 +9,7 @@ import useAuthEffect from '../../hooks/useAuthEffect';
 import { portfoliosOperations } from '../../state/features/portfolios';
 import { PATHS } from '../../utils/constants';
 import PortfolioList from './components/portfolioList';
+import { gray400, gray200 } from '../../../styles/_colors.module.scss';
 
 const { fetchPortfoliosOfUser } = portfoliosOperations;
 
@@ -54,8 +55,8 @@ const Portfolios = () => {
       <div
         className="has-background-white"
         style={{
-          boxShadow: 'inset 0px -1px 0px #BFCBD3',
-          borderTop: '1px solid #F0F2F4',
+          boxShadow: `inset 0px -1px 0px ${gray400}`,
+          borderTop: `1px solid ${gray200}`,
         }}
       >
         <div className="container pt-32">
