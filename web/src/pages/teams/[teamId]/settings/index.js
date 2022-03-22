@@ -16,7 +16,7 @@ const { fetchTeamMembers } = teamsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const router = useRouter();
   const {
     query: { teamId, tab },

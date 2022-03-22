@@ -14,7 +14,7 @@ import {
   subDays,
 } from 'date-fns';
 import { EMOJIS, TAGS } from './constants';
-import { generateChartDataByDays, generateChartDataByWeeks, generateChartDataByMonths, generateChartDataByYears } from './codeStats';
+import { generateChartDataByDays, generateChartDataByMonths, generateChartDataByYears, generateChartDataByWeeks } from './codeStats';
 
 export const getEmoji = (id) => {
   const { emoji } = find(EMOJIS, { _id: id });
