@@ -34,7 +34,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
 
   const modalRef = useRef(null);
 
-  const [idsArray, changeIdsArray] = useState([]);
+  const [ids, changeIds] = useState([]);
   const [activePortfolio, changeActivePortfolio] = useState('');
 
   const data = isSnapshotsModalType(type) ? 
@@ -43,20 +43,13 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       date: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
       id: snapshot._id,
     })) : 
-    portfolios.map(portfolio => {
-      let latestDate = new Date(portfolio.snapshots[0].id.updatedAt);
-      portfolio.snapshots.forEach(snapshot => {
-        if (new Date(snapshot.id.updatedAt) > latestDate) {
-          latestDate = new Date(snapshot.id.updatedAt);
-        }
-      });
-      return {
-        title: portfolio._id, // fix this after adding portfolio name
-        date: format(latestDate, 'MMM dd, yyyy'),
+    portfolios.map(portfolio => ({
+        title: portfolio._id, //ToDO: fix this(change to name) after adding portfolio name
+        date: format(portfolio.updatedAt, 'MMM dd, yyyy'),
         type: portfolio.type,
         id: portfolio._id,
-      };
-    });
+      })
+    );
 
   const columns = [
     {
@@ -67,17 +60,17 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
         ),
       accessor: 'title',
       className: 'px-8 has-text-weight-bold is-size-7',
-      Cell: ({ row, cell }) => (
-        <div className="is-flex px-8 my-12">
+      Cell: ({ row, cell }) => {
+        const isTarget = ids.includes(row.values.id);
+        return (<div className="is-flex px-8 my-12">
           {isSnapshotsModalType(type) ?
           <Checkbox
-            value={idsArray.includes(row.values.id)}
+            value={isTarget}
             onChange={() => {
-              if (idsArray.includes(row.values.id)) {
-                const result = idsArray.filter(id => id !== row.values.id);
-                changeIdsArray([...result]);
+              if (isTarget) {
+                changeIds(ids.filter(id => id !== row.values.id));
               } else {
-                changeIdsArray([...idsArray, row.values.id]);
+                changeIds([...ids, row.values.id]);
               }
             }}
           /> :
@@ -87,8 +80,8 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
           />
           }
           <span className={`${isSnapshotsModalType(type) ? 'pl-10' : ''}`}>{cell.value}</span>
-        </div>
-        ),
+        </div>)
+        },
           sorted: true,
       },
       {
@@ -134,8 +127,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
     try {
       let body = [];
       if (isSnapshotsModalType(type)) {
-        body = [...idsArray];
-        await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
+        await dispatch(addSnapshotToPortfolio(portfolio._id, ids, token));
       } else {
         body.push(snapshotId);
         await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
@@ -156,11 +148,13 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       <div className="modal-background" />
       <div className={clsx('modal-content px-10', styles.modalWindowContent)}>
         <div className="px-25 py-15 has-background-white border-radius-4px">
-          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
-            {!isSnapshotsModalType(type) ? 'Add to portfolio' : 'Add Snapshot(s) to Portfolio'}
-          </p>
-          <div onClick={onClose} className="is-clickable" style={{ position: 'absolute', top: 20, right: 30 }}>
-            <CloseIcon size="medium" color={black900} />
+          <div className="is-flex is-justify-content-space-between mb-10">
+            <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
+              {!isSnapshotsModalType(type) ? 'Add to portfolio' : 'Add Snapshot(s) to Portfolio'}
+            </p>
+            <div onClick={onClose} className="is-clickable pt-10">
+              <CloseIcon size="medium" color={black900} />
+            </div>
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Table data={data} columns={columns} minimal/>
@@ -169,9 +163,9 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
               <button
                 className={clsx('button is-primary has-text-weight-semibold is-size-7 mx-10')}
                 type="submit"
-                disabled={!isSnapshotsModalType(type) ? !activePortfolio : !idsArray.length}
+                disabled={!isSnapshotsModalType(type) ? !activePortfolio : !ids.length}
               >
-                {!isSnapshotsModalType(type) ? 'Add to portfolio' : `Add ${idsArray.length} snapshots`}
+                {!isSnapshotsModalType(type) ? 'Add to portfolio' : `Add ${ids.length} snapshots`}
               </button>
             </div>
           </form>

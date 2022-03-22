@@ -77,6 +77,7 @@ const requestPostSnapshotToPortfolio = () => ({
 });
 
 const requestPostSnapshotToPortfolioSuccess = () => ({
+  //ToDo: add data after backend will be ready
   type: types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_SUCCESS,
 });
 
@@ -162,7 +163,7 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
     dispatch(requestPostSnapshotToPortfolio());
     const payload = await postSnapshotToPortfolio(portfolioId, body, token);
     //const { data } = payload; 
-    //Fix this after backend will be ready
+    //ToDo: Fix this after backend will be ready
     dispatch(requestPostSnapshotToPortfolioSuccess());
     return payload;
   } catch (error) {

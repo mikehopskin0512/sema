@@ -144,7 +144,7 @@ const reducer = (state = initialState, action) => {
       //   ...state.data,
       //   portfolio: action.portfolio,
       // },
-      // Fix this after backend will be ready
+      //ToDo: Fix this after backend will be ready
     };
   case types.REQUEST_POST_SNAPSHOT_TO_PORTFOLIO_ERROR:
     return {
