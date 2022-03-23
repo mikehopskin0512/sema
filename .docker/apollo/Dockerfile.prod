@@ -31,6 +31,7 @@ COPY --chown=node:node --from=builder /usr/app/logs ./logs
 COPY --chown=node:node --from=builder /usr/app/data ./data
 COPY --chown=node:node --from=builder /usr/app/migrations ./migrations
 COPY --chown=node:node --from=builder /usr/app/scripts ./scripts
+COPY --chown=node:node --from=builder /usr/app/migrate-mongo-config.js ./migrate-mongo-config.js
 RUN npm install -g pm2
 
 RUN ln -s dist src
