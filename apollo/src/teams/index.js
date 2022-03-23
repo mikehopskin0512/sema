@@ -14,12 +14,13 @@ import {
   getTeamRepos,
   getTeamsByUser,
   updateTeam,
-  getTeamByUrl,
   updateTeamRepos,
+  ROLE_NAMES,
+  getTeamByUrl,
   updateTeamAvatar,
 } from './teamService';
 import checkAccess from '../middlewares/checkAccess';
-
+import { getRoleByName } from '../roles/roleService';
 import { _checkPermission, fullName } from '../shared/utils';
 import checkEnv from '../middlewares/checkEnv';
 import { findByUsername } from '../users/userService';
@@ -292,6 +293,27 @@ export default (app, passport) => {
         }));
 
         return res.status(200).send({ invalidEmails: result.filter(item => !!item) });
+      } catch (error) {
+        logger.error(error);
+        return res.status(error.statusCode).send(error);
+      }
+    },
+  );
+
+  route.get(
+    '/invite/:teamId',
+    passport.authenticate(['bearer'], { session: false }),
+    async (req, res) => {
+      try {
+        const { user } = req;
+        if (!user) {
+          return res.status(404).send({ message: 'User not found'});
+        }
+        const { username } = user;
+        const { teamId } = req.params;
+        const { _id: role } = await getRoleByName(ROLE_NAMES.MEMBER)
+        const result = await addTeamMembers(teamId, [username], role);
+        return res.status(200).send(result);
       } catch (error) {
         logger.error(error);
         return res.status(error.statusCode).send(error);

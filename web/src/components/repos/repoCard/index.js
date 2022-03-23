@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { triggerAlert } from '../../../state/features/alerts/actions';
-import { editTeamRepos, fetchTeamRepos } from '../../../state/features/teams/actions';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import styles from './repoCard.module.scss';
 import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
+import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
 const statLabels = {
   smartCodeReviews: 'Sema Code Reviews',
@@ -20,11 +18,10 @@ const statLabels = {
 };
 
 const RepoCard = (props) => {
+  const titleRef = useRef(null);
   const {
-    name, externalId, _id: repoId, repoStats, users = [], column = 3, isTeamView = false,
+    name, externalId, _id: repoId, repoStats, users = [], column = 3, isTeamView = false, onRemoveRepo
   } = props;
-  const { token, selectedTeam } = useSelector((state) => state.authState)
-  const dispatch = useDispatch();
   const { isTeamAdmin } = usePermission();
 
   const renderStats = (label, value) => (
@@ -38,15 +35,8 @@ const RepoCard = (props) => {
   const [isDeleteRepoModalOpen, setDeleteRepoModalOpen] = useState(false);
   const removeRepo = async (e) => {
     e.stopPropagation();
-    const repos = selectedTeam.team.repos.filter(id => id !== repoId);
-    try {
-      await dispatch(editTeamRepos(selectedTeam.team._id, { repos }, token));
-      setDeleteRepoModalOpen(false);
-      dispatch(triggerAlert('Repo has been deleted', 'success'));
-      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
-    } catch (e) {
-      dispatch(triggerAlert('Unable to delete repo', 'error'));
-    }
+    await onRemoveRepo(repoId);
+    setDeleteRepoModalOpen(false);
   };
 
   return (
@@ -57,7 +47,9 @@ const RepoCard = (props) => {
     >
       <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
         <div className="has-background-gray-200 is-flex is-justify-content-space-between p-12 is-align-items-center">
-          <p className="has-text-black-900 has-text-weight-semibold is-size-5">{name}</p>
+          <OverflowTooltip ref={titleRef} text={name}>
+            <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
+          </OverflowTooltip>
           <RepoUsers users={isTeamView ? repoStats.userIds : users} />
         </div>
         <div className="is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
@@ -69,7 +61,7 @@ const RepoCard = (props) => {
             ))}
           </div>
         </div>
-        {isTeamAdmin && (
+        {isTeamAdmin() && (
           <div className="has-background-gray-300 is-flex py-8 pr-12">
             <DropDownMenu
               options={[{ label: 'Remove from Team', onClick: () => setDeleteRepoModalOpen(true) }]}
@@ -82,7 +74,7 @@ const RepoCard = (props) => {
           </div>
         )}
       </div>
-      {isTeamAdmin && (
+      {isTeamAdmin() && (
         <DeleteRepoModal
           isOpen={isDeleteRepoModalOpen}
           onCancel={() => setDeleteRepoModalOpen(false)}

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,8 +15,9 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { ArrowDropdownIcon, PlusIcon } from '../../Icons';
+import { ArrowDropdownIcon, PlusIcon, LinkIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
+import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
@@ -32,6 +33,8 @@ const TeamManagement = ({ activeTeam }) => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
+  const [userRole, setUserRole] = useState({});
+  const [copyTooltip, toggleCopyTooltip] = useState(false);
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -96,18 +99,31 @@ const TeamManagement = ({ activeTeam }) => {
       Header: () => <div className="is-size-8 is-uppercase">Member</div>,
       accessor: 'userInfo',
       className: 'pl-20 pr-50 py-10 has-background-white-50',
-      Cell: ({ cell: { value } }) => (
-        <div className="is-flex is-align-items-center is-cursor-pointer">
-          <Avatar src={value.avatarUrl} size="32" round />
-          <span className="is-whitespace-nowrap ml-10">{ value.name }</span>
-        </div>
-      ),
+      Cell: ({ cell: { value } }) => {
+        const nameRef = useRef(null);
+        return (
+          <div className={clsx("is-flex is-align-items-center is-cursor-pointer",)}>
+            <Avatar src={value.avatarUrl} size="32" round />
+            <OverflowTooltip ref={nameRef} text={value.name}>
+              <p ref={nameRef} className={clsx("ml-10 has-overflow-ellipsis", styles.name)}>{value.name}</p>
+            </OverflowTooltip>
+          </div>
+        )
+      },
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Email</div>,
       isVisible: false,
       accessor: 'email',
       className: 'pl-20 pr-50 py-10 has-background-gray-200',
+      Cell: ({ cell: { value } }) => {
+        const emailRef = useRef(null);
+        return (
+          <OverflowTooltip ref={emailRef} text={value}>
+            <p ref={emailRef} className={clsx("has-overflow-ellipsis", styles.email)}>{value}</p>
+          </OverflowTooltip>
+        )
+      },
     },
     {
       Header: () => <div className="is-size-8 is-uppercase">Roles</div>,
@@ -137,7 +153,7 @@ const TeamManagement = ({ activeTeam }) => {
       className: 'pl-20 py-10 has-background-white-50',
       Cell: ({ row }) => canModifyRoles ? (
         <div className="is-flex is-justify-content-flex-end">
-          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit}/>
+          <ActionMenu member={row.original} onRemove={onRemoveMember} disabled={row.original.disableEdit} />
         </div>
       ) : (
         <div />
@@ -149,6 +165,14 @@ const TeamManagement = ({ activeTeam }) => {
     setPage(pageIndex + 1);
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
+
+  const copyInviteLink = async () => {
+    const { origin } = window.location
+    const teamId = activeTeam.team._id;
+    await navigator.clipboard.writeText(`${origin}${PATHS.TEAMS._}/invite/${teamId}`);
+    toggleCopyTooltip(true);
+    setTimeout(() => toggleCopyTooltip(false), 3000);
+  }
 
   const initialState = useMemo(() => {
     let defaultHidden = []
@@ -162,7 +186,7 @@ const TeamManagement = ({ activeTeam }) => {
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   const goToInvitePage = () => {
-    router.push(PATHS.TEAM.INVITE(teamId));
+    router.push(PATHS.TEAMS.INVITE(teamId));
   };
 
   return (
@@ -170,6 +194,13 @@ const TeamManagement = ({ activeTeam }) => {
       <Helmet {...TeamManagementHelmet} />
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
         <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+        <div className='ml-auto mr-15'>
+          {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />}
+          <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}>
+            <LinkIcon size="small" className={clsx('mr-5')} />
+            Copy Invitation Link
+          </button>
+        </div>
         <button
           className="button is-primary border-radius-4px"
           type="button"
@@ -195,13 +226,13 @@ const TeamManagement = ({ activeTeam }) => {
               initialState={initialState}
             />
           </div>
+          <RoleChangeModal
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+            member={editableMember}
+            onSubmit={updateRole}
+          />
         </div>
-        <RoleChangeModal
-          open={isOpen}
-          onClose={() => setIsOpen(false)}
-          member={editableMember}
-          onSubmit={updateRole}
-        />
       </div>
     </div>
   );

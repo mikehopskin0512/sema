@@ -183,22 +183,29 @@ export const PATHS = {
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAM: {
-    _: '/team',
-    EDIT: (id) => `/team/${id}/edit`,
-    ADD: '/team/add',
-    INVITE: (id) => `/team/${id}/invite`,
+  TEAMS: {
+    _: '/teams',
+    EDIT: (id) => `/teams/${id}/edit`,
+    ADD: '/teams/add',
+    INVITE: (id) => `/teams/${id}/invite`,
+    SETTINGS: (id) => `/teams/${id}/settings`,
+    LABELS: (id) => `/teams/${id}/settings?tab=labels`,
+    MANAGEMENT: (id) => `/teams/${id}/settings?tab=management`,
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
   PASSWORD_RESET: '/password-reset',
-  TEAMS: '/teams',
   REPORTS: '/reports',
   SETTINGS: '/settings',
   TEAM_CREATE: '/teams/add',
   TEAM_INVITE: '/teams/invite',
   SEMA_ADMIN: '/sema-admin',
-  PORTFOLIOS: '/portfolios',
+  PORTFOLIO: {
+    _: '/portfolios',
+    VIEW: (id) => `/portfolios/${id}`,
+    PORTFOLIOS: '/portfolios?tab=portfolios',
+    SNAPSHOTS: '/portfolios?tab=snapshots',
+  },
   IDENTITIES: '/api/identities/github',
   TEAM_INSIGHTS: '/team-insights',
 };
@@ -219,7 +226,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: `${PATHS.TEAM._}/[teamId]/edit`,
+    path: `${PATHS.TEAMS._}/[teamId]/edit`,
   },
 ];
 
@@ -237,6 +244,7 @@ export const SEMA_ROLES = {
   member: 'Member',
 };
 
+// TODO: should be in place, no need to put to constants
 export const TAB = {
   info: 'info',
   management: 'management',

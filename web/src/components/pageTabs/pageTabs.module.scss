@@ -1,0 +1,16 @@
+@import "../../../styles/_colors.module.scss";
+
+.item {
+  color: $gray-700;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    color: $blue-700;
+    border-bottom: 2px solid $blue-700;
+  }
+}
+
+.active {
+  color: $blue-700;
+  border-bottom: 2px solid $blue-700;
+}

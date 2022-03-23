@@ -1,5 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd themis
-npm run lint
+#cd themis
+#npm run lint

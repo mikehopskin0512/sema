@@ -14,7 +14,7 @@ import usePermission from '../../hooks/usePermission';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
-import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import {PATHS, SEMA_CORPORATE_TEAM_ID} from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
 import { black950 } from '../../../styles/_colors.module.scss';
 
@@ -89,7 +89,7 @@ const EditLabel = () => {
     if (tags.length > 0) {
       dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
       router.push({
-        pathname: `/team/${teamId}/settings`,
+        pathname: PATHS.TEAMS.SETTINGS(teamId),
         query: { tab: 'labels' },
       });
     }

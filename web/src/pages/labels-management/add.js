@@ -10,7 +10,7 @@ import Helmet from '../../components/utils/Helmet';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations } from '../../state/features/tags';
-import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import {PATHS, SEMA_CORPORATE_TEAM_ID} from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
 import { black950 } from '../../../styles/_colors.module.scss';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -125,7 +125,7 @@ const AddLabels = () => {
     const data = dispatch(createTags(tags, token));
     if (data) {
       router.push({
-        pathname: `/team/${teamId}/settings`,
+        pathname: PATHS.TEAMS.SETTINGS(teamId),
         query: { tab: 'labels' },
       });
     }

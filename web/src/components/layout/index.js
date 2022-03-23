@@ -14,10 +14,10 @@ const widescreenPages = [
   `${PATHS.REPO}/[repoId]`,
   PATHS.SUPPORT,
   PATHS.LOGIN,
-  `${PATHS.TEAM._}/[teamId]/${PATHS.DASHBOARD}`,
-  `${PATHS.PORTFOLIOS}/[portfolioId]`,
-  PATHS.PORTFOLIOS,
-  `${PATHS.TEAM._}/[teamId]${PATHS.SETTINGS}`,
+  `${PATHS.TEAMS._}/[teamId]/${PATHS.DASHBOARD}`,
+  `${PATHS.PORTFOLIO._}/[portfolioId]`,
+  PATHS.PORTFOLIO._,
+  `${PATHS.TEAMS._}/[teamId]${PATHS.SETTINGS}`,
 ];
 
 const noHeaderPages = [PATHS.LOGIN];

@@ -6,6 +6,11 @@ module.exports = {
         destination: '/dashboard',
         permanent: false,
       },
+      {
+        source: '/team',
+        destination: '/dashboard',
+        permanent: false,
+      },
     ];
   },
 };
