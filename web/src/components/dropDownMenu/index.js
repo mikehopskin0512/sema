@@ -11,7 +11,12 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
   });
   return (
     <div
-      className={clsx('ml-auto dropdown ', isOpen ? 'is-active' : '', isRight && 'is-right', isUp && 'is-up')}
+      className={clsx(
+        "dropdown ",
+        isOpen ? "is-active" : "",
+        isRight && "is-right",
+        isUp && "is-up"
+      )}
       ref={popupRef}
       onClick={(event) => event.stopPropagation()}
     >
@@ -22,8 +27,8 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
       <div className="dropdown-menu" id="dropdown-menu" role="menu">
         <div className="dropdown-content  py-0">
           <div className="dropdown-content">
-            <div className="dropdown-item py-0">
-              {options.map(({ label, onClick }) => (
+            {options.map(({ label, onClick }) => (
+              <div className="dropdown-item py-0">
                 <button
                   type="button"
                   className="button is-small px-0 is-ghost has-background-white has-text-black outline-none"
@@ -31,8 +36,8 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
                 >
                   {label}
                 </button>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
   }));
   const { tags } = tagState;
   const { token } = auth;
-  const { isSemaAdmin } = usePermission();
+  const { isTeamAdminOrLibraryEditor } = usePermission();
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -49,8 +49,8 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
   }, [collectionState]);
 
   const statusOptions = [
-    { value: false, 'label': 'Inactive' },
-    { value: true, 'label': 'Active' }
+    { value: true, 'label': 'Available' },
+    { value: false, 'label': 'Archived' },
   ];
 
   const onChangeFilter = (type, value) => {
@@ -111,23 +111,22 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
             outlined
           />
         </div>
+        <div className="column">
+          <CustomSelect
+            selectProps={{
+              options: authors,
+              placeholder: '',
+              isMulti: true,
+              onChange: ((value) => onChangeFilter('authors', value)),
+              value: filter.authors,
+            }}
+            label="Author"
+            showCheckbox
+            outlined
+          />
+        </div>
         {
-          isSemaAdmin() && (
-            <>
-              <div className="column">
-                <CustomSelect
-                  selectProps={{
-                    options: authors,
-                    placeholder: '',
-                    isMulti: true,
-                    onChange: ((value) => onChangeFilter('authors', value)),
-                    value: filter.authors,
-                  }}
-                  label="Author"
-                  showCheckbox
-                  outlined
-                />
-              </div>
+          isTeamAdminOrLibraryEditor() && (
               <div className="column">
                 <CustomSelect
                   selectProps={{
@@ -142,7 +141,6 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
                   outlined
                 />
               </div>
-            </>
           )
         }
         <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">

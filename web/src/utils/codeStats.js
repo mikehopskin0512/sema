@@ -12,9 +12,11 @@ import {
   startOfWeek,
   endOfDay,
   startOfDay,
+  differenceInDays,
+  addDays,
 } from 'date-fns';
-import { findIndex } from 'lodash';
-import { EMOJIS, TAGS } from './constants';
+import { findIndex, range, reverse } from 'lodash';
+import { DAYS_IN_WEEK, EMOJIS, TAGS } from './constants';
 
 const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
   const endOfMonth = {
@@ -90,41 +92,9 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
-  const weeks = eachWeekOfInterval({
-    start: startOfDay(new Date(startDate)),
-    end: endOfDay(new Date(endDate)),
-  });
-  let reactionsByWeek = [];
-  const tagsArr = [];
-  let weekRange = [];
-  weekRange = weeks.map((week, index) => {
-    const startDay = new Date(week);
-    const endDay = endOfWeek(new Date(week));
-    const startWeekDay = format(startDay, 'MMM dd');
-    let endWeekDay = format(endDay, 'dd');
-    endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
-    const item = {
-      date: `${startWeekDay}-${endWeekDay}`,
-    };
-    EMOJIS.forEach((reaction) => {
-      item[reaction._id] = {
-        current: 0,
-        previous: 0
-      };
-    });
-    reactionsByWeek.unshift(item);
-    tagsArr.push({
-      date: `${startWeekDay}-${endWeekDay}`,
-      x: `Week ${index + 1}`,
-      y: 0,
-    });
-    return {
-      date: `${startWeekDay}-${endWeekDay}`,
-      startDay,
-      endDay
-    };
-  });
-
+  const weeks = getWeekByDateRange(startOfDay(new Date(startDate)),endOfDay(new Date(endDate)));
+  let { weekRange, tagsArr, reactionsByWeek } = getWeekRange(weeks);
+  weekRange = [...weekRange].reverse();
   const tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
   const filteredComments = smartcomments.filter((comment) => isWithinInterval(
@@ -384,4 +354,58 @@ const parseTagsAndReactions = (
     }
   });
   return { reactions: reactionsArr, tags };
+}
+
+const getWeekByDateRange = (startDate, endDate) => {
+  const WEEKS_COUNT = eachWeekOfInterval({
+    start: startOfDay(new Date(startDate)),
+    end: endOfDay(new Date(endDate)),
+  }).length;
+  const daysOfWeekRange = range(WEEKS_COUNT).map((day) => {
+    if (day === WEEKS_COUNT - 1) {
+      return endOfDay(startDate);
+    }
+    return subDays(endDate, DAYS_IN_WEEK * day)
+  });
+  return reverse(daysOfWeekRange);
+}
+
+const getWeekRange = (weeks) => {
+  let reactionsByWeek = [];
+  const tagsArr = [];
+  const weekRange = reverse(weeks).map((week, index) => {
+    let startDay = startOfDay(new Date(week))
+    let endDay = endOfDay(new Date(week));
+    if (weeks[index+1]) {
+      startDay = startOfDay(weeks[index+1])
+    } else {
+      startDay = startOfWeek(new Date(week))
+    }
+    // const startDay = new Date(week);
+    // const endDay = endOfWeek(new Date(week));
+    const startWeekDay = format(startDay, 'MMM dd');
+    let endWeekDay = format(endDay, 'dd');
+    endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
+    const item = {
+      date: `${startWeekDay}-${endWeekDay}`,
+    };
+    EMOJIS.forEach((reaction) => {
+      item[reaction._id] = {
+        current: 0,
+        previous: 0
+      };
+    });
+    reactionsByWeek.push(item);
+    tagsArr.unshift({
+      date: `${startWeekDay}-${endWeekDay}`,
+      x: `Week ${index + 1}`,
+      y: 0,
+    });
+    return {
+      date: `${startWeekDay}-${endWeekDay}`,
+      startDay,
+      endDay
+    };
+  });
+  return { weekRange, reactionsByWeek, tagsArr };
 }

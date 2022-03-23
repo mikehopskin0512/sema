@@ -175,8 +175,6 @@ export const getTeamMetrics = async (teamId) => {
     const repoExternalIds = teamRepos.map((repo) => {
       return repo.externalId;
     });
-    const semaUsers = uniq(teamRepos.map((repo) => repo.repoStats.userIds.map((id) => id?.toString())).flat());
-    totalMetrics.semaUsers = semaUsers.length;
     let smartComments = await Promise.all(repoExternalIds.map(async (id) => {
       return await getSmartCommentsByExternalId(id)
     }));
@@ -184,6 +182,7 @@ export const getTeamMetrics = async (teamId) => {
     totalMetrics.smartComments = smartComments.length || 0;
     totalMetrics.smartCodeReviews = _getSmartCommentersCount(smartComments);
     totalMetrics.smartCommenters = _getPullRequests(smartComments);
+    totalMetrics.semaUsers = totalMetrics.smartCommenters;
     return totalMetrics;
     // TODO: Implementation of metrics chart.
     // For metrics chart

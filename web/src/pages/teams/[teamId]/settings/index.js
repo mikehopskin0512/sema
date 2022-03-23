@@ -16,7 +16,7 @@ const { fetchTeamMembers } = teamsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const router = useRouter();
   const {
     query: { teamId, tab },
@@ -30,7 +30,7 @@ const TeamSettings = () => {
   );
   const { token, user } = auth;
   const [activeTeam, setActiveTeam] = useState({});
-  
+
   useEffect(() => {
     dispatch(fetchTeamMembers(teamId, {}, token));
   }, [teamId]);
@@ -59,15 +59,15 @@ const TeamSettings = () => {
 
   const menus = [
     (isTeamAdminOrLibraryEditor() && {
-      name: 'Team Management',
-      path: PATHS.TEAMS.SETTINGS(teamId),
-      tab: TAB.management,
+      label: 'Team Management',
+      path: PATHS.TEAMS.MANAGEMENT(teamId),
+      id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
-    (isTeamAdminOrLibraryEditor() && {
-      name: 'Labels Management',
-      path: PATHS.TEAMS.SETTINGS(teamId),
-      tab: TAB.labels,
+    (isSemaAdmin() && {
+      label: 'Labels Management',
+      path: PATHS.TEAMS.LABELS(teamId),
+      id: TAB.labels,
       icon: <TagIcon />,
     }),
   ];

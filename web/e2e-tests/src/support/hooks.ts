@@ -86,9 +86,12 @@ export const hooks = {
     const otp = generateToken(SECRET_KEY);
 
     console.log(otp);
-
-    await browser.url(`${await browser.options.baseUrl}/login`);
-    await $("span=Sign in with GitHub").click();
+    const url = `${browser.options.baseUrl}/login`;
+    console.log("APP BASE URL IS: " + url)
+    await browser.url(url);
+    const guthubButton = browser.$$("button.is-primary.is-outlined")[1];
+    await guthubButton.scrollIntoView();
+    await guthubButton.click();
     await $("#login_field").setValue("qateam+automationadmin@semasoftware.com");
     await $("#password").setValue("Automation1Tester2#");
     await $(".js-sign-in-button").click();

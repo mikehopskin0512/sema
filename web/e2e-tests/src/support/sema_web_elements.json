@@ -18,6 +18,8 @@
     "confirmationModal"             : "//div[@class='modal-content px-10']/div",
     "confirmBtn"                    : "//button[normalize-space()='Yes, log me out']",
 
+    "trophyBtn"                     : "//img[@alt='trophy']",
+
     "footerTermsAndConditionsBtn"     : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Terms & Conditions']",
     "footerSendFeedbackBtn"         : "//footer//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'button ')][normalize-space()='Send Feedback']",
     "footerIdeaBoardBtn"            : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Idea Board']",
@@ -195,5 +197,24 @@
     "releaseNoteList"               : "//div[contains(@class,'release-notes_collection-list')]",
 
     "######### Idea Board ###########################" : "",
-    "createIdeaInput"               : "//form[@id='create_idea']"
+    "createIdeaInput"               : "//form[@id='create_idea']",
+
+    "######### PORTFOLIOS LOCATORS ###########################" : "",
+    "portfoliosUserName"                        : "//div[contains(@class,'portfoliosDashboard_username__3FIpp')]//div[contains(@class,'has-text-weight-semibold')]",
+    "portfoliosUserGitHubLink"                  : "//div[contains(@class,'portfoliosDashboard_username__3FIpp')]//div/span/a[@href]",
+    "portfoliosChangePersonalOverviewBtn"       : "//button[contains(@class,'portfoliosDashboard_edit-icon__2TqWp')]",
+    "portfoliosPersonalOverview"                : "//div[contains(@class,'portfoliosDashboard_user-overview__22VtD')]//div[contains(@class,'content')]",
+    "portfoliosEditPersonalOverviewInput"       : "//textarea[@placeholder='Write your overview...']",
+    "portfoliosEditPersonalOverviewCloseBtn"    : "//button[@class='delete'][@aria-label='close']",
+    "portfoliosEditPersonalOverviewSaveBtn"     : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Cancel']",
+    "portfoliosEditPersonalOverviewCancelBtn"   : "//section[contains(@class,'editModal_modal-body__EcS0H')]//button[text()='Save changes']",
+    "portfoliosSnapshotsBoard"                  : "//div[contains(@class,'snapshot_snapshot__BxUL9')]",
+    "portfoliosSnapshotName"                    : "//div[contains(@class,'snapshot_snapshot__BxUL9')]//div[@class='column is-full'][1]/div[1]",
+    "portfoliosSnapshotDescription"             : "//div[contains(@class,'snapshot_snapshot__BxUL9')]//div[@class='column is-full'][1]/div[2]",
+    "portfoliosSnapshotThreeDotsMenuBtn"        : "//div[contains(@class,'snapshot_snapshot__BxUL9')]//div[@class='dropdown-trigger']",
+    "portfoliosSnapshotEditBtn"                 : "//div[contains(@class,'is-active is-right')]//button[contains(@type,'button')][normalize-space()='Edit Snapshots']",
+    "portfoliosSnapshotDeleteBtn"               : "//div[contains(@class,'is-active is-right')]//button[contains(@type,'button')][normalize-space()='Delete Snapshots']",
+    "portfoliosDeleteSnapshotCancelBtn"         : "//div[contains(@class,'deleteModal_modal__16usq')]//button[text()='Cancel']",
+    "portfoliosDeleteSnapshotConfirmBtn"        : "//div[contains(@class,'deleteModal_modal__16usq')]//button[text()='Delete']"
+
 }
