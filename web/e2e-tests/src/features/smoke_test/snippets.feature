@@ -14,11 +14,11 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "collectionArea" becomes displayed
     When I click on the element "firstInActiveCollectionToggle"
     Then I expect that element "firstInActiveCollectionName" becomes displayed
-    When I save the name of collection "firstInActiveCollectionName"
+    When I save the text of element "firstInActiveCollectionName"
     And  I click on the element "firstInActiveCollectionToggle"
     Then I expect that selected collection element "activeCollectionsNames" is enabled
 ##    C2788
-    When I save the name of collection "firstActiveCollectionName"
+    When I save the text of element "firstActiveCollectionName"
     And  I click on the element "firstActiveCollectionToggle"
     Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
