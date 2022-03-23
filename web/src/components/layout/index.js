@@ -15,8 +15,8 @@ const widescreenPages = [
   PATHS.SUPPORT,
   PATHS.LOGIN,
   `${PATHS.TEAMS._}/[teamId]/${PATHS.DASHBOARD}`,
-  `${PATHS.PORTFOLIOS}/[portfolioId]`,
-  PATHS.PORTFOLIOS,
+  `${PATHS.PORTFOLIO._}/[portfolioId]`,
+  PATHS.PORTFOLIO._,
   `${PATHS.TEAMS._}/[teamId]${PATHS.SETTINGS}`,
 ];
 

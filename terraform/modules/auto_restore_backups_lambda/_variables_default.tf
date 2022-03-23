@@ -25,7 +25,7 @@ variable "runtime" {
 variable "memory_size" {
   type        = number
   description = "Amount of memory in MB your Lambda Function can use at runtime."
-  default     = 128
+  default     = 256
 }
 
 variable "timeout" {

@@ -85,6 +85,8 @@ import { ReactComponent as TeamSvg } from './img/team.svg';
 import { ReactComponent as LinkSvg } from './img/link.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
+import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
+import { ReactComponent as ShareSvg } from './img/share.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -108,6 +110,12 @@ const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...pro
 export const ActivityLogIcon = (props) => (
   <Icon {...props}>
     <ActivityLogSvg />
+  </Icon>
+);
+
+export const ShareIcon = (props) => (
+  <Icon {...props}>
+    <ShareSvg />
   </Icon>
 );
 
@@ -559,6 +567,12 @@ export const StarOutlineScg = (props) => (
 export const SwipeIcon = (props) => (
   <Icon {...props}>
     <SwipeSvg />
+  </Icon>
+);
+
+export const Trophy2Icon = (props) => (
+  <Icon {...props}>
+    <Trophy2Svg />
   </Icon>
 );
 

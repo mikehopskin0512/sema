@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getSnapshotsByUserId, putSnapshot } from './api';
+import { getUserSnapshots, putSnapshot } from './api';
 
 const requestFetchUserSnapshots = () => ({
   type: types.REQUEST_FETCH_USER_SNAPSHOTS,
@@ -32,7 +32,7 @@ const requestUpdateSnapshotError = (errors) => ({
 export const fetchUserSnapshots = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUserSnapshots());
-    const payload = await getSnapshotsByUserId(userId, token);
+    const payload = await getUserSnapshots(userId, token);
     const { data } = payload;
     dispatch(requestFetchUserSnapshotsSuccess(data));
   } catch (error) {

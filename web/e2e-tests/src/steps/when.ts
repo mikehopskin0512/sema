@@ -123,7 +123,7 @@ When(
 );
 
 When(
-    /^I save the name of collection "([^"]*)?"$/,
+    /^I save the text of element "([^"]*)?"$/,
     getElementText
 )
 
