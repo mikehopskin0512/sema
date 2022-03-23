@@ -20,7 +20,7 @@ const requestUpdateSnapshot = () => ({
   type: types.REQUEST_UPDATE_SNAPSHOT,
 });
 
-const requestUpdateSnapshotSuccess = (snapshot) => ({
+export const requestUpdateSnapshotSuccess = (snapshot) => ({
   type: types.REQUEST_UPDATE_SNAPSHOT_SUCCESS,
   snapshot,
 });

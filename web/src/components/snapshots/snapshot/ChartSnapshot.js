@@ -15,7 +15,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const ChartSnapshot = ({ snapshotData, portfolioId }) => {
+const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -55,14 +55,13 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
         onClose={() => toggleEditModal(false)}
         snapshotData={snapshotData}
         type="edit"
-        dataType={componentType}
       />
       <DeleteModal 
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')}>
+      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative', spaced && 'mr-16')}>
         <div className="is-pulled-right mb-40">
           <DropDownMenu
             isRight

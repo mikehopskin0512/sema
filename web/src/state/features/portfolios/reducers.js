@@ -4,7 +4,7 @@ const initialState = {
   isFetching: false,
   data: {
     portfolio: {},
-    portfolios: []
+    portfolios: [],
   },
   error: {},
 };
@@ -84,6 +84,7 @@ const reducer = (state = initialState, action) => {
     };
   case types.REQUEST_UPDATE_SNAPSHOT_SUCCESS: {
     const { portfolios } = state.data;
+    if (portfolios.length === 0) return { ...state, isFetching: false };
     const [portfolio, ...rest] = portfolios;
     if (!portfolio) return {...state, isFetching: false};
     const snapshot = { ...action.snapshot };

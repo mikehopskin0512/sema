@@ -312,12 +312,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
-          {snapshots.map((s) =>
+          {snapshots.map((s, i) =>
             s.componentType === 'comments' ? (
               <CommentSnapshot snapshotData={s} portfolioId={portfolio._id} />
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} />
+                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} spaced={i % 2 === 0} />
               </section>
             )
           )}
