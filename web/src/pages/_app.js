@@ -78,6 +78,7 @@ const Application = ({ Component, pageProps, store }) => {
     const { authState: { user = null } } = store.getState();
 
     analytics.initAmplitude(user);
+    analytics.segmentIdentify(user);
 
     const handleRouteChange = (url) => {
       analytics.googleAnalyticsPageView(url);
