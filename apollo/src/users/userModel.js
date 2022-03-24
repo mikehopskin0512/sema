@@ -66,6 +66,7 @@ const userSchema = mongoose.Schema({
   companyName: String,
   cohort: String,
   notes: String,
+  hasExtension: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;

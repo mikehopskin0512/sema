@@ -25,6 +25,7 @@
     "@nivo/circle-packing": "^0.73.0",
     "@nivo/core": "^0.73.0",
     "@nivo/line": "^0.73.0",
+    "@segment/snippet": "^4.15.3",
     "adonis": "file:../adonis",
     "amplitude-js": "^8.8.0",
     "axios": "^0.19.2",

@@ -68,6 +68,7 @@ const Admin = () => {
 
     // Send invite & reset form
     await Promise.allSettled(allInvitationsPromises);
+
     reset();
   };
 

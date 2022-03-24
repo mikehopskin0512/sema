@@ -7,8 +7,10 @@ import { ListIcon, Trophy2Icon } from '../../components/Icons';
 import withLayout from '../../components/layout';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { portfoliosOperations } from '../../state/features/portfolios';
+import { fetchUserSnapshots } from '../../state/features/snapshots/actions';
 import { PATHS } from '../../utils/constants';
 import PortfolioList from './components/portfolioList';
+import SnapshotList from './components/snapshotList';
 import { gray400, gray200 } from '../../../styles/_colors.module.scss';
 
 const { fetchPortfoliosOfUser } = portfoliosOperations;
@@ -24,9 +26,13 @@ const Portfolios = () => {
 
   useAuthEffect(() => {
     dispatch(fetchPortfoliosOfUser(userId, token));
+    dispatch(fetchUserSnapshots(userId, token));
   }, [userId]);
 
   useAuthEffect(() => {
+    if (tab === 'snapshots') {
+      return;
+    }
     if (portfolios.length === 1) {
       router.push(PATHS.PORTFOLIO.VIEW(portfolios[0]._id));
     }
@@ -70,7 +76,7 @@ const Portfolios = () => {
         <div className="has-background-white-50">
           <div className="hero-body pt-0 pb-100 px-0">
             {tab === tabs[0].id && <PortfolioList />}
-            {tab === tabs[1].id && <div />}
+            {tab === tabs[1].id && <SnapshotList />}
           </div>
         </div>
       </div>
