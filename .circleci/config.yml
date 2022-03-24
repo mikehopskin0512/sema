@@ -83,7 +83,7 @@ jobs:
             aws ecs wait services-stable --profile phoenix --cluster "${ENV}-frontend" \
                 --services apollo phoenix
       - run: 
-          name: test python script
+          name: invoke jenkins test job
           command: |
             import requests
             import re
@@ -300,7 +300,9 @@ workflows:
             branches:
               only:
                 - /release-.*/
-                - DVPS-125
+          requires:
+            - deploy-web
+            - deploy-apollo
       - phoenix-notify:
           context: 
            - slack-secrets
