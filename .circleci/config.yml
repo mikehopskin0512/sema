@@ -90,6 +90,7 @@ jobs:
             import sys 
             import json
             import time
+            import os
 
             # secs for polling Jenkins API
             #
