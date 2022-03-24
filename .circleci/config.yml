@@ -2,7 +2,6 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.4
   openvpn: titel-media/openvpn@0.1.1
-  browser-tools: circleci/browser-tools@1.2.4
 jobs:
   deploy-web:
     environment:
@@ -44,8 +43,6 @@ jobs:
     steps:
       - checkout
       - openvpn/install
-      - browser-tools/install-chrome
-      - browser-tools/install-chromedriver
       - run:
           name: Init VPN
           command: |
