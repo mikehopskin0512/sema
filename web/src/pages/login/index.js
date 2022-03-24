@@ -19,12 +19,12 @@ import { invitationsOperations } from '../../state/features/invitations';
 
 const { clearAlert } = alertOperations;
 const { authenticate } = authOperations;
-const { fetchInvite, acceptInvite } = invitationsOperations;
+const { fetchInvite, acceptInvite, trackTeamInviteAccepted } = invitationsOperations;
 
 const Login = () => {
   const router = useRouter();
   const {
-    query: { token: inviteToken },
+    query: { token: inviteToken, team: teamId },
   } = router;
 
   const dispatch = useDispatch();
@@ -75,6 +75,9 @@ const Login = () => {
     if (inviteToken) {
       dispatch(fetchInvite(inviteToken));
       dispatch(acceptInvite(inviteToken, token));
+      if (teamId) {
+        trackTeamInviteAccepted(teamId, {});
+      }
     }
   }, [])
 

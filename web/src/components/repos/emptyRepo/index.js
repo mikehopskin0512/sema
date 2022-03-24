@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import usePermission from '../../../hooks/usePermission';
 import { PROFILE_VIEW_MODE } from '../../../utils/constants';
@@ -31,26 +30,35 @@ const EmptyRepo = () => {
       )}
       <div className="has-text-centered py-50 is-flex is-flex-direction-column">
         <p className="has-text-weight-semibold is-size-5">No Repos Yet!</p>
-        <p className="mt-15 mb-15">Make some code reviews on GitHub with the Sema Plugin installed <br/>and your Repos will appear here.</p>
+        <p className="mt-15 mb-15">
+          {!isTeamView ? 
+            <>
+              <span>Make some code reviews on GitHub with the Sema Plugin installed</span> 
+              <br/>
+              <span>and your Repos will appear here.</span>
+            </>
+            : 'Add repos to your team in order to start collaborating together.'
+          }
+        </p>
         <div className="mx-auto">
           {isAddRepoEnable && (
             <button
               type="button"
-              className="button is-primary mb-20 has-text-weight-semibold is-fullwidth"
+              className="button is-primary has-text-weight-semibold is-fullwidth"
               onClick={() => setRepoListOpen(true)}
             >
               Add a Repo to Team
             </button>
           )}
-          <Link href="https://github.com">
+          {!isTeamView && <a href="https://github.com" target="_blank">
             <button
               type="button"
-              className="button is-outlined is-primary has-text-weight-semibold is-fullwidth"
+              className="button is-primary has-text-weight-semibold is-fullwidth"
               onClick={openGithub}
             >
               Start reviewing code on GitHub
             </button>
-          </Link>
+          </a>}
         </div>
       </div>
       <HowItWorks />

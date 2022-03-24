@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema({
   jobTitle: String,
   company: String,
   avatarUrl: String,
-  inviteCount: { type: Number, default: 0 },
+  inviteCount: { type: Number, default: 10 },
   isActive: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
@@ -66,6 +66,7 @@ const userSchema = mongoose.Schema({
   companyName: String,
   cohort: String,
   notes: String,
+  hasExtension: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const SALT_WORK_FACTOR = 10;

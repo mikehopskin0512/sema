@@ -40,6 +40,17 @@ const structureSnapshot = ({
   componentData: structureComponentData(componentData),
 });
 
+export const getSnapshotsByUserId = async (userId) => {
+  try {
+    const snapshots = Snapshot.find({ userId });
+    return await snapshots.lean();
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const create = async (snapshot) => {
   try {
     const newSnapshot = new Snapshot(structureSnapshot(snapshot));

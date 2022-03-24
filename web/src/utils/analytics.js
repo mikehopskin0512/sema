@@ -23,6 +23,19 @@ export const AMPLITUDE_EVENTS = {
   ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO: 'ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO'
 };
 
+export const SEGMENT_EVENTS = {
+  WAITLIST_SIGNUP: 'Waitlist Sign up',
+  WAITLIST_ACCEPTED: 'Waitlist Accepted',
+  INVITATION_SENT: 'Invitation sent',
+  INVITATION_ACCEPTED: 'Invitation accepted',
+  PRODUCT_SIGNUP: 'Product sign up',
+  EXTENSION_INSTALLED: 'Extension installed',
+  EXTENSION_UNINSTALLED: 'Extension uninstalled',
+  ONBOARDING_COMPLETED: 'Onboarding completed',
+  USER_LOGIN: 'User login',
+  USER_LOGOUT: 'User logout',
+};
+
 // Conditional import and init amplitude only on the browser side
 export const initAmplitude = (user) => {
   if (amplitudeApiKey) {
@@ -90,4 +103,30 @@ export const googleAnalyticsPageView = (url) => {
 // log specific events happening.
 export const googleAnalyticsEvent = ({ action, params }) => {
   window.gtag('event', action, params);
+};
+
+// Segment
+
+export const segmentIdentify = (user) => {
+  const { _id, username, firstName = '', lastName = '' } = user;
+  global.analytics.identify(_id, {
+    name: `${firstName} ${lastName}`.trim(),
+    email: username
+  });
+};
+
+export const segmentTrack = (action, properties) => {
+  global.analytics.track(action, {
+    ...properties,
+  });
+};
+
+export const segmentGroup = (groupId, traits) => {
+  global.analytics.group(groupId, {
+    ...traits,
+  });
+};
+
+export const segmentReset = () => {
+  global.analytics.reset();
 };

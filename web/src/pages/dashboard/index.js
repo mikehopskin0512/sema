@@ -1,28 +1,33 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
+import { teamsOperations } from '../../state/features/teams';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
 import OnboardingModal from '../../components/onboarding/onboardingModal';
 import ReposView from '../../components/repos/reposView';
+
 import Loader from '../../components/Loader';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
+import { PATHS } from '../../utils/constants';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
-const { updateUser } = authOperations;
+const { updateUser, updateUserHasExtension } = authOperations;
+const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
 
 const Dashboard = () => {
   const router = useRouter();
   const { step, page = parseInt(step) } = router.query;
 
+  const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [semaCollections, setSemaCollections] = useState([]);
   const [collectionState, setCollection] = useState({ personalComments: true });
@@ -31,12 +36,14 @@ const Dashboard = () => {
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
-  const { auth, repositories } = useSelector((state) => ({
+  const { auth, repositories, rolesState } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState.data.repositories,
+    rolesState: state.rolesState
   }));
   const { token, user } = auth;
-  const { identities, isOnboarded = null } = user;
+  const { identities, isOnboarded = null, hasExtension = null, username } = user;
+  const { roles } = rolesState;
   const userRepos = identities?.length ? identities[0].repositories : [];
   const isLoaded = !userRepos.length || (userRepos.length && repositories.length);
 
@@ -72,11 +79,25 @@ const Dashboard = () => {
     setComment({ ...comment, [e.target.name]: e.target.value });
   };
 
-  const onboardUser = () => {
+  const onboardUser = async () => {
     const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
+    if (teamIdInvitation) {
+      inviteToTeam();
+    }
   };
+  
+  const inviteToTeam = async () => {
+    const memberRole = roles.find((role) => role.name === 'Member')
+    if (!isEmpty(memberRole)) {
+      const teamId = teamIdInvitation;
+      await dispatch(inviteTeamUser(teamId, token));
+      await dispatch(fetchTeamsOfUser(token));
+      setTeamIdInvitation('');
+      router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+    }
+  }
 
   const toggleOnboardingModal = (status) => {
     if (status === false) {
@@ -95,6 +116,10 @@ const Dashboard = () => {
   useEffect(() => {
     (async () => {
       const result = await isExtensionInstalled();
+      if (hasExtension !== result) {
+        const updatedUser = { ...user, ...{ hasExtension: result } };
+        dispatch(updateUserHasExtension(updatedUser, token));
+      }
       togglePluginInstalled(result);
     })();
     getCollectionsByAuthor('sema');

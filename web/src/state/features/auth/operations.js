@@ -38,6 +38,8 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
     const { verificationToken } = jwtDecode(jwtToken) || {};
 
     await dispatch(actions.activateUser(verificationToken));
+    const { firstName: first_name = '', lastName: last_name = '', username: email = '' } = user;
+    analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_SIGNUP, { first_name, last_name, email });
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE, { url: PATHS.DASHBOARD });
     Router.push(PATHS.DASHBOARD);
@@ -48,4 +50,27 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
   }
 };
 
-export default { ...actions, createAndJoinOrg, registerAndAuthUser };
+const updateUserHasExtension = (user, token) => async (dispatch) => {
+  const { hasExtension, segmentEvent = hasExtension
+    ? analytics.SEGMENT_EVENTS.EXTENSION_INSTALLED
+    : analytics.SEGMENT_EVENTS.EXTENSION_UNINSTALLED } = user;
+  await dispatch(actions.updateUser(user, token));
+  analytics.segmentTrack(segmentEvent, { isExtensionEnabled: hasExtension });
+};
+
+const trackUserLogin = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGIN, {});
+};
+
+const trackUserLogout = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.USER_LOGOUT, {});
+  analytics.segmentReset();
+};
+
+const trackOnboardingCompleted = () => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.ONBOARDING_COMPLETED, {});
+};
+
+export default {
+  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout, trackOnboardingCompleted
+};
