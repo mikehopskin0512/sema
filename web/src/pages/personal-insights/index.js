@@ -184,7 +184,7 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     getCommentsOverview(filter);
-  }, [filter, commentView]);
+  }, [JSON.stringify(filter), commentView]);
 
   const setFilterValues = (overview) => {
     if (!overview?.smartComments?.length) {
