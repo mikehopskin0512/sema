@@ -113,9 +113,9 @@ jobs:
             #
             m = re.match(r"http.+(queue.+)\/", r.headers['Location'])
             if not m:
-                # To Do: handle error
-                print "Job starte request did not have queue location"
-                sys.exit(1)
+              # To Do: handle error
+              print "Job starte request did not have queue location"
+              sys.exit(1)
 
             # poll the queue looking for job to start
             #
@@ -124,51 +124,51 @@ jobs:
             elasped_time = 0 
             print '{} Job {} added to queue: {}'.format(time.ctime(), job_name, job_info_url)
             while True:
-                l = requests.get(job_info_url)
-                jqe = l.json()
-                task = jqe['task']['name']
-                try:
-                    job_id = jqe['executable']['number']
-                    break
-                except:
-                    #print "no job ID yet for build: {}".format(task)
-                    time.sleep(QUEUE_POLL_INTERVAL)
-                    elasped_time += QUEUE_POLL_INTERVAL
+              l = requests.get(job_info_url)
+              jqe = l.json()
+              task = jqe['task']['name']
+              try:
+                  job_id = jqe['executable']['number']
+                  break
+              except:
+                  #print "no job ID yet for build: {}".format(task)
+                  time.sleep(QUEUE_POLL_INTERVAL)
+                  elasped_time += QUEUE_POLL_INTERVAL
 
-                if (elasped_time % (QUEUE_POLL_INTERVAL * 10)) == 0:
-                    print "{}: Job {} not started yet from {}".format(time.ctime(), job_name, queue_id)
+              if (elasped_time % (QUEUE_POLL_INTERVAL * 10)) == 0:
+                  print "{}: Job {} not started yet from {}".format(time.ctime(), job_name, queue_id)
 
             # poll job status waiting for a result
             #
             job_url = 'http://{}@{}/job/{}/{}/api/json'.format(auth_token, jenkins_uri, job_name, job_id)
             start_epoch = int(time.time())
             while True:
-                print "{}: Job started URL: {}".format(time.ctime(), job_url)
-                j = requests.get(job_url)
-                jje = j.json()
-                result = jje['result']
-                if result == 'SUCCESS':
-                    # Do success steps
-                    print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
-                    break
-                elif result == 'FAILURE':
-                    # Do failure steps
-                    print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
-                    break
-                elif result == 'ABORTED':
-                    # Do aborted steps
-                    print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
-                    break
-                else:
-                    print "{}: Job: {} Status: {}. Polling again in {} secs".format(
-                            time.ctime(), job_name, result, JOB_POLL_INTERVAL)
+              print "{}: Job started URL: {}".format(time.ctime(), job_url)
+              j = requests.get(job_url)
+              jje = j.json()
+              result = jje['result']
+              if result == 'SUCCESS':
+                  # Do success steps
+                  print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
+                  break
+              elif result == 'FAILURE':
+                  # Do failure steps
+                  print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
+                  break
+              elif result == 'ABORTED':
+                  # Do aborted steps
+                  print "{}: Job: {} Status: {}".format(time.ctime(), job_name, result)
+                  break
+              else:
+                  print "{}: Job: {} Status: {}. Polling again in {} secs".format(
+                          time.ctime(), job_name, result, JOB_POLL_INTERVAL)
 
-                cur_epoch = int(time.time())
-                if (cur_epoch - start_epoch) > OVERALL_TIMEOUT:
-                    print "{}: No status before timeout of {} secs".format(OVERALL_TIMEOUT)
-                    sys.exit(1)
+              cur_epoch = int(time.time())
+              if (cur_epoch - start_epoch) > OVERALL_TIMEOUT:
+                  print "{}: No status before timeout of {} secs".format(OVERALL_TIMEOUT)
+                  sys.exit(1)
 
-                time.sleep(JOB_POLL_INTERVAL)
+              time.sleep(JOB_POLL_INTERVAL)
 
           shell: /usr/bin/python3
       - openvpn/disconnect
