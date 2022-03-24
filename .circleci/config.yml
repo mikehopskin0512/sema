@@ -43,7 +43,6 @@ jobs:
       image: ubuntu-2004:202111-02
     steps:
       - checkout
-      - run: git checkout test-automation
       - openvpn/install
       - browser-tools/install-chrome
       - browser-tools/install-chromedriver
@@ -84,19 +83,10 @@ jobs:
             aws ecs wait services-stable --profile phoenix --cluster "${ENV}-frontend" \
                 --services apollo phoenix
       - run: 
-          name: install dependencies
+          name: test python script
           command: |
-            npm install
-          working_directory: web/e2e-tests
-      - run: 
-          name: run tests
-          command: |
-            npm run wdio || true
-            #sed -i 's/<failure\/>//g' test/results/results-0-0.xml
-            #sed -i 's/<error message/<failure message/g' test/results/results-0-0.xml
-          working_directory: web/e2e-tests
-      - store_test_results:
-          path: web/e2e-tests/test/results
+            print("hello world")
+          shell: /usr/bin/python3
       - openvpn/disconnect
       - slack/notify:
           event: fail
