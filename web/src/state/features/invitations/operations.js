@@ -1,5 +1,6 @@
 import * as actions from './actions';
 import { authOperations } from '../auth';
+import * as analytics from '../../../utils/analytics';
 
 const { hydrateUser } = authOperations;
 
@@ -33,4 +34,18 @@ const revokeInviteAndHydrateUser = (id, userId, token, recipient) => async (disp
   return true;
 };
 
-export default { ...actions, createInviteAndHydrateUser, revokeInviteAndHydrateUser };
+const trackSendInvite = (email) => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_SENT, { email });
+};
+
+const trackRedeemedInvite = (email) => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_ACCEPTED, { email });
+};
+
+const trackTeamInviteAccepted = (teamId, traits) => {
+  analytics.segmentGroup(teamId, traits);
+};
+
+export default {
+  ...actions, createInviteAndHydrateUser, revokeInviteAndHydrateUser, trackSendInvite, trackRedeemedInvite, trackTeamInviteAccepted,
+};
