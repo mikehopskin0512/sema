@@ -154,10 +154,12 @@ jobs:
               elif result == 'FAILURE':
                   # Do failure steps
                   print("{}: Job: {} Status: {}".format(time.ctime(), job_name, result))
+                  sys.exit(1)
                   break
               elif result == 'ABORTED':
                   # Do aborted steps
                   print("{}: Job: {} Status: {}".format(time.ctime(), job_name, result))
+                  sys.exit(1)
                   break
               else:
                   print("{}: Job: {} Status: {}. Polling again in {} secs".format(
