@@ -19,7 +19,7 @@ import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { registerAndAuthUser, partialUpdateUser } = authOperations;
-const { fetchInvite, redeemInvite } = invitationsOperations;
+const { fetchInvite, redeemInvite, trackRedeemedInvite } = invitationsOperations;
 
 const InviteError = () => (
   <div className="columns is-centered">
@@ -73,6 +73,8 @@ const RegistrationForm = (props) => {
       dispatch(redeemInvite(inviteToken, userId, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
       router.push(PATHS.DASHBOARD);
+      const { username: email = '' } = data;
+      trackRedeemedInvite(email);
     } else {
       // New user
       // If no invite, set to waitlist

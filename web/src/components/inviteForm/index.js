@@ -9,7 +9,7 @@ import * as analytics from '../../utils/analytics';
 import { CloseIcon } from '../Icons';
 import { white50 } from '../../../styles/_colors.module.scss';
 
-const { resendInvite, createInviteAndHydrateUser } = invitationsOperations;
+const { resendInvite, createInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
 
 const InviteForm = ({ onReload }) => {
   const dispatch = useDispatch();
@@ -55,6 +55,7 @@ const InviteForm = ({ onReload }) => {
     // Send invite & reset form
     setRecipient(email);
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
+    trackSendInvite(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
 
     if (response.status === 201) {
