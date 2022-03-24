@@ -27,17 +27,19 @@ const HowItWorks = () => {
   }, [language]);
 
   return(
-    <div className={clsx("has-background-white border-radius-4px p-40 mb-50", styles.container)}>
+    <>
+    <div className={clsx("has-background-blue-0 border-radius-4px p-40", styles.container)}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="has-text-centered">
-        <p className="has-text-weight-semibold is-size-5">See how it works</p>
-        <p>Sema supercharges your GitHub snippets with snippets, summaries, and tags.</p>
-        <img src="/img/no-repos.svg" className="mt-60" />
-        <span className="has-text-weight-semibold">
-          Learn more about <Link href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.SUMMARIES}`}><span className="has-text-primary is-clickable is-underlined">Summaries and Tags</span></Link>
-        </span>
+        <p className="has-text-weight-semibold has-text-primary is-size-5 mb-10">See how it works</p>
+        <p>Sema supercharges your GitHub reviews with snippets, summaries, and tags.</p>
+        <div className="has-background-white mt-30">
+          <img src="/img/no-repos3.svg" className="my-60" />
+        </div>
       </div>
-      <div className="is-divider" />
+    </div>
+    <div className="is-divider p-0 m-0" />
+    <div className={clsx("has-background-white border-radius-4px p-40 mb-40", styles.container)}>
       <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
         <p className="is-size-7 mr-10">Video Language</p>
         <Select
@@ -64,6 +66,7 @@ const HowItWorks = () => {
         <button type="button" className="button is-primary mb-20 has-text-weight-semibold mt-25" onClick={() => openSupportForm('Support')}>Contact Support</button>
       </div>
     </div>
+    </>
   )
 }
 
