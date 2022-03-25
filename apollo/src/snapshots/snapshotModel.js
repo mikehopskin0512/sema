@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import { create as createPortfolio, getPortfoliosByUser } from '../portfolios/portfolioService';
-import { getUserMetadata } from '../users/userService';
 
 const { Schema } = mongoose;
 
@@ -47,6 +45,10 @@ const snapshotSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   title: String,
   description: String,
+  portfolios: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Portfolio',
+  }],
   componentType: {
     type: String,
     required: true,
@@ -55,34 +57,5 @@ const snapshotSchema = new Schema({
   componentData: componentDataSchema,
 
 }, { timestamps: true });
-
-snapshotSchema.post('save', async (doc, next) => {
-  try {
-    const { _id: snapshotId, userId } = doc;
-    const userPorfolios = await getPortfoliosByUser(userId, false);
-    // User does not have a portfolio
-    if (userPorfolios?.length === 0) {
-      const user = await getUserMetadata(userId);
-      const identities = user.identities.map((d) => {
-        const { repositories, ...rest } = d;
-        return { ...rest };
-      });
-      await createPortfolio({
-        userId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        identities: identities,
-        headline: `${user.firstName} ${user.lastName}`.trim(),
-        imageUrl: user.avatarUrl,
-        overview: '',
-        type: 'public',
-        snapshots: [{ id: snapshotId, sort: 0 }],
-      });
-    }
-  } catch(error) {
-    next(error)
-  }
-  next();
-});
 
 module.exports = mongoose.model('Snapshot', snapshotSchema);
