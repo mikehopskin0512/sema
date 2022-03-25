@@ -5,12 +5,7 @@ const initialState = {
   members: [],
   membersCount: 0,
   repos: [],
-  metrics: {
-    semaUsers: 0,
-    smartCodeReviews: 0,
-    smartCommenters: 0,
-    smartComments: 0,
-  },
+  metrics: undefined,
   isFetching: false,
   teamCollections: [],
   smartComments: [],
