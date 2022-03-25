@@ -94,7 +94,7 @@ const DateRangeSelector = (props) => {
   }, [selectedRange]);
 
   useEffect(() => {
-    setSelectedRange('last30Days');
+    setSelectedRange('allTime');
   }, []);
 
   useEffect(() => {
