@@ -40,7 +40,8 @@ const HowItWorks = () => {
     </div>
     <div className="is-divider p-0 m-0" />
     <div className={clsx("has-background-white border-radius-4px p-40 mb-40", styles.container)}>
-      <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
+      {/* Commented for a future video language implementation */}
+      {/* <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
         <p className="is-size-7 mr-10">Video Language</p>
         <Select
           selectProps={{
@@ -56,7 +57,7 @@ const HowItWorks = () => {
           small
           width={150}
         />
-      </div>
+      </div> */}
       <div className={styles['video-container']}>
         <iframe src={language.url} key={language.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
       </div>
