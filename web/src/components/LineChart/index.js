@@ -5,13 +5,27 @@ import { blue500, blue900, white50 } from '../../../styles/_colors.module.scss'
 
 const LineChart = ({ data = [] }) => {
   const tickValues = data?.[0]?.data?.length || 2;
+  const breakText = (text) => {
+    const dashIndex = text.search('-');
+    if (dashIndex !== -1) {
+      return (
+        <>
+          <tspan x='0' dy="1.2em">{text.slice(0,dashIndex+1)}</tspan>
+          <tspan x='0' dy="1.2em">{text.slice(dashIndex+1)}</tspan>
+        </>
+      )
+    }
+    return (
+      <tspan>{text}</tspan>
+    )
+  }
   return(
       <ResponsiveLine
         data={data}
         theme={{
           textColor: white50,
         }}
-        margin={{ top: 10, right: 25, bottom: 25, left: 25 }}
+        margin={{ top: 10, right: 25, bottom: 50, left: 25 }}
         xScale={{ type: 'point' }}
         yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
         yFormat=">+0.2f"
@@ -23,7 +37,8 @@ const LineChart = ({ data = [] }) => {
           tickPadding: 5,
           tickRotation: 0,
           legendOffset: 0,
-          legendPosition: 'middle'
+          legendPosition: 'middle',
+          format: e => breakText(e)
         }}
         axisLeft={{
             orient: 'left',
