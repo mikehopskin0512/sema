@@ -16,12 +16,13 @@ import ReposView from '../../components/repos/reposView';
 import Loader from '../../components/Loader';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { isExtensionInstalled } from '../../utils/extension';
-import { PATHS } from '../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE } from '../../utils/constants';
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 const { updateUser, updateUserHasExtension } = authOperations;
 const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
+const { setSelectedTeam, setProfileViewMode } = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
@@ -36,14 +37,17 @@ const Dashboard = () => {
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
   const dispatch = useDispatch();
-  const { auth, repositories, rolesState } = useSelector((state) => ({
+  const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState.data.repositories,
-    rolesState: state.rolesState
+    rolesState: state.rolesState,
+    teamsState: state.teamsState
   }));
-  const { token, user } = auth;
+  const { token, user, selectedTeam } = auth;
   const { identities, isOnboarded = null, hasExtension = null, username } = user;
   const { roles } = rolesState;
+  const { teams } = teamsState;
+  const { teamId: inviteTeamId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
   const isLoaded = !userRepos.length || (userRepos.length && repositories.length);
 
@@ -105,6 +109,17 @@ const Dashboard = () => {
     }
     toggleOnboardingModalActive(status);
   };
+  
+  useEffect(() => {
+    if (inviteTeamId) {
+      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
+      if (invitedTeam && selectedTeam?.team?._id !== inviteTeamId) {
+        dispatch(setSelectedTeam(invitedTeam));
+        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+      }
+    }
+  }, [inviteTeamId, user.roles]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
@@ -161,6 +176,7 @@ const Dashboard = () => {
   }
 
   return (
+    !inviteTeamId &&
     <>
       {!isLoaded ? (
         <LoaderScreen />
