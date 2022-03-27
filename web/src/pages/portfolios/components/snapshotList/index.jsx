@@ -8,9 +8,10 @@ import Table from '../../../../components/table';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../../../components/portfolios/addSnapshotModal';
 import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../components/Icons';
 import toaster from 'toasted-notes';
+import router from 'next/router';
 
 const snapshotList = () => {
-  const showNotification = (isError) => {
+  const showNotification = (isError, path) => {
     toaster.notify(({ onClose }) => (
       <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
         <div className="message-body has-background-white is-flex">
@@ -27,12 +28,21 @@ const snapshotList = () => {
                 <CloseIcon size="small" />
               </div>
             </div>
+            {!isError && <div 
+              className="has-text-info is-clickable is-underlined" 
+              onClick={() => {
+                router.push(path);
+                onClose();
+              }}
+            >
+              View portfolio
+            </div>}
           </div>
         </div>
       </div>
     ), {
       position: 'top-right',
-      duration: 4000,
+      duration: isError ? 3000 : null,
     });
   };
   const { snapshotsState } = useSelector((state) => state);

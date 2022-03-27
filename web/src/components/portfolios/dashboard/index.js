@@ -42,7 +42,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
       </div>
     ), {
       position: 'top-right',
-      duration: 4000,
+      duration: isError ? 3000 : null,
     });
   };
 

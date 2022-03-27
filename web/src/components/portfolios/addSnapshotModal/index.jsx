@@ -12,6 +12,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 import Table from '../../table';
 import Checkbox from '../../checkbox';
 import CustomRadio from '../../radio';
+import { PATHS } from '../../../utils/constants';
 
 const { addSnapshotToPortfolio } = portfoliosOperations;
 
@@ -45,7 +46,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
     })) : 
     portfolios.map(portfolio => ({
         title: portfolio._id, //ToDO: fix this(change to name) after adding portfolio name
-        date: format(portfolio.updatedAt, 'MMM dd, yyyy'),
+        date: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
         type: portfolio.type,
         id: portfolio._id,
       })
@@ -134,8 +135,10 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       }
       if (portfoliosState.error) {
         showNotification(true);
-      } else {
+      } else if (isSnapshotsModalType(type)) {
         showNotification(false);
+      } else {
+        showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
       }
     } catch (error) {
       showNotification(true);
