@@ -13,6 +13,7 @@ import Table from '../../table';
 import Checkbox from '../../checkbox';
 import CustomRadio from '../../radio';
 import { PATHS } from '../../../utils/constants';
+import { isEmpty } from 'lodash';
 
 const { addSnapshotToPortfolio } = portfoliosOperations;
 
@@ -126,14 +127,15 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
 
   const onSubmit = async (data) => {
     try {
-      let body = [];
+      let body = { snapshots: [] };
       if (isSnapshotsModalType(type)) {
-        await dispatch(addSnapshotToPortfolio(portfolio._id, ids, token));
+        body.snapshots = [...ids];
+        await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
       } else {
-        body.push(snapshotId);
+        body.snapshots.push(snapshotId);
         await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
       }
-      if (portfoliosState.error) {
+      if (!isEmpty(portfoliosState.error)) {
         showNotification(true);
       } else if (isSnapshotsModalType(type)) {
         showNotification(false);
