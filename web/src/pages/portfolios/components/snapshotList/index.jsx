@@ -101,18 +101,23 @@ const snapshotList = () => {
               isRight
               options={[
                 {
-                  label: 'Duplicate Portfolio',
+                  // TODO: Edit function
+                  label: 'Edit',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
                 {
-                  label: 'Save as PDF',
+                  // TODO: Duplicate function
+                  label: 'Duplicate',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
                 // TODO: delete function
-                { label: 'Delete', onClick: () => console.log(1) },
+                {
+                  label: 'Delete',
+                  onClick: () => console.log('TODO: will be implement later')
+                },
               ]}
               trigger={
-                <div className="is-clickable is-flex mr-20">
+                <div className="is-clickable is-flex mr-20 p-8 has-text-gray-600">
                   <OptionsIcon />
                 </div>
               }
@@ -129,16 +134,18 @@ const snapshotList = () => {
         <p className="title is-size-4">Snapshot Library</p>
       </div>
       <Table
+        minimal
+        className="overflow-unset shadow-none"
         data={tableData}
         columns={columns}
       />
-        <AddSnapshotModal
-          active={isModalActive}
-          snapshotId={snapshotIdForPortfolio}
-          onClose={() => setSnapshotIdForPortfolio(null)}
-          showNotification={showNotification}
-          type={ADD_SNAPSHOT_MODAL_TYPES.PORTFOLIOS}
-        />
+      <AddSnapshotModal
+        active={isModalActive}
+        snapshotId={snapshotIdForPortfolio}
+        onClose={() => setSnapshotIdForPortfolio(null)}
+        showNotification={showNotification}
+        type={ADD_SNAPSHOT_MODAL_TYPES.PORTFOLIOS}
+      />
     </div>
   );
 };

@@ -30,6 +30,9 @@ const Portfolios = () => {
   }, [userId]);
 
   useAuthEffect(() => {
+    if (tab === 'snapshots') {
+      return;
+    }
     if (portfolios.length === 1) {
       router.push(PATHS.PORTFOLIO.VIEW(portfolios[0]._id));
     }

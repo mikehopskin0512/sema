@@ -10,7 +10,7 @@ import SmartComment from './smartCommentModel';
 import Reaction from '../reaction/reactionModel';
 import User from '../../users/userModel';
 
-import { fullName } from '../../shared/utils';
+import { fullName, metricsStartDate } from '../../shared/utils';
 import { getTeamRepos } from '../../teams/teamService';
 
 const { Types: { ObjectId } } = mongoose;
@@ -544,6 +544,147 @@ export const exportSuggestedMetrics = async ({ search, sortDesc }) => {
 
   return csv;
 };
+
+const groupMetricsPipeline = [
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: "%Y-%m-%d",
+            date: "$createdAt",
+          },
+        },
+        comments: { $sum: 1 },
+        pullRequests: { $addToSet: "$githubMetadata.pull_number" },
+        commenters: { $addToSet: "$userId" },
+      },
+    },
+    {
+      $project: {
+        _id: "$$REMOVE",
+        values: {
+          $arrayToObject: [
+            [
+              {
+                k: "$_id",
+                v: {
+                  comments: "$comments",
+                  pullRequests: { $size: "$pullRequests" },
+                  commenters: { $size: "$commenters" },
+                },
+              },
+            ],
+          ],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        values: { $mergeObjects: "$values" },
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: "$values",
+      },
+    }];
+
+
+export async function getTeamSmartCommentsMetrics(teamId) {
+  const [doc] = await SmartComment.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: metricsStartDate,
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "repositories",
+        let: {
+          repoExternalId: "$githubMetadata.repo_id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$externalId", "$$repoExternalId"],
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "repo",
+      },
+    },
+    {
+      $unwind: "$repo",
+    },
+    {
+      $lookup: {
+        from: "teams",
+        let: {
+          repoId: "$repo._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              "repos.0": {
+                $exists: true,
+              },
+            },
+          },
+          {
+            $match: {
+              $expr: { $eq: [teamId, "$_id"] },
+              $expr: {
+                $in: ["$$repoId", "$repos"],
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "teams",
+      },
+    },
+    {
+      $match: {
+        "teams.0": {
+          $exists: true,
+        },
+      },
+    },
+    ...groupMetricsPipeline
+  ]);
+  return doc;
+}
+
+export async function getRepoSmartCommentsMetrics(repoExternalId) {
+  const [doc] = await SmartComment.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: metricsStartDate,
+        },
+        "githubMetadata.repo_id": {
+          $eq: repoExternalId
+        }
+      },
+    },
+    ...groupMetricsPipeline
+  ]);
+  return doc;
+}
 
 export const getSmartCommentsByExternalId = async (externalId) => {
   try {

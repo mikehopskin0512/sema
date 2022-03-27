@@ -112,6 +112,6 @@ Then(
 )
 
 Then(
-    /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections)$/,
+    /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections|portfolios)$/,
     checkEqualTextForElements
 )

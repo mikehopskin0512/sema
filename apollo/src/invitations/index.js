@@ -148,7 +148,7 @@ export default (app, passport) => {
   
       const invitation = await checkIfInvitedByToken(inviteToken);
       await createUserRole({ team: invitation.team, user: user._id, role: invitation.role });
-      await deleteInvitation(invitation._id);
+      await redeemInvite(inviteToken, user._id, invitation._id);
       return res.sendStatus(200);
     } catch (error) {
       logger.error(error);

@@ -15,7 +15,7 @@ const TagsChart = ({
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [tooltipPosition, setTooltipPosition] = useState('top');
-  const [emptyChart, setEmptyChart] = useState(false)
+  const [emptyChart, setEmptyChart] = useState(false);
 
   const handleTooltipPosition = (event) => {
     setTooltipPosition(event.clientY > CIRCLE_CHART_MIN_TOP ? 'top' : 'bottom');
@@ -64,9 +64,9 @@ const TagsChart = ({
     const keys = Object.keys(tags);
     keys.forEach((key) => {
       total += tags[key].total;
-    })
+    });
     return total;
-  }
+  };
 
   useEffect(() => {
     const total = getTotalTags();
@@ -81,8 +81,11 @@ const TagsChart = ({
 
   const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
     <TooltipWrapper anchor={tooltipPosition} position={[0, 0]}>
-      <div className={clsx("box has-background-black-900 p-20 border-radius-4px", styles.tooltip)}>
-        <p className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name} - last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</p>
+      <div className={clsx('box has-background-black-900 p-20 border-radius-4px', styles.tooltip)}>
+        <div className="is-flex is-align-items-center is-justify-content-space-between">
+          <span className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name}</span>
+          <span className="has-text-primary">last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</span>
+        </div>
         {tag.data.length > 0 && (
           <div className={clsx('py-3', styles['line-chart-container'])}>
             <LineChart data={[tag]} />
@@ -92,7 +95,7 @@ const TagsChart = ({
         <p className="is-size-7 has-text-white-50">{formattedValue} of all tags</p>
       </div>
     </TooltipWrapper>
-  ))
+  ));
 
   return (
     <>
@@ -105,7 +108,7 @@ const TagsChart = ({
           <CircularPacking
             circlePackingData={circlePackingData}
             emptyChart={emptyChart}
-            renderTooltip={renderTooltip}  
+            renderTooltip={renderTooltip}
           />
         </div>
       </div>

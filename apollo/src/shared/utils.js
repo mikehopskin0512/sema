@@ -5,6 +5,10 @@ import Tag from '../comments/tags/tagModel';
 import UserRole from '../userRoles/userRoleModel';
 import { isEmpty } from 'lodash';
 
+let metricsDaysPast = 29;
+export let metricsStartDate = new Date();
+metricsStartDate.setDate(metricsStartDate.getDate() - metricsDaysPast);
+
 export const handle = (promise) => promise
   .then((data) => ([data, undefined]))
   .catch((error) => Promise.resolve([undefined, error]));

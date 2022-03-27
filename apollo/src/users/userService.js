@@ -4,7 +4,7 @@ import { semaCorporateTeamId } from '../config'
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { generateToken } from '../shared/utils';
+import { generateToken, metricsStartDate } from '../shared/utils';
 import { checkIfInvitedByToken } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
@@ -557,3 +557,128 @@ export const getUserMetadata = async(id) => {
   const user = await User.findById(id).select({ firstName: 1, lastName: 1, avatarUrl: 1, identities: 1 }).lean().exec();
   return user;
 };
+
+export async function getRepoUsersMetrics(repoExternalId) {
+  const [doc] = await User.aggregate([
+    {
+      '$match': {
+        'createdAt': {
+          '$gte': metricsStartDate
+        },
+        'identities.repositories.id': repoExternalId
+      }
+    }, {
+      '$group': {
+        '_id': {
+          '$dateToString': {
+            'format': '%Y-%m-%d', 
+            'date': '$createdAt'
+          }
+        }, 
+        'users': {
+          '$sum': 1
+        }
+      }
+    }, {
+      '$project': {
+        '_id': '$$REMOVE', 
+        'values': {
+          '$arrayToObject': [
+            [
+              {
+                'k': '$_id', 
+                'v': '$users'
+              }
+            ]
+          ]
+        }
+      }
+    }, {
+      '$group': {
+        '_id': null, 
+        'values': {
+          '$mergeObjects': '$values'
+        }
+      }
+    }, {
+      '$replaceRoot': {
+        'newRoot': '$values'
+      }
+    }
+  ]);
+  return doc;
+}
+
+export async function getTeamUsersMetrics(teamId) {
+  const [doc] = await User.aggregate([
+    {
+      '$match': {
+        'createdAt': {
+          '$gte': metricsStartDate
+        }
+      }
+    }, {
+      '$lookup': {
+        'from': 'userroles', 
+        'localField': '_id', 
+        'foreignField': 'user', 
+        'as': 'userRole'
+      }
+    }, {
+      '$unwind': '$userRole'
+    },
+    {
+      $match: {
+        'userRole.team': (new ObjectId(teamId))
+      }
+    },
+     {
+      '$lookup': {
+        'from': 'teams', 
+        'localField': 'userRole.team', 
+        'foreignField': '_id', 
+        'as': 'team'
+      }
+    }, {
+      '$unwind': '$team'
+    }, {
+      '$group': {
+        '_id': {
+          '$dateToString': {
+            'format': '%Y-%m-%d', 
+            'date': '$createdAt'
+          }
+        }, 
+        'users': {
+          '$sum': 1
+        }
+      }
+    }, {
+      '$project': {
+        '_id': '$$REMOVE', 
+        'values': {
+          '$arrayToObject': [
+            [
+              {
+                'k': '$_id', 
+                'v': '$users'
+              }
+            ]
+          ]
+        }
+      }
+    }, {
+      '$group': {
+        '_id': null, 
+        'values': {
+          '$mergeObjects': '$values'
+        }
+      }
+    }, {
+      '$replaceRoot': {
+        'newRoot': '$values'
+      }
+    }
+  ]);
+  return doc;
+}

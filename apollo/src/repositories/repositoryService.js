@@ -3,9 +3,11 @@ import { endOfDay, toDate, differenceInCalendarDays, format, sub } from "date-fn
 import Repositories from './repositoryModel';
 import Users from './../users/userModel';
 import { getReactionIdKeys } from "../comments/reaction/reactionService";
-import { findByExternalId as findSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
+import { getRepoUsersMetrics } from "../users/userService";
+import { findByExternalId as findSmartCommentsByExternalId, getRepoSmartCommentsMetrics } from '../comments/smartComments/smartCommentService';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
@@ -161,6 +163,26 @@ export const findByExternalIds = async (externalIds, populateUsers) => {
   }
 };
 
+async function getRepoMetrics(externalId) {
+  let usersMetrics = await getRepoUsersMetrics(externalId);
+  let commentsMetrics = await getRepoSmartCommentsMetrics(externalId);
+  let auxDate = new Date(metricsStartDate);
+  let today = new Date();
+  let metrics = [];
+  while (auxDate <= today) {
+    let dateAsString = auxDate.toISOString().split('T')[0];
+    let values = commentsMetrics?.[dateAsString] ?? {        
+      comments: 0,
+      pullRequests: 0,
+      commenters: 0
+    };
+    values.users = usersMetrics?.[dateAsString] ?? 0;
+    metrics = [...metrics, values];  
+    auxDate.setDate(auxDate.getDate() + 1);
+  }
+  return metrics;
+}
+
 export const aggregateRepositories = async (externalIds, includeSmartComments, date) => {
   try {
     // Get Repos by externalId
@@ -168,9 +190,8 @@ export const aggregateRepositories = async (externalIds, includeSmartComments, d
     if (repos.length > 0) {
       // Tally stats
       const repositories = Promise.all(repos.map(async (repo) => {
-        const { _id, externalId = '', name = '', createdAt, updatedAt,
-          repoStats: { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0 },
-          repoStats = { userIds: [] } } = repo;
+        const { _id, externalId = '', name = '', createdAt, updatedAt, repoStats: { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0 } } = repo;
+        const metrics = await getRepoMetrics(externalId);
         const data = {
           repoStats: {
             smartComments,
@@ -178,11 +199,12 @@ export const aggregateRepositories = async (externalIds, includeSmartComments, d
             smartCodeReviews,
             semaUsers,
           },
+          metrics,
           _id,
           externalId,
           name,
           createdAt,
-          users: repoStats.userIds,
+          users: repo.repoStats.userIds,
           updatedAt,
         };
         if (includeSmartComments) {

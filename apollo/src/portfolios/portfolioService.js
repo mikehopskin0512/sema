@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import Portfolio from './portfolioModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { getSnapshotsByPortfolio } from '../snapshots/snapshotService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -129,7 +128,7 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
   }
 };
 
-export const addSnapshot = async (portfolioId, snapshotId) => {
+export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
     const snapshots = portfolio.snapshots.map(({ id, sort }) => {
@@ -153,6 +152,7 @@ export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
     const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId)
+    // TODO: populate should be deleted here
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },

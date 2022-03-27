@@ -3,13 +3,14 @@ import { uniq } from 'lodash';
 import Team from './teamModel';
 import errors from '../shared/errors';
 import logger from '../shared/logger';
+import { metricsStartDate } from '../shared/utils';
 import UserRole from '../userRoles/userRoleModel';
 import { getRepositories } from '../repositories/repositoryService';
-import { getSmartCommentsByExternalId, _getPullRequests, _getSmartCommentersCount } from '../comments/smartComments/smartCommentService';
+import { getTeamSmartCommentsMetrics, getSmartCommentsByExternalId, _getPullRequests, _getSmartCommentersCount } from '../comments/smartComments/smartCommentService';
 import { createUserRole } from '../userRoles/userRoleService';
 import { getRoleByName } from '../roles/roleService';
 import { semaCorporateTeamName } from '../config';
-import { findByUsername } from '../users/userService';
+import { findByUsername, getTeamUsersMetrics } from '../users/userService';
 const { Types: { ObjectId } } = mongoose;
 
 export const ROLE_NAMES = {
@@ -163,45 +164,26 @@ export const getTeamRepos = async (teamId) => {
   }
 };
 
-export const getTeamMetrics = async (teamId) => {
-  try {
-    const totalMetrics = {
-      smartCodeReviews: 0,
-      smartComments: 0,
-      smartCommenters: 0,
-      semaUsers: 0,
-    }
-    const teamRepos = await getTeamRepos(teamId);
-    const repoExternalIds = teamRepos.map((repo) => {
-      return repo.externalId;
-    });
-    let smartComments = await Promise.all(repoExternalIds.map(async (id) => {
-      return await getSmartCommentsByExternalId(id)
-    }));
-    smartComments = smartComments.flat();
-    totalMetrics.smartComments = smartComments.length || 0;
-    totalMetrics.smartCodeReviews = _getSmartCommentersCount(smartComments);
-    totalMetrics.smartCommenters = _getPullRequests(smartComments);
-    totalMetrics.semaUsers = totalMetrics.smartCommenters;
-    return totalMetrics;
-    // TODO: Implementation of metrics chart.
-    // For metrics chart
-    // const smartCommentsByDate = {}
-    // smartComments.forEach((comment) => {
-    //   const formattedDate = format(new Date(comment.createdAt), 'yyyy-MM-dd')
-    //   if (smartCommentsByDate[formattedDate]) {
-    //     smartCommentsByDate[formattedDate].push(comment);
-    //   } else {
-    //     smartCommentsByDate[formattedDate] = [comment]
-    //   }
-    // });
-    // return smartCommentsByDate
-  } catch (err) {
-    logger.error(err);
-    const error = new errors.NotFound(err);
-    return error;
+export async function getTeamMetrics(teamId) {
+  let userMetrics = await getTeamUsersMetrics(teamId);
+  let commentsMetrics = await getTeamSmartCommentsMetrics(teamId);
+  let metrics = [];
+  let auxDate = new Date(metricsStartDate);
+  let today = new Date();
+  while (auxDate <= today) {
+    let dateAsString = auxDate.toISOString().split('T')[0];
+    let values = commentsMetrics?.[dateAsString] ?? {        
+      comments: 0,
+      pullRequests: 0,
+      commenters: 0
+    };
+    values.users = userMetrics?.[dateAsString] ?? 0;
+    metrics = [...metrics, values];  
+    auxDate.setDate(auxDate.getDate() + 1);
   }
+  return metrics;
 }
+
 
 export const getTeamMembers = async (teamId, { page, perPage }, type = 'paginate') => {
   try {
