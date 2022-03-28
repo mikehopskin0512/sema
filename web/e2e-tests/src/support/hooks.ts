@@ -35,7 +35,8 @@ export const hooks = {
   onPrepare: function (config, capabilities) {
     // directory path
     const dirJunit = "./test/results";
-    const dirAllureRes = './allure-results';     
+    const dirAllureRes = './allure-results'; 
+    const dirHtmlRep = './reports/html-reports';     
 
     // delete directory recursively
     try {
@@ -49,6 +50,12 @@ export const hooks = {
         console.log(`${dirAllureRes} is deleted!`);
       } catch (err) {
         console.error(`Error while deleting ${dirAllureRes}.`);
+      }
+      try {
+        fs.rmdirSync(dirHtmlRep, { recursive: true });
+        console.log(`${dirHtmlRep} is deleted!`);
+      } catch (err) {
+        console.error(`Error while deleting ${dirHtmlRep}.`);
       }
   },
 

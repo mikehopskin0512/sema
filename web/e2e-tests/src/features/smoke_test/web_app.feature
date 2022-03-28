@@ -1,4 +1,4 @@
-@webapp
+@webapp @zicu
 Feature: Web tabs should contains all functionality items
 
     Background: Wait for page to be displayed

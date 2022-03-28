@@ -145,9 +145,39 @@ export const config: WebdriverIO.Config = {
   //     ]
   // ],
   reporters: [
+    'spec',
+    [
+      "junit",
+      {
+        outputDir: "./reports/junit",                
+        outputFileFormat: function (options) {
+          // optional
+          return `results-${options.cid}.xml`;
+        },
+        errorOptions: {
+            error: 'message',
+            failure: 'message',
+            stacktrace: 'stack'
+        },        
+      }
+    ],
+    // [
+    //   "html-nice",
+    //   {
+    //     outputDir: "./reports/html-reports/",
+    //     filename: "report.html",
+    //     reportTitle: "Test Report Title",
+    //     linkScreenshots: true,
+    //     //to show the report in a browser when done
+    //     showInBrowser: true,
+    //     collapseTests: false,
+    //     //to turn on screenshots after every test
+    //     useOnAfterCommandForScreenshot: false,
+    //   }
+    // ],
     ['allure', {
         outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,
+        disableWebdriverStepsReporting: true,        
     }]
   ],
   //
