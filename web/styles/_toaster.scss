@@ -1,4 +1,20 @@
 /* Toaster CSS */
+@import "./_colors.module.scss";
+
+.Toaster__manager-top {
+  @media only screen and (min-width: 1408px) {
+    max-width: 1344px !important;
+  }
+  @media only screen and (min-width: 1216px) and (max-width: 1407px) {
+    max-width: 1152px !important;
+  }
+  max-width: 960px !important;
+}
+
+.Toaster__message {
+  align-items: end !important;
+  margin-top: 85px;
+}
 
 .Toaster__message-wrapper {
   padding: 8px;
@@ -8,4 +24,29 @@
     min-width: 600px;
     margin-top: 0;
     border: 1px solid $grey-lighter;
+}
+
+.toaster {
+  position: relative;
+  width: 430px;
+  background: $white-0;
+  border-radius: 4px 2px 2px 4px;
+  filter: drop-shadow(0px 2px 3px rgba(32, 32, 32, 0.2));
+  &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+  }
+}
+
+.toaster-success:after {
+  background-color: $green-500;
+}
+
+.toaster-error:after {
+  background-color: $red-500;
 }
