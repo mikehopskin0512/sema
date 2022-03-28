@@ -29,6 +29,8 @@ export const POSITIVE = 'positive';
 export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
 export const IS_DIRTY = 'isDirty';
+export const SUGGESTION_POSITIVE = 'suggestion_positive';
+export const SUGGESTION_NEGATIVE = 'suggestion_negative';
 
 export const TAGS_INIT = [
   {
@@ -36,42 +38,56 @@ export const TAGS_INIT = [
     [NEGATIVE]: 'Unreadable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['readable'],
+    [SUGGESTION_NEGATIVE]: ['unreadable'],
   },
   {
     [POSITIVE]: 'Secure',
     [NEGATIVE]: 'Not secure',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['secure'],
+    [SUGGESTION_NEGATIVE]: ['not secure', 'insecure'],
   },
   {
     [POSITIVE]: 'Efficient',
     [NEGATIVE]: 'Inefficient',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['efficient'],
+    [SUGGESTION_NEGATIVE]: ['inefficient'],
   },
   {
     [POSITIVE]: 'Elegant',
     [NEGATIVE]: 'Inelegant',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['elegant'],
+    [SUGGESTION_NEGATIVE]: ['inelegant'],
   },
   {
     [POSITIVE]: 'Reusable',
     [NEGATIVE]: 'Not reusable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['reusable'],
+    [SUGGESTION_NEGATIVE]: ['not reusable'],
   },
   {
     [POSITIVE]: 'Fault-tolerant',
     [NEGATIVE]: 'Brittle',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['fault-tolerant'],
+    [SUGGESTION_NEGATIVE]: ['brittle'],
   },
   {
     [POSITIVE]: 'Maintainable',
     [NEGATIVE]: 'Not maintainable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['maintainable'],
+    [SUGGESTION_NEGATIVE]: ['not maintainable'],
   },
 ];
 

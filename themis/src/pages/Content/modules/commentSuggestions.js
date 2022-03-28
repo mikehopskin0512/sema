@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import {
-  NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS,
+  NEGATIVE, POSITIVE, TAGS_INIT, EMOJIS, SUGGESTION_NEGATIVE, SUGGESTION_POSITIVE,
 } from '../constants';
 
 function checkTerm(commentText, matchTerm, reactionBallot) {
@@ -110,9 +110,9 @@ function suggestTags(commentText) {
   const commentTextL = commentText.toLowerCase();
   // eslint-disable-next-line no-restricted-syntax
   for (const tagPair of TAGS_INIT) {
-    if (commentTextL.includes(tagPair[NEGATIVE].toLowerCase())) {
+    if (tagPair[SUGGESTION_NEGATIVE].includes(commentTextL)) {
       foundTags.push(tagPair[NEGATIVE]);
-    } else if (commentTextL.includes(tagPair[POSITIVE].toLowerCase())) {
+    } else if (tagPair[SUGGESTION_POSITIVE].includes(commentTextL)) {
       foundTags.push(tagPair[POSITIVE]);
     }
   }
