@@ -20,11 +20,11 @@
 
     "trophyBtn"                     : "//img[@alt='trophy']",
 
-    "footerTermsAndConditionsBtn"     : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Terms & Conditions']",
+    "footerTermsAndConditionsBtn"   : "=Terms & Conditions",
     "footerSendFeedbackBtn"         : "//footer//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'button ')][normalize-space()='Send Feedback']",
-    "footerIdeaBoardBtn"            : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Idea Board']",
-    "footerReleaseNoteBtn"          : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Release Notes']",
-    "footerSupportBtn"              : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Support']",
+    "footerIdeaBoardBtn"            : "=Idea Board",
+    "footerReleaseNoteBtn"          : "=Release Notes",
+    "footerSupportBtn"              : "=Support",
 
     "emailBtn"                      : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/button[text()='Email']",
     "ideaBoardBtn"                  : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/a[text()='Idea Board']",

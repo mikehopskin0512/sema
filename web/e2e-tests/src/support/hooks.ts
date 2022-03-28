@@ -9,6 +9,7 @@
 
 //
 import { generateToken } from "authenticator";
+import { isConstructorDeclaration } from "typescript";
 const fs = require("fs");
 
 import { ReportAggregator, HtmlReporter } from "wdio-html-nice-reporter";
@@ -223,8 +224,24 @@ export const hooks = {
   // afterStep: function ({ uri, feature, step }, context, { error, result, duration, passed }) {
 
   // },
-  // afterScenario: function (uri, feature, scenario, result, sourceLocation) {
-  // },
+
+  /**
+   *
+   * Runs after a Cucumber Scenario.
+   * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
+   * @param {Object}                 result           results object containing scenario results `{passed: boolean, error: string, duration: number}`
+   * @param {boolean}                result.passed    true if scenario has passed
+   * @param {string}                 result.error     error stack if scenario failed
+   * @param {number}                 result.duration  duration of scenario in milliseconds
+   * @param {Object}                 context          Cucumber World object
+   */
+  afterScenario: function (world, result, context) {
+    if ( world.result.status === "FAILED") {
+      console.log("FAILED TEST!");
+      browser.takeScreenshot();
+    }
+  },
+  
   // afterFeature: function (uri, feature, scenarios) {
   // }
 };
