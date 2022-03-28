@@ -2,11 +2,12 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from '../Icons';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, SemaIcon } from '../Icons';
 import styles from './footer.module.scss';
 import ContactUs from '../contactUs';
 import SupportForm from '../supportForm';
 import { noContactUs, PATHS } from '../../utils/constants';
+import { black900, gray600 } from '../../../styles/_colors.module.scss';
 
 const Footer = () => {
   const router = useRouter();
@@ -32,41 +33,33 @@ const Footer = () => {
   const closeSupportForm = () => setSupportForm(false);
 
   const renderSocialLinks = () => (
-    <div className="is-flex is-align-items-center is-justify-content-center">
-      <div className={styles.socials__icon}>
-        <a href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
-          <LinkedinIcon color="rgb(244, 244, 244)" size="small" />
-        </a>
-      </div>
-      <div className={styles.socials__icon}>
-        <a href={socialLinks.instagram} target="_blank" rel="noreferrer">
-          <InstagramIcon color="rgb(244, 244, 244)" size="small" />
-        </a>
-      </div>
-      <div className={styles.socials__icon}>
-        <a href={socialLinks.facebook} target="_blank" rel="noreferrer">
-          <FacebookIcon color="rgb(244, 244, 244)" size="small" />
-        </a>
-      </div>
-      <div className={styles.socials__icon}>
-        <a href={socialLinks.twitter} target="_blank" rel="noreferrer">
-          <TwitterIcon color="rgb(244, 244, 244)" size="small" />
-        </a>
-      </div>
+    <div className={`is-flex is-align-items-center is-justify-content-space-evenly ${styles['social-icon-wrapper']}`}>
+      <a className='is-flex' href={socialLinks.linkedIn} target="_blank" rel="noreferrer">
+        <LinkedinIcon color={black900} size="small" />
+      </a>
+      <a className='is-flex' href={socialLinks.instagram} target="_blank" rel="noreferrer">
+        <InstagramIcon color={black900} size="small" />
+      </a>
+      <a className='is-flex' href={socialLinks.facebook} target="_blank" rel="noreferrer">
+        <FacebookIcon color={black900} size="small" />
+      </a>
+      <a className='is-flex' href={socialLinks.twitter} target="_blank" rel="noreferrer">
+        <TwitterIcon color={black900} size="small" />
+      </a>
     </div>
   );
 
   const renderAppLinks = () => (
     <>
-      <div className="has-text-gray-200 is-size-7 has-text-centered is-hidden-mobile">
-        &copy; {new Date().getFullYear()} Sema
+      <div className="has-text-gray-600 is-size-7 has-text-centered is-hidden-mobile is-flex is-align-items-center">
+       <SemaIcon color={gray600} size="medium" className="mr-8" /> Copyright &copy; {new Date().getFullYear()} Sema Technologies, Inc. All rights reserved.
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={termsAndConditionsLink}>Terms & Conditions</a>
+        <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={termsAndConditionsLink}>Terms & Conditions</a>
       </div>
       <div className="has-text-centered">
         <div
-          className="button is-ghost has-text-gray-200 is-size-7 is-size-m-desktop has-text-weight-semibold"
+          className="button is-ghost has-text-black-900 is-size-7 is-size-m-desktop has-text-weight-semibold px-10"
           onClick={() => openSupportForm('Feedback')}
           aria-hidden="true"
         >
@@ -75,16 +68,15 @@ const Footer = () => {
       </div>
       {isAuthenticated && (
         <div className="has-text-centered">
-          <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
+          <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={`https://sema.uservoice.com/?sso=${userVoiceToken}`}>Idea Board</a>
         </div>
       )}
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href="https://semasoftware.com/release-notes">Release Notes</a>
+        <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href="https://semasoftware.com/release-notes">Release Notes</a>
       </div>
       <div className="has-text-centered">
-        <a className="button is-ghost has-text-gray-200 is-size-7 has-text-weight-semibold" href={PATHS.SUPPORT}>Support</a>
+        <a className="button is-ghost has-text-black-900 is-size-7 has-text-weight-semibold px-10" href={PATHS.SUPPORT}>Support</a>
       </div>
-      <div className="is-one-quarter-fullhd is-1-desktop" />
     </>
   );
 
@@ -99,24 +91,13 @@ const Footer = () => {
     <>
       {renderContactUs()}
       <footer className={clsx(styles.footer, 'px-50')}>
-        <div className='content-container px-50'>
+        <div className='content-container is-flex is-justify-content-center px-50'>
           <SupportForm active={supportForm} closeForm={closeSupportForm} type={formType} />
-          <div className="is-flex is-flex-wrap-wrap is-flex-direction-column is-align-items-center is-hidden-desktop">
-            {renderAppLinks()}
-          </div>
-          <div className="is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-flex-start is-align-items-center is-hidden-touch">
+          <div className={clsx("is-relative is-flex is-flex-wrap-wrap is-align-items-center is-flex is-justify-content-flex-start is-align-items-center", styles['responsive-footer'])}>
             <div className="is-flex is-align-items-center">
               {renderAppLinks()}
-            </div>
-            <div className={styles.socials}>
               {renderSocialLinks()}
             </div>
-          </div>
-          <div className="is-hidden-desktop mt-25">
-            {renderSocialLinks()}
-          </div>
-          <div className="has-text-white has-text-centered is-hidden-desktop my-25">
-            &copy; {new Date().getFullYear()} Sema
           </div>
         </div>
       </footer>
