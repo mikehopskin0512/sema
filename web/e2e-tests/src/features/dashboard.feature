@@ -1,4 +1,4 @@
-@dashboard
+@dashboard @zicu
 Feature: Dashboard options
 
   @admin  @PTA25

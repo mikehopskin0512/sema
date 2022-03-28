@@ -161,20 +161,20 @@ export const config: WebdriverIO.Config = {
         },        
       }
     ],
-    // [
-    //   "html-nice",
-    //   {
-    //     outputDir: "./reports/html-reports/",
-    //     filename: "report.html",
-    //     reportTitle: "Test Report Title",
-    //     linkScreenshots: true,
-    //     //to show the report in a browser when done
-    //     showInBrowser: true,
-    //     collapseTests: false,
-    //     //to turn on screenshots after every test
-    //     useOnAfterCommandForScreenshot: false,
-    //   }
-    // ],
+    [
+      "html-nice",
+      {
+        outputDir: "./reports/html-reports/",
+        filename: "report.html",
+        reportTitle: "SEMA e2e Test results",
+        linkScreenshots: true,
+        //to show the report in a browser when done
+        showInBrowser: true,
+        collapseTests: true,
+        //to turn on screenshots after every test
+        useOnAfterCommandForScreenshot: true,
+      }
+    ],
     ['allure', {
         outputDir: 'allure-results',
         disableWebdriverStepsReporting: true,        
