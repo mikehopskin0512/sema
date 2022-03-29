@@ -10,6 +10,7 @@ import Modal from '../Modal';
 import styles from './createSnippetModal.module.scss';
 import { fireAmplitudeEvent, getAllCollection, getAllTags, saveSmartComment } from '../../modules/content-util';
 import { mapTagsToOptions } from './helpers';
+import { getActiveThemeClass } from '../../../../../utils/theme';
 
 const semaLogo = chrome.runtime.getURL(
   'img/sema-logo.svg',
@@ -111,13 +112,14 @@ const CreateSnippetModal = () => {
   return (
     <Modal isActive={isActive}>
       <form
-        className={styles.modal}
+        className={`${styles[getActiveThemeClass()]} ${styles.modal}`}
         onSubmit={onSubmit}
       >
         <header className={styles.header}>
           <h2 className={styles.title}>Create New Snippet</h2>
           <div style={{ width: '200px' }}>
             <SelectField
+              isSpecialTheme
               disabled
               options={collections.map((item) => ({
                 label: item.collectionData.name,
