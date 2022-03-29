@@ -12,6 +12,7 @@ import router from 'next/router';
 
 const snapshotList = () => {
   const showNotification = (isError, path) => {
+    //ToDo: change this for new notification component after ETCR-1086 will be merged
     toaster.notify(({ onClose }) => (
       <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
         <div className="message-body has-background-white is-flex">
