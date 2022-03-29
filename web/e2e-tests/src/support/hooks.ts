@@ -96,6 +96,8 @@ export const hooks = {
 
     console.log(otp);
 
+    await browser.maximizeWindow();
+
     await browser.url("https://app-staging.semasoftware.com/login");
     await $("span=Sign in with GitHub").click();
 

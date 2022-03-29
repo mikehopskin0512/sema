@@ -21,7 +21,7 @@
     "trophyBtn"                     : "//img[@alt='trophy']",
 
     "footerTermsAndConditionsBtn"   : "=Terms & Conditions",
-    "footerSendFeedbackBtn"         : "//footer//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'button ')][normalize-space()='Send Feedback']",
+    "footerSendFeedbackBtn"         : "div=Send Feedback",
     "footerIdeaBoardBtn"            : "=Idea Board",
     "footerReleaseNoteBtn"          : "=Release Notes",
     "footerSupportBtn"              : "=Support",
@@ -29,10 +29,10 @@
     "emailBtn"                      : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/button[text()='Email']",
     "ideaBoardBtn"                  : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/a[text()='Idea Board']",
 
-    "footerLinkedInBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.linkedin.com/company/11298026']",
-    "footerInstagramBtn"            : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.instagram.com/se_ma1743/']",
-    "footerFacebookBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://business.facebook.com/semasoftware/']",
-    "footerTwitterBtn"              : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://twitter.com/semasoftware1']",
+    "footerLinkedInBtn"             : "[href='https://www.linkedin.com/company/11298026']",
+    "footerInstagramBtn"            : "[href='https://www.instagram.com/se_ma1743/']",
+    "footerFacebookBtn"             : "[href='https://business.facebook.com/semasoftware/']",
+    "footerTwitterBtn"              : "[href='https://twitter.com/semasoftware1']",
 
     "########## LOGIN LOCATORS ###############" : "",
     "signInWithGithubBtn"           : "//div[contains(@class,'is-hidden-touch')]//span[text()='Sign in with GitHub']",
@@ -166,6 +166,7 @@
 
 
     "########## PERSONAL INSIGHTS LOCATORS #############" : "",
+    "personalInsightsSummariesLbl"  : "p=TOTAL SUMMARIES",
     "personalInsightsHeader"        : "//div[@class='tile']",
 
     "########## INVITES LOCATORS #############" : "",

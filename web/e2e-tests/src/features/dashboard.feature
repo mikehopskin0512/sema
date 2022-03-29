@@ -95,7 +95,8 @@ Feature: Dashboard options
 
     @admin  @PTA37
     Scenario: Footer action Send Feedback leads to info page
-        When I open the site "/dashboard"        
+        When I open the site "/dashboard"              
+        And I wait on element "footerSendFeedbackBtn" for 10000ms to be displayed  
         When I click on the button "footerSendFeedbackBtn"
         Then I expect that element "supportModal" becomes displayed
         And  I expect that element "supportModalTitleInput" becomes displayed
@@ -142,7 +143,11 @@ Feature: Dashboard options
     @admin  @PTA41
     Scenario: Footer's social media links are present on a buttons
         When I open the site "/dashboard"
+        And I scroll to element "footerLinkedInBtn"         
         And I expect that element "footerLinkedInBtn" becomes displayed
+        #And I scroll to element "footerInstagramBtn"
         And I expect that element "footerInstagramBtn" becomes displayed
+        #And I scroll to element "footerFacebookBtn"
         And I expect that element "footerFacebookBtn" becomes displayed
+        #And I scroll to element "footerTwitterBtn"
         And I expect that element "footerTwitterBtn" becomes displayed
