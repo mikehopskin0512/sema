@@ -52,8 +52,9 @@
 
     "########### REPOS LOCATORS ###############" : "",
     "reposDropDownList"             : "//div[contains(@class,'css-1uccc91-singleValue')]",
-    "repoDropDownOption1"           : "//div[@id='react-select-5-option-0']",
-    "phoenixRepoDropDownOption"     : "//div[@id='react-select-5-option-0'][text()='phoenix']",
+    "repoDropDownOption1"           : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[1]",
+    "astrobeeRepoDropDownOption"    : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[text()='astrobee']",
+    "scikitlearnRepoDropDownOption" : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[text()='scikit-learn']",
     "activityLogTabBtn"             : "//span[normalize-space()='Activity Logs']",
     "codeStatsTabBtn"               : "//span[normalize-space()='Code Stats']",
     "dateRangeFilter"               : "//button[contains(@class,'dateRangeSelector_button__35SUY')]",
