@@ -6,9 +6,7 @@ import { Controller } from 'react-hook-form';
 import styles from './editCommentCollectionForm.module.scss';
 import { tagsOperations } from '../../../../state/features/tags';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
-import CustomCheckbox from '../../../customCheckbox';
 import usePermission from '../../../../hooks/usePermission';
-import { SEMA_CORPORATE_TEAM_ID } from "../../../../utils/constants";
 import { InputField } from 'adonis';
 import { red50, red500 } from '../../../../../styles/_colors.module.scss'
 
@@ -216,19 +214,6 @@ const EditCommentCollectionForm = ({ errors, cid = null, control }) => {
           )}
         />
       </div>
-      {!cid && checkTeam(SEMA_CORPORATE_TEAM_ID) && (
-        <Controller
-          name="isCommunityCollection"
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <CustomCheckbox
-              label="Populate this collection to all users and teams"
-              checked={value}
-              onChange={(e) => onChange(e.target.checked)}
-            />
-          )}
-        />
-      )}
     </div>
   );
 };

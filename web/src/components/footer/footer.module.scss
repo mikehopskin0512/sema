@@ -1,20 +1,26 @@
 @import "../../../styles/_colors.module.scss";
 
 .footer {
-    background-color: $gray-900;
+    background-color: $white-0;
 }
 
 .tile {
     height: 50px;
 }
 
-.socials {
-    position: absolute;
-    right: 0;
+.social-icon-wrapper {
+    width: 150px;
+    @media only screen and (max-width: 1407px) {
+        margin-top: 16px;
+    }
+}
 
-    &__icon {
-        margin-left: 16px;
-        margin-right: 16px;
-        height: 16px;
+.responsive-footer {
+    @media only screen and (max-width: 1407px) {
+        > div {
+            flex-direction: column !important;
+            justify-content: center !important;
+            width: 100%;
+        }
     }
 }

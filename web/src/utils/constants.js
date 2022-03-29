@@ -214,12 +214,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
   {
     value: 'english',
     label: 'English',
-    url: 'https://www.youtube.com/embed/x6FoswLcqxE',
-  },
-  {
-    value: 'russian',
-    label: 'Russian',
-    url: 'https://www.youtube.com/embed/Q7ryQIm2eYY',
+    url: 'https://www.youtube.com/embed/4AnOJ5sr_hY',
   },
 ];
 

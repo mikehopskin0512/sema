@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import Snapshot from './snapshotModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
-import { addSnapshot } from '../portfolios/portfolioService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -30,11 +29,12 @@ const structureComponentData = ({
 });
 
 const structureSnapshot = ({
-  _id = null, userId = null, title = null, description = null, componentType = null, componentData = null,
+  _id = null, userId = null, title = null, description = null, componentType = null, componentData = null, portfolios = [],
 }) => ({
   _id: _id ? new ObjectId(_id) : new ObjectId(),
   userId: new ObjectId(userId),
   title,
+  portfolios,
   description,
   componentType,
   componentData: structureComponentData(componentData),
@@ -51,13 +51,10 @@ export const getSnapshotsByUserId = async (userId) => {
   }
 };
 
-export const create = async (snapshot, portfolioId) => {
+export const create = async (snapshot) => {
   try {
     const newSnapshot = new Snapshot(structureSnapshot(snapshot));
     const savedSnapshot = await newSnapshot.save();
-    if (portfolioId) {
-      await addSnapshot(portfolioId, savedSnapshot._id);
-    }
     return savedSnapshot;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -96,6 +93,34 @@ export const deleteOne = async (snapshotId) => {
   try {
     const deletedSnapshot = await Snapshot.findByIdAndDelete(new ObjectId(snapshotId)).exec();
     return deletedSnapshot;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const addPortfolioToSnapshot = async (snapshotId, portfolioId) => {
+  try {
+    await Snapshot.findByIdAndUpdate(
+      new ObjectId(snapshotId),
+      { $push: { portfolios: portfolioId } },
+    ).exec();
+    return snapshotId;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const removePortfolioFromSnapshot = async (snapshotId, portfolioId) => {
+  try {
+    await Snapshot.findByIdAndUpdate(
+      new ObjectId(snapshotId),
+      { $pull: { portfolios: portfolioId } },
+    ).exec();
+    return snapshotId;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

@@ -321,8 +321,8 @@ export const fetchTeamCollections = (teamId, token) => async (dispatch) => {
 export const fetchTeamSmartCommentSummary = (params, token) => async (dispatch) => {
   try {
     dispatch(requestFetchTeamSmartCommentSummary())
-    const { data: { summary } } = await getSmartCommentSummary(params, token);
-    dispatch(requestFetchTeamSmartCommentSummarySuccess(summary));
+    const { data } = await getSmartCommentSummary(params, token);
+    dispatch(requestFetchTeamSmartCommentSummarySuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

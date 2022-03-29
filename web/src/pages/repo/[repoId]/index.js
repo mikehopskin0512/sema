@@ -13,6 +13,7 @@ import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
 import StatsView from '../../../components/repos/repoPageLayout/components/StatsView';
+import Metrics from '../../../components/metrics';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 
@@ -188,7 +189,7 @@ const RepoPage = () => {
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
-        <StatsView overview={overview} dates={dates} />
+        <Metrics metrics={overview.metrics} />
       </div>
       {
         selectedTab === 'activity' && (
