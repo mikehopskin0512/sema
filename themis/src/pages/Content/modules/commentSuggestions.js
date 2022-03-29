@@ -110,9 +110,9 @@ function suggestTags(commentText) {
   const commentTextL = commentText.toLowerCase();
   // eslint-disable-next-line no-restricted-syntax
   for (const tagPair of TAGS_INIT) {
-    if (tagPair[SUGGESTION_NEGATIVE].includes(commentTextL)) {
+    if (commentTextL.includes(tagPair[SUGGESTION_NEGATIVE])) {
       foundTags.push(tagPair[NEGATIVE]);
-    } else if (tagPair[SUGGESTION_POSITIVE].includes(commentTextL)) {
+    } else if (commentTextL.includes(tagPair[SUGGESTION_POSITIVE])) {
       foundTags.push(tagPair[POSITIVE]);
     }
   }
