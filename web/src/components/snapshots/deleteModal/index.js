@@ -5,14 +5,16 @@ import Toaster from '../../toaster';
 import styles from './deleteModal.module.scss';
 import { CloseIcon } from '../../Icons';
 
-const DeleteSnapshot = ({ isModalActive, toggleModalActive, onSubmit }) => (
+const DeleteModal = ({ isModalActive, toggleModalActive, onSubmit, type = 'snapshot' }) => (
   <>
     <div className={clsx('modal', isModalActive && 'is-active')}>
       <div className="modal-background" />
       <div className={clsx('modal-card', styles.modal)}>
         <header className={clsx('modal-card-head has-background-white is-align-items-flex-start', styles['modal-head'])}>
           <div className="is-full-width">
-            <p className={clsx('modal-card-title has-text-weight-semibold')}>Do you want to delete this Snapshot?</p>
+            <p className={clsx('modal-card-title has-text-weight-semibold')}>
+              {`Do you want to delete this ${type === 'snapshot' ? 'Snapshot' : 'Portfolio'}?`}
+            </p>
           </div>
           <button type="button" onClick={() => toggleModalActive(false)} className={clsx('button is-ghost has-text-black-900', styles['close-btn'])}>
             <CloseIcon size="medium" />
@@ -42,10 +44,11 @@ const DeleteSnapshot = ({ isModalActive, toggleModalActive, onSubmit }) => (
   </>
 );
 
-DeleteSnapshot.propTypes = {
+DeleteModal.propTypes = {
   isModalActive: PropTypes.bool.isRequired,
   toggleModalActive: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
-export default DeleteSnapshot;
+export default DeleteModal;

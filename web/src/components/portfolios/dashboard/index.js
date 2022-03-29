@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon } from '../../Icons';
+import { GithubIcon, EditIcon, OptionsIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
@@ -13,6 +13,8 @@ import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
 import Avatar from 'react-avatar';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import DeleteModal from '../../snapshots/deleteModal';
+import DropDownMenu from '../../dropDownMenu';
 
 const { updatePortfolio } = portfoliosOperations;
 
@@ -34,6 +36,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
   const [snapshots, setSnapshots] = useState([]);
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [titleModalOpen, setTitleModalOpen] = useState(false);
+  const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
   const parsePortfolio = (portfolio) => {
     if (!isEmpty(portfolio)) {
@@ -69,6 +72,13 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
     }
   };
 
+  const onDeletePortfolio = async () => {
+    // const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
+    // if (payload.status === 200) {
+    //   toggleDeleteModal(false);
+    // }
+  };
+
   useEffect(() => {
     parsePortfolio(portfolio);
   }, [portfolio]);
@@ -91,6 +101,11 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
         isOpen={titleModalOpen}
         profileTitle={user.title}
       />
+      <DeleteModal
+        isModalActive={isDeleteModalOpen}
+        toggleModalActive={toggleDeleteModal}
+        onSubmit={() => onDeletePortfolio()}
+      />
       <div className={clsx('has-background-white mb-10', styles.title)}>
         <div className="container py-20">
           <div className="is-relative mx-10">
@@ -101,6 +116,26 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
                   <EditIcon className={clsx(styles['edit-icon'], 'is-clickable')} onClick={() => setTitleModalOpen(true)} />
                 )
               }
+            </div>
+            <div className="is-relative is-flex">
+            <DropDownMenu
+                isRight
+                options={[
+                  {
+                    // TODO: add Duplicate - ETCR-1030
+                    label: 'Duplicate Portfolio',
+                    onClick: () => console.log('TODO: will be implement later'),
+                  },
+                  { 
+                    label: 'Delete', onClick: () => toggleDeleteModal(true) 
+                  },
+                ]}
+                trigger={
+                  <div className="is-clickable" style={{ position: 'absolute', top: 0, right: 0}}>
+                    <OptionsIcon />
+                  </div>
+                }
+              />
             </div>
           </div>
         </div>

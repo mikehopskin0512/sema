@@ -8,6 +8,7 @@ import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
 import Tooltip from '../../../../components/Tooltip';
 import { PATHS, SEMA_APP_URL } from '../../../../utils/constants';
+import DeleteModal from '../../../../components/snapshots/deleteModal';
 
 const portfolioList = () => {
   const { portfoliosState } = useSelector((state) => state);
@@ -15,10 +16,18 @@ const portfolioList = () => {
     data: { portfolios },
   } = portfoliosState;
   const [copiedToClipboard, setCopiedToClipboard] = useState('');
+  const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
   const addPortfolio = () => {};
   const copyToClipboard = (id) => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
     setCopiedToClipboard(id);
+  };
+
+  const onDeletePortfolio = async () => {
+    // const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
+    // if (payload.status === 200) {
+    //   toggleDeleteModal(false);
+    // }
   };
 
   const tableData = portfolios.map((portfolio, i) => ({
@@ -95,8 +104,7 @@ const portfolioList = () => {
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
-                // TODO: add delete function ETCR-1044
-                { label: 'Delete', onClick: () => console.log(1) },
+                { label: 'Delete', onClick: () => toggleDeleteModal(true) },
               ]}
               trigger={
                 <div className="is-clickable is-flex mr-24">
@@ -128,6 +136,11 @@ const portfolioList = () => {
         className="overflow-unset shadow-none"
         data={tableData}
         columns={columns}
+      />
+      <DeleteModal
+        isModalActive={isDeleteModalOpen}
+        toggleModalActive={toggleDeleteModal}
+        onSubmit={() => onDeletePortfolio()}
       />
     </div>
   );
