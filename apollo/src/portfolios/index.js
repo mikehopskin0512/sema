@@ -47,6 +47,12 @@ export default (app, passport) => {
   route.put('/:id', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     const portfolio = req.body;
+    if (!req.body.title) {
+      return res.status(400).send({ error: 'title is required field' });
+    }
+    if (req.body.title.length > 130) {
+      return res.status(400).send({ error: 'title is too long' });
+    }
     try {
       const updatedPortfolio = await update(id, portfolio);
       return res.status(200).send(updatedPortfolio);

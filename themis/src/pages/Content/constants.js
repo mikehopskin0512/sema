@@ -29,6 +29,8 @@ export const POSITIVE = 'positive';
 export const NEGATIVE = 'negative';
 export const SELECTED = 'selected';
 export const IS_DIRTY = 'isDirty';
+export const SUGGESTION_POSITIVE = 'suggestion_positive';
+export const SUGGESTION_NEGATIVE = 'suggestion_negative';
 
 export const TAGS_INIT = [
   {
@@ -36,42 +38,56 @@ export const TAGS_INIT = [
     [NEGATIVE]: 'Unreadable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['readable'],
+    [SUGGESTION_NEGATIVE]: ['unreadable'],
   },
   {
     [POSITIVE]: 'Secure',
     [NEGATIVE]: 'Not secure',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['secure'],
+    [SUGGESTION_NEGATIVE]: ['not secure', 'insecure'],
   },
   {
     [POSITIVE]: 'Efficient',
     [NEGATIVE]: 'Inefficient',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['efficient'],
+    [SUGGESTION_NEGATIVE]: ['inefficient'],
   },
   {
     [POSITIVE]: 'Elegant',
     [NEGATIVE]: 'Inelegant',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['elegant'],
+    [SUGGESTION_NEGATIVE]: ['inelegant'],
   },
   {
     [POSITIVE]: 'Reusable',
     [NEGATIVE]: 'Not reusable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['reusable'],
+    [SUGGESTION_NEGATIVE]: ['not reusable'],
   },
   {
     [POSITIVE]: 'Fault-tolerant',
     [NEGATIVE]: 'Brittle',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['fault-tolerant'],
+    [SUGGESTION_NEGATIVE]: ['brittle'],
   },
   {
     [POSITIVE]: 'Maintainable',
     [NEGATIVE]: 'Not maintainable',
     [SELECTED]: null,
     [IS_DIRTY]: false,
+    [SUGGESTION_POSITIVE]: ['maintainable'],
+    [SUGGESTION_NEGATIVE]: ['not maintainable'],
   },
 ];
 
@@ -216,7 +232,7 @@ export const SEMA_REACTION_REGEX = /\*\*Summary:\*\*([ \w : |])*/s;
 export const SEMA_TAGS_REGEX = /\*\*Tags:\*\*([ \w : | ,])*/s;
 
 export const SEMA_ICON_ANCHOR_LIGHT = `
-  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Comments enabled'>
     <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#586069"/>
@@ -226,7 +242,7 @@ export const SEMA_ICON_ANCHOR_LIGHT = `
 `;
 
 export const SEMA_ICON_ANCHOR_DARK = `
-  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Comments enabled'>
     <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#8b949e"/>
@@ -236,7 +252,7 @@ export const SEMA_ICON_ANCHOR_DARK = `
 `;
 
 export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
-  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Comments enabled'>
     <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#768390"/>
@@ -246,7 +262,7 @@ export const SEMA_ICON_ANCHOR_DARK_DIMMED = `
 `;
 
 export const SEMA_ICON_ANCHOR_DARK_HIGH_CONTRAST = `
-  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Smart Comments enabled'>
+  <span class='tooltipped tooltipped-nw' style='position: absolute; right: 35px' aria-label='Sema Comments enabled'>
     <a class='Link--muted position-relative d-inline' href='https://semasoftware.com/gh' target='_blank' aria-label='Learn about Sema smart comments'>
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.02037 13H14.9796C15.5323 13 16 12.5168 16 11.9458V4.05417C16 3.46852 15.5465 3 14.9796 3H1.02037C0.453499 3 0 3.46852 0 4.05417V11.9458C0 12.5315 0.453499 13 1.02037 13ZM3 11.75L4.87904 4.25H7.0625L5.16954 11.75H3ZM10.8056 4.75L10.9773 6.88721L12.9176 6.36638L13.3125 7.62356L11.3894 8.41379L12.5742 10.2457L11.6813 11L10.2562 9.31178L8.76236 11L7.83517 10.2816L9.00275 8.41379L7.0625 7.62356L7.40591 6.33046L9.46635 6.88721L9.63805 4.75H10.8056Z" fill="#f0f3f6"/>

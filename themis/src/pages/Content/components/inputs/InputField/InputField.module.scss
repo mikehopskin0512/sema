@@ -1,4 +1,5 @@
 @import '../../../styles/colors.module';
+@import '../../../styles/content.styles';
 
 .input {
   width: 100%;
@@ -8,10 +9,11 @@
   font-size: 14px;
   border-radius: 4px;
   resize: none;
+  color: var(--color-font-create-snippet-modal);
 }
 
 .title {
-  color: $black-950;
+  color: var(--color-title-create-snippet-modal);
   font-size: 14px;
   font-weight: 700;
   line-height: 20px;

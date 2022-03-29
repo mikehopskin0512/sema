@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import toaster from 'toasted-notes';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon } from './Icons';
+import {
+  red500,
+  green500,
+  gray600,
+} from '../../styles/_colors.module.scss';
 
 const Toaster = (props) => {
   const {
@@ -10,32 +16,35 @@ const Toaster = (props) => {
   } = props;
 
   // Set alert style based on type
-  let alertStyle = 'is-success is-light';
+  let alertStyle, alertIcon;
   switch (type) {
   case 'error':
-    alertStyle = 'is-danger is-light';
-    break;
-  case 'info':
-    alertStyle = 'is-info is-light';
+    alertStyle = 'toaster-error';
+    alertIcon = <AlertFilledIcon color={red500} className="mr-8" />;
     break;
   default:
-    alertStyle = 'is-success is-light';
+    alertStyle = 'toaster-success';
+    alertIcon = <CheckFilledIcon color={green500} className="mr-8" />;
   }
 
   // Build alert message from children or message string
-  const toasterMessage = children || <h4>{message}</h4>;
+  const toasterMessage = children || <h4 className='has-text-black-950 has-text-weight-semibold'>{message}</h4>;
 
   // Trigger toaster on component load or props change
   useEffect(() => {
     if (showAlert) {
       toaster.notify(({ onClose }) => (
-        // Using button here messes up styles
-        <a href={null} onClick={onClose}>
-          <div className={`notification toaster ${alertStyle}`}>
-            <i className="delete" />
-            {toasterMessage}
+        <span>
+          <div className={`toaster ${alertStyle} p-16`}>
+            <div className='is-flex'>
+              {alertIcon}
+              <div className='is-flex is-flex-grow-1'>
+                {toasterMessage}
+              </div>
+              <CloseIcon color={gray600} onClick={onClose} className="is-clickable" />
+            </div>
           </div>
-        </a>
+        </span>
       ), {
         position,
         duration,

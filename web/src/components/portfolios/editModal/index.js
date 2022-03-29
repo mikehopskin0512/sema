@@ -50,7 +50,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, onSu
                 </div>
                 <div>
                   <button type="button" className="button" onClick={() => toggleModalActive(false)}>Cancel</button>
-                  <button type="button" className="button is-primary ml-10" onClick={() => onSubmit(overview)}>Save changes</button>
+                  <button type="button" className="button is-primary ml-10" onClick={() => onSubmit({ overview })}>Save changes</button>
                 </div>
               </div>
             </div>

@@ -57,6 +57,11 @@
   --color-suggestion-source: #{v.$color-tag-container-dark};
   --color-suggestion-title: #{v.$color-title-light};
   --color-comment-text: #{v.$color-title-light};
+
+  --color-background-create-snippet-modal: #{v.$color-light-background-create-snippet-modal};
+  --color-title-create-snippet-modal: #{v.$color-light-title-create-snippet-modal};
+  --color-font-create-snippet-modal: #{v.$color-light-font-create-snippet-modal};
+  --color-border-create-snippet-modal: #{v.$color-light-border-create-snippet-modal};
 }
 
 .theme--dark {
@@ -116,6 +121,11 @@
   --color-suggestion-source: #{v.$color-source-dark};
   --color-suggestion-title: #{v.$color-dark-emoji-font};
   --color-comment-text: #{v.$color-comment-text-dark};
+
+  --color-background-create-snippet-modal: #{v.$color-dark-background-create-snippet-modal};
+  --color-title-create-snippet-modal: #{v.$color-dark-title-create-snippet-modal};
+  --color-font-create-snippet-modal: #{v.$color-dark-font-create-snippet-modal};
+  --color-border-create-snippet-modal: #{v.$color-dark-border-create-snippet-modal};
 }
 
 .theme--dark-dimmed {
@@ -175,6 +185,11 @@
   --color-suggestion-source: #{v.$color-source-dark};
   --color-suggestion-title: #{v.$color-dark-emoji-font};
   --color-comment-text: #{v.$color-comment-text-dark};
+
+  --color-background-create-snippet-modal: #{v.$color-dark-dim-background-create-snippet-modal};
+  --color-title-create-snippet-modal: #{v.$color-dark-dim-title-create-snippet-modal};
+  --color-font-create-snippet-modal: #{v.$color-dark-dim-font-create-snippet-modal};
+  --color-border-create-snippet-modal: #{v.$color-dark-dim-border-create-snippet-modal};
 }
 
 .theme--dark-high-contrast {
@@ -234,6 +249,11 @@
   --color-suggestion-source: #{v.$color-source-dark};
   --color-suggestion-title: #{v.$color-dark-emoji-font};
   --color-comment-text: #{v.$color-comment-text-dark};
+
+  --color-background-create-snippet-modal: #{v.$color-dark-high-contrast-background-create-snippet-modal};
+  --color-title-create-snippet-modal: #{v.$color-dark-high-contrast-title-create-snippet-modal};
+  --color-font-create-snippet-modal: #{v.$color-dark-high-contrast-font-create-snippet-modal};
+  --color-border-create-snippet-modal: #{v.$color-dark-high-contrast-border-create-snippet-modal};
 }
 
 .sema {

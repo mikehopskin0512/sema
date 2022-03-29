@@ -97,13 +97,13 @@ export const createTags = (tags, token) => async (dispatch) => {
     dispatch(createNewTag());
     const payload = await addTags(tags, token);
     const { data } = payload;
-    dispatch(triggerAlert('Successfully added tags!', 'success'));
+    dispatch(triggerAlert('Labels added successfully!', 'success'));
     dispatch(createNewTagSuccess());
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert('Unable to add tags', 'error'));
+    dispatch(triggerAlert('Unable to add labels', 'error'));
     dispatch(createNewTagError(errMessage));
   }
 }
@@ -125,12 +125,12 @@ export const removeTagById = (id, token) => async (dispatch) => {
   try {
     dispatch(removeTag());
     await deleteTag(id, token);
-    dispatch(triggerAlert('Successfully deleted tag', 'success'));
+    dispatch(triggerAlert('Label deleted successfully', 'success'));
     dispatch(removeTagSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert('Unable to delete tag', 'error'));
+    dispatch(triggerAlert('Unable to delete label', 'error'));
     dispatch(removeTagError(errMessage));
   }
 };
@@ -139,12 +139,12 @@ export const updateTagById = (id, body, token) => async (dispatch) => {
   try {
     dispatch(updateTag());
     await putTag(id, body, token);
-    dispatch(triggerAlert('Successfully updated tag', 'success'));
+    dispatch(triggerAlert('Label updated successfully', 'success'));
     dispatch(updateTagSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(triggerAlert('Unable to update tag', 'error'));
+    dispatch(triggerAlert('Unable to update label', 'error'));
     dispatch(updateTagError(errMessage));
   }
 };
