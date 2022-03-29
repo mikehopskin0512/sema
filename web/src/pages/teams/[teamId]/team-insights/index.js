@@ -25,10 +25,9 @@ const { fetchReposByIds } = repositoriesOperations;
 
 const TeamInsights = () => {
   const dispatch = useDispatch();
-  const { auth, teams, repositories } = useSelector((state) => ({
+  const { auth, teams } = useSelector((state) => ({
     auth: state.authState,
     teams: state.teamsState,
-    repositories: state.repositoriesState,
   }));
   const { token, user, selectedTeam } = auth;
   const githubUser = user.identities?.[0];
@@ -105,7 +104,7 @@ const TeamInsights = () => {
         params.externalIds += index === 0 ? item.value : `-${item.value}`;
       });
     }
-    params.teamId = selectedTeam?.team?._id || '';
+    params.teamId = selectedTeam?.team?._id;
     if ((startDate && endDate) || (!startDate && !endDate)) {
       dispatch(fetchTeamSmartCommentOverview(params, token));
     }
@@ -184,11 +183,11 @@ const TeamInsights = () => {
   }, []);
 
   useEffect(() => {
-    const reposList = teams?.repos.map(item => (
-      {  
-        name: item.name, 
-        label: item.name, 
-        value: item.externalId,
+    const reposList = teams?.repos.map(({ name, externalId }) => (
+      {
+        name,
+        label: name,
+        value: externalId,
       })) || [];
     setFilterRepoList([...reposList]);
   }, [teams]);
@@ -201,11 +200,14 @@ const TeamInsights = () => {
   }, [teams]);
 
   useEffect(() => {
+    if (!selectedTeam?.team?._id) {
+      return
+    }
     getCommentsOverview(filter);
-  }, [filter, commentView, isActive]);
+  }, [JSON.stringify(filter), commentView, isActive]);
 
   useAuthEffect(() => {
-    const { repos } = selectedTeam.team;
+    const { repos } = selectedTeam.team || {};
     if (repos?.length) {
       const idsParamString = repos.join('-');
       dispatch(fetchReposByIds(idsParamString, token));
@@ -283,7 +285,7 @@ const TeamInsights = () => {
     const { overview } = teams;
     filterComments(overview);
     setFilterValues(overview);
-  }, [filter, teams]);
+  }, [JSON.stringify(filter), teams]);
 
   const renderTopReactions = () => {
     return topReactions.map((reaction) => {
@@ -316,7 +318,7 @@ const TeamInsights = () => {
         <div>
           <div className="is-flex is-justify-content-space-between has-background-white pb-15 pt-30">
             <p className="has-text-black-950 has-text-weight-semibold is-size-4 pb-20 px-15">
-              {!isActive ? 
+              {!isActive ?
                           <Avatar
                           name={selectedTeam?.team?.name || "Team"}
                           src={selectedTeam?.team?.avatarUrl}

@@ -10,10 +10,10 @@ import errors from '../../shared/errors';
 import { github, orgDomain, version } from '../../config';
 import { getProfile, getUserEmails, getRepositoryList } from './utils';
 import {
-  create, findByUsernameOrIdentity, updateIdentity, updateUserRepositoryList, verifyUser,
+  create, findByUsernameOrIdentity, updateIdentity,
 } from '../../users/userService';
-import { createRefreshToken, setRefreshToken, createAuthToken, createIdentityToken } from '../../auth/authService';
-import { checkIfInvitedByToken, deleteInvitation } from '../../invitations/invitationService';
+import { createRefreshToken, setRefreshToken, createIdentityToken } from '../../auth/authService';
+import {checkIfInvitedByToken, redeemInvite} from '../../invitations/invitationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -105,7 +105,7 @@ export default (app) => {
         if (inviteToken) {
           const invitation = await checkIfInvitedByToken(inviteToken);
           await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
-          await deleteInvitation(invitation._id);
+          await redeemInvite(inviteToken, user._id, invitation._id);
         }
         
         if (!isWaitlist) {

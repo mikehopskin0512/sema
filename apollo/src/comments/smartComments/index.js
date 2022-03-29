@@ -194,15 +194,25 @@ export default (app, passport) => {
 
   route.get('/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
-      requester: author, reviewer, externalIds, startDate, endDate,
+      requester: author, reviewer, externalIds, startDate, endDate, teamId,
     } = req.query;
     try {
       const repoIds = externalIds && externalIds.split('-');
       const overview = await getSmartCommentsTagsReactions({
-        author, reviewer, repoIds, startDate, endDate,
+        author, reviewer, repoIds, startDate, endDate, teamId,
       });
       return res.status(201).send({
-        overview,
+        overview: {
+          ...overview,
+          smartComments: overview.smartComments.map((comment) => ({
+            ...comment,
+            // TODO: this is a fix on an endpoit level, probably we have to fix it on service level
+            userId: !comment.userId ? {} : {
+              _id: comment.userId._id,
+              avatarUrl: comment.userId.avatarUrl,
+            },
+          })),
+        },
       });
     } catch (error) {
       logger.error(error);

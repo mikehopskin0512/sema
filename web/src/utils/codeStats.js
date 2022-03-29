@@ -31,9 +31,9 @@ const mergeTwoData = (reactions, type) => {
   reactions.reduce((previousValue, currentValue, currentIndex) => {
     if (currentIndex % 2) {
       const item = {
-        ...type == 'd' && {date: `${currentValue.date}-${format(new Date(previousValue.date), 'dd')}`},
-        ...type == 'm' && {date: `${currentValue.date}/${previousValue.date}`},
-        ...type == 'w' && {date: `${currentValue.date.split(" ")[0]} ${currentValue.date.split(" ")[1].split("-")[0]}-${previousValue.date.split("-")[1]}`}
+        ...type == 'd' && { date: `${currentValue.date}-${format(new Date(previousValue.date), 'dd')}` },
+        ...type == 'm' && { date: `${currentValue.date}/${previousValue.date}` },
+        ...type == 'w' && { date: getDateRange(currentValue.date, previousValue.date) }
       };
       EMOJIS.forEach((emoji) => {
         item[emoji._id] = {
@@ -68,8 +68,8 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     });
     reactionsByDay.push(item);
     tagsArr.push({
-        x: format(thisDay, 'MMM dd'),
-        y: 0,
+      x: format(thisDay, 'MMM dd'),
+      y: 0,
     });
     day += 1;
   }
@@ -87,15 +87,16 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   );
   if (diff > 6) {
     reactions = mergeTwoData(reactions, 'd');
+    tags = reduceTagsData(tags, 'd')
   }
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
-  const weeks = getWeekByDateRange(startOfDay(new Date(startDate)),endOfDay(new Date(endDate)));
+  const weeks = getWeekByDateRange(startOfDay(new Date(startDate)), endOfDay(new Date(endDate)));
   let { weekRange, tagsArr, reactionsByWeek } = getWeekRange(weeks);
   weekRange = [...weekRange].reverse();
-  const tagsByWeek = createTags(tagsArr);
+  let tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
   const filteredComments = smartcomments.filter((comment) => isWithinInterval(
     new Date(comment.createdAt),
@@ -113,7 +114,7 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
   ));
   // Count reactions and tags within time range
   filteredComments.forEach((comment) => {
-    const itemRange =  findIndex(weekRange, (item) => (isWithinInterval(new Date(comment.createdAt), {
+    const itemRange = findIndex(weekRange, (item) => (isWithinInterval(new Date(comment.createdAt), {
       start: item.startDay,
       end: item.endDay,
     })));
@@ -143,9 +144,9 @@ export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
       reactionsByWeek[index][comment.reaction].previous += 1;
     }
   });
-
   if (weeks.length > 13) {
     reactionsByWeek = mergeTwoData(reactionsByWeek, 'w');
+    tagsByWeek = reduceTagsData(tagsByWeek, 'w');
   }
   return { reactionsByWeek, tagsByWeek };
 }
@@ -186,8 +187,9 @@ export const generateChartDataByMonths = (smartcomments, startDate, endDate) => 
     tagsByMonth,
     startDate,
     endDate,
-    )
+  )
   reactions = mergeTwoData(reactions, 'm');
+  tags = reduceTagsData(tags, 'm');
   return { reactionsByMonth: reactions, tagsByMonth: tags };
 }
 
@@ -306,7 +308,7 @@ const parseTagsAndReactions = (
   ));
   // Count reactions and tags within the time range
   filteredComments.forEach((comment) => {
-    const formattedDate =  format(new Date(comment.createdAt), dateFormat);
+    const formattedDate = format(new Date(comment.createdAt), dateFormat);
     const reactionIndex = findIndex(reactionsArr, { date: formattedDate });
     if (reactionIndex > -1) {
       reactionsArr[reactionIndex][comment.reaction].current += 1;
@@ -376,8 +378,8 @@ const getWeekRange = (weeks) => {
   const weekRange = reverse(weeks).map((week, index) => {
     let startDay = startOfDay(new Date(week))
     let endDay = endOfDay(new Date(week));
-    if (weeks[index+1]) {
-      startDay = startOfDay(weeks[index+1])
+    if (weeks[index + 1]) {
+      startDay = startOfDay(weeks[index + 1])
     } else {
       startDay = startOfWeek(new Date(week))
     }
@@ -398,7 +400,7 @@ const getWeekRange = (weeks) => {
     reactionsByWeek.push(item);
     tagsArr.unshift({
       date: `${startWeekDay}-${endWeekDay}`,
-      x: `Week ${index + 1}`,
+      x: `${startWeekDay}-${endWeekDay}`,
       y: 0,
     });
     return {
@@ -409,3 +411,72 @@ const getWeekRange = (weeks) => {
   });
   return { weekRange, reactionsByWeek, tagsArr };
 }
+
+// This is used for parsing the tags data to have a similar look on reaction chart, this will be used for the tooltip on the Tags Chart.
+const reduceTagsData = (tags, type) => {
+  let updatedTags = {};
+  for (const [key, val] of Object.entries(tags)) {
+    let updatedTagsArray = [];
+    let tagsArray = val.data;
+    if (type === 'm') {
+      tagsArray = reverse(tagsArray);
+    }
+    tagsArray.reduce((previousValue, currentValue, currentIndex) => {
+      if (currentIndex % 2) {
+        switch (type) {
+          case 'd':
+            const itemDaily = {
+              date: `${currentValue.x}-${format(new Date(previousValue.x), 'dd')}`,
+              x: `${currentValue.x}-${format(new Date(previousValue.x), 'dd')}`,
+              y: previousValue.y + currentValue.y
+            }
+            updatedTagsArray.push(itemDaily);
+            break;
+          case 'w':
+            const itemWeekly = {
+              date: getDateRange(previousValue.date, currentValue.date),
+              x: getDateRange(previousValue.date, currentValue.date),
+              y: previousValue.y + currentValue.y
+            }
+            updatedTagsArray.push(itemWeekly);
+            break;
+          case 'm':
+            const itemMonthly = {
+              x: `${currentValue.x}/${previousValue.x}`,
+              y: previousValue.y + currentValue.y
+            }
+            updatedTagsArray.push(itemMonthly);
+            break;
+        }
+      }
+      return currentValue;
+    });
+    if (type === 'm') {
+      updatedTagsArray = reverse(updatedTagsArray);
+    }
+    updatedTags[key] = {
+      total: val.total,
+      data: updatedTagsArray
+    }
+  }
+  return updatedTags;
+}
+
+const getDateRange = (previousRange, currentRange) => {
+  const [currentFrom, currentTo] = currentRange.split("-");
+  const [previousFrom, previousTo] = previousRange.split("-");
+  const prevDay = previousFrom.replace(/[^0-9]/g, "");
+  const currDay = currentTo.replace(/[^0-9]/g, "");
+  let prevMonth = previousRange.replace(/[^a-zA-Z]/g, "");
+  let currMonth = currentRange.replace(/[^a-zA-Z]/g, "");
+  prevMonth = prevMonth.length > 3 ? prevMonth.slice(0, 3) : prevMonth
+  currMonth = currMonth.length > 3 ? currMonth.slice(3) : currMonth
+  /*
+    Check if the the current range To date goes to next month
+    Ex. Jan 28-Feb 0
+  */
+  if (currMonth === prevMonth) {
+    return `${previousFrom}-${currentTo}`;
+  }
+  return `${prevMonth} ${prevDay}-${currMonth} ${currDay}`;
+};
