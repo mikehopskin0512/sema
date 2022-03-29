@@ -7,7 +7,7 @@ const { Types: { ObjectId } } = mongoose;
 
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
-  headline = null, imageUrl = null, overview = null, type = null, snapshots = [],
+  headline = null, imageUrl = null, overview = null, type = null, snapshots = [], title = null,
 }) => (
   {
     _id: new ObjectId(_id),
@@ -19,6 +19,7 @@ const structurePortfolio = ({
     identities,
     overview,
     type,
+    title,
     snapshots: snapshots.map(({ id: snapshot, sort }) => ({ id: new ObjectId(snapshot._id), sort })),
   }
 );
