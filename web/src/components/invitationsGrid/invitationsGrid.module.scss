@@ -3,6 +3,9 @@
   margin: auto;
 }
 
-.actionsHeader{
-  width: 500px;
+.actions-cell {
+  @media only screen and (max-width: 1407px) {
+    flex-wrap: wrap;
+  }
+  flex-wrap: nowrap;
 }

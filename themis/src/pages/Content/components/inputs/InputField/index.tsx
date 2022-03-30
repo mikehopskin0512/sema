@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './InputField.module.scss';
+// @ts-ignore
+import { getActiveThemeClass } from '../../../../../../utils/theme';
 
 interface IInputField {
   title: string,
@@ -21,7 +23,7 @@ const InputField = (
   }: IInputField,
 ) => (
   <div>
-    <p className={styles.title}>
+    <p className={`${styles[getActiveThemeClass()]} ${styles.title}`}>
       <b>
         {title}
         {isRequired && <span> *</span>}
@@ -29,14 +31,14 @@ const InputField = (
     </p>
     {isTextarea ? (
       <textarea
-        className={styles.input}
+        className={`${styles[getActiveThemeClass()]} ${styles.input}`}
         value={value}
         onInput={({ target }: React.ChangeEvent<HTMLTextAreaElement>) => onInput(target.value)}
         placeholder={placeholder}
       />
     ) : (
       <input
-        className={styles.input}
+        className={`${styles[getActiveThemeClass()]} ${styles.input}`}
         value={value}
         onInput={({ target }: React.ChangeEvent<HTMLInputElement>) => onInput(target.value)}
         placeholder={placeholder}

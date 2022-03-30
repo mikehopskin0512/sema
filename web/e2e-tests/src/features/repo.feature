@@ -12,7 +12,6 @@ Feature: Repo
       When I click on the element "repoListViewBtn"
       Then I expect that element "reposCards" becomes not displayed
       And  I expect that element "reposListRows" becomes displayed
-#        And I pause for 30000ms
       When I click on the element "repoCardViewBtn"
       Then I expect that element "reposCards" becomes displayed
       And  I expect that element "reposListRows" becomes not displayed
@@ -22,8 +21,7 @@ Feature: Repo
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
       When I click on the element "1stReposCard"
-#      Then I expect that element "reposDropDownList" becomes displayed
-      And  I expect that element "activityLogTabBtn" becomes displayed
+      Then I expect that element "activityLogTabBtn" becomes displayed
       And  I expect that element "codeStatsTabBtn" becomes displayed
       And  I expect that element "dateRangeFilter" becomes displayed
       And  I expect that element "fromFilter" becomes displayed
@@ -37,8 +35,8 @@ Feature: Repo
       And  I expect that element "smartCommentsIndicator" becomes displayed
       And  I expect that element "smartCommentersIndicator" becomes displayed
       And  I expect that element "semaUsersIndicator" becomes displayed
-#      And  I expect that element "commentsList" becomes displayed
-      And  I expect that element "noCommentsList" becomes displayed
+      And  I expect that element "commentsList" becomes displayed
+#      And  I expect that element "noCommentsList" becomes displayed
       And  I expect that element "snapshotBtn" becomes displayed
 
       And  I expect that element "codeStatsSummaries" becomes not displayed
@@ -54,10 +52,6 @@ Feature: Repo
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"
-#        Then I expect that element "reposDropDownList" becomes displayed
-
-#        When I click on the element "reposDropDownList"
-#        And  I click on the element "repoDropDownOption1"
         Then I expect that element "dateRangeFilter" becomes displayed
         When I click on the element "dateRangeFilter"
         Then I expect that element "last7DaysDateRange" becomes displayed
@@ -109,12 +103,11 @@ Feature: Repo
         And  I expect that element "smartCommentersIndicator" becomes displayed
         And  I expect that element "semaUsersIndicator" becomes displayed
         And  I expect that element "noCommentsList" becomes not displayed
-        And  I expect that element "snapshotBtn" becomes not displayed
 
         And  I expect that element "codeStatsSummaries" becomes displayed
         And  I expect that element "codeStatsTags" becomes displayed
-        And  I expect that element "codeStatsSummariesSnapshotBtn" becomes not displayed
-        And  I expect that element "codeStatsTagsSnapshotBtn" becomes not displayed
+        And  I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed
+        And  I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
 
         When I click on the element "searchFilterBtn"
         Then I expect that element "searchFilterInput" becomes displayed
@@ -124,10 +117,6 @@ Feature: Repo
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"
-#        Then I expect that element "reposDropDownList" becomes displayed
-
-#        When I click on the element "reposDropDownList"
-#        And  I click on the element "repoDropDownOption1"
         Then I expect that element "codeStatsTabBtn" becomes displayed
 
         When I click on the element "codeStatsTabBtn"
@@ -156,4 +145,21 @@ Feature: Repo
         And  I expect that element "codeStatsSummaries" becomes displayed
         And  I expect that element "codeStatsTags" becomes displayed
         And  I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed
-#        And  I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
+        And  I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
+
+    @admin  @PTA47
+    Scenario: Repo can be selected from dropdown menu
+        Then I expect that element "reposContainer" becomes displayed
+        And  I expect that element "reposCards" becomes displayed
+        When I click on the element "1stReposCard"
+        Then I expect that element "reposDropDownList" becomes displayed
+        When I click on the element "reposDropDownList"
+        Then I expect that element "scikitlearnRepoDropDownOption" becomes displayed
+
+        When I click on the element "scikitlearnRepoDropDownOption"
+        Then I expect that element "reposDropDownList" matches the text "scikit-learn"
+
+        When I click on the element "reposDropDownList"
+        Then I expect that element "astrobeeRepoDropDownOption" becomes displayed
+        When I click on the element "astrobeeRepoDropDownOption"
+        Then I expect that element "reposDropDownList" matches the text "astrobee"

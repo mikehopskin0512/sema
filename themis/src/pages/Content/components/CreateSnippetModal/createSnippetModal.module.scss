@@ -1,10 +1,12 @@
 @import '../../styles/colors.module';
+@import '../../styles/content.styles';
 
 .modal {
   padding: 40px;
   width: 800px;
-  background-color: $white-0;
+  background: var(--color-background-create-snippet-modal);
   border-radius: 4px;
+  border: 1px solid var(--color-border-create-snippet-modal);
 }
 
 .form-field {
@@ -17,7 +19,7 @@
 
 .title {
   margin: 0 !important;
-  color: $black-950;
+  color: var(--color-title-create-snippet-modal);
   font-size: 28px;
   line-height: 36px;
 }
