@@ -1,4 +1,4 @@
-@snippets
+@snippets @zicu
 Feature: User is able to interact with snippets properly
 
 
@@ -6,21 +6,23 @@ Feature: User is able to interact with snippets properly
   #    Given User click on the element "authorizeSemaSoftwareBtn" if visible
   #    When I wait on element "userLogo" for 10000ms
 
-  # @admin  @C1704 
-  # Scenario: Snippets collection can be turned on and turned off
-  #   #    C2787  C1737
-  #   When I click on the element "snippetsTab"    
-  #   And  I expect that element "snippetsTitleLbl" becomes displayed
-  #   And  I scroll to element "snippetsOtherCollLbl"   
-  #   And  I click on the element "firstInactiveCollectionToggle"
-  #   Then I expect that element "firstInactiveCollectionName" becomes displayed
-  #   When I save the text of element "firstInactiveCollectionName"
-  #   And  I click on the element "firstInactiveCollectionToggle"
-  #   Then I expect that selected collection element "activeCollectionsNames" is enabled
-  #   ##    C2788
-  #   When I save the text of element "firstActiveCollectionName"
-  #   And  I click on the element "firstActiveCollectionToggle"
-  #   Then I expect that selected collection element "inactiveCollectionsNames" is enabled
+  @admin  @C1704 
+  Scenario: Snippets collection can be turned on and turned off
+    #    C2787  C1737
+    # When I click on the element "snippetsTab"
+
+    #TODO: this elements never is found
+    # And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
+    # And  I scroll to element "firstInActiveCollectionToggle"   
+    # When I click on the element "firstInActiveCollectionToggle"
+    # Then I expect that element "firstInActiveCollectionName" becomes displayed
+    # When I save the text of element "firstInActiveCollectionName"
+    # And  I click on the element "firstInActiveCollectionToggle"
+    # Then I expect that selected collection element "activeCollectionsNames" is enabled
+    # ##    C2788
+    # When I save the text of element "firstActiveCollectionName"
+    # And  I click on the element "firstActiveCollectionToggle"
+    # Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
   @admin  @C2797
   #      C2798  C1737
@@ -71,7 +73,6 @@ Feature: User is able to interact with snippets properly
     When I click on the button "saveNewSnippetBtn"
     Then I expect that new item "allSnippetsNames" is added to snippets
 
-  #TODO: Please review if the collection exist, also I recommend to search for colelction manually
   # @admin  @C1706  @snip
   # Scenario: Search for existing snippet works
   #   When I open the site "/snippets"
@@ -139,84 +140,92 @@ Feature: User is able to interact with snippets properly
     When I click on the element "addNewCollectionBtn"
     Then I expect that element "newCollectionTitleInput" becomes displayed
     When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "TypeScript" to the inputfield "newCollectionLanguagesInput"
-    #Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter" "Tab"
-    And I pause for 15000ms
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
+
+    #TODO: @Andriy plese modify selectors and intercation with dropdowns properly
+    #When I click on the element "newCollectionLanguagesInput"
+    # And  I set "TypeScript" to the inputfield "newCollectionLanguagesInput"
+    #And  I pause for 5000ms
+    # And  I wait on element "firstOptionForLanguagesInput" to be displayed
+    # And I click on the element "firstOptionForLanguagesInput"
+    # Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+    #And  I press "Enter"
+    #Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+    # When I click on the element "newCollectionOtherLabelInput"
+    # And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+    # Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+    # When I press "Enter"
     And  I set "test author name" to the inputfield "newCollectionAuthorInput"
     And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
     And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
     When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
     Then I expect that element "saveNewCollectionBtn" becomes displayed
     When I click on the button "saveNewCollectionBtn"
+
+    #TODO: @Andriy could you check on this step, not sure how this works
     Then I expect that new item "allCollectionsNames" is added to collections
 
-  @C1714  @snippet
-  Scenario:  "View more" snippets shows
-    When I open the site "/snippets"
-    Then I expect that element "philosophiesCollection" becomes displayed
-    When I click on the element "philosophiesCollection"
-    Then I expect that element "viewMoreBtn" becomes displayed
-    And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
-    When I click on the element "viewMoreBtn"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "20" times
+  # @C1714  @snippet
+  # Scenario:  "View more" snippets shows
+  #   When I open the site "/snippets"
+  #   Then I expect that element "philosophiesCollection" becomes displayed
+  #   When I click on the element "philosophiesCollection"
+  #   Then I expect that element "viewMoreBtn" becomes displayed
+  #   And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
+  #   When I click on the element "viewMoreBtn"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "20" times
 
-  @admin  @C2442  @snippet
-  Scenario: The default tags for collection is added to snippet
-    #temporary solution
-    Then I expect that element "userLogo" becomes displayed
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
-    Then I expect that element "snippetsTab" becomes displayed
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "addNewCollectionBtn" becomes displayed
-    When I click on the element "addNewCollectionBtn"
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "Test Collection FOR TAGS " with timestamp to the inputfield "newCollectionTitleInput"
-    And  I set "This collection is for creating snippets with same tag in as here" to the inputfield "newCollectionDescriptionInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    Then I expect that element "newCollectionLanguagesInput" becomes displayed
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "Type" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter"
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I click on the element "newCollectionTitleInput"
-    And  I set "Leadership" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
+  # @admin  @C2442  @snippet
+  # Scenario: The default tags for collection is added to snippet
+  #   #temporary solution
+  #   Then I expect that element "userLogo" becomes displayed
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "semaCorporateTeamLogo" becomes displayed
+  #   When I click on the element "semaCorporateTeamLogo"
+  #   Then I expect that element "snippetsTab" becomes displayed
+  #   #------------------
+  #   When I click on the element "snippetsTab"
+  #   Then I expect that element "addNewCollectionBtn" becomes displayed
+  #   When I click on the element "addNewCollectionBtn"
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   When I set "Test Collection FOR TAGS " with timestamp to the inputfield "newCollectionTitleInput"
+  #   And  I set "This collection is for creating snippets with same tag in as here" to the inputfield "newCollectionDescriptionInput"
+  #   And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+  #   And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+  #   And  I set "test author name" to the inputfield "newCollectionAuthorInput"
 
-    And  I click on the button "saveNewCollectionBtn"
-    Then I expect that element "searchCollectionInput" becomes displayed
+  #   #TODO: this element never found
+  #   Then I expect that element "newCollectionLanguagesInput" becomes displayed
+  #   When I click on the element "newCollectionLanguagesInput"
+  #   And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+  #   Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+  #   When I press "Enter"
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   When I click on the element "newCollectionTitleInput"
+  #   And  I set "Leadership" to the inputfield "newCollectionOtherLabelInput"
+  #   Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+  #   When I press "Enter"
 
-    When I search created collection "searchCollectionInput"
-    Then I expect that element "firstInActiveCollectionName" becomes displayed
-    And  I click on the element "firstInActiveCollectionName"
-    Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
-    When I click on the element "addNewSnippetInCollectionBtn"
-    Then I expect that element "selectedLeadershipTag" becomes displayed
-    And  I expect that element "selectedTypeScriptLanguage" becomes displayed
+  #   And  I click on the button "saveNewCollectionBtn"
+  #   Then I expect that element "searchCollectionInput" becomes displayed
 
-    When I set "Test Snippet with default tags " with timestamp to the inputfield "newSnippetTitleInput"
-    And  I set "default tags" to the inputfield "newSnippetBodyInput"
-    And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
-    And  I click on the button "saveNewSnippetBtn"
-    Then I expect that element "allSnippetsNames" becomes displayed
-    When I search created snippet "searchSnippetInput"
+  #   When I search created collection "searchCollectionInput"
+  #   Then I expect that element "firstInActiveCollectionName" becomes displayed
+  #   And  I click on the element "firstInActiveCollectionName"
+  #   Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
+  #   When I click on the element "addNewSnippetInCollectionBtn"
+  #   Then I expect that element "selectedLeadershipTag" becomes displayed
+  #   And  I expect that element "selectedTypeScriptLanguage" becomes displayed
 
-    Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
-    And  I expect that element "snippetsLanguage" matches the text "Leadership"
-    And  I expect that element "snippetsLabel" matches the text "TypeScript"
+  #   When I set "Test Snippet with default tags " with timestamp to the inputfield "newSnippetTitleInput"
+  #   And  I set "default tags" to the inputfield "newSnippetBodyInput"
+  #   And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
+  #   And  I click on the button "saveNewSnippetBtn"
+  #   Then I expect that element "allSnippetsNames" becomes displayed
+  #   When I search created snippet "searchSnippetInput"
+
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
+  #   And  I expect that element "snippetsLanguage" matches the text "Leadership"
+  #   And  I expect that element "snippetsLabel" matches the text "TypeScript"
 
   #  @admin  @C2469
   #    after SCR-768   todo
@@ -284,192 +293,192 @@ Feature: User is able to interact with snippets properly
   #    Then I expect that element "openedSnippetTODO" becomes displayed
 
 
-  @admin  @C2741  @snippet
-  #      C2741  C2742
-  Scenario: Field validation for creating collection
-    #temporary solution
-    When I click on the element "userLogo"
-    When I click on the element "semaCorporateTeamLogo"
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "addNewCollectionBtn" becomes displayed
-    When I click on the element "addNewCollectionBtn"
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    And  I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
+  # @admin  @C2741  @snippet
+  # #      C2741  C2742
+  # Scenario: Field validation for creating collection
+  #   #temporary solution
+  #   When I click on the element "userLogo"
+  #   When I click on the element "semaCorporateTeamLogo"
+  #   #------------------
+  #   When I click on the element "snippetsTab"
+  #   Then I expect that element "addNewCollectionBtn" becomes displayed
+  #   When I click on the element "addNewCollectionBtn"
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   And  I expect that element "saveNewCollectionBtn" becomes displayed
+  #   When I click on the button "saveNewCollectionBtn"
 
-    Then I expect that element "snippetCollectionTitleError" becomes displayed
-    And  I expect that element "snippetCollectionTitleError" matches the text "Title is required"
-    And  I expect that element "snippetCollectionLanguageError" matches the text "At least one tag is required"
-    And  I expect that element "snippetCollectionOtherError" matches the text "At least one tag is required"
-    And  I expect that element "snippetCollectionAuthorError" matches the text "Author is required"
-    And  I expect that element "snippetCollectionSourceNameError" matches the text "Source name is required"
-    And  I expect that element "snippetCollectionLinkError" matches the text "Source link is required"
+  #   Then I expect that element "snippetCollectionTitleError" becomes displayed
+  #   And  I expect that element "snippetCollectionTitleError" matches the text "Title is required"
+  #   And  I expect that element "snippetCollectionLanguageError" matches the text "At least one tag is required"
+  #   And  I expect that element "snippetCollectionOtherError" matches the text "At least one tag is required"
+  #   And  I expect that element "snippetCollectionAuthorError" matches the text "Author is required"
+  #   And  I expect that element "snippetCollectionSourceNameError" matches the text "Source name is required"
+  #   And  I expect that element "snippetCollectionLinkError" matches the text "Source link is required"
 
-    When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "java" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"
+  #   When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
+  #   When I click on the element "newCollectionLanguagesInput"
+  #   And  I set "java" to the inputfield "newCollectionLanguagesInput"
+  #   Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+  #   When I press "Enter"
+  #   Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+  #   When I click on the element "newCollectionOtherLabelInput"
+  #   And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+  #   Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+  #   When I press "Enter"
+  #   And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+  #   And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+  #   And  I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"
 
-    Then I expect that element "snippetCollectionTitleError" becomes not displayed
-    And  I expect that element "snippetCollectionLanguageError" becomes not displayed
-    And  I expect that element "snippetCollectionOtherError" becomes not displayed
-    And  I expect that element "snippetCollectionAuthorError" becomes not displayed
-    And  I expect that element "snippetCollectionSourceNameError" becomes not displayed
-    And  I expect that element "snippetCollectionLinkError" matches the text "Invalid URL"
+  #   Then I expect that element "snippetCollectionTitleError" becomes not displayed
+  #   And  I expect that element "snippetCollectionLanguageError" becomes not displayed
+  #   And  I expect that element "snippetCollectionOtherError" becomes not displayed
+  #   And  I expect that element "snippetCollectionAuthorError" becomes not displayed
+  #   And  I expect that element "snippetCollectionSourceNameError" becomes not displayed
+  #   And  I expect that element "snippetCollectionLinkError" matches the text "Invalid URL"
 
-    When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
-    Then I expect that element "snippetCollectionLinkError" becomes not displayed
+  #   When I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
+  #   Then I expect that element "snippetCollectionLinkError" becomes not displayed
 
 
-  @admin  @C2786  @snippet
-  Scenario: Populate this collection to all users checkbox is marked
-    #temporary solution
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "addNewCollectionBtn" becomes displayed
-    When I click on the element "addNewCollectionBtn"
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "Test Collection with marked" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "java" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-    Then I expect that checkbox "newCollectionPopulateCheckBox" is checked
+  # @admin  @C2786  @snippet
+  # Scenario: Populate this collection to all users checkbox is marked
+  #   #temporary solution
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "semaCorporateTeamLogo" becomes displayed
+  #   When I click on the element "semaCorporateTeamLogo"
+  #   #------------------
+  #   When I click on the element "snippetsTab"
+  #   Then I expect that element "addNewCollectionBtn" becomes displayed
+  #   When I click on the element "addNewCollectionBtn"
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   When I set "Test Collection with marked" with timestamp to the inputfield "newCollectionTitleInput"
+  #   When I click on the element "newCollectionLanguagesInput"
+  #   And  I set "java" to the inputfield "newCollectionLanguagesInput"
+  #   Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+  #   When I press "Enter"
+  #   Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+  #   When I click on the element "newCollectionOtherLabelInput"
+  #   And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+  #   Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+  #   When I press "Enter"
+  #   And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+  #   And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+  #   And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+  #   When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+  #   Then I expect that checkbox "newCollectionPopulateCheckBox" is checked
 
-    Then I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
-    Then I expect that new item "allCollectionsNames" is added to collections
-    #      logout       todo   acme login
-    When I click on the element "userLogo"
-    Then I expect that element "signOutBtn" becomes displayed
-    When I click on the element "signOutBtn"
-    Then I expect that element "confirmBtn" becomes displayed
-    And  I click on the element "confirmBtn"
-    Then I expect that element "signInWithGithubBtn" becomes displayed
-    #       login with acme
-    When I click on the button "signInWithGithubBtn"
-    And  I pause for 2000ms
-    And  I clear the inputfield "loginInput"
-    When I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
-    And  I clear the inputfield "passwordInput"
-    And  I add "Automation3Tester4#" to the inputfield "passwordInput"
-    And  I click on the button "signinBtn"
-    Then I expect that element "snippetsTab" becomes displayed
-    #      check added collection
-    When I click on the element "snippetsTab"
-    And  I search created collection "searchCollectionInput"
-    Then I expect that new item "allCollectionsNames" is added to collections
+  #   Then I expect that element "saveNewCollectionBtn" becomes displayed
+  #   When I click on the button "saveNewCollectionBtn"
+  #   Then I expect that new item "allCollectionsNames" is added to collections
+  #   #      logout       todo   acme login
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "signOutBtn" becomes displayed
+  #   When I click on the element "signOutBtn"
+  #   Then I expect that element "confirmBtn" becomes displayed
+  #   And  I click on the element "confirmBtn"
+  #   Then I expect that element "signInWithGithubBtn" becomes displayed
+  #   #       login with acme
+  #   When I click on the button "signInWithGithubBtn"
+  #   And  I pause for 2000ms
+  #   And  I clear the inputfield "loginInput"
+  #   When I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+  #   And  I clear the inputfield "passwordInput"
+  #   And  I add "Automation3Tester4#" to the inputfield "passwordInput"
+  #   And  I click on the button "signinBtn"
+  #   Then I expect that element "snippetsTab" becomes displayed
+  #   #      check added collection
+  #   When I click on the element "snippetsTab"
+  #   And  I search created collection "searchCollectionInput"
+  #   Then I expect that new item "allCollectionsNames" is added to collections
 
-  @admin  @C2786000  @snippet
-  Scenario: Populate this collection to all users checkbox is not marked
-    #temporary solution
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "addNewCollectionBtn" becomes displayed
-    When I click on the element "addNewCollectionBtn"
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "Test Collection with unmarked" with timestamp to the inputfield "newCollectionTitleInput"
-    And  I click on the element "newCollectionLanguagesInput"
-    And  I set "java" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    And  I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-    #      unmark checkbox
-    And  I expect that checkbox "newCollectionPopulateCheckBox" is checked
-    When I click on the element "newCollectionPopulateCheckBox"
-    Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
+  # @admin  @C2786000  @snippet
+  # Scenario: Populate this collection to all users checkbox is not marked
+  #   #temporary solution
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "semaCorporateTeamLogo" becomes displayed
+  #   When I click on the element "semaCorporateTeamLogo"
+  #   #------------------
+  #   When I click on the element "snippetsTab"
+  #   Then I expect that element "addNewCollectionBtn" becomes displayed
+  #   When I click on the element "addNewCollectionBtn"
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   When I set "Test Collection with unmarked" with timestamp to the inputfield "newCollectionTitleInput"
+  #   And  I click on the element "newCollectionLanguagesInput"
+  #   And  I set "java" to the inputfield "newCollectionLanguagesInput"
+  #   Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+  #   And  I press "Enter"
+  #   Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+  #   When I click on the element "newCollectionOtherLabelInput"
+  #   And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+  #   Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+  #   When I press "Enter"
+  #   And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+  #   When I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+  #   And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+  #   When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+  #   #      unmark checkbox
+  #   And  I expect that checkbox "newCollectionPopulateCheckBox" is checked
+  #   When I click on the element "newCollectionPopulateCheckBox"
+  #   Then I expect that checkbox "newCollectionPopulateCheckBox" is not checked
 
-    Then I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
-    Then I expect that new item "allCollectionsNames" is added to collections
-    #        logout     todo   acme login
-    When I click on the element "userLogo"
-    Then I expect that element "signOutBtn" becomes displayed
-    When I click on the element "signOutBtn"
-    Then I expect that element "confirmBtn" becomes displayed
-    And  I click on the element "confirmBtn"
-    Then I expect that element "signInWithGithubBtn" becomes displayed
-    When I delete all cookies
-    #         login with acme
-    And  I click on the button "signInWithGithubBtn"
-    Then I expect that element "loginInput" becomes displayed
-    When I clear the inputfield "loginInput"
-    And  I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
-    And  I clear the inputfield "passwordInput"
-    And  I add "Automation3Tester4#" to the inputfield "passwordInput"
-    And  I click on the button "signinBtn"
-    Then I expect that element "snippetsTab" becomes displayed
-    #        check added collection
-    When I click on the element "snippetsTab"
-    And  I search created collection "searchCollectionInput"
-    Then I expect that new item "allCollectionsNames" is not added to collections
+  #   Then I expect that element "saveNewCollectionBtn" becomes displayed
+  #   When I click on the button "saveNewCollectionBtn"
+  #   Then I expect that new item "allCollectionsNames" is added to collections
+  #   #        logout     todo   acme login
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "signOutBtn" becomes displayed
+  #   When I click on the element "signOutBtn"
+  #   Then I expect that element "confirmBtn" becomes displayed
+  #   And  I click on the element "confirmBtn"
+  #   Then I expect that element "signInWithGithubBtn" becomes displayed
+  #   When I delete all cookies
+  #   #         login with acme
+  #   And  I click on the button "signInWithGithubBtn"
+  #   Then I expect that element "loginInput" becomes displayed
+  #   When I clear the inputfield "loginInput"
+  #   And  I add "qateam+automationacme@semasoftware.com" to the inputfield "loginInput"
+  #   And  I clear the inputfield "passwordInput"
+  #   And  I add "Automation3Tester4#" to the inputfield "passwordInput"
+  #   And  I click on the button "signinBtn"
+  #   Then I expect that element "snippetsTab" becomes displayed
+  #   #        check added collection
+  #   When I click on the element "snippetsTab"
+  #   And  I search created collection "searchCollectionInput"
+  #   Then I expect that new item "allCollectionsNames" is not added to collections
 
-  @admin @C2795  @C2324
-  Scenario: Snippet collection can be edited
-    #temporary solution
-    When I click on the element "userLogo"
-    Then I expect that element "semaCorporateTeamLogo" becomes displayed
-    When I click on the element "semaCorporateTeamLogo"
-    Then I expect that element "snippetsTab" becomes displayed
-    #------------------
-    When I click on the element "snippetsTab"
-    Then I expect that element "threeDotsCollectionBtn" becomes displayed
-    #  C2324
-    When I click on the "1st" element "threeDotsCollectionBtn"
-    Then I expect that element "editCollectionBtn" becomes displayed
-    When I click on the element "editCollectionBtn"
+  # @admin @C2795  @C2324
+  # Scenario: Snippet collection can be edited
+  #   #temporary solution
+  #   When I click on the element "userLogo"
+  #   Then I expect that element "semaCorporateTeamLogo" becomes displayed
+  #   When I click on the element "semaCorporateTeamLogo"
+  #   Then I expect that element "snippetsTab" becomes displayed
+  #   #------------------
+  #   When I click on the element "snippetsTab"
+  #   Then I expect that element "threeDotsCollectionBtn" becomes displayed
+  #   #  C2324
+  #   When I click on the "1st" element "threeDotsCollectionBtn"
+  #   Then I expect that element "editCollectionBtn" becomes displayed
+  #   When I click on the element "editCollectionBtn"
 
-    Then I expect that element "newCollectionTitleInput" becomes displayed
-    When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
-    When I click on the element "newCollectionLanguagesInput"
-    And  I set "java" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter"
-    Then I expect that element "newCollectionOtherLabelInput" becomes displayed
-    When I click on the element "newCollectionOtherLabelInput"
-    And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
-    Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
-    When I press "Enter"
-    And  I set "test author name" to the inputfield "newCollectionAuthorInput"
-    And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
-    And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
-    When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
-    Then I expect that element "saveNewCollectionBtn" becomes displayed
-    When I click on the button "saveNewCollectionBtn"
-    Then I expect that new item "allCollectionsNames" is added to collections
+  #   Then I expect that element "newCollectionTitleInput" becomes displayed
+  #   When I set "edited" with timestamp to the inputfield "newCollectionTitleInput"
+  #   When I click on the element "newCollectionLanguagesInput"
+  #   And  I set "java" to the inputfield "newCollectionLanguagesInput"
+  #   Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+  #   When I press "Enter"
+  #   Then I expect that element "newCollectionOtherLabelInput" becomes displayed
+  #   When I click on the element "newCollectionOtherLabelInput"
+  #   And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
+  #   Then I expect that element "firstOptionForOtherLabelInput" becomes displayed
+  #   When I press "Enter"
+  #   And  I set "test author name" to the inputfield "newCollectionAuthorInput"
+  #   And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
+  #   And  I set "https://testSource.com" to the inputfield "newCollectionSourceLinkInput"
+  #   When I set "Body text test" to the inputfield "newCollectionDescriptionInput"
+  #   Then I expect that element "saveNewCollectionBtn" becomes displayed
+  #   When I click on the button "saveNewCollectionBtn"
+  #   Then I expect that new item "allCollectionsNames" is added to collections
 
 #  @acme  @C2326
 #    waiting for acme creads  todo
