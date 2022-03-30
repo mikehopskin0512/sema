@@ -131,6 +131,30 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REQUEST_REMOVE_PORTFOLIO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_REMOVE_PORTFOLIO_SUCCESS: {
+    const { portfolios } = state.data;
+    const newPortfolios = portfolios.filter(portfolio => portfolio._id !== action.portfolioId);
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolio: {},
+        portfolios: newPortfolios,
+      },
+    };
+  }
+  case types.REQUEST_REMOVE_PORTFOLIO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }

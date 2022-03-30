@@ -1,34 +1,53 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon, PlusIcon, ShareIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
 import Tooltip from '../../../../components/Tooltip';
-import { PATHS, SEMA_APP_URL } from '../../../../utils/constants';
+import { ALERT_TYPES, PATHS, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../../utils/constants';
 import DeleteModal from '../../../../components/snapshots/deleteModal';
+import { alertOperations } from '../../../../state/features/alerts';
+import { portfoliosOperations } from '../../../../state/features/portfolios';
+import Toaster from '../../../../components/toaster';
+
+const { triggerAlert, clearAlert } = alertOperations;
+const { removePortfolio } = portfoliosOperations;
 
 const portfolioList = () => {
-  const { portfoliosState } = useSelector((state) => state);
+  const dispatch = useDispatch();
+  const { portfoliosState, alertsState, authState } = useSelector((state) => state);
   const {
     data: { portfolios },
   } = portfoliosState;
+  const { showAlert, alertType, alertLabel } = alertsState;
+  const { token } = authState;
   const [copiedToClipboard, setCopiedToClipboard] = useState('');
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
+  const [activePortfolioId, setActivePortfolioId] = useState(null);
   const addPortfolio = () => {};
   const copyToClipboard = (id) => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
     setCopiedToClipboard(id);
   };
 
-  const onDeletePortfolio = async () => {
-    // const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    // if (payload.status === 200) {
-    //   toggleDeleteModal(false);
-    // }
+  const onDeletePortfolio = async (id) => {
+    const payload = await dispatch(removePortfolio(id, token));
+    toggleDeleteModal(false);
+    if (payload.status === RESPONSE_STATUSES.SUCCESS) {
+      dispatch(triggerAlert(`Portfolio was successfully deleted`, ALERT_TYPES.SUCCESS));
+    } else {
+      dispatch(triggerAlert(`Portfolio was not deleted`, ALERT_TYPES.ERROR));
+    }
   };
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
 
   const tableData = portfolios.map((portfolio, i) => ({
     // TODO: will be fixed in portfolio name ticket
@@ -104,7 +123,13 @@ const portfolioList = () => {
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
-                { label: 'Delete', onClick: () => toggleDeleteModal(true) },
+                { 
+                  label: 'Delete', 
+                  onClick: () => {
+                    toggleDeleteModal(true);
+                    setActivePortfolioId(row.values.id);
+                  }
+                },
               ]}
               trigger={
                 <div className="is-clickable is-flex mr-24">
@@ -140,8 +165,9 @@ const portfolioList = () => {
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
-        onSubmit={() => onDeletePortfolio()}
+        onSubmit={() => onDeletePortfolio(activePortfolioId)}
       />
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} position="top-right" duration={3000}/>
     </div>
   );
 };

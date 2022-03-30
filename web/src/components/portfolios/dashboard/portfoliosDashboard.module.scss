@@ -32,9 +32,6 @@
 }
 
 .edit-icon {
-  position: absolute;
-  top: 0px;
-  right: 0px;
   &:hover {
     background-color: $gray-100;
     svg {
@@ -44,6 +41,12 @@
   svg {
     color: $gray-600;
   }
+}
+
+.dropdownContainer {
+  position: absolute;
+  top: 5px;
+  right: 0px;
 }
 
 .title {

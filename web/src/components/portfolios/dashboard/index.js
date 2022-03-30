@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { GithubIcon, EditIcon, OptionsIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
-import { DEFAULT_AVATAR } from '../../../utils/constants';
+import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, RESPONSE_STATUSES } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
@@ -15,8 +15,11 @@ import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
+import router from 'next/router';
+import { alertOperations } from '../../../state/features/alerts';
 
-const { updatePortfolio } = portfoliosOperations;
+const { updatePortfolio, removePortfolio } = portfoliosOperations;
+const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isPublic }) => {
   const dispatch = useDispatch();
@@ -63,7 +66,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
 
       body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
-      if (payload.status === 200) {
+      if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
         setTitleModalOpen(false);
         // We might need to change this one in the future if portfolio dashboard handles multiple portfolio
@@ -73,10 +76,14 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
   };
 
   const onDeletePortfolio = async () => {
-    // const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    // if (payload.status === 200) {
-    //   toggleDeleteModal(false);
-    // }
+    const payload = await dispatch(removePortfolio(portfolio._id, token));
+    toggleDeleteModal(false);
+    await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
+    if (payload.status === RESPONSE_STATUSES.SUCCESS) {
+      dispatch(triggerAlert(`Portfolio was successfully deleted`, ALERT_TYPES.SUCCESS));
+    } else {
+      dispatch(triggerAlert(`Portfolio was not deleted`, ALERT_TYPES.ERROR));
+    }
   };
 
   useEffect(() => {
@@ -108,17 +115,17 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
       />
       <div className={clsx('has-background-white mb-10', styles.title)}>
         <div className="container py-20">
-          <div className="is-relative mx-10">
+          <div className="is-relative is-flex mx-10">
             <div className="is-size-4 has-text-weight-bold">{user.title}</div>
             <div>
               {
                 isPortfolioOwner() && (
-                  <EditIcon className={clsx(styles['edit-icon'], 'is-clickable')} onClick={() => setTitleModalOpen(true)} />
+                  <EditIcon className={clsx(styles['edit-icon'], 'is-clickable mt-5 ml-20')} onClick={() => setTitleModalOpen(true)} />
                 )
               }
             </div>
-            <div className="is-relative is-flex">
-            <DropDownMenu
+            <div className={styles['dropdownContainer']}>
+              <DropDownMenu
                 isRight
                 options={[
                   {
@@ -131,7 +138,7 @@ const PortfolioDashboard = ({ portfolio, isPublic }) => {
                   },
                 ]}
                 trigger={
-                  <div className="is-clickable" style={{ position: 'absolute', top: 0, right: 0}}>
+                  <div className="is-clickable">
                     <OptionsIcon />
                   </div>
                 }

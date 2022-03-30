@@ -69,7 +69,7 @@ export default (app, passport) => {
       await Promise.all(deletedPortfolio.snapshots.map(async (snapshot) => {
         await removePortfolioFromSnapshot(snapshot.id, portfolioId);
       }));
-      return res.status(200).send(deletedPortfolio);
+      return res.status(200).send({});
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
