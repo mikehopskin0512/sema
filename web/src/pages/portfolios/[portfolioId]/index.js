@@ -41,9 +41,7 @@ const PublicPortfolio = () => {
     <>
       <div className="has-background-gray-200 hero">
         <Helmet {...PortfolioHelmet} />
-        <div className="hero-body pb-300 mx-25">
-          <PortfolioDashboard portfolio={portfolio} isPublic />
-        </div>
+        <PortfolioDashboard portfolio={portfolio} isPublic />
       </div>
     </>
   );

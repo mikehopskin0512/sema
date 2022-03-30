@@ -46,6 +46,12 @@
   }
 }
 
+.title {
+  border-top: 1px solid $gray-300;
+  border-bottom: 1px solid $gray-300;
+  min-height: 75px;
+}
+
 .snaps-container {
   .chart-wrap {
     @media only screen and (min-width: 1440px) {

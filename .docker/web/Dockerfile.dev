@@ -5,9 +5,14 @@ RUN apk add --update --no-cache \
     make~=4.2 \
     g++~=9.3
 
+WORKDIR /usr/adonis 
+COPY  ./adonis /usr/adonis
+RUN npm ci 
+RUN npm run build
+
 WORKDIR /usr/app
-COPY ./.env ./
-COPY ./package*.json ./
+COPY ./web/.env ./
+COPY ./web/package*.json ./
 
 ENV PATH /usr/app/node_modules/.bin:$PATH
 ENV NODE_ENV development
