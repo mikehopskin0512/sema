@@ -92,10 +92,13 @@
     "allTimeDateRange"              : "//a[text()='All time']",
 
     "########## SNIPPETS LOCATORS #############" : "",
+    "snippetsTitleLbl"              : "p=Snippets",
+    "snippetsOtherCollLbl"          : "p*=Other Collections",
+
     "collectionArea"                : "//div[@id='collectionBody']",
     "firstInActiveCollectionName"   : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]/../..//p[contains(@class,'pr-10')]",
     "firstActiveCollectionName"     : "//div[contains(@class,'is-clickable')][1]//input[@checked]/../..//p[contains(@class,'pr-10')]",
-    "firstInActiveCollectionToggle" : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]",
+    "firstInactiveCollectionToggle" : "//div[contains(@class,'is-clickable')][1]//input[not(@checked)]",
     "firstActiveCollectionToggle"   : "//div[contains(@class,'is-clickable')][1]//input[@checked]",
     "createdTestCollectionToggle"   : "//p[text()='Test Collection']/following-sibling::div/input[@checked]",
 
@@ -124,7 +127,8 @@
     "selectedTypeScriptLanguage"    : "//div[@class='control']//div[text()='TypeScript']",
 
     "addNewCollectionBtn"           : "//a[@href='/snippets/add']/button",
-    "newCollectionTitleInput"       : "//input[@name='name']",
+    "addSnippetCollectionTitle"     : "p=Add a Snippet Collection",
+    "newCollectionTitleInput"       : "//label[text()='Snippet Collection Title']/following-sibling::div/input",
     "newCollectionDescriptionInput" : "//textarea[@name='description']",
     "newCollectionSourceNameInput"  : "//input[@name='sourceName']",
     "newCollectionSourceLinkInput"  : "//input[@name='sourceLink']",

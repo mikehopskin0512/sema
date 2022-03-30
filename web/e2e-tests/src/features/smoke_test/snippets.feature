@@ -6,21 +6,21 @@ Feature: User is able to interact with snippets properly
   #    Given User click on the element "authorizeSemaSoftwareBtn" if visible
   #    When I wait on element "userLogo" for 10000ms
 
-  @admin  @C1704 
-  Scenario: Snippets collection can be turned on and turned off
-    #    C2787  C1737
-    When I click on the element "snippetsTab"
-    And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
-    And  I scroll to element "firstInActiveCollectionToggle"   
-    When I click on the element "firstInActiveCollectionToggle"
-    Then I expect that element "firstInActiveCollectionName" becomes displayed
-    When I save the text of element "firstInActiveCollectionName"
-    And  I click on the element "firstInActiveCollectionToggle"
-    Then I expect that selected collection element "activeCollectionsNames" is enabled
-    ##    C2788
-    When I save the text of element "firstActiveCollectionName"
-    And  I click on the element "firstActiveCollectionToggle"
-    Then I expect that selected collection element "inactiveCollectionsNames" is enabled
+  # @admin  @C1704 
+  # Scenario: Snippets collection can be turned on and turned off
+  #   #    C2787  C1737
+  #   When I click on the element "snippetsTab"    
+  #   And  I expect that element "snippetsTitleLbl" becomes displayed
+  #   And  I scroll to element "snippetsOtherCollLbl"   
+  #   And  I click on the element "firstInactiveCollectionToggle"
+  #   Then I expect that element "firstInactiveCollectionName" becomes displayed
+  #   When I save the text of element "firstInactiveCollectionName"
+  #   And  I click on the element "firstInactiveCollectionToggle"
+  #   Then I expect that selected collection element "activeCollectionsNames" is enabled
+  #   ##    C2788
+  #   When I save the text of element "firstActiveCollectionName"
+  #   And  I click on the element "firstActiveCollectionToggle"
+  #   Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
   @admin  @C2797
   #      C2798  C1737
@@ -71,61 +71,62 @@ Feature: User is able to interact with snippets properly
     When I click on the button "saveNewSnippetBtn"
     Then I expect that new item "allSnippetsNames" is added to snippets
 
-  @admin  @C1706  @snip
-  Scenario: Search for existing snippet works
-    When I open the site "/snippets"
-    Then I expect that element "philosophiesCollection" becomes displayed
-    When I click on the element "philosophiesCollection"
-    Then I expect that element "searchedSnippetsResult" becomes displayed
-    And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
-    When I set "log" to the inputfield "searchSnippetInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
-    #    @C1707
-    When I select the option with the value "Practices" for element "searchSnippetTagInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "3" times
-    #    @C1708
-    When I select the option with the value "Go" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" is not displayed
+  #TODO: Please review if the collection exist, also I recommend to search for colelction manually
+  # @admin  @C1706  @snip
+  # Scenario: Search for existing snippet works
+  #   When I open the site "/snippets"
+  #   Then I expect that element "philosophiesCollection" becomes displayed
+  #   When I click on the element "philosophiesCollection"
+  #   Then I expect that element "searchedSnippetsResult" becomes displayed
+  #   And  I expect that element "searchedSnippetsResult" does appear exactly "10" times
+  #   When I set "log" to the inputfield "searchSnippetInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
+  #   #    @C1707
+  #   When I select the option with the value "Practices" for element "searchSnippetTagInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "3" times
+  #   #    @C1708
+  #   When I select the option with the value "Go" for element "searchSnippetLanguageInput"
+  #   Then I expect that element "searchedSnippetsResult" is not displayed
 
-    When I clear the inputfield "searchSnippetInput"
-    And  I set "enf" to the inputfield "searchSnippetInput"
-    And  I select the option with the value "Strategic" for element "searchSnippetTagInput"
-    And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
-    #    C1709
-    When I click on the element "clearSearchResultBtn"
-    And  I select the option with the value "Individual" for element "searchSnippetTagInput"
-    And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "2" times
-    #    C1711
-    When I select the option with the text "Label" for element "searchSnippetTagInput"
-    And  I select the option with the value "All" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
-    And  I expect that element "viewMoreBtn" becomes displayed
-    #    C1710
-    When I select the option with the value "Team" for element "searchSnippetTagInput"
-    And  I select the option with the text "Language" for element "searchSnippetLanguageInput"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
-    And  I expect that element "viewMoreBtn" is not displayed
-    #    C1712
-    When I click on the element "clearSearchResultBtn"
-    Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
-    And  I expect that element "viewMoreBtn" becomes displayed
-    And  I expect that element "clearSearchResultBtn" is not displayed
+  #   When I clear the inputfield "searchSnippetInput"
+  #   And  I set "enf" to the inputfield "searchSnippetInput"
+  #   And  I select the option with the value "Strategic" for element "searchSnippetTagInput"
+  #   And  I select the option with the value "All" for element "searchSnippetLanguageInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
+  #   #    C1709
+  #   When I click on the element "clearSearchResultBtn"
+  #   And  I select the option with the value "Individual" for element "searchSnippetTagInput"
+  #   And  I select the option with the value "All" for element "searchSnippetLanguageInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "2" times
+  #   #    C1711
+  #   When I select the option with the text "Label" for element "searchSnippetTagInput"
+  #   And  I select the option with the value "All" for element "searchSnippetLanguageInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
+  #   And  I expect that element "viewMoreBtn" becomes displayed
+  #   #    C1710
+  #   When I select the option with the value "Team" for element "searchSnippetTagInput"
+  #   And  I select the option with the text "Language" for element "searchSnippetLanguageInput"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "5" times
+  #   And  I expect that element "viewMoreBtn" is not displayed
+  #   #    C1712
+  #   When I click on the element "clearSearchResultBtn"
+  #   Then I expect that element "searchedSnippetsResult" does appear exactly "10" times
+  #   And  I expect that element "viewMoreBtn" becomes displayed
+  #   And  I expect that element "clearSearchResultBtn" is not displayed
 
-  @C1713  @snippet
-  Scenario: Return back to collections from snippets
-    When I open the site "/snippets"
-    Then I expect that element "philosophiesCollection" becomes displayed
-    When I click on the element "philosophiesCollection"
-    Then I expect that element "arrowBackBtn" becomes displayed
-    When I click on the element "arrowBackBtn"
-    Then I expect that element "philosophiesCollection" becomes displayed
+  # @C1713  @snippet
+  # Scenario: Return back to collections from snippets
+  #   When I open the site "/snippets"
+  #   Then I expect that element "philosophiesCollection" becomes displayed
+  #   When I click on the element "philosophiesCollection"
+  #   Then I expect that element "arrowBackBtn" becomes displayed
+  #   When I click on the element "arrowBackBtn"
+  #   Then I expect that element "philosophiesCollection" becomes displayed
 
-    When I click on the element "philosophiesCollection"
-    Then I expect that element "snippetsLibraryLinkBtn" becomes displayed
-    When I click on the element "snippetsLibraryLinkBtn"
-    Then I expect that element "arrowBackBtn" is not displayed
+  #   When I click on the element "philosophiesCollection"
+  #   Then I expect that element "snippetsLibraryLinkBtn" becomes displayed
+  #   When I click on the element "snippetsLibraryLinkBtn"
+  #   Then I expect that element "arrowBackBtn" is not displayed
 
   @admin  @C2790  @snippet
   Scenario: Adding new snippet collection
@@ -139,9 +140,10 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "newCollectionTitleInput" becomes displayed
     When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
     When I click on the element "newCollectionLanguagesInput"
-    And  I set "Type" to the inputfield "newCollectionLanguagesInput"
-    Then I expect that element "firstOptionForLanguagesInput" becomes displayed
-    When I press "Enter"
+    And  I set "TypeScript" to the inputfield "newCollectionLanguagesInput"
+    #Then I expect that element "firstOptionForLanguagesInput" becomes displayed
+    When I press "Enter" "Tab"
+    And I pause for 15000ms
     Then I expect that element "newCollectionOtherLabelInput" becomes displayed
     When I click on the element "newCollectionOtherLabelInput"
     And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
