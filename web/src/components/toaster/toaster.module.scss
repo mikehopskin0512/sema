@@ -1,0 +1,42 @@
+@import "../../../styles/_colors.module.scss"; 
+
+@mixin container($color) {
+  filter: drop-shadow(0px 2px 3px rgba(32, 32, 32, 0.2));
+  width: 430px;
+  border-left-width: 4px;
+  border-left-style: solid;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-left-color: $color;
+  .icon {
+    color: $color;
+  }
+}
+
+.container {
+  &--success {
+    @include container($green-500);
+  }
+  &--error {
+    @include container($red-500);
+  }
+  &--warning {
+    @include container($orange-500);
+  }
+  &--info {
+    @include container($blue-700);
+  }
+}
+
+.icon {
+  display: inline-flex;
+}
+
+.title {
+  flex-grow: 1;
+}
+
+.close-button {
+  height: auto;
+}
