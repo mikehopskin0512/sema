@@ -20,8 +20,15 @@ const portfolioSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   firstName: String,
   lastName: String,
+  title: {
+    required: true,
+    maxlength: 130,
+    type: String,
+  },
+  // TODO: should be deleted in dev portfolio v3
   headline: String,
   imageUrl: String,
+  // TODO: should be deleted in dev portfolio v3
   overview: String,
   identities: [identitySchema],
   type: { type: String, enum: ['public', 'private'] },

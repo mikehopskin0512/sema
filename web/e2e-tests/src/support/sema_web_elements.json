@@ -20,19 +20,19 @@
 
     "trophyBtn"                     : "//img[@alt='trophy']",
 
-    "footerTermsAndConditionsBtn"     : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Terms & Conditions']",
-    "footerSendFeedbackBtn"         : "//footer//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'button ')][normalize-space()='Send Feedback']",
-    "footerIdeaBoardBtn"            : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Idea Board']",
-    "footerReleaseNoteBtn"          : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Release Notes']",
-    "footerSupportBtn"              : "//footer//div[contains(@class,'is-hidden-touch')]//a[contains(@class,'button ')][normalize-space()='Support']",
+    "footerTermsAndConditionsBtn"   : "=Terms & Conditions",
+    "footerSendFeedbackBtn"         : "div=Send Feedback",
+    "footerIdeaBoardBtn"            : "=Idea Board",
+    "footerReleaseNoteBtn"          : "=Release Notes",
+    "footerSupportBtn"              : "=Support",
 
     "emailBtn"                      : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/button[text()='Email']",
     "ideaBoardBtn"                  : "//div[contains(@class,'layout_footer__1yYTG')]//div[contains(@class,'is-hidden-touch')]//div[contains(@class,'contactUs_contact-us-desktop__3wRMv')]/a[text()='Idea Board']",
 
-    "footerLinkedInBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.linkedin.com/company/11298026']",
-    "footerInstagramBtn"            : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://www.instagram.com/se_ma1743/']",
-    "footerFacebookBtn"             : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://business.facebook.com/semasoftware/']",
-    "footerTwitterBtn"              : "//div[contains(@class,'footer_socials__1Iodj')]//a[@href='https://twitter.com/semasoftware1']",
+    "footerLinkedInBtn"             : "[href='https://www.linkedin.com/company/11298026']",
+    "footerInstagramBtn"            : "[href='https://www.instagram.com/se_ma1743/']",
+    "footerFacebookBtn"             : "[href='https://business.facebook.com/semasoftware/']",
+    "footerTwitterBtn"              : "[href='https://twitter.com/semasoftware1']",
 
     "########## LOGIN LOCATORS ###############" : "",
     "signInWithGithubBtn"           : "//div[contains(@class,'is-hidden-touch')]//span[text()='Sign in with GitHub']",
@@ -52,8 +52,9 @@
 
     "########### REPOS LOCATORS ###############" : "",
     "reposDropDownList"             : "//div[contains(@class,'css-1uccc91-singleValue')]",
-    "repoDropDownOption1"           : "//div[@id='react-select-5-option-0']",
-    "phoenixRepoDropDownOption"     : "//div[@id='react-select-5-option-0'][text()='phoenix']",
+    "repoDropDownOption1"           : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[1]",
+    "astrobeeRepoDropDownOption"    : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[text()='astrobee']",
+    "scikitlearnRepoDropDownOption" : "//div[contains(@class,'hoverSelect_select-container__1kZb6')]/div[@class=' css-26l3qy-menu']/div/div[text()='scikit-learn']",
     "activityLogTabBtn"             : "//span[normalize-space()='Activity Logs']",
     "codeStatsTabBtn"               : "//span[normalize-space()='Code Stats']",
     "dateRangeFilter"               : "//button[contains(@class,'dateRangeSelector_button__35SUY')]",
@@ -166,6 +167,7 @@
 
 
     "########## PERSONAL INSIGHTS LOCATORS #############" : "",
+    "personalInsightsSummariesLbl"  : "p=TOTAL SUMMARIES",
     "personalInsightsHeader"        : "//div[@class='tile']",
 
     "########## INVITES LOCATORS #############" : "",

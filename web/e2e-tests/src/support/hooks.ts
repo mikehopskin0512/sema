@@ -9,6 +9,7 @@
 
 //
 import { generateToken } from "authenticator";
+import { isConstructorDeclaration } from "typescript";
 const fs = require("fs");
 
 import { ReportAggregator, HtmlReporter } from "wdio-html-nice-reporter";
@@ -22,20 +23,11 @@ export const hooks = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  // onPrepare: function (config, capabilities) {
-  //     reportAggregator = new ReportAggregator({
-  //         outputDir: './reports/html-reports/',
-  //         filename: 'master-report.html',
-  //         reportTitle: 'Master Report',
-  //         browserName: capabilities.browserName,
-  //         collapseTests: true
-  //     });
-  //     reportAggregator.clean();
-  // },
   onPrepare: function (config, capabilities) {
     // directory path
     const dirJunit = "./test/results";
-    const dirAllureRes = './allure-results';     
+    const dirAllureRes = "./allure-results";
+    const dirHtmlRep = "./reports/html-reports";
 
     // delete directory recursively
     try {
@@ -45,11 +37,28 @@ export const hooks = {
       console.error(`Error while deleting ${dirJunit}.`);
     }
     try {
-        fs.rmdirSync(dirAllureRes, { recursive: true });
-        console.log(`${dirAllureRes} is deleted!`);
-      } catch (err) {
-        console.error(`Error while deleting ${dirAllureRes}.`);
-      }
+      fs.rmdirSync(dirAllureRes, { recursive: true });
+      console.log(`${dirAllureRes} is deleted!`);
+    } catch (err) {
+      console.error(`Error while deleting ${dirAllureRes}.`);
+    }
+    try {
+      fs.rmdirSync(dirHtmlRep, { recursive: true });
+      console.log(`${dirHtmlRep} is deleted!`);
+    } catch (err) {
+      console.error(`Error while deleting ${dirHtmlRep}.`);
+    }
+
+    reportAggregator = new ReportAggregator({
+      outputDir: "./reports/html-reports/",
+      filename: "index.html",
+      reportTitle: "SEMA e2e tests",
+      browserName: capabilities.browserName,
+      showInBrowser: true,
+      collapseTests: true,
+    });
+    reportAggregator.clean();
+    reportAggregator = reportAggregator;
   },
 
   /**
@@ -87,9 +96,11 @@ export const hooks = {
 
     console.log(otp);
 
+    await browser.maximizeWindow();
+
     await browser.url("https://app-staging.semasoftware.com/login");
     await $("span=Sign in with GitHub").click();
-    
+
     await $("#login_field").setValue("qateam+automationadmin@semasoftware.com");
     await $("#password").setValue("Automation1Tester2#");
     await $(".js-sign-in-button").click();
@@ -151,15 +162,15 @@ export const hooks = {
   /**
    * Function to be executed after a test (in Mocha/Jasmine)
    */
-  afterTest: async function (
-    test,
-    context,
-    { error, result, duration, passed, retries }
-  ) {
-    if (error) {
-      await browser.takeScreenshot();
-    }
-  },
+  // afterTest: async function (
+  //   test,
+  //   context,
+  //   { error, result, duration, passed, retries }
+  // ) {
+  //   if (error) {
+  //     await browser.takeScreenshot();
+  //   }
+  // },
   /**
    * Hook that gets executed after the suite has ended.
    * @param {Object} suite suite details
@@ -191,11 +202,11 @@ export const hooks = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  // onComplete: function (exitCode, config, capabilities, results) {
-  //     (async () => {
-  //         await reportAggregator.createReport();
-  //     })();
-  // },
+  onComplete: function (exitCode, config, capabilities, results) {
+    (async () => {
+      await reportAggregator.createReport();
+    })();
+  },
   /**
    * Gets executed when a refresh happens.
    * @param {String} oldSessionId session ID of the old session
@@ -215,8 +226,24 @@ export const hooks = {
   // afterStep: function ({ uri, feature, step }, context, { error, result, duration, passed }) {
 
   // },
-  // afterScenario: function (uri, feature, scenario, result, sourceLocation) {
-  // },
+
+  /**
+   *
+   * Runs after a Cucumber Scenario.
+   * @param {ITestCaseHookParameter} world            world object containing information on pickle and test step
+   * @param {Object}                 result           results object containing scenario results `{passed: boolean, error: string, duration: number}`
+   * @param {boolean}                result.passed    true if scenario has passed
+   * @param {string}                 result.error     error stack if scenario failed
+   * @param {number}                 result.duration  duration of scenario in milliseconds
+   * @param {Object}                 context          Cucumber World object
+   */
+  afterScenario: function (world, result, context) {
+    if ( world.result.status === "FAILED") {
+      console.log("FAILED TEST!");
+      browser.takeScreenshot();
+    }
+  },
+  
   // afterFeature: function (uri, feature, scenarios) {
   // }
 };

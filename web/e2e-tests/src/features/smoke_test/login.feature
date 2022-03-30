@@ -1,4 +1,4 @@
-@login
+@login @zicu
 Feature: Login with different user roles
 
     @admin  @C1724
