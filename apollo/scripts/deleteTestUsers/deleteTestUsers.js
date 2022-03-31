@@ -1,25 +1,34 @@
 // Examples usage: 
 // Before the run, you should change the variable DB_NAME on the necessary database name 
-// Also you should change the variable USERS_NAME 
+// Also you should change the variable USERS_EMAILS 
 // 
-// Command: mongo <DB_URL> deleteTestUsers.js 
+// Command: mongo <DB_URL> --eval "const DB_NAME = '<DB_NAME>', USERS_EMAILS = ['<EMAIL>']" deleteTestUsers.js 
 // 
-const DB_NAME = "phoenix_qa" // Might be used phoenix_prod 
-const USERS_NAME = ["artem@semasoftware.com"]
+// Description: 
+// This script deletes all the test users from the database.
+//
 
 var db = db.getSiblingDB(DB_NAME)
 const all_collections = db.getCollectionNames()
-if (!Array.isArray(USERS_NAME)) {
-    print("USERS NAME should be Array")
+
+// check if DB_NAME start with phoenix_ and be a string
+if (!DB_NAME.startsWith("phoenix_") || typeof DB_NAME !== "string") {
+    print("DB_NAME should starts with phoenix_ and be a string")
+    quit(1)
+}
+
+// check if USERS_EMAILS is not empty and will be array
+if (USERS_EMAILS.length === 0 || !Array.isArray(USERS_EMAILS)) {
+    print("USERS NAME should not be empty and should be Array")
     quit(1)
 }
 
 const users = db.users.find({
-    username: { $in: USERS_NAME },
+    username: { $in: USERS_EMAILS },
 })
 
 const recipient = db.invitations.find({
-    recipient: { $in: USERS_NAME },
+    recipient: { $in: USERS_EMAILS },
 })
 const users_id = recipient_id = new Array
 
