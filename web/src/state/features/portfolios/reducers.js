@@ -131,6 +131,37 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS: {
+    const { portfolios, portfolio } = state.data;
+    const { portfolioId, portfolioType } = action;
+    const index = portfolios.findIndex((s) => s._id === portfolioId);
+    const updatedPortfolio = portfolios[index];
+    updatedPortfolio.type = portfolioType;
+    portfolios.splice(index, 1, updatedPortfolio);
+    if (portfolio._id === portfolioId) {
+      portfolio.type = portfolioType;
+    }
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolios,
+        portfolio,
+      },
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
   default:
     return state;
   }
