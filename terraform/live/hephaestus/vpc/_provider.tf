@@ -2,12 +2,12 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 3.38.0"
     }
   }
 }
 
 provider "aws" {
-  region  = var.aws_region
+  region  = "us-east-1"
   profile = "sema-terraform"
 }

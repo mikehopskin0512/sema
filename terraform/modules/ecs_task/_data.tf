@@ -84,18 +84,17 @@ data "aws_lb_listener" "https" {
 
 
 data "aws_iam_policy_document" "ssm" {
-    version ="2012-10-17"
-    statement {
-       effect = "Allow"
-       actions = [
-            "ssmmessages:CreateControlChannel",
-            "ssmmessages:CreateDataChannel",
-            "ssmmessages:OpenControlChannel",
-            "ssmmessages:OpenDataChannel"
-       ]
+  statement {
+    effect = "Allow"
+    actions = [
+      "ssmmessages:CreateControlChannel",
+      "ssmmessages:CreateDataChannel",
+      "ssmmessages:OpenControlChannel",
+      "ssmmessages:OpenDataChannel"
+    ]
 
-      resources = [
+    resources = [
       "*",
     ]
-    }
+  }
 }
