@@ -2,7 +2,7 @@
 // Before the run, you should change the variable DB_NAME on the necessary database name 
 // Also you should change the variable USERS_EMAILS 
 // 
-// Command: mongo <DB_URL> --eval "const DB_NAME = '<DB_NAME>', USERS_EMAILS = ['<EMAIL>']" deleteTestUsers.js 
+// Command: mongo <DB_URL> --quiet --eval "const DB_NAME = '<DB_NAME>', USERS_EMAILS = ['<EMAIL>']" deleteTestUsers.js 
 // 
 // Description: 
 // This script deletes all the test users from the database.
