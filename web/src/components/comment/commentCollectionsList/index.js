@@ -203,6 +203,7 @@ const CommentCollectionsList = () => {
           <SnippetCollectionFilter
             setFilter={setFilter}
             filter={filter}
+            collections={sortedCollections}
           />
         </div>
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
