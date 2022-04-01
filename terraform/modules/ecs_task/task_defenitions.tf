@@ -8,4 +8,11 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn            = aws_iam_role.task.arn
   execution_role_arn       = aws_iam_role.execution.arn
   tags                     = local.task_definition_tags
+
+  dynamic "ephemeral_storage" {
+    for_each = length(compact([null, "", var.ephemeral_storage])) > 0 ? ["created"] : []
+    content {
+      size_in_gib = var.ephemeral_storage
+    }
+  }
 }

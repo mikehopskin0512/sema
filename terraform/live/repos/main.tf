@@ -15,6 +15,14 @@ resource "aws_ecr_repository" "phoenix" {
   }
 }
 
+resource "aws_ecr_repository" "hephaestus" {
+  name = "hephaestus"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 resource "aws_ecr_repository" "athena_ananke" {
   name = "athena-ananke"
 

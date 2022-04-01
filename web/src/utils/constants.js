@@ -254,3 +254,8 @@ export const TAG_TYPE = {
 
 export const BAR_CHART_MIN_TOP = 132;
 export const CIRCLE_CHART_MIN_TOP = 275;
+
+export const PORTFOLIO_TYPES = {
+  PUBLIC: 'public',
+  PRIVATE: 'private',
+};
