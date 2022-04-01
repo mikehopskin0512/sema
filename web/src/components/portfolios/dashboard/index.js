@@ -15,6 +15,7 @@ import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import { gray600, black950 } from '../../../../styles/_colors.module.scss';
 import ErrorPage from '../errorPage';
+import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 
 const { updatePortfolio, updatePortfolioType } = portfoliosOperations;
 
@@ -151,6 +152,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
         <div className="portfolio-content mb-50 container">
+          <PortfolioGuideBanner />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />

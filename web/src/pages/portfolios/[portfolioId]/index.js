@@ -11,7 +11,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { fetchPortfolio } = portfoliosOperations;
 
-const isPublicPortfolio = type => type === 'public';
+const isPublicPortfolio = (type) => type === 'public';
 
 const PublicPortfolio = () => {
   const router = useRouter();
@@ -42,17 +42,17 @@ const PublicPortfolio = () => {
 
   return (
     <>
-    {portfolios.isFetching ? (
+      {portfolios.isFetching ? (
         <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
           <Loader />
         </div>
       ) : (
-      <div className="has-background-gray-200 hero">
-        <Helmet {...PortfolioHelmet} />
-        <div className="hero-body pb-300 mx-25">
-          <PortfolioDashboard portfolio={portfolio} isIndividualView={true} />
+        <div className="has-background-gray-200 hero">
+          <Helmet {...PortfolioHelmet} />
+          <div className="hero-body pb-300 mx-25">
+            <PortfolioDashboard portfolio={portfolio} isIndividualView />
+          </div>
         </div>
-      </div>
       )}
     </>
   );
