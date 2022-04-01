@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
+import styles from './styles.module.scss';
 
 const InputField = ({
   title,
@@ -22,11 +23,14 @@ const InputField = ({
           {isRequired && <span className="has-text-red-500"> *</span>}
         </label>
       )}
-      <div className={clsx(
+      <div
+        className={clsx(
         'control',
         iconRight && 'has-icons-right',
         iconLeft && 'has-icons-left',
-      )}>
+        styles['input-focused'],
+      )}
+      >
         {isMultiLine ? (
           <textarea
             disabled={disabled}

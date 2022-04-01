@@ -8,7 +8,17 @@ import styles from './reposView.module.scss';
 
 const NUM_PER_PAGE = 9;
 
-const ReposView = ({ type = 'user' }) => {
+const REPO_TYPES = {
+  USER: 'user',
+  TEAM: 'team'
+}
+
+const ReposView = ({
+  type = 'user',
+  onSearchChange,
+  searchQuery,
+  withSearch
+}) => {
   const { githubUser, repositories, teams } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
     repositories: state.repositoriesState.data.repositories,
@@ -20,6 +30,8 @@ const ReposView = ({ type = 'user' }) => {
   });
   const [page, setPage] = useState(1);
   const isMoreReposAvailable = repos.other.length > NUM_PER_PAGE && NUM_PER_PAGE * page < repos.other.length;
+  const isEmptyRepo = (type === REPO_TYPES.USER && (!repositories.length && !repositories.isFetching)) ||
+    (type === REPO_TYPES.TEAM && (!teams.isFetching && !teams.repos.length))
 
   useEffect(() => {
     if (githubUser && type === 'user') {
@@ -43,23 +55,18 @@ const ReposView = ({ type = 'user' }) => {
     }
   }, [teams]);
 
-  if (type === 'user') {
-    if ((!repositories.length && !repositories.isFetching)) {
-      return <EmptyRepo />
-    }
-  }
-
-  if  (type === 'team') {
-    if (!teams.isFetching && !teams.repos.length) {
-      return <EmptyRepo />
-    }
-  }
-
   return ( !repositories.isFetching &&
     <>
       <div className={clsx('my-40', styles['repos-container'])}>
-        <RepoList type="FAVORITES" repos={repos.favorites} />
-        <RepoList type={type === 'team' ? 'REPOS' : 'MY_REPOS'} repos={repos.other.slice(0, NUM_PER_PAGE * page)} />
+        {/* <RepoList type="FAVORITES" repos={repos.favorites} /> */}
+        <RepoList
+          type={type === 'team' ? 'REPOS' : 'MY_REPOS'}
+          repos={repos.other.slice(0, NUM_PER_PAGE * page)}
+          searchQuery={searchQuery}
+          onSearchChange={onSearchChange}
+          withSearch={withSearch}
+        />
+        {isEmptyRepo && <EmptyRepo />}
       </div>
       <div className="is-flex is-flex-direction-column is-justify-content-center is-align-items-center is-fullwidth has-footer-margin">
         {isMoreReposAvailable && (

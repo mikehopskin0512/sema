@@ -59,8 +59,8 @@ export default (app, passport) => {
 
     try {
       const repositories = Ids ? await getRepositories(idsArray) : await findByOrg(orgId);
-      if (!repositories) { 
-        throw new errors.NotFound(Ids ? 'No repositories found' : 'No repositories found for this organization'); 
+      if (!repositories) {
+        throw new errors.NotFound(Ids ? 'No repositories found' : 'No repositories found for this organization');
       }
 
       return res.status(201).send({
@@ -75,10 +75,13 @@ export default (app, passport) => {
   route.get('/sema-repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { externalIds } = req.query;
     try {
-      const repositories = await findByExternalIds(JSON.parse(externalIds));
-      return res.status(201).send({
-        repositories,
+      const repositories = await findByExternalIds({
+        externalIds: JSON.parse(externalIds),
       });
+      return res.status(201)
+        .send({
+          repositories,
+        });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -86,12 +89,19 @@ export default (app, passport) => {
   });
 
   route.get('/dashboard', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { externalIds } = req.query;
+    const {
+      externalIds,
+      searchQuery,
+    } = req.query;
     try {
-      const repositories = await aggregateRepositories(JSON.parse(externalIds));
-      return res.status(201).send({
-        repositories,
+      const repositories = await aggregateRepositories({
+        externalIds: JSON.parse(externalIds),
+        searchQuery,
       });
+      return res.status(201)
+        .send({
+          repositories,
+        });
     } catch (error) {
       logger.error(error);
       return res.status(error?.statusCode || 500).send(error);
@@ -131,7 +141,7 @@ export default (app, passport) => {
       if (startDate && endDate) {
         dateRange = { startDate, endDate };
       }
-      const repositories = await aggregateRepositories([externalId], true, dateRange);
+      const repositories = await aggregateRepositories({ externalIds: [externalId] }, true, dateRange);
       if (repositories.length > 0) {
         return res.status(201).send(repositories[0]);
       }
