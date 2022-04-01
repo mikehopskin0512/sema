@@ -3,12 +3,12 @@ import clsx from 'clsx';
 import styles from './portfolioGuide.module.scss';
 import PortfolioGuideModal from '../../portfolios/guideModal';
 
-const PortfolioGuideBanner = () => {
+const PortfolioGuideBanner = ({ isActive }) => {
   const [isGuideModalActive, toggleGuideModal] = useState(false);
   return (
     <>
       <PortfolioGuideModal isActive={isGuideModalActive} onClose={() => toggleGuideModal(false)} />
-      <div className={clsx(styles.banner, 'px-40 py-15 is-flex is-align-items-center mb-30')}>
+      <div className={clsx(styles.banner, 'px-40 py-15 is-flex is-align-items-center mb-30', !isActive && 'is-hidden')}>
         <div className="is-flex is-flex-direction-column">
           <span className="has-text-weight-semibold mr-10">Portfolios are designed to help you show off your hard work.</span>
           <span className="mr-20">Add some snapshots from your personal insights & activity log to get started.</span>

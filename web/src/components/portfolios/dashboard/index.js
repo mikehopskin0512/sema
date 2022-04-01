@@ -152,7 +152,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
         <div className="portfolio-content mb-50 container">
-          <PortfolioGuideBanner />
+          <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
