@@ -126,7 +126,6 @@ export const COLLECTION_TYPE = {
   TEAM: 'team',
 };
 
-
 export const DAYS_IN_WEEK = 7;
 export const DAYS_IN_MONTH = 30;
 export const DAYS_IN_YEAR = 365;
@@ -254,6 +253,7 @@ export const TAG_TYPE = {
 
 export const BAR_CHART_MIN_TOP = 132;
 export const CIRCLE_CHART_MIN_TOP = 275;
+export const ON_INPUT_DEBOUNCE_INTERVAL_MS = 250;
 
 export const PORTFOLIO_TYPES = {
   PUBLIC: 'public',
