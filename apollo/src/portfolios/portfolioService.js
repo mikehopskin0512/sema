@@ -92,6 +92,23 @@ export const update = async (portfolioId, portfolio) => {
   }
 };
 
+export const updatePortfolioType = async (portfolioId, type) => {
+  try {
+    await Portfolio
+      .findOneAndUpdate(
+        { _id: new ObjectId(portfolioId) },
+        { $set: { type } },
+        { new: true },
+      )
+      .exec();
+    return;
+  } catch (err) {
+    const error = new errors.NotFound(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const deleteOne = async (portfolioId) => {
   try {
     const deletedPortfolio = await Portfolio.findByIdAndDelete(new ObjectId(portfolioId)).exec();

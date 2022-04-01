@@ -32,9 +32,6 @@
 }
 
 .edit-icon {
-  position: absolute;
-  top: 0px;
-  right: 0px;
   &:hover {
     background-color: $gray-100;
     svg {
@@ -67,4 +64,11 @@
       }
     }
   }
+}
+
+.textContainer {
+  position: absolute;
+  top: -30px; 
+  background: black; 
+  color: white;
 }

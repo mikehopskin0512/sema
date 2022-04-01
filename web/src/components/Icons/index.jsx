@@ -69,6 +69,7 @@ import { ReactComponent as SemaSvg } from './img/sema.svg';
 import { ReactComponent as SeparatorSvg } from './img/separator.svg';
 import { ReactComponent as SettingsSvg } from './img/settings.svg';
 import { ReactComponent as SignOutSvg } from './img/sign-out.svg';
+import { ReactComponent as ShareSvg } from './img/share.svg';
 import { ReactComponent as SourceSvg } from './img/source.svg';
 import { ReactComponent as StarFilledSvg } from './img/star-filled.svg';
 import { ReactComponent as StarOutlineSvg } from './img/star-outline.svg';
@@ -87,7 +88,6 @@ import { ReactComponent as LinkSvg } from './img/link.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
-import { ReactComponent as ShareSvg } from './img/share.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -554,6 +554,7 @@ export const SignOutIcon = (props) => (
     <SignOutSvg />
   </Icon>
 );
+
 export const SourceIcon = (props) => (
   <Icon {...props}>
     <SourceSvg />

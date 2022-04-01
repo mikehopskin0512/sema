@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio, postSnapshotToPortfolio } from './api';
+import { getPortfolio, putPortfolio, getUserPortfolio, postSnapshotToPortfolio, patchPortfolioType } from './api';
 import { deleteSnapshot, putSnapshot } from '../snapshots/api';
 
 const requestFetchUserPortfolio = () => ({
@@ -69,6 +69,21 @@ const requestRemoveSnapshotSuccess = (portfolio) => ({
 
 const requestRemoveSnapshotError = (errors) => ({
   type: types.REQUEST_REMOVE_SNAPSHOT_ERROR,
+  errors,
+});
+
+const requestUpdatePortfolioType = () => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
+});
+
+const requestUpdatePortfolioTypeSuccess = (portfolioId, portfolioType) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS,
+  portfolioId,
+  portfolioType,
+});
+
+const requestUpdatePortfolioTypeError = (errors) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR,
   errors,
 });
 
@@ -162,7 +177,7 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
   try {
     dispatch(requestPostSnapshotToPortfolio());
     const payload = await postSnapshotToPortfolio(portfolioId, body, token);
-    //const { data } = payload; 
+    //const { data } = payload;
     //ToDo: Fix this after backend will be ready
     dispatch(requestPostSnapshotToPortfolioSuccess());
     return payload;
@@ -173,3 +188,16 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
     return error.response;
   }
 }
+
+export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdatePortfolioType());
+    await patchPortfolioType(portfolioId, type, token);
+    dispatch(requestUpdatePortfolioTypeSuccess(portfolioId, type));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestUpdatePortfolioTypeError(errMessage));
+    return error.response;
+  }
+};

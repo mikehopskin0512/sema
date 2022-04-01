@@ -1,4 +1,4 @@
-@webapp
+@webapp @zicu
 Feature: Web tabs should contains all functionality items
 
     Background: Wait for page to be displayed
@@ -10,8 +10,10 @@ Feature: Web tabs should contains all functionality items
         Then I expect that the url is "/dashboard"
         And  I expect that the title is "Sema Dashboard"
 
-        When I click on the button "personalInsightsTab"
-        And  I expect that element "personalInsightsHeader" becomes displayed
+        When I click on the button "personalInsightsTab"   
+        Then I expect that element "personalInsightsSummariesLbl" becomes displayed     
+        #TODO: Andriy please update this element properly or wait for element
+        #And  I expect that element "personalInsightsHeader" becomes displayed        
         Then I expect that the url is "/personal-insights"
         And  I expect that the title is "Personal Insights"
 
