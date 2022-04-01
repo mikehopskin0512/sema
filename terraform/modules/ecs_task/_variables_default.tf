@@ -139,3 +139,27 @@ variable "max_capacity" {
   description = "The max capacity of the scalable target."
   default     = 6
 }
+
+variable "ecs_external_access_path_pattern" {
+  type        = string
+  description = "This is path pattern for load balancer rule"
+  default     = null
+}
+
+variable "ecs_external_access_priority" {
+  type        = number
+  description = "This is a number of priority for load balancer rule"
+  default     = null
+}
+
+variable "ephemeral_storage" {
+  type        = number
+  description = "This is a number of ephemeral storage size"
+  default     = null
+}
+
+variable "gpu" {
+  type        = string
+  description = "Number of required gpu"
+  default     = null
+}

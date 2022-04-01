@@ -20,7 +20,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       case 'sent':
         return type === 'admin' ? 'p-10' : 'has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35';
       case 'actions':
-        return type === 'dashboard' ? `has-text-gray-700 p-15 has-background-white-50 is-uppercase pt-35 pl-150 ${styles.actionsHeader}` : '';
+        return type === 'dashboard' ? `has-text-gray-700 has-background-white-50 is-uppercase px-4 py-15 pt-35` : '';
       default:
         return 'p-10';
     }
@@ -107,17 +107,17 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         accessor: 'actions',
         className: getHeaderClass('actions'),
         Cell: ({ cell: { value: el } }) => (
-          <div className='is-flex is-align-items-center py-10'>
+          <div className={`is-flex is-align-items-center ${styles['actions-cell']}`}>
             {
               el.isPending && (
                 <>
-                  <button className="button is-text outline-none" onClick={() => resendInvitation(el.recipient)}>
+                  <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el.recipient)}>
                     <UndoIcon size="small" />
                     <span className="ml-8">
                       Resend Invitation
                     </span>
                   </button>
-                  <button className="button is-text outline-none" onClick={() => revokeInvitation(el._id, el.recipient)}>
+                  <button className="button is-text outline-none pl-4" onClick={() => revokeInvitation(el._id, el.recipient)}>
                     <CloseIcon size="small" />
                     <span className="ml-8">
                       Revoke

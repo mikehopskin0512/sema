@@ -13,12 +13,11 @@ import {gray500} from '../../../../styles/_colors.module.scss'
 
 const { fetchTagList } = tagsOperations;
 
-const SnippetCollectionFilter = ({ filter, setFilter }) => {
+const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   const dispatch = useDispatch();
-  const { tagState, auth, collectionState } = useSelector((state) => ({
+  const { tagState, auth } = useSelector((state) => ({
     auth: state.authState,
     tagState: state.tagsState,
-    collectionState: state.collectionsState,
   }));
   const { tags } = tagState;
   const { token } = auth;
@@ -29,24 +28,22 @@ const SnippetCollectionFilter = ({ filter, setFilter }) => {
   }, []);
 
   const sources = useMemo(() => {
-    const { data = [] } = collectionState ?? {};
-    if (data.length > 0) {
-      const src = data?.map((item) => item?.collectionData?.source)
+    if (collections.length > 0) {
+      const src = collections.map((item) => item?.collectionData?.source)
         .filter((v, i, a) => v && a.indexOf(v) === i);
       return src.map((v) => ({ value: v, label: v }));
     }
     return [];
-  }, [collectionState]);
+  }, [collections]);
 
   const authors = useMemo(() => {
-    const { data = [] } = collectionState ?? {};
-    if (data.length > 0) {
-      const filtered = data?.map((item) => item?.collectionData?.author)
+    if (collections.length > 0) {
+      const filtered = collections.map((item) => item?.collectionData?.author)
         .filter((v, i, a) => v && a.indexOf(v) === i);
       return filtered.map((v) => ({ value: v, label: v }));
     }
     return [];
-  }, [collectionState]);
+  }, [collections]);
 
   const statusOptions = [
     { value: true, 'label': 'Available' },

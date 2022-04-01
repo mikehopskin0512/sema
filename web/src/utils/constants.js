@@ -263,3 +263,8 @@ export const ALERT_TYPES = {
   SUCCESS: 'success',
   ERROR: 'error',
 };
+
+export const PORTFOLIO_TYPES = {
+  PUBLIC: 'public',
+  PRIVATE: 'private',
+};
