@@ -13,7 +13,7 @@ const DeleteModal = ({ isModalActive, toggleModalActive, onSubmit, type = 'snaps
         <header className={clsx('modal-card-head has-background-white is-align-items-flex-start', styles['modal-head'])}>
           <div className="is-full-width">
             <p className={clsx('modal-card-title has-text-weight-semibold')}>
-              {`Do you want to delete this ${type === 'snapshot' ? 'Snapshot' : 'Portfolio'}?`}
+              {`Do you want to delete this ${type === 'snapshot' ? 'Snapshot' : 'portfolio'}?`}
             </p>
           </div>
           <button type="button" onClick={() => toggleModalActive(false)} className={clsx('button is-ghost has-text-black-900', styles['close-btn'])}>
