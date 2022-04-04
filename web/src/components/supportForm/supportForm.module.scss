@@ -1,0 +1,37 @@
+@import "../../../styles/colors.module";
+
+.support-form-modal-close {
+    @media only screen and (max-width: 600px) {
+        right: 5px;
+        top: 5px;
+    }
+    &::after, &::before {
+        @media only screen and (max-width: 600px) {
+            background-color: $gray-600;
+        }
+    }
+}
+
+.support-form-modal-content {
+    padding: 50px;
+    @media only screen and (max-width: 600px) {
+        padding: 0px !important;
+        position: absolute !important;
+        max-height: none;
+        height: 100%;
+        top: 0;
+    }
+  }
+
+.support-form-modal-background {
+    padding: 50px;
+  
+    @media only screen and (max-width: 600px) {
+        min-height: 100%;
+    }
+
+    @media only screen and (max-width: 450px) {
+        padding: 8px !important;
+    }
+  }
+  

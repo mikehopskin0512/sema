@@ -148,11 +148,24 @@ export const getRepositories = async (ids, populateUsers) => {
   }
 };
 
-export const findByExternalIds = async (externalIds, populateUsers) => {
+export const findByExternalIds = async (params, populateUsers) => {
+  const {
+    externalIds,
+    searchQuery,
+  } = params;
+  const searchRegEx = new RegExp(searchQuery, 'ig');
+
   try {
-    const query = Repositories.find({ 'externalId': { $in: externalIds } });
+    const query = Repositories.find({
+      'externalId': { $in: externalIds },
+      'name': { $regex: searchRegEx },
+    });
     if (populateUsers) {
-      query.populate({ path: 'repoStats.userIds', select: 'avatarUrl', model: 'User' });
+      query.populate({
+        path: 'repoStats.userIds',
+        select: 'avatarUrl',
+        model: 'User',
+      });
     }
     const repositories = await query.lean();
     return repositories;
@@ -171,26 +184,38 @@ async function getRepoMetrics(externalId) {
   let metrics = [];
   while (auxDate <= today) {
     let dateAsString = auxDate.toISOString().split('T')[0];
-    let values = commentsMetrics?.[dateAsString] ?? {        
+    let values = commentsMetrics?.[dateAsString] ?? {
       comments: 0,
       pullRequests: 0,
       commenters: 0
     };
     values.users = usersMetrics?.[dateAsString] ?? 0;
-    metrics = [...metrics, values];  
+    metrics = [...metrics, values];
     auxDate.setDate(auxDate.getDate() + 1);
   }
   return metrics;
 }
 
-export const aggregateRepositories = async (externalIds, includeSmartComments, date) => {
+export const aggregateRepositories = async (params, includeSmartComments, date) => {
   try {
     // Get Repos by externalId
-    const repos = await findByExternalIds(externalIds, true);
+    const repos = await findByExternalIds(params, true);
     if (repos.length > 0) {
       // Tally stats
       const repositories = Promise.all(repos.map(async (repo) => {
-        const { _id, externalId = '', name = '', createdAt, updatedAt, repoStats: { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0 } } = repo;
+        const {
+          _id,
+          externalId = '',
+          name = '',
+          createdAt,
+          updatedAt,
+          repoStats: {
+            smartComments = 0,
+            smartCommenters = 0,
+            smartCodeReviews = 0,
+            semaUsers = 0,
+          },
+        } = repo;
         const metrics = await getRepoMetrics(externalId);
         const data = {
           repoStats: {

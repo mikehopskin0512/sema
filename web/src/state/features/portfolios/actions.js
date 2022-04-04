@@ -1,5 +1,5 @@
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio } from './api';
+import { getPortfolio, putPortfolio, getUserPortfolio, patchPortfolioType } from './api';
 import { deleteSnapshot, putSnapshot } from '../snapshots/api';
 
 const requestFetchUserPortfolio = () => ({
@@ -72,6 +72,21 @@ const requestRemoveSnapshotError = (errors) => ({
   errors,
 });
 
+const requestUpdatePortfolioType = () => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
+});
+
+const requestUpdatePortfolioTypeSuccess = (portfolioId, portfolioType) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS,
+  portfolioId,
+  portfolioType,
+});
+
+const requestUpdatePortfolioTypeError = (errors) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR,
+  errors,
+});
+
 export const fetchPortfoliosOfUser = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUserPortfolio());
@@ -140,6 +155,19 @@ export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatc
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestRemoveSnapshotError(errMessage));
+    return error.response;
+  }
+};
+
+export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
+  try {
+    dispatch(requestUpdatePortfolioType());
+    await patchPortfolioType(portfolioId, type, token);
+    dispatch(requestUpdatePortfolioTypeSuccess(portfolioId, type));
+  } catch (error) {
+    const { response: { data: { message }, status, statusText } } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestUpdatePortfolioTypeError(errMessage));
     return error.response;
   }
 };
