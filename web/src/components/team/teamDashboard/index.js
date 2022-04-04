@@ -20,7 +20,15 @@ const TeamDashboard = ({ team }) => {
   return (
     <>
       <div className="mt-50 mb-30">
-        <Metrics metrics={metrics} />
+        <Metrics
+          metrics={metrics?.metrics}
+          totalMetrics={{
+            pullRequests: metrics?.totalMetrics?.smartCodeReviews ?? 0,
+            comments: metrics?.totalMetrics?.smartComments ?? 0,
+            commenters: metrics?.totalMetrics?.smartCommenters ?? 0,
+            users: metrics?.totalMetrics?.semaUsers ?? 0,
+          }}
+        />
       </div>
       <div className="columns">
         <div className="column is-8">

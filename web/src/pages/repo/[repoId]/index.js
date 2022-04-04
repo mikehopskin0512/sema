@@ -27,12 +27,19 @@ const tabTitle = {
 
 const RepoPage = () => {
   const dispatch = useDispatch();
+
   const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
   }));
   const { token, selectedTeam } = auth;
   const { data: { overview } } = repositories;
+  const totalMetrics = {
+    pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
+    comments: overview.repoStats?.smartComments ?? 0,
+    commenters: overview.repoStats?.smartCommenters ?? 0,
+    users: overview.repoStats?.semaUsers ?? 0,
+  };
 
   const {
     query: { repoId },
@@ -189,7 +196,7 @@ const RepoPage = () => {
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
-        <Metrics metrics={overview.metrics} />
+        <Metrics metrics={overview.metrics} totalMetrics={totalMetrics} />
       </div>
       {
         selectedTab === 'activity' && (
