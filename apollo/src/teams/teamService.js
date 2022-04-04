@@ -184,6 +184,28 @@ export async function getTeamMetrics(teamId) {
   return metrics;
 }
 
+export async function getTeamTotalMetrics(teamId) {
+  const totalMetrics = {
+    smartCodeReviews: 0,
+    smartComments: 0,
+    smartCommenters: 0,
+    semaUsers: 0,
+  }
+  const teamRepos = await getTeamRepos(teamId);
+  const repoExternalIds = teamRepos.map((repo) => {
+    return repo.externalId;
+  });
+  let smartComments = await Promise.all(repoExternalIds.map(async (id) => {
+    return await getSmartCommentsByExternalId(id)
+  }));
+  smartComments = smartComments.flat();
+  totalMetrics.smartComments = smartComments.length || 0;
+  totalMetrics.smartCodeReviews = _getSmartCommentersCount(smartComments);
+  totalMetrics.smartCommenters = _getPullRequests(smartComments);
+  totalMetrics.semaUsers = totalMetrics.smartCommenters;
+  return totalMetrics;
+}
+
 
 export const getTeamMembers = async (teamId, { page, perPage }, type = 'paginate') => {
   try {
