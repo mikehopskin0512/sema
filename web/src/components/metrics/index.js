@@ -2,8 +2,8 @@ import React from 'react';
 import MetricsCard from './metricsCard';
 import styles from "./metrics.module.scss";
 
-export default function Metrics({ metrics }) {
-  if (!metrics) return null;
+export default function Metrics({ metrics, totalMetrics }) {
+  if (!metrics || !totalMetrics) return null;
 
   const meta = [
     { key: 'pullRequests', title: 'sema code reviews', tooltip: 'Pull Request reviewed using Sema' },
@@ -23,7 +23,7 @@ export default function Metrics({ metrics }) {
       </div>
       <div className={`mt-20 pb-10 columns m-0 ${styles["metrics-container"]}`}>
         {meta.map(({ title, key, tooltip }) => {
-          return <MetricsCard key={key} title={title} tooltip={tooltip} dataPoints={metrics.map(metric => metric[key])} />
+          return <MetricsCard key={key} total={totalMetrics[key]} title={title} tooltip={tooltip} dataPoints={metrics.map(metric => metric[key])} />
         })}
       </div>
     </>

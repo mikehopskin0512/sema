@@ -1,3 +1,5 @@
+@import "../../../styles/_colors.module.scss";
+
 .user-summary {
   position: relative;
 }
@@ -33,4 +35,25 @@
   position: absolute;
   top: 0px;
   right: 0px;
+}
+
+.notification-toast {
+  &-content-wrapper {
+    width: 300px;
+  }
+  &-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  &-icon {
+    position: relative;
+    top: -5px;
+    max-height: 20px;
+    svg {
+      color: $gray-600
+    }
+  }
 }

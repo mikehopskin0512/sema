@@ -11,6 +11,7 @@ import {
   getTeamMembers,
   addTeamMembers,
   getTeamMetrics,
+  getTeamTotalMetrics,
   getTeamRepos,
   getTeamsByUser,
   updateTeam,
@@ -147,7 +148,8 @@ export default (app, passport) => {
     try {
       const { teamId } = req.params;
       const metrics = await getTeamMetrics(teamId);
-      return res.status(200).send(metrics);
+      const totalMetrics = await getTeamTotalMetrics(teamId);
+      return res.status(200).send({ metrics, totalMetrics });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

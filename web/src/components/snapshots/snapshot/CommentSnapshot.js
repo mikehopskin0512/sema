@@ -8,7 +8,7 @@ import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
-import DeleteSnapshot from '../deleteModal';
+import DeleteModal from '../deleteModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { removeSnapshot } = portfoliosOperations;
@@ -43,7 +43,7 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
         type="edit"
         dataType={componentType}
       />
-      <DeleteSnapshot 
+      <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
