@@ -15,10 +15,16 @@ import Toaster from '../../../../components/toaster';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const { removePortfolio } = portfoliosOperations;
+import { copyExistingPortfolio } from '../../../../state/features/portfolios/actions';
 
-const portfolioList = () => {
+const PortfolioList = () => {
   const dispatch = useDispatch();
-  const { portfoliosState, alertsState, authState } = useSelector((state) => state);
+  const {
+    portfoliosState,
+    authState,
+    alertsState
+  } = useSelector((state) => state);
+
   const {
     data: { portfolios },
   } = portfoliosState;
@@ -50,12 +56,24 @@ const portfolioList = () => {
   }, [showAlert, dispatch]);
 
   const tableData = portfolios.map((portfolio, i) => ({
-    // TODO: will be fixed in portfolio name ticket
-    title: `Portfolio ${i}`,
+    title: portfolio.title,
     id: portfolio._id,
     updatedAt: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
     type: portfolio.type,
   }));
+
+  const createPortfolioCopy = (portfolioId) => {
+    const requiredPortfolio = portfolios.find((item) => item._id === portfolioId);
+    if (!requiredPortfolio) return false;
+    const {
+      _id,
+      ...copy
+    } = requiredPortfolio;
+
+    return {
+      ...copy, title: `${copy.title}_Copy`,
+    };
+  };
 
   const columns = [
     {
@@ -114,28 +132,33 @@ const portfolioList = () => {
               isRight
               options={[
                 {
-                  // TODO: add Duplicate - ETCR-1030
                   label: 'Duplicate Portfolio',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => {
+                    const originId = row.original.id;
+
+                    if (createPortfolioCopy(originId)) {
+                      dispatch(copyExistingPortfolio(createPortfolioCopy(originId), token));
+                    }
+                  },
                 },
                 {
                   // TODO: add Save as PDF ETCR-688
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
-                { 
-                  label: 'Delete', 
+                {
+                  label: 'Delete',
                   onClick: () => {
                     toggleDeleteModal(true);
                     setActivePortfolioId(row.values.id);
                   }
                 },
               ]}
-              trigger={
+              trigger={(
                 <div className="is-clickable is-flex mr-24">
                   <OptionsIcon />
                 </div>
-              }
+              )}
             />
           </div>
         );
@@ -172,4 +195,4 @@ const portfolioList = () => {
   );
 };
 
-export default portfolioList;
+export default PortfolioList;

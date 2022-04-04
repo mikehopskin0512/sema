@@ -3,10 +3,8 @@ import * as types from './types';
 const initialState = {
   isFetching: false,
   data: {
-    portfolio: {
-
-    },
-    portfolios: [],
+    portfolio: {},
+    portfolios: []
   },
   error: {},
 };
@@ -130,6 +128,26 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
+    };
+  case types.REQUEST_PORTFOLIO_COPY:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_PORTFOLIO_COPY_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolios: [...state.data.portfolios, action.portfolio],
+      },
+      error: {},
+    };
+  case types.REQUEST_PORTFOLIO_COPY_ERROR:
+    return {
+      ...state,
+      isFetching: true,
     };
   case types.REQUEST_REMOVE_PORTFOLIO:
     return {

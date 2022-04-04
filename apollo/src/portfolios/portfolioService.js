@@ -27,8 +27,7 @@ const structurePortfolio = ({
 export const create = async (portfolio) => {
   try {
     const newPortfolio = new Portfolio(structurePortfolio(portfolio));
-    const savedPortfolio = await newPortfolio.save();
-    return savedPortfolio;
+    return newPortfolio.save();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -52,7 +51,7 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
             model: 'User',
           }
         ]
-      })
+      });
     }
     return await portfolios.lean();
   } catch (err) {
@@ -169,7 +168,7 @@ export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
 export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
-    const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId)
+    const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId);
     // TODO: populate should be deleted here
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
@@ -185,8 +184,8 @@ export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
         {
           path: 'componentData.smartComments.userId',
           model: 'User',
-        }
-      ]
+        },
+      ],
     }).exec();
     return updatedPortfolio;
   } catch (err) {

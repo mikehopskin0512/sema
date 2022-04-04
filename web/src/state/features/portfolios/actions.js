@@ -1,6 +1,10 @@
+import React from 'react';
+import toast from 'toasted-notes';
+import { AlertFilledIcon } from '../../../components/Icons';
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio, deletePortfolio, patchPortfolioType } from './api';
+import { getPortfolio, putPortfolio, getUserPortfolio, deletePortfolio, patchPortfolioType, createPortfolio } from "./api";
 import { deleteSnapshot, putSnapshot } from '../snapshots/api';
+import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -101,6 +105,20 @@ const requestUpdatePortfolioTypeError = (errors) => ({
   errors,
 });
 
+const requestCopyPortfolio = () => ({
+  type: types.REQUEST_PORTFOLIO_COPY,
+});
+
+const requestCopyPortfolioError = (errors) => ({
+  type: types.REQUEST_PORTFOLIO_COPY_ERROR,
+  errors,
+});
+
+const requestCopyPortfolioSuccess = (portfolio) => ({
+  type: types.REQUEST_PORTFOLIO_COPY_SUCCESS,
+  portfolio,
+});
+
 export const fetchPortfoliosOfUser = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUserPortfolio());
@@ -108,7 +126,12 @@ export const fetchPortfoliosOfUser = (userId, token) => async (dispatch) => {
     const { data } = payload;
     dispatch(requestFetchUserPortfolioSuccess(data));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = `${status} - ${statusText}`;
     dispatch(requestFetchUserPortfolioError(errMessage));
   }
@@ -121,7 +144,12 @@ export const fetchPortfolio = (id) => async (dispatch) => {
     const { data } = payload;
     dispatch(requestFetchPortfolioSuccess(data));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = `${status} - ${statusText}`;
     dispatch(requestFetchPortfolioError(errMessage));
   }
@@ -135,9 +163,48 @@ export const updatePortfolio = (id, body, token) => async (dispatch) => {
     dispatch(requestUpdatePortfolioSuccess(data));
     return payload;
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestUpdatePortfolioError(errMessage));
+    return error.response;
+  }
+};
+
+export const copyExistingPortfolio = (portfolio, token) => async (dispatch) => {
+  try {
+    dispatch(requestCopyPortfolio());
+    const { data } = await createPortfolio(portfolio, token);
+    dispatch(requestCopyPortfolioSuccess(data));
+    return data;
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestCopyPortfolioError(errMessage));
+
+    // TODO: add general component for notifications
+    toast.notify(({ onClose }) => (
+      <PortfolioListNotification
+        text="Portfolio was not duplicated"
+        icon={<AlertFilledIcon size="small" />}
+        onClose={onClose}
+        onRetry={() => dispatch(copyExistingPortfolio(portfolio, token))} />
+    ), {
+      duration: 3000,
+      position: 'bottom-left',
+    });
+
     return error.response;
   }
 };
@@ -150,7 +217,13 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
     dispatch(requestUpdateSnapshotSuccess(data));
     return payload;
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestUpdateSnapshotError(errMessage));
     return error.response;
@@ -160,10 +233,14 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
 export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatch) => {
   try {
     dispatch(requestRemoveSnapshot());
-    const payload = await deleteSnapshot({ portfolioId, snapshotId }, token);
+    const payload = await deleteSnapshot({
+      portfolioId,
+      snapshotId,
+    }, token);
     const { data } = payload;
     const { portfolio } = data;
     dispatch(requestRemoveSnapshotSuccess(portfolio));
+
     return payload;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
