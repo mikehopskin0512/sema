@@ -129,6 +129,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeletePortfolio()}
+        type="portfolio"
       />
       <div className={clsx('has-background-white mb-10', styles.title)}>
         <div className="container py-20">

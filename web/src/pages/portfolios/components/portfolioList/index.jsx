@@ -166,6 +166,7 @@ const portfolioList = () => {
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeletePortfolio(activePortfolioId)}
+        type="portfolio"
       />
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} position="top-right" duration={3000}/>
     </div>
