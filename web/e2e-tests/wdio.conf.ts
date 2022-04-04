@@ -156,14 +156,15 @@ export const config: WebdriverIO.Config = {
         linkScreenshots: true,
         //to show the report in a browser when done
         showInBrowser: true,
-        collapseTests: true,
+        collapseTests: false,
         //to turn on screenshots after every test
-        useOnAfterCommandForScreenshot: true,
+        useOnAfterCommandForScreenshot: false,
       }
     ],
     ['allure', {
         outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,        
+        disableWebdriverStepsReporting: false,        
+        disableWebdriverScreenshotsReporting: false
     }]
   ],
   //
