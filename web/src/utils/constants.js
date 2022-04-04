@@ -255,6 +255,15 @@ export const BAR_CHART_MIN_TOP = 132;
 export const CIRCLE_CHART_MIN_TOP = 275;
 export const ON_INPUT_DEBOUNCE_INTERVAL_MS = 250;
 
+export const RESPONSE_STATUSES = {
+  SUCCESS: 200,
+};
+
+export const ALERT_TYPES = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+};
+
 export const PORTFOLIO_TYPES = {
   PUBLIC: 'public',
   PRIVATE: 'private',
