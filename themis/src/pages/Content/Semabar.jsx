@@ -123,7 +123,7 @@ const Semabar = (props) => {
      */
     const dropdownStyle = dropPosition === DROP_POSITIONS.UP
       ? { top: offsetPos.top - modalHeight }
-      : { top: '25px', maxHeight: '250px', overflow: 'scroll' };
+      : { top: '20px', maxHeight: 'fit-content', position: 'fixed' };
 
     return (
       <div className={containerClasses} style={{ position: 'inherit' }}>
