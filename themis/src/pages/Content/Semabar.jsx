@@ -89,10 +89,12 @@ const Semabar = (props) => {
   };
   const createAddTags = () => {
     const {
-      y, height, offsetPos,
+      y, height, offsetPos, pageY
     } = tagsButtonPositionValues;
+
     let dropPosition = DROP_POSITIONS.DOWN;
     const modalHeight = 350;
+    const isUpperModal = pageY < 720;
 
     if (y && height) {
       const vh = Math.max(
@@ -102,7 +104,7 @@ const Semabar = (props) => {
 
       const availableHeight = vh - (y + height);
 
-      if (availableHeight > modalHeight) {
+      if (availableHeight > modalHeight || isUpperModal) {
         dropPosition = DROP_POSITIONS.DOWN;
       } else {
         dropPosition = DROP_POSITIONS.UP;
@@ -145,6 +147,7 @@ const Semabar = (props) => {
                 y: targetY,
                 height: targetHeight,
                 width,
+                pageY: event.pageY,
                 offsetPos: {
                   left: event.currentTarget.offsetLeft,
                   top: event.currentTarget.offsetTop,
