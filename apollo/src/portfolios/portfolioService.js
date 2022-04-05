@@ -49,8 +49,9 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
           {
             path: 'componentData.smartComments.userId',
             model: 'User',
-          }
-        ]
+            select: ['firstName', 'lastName', 'username', 'avatarUrl'],
+          },
+        ],
       });
     }
     return await portfolios.lean();
@@ -133,9 +134,10 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
           {
             path: 'componentData.smartComments.userId',
             model: 'User',
-          }
-        ]
-      })
+            select: ['firstName', 'lastName', 'username', 'avatarUrl'],
+          },
+        ],
+      });
     }
     return await portfolio.lean();
   } catch (err) {
