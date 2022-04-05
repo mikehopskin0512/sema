@@ -210,6 +210,8 @@ export default (app, passport) => {
             userId: !comment.userId ? {} : {
               _id: comment.userId._id,
               avatarUrl: comment.userId.avatarUrl,
+              firstName: comment.userId.firstName,
+              lastName: comment.userId.lastName,
             },
           })),
         },
