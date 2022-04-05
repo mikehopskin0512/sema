@@ -99,4 +99,4 @@ Toaster.propTypes = {
   message: PropTypes.string.isRequired
 };
 
-export { notify, Toaster as default };
+export { Toaster as default, notify };

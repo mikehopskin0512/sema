@@ -3,7 +3,7 @@ import toast from 'toasted-notes';
 import { AlertFilledIcon } from '../../../components/Icons';
 import * as types from './types';
 import { getPortfolio, putPortfolio, getUserPortfolio, deletePortfolio, patchPortfolioType, createPortfolio, addSnapshotToPortfolio } from './api';
-import { deleteSnapshot, putSnapshot } from '../snapshots/api';
+import { deleteSnapshotFromPortfolio, putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 import { notify } from '../../../components/toaster/index';
 
@@ -234,7 +234,7 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
 export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatch) => {
   try {
     dispatch(requestRemoveSnapshot());
-    const payload = await deleteSnapshot({
+    const payload = await deleteSnapshotFromPortfolio({
       portfolioId,
       snapshotId,
     }, token);
