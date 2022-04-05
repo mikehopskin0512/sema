@@ -18,7 +18,7 @@ function ToasterIcon({ type }) {
   return null;
 }
 
-function ToasterElement({ onClose, title, type }) {
+function ToasterElement({ onClose, title, type, subtitle }) {
   return (
     <div
       className={`p-16 has-background-white ${styles[`container--${type}`]}`}
