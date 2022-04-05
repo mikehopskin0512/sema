@@ -74,7 +74,28 @@
 
 .textContainer {
   position: absolute;
-  top: -30px; 
-  background: black; 
+  top: -30px;
+  background: black;
   color: white;
+}
+
+.portfolio-ghost-button {
+  padding: 14px;
+  color: $gray-800;
+  border: 1px solid $gray-400;
+  box-sizing: border-box;
+  border-radius: 4px;
+  position: unset !important;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 12px;
+
+  svg {
+    color: rgba($blue-700, 0.5);
+  }
+}
+
+.portfolio-header-actions {
+  gap: 10px
 }

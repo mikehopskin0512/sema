@@ -2,9 +2,10 @@ import React from 'react';
 import toast from 'toasted-notes';
 import { AlertFilledIcon } from '../../../components/Icons';
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio, deletePortfolio, patchPortfolioType, createPortfolio } from "./api";
+import { getPortfolio, putPortfolio, getUserPortfolio, deletePortfolio, patchPortfolioType, createPortfolio, addSnapshotToPortfolio } from './api';
 import { deleteSnapshot, putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
+import { notify } from '../../../components/toaster/index';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -276,3 +277,40 @@ export const removePortfolio = (portfolioId, token) => async (dispatch) => {
     return error.response;
   }
 };
+
+export const addSnapshotsToPortfolio = ({
+  portfolioId,
+  snapshots,
+  token,
+  closeCallback,
+  type = 'dashboard'
+}) => async (dispatch) => {
+  try {
+    await addSnapshotToPortfolio(portfolioId, snapshots, token);
+    if (type === 'dashboard') {
+      const payload = await getPortfolio(portfolioId);
+      const { data } = payload;
+      dispatch(requestFetchPortfolioSuccess(data));
+    }
+    notify(
+      'Snapshots were added to this portfolio',
+      {
+        subtitle: `You've successfully added ${snapshots.length} Snapshots.`,
+        duration: 3000,
+      });
+    if (typeof closeCallback === 'function') closeCallback();
+  } catch (error) {
+    const {
+      response: {
+        status,
+        statusText,
+      },
+    } = error;
+    notify('Snapshot was not added', {
+      type: 'error',
+      duration: 3000,
+    });
+    const errMessage = `${status} - ${statusText}`;
+    dispatch(requestFetchPortfolioError(errMessage));
+  }
+}

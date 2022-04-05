@@ -1,0 +1,42 @@
+@import "../../../../styles/colors.module";
+
+.modal {
+  width: 40vw;
+  max-height: 900px;
+
+  @media screen and (max-width: 1400px){
+    width: 70vw;
+  }
+
+  table:first-child {
+    border-collapse: unset;
+    border-radius: 10px 10px 0 0;
+  }
+
+  tr {
+    background: $gray-300 !important;
+  }
+
+  th {
+    padding-top: 9px !important;
+    padding-bottom: 9px !important;
+    font-size: 10px !important;
+    font-weight: 600;
+    line-height: 13px;
+  }
+
+  table  th:nth-child(1){
+    border-radius: 8px 0 0 0;
+  }
+
+  table  th:nth-last-child(1){
+    border-radius: 0 8px 0 0;
+  }
+}
+
+.table-cell-value {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: $black-900;
+}

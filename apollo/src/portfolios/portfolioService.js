@@ -150,6 +150,10 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
 export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
+
+    // To exclude duplicates
+    if (portfolio.snapshots?.find(i => i.id.toString() === snapshotId)) return true;
+
     const snapshots = portfolio.snapshots.map(({ id, sort }) => {
       const position = sort + 1;
       return { id, sort: position };
