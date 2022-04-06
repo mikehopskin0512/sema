@@ -34,12 +34,15 @@ const AddModal = ({
     dispatch(fetchUserSnapshots(userId, token));
   }, []);
 
-  const formattedSnapshots = useMemo(() => snapshots.map((snapshot) => ({
-    title: snapshot.title,
-    updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
-    id: snapshot._id,
-  }))
-    .sort((a, b) => a.title.localeCompare(b.title)), [snapshots]);
+  const formattedSnapshots = useMemo(() =>
+    snapshots
+      .filter(item => !portfolio?.snapshots?.find(snap => snap.id?._id === item._id))
+      ?.map((snapshot) => ({
+        title: snapshot.title,
+        updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
+        id: snapshot._id,
+      }))
+      .sort((a, b) => a.title.localeCompare(b.title)), [snapshots, portfolio, isModalActive]);
 
   const setSnapsToAdd = (id) => {
     return setIdsToAdd((ids) => ids.includes(id) ? ids.filter(i => i !== id) : [...ids, id]);

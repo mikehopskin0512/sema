@@ -151,20 +151,22 @@ export const addSnapshotsToPortfolio = async (portfolioId, snapshotIds) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
 
-    // To exclude duplicates
-    if (portfolio.snapshots?.find(i => i.id.toString() === snapshotId)) return true;
+    const portfolioSnaps = portfolio.snapshots?.map(i => i.id.toString())
 
-    const portfolioSnapshots = portfolio.snapshots.map(({ id, sort }) => (
+    const portfolioSnapshots = portfolio.snapshots?.map(({ id, sort }) => (
       { id, sort: sort + snapshotIds.length }
     ));
+
     const snapshots = [
-      ...snapshotIds.map((id, sort) => ({ id, sort })),
+      // To exclude duplicates
+      ...snapshotIds.filter(snap => !portfolioSnaps?.includes(snap))?.map((id, sort) => ({ id, sort })),
       ...portfolioSnapshots,
     ];
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },
     ).exec();
+
     return updatedPortfolio;
   } catch (err) {
     const error = new errors.BadRequest(err);
