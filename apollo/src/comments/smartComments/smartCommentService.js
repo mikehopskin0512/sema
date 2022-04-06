@@ -128,7 +128,7 @@ export const update = async (
   smartComment,
 ) => {
   try {
-    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment);
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment, { new: true });
     return updatedSmartComment;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -785,4 +785,30 @@ export const _getSmartCommentersCount = (smartComments = []) => {
 
 export const _getPullRequests = (smartComments = []) => {
   return uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
+};
+
+export const updateByGithubId = async (
+  id,
+  smartComment,
+) => {
+  try {
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ 'githubMetadata.commentId': id }, smartComment, { new: true });
+    return updatedSmartComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const deleteByGithubId = async (
+  id,
+) => {
+  try {
+    await SmartComment.deleteOne({ 'githubMetadata.commentId': id });
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
 };
