@@ -33,10 +33,6 @@ export const create = async (collection, userId, teamId) => {
     }
 
     switch (collection.type) {
-      case COLLECTION_TYPE.COMMUNITY:
-        await populateCollectionsToUsers([createdCollection._id]);
-        await bulkUpdateTeamCollections(createdCollection._id, null, isActiveCollection);
-        break;
       case COLLECTION_TYPE.TEAM:
         await bulkUpdateTeamCollections(createdCollection._id, teamId, isActiveCollection)
         break;
