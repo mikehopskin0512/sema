@@ -11,7 +11,7 @@ import {
   update,
   deleteOne,
   getPortfolioById,
-  addSnapshotToPortfolio,
+  addSnapshotsToPortfolio,
   removeSnapshotFromPortfolio,
   updatePortfolioType,
 } from './portfolioService';
@@ -93,8 +93,8 @@ export default (app, passport) => {
     const { snapshots } = req.body;
     const { id: portfolioId } = req.params;
     try {
+      await addSnapshotsToPortfolio(portfolioId, snapshots);
       await Promise.all(snapshots.map(async (snapshotId) => {
-        await addSnapshotToPortfolio(portfolioId, snapshotId);
         await addPortfolioToSnapshot(snapshotId, portfolioId);
       }));
       return res.status(201).send({});

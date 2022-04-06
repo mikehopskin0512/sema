@@ -147,18 +147,20 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
   }
 };
 
-export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
+export const addSnapshotsToPortfolio = async (portfolioId, snapshotIds) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
 
     // To exclude duplicates
     if (portfolio.snapshots?.find(i => i.id.toString() === snapshotId)) return true;
 
-    const snapshots = portfolio.snapshots.map(({ id, sort }) => {
-      const position = sort + 1;
-      return { id, sort: position };
-    });
-    snapshots.unshift({ id: snapshotId, sort: 0 });
+    const portfolioSnapshots = portfolio.snapshots.map(({ id, sort }) => (
+      { id, sort: sort + snapshotIds.length }
+    ));
+    const snapshots = [
+      ...snapshotIds.map((id, sort) => ({ id, sort })),
+      ...portfolioSnapshots,
+    ];
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },

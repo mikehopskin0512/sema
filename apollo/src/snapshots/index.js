@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import { version } from '../config';
-import { addSnapshotToPortfolio, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
+import { addSnapshotsToPortfolio, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
 import logger from '../shared/logger';
 import { create, update, deleteOne } from './snapshotService';
 import checkEnv from '../middlewares/checkEnv';
@@ -24,7 +24,7 @@ export default (app, passport) => {
         portfolios: portfolioId ? [portfolioId] : [],
       });
       if (portfolioId) {
-        await addSnapshotToPortfolio(portfolioId, savedSnapshot._id);
+        await addSnapshotsToPortfolio(portfolioId, [savedSnapshot._id]);
       }
       return res.status(201).send(savedSnapshot);
     } catch (error) {
