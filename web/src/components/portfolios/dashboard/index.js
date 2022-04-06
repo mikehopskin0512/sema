@@ -40,11 +40,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
             <CheckFilledIcon size="small" />
           }
           <div>
-            <div className="is-flex is-justify-content-space-between mb-15">
+            <div className="is-flex is-justify-content-space-between">
               <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
                 {isError ? 'Snapshots were not added.' : 'Snapshots were added to this portfolio'}
               </span>
-              <div onClick={onClose}>
+              <div className="ml-30" onClick={onClose}>
                 <CloseIcon size="small" />
               </div>
             </div>

@@ -24,11 +24,11 @@ const snapshotList = () => {
             <CheckFilledIcon size="small" />
           }
           <div>
-            <div className="is-flex is-justify-content-space-between mb-15">
+            <div className="is-flex is-justify-content-space-between">
               <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
                 {isError ? 'Snapshot was not added.' : 'Snapshot was added to your portfolio'}
               </span>
-              <div onClick={onClose}>
+              <div className="ml-30" onClick={onClose}>
                 <CloseIcon size="small" />
               </div>
             </div>
@@ -79,7 +79,7 @@ const snapshotList = () => {
   const tableData = snapshots.map((snapshot, i) => ({
     id: snapshot._id,
     // TODO: will be fixed in portfolio name ticket
-    title: `Snapshot ${i}`,
+    title: snapshot.title,
     updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
     snapshotId: snapshot._id,
     portfoliosAmount: snapshot.portfolios?.length,

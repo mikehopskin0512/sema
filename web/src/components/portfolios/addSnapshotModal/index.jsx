@@ -46,7 +46,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       id: snapshot._id,
     })) : 
     portfolios.map(portfolio => ({
-        title: portfolio._id, //ToDO: fix this(change to name) after adding portfolio name
+        title: portfolio.title,
         date: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
         type: portfolio.type,
         id: portfolio._id,
