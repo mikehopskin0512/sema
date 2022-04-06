@@ -12,15 +12,16 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
   return (
     <div
       className={clsx(
-        "dropdown ",
-        isOpen ? "is-active" : "",
-        isRight && "is-right",
-        isUp && "is-up"
+        'dropdown ',
+        isOpen ? 'is-active' : '',
+        isRight && 'is-right',
+        isUp && 'is-up',
       )}
       ref={popupRef}
       onClick={(event) => event.stopPropagation()}
+      aria-hidden="true"
     >
-      <div className="dropdown-trigger" onClick={toggleMenu}>
+      <div className="dropdown-trigger" onClick={toggleMenu} aria-hidden="true">
         {trigger}
       </div>
 
@@ -32,7 +33,10 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
                 <button
                   type="button"
                   className="button is-small px-0 is-ghost has-background-white has-text-black outline-none"
-                  onClick={onClick}
+                  onClick={() => {
+                    onClick();
+                    closeMenu();
+                  }}
                 >
                   {label}
                 </button>

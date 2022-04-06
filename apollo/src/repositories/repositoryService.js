@@ -203,19 +203,8 @@ export const aggregateRepositories = async (params, includeSmartComments, date) 
     if (repos.length > 0) {
       // Tally stats
       const repositories = Promise.all(repos.map(async (repo) => {
-        const {
-          _id,
-          externalId = '',
-          name = '',
-          createdAt,
-          updatedAt,
-          repoStats: {
-            smartComments = 0,
-            smartCommenters = 0,
-            smartCodeReviews = 0,
-            semaUsers = 0,
-          },
-        } = repo;
+        const { _id, externalId = '', name = '', createdAt, updatedAt, repoStats } = repo;
+        const { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0, ...rawRepoStats } = repoStats;
         const metrics = await getRepoMetrics(externalId);
         const data = {
           repoStats: {
@@ -223,6 +212,7 @@ export const aggregateRepositories = async (params, includeSmartComments, date) 
             smartCommenters,
             smartCodeReviews,
             semaUsers,
+            ...rawRepoStats
           },
           metrics,
           _id,

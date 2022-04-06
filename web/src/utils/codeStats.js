@@ -480,3 +480,15 @@ const getDateRange = (previousRange, currentRange) => {
   }
   return `${prevMonth} ${prevDay}-${currMonth} ${currDay}`;
 };
+
+export const getCommentsCountLastMonth = (repository) => {
+  const now = new Date()
+  const monthBefore = subDays(now, 30)
+  const dateRange = { start: monthBefore, end: now }
+  return repository.repoStats.reactions.reduce((prev, curr) => {
+    if (isWithinInterval(new Date(curr.createdAt), dateRange)) {
+      return prev + 1;
+    }
+    return prev;
+  }, 0)
+}

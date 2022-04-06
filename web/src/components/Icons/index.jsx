@@ -87,6 +87,7 @@ import { ReactComponent as LinkSvg } from './img/link.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
+import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -659,5 +660,11 @@ export const TagIcon = (props) => (
 export const InviteIcon = (props) => (
   <Icon {...props}>
     <InviteSvg />
+  </Icon>
+);
+
+export const FilterBarsIcon = (props) => (
+  <Icon {...props}>
+    <FilterBarsSvg fill="" />
   </Icon>
 );
