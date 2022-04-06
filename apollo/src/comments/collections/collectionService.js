@@ -118,11 +118,25 @@ export const findByType = async (type) => {
   }
 };
 
+const addPublicCollectionsToList = (collections, communityCollectionDataList) => {
+  const communityCollections = communityCollectionDataList.map((communityCollectionData) => ({
+    isActive: false,
+    collectionData: communityCollectionData,
+  }));
+  const basicCollections = collections || [];
+  const basicCollectionIdSet = new Set(basicCollections.filter(collection =>  collection.collectionData).map(collection =>  collection.collectionData._id.toString()));
+  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));  
+  return [...basicCollections , ...communityCollectionsToAdd]
+
+}
+
 export const getUserCollectionsById = async (id, teamId = null) => {
   try {
     const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
+    const communityCollectionDataList = await findByType(COLLECTION_TYPE.COMMUNITY);
     if (parent) {
-      const collections = parent.collections?.filter((collection) => collection.collectionData).map((collection) => {
+      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList); 
+      const collections = collectionFullList.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
         let guides = [];
