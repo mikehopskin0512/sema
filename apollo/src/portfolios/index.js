@@ -11,7 +11,7 @@ import {
   update,
   deleteOne,
   getPortfolioById,
-  addSnapshotToPortfolio,
+  addSnapshotsToPortfolio,
   removeSnapshotFromPortfolio,
   updatePortfolioType,
 } from './portfolioService';
@@ -88,13 +88,13 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.post('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { snapshots } = req.body;
     const { id: portfolioId } = req.params;
     try {
+      await addSnapshotsToPortfolio(portfolioId, snapshots);
       await Promise.all(snapshots.map(async (snapshotId) => {
-        await addSnapshotToPortfolio(portfolioId, snapshotId);
         await addPortfolioToSnapshot(snapshotId, portfolioId);
       }));
       return res.status(201).send({});
