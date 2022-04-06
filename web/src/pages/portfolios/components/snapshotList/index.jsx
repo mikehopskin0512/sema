@@ -1,15 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
+import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../../../components/portfolios/addSnapshotModal';
+import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../components/Icons';
+import toaster from 'toasted-notes';
+import router from 'next/router';
 import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
 
 const snapshotList = () => {
+  const showNotification = (isError, path) => {
+    //ToDo: change this for new notification component after ETCR-1086 will be merged
+    toaster.notify(({ onClose }) => (
+      <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
+        <div className="message-body has-background-white is-flex">
+          {isError ?
+            <AlertFilledIcon size="small" /> :
+            <CheckFilledIcon size="small" />
+          }
+          <div>
+            <div className="is-flex is-justify-content-space-between">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
+                {isError ? 'Snapshot was not added.' : 'Snapshot was added to your portfolio'}
+              </span>
+              <div className="ml-30" onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
+            </div>
+            {!isError && <div 
+              className="has-text-info is-clickable is-underlined" 
+              onClick={() => {
+                router.push(path);
+                onClose();
+              }}
+            >
+              View portfolio
+            </div>}
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: isError ? 3000 : null,
+    });
+  };
+  const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
+  const isModalActive = !!snapshotIdForPortfolio;
   const dispatch = useDispatch();
 
   const [isDeleteModal, setDeleteModal] = useState(false);
@@ -35,7 +76,9 @@ const snapshotList = () => {
     setSelectedSnapshot(isDeleteModal ? null : info);
   };
 
-  const tableData = snapshots.map((snapshot) => ({
+  const tableData = snapshots.map((snapshot, i) => ({
+    id: snapshot._id,
+    // TODO: will be fixed in portfolio name ticket
     title: snapshot.title,
     updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
     snapshotId: snapshot._id,
@@ -43,6 +86,12 @@ const snapshotList = () => {
   }));
 
   const columns = [
+    {
+      Header: '',
+      isVisible: false,
+      accessor: 'id',
+      className: 'is-hidden',
+    },
     {
       Header: 'Title',
       accessor: 'title',
@@ -68,13 +117,14 @@ const snapshotList = () => {
               className={clsx("is-flex mr-20", isPublic && "is-cursor-pointer")}
             >
               <button
-                onClick={addToPortfolio}
+                onClick={() => setSnapshotIdForPortfolio(row.values.id)}
                 type="button"
                 className="button is-transparent has-text-weight-semibold"
               >
                 Add to Portfolio
               </button>
             </div>
+            {/* TODO: fix menu */}
             <DropDownMenu
               isRight
               options={[
@@ -120,6 +170,13 @@ const snapshotList = () => {
         className="overflow-unset shadow-none"
         data={tableData}
         columns={columns}
+      />
+      <AddSnapshotModal
+        active={isModalActive}
+        snapshotId={snapshotIdForPortfolio}
+        onClose={() => setSnapshotIdForPortfolio(null)}
+        showNotification={showNotification}
+        type={ADD_SNAPSHOT_MODAL_TYPES.PORTFOLIOS}
       />
       <DeleteSnapshot
         isModalActive={isDeleteModal}

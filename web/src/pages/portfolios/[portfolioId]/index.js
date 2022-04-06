@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PortfolioHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import PortfolioDashboard from '../../../components/portfolios/dashboard';
-import Loader from '../../../components/Loader';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { fetchPortfolio } = portfoliosOperations;
@@ -42,18 +41,12 @@ const PublicPortfolio = () => {
 
   return (
     <>
-    {portfolios.isFetching ? (
-        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-          <Loader />
-        </div>
-      ) : (
-      <div className="has-background-gray-200 hero">
-        <Helmet {...PortfolioHelmet} />
-        <div className="hero-body pb-300 mx-25">
-          <PortfolioDashboard portfolio={portfolio} isIndividualView={true} />
-        </div>
+    <div className="has-background-gray-200 hero">
+      <Helmet {...PortfolioHelmet} />
+      <div className="hero-body pb-300 mx-25">
+        <PortfolioDashboard portfolio={portfolio} isIndividualView={true} isLoading={portfolios.isFetching}/>
       </div>
-      )}
+    </div>
     </>
   );
 };
