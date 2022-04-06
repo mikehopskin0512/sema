@@ -156,14 +156,15 @@ export const config: WebdriverIO.Config = {
         linkScreenshots: true,
         //to show the report in a browser when done
         showInBrowser: true,
-        collapseTests: true,
+        collapseTests: false,
         //to turn on screenshots after every test
-        useOnAfterCommandForScreenshot: true,
+        useOnAfterCommandForScreenshot: false,
       }
     ],
     ['allure', {
         outputDir: 'allure-results',
-        disableWebdriverStepsReporting: true,        
+        disableWebdriverStepsReporting: false,        
+        disableWebdriverScreenshotsReporting: false
     }]
   ],
   //
@@ -178,7 +179,7 @@ export const config: WebdriverIO.Config = {
     // <boolean> invoke formatters without executing steps
     // dryRun: false,
     // <boolean> abort the run on first failure
-    failFast: true,
+    failFast: false,
     // <boolean> Enable this config to treat undefined definitions as
     // warnings
     ignoreUndefinedDefinitions: false,

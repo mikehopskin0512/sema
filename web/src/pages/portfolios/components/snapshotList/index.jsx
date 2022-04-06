@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
@@ -9,6 +9,9 @@ import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../../../componen
 import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../components/Icons';
 import toaster from 'toasted-notes';
 import router from 'next/router';
+import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
+import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
+import styles from '../../portfolios.module.scss';
 
 const snapshotList = () => {
   const showNotification = (isError, path) => {
@@ -46,18 +49,40 @@ const snapshotList = () => {
       duration: isError ? 3000 : null,
     });
   };
-  const { snapshotsState } = useSelector((state) => state);
+  const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
+  const isModalActive = !!snapshotIdForPortfolio;
+  const dispatch = useDispatch();
+
+  const [isDeleteModal, setDeleteModal] = useState(false);
+  const [selectedSnapshot, setSelectedSnapshot] = useState(null);
+  const { snapshotsState, authState } = useSelector((state) => state);
+
   const {
     data: { snapshots },
   } = snapshotsState;
-  const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
-  const isModalActive = !!snapshotIdForPortfolio;
+  const { token } = authState;
+
+  const addToPortfolio = () => {
+    //  TODO: add to portfolio
+  };
+
+  const deleteSnapshot = (id, token) => {
+    dispatch(deleteUserSnapshot(id, token));
+    setDeleteModal(false);
+  };
+
+  const toggleDeleteModal = (info) => {
+    setDeleteModal(!isDeleteModal);
+    setSelectedSnapshot(isDeleteModal ? null : info);
+  };
 
   const tableData = snapshots.map((snapshot, i) => ({
     id: snapshot._id,
     // TODO: will be fixed in portfolio name ticket
     title: `Snapshot ${i}`,
     updatedAt: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
+    snapshotId: snapshot._id,
+    portfoliosAmount: snapshot.portfolios?.length,
   }));
 
   const columns = [
@@ -84,17 +109,19 @@ const snapshotList = () => {
       className: 'pl-20 py-10 has-background-white-50',
       Cell: ({ row }) => {
         const isPublic = row.values.type === 'public';
+        const { portfoliosAmount, snapshotId } = row.original;
+
         return (
           <div className="is-flex is-justify-content-flex-end">
-            <div className={clsx(
-              'is-flex mr-20',
-              isPublic && 'is-cursor-pointer',
-            )}>
+            <div
+              className={clsx("is-flex mr-20", isPublic && "is-cursor-pointer")}
+            >
               <button
                 onClick={() => setSnapshotIdForPortfolio(row.values.id)}
                 type="button"
-                className="button is-transparent"
-              >+ Add to Portfolio
+                className="button is-transparent has-text-weight-semibold"
+              >
+                Add to Portfolio
               </button>
             </div>
             {/* TODO: fix menu */}
@@ -114,7 +141,11 @@ const snapshotList = () => {
                 // TODO: delete function
                 {
                   label: 'Delete',
-                  onClick: () => console.log('TODO: will be implement later')
+                  onClick: () =>
+                    toggleDeleteModal({
+                      snapshotId,
+                      portfoliosAmount,
+                    }),
                 },
               ]}
               trigger={
@@ -146,6 +177,24 @@ const snapshotList = () => {
         onClose={() => setSnapshotIdForPortfolio(null)}
         showNotification={showNotification}
         type={ADD_SNAPSHOT_MODAL_TYPES.PORTFOLIOS}
+      />
+      <DeleteSnapshot
+        isModalActive={isDeleteModal}
+        toggleModalActive={setDeleteModal}
+        bodyContent={
+          <section>
+            <span className="has-text-red-600">Attention!</span> This Snapshot
+            appears in {selectedSnapshot?.portfoliosAmount ?? 0} portfolios.
+            Deleting the Snapshot will permanently remove it from all
+            portfolios.
+          </section>
+        }
+        onSubmit={() => deleteSnapshot(selectedSnapshot?.snapshotId, token)}
+        bodyPaddings="pl-40 pr-40 pb-40 pt-25"
+        headerClass={styles["snapshots-modal-header"]}
+        additionalWrapperClass={styles["snapshots-modal-wrapper"]}
+        titleClass={styles["snapshots-modal-title"]}
+        crossClass={styles["snapshots-modal-cross"]}
       />
     </div>
   );

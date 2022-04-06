@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 import clsx from 'clsx'
 import styles from './metricsCard.module.scss'
 import { ResponsiveLine } from "@nivo/line";
@@ -8,6 +9,7 @@ import { InfoOutlineIcon } from '../../Icons';
 import { blue700, gray100 } from "../../../../styles/_colors.module.scss";
 
 const MetricsCard = ({
+  total,
   title,
   tooltip,
   dataPoints,
@@ -49,7 +51,7 @@ const MetricsCard = ({
             styles["card-subtitle"]
           )}
         >
-          {lastPoint}
+          {total}
           <div className={styles.chart}>
             <ResponsiveLine
               curve="monotoneX"
