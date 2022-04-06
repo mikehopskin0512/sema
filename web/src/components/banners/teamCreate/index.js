@@ -12,11 +12,15 @@ const TeamCreateBanner = () => {
   const router = useRouter();
   const { pathname } = router;
   const {
+    auth,
     teamsState,
   } = useSelector((state) => ({
+    auth: state.authState,
     teamsState: state.teamsState,
   }));
   const [active, toggleActive] = useState(false);
+  const { user } = auth;
+  const { isOnboarded } = user;
   const { teams } = teamsState;
 
   const redirectUser = () => {
@@ -24,8 +28,8 @@ const TeamCreateBanner = () => {
   };
 
   useEffect(() => {
-    toggleActive(teams.length !== 0 && ENABLED_PAGES.includes(pathname));
-  }, [pathname, teams]);
+    toggleActive(teams.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded);
+  }, [pathname, teams, isOnboarded]);
 
   return (
     <>
