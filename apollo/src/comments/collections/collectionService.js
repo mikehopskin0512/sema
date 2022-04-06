@@ -102,7 +102,14 @@ export const findById = async (id) => {
 
 export const findByType = async (type) => {
   try {
-    const collections = Collection.find({ type }).exec();
+    const collections = Collection.find({ type }).lean().populate({
+      path: 'comments',
+      model: 'SuggestedComment',
+      populate: {
+        path: 'engGuides.engGuide',
+        model: 'EngGuide'
+      }
+    }).sort({ createdAt: -1 }).exec();
     return collections;
   } catch (err) {
     logger.error(err);
