@@ -7,6 +7,7 @@ export const { SEMA_COOKIE_DOMAIN } = process.env;
 export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
+export const { SEGMENT_API_KEY } = process.env;
 
 export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.gif`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
