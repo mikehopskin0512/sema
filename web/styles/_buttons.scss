@@ -1,0 +1,17 @@
+@import "./_colors.module.scss";
+
+.is-primary.is-outlined {
+  &:hover {
+    background-color: $blue-0 !important;
+    border-color: $blue-600 !important;
+    color: $blue-600 !important;
+  }
+  &:focus {
+    border-color: $orange-200 !important;
+    background-color: $white-0 !important;
+    color: $blue-600 !important;
+    &:not(:active) {
+      box-shadow: 0 0 0 0.125em $orange-200 !important;
+    }
+  }
+}

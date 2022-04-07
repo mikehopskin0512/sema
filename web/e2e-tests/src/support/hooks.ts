@@ -223,9 +223,11 @@ export const hooks = {
   // },
   // beforeStep: function ({uri, feature, step}, context) {
   // },
-  // afterStep: function ({ uri, feature, step }, context, { error, result, duration, passed }) {
-
-  // },
+  afterStep: async function ({ uri, feature, step }, context, { error, result, duration, passed }) {
+    if (await error) {
+      await browser.takeScreenshot();
+    }
+  },
 
   /**
    *
@@ -237,13 +239,13 @@ export const hooks = {
    * @param {number}                 result.duration  duration of scenario in milliseconds
    * @param {Object}                 context          Cucumber World object
    */
-  afterScenario: function (world, result, context) {
-    if ( world.result.status === "FAILED") {
-      console.log("FAILED TEST!");
-      browser.takeScreenshot();
-    }
-  },
-  
+  // afterScenario: async function (world, result, context) {
+  //   if (await world.result.status === "FAILED") {
+  //     console.log("FAILED TEST!");
+  //     await browser.takeScreenshot();
+  //   }
+  // },
+
   // afterFeature: function (uri, feature, scenarios) {
   // }
 };

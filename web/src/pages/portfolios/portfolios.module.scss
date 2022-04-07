@@ -1,3 +1,7 @@
+@import "../../../styles/_colors.module.scss";
+
+@import '../../../styles/colors.module';
+
 .user-summary {
   position: relative;
 }
@@ -31,6 +35,46 @@
 
 .edit-icon {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
+}
+
+.snapshots-modal {
+  &-wrapper {
+    width: 510px;
+  }
+
+  &-header {
+    padding: 40px 40px 0 40px;
+    border-bottom: none;
+  }
+
+  &-title {
+    font-size: 2rem;
+  }
+
+  &-cross {
+    opacity: 0.5;
+  }
+}
+
+.notification-toast {
+  &-content-wrapper {
+    width: 300px;
+  }
+  &-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  &-icon {
+    position: relative;
+    top: -5px;
+    max-height: 20px;
+    svg {
+      color: $gray-600
+    }
+  }
 }

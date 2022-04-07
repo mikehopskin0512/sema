@@ -4,28 +4,66 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon, ShareIcon } from '../../Icons';
+import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
-import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL } from '../../../utils/constants';
+import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
 import Avatar from 'react-avatar';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
+import useAuthEffect from '../../../hooks/useAuthEffect';
+import toaster from 'toasted-notes';
+import DeleteModal from '../../snapshots/deleteModal';
+import DropDownMenu from '../../dropDownMenu';
+import router from 'next/router';
+import { alertOperations } from '../../../state/features/alerts';
 import { gray600, black950 } from '../../../../styles/_colors.module.scss';
 import ErrorPage from '../errorPage';
+import Loader from '../../../components/Loader';
 
-const { updatePortfolio, updatePortfolioType } = portfoliosOperations;
+const { fetchUserSnapshots } = snapshotsOperations;
+const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
+const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }) => {
+  const showNotification = (isError) => {
+    //ToDo: change this for new notification component after ETCR-1086 will be merged
+    toaster.notify(({ onClose }) => (
+      <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
+        <div className="message-body has-background-white is-flex">
+          {isError ?
+            <AlertFilledIcon size="small" /> :
+            <CheckFilledIcon size="small" />
+          }
+          <div>
+            <div className="is-flex is-justify-content-space-between">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
+                {isError ? 'Snapshots were not added.' : 'Snapshots were added to this portfolio'}
+              </span>
+              <div className="ml-30" onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: isError ? 3000 : null,
+    });
+  };
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
       auth: state.authState,
     }),
   );
-  const { token = '', user: { _id: userId } } = auth;
+  const { user: userData, token = '' } = auth;
+  const { _id: userId } = userData;
 
   const [user, setUser] = useState({
     fullName: '',
@@ -37,9 +75,13 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [titleModalOpen, setTitleModalOpen] = useState(false);
+  const [isParsing, setIsParsing] = useState(false);
+  const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
   const parsePortfolio = (portfolio) => {
+    setIsParsing(true);
     if (!isEmpty(portfolio)) {
       const {
         identities = [], headline, imageUrl, overview, snapshots: snapshotsData, title,
@@ -51,6 +93,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
         setSnapshots(d);
       }
     }
+    setIsParsing(false);
   };
 
   const onSaveProfile = async (values) => {
@@ -64,12 +107,23 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
 
       body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
-      if (payload.status === 200) {
+      if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
         setTitleModalOpen(false);
         // We might need to change this one in the future if portfolio dashboard handles multiple portfolio
         parsePortfolio(payload.data);
       }
+    }
+  };
+
+  const onDeletePortfolio = async () => {
+    const payload = await dispatch(removePortfolio(portfolio._id, token));
+    toggleDeleteModal(false);
+    await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
+    if (payload.status === RESPONSE_STATUSES.SUCCESS) {
+      dispatch(triggerAlert(`Portfolio was successfully deleted`, ALERT_TYPES.SUCCESS));
+    } else {
+      dispatch(triggerAlert(`Portfolio was not deleted`, ALERT_TYPES.ERROR));
     }
   };
 
@@ -84,23 +138,31 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
   };
 
   const isPublicPortfolio = () => portfolio.type === PORTFOLIO_TYPES.PUBLIC;
+  const isPrivatePortfolio = () => portfolio.type === PORTFOLIO_TYPES.PRIVATE;
 
   const onChangeToggle = async () => {
     const newType = isPublicPortfolio() ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
     await dispatch(updatePortfolioType(portfolio._id, newType, token));
   };
-  
+
   const onCopy = () => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIOS}/${portfolio._id}`);
     changeIsCopied(true);
   };
 
-  if (!isOwner && !isPublicPortfolio() && isIndividualView) {
+  if (isLoading || isParsing) {
+    return (
+      <Loader />
+      )
+  }
+
+  if (!isOwner && isPrivatePortfolio() && isIndividualView) {
     return <ErrorPage />
   }
 
   return (
     <>
+      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <EditPortfolioTitle
         onSubmit={onSaveProfile}
@@ -108,44 +170,82 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
         isOpen={titleModalOpen}
         profileTitle={user.title}
       />
-      <div className={clsx('has-background-white mb-10', styles.title)}>
+      <DeleteModal
+        isModalActive={isDeleteModalOpen}
+        toggleModalActive={toggleDeleteModal}
+        onSubmit={() => onDeletePortfolio()}
+        type="portfolio"
+      />
+      <div className={clsx('mb-10', styles.title)}>
         <div className="container py-20">
-          <div className="is-relative is-flex mx-10">
-            <div className="is-size-4 has-text-weight-bold">{user.title}</div>
-            <div>
+          <div className="is-relative is-flex mx-10 is-justify-content-space-between">
+            <div className="is-relative is-flex">
+              <div className="is-size-4 has-text-weight-bold">{user.title}</div>
+              <div>
               {
                 isOwner && (
                   <EditIcon className={clsx(styles['edit-icon'], 'is-clickable mt-5 ml-20')} onClick={() => setTitleModalOpen(true)} />
                 )
               }
+              </div>
             </div>
-            {isOwner && isIndividualView && 
-            <div className="is-flex ml-20" style={{paddingTop: '3px'}}>
-              <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
-                <div className={clsx(styles['textContainer'])}>
-                  {isPublicPortfolio() ? 
-                  (isCopied && hover && 'Copied! This portfolio is viewable with this link.') : 
-                  (hover && 'Change status to “Public” in order to copy sharable link.')}
-                </div>
-                <span className="mr-10 is-size-5">Public</span>
-                <input
-                  id={`activeSwitch-${portfolio._id}`}
-                  type="checkbox"
-                  onChange={onChangeToggle}
-                  name={`activeSwitch-${portfolio._id}`}
-                  className="switch is-rounded"
-                  checked={isPublicPortfolio()}
+            <div className="is-relative is-flex">
+              <div className={styles['dropdownContainer']}>
+                <DropDownMenu
+                  isRight
+                  options={[
+                  {
+                    // TODO: add Duplicate - ETCR-1030
+                    label: 'Duplicate Portfolio',
+                    onClick: () => console.log('TODO: will be implement later'),
+                  },
+                  {
+                    label: 'Delete', onClick: () => toggleDeleteModal(true)
+                  },
+                  ]}
+                  trigger={
+                    <div className="is-clickable">
+                      <OptionsIcon />
+                    </div>
+                  }
                 />
-                <label htmlFor={`activeSwitch-${portfolio._id}`} />
               </div>
-              <div 
-                onClick={isPublicPortfolio() ? onCopy : () => {}} 
-                onMouseEnter={() => setHover(true)} 
-                onMouseLeave={() => setHover(false)}
-              >
-                <ShareIcon color={isPublicPortfolio() ? black950 : gray600}/>
-              </div>
-            </div>}
+              {isOwner && isIndividualView &&
+              <div className="is-flex ml-20" style={{paddingTop: '3px'}}>
+                <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                  <div className={clsx(styles['textContainer'])}>
+                    {isPublicPortfolio() ?
+                    (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
+                    (hover && 'Change status to “Public” in order to copy sharable link.')}
+                  </div>
+                  <span className="mr-10 is-size-5">Public</span>
+                  <input
+                    id={`activeSwitch-${portfolio._id}`}
+                    type="checkbox"
+                    onChange={onChangeToggle}
+                    name={`activeSwitch-${portfolio._id}`}
+                    className="switch is-rounded"
+                    checked={isPublicPortfolio()}
+                  />
+                  <label htmlFor={`activeSwitch-${portfolio._id}`} />
+                </div>
+                <div
+                  onClick={isPublicPortfolio() ? onCopy : () => {}}
+                  onMouseEnter={() => setHover(true)}
+                  onMouseLeave={() => setHover(false)}
+                >
+                  <ShareIcon color={isPublicPortfolio() ? black950 : gray600}/>
+                </div>
+                <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
+                <button
+                  onClick={() => setIsActive(true)}
+                  type="button"
+                  className="button is-transparent m-0"
+                >
+                  + Add Snapshot
+                </button>
+              </div>}
+            </div>
           </div>
         </div>
       </div>
@@ -208,12 +308,14 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
 
 PortfolioDashboard.defaultProps = {
   isIndividualView: false,
+  isLoading: false,
 };
 
 
 PortfolioDashboard.propTypes = {
   portfolio: PropTypes.object.isRequired,
   isIndividualView: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 

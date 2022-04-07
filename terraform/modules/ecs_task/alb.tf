@@ -20,9 +20,20 @@ resource "aws_lb_target_group" "service" {
 resource "aws_lb_listener_rule" "service_routing" {
   listener_arn = data.aws_lb_listener.https["created"].arn
 
+  priority = var.ecs_external_access_priority
+
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.service["created"].arn
+  }
+
+  dynamic "condition" {
+    for_each = length(compact([null, "", var.ecs_external_access_path_pattern])) > 0 ? ["created"] : []
+    content {
+      path_pattern {
+        values = [var.ecs_external_access_path_pattern]
+      }
+    }
   }
 
   condition {

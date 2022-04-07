@@ -21,6 +21,8 @@ import {
   getSuggestedMetrics,
   exportSuggestedMetrics,
   getSmartCommentsTagsReactions,
+  updateByGithubId,
+  deleteByGithubId,
 } from './smartCommentService';
 import { get } from '../../repositories/repositoryService';
 import checkEnv from '../../middlewares/checkEnv';
@@ -210,10 +212,38 @@ export default (app, passport) => {
             userId: !comment.userId ? {} : {
               _id: comment.userId._id,
               avatarUrl: comment.userId.avatarUrl,
+              firstName: comment.userId.firstName,
+              lastName: comment.userId.lastName,
             },
           })),
         },
       });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.put('/update-by-github/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const smartComment = req.body;
+      const updatedSmartComment = await updateByGithubId(id, smartComment);
+      if (!updatedSmartComment) {
+        throw new errors.BadRequest('Smart Comment update error');
+      }
+      return res.status(204).json({ smartComment: updatedSmartComment });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.delete('/update-by-github/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      await deleteByGithubId(id);
+      return res.status(200).json({ deleted: true });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

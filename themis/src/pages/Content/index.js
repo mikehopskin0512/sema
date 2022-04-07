@@ -25,7 +25,9 @@ import {
   setTextareaSemaIdentifier,
   checkSubmitButton,
   fireAmplitudeEvent,
+  checkIfPullRequestReviewUrl,
   fetchCurrentUser,
+  onDeleteComment,
 } from './modules/content-util';
 
 import {
@@ -62,6 +64,8 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
+
+checkIfPullRequestReviewUrl();
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
@@ -124,6 +128,9 @@ const onLoginChecked = () => {
        */
   window.semaExtensionRegistry.registerEventListener('click', (event) => {
     onDocumentClicked(event);
+    if (event.target?.ariaLabel === 'Delete comment') {
+      onDeleteComment(event);
+    }
   }, true);
 
   /**
