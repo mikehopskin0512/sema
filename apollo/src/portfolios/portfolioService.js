@@ -162,12 +162,13 @@ export const addSnapshotsToPortfolio = async (portfolioId, snapshotIds) => {
       ...snapshotIds.filter(snap => !portfolioSnaps?.includes(snap))?.map((id, sort) => ({ id, sort })),
       ...portfolioSnapshots,
     ];
-    const updatedPortfolio = await Portfolio.findOneAndUpdate(
+
+    await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },
     ).exec();
 
-    return updatedPortfolio;
+    return getPortfolioById(portfolioId);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

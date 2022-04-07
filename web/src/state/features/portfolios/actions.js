@@ -286,10 +286,8 @@ export const addSnapshotsToPortfolio = ({
   type = 'dashboard'
 }) => async (dispatch) => {
   try {
-    await addSnapshotToPortfolio(portfolioId, snapshots, token);
+    const { data } = await addSnapshotToPortfolio(portfolioId, snapshots, token);
     if (type === 'dashboard') {
-      const payload = await getPortfolio(portfolioId);
-      const { data } = payload;
       dispatch(requestFetchPortfolioSuccess(data));
     }
     notify(

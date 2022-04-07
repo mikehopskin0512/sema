@@ -1,19 +1,18 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
+import { format } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
 import { CloseIcon } from '../../../components/Icons';
 import styles from './addModal.module.scss';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserSnapshots } from '../../../state/features/snapshots/actions';
 import Table from '../../../components/table';
-import { format } from 'date-fns';
 import Checkbox from '../../../components/checkbox';
 import { addSnapshotsToPortfolio } from '../../../state/features/portfolios/actions';
 
 const AddModal = ({
   isModalActive,
   toggleModalActive,
-  portfolio,
-  onSubmit,
+  portfolio
 }) => {
   const [idsToAdd, setIdsToAdd] = useState([]);
   const dispatch = useDispatch();
@@ -51,7 +50,6 @@ const AddModal = ({
   const closeModal = () => {
     setIdsToAdd([]);
     toggleModalActive(false);
-    if (typeof onSubmit === 'function') onSubmit();
   };
 
   const onPortfolioUpdate = async () => {

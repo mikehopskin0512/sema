@@ -93,11 +93,11 @@ export default (app, passport) => {
     const { snapshots } = req.body;
     const { id: portfolioId } = req.params;
     try {
-      await addSnapshotsToPortfolio(portfolioId, snapshots);
+      const updatedPortfolio = await addSnapshotsToPortfolio(portfolioId, snapshots);
       await Promise.all(snapshots.map(async (snapshotId) => {
         await addPortfolioToSnapshot(snapshotId, portfolioId);
       }));
-      return res.status(201).send({});
+      return res.status(201).send(updatedPortfolio);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
