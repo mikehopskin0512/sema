@@ -19,6 +19,7 @@ elif [ "${ENV}" = "prod" ]; then
 elif [ "${ENV}" = "staging" ]; then
   cp .env.staging .env
 fi
+npm run changeV
 npm ci
 npm run build
 zip -r build.zip build

@@ -13,7 +13,8 @@
     "prettier": "prettier --write '**/*.{js,jsx,css,html}'",
     "compile-scss": "sass src/pages/Content/styles/content.styles.scss:build/css/content.styles.css",
     "lint": "eslint 'src/pages/**/*' --ext .jsx,.js --fix",
-    "prepare": "cd .. && husky install themis/.husky"
+    "prepare": "cd .. && husky install themis/.husky",
+    "changeV": "node utils/changeV.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
