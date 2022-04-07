@@ -121,24 +121,6 @@ export const initAmplitude = ({
   }
 };
 
-export const segmentIdentify = (user) => {
-  const { _id, username, firstName = '', lastName = '' } = user;
-  global.analytics.identify(_id, {
-    name: `${firstName} ${lastName}`.trim(),
-    email: username,
-  });
-};
-
-export const segmentTrack = (action, properties) => {
-  global.analytics.track(action, {
-    ...properties,
-  });
-};
-
-export const segmentReset = () => {
-  global.analytics.reset();
-};
-
 export const isTextBox = (element) => {
   const tagName = element.tagName.toLowerCase();
   if (tagName === 'textarea') return true;

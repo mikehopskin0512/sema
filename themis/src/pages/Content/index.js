@@ -30,6 +30,8 @@ import {
   onDeleteComment,
 } from './modules/content-util';
 
+import { initSegment } from './modules/segment';
+
 import {
   EVENTS,
   SEMA_ICON_ANCHOR_LIGHT,
@@ -121,6 +123,7 @@ const onLoginChecked = () => {
   $(() => {
     const { user } = store.getState();
     initAmplitude(user);
+    initSegment(user);
     showLogoutToaster();
   });
   /**
