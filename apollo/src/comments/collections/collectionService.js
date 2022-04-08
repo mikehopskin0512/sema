@@ -213,23 +213,43 @@ export const pushCollectionComment = async (collectionId, suggestedCommentId) =>
   }
 };
 
-export const toggleActiveCollection = async (userId, collectionId) => {
+const toggleCollectionInList = (collections, collectionId, collectionType) => {
+  const isEqualItemById = (item, id) => item?.collectionData?._id?.equals(id);
+  if(collectionType !== COLLECTION_TYPE.COMMUNITY) {
+    return collections.map((item) => {
+      if (isEqualItemById(item, collectionId)) {
+        return {
+          collectionData: new ObjectId(item?.collectionData?._id),
+          isActive: !item.isActive,
+        }
+      }
+      return {
+        collectionData: new ObjectId(item?.collectionData?._id),
+        isActive: item.isActive,
+      };
+    });
+  }
+
+  // Toggle community collection
+  const foundCollection = collections.find((item) => isEqualItemById(item, collectionId));
+  if(foundCollection) {
+    // Community collection exists in list, so we need to remove it.
+    return collections.filter((item) => !isEqualItemById(item, collectionId));
+  }
+
+  const justEnabledCollecion = {
+    collectionData: new ObjectId(collectionId),
+    isActive: true,
+  };
+  return [...collections, justEnabledCollecion]
+}
+
+export const toggleActiveCollection = async (userId, collectionId, collectionType) => {
   try {
     const user = await findUserById(userId);
     if (user) {
       const { collections } = user;
-      const newCollections = collections.map((item) => {
-        if (item?.collectionData?._id?.equals(collectionId)) {
-          return {
-            collectionData: new ObjectId(item?.collectionData?._id),
-            isActive: !item.isActive,
-          }
-        }
-        return {
-          collectionData: new ObjectId(item?.collectionData?._id),
-          isActive: item.isActive,
-        };
-      });
+      const newCollections = toggleCollectionInList(collections, collectionId, collectionType);
       await updateUser(userId, {collections: newCollections});
       const newUser = await findUserById(userId);
       return {
@@ -250,18 +270,12 @@ export const toggleActiveCollection = async (userId, collectionId) => {
   }
 }
 
-export const toggleTeamsActiveCollection = async (teamId, collectionId) => {
+export const toggleTeamsActiveCollection = async (teamId, collectionId, collectionType) => {
   try {
     const team = await findTeamById(teamId);
     if (team) {
       const { collections } = team;
-      const newCollections = collections.map((item) => {
-        const isNeedUpdate = item?.collectionData?._id?.equals(collectionId);
-        return {
-          collectionData: new ObjectId(item?.collectionData?._id),
-          isActive: isNeedUpdate ? !item.isActive : item.isActive,
-        }
-      });
+      const newCollections = toggleCollectionInList(collections, collectionId, collectionType);
       await updateTeam({...team, collections: newCollections});
       const newTeam = await findTeamById(teamId);
       return {
