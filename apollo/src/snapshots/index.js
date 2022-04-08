@@ -33,6 +33,7 @@ export default (app, passport) => {
       }
       return savedSnapshot;
     }
+    // TODO: should be refactored with better structure and name
     async function getPortfolioId() {
       const portfolios = await getPortfoliosByUser(user._id);
       const hasNoPortfolios = !portfolios.length;
