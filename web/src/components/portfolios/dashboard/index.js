@@ -146,7 +146,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   };
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIOS}/${portfolio._id}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO._}/${portfolio._id}`);
     changeIsCopied(true);
   };
 
