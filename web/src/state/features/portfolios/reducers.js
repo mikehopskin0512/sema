@@ -66,6 +66,7 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       data: {
         ...state.data,
+        portfolio,
         portfolios,
       },
     };

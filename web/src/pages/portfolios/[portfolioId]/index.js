@@ -41,7 +41,7 @@ const PublicPortfolio = () => {
 
   return (
     <>
-    <div className="has-background-gray-200 hero">
+    <div className="has-background-white hero">
       <Helmet {...PortfolioHelmet} />
       <div className="hero-body pb-300 mx-25">
         <PortfolioDashboard portfolio={portfolio} isIndividualView={true} isLoading={portfolios.isFetching}/>
