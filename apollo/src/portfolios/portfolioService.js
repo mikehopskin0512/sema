@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { PORTFOLIO_TYPES } from './constants';
 import Portfolio from './portfolioModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -7,7 +8,7 @@ const { Types: { ObjectId } } = mongoose;
 
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
-  headline = null, imageUrl = null, overview = null, type = null, snapshots = [], title = null,
+  headline = null, imageUrl = null, overview = null, type = PORTFOLIO_TYPES.PRIVATE, snapshots = [], title = null,
 }) => (
   {
     _id: new ObjectId(_id),
