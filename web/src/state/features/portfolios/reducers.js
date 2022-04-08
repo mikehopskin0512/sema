@@ -1,3 +1,4 @@
+import snapshots from '../snapshots';
 import * as types from './types';
 
 const initialState = {
@@ -112,14 +113,19 @@ const reducer = (state = initialState, action) => {
       isFetching: true,
     };
   case types.REQUEST_REMOVE_SNAPSHOT_SUCCESS: {
-    const { portfolios } = state.data;
-    portfolios[0] = action.portfolio;
+    const { deletedSnapshots, portfolioId } = action;
+    const updatedPortfolios = [...state.data.portfolios];
+    const portfolio = updatedPortfolios.find(({ _id }) => _id === portfolioId);
+    const filterDeletedSnapshots = ({ id: { _id } }) => !deletedSnapshots.includes(_id);
+    portfolio.snapshots = portfolio.snapshots.filter(filterDeletedSnapshots);
+    const isCurrentPortfolio = portfolio._id === state.data.portfolio._id;
     return {
       ...state,
       isFetching: false,
       data: {
         ...state.data,
-        portfolios,
+        portfolio: isCurrentPortfolio ? portfolio : state.data.portfolio,
+        portfolios: updatedPortfolios,
       },
     };
   }
