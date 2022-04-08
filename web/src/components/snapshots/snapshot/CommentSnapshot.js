@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
 import ActivityItem from '../../activity/item';
-import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
-import { portfoliosOperations } from '../../../state/features/portfolios';
-
-const { removeSnapshot } = portfoliosOperations;
 
 const CommentSnapshot = ({ snapshotData, portfolioId }) => {
   const dispatch = useDispatch();
@@ -28,10 +25,8 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
   };
 
   const onDeleteSnapshot = async () => {
-    const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    if (payload.status === 200) {
-      toggleDeleteModal(false);
-    }
+    dispatch(removeSnapshotsFromPortfolio(portfolioId, [snapshotId], token));
+    toggleDeleteModal(false);
   };
 
   return (
@@ -53,8 +48,8 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
           <DropDownMenu
             isRight
             options={[
-              { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
-              { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
+              { label: 'Edit Snapshot', onClick: () => toggleEditModal(true) },
+              { label: 'Delete Snapshot', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
               <div className="is-clickable is-flex">
