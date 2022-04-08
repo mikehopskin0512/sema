@@ -125,7 +125,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   useEffect(() => {
     parsePortfolio(portfolio);
-  }, [portfolio]);
+  }, [portfolio?.snapshots.length]);
 
   const isOwner = useMemo(() => portfolio.userId === auth.user._id, [portfolio, auth]);
 
@@ -288,10 +288,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
           {snapshots.map((s) =>
             s.componentType === 'comments' ? (
-              <CommentSnapshot snapshotData={s} portfolioId={portfolio._id} />
+              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} />
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
               </section>
             )
           )}
