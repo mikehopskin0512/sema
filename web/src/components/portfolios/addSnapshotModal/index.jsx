@@ -39,12 +39,12 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   const [ids, changeIds] = useState([]);
   const [activePortfolio, changeActivePortfolio] = useState('');
 
-  const data = isSnapshotsModalType(type) ? 
+  const data = isSnapshotsModalType(type) ?
     snapshots.map(snapshot => ({
       title: snapshot.title,
       date: format(new Date(snapshot.updatedAt), 'MMM dd, yyyy'),
       id: snapshot._id,
-    })) : 
+    })) :
     portfolios.map(portfolio => ({
         title: portfolio.title,
         date: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
@@ -112,7 +112,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
         return (
           <div style={{maxWidth: '90px'}} className={`is-flex border-radius-24px ${row.values.type === 'public' ? 'has-background-green-50 has-text-green-500' : 'has-background-red-100 has-text-red-600'}`}>
             <div className="px-5 pt-8">
-              {row.values.type === 'public' ? 
+              {row.values.type === 'public' ?
                 <EyeIcon size="small" color={green500}/> :
                 <EyeOffIcon size="small" color={red600}/>
               }
@@ -126,25 +126,25 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   }
 
   const onSubmit = async (data) => {
-    try {
-      let body = { snapshots: [] };
-      if (isSnapshotsModalType(type)) {
-        body.snapshots = [...ids];
-        await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
-      } else {
-        body.snapshots.push(snapshotId);
-        await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
-      }
-      if (!isEmpty(portfoliosState.error)) {
-        showNotification(true);
-      } else if (isSnapshotsModalType(type)) {
-        showNotification(false);
-      } else {
-        showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
-      }
-    } catch (error) {
-      showNotification(true);
-    }
+    // try {
+    //   let body = { snapshots: [] };
+    //   if (isSnapshotsModalType(type)) {
+    //     body.snapshots = [...ids];
+    //     await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
+    //   } else {
+    //     body.snapshots.push(snapshotId);
+    //     await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
+    //   }
+    //   if (!isEmpty(portfoliosState.error)) {
+    //     showNotification(true);
+    //   } else if (isSnapshotsModalType(type)) {
+    //     showNotification(false);
+    //   } else {
+    //     showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
+    //   }
+    // } catch (error) {
+    //   showNotification(true);
+    // }
     onClose();
   }
 
@@ -181,10 +181,10 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
 };
 
 AddSnapshotModal.propTypes = {
-  active: PropTypes.bool.isRequired, 
-  onClose: PropTypes.func.isRequired, 
-  type: PropTypes.string.isRequired, 
-  snapshotId: PropTypes.string, 
+  active: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  snapshotId: PropTypes.string,
   showNotification: PropTypes.func,
 };
 

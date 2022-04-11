@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -16,14 +16,13 @@ import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import { gray900, gray600, black950 } from '../../../../styles/_colors.module.scss';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
-import useAuthEffect from '../../../hooks/useAuthEffect';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
-import AddModal from '../../../components/portfolios/addModal/addModal';
+import AddModal from '../addModal';
 import Loader from '../../../components/Loader';
 
 const { fetchUserSnapshots } = snapshotsOperations;
@@ -186,7 +185,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         toggleModalActive={toggleAddModal}
         portfolio={portfolio}
       />
-      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
+      {/* <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/> */}
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <EditPortfolioTitle
         onSubmit={onSaveProfile}
@@ -266,7 +265,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                 </div>
                 <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
                 <button
-                  onClick={() => setIsActive(true)}
+                  onClick={() => toggleAddModal(true)}
                   type="button"
                   className="button is-transparent m-0"
                 >

@@ -8,6 +8,7 @@ import { fetchUserSnapshots } from '../../../state/features/snapshots/actions';
 import Table from '../../../components/table';
 import Checkbox from '../../../components/checkbox';
 import { addSnapshotsToPortfolio } from '../../../state/features/portfolios/actions';
+import { notify } from '../../../components/toaster/index';
 
 const AddModal = ({
   isModalActive,
@@ -57,7 +58,21 @@ const AddModal = ({
       portfolioId: portfolio._id,
       snapshots: idsToAdd,
       token,
-      closeCallback: closeModal,
+      onSuccess: (snapshots) => {
+        notify(
+          'Snapshots were added to this portfolio',
+          {
+            subtitle: `You've successfully added ${snapshots.length} Snapshots.`,
+            duration: 3000,
+          });
+        closeModal();
+      },
+      onError: () => {
+        notify('Snapshot was not added', {
+          type: 'error',
+          duration: 3000,
+        });
+      }
     }));
   };
 

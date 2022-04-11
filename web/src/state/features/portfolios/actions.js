@@ -5,7 +5,6 @@ import * as types from './types';
 import { getPortfolio, putPortfolio, getUserPortfolio, postSnapshotToPortfolio, deletePortfolio, patchPortfolioType, createPortfolio, addSnapshotToPortfolio } from './api';
 import { deleteSnapshot, deleteSnapshotFromPortfolio, putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
-import { notify } from '../../../components/toaster/index';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -265,21 +264,21 @@ export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatc
   }
 };
 
-export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
-  try {
-    dispatch(requestPostSnapshotToPortfolio());
-    const payload = await postSnapshotToPortfolio(portfolioId, body, token);
-    //const { data } = payload;
-    //ToDo: Fix this after backend will be ready
-    dispatch(requestPostSnapshotToPortfolioSuccess());
-    return payload;
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestPostSnapshotToPortfolioError(errMessage));
-    return error.response;
-  }
-}
+// export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
+//   try {
+//     dispatch(requestPostSnapshotToPortfolio());
+//     const payload = await postSnapshotToPortfolio(portfolioId, body, token);
+//     //const { data } = payload;
+//     //ToDo: Fix this after backend will be ready
+//     dispatch(requestPostSnapshotToPortfolioSuccess());
+//     return payload;
+//   } catch (error) {
+//     const { response: { data: { message }, status, statusText } } = error;
+//     const errMessage = message || `${status} - ${statusText}`;
+//     dispatch(requestPostSnapshotToPortfolioError(errMessage));
+//     return error.response;
+//   }
+// }
 
 export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
   try {
@@ -312,7 +311,8 @@ export const addSnapshotsToPortfolio = ({
   portfolioId,
   snapshots,
   token,
-  closeCallback,
+  onSuccess,
+  onError,
   type = 'dashboard'
 }) => async (dispatch) => {
   try {
@@ -320,13 +320,9 @@ export const addSnapshotsToPortfolio = ({
     if (type === 'dashboard') {
       dispatch(requestFetchPortfolioSuccess(data));
     }
-    notify(
-      'Snapshots were added to this portfolio',
-      {
-        subtitle: `You've successfully added ${snapshots.length} Snapshots.`,
-        duration: 3000,
-      });
-    if (typeof closeCallback === 'function') closeCallback();
+
+    if (typeof onSuccess === 'function') onSuccess(snapshots);
+
   } catch (error) {
     const {
       response: {
@@ -334,10 +330,9 @@ export const addSnapshotsToPortfolio = ({
         statusText,
       },
     } = error;
-    notify('Snapshot was not added', {
-      type: 'error',
-      duration: 3000,
-    });
+
+    if (typeof onError === 'function') onError();
+
     const errMessage = `${status} - ${statusText}`;
     dispatch(requestFetchPortfolioError(errMessage));
   }
