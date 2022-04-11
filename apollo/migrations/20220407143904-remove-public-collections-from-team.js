@@ -5,7 +5,6 @@ module.exports = {
         const teams = await db.collection('teams').find({ }).toArray();
 
         await Promise.all(teams.map(async (team) => {
-          await db.collection('teams').updateOne({ _id: team._id}, {$set: { collectionsBackup: team.collections} });
           const collectionsFiltered = team.collections.filter((collection) => collection.collectionData && communityCollectionIdSet.has(collection.collectionData.toString()));
           await db.collection('teams').updateOne({ _id: team._id}, {$set: { collections: collectionsFiltered} });
         }));
