@@ -199,7 +199,6 @@ const CustomSelect = (props) => {
               // Input,
             }}
             menuIsOpen={menuIsOpen}
-            blurInputOnSelect
             width={width}
             {...selectProps}
             onChange={(data) => {
