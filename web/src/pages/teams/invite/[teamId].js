@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { teamsOperations } from '../../../state/features/teams';
 import { PATHS } from '../../../utils/constants';
-import useAuthEffect from '../../../hooks/useAuthEffect';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
 const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
@@ -18,13 +17,13 @@ const PublicTeamInvite = () => {
   const router = useRouter();
   const { teamId } = router.query;
   const { user, token } = auth;
-
+  
   const joinTeam = async () => {
     await dispatch(inviteTeamUser(teamId, token));
     await dispatch(fetchTeamsOfUser(token));
   };
 
-  useAuthEffect(() => {
+  useEffect(() => {
     if (user && token) {
       joinTeam();
       router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
