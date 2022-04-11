@@ -139,7 +139,7 @@ const SnapshotModal = ({
           </p>
           <p className="has-text-black is-size-6 mb-20">
             <span className="has-text-red-600">Attention!</span>{' '}
-            This Snapshot will be edited in {snapshotData.portfolios?.length ?? 0} different Portfolios.
+            This Snapshot will be edited in {snapshotData?.portfolios?.length ?? 0} different Portfolios.
           </p>
           <div onClick={onClose} className="is-clickable" style={{
             position: "absolute",
