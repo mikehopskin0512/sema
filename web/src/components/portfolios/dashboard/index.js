@@ -1,23 +1,21 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
-import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES, KEY_CODES } from '../../../utils/constants';
+import { ALERT_TYPES, DEFAULT_AVATAR, KEY_CODES, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import { snapshotsOperations } from '../../../state/features/snapshots';
 import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
-import Avatar from 'react-avatar';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import useOutsideClick from '../../../utils/useOutsideClick';
-import { gray900, gray600, black950 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600, gray900 } from '../../../../styles/_colors.module.scss';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
-import useAuthEffect from '../../../hooks/useAuthEffect';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -155,11 +153,17 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     e.stopPropagation();
   };
 
-  const isPublicPortfolio = () => portfolio.type === PORTFOLIO_TYPES.PUBLIC;
-  const isPrivatePortfolio = () => portfolio.type === PORTFOLIO_TYPES.PRIVATE;
+  const isPublicPortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PUBLIC, [portfolio]);
+  const isPrivatePortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PRIVATE, [portfolio]);
+  const isLoadingScreen = useMemo(() => isLoading || isParsing || !portfolio || !auth.user._id, [
+    isLoading,
+    isParsing,
+    portfolio,
+    auth,
+  ]);
 
   const onChangeToggle = async () => {
-    const newType = isPublicPortfolio() ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
+    const newType = isPublicPortfolio ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
     await dispatch(updatePortfolioType(portfolio._id, newType, token));
   };
 
@@ -168,13 +172,13 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     changeIsCopied(true);
   };
 
-  if (isLoading || isParsing) {
+  if (isLoadingScreen) {
     return (
       <Loader />
       )
   }
 
-  if (!isOwner && isPrivatePortfolio() && isIndividualView) {
+  if (!isOwner && isPrivatePortfolio && isIndividualView) {
     return <ErrorPage />
   }
 
@@ -198,10 +202,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
             <div className="is-relative is-flex">
-            {isInputEditable ? 
-              <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> : 
+            {isInputEditable ?
+              <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> :
               <>
-                <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div> 
+                <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div>
                 <div>
                   {
                     isOwner && (
@@ -236,7 +240,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
               <div className="is-flex ml-20 pr-40" style={{paddingTop: '3px'}}>
                 <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
                   <div className={clsx(styles['textContainer'])}>
-                    {isPublicPortfolio() ?
+                    {isPublicPortfolio ?
                     (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
                     (hover && 'Change status to “Public” in order to copy sharable link.')}
                   </div>
@@ -247,16 +251,16 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     onChange={onChangeToggle}
                     name={`activeSwitch-${portfolio._id}`}
                     className="switch is-rounded"
-                    checked={isPublicPortfolio()}
+                    checked={isPublicPortfolio}
                   />
                   <label htmlFor={`activeSwitch-${portfolio._id}`} />
                 </div>
                 <div
-                  onClick={isPublicPortfolio() ? onCopy : () => {}}
+                  onClick={isPublicPortfolio ? onCopy : () => {}}
                   onMouseEnter={() => setHover(true)}
                   onMouseLeave={() => setHover(false)}
                 >
-                  <ShareIcon color={isPublicPortfolio() ? black950 : gray600}/>
+                  <ShareIcon color={isPublicPortfolio ? black950 : gray600}/>
                 </div>
                 <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
                 <button
