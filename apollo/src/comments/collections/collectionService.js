@@ -105,10 +105,6 @@ export const findByType = async (type) => {
     const collections = Collection.find({ type }).lean().populate({
       path: 'comments',
       model: 'SuggestedComment',
-      populate: {
-        path: 'engGuides.engGuide',
-        model: 'EngGuide'
-      }
     }).sort({ createdAt: -1 }).exec();
     return collections;
   } catch (err) {
