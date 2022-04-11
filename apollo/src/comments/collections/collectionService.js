@@ -211,12 +211,12 @@ export const pushCollectionComment = async (collectionId, suggestedCommentId) =>
 
 const isEqualItemById = (item, id) => item?.collectionData?._id?.equals(id);
 
-const isIdInCollectionList(collections, collectionId) => {
+const isIdInCollectionList = (collections, collectionId) => {
   const foundCollection = collections.find((item) => isEqualItemById(item, collectionId));
   return !!foundCollection;
 }
 
-const toggleOtherCollectionActiveStatus(collections, collectionId) => {
+const toggleOtherCollectionActiveStatus = (collections, collectionId) => {
   return collections.map((item) => {
     return {
       collectionData: new ObjectId(item?.collectionData?._id),
@@ -225,7 +225,7 @@ const toggleOtherCollectionActiveStatus(collections, collectionId) => {
   });
 }
 
-const toggleCommunityCollectionActiveStatus(collections, collectionId) => {
+const toggleCommunityCollectionActiveStatus = (collections, collectionId) => {
   if(isIdInCollectionList(collections, collectionId)) {
     return collections.filter((item) => !isEqualItemById(item, collectionId));
   }
