@@ -57,7 +57,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
         type="edit"
         dataType={componentType}
       />
-      <DeleteModal 
+      <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
@@ -83,7 +83,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
             )}
           />
         </div>
-        <div className="is-multiline mt-25">
+        <div className="is-multiline mt-15">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
