@@ -200,6 +200,7 @@ const CustomSelect = (props) => {
               ValueContainer,
               // Input,
             }}
+            blurInputOnSelect
             menuIsOpen={menuIsOpen}
             width={width}
             {...selectProps}
