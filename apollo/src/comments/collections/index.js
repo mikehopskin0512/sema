@@ -36,8 +36,7 @@ export default (app, passport) => {
             throw new errors.Unauthorized('User does not have permission');
           }
         }
-
-        payload = teamId ? await toggleTeamsActiveCollection(teamId, id) : await toggleActiveCollection(_id, id);
+        payload = teamId ? await toggleTeamsActiveCollection(teamId, id, collectionData.type) : await toggleActiveCollection(_id, id, collectionData.type);
         if (payload.status == 400) {
           return res.status('400').send(payload);
         }
