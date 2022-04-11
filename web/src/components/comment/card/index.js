@@ -215,9 +215,6 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                             </>
                           )
                         }
-                        <a href="#" className="dropdown-item is-active">
-                          Share with Sema Community
-                        </a>
                       </div>
                     </div>
                   </div>

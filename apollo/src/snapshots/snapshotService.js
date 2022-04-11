@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Snapshot from './snapshotModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { findManyById } from '../comments/smartComments/smartCommentService';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -53,9 +54,16 @@ export const getSnapshotsByUserId = async (userId) => {
 
 export const create = async (snapshot) => {
   try {
-    const newSnapshot = new Snapshot(structureSnapshot(snapshot));
-    const savedSnapshot = await newSnapshot.save();
-    return savedSnapshot;
+    const { componentData } = snapshot;
+    const smartCommentIds = componentData.smartComments.map(s => s.smartCommentId);
+    const newSnapshot = await Snapshot.create(structureSnapshot({
+      ...snapshot,
+      componentData: {
+        ...componentData,
+        smartComments: await loadSmartComments(smartCommentIds)
+      }
+    }));
+    return newSnapshot;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -63,11 +71,24 @@ export const create = async (snapshot) => {
   }
 };
 
+const loadSmartComments = async (ids) => {
+  const smartComments = await findManyById(ids);
+  return smartComments.map(structureSmartComment);
+}
+
 export const update = async (snapshotId, snapshot) => {
   try {
     const updatedSnapshot = await Snapshot.findOneAndUpdate(
       { _id: new ObjectId(snapshotId) },
-      { $set: structureSnapshot(snapshot) },
+      {
+        $set: structureSnapshot({
+          ...snapshot,
+          componentData: {
+            ...componentData,
+            smartComments: await loadSmartComments(smartCommentIds)
+          }
+        })
+      },
       { new: true },
     )
       .populate([

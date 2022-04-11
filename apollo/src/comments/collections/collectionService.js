@@ -305,7 +305,7 @@ export const createTeamCollection = async (team) => {
       type: COLLECTION_TYPE.TEAM,
       comments: [],
     };
-    return await create(collection);
+    return await create(collection, team.createdBy, team._id);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);

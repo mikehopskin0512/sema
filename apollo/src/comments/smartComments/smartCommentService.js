@@ -100,6 +100,16 @@ export const filterSmartComments = async ({ reviewer, author, repoIds, startDate
   }
 };
 
+export const findManyById = async (smartCommentIds) => {
+  try {
+    return await SmartComment.find({ _id: { $in: smartCommentIds } }).exec();
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
+
 export const findByReviewer = async (reviewerId, repoId) => {
   try {
     const comments = await SmartComment.find({ "githubMetadata.user.id": reviewerId });
@@ -128,7 +138,7 @@ export const update = async (
   smartComment,
 ) => {
   try {
-    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment);
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ _id: new ObjectId(id) }, smartComment, { new: true });
     return updatedSmartComment;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -546,49 +556,49 @@ export const exportSuggestedMetrics = async ({ search, sortDesc }) => {
 };
 
 const groupMetricsPipeline = [
-    {
-      $group: {
-        _id: {
-          $dateToString: {
-            format: "%Y-%m-%d",
-            date: "$createdAt",
-          },
+  {
+    $group: {
+      _id: {
+        $dateToString: {
+          format: "%Y-%m-%d",
+          date: "$createdAt",
         },
-        comments: { $sum: 1 },
-        pullRequests: { $addToSet: "$githubMetadata.pull_number" },
-        commenters: { $addToSet: "$userId" },
       },
+      comments: { $sum: 1 },
+      pullRequests: { $addToSet: "$githubMetadata.pull_number" },
+      commenters: { $addToSet: "$userId" },
     },
-    {
-      $project: {
-        _id: "$$REMOVE",
-        values: {
-          $arrayToObject: [
-            [
-              {
-                k: "$_id",
-                v: {
-                  comments: "$comments",
-                  pullRequests: { $size: "$pullRequests" },
-                  commenters: { $size: "$commenters" },
-                },
+  },
+  {
+    $project: {
+      _id: "$$REMOVE",
+      values: {
+        $arrayToObject: [
+          [
+            {
+              k: "$_id",
+              v: {
+                comments: "$comments",
+                pullRequests: { $size: "$pullRequests" },
+                commenters: { $size: "$commenters" },
               },
-            ],
+            },
           ],
-        },
+        ],
       },
     },
-    {
-      $group: {
-        _id: null,
-        values: { $mergeObjects: "$values" },
-      },
+  },
+  {
+    $group: {
+      _id: null,
+      values: { $mergeObjects: "$values" },
     },
-    {
-      $replaceRoot: {
-        newRoot: "$values",
-      },
-    }];
+  },
+  {
+    $replaceRoot: {
+      newRoot: "$values",
+    },
+  }];
 
 
 export async function getTeamSmartCommentsMetrics(teamId) {
@@ -723,9 +733,9 @@ export const getSmartCommentsTagsReactions = async ({ author, reviewer, repoIds,
   try {
     const filter = { reviewer, author, repoIds, startDate, endDate, user, individual: typeof individual === 'string' ? JSON.parse(individual) : individual };
 
-    if(teamId) {
-      const teamRepos = await getTeamRepos (teamId);
-      filter.repoIds= teamRepos.map((repo) => {
+    if (teamId) {
+      const teamRepos = await getTeamRepos(teamId);
+      filter.repoIds = teamRepos.map((repo) => {
         return repo.externalId;
       });
     }
@@ -785,4 +795,30 @@ export const _getSmartCommentersCount = (smartComments = []) => {
 
 export const _getPullRequests = (smartComments = []) => {
   return uniqBy(smartComments, 'githubMetadata.pull_number').length || 0;
+};
+
+export const updateByGithubId = async (
+  id,
+  smartComment,
+) => {
+  try {
+    const updatedSmartComment = await SmartComment.findOneAndUpdate({ 'githubMetadata.commentId': id }, smartComment, { new: true });
+    return updatedSmartComment;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const deleteByGithubId = async (
+  id,
+) => {
+  try {
+    await SmartComment.deleteOne({ 'githubMetadata.commentId': id });
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw error;
+  }
 };

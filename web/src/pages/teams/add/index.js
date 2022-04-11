@@ -57,6 +57,7 @@ const TeamEditPage = () => {
   const { token } = useSelector((state) => state.authState);
   const { teamsState } = useSelector((state) => state);
   const showNotification = (team) => {
+    //ToDo: change this for new notification component after ETCR-1086 will be merged
     const isError = !team;
     toaster.notify(({ onClose }) => (
       <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>

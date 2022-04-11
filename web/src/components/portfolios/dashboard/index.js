@@ -4,33 +4,68 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon, ShareIcon, OptionsIcon, PlusIcon } from '../../Icons';
+import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon, PlusIcon } from '../../Icons';
 import { fullName, getPlatformLink } from '../../../utils';
-import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES } from '../../../utils/constants';
+import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES, KEY_CODES } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import useOutsideClick from '../../../utils/useOutsideClick';
+import { gray900, gray600, black950 } from '../../../../styles/_colors.module.scss';
+import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
+import useAuthEffect from '../../../hooks/useAuthEffect';
+import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
-import { gray600, black950 } from '../../../../styles/_colors.module.scss';
 import ErrorPage from '../errorPage';
 import AddModal from '../../../components/portfolios/addModal/addModal';
+import Loader from '../../../components/Loader';
 
+const { fetchUserSnapshots } = snapshotsOperations;
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }) => {
+  const showNotification = (isError) => {
+    //ToDo: change this for new notification component after ETCR-1086 will be merged
+    toaster.notify(({ onClose }) => (
+      <div className={clsx('message  shadow mt-60', isError ? 'is-red-500' : 'is-success')}>
+        <div className="message-body has-background-white is-flex">
+          {isError ?
+            <AlertFilledIcon size="small" /> :
+            <CheckFilledIcon size="small" />
+          }
+          <div>
+            <div className="is-flex is-justify-content-space-between">
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
+                {isError ? 'Snapshots were not added.' : 'Snapshots were added to this portfolio'}
+              </span>
+              <div className="ml-30" onClick={onClose}>
+                <CloseIcon size="small" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {
+      position: 'top-right',
+      duration: isError ? 3000 : null,
+    });
+  };
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
       auth: state.authState,
     }),
   );
-  const { token = '', user: { _id: userId } } = auth;
+  const inputRef = useRef(null);
+  const { user: userData, token = '' } = auth;
+  const { _id: userId } = userData;
 
   const [user, setUser] = useState({
     fullName: '',
@@ -42,11 +77,31 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [titleModalOpen, setTitleModalOpen] = useState(false);
+  const [isInputEditable, setIsInputEditable] = useState(false);
+
+  const onPressHandler = (e) => {
+    if (e.keyCode === KEY_CODES.ENTER && isInputEditable) {
+      inputRef.current.value !== portfolio.title && onSaveProfile({ title: inputRef.current.value });
+      setIsInputEditable(false);
+    }
+  };
+
+  const outsideClickCallback = () => {
+    if (isInputEditable) {
+      inputRef.current.value !== portfolio.title && onSaveProfile({ title: inputRef.current.value });
+      setIsInputEditable(false);
+    }
+  };
+
+  useOutsideClick(inputRef, outsideClickCallback);
+  const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
   const [isAddModalOpen, toggleAddModal] = useState(false);
 
   const parsePortfolio = (portfolio) => {
+    setIsParsing(true);
     if (!isEmpty(portfolio)) {
       const {
         identities = [], headline, imageUrl, overview, snapshots: snapshotsData, title,
@@ -58,10 +113,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
         setSnapshots(d);
       }
     }
+    setIsParsing(false);
   };
 
   const onSaveProfile = async (values) => {
-    const { _id, ...rest } = portfolio
+    const { _id, ...rest } = portfolio;
+
     if (_id && token) {
       const body = {
         _id,
@@ -74,8 +131,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
       if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
         setTitleModalOpen(false);
-        // We might need to change this one in the future if portfolio dashboard handles multiple portfolio
-        parsePortfolio(payload.data);
       }
     }
   };
@@ -102,6 +157,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
   };
 
   const isPublicPortfolio = () => portfolio.type === PORTFOLIO_TYPES.PUBLIC;
+  const isPrivatePortfolio = () => portfolio.type === PORTFOLIO_TYPES.PRIVATE;
 
   const onChangeToggle = async () => {
     const newType = isPublicPortfolio() ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
@@ -109,16 +165,28 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
   };
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIOS}/${portfolio._id}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
     changeIsCopied(true);
   };
 
-  if (!isOwner && !isPublicPortfolio() && isIndividualView) {
+  if (isLoading || isParsing) {
+    return (
+      <Loader />
+      )
+  }
+
+  if (!isOwner && isPrivatePortfolio() && isIndividualView) {
     return <ErrorPage />
   }
 
   return (
     <>
+      <AddModal
+        isModalActive={isAddModalOpen}
+        toggleModalActive={toggleAddModal}
+        portfolio={portfolio}
+      />
+      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <EditPortfolioTitle
         onSubmit={onSaveProfile}
@@ -132,25 +200,46 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
-      <AddModal
-        isModalActive={isAddModalOpen}
-        toggleModalActive={toggleAddModal}
-        portfolio={portfolio}
-      />
-      <div className={clsx('has-background-white mb-10', styles.title)}>
-        <div className="container py-20 ">
+      <div className={clsx('mb-10', styles.title)}>
+        <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
-            <div className="is-flex">
-              <div className="is-size-4 has-text-weight-bold">{user.title}</div>
-              <div>
-                {
-                  isOwner && (
-                    <EditIcon className={clsx(styles['edit-icon'], 'is-clickable mt-5 ml-20')} onClick={() => setTitleModalOpen(true)} />
-                  )
-                }
+            <div className="is-relative is-flex">
+            {isInputEditable ?
+              <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> :
+              <>
+                <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div>
+                <div>
+                  {
+                    isOwner && (
+                      <EditIcon className={clsx(styles['edit-icon'], 'is-clickable ml-20 mt-5')} onClick={() => setIsInputEditable(true)} />
+                    )
+                  }
+                </div>
+              </>}
+            </div>
+            <div className="is-relative is-flex">
+              <div className={styles['dropdownContainer']}>
+                <DropDownMenu
+                  isRight
+                  options={[
+                  {
+                    // TODO: add Duplicate - ETCR-1030
+                    label: 'Duplicate Portfolio',
+                    onClick: () => console.log('TODO: will be implement later'),
+                  },
+                  {
+                    label: 'Delete', onClick: () => toggleDeleteModal(true)
+                  },
+                  ]}
+                  trigger={
+                    <div className="is-clickable">
+                      <OptionsIcon />
+                    </div>
+                  }
+                />
               </div>
               {isOwner && isIndividualView &&
-              <div className="is-flex ml-20" style={{paddingTop: '3px'}}>
+              <div className="is-flex ml-20 pr-40" style={{paddingTop: '3px'}}>
                 <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
                   <div className={clsx(styles['textContainer'])}>
                     {isPublicPortfolio() ?
@@ -175,35 +264,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
                 >
                   <ShareIcon color={isPublicPortfolio() ? black950 : gray600}/>
                 </div>
+                <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
+                <button
+                  onClick={() => setIsActive(true)}
+                  type="button"
+                  className="button is-transparent m-0"
+                >
+                  + Add Snapshot
+                </button>
               </div>}
-            </div>
-            <div className={clsx("is-right is-flex is-align-items-baseline", styles['portfolio-header-actions'])}>
-              <button
-                type="button"
-                className={clsx("button", styles['portfolio-ghost-button'])}
-                onClick={() => toggleAddModal(true)}
-              >
-                <PlusIcon />
-                <span className="ml-10 has-text-weight-semibold">Add Snapshot</span>
-              </button>
-              <DropDownMenu
-                isRight
-                options={[
-                  {
-                    // TODO: add Duplicate - ETCR-1030
-                    label: 'Duplicate Portfolio',
-                    onClick: () => console.log('TODO: will be implement later'),
-                  },
-                  {
-                    label: 'Delete', onClick: () => toggleDeleteModal(true)
-                  },
-                ]}
-                trigger={
-                  <div className="is-clickable">
-                    <OptionsIcon />
-                  </div>
-                }
-              />
             </div>
           </div>
         </div>
@@ -267,12 +336,14 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic }) => {
 
 PortfolioDashboard.defaultProps = {
   isIndividualView: false,
+  isLoading: false,
 };
 
 
 PortfolioDashboard.propTypes = {
   portfolio: PropTypes.object.isRequired,
   isIndividualView: PropTypes.bool,
+  isLoading: PropTypes.bool,
 };
 
 
