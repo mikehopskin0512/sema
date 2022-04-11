@@ -85,6 +85,7 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_SNAPSHOT_SUCCESS: {
     const { portfolios } = state.data;
     const [portfolio, ...rest] = portfolios;
+    if (!portfolio) return {...state, isFetching: false};
     const snapshot = { ...action.snapshot };
     portfolio.snapshots = portfolio.snapshots.map((s) => {
       if (s.id._id === snapshot._id) {

@@ -9,8 +9,10 @@ import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 
+const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
 const CommentSnapshot = ({ snapshotData, portfolioId }) => {
@@ -53,6 +55,12 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
           <DropDownMenu
             isRight
             options={[
+              { 
+                label: 'Duplicate Snapshot', 
+                onClick: () => {
+                  dispatch(duplicateSnapshot(snapshotData, token));
+                } 
+              },
               { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
