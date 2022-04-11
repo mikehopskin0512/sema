@@ -75,21 +75,11 @@ userSchema.pre('save', async function save(next) {
   if (!this.isModified('password')) return next();
   try {
     const { username } = this.identities[0];
-    const defaultSemaCollections = ['Philosophies', 'Famous Quotes', 'My Snippets', 'Common Comments', 'Security - Mitre’s Common Weakness Enumeration (CWE)'];
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
     // Creates default user collection
     const personalCollection = await createUserCollection(username);
-    const semaCollections = await findByAuthor('sema');
-    const userCollections = semaCollections.map((c) => {
-      const collection = { isActive: false, collectionData: c._id };
-      if (defaultSemaCollections.includes(c.name)) {
-        collection.isActive = true;
-      }
-      return collection;
-    });
-    userCollections.push({ collectionData: personalCollection._id, isActive: true });
-    this.collections = userCollections;
+    this.collections = [personalCollection];
 
     // Allow null password (don't hash if password is null)
     if (this.password) {
