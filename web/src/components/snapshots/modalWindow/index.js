@@ -123,7 +123,7 @@ const SnapshotModal = ({
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
-  return (
+  return active && (
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="modal-background" />
