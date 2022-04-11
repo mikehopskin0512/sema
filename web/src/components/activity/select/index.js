@@ -15,13 +15,13 @@ const Menu = ({
   const { children } = p;
   return (
     <components.Menu {...p} className={clsx('mt-neg5', styles.menu)} style={{ width }}>
-      { isMulti && (
+      {isMulti && (
         <div className={clsx('mx-12 mt-10 is-flex is-flex-wrap-wrap is-size-7')}>
-          <div className="is-clickable has-text-link" onClick={selectAll}>Select all</div>
+          <div className="is-clickable has-text-link" onClick={selectAll} aria-hidden>Select all</div>
           <div className="mx-5">|</div>
-          <div className="is-clickable has-text-link" onClick={deselectAll}>Deselect all</div>
+          <div className="is-clickable has-text-link" onClick={deselectAll} aria-hidden>Deselect all</div>
         </div>
-      ) }
+      )}
       {children}
     </components.Menu>
   );
@@ -41,6 +41,22 @@ const Control = ({ children, selectProps, ...rest }) => {
     </div>
   );
 };
+
+const ValueContainer = ({ children, ...p }) => (
+  <components.ValueContainer
+    {...p}
+    style={{ ...p.style }}
+    className={clsx('is-flex is-fullwidth', styles['value-container'], p.class)}
+  >
+    {children}
+  </components.ValueContainer>
+);
+
+const IndicatorSeparator = () => null;
+
+const DropdownIndicator = () => null;
+
+const Placeholder = (p) => <components.Placeholder {...p} className={clsx('has-text-weight-semibold', styles.placeholder)} />;
 
 const CustomSelect = (props) => {
   const {
@@ -72,43 +88,37 @@ const CustomSelect = (props) => {
     // return function to be called when unmounted
     return () => {
       document.removeEventListener('mousedown', handleClick);
-      document.addEventListener('keypress', handleKeypress);
+      document.removeEventListener('keypress', handleKeypress);
     };
   }, []);
 
-  const selectAll = () => {
+  const selectAll = useCallback(() => {
     onChange(options);
-  };
+  }, [onChange, options]);
 
-  const deselectAll = () => {
+  const deselectAll = useCallback(() => {
     onChange([]);
-  };
+  }, [onChange]);
 
   const toggleMenu = () => setMenuIsOpen(!menuIsOpen);
-
-  const IndicatorSeparator = () => null;
-
-  const DropdownIndicator = () => null;
-
-  const Placeholder = (p) => <components.Placeholder {...p} className={clsx('has-text-weight-semibold', styles.placeholder)} />;
 
   const Option = (p) => {
     const { isSelected, data: { label: optionLabel, img, value, emoji } } = p;
     return (
       <components.Option {...p} className={isSelected ? 'has-background-white' : ''}>
-        { showCheckbox ? (
+        {showCheckbox ? (
           <label className="checkbox is-flex is-align-items-center py-5">
             <input type="checkbox" className="mr-8" checked={isSelected} />
-            {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} /> }
+            {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} />}
             <span className="is-size-7 mr-5">{emoji ? `${emoji} ` : ''}</span>
             <span className={`is-size-7 has-text-weight-semibold has-text-black-950 ${styles['item-label']}`}>{optionLabel}</span>
           </label>
         ) : (
           <div className="is-flex is-align-items-center">
-            {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} /> }
+            {img && <img className={clsx('mr-8', styles.img)} src={img} alt={value} />}
             <span className="is-size-7 has-text-weight-semibold has-text-black-950">{optionLabel}</span>
           </div>
-        ) }
+        )}
 
       </components.Option>
     );
@@ -130,16 +140,8 @@ const CustomSelect = (props) => {
   const MultiValue = (p) => (
     <div className="tag px-5 py-2 is-size-8 has-text-weight-semibold has-text-black-950 has-background-gray-100">
       {p.data.label}
-      <button className="delete is-small" onClick={(e) => (removeSelectedValue(e, p.data.value))} />
+      <button type="button" className="delete is-small" onClick={(e) => (removeSelectedValue(e, p.data.value))} aria-label="remove-multi-value" />
     </div>
-  );
-
-  const ValueContainer = (p) => (
-    <components.ValueContainer
-      {...p}
-      style={{ ...p.style }}
-      className={clsx('is-flex is-fullwidth', styles['value-container'], p.class)}
-    />
   );
 
   const RenderMenu = useCallback((p) => Menu({
@@ -209,7 +211,7 @@ const CustomSelect = (props) => {
             }}
           />
         </div>
-      ) }
+      )}
 
     </div>
 
