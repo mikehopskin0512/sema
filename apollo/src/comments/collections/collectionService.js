@@ -295,7 +295,7 @@ export const findByAuthor = async (author) => {
   }
 };
 
-export const createUserCollection = async (username) => {
+export const createUserCollection = async (username, userId) => {
   try {
     const defaultCollection = {
       name: 'My Snippets',
@@ -305,7 +305,7 @@ export const createUserCollection = async (username) => {
       type: COLLECTION_TYPE.PERSONAL,
       comments: [],
     };
-    const userCollection = await create(defaultCollection);
+    const userCollection = await create(defaultCollection, userId);
     return userCollection
   } catch (err) {
     logger.error(err);

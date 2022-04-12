@@ -79,12 +79,15 @@ userSchema.pre('save', async function save(next) {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
     // Creates default user collection
-    const personalCollection = await createUserCollection(username);
-    this.collections = [{
-      isActive: true,
-      collectionData: personalCollection._id,
-      _id: new ObjectId(),
-    }];
+    if (this.isNew) {
+      this._id = new ObjectId();
+      const personalCollection = await createUserCollection(username, this._id);
+      this.collections = [{
+        isActive: true,
+        collectionData: personalCollection._id,
+        _id: new ObjectId(),
+      }];
+    }
 
     // Allow null password (don't hash if password is null)
     if (this.password) {
