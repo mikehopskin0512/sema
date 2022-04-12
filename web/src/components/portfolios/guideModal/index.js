@@ -23,9 +23,12 @@ const PortfolioGuideModal = ({ isActive, onClose }) => (
             const body = (
               <div className="is-flex">
                 <Number value={index + 1} />
-                <span className="has-text-weight-semibold">
-                  You can go to your Personal or Team Profile, Activity Log and click “Snapshot for Portfolio”
-                </span>
+                <div className='is-flex is-flex-direction-column'>
+                  {d.title && <div className='has-text-weight-bold'>{d.title}</div> }
+                  <span className="has-text-weight-semibold">
+                    {d.content}
+                  </span>
+                </div>
               </div>
             );
             const img = <img src={d.img} alt={d.alt} width={d.width} height={d.height} />;

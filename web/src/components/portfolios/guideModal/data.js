@@ -20,7 +20,8 @@ export const modalDetails = [
     contentMargin: 'mt-80',
   },
   {
-    content: 'Amazing! Now your portfolio will be shown here!',
+    title: 'Amazing!',
+    content: 'Now your portfolio will be shown here!',
     img: '/img/portfolio/portfolio-guide-3.png',
     alt: 'guide-3',
     width: '301px',
