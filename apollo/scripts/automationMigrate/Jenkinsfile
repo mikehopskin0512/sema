@@ -1,0 +1,70 @@
+def MIGRATIONS
+
+pipeline {
+   agent any
+
+environment {
+    DATABASE_PASSWORD = credentials('MONGODB_PASSWORD')
+}
+
+   parameters {
+      string(
+         name: 'branch',
+         defaultValue: 'develop',
+         description: 'The branch to get the latest migrations scripts'
+      )
+      choice(
+          name: 'database', 
+          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'], 
+          description: 'Pick something')
+   }
+
+   stages {
+      stage('git checkout') {
+         steps {
+            git url: 'git@github.com:Semalab/phoenix.git', credentialsId: 'bac0b172-e8be-4f07-a600-512f7dc68ab0', branch: "${params.branch}"
+         }
+      }
+
+      stage('install dependencies') {
+         steps {
+            nodejs(nodeJSInstallationName: 'nodejs') {
+               dir('apollo') {
+                  sh "npm install"
+               }
+            }
+         }
+      }
+      stage('Perform migrations') {
+         steps {
+            dir('apollo') {
+                sh script: "sed -i \"s|MONGOOSE_URI=.*\$|MONGOOSE_URI=mongodb+srv://phoenix_admin:${env.database_password}@sema-cluster.tpplx.mongodb.net/${params.database}?authSource=admin\\&replicaSet=atlas-bjp57o-shard-0\\&readPreference=primary\\&appname=MongoDB\\%20Compass\\&retryWrites=false\\&ssl=true|g\" .env", returnStdout: false
+                sh script: "sed -i \"s|DATABASE_NAME=.*\$|DATABASE_NAME=${params.database}|g\" .env", returnStdout: false
+                script { 
+                    RUN_LOG = sh(script: 'npx migrate-mongo up', returnStdout: true) 
+                    MIGRATIONS = sh(script: '''
+                    npx migrate-mongo status > migrations_status.txt
+                    grep -Po "│.+?\\d{14}.+?js.+?│.+?│" migrations_status.txt | awk '{$1=$1};1' | sed -E 's/\\s[0-9]{4}-.+?Z/ APPLIED/'
+                    ''', returnStdout: true).trim()
+                }
+            }
+         }
+      }
+   }
+   post {
+        success {
+            slackSend(
+                message: "Migrations completed from branch ${params.branch} against database ${params.database} \n Status: \n ${MIGRATIONS}",
+                channel: '#important-test-notifications',
+                color: 'good',
+            )
+        }
+        failure {
+            slackSend(
+                message: "Migrations failed from branch ${params.branch} against database ${params.database}\n Logs --> $BUILD_URL/console",
+                channel: '#important-test-notifications',
+                color: 'danger',
+            )
+        }
+    }
+}
