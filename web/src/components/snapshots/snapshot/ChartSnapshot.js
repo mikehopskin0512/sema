@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
-import ActivityItem from '../../activity/item';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 
+const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
 const ChartSnapshot = ({ snapshotData, portfolioId }) => {
@@ -21,7 +23,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
     }),
   );
   const { token } = auth;
-  const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
+  const { _id: snapshotId = '', title, description, componentType, componentData = { smartComments: [] } } = snapshotData
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
@@ -40,10 +42,8 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
   };
 
   const onDeleteSnapshot = async () => {
-    const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    if (payload.status === 200) {
-      toggleDeleteModal(false);
-    }
+    dispatch(removeSnapshotsFromPortfolio(portfolioId, [snapshotId], token));
+    toggleDeleteModal(false);
   };
 
   return (
@@ -55,7 +55,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
         type="edit"
         dataType={componentType}
       />
-      <DeleteModal 
+      <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
@@ -65,6 +65,12 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
           <DropDownMenu
             isRight
             options={[
+              { 
+                label: 'Duplicate Snapshot', 
+                onClick: () => {
+                  dispatch(duplicateSnapshot(snapshotData, token));
+                } 
+              },
               { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
@@ -75,7 +81,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
             )}
           />
         </div>
-        <div className="is-multiline mt-25">
+        <div className="is-multiline mt-15">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>

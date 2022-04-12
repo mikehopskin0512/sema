@@ -25,7 +25,9 @@ import {
   setTextareaSemaIdentifier,
   checkSubmitButton,
   fireAmplitudeEvent,
+  checkIfPullRequestReviewUrl,
   fetchCurrentUser,
+  onDeleteComment,
 } from './modules/content-util';
 
 import {
@@ -62,6 +64,10 @@ import {
 } from './modules/redux/action';
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
+
+const SEMA_ICON_LABEL = 'Sema Comments enabled';
+
+checkIfPullRequestReviewUrl();
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
@@ -124,6 +130,9 @@ const onLoginChecked = () => {
        */
   window.semaExtensionRegistry.registerEventListener('click', (event) => {
     onDocumentClicked(event);
+    if (event.target?.ariaLabel === 'Delete comment') {
+      onDeleteComment(event);
+    }
   }, true);
 
   /**
@@ -361,7 +370,11 @@ const onLoginChecked = () => {
         it gets changed by github time to time
       */
       const markdownIcon = $('.Link--muted.position-relative.d-inline');
-      $(markdownIcon).after(SEMA_ICON);
+
+      // Allow us to add icon only if it's not placed already
+      if (markdownIcon[0]?.nextElementSibling?.ariaLabel !== SEMA_ICON_LABEL) {
+        $(markdownIcon).after(SEMA_ICON);
+      }
     }
 
     // add default reaction for approval comment

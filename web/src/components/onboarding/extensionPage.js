@@ -6,6 +6,7 @@ import { faCheckCircle, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg
 import { isExtensionInstalled } from '../../utils/extension';
 import styles from './onboarding.module.scss';
 import { authOperations } from '../../state/features/auth';
+
 const { trackOnboardingCompleted } = authOperations;
 
 const EXTENSION_LINK = process.env.NEXT_PUBLIC_EXTENSION_LINK;
@@ -32,7 +33,7 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
             className="button is-primary has-text-weight-semibold mt-25"
             onClick={() => window.open(EXTENSION_LINK, '_blank')}
           >
-            <img src="/img/onboarding/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
+            <img src="/img/onboarding/google-extension.png" alt="install" className={clsx('mr-10', styles['chrome-button'])} />
             Add Extension Here
           </button>
         </>
@@ -49,14 +50,14 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
   const handleOnClick = () => {
     trackOnboardingCompleted();
     closeModal();
-  }
+  };
 
   return (
     <>
       <div className="columns m-0 is-full-height" style={{}}>
         <div className="is-flex is-justify-content-space-between is-align-items-center p-15 is-hidden-desktop">
           <p className="has-text-primary has-text-weight-semibold is-size-4 p-5">One last step</p>
-          <button type="button" className="button is-white" onClick={closeModal}>
+          <button type="button" className="button is-white" onClick={handleOnClick}>
             <FontAwesomeIcon className="is-clickable" icon={faTimes} size="lg" />
           </button>
         </div>
@@ -68,7 +69,7 @@ const ExtensionPage = ({ page, previousPage, isPluginInstalled, closeModal }) =>
         <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="is-flex is-justify-content-space-between is-align-items-center">
             <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">One last step</p>
-            <button type="button" className="button is-white" onClick={closeModal}>
+            <button type="button" className="button is-white" onClick={handleOnClick}>
               <FontAwesomeIcon className="is-clickable" icon={faTimes} />
             </button>
           </div>
