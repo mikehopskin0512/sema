@@ -33,10 +33,6 @@ export const create = async (collection, userId, teamId) => {
     }
 
     switch (collection.type) {
-      case COLLECTION_TYPE.COMMUNITY:
-        await populateCollectionsToUsers([createdCollection._id]);
-        await bulkUpdateTeamCollections(createdCollection._id, null, isActiveCollection);
-        break;
       case COLLECTION_TYPE.TEAM:
         await bulkUpdateTeamCollections(createdCollection._id, teamId, isActiveCollection)
         break;
@@ -106,7 +102,10 @@ export const findById = async (id) => {
 
 export const findByType = async (type) => {
   try {
-    const collections = Collection.find({ type }).exec();
+    const collections = Collection.find({ type }).lean().populate({
+      path: 'comments',
+      model: 'SuggestedComment',
+    }).sort({ createdAt: -1 }).exec();
     return collections;
   } catch (err) {
     logger.error(err);
@@ -115,11 +114,25 @@ export const findByType = async (type) => {
   }
 };
 
+const addPublicCollectionsToList = (collections, communityCollectionDataList) => {
+  const communityCollections = communityCollectionDataList.map((communityCollectionData) => ({
+    isActive: false,
+    collectionData: communityCollectionData,
+  }));
+  const basicCollections = collections || [];
+  const basicCollectionIdSet = new Set(basicCollections.filter(collection =>  collection.collectionData).map(collection =>  collection.collectionData._id.toString()));
+  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));  
+  return [...basicCollections , ...communityCollectionsToAdd]
+
+}
+
 export const getUserCollectionsById = async (id, teamId = null) => {
   try {
     const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
+    const communityCollectionDataList = await findByType(COLLECTION_TYPE.COMMUNITY);
     if (parent) {
-      const collections = parent.collections?.filter((collection) => collection.collectionData).map((collection) => {
+      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList); 
+      const collections = collectionFullList.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
         let guides = [];
@@ -196,23 +209,47 @@ export const pushCollectionComment = async (collectionId, suggestedCommentId) =>
   }
 };
 
-export const toggleActiveCollection = async (userId, collectionId) => {
+const isEqualItemById = (item, id) => item?.collectionData?._id?.equals(id);
+
+const isIdInCollectionList = (collections, collectionId) => {
+  const foundCollection = collections.find((item) => isEqualItemById(item, collectionId));
+  return !!foundCollection;
+}
+
+const toggleOtherCollectionActiveStatus = (collections, collectionId) => {
+  return collections.map((item) => {
+    return {
+      collectionData: new ObjectId(item?.collectionData?._id),
+      isActive: isEqualItemById(item, collectionId)? !item.isActive: item.isActive,
+    };
+  });
+}
+
+const toggleCommunityCollectionActiveStatus = (collections, collectionId) => {
+  if(isIdInCollectionList(collections, collectionId)) {
+    return collections.filter((item) => !isEqualItemById(item, collectionId));
+  }
+
+  const justEnabledCollecion = {
+    collectionData: new ObjectId(collectionId),
+    isActive: true,
+  };
+  return [...collections, justEnabledCollecion]
+}
+
+const toggleCollectionActiveStatus = (collections, collectionId, collectionType) => {
+  if(collectionType !== COLLECTION_TYPE.COMMUNITY) {
+    return toggleOtherCollectionActiveStatus(collections, collectionId);
+  }
+  return toggleCommunityCollectionActiveStatus(collections, collectionId);
+}
+
+export const toggleActiveCollection = async (userId, collectionId, collectionType) => {
   try {
     const user = await findUserById(userId);
     if (user) {
       const { collections } = user;
-      const newCollections = collections.map((item) => {
-        if (item?.collectionData?._id?.equals(collectionId)) {
-          return {
-            collectionData: new ObjectId(item?.collectionData?._id),
-            isActive: !item.isActive,
-          }
-        }
-        return {
-          collectionData: new ObjectId(item?.collectionData?._id),
-          isActive: item.isActive,
-        };
-      });
+      const newCollections = toggleCollectionActiveStatus(collections, collectionId, collectionType);
       await updateUser(userId, {collections: newCollections});
       const newUser = await findUserById(userId);
       return {
@@ -233,18 +270,12 @@ export const toggleActiveCollection = async (userId, collectionId) => {
   }
 }
 
-export const toggleTeamsActiveCollection = async (teamId, collectionId) => {
+export const toggleTeamsActiveCollection = async (teamId, collectionId, collectionType) => {
   try {
     const team = await findTeamById(teamId);
     if (team) {
       const { collections } = team;
-      const newCollections = collections.map((item) => {
-        const isNeedUpdate = item?.collectionData?._id?.equals(collectionId);
-        return {
-          collectionData: new ObjectId(item?.collectionData?._id),
-          isActive: isNeedUpdate ? !item.isActive : item.isActive,
-        }
-      });
+      const newCollections = toggleCollectionActiveStatus(collections, collectionId, collectionType);
       await updateTeam({...team, collections: newCollections});
       const newTeam = await findTeamById(teamId);
       return {

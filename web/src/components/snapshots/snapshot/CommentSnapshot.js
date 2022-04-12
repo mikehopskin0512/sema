@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import styles from './snapshot.module.scss';
 import ActivityItem from '../../activity/item';
-import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
@@ -71,8 +70,8 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
             )}
           />
         </div>
-        <div className="columns is-multiline mt-25">
-          <div className={clsx('column is-full')}>
+        <div className={clsx('columns is-multiline mt-25 sema-is-boxed', styles['comments-snap-content'])}>
+          <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>{description}</div>
           </div>

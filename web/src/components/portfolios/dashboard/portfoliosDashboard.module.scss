@@ -63,11 +63,18 @@
       flex-direction: column;
     }
   }
+  section:nth-of-type(odd) {
+   > div {
+      @media only screen and (min-width: 1440px) {
+        margin-right: 16px;
+      }
+    }
+  }
 }
 
 .textContainer {
   position: absolute;
-  top: -30px; 
-  background: black; 
+  top: -30px;
+  background: black;
   color: white;
 }

@@ -13,11 +13,14 @@ Feature: User is able to interact with snippets properly
     And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
     And  I scroll to element "firstInActiveCollectionToggle"
     When I click on the element "firstInActiveCollectionToggle"
+     And I pause for 2000ms
     Then I expect that element "firstInActiveCollectionName" becomes displayed
     When I save the text of element "firstInActiveCollectionName"
     And  I click on the element "firstInActiveCollectionToggle"
     Then I expect that selected collection element "activeCollectionsNames" is enabled
     ##    C2788
+
+    And  I expect that element "firstActiveCollectionName" becomes displayed
     When I save the text of element "firstActiveCollectionName"
     And  I click on the element "firstActiveCollectionToggle"
     Then I expect that selected collection element "inactiveCollectionsNames" is enabled
@@ -28,6 +31,7 @@ Feature: User is able to interact with snippets properly
     When I open the site "/snippets"
     Then I expect that element "addNewSnippetBtn" becomes displayed
     When I click on the element "addNewSnippetBtn"
+    And  I pause for 4000ms
     Then I expect that element "newSnippetTitleInput" becomes displayed
     When I set "Test Snippet" with timestamp to the inputfield "newSnippetTitleInput"
     And  I set "Body text test" to the inputfield "newSnippetBodyInput"
@@ -59,28 +63,36 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
 
     When I click on the element "addNewSnippetInCollectionBtn"
-    Then I expect that element "newSnippetTitleInput" becomes displayed
-    When I click on the element "newSnippetTitleInput"
+    And  I pause for 4000ms
+    And  I expect that element "newSnippetTitleInput" becomes displayed
+    And  I expect that element "newSnippetBodyInput" becomes displayed
+    And  I expect that element "newSnippetLanguagesInput" becomes displayed
+    And  I expect that element "newSnippetTagsInput" becomes displayed
     And  I pause for 1000ms
-    And  I set "Test Snippet in existing collection" with timestamp to the inputfield "newSnippetTitleInput"
+    When I click on the element "newSnippetBodyInput"
     And  I set "Body text test" to the inputfield "newSnippetBodyInput"
+    And  I pause for 1000ms
+    And  I click on the element "newSnippetTitleInput"
+    And  I set "Test Snippet in existing collection" with timestamp to the inputfield "newSnippetTitleInput"
 
-    When I click on the element "newSnippetLanguagesInput"
+    And  I click on the element "newSnippetLanguagesInput"
+    And  I pause for 1000ms
     And  I set "Java" to the inputfield "newSnippetLanguagesInput"
     And  I pause for 3000ms
     And  I press "Enter"
     And  I click on the element "newSnippetTagsInput"
+    And  I pause for 1000ms
     And  I set "Naming" to the inputfield "newSnippetTagsInput"
     And  I pause for 3000ms
     And  I press "Enter"
     And  I click on the element "newSnippetSourceNameInput"
     And  I set "Source name test" to the inputfield "newSnippetSourceNameInput"
     And  I set "https://testSource.com" to the inputfield "newSnippetSourceLinkInput"
+    And  I pause for 3000ms
 
     Then I expect that element "saveNewSnippetBtn" becomes displayed
-    And  I pause for 3000ms
     When I click on the button "saveNewSnippetBtn"
-    And  I pause for 1000ms
+    And  I pause for 20000ms
     Then I expect that element "allSnippetsNames" becomes displayed
     And  I expect that new item "allSnippetsNames" is added to snippets
 
@@ -216,8 +228,9 @@ Feature: User is able to interact with snippets properly
     And  I pause for 3000ms
     And  I press "Enter"
 
+    And  I pause for 1000ms
     And  I click on the button "saveNewCollectionBtn"
-    Then I expect that element "saveNewCollectionBtn" becomes not displayed
+    And  I pause for 2000ms
     Then I expect that element "searchIconBtn" becomes displayed
     When I click on the button "searchIconBtn"
     Then I expect that element "searchCollectionInput" becomes displayed
@@ -228,6 +241,7 @@ Feature: User is able to interact with snippets properly
     And  I click on the element "firstInActiveCollectionName"
     Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
     When I click on the element "addNewSnippetInCollectionBtn"
+    And  I pause for 4000ms
     Then I expect that element "selectedLeadershipTag" becomes displayed
     And  I expect that element "selectedTypeScriptLanguage" becomes displayed
     And  I expect that element "newSnippetTitleInput" becomes displayed

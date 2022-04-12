@@ -69,7 +69,6 @@
     "html-loader": "^2.1.0",
     "html-webpack-plugin": "^5.2.0",
     "husky": "^7.0.1",
-    "node-sass": "^4.14.1",
     "prettier": "^2.2.1",
     "sass": "^1.35.1",
     "sass-loader": "^11.0.1",
