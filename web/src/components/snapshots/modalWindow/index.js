@@ -19,6 +19,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
 import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
+import { notify } from '../../../components/toaster/index.js';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
@@ -101,6 +102,7 @@ const SnapshotModal = ({
           await dispatch(fetchPortfoliosOfUser(user._id, token));
         }
         await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        notify('Snapshot was added to your portfolio');
         reset();
         onClose();
       }
