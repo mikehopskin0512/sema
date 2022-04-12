@@ -220,16 +220,27 @@ export const getInitialSemaValues = (textbox) => {
   return { initialReaction, initialTags };
 };
 
-const updateSmartComment = async (comment) => {
-  const { _id: id } = comment;
-  const res = await fetch(`${SMART_COMMENT_URL}/${id}`, {
+const updateSmartComment = async (comment, githubId = null) => {
+  let url = '';
+  if (githubId) {
+    url = `${SMART_COMMENT_URL}/update-by-github/${githubId}`;
+  } else {
+    const { _id: id } = comment;
+    url = `${SMART_COMMENT_URL}/${id}`;
+  }
+  const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
     method: 'PUT',
     body: JSON.stringify(comment),
   });
-  const response = await res.text();
-  const { smartComment } = JSON.parse(response);
-  return smartComment;
+};
+
+const deleteSmartComment = async (githubId) => {
+  const url = `${SMART_COMMENT_URL}/update-by-github/${githubId}`;
+  await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'DELETE',
+  });
 };
 
 export const saveSmartComment = async (comment) => {
@@ -272,19 +283,27 @@ export const onConversationMutationObserver = ([mutation]) => {
     );
 
     const { smartComment } = store.getState();
+    let commentId = null;
 
     if (nodeIndex !== -1) {
       const newCommentDiv = mutation.addedNodes[nodeIndex];
       const { id } = newCommentDiv.querySelector(
         'div.timeline-comment-group',
       );
-      smartComment.githubMetadata.commentId = id;
+      commentId = id;
     } else if (singleNode !== -1) {
       const { id } = mutation.addedNodes[singleNode];
-      smartComment.githubMetadata.commentId = id;
+      commentId = id;
     } else {
       return;
     }
+
+    if (commentId?.includes('discussion_')) {
+      smartComment.githubMetadata.commentId = commentId.split('_').pop();
+    } else {
+      smartComment.githubMetadata.commentId = commentId;
+    }
+
     updateSmartComment(smartComment);
     store.dispatch(removeMutationObserver());
   }
@@ -294,20 +313,21 @@ export const onFilesChangedMutationObserver = ([mutation]) => {
   if (mutation.addedNodes.length) {
     const threadNode = [...mutation.addedNodes].findIndex(
       (node) => 'classList' in node
-        && node.classList.contains('js-resolvable-timeline-thread-container'),
+        && node.classList.contains('review-comment'),
     );
     const singleNode = [...mutation.addedNodes].findIndex(
-      (node) => 'classList' in node && node.classList.contains('review-comment'),
+      (node) => 'classList' in node && node.classList.contains('comment-holder'),
     );
 
     const { smartComment } = store.getState();
 
     if (threadNode !== -1) {
       const newCommentDiv = mutation.addedNodes[threadNode];
-      const { id } = newCommentDiv.querySelector('div.review-comment');
+      const { id } = newCommentDiv;
       smartComment.githubMetadata.commentId = id;
     } else if (singleNode !== -1) {
-      const { id } = mutation.addedNodes[singleNode];
+      const newInlineCommentDiv = mutation.addedNodes[singleNode];
+      const { id } = newInlineCommentDiv.querySelector('div.review-comment');
       smartComment.githubMetadata.commentId = id;
     } else {
       return;
@@ -392,6 +412,18 @@ const isReply = (textarea) => {
   return isReplyComment;
 };
 
+const getGithubId = (elementId) => {
+  let githubId = null;
+  if (elementId.includes('issuecomment-')) {
+    githubId = elementId.match(/.*?(?=-body)/gs)?.shift();
+  } else if (elementId.includes('discussion_')) {
+    githubId = elementId.match(/(?<=discussion_).*?(?=-body)/gs)?.pop();
+  } else if (elementId.includes('pullrequestreview-')) {
+    githubId = elementId.split('-body').shift();
+  }
+  return githubId;
+};
+
 export async function writeSemaToGithub(activeElement) {
   const { _id: userId, isLoggedIn } = store.getState().user;
 
@@ -402,7 +434,10 @@ export async function writeSemaToGithub(activeElement) {
   let comment = {};
   let inLineMetada = {};
 
+  const githubId = getGithubId(activeElement.id);
+
   const isPullRequestReview = activeElement?.id && activeElement.id.includes('pending_pull_request_review_');
+  const isPullRequestReviewChanges = activeElement?.id && activeElement.id.includes('pull_request_review_body');
   const onFilesTab = document.URL.split('/').pop().includes('files');
 
   const location = onFilesTab ? 'files changed' : 'conversation';
@@ -507,15 +542,30 @@ export async function writeSemaToGithub(activeElement) {
       `div[data-gid="${pullRequestReviewId}"] div[id^="pullrequestreview-"]`,
     );
     comment.githubMetadata.commentId = commentDiv?.id;
-    createSmartComment(comment);
+
+    if (githubId) {
+      updateSmartComment(comment, githubId);
+    } else {
+      createSmartComment(comment);
+    }
   }
 
-  createSmartComment(comment).then((smartComment) => {
-    store.dispatch(addSmartComment(smartComment));
-    if (isSnippetForSave) {
-      store.dispatch(changeSnippetComment(comment));
-    }
-  });
+  if (githubId) {
+    comment.githubMetadata.commentId = githubId;
+    updateSmartComment(comment, githubId);
+  } else {
+    createSmartComment(comment).then((smartComment) => {
+      if (isPullRequestReviewChanges) {
+        localStorage.setItem('smart_comment_id', smartComment._id);
+      } else {
+        localStorage.removeItem('smart_comment_id');
+      }
+      store.dispatch(addSmartComment(smartComment));
+      if (isSnippetForSave) {
+        store.dispatch(changeSnippetComment(comment));
+      }
+    });
+  }
 
   // Evaluate user interactions
   const opts = {
@@ -663,7 +713,8 @@ export function onSuggestion() {
     const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
     if (suggestedReaction) {
       // isReactionDirty is true when reaction is manually selected from UI
-      if (!isReactionDirty) {
+      // Should trigger reset when we delete our manually selected suggestion in textarea
+      if (!isReactionDirty || !activeElement.value?.length) {
         store.dispatch(
           updateSelectedEmoji({
             id: semabarId,
@@ -848,4 +899,25 @@ export const fetchCurrentUser = async ({ token = null, isLoggedIn }) => {
   } catch (error) {
     store.dispatch(fetchCurrentUserError(error));
   }
+};
+
+export const checkIfPullRequestReviewUrl = () => {
+  const url = window.location.href || '';
+  const hasPullRequestReviewId = url.includes('#pullrequestreview');
+  const smartCommentId = localStorage.getItem('smart_comment_id') || null;
+  if (hasPullRequestReviewId && smartCommentId) {
+    const githubId = url.split('#')?.pop() || null;
+    const smartComment = { _id: smartCommentId, 'githubMetadata.commentId': githubId };
+    updateSmartComment(smartComment);
+    localStorage.removeItem('smart_comment_id');
+  }
+};
+
+export const onDeleteComment = (event) => {
+  const element = event.target;
+  let [{ id }] = $(element).parents('div.timeline-comment-group');
+  if (id?.includes('discussion_')) {
+    id = id.split('discussion_').pop();
+  }
+  deleteSmartComment(id);
 };

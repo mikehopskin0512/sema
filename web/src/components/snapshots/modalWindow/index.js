@@ -15,18 +15,23 @@ import styles from './modalWindow.module.scss';
 import { isEmpty } from 'lodash';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
+import Toaster from '../../toaster';
+import useOutsideClick from "../../../utils/useOutsideClick";
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
+const { triggerAlert } = alertOperations;
 
-const schema = yup.object().shape({
-  title: yup
-    .string()
-    .required('Title is required'),
-  description: yup
-    .string()
-    .required('Description is required'),
-});
+const schema = yup.object()
+  .shape({
+    title: yup
+      .string()
+      .required('Title is required'),
+    description: yup
+      .string()
+      .required('Description is required'),
+  });
 
 export const SNAPSHOT_MODAL_TYPES = {
   CREATE: 'create',
@@ -39,21 +44,39 @@ export const SNAPSHOT_DATA_TYPES = {
   TAGS: 'tags',
 };
 
-const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDate, endDate }) => {
+const SnapshotModal = ({
+  active,
+  onClose,
+  snapshotData,
+  type,
+  dataType,
+  startDate,
+  endDate,
+}) => {
   const dispatch = useDispatch();
-  const { control, formState: { errors }, reset, handleSubmit, setValue } = useForm({
+  const {
+    control,
+    formState: { errors },
+    reset,
+    handleSubmit,
+    setValue,
+  } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const { auth, portfolios } = useSelector((state) => ({
+  const { auth, portfolios, alerts } = useSelector((state) => ({
     auth: state.authState,
     portfolios: state.portfoliosState.data.portfolios,
+    alerts: state.alertsState,
   }));
+  const { showAlert, alertType, alertLabel } = alerts;
 
   const { token, user } = auth;
   const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
+
+  useOutsideClick(modalRef, onClose);
 
   const onSubmit = async (data) => {
     const snapshotDataForSave = {
@@ -61,9 +84,12 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
       title: data.title,
       description: data.description,
       componentType: dataType,
-      componentData: snapshotData.componentData,
+      componentData: {
+        ...snapshotData.componentData,
+        smartComments: parseSnapshotData(snapshotData.componentData.smartComments)
+      }
     }
-    snapshotDataForSave.componentData.smartComments = parseSnapshotData(snapshotDataForSave.componentData.smartComments)
+
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
         const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
@@ -75,12 +101,13 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
           await dispatch(fetchPortfoliosOfUser(user._id, token));
         }
         await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        reset();
+        onClose();
       }
     } catch (e) {
       console.log(e);
+      dispatch(triggerAlert('Unable to create snapshot!', 'error'));
     }
-    reset();
-    onClose();
   };
 
   const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
@@ -89,22 +116,31 @@ const SnapshotModal = ({ active, onClose, snapshotData, type, dataType, startDat
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
       reset({
         title: snapshotData.title,
-        description: snapshotData.description
+        description: snapshotData.description,
       });
     }
   }, []);
 
-  const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px'} : null, [dataType, activityTypeData]);
+  const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
-  return (
+  return active && (
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="modal-background" />
-      <div className={clsx('modal-content px-10', styles.modalWindowContent)}>
+      <div className={clsx('modal-content px-10', styles.modalWindowContent)} ref={modalRef}>
         <div className="px-25 py-15 has-background-white border-radius-4px">
-          <p className="has-text-black has-text-weight-bold is-size-4 mb-10">
+          <p className="has-text-black has-text-weight-bold is-size-4 mb-20">
             {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save snapshot to Portfolio' : 'Edit snapshot'}
           </p>
-          <div onClick={onClose} className="is-clickable" style={{ position: 'absolute', top: 20, right: 30 }}>
+          <p className="has-text-black is-size-6 mb-20">
+            <span className="has-text-red-600">Attention!</span>{' '}
+            This Snapshot will be edited in {snapshotData.portfolios?.length ?? 0} different Portfolios.
+          </p>
+          <div onClick={onClose} className="is-clickable" style={{
+            position: "absolute",
+            top: 20,
+            right: 30,
+          }}>
             <CloseIcon size="medium" color={black900} />
           </div>
           <form onSubmit={handleSubmit(onSubmit)}>

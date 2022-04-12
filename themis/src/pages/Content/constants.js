@@ -8,7 +8,7 @@ export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
 export const { AMPLITUDE_API_KEY } = process.env;
 
-export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.svg`;
+export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.gif`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
 export const SEMA_LANDING_FAQ_TAGS = `${SEMA_LANDING_FAQ}#what-do-tags-mean`;
 export const SEMA_LANDING_GITHUB = `${SEMA_LANDING_URL}/gh`;

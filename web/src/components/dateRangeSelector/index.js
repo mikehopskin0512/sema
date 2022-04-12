@@ -8,7 +8,6 @@ import clsx from 'clsx';
 import { isEqual, setDate, subDays, subMonths } from 'date-fns';
 import moment from 'moment';
 import usePopup from '../../hooks/usePopup';
-import useLocalStorage from '../../hooks/useLocalStorage';
 import styles from './dateRangeSelector.module.scss';
 import 'react-dates/lib/css/_datepicker.css';
 import { gray700 } from '../../../styles/_colors.module.scss';
@@ -56,11 +55,9 @@ const DateRangeSelector = (props) => {
   const popupRef = useRef(null);
   const [selectedRange, setSelectedRange] = useState('allTime');
   const [focusedInput, setFocusedInput] = useState('startDate');
-  const { isOpen, toggleMenu } = usePopup(popupRef);
+  const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [dateRangeFilter, setDateRangeFilter] = useLocalStorage('sema-date-filter', {});
-  const [persist, setPersist] = useState(false);
 
   const setDates = ({ startDate, endDate }) => {
     setSelectedRange('custom');
@@ -72,15 +69,6 @@ const DateRangeSelector = (props) => {
       startDate,
       endDate: isStartedDateChanged ? null : endDate,
     });
-  };
-
-  const persistSavedFilter = () => {
-    if (!persist) {
-      const { startDate: sDate, endDate: eDate } = dateRangeFilter;
-      setSelectedRange('custom');
-      setDates({ startDate: moment(sDate), endDate: moment(eDate) });
-      setPersist(true);
-    }
   };
 
   useEffect(() => {
@@ -97,20 +85,10 @@ const DateRangeSelector = (props) => {
     setSelectedRange('allTime');
   }, []);
 
-  useEffect(() => {
-    if (!isEmpty(dateRangeFilter)) {
-      persistSavedFilter();
-    }
-  }, [dateRangeFilter]);
-
-  useEffect(() => {
-    if (start && end) {
-      setDateRangeFilter({
-        startDate: start,
-        endDate: end,
-      });
-    }
-  }, [start, end]);
+  const setAllTime = () => {
+    setSelectedRange('allTime');
+    closeMenu();
+  };
 
   const renderCalendarInfo = () => (
     /* eslint-disable */
@@ -121,7 +99,7 @@ const DateRangeSelector = (props) => {
         <li><a className={clsx('px-25', selectedRange === 'last30Days' ? 'has-text-primary has-text-weight-semibold' : null)} onClick={() => setSelectedRange('last30Days')}>Last 30 days</a></li>
         <li><a className={clsx('px-25', selectedRange === 'last3Months' ? 'has-text-primary has-text-weight-semibold' : null)} onClick={() => setSelectedRange('last3Months')}>Last 3 months</a></li>
         <li><a className={clsx('px-25', selectedRange === 'last12Months' ? 'has-text-primary has-text-weight-semibold' : null)} onClick={() => setSelectedRange('last12Months')}>Last 12 months</a></li>
-        <li><a className={clsx('px-25', selectedRange === 'allTime' ? 'has-text-primary has-text-weight-semibold' : null)} onClick={() => setSelectedRange('allTime')}>All time</a></li>
+        <li><a className={clsx('px-25', selectedRange === 'allTime' ? 'has-text-primary has-text-weight-semibold' : null)} onClick={setAllTime}>All time</a></li>
       </ul>
     </div>
   );
@@ -145,7 +123,7 @@ const DateRangeSelector = (props) => {
     if (start && end) {
       return `${moment(start).format('MM/DD/YY')} - ${moment(end).format('MM/DD/YY')}`;
     }
-    return 'Date range';
+    return 'All time';
   };
 
   return (

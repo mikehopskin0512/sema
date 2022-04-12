@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -40,6 +40,10 @@ const Portfolios = () => {
       router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     }
   }, [portfolios]);
+
+  useEffect(() => {
+    dispatch(fetchPortfoliosOfUser(userId, token));
+  }, []);
 
   const tabs = [
     {

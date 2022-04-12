@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { PORTFOLIO_TYPES } from './constants';
 import Portfolio from './portfolioModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -7,7 +8,7 @@ const { Types: { ObjectId } } = mongoose;
 
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
-  headline = null, imageUrl = null, overview = null, type = null, snapshots = [], title = null,
+  headline = null, imageUrl = null, overview = null, type = PORTFOLIO_TYPES.PRIVATE, snapshots = [], title = null,
 }) => (
   {
     _id: new ObjectId(_id),
@@ -27,8 +28,7 @@ const structurePortfolio = ({
 export const create = async (portfolio) => {
   try {
     const newPortfolio = new Portfolio(structurePortfolio(portfolio));
-    const savedPortfolio = await newPortfolio.save();
-    return savedPortfolio;
+    return newPortfolio.save();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -50,9 +50,10 @@ export const getPortfoliosByUser = async (userId, populate = true) => {
           {
             path: 'componentData.smartComments.userId',
             model: 'User',
-          }
-        ]
-      })
+            select: ['firstName', 'lastName', 'username', 'avatarUrl'],
+          },
+        ],
+      });
     }
     return await portfolios.lean();
   } catch (err) {
@@ -134,9 +135,10 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
           {
             path: 'componentData.smartComments.userId',
             model: 'User',
-          }
-        ]
-      })
+            select: ['firstName', 'lastName', 'username', 'avatarUrl'],
+          },
+        ],
+      });
     }
     return await portfolio.lean();
   } catch (err) {
@@ -169,7 +171,7 @@ export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
 export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
-    const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId)
+    const snapshots = portfolio.snapshots.filter((s) => s.id.toString() !== snapshotId);
     // TODO: populate should be deleted here
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
@@ -185,8 +187,8 @@ export const removeSnapshotFromPortfolio = async (portfolioId, snapshotId) => {
         {
           path: 'componentData.smartComments.userId',
           model: 'User',
-        }
-      ]
+        },
+      ],
     }).exec();
     return updatedPortfolio;
   } catch (err) {

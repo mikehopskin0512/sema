@@ -1,33 +1,79 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon, PlusIcon, ShareIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
 import Table from '../../../../components/table';
 import Tooltip from '../../../../components/Tooltip';
-import { PATHS, SEMA_APP_URL } from '../../../../utils/constants';
+import { ALERT_TYPES, PATHS, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../../utils/constants';
+import DeleteModal from '../../../../components/snapshots/deleteModal';
+import { alertOperations } from '../../../../state/features/alerts';
+import { portfoliosOperations } from '../../../../state/features/portfolios';
+import Toaster from '../../../../components/toaster';
 
-const portfolioList = () => {
-  const { portfoliosState } = useSelector((state) => state);
+const { triggerAlert, clearAlert } = alertOperations;
+const { removePortfolio } = portfoliosOperations;
+import { copyExistingPortfolio } from '../../../../state/features/portfolios/actions';
+
+const PortfolioList = () => {
+  const dispatch = useDispatch();
+  const {
+    portfoliosState,
+    authState,
+    alertsState
+  } = useSelector((state) => state);
+
   const {
     data: { portfolios },
   } = portfoliosState;
+  const { showAlert, alertType, alertLabel } = alertsState;
+  const { token } = authState;
   const [copiedToClipboard, setCopiedToClipboard] = useState('');
+  const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
+  const [activePortfolioId, setActivePortfolioId] = useState(null);
   const addPortfolio = () => {};
   const copyToClipboard = (id) => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
     setCopiedToClipboard(id);
   };
 
+  const onDeletePortfolio = async (id) => {
+    const payload = await dispatch(removePortfolio(id, token));
+    toggleDeleteModal(false);
+    if (payload.status === RESPONSE_STATUSES.SUCCESS) {
+      dispatch(triggerAlert(`Portfolio was successfully deleted`, ALERT_TYPES.SUCCESS));
+    } else {
+      dispatch(triggerAlert(`Portfolio was not deleted`, ALERT_TYPES.ERROR));
+    }
+  };
+
+  useEffect(() => {
+    if (showAlert === true) {
+      dispatch(clearAlert());
+    }
+  }, [showAlert, dispatch]);
+
   const tableData = portfolios.map((portfolio, i) => ({
-    // TODO: will be fixed in portfolio name ticket
-    title: `Portfolio ${i}`,
+    title: portfolio.title,
     id: portfolio._id,
     updatedAt: format(new Date(portfolio.updatedAt), 'MMM dd, yyyy'),
     type: portfolio.type,
   }));
+
+  const createPortfolioCopy = (portfolioId) => {
+    const requiredPortfolio = portfolios.find((item) => item._id === portfolioId);
+    if (!requiredPortfolio) return false;
+    const {
+      _id,
+      ...copy
+    } = requiredPortfolio;
+
+    return {
+      ...copy, title: `${copy.title}_Copy`,
+    };
+  };
 
   const columns = [
     {
@@ -86,23 +132,33 @@ const portfolioList = () => {
               isRight
               options={[
                 {
-                  // TODO: add Duplicate - ETCR-1030
                   label: 'Duplicate Portfolio',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => {
+                    const originId = row.original.id;
+
+                    if (createPortfolioCopy(originId)) {
+                      dispatch(copyExistingPortfolio(createPortfolioCopy(originId), token));
+                    }
+                  },
                 },
                 {
                   // TODO: add Save as PDF ETCR-688
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
                 },
-                // TODO: add delete function ETCR-1044
-                { label: 'Delete', onClick: () => console.log(1) },
+                {
+                  label: 'Delete',
+                  onClick: () => {
+                    toggleDeleteModal(true);
+                    setActivePortfolioId(row.values.id);
+                  }
+                },
               ]}
-              trigger={
+              trigger={(
                 <div className="is-clickable is-flex mr-24">
                   <OptionsIcon />
                 </div>
-              }
+              )}
             />
           </div>
         );
@@ -129,8 +185,15 @@ const portfolioList = () => {
         data={tableData}
         columns={columns}
       />
+      <DeleteModal
+        isModalActive={isDeleteModalOpen}
+        toggleModalActive={toggleDeleteModal}
+        onSubmit={() => onDeletePortfolio(activePortfolioId)}
+        type="portfolio"
+      />
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} position="top-right" duration={3000}/>
     </div>
   );
 };
 
-export default portfolioList;
+export default PortfolioList;

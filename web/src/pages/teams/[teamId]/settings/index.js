@@ -64,7 +64,7 @@ const TeamSettings = () => {
       id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
-    (isSemaAdmin() && {
+    (isTeamAdminOrLibraryEditor() && {
       label: 'Labels Management',
       path: PATHS.TEAMS.LABELS(teamId),
       id: TAB.labels,

@@ -67,7 +67,7 @@ smartCommentSchema.post('save', async function (doc, next) {
           repository.repoStats.smartCodeReviews += 1;
         }
 
-        const repoUserIds = repository.repoStats.userIds.map((id) => id.toString());
+        const repoUserIds = repository.repoStats.userIds?.map((id) => id?.toString()) || [];
         if (!repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
           repository.repoStats.smartCommenters += 1;

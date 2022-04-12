@@ -18,7 +18,7 @@ const collectionSchema = new Schema({
     $type: String,
     enum: Object.values(COLLECTION_TYPE),
   },
-  comments: [{ $type: Schema.Types.ObjectId, ref: 'suggestedComment' }],
+  comments: [{ $type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
   author: { $type: String },
   isActive: { $type: Boolean, default: true },
   source: {

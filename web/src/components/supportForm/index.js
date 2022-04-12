@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import styles from './supportForm.module.scss';
 
 import { supportOperations } from '../../state/features/support';
 
@@ -53,14 +54,15 @@ const SupportForm = ({ active, closeForm, type = 'Support' }) => {
     setValue('type', type);
   }, [setValue, type]);
 
+
   return (
     <>
-      <div className={clsx('modal', active ? 'is-active' : '')}>
+      <div className={clsx('modal support-form-modal', active ? 'is-active' : '')}>
         <div className="modal-background" />
-        <div className="modal-content p-50">
-          <div className="has-background-white p-50">
-            <button className="modal-close is-large" aria-label="close" type="button" onClick={close} />
-            <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">We’d love to hear from you!</p>
+        <div className={clsx('modal-content ', styles['support-form-modal-content'])}>
+          <div className={clsx('has-background-white ', styles['support-form-modal-background'])}>
+            <button className={clsx(styles['support-form-modal-close'], " modal-close is-large")} aria-label="close" type="button" onClick={close} />
+            <p className="is-size-4 has-text-weight-semibold is-size-4-mobile mr-30">We’d love to hear from you!</p>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="field mt-20">
                 <label className="label" htmlFor="title">

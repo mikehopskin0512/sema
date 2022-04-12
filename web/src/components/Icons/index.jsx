@@ -36,6 +36,7 @@ import { ReactComponent as DuplicateSvg } from './img/duplicate.svg';
 import { ReactComponent as EditSvg } from './img/edit.svg';
 import { ReactComponent as ExternalLinkSvg } from './img/external-link.svg';
 import { ReactComponent as EyeSvg } from './img/eye.svg';
+import { ReactComponent as EyeOffSvg } from './img/eye-off.svg';
 import { ReactComponent as FacebookSvg } from './img/facebook.svg';
 import { ReactComponent as FileSvg } from './img/file.svg';
 import { ReactComponent as FilterSvg } from './img/filter.svg';
@@ -87,6 +88,7 @@ import { ReactComponent as LinkSvg } from './img/link.svg';
 import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
+import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
@@ -368,6 +370,12 @@ export const ExternalLinkIcon = (props) => (
 export const EyeIcon = (props) => (
   <Icon {...props}>
     <EyeSvg />
+  </Icon>
+);
+
+export const EyeOffIcon = (props) => (
+  <Icon {...props}>
+    <EyeOffSvg />
   </Icon>
 );
 
@@ -659,5 +667,11 @@ export const TagIcon = (props) => (
 export const InviteIcon = (props) => (
   <Icon {...props}>
     <InviteSvg />
+  </Icon>
+);
+
+export const FilterBarsIcon = (props) => (
+  <Icon {...props}>
+    <FilterBarsSvg fill="" />
   </Icon>
 );

@@ -1,7 +1,7 @@
 import Router from 'next/router';
 import * as types from './types';
 import {
-  getRepos, postRepositories, postAnalysis, getRepo, filterSemaRepos, getReactionsStats, getTagsStats, getDashboardRepositories, getRepositoryOverview
+  filterSemaRepos, getDashboardRepositories, getRepo, getRepos, getRepositoryOverview, postAnalysis, postRepositories,
 } from './api';
 import { alertOperations } from '../alerts';
 
@@ -158,7 +158,13 @@ export const addRepositories = (repositoriesData, token) => async (dispatch) => 
 
     dispatch(requestCreateRepoSuccess(repositories));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestCreateRepoError(errMessage));
@@ -173,7 +179,13 @@ export const fetchRepos = (orgId, token) => async (dispatch) => {
 
     dispatch(requestFetchReposSuccess(repositories));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchReposError(errMessage));
@@ -188,7 +200,13 @@ export const fetchReposByIds = (Ids, token) => async (dispatch) => {
 
     dispatch(requestFetchReposSuccess(repositories));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchReposError(errMessage));
@@ -196,17 +214,32 @@ export const fetchReposByIds = (Ids, token) => async (dispatch) => {
 };
 
 export const addAnalysis = (repository, token) => async (dispatch) => {
-  const { _id: repositoryId, name, legacyId, sourceId: { externalSourceId } } = repository;
+  const {
+    _id: repositoryId,
+    name,
+    legacyId,
+    sourceId: { externalSourceId },
+  } = repository;
   try {
     dispatch(requestCreateAnalysis());
-    const payload = await postAnalysis({ repositoryId, legacyId, externalSourceId }, token);
+    const payload = await postAnalysis({
+      repositoryId,
+      legacyId,
+      externalSourceId,
+    }, token);
     const { data: { repositories = [] } } = payload;
 
     dispatch(triggerAlert(`Analysis started for ${name}`, 'success'));
 
     dispatch(requestCreateAnalysisSuccess(repositories));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestCreateAnalysisError(errMessage));
@@ -222,7 +255,13 @@ export const fetchRepo = (repositoryId, token) => async (dispatch) => {
 
     dispatch(requestFetchRepoSuccess(repository));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFetchRepoError(errMessage));
@@ -238,7 +277,13 @@ export const filterSemaRepositories = (externalIds, token) => async (dispatch) =
     dispatch(requestFilterSemaReposSuccess(repositories));
     return repositories;
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
 
     dispatch(requestFilterSemaReposError(errMessage));
@@ -253,19 +298,38 @@ export const fetchRepositoryOverview = (externalId, token, dates) => async (disp
       dispatch(requestFetchRepositoryOverviewSuccess(data));
     }
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestFetchRepositoryOverviewError(errMessage));
   }
 };
 
-export const fetchRepoDashboard = (externalIds, token) => async (dispatch) => {
+export const fetchRepoDashboard = (query, token) => async (dispatch) => {
+  const {
+    externalIds,
+    searchQuery,
+  } = query;
   try {
     dispatch(requestFetchDashboardRepos());
-    const { data: { repositories = [] } } = await getDashboardRepositories({ externalIds: JSON.stringify(externalIds) }, token);
+    const { data: { repositories = [] } } = await getDashboardRepositories({
+      externalIds: JSON.stringify(externalIds),
+      searchQuery,
+    }, token);
     dispatch(requestFetchDashboardReposSuccess(repositories));
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestFetchDashboardReposError(errMessage));
   }
