@@ -9,6 +9,11 @@ import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
+import { snapshotsOperations } from '../../../state/features/snapshots';
+import { portfoliosOperations } from '../../../state/features/portfolios';
+
+const { duplicateSnapshot } = snapshotsOperations;
+const { removeSnapshot } = portfoliosOperations;
 
 const ChartSnapshot = ({ snapshotData, portfolioId }) => {
   const dispatch = useDispatch();
@@ -60,8 +65,14 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
           <DropDownMenu
             isRight
             options={[
-              { label: 'Edit Snapshot', onClick: () => toggleEditModal(true) },
-              { label: 'Delete Snapshot', onClick: () => toggleDeleteModal(true) },
+              { 
+                label: 'Duplicate Snapshot', 
+                onClick: () => {
+                  dispatch(duplicateSnapshot(snapshotData, token));
+                } 
+              },
+              { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
+              { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
               <div className="is-clickable is-flex">
@@ -70,7 +81,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
             )}
           />
         </div>
-        <div className="is-multiline mt-25">
+        <div className="is-multiline mt-15">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>

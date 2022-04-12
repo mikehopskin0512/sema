@@ -54,7 +54,17 @@ const ActivityItem = (props) => {
 
   const getPRUrl = () => {
     let prUrl = url;
+    prUrl = prUrl.replace("/files", "");
+    
+    if (prUrl.includes("pullrequestreview")) {
+      const slug = prUrl.split("#").pop();
+      prUrl = prUrl.replace(`#${slug}`, "");
+    }
+
     if (!isEmpty(commentId)) {
+      if (/^r/i.test(commentId)) {
+        return prUrl += `#discussion_${commentId}`;
+      }
       prUrl += `#${commentId}`;
     }
     return prUrl;

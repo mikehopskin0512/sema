@@ -11,6 +11,7 @@ import {
 import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
 import { PATHS } from '../../../utils/constants';
+import * as analytics from '../../../utils/analytics';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
@@ -117,7 +118,7 @@ export const authenticate = (username, password) => async (dispatch) => {
 
       // Hydrate user regardless of isVerified
       dispatch(hydrateUser(user, userVoiceToken));
-      //logHeapAnalytics(userId, orgId);
+      // logHeapAnalytics(userId, orgId);
     }
   } catch (err) {
     const { response: { data: { message } } } = err;
@@ -166,7 +167,7 @@ export const refreshJwt = (refreshToken) => async (dispatch) => {
     // Send token to state
     dispatch(requestRefreshTokenSuccess(jwtToken));
 
-     // Check if user isVerified
+    // Check if user isVerified
     if (isVerified) {
       // Fetch and hydrate user
       const user = await dispatch(fetchCurrentUser(userId, jwtToken));
@@ -276,7 +277,7 @@ export const setSelectedTeamSuccess = (selectedTeam) => ({
 export const setProfileViewModeSuccess = (profileViewMode) => ({
   type: types.SET_PROFILE_VIEW_MODE,
   profileViewMode,
-})
+});
 
 export const setSelectedTeam = (selectedTeam) => (dispatch) => {
   localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
@@ -286,13 +287,14 @@ export const setSelectedTeam = (selectedTeam) => (dispatch) => {
 export const setProfileViewMode = (profileViewMode) => (dispatch) => {
   localStorage.setItem('sema_profile_view_mode', profileViewMode);
   dispatch(setProfileViewModeSuccess(profileViewMode));
-}
+};
 
 export const registerUser = (user, invitation = {}) => async (dispatch) => {
   try {
     dispatch(requestRegistration());
     const payload = await createUser({ user, invitation });
     const { data: { jwtToken, user: newUser } } = payload;
+    analytics.segmentIdentify(newUser);
     dispatch(registrationSuccess(jwtToken, newUser));
     return payload;
   } catch (error) {
@@ -331,7 +333,7 @@ export const activateUser = (verifyToken) => async (dispatch) => {
     const payload = await verifyUser({}, verifyToken);
 
     // Auto login user
-    const { data: { jwtToken, user }} = payload;
+    const { data: { jwtToken, user } } = payload;
     const { _id: userId, isVerified, userVoiceToken } = jwtDecode(jwtToken) || {};
 
     if (userId) {

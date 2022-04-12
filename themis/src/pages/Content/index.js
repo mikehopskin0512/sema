@@ -65,6 +65,8 @@ import {
 import { getActiveTheme, getActiveThemeClass, getSemaIconTheme } from '../../../utils/theme';
 import LogOutToaster from './components/LogOutToaster';
 
+const SEMA_ICON_LABEL = 'Sema Comments enabled';
+
 checkIfPullRequestReviewUrl();
 
 window.semaExtensionRegistry = new SemaExtensionRegistry();
@@ -368,7 +370,11 @@ const onLoginChecked = () => {
         it gets changed by github time to time
       */
       const markdownIcon = $('.Link--muted.position-relative.d-inline');
-      $(markdownIcon).after(SEMA_ICON);
+
+      // Allow us to add icon only if it's not placed already
+      if (markdownIcon[0]?.nextElementSibling?.ariaLabel !== SEMA_ICON_LABEL) {
+        $(markdownIcon).after(SEMA_ICON);
+      }
     }
 
     // add default reaction for approval comment

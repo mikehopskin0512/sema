@@ -9,6 +9,11 @@ import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
+import { snapshotsOperations } from '../../../state/features/snapshots';
+import { portfoliosOperations } from '../../../state/features/portfolios';
+
+const { duplicateSnapshot } = snapshotsOperations;
+const { removeSnapshot } = portfoliosOperations;
 
 const CommentSnapshot = ({ snapshotData, portfolioId }) => {
   const dispatch = useDispatch();
@@ -48,8 +53,14 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
           <DropDownMenu
             isRight
             options={[
-              { label: 'Edit Snapshot', onClick: () => toggleEditModal(true) },
-              { label: 'Delete Snapshot', onClick: () => toggleDeleteModal(true) },
+              { 
+                label: 'Duplicate Snapshot', 
+                onClick: () => {
+                  dispatch(duplicateSnapshot(snapshotData, token));
+                } 
+              },
+              { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
+              { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
               <div className="is-clickable is-flex">
@@ -58,8 +69,8 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
             )}
           />
         </div>
-        <div className="columns is-multiline mt-25">
-          <div className={clsx('column is-full')}>
+        <div className={clsx('columns is-multiline mt-25 sema-is-boxed', styles['comments-snap-content'])}>
+          <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>{description}</div>
           </div>
