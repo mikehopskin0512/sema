@@ -4,7 +4,7 @@ import logger from '../../shared/logger';
 import {
   findById as findUserById,
   findUserCollectionsByUserId,
-  patch as updateUser, populateCollectionsToUsers,
+  patch as updateUser,
 } from '../../users/userService';
 import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
