@@ -713,7 +713,8 @@ export function onSuggestion() {
     const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
     if (suggestedReaction) {
       // isReactionDirty is true when reaction is manually selected from UI
-      if (!isReactionDirty) {
+      // Should trigger reset when we delete our manually selected suggestion in textarea
+      if (!isReactionDirty || !activeElement.value?.length) {
         store.dispatch(
           updateSelectedEmoji({
             id: semabarId,

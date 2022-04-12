@@ -1,5 +1,5 @@
 import * as types from "./types";
-import { deleteSnapshot, getUserSnapshots, putSnapshot } from "./api";
+import { deleteSnapshot, getUserSnapshots, postSnapshots, putSnapshot } from "./api";
 import { notify } from '../../../components/toaster/index';
 
 const requestFetchUserSnapshots = () => ({
@@ -81,6 +81,61 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestUpdateSnapshotError(errMessage));
     return error.response;
+  }
+};
+
+export const createSnapshot = (snapshot, token) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const {
+      snapshotsState: {
+        data: { snapshots: previousSnapshots },
+      },
+    } = getState();
+    dispatch(requestFetchUserSnapshots());
+    const payload = await postSnapshots(snapshot, token);
+    const { data: createdSnapshot } = payload;
+    const newSnapshots = [...previousSnapshots, createdSnapshot];
+    dispatch(requestFetchUserSnapshotsSuccess(newSnapshots));
+    return payload;
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestUpdateSnapshotError(errMessage));
+    return error.response;
+  }
+};
+
+export const duplicateSnapshot = (snapshotToDuplicate, token) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    let newSnapshot = { ...snapshotToDuplicate };
+    delete newSnapshot.portolios;
+    delete newSnapshot._id;
+    newSnapshot.title = `${newSnapshot.title} (copy)`;
+    await dispatch(createSnapshot(newSnapshot, token));
+    notify('Snapshot was successfully duplicated', { type: 'success'});
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestUpdateSnapshotError(errMessage));
+    notify('Snapshot was not duplicated', { type: 'error'})
   }
 };
 

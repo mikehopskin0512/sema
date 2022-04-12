@@ -86,6 +86,7 @@ const reducer = (state = initialState, action) => {
     const { portfolios } = state.data;
     if (portfolios.length === 0) return { ...state, isFetching: false };
     const [portfolio, ...rest] = portfolios;
+    if (!portfolio) return {...state, isFetching: false};
     const snapshot = { ...action.snapshot };
     portfolio.snapshots = portfolio.snapshots.map((s) => {
       if (s.id._id === snapshot._id) {

@@ -11,8 +11,11 @@ import toaster from 'toasted-notes';
 import router from 'next/router';
 import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
 import SnapshotModal from '../../../../components/snapshots/modalWindow';
+import { snapshotsOperations } from '../../../../state/features/snapshots';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
+
+const { duplicateSnapshot } = snapshotsOperations;
 
 const snapshotList = () => {
   const showNotification = (isError, path) => {
@@ -33,8 +36,8 @@ const snapshotList = () => {
                 <CloseIcon size="small" />
               </div>
             </div>
-            {!isError && <div 
-              className="has-text-info is-clickable is-underlined" 
+            {!isError && <div
+              className="has-text-info is-clickable is-underlined"
               onClick={() => {
                 router.push(path);
                 onClose();
@@ -57,6 +60,8 @@ const snapshotList = () => {
   const [isDeleteModal, setDeleteModal] = useState(false);
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const { snapshotsState, authState } = useSelector((state) => state);
+  const isEditModalOpen = editingSnapshot !== null;
+  const clearEditingSnapshot = () => setEditingSnapshot(null);
 
   const isEditModalOpen = editingSnapshot !== null;
   const clearEditingSnapshot = () => setEditingSnapshot(null);
@@ -137,9 +142,11 @@ const snapshotList = () => {
                   onClick: () => setEditingSnapshot(snapshots[row.index])
                 },
                 {
-                  // TODO: Duplicate function
                   label: 'Duplicate',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => {
+                    const snapshot = snapshots[row.index];
+                    dispatch(duplicateSnapshot(snapshot, token));
+                  }
                 },
                 // TODO: delete function
                 {
