@@ -264,6 +264,7 @@ export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatc
   }
 };
 
+// TODO: should be removed in future iterations, caused by tickets duplication
 // export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
 //   try {
 //     dispatch(requestPostSnapshotToPortfolio());

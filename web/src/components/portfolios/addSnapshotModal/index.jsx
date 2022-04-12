@@ -126,25 +126,25 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   }
 
   const onSubmit = async (data) => {
-    // try {
-    //   let body = { snapshots: [] };
-    //   if (isSnapshotsModalType(type)) {
-    //     body.snapshots = [...ids];
-    //     await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
-    //   } else {
-    //     body.snapshots.push(snapshotId);
-    //     await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
-    //   }
-    //   if (!isEmpty(portfoliosState.error)) {
-    //     showNotification(true);
-    //   } else if (isSnapshotsModalType(type)) {
-    //     showNotification(false);
-    //   } else {
-    //     showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
-    //   }
-    // } catch (error) {
-    //   showNotification(true);
-    // }
+    try {
+      let body = { snapshots: [] };
+      if (isSnapshotsModalType(type)) {
+        body.snapshots = [...ids];
+        await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
+      } else {
+        body.snapshots.push(snapshotId);
+        await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
+      }
+      if (!isEmpty(portfoliosState.error)) {
+        showNotification(true);
+      } else if (isSnapshotsModalType(type)) {
+        showNotification(false);
+      } else {
+        showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
+      }
+    } catch (error) {
+      showNotification(true);
+    }
     onClose();
   }
 

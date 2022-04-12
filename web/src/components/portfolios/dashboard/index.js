@@ -185,6 +185,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         toggleModalActive={toggleAddModal}
         portfolio={portfolio}
       />
+      {/* TODO: should be removed in future iterations, caused by tickets duplication */}
       {/* <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/> */}
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <EditPortfolioTitle
