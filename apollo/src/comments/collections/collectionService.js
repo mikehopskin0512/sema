@@ -25,22 +25,10 @@ export const create = async (collection, userId, teamId) => {
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
-    const isActiveCollection = collection.type !== COLLECTION_TYPE.COMMUNITY;
 
     const isDefaultUserCollection = collection.name.toLowerCase() === process.env.DEFAULT_COLLECTION_NAME
     if (isDefaultUserCollection) {
       return createdCollection;
-    }
-
-    switch (collection.type) {
-      case COLLECTION_TYPE.TEAM:
-        await bulkUpdateTeamCollections(createdCollection._id, teamId, isActiveCollection)
-        break;
-      case COLLECTION_TYPE.PERSONAL:
-        await populateCollectionsToUsers([createdCollection._id], userId);
-        break;
-      default:
-        return;
     }
 
     return createdCollection;
