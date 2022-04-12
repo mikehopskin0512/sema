@@ -88,7 +88,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.post('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { snapshots } = req.body;
     const { id: portfolioId } = req.params;
@@ -104,8 +104,8 @@ export default (app, passport) => {
     }
   });
 
-  route.delete('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { snapshots } = req.body;
+  route.put('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const snapshots = req.body;
     const { id: portfolioId } = req.params;
     try {
       await Promise.all(snapshots.map(async (snapshotId) => {

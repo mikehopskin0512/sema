@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -9,7 +9,6 @@ import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, KEY_CODES, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import { snapshotsOperations } from '../../../state/features/snapshots';
 import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
@@ -24,7 +23,6 @@ import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
 import Loader from '../../../components/Loader';
 
-const { fetchUserSnapshots } = snapshotsOperations;
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
@@ -145,7 +143,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   useEffect(() => {
     parsePortfolio(portfolio);
-  }, [portfolio]);
+  }, [portfolio?.snapshots.length]);
 
   const isOwner = useMemo(() => portfolio.userId === auth.user._id, [portfolio, auth]);
 
@@ -318,10 +316,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
           {snapshots.map((s) =>
             s.componentType === 'comments' ? (
-              <CommentSnapshot snapshotData={s} portfolioId={portfolio._id} />
+              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} />
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
               </section>
             )
           )}

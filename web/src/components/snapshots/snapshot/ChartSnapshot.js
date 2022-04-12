@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
-import ActivityItem from '../../activity/item';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
@@ -23,7 +23,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
     }),
   );
   const { token } = auth;
-  const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
+  const { _id: snapshotId = '', title, description, componentType, componentData = { smartComments: [] } } = snapshotData
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
@@ -42,10 +42,8 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
   };
 
   const onDeleteSnapshot = async () => {
-    const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    if (payload.status === 200) {
-      toggleDeleteModal(false);
-    }
+    dispatch(removeSnapshotsFromPortfolio(portfolioId, [snapshotId], token));
+    toggleDeleteModal(false);
   };
 
   return (
