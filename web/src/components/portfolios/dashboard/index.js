@@ -21,6 +21,7 @@ import DropDownMenu from '../../dropDownMenu';
 import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
+import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
 
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
@@ -275,6 +276,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
         <div className="portfolio-content mb-50 container">
+          <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
