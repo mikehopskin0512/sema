@@ -55,9 +55,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     });
   };
   const dispatch = useDispatch();
-  const { auth } = useSelector(
+  const { auth, portfolios } = useSelector(
     (state) => ({
       auth: state.authState,
+      portfolios: state.portfoliosState.data.portfolios
     }),
   );
   const inputRef = useRef(null);
@@ -122,7 +123,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         ...values,
       };
 
-      body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
+      body.snapshots = body.snapshots.map(({ id: snapshot, sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
@@ -166,6 +167,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     await dispatch(updatePortfolioType(portfolio._id, newType, token));
   };
 
+  const goToAddPortfolio = () => {
+    // TODO: Redirect to Add Portfolio
+  }
+
   const onCopy = () => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
     changeIsCopied(true);
@@ -174,7 +179,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   if (isLoadingScreen) {
     return (
       <Loader />
-      )
+    )
   }
 
   if (!isOwner && isPrivatePortfolio && isIndividualView) {
@@ -183,7 +188,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   return (
     <>
-      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
+      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} />
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <EditPortfolioTitle
         onSubmit={onSaveProfile}
@@ -201,32 +206,80 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
             <div className="is-relative is-flex">
-            {isInputEditable ?
-              <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> :
-              <>
-                <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div>
-                <div>
-                  {
-                    isOwner && (
-                      <EditIcon className={clsx(styles['edit-icon'], 'is-clickable ml-20 mt-5')} onClick={() => setIsInputEditable(true)} />
+              {isInputEditable ?
+                <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> :
+                <>
+                  <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div>
+                  <div>
+                    {
+                      isOwner && (
+                        <EditIcon className={clsx(styles['edit-icon'], 'is-clickable ml-20 mt-5')} onClick={() => setIsInputEditable(true)} />
+                      )
+                    }
+                  </div>
+                </>}
+            </div>
+            <div className="is-relative is-flex is-align-items-center">
+              {isOwner && isIndividualView &&
+                <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                  <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                    <div className={clsx(styles['textContainer'])}>
+                      {isPublicPortfolio ?
+                        (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
+                        (hover && 'Change status to “Public” in order to copy sharable link.')}
+                    </div>
+                    <span className="mr-10 is-size-5">Public</span>
+                    <input
+                      id={`activeSwitch-${portfolio._id}`}
+                      type="checkbox"
+                      onChange={onChangeToggle}
+                      name={`activeSwitch-${portfolio._id}`}
+                      className="switch is-rounded"
+                      checked={isPublicPortfolio}
+                    />
+                    <label htmlFor={`activeSwitch-${portfolio._id}`} />
+                  </div>
+                  <div
+                    onClick={isPublicPortfolio ? onCopy : () => { }}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
+                  >
+                    <ShareIcon color={isPublicPortfolio ? black950 : gray600} />
+                  </div>
+                  <div className="is-size-4 mx-20" style={{ color: gray600 }}>|</div>
+                  <button
+                    onClick={() => setIsActive(true)}
+                    type="button"
+                    className="button is-transparent m-0"
+                  >
+                    + Add Snapshot
+                  </button>
+                  {portfolios.length === 1 &&
+                    (
+                      <button
+                        onClick={goToAddPortfolio}
+                        type="button"
+                        className="button is-transparent m-0 ml-15"
+                      >
+                        Create another Portfolio
+                      </button>
                     )
                   }
-                </div>
-              </>}
-            </div>
-            <div className="is-relative is-flex">
+                </div>}
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
                   isRight
                   options={[
-                  {
-                    // TODO: add Duplicate - ETCR-1030
-                    label: 'Duplicate Portfolio',
-                    onClick: () => console.log('TODO: will be implement later'),
-                  },
-                  {
-                    label: 'Delete', onClick: () => toggleDeleteModal(true)
-                  },
+                    {
+                      // TODO: add Duplicate - ETCR-1030
+                      label: 'Duplicate Portfolio',
+                      onClick: () => console.log('TODO: will be implement later'),
+                    },
+                    {
+                      label: 'Delete',
+                      onClick: () => toggleDeleteModal(true),
+                      isHidden: portfolios.length === 1
+                    },
                   ]}
                   trigger={
                     <div className="is-clickable">
@@ -235,41 +288,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                   }
                 />
               </div>
-              {isOwner && isIndividualView &&
-              <div className="is-flex ml-20 pr-40" style={{paddingTop: '3px'}}>
-                <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
-                  <div className={clsx(styles['textContainer'])}>
-                    {isPublicPortfolio ?
-                    (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
-                    (hover && 'Change status to “Public” in order to copy sharable link.')}
-                  </div>
-                  <span className="mr-10 is-size-5">Public</span>
-                  <input
-                    id={`activeSwitch-${portfolio._id}`}
-                    type="checkbox"
-                    onChange={onChangeToggle}
-                    name={`activeSwitch-${portfolio._id}`}
-                    className="switch is-rounded"
-                    checked={isPublicPortfolio}
-                  />
-                  <label htmlFor={`activeSwitch-${portfolio._id}`} />
-                </div>
-                <div
-                  onClick={isPublicPortfolio ? onCopy : () => {}}
-                  onMouseEnter={() => setHover(true)}
-                  onMouseLeave={() => setHover(false)}
-                >
-                  <ShareIcon color={isPublicPortfolio ? black950 : gray600}/>
-                </div>
-                <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
-                <button
-                  onClick={() => setIsActive(true)}
-                  type="button"
-                  className="button is-transparent m-0"
-                >
-                  + Add Snapshot
-                </button>
-              </div>}
             </div>
           </div>
         </div>
@@ -287,10 +305,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                 <div className="flex-break" />
                 <div className="is-flex is-align-items-center"><GithubIcon />
                   <span className="is-underlined pl-8 is-size-6">
-                  <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
-                    {user.username}
-                  </a>
-                </span>
+                    <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
+                      {user.username}
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
