@@ -10,7 +10,7 @@ export const modalDetails = [
     contentMargin: 'mt-50',
   },
   {
-    content: 'After that write the best title to show your experience and write description to show your progress.',
+    content: 'Write the best title to show your experience and write a description to show your progress.',
     img: '/img/portfolio/portfolio-guide-2.png',
     alt: 'guide-2',
     width: '319px',
