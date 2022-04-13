@@ -1,0 +1,31 @@
+@import "../../../../styles/_colors.module.scss";
+
+.container {
+  background-color: $gray-100;
+  padding: 15px 20px;
+  margin: 10px;
+  border-radius: 20px;
+}
+
+.modalContent {
+  width: 980px !important;
+    @media only screen and (max-width: 769px) {
+      width: 100% !important;
+  }
+}
+
+.number {
+  box-shadow: 8px 8px 0px rgba(229, 42, 145, 0.2);
+  border-radius: 20px;
+  background-color: $white-0;
+  padding: 5px 7px;
+  width: min-content;
+  display: inline-block;
+  margin: 0px 20px 0px 0px;
+  height: min-content;
+}
+
+.header {
+  background-color: $white-0;
+  border: 0;
+}

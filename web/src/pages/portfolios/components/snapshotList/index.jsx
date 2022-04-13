@@ -10,8 +10,11 @@ import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../compone
 import toaster from 'toasted-notes';
 import router from 'next/router';
 import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
+import { snapshotsOperations } from '../../../../state/features/snapshots';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
+
+const { duplicateSnapshot } = snapshotsOperations;
 
 const snapshotList = () => {
   const showNotification = (isError, path) => {
@@ -56,7 +59,6 @@ const snapshotList = () => {
   const [isDeleteModal, setDeleteModal] = useState(false);
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const { snapshotsState, authState } = useSelector((state) => state);
-
   const {
     data: { snapshots },
   } = snapshotsState;
@@ -134,9 +136,11 @@ const snapshotList = () => {
                   onClick: () => console.log('TODO: will be implement later'),
                 },
                 {
-                  // TODO: Duplicate function
                   label: 'Duplicate',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => {
+                    const snapshot = snapshots[row.index];
+                    dispatch(duplicateSnapshot(snapshot, token));
+                  }
                 },
                 // TODO: delete function
                 {

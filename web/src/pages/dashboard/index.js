@@ -41,7 +41,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
     auth: state.authState,
-    repositories: state.repositoriesState.data.repositories,
+    repositories: state.repositoriesState,
     rolesState: state.rolesState,
     teamsState: state.teamsState
   }));
@@ -53,7 +53,7 @@ const Dashboard = () => {
   const userRepos = identities?.length ? identities[0].repositories : [];
 
   // Now we should show the UI in cases when we receive an empty arrays
-  const isLoaded = !userRepos || (userRepos && repositories);
+  const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
 
   const logOnboardingAcitvity = (page) => {
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_ONBOARDING_WIZARD, { url: `/onboardingModal/page=${page}` });
@@ -198,7 +198,7 @@ const Dashboard = () => {
     </div>
   );
 
-  if (auth.isFetching) {
+  if (auth.isFetching || repositories.isFetching) {
     return <LoaderScreen />;
   }
 
