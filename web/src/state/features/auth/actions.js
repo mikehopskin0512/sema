@@ -12,6 +12,7 @@ import { alertOperations } from '../alerts';
 import { removeCookie } from '../../utils/cookie';
 import { PATHS } from '../../../utils/constants';
 import * as analytics from '../../../utils/analytics';
+import { optimisticToggleCollectionActive } from '../collections/actions';
 
 const { triggerAlert, clearAlert } = alertOperations;
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
@@ -72,9 +73,10 @@ const toggleUserCollectionActive = () => ({
   type: types.TOGGLE_USER_COLLECTION_ACTIVE,
 });
 
-const toggleUserCollectionActiveSuccess = (user) => ({
+const toggleUserCollectionActiveSuccess = (user, id) => ({
   type: types.TOGGLE_USER_COLLECTION_ACTIVE_SUCCESS,
   user,
+  id,
 });
 
 const toggleUserCollectionActiveError = (errors) => ({
@@ -401,11 +403,13 @@ export const partialUpdateUser = (userId, fields = {}, token) => async (dispatch
 export const setActiveUserCollections = (id, token) => async (dispatch) => {
   try {
     dispatch(toggleUserCollectionActive());
+    dispatch(optimisticToggleCollectionActive(id));
     const response = await toggleActiveCollection(id, {}, token);
     const { data: { user } } = response;
-    dispatch(toggleUserCollectionActiveSuccess(user));
+    dispatch(toggleUserCollectionActiveSuccess(user, id));
     return response.status || 200;
   } catch (error) {
+    dispatch(optimisticToggleCollectionActive(id));
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(toggleUserCollectionActiveError(errMessage));

@@ -12,19 +12,19 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-  case types.FETCH_COLLECTION:
+  case types.FETCH_COMMENT_COLLECTION:
     return {
       ...state,
       isFetching: true,
     };
-  case types.FETCH_COLLECTION_SUCCESS:
+  case types.FETCH_COMMENT_COLLECTION_SUCCESS:
     return {
       ...state,
       isFetching: false,
       collection: action.collection,
       error: {},
     };
-  case types.FETCH_COLLECTION_ERROR:
+  case types.FETCH_COMMENT_COLLECTION_ERROR:
     return {
       ...state,
       isFetching: false,
