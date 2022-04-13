@@ -22,6 +22,7 @@ export const create = async (collection, userId, teamId) => {
         ...tag,
         tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
       })) : [],
+      teamId,
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
@@ -51,6 +52,8 @@ export const createMany = async (collections, type, userId, teamId) => {
         }
         return tags;
       }),
+      type,
+      teamId,
       createdBy: userId && ObjectId(userId)
     }));
     const newCollections = await Collection.insertMany(cols, { ordered: false });
