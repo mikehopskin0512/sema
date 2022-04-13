@@ -6,7 +6,7 @@ import {
   findUserCollectionsByUserId,
   patch as updateUser,
 } from '../../users/userService';
-import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
+import { getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
 import { COLLECTION_TYPE } from './constants';
 import User from "../../users/userModel";
