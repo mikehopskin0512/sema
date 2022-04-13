@@ -1,16 +1,17 @@
 /* eslint-disable import/no-unresolved */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DEFAULT_COLLECTION_NAME, EVENTS } from '../../constants';
+import { DEFAULT_COLLECTION_NAME, SEGMENT_EVENTS } from '../../constants';
 import { addNotification, changeSnippetComment } from '../../modules/redux/action';
 import Button from '../inputs/Button';
 import InputField from '../inputs/InputField';
 import SelectField from '../inputs/SelectField';
 import Modal from '../Modal';
 import styles from './createSnippetModal.module.scss';
-import { fireAmplitudeEvent, getAllCollection, getAllTags, saveSmartComment } from '../../modules/content-util';
+import { getAllCollection, getAllTags, saveSmartComment } from '../../modules/content-util';
 import { mapTagsToOptions } from './helpers';
 import { getActiveThemeClass } from '../../../../../utils/theme';
+import { segmentTrack } from '../../modules/segment';
 
 const semaLogo = chrome.runtime.getURL(
   'img/sema-logo.svg',
@@ -71,7 +72,7 @@ const CreateSnippetModal = () => {
   const onSubmit = async () => {
     const existingTags = [label, language].filter((item) => item);
     try {
-      fireAmplitudeEvent(EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
+      segmentTrack(SEGMENT_EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
       await saveSmartComment({
         collectionId,
         comments: [

@@ -3,10 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { fireAmplitudeEvent, detectURLChange, isPRPage } from '../../modules/content-util';
+import { detectURLChange, isPRPage } from '../../modules/content-util';
 import { closeLoginReminder } from '../../modules/redux/action';
-import { EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
+import { SEGMENT_EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
 import { getActiveThemeClass } from '../../../../../utils/theme';
+import { segmentReset, segmentTrack } from '../../modules/segment';
 
 const lightModeLogoUrl = chrome.runtime.getURL(
   'img/sema-logo.png',
@@ -25,7 +26,7 @@ const screenshot2 = chrome.runtime.getURL(
 );
 
 const openSemaDashboard = () => {
-  fireAmplitudeEvent(EVENTS.CLICKED_LOGIN_TOASTER);
+  segmentTrack(SEGMENT_EVENTS.CLICKED_LOGIN_TOASTER);
   window.open(SEMA_UI_URL, '_blank');
 };
 
@@ -38,6 +39,10 @@ const LogOutToaster = () => {
   const activeTheme = getActiveThemeClass();
   const logoUrl = activeTheme === '' ? lightModeLogoUrl : darkModeLogoUrl;
   const closeReminder = () => dispatch(closeLoginReminder());
+
+  if (isToasterActive) {
+    segmentReset();
+  }
 
   useEffect(() => {
     const stopDetectURLChange = detectURLChange(() => {

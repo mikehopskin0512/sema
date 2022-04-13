@@ -1,5 +1,5 @@
-import { SEGMENT_API_KEY } from '../constants';
 import { AnalyticsBrowser } from '@segment/analytics-next';
+import { SEGMENT_API_KEY, SEGMENT_EVENTS } from '../constants';
 
 // Avoids a request to Segment on every tab.
 const segmentSettings = {
@@ -31,19 +31,6 @@ const segmentSettings = {
 };
 
 let segmentLoaded = false;
-
-export function initSegment(user) {
-  if (!segmentLoaded) loadSegment();
-
-  segmentLoaded = true;
-
-  const { _id, username, firstName = '', lastName = '' } = user;
-
-  analytics.identify(_id, {
-    name: `${firstName} ${lastName}`.trim(),
-    email: username,
-  });
-}
 
 // Based on https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart
 // but using @segment/analytics-next to prevent loading the snippet
@@ -92,4 +79,30 @@ async function loadSegment() {
   });
 
   window.analytics = instance;
+}
+
+const segmentIdentify = (user) => {
+  const { _id, username, firstName = '', lastName = '' } = user;
+  analytics.identify(_id, {
+    name: `${firstName} ${lastName}`.trim(),
+    email: username,
+    source: 'Chrome Extension',
+  });
+  analytics.track(SEGMENT_EVENTS.VIEWED_GITHUB_PAGE);
+};
+
+export const segmentTrack = (action, properties) => {
+  analytics.track(action, {
+    ...properties,
+  });
+};
+
+export const segmentReset = () => {
+  analytics.reset();
+};
+
+export function initSegment(user) {
+  if (!segmentLoaded) loadSegment();
+  segmentLoaded = true;
+  segmentIdentify(user);
 }

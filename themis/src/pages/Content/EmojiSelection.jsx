@@ -6,8 +6,8 @@ import useOutsideClick from './helpers/useOutsideClick';
 
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
-import { EVENTS, SEMA_LANDING_FAQ } from './constants';
-import { fireAmplitudeEvent } from './modules/content-util';
+import { SEGMENT_EVENTS, SEMA_LANDING_FAQ } from './constants';
+import { segmentTrack } from './modules/segment';
 
 const EmojiSelection = ({
   allEmojis,
@@ -77,7 +77,7 @@ const EmojiSelection = ({
                     onEmojiSelected(emoji);
                     toggleIsSelectingEmoji();
                     // eslint-disable-next-line max-len
-                    fireAmplitudeEvent(EVENTS.CLICKED_REACTION, { change_reaction: true, reaction: emoji.title, clicked_faq: false });
+                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, { change_reaction: true, reaction: emoji.title, clicked_faq: false });
                   }}
                 >
                   <Emoji symbol={emoji.emoji} />
@@ -94,7 +94,7 @@ const EmojiSelection = ({
                   href={SEMA_LANDING_FAQ}
                   onClick={() => {
                     // eslint-disable-next-line max-len
-                    fireAmplitudeEvent(EVENTS.CLICKED_REACTION, { change_reaction: false, reaction: null, clicked_faq: true });
+                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, { change_reaction: false, reaction: null, clicked_faq: true });
                   }}
                 >
                   Learn more about summaries

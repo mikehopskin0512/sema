@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import React from 'react';
 import {
-  EVENTS, POSITIVE, NEGATIVE, TOGGLE_OP,
+  POSITIVE, NEGATIVE, TOGGLE_OP, SEGMENT_EVENTS,
 } from '../../constants';
-import { fireAmplitudeEvent } from '../../modules/content-util';
+import { segmentTrack } from '../../modules/segment';
 
 function TagsModal({ allTags, toggleTagSelection }) {
   const Tag = ({ tag, type }) => {
@@ -15,7 +15,9 @@ function TagsModal({ allTags, toggleTagSelection }) {
         op: TOGGLE_OP,
       });
       // eslint-disable-next-line object-curly-newline
-      fireAmplitudeEvent(EVENTS.CLICKED_ADD_TAGS, { change_tag: true, tag: tag[type], tag_type: type, clicked_faq: false });
+      segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
+        change_tag: true, tag: tag[type], tag_type: type, clicked_faq: false,
+      });
     };
     return (
       <div

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { segmentTrack } from './modules/segment';
 import SuggestionModal from './components/SuggestionModal';
-import { EVENTS, SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID } from './constants';
-import { fireAmplitudeEvent } from './modules/content-util';
-
+import { SUGGESTION_URL, GLOBAL_SEMA_SEARCH_ID, SEGMENT_EVENTS } from './constants';
 import {
   toggleGlobalSearchModal,
   toggleGlobalSearchLoading,
@@ -57,8 +56,7 @@ const GlobalSearchbar = (props) => {
     setSearchResults([]);
     props.toggleSearchModal();
     props.onLastUsedSmartComment(suggestion);
-    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
-
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
