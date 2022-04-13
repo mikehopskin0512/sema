@@ -1,19 +1,18 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
+import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
 import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES, KEY_CODES } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
-import useOutsideClick from '../../../utils/useOutsideClick';
-import { gray900, gray600, black950 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
@@ -59,10 +58,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       auth: state.authState,
     }),
   );
-  const inputRef = useRef(null);
-  const { user: userData, token = '' } = auth;
-  const { _id: userId } = userData;
-
+  const { token = '' } = auth;
   const [user, setUser] = useState({
     fullName: '',
     avatar: DEFAULT_AVATAR,
@@ -74,24 +70,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [titleModalOpen, setTitleModalOpen] = useState(false);
-  const [isInputEditable, setIsInputEditable] = useState(false);
-
-  const onPressHandler = (e) => {
-    if (e.keyCode === KEY_CODES.ENTER && isInputEditable) {
-      inputRef.current.value !== portfolio.title && onSaveProfile({ title: inputRef.current.value });
-      setIsInputEditable(false);
-    }
-  };
-
-  const outsideClickCallback = () => {
-    if (isInputEditable) {
-      inputRef.current.value !== portfolio.title && onSaveProfile({ title: inputRef.current.value });
-      setIsInputEditable(false);
-    }
-  };
-
-  useOutsideClick(inputRef, outsideClickCallback);
   const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
@@ -125,7 +103,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
-        setTitleModalOpen(false);
       }
     }
   };
@@ -165,9 +142,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   };
 
   if (isLoading || isParsing) {
-    return (
-      <Loader />
-      )
+    return <Loader />
   }
 
   if (!isOwner && isPrivatePortfolio() && isIndividualView) {
@@ -178,12 +153,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     <>
       <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
-      <EditPortfolioTitle
-        onSubmit={onSaveProfile}
-        onClose={() => setTitleModalOpen(false)}
-        isOpen={titleModalOpen}
-        profileTitle={user.title}
-      />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
@@ -193,20 +162,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       <div className={clsx('mb-10', styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
-            <div className="is-relative is-flex">
-            {isInputEditable ? 
-              <input onKeyDown={onPressHandler} style={{ padding: '9px 16px', color: gray900 }} className="is-size-4 has-text-weight-semi-bold has-background-gray-200 border-none" ref={inputRef} type="text" defaultValue={user.title} /> : 
-              <>
-                <div className="is-size-4 has-text-weight-semi-bold">{user.title}</div> 
-                <div>
-                  {
-                    isOwner && (
-                      <EditIcon className={clsx(styles['edit-icon'], 'is-clickable ml-20 mt-5')} onClick={() => setIsInputEditable(true)} />
-                    )
-                  }
-                </div>
-              </>}
-            </div>
+            <TitleField
+              portfolio={portfolio}
+              isEditable={isOwner}
+            />
             <div className="is-relative is-flex">
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
