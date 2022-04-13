@@ -28,10 +28,12 @@ const teamSchema = new Schema({
 
 teamSchema.pre('save', async function save(next) {
   try {
-    const teamCollection = await createTeamCollection(this);
-    this.collections = [
-      { isActive: true, collectionData: teamCollection },
-    ];
+    if(this.isNew) {
+      const teamCollection = await createTeamCollection(this);
+      this.collections = [
+        { isActive: true, collectionData: teamCollection },
+      ];
+    }
     if (!this.url) {
       this.url = this._id;
     }
