@@ -1,4 +1,4 @@
-import snapshots from '../snapshots';
+import { updatePortfolioType } from './helpers';
 import * as types from './types';
 
 const initialState = {
@@ -201,37 +201,22 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE:
-    return {
-      ...state,
-      isFetching: true,
-    };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS: {
-    const { portfolios, portfolio } = state.data;
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE: {
     const { portfolioId, portfolioType } = action;
-    const index = portfolios.findIndex((s) => s._id === portfolioId);
-    const updatedPortfolio = portfolios[index];
-    updatedPortfolio.type = portfolioType;
-    portfolios.splice(index, 1, updatedPortfolio);
-    if (portfolio._id === portfolioId) {
-      portfolio.type = portfolioType;
-    }
     return {
       ...state,
-      isFetching: false,
-      data: {
-        ...state.data,
-        portfolios,
-        portfolio,
-      },
+      ...updatePortfolioType(state, portfolioId, portfolioType),
+      error: {},
     };
   }
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR:
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR: {
+    const { portfolioId, portfolioType } = action;
     return {
       ...state,
-      isFetching: false,
+      ...updatePortfolioType(state, portfolioId, portfolioType),
       error: action.errors,
     };
+  }
   default:
     return state;
   }

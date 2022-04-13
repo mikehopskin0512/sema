@@ -100,12 +100,8 @@ const requestRemovePortfolioError = (errors) => ({
   errors,
 });
 
-const requestUpdatePortfolioType = () => ({
+const requestUpdatePortfolioType = (portfolioId, portfolioType) => ({
   type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
-});
-
-const requestUpdatePortfolioTypeSuccess = (portfolioId, portfolioType) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS,
   portfolioId,
   portfolioType,
 });
@@ -289,10 +285,14 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
 
 export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
   try {
-    dispatch(requestUpdatePortfolioType());
+    dispatch(requestUpdatePortfolioType(portfolioId, type));
     await patchPortfolioType(portfolioId, type, token);
-    dispatch(requestUpdatePortfolioTypeSuccess(portfolioId, type));
   } catch (error) {
+    // TODO: it's a temp solution / we have to fix our error handling
+    if (!error?.response?.data?.message) {
+      dispatch(requestUpdatePortfolioTypeError(error, portfolioId, type));
+      return error;
+    }
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
     dispatch(requestUpdatePortfolioTypeError(errMessage));
