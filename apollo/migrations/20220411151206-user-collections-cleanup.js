@@ -11,6 +11,7 @@ module.exports = {
         const newCollection = await db.collection('collections').insertOne({
           name: 'My Snippets',
           comments: [],
+          isAcive: true,
           description: 'Have a code review comment you frequently reuse? Add it here and it will be ready for your next review.',
           author: user.username,
           type: 'personal',
