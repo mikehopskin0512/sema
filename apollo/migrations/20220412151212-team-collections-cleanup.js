@@ -36,7 +36,7 @@ module.exports = {
 
       const collections = [{
         collectionData: new ObjectId(collectionId),
-        isAcive: true,
+        isActive: true,
         _id: new ObjectId(),
       }]
       await db.collection('teams').updateOne({ _id: team._id}, {$set: { collections } });
