@@ -695,7 +695,7 @@ export const toggleTagSelection = (
   return updatedTags;
 };
 
-export function onSuggestion() {
+export async function onSuggestion() {
   const { activeElement } = document;
   const isValid = isValidSemaTextBox(activeElement);
   if (isValid) {
@@ -705,7 +705,7 @@ export function onSuggestion() {
 
     const semabarId = $(semabarContainer).attr('id');
 
-    const payload = suggest(activeElement.value);
+    const payload = await suggest(activeElement.value);
 
     const state = store.getState();
 

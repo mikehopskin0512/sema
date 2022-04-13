@@ -195,7 +195,7 @@ const onLoginChecked = () => {
     };
   }
 
-  const getDebouncedInput = () => debounce(() => {
+  const getDebouncedInput = () => debounce(async () => {
     store.dispatch(
       updateTextareaState({
         isTyping: true,
@@ -209,7 +209,7 @@ const onLoginChecked = () => {
       );
     }, CALCULATION_ANIMATION_DURATION_MS);
 
-    onSuggestion();
+    await onSuggestion();
   }, ON_INPUT_DEBOUCE_INTERVAL_MS);
 
   /**
