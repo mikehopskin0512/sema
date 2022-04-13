@@ -316,3 +316,6 @@ export const DEFAULT_PROFILE_NAME = 'Personal';
 export const STORAGE_ITEMS = {
   PROFILE: 'profile',
 };
+
+export const ANIMATION_TIME = 0.5;
+export const ANIMATION_TIMEOUT = 550;
