@@ -55,7 +55,6 @@ const InviteForm = ({ onReload }) => {
     // Send invite & reset form
     setRecipient(email);
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
-    trackSendInvite(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
 
     if (response.status === 201) {
