@@ -133,7 +133,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   const onChangeToggle = async () => {
     const newType = isPublicPortfolio() ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
-    await dispatch(updatePortfolioType(portfolio._id, newType, token));
+    await dispatch(updatePortfolioType(portfolio._id, newType));
   };
 
   const onCopy = () => {

@@ -11,6 +11,7 @@ import {
   patchPortfolioType,
   createPortfolio,
   deleteSnapshotsFromPortfolio,
+  patchPortfolioTitle,
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
@@ -104,6 +105,19 @@ const requestUpdatePortfolioType = (portfolioId, portfolioType) => ({
   type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
   portfolioId,
   portfolioType,
+});
+
+const requestUpdatePortfolioTitle = (portfolioId, title) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE,
+  portfolioId,
+  title,
+});
+
+const requestUpdatePortfolioTitleError = (error, portfolioId, initialTitle) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR,
+  error,
+  initialTitle,
+  portfolioId,
 });
 
 const requestUpdatePortfolioTypeError = (errors) => ({
@@ -283,19 +297,28 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
   }
 }
 
-export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
+export const updatePortfolioType = (portfolioId, type) => async (dispatch, getState) => {
+  const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
+  const initialType = portfolios.find(({ _id }) => _id === portfolioId)?.type;
   try {
     dispatch(requestUpdatePortfolioType(portfolioId, type));
     await patchPortfolioType(portfolioId, type, token);
   } catch (error) {
-    // TODO: it's a temp solution / we have to fix our error handling
-    if (!error?.response?.data?.message) {
-      dispatch(requestUpdatePortfolioTypeError(error, portfolioId, type));
-      return error;
-    }
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestUpdatePortfolioTypeError(errMessage));
+    dispatch(requestUpdatePortfolioTypeError(errMessage, portfolioId, initialType));
+    return error.response;
+  }
+};
+
+export const updatePortfolioTitle = (portfolioId, title) => async (dispatch, getState) => {
+  const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
+  const initialTitle = portfolios.find(({ _id }) => _id === portfolioId)?.title;
+  try {
+    dispatch(requestUpdatePortfolioTitle(portfolioId, title));
+    await patchPortfolioTitle(portfolioId, title, token);
+  } catch (error) {
+    dispatch(requestUpdatePortfolioTitleError(error, portfolioId, initialTitle));
     return error.response;
   }
 };

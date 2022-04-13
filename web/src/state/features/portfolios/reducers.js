@@ -1,11 +1,11 @@
-import { updatePortfolioType } from './helpers';
+import { updatePortfolioType, updatePortfolioTitle } from './helpers';
 import * as types from './types';
 
 const initialState = {
   isFetching: false,
   data: {
     portfolio: {},
-    portfolios: []
+    portfolios: [],
   },
   error: {},
 };
@@ -215,6 +215,22 @@ const reducer = (state = initialState, action) => {
       ...state,
       ...updatePortfolioType(state, portfolioId, portfolioType),
       error: action.errors,
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_TITLE: {
+    const { portfolioId, title } = action;
+    return {
+      ...state,
+      ...updatePortfolioTitle(state, portfolioId, title),
+      error: {},
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR: {
+    const { portfolioId, initialTitle } = action;
+    return {
+      ...state,
+      ...updatePortfolioTitle(state, portfolioId, initialTitle),
+      error: action.error,
     };
   }
   default:

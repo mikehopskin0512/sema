@@ -19,3 +19,19 @@ export const updatePortfolioType = (state, portfolioId, type) => {
     isFetching: false,
   };
 };
+
+export const updatePortfolioTitle = (state, portfolioId, title) => {
+  return {
+    ...state,
+    data: {
+      ...state.data,
+      portfolios: updatePortfolioFieldById(
+        [...state.data.portfolios],
+        portfolioId,
+        'title',
+        title,
+      ),
+    },
+    isFetching: false,
+  };
+};

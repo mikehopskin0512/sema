@@ -1,57 +1,64 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { updatePortfolioTitle } from '../../../state/features/portfolios/actions';
-import { KEY_CODES } from '../../../utils/constants';
 import useOutsideClick from '../../../utils/useOutsideClick';
+import titleFieldValidationSchema from './validationSchema';
 import { EditIcon } from '../../Icons';
-import { gray900 } from '../../../../styles/_colors.module.scss';
 
 const TitleField = ({ isEditable, portfolio }) => {
   const dispatch = useDispatch();
-  const [value, setValue] = useState('');
   const [isInputActive, setIsInputActive] = useState(false);
   const inputRef = useRef(null);
+  const { control, formState: { errors }, reset, handleSubmit, watch } = useForm({
+    defaultValues: {
+      title: '',
+    },
+    resolver: yupResolver(titleFieldValidationSchema),
+  });
+  const title = watch('title');
 
-  const update = () => {
-    const isTitleChanged = value !== portfolio.title;
+  const update = ({ title }) => {
+    const isTitleChanged = title !== portfolio.title;
     if (isEditable && isTitleChanged) {
-      dispatch(updatePortfolioTitle(portfolio._id.toString(), value));
+      dispatch(updatePortfolioTitle(portfolio._id.toString(), title));
     }
     setIsInputActive(false);
   };
-  const onTitleInputKeyDown = (e) => {
-    const isEnterKey = e.keyCode === KEY_CODES.ENTER;
-    if (isEnterKey) {
-      update();
-    }
-  };
-  useOutsideClick(inputRef, update);
+  useOutsideClick(inputRef, handleSubmit(update));
   useEffect(() => {
-    setValue(portfolio.title);
+    reset({ title: portfolio.title });
   }, [portfolio.title]);
 
   return (
-    <div className="is-relative is-flex">
+    <div className="is-relative is-flex is-align-items-center">
       {isInputActive ? (
-        <div ref={inputRef}>
-          {/* TODO: add validation here  */}
-          <input
-            onKeyDown={onTitleInputKeyDown}
-            style={{
-              padding: '9px 16px',
-              color: gray900,
-            }}
-            className="is-size-4 has-text-gray-900 py-8 px-16 has-text-weight-semi-bold has-background-gray-200 border-none"
-            value={value}
-            onInput={(e) => setValue(e.target.value)}
-            type="text"
+        <form onSubmit={handleSubmit(update)} ref={inputRef}>
+          {/* TODO: focus should be improved here somehow */}
+          <Controller
+            name="title"
+            control={control}
+            render={({ field }) => (
+              <input
+                className="is-size-4 has-text-gray-900 py-8 px-16 has-text-weight-semi-bold has-background-gray-200 border-none"
+                value={field.value}
+                onInput={(e) => field.onChange(e.target.value)}
+                type="text"
+              />
+            )}
           />
-        </div>
+          {errors?.title && (
+            <div className="mt-3 is-size-7 has-text-red-500">
+              <span>{errors.title.message}</span>
+            </div>
+          )}
+        </form>
       ) : (
         <>
           <div className="is-size-4 has-text-weight-semi-bold">
-            {value}
+            {title}
           </div>
           <div>
             {isEditable && (
