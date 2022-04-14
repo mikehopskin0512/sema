@@ -11,6 +11,7 @@ import TagsInput from '../../../components/tagsInput';
 import Helmet, { TeamCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import { teamsOperations } from '../../../state/features/teams';
+import { authOperations } from '../../../state/features/auth';
 import {
   AlertFilledIcon,
   AlertOutlineIcon,
@@ -23,9 +24,10 @@ import { getAll } from '../../../state/utils/api';
 import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../../utils/constants';
 
 const { createTeam, fetchTeamsOfUser } = teamsOperations;
+const { setSelectedTeam } = authOperations;
 const URL_STATUS = {
   ALLOCATED: 'allocated',
-  AVAIlABLE: 'available',
+  AVAILABLE: 'available',
 };
 const schema = yup.object().shape({
   name: yup
@@ -88,7 +90,7 @@ const TeamEditPage = () => {
   };
   const [isLoading, setLoading] = useState(false);
   const isAllocatedUrl = urlChecks[url] === URL_STATUS.ALLOCATED;
-  const isAvailableUrl = urlChecks[url] === URL_STATUS.AVAIlABLE;
+  const isAvailableUrl = urlChecks[url] === URL_STATUS.AVAILABLE;
   const isCreateDisabled = isLoading || isAllocatedUrl;
   const [isUrlCheckLoading, setUrlCheckLoading] = useState(false);
   const onCancel = async () => {
@@ -113,14 +115,20 @@ const TeamEditPage = () => {
       }
       if (team) {
         showNotification(team);
-        await dispatch(fetchTeamsOfUser(token));
-        await router.push(`${PATHS.TEAMS._}/${team.url}${PATHS.SETTINGS}?tab=${TAB.info}`);
+        switchToTeam(team);
       }
     } catch (e) {
+      console.error(e);
       showNotification(null);
     } finally {
       setLoading(false);
     }
+  }
+  const switchToTeam = async(team) => {
+    const roles = await dispatch(fetchTeamsOfUser(token))
+    const activeTeam = roles.find(role => role.team._id === team._id);
+    dispatch(setSelectedTeam(activeTeam))
+    router.push(`${PATHS.TEAMS._}/${team._id}${PATHS.DASHBOARD}`);
   }
   const checkUrl = async (e) => {
     e?.preventDefault();
@@ -132,7 +140,7 @@ const TeamEditPage = () => {
       const { data } = await getAll(`/api/proxy/teams/check-url/${url}`, {}, token);
       setUrlChecks(state => ({
         ...state,
-        [url]: data.isAvailable ? URL_STATUS.AVAIlABLE : URL_STATUS.ALLOCATED,
+        [url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
       }))
       return data.isAvailable;
     } finally {
