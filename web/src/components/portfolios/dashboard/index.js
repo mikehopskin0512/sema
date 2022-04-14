@@ -12,7 +12,7 @@ import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
-import { black950, gray600, gray900 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
@@ -73,6 +73,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const [isActive, setIsActive] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
+  const isOwner = portfolio.userId === auth.user._id;
+  const isPublicPortfolio = portfolio.type === PORTFOLIO_TYPES.PUBLIC;
+  const isPrivatePortfolio = portfolio.type === PORTFOLIO_TYPES.PRIVATE;
+  const isLoadingScreen = isLoading || isParsing || !portfolio || !auth.user._id;
 
   const parsePortfolio = (portfolio) => {
     setIsParsing(true);
@@ -123,20 +127,9 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     parsePortfolio(portfolio);
   }, [portfolio?.snapshots.length]);
 
-  const isOwner = useMemo(() => portfolio.userId === auth.user._id, [portfolio, auth]);
-
   const onClickChild = (e) => {
     e.stopPropagation();
   };
-
-  const isPublicPortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PUBLIC, [portfolio]);
-  const isPrivatePortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PRIVATE, [portfolio]);
-  const isLoadingScreen = useMemo(() => isLoading || isParsing || !portfolio || !auth.user._id, [
-    isLoading,
-    isParsing,
-    portfolio,
-    auth,
-  ]);
 
   const onChangeToggle = async () => {
     const newType = isPublicPortfolio ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;

@@ -205,7 +205,6 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_PORTFOLIO_TYPE: {
     const { portfolioId, portfolioType } = action;
     return {
-      ...state,
       ...updatePortfolioType(state, portfolioId, portfolioType),
       error: {},
     };
@@ -213,7 +212,6 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR: {
     const { portfolioId, portfolioType } = action;
     return {
-      ...state,
       ...updatePortfolioType(state, portfolioId, portfolioType),
       error: action.errors,
     };
@@ -221,7 +219,6 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_PORTFOLIO_TITLE: {
     const { portfolioId, title } = action;
     return {
-      ...state,
       ...updatePortfolioTitle(state, portfolioId, title),
       error: {},
     };
@@ -229,7 +226,6 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR: {
     const { portfolioId, initialTitle } = action;
     return {
-      ...state,
       ...updatePortfolioTitle(state, portfolioId, initialTitle),
       error: action.error,
     };
