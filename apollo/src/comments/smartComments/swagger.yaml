@@ -94,6 +94,7 @@ components:
           type: string
         userId:
           type: string
+          required: true
 security:
   - bearerAuth: []
 paths:
