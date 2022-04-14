@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from 'adonis';
+import { isEmpty } from 'lodash';
 import toaster from 'toasted-notes';
 import * as yup from 'yup';
 import TagsInput from '../../../components/tagsInput';
@@ -110,7 +111,7 @@ const TeamEditPage = () => {
         ...data,
         members: data.members.map((member) => member.label),
       }, token));
-      if (teamsState.error) {
+      if (!isEmpty(teamsState.error)) {
         showNotification(null);
       }
       if (team) {
