@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+
+# Runs linters (e.g. ESLint) on a given service (apollo, themis, etc.)
+# Mainly used together with our linter GitHub action.
+#
+# Usage:
+#
+# Lint all services:
+#
+# $ ./scripts/lint
+#
+# Lint all files in one service:
+#
+# $ ./scripts/lint apollo
+#
+#
+# Lint one service and only the files in that service:
+#
+# $ ./scripts/lint apollo apollo/src/users/userModel.js themis/Content/index.js
+#
+
+
+set -euo pipefail
+
+
+root_path=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/..
+
+
+lint_directory() {
+  local directory
+  directory=$1
+  shift
+
+  pushd $root_path/$directory > /dev/null
+
+  echo "Linting $directory..."
+
+  local files="."
+
+  if [[ $# > 0 ]]; then
+    files=$(tr ' ' '\n' <<< $@ |
+      grep -E '\b'$directory/ | \
+      sed -Ee 's|^'$directory'/||')
+
+    if [[ -n $files ]]; then
+      echo "Files: "
+      echo "$files"
+    fi
+  fi
+
+  npx eslint $files
+
+  popd > /dev/null
+}
+
+
+if [[ -n ${1:-} ]]; then
+  lint_directory $@
+else
+  for directory in apollo adonis themis web; do
+    lint_directory "$directory"
+  done
+fi

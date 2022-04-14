@@ -6,6 +6,7 @@
     "dev:admin": "",
     "dev:apollo": "",
     "dev:hermes": "",
-    "dev:web": "cd web && npm run dev"
+    "dev:web": "cd web && npm run dev",
+    "lint": "./scripts/lint"
   }
 }

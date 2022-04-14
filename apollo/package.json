@@ -44,6 +44,7 @@
     "method-override": "^3.0.0",
     "migrate-mongo": "^8.2.3",
     "mongoose": "^5.9.15",
+    "multer": "1.4.1",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
@@ -55,17 +56,17 @@
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
     "xlsx": "^0.15.5",
-    "yamljs": "^0.3.0",
-    "multer": "1.4.1"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
+    "@babel/eslint-parser": "^7.17.0",
     "@babel/node": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint": "^8.13.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
     "nodemon": "^2.0.4"
   }
 }
