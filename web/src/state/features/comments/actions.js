@@ -118,7 +118,7 @@ export const getUserSuggestedComments = (title, userId, token, isAllCollections 
     dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
   } catch (error) {
     let errMessage = '';
-    if (!error.responese) {
+    if (!error.response) {
       let errMessage = 'unknown error';
     } else {
       const { response: { data: { message }, status, statusText } } = error;
