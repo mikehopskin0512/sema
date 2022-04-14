@@ -76,7 +76,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const isOwner = portfolio.userId === auth.user._id;
   const isPublicPortfolio = portfolio.type === PORTFOLIO_TYPES.PUBLIC;
   const isPrivatePortfolio = portfolio.type === PORTFOLIO_TYPES.PRIVATE;
-  const isLoadingScreen = isLoading || isParsing || !portfolio || !auth.user._id;
+  const isLoadingScreen = isLoading || isParsing || !portfolio || !portfolio._id;
 
   const parsePortfolio = (portfolio) => {
     setIsParsing(true);
@@ -125,7 +125,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   useEffect(() => {
     parsePortfolio(portfolio);
-  }, [portfolio?.snapshots.length]);
+  }, [portfolio?.snapshots?.length]);
 
   const onClickChild = (e) => {
     e.stopPropagation();
