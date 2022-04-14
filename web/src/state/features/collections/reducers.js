@@ -98,6 +98,14 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.OPTIMISTIC_TOGGLE_USER_COLLECTION_ACTIVE:
+    const newData = [...state.data];
+    const collection = newData.find(collection => collection.collectionData._id === action.id);
+    collection.isActive = !collection.isActive;
+    return {
+      ...state,
+      data: newData,
+    };
   default:
     return state;
   }

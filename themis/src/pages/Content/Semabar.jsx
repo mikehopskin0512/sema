@@ -10,6 +10,7 @@ import { EMOJIS, EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
 import LoginBar from './LoginBar';
 import { fireAmplitudeEvent } from './modules/content-util';
 import Tag from './components/tag';
+import { getActiveThemeClass } from '../../../utils/theme';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -111,10 +112,10 @@ const Semabar = (props) => {
      */
     const dropdownStyle = dropPosition === DROP_POSITIONS.UP
       ? { top: offsetPos.top - modalHeight }
-      : { top: '20px', maxHeight: 'fit-content', position: 'fixed' };
+      : { top: '20px', maxHeight: 'fit-content', position: 'absolute' };
 
     return (
-      <div className={containerClasses} style={{ position: 'inherit' }}>
+      <div className={`${containerClasses} ${getActiveThemeClass()}`} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
             type="button"
@@ -150,7 +151,7 @@ const Semabar = (props) => {
           </button>
         </div>
         <div
-          className="sema-dropdown-menu tags-selection"
+          className={`sema-dropdown-menu tags-selection ${getActiveThemeClass()}`}
           role="menu"
           style={dropdownStyle}
         >

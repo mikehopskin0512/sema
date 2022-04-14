@@ -17,6 +17,15 @@ const api = axios.create({
   credentials: 'include',
 });
 
+export const onServerError = fn => {
+  const interceptor = api.interceptors.response.use(null, error => {
+    if (error.response.status === 500) {
+      fn(error);
+    }
+    throw error;
+  });
+  return () => api.interceptors.response.eject(interceptor);
+};
 
 export const setAxiosInterceptor = ({ dispatch }) => {
   api.interceptors.response.use(null, async (error) => {

@@ -7,6 +7,7 @@ import styles from './suggestedCommentCard.module.scss';
 import ActionMenu from './actionMenu';
 import Checkbox from '../../checkbox';
 import PreviewableLink from "./previewableLink";
+import Markdown from 'markdown-to-jsx';
 
 const defaultDate = '07/01/2021';
 
@@ -70,7 +71,9 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
         </div>
       ) }
       <p className={clsx("has-text-black-950 is-size-6 my-20", styles['comment-container'])}>
-        {comment}
+        <Markdown>
+          {comment}
+        </Markdown>
       </p>
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 is-flex-wrap-wrap">
         {/* No data for supporting documents yet */}
