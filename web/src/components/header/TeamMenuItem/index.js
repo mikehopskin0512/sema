@@ -38,7 +38,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
     <>
       <div className={`${isSelected ? 'has-background-white' : ''} p-15 is-relative`}>
         <div>
-          <div className={clsx(`is-flex ${isSelected ? 'is-flex-direction-column' : 'is-flex-wrap-wrap'} is-align-items-center py-5`, styles.team)} onClick={handleOnTeamClick}>
+          <div className={clsx(`is-flex ${isSelected && 'is-flex-direction-column'} is-align-items-center py-5`, styles.team)} onClick={handleOnTeamClick}>
             <Avatar
               name={role?.team?.name || "Team"}
               src={role?.team?.avatarUrl}
