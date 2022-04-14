@@ -2,7 +2,7 @@
 $color-github-button-blue: #0081a7;
 
 $reminder-width: 384px;
-$reminder-height: 445px;
+$reminder-height: 412px;
 $color-dark: #3b434b;
 $color-dark-2: #0d1117;
 $color-dark-3: #0e1218;
@@ -14,6 +14,7 @@ $color-light-1: rgb(225, 228, 232);
 
 // THEMES
 $color-light-font: rgb(54, 54, 54);
+$color-light-high-contrast-font: rgb(54, 54, 54);
 $color-dark-font: #c9d1d9;
 $color-dark-dim-font: #adbac7;
 $color-dark-high-contrast-font: #f0f3f6;
@@ -29,54 +30,76 @@ $color-dark-dim-border: #373e47;
 $color-dark-high-contrast-border: #7a828e;
 
 $color-light-tags-container-bg: #fff;
-$color-dark-tags-container-bg: #191a1c;
-$color-dark-dim-tags-container-bg: #1f232b;
-$color-dark-high-contrast-tags-container-bg: #010409;
+$color-light-high-contrast-tags-container-bg: #fff;
+$color-dark-tags-container-bg: #192129;
+$color-dark-dim-tags-container-bg: #212B36;
+$color-dark-high-contrast-tags-container-bg: #161616;
 
-$color-light-tags-container-border: #d5d8db;
-$color-dark-tags-container-border: #272e33;
-$color-dark-dim-tags-container-border: #373e47;
-$color-dark-high-contrast-tags-container-border: #7a828e;
+$color-light-tags-container-border: #F0F2F4;
+$color-light-high-contrast-tags-container-border: #F0F2F4;
+$color-dark-tags-container-border: #192129;
+$color-dark-dim-tags-container-border: #212B36;
+$color-dark-high-contrast-tags-container-border: #161616;
 
-$color-light-tags-header-bg: #fbfbfb;
-$color-dark-tags-header-bg: #22282c;
-$color-dark-dim-tags-header-bg: #22282c;
-$color-dark-high-contrast-tags-header-bg: #272b33;
+$color-light-tags-header-bg: #F0F2F4;
+$color-light-high-contrast-tags-header-bg: #E3E9EE;
+$color-dark-tags-header-bg: #212B36;
+$color-dark-dim-tags-header-bg: #192129;
+$color-dark-high-contrast-tags-header-bg: #192129;
 
-$color-light-tags-header-font: #000;
-$color-dark-tags-header-font: #fff;
-$color-dark-dim-tags-header-font: #fff;
-$color-dark-high-contrast-tags-header-font: #fff;
+$color-light-tags-header-font: #212B36;
+$color-light-high-contrast-tags-header-font: #161616;
+$color-dark-tags-header-font: #F0F2F4;
+$color-dark-dim-tags-header-font: #F0F2F4;
+$color-dark-high-contrast-tags-header-font: #FFFFFF;
 
-$color-light-tag-bg: whitesmoke;
-$color-dark-tag-bg: #272e33;
-$color-dark-dim-tag-bg: #272e33;
-$color-dark-high-contrast-tag-bg: #272b33;
+$color-light-tag-bg: #F0F2F4;
+$color-light-high-contrast-tag-bg: #E3E9EE;
+$color-dark-tag-bg: #56626E;
+$color-dark-dim-tag-bg: #56626E;
+$color-dark-high-contrast-tag-bg: #212B36;
 
-$color-light-tag-font: rgba(0, 0, 0, 0.7);
-$color-dark-tag-font: #a5a5a5;
-$color-dark-dim-tag-font: #a5a5a5;
-$color-dark-high-contrast-tag-font: #a5a5a5;
+$color-light-tag-border: none;
+$color-light-high-contrast-tag-border: 1px solid #56626E;
+$color-dark-tag-border: none;
+$color-dark-dim-tag-border: none;
+$color-dark-high-contrast-tag-border: 1px solid #BFCBD3;
 
-$color-light-selected-tag-bg: rgb(54, 54, 54);
-$color-dark-selected-tag-bg: #343c42;
-$color-dark-dim-selected-tag-bg: #343c42;
-$color-dark-high-contrast-selected-tag-bg: #343c42;
+$color-light-tag-selected-border: none;
+$color-light-high-contrast-tag-selected-border: none;
+$color-dark-tag-selected-border: 1px solid #F0F2F4;
+$color-dark-dim-tag-selected-border: 1px solid #F0F2F4;
+$color-dark-high-contrast-tag-selected-border: none;
 
-$color-light-selected-tag-font: rgb(255, 255, 255);
-$color-dark-selected-tag-font: #d0d0d0;
-$color-dark-dim-selected-tag-font: #d0d0d0;
-$color-dark-high-contrast-selected-tag-font: #d0d0d0;
+$color-light-tag-font: #56626E;
+$color-light-high-contrast-tag-font: #161616;
+$color-dark-tag-font: #F0F2F4;
+$color-dark-dim-tag-font: #F8F8F8;
+$color-dark-high-contrast-tag-font: #F0F2F4;
 
-$color-light-title: #4a4a4a;
-$color-dark-title: #a5a5a5;
-$color-dark-dim-title: #a5a5a5;
-$color-dark-high-contrast-title: #f0f3f6;
+$color-light-selected-tag-bg: #56626E;
+$color-light-high-contrast-selected-tag-bg: #161616;
+$color-dark-selected-tag-bg: #192129;
+$color-dark-dim-selected-tag-bg: #192129;
+$color-dark-high-contrast-selected-tag-bg: #F0F2F4;
 
-$color-light-content: #4a4a4a;
-$color-dark-content: #626262;
-$color-dark-dim-content: #626262;
-$color-dark-high-contrast-content: #d6d9db;
+$color-light-selected-tag-font: #FFFFFF;
+$color-light-high-contrast-selected-tag-font: #FFFFFF;
+$color-dark-selected-tag-font: #F0F2F4;
+$color-dark-dim-selected-tag-font: #F0F2F4;
+$color-dark-high-contrast-selected-tag-font: #161616;
+
+$color-light-title: #212B36;
+$color-light-high-contrast-title: #161616;
+$color-dark-title: #F0F2F4;
+$color-dark-dim-title: #F0F2F4;
+$color-dark-high-contrast-title: #FFFFFF;
+
+$color-light-content: #56626E;
+$color-light-high-contrast-content: #212B36;
+$color-dark-content: #E3E9EE;
+$color-dark-dim-content: #E3E9EE;
+$color-dark-high-contrast-content: #F8F8F8;
 
 $color-light-btn-container: #fbfbfb;
 $color-dark-btn-container: #0e1218;
@@ -108,45 +131,64 @@ $color-dark-review-form-border: #1f6feb;
 $color-dark-dim-review-form-border: #4184e4;
 $color-dark-high-contrast-review-form-border: #409eff;
 
-$color-light-add-tags-bg: white;
+$color-light-add-tags-bg: #FFFFFF;
+$color-light-high-contrast-add-tags-bg: #FFFFFF;
 $color-dark-add-tags-bg: #272e33;
 $color-dark-dim-add-tags-bg: #272e33;
 $color-dark-high-contrast-add-tags-bg: #272b33;
 
 $color-light-add-tags-font: rgb(54, 54, 54);
+$color-light-high-contrast-add-tags-font: #161616;
 $color-dark-add-tags-font: #d0d0d0;
 $color-dark-dim-add-tags-font: #d0d0d0;
 $color-dark-high-contrast-add-tags-font: #d0d0d0;
 
 $color-light-add-tags-border: 1px dashed rgb(219, 219, 219);
+$color-light-high-contrast-add-tags-border: 1px dashed rgb(219, 219, 219);
 $color-dark-add-tags-border: 0.75px dashed #a5a5a5;
 $color-dark-dim-add-tags-border: 0.75px dashed #a5a5a5;
 $color-dark-high-contrast-add-tags-border: 0.75px dashed #7a828e;
+
+$color-light-add-tags-border: 1px dashed rgb(219, 219, 219);
+$color-light-high-contrast-add-tags-border: 1px dashed rgb(219, 219, 219);
+$color-dark-add-tags-border: 0.75px dashed #a5a5a5;
+$color-dark-dim-add-tags-border: 0.75px dashed #a5a5a5;
+$color-dark-high-contrast-add-tags-border: 0.75px dashed #7a828e;
+
+$color-light-tags-header-border: none;
+$color-light-high-contrast-tags-header-border: 1px solid #56626E;;
+$color-dark-tags-header-border: none;
+$color-dark-dim-tags-header-border: none;
+$color-dark-high-contrast-tags-header-border: 1px solid #BFCBD3;
 
 $color-light-highlight: rgba(0, 104, 255, 0.08);
 $color-dark-highlight: rgba(52, 60, 66, 0.6);
 $color-dark-dim-highlight: rgba(52, 60, 66, 0.6);
 $color-dark-high-contrast-highlight: rgba(52, 60, 66, 0.6);
 
-$color-light-emoji-bg: #fff;
-$color-dark-emoji-bg: #22282c;
-$color-dark-dim-emoji-bg: #22282c;
-$color-dark-high-contrast-emoji-bg: #22282c;
+$color-light-emoji-bg: #FFFFFF;
+$color-light-high-contrast-emoji-bg: #FFFFFF;
+$color-dark-emoji-bg: #192129;
+$color-dark-dim-emoji-bg: #212B36;
+$color-dark-high-contrast-emoji-bg: #161616;
 
-$color-light-emoji-font: #0a0a0a;
-$color-dark-emoji-font: #f0f2f4;
-$color-dark-dim-emoji-font: #f0f2f4;
-$color-dark-high-contrast-emoji-font: #f0f2f4;
+$color-light-emoji-font: #56626E;
+$color-light-high-contrast-emoji-font: #212B36;
+$color-dark-emoji-font: #F0F2F4;
+$color-dark-dim-emoji-font: #F0F2F4;
+$color-dark-high-contrast-emoji-font: #F8F8F8;
 
-$color-light-emoji-bg-hover: #0081a70d;
-$color-dark-emoji-bg-hover: #343c42;
-$color-dark-dim-emoji-bg-hover: #343c42;
-$color-dark-high-contrast-emoji-bg-hover: #343c42;
+$color-light-emoji-bg-hover: #E3F2F8;
+$color-light-high-contrast-emoji-bg-hover: #9FE1F5;
+$color-dark-emoji-bg-hover: #02556D;
+$color-dark-dim-emoji-bg-hover: #02556D;
+$color-dark-high-contrast-emoji-bg-hover: #02556D;
 
-$color-light-emoji-font-hover: #0a0a0a;
-$color-dark-emoji-font-hover: #fff;
-$color-dark-dim-emoji-font-hover: #fff;
-$color-dark-high-contrast-emoji-font-hover: #fff;
+$color-light-emoji-font-hover: #56626E;
+$color-light-high-contrast-emoji-font-hover: #212B36;
+$color-dark-emoji-font-hover: #F0F2F4;
+$color-dark-dim-emoji-font-hover: #F0F2F4;
+$color-dark-high-contrast-emoji-font-hover: #F8F8F8;
 
 $color-light-reminder-bg: #ffffff;
 $color-dark-reminder-bg: #0E1218;
@@ -168,13 +210,33 @@ $color-dark-reminder-sign-in-btn-bg: #212B36;
 $color-dark-dim-reminder-sign-in-btn-bg: #212B36;
 $color-dark-high-contrast-reminder-sign-in-btn-bg: #212B36;
 
-$color-light-reminder-sign-in-btn-font: #ffffff;
-$color-dark-reminder-sign-in-btn-font: #33C2EC;
-$color-dark-dim-reminder-sign-in-btn-font: #0081a7;
-$color-dark-high-contrast-reminder-sign-in-btn-font: #33C2EC;
+$color-light-reminder-sign-in-btn-font: #0081A7;
+$color-light-high-contrast-reminder-sign-in-btn-font: #006D8D;
+$color-dark-reminder-sign-in-btn-font: #13A3CD;
+$color-dark-dim-reminder-sign-in-btn-font: #1394BA;
+$color-dark-high-contrast-reminder-sign-in-btn-font: #10B2E1;
 
 $color-tag-container-dark: #56626E;
 $color-tag-container-light: #E3E9EE;
+
+$color-light-tag-container-bg: #F0F2F4;
+$color-light-high-contrast-tag-container-bg: #E3E9EE;
+$color-dark-tag-container-bg: #56626E;
+$color-dark-dim-tag-container-bg: #56626E;
+$color-dark-high-contrast-tag-container-bg: #212B36;
+
+$color-light-tag-container-text: #56626E;
+$color-light-high-contrast-tag-container-text: #161616;
+$color-dark-tag-container-text: #F0F2F4;
+$color-dark-dim-tag-container-text: #F8F8F8;
+$color-dark-high-contrast-tag-container-text: #F0F2F4;
+
+$color-light-tag-container-border: none;
+$color-light-high-contrast-tag-container-border: none;
+$color-dark-tag-container-border: none;
+$color-dark-dim-tag-container-border: none;
+$color-dark-high-contrast-tag-container-border: 1px solid #BFCBD3;
+
 $color-source-dark: #909AA4;
 $color-title-light: #051226;
 $color-comment-text-dark: #FAFAFC;
@@ -198,3 +260,58 @@ $color-light-border-create-snippet-modal: #161616;
 $color-dark-border-create-snippet-modal: #BFCBD3;
 $color-dark-dim-border-create-snippet-modal: #909AA4;
 $color-dark-high-contrast-border-create-snippet-modal: #ffffff;
+
+$color-light-comment-hover: #F0F2F4;
+$color-light-high-contrast-comment-hover: #E3E9EE;
+$color-dark-comment-hover: #212B36;
+$color-dark-dim-comment-hover: #212B36;
+$color-dark-high-contrast-comment-hover: #192129;
+
+$color-light-comment-title: #212B36;
+$color-light-high-contrast-comment-title: #161616;
+$color-dark-comment-title: #F0F2F4;
+$color-dark-dim-comment-title: #F0F2F4;
+$color-dark-high-contrast-comment-title: #FFFFFF;
+
+$color-light-comment-source: #56626E;
+$color-light-high-contrast-comment-source: #212B36;
+$color-dark-comment-source: #E3E9EE;
+$color-dark-dim-comment-source: #E3E9EE;
+$color-dark-high-contrast-comment-source: #E3E9EE;
+
+$color-light-comment-text: #56626E;
+$color-light-high-contrast-comment-text: #212B36;
+$color-dark-comment-text: #E3E9EE;
+$color-dark-dim-comment-text: #E3E9EE;
+$color-dark-high-contrast-comment-text: #F8F8F8;
+
+$color-light-title-suggestions-placeholder: #212B36;
+$color-light-high-contrast-title-suggestions-placeholder: #212B36;
+$color-dark-title-suggestions-placeholder: #F0F2F4;
+$color-dark-dim-title-suggestions-placeholder: #F0F2F4;
+$color-dark-high-contrast-title-suggestions-placeholder: #FFFFFF;
+
+$color-light-text-suggestions-placeholder: #56626E;
+$color-light-high-contrast-text-suggestions-placeholder: #212B36;
+$color-dark-text-suggestions-placeholder: #E3E9EE;
+$color-dark-dim-text-suggestions-placeholder: #E3E9EE;
+$color-dark-high-contrast-text-suggestions-placeholder: #F8F8F8;
+
+
+$color-light-title-no-results: #212B36;
+$color-light-high-contrast-title-no-results: #212B36;
+$color-dark-title-no-results: #F0F2F4;
+$color-dark-dim-title-no-results: #F0F2F4;
+$color-dark-high-contrast-title-no-results: #FFFFFF;
+
+$color-light-link-no-results: #0081A7;
+$color-light-high-contrast-link-no-results: #006D8D;
+$color-dark-link-no-results: #13A3CD;
+$color-dark-dim-link-no-results: #1394BA;
+$color-dark-high-contrast-link-no-results: #10B2E1;
+
+$color-light-logout-bg: #FFFFFF;
+$color-light-high-contrast-logout-bg: #FFFFFF;
+$color-dark-logout-bg: #192129;
+$color-dark-dim-logout-bg: #212B36;
+$color-dark-high-contrast-logout-bg: #161616;
