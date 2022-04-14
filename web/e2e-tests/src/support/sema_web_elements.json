@@ -125,7 +125,7 @@
     "newSnippetAuthorNameInput"     : "//label[text()='']/following-sibling::div/input",
     "saveNewSnippetBtn"             : "//button/span[text()='Save New Snippet']",
     "selectedLeadershipTag"         : "//div[@class='control']//div[text()='Leadership']",
-    "selectedTypeScriptLanguage"    : "//div[@class='control']//div[text()='TypeScript']",
+    "selectedAllLanguage"    : "//div[@class='control']//div[text()='All']",
 
     "addNewCollectionBtn"           : "//a[@href='/snippets/add']/button",
     "newCollectionTitleInput"       : "//label[text()='Snippet Collection Title']/following-sibling::div/input",
@@ -150,8 +150,8 @@
 
     "allSnippetsNames"              : "//div[contains(@class,'suggestedCommentCard_title__1fTLb')]//p",
     "searchedSnippetsResult"        : "//div/div[contains(@class,'suggestedCommentCard_container__JzDQc')]",
-    "snippetsLanguage"              : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][1]",
-    "snippetsLabel"                 : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][2]",
+    "snippetsLanguage"              : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][2]",
+    "snippetsLabel"                 : "//div[contains(@class,'suggestedCommentCard_language__20Geg')][1]",
 
     "searchSnippetInput"            : "//input[@placeholder='Search snippets']",
     "searchSnippetTagInput"         : "//select[contains(@name,'tag')]",

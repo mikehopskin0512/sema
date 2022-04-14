@@ -219,12 +219,14 @@ Feature: User is able to interact with snippets properly
 
     Then I expect that element "newCollectionOtherLabelInput" becomes displayed
     When I click on the element "newCollectionOtherLabelInput"
+    And  I pause for 1000ms
     And  I set "Leader" to the inputfield "newCollectionOtherLabelInput"
     And  I pause for 3000ms
     And  I press "Enter"
 
     Then I expect that element "newCollectionLanguagesInput" becomes displayed
     When I click on the element "newCollectionLanguagesInput"
+    And  I pause for 1000ms
     And  I set "all" to the inputfield "newCollectionLanguagesInput"
     And  I pause for 3000ms
     And  I press "Enter"
@@ -244,7 +246,7 @@ Feature: User is able to interact with snippets properly
     When I click on the element "addNewSnippetInCollectionBtn"
     And  I pause for 4000ms
     Then I expect that element "selectedLeadershipTag" becomes displayed
-    And  I expect that element "selectedTypeScriptLanguage" becomes displayed
+    And  I expect that element "selectedAllLanguage" becomes displayed
     And  I expect that element "newSnippetTitleInput" becomes displayed
     And  I expect that element "newSnippetBodyInput" becomes displayed
     When I click on the element "newSnippetBodyInput"
@@ -338,8 +340,8 @@ Feature: User is able to interact with snippets properly
 #      Then I expect that element "openedSnippetTODO" becomes displayed
 
 
-  @C2741
   #      C2741  C2742
+  @C2741
   Scenario: Field validation for creating collection
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
@@ -366,11 +368,13 @@ Feature: User is able to interact with snippets properly
     And  I set "Source name test" to the inputfield "newCollectionSourceNameInput"
     And  I set "invalid url text" to the inputfield "newCollectionSourceLinkInput"
     When I click on the element "newCollectionLanguagesInput"
+    And  I pause for 1000ms
     And  I set "java" to the inputfield "newCollectionLanguagesInput"
     And  I pause for 3000ms
     When I press "Enter"
     Then I expect that element "newCollectionOtherLabelInput" becomes displayed
     When I click on the element "newCollectionOtherLabelInput"
+    And  I pause for 1000ms
     And  I set "Syntax" to the inputfield "newCollectionOtherLabelInput"
     And  I pause for 3000ms
     And  I press "Enter"
