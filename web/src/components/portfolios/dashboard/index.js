@@ -144,7 +144,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   useEffect(() => {
     parsePortfolio(portfolio);
-  }, [portfolio?.snapshots.length]);
+  }, [portfolio?.snapshots?.length]);
 
   const isOwner = useMemo(() => portfolio.userId === auth.user._id, [portfolio, auth]);
 
@@ -154,7 +154,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   const isPublicPortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PUBLIC, [portfolio]);
   const isPrivatePortfolio = useMemo(() => portfolio.type === PORTFOLIO_TYPES.PRIVATE, [portfolio]);
-  const isLoadingScreen = useMemo(() => isLoading || isParsing || !portfolio || !auth.user._id, [
+  const isLoadingScreen = useMemo(() => isLoading || isParsing || !portfolio || !portfolio._id || !auth.user._id, [
     isLoading,
     isParsing,
     portfolio,

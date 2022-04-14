@@ -15,16 +15,20 @@ const PublicPortfolio = () => {
     query: { portfolioId },
   } = router;
   const dispatch = useDispatch();
-  const { token, portfolios } = useSelector(
+  const { token, portfolios, publicPortfolio, isLoading } = useSelector(
     (state) => ({
       token: state.authState.token,
       portfolios: state.portfoliosState.data.portfolios,
+      publicPortfolio: state.portfoliosState.data.portfolio,
+      isLoading: state.portfoliosState.isFetching
     }),
   );
-  const portfolio = portfolios.find(({ _id }) => _id === portfolioId);
+
   useEffect(() => {
     dispatch(fetchPortfolio(portfolioId));
   }, [portfolioId, dispatch, token]);
+
+  const portfolio = portfolios.find(({ _id }) => _id === portfolioId) || publicPortfolio;
 
   return (
     <div className="has-background-white hero">
@@ -34,7 +38,7 @@ const PublicPortfolio = () => {
           <PortfolioDashboard
             portfolio={portfolio}
             isIndividualView
-            isLoading={portfolios.isFetching}
+            isLoading={isLoading}
           />
         )}
       </div>
