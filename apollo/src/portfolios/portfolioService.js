@@ -93,6 +93,22 @@ export const update = async (portfolioId, portfolio) => {
   }
 };
 
+export const updatePortfolioTitle = async (portfolioId, title) => {
+  try {
+    return await Portfolio
+      .findOneAndUpdate(
+        { _id: new ObjectId(portfolioId) },
+        { $set: { title } },
+        { new: true },
+      )
+      .exec();
+  } catch (err) {
+    const error = new errors.NotFound(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
 export const updatePortfolioType = async (portfolioId, type) => {
   try {
     await Portfolio
