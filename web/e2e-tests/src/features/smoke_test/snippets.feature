@@ -1,4 +1,4 @@
-@snippets
+@snippets @regression
 Feature: User is able to interact with snippets properly
 
 
@@ -6,17 +6,18 @@ Feature: User is able to interact with snippets properly
   #    Given User click on the element "authorizeSemaSoftwareBtn" if visible
   #    When I wait on element "userLogo" for 10000ms
 
-   @admin  @C1704
+  @C1704 @smoke
   Scenario: Snippets collection can be turned on and turned off
     #    C2787  C1737
     When I click on the element "snippetsTab"
     And  I wait on element "firstInActiveCollectionToggle" for 10000ms to be enabled
     And  I scroll to element "firstInActiveCollectionToggle"
     When I click on the element "firstInActiveCollectionToggle"
-     And I pause for 2000ms
+     And I pause for 3000ms
     Then I expect that element "firstInActiveCollectionName" becomes displayed
     When I save the text of element "firstInActiveCollectionName"
-    And  I click on the element "firstInActiveCollectionToggle"
+    Then I expect that element "firstInActiveCollectionToggle" becomes displayed
+    When I click on the element "firstInActiveCollectionToggle"
     Then I expect that selected collection element "activeCollectionsNames" is enabled
     ##    C2788
 
@@ -25,7 +26,7 @@ Feature: User is able to interact with snippets properly
     And  I click on the element "firstActiveCollectionToggle"
     Then I expect that selected collection element "inactiveCollectionsNames" is enabled
 
-  @admin  @C2797
+  @C2797 @smoke
   #      C2798  C1737
   Scenario: Adding new snippet to "My Snippets" collection
     When I open the site "/snippets"
@@ -55,7 +56,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "allSnippetsNames" becomes displayed
     Then I expect that new item "allSnippetsNames" is added to snippets
 
-  @admin  @C2814  @snippet
+  @C2814
   Scenario: Adding new snippet to already existing collection
     When I open the site "/snippets"
     Then I expect that element "mySnippetsCollection" becomes displayed
@@ -96,7 +97,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "allSnippetsNames" becomes displayed
     And  I expect that new item "allSnippetsNames" is added to snippets
 
-  @admin  @C1706  @snip
+  @C1706 @smoke
   Scenario: Search for existing snippet works
     When I open the site "/snippets"
     Then I expect that element "searchIconBtn" becomes displayed
@@ -141,7 +142,7 @@ Feature: User is able to interact with snippets properly
     And  I expect that element "viewMoreBtn" becomes displayed
     And  I expect that element "clearSearchResultBtn" is not displayed
 
-  @C1713  @snippet
+  @C1713
   Scenario: Return back to collections from snippets
     When I open the site "/snippets"
 
@@ -156,7 +157,7 @@ Feature: User is able to interact with snippets properly
     When I click on the element "snippetsLibraryLinkBtn"
     Then I expect that element "arrowBackBtn" is not displayed
 
-  @admin  @C2790  @snippet
+  @C2790 @smoke
   Scenario: Adding new snippet collection
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
@@ -169,7 +170,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "newCollectionTitleInput" becomes displayed
     When I set "Test Collection" with timestamp to the inputfield "newCollectionTitleInput"
     And  I click on the element "newCollectionLanguagesInput"
-    And  I set "Type" to the inputfield "newCollectionLanguagesInput"
+    And  I set "all" to the inputfield "newCollectionLanguagesInput"
     And  I pause for 3000ms
     And  I press "Enter"
     Then I expect that element "newCollectionOtherLabelInput" becomes displayed
@@ -185,7 +186,7 @@ Feature: User is able to interact with snippets properly
     When I click on the button "saveNewCollectionBtn"
     Then I expect that new item "allCollectionsNames" is added to collections
 
-  @C1714  @snippet
+  @C1714
   Scenario:  "View more" snippets shows
     When I open the site "/snippets"
     Then I expect that element "searchIconBtn" becomes displayed
@@ -198,7 +199,7 @@ Feature: User is able to interact with snippets properly
     When I click on the element "viewMoreBtn"
     Then I expect that element "searchedSnippetsResult" does appear exactly "20" times
 
-  @admin  @C2442
+  @C2442
   Scenario: The default tags for collection is added to snippet
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
@@ -224,7 +225,7 @@ Feature: User is able to interact with snippets properly
 
     Then I expect that element "newCollectionLanguagesInput" becomes displayed
     When I click on the element "newCollectionLanguagesInput"
-    And  I set "type" to the inputfield "newCollectionLanguagesInput"
+    And  I set "all" to the inputfield "newCollectionLanguagesInput"
     And  I pause for 3000ms
     And  I press "Enter"
 
@@ -265,9 +266,9 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "searchedSnippetsResult" does appear exactly "1" times
     And  I pause for 2000ms
     And  I expect that element "snippetsLanguage" matches the text "LEADERSHIP"
-    And  I expect that element "snippetsLabel" matches the text "TYPESCRIPT"
+    And  I expect that element "snippetsLabel" matches the text "ALL"
 
-#    @admin  @C2469
+#    @C2469
 #      after SCR-768   todo
 #    Scenario: Global search by items of turned off collection are clickable
 #      When I click on the element "snippetsTab"
@@ -288,7 +289,7 @@ Feature: User is able to interact with snippets properly
 #      When I set "Iterate in Thens" to the inputfield "searchCollectionInput"
 #      Then "snippet" snippet should be found in "collection"
 
-  #  @admin  @C2480
+  #  @C2480
   #    after SCR-768   todo
   #  Scenario: Global search with non-alphanumeric characters
   #    When I click on the element "snippetsTab"
@@ -316,7 +317,7 @@ Feature: User is able to interact with snippets properly
   #    And  I set "%" to the inputfield "searchCollectionInput"
   #    Then I expect that element "searchedCollectionsResult" does appear exactly "todo" times
 
-#    @admin  @C2730
+#    @C2730
 #         after SCR-768   todo
 #    Scenario: Global search results are clickable
 #      When I click on the element "snippetsTab"
@@ -337,7 +338,7 @@ Feature: User is able to interact with snippets properly
 #      Then I expect that element "openedSnippetTODO" becomes displayed
 
 
-  @admin  @C2741
+  @C2741
   #      C2741  C2742
   Scenario: Field validation for creating collection
     Then I expect that element "userLogo" becomes displayed
@@ -385,7 +386,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "snippetCollectionLinkError" becomes not displayed
 
 
-#  @admin  @C2786  @snippet
+#  @C2786
 #  Scenario: Populate this collection to all users checkbox is marked
 #    Then I expect that element "userLogo" becomes displayed
 #    When I click on the element "userLogo"
@@ -440,7 +441,7 @@ Feature: User is able to interact with snippets properly
 #    And  I search created collection "searchCollectionInput"
 #    Then I expect that new item "allCollectionsNames" is added to collections
 
-#  @admin  @C2786000  @snippet
+#  @C2786000
 #  Scenario: Populate this collection to all users checkbox is not marked
 #    Then I expect that element "userLogo" becomes displayed
 #    When I click on the element "userLogo"
@@ -499,7 +500,7 @@ Feature: User is able to interact with snippets properly
 #    And  I search created collection "searchCollectionInput"
 #    Then I expect that new item "allCollectionsNames" is not added to collections
 
-  @admin @C2795
+  @C2795  @smoke
   Scenario: Snippet collection can be edited
     Then I expect that element "userLogo" becomes displayed
     When I click on the element "userLogo"
@@ -533,7 +534,7 @@ Feature: User is able to interact with snippets properly
     When I click on the button "saveNewCollectionBtn"
     Then I expect that new item "allCollectionsNames" is added to collections
 
-#  @acme  @C2326
+#  @C2326
 #    waiting for acme creads  todo
 #  Scenario: Context menu is not visible for common user
 #    When I click on the element "snippetsTab"
