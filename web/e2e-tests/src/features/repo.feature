@@ -1,8 +1,9 @@
-@repo
+@repo @regression
 Feature: Repo
 
-  @admin  @PTA48
+  @PTA48
   Scenario: My Repos can change card view to list view
+      When I click on the element "reposTab"
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
       And  I expect that element "reposListRows" becomes not displayed
@@ -16,8 +17,9 @@ Feature: Repo
       Then I expect that element "reposCards" becomes displayed
       And  I expect that element "reposListRows" becomes not displayed
 
-  @admin  @PTA52
+  @PTA52 @smoke
   Scenario: Activity log elements are displayed for repo
+      When I click on the element "reposTab"
       Then I expect that element "reposContainer" becomes displayed
       And  I expect that element "reposCards" becomes displayed
       When I click on the element "1stReposCard"
@@ -47,8 +49,9 @@ Feature: Repo
       When I click on the element "searchFilterBtn"
       Then I expect that element "searchFilterInput" becomes displayed
 
-    @admin  @PTA52_2
+    @PTA52_2
     Scenario: Activity log elements are displayed for repo with selected date range
+        When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"
@@ -82,8 +85,9 @@ Feature: Repo
         And  I expect that element "codeStatsSummariesSnapshotBtn" becomes not displayed
         And  I expect that element "codeStatsTagsSnapshotBtn" becomes not displayed
 
-    @admin  @PTA53
+    @PTA53 @smoke
     Scenario: Code stats elements are displayed for repo
+        When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"
@@ -112,8 +116,9 @@ Feature: Repo
         When I click on the element "searchFilterBtn"
         Then I expect that element "searchFilterInput" becomes displayed
 
-    @admin  @PTA53_2
+    @PTA53_2
     Scenario: Code stats elements are displayed for repo with selected date range
+        When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"
@@ -147,8 +152,9 @@ Feature: Repo
         And  I expect that element "codeStatsSummariesSnapshotBtn" becomes displayed
         And  I expect that element "codeStatsTagsSnapshotBtn" becomes displayed
 
-    @admin  @PTA47
+    @PTA47 @smoke
     Scenario: Repo can be selected from dropdown menu
+        When I click on the element "reposTab"
         Then I expect that element "reposContainer" becomes displayed
         And  I expect that element "reposCards" becomes displayed
         When I click on the element "1stReposCard"

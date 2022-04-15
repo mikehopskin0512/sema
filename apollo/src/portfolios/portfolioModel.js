@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { PORTFOLIO_TYPES } from './constants';
 
 const { Schema } = mongoose;
 
@@ -17,7 +18,7 @@ const identitySchema = mongoose.Schema({
 }, { _id: false });
 
 const portfolioSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   firstName: String,
   lastName: String,
   title: {
@@ -31,7 +32,7 @@ const portfolioSchema = new Schema({
   // TODO: should be deleted in dev portfolio v3
   overview: String,
   identities: [identitySchema],
-  type: { type: String, enum: ['public', 'private'] },
+  type: { type: String, enum: [PORTFOLIO_TYPES.PUBLIC, PORTFOLIO_TYPES.PRIVATE] },
   snapshots: [{
     id: { type: Schema.Types.ObjectId, ref: 'Snapshot' },
     sort: Number,

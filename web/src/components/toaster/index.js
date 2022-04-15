@@ -18,17 +18,20 @@ function ToasterIcon({ type }) {
   return null;
 }
 
-function ToasterElement({ onClose, title, type, subtitle }) {
+function ToasterElement({ onClose, description, title, type, subtitle }) {
   return (
     <div
-      className={`p-16 has-background-white ${styles[`container--${type}`]}`}
+      className={`p-16 is-flex is-align-items-flex-start has-background-white ${styles[`container--${type}`]}`}
     >
       <div className={styles.icon}>
         <ToasterIcon type={type} />
       </div>
-      <div>
+      <div className="is-flex is-flex-direction-column">
         <div className={`${styles.title} has-text-weight-semibold`}>{title}</div>
         {!!subtitle && <div className={`${styles.subtitle}`}>{subtitle}</div>}
+        {description && <div className="mt-8 is-size-7">
+          {description}
+        </div>}
       </div>
       <button
         type="button"
@@ -48,6 +51,7 @@ const notify = (
     position = 'top-right',
     duration = 4000,
     subtitle,
+    description,
     ...options
   } = {},
 ) => {
@@ -65,7 +69,7 @@ const notify = (
   }
   return toaster.notify(
     ({ onClose }) => (
-      <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} />
+      <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} description={description} />
     ),
     {
       ...options,

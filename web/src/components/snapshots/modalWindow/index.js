@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -19,6 +20,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
 import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
+import { notify } from '../../../components/toaster/index.js';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
@@ -101,11 +103,22 @@ const SnapshotModal = ({
           await dispatch(fetchPortfoliosOfUser(user._id, token));
         }
         await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        notify('Snapshot was added to your portfolio', {
+          description: (
+            <>
+              <p>You've successfully added this snapshot.</p>
+              {portfolioId ? (
+                <Link href={`/portfolios/${portfolioId}`}>
+                  <a>Go to the portfolio</a>
+                </Link>
+              ) : null}
+            </>
+          ),
+        });
         reset();
         onClose();
       }
     } catch (e) {
-      console.log(e);
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
     }
   };
@@ -123,7 +136,7 @@ const SnapshotModal = ({
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
-  return (
+  return active && (
     <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="modal-background" />

@@ -16,9 +16,12 @@ import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
 import EmailsInput from "../../../../components/team/EmailsInput";
+import { invitationsOperations } from '../../../../state/features/invitations';
+import { isEmpty } from "lodash";
 
 const { fetchRoles } = rolesOperations;
 const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
+const { trackSendInvite } = invitationsOperations;
 
 const TeamInvitePage = () => {
   const router = useRouter();
@@ -37,10 +40,12 @@ const TeamInvitePage = () => {
     usersState: state.usersState
   }));
 
-  const { token } = authState;
+  const { user, token } = authState;
   const { roles } = rolesState;
   const { users } = usersState;
   const { invalidEmails } = teamsState;
+  const { _id: userId, firstName = '', lastName = '', username: senderEmail, organizations = [], inviteCount = 0 } = user;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
 
   const rolesOptions = useMemo(() => roles.map((item) => ({
     value: item._id,
@@ -58,6 +63,11 @@ const TeamInvitePage = () => {
       const userIds = emails ? emails.map((item) => item.label) : [];
 
       if (!userIds.length || !role) return;
+
+      // fire segment event for all invited users
+      userIds.forEach((userEmail) => {
+        trackSendInvite(userEmail, fullName, senderEmail, 'team');
+      })
 
       // adding normal users to Sema Corporate Team
       await dispatch(inviteTeamUsers(teamId, {

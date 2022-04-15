@@ -6,17 +6,17 @@ import { NO_RESULTS_ICON } from './constants.ts';
 function NoResultsView({ searchValue }) {
   const activeTheme = getActiveTheme().toUpperCase();
   return (
-    <div className="sema-comment-placeholder">
+    <div className="sema-comment-placeholder no-results-ph">
       <img
         className="sema-comment-placeholder--img"
         src={NO_RESULTS_ICON[activeTheme]}
         alt="no results"
       />
-      <span className="sema-comment-placeholder--title">
+      <span className="no-results-ph--title sema-comment-placeholder--title">
         No snippets found :(
       </span>
       <a
-        className="sema-comment-placeholder--link"
+        className="no-results-ph--link sema-comment-placeholder--link"
         href={SEMA_WEB_COLLECTIONS}
         target="_blank"
         rel="noopener noreferrer"
@@ -24,7 +24,7 @@ function NoResultsView({ searchValue }) {
         Manage your collections
       </a>
       <a
-        className="sema-comment-placeholder--link"
+        className="no-results-ph--link sema-comment-placeholder--link"
         href={`https://www.google.com/search?q=${searchValue}`}
         target="_blank"
         rel="noopener noreferrer"

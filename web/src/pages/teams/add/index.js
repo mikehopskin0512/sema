@@ -5,12 +5,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InputField } from 'adonis';
+import { isEmpty } from 'lodash';
 import toaster from 'toasted-notes';
 import * as yup from 'yup';
 import TagsInput from '../../../components/tagsInput';
 import Helmet, { TeamCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import { teamsOperations } from '../../../state/features/teams';
+import { authOperations } from '../../../state/features/auth';
 import {
   AlertFilledIcon,
   AlertOutlineIcon,
@@ -23,9 +25,10 @@ import { getAll } from '../../../state/utils/api';
 import { PATHS, SEMA_CORPORATE_TEAM_NAME, SEMA_APP_URL, TAB, PROFILE_VIEW_MODE } from '../../../utils/constants';
 
 const { createTeam, fetchTeamsOfUser } = teamsOperations;
+const { setSelectedTeam } = authOperations;
 const URL_STATUS = {
   ALLOCATED: 'allocated',
-  AVAIlABLE: 'available',
+  AVAILABLE: 'available',
 };
 const schema = yup.object().shape({
   name: yup
@@ -42,9 +45,10 @@ const TeamEditPage = () => {
   const [urlChecks, setUrlChecks] = useState({
     [SEMA_CORPORATE_TEAM_NAME]: URL_STATUS.ALLOCATED,
   });
+  const router = useRouter();
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
-      name: '',
+      name: router.query.name,
       url: '',
       description: '',
       members: [],
@@ -52,7 +56,6 @@ const TeamEditPage = () => {
     resolver: yupResolver(schema),
   })
   const url = watch('url');
-  const router = useRouter();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { teamsState } = useSelector((state) => state);
@@ -88,7 +91,7 @@ const TeamEditPage = () => {
   };
   const [isLoading, setLoading] = useState(false);
   const isAllocatedUrl = urlChecks[url] === URL_STATUS.ALLOCATED;
-  const isAvailableUrl = urlChecks[url] === URL_STATUS.AVAIlABLE;
+  const isAvailableUrl = urlChecks[url] === URL_STATUS.AVAILABLE;
   const isCreateDisabled = isLoading || isAllocatedUrl;
   const [isUrlCheckLoading, setUrlCheckLoading] = useState(false);
   const onCancel = async () => {
@@ -108,19 +111,25 @@ const TeamEditPage = () => {
         ...data,
         members: data.members.map((member) => member.label),
       }, token));
-      if (teamsState.error) {
+      if (!isEmpty(teamsState.error)) {
         showNotification(null);
       }
       if (team) {
         showNotification(team);
-        await dispatch(fetchTeamsOfUser(token));
-        await router.push(`${PATHS.TEAMS._}/${team.url}${PATHS.SETTINGS}?tab=${TAB.info}`);
+        switchToTeam(team);
       }
     } catch (e) {
+      console.error(e);
       showNotification(null);
     } finally {
       setLoading(false);
     }
+  }
+  const switchToTeam = async(team) => {
+    const roles = await dispatch(fetchTeamsOfUser(token))
+    const activeTeam = roles.find(role => role.team._id === team._id);
+    dispatch(setSelectedTeam(activeTeam))
+    router.push(`${PATHS.TEAMS._}/${team._id}${PATHS.DASHBOARD}`);
   }
   const checkUrl = async (e) => {
     e?.preventDefault();
@@ -132,7 +141,7 @@ const TeamEditPage = () => {
       const { data } = await getAll(`/api/proxy/teams/check-url/${url}`, {}, token);
       setUrlChecks(state => ({
         ...state,
-        [url]: data.isAvailable ? URL_STATUS.AVAIlABLE : URL_STATUS.ALLOCATED,
+        [url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
       }))
       return data.isAvailable;
     } finally {

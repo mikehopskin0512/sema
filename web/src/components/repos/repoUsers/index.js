@@ -11,7 +11,7 @@ const RepoUsers = ({ users = [] }) => {
   const isUserListFolded = users && users.length > USERS_LIST_MAX_LENGTH;
   const userList = users && users.length ? users.slice(0, isUserListFolded ? USERS_FOLDED_LIST_LENGTH : USERS_LIST_MAX_LENGTH) : [];
   return (
-    <div className="is-flex">
+    <div className="is-flex is-justify-content-center">
       {userList.map((item) => (
         <img
           key={item._id}
