@@ -16,19 +16,23 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleOnTeamClick = () => {
+  const setTeam = () => {
     let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
     if (!!role?.team?._id) {
       viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
     }
-
     dispatch(setSelectedTeam(role));
     dispatch(setProfileViewMode(viewMode));
+  }
+
+  const handleOnTeamClick = () => {
+    setTeam();
     router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.DASHBOARD}`);
     toggleUserMenu();
   };
 
   const handleSettingsClick = () => {
+    setTeam();
     router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
   }
 
