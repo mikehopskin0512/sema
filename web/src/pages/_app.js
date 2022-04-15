@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LaunchDarkly from '../components/launchDarkly';
 import { useRouter } from 'next/router';
 import {useDispatch, useSelector} from 'react-redux';
 import { Provider } from 'react-redux';
@@ -103,7 +104,9 @@ const Application = ({ Component, pageProps, store }) => {
 
   return (
     <Provider store={store}>
-      <Layout Component={Component} pageProps={pageProps}/>
+      <LaunchDarkly>
+        <Layout Component={Component} pageProps={pageProps}/>
+      </LaunchDarkly>
     </Provider>
   );
 };
