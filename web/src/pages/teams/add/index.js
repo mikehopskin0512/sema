@@ -45,9 +45,10 @@ const TeamEditPage = () => {
   const [urlChecks, setUrlChecks] = useState({
     [SEMA_CORPORATE_TEAM_NAME]: URL_STATUS.ALLOCATED,
   });
+  const router = useRouter();
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
-      name: '',
+      name: router.query.name,
       url: '',
       description: '',
       members: [],
@@ -55,7 +56,6 @@ const TeamEditPage = () => {
     resolver: yupResolver(schema),
   })
   const url = watch('url');
-  const router = useRouter();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { teamsState } = useSelector((state) => state);

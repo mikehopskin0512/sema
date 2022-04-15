@@ -21,6 +21,16 @@ export const content = [
     img: '/img/tags.png',
     animationData: animationTags,
   },
+  {
+    title: 'Add the Sema Extension',
+    subtitle: 'The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.',
+    img: '/img/onboarding/install-extension.png'
+  },
+  {
+    title: 'Sema is Better With Your Team!',
+    subtitle: 'Set up shared repos, insights and team snippets to help and better onboarding your engineering efforts.',
+    img: '/img/onboarding/part-of-us.png'
+  },
 ];
 
 export const commentCollection = [
