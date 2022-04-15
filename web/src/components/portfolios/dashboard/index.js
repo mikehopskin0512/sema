@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, PdfIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, KEY_CODES, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -26,7 +26,7 @@ import Loader from '../../../components/Loader';
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, printDocument }) => {
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
     toaster.notify(({ onClose }) => (
@@ -205,6 +205,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     className="button is-transparent m-0"
                   >
                     + Add Snapshot
+                  </button>
+                  <button onClick={printDocument} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                    <p>Save as PDF</p>
+                    <PdfIcon />
                   </button>
                   {portfolios.length === 1 &&
                     (

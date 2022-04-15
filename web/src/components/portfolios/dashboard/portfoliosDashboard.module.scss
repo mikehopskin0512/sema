@@ -71,3 +71,24 @@
   background: black;
   color: white;
 }
+
+.pdfButton {
+  p {
+    display: none;
+  }
+  &:hover {
+    background-color: $gray-100 !important;
+    p {
+      padding: 4px;
+      top: -30px;
+      left: -35px;
+      text-align: center;
+      width: 100px;
+      display: block;
+      position: absolute;
+      background: black;
+      color: white;
+      border-radius: 4px;
+    }
+  }
+}

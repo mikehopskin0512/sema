@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,6 +6,7 @@ import { PortfolioHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import PortfolioDashboard from '../../../components/portfolios/dashboard';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { savePdfDocument } from '../../../utils';
 
 const { fetchPortfolio } = portfoliosOperations;
 
@@ -14,6 +15,7 @@ const PublicPortfolio = () => {
   const {
     query: { portfolioId },
   } = router;
+  const portfolioRef = useRef(null);
   const dispatch = useDispatch();
   const { token, portfolios, publicPortfolio, isLoading } = useSelector(
     (state) => ({
@@ -33,12 +35,13 @@ const PublicPortfolio = () => {
   return (
     <div className="has-background-white hero">
       <Helmet {...PortfolioHelmet} />
-      <div className="hero-body pb-300 mx-25">
+      <div className="hero-body pb-300 mx-25" ref={portfolioRef}>
         {portfolio && (
           <PortfolioDashboard
             portfolio={portfolio}
             isIndividualView
             isLoading={isLoading}
+            printDocument={() => savePdfDocument(portfolioRef)}
           />
         )}
       </div>

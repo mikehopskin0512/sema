@@ -272,3 +272,12 @@ export const PORTFOLIO_TYPES = {
 export const KEY_CODES = {
   ENTER: 13,
 };
+
+export const PDF_OPTIONS = {
+  IMAGE_FORMAT: 'PNG',
+  IMAGE_COMPRESSION: 'FAST',
+  IMAGE_ALIAS: 'print',
+  A_FOUR_PAGE_HEIGHT: 300,
+  A_FOUR_PAGE_WIDTH: 205,
+  DEFAULT_FILENAME: 'portfolio.pdf',
+};
