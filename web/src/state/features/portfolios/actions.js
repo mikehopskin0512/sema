@@ -14,7 +14,7 @@ import {
   patchPortfolioTitle,
   addSnapshotToPortfolio
 } from './api';
-import { deleteSnapshot, deleteSnapshotFromPortfolio, putSnapshot } from '../snapshots/api';
+import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 
 const requestFetchUserPortfolio = () => ({
@@ -345,10 +345,15 @@ export const addSnapshotsToPortfolio = ({
   token,
   onSuccess,
   onError,
-  type = 'dashboard'
+  type = 'dashboard',
+  userId
 }) => async (dispatch) => {
   try {
     const { data } = await addSnapshotToPortfolio(portfolioId, snapshots, token);
+    const { data: userPortfoliosData } = await getUserPortfolio(userId, token);
+
+    dispatch(requestFetchUserPortfolioSuccess(userPortfoliosData));
+
     if (type === 'dashboard') {
       dispatch(requestFetchPortfolioSuccess(data));
     }

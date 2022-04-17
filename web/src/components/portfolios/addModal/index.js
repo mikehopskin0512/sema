@@ -72,7 +72,8 @@ const AddModal = ({
           type: 'error',
           duration: 3000,
         });
-      }
+      },
+      userId
     }));
   };
 
