@@ -253,10 +253,10 @@ export const fetchTeamMetrics = (teamId, token) => async (dispatch) => {
   }
 }
 
-export const fetchTeamRepos = (teamId, token) => async (dispatch) => {
+export const fetchTeamRepos = ({ teamId, searchParams = '' }, token) => async (dispatch) => {
   try {
     dispatch(requestFetchTeamRepos());
-    const payload = await getTeamRepos(teamId, token);
+    const payload = await getTeamRepos(teamId, { searchParams }, token);
     const { data } = payload;
     dispatch(requestFetchTeamReposSuccess(data));
   } catch (error) {
