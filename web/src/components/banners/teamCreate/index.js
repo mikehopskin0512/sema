@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { CloseIcon } from '../../Icons';
 import styles from './teamCreate.module.scss';
 import { PATHS } from '../../../utils/constants';
+import { authOperations } from '../../../state/features/auth';
+
+const { updateUser } = authOperations;
 
 const ENABLED_PAGES = [PATHS.DASHBOARD, PATHS.PERSONAL_INSIGHTS, PATHS.INVITATIONS];
 
 const TeamCreateBanner = () => {
   const router = useRouter();
   const { pathname } = router;
+  const dispatch = useDispatch();
   const {
     auth,
     teamsState,
@@ -19,7 +23,7 @@ const TeamCreateBanner = () => {
     teamsState: state.teamsState,
   }));
   const [active, toggleActive] = useState(false);
-  const { user } = auth;
+  const { user, token } = auth;
   const { isOnboarded } = user;
   const { teams } = teamsState;
 
@@ -27,9 +31,15 @@ const TeamCreateBanner = () => {
     router.push(PATHS.TEAM_CREATE);
   };
 
+  const disableTeamCreateBanner = () => {
+    const banners = { ...user.banners };
+    const updatedUser = { ...user, banners: { ...banners, teamCreate: false } };
+    dispatch(updateUser(updatedUser, token));
+  };
+
   useEffect(() => {
-    toggleActive(teams.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded);
-  }, [pathname, teams, isOnboarded]);
+    toggleActive(teams.length !== 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners.teamCreate);
+  }, [pathname, teams, isOnboarded, user]);
 
   return (
     <>
@@ -40,7 +50,7 @@ const TeamCreateBanner = () => {
           <img src="/img/hero-character.svg" alt="hero" />
         </div>
         <button type="button" className="button mr-30" onClick={redirectUser}>Create a Team</button>
-        <CloseIcon className="is-clickable" onClick={() => toggleActive(false)} />
+        <CloseIcon className="is-clickable" onClick={disableTeamCreateBanner} />
       </div>
     </>
   );
