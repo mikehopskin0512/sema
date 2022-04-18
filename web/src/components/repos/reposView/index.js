@@ -62,7 +62,7 @@ const ReposView = ({
         <RepoList
           type={type === 'team' ? 'REPOS' : 'MY_REPOS'}
           repos={repos.other.slice(0, NUM_PER_PAGE * page)}
-          searchQuery={searchQuery}
+          search={searchQuery}
           onSearchChange={onSearchChange}
           withSearch={withSearch}
         />

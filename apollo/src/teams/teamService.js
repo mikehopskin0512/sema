@@ -149,14 +149,15 @@ export const updateTeamRepos = async (teamId, repoIds) => {
   }
 };
 
-export const getTeamRepos = async (teamId) => {
+export const getTeamRepos = async (teamId, params = {}) => {
   try {
+    const { searchQuery = '' } = params;
     const [team] = await Team
       .find({ _id: teamId })
       .select('repos')
       .exec();
     const ids = team?.repos.map(repo => repo._id.toString()) || [];
-    return getRepositories(ids, true);
+    return getRepositories({ ids, searchQuery }, true);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
