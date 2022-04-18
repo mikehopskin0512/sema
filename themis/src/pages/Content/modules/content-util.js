@@ -1,8 +1,7 @@
 import $ from 'cash-dom';
 // eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
-import amplitude from 'amplitude-js';
-
+import { segmentTrack } from './segment';
 import {
   EMOJIS,
   TAGS_INIT,
@@ -18,8 +17,6 @@ import {
   SMART_COMMENT_URL,
   IS_DIRTY,
   DELIMITERS,
-  AMPLITUDE_API_KEY,
-  EVENTS,
   SEMA_TEXTAREA_IDENTIFIER,
   SUGGESTED_COMMENTS_URL,
   SEMA_LANDING_GITHUB,
@@ -28,6 +25,7 @@ import {
   TAGS_URL,
   USERS_URL,
   TEAMS_URL,
+  SEGMENT_EVENTS,
 } from '../constants';
 
 import suggest from './commentSuggestions';
@@ -86,39 +84,6 @@ export const getGithubMetadata = (document) => {
   };
 
   return githubMetadata;
-};
-
-export const fireAmplitudeEvent = (event, opts) => {
-  if (AMPLITUDE_API_KEY) {
-    const githubMetadata = getGithubMetadata(document);
-    const { user: { login: github_username_id = null } = null } = githubMetadata;
-    amplitude.getInstance().setUserProperties({ github_username_id });
-    amplitude.getInstance().logEvent(event, {
-      ...opts,
-      ...githubMetadata,
-      url: window.location.href,
-    });
-  }
-};
-
-export const initAmplitude = ({
-  _id, username, firstName, lastName, isVerified, isWaitlist, isLoggedIn, roles = [{}],
-}) => {
-  if (AMPLITUDE_API_KEY) {
-    const [{ role = null, team = null }] = roles;
-    amplitude.getInstance().init(AMPLITUDE_API_KEY, username);
-    amplitude.getInstance().setUserProperties({
-      user_id: _id,
-      first_name: firstName,
-      last_name: lastName,
-      is_verified: isVerified,
-      is_waitlist: isWaitlist,
-      is_logged_in: isLoggedIn,
-      role: role?.name,
-      team: team?.name,
-    });
-    fireAmplitudeEvent(EVENTS.VIEWED_GITHUB_PAGE);
-  }
 };
 
 export const isTextBox = (element) => {
@@ -578,7 +543,7 @@ export async function writeSemaToGithub(activeElement) {
     opts.is_sema_bar_used = true;
   }
 
-  fireAmplitudeEvent(EVENTS.CREATE_SMART_COMMENT, opts);
+  segmentTrack(SEGMENT_EVENTS.CREATE_SMART_COMMENT, opts);
   const semaIds = getSemaIds(activeElement);
   store.dispatch(resetSemaStates(semaIds));
 }
