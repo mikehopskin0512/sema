@@ -102,7 +102,7 @@ const TeamReposList = ({ isActive, onClose }) => {
   const addRepos = async () => {
     try {
       await dispatch(editTeamRepos(team._id, { repos: Array(...activeRepos) }, token));
-      dispatch(fetchTeamRepos(team._id, token));
+      dispatch(fetchTeamRepos({ teamId: team._id }, token));
       dispatch(triggerAlert('Repos were added', 'success'));
       onClose();
     } catch (e) {

@@ -3,7 +3,10 @@ import React from 'react';
 import {
   POSITIVE, NEGATIVE, TOGGLE_OP, SEGMENT_EVENTS,
 } from '../../constants';
+
 import { segmentTrack } from '../../modules/segment';
+import { getActiveThemeClass } from '../../../../../utils/theme';
+
 
 function TagsModal({ allTags, toggleTagSelection }) {
   const Tag = ({ tag, type }) => {
@@ -24,6 +27,7 @@ function TagsModal({ allTags, toggleTagSelection }) {
         className={`
           sema-tag 
           sema-is-rounded 
+          ${isSelected ? 'tag-selected' : ''}
           ${isSelected ? 'sema-is-dark' : 'sema-is-light'}
         `}
         style={{ cursor: 'pointer' }}
@@ -35,7 +39,7 @@ function TagsModal({ allTags, toggleTagSelection }) {
   };
 
   return (
-    <div className="tags-modal">
+    <div className={`tags-modal ${getActiveThemeClass()}`}>
       <div className="tags-modal--column sema-is-align-items-flex-end">
         {allTags.map((tag) => <Tag tag={tag} type={POSITIVE} key={tag[POSITIVE]} />)}
       </div>

@@ -4,12 +4,19 @@ import * as analytics from '../../../utils/analytics';
 
 const { hydrateUser } = authOperations;
 
+const trackSendInvite = (email, senderName, senderEmail, inviteType) => {
+  analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_SENT,
+    { email, sender_name: senderName, sender_email: senderEmail, invite_type: inviteType });
+};
+
 const createInviteAndHydrateUser = (invitationData, token) => async (dispatch) => {
   try {
     const response = await dispatch(actions.createInvite(invitationData, token)) || {};
     if (!response.user) {
       return response;
     }
+    const { recipient, senderName, senderEmail } = invitationData;
+    trackSendInvite(recipient, senderName, senderEmail, 'user');
     dispatch(hydrateUser(response.user));
   } catch (err) {
     const error = new Error(err);
@@ -34,10 +41,6 @@ const revokeInviteAndHydrateUser = (id, userId, token, recipient) => async (disp
   return true;
 };
 
-const trackSendInvite = (email) => {
-  analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_SENT, { email });
-};
-
 const trackRedeemedInvite = (email) => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.INVITATION_ACCEPTED, { email });
 };
@@ -47,5 +50,5 @@ const trackTeamInviteAccepted = (teamId, traits) => {
 };
 
 export default {
-  ...actions, createInviteAndHydrateUser, revokeInviteAndHydrateUser, trackSendInvite, trackRedeemedInvite, trackTeamInviteAccepted,
+  ...actions, createInviteAndHydrateUser, revokeInviteAndHydrateUser, trackRedeemedInvite, trackTeamInviteAccepted, trackSendInvite
 };

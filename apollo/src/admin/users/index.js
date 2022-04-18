@@ -163,11 +163,13 @@ export default (app, passport) => {
 
       if (key === 'isWaitlist' && value === false) {
         const { username } = user;
-        const [invitation] = await checkIfInvited(username);
-        if (invitation) {
+        const invitations = await checkIfInvited(username);
+        invitations.forEach(async (invitation) => {
           await deleteInvitation(invitation._id);
-          await revokeInvitation(invitation.senderEmail);
-        }
+          if(invitation.sender) {
+            await revokeInvitation(invitation.senderEmail);
+          }
+        });
 
         // Send email
         const message = {

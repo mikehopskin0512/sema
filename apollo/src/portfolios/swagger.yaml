@@ -23,6 +23,7 @@ components:
           type: string
         userId:
           type: string
+          required: true
         firstName:
           type: string
         lastName:

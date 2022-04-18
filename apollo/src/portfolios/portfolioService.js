@@ -9,21 +9,23 @@ const { Types: { ObjectId } } = mongoose;
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
   headline = null, imageUrl = null, overview = null, type = PORTFOLIO_TYPES.PRIVATE, snapshots = [], title = null,
-}) => (
-  {
+}) => {
+  const userAvatarUrl = identities.length && identities[0].avatarUrl;
+  const portfolioAvatarUrl = imageUrl || userAvatarUrl;
+  return {
     _id: new ObjectId(_id),
     userId: new ObjectId(userId),
     firstName,
     lastName,
     headline,
-    imageUrl,
+    imageUrl: portfolioAvatarUrl,
     identities,
     overview,
     type,
     title,
     snapshots: snapshots.map(({ id: snapshot, sort }) => ({ id: new ObjectId(snapshot._id), sort })),
   }
-);
+};
 
 export const create = async (portfolio) => {
   try {
@@ -86,6 +88,22 @@ export const update = async (portfolioId, portfolio) => {
       })
       .exec();
     return updatedPortfolio;
+  } catch (err) {
+    const error = new errors.NotFound(err);
+    logger.error(error);
+    throw error;
+  }
+};
+
+export const updatePortfolioTitle = async (portfolioId, title) => {
+  try {
+    return await Portfolio
+      .findOneAndUpdate(
+        { _id: new ObjectId(portfolioId) },
+        { $set: { title } },
+        { new: true },
+      )
+      .exec();
   } catch (err) {
     const error = new errors.NotFound(err);
     logger.error(error);

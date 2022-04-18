@@ -6,24 +6,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { detectURLChange, isPRPage } from '../../modules/content-util';
 import { closeLoginReminder } from '../../modules/redux/action';
 import { SEGMENT_EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
-import { getActiveThemeClass } from '../../../../../utils/theme';
 import { segmentReset, segmentTrack } from '../../modules/segment';
+import { getActiveTheme } from '../../../../../utils/theme';
+import { SEMA_LOGOUT_ICON, SEMA_LOGOUT_PLACEHOLDER } from './constants';
 
-const lightModeLogoUrl = chrome.runtime.getURL(
-  'img/sema-logo.png',
-);
-
-const darkModeLogoUrl = chrome.runtime.getURL(
-  'img/dark_mode_sema.png',
-);
-
-const screenshot1 = chrome.runtime.getURL(
-  'img/code-review-sample1.png',
-);
-
-const screenshot2 = chrome.runtime.getURL(
-  'img/code-review-sample2.png',
-);
 
 const openSemaDashboard = () => {
   segmentTrack(SEGMENT_EVENTS.CLICKED_LOGIN_TOASTER);
@@ -36,8 +22,9 @@ const LogOutToaster = () => {
   const { isLoggedIn } = useSelector((state) => state.user);
   const [isActivePage, setActivePage] = useState(isPRPage());
   const isToasterActive = !isReminderClosed && !isLoggedIn && isActivePage;
-  const activeTheme = getActiveThemeClass();
-  const logoUrl = activeTheme === '' ? lightModeLogoUrl : darkModeLogoUrl;
+  const activeTheme = getActiveTheme().toUpperCase();
+  const logoSemaUrl = SEMA_LOGOUT_ICON[activeTheme];
+  const logoPlaceholder = SEMA_LOGOUT_PLACEHOLDER[activeTheme];
   const closeReminder = () => dispatch(closeLoginReminder());
 
   if (isToasterActive) {
@@ -55,11 +42,11 @@ const LogOutToaster = () => {
 
   return (
     <div
-      className="reminder-container"
+      className="no-login-modal-container reminder-container"
       style={{ display: isToasterActive ? 'block' : 'none' }}
     >
       <div className="reminder-header">
-        <img src={logoUrl} alt="sema logo" />
+        <img src={logoSemaUrl} alt="sema logo" />
         <FontAwesomeIcon
           onClick={closeReminder}
           icon={faTimes}
@@ -67,27 +54,33 @@ const LogOutToaster = () => {
         />
       </div>
       <div className="reminder-hero">
-        <div className="reminder-screenshots-container">
-          <img src={screenshot2} className="reminder-screenshot1" alt="code lines" />
-          <img
-            src={screenshot1}
-            className="reminder-screenshot2"
-            alt="code lines"
-          />
-        </div>
-        <p>
-          Please sign in to enable Smart Code Reviews
+        <p className="no-login-modal-title">
+          <span role="img" aria-label="hammer">🛠️</span>
+          This needs a fix
         </p>
+
+        <p className="no-login-modal-text">
+          Sign back in to supercharge your <br /> GitHub comments
+        </p>
+
+        <img src={logoPlaceholder} alt="Logout placeholder" />
         <button
           onClick={openSemaDashboard}
-          type="button"
+          type="no-login-modal-text-button button"
         >
           <FontAwesomeIcon icon={faGithub} style={{ width: '32px' }} />
           <span>
             Sign in with GitHub
           </span>
         </button>
-        <a target="_blank" href={SEMA_LANDING_FAQ} rel="noreferrer">Have Questions?</a>
+        <a
+          target="_blank"
+          href={SEMA_LANDING_FAQ}
+          rel="noreferrer"
+          className="no-login-modal-link"
+        >
+          Learn more
+        </a>
       </div>
     </div>
   );

@@ -162,7 +162,7 @@ function CommentsList({
         <div className="dashed-line" />
         <div className="sema-is-flex">
           {tags?.map((tag) => (
-            <div key={tag.id} className="tags-container">
+            <div key={tag.id} className="suggestion-tag-container tags-container">
               {tag.label}
             </div>
           ))}

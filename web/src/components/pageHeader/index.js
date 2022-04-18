@@ -31,7 +31,7 @@ const defaultMenus = [
 
 const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) => {
   const router = useRouter();
-  const { checkAccess } = usePermission();
+  const { isTeamAdmin } = usePermission();
   const { team } = userRole;
 
   const goToEditPage = () => {
@@ -57,7 +57,7 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
             <div className="has-text-gray-600">{team?.description}</div>
           </div>
         </div>
-        {checkAccess(team?._id, 'canEditUsers') && type === 'normal' && (
+        {isTeamAdmin() && (
           <div className='is-flex'>
             <button
               className="button has-background-white has-text-primary border-none border-radius-4px outline-none"

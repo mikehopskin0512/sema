@@ -149,14 +149,15 @@ export const updateTeamRepos = async (teamId, repoIds) => {
   }
 };
 
-export const getTeamRepos = async (teamId) => {
+export const getTeamRepos = async (teamId, params = {}) => {
   try {
+    const { searchQuery = '' } = params;
     const [team] = await Team
       .find({ _id: teamId })
       .select('repos')
       .exec();
     const ids = team?.repos.map(repo => repo._id.toString()) || [];
-    return getRepositories(ids, true);
+    return getRepositories({ ids, searchQuery }, true);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -245,27 +246,6 @@ export const addTeamMembers = async (team, users, role) => {
     return error;
   }
 };
-
-export const bulkUpdateTeamCollections = async (collectionId, teamId, isActive) => {
-  try {
-    const filter = teamId ? { _id: new ObjectId(teamId) } : {};
-    await Team.updateMany(
-      filter,
-      {
-        $push: {
-          "collections": {
-            isActive,
-            collectionData: collectionId,
-          }
-        }
-      }
-    )
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-}
 
 export const updateTeamAvatar = async (teamId, userId, file) => {
   const team = await Team.findById(teamId);
