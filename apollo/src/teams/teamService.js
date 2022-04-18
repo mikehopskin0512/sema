@@ -246,27 +246,6 @@ export const addTeamMembers = async (team, users, role) => {
   }
 };
 
-export const bulkUpdateTeamCollections = async (collectionId, teamId, isActive) => {
-  try {
-    const filter = teamId ? { _id: new ObjectId(teamId) } : {};
-    await Team.updateMany(
-      filter,
-      {
-        $push: {
-          "collections": {
-            isActive,
-            collectionData: collectionId,
-          }
-        }
-      }
-    )
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-}
-
 export const updateTeamAvatar = async (teamId, userId, file) => {
   const team = await Team.findById(teamId);
 
