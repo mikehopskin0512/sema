@@ -49,6 +49,9 @@ const userSchema = mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
   isOnboarded: { type: Date, default: null },
+  banners: {
+    teamCreate: { type: Boolean, default: true }
+  },
   verificationToken: String,
   verificationExpires: Date,
   resetToken: String,
