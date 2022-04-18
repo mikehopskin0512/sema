@@ -181,7 +181,6 @@ export default (app, passport) => {
       const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/tags`, req.body);
       return res.status(200).json(data);
     } catch (error) {
-      logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });

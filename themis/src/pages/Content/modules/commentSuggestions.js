@@ -28,17 +28,20 @@ function checkTerms(commentText, matchTerms, reactionBallot) {
 
 async function suggestReaction(originalCommentText) {
   const commentText = originalCommentText.toLowerCase();
+  try {
+    const response = await fetch(SUMMARIES_SUGGESTIONS_URL, {
+      headers: REQUEST_DEFAULT_HEADERS,
+      method: 'POST',
+      body: JSON.stringify({ comments: commentText })
+    });
 
-  const response = await fetch(SUMMARIES_SUGGESTIONS_URL, {
-    headers: REQUEST_DEFAULT_HEADERS,
-    method: 'POST',
-    body: JSON.stringify({ comments: commentText })
-  });
+    const data = await response.json();
+    const suggestion = data.hard_labels[0][0];
 
-  const data = await response.json();
-  const suggestion = data.hard_labels[0][0];
-
-  return EMOJIS.find(i => i.key === suggestion);
+    return EMOJIS.find(i => i.key === suggestion);
+  } catch {
+    return []
+  }
 }
 
 const mapTagToValue = (tags) => tags.map(tag => TAGS_KEYS[tag.toUpperCase()]).filter(i => !!i);
@@ -46,20 +49,23 @@ const mapTagToValue = (tags) => tags.map(tag => TAGS_KEYS[tag.toUpperCase()]).fi
 async function suggestTags(originalCommentText) {
   const commentText = originalCommentText.toLowerCase();
 
-  const response = await fetch(TAGS_SUGGESTIONS_URL, {
-    headers: REQUEST_DEFAULT_HEADERS,
-    method: 'POST',
-    body: JSON.stringify({ comments: commentText })
-  });
+  try {
+    const response = await fetch(TAGS_SUGGESTIONS_URL, {
+      headers: REQUEST_DEFAULT_HEADERS,
+      method: 'POST',
+      body: JSON.stringify({ comments: commentText })
+    });
 
-  const data = await response.json();
-  const tags = data.hard_labels[0] ?? [];
+    const data = await response.json();
+    const tags = data.hard_labels[0] ?? [];
 
-  return mapTagToValue(tags);
+    return mapTagToValue(tags);
+  } catch {
+    return []
+  }
 }
 
 export default async function suggest(commentText) {
-  const suggestedReaction = await suggestReaction(commentText);
-  const suggestedTags = await suggestTags(commentText);
+  const [suggestedReaction, suggestedTags] = await Promise.all([suggestReaction(commentText), suggestTags(commentText)]);
   return { suggestedReaction, suggestedTags };
 }

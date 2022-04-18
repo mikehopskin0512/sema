@@ -8,7 +8,8 @@
   },
   "host_permissions": [
     "https://github.com/*",
-    "https://*.semasoftware.com/*"
+    "https://*.semasoftware.com/*",
+    "http://localhost:3000/"
   ],
   "permissions": [
     "activeTab",
