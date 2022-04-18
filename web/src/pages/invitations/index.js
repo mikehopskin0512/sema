@@ -21,7 +21,7 @@ import Logo from '../../components/Logo';
 import useAuthEffect from '../../hooks/useAuthEffect';
 
 const { clearAlert } = alertOperations;
-const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser } = invitationsOperations;
+const { createInviteAndHydrateUser, getInvitesBySender, resendInvite, revokeInviteAndHydrateUser, trackSendInvite } = invitationsOperations;
 
 const Invite = () => {
   const schema = yup.object().shape({
@@ -79,6 +79,9 @@ const Invite = () => {
     setRecipient(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
+    
+    // send segment event tracking
+    trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
     const isSent = response.status === 201;
     if (isSent) {
       reset(defaultValues);

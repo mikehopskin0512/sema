@@ -251,6 +251,18 @@ export const bulkAdmitUsers = async (bulkCount) => {
   const userIds = users.map(item => item._id);
 
   await User.updateMany({ _id: { $in: userIds } }, { $set: { isWaitlist: false } });
+
+  users.forEach(async user => {
+    const { username } = user;
+    const invitations = await checkIfInvited(username);
+
+    invitations.forEach(async invitation => {
+      await deleteInvitation(invitation._id);
+      if (invitation.sender) {
+        await revokeInvitation(invitation.senderEmail);
+      }
+    })
+  })
 };
 
 export const getTimeToValueMetric = async (params, isExport = false) => {

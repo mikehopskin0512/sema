@@ -14,6 +14,7 @@ import {
   addSnapshotToPortfolio,
   removeSnapshotFromPortfolio,
   updatePortfolioType,
+  updatePortfolioTitle,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -71,6 +72,18 @@ export default (app, passport) => {
         await removePortfolioFromSnapshot(snapshot.id, portfolioId);
       }));
       return res.status(200).send({});
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.patch('/:id/title', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { title } = req.body;
+    try {
+      await updatePortfolioTitle(id, title);
+      return res.status(200).send({ title });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

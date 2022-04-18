@@ -47,5 +47,4 @@ export const getSearchTermQuery = () => {
   const docs = await getSearchTermQuery();
   const returnArray = [];
   docs.forEach((aResult) => returnArray.push(flattenObject(aResult)));
-  console.log(JSON.stringify(returnArray, null, 2));
 })();

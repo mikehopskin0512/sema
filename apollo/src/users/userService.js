@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import _ from 'lodash';
-import { semaCorporateTeamId } from '../config'
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';

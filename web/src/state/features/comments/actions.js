@@ -6,16 +6,16 @@ import { alertOperations } from '../alerts';
 const { triggerAlert } = alertOperations;
 
 const fetchCollection = () => ({
-  type: types.FETCH_COLLECTION,
+  type: types.FETCH_COMMENT_COLLECTION,
 });
 
 const fetchCollectionSuccess = (collection) => ({
-  type: types.FETCH_COLLECTION_SUCCESS,
+  type: types.FETCH_COMMENT_COLLECTION_SUCCESS,
   collection,
 });
 
 const fetchCollectionError = (error) => ({
-  type: types.FETCH_COLLECTION_ERROR,
+  type: types.FETCH_COMMENT_COLLECTION_ERROR,
   error,
 });
 
@@ -118,7 +118,7 @@ export const getUserSuggestedComments = (title, userId, token, isAllCollections 
     dispatch(fetchUserSuggestedCommentsSuccess(data.searchResults.result));
   } catch (error) {
     let errMessage = '';
-    if (!error.responese) {
+    if (!error.response) {
       let errMessage = 'unknown error';
     } else {
       const { response: { data: { message }, status, statusText } } = error;

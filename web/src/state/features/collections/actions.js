@@ -74,6 +74,11 @@ const requestUpdateCollectionError = (errors) => ({
   errors,
 });
 
+export const optimisticToggleCollectionActive = (id) => ({
+  type: types.OPTIMISTIC_TOGGLE_USER_COLLECTION_ACTIVE,
+  id,
+});
+
 export const createCollections = (collectionsData, token) => async (dispatch) => {
   try {
     dispatch(requestCreateCollections());

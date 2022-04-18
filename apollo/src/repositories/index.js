@@ -95,7 +95,7 @@ export default (app, passport) => {
     } = req.query;
     try {
       const repositories = await aggregateRepositories({
-        externalIds: JSON.parse(externalIds),
+        externalIds: externalIds ? JSON.parse(externalIds): [],
         searchQuery,
       });
       return res.status(201)

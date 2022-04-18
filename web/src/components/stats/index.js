@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import ReactionChart from './reactionChart';
 import TagsChart from './tagsChart';
 import { setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../snapshots/modalWindow';
 
-const StatsPage = ({ startDate, endDate, filter }) => {
+const StatsPage = ({ startDate, endDate, filter: unsafeFilter }) => {
   const { repositories } = useSelector((state) => ({
     repositories: state.repositoriesState,
   }));
@@ -21,6 +21,9 @@ const StatsPage = ({ startDate, endDate, filter }) => {
   const [openReactionsModal, setOpenReactionsModal] = useState(false);
   const [openTagsModal, setOpenTagsModal] = useState(false);
   const [componentData, setComponentData] = useState({ yAxisType: 'total', startDate, endDate });
+
+  // Code stats should not display data from individual users.
+  const filter = useMemo(() => ({ ...unsafeFilter, from: [], to: [] }), [ unsafeFilter ]);
 
   useEffect(() => {
     if (overview?.smartcomments && overview?.smartcomments.length > 0) {

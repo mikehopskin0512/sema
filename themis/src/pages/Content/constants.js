@@ -285,10 +285,28 @@ export const SUGGESTED_TAG_LIMIT = 3;
 export const WHOAMI = 'whoami';
 export const FIXED_GITHUB_TEXTAREA_ID = 'new_comment_field';
 
-export const LIGHT = 'light';
-export const DARK = 'dark';
-export const DARK_DIMMED = 'dark_dimmed';
-export const DARK_HIGH_CONTRAST = 'dark_high_contrast';
+export const COLOR_MODE_ATTRIBUTE = 'data-color-mode';
+
+export const COLOR_MODES = {
+  LIGHT: 'light',
+  DARK: 'dark',
+  AUTO: 'auto'
+}
+
+export const THEMES = {
+  DARK: 'dark',
+  DARK_DIMMED: 'dark_dimmed',
+  DARK_HIGH_CONTRAST: 'dark_high_contrast',
+  LIGHT: 'light',
+  LIGHT_HIGH_CONTRAST: 'light_high_contrast',
+}
+
+export const THEMES_BACKGROUNDS = {
+  LIGHT: 'rgb(255, 255, 255)',
+  DARK: 'rgb(13, 17, 23)',
+  DARK_HIGH_CONTRAST: 'rgb(10, 12, 16)',
+  DARK_DIMMED: 'rgb(34, 39, 46)'
+}
 
 export const IS_HIGHLIGHTS_ACTIVE = process.env.SEMA_HIGHLIGHTS_OFF !== 'true';
 
@@ -316,3 +334,6 @@ export const DEFAULT_PROFILE_NAME = 'Personal';
 export const STORAGE_ITEMS = {
   PROFILE: 'profile',
 };
+
+export const ANIMATION_TIME = 0.5;
+export const ANIMATION_TIMEOUT = 550;
