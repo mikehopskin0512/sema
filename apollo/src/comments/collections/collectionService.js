@@ -4,9 +4,9 @@ import logger from '../../shared/logger';
 import {
   findById as findUserById,
   findUserCollectionsByUserId,
-  patch as updateUser, populateCollectionsToUsers,
+  patch as updateUser,
 } from '../../users/userService';
-import { bulkUpdateTeamCollections, getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
+import { getTeamById as findTeamById, updateTeam } from '../../teams/teamService';
 import Collection from './collectionModel';
 import { COLLECTION_TYPE } from './constants';
 import User from "../../users/userModel";
@@ -22,25 +22,14 @@ export const create = async (collection, userId, teamId) => {
         ...tag,
         tag: ObjectId.isValid(tag.tag) ? ObjectId(tag.tag) : null
       })) : [],
+      teamId,
       createdBy: ObjectId(userId),
     });
     const createdCollection = await newCollection.save();
-    const isActiveCollection = collection.type !== COLLECTION_TYPE.COMMUNITY;
 
     const isDefaultUserCollection = collection.name.toLowerCase() === process.env.DEFAULT_COLLECTION_NAME
     if (isDefaultUserCollection) {
       return createdCollection;
-    }
-
-    switch (collection.type) {
-      case COLLECTION_TYPE.TEAM:
-        await bulkUpdateTeamCollections(createdCollection._id, teamId, isActiveCollection)
-        break;
-      case COLLECTION_TYPE.PERSONAL:
-        await populateCollectionsToUsers([createdCollection._id], userId);
-        break;
-      default:
-        return;
     }
 
     return createdCollection;
@@ -63,6 +52,8 @@ export const createMany = async (collections, type, userId, teamId) => {
         }
         return tags;
       }),
+      type,
+      teamId,
       createdBy: userId && ObjectId(userId)
     }));
     const newCollections = await Collection.insertMany(cols, { ordered: false });
@@ -307,7 +298,7 @@ export const findByAuthor = async (author) => {
   }
 };
 
-export const createUserCollection = async (username) => {
+export const createUserCollection = async (username, userId) => {
   try {
     const defaultCollection = {
       name: 'My Snippets',
@@ -317,7 +308,7 @@ export const createUserCollection = async (username) => {
       type: COLLECTION_TYPE.PERSONAL,
       comments: [],
     };
-    const userCollection = await create(defaultCollection);
+    const userCollection = await create(defaultCollection, userId);
     return userCollection
   } catch (err) {
     logger.error(err);
