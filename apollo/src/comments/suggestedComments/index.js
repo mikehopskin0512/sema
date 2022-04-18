@@ -168,7 +168,6 @@ export default (app, passport) => {
   route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/summaries`, req.body);
-      console.log(data);
       return res.status(200).json(data);
     } catch (error) {
       logger.error(error);
