@@ -3,10 +3,7 @@ import {
   GITHUB_URL,
   SEARCH_CATEGORY_TITLES,
   SEMA_CORPORATE_TEAM_ID,
-  PDF_OPTIONS,
 } from './constants';
-import { jsPDF } from "jspdf";
-import domtoimage from 'dom-to-image';
 
 export const unshift = (arr, newval) => {
   arr.unshift(newval);
@@ -125,43 +122,4 @@ export const parseEmails = (str) => {
     const match = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/.exec(item);
     return match ? match[1] : match;
   }).filter((item) => !!item);
-}
-
-export const savePdfDocument = async (ref) => {
-  const pngData = await domtoimage.toPng(ref.current, { quality: 0.95 });
-  
-  const imgHeight = (ref.current.clientHeight * PDF_OPTIONS.A_FOUR_PAGE_WIDTH) / ref.current.clientWidth;
-  let heightLeft = imgHeight;
-  
-  const pdf = new jsPDF('p', 'mm', 'a4', true);
-  let position = 0;
-  
-  pdf.addImage(
-    pngData,
-    PDF_OPTIONS.IMAGE_FORMAT,
-    0,
-    position,
-    PDF_OPTIONS.A_FOUR_PAGE_WIDTH,
-    imgHeight,
-    PDF_OPTIONS.IMAGE_ALIAS,
-    PDF_OPTIONS.IMAGE_COMPRESSION,
-  ); 
-  heightLeft -= PDF_OPTIONS.A_FOUR_PAGE_HEIGHT;
-  
-  while (heightLeft >= 0) {
-    position = heightLeft - imgHeight;
-    pdf.addPage();
-    pdf.addImage(
-      pngData,
-      0,
-      position,
-      PDF_OPTIONS.A_FOUR_PAGE_WIDTH,
-      imgHeight,
-      PDF_OPTIONS.IMAGE_ALIAS,
-      PDF_OPTIONS.IMAGE_COMPRESSION,
-    );
-    heightLeft -= PDF_OPTIONS.A_FOUR_PAGE_HEIGHT;
-  }
-  
-  pdf.save(PDF_OPTIONS.DEFAULT_FILENAME);
 }

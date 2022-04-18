@@ -6,7 +6,7 @@ import { PortfolioHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import PortfolioDashboard from '../../../components/portfolios/dashboard';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import { savePdfDocument } from '../../../utils';
+import { savePdfDocument } from '../../../utils/pdfHelpers';
 
 const { fetchPortfolio } = portfoliosOperations;
 
