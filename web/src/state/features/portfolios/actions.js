@@ -2,8 +2,18 @@ import React from 'react';
 import toast from 'toasted-notes';
 import { AlertFilledIcon } from '../../../components/Icons';
 import * as types from './types';
-import { getPortfolio, putPortfolio, getUserPortfolio, postSnapshotToPortfolio, deletePortfolio, patchPortfolioType, createPortfolio } from "./api";
-import { deleteSnapshot, deleteSnapshotFromPortfolio, putSnapshot } from '../snapshots/api';
+import {
+  getPortfolio,
+  putPortfolio,
+  getUserPortfolio,
+  postSnapshotToPortfolio,
+  deletePortfolio,
+  patchPortfolioType,
+  createPortfolio,
+  deleteSnapshotsFromPortfolio,
+  patchPortfolioTitle,
+} from './api';
+import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 
 const requestFetchUserPortfolio = () => ({
@@ -66,9 +76,10 @@ const requestRemoveSnapshot = () => ({
   type: types.REQUEST_REMOVE_SNAPSHOT,
 });
 
-const requestRemoveSnapshotSuccess = (portfolio) => ({
+const requestRemoveSnapshotSuccess = (portfolioId, deletedSnapshots) => ({
   type: types.REQUEST_REMOVE_SNAPSHOT_SUCCESS,
-  portfolio,
+  portfolioId,
+  deletedSnapshots,
 });
 
 const requestRemoveSnapshotError = (errors) => ({
@@ -90,14 +101,23 @@ const requestRemovePortfolioError = (errors) => ({
   errors,
 });
 
-const requestUpdatePortfolioType = () => ({
+const requestUpdatePortfolioType = (portfolioId, portfolioType) => ({
   type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
-});
-
-const requestUpdatePortfolioTypeSuccess = (portfolioId, portfolioType) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS,
   portfolioId,
   portfolioType,
+});
+
+const requestUpdatePortfolioTitle = (portfolioId, title) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE,
+  portfolioId,
+  title,
+});
+
+const requestUpdatePortfolioTitleError = (error, portfolioId, initialTitle) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR,
+  error,
+  initialTitle,
+  portfolioId,
 });
 
 const requestUpdatePortfolioTypeError = (errors) => ({
@@ -244,18 +264,15 @@ export const updateSnapshot = (id, body, token) => async (dispatch) => {
   }
 };
 
-export const removeSnapshot = (portfolioId, snapshotId, token) => async (dispatch) => {
+export const removeSnapshotsFromPortfolio = (portfolioId, snapshots, token) => async (dispatch) => {
   try {
     dispatch(requestRemoveSnapshot());
-    const payload = await deleteSnapshotFromPortfolio({
+    await deleteSnapshotsFromPortfolio(
       portfolioId,
-      snapshotId,
-    }, token);
-    const { data } = payload;
-    const { portfolio } = data;
-    dispatch(requestRemoveSnapshotSuccess(portfolio));
-
-    return payload;
+      snapshots,
+      token,
+    );
+    dispatch(requestRemoveSnapshotSuccess(portfolioId, snapshots));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
@@ -280,15 +297,28 @@ export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispa
   }
 }
 
-export const updatePortfolioType = (portfolioId, type, token) => async (dispatch) => {
+export const updatePortfolioType = (portfolioId, type) => async (dispatch, getState) => {
+  const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
+  const initialType = portfolios.find(({ _id }) => _id === portfolioId)?.type;
   try {
-    dispatch(requestUpdatePortfolioType());
+    dispatch(requestUpdatePortfolioType(portfolioId, type));
     await patchPortfolioType(portfolioId, type, token);
-    dispatch(requestUpdatePortfolioTypeSuccess(portfolioId, type));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestUpdatePortfolioTypeError(errMessage));
+    dispatch(requestUpdatePortfolioTypeError(errMessage, portfolioId, initialType));
+    return error.response;
+  }
+};
+
+export const updatePortfolioTitle = (portfolioId, title) => async (dispatch, getState) => {
+  const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
+  const initialTitle = portfolios.find(({ _id }) => _id === portfolioId)?.title;
+  try {
+    dispatch(requestUpdatePortfolioTitle(portfolioId, title));
+    await patchPortfolioTitle(portfolioId, title, token);
+  } catch (error) {
+    dispatch(requestUpdatePortfolioTitleError(error, portfolioId, initialTitle));
     return error.response;
   }
 };

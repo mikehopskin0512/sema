@@ -5,7 +5,7 @@
 }
 
 .document {
-  max-width: 500px;
+  max-width: 200px;
 }
 
 .body {
@@ -13,8 +13,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   color: $gray-900;
-}
-
-.stats-col {
-  width: 180px;
+  max-width: 150px;
+  @media only screen and (min-width: 1408px) {
+    max-width: 250px !important;
+  }
 }

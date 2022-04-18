@@ -13,10 +13,13 @@
   --color-tags-background: #{v.$color-light-tags-container-bg};
   --color-tags-border: #{v.$color-light-tags-container-border};
   --color-tags-header-bg: #{v.$color-light-tags-header-bg};
+  --color-tags-header-border: #{v.$color-light-tags-header-border};
   --color-tags-header-font: #{v.$color-light-tags-header-font};
 
   --color-tag-font: #{v.$color-light-tag-font};
   --color-tag-bg: #{v.$color-light-tag-bg};
+  --color-tag-border: #{v.$color-light-tag-border};
+  --color-tag-border-selected: #{v.$color-light-tag-selected-border};
 
   --color-selected-tag-font: #{v.$color-light-selected-tag-font};
   --color-selected-tag-bg: #{v.$color-light-selected-tag-bg};
@@ -51,17 +54,107 @@
   --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-light-reminder-sign-in-btn-font};
 
-  --color-hover-comment: #{v.$color-dark-reminder-font};
+  --color-hover-comment: #{v.$color-light-comment-hover};
   --color-sourceUrl-text: #{v.$color-light-tags-header-font};
   --color-tags-container: #{v.$color-tag-container-light};
-  --color-suggestion-source: #{v.$color-tag-container-dark};
-  --color-suggestion-title: #{v.$color-title-light};
-  --color-comment-text: #{v.$color-title-light};
+  --color-suggestion-source: #{v.$color-light-comment-source};
+  --color-suggestion-title: #{v.$color-light-comment-title};
+  --color-comment-text: #{v.$color-light-comment-text};
 
   --color-background-create-snippet-modal: #{v.$color-light-background-create-snippet-modal};
   --color-title-create-snippet-modal: #{v.$color-light-title-create-snippet-modal};
   --color-font-create-snippet-modal: #{v.$color-light-font-create-snippet-modal};
   --color-border-create-snippet-modal: #{v.$color-light-border-create-snippet-modal};
+
+  --color-snippets-suggestion-title: #{v.$color-light-title-suggestions-placeholder};
+  --color-snippets-suggestion-text: #{v.$color-light-text-suggestions-placeholder};
+
+  --color-snippets-no-results-title: #{v.$color-light-title-no-results};
+  --color-snippets-no-results-link: #{v.$color-light-link-no-results};
+
+  --color-suggestion-tag-container-text: #{v.$color-light-tag-container-text};
+  --color-suggestion-tag-container-border: #{v.$color-light-tag-container-border};
+  --color-suggestion-tag-container-bg:  #{v.$color-light-tag-container-bg};
+
+  --сolor-logout-modal-bg: #{v.$color-light-logout-bg};
+}
+
+.theme--light_high_contrast {
+  --color-border: #{v.$color-light-border};
+
+  --color-sema-bg: #{v.$color-light-bg};
+  --color-sema-border: #{v.$color-light-border};
+
+  --color-text-input-bg: #{v.$color-light-bg};
+  --color-text-input-border: #{v.$color-light-border};
+  --color-text-input-font: #{v.$color-light-font};
+
+  --color-tags-background: #{v.$color-light-high-contrast-tags-container-bg};
+  --color-tags-border: #{v.$color-light-high-contrast-tags-container-border};
+  --color-tags-header-bg: #{v.$color-light-high-contrast-tags-header-bg};
+  --color-tags-header-border: #{v.$color-light-high-contrast-tags-header-border};
+  --color-tags-header-font: #{v.$color-light-high-contrast-tags-header-font};
+
+  --color-tag-font: #{v.$color-light-high-contrast-tag-font};
+  --color-tag-bg: #{v.$color-light-high-contrast-tag-bg};
+  --color-tag-border: #{v.$color-light-high-contrast-tag-border};
+
+  --color-selected-tag-font: #{v.$color-light-high-contrast-selected-tag-font};
+  --color-selected-tag-bg: #{v.$color-light-high-contrast-selected-tag-bg};
+
+  --color-add-tags-bg: #{v.$color-light-high-contrast-add-tags-bg};
+  --color-add-tags-font: #{v.$color-light-high-contrast-add-tags-font};
+  --color-add-tags-border: #{v.$color-light-high-contrast-add-tags-border};
+
+  --color-title: #{v.$color-light-title};
+  --color-source-name: #{v.$color-font-dark-1};
+  --color-content: #{v.$color-light-content};
+
+  --color-suggestion-container: #{v.$color-light-btn-container};
+  --color-credit-img: invert(0);
+
+  --color-btn-border: #{v.$color-light-btn-border};
+
+  --color-scroll-bg: #{v.$color-light-scroll-bg};
+  --color-scroll-border: #{v.$color-light-scroll-border};
+
+  --color-form-border: #{v.$color-light-form-border};
+
+  --color-highlight: #{v.$color-light-highlight};
+
+  --color-emoji-bg: #{v.$color-light-high-contrast-emoji-bg};
+  --color-emoji-font: #{v.$color-light-high-contrast-emoji-font};
+  --color-emoji-bg-hover: #{v.$color-light-high-contrast-emoji-bg-hover};
+  --color-emoji-font-hover: #{v.$color-light-high-contrast-emoji-font-hover};
+
+  --color-reminder-border: #{v.$color-light-reminder-border};
+  --color-reminder-font: #{v.$color-light-reminder-font};
+  --color-reminder-github-bg: #{v.$color-light-reminder-sign-in-btn-bg};
+  --color-reminder-github-font: #{v.$color-light-high-contrast-reminder-sign-in-btn-font};
+
+  --color-hover-comment: #{v.$color-light-high-contrast-comment-hover};
+  --color-sourceUrl-text: #{v.$color-light-tags-header-font};
+  --color-tags-container: #{v.$color-tag-container-light};
+  --color-suggestion-source: #{v.$color-light-high-contrast-comment-source};
+  --color-suggestion-title: #{v.$color-light-high-contrast-comment-title};
+  --color-comment-text: #{v.$color-light-high-contrast-comment-text};
+
+  --color-background-create-snippet-modal: #{v.$color-light-background-create-snippet-modal};
+  --color-title-create-snippet-modal: #{v.$color-light-title-create-snippet-modal};
+  --color-font-create-snippet-modal: #{v.$color-light-font-create-snippet-modal};
+  --color-border-create-snippet-modal: #{v.$color-light-border-create-snippet-modal};
+
+  --color-snippets-suggestion-title: #{v.$color-light-high-contrast-title-suggestions-placeholder};
+  --color-snippets-suggestion-text: #{v.$color-light-high-contrast-text-suggestions-placeholder};
+
+  --color-snippets-no-results-title: #{v.$color-light-high-contrast-title-no-results};
+  --color-snippets-no-results-link: #{v.$color-light-high-contrast-link-no-results};
+
+  --color-suggestion-tag-container-text: #{v.$color-light-high-contrast-tag-container-text};
+  --color-suggestion-tag-container-border: #{v.$color-light-high-contrast-tag-container-border};
+  --color-suggestion-tag-container-bg:  #{v.$color-light-high-contrast-tag-container-bg};
+
+  --сolor-logout-modal-bg: #{v.$color-light-high-contrast-logout-bg};
 }
 
 .theme--dark {
@@ -77,10 +170,13 @@
   --color-tags-border: #{v.$color-dark-tags-container-border};
   --color-tags-background: #{v.$color-dark-tags-container-bg};
   --color-tags-header-bg: #{v.$color-dark-tags-header-bg};
+  --color-tags-header-border: #{v.$color-dark-tags-header-border};
   --color-tags-header-font: #{v.$color-dark-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-tag-font};
   --color-tag-bg: #{v.$color-dark-tag-bg};
+  --color-tag-border: #{v.$color-dark-tag-border};
+  --color-tag-border-selected: #{v.$color-dark-tag-selected-border};
 
   --color-selected-tag-font: #{v.$color-dark-selected-tag-font};
   --color-selected-tag-bg: #{v.$color-dark-selected-tag-bg};
@@ -115,17 +211,29 @@
   --color-reminder-github-bg: #{v.$color-dark-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-reminder-sign-in-btn-font};
 
-  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-hover-comment: #{v.$color-dark-comment-hover};
   --color-sourceUrl-text: #{v.$color-dark-tag-font};
   --color-tags-container: #{v.$color-tag-container-dark};
-  --color-suggestion-source: #{v.$color-source-dark};
-  --color-suggestion-title: #{v.$color-dark-emoji-font};
-  --color-comment-text: #{v.$color-comment-text-dark};
+  --color-suggestion-source: #{v.$color-dark-comment-source};
+  --color-suggestion-title: #{v.$color-dark-comment-title};
+  --color-comment-text: #{v.$color-dark-comment-text};
 
   --color-background-create-snippet-modal: #{v.$color-dark-background-create-snippet-modal};
   --color-title-create-snippet-modal: #{v.$color-dark-title-create-snippet-modal};
   --color-font-create-snippet-modal: #{v.$color-dark-font-create-snippet-modal};
   --color-border-create-snippet-modal: #{v.$color-dark-border-create-snippet-modal};
+
+  --color-snippets-suggestion-title: #{v.$color-dark-title-suggestions-placeholder};
+  --color-snippets-suggestion-text: #{v.$color-dark-text-suggestions-placeholder};
+
+  --color-snippets-no-results-title: #{v.$color-dark-title-no-results};
+  --color-snippets-no-results-link: #{v.$color-dark-link-no-results};
+
+  --color-suggestion-tag-container-text: #{v.$color-dark-tag-container-text};
+  --color-suggestion-tag-container-border: #{v.$color-dark-tag-container-border};
+  --color-suggestion-tag-container-bg:  #{v.$color-dark-tag-container-bg};
+
+  --сolor-logout-modal-bg: #{v.$color-dark-logout-bg};
 }
 
 .theme--dark-dimmed {
@@ -141,10 +249,13 @@
   --color-tags-border: #{v.$color-dark-dim-tags-container-border};
   --color-tags-background: #{v.$color-dark-dim-tags-container-bg};
   --color-tags-header-bg: #{v.$color-dark-dim-tags-header-bg};
+  --color-tags-header-border: #{v.$color-dark-dim-tags-header-border};
   --color-tags-header-font: #{v.$color-dark-dim-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-dim-tag-font};
   --color-tag-bg: #{v.$color-dark-dim-tag-bg};
+  --color-tag-border: #{v.$color-dark-dim-tag-border};
+  --color-tag-border-selected: #{v.$color-dark-dim-tag-selected-border};
 
   --color-selected-tag-font: #{v.$color-dark-dim-selected-tag-font};
   --color-selected-tag-bg: #{v.$color-dark-dim-selected-tag-bg};
@@ -179,17 +290,29 @@
   --color-reminder-github-bg: #{v.$color-dark-dim-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-dim-reminder-sign-in-btn-font};
 
-  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-hover-comment: #{v.$color-dark-dim-comment-hover};
   --color-sourceUrl-text: #{v.$color-dark-tag-font};
   --color-tags-container: #{v.$color-tag-container-dark};
-  --color-suggestion-source: #{v.$color-source-dark};
-  --color-suggestion-title: #{v.$color-dark-emoji-font};
-  --color-comment-text: #{v.$color-comment-text-dark};
+  --color-suggestion-source: #{v.$color-dark-dim-comment-source};
+  --color-suggestion-title: #{v.$color-dark-dim-comment-title};
+  --color-comment-text: #{v.$color-dark-dim-comment-text};
 
   --color-background-create-snippet-modal: #{v.$color-dark-dim-background-create-snippet-modal};
   --color-title-create-snippet-modal: #{v.$color-dark-dim-title-create-snippet-modal};
   --color-font-create-snippet-modal: #{v.$color-dark-dim-font-create-snippet-modal};
   --color-border-create-snippet-modal: #{v.$color-dark-dim-border-create-snippet-modal};
+
+  --color-snippets-suggestion-title: #{v.$color-dark-dim-title-suggestions-placeholder};
+  --color-snippets-suggestion-text: #{v.$color-dark-dim-text-suggestions-placeholder};
+
+  --color-snippets-no-results-title: #{v.$color-dark-dim-title-no-results};
+  --color-snippets-no-results-link: #{v.$color-dark-dim-link-no-results};
+
+  --color-suggestion-tag-container-text: #{v.$color-dark-dim-tag-container-text};
+  --color-suggestion-tag-container-border: #{v.$color-dark-dim-tag-container-border};
+  --color-suggestion-tag-container-bg:  #{v.$color-dark-dim-tag-container-bg};
+
+  --сolor-logout-modal-bg: #{v.$color-dark-dim-logout-bg};
 }
 
 .theme--dark-high-contrast {
@@ -205,10 +328,13 @@
   --color-tags-border: #{v.$color-dark-high-contrast-tags-container-border};
   --color-tags-background: #{v.$color-dark-high-contrast-tags-container-bg};
   --color-tags-header-bg: #{v.$color-dark-high-contrast-tags-header-bg};
+  --color-tags-header-border: #{v.$color-dark-high-contrast-tags-header-border};
   --color-tags-header-font: #{v.$color-dark-high-contrast-tags-header-font};
 
   --color-tag-font: #{v.$color-dark-high-contrast-tag-font};
   --color-tag-bg: #{v.$color-dark-high-contrast-tag-bg};
+  --color-tag-border: #{v.$color-dark-high-contrast-tag-border};
+  --color-tag-border-selected: #{v.$color-dark-high-contrast-tag-selected-border};
 
   --color-selected-tag-font: #{v.$color-dark-high-contrast-selected-tag-font};
   --color-selected-tag-bg: #{v.$color-dark-high-contrast-selected-tag-bg};
@@ -243,17 +369,30 @@
   --color-reminder-github-bg: #{v.$color-dark-high-contrast-reminder-sign-in-btn-bg};
   --color-reminder-github-font: #{v.$color-dark-high-contrast-reminder-sign-in-btn-font};
 
-  --color-hover-comment: #{v.$color-dark-reminder-sign-in-btn-bg};
+  --color-hover-comment: #{v.$color-dark-high-contrast-comment-hover};
   --color-sourceUrl-text: #{v.$color-dark-tag-font};
   --color-tags-container: #{v.$color-tag-container-dark};
-  --color-suggestion-source: #{v.$color-source-dark};
-  --color-suggestion-title: #{v.$color-dark-emoji-font};
-  --color-comment-text: #{v.$color-comment-text-dark};
+  --color-suggestion-source: #{v.$color-dark-high-contrast-comment-source};
+  --color-suggestion-title: #{v.$color-dark-high-contrast-comment-title};
+  --color-comment-text: #{v.$color-dark-high-contrast-comment-text};
 
   --color-background-create-snippet-modal: #{v.$color-dark-high-contrast-background-create-snippet-modal};
   --color-title-create-snippet-modal: #{v.$color-dark-high-contrast-title-create-snippet-modal};
   --color-font-create-snippet-modal: #{v.$color-dark-high-contrast-font-create-snippet-modal};
   --color-border-create-snippet-modal: #{v.$color-dark-high-contrast-border-create-snippet-modal};
+
+
+  --color-snippets-suggestion-title: #{v.$color-dark-high-contrast-title-suggestions-placeholder};
+  --color-snippets-suggestion-text: #{v.$color-dark-high-contrast-text-suggestions-placeholder};
+
+  --color-snippets-no-results-title: #{v.$color-dark-high-contrast-title-no-results};
+  --color-snippets-no-results-link: #{v.$color-dark-high-contrast-link-no-results};
+
+  --color-suggestion-tag-container-text: #{v.$color-dark-high-contrast-tag-container-text};
+  --color-suggestion-tag-container-border: #{v.$color-dark-high-contrast-tag-container-border};
+  --color-suggestion-tag-container-bg:  #{v.$color-dark-high-contrast-tag-container-bg};
+
+  --сolor-logout-modal-bg: #{v.$color-dark-high-contrast-logout-bg};
 }
 
 .sema {
@@ -428,6 +567,7 @@ button.sema-reaction-selection {
   min-height: 85px;
   box-sizing: border-box;
   margin-bottom: 8px;
+  padding-left: 8px;
 
   .active-buttons-container {
     display: none;
@@ -505,16 +645,16 @@ button.sema-reaction-selection {
 }
 
 .suggestion-author {
-  font-size: 12px; 
+  font-size: 12px;
   color: var(--color-suggestion-source);
   font-weight: 400;
 }
 
 .suggestion-soucreUrl {
-  text-decoration-style: solid; 
-  text-decoration-line: underline; 
-  font-weight: 400; 
-  font-size: 12px; 
+  text-decoration-style: solid;
+  text-decoration-line: underline;
+  font-weight: 400;
+  font-size: 12px;
   line-height: 21px;
   color: var(--color-sourceUrl-text);
 }
@@ -522,12 +662,18 @@ button.sema-reaction-selection {
 .tags-container {
   height: 23px;
   background: var(--color-tags-container);
-  border-radius: 4px; 
-  margin-right: 8px; 
-  padding: 4px 8px; 
-  font-weight: 600; 
-  font-size: 10px; 
+  border-radius: 4px;
+  margin-right: 8px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: 10px;
   line-height: 15px;
+
+  &.suggestion-tag-container {
+    background-color: var(--color-suggestion-tag-container-bg) !important;
+    color: var(--color-suggestion-tag-container-text) !important;
+    border: var(--color-suggestion-tag-container-border) !important;
+  }
 }
 
 .source-icon {
@@ -537,15 +683,15 @@ button.sema-reaction-selection {
 }
 
 .dashed-line {
-  width: 100%; 
-  height: 1px; 
-  box-sizing: border-box; 
-  border: 0.5px dashed var(--color-tags-container); 
+  width: 100%;
+  height: 1px;
+  box-sizing: border-box;
+  border: 0.5px dashed var(--color-tags-container);
   margin-bottom: 16px;
 }
 
 .note-icon {
-  width: 15px; 
+  width: 15px;
   height: 21px;
 }
 
@@ -736,6 +882,26 @@ h6 {
   }
 }
 
+.suggested-snippets-ph {
+  &--title {
+    color: var(--color-snippets-suggestion-title) !important;
+  }
+
+  &--text {
+    color: var(--color-snippets-suggestion-text) !important;
+  }
+}
+
+.no-results-ph {
+  &--title {
+    color: var(--color-snippets-no-results-title) !important;
+  }
+
+  &--link {
+    color: var(--color-snippets-no-results-link) !important;
+  }
+}
+
 .sema-is-oblong {
   border-radius: 25px;
 }
@@ -800,12 +966,16 @@ h6 {
     margin-bottom: 8px;
     margin-top: 10px;
     font-style: italic;
+    border: var(--color-tag-border) !important;
+    &.tag-selected {
+      border: var(--color-tag-border-selected) !important;
+    }
   }
 }
 
 .tags-selection {
   width: auto;
-  border-color: var(--color-tags-border);
+  border: 1px solid var(--color-tags-border);
   padding-top: 0;
   margin-top: 4px;
   right: 0;
@@ -919,7 +1089,8 @@ h6 {
   justify-content: space-between;
   align-items: center;
   color: var(--color-title);
-  background-color: var(--color-tags-background);
+  background-color: var(--color-tags-header-bg);
+  border-bottom:  var(--color-tags-header-border);
   padding: 10px 20px 14px;
 
   &--reactions {
@@ -984,7 +1155,7 @@ h6 {
   flex: 1;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .reminder-header > img {
@@ -1035,7 +1206,7 @@ h6 {
 }
 
 .reminder-hero > button {
-  margin: 22px 0px;
+  margin: 25px 0 10px;
   height: 45px;
   width: 225px;
   display: flex;
@@ -1044,7 +1215,7 @@ h6 {
   align-items: center;
   color: var(--color-reminder-github-font);
   border: 2px solid var(--color-reminder-github-font);
-  background-color: var(--color-reminder-github-bg);
+  background-color: inherit;
   border-radius: 4px;
 }
 
@@ -1062,4 +1233,34 @@ h6 {
 .view-suggestion-modal {
   background-color: var(--color-text-input-bg);
   color: var(--color-text-input-font);
+}
+
+.no-login-modal-container {
+  background-color: var(--сolor-logout-modal-bg);
+}
+
+.reminder-hero {
+  .no-login-modal-link {
+    color: var(--color-snippets-no-results-link);
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .no-login-modal-title {
+    display: inline-flex;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 8px;
+    color: var(--color-snippets-suggestion-title);
+  }
+
+  .no-login-modal-text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 15px;
+    color: var(--color-snippets-suggestion-text);
+  }
 }

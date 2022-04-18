@@ -1,10 +1,11 @@
+import { updatePortfolioType, updatePortfolioTitle } from './helpers';
 import * as types from './types';
 
 const initialState = {
   isFetching: false,
   data: {
     portfolio: {},
-    portfolios: []
+    portfolios: [],
   },
   error: {},
 };
@@ -66,6 +67,7 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       data: {
         ...state.data,
+        portfolio,
         portfolios,
       },
     };
@@ -84,6 +86,7 @@ const reducer = (state = initialState, action) => {
   case types.REQUEST_UPDATE_SNAPSHOT_SUCCESS: {
     const { portfolios } = state.data;
     const [portfolio, ...rest] = portfolios;
+    if (!portfolio) return {...state, isFetching: false};
     const snapshot = { ...action.snapshot };
     portfolio.snapshots = portfolio.snapshots.map((s) => {
       if (s.id._id === snapshot._id) {
@@ -112,14 +115,19 @@ const reducer = (state = initialState, action) => {
       isFetching: true,
     };
   case types.REQUEST_REMOVE_SNAPSHOT_SUCCESS: {
-    const { portfolios } = state.data;
-    portfolios[0] = action.portfolio;
+    const { deletedSnapshots, portfolioId } = action;
+    const updatedPortfolios = [...state.data.portfolios];
+    const portfolio = updatedPortfolios.find(({ _id }) => _id === portfolioId);
+    const filterDeletedSnapshots = ({ id: { _id } }) => !deletedSnapshots.includes(_id);
+    portfolio.snapshots = portfolio.snapshots.filter(filterDeletedSnapshots);
+    const isCurrentPortfolio = portfolio._id === state.data.portfolio._id;
     return {
       ...state,
       isFetching: false,
       data: {
         ...state.data,
-        portfolios,
+        portfolio: isCurrentPortfolio ? portfolio : state.data.portfolio,
+        portfolios: updatedPortfolios,
       },
     };
   }
@@ -194,37 +202,34 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE:
-    return {
-      ...state,
-      isFetching: true,
-    };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_SUCCESS: {
-    const { portfolios, portfolio } = state.data;
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE: {
     const { portfolioId, portfolioType } = action;
-    const index = portfolios.findIndex((s) => s._id === portfolioId);
-    const updatedPortfolio = portfolios[index];
-    updatedPortfolio.type = portfolioType;
-    portfolios.splice(index, 1, updatedPortfolio);
-    if (portfolio._id === portfolioId) {
-      portfolio.type = portfolioType;
-    }
     return {
-      ...state,
-      isFetching: false,
-      data: {
-        ...state.data,
-        portfolios,
-        portfolio,
-      },
+      ...updatePortfolioType(state, portfolioId, portfolioType),
+      error: {},
     };
   }
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR:
+  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR: {
+    const { portfolioId, portfolioType } = action;
     return {
-      ...state,
-      isFetching: false,
+      ...updatePortfolioType(state, portfolioId, portfolioType),
       error: action.errors,
     };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_TITLE: {
+    const { portfolioId, title } = action;
+    return {
+      ...updatePortfolioTitle(state, portfolioId, title),
+      error: {},
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR: {
+    const { portfolioId, initialTitle } = action;
+    return {
+      ...updatePortfolioTitle(state, portfolioId, initialTitle),
+      error: action.error,
+    };
+  }
   default:
     return state;
   }

@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
-import { createTeamCollection, findByType } from '../comments/collections/collectionService';
-import { COLLECTION_TYPE } from '../comments/collections/constants';
+import { createTeamCollection } from '../comments/collections/collectionService';
 
-const { Schema } = mongoose;
+const { Schema, Types: { ObjectId }  } = mongoose;
 
 const teamSchema = new Schema({
   name: { type: String, required: true },
@@ -29,12 +28,13 @@ const teamSchema = new Schema({
 
 teamSchema.pre('save', async function save(next) {
   try {
-    const teamCollection = await createTeamCollection(this);
-    const collections = await findByType(COLLECTION_TYPE.COMMUNITY);
-    this.collections = [
-      { isActive: true, collectionData: teamCollection },
-      ...collections,
-    ];
+    if(this.isNew) {
+      this._id = new ObjectId();
+      const teamCollection = await createTeamCollection(this);
+      this.collections = [
+        { isActive: true, collectionData: teamCollection },
+      ];
+    }
     if (!this.url) {
       this.url = this._id;
     }

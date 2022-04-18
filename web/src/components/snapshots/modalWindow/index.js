@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -15,13 +16,14 @@ import styles from './modalWindow.module.scss';
 import { isEmpty } from 'lodash';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { portfoliosOperations } from '../../../state/features/portfolios';
+import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
+import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
+import { notify } from '../../../components/toaster/index.js';
 
-const {
-  updateSnapshot,
-  fetchPortfoliosOfUser,
-} = portfoliosOperations;
+const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
+const { triggerAlert } = alertOperations;
 
 const schema = yup.object()
   .shape({
@@ -64,18 +66,14 @@ const SnapshotModal = ({
     resolver: yupResolver(schema),
   });
 
-  const {
-    auth,
-    portfolios,
-  } = useSelector((state) => ({
+  const { auth, portfolios, alerts } = useSelector((state) => ({
     auth: state.authState,
     portfolios: state.portfoliosState.data.portfolios,
+    alerts: state.alertsState,
   }));
+  const { showAlert, alertType, alertLabel } = alerts;
 
-  const {
-    token,
-    user,
-  } = auth;
+  const { token, user } = auth;
   const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
@@ -88,9 +86,12 @@ const SnapshotModal = ({
       title: data.title,
       description: data.description,
       componentType: dataType,
-      componentData: snapshotData.componentData,
-    };
-    snapshotDataForSave.componentData.smartComments = parseSnapshotData(snapshotDataForSave.componentData.smartComments);
+      componentData: {
+        ...snapshotData.componentData,
+        smartComments: parseSnapshotData(snapshotData.componentData.smartComments)
+      }
+    }
+
     try {
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
         const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
@@ -101,16 +102,25 @@ const SnapshotModal = ({
         if (!portfolioId) {
           await dispatch(fetchPortfoliosOfUser(user._id, token));
         }
-        await postSnapshots({
-          ...snapshotDataForSave,
-          portfolioId,
-        }, token);
+        await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        notify('Snapshot was added to your portfolio', {
+          description: (
+            <>
+              <p>You've successfully added this snapshot.</p>
+              {portfolioId ? (
+                <Link href={`/portfolios/${portfolioId}`}>
+                  <a>Go to the portfolio</a>
+                </Link>
+              ) : null}
+            </>
+          ),
+        });
+        reset();
+        onClose();
       }
     } catch (e) {
-      console.log(e);
+      dispatch(triggerAlert('Unable to create snapshot!', 'error'));
     }
-    reset();
-    onClose();
   };
 
   const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
@@ -124,13 +134,11 @@ const SnapshotModal = ({
     }
   }, []);
 
-  const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? {
-    overflowY: 'scroll',
-    maxHeight: '372px',
-  } : null, [dataType, activityTypeData]);
+  const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
-  return (
-    <div className={`modal ${active ? 'is-active' : ''}`}>
+  return active && (
+    <div className={`modal ${active ? 'is-active' : ''}`} ref={modalRef}>
+      <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <div className="modal-background" />
       <div className={clsx('modal-content px-10', styles.modalWindowContent)} ref={modalRef}>
         <div className="px-25 py-15 has-background-white border-radius-4px">

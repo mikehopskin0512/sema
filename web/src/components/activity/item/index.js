@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { format } from 'date-fns';
 import { find, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
+import Markdown from 'markdown-to-jsx';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import { EMOJIS } from './constants';
 import styles from './item.module.scss';
@@ -54,7 +55,17 @@ const ActivityItem = (props) => {
 
   const getPRUrl = () => {
     let prUrl = url;
+    prUrl = prUrl.replace("/files", "");
+    
+    if (prUrl.includes("pullrequestreview")) {
+      const slug = prUrl.split("#").pop();
+      prUrl = prUrl.replace(`#${slug}`, "");
+    }
+
     if (!isEmpty(commentId)) {
+      if (/^r/i.test(commentId)) {
+        return prUrl += `#discussion_${commentId}`;
+      }
       prUrl += `#${commentId}`;
     }
     return prUrl;
@@ -105,8 +116,10 @@ const ActivityItem = (props) => {
             </>
           ) : <div className={isSnapshot ? '' : 'py-25'} />}
         </div>
-        <div className={clsx(isSnapshot ? 'my-3' : 'my-8', styles['item-comment'])}>
-          <div dangerouslySetInnerHTML={{ __html: comment }} className="is-size-7 has-text-black-950" />
+        <div className={clsx(isSnapshot ? 'my-3' : 'my-8', 'is-size-7 has-text-black-950', styles['item-comment'])}>
+          <Markdown>
+            {comment}
+          </Markdown>
         </div>
         <p className={clsx('is-size-8 is-hidden-desktop has-text-align-right', styles.date)}>{dateCreated}</p>
       </div>

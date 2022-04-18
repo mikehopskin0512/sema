@@ -27,7 +27,7 @@ const githubMetadataSchema = new Schema({
 
 const smartCommentSchema = new Schema({
   comment: String,
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   location: { type: String, enum: ['conversation', 'files changed'] },
   suggestedComments: [{ type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },

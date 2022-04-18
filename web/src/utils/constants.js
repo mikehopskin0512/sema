@@ -268,3 +268,7 @@ export const PORTFOLIO_TYPES = {
   PUBLIC: 'public',
   PRIVATE: 'private',
 };
+
+export const KEY_CODES = {
+  ENTER: 13,
+};

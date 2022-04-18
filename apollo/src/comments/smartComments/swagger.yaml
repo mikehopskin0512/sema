@@ -94,6 +94,7 @@ components:
           type: string
         userId:
           type: string
+          required: true
 security:
   - bearerAuth: []
 paths:
@@ -368,5 +369,36 @@ paths:
                 properties:
                   overview:
                     type: object
+        400:
+          description: bad input parameter
+  /v1/comments/smart/update-by-github/{id}:
+    put:
+      summary: update smart comment by github id
+      operationId: updateByGithubId
+      parameters:
+        - in: path
+          name: id
+          description: github comment id
+          required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartComment'
+          description: updated smart comment
+        400:
+          description: bad input parameter
+    delete:
+      summary: delete smart comment by github id
+      operationId: deleteByGithubId
+      parameters:
+        - in: path
+          name: id
+          description: github comment id
+          required: true
+      responses:
+        200:
+          description: deleted smart comment
         400:
           description: bad input parameter

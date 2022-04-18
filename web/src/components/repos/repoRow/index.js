@@ -32,27 +32,27 @@ const RepoRow = (props) => {
           </p>
         </div>
       </td>
-      <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
+      <td className={clsx('py-15 has-background-white px-10')}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
           {repoStats?.smartCodeReviews || 0}
         </p>
       </td>
-      <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
+      <td className={clsx('py-15 has-background-white px-10')}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
           {repoStats?.smartComments || 0}
         </p>
       </td>
-      <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
+      <td className={clsx('py-15 has-background-white px-10')}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
           {repoStats?.smartCommenters || 0}
         </p>
       </td>
-      <td className={clsx('py-15 has-background-white px-10', styles['stats-col'])}>
+      <td className={clsx('py-15 has-background-white px-10')}>
         <p className="is-size-5 has-text-centered has-text-weight-bold">
           {repoStats?.semaUsers || 0}
         </p>
       </td>
-      <td className={clsx('py-15 has-background-white px-10 is-flex is-justify-content-center')}>
+      <td className={clsx('py-15 has-background-white px-10')}>
         <RepoUsers users={users} />
       </td>
     </tr>

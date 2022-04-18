@@ -23,6 +23,7 @@ components:
           type: string
         userId:
           type: string
+          required: true
         componentType:
           enum:
             - comments
@@ -54,6 +55,7 @@ components:
                     type: string
                   userId:
                     type: string
+                    required: true
                   comment:
                     type: string
                   githubMetadata:

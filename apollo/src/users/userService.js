@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import _ from 'lodash';
-import { semaCorporateTeamId } from '../config'
 import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
@@ -513,42 +512,6 @@ export const bulkUpdateUserCollections = async (doc, ids) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
-  }
-}
-
-// populate collections to multiple users
-export const populateCollectionsToUsers = async (collectionIds = [], userId = null) => {
-  try {
-    if (userId) {
-      const user = await User.findById(userId).select('collections');
-      await populateCollections(collectionIds, user);
-    } else {
-      const users = await User.find({ isActive: true }).select('collections');
-      await Promise.all(users.map(async (user) => await populateCollections(collectionIds, user)));
-    }
-  } catch (e) {
-    logger.error(e);
-    throw (error);
-  }
-};
-
-// populate collections to a single user
-export const populateCollections = async (collectionIds = [], user) => {
-  try {
-    if (user && user.collections) {
-      const existingCollectionIds = user.collections.map(col => col.collectionData);
-      const newCollectionIds = collectionIds.filter(collectionId => existingCollectionIds.indexOf(collectionId) < 0);
-      await User.updateOne({ _id: user._id }, {
-        $push: {
-          collections: {
-            $each: newCollectionIds.map(id => ({ isActive: false, collectionData: id }))
-          }
-        }
-      });
-    }
-  } catch (err) {
-    logger.error(err);
     throw (error);
   }
 }

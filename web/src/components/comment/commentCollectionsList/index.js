@@ -158,7 +158,11 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  if (isFetching) {
+  const isLoaderNeeded = isEmpty(selectedTeam) ? 
+    isFetching : 
+    !teamCollections.length && teamsState.isFetching;
+
+  if (isLoaderNeeded) {
     return (
       <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '60vh' }}>
         <Loader />

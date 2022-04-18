@@ -3,7 +3,12 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import { version } from '../config';
-import { addSnapshotToPortfolio, removeSnapshotFromPortfolio } from '../portfolios/portfolioService';
+import {
+  addSnapshotToPortfolio,
+  removeSnapshotFromPortfolio,
+  create as createPortfolio,
+  getPortfoliosByUser,
+} from '../portfolios/portfolioService';
 import logger from '../shared/logger';
 import { create, update, deleteOne } from './snapshotService';
 import checkEnv from '../middlewares/checkEnv';
@@ -15,17 +20,36 @@ export default (app, passport) => {
   app.use(`/${version}/snapshots`, route);
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const snapshot = req.body;
-    const { portfolioId = null, ...rest } = snapshot;
-    try {
+    const { user, body: snapshot } = req;
+    async function saveSnapshot(portfolioId) {
       const savedSnapshot = await create({
-        ...rest,
-        userId: req.user._id,
+        ...snapshot,
+        _id: null,
+        userId: user._id,
         portfolios: portfolioId ? [portfolioId] : [],
       });
       if (portfolioId) {
         await addSnapshotToPortfolio(portfolioId, savedSnapshot._id);
       }
+      return savedSnapshot;
+    }
+    // TODO: should be refactored with better structure and name
+    async function getPortfolioId() {
+      const portfolios = await getPortfoliosByUser(user._id);
+      const hasNoPortfolios = !portfolios.length;
+      if (hasNoPortfolios) {
+        const portfolio = await createPortfolio({
+          ...user,
+          userId: user._id,
+          title: 'Portfolio 1',
+        });
+        return portfolio._id.toString();
+      }
+      return null;
+    }
+    try {
+      const portfolioId = snapshot.portfolioId || await getPortfolioId();
+      const savedSnapshot = await saveSnapshot(portfolioId);
       return res.status(201).send(savedSnapshot);
     } catch (error) {
       logger.error(error);

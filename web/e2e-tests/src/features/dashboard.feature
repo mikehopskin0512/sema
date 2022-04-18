@@ -1,7 +1,7 @@
-@dashboard @zicu
+@dashboard @regression
 Feature: Dashboard options
 
-    @admin  @PTA25
+    @PTA25 @smoke
     Scenario: User profile elements are displayed
         When I open the site "/dashboard"
         Then I expect that element "userLogo" becomes displayed
@@ -18,11 +18,12 @@ Feature: Dashboard options
         And  I expect that element "accountBtn" becomes displayed
         And  I expect that element "accountBtn" does appear exactly "1" times
 
-    @admin  @PTA24
+    @PTA24
     Scenario: Contact support button sends request
         When I open the site "/dashboard"
-        And  I wait on element "footerSupportBtn" for 10000ms to be displayed
-        And I click on the button "footerSupportBtn"
+        Then I expect that element "reposContainer" becomes displayed
+        When I wait on element "footerSupportBtn" for 10000ms to be displayed
+        And  I click on the button "footerSupportBtn"
         And  I wait on element "supportSection" for 10000ms to be displayed
         And  I expect that the url is "/support"
         And  I expect that the title is "Help and Support"
@@ -44,9 +45,10 @@ Feature: Dashboard options
         And  I click on the element "supportModalSubmitBtn"
         Then I expect that element "supportModal" becomes not displayed
 
-    @admin  @PTA24_2 @Pending
+    @PTA24_2 @smoke
     Scenario: Error messages works on contact support modal
         When I open the site "/dashboard"
+        Then I expect that element "reposContainer" becomes displayed
         And  I wait on element "footerSupportBtn" for 10000ms to be displayed
         When I click on the button "footerSupportBtn"
         And  I expect that element "contactSupportBtn" becomes displayed
@@ -72,32 +74,35 @@ Feature: Dashboard options
         Then I expect that element "supportModalTitleError" becomes not displayed
         And  I expect that element "supportModalEmailError" becomes not displayed
 
-    @admin  @PTA34
+    @PTA34
     Scenario: Footer action Release Notes leads to info page
         When I open the site "/dashboard"
-        When  I wait on element "footerReleaseNoteBtn" for 10000ms to be displayed
-        And I scroll to element "footerReleaseNoteBtn"
-        And I click on the button "footerReleaseNoteBtn"
+        Then I expect that element "reposContainer" becomes displayed
+        When I wait on element "footerReleaseNoteBtn" for 10000ms to be displayed
+        And  I scroll to element "footerReleaseNoteBtn"
+        And  I click on the button "footerReleaseNoteBtn"
         And  I expect that the url is "/release-notes"
         #TODO: Andryi please check this step
     #And  I expect that the title is "Release Notes"
     #And  I expect that element "releaseNoteList" becomes displayed
 
-    @Pending
+    @PTA35
     Scenario: Footer action Terms and Conditions leads to info page
         When I open the site "/dashboard"
+        Then I expect that element "reposContainer" becomes displayed
         When I wait on element "footerTermsAndConditionsBtn" for 10000ms to be displayed
-        When I click on the button "footerTermsAndConditionsBtn"
+        And  I click on the button "footerTermsAndConditionsBtn"
         And  I expect that the url is "/terms-and-conditions"
         #TODO: Andryi please check this step
         #And  I expect that the title is "Terms and Conditions"
         #And  I expect that element "termsAndConditionSection" becomes displayed
 
-    @admin  @PTA37
+    @PTA37
     Scenario: Footer action Send Feedback leads to info page
-        When I open the site "/dashboard"              
-        And I wait on element "footerSendFeedbackBtn" for 10000ms to be displayed  
-        When I click on the button "footerSendFeedbackBtn"
+        When I open the site "/dashboard"
+        Then I expect that element "reposContainer" becomes displayed
+        When I wait on element "footerSendFeedbackBtn" for 10000ms to be displayed
+        And  I click on the button "footerSendFeedbackBtn"
         Then I expect that element "supportModal" becomes displayed
         And  I expect that element "supportModalTitleInput" becomes displayed
         And  I expect that element "supportModalTypeSelect" becomes displayed
@@ -107,16 +112,17 @@ Feature: Dashboard options
         And  I expect that element "supportModalCancelBtn" becomes displayed
         And  I expect that element "supportModalSubmitBtn" becomes displayed
 
-    @admin  @PTA38
+    @PTA38
     Scenario: Footer action Idea Board leads to info page
         When I open the site "/dashboard"
-        When  I wait on element "footerIdeaBoardBtn" for 10000ms to be displayed
-        When I click on the button "footerIdeaBoardBtn"
+        Then I expect that element "reposContainer" becomes displayed
+        When I wait on element "footerIdeaBoardBtn" for 10000ms to be displayed
+        And  I click on the button "footerIdeaBoardBtn"
         #TODO: Andryi please check this step
         #And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
         #And  I expect that element "createIdeaInput" becomes displayed
 
-    @admin  @PTA39
+    @PTA39
     Scenario: Footer Email button opens the support modal
         When I open the site "/dashboard"
         And  I wait on element "emailBtn" for 10000ms to be displayed
@@ -130,7 +136,7 @@ Feature: Dashboard options
         And  I expect that element "supportModalCancelBtn" becomes displayed
         And  I expect that element "supportModalSubmitBtn" becomes displayed
 
-    @admin  @PTA40
+    @PTA40
     Scenario: Footer Idea Board button opens the board in a new tab
         When I open the site "/dashboard"
         Then I expect that element "ideaBoardBtn" becomes displayed
@@ -140,7 +146,7 @@ Feature: Dashboard options
         And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
         And  I expect that element "createIdeaInput" becomes displayed
 
-    @admin  @PTA41
+    @PTA41 @smoke
     Scenario: Footer's social media links are present on a buttons
         When I open the site "/dashboard"
         And I scroll to element "footerLinkedInBtn"         

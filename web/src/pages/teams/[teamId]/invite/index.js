@@ -16,9 +16,13 @@ import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
 import EmailsInput from "../../../../components/team/EmailsInput";
+import { invitationsOperations } from '../../../../state/features/invitations';
+import { isEmpty } from "lodash";
 
 const { fetchRoles } = rolesOperations;
 const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
+const { trackSendInvite } = invitationsOperations;
+import TagsInput from '../../../../components/tagsInput';
 
 const TeamInvitePage = () => {
   const router = useRouter();
@@ -37,10 +41,12 @@ const TeamInvitePage = () => {
     usersState: state.usersState
   }));
 
-  const { token } = authState;
+  const { user, token } = authState;
   const { roles } = rolesState;
   const { users } = usersState;
   const { invalidEmails } = teamsState;
+  const { _id: userId, firstName = '', lastName = '', username: senderEmail, organizations = [], inviteCount = 0 } = user;
+  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
 
   const rolesOptions = useMemo(() => roles.map((item) => ({
     value: item._id,
@@ -59,6 +65,11 @@ const TeamInvitePage = () => {
 
       if (!userIds.length || !role) return;
 
+      // fire segment event for all invited users
+      userIds.forEach((userEmail) => {
+        trackSendInvite(userEmail, fullName, senderEmail, 'team');
+      })
+
       // adding normal users to Sema Corporate Team
       await dispatch(inviteTeamUsers(teamId, {
         users: userIds,
@@ -76,11 +87,6 @@ const TeamInvitePage = () => {
   const onCancel = async () => {
     await router.back();
   };
-
-  const userOptions = useMemo(() => users.map((item) => ({
-    value: item._id,
-    label: item.username,
-  })), [users]);
 
   const checkForSelectedTeam = () => {
     if (!authState.selectedTeam || !authState.selectedTeam.team) {
@@ -108,20 +114,20 @@ const TeamInvitePage = () => {
   const IndicatorSeparator = () => null;
 
   const handleChangeEmails = (values, event) => {
-    let newEmails = [];
-    if (event.action === 'create-option') {
-      const lastValue = values.pop();
-      newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
+    if(values && values.length === 0) {
+      setValue('emails', []);
     } else {
-      newEmails = values;
+      let newEmails = [];
+      const lastValue = values.pop();
+      if (lastValue) {
+        newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
+        setValue('emails', newEmails);
+      }
+  
+      dispatch(validateTeamInvitationEmails(teamId, {
+        users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
+      }, token));
     }
-
-    setValue('emails', newEmails);
-
-    // validate emails
-    dispatch(validateTeamInvitationEmails(teamId, {
-      users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
-    }, token));
   };
 
   const blockedEmailsError = useMemo(() => {
@@ -180,7 +186,7 @@ const TeamInvitePage = () => {
         <div className="px-10 is-flex is-flex-direction-column">
           <div className={clsx('mb-25', styles['form-input'])}>
             <div className="has-text-weight-semibold is-size-7 mb-5">Invite Users by Email</div>
-            <EmailsInput
+            <TagsInput
               {...register(
                 'emails',
                 {
@@ -190,7 +196,6 @@ const TeamInvitePage = () => {
               value={watch('emails')}
               placeholder="Choose Email"
               onChange={handleChangeEmails}
-              options={userOptions}
               error={errors.emails?.message || blockedEmailsError || existingEmailsError}
             />
             {errors.emails && (<p className="has-text-error is-size-8 is-italized mt-5">{errors.emails.message}</p>)}

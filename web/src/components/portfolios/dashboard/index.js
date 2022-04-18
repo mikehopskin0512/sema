@@ -1,31 +1,28 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
+import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
-import { DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, SEMA_APP_URL, ALERT_TYPES, RESPONSE_STATUSES } from '../../../utils/constants';
+import { ALERT_TYPES, DEFAULT_AVATAR, KEY_CODES, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import { snapshotsOperations } from '../../../state/features/snapshots';
-import EditPortfolioTitle from '../../../components/portfolios/editTitleModal';
-import Avatar from 'react-avatar';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
-import useAuthEffect from '../../../hooks/useAuthEffect';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
-import { gray600, black950 } from '../../../../styles/_colors.module.scss';
 import ErrorPage from '../errorPage';
+import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
 
-const { fetchUserSnapshots } = snapshotsOperations;
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
@@ -57,14 +54,13 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     });
   };
   const dispatch = useDispatch();
-  const { auth } = useSelector(
+  const { auth, portfolios } = useSelector(
     (state) => ({
       auth: state.authState,
+      portfolios: state.portfoliosState.data.portfolios
     }),
   );
-  const { user: userData, token = '' } = auth;
-  const { _id: userId } = userData;
-
+  const { token = '' } = auth;
   const [user, setUser] = useState({
     fullName: '',
     avatar: DEFAULT_AVATAR,
@@ -76,9 +72,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [titleModalOpen, setTitleModalOpen] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
+  const isOwner = portfolio.userId === auth.user._id;
+  const isPublicPortfolio = portfolio.type === PORTFOLIO_TYPES.PUBLIC;
+  const isPrivatePortfolio = portfolio.type === PORTFOLIO_TYPES.PRIVATE;
+  const isLoadingScreen = isLoading || isParsing || !portfolio || !portfolio._id;
 
   const parsePortfolio = (portfolio) => {
     setIsParsing(true);
@@ -97,7 +96,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   };
 
   const onSaveProfile = async (values) => {
-    const { _id, ...rest } = portfolio
+    const { _id, ...rest } = portfolio;
+
     if (_id && token) {
       const body = {
         _id,
@@ -105,13 +105,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         ...values,
       };
 
-      body.snapshots = body.snapshots.map(({ id: snapshot , sort }) => ({ id: { _id: snapshot._id }, sort }));
+      body.snapshots = body.snapshots.map(({ id: snapshot, sort }) => ({ id: { _id: snapshot._id }, sort }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
-        setTitleModalOpen(false);
-        // We might need to change this one in the future if portfolio dashboard handles multiple portfolio
-        parsePortfolio(payload.data);
       }
     }
   };
@@ -129,47 +126,38 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   useEffect(() => {
     parsePortfolio(portfolio);
-  }, [portfolio]);
-
-  const isOwner = useMemo(() => portfolio.userId === auth.user._id, [portfolio, auth]);
+  }, [portfolio?.snapshots?.length]);
 
   const onClickChild = (e) => {
     e.stopPropagation();
   };
 
-  const isPublicPortfolio = () => portfolio.type === PORTFOLIO_TYPES.PUBLIC;
-  const isPrivatePortfolio = () => portfolio.type === PORTFOLIO_TYPES.PRIVATE;
-
   const onChangeToggle = async () => {
-    const newType = isPublicPortfolio() ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
-    await dispatch(updatePortfolioType(portfolio._id, newType, token));
+    const newType = isPublicPortfolio ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
+    await dispatch(updatePortfolioType(portfolio._id, newType));
   };
 
+  const goToAddPortfolio = () => {
+    // TODO: Redirect to Add Portfolio
+  }
+
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIOS}/${portfolio._id}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
     changeIsCopied(true);
   };
 
-  if (isLoading || isParsing) {
-    return (
-      <Loader />
-      )
+  if (isLoadingScreen) {
+    return <Loader />
   }
 
-  if (!isOwner && isPrivatePortfolio() && isIndividualView) {
+  if (!isOwner && isPrivatePortfolio && isIndividualView) {
     return <ErrorPage />
   }
 
   return (
     <>
-      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification}/>
+      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} />
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
-      <EditPortfolioTitle
-        onSubmit={onSaveProfile}
-        onClose={() => setTitleModalOpen(false)}
-        isOpen={titleModalOpen}
-        profileTitle={user.title}
-      />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
@@ -179,29 +167,71 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       <div className={clsx('mb-10', styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
-            <div className="is-relative is-flex">
-              <div className="is-size-4 has-text-weight-bold">{user.title}</div>
-              <div>
-              {
-                isOwner && (
-                  <EditIcon className={clsx(styles['edit-icon'], 'is-clickable mt-5 ml-20')} onClick={() => setTitleModalOpen(true)} />
-                )
-              }
-              </div>
-            </div>
-            <div className="is-relative is-flex">
+            <TitleField
+              portfolio={portfolio}
+              isEditable={isOwner}
+            />
+            <div className="is-relative is-flex is-align-items-center">
+              {isOwner && isIndividualView &&
+                <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                  <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                    <div className={clsx(styles['textContainer'])}>
+                      {isPublicPortfolio ?
+                        (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
+                        (hover && 'Change status to “Public” in order to copy sharable link.')}
+                    </div>
+                    <span className="mr-10 is-size-5">Public</span>
+                    <input
+                      id={`activeSwitch-${portfolio._id}`}
+                      type="checkbox"
+                      onChange={onChangeToggle}
+                      name={`activeSwitch-${portfolio._id}`}
+                      className="switch is-rounded"
+                      checked={isPublicPortfolio}
+                    />
+                    <label htmlFor={`activeSwitch-${portfolio._id}`} />
+                  </div>
+                  <div
+                    onClick={isPublicPortfolio ? onCopy : () => { }}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
+                  >
+                    <ShareIcon color={isPublicPortfolio ? black950 : gray600} />
+                  </div>
+                  <div className="is-size-4 mx-20" style={{ color: gray600 }}>|</div>
+                  <button
+                    onClick={() => setIsActive(true)}
+                    type="button"
+                    className="button is-transparent m-0"
+                  >
+                    + Add Snapshot
+                  </button>
+                  {portfolios.length === 1 &&
+                    (
+                      <button
+                        onClick={goToAddPortfolio}
+                        type="button"
+                        className="button is-transparent m-0 ml-15"
+                      >
+                        Create another Portfolio
+                      </button>
+                    )
+                  }
+                </div>}
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
                   isRight
                   options={[
-                  {
-                    // TODO: add Duplicate - ETCR-1030
-                    label: 'Duplicate Portfolio',
-                    onClick: () => console.log('TODO: will be implement later'),
-                  },
-                  {
-                    label: 'Delete', onClick: () => toggleDeleteModal(true)
-                  },
+                    {
+                      // TODO: add Duplicate - ETCR-1030
+                      label: 'Duplicate Portfolio',
+                      onClick: () => console.log('TODO: will be implement later'),
+                    },
+                    {
+                      label: 'Delete',
+                      onClick: () => toggleDeleteModal(true),
+                      isHidden: portfolios.length === 1
+                    },
                   ]}
                   trigger={
                     <div className="is-clickable">
@@ -210,47 +240,13 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                   }
                 />
               </div>
-              {isOwner && isIndividualView &&
-              <div className="is-flex ml-20" style={{paddingTop: '3px'}}>
-                <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
-                  <div className={clsx(styles['textContainer'])}>
-                    {isPublicPortfolio() ?
-                    (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
-                    (hover && 'Change status to “Public” in order to copy sharable link.')}
-                  </div>
-                  <span className="mr-10 is-size-5">Public</span>
-                  <input
-                    id={`activeSwitch-${portfolio._id}`}
-                    type="checkbox"
-                    onChange={onChangeToggle}
-                    name={`activeSwitch-${portfolio._id}`}
-                    className="switch is-rounded"
-                    checked={isPublicPortfolio()}
-                  />
-                  <label htmlFor={`activeSwitch-${portfolio._id}`} />
-                </div>
-                <div
-                  onClick={isPublicPortfolio() ? onCopy : () => {}}
-                  onMouseEnter={() => setHover(true)}
-                  onMouseLeave={() => setHover(false)}
-                >
-                  <ShareIcon color={isPublicPortfolio() ? black950 : gray600}/>
-                </div>
-                <div className="is-size-4 mx-20" style={{color: gray600}}>|</div>
-                <button
-                  onClick={() => setIsActive(true)}
-                  type="button"
-                  className="button is-transparent m-0"
-                >
-                  + Add Snapshot
-                </button>
-              </div>}
             </div>
           </div>
         </div>
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
         <div className="portfolio-content mb-50 container">
+          <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
@@ -261,10 +257,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                 <div className="flex-break" />
                 <div className="is-flex is-align-items-center"><GithubIcon />
                   <span className="is-underlined pl-8 is-size-6">
-                  <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
-                    {user.username}
-                  </a>
-                </span>
+                    <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
+                      {user.username}
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
@@ -292,10 +288,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
           {snapshots.map((s) =>
             s.componentType === 'comments' ? (
-              <CommentSnapshot snapshotData={s} portfolioId={portfolio._id} />
+              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot snapshotData={s} portfolioId={portfolio._id} />
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
               </section>
             )
           )}

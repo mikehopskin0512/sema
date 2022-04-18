@@ -71,5 +71,12 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 320px;
+  width: 100%;
+}
+
+.tooltip-wrapper {
+  max-width: 80%;
+  > div {
+    width: 100%;
+  }
 }
