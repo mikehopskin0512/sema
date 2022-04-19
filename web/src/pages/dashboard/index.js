@@ -28,7 +28,8 @@ const Dashboard = () => {
   const router = useRouter();
   const { step, page = parseInt(step) } = router.query;
 
-  const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
+  // TODO: should be disabled until new invitations logic
+  // const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchStarted, setSearchStarted] = useState(false);
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
@@ -91,21 +92,23 @@ const Dashboard = () => {
     const updatedUser = { ...user, ...{ isOnboarded: new Date() } };
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
-    if (teamIdInvitation) {
-      inviteToTeam();
-    }
+    // TODO: should be disabled until new invitations logic
+    // if (teamIdInvitation) {
+    //   inviteToTeam();
+    // }
   };
 
-  const inviteToTeam = async () => {
-    const memberRole = roles.find((role) => role.name === 'Member')
-    if (!isEmpty(memberRole)) {
-      const teamId = teamIdInvitation;
-      await dispatch(inviteTeamUser(teamId, token));
-      await dispatch(fetchTeamsOfUser(token));
-      setTeamIdInvitation('');
-      router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
-    }
-  }
+  // TODO: should be disabled until new invitations logic
+  // const inviteToTeam = async () => {
+  //   const memberRole = roles.find((role) => role.name === 'Member')
+  //   if (!isEmpty(memberRole)) {
+  //     const teamId = teamIdInvitation;
+  //     await dispatch(inviteTeamUser(teamId, token));
+  //     await dispatch(fetchTeamsOfUser(token));
+  //     setTeamIdInvitation('');
+  //     router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+  //   }
+  // }
 
   const toggleOnboardingModal = (status) => {
     if (status === false) {
@@ -114,16 +117,17 @@ const Dashboard = () => {
     toggleOnboardingModalActive(status);
   };
 
-  useEffect(() => {
-    if (inviteTeamId) {
-      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
-      if (invitedTeam && selectedTeam?.team?._id !== inviteTeamId) {
-        dispatch(setSelectedTeam(invitedTeam));
-        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
-      }
-    }
-  }, [inviteTeamId, user.roles]);
+  // TODO: should be disabled until new invitations logic
+  // useEffect(() => {
+  //   if (inviteTeamId) {
+  //     const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
+  //     if (invitedTeam && selectedTeam?.team?._id !== inviteTeamId) {
+  //       dispatch(setSelectedTeam(invitedTeam));
+  //       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+  //       router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+  //     }
+  //   }
+  // }, [inviteTeamId, user.roles]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
