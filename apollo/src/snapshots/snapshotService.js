@@ -7,9 +7,9 @@ import { findManyById } from '../comments/smartComments/smartCommentService';
 const { Types: { ObjectId } } = mongoose;
 
 const structureSmartComment = ({
-  smartCommentId = null, userId = null, comment = null, reaction = null, tags = null, githubMetadata = {}, createdAt = null,
+  _id = null, smartCommentId = null, userId = null, comment = null, reaction = null, tags = null, githubMetadata = {}, createdAt = null,
 }) => ({
-  smartCommentId: new ObjectId((smartCommentId)),
+  smartCommentId: new ObjectId(_id),
   userId: new ObjectId(userId),
   comment,
   reaction: new ObjectId(reaction),
@@ -21,7 +21,7 @@ const structureSmartComment = ({
 const structureComponentData = ({
   smartComments = null, groupBy = 'day', yAxisType = '', dateDiff = 0, startDate = null, endDate = null,
 }) => ({
-  smartComments: smartComments.map((smartComment) => (structureSmartComment(smartComment))),
+  smartComments,
   groupBy,
   yAxisType,
   dateDiff: parseInt(dateDiff, 10),
@@ -78,13 +78,15 @@ const loadSmartComments = async (ids) => {
 
 export const update = async (snapshotId, snapshot) => {
   try {
+    const { componentData } = snapshot;
+    const smartCommentIds = componentData.smartComments.map(s => s.smartCommentId);
     const updatedSnapshot = await Snapshot.findOneAndUpdate(
       { _id: new ObjectId(snapshotId) },
       {
         $set: structureSnapshot({
           ...snapshot,
           componentData: {
-            ...componentData,
+            ...snapshot.componentData,
             smartComments: await loadSmartComments(smartCommentIds)
           }
         })

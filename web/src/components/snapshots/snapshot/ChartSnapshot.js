@@ -15,7 +15,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const ChartSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
+const ChartSnapshot = ({ snapshotData, portfolioId, isOwner, onUpdate }) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -46,11 +46,18 @@ const ChartSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
     toggleDeleteModal(false);
   };
 
+  const handleSnapshotUpdate = (data) => {
+    toggleEditModal(false);
+    if(data) {
+      onUpdate(data);
+    }
+  }
+
   return (
     <>
       <SnapshotModal
         active={isEditModalOpen}
-        onClose={() => toggleEditModal(false)}
+        onClose={handleSnapshotUpdate}
         snapshotData={snapshotData}
         type="edit"
         dataType={componentType}
