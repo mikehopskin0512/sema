@@ -43,17 +43,18 @@ lint_directory() {
       tr ' ' '\n' <<< $@ |                 # One line per argument (file)
       grep -E '\b'$directory/ |            # Files in this directory
       sed -Ee 's|^'$directory'/||' |       # Remove the directory name itself
-      (grep -E '\.(js|ts|jsx|tsx)$' || :)) # Keep JS files that ESLint can use
+      (grep -E '\.(js|ts|jsx|tsx)$' || :)) # Keep JS files
 
     if [[ -n $files ]]; then
       echo "Files: "
       echo "$files"
 
-      npx eslint $files
       npx prettier --check $files
+      npx eslint $files
     fi
   else
-    # No files were given, ESLint the whole directory
+    # No files were given, lint the whole directory
+    npx prettier --check .
     npx eslint .
   fi
 
