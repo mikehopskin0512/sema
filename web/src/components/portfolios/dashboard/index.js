@@ -172,7 +172,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
               isEditable={isOwner}
             />
             <div className="is-relative is-flex is-align-items-center">
-              {isOwner && isIndividualView &&
+              {isOwner && isIndividualView && <>
                 <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
                   <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
@@ -217,7 +217,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                       </button>
                     )
                   }
-                </div>}
+                </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
                   isRight
@@ -240,6 +240,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                   }
                 />
               </div>
+              </>}
             </div>
           </div>
         </div>
@@ -270,7 +271,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                   {user.overview}
                 </div>
                 {
-                  !isPublic && (
+                  isOwner && (
                     <button
                       type="button"
                       className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
@@ -288,10 +289,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
           {snapshots.map((s) =>
             s.componentType === 'comments' ? (
-              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
+              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} />
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
               </section>
             )
           )}

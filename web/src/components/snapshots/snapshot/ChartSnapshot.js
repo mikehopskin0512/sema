@@ -15,7 +15,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const ChartSnapshot = ({ snapshotData, portfolioId }) => {
+const ChartSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -61,7 +61,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
         onSubmit={() => onDeleteSnapshot()}
       />
       <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')}>
-        <div className="is-pulled-right mb-40">
+        {isOwner && <div className="is-pulled-right mb-40">
           <DropDownMenu
             isRight
             options={[
@@ -80,7 +80,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
               </div>
             )}
           />
-        </div>
+        </div>}
         <div className="is-multiline mt-15">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
@@ -102,6 +102,11 @@ const ChartSnapshot = ({ snapshotData, portfolioId }) => {
 ChartSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,
   portfolioId: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool,
+};
+
+ChartSnapshot.defaultProps = {
+  isOwner: true,
 };
 
 export default ChartSnapshot;
