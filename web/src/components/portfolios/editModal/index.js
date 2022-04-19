@@ -19,7 +19,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, onSu
         <div className="modal-background" />
         <div className={clsx('modal-card', styles.modal)}>
           <header className="modal-card-head has-background-white">
-            <p className="modal-card-title has-text-weight-semibold">Edit Personal Overview</p>
+            <p className="modal-card-title has-text-weight-semibold">Edit Overview</p>
             <button
               type="button"
               className="delete"
@@ -29,7 +29,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, onSu
           </header>
           <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
             <div className="p-30">
-              <div className="has-text-weight-semibold is-size-6">Personal Overview</div>
+              <div className="has-text-weight-semibold is-size-6">Overview</div>
               <InputField
                 isMultiLine
                 className="mt-10 has-fixed-size"
