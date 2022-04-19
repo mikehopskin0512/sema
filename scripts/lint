@@ -48,19 +48,32 @@ lint_directory() {
     if [[ -n $files ]]; then
       echo "Files: "
       echo "$files"
+      echo
 
-      npx prettier --check $files
+      prettier_check $files
       npx eslint $files
     fi
   else
+    echo
     # No files were given, lint the whole directory
-    npx prettier --check .
+    prettier_check
     npx eslint .
   fi
 
   echo "Linting $directory done."
 
   popd > /dev/null
+}
+
+
+prettier_check() {
+  # Transform `prettier check` output into something
+  # that GitHub will turn into an inline annotation
+  # in the PR.
+  # https://github.com/actions/setup-node/blob/main/.github/eslint-compact.json
+  npx prettier --list-different $@ | while read line; do
+    echo "$(readlink -f $line): line 1, col 1, Error - Missing Prettier formatting (prettier)"
+  done
 }
 
 
