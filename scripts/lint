@@ -50,6 +50,7 @@ lint_directory() {
       echo "$files"
 
       npx eslint $files
+      npx prettier --check $files
     fi
   else
     # No files were given, ESLint the whole directory
