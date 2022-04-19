@@ -236,13 +236,14 @@ const TeamInvitePage = () => {
             {errors.role && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.role.message}</p>)}
           </div>
           <div className='is-divider' />
-          <div className={clsx(styles['copy-invite'])}>
-            {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />}
-            <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}>
-              <LinkIcon size="small" className={clsx('mr-5')} />
-              Copy Invitation Link
-            </button>
-          </div>
+          {/* // TODO: should be disabled until new invitations logic */}
+          {/* <div className={clsx(styles['copy-invite'])}> */}
+          {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
+          {/*   <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}> */}
+          {/*     <LinkIcon size="small" className={clsx('mr-5')} /> */}
+          {/*     Copy Invitation Link */}
+          {/*   </button> */}
+          {/* </div> */}
         </div>
       </div>
       <InviteSentConfirmModal onClose={handleClose} open={modalOpen} />
