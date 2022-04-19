@@ -73,7 +73,7 @@ const RepoPage = () => {
 
   useAuthEffect(() => {
     if(!isEmpty(selectedTeam)){
-      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
     }
   }, []);
 

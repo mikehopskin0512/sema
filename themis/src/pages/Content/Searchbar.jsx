@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { debounce } from 'lodash/function';
 import ProfileSwitcher from './components/ProfileSwitcher';
 import SuggestionModal from './components/SuggestionModal';
-import { EVENTS, SUGGESTION_URL } from './constants';
-import { fetchTeams, fireAmplitudeEvent } from './modules/content-util';
-
+import { SEGMENT_EVENTS, SUGGESTION_URL } from './constants';
+import { fetchTeams } from './modules/content-util';
+import { segmentTrack } from './modules/segment';
 import {
   toggleSearchModal,
   addSuggestedComments,
@@ -66,7 +66,7 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
     onLastUsedSmartComment(suggestion);
     commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     onTextPaste();
-    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
       comment_bar_action: 'insert',
       comment_source: sourceName,
       comment_used: title,

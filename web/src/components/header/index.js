@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Link from 'next/link';
 import Avatar from 'react-avatar';
@@ -23,6 +24,7 @@ const { fetchPortfoliosOfUser } = portfoliosOperations;
 
 const Header = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [supportForm, setSupportForm] = useState(false);
   const [signOutModal, setSignOutModal] = useState(false);
   const { checkAccess, isSemaAdmin } = usePermission();
@@ -54,6 +56,13 @@ const Header = () => {
 
   const openSupportForm = () => setSupportForm(true);
   const closeSupportForm = () => setSupportForm(false);
+
+  const handleClick = () => {
+    if (selectedTeam) {
+      return router.push(`${PATHS.TEAMS._}/${selectedTeam?.team?._id}${PATHS.DASHBOARD}`);
+    }
+    return router.push(`${PATHS.DASHBOARD}`);
+  }
 
   const orgMenuList = organizations.map((org) => (
     <Link href="/">
@@ -118,11 +127,9 @@ const Header = () => {
         aria-label="main navigation"
       >
         <div className="navbar-brand">
-          <Link href="/">
-            <a className="is-flex is-align-items-center">
-              <Logo shape="horizontal" width={100} height={34} />
-            </a>
-          </Link>
+          <a className="is-flex is-align-items-center" onClick={handleClick}>
+            <Logo shape="horizontal" width={100} height={34} />
+          </a>
           {token && isVerified && !isWaitlist && (
             <button
               onClick={toggleHamburger}

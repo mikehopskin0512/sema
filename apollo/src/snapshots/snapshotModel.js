@@ -24,7 +24,7 @@ const githubMetadataSchema = new Schema({
 
 const smartCommentSchema = new Schema({
   smartCommentId: { type: Schema.Types.ObjectId, ref: 'SmartComments' },
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   comment: String,
   reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
   tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
@@ -42,7 +42,7 @@ const componentDataSchema = new Schema({
 }, { _id: false });
 
 const snapshotSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   title: String,
   description: String,
   portfolios: [{

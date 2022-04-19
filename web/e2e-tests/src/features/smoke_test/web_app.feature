@@ -1,17 +1,17 @@
-@webapp @zicu
+@webapp @regression
 Feature: Web tabs should contains all functionality items
 
     Background: Wait for page to be displayed
         When I wait on element "userLogo" for 10000ms to be displayed
 
-    @C1725
+    @C1725 @smoke
     Scenario: Navigate throught tab web pages
         When I click on the button "reposTab"
         Then I expect that the url is "/dashboard"
         And  I expect that the title is "Sema Dashboard"
 
-        When I click on the button "personalInsightsTab"   
-        Then I expect that element "personalInsightsSummariesLbl" becomes displayed     
+        When I click on the button "personalInsightsTab"
+        Then I expect that element "personalInsightsSummariesLbl" becomes displayed
         #TODO: Andriy please update this element properly or wait for element
         #And  I expect that element "personalInsightsHeader" becomes displayed        
         Then I expect that the url is "/personal-insights"

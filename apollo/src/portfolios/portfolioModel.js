@@ -18,7 +18,7 @@ const identitySchema = mongoose.Schema({
 }, { _id: false });
 
 const portfolioSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   firstName: String,
   lastName: String,
   title: {

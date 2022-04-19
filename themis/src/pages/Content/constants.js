@@ -6,7 +6,7 @@ export const { SEMA_COOKIE_NAME } = process.env;
 export const { SEMA_COOKIE_DOMAIN } = process.env;
 export const { SEMA_CLIENT_ID } = process.env;
 export const { SEMA_CLIENT_SECRET } = process.env;
-export const { AMPLITUDE_API_KEY } = process.env;
+export const { SEGMENT_API_KEY } = process.env;
 
 export const SEMA_LOGO_URL = `${SEMA_PRODUCTION_URL}/img/sema-tray-logo.gif`;
 export const SEMA_LANDING_FAQ = `${SEMA_LANDING_URL}/faq`;
@@ -315,18 +315,19 @@ export const SEMA_REMINDER_ROOT_ID = 'sema-reminder-root';
 export const SEMA_REMINDER_SESSION_STORAGE_KEY = 'semaReminderClosed';
 
 export const DELIMITERS = [',', '.', ' ', ';', '\n'];
-export const EVENTS = {
-  INSTALLED_EXTENSION: 'INSTALLED_EXTENSION',
-  UNINSTALLED_EXTENSION: 'UNINSTALLED_EXTENSION',
-  UPDATED_EXTENSION: 'UPDATED_EXTENSION',
-  VIEWED_GITHUB_PAGE: 'VIEWED_GITHUB_PAGE',
-  CREATE_SMART_COMMENT: 'CREATE_SMART_COMMENT',
-  CLICKED_COMMENT_LIBRARY_BAR: 'CLICKED_COMMENT_LIBRARY_BAR',
-  CLICKED_REACTION: 'CLICKED_REACTION',
-  CLICKED_ADD_TAGS: 'CLICKED_ADD_TAGS',
-  CLICKED_SAVE_TO_MY_COMMENTS: 'CLICKED_SAVE_TO_MY_COMMENTS',
-  LOGIN_TOASTER_SHOWED: 'LOGIN_TOASTER_SHOWED',
-  CLICKED_LOGIN_TOASTER: 'CLICKED_LOGIN_TOASTER',
+
+export const SEGMENT_EVENTS = {
+  INSTALLED_EXTENSION: 'Installed Extension',
+  UNINSTALLED_EXTENSION: 'Uninstalled Extension',
+  UPDATED_EXTENSION: 'Updated Extension',
+  VIEWED_GITHUB_PAGE: 'CE: Viewed Github Page',
+  CREATE_SMART_COMMENT: 'CE: Created Smart Comment',
+  CLICKED_COMMENT_LIBRARY_BAR: 'CE: Clicked Comment Library Bar',
+  CLICKED_REACTION: 'CE: Clicked Reaction',
+  CLICKED_ADD_TAGS: 'CE: Clicked Add Tags',
+  CLICKED_SAVE_TO_MY_COMMENTS: 'CE: Clicked Save to My Comments',
+  LOGIN_TOASTER_SHOWED: 'CE: Login Toaster Showed',
+  CLICKED_LOGIN_TOASTER: 'CE: Clicked Login Toaster',
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';

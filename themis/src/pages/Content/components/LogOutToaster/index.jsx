@@ -3,14 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { fireAmplitudeEvent, detectURLChange, isPRPage } from '../../modules/content-util';
+import { detectURLChange, isPRPage } from '../../modules/content-util';
 import { closeLoginReminder } from '../../modules/redux/action';
-import { EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
+import { SEGMENT_EVENTS, SEMA_LANDING_FAQ, SEMA_UI_URL } from '../../constants';
+import { segmentReset, segmentTrack } from '../../modules/segment';
 import { getActiveTheme } from '../../../../../utils/theme';
 import { SEMA_LOGOUT_ICON, SEMA_LOGOUT_PLACEHOLDER } from './constants';
 
+
 const openSemaDashboard = () => {
-  fireAmplitudeEvent(EVENTS.CLICKED_LOGIN_TOASTER);
+  segmentTrack(SEGMENT_EVENTS.CLICKED_LOGIN_TOASTER);
   window.open(SEMA_UI_URL, '_blank');
 };
 
@@ -24,6 +26,10 @@ const LogOutToaster = () => {
   const logoSemaUrl = SEMA_LOGOUT_ICON[activeTheme];
   const logoPlaceholder = SEMA_LOGOUT_PLACEHOLDER[activeTheme];
   const closeReminder = () => dispatch(closeLoginReminder());
+
+  if (isToasterActive) {
+    segmentReset();
+  }
 
   useEffect(() => {
     const stopDetectURLChange = detectURLChange(() => {
