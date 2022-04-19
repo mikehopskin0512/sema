@@ -39,9 +39,10 @@ lint_directory() {
   if [[ $# > 0 ]]; then
     local files
 
-    files=$(tr ' ' '\n' <<< $@ |           # One line per argument (file)
-      grep -E '\b'$directory/ | \          # Files in this directory
-      sed -Ee 's|^'$directory'/||' | \     # Remove the directory name itself
+    files=$(
+      tr ' ' '\n' <<< $@ |                 # One line per argument (file)
+      grep -E '\b'$directory/ |            # Files in this directory
+      sed -Ee 's|^'$directory'/||' |       # Remove the directory name itself
       (grep -E '\.(js|ts|jsx|tsx)$' || :)) # Keep JS files that ESLint can use
 
     if [[ -n $files ]]; then
