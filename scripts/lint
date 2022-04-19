@@ -36,20 +36,26 @@ lint_directory() {
 
   echo "Linting $directory..."
 
-  local files="."
-
   if [[ $# > 0 ]]; then
-    files=$(tr ' ' '\n' <<< $@ |
-      grep -E '\b'$directory/ | \
-      sed -Ee 's|^'$directory'/||')
+    local files
+
+    files=$(tr ' ' '\n' <<< $@ |           # One line per argument (file)
+      grep -E '\b'$directory/ | \          # Files in this directory
+      sed -Ee 's|^'$directory'/||' | \     # Remove the directory name itself
+      (grep -E '\.(js|ts|jsx|tsx)$' || :)) # Keep JS files that ESLint can use
 
     if [[ -n $files ]]; then
       echo "Files: "
       echo "$files"
+
+      npx eslint $files
     fi
+  else
+    # No files were given, ESLint the whole directory
+    npx eslint .
   fi
 
-  npx eslint $files
+  echo "Linting $directory done."
 
   popd > /dev/null
 }
