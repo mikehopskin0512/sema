@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LaunchDarkly from '../components/launchDarkly';
 import { useRouter } from 'next/router';
 import {useDispatch, useSelector} from 'react-redux';
 import { Provider } from 'react-redux';
@@ -21,10 +22,12 @@ import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
 import '../../styles/_calendar_overrides.scss';
 import usePermission from '../hooks/usePermission';
+import useApiError from '../hooks/useApiError';
 import NotFound from './404';
 import { permissionsMap } from '../data/permissions';
 import { PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../utils/constants';
 import { authOperations } from '../state/features/auth';
+import ErrorScreen from '../components/errorScreen';
 
 config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
@@ -35,6 +38,7 @@ library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
 const { setProfileViewMode, setSelectedTeam } = authOperations;
 
 function Layout({ Component, pageProps }) {
+  const apiError = useApiError();
   const { checkAccess } = usePermission();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -65,6 +69,8 @@ function Layout({ Component, pageProps }) {
     setDataLoaded(true);
     dispatch(setSelectedTeam(selectedTeam || {}));
   }, []);
+
+  if (apiError) return <ErrorScreen imagePath="/img/500.svg" title="We are sorry..." subtitle="Something went wrong." />;
 
   return (
     dataLoaded && checkPermission() ? <Component {...pageProps} /> : null
@@ -98,7 +104,9 @@ const Application = ({ Component, pageProps, store }) => {
 
   return (
     <Provider store={store}>
-      <Layout Component={Component} pageProps={pageProps}/>
+      <LaunchDarkly>
+        <Layout Component={Component} pageProps={pageProps}/>
+      </LaunchDarkly>
     </Provider>
   );
 };

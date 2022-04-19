@@ -102,12 +102,21 @@ const HeaderMenu = ({
     Object.keys(selectedTeam).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
     return menuItems;
   }, [orderedTeams]);
+
+  const portfolioRedirect = () => {
+    if (portfolios.length === 1) {
+      router.push(`${PATHS.PORTFOLIO.VIEW(portfolioId)}`);
+    } else {
+      router.push(`${PATHS.PORTFOLIO._}`);
+    }
+  };
+
   const isNoTeams = !teams.length;
 
   return (
     <>
       <Tooltip text={'Here is your Developer Portfolio'}>
-        <div onClick={() => router.push(`${PATHS.PORTFOLIO._}`)} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+        <div onClick={() => portfolioRedirect()} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
           <TrophyIcon />
         </div>
       </Tooltip>

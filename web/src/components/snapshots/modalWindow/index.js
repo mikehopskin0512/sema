@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import clsx from 'clsx';
@@ -106,11 +107,22 @@ const SnapshotModal = ({
           await dispatch(fetchPortfoliosOfUser(user._id, token));
         }
         await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        notify('Snapshot was added to your portfolio', {
+          description: (
+            <>
+              <p>You've successfully added this snapshot.</p>
+              {portfolioId ? (
+                <Link href={`/portfolios/${portfolioId}`}>
+                  <a>Go to the portfolio</a>
+                </Link>
+              ) : null}
+            </>
+          ),
+        });
         reset();
         onClose();
       }
     } catch (e) {
-      console.log(e);
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
     }
   };

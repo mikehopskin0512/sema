@@ -3,9 +3,9 @@ import { getActiveThemeClass } from '../../../../../../utils/theme';
 import SuggestionComment from './SuggestionComment';
 import { sourceUrlToLink, truncate } from '../helpers';
 import ControlButton from './ControlButton';
-import { EVENTS } from '../../../constants';
+import { segmentTrack } from '../../../modules/segment';
+import { SEGMENT_EVENTS } from '../../../constants';
 import { MAX_CHARACTER_LENGTH } from './constants';
-import { fireAmplitudeEvent } from '../../../modules/content-util';
 
 function CommentsList({
   searchResults,
@@ -20,7 +20,7 @@ function CommentsList({
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
     changeIsDetailedView(true);
-    fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
       comment_bar_action: 'view',
       comment_source: sourceName,
       comment_used: title,
@@ -32,7 +32,7 @@ function CommentsList({
       () => {
         setCopiedId(id);
         onLastUsedSmartComment(suggestion);
-        fireAmplitudeEvent(EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+        segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
           comment_bar_action: 'copy',
           comment_source: sourceName,
           comment_used: title,
@@ -162,7 +162,7 @@ function CommentsList({
         <div className="dashed-line" />
         <div className="sema-is-flex">
           {tags?.map((tag) => (
-            <div key={tag.id} className="tags-container">
+            <div key={tag.id} className="suggestion-tag-container tags-container">
               {tag.label}
             </div>
           ))}

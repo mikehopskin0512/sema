@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Avatar from 'react-avatar';
+import { isEmpty } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import Table from '../../table';
 import styles from './minimalTeamTable.module.scss'
@@ -51,7 +52,7 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
   );
 
   const dataSource = useMemo(() => {
-    return members ? members.map((member) => {
+    return members ? members.filter((member) => member.user).map((member) => {
       const { user: { firstName = '', lastName = '', identities, lastLogin }, role } = member;
       const field = {
         lastLogin: ''

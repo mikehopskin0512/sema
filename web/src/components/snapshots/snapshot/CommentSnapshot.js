@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
 import ActivityItem from '../../activity/item';
 import { OptionsIcon } from '../../Icons';
@@ -14,7 +15,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const CommentSnapshot = ({ snapshotData, portfolioId }) => {
+const CommentSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
@@ -29,10 +30,8 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
   };
 
   const onDeleteSnapshot = async () => {
-    const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    if (payload.status === 200) {
-      toggleDeleteModal(false);
-    }
+    dispatch(removeSnapshotsFromPortfolio(portfolioId, [snapshotId], token));
+    toggleDeleteModal(false);
   };
 
   return (
@@ -50,7 +49,7 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
         onSubmit={() => onDeleteSnapshot()}
       />
       <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')}>
-        <div className="is-pulled-right mb-40">
+        {isOwner && <div className="is-pulled-right mb-40">
           <DropDownMenu
             isRight
             options={[
@@ -69,7 +68,7 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
               </div>
             )}
           />
-        </div>
+        </div>}
         <div className={clsx('columns is-multiline mt-25 sema-is-boxed', styles['comments-snap-content'])}>
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
@@ -89,6 +88,11 @@ const CommentSnapshot = ({ snapshotData, portfolioId }) => {
 CommentSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,
   portfolioId: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool,
+};
+
+CommentSnapshot.defaultProps = {
+  isOwner: true,
 };
 
 export default CommentSnapshot;

@@ -14,6 +14,7 @@ import {
   addSnapshotToPortfolio,
   removeSnapshotFromPortfolio,
   updatePortfolioType,
+  updatePortfolioTitle,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -77,6 +78,18 @@ export default (app, passport) => {
     }
   });
 
+  route.patch('/:id/title', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { title } = req.body;
+    try {
+      await updatePortfolioTitle(id, title);
+      return res.status(200).send({ title });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
   route.patch('/:id/type', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { id } = req.params;
     const { type } = req.body;
@@ -88,7 +101,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.post('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { snapshots } = req.body;
     const { id: portfolioId } = req.params;
@@ -104,8 +117,8 @@ export default (app, passport) => {
     }
   });
 
-  route.delete('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { snapshots } = req.body;
+  route.put('/:id/snapshots', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const snapshots = req.body;
     const { id: portfolioId } = req.params;
     try {
       await Promise.all(snapshots.map(async (snapshotId) => {

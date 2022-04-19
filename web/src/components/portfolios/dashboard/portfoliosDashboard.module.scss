@@ -43,11 +43,6 @@
   }
 }
 
-.dropdownContainer {
-  position: absolute;
-  top: 5px;
-  right: 0px;
-}
 
 .title {
   border-top: 1px solid $gray-300;
@@ -58,16 +53,14 @@
 .snaps-container {
   .chart-wrap {
     @media only screen and (min-width: 1440px) {
-      width: 50%;
+      width: calc(50% - 16px);
       display: inline-flex;
       flex-direction: column;
     }
   }
-  section:nth-of-type(odd) {
-   > div {
-      @media only screen and (min-width: 1440px) {
-        margin-right: 16px;
-      }
+  .chart-wrap:nth-of-type(odd) {
+    @media only screen and (min-width: 1440px) {
+      margin-right: 32px;
     }
   }
 }

@@ -50,7 +50,7 @@ const RepoList = ({
       const newRepos = repos.filter(repo => repo?._id !== repoId).map(repo => repo._id);
       await dispatch(updateTeamRepositories(selectedTeam.team._id, { repos: newRepos }, token));
       dispatch(triggerAlert('Repo has been deleted', 'success'));
-      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
     } catch (e) {
       dispatch(triggerAlert('Unable to delete repo', 'error'));
     }

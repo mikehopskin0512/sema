@@ -4,18 +4,13 @@ import { connect } from 'react-redux';
 import TagsModal from './components/TagsModal';
 import EmojiSelection from './EmojiSelection';
 
-import {
-  toggleTagModal,
-  updateSelectedEmoji,
-  updateSelectedTags,
-  toggleIsSelectingEmoji,
-} from './modules/redux/action';
+import { toggleIsSelectingEmoji, toggleTagModal, updateSelectedEmoji, updateSelectedTags } from './modules/redux/action';
 
-import {
-  EVENTS, DELETE_OP, SELECTED, EMOJIS, SEMA_LANDING_FAQ_TAGS,
-} from './constants';
+import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
 import LoginBar from './LoginBar';
-import { fireAmplitudeEvent } from './modules/content-util';
+import Tag from './components/tag';
+import { segmentTrack } from './modules/segment';
+import { getActiveThemeClass } from '../../../utils/theme';
 
 const DROP_POSITIONS = {
   UP: 'sema-is-up',
@@ -56,9 +51,11 @@ const Semabar = (props) => {
   const {
     isLoggedIn,
     isWaitlist,
+    updateSelectedTags
   } = props;
   const [isHover, setHover] = useState(false);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
+
   const createActiveTags = () => {
     const activeTags = props.selectedTags.reduce((acc, tagObj) => {
       const selectedTag = tagObj[tagObj[SELECTED]];
@@ -67,29 +64,19 @@ const Semabar = (props) => {
       }
       return acc;
     }, []);
+
     return (
       <>
         {activeTags.map((tag) => (
-          <span
-            className="sema-tag sema-is-dark sema-is-rounded sema-mr-2"
-            style={{ height: '2.5em' }}
-            key={tag}
-          >
-            {tag}
-            <button
-              aria-label={tag}
-              type="button"
-              className="sema-delete sema-is-small"
-              onClick={() => props.updateSelectedTags({ tag, op: DELETE_OP })}
-            />
-          </span>
+            <Tag tag={tag} updateSelectedTags={updateSelectedTags} key={tag} />
         ))}
       </>
     );
   };
+
   const createAddTags = () => {
     const {
-      y, height, offsetPos, pageY
+      y, height, offsetPos, pageY,
     } = tagsButtonPositionValues;
 
     let dropPosition = DROP_POSITIONS.DOWN;
@@ -125,10 +112,10 @@ const Semabar = (props) => {
      */
     const dropdownStyle = dropPosition === DROP_POSITIONS.UP
       ? { top: offsetPos.top - modalHeight }
-      : { top: '20px', maxHeight: 'fit-content', position: 'fixed' };
+      : { top: '20px', maxHeight: 'fit-content', position: 'absolute' };
 
     return (
-      <div className={containerClasses} style={{ position: 'inherit' }}>
+      <div className={`${containerClasses} ${getActiveThemeClass()}`} style={{ position: 'inherit' }}>
         <div className="sema-dropdown-trigger">
           <button
             type="button"
@@ -164,7 +151,7 @@ const Semabar = (props) => {
           </button>
         </div>
         <div
-          className="sema-dropdown-menu tags-selection"
+          className={`sema-dropdown-menu tags-selection ${getActiveThemeClass()}`}
           role="menu"
           style={dropdownStyle}
         >
@@ -177,7 +164,7 @@ const Semabar = (props) => {
                 rel="noreferrer"
                 onClick={() => {
                   // eslint-disable-next-line max-len
-                  fireAmplitudeEvent(EVENTS.CLICKED_ADD_TAGS, {
+                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
                     change_tag: false, tag: null, tag_type: null, clicked_faq: true,
                   });
                 }}
@@ -190,7 +177,7 @@ const Semabar = (props) => {
             <div className="sema-dropdown-item">
               <TagsModal
                 allTags={props.selectedTags}
-                toggleTagSelection={props.updateSelectedTags}
+                toggleTagSelection={updateSelectedTags}
               />
             </div>
           </div>

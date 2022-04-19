@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
-import ActivityItem from '../../activity/item';
 import SnapshotChartContainer from '../snapshotChartContainer';
 import { OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
@@ -15,7 +15,7 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
+const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner }) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -23,7 +23,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
     }),
   );
   const { token } = auth;
-  const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
+  const { _id: snapshotId = '', title, description, componentType, componentData = { smartComments: [] } } = snapshotData
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
@@ -42,10 +42,8 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
   };
 
   const onDeleteSnapshot = async () => {
-    const payload = await dispatch(removeSnapshot(portfolioId, snapshotId, token));
-    if (payload.status === 200) {
-      toggleDeleteModal(false);
-    }
+    dispatch(removeSnapshotsFromPortfolio(portfolioId, [snapshotId], token));
+    toggleDeleteModal(false);
   };
 
   return (
@@ -62,15 +60,15 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
         onSubmit={() => onDeleteSnapshot()}
       />
       <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative', spaced && 'mr-16')}>
-        <div className="is-pulled-right mb-40">
+        {isOwner && <div className="is-pulled-right mb-40">
           <DropDownMenu
             isRight
             options={[
-              { 
-                label: 'Duplicate Snapshot', 
+              {
+                label: 'Duplicate Snapshot',
                 onClick: () => {
                   dispatch(duplicateSnapshot(snapshotData, token));
-                } 
+                },
               },
               { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
@@ -81,7 +79,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
               </div>
             )}
           />
-        </div>
+        </div>}
         <div className="is-multiline mt-15">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
@@ -103,6 +101,11 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced }) => {
 ChartSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,
   portfolioId: PropTypes.string.isRequired,
+  isOwner: PropTypes.bool,
+};
+
+ChartSnapshot.defaultProps = {
+  isOwner: true,
 };
 
 export default ChartSnapshot;

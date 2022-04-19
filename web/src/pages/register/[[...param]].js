@@ -18,7 +18,7 @@ import { invitationsOperations } from '../../state/features/invitations';
 import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
-const { registerAndAuthUser, partialUpdateUser } = authOperations;
+const { registerAndAuthUser, partialUpdateUser, trackProductSignUp } = authOperations;
 const { fetchInvite, redeemInvite, trackRedeemedInvite } = invitationsOperations;
 
 const InviteError = () => (
@@ -68,12 +68,12 @@ const RegistrationForm = (props) => {
   const initialEmail = githubEmail || recipient;
 
   const onSubmit = (data) => {
+    const { username: email = '' } = data;
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
       dispatch(redeemInvite(inviteToken, userId, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
       router.push(teamId ? `${PATHS.DASHBOARD}/?teamId=${teamId}` : PATHS.DASHBOARD);
-      const { username: email = '' } = data;
       trackRedeemedInvite(email);
     } else {
       // New user
@@ -83,6 +83,7 @@ const RegistrationForm = (props) => {
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));
     }
+    trackProductSignUp(email);
   };
 
   const renderEmailList = (emails) => {
