@@ -39,12 +39,12 @@ jobs:
       matrix:
         service: ${{ fromJson(needs.set_changed_services.outputs.matrix) }}
     steps:
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
       with:
         node-version: 12.x
         cache: 'npm'
         cache-dependency-path: ${{ matrix.service }}/package-lock.json
-    - uses: actions/checkout@v2
     - name: Install modules
       run: npm ci
       working-directory: ${{ matrix.service }}
