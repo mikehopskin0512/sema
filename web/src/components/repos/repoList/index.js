@@ -24,10 +24,10 @@ const LIST_TYPE = {
 
 const filterOptions = [
   { value: 'a-z', label: 'A - Z', placeholder: 'A - Z' },
-  { value: 'z-a', label: 'Z - A',  placeholder: 'Z - A' },
-  { value: 'dateAdded', label: 'Date Added',  placeholder: 'Date Added' },
-  { value: 'mostRecent', label: 'Most Recent Sema Comment',  placeholder: 'Recent comment' },
-  { value: 'mostActive', label: 'Most Active',  placeholder: 'Most Active' },
+  { value: 'z-a', label: 'Z - A', placeholder: 'Z - A' },
+  { value: 'dateAdded', label: 'Date Added', placeholder: 'Date Added' },
+  { value: 'mostRecent', label: 'Most Recent Sema Comment', placeholder: 'Recent comment' },
+  { value: 'mostActive', label: 'Most Active', placeholder: 'Most Active' },
 ]
 
 const RepoList = ({
@@ -130,16 +130,14 @@ const RepoList = ({
               </button>
             )}
           </div>
-          {type !== 'REPOS' && (
-            <div className="is-flex">
-              <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
-                <ListIcon />
-              </button>
-              <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
-                <GridIcon />
-              </button>
-            </div>
-          )}
+          <div className="is-flex">
+            <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
+              <ListIcon />
+            </button>
+            <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
+              <GridIcon />
+            </button>
+          </div>
         </div>
         <div className='columns'>
           <div className='column'>
