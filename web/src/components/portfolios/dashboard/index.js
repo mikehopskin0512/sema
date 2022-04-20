@@ -154,6 +154,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     return <ErrorPage />
   }
 
+  const handleSnapshotUpdate = (data) => {
+    setSnapshots(snapshots.map(snapshot => {
+      if(data._id === snapshot._id) {
+        return data;
+      }
+      return snapshot;
+    }))
+  }
+
   return (
     <>
       <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} />
@@ -292,7 +301,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
               <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner} onUpdate={handleSnapshotUpdate} />
               </section>
             )
           )}
