@@ -194,13 +194,14 @@ const TeamManagement = ({ activeTeam }) => {
       <Helmet {...TeamManagementHelmet} />
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
         <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
-        <div className='ml-auto mr-15'>
-          {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />}
-          <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}>
-            <LinkIcon size="small" className={clsx('mr-5')} />
-            Copy Invitation Link
-          </button>
-        </div>
+        {/* // TODO: should be disabled until new invitations logic */}
+        {/* <div className='ml-auto mr-15'> */}
+        {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
+        {/*   <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}> */}
+        {/*     <LinkIcon size="small" className={clsx('mr-5')} /> */}
+        {/*     Copy Invitation Link */}
+        {/*   </button> */}
+        {/* </div> */}
         <button
           className="button is-primary border-radius-4px"
           type="button"

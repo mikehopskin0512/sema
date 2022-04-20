@@ -100,7 +100,7 @@ const SnapshotModal = ({
         if (payload.status === 200) {
           dispatch(requestUpdateSnapshotSuccess(payload.data));
           notify('Snapshot was successfully edited.', { type: 'success' });
-          onClose();
+          onClose(payload.data);
         }
       } else {
         if (!portfolioId) {
@@ -136,7 +136,7 @@ const SnapshotModal = ({
         description: snapshotData.description,
       });
     }
-  }, []);
+  }, [snapshotData]);
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
@@ -148,10 +148,6 @@ const SnapshotModal = ({
         <div className="px-25 py-15 has-background-white border-radius-4px">
           <p className="has-text-black has-text-weight-bold is-size-4 mb-20">
             {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save snapshot to Portfolio' : 'Edit snapshot'}
-          </p>
-          <p className="has-text-black is-size-6 mb-20">
-            <span className="has-text-red-600">Attention!</span>{' '}
-            This Snapshot will be edited in {snapshotData?.portfolios?.length ?? 0} different Portfolios.
           </p>
           <div onClick={onClose} className="is-clickable" style={{
             position: "absolute",

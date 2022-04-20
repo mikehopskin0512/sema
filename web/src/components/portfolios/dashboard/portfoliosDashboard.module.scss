@@ -71,3 +71,24 @@
   background: black;
   color: white;
 }
+
+.portfolio-ghost-button {
+  padding: 14px;
+  color: $gray-800;
+  border: 1px solid $gray-400;
+  box-sizing: border-box;
+  border-radius: 4px;
+  position: unset !important;
+  background-color: transparent;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 12px;
+
+  svg {
+    color: rgba($gray-600, 0.8);
+  }
+}
+
+.portfolio-header-actions {
+  gap: 10px
+}
