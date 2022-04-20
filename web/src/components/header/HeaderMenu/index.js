@@ -185,7 +185,7 @@ const HeaderMenu = ({
               round
               textSizeRatio={2.5}
             />
-            <span className="is-size-7 has-text-weight-semibold mx-3">{getAvatarName}</span>
+            <span className={clsx("is-size-7 has-text-weight-semibold mx-3", styles['avatar-name-wrapper'])}>{getAvatarName}</span>
             <FontAwesomeIcon icon={faSortDown} size="lg" className="mt-neg8 ml-8" />
           </div>
         </a>
