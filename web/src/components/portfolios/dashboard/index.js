@@ -1,25 +1,25 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
+import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
-import { ALERT_TYPES, DEFAULT_AVATAR, KEY_CODES, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
+import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
 import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
 import { black950, gray600 } from '../../../../styles/_colors.module.scss';
-import AddSnapshotModal, { ADD_SNAPSHOT_MODAL_TYPES } from '../../portfolios/addSnapshotModal';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
+import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
 
@@ -78,6 +78,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const isPublicPortfolio = portfolio.type === PORTFOLIO_TYPES.PUBLIC;
   const isPrivatePortfolio = portfolio.type === PORTFOLIO_TYPES.PRIVATE;
   const isLoadingScreen = isLoading || isParsing || !portfolio || !portfolio._id;
+  const [isAddModalOpen, toggleAddModal] = useState(false);
 
   const parsePortfolio = (portfolio) => {
     setIsParsing(true);
@@ -154,9 +155,24 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     return <ErrorPage />
   }
 
+  const handleSnapshotUpdate = (data) => {
+    setSnapshots(snapshots.map(snapshot => {
+      if(data._id === snapshot._id) {
+        return data;
+      }
+      return snapshot;
+    }))
+  }
+
   return (
     <>
-      <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} />
+      <AddModal
+        isModalActive={isAddModalOpen}
+        toggleModalActive={toggleAddModal}
+        portfolio={portfolio}
+      />
+      {/* TODO: should be removed in future iterations, caused by tickets duplication */}
+      {/* <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} /> */}
       <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
@@ -200,7 +216,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                   </div>
                   <div className="is-size-4 mx-20" style={{ color: gray600 }}>|</div>
                   <button
-                    onClick={() => setIsActive(true)}
+                    onClick={() => toggleAddModal(true)}
                     type="button"
                     className="button is-transparent m-0"
                   >
@@ -287,12 +303,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
-          {snapshots.map((s) =>
-            s.componentType === 'comments' ? (
+          {snapshots?.map((s) =>
+            s?.componentType === 'comments' ? (
               <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
             ) : (
               <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
+                <ChartSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner} onUpdate={handleSnapshotUpdate} />
               </section>
             )
           )}

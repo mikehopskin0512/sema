@@ -18,7 +18,7 @@ function ToasterIcon({ type }) {
   return null;
 }
 
-function ToasterElement({ onClose, description, title, type }) {
+function ToasterElement({ onClose, description, title, type, subtitle }) {
   return (
     <div
       className={`p-16 is-flex is-align-items-flex-start has-background-white ${styles[`container--${type}`]}`}
@@ -28,6 +28,7 @@ function ToasterElement({ onClose, description, title, type }) {
       </div>
       <div className="is-flex is-flex-direction-column">
         <div className={`${styles.title} has-text-weight-semibold`}>{title}</div>
+        {!!subtitle && <div className={`${styles.subtitle}`}>{subtitle}</div>}
         {description && <div className="mt-8 is-size-7">
           {description}
         </div>}
@@ -45,7 +46,14 @@ function ToasterElement({ onClose, description, title, type }) {
 
 const notify = (
   message = 'Request failed',
-  { type = 'success', position = 'top-right', duration = 4000, description, ...options } = {}
+  {
+    type = 'success',
+    position = 'top-right',
+    duration = 4000,
+    subtitle,
+    description,
+    ...options
+  } = {},
 ) => {
   // Set alert style based on type
   let alertStyle = 'is-success';
@@ -61,7 +69,7 @@ const notify = (
   }
   return toaster.notify(
     ({ onClose }) => (
-      <ToasterElement type={type} onClose={onClose} title={message} description={description} />
+      <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} description={description} />
     ),
     {
       ...options,

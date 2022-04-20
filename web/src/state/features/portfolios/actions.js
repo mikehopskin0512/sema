@@ -12,6 +12,7 @@ import {
   createPortfolio,
   deleteSnapshotsFromPortfolio,
   patchPortfolioTitle,
+  addSnapshotToPortfolio
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
@@ -281,21 +282,22 @@ export const removeSnapshotsFromPortfolio = (portfolioId, snapshots, token) => a
   }
 };
 
-export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
-  try {
-    dispatch(requestPostSnapshotToPortfolio());
-    const payload = await postSnapshotToPortfolio(portfolioId, body, token);
-    //const { data } = payload;
-    //ToDo: Fix this after backend will be ready
-    dispatch(requestPostSnapshotToPortfolioSuccess());
-    return payload;
-  } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestPostSnapshotToPortfolioError(errMessage));
-    return error.response;
-  }
-}
+// TODO: should be removed in future iterations, caused by tickets duplication
+// export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
+//   try {
+//     dispatch(requestPostSnapshotToPortfolio());
+//     const payload = await postSnapshotToPortfolio(portfolioId, body, token);
+//     //const { data } = payload;
+//     //ToDo: Fix this after backend will be ready
+//     dispatch(requestPostSnapshotToPortfolioSuccess());
+//     return payload;
+//   } catch (error) {
+//     const { response: { data: { message }, status, statusText } } = error;
+//     const errMessage = message || `${status} - ${statusText}`;
+//     dispatch(requestPostSnapshotToPortfolioError(errMessage));
+//     return error.response;
+//   }
+// }
 
 export const updatePortfolioType = (portfolioId, type) => async (dispatch, getState) => {
   const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
@@ -336,3 +338,39 @@ export const removePortfolio = (portfolioId, token) => async (dispatch) => {
     return error.response;
   }
 };
+
+export const addSnapshotsToPortfolio = ({
+  portfolioId,
+  snapshots,
+  token,
+  onSuccess,
+  onError,
+  type = 'dashboard',
+  userId
+}) => async (dispatch) => {
+  try {
+    const { data } = await addSnapshotToPortfolio(portfolioId, snapshots, token);
+    const { data: userPortfoliosData } = await getUserPortfolio(userId, token);
+
+    dispatch(requestFetchUserPortfolioSuccess(userPortfoliosData));
+
+    if (type === 'dashboard') {
+      dispatch(requestFetchPortfolioSuccess(data));
+    }
+
+    if (typeof onSuccess === 'function') onSuccess(snapshots);
+
+  } catch (error) {
+    const {
+      response: {
+        status,
+        statusText,
+      },
+    } = error;
+
+    if (typeof onError === 'function') onError();
+
+    const errMessage = `${status} - ${statusText}`;
+    dispatch(requestFetchPortfolioError(errMessage));
+  }
+}
