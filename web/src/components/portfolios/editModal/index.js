@@ -33,7 +33,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, onSu
               <InputField
                 isMultiLine
                 className="mt-10 has-fixed-size"
-                placeholder="Write your overview..."
+                placeholder="Add your personal overview"
                 rows="5"
                 value={overview}
                 onChange={(v) => setOverview(v)}
