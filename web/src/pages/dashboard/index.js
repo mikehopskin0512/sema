@@ -130,7 +130,7 @@ const Dashboard = () => {
   // }, [inviteTeamId, user.roles]);
 
   useAuthEffect(() => {
-    if (userRepos.length) {
+    if (userRepos.length > 0) {
       const externalIds = userRepos.map((repo) => repo.id);
       dispatch(fetchRepoDashboard({
         externalIds,
