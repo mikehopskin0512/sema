@@ -3,5 +3,5 @@
     "browser": true
   },
   "parser": "@babel/eslint-parser",
-  "extends": [ "airbnb" ]
+  "extends": ["airbnb", "prettier"]
 }
