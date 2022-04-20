@@ -41,12 +41,7 @@ const TeamReposList = ({ isActive, onClose }) => {
       isAllSelected ? [] : repositories.map((repo) => repo._id),
     ));
   };
-  useEffect(() => {
-    if (!repositories.length) {
-      const adminRepoExternalIds = user?.identities[0].repositories.map(repo => repo.id);
-      dispatch(fetchRepoDashboard(adminRepoExternalIds, token))
-    }
-  }, [])
+
   const columns = useMemo(
     () => [
       {

@@ -28,8 +28,8 @@ const DropDownMenu = ({ trigger, options = [], isRight = false, isUp = false }) 
       <div className="dropdown-menu" id="dropdown-menu" role="menu">
         <div className="dropdown-content  py-0">
           <div className="dropdown-content">
-            {options.map(({ label, onClick, isHidden }) => (
-              <div className={clsx("dropdown-item py-0", isHidden && 'is-hidden')}>
+            {options.map(({ label, onClick, isHidden }, i) => (
+              <div key={i} className={clsx("dropdown-item py-0", isHidden && 'is-hidden')}>
                 <button
                   type="button"
                   className="button is-small px-0 is-ghost has-background-white has-text-black outline-none"

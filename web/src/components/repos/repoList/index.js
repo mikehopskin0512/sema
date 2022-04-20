@@ -171,7 +171,7 @@ const RepoList = ({
                   })
                 }
                 trigger={(
-                  <button class="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
+                  <button className="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
                     <FilterBarsIcon size="small" fill={blue700} />
                     <span className='ml-10 has-text-weight-semibold'>{sort.placeholder || 'Sort By'}</span>
                   </button>
