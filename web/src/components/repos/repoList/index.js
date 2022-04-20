@@ -15,6 +15,7 @@ import DropDownMenu from '../../../components/dropDownMenu';
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
 import { blue700 } from '../../../../styles/_colors.module.scss';
+import { alertOperations } from '../../../state/features/alerts';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -44,6 +45,7 @@ const RepoList = ({
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isTeamAdmin } = usePermission();
+  const { clearAlert } = alertOperations;
 
   const removeRepo = async (repoId) => {
     try {
@@ -102,6 +104,11 @@ const RepoList = ({
     ))
   }
 
+  const handleOnClose = () => {
+    dispatch(clearAlert());
+    setRepoListOpen(false);
+  }
+
   useEffect(() => {
     sortRepos();
   }, [sort, repos]);
@@ -113,7 +120,7 @@ const RepoList = ({
         {isTeamAdmin() && (
           <TeamReposList
             isActive={isRepoListOpen}
-            onClose={() => setRepoListOpen(false)}
+            onClose={handleOnClose}
           />
         )}
         <div className="is-flex is-justify-content-space-between">
