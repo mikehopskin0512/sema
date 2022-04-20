@@ -46,7 +46,8 @@ export const reauthenticate = (token) => ({
 export const deauthenticate = () => (dispatch) => {
   removeCookie(refreshCookie);
   Router.push(PATHS.LOGIN);
-  dispatch(triggerAlert('You have successfully logged out', 'success'));
+  // TODO: Will reactivate if we ever need a notif for logout.
+  // dispatch(triggerAlert('You have successfully logged out', 'success'));
   dispatch({ type: types.DEAUTHENTICATE });
 };
 
