@@ -177,7 +177,7 @@ const RepoList = ({
           </div>
         ) : null}
         {view === 'list' ? (
-          <RepoTable data={filteredRepos} />
+          <RepoTable data={filteredRepos} removeRepo={removeRepo} isTeamView={type !== 'MY_REPOS'} />
         ) : null}
       </div>
     ) : null
