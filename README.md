@@ -93,6 +93,9 @@ This updates the _image's_ `node_modules` as well as registers this change in th
 # remove all layers
 sudo docker system prune
 
+# if getting disk space errors
+sudo docker volume prune
+
 # rebuild
 docker-compose build --no-cache
 ```

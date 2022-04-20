@@ -124,7 +124,8 @@ export default (app, passport) => {
   route.get('/:teamId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { teamId } = req.params;
-      const repos = await getTeamRepos(teamId);
+      const { searchParams = '' } = req.query;
+      const repos = await getTeamRepos(teamId, { searchQuery: searchParams });
       return res.status(200).send(repos);
     } catch (error) {
       logger.error(error);

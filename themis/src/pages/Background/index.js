@@ -1,7 +1,6 @@
 // eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import {
-  EVENTS,
   SEMA_URL,
   SEMA_UI_URL,
   WHOAMI,
@@ -218,12 +217,5 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
         sendMessageToTab({ isUserUpdated: true, ...tokenResponse });
       });
     }
-  }
-});
-
-// Amplitude
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo.url) {
-    sendMessageToTab({ amplitude: true, event: EVENTS.VIEWED_GITHUB_PAGE });
   }
 });

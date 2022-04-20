@@ -22,6 +22,7 @@ import { isEmpty } from "lodash";
 const { fetchRoles } = rolesOperations;
 const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
 const { trackSendInvite } = invitationsOperations;
+import TagsInput from '../../../../components/tagsInput';
 
 const TeamInvitePage = () => {
   const router = useRouter();
@@ -87,11 +88,6 @@ const TeamInvitePage = () => {
     await router.back();
   };
 
-  const userOptions = useMemo(() => users.map((item) => ({
-    value: item._id,
-    label: item.username,
-  })), [users]);
-
   const checkForSelectedTeam = () => {
     if (!authState.selectedTeam || !authState.selectedTeam.team) {
       return router.push(PATHS.DASHBOARD);
@@ -118,20 +114,20 @@ const TeamInvitePage = () => {
   const IndicatorSeparator = () => null;
 
   const handleChangeEmails = (values, event) => {
-    let newEmails = [];
-    if (event.action === 'create-option') {
-      const lastValue = values.pop();
-      newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
+    if(values && values.length === 0) {
+      setValue('emails', []);
     } else {
-      newEmails = values;
+      let newEmails = [];
+      const lastValue = values.pop();
+      if (lastValue) {
+        newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
+        setValue('emails', newEmails);
+      }
+  
+      dispatch(validateTeamInvitationEmails(teamId, {
+        users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
+      }, token));
     }
-
-    setValue('emails', newEmails);
-
-    // validate emails
-    dispatch(validateTeamInvitationEmails(teamId, {
-      users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
-    }, token));
   };
 
   const blockedEmailsError = useMemo(() => {
@@ -190,7 +186,7 @@ const TeamInvitePage = () => {
         <div className="px-10 is-flex is-flex-direction-column">
           <div className={clsx('mb-25', styles['form-input'])}>
             <div className="has-text-weight-semibold is-size-7 mb-5">Invite Users by Email</div>
-            <EmailsInput
+            <TagsInput
               {...register(
                 'emails',
                 {
@@ -200,7 +196,6 @@ const TeamInvitePage = () => {
               value={watch('emails')}
               placeholder="Choose Email"
               onChange={handleChangeEmails}
-              options={userOptions}
               error={errors.emails?.message || blockedEmailsError || existingEmailsError}
             />
             {errors.emails && (<p className="has-text-error is-size-8 is-italized mt-5">{errors.emails.message}</p>)}
@@ -236,13 +231,14 @@ const TeamInvitePage = () => {
             {errors.role && (<p className="has-text-danger is-size-8 is-italized mt-5">{errors.role.message}</p>)}
           </div>
           <div className='is-divider' />
-          <div className={clsx(styles['copy-invite'])}>
-            {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />}
-            <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}>
-              <LinkIcon size="small" className={clsx('mr-5')} />
-              Copy Invitation Link
-            </button>
-          </div>
+          {/* // TODO: should be disabled until new invitations logic */}
+          {/* <div className={clsx(styles['copy-invite'])}> */}
+          {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
+          {/*   <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}> */}
+          {/*     <LinkIcon size="small" className={clsx('mr-5')} /> */}
+          {/*     Copy Invitation Link */}
+          {/*   </button> */}
+          {/* </div> */}
         </div>
       </div>
       <InviteSentConfirmModal onClose={handleClose} open={modalOpen} />

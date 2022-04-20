@@ -82,7 +82,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(fetchTeamMembers(teamId, { page: 1, perPage: 6 }, token));
     dispatch(fetchTeamMetrics(teamId, token));
-    dispatch(fetchTeamRepos(teamId, token));
+    dispatch(fetchTeamRepos({ teamId }, token));
   }, [dispatch, teamId, token]);
 
   const inviteToTeam = async () => {

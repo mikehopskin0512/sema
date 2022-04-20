@@ -5,7 +5,7 @@ module.exports = {
     */
     const userroles = await db.collection('userroles').find({}).toArray();
     await Promise.all (userroles.map(async (userrole) => {
-      const user = await db.collection('users').findOne({ _id: userrole.user }).toArray();
+      const user = await db.collection('users').findOne({ _id: userrole.user });
       if (!user) {
         await db.collection('userroles').deleteOne({ _id: userrole._id });
       }

@@ -6,10 +6,10 @@ import EmojiSelection from './EmojiSelection';
 
 import { toggleIsSelectingEmoji, toggleTagModal, updateSelectedEmoji, updateSelectedTags } from './modules/redux/action';
 
-import { EMOJIS, EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
+import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
 import LoginBar from './LoginBar';
-import { fireAmplitudeEvent } from './modules/content-util';
 import Tag from './components/tag';
+import { segmentTrack } from './modules/segment';
 import { getActiveThemeClass } from '../../../utils/theme';
 
 const DROP_POSITIONS = {
@@ -76,7 +76,7 @@ const Semabar = (props) => {
 
   const createAddTags = () => {
     const {
-      y, height, offsetPos, pageY
+      y, height, offsetPos, pageY,
     } = tagsButtonPositionValues;
 
     let dropPosition = DROP_POSITIONS.DOWN;
@@ -164,7 +164,7 @@ const Semabar = (props) => {
                 rel="noreferrer"
                 onClick={() => {
                   // eslint-disable-next-line max-len
-                  fireAmplitudeEvent(EVENTS.CLICKED_ADD_TAGS, {
+                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
                     change_tag: false, tag: null, tag_type: null, clicked_faq: true,
                   });
                 }}
