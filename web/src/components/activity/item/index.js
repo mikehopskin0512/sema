@@ -110,7 +110,7 @@ const ActivityItem = (props) => {
               <DotIcon size="tiny" className="mx-24 has-text-black-950" />
               <div className="is-flex is-flex-wrap-wrap">
                 {tags.map(({ label }) => (
-                  <span key={`tag-${label}`} className="tag has-background-gray-200 has-text-black-950 has-text-weight-bold is-size-7 mr-5 my-2 py-16">{label}</span>
+                  <span key={`tag-${label}`} className="tag has-background-gray-200 has-text-black-950 has-text-weight-bold is-size-7 mr-5 my-2">{label}</span>
                 ))}
               </div>
             </>
