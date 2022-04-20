@@ -96,7 +96,7 @@ const SnapshotModal = ({
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
         const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
         if (payload.status === 200) {
-          onClose();
+          onClose(payload.data);
         }
       } else {
         if (!portfolioId) {
@@ -132,7 +132,7 @@ const SnapshotModal = ({
         description: snapshotData.description,
       });
     }
-  }, []);
+  }, [snapshotData]);
 
   const containerStyle = useMemo(() => (dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && activityTypeData?.length > 3) ? { overflowY: 'scroll', maxHeight: '372px' } : null, [dataType, activityTypeData]);
 
