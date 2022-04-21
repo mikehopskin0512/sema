@@ -1,29 +1,48 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_COLLECTION_NAME, SEGMENT_EVENTS } from '../../constants';
-import { addNotification, changeSnippetComment } from '../../modules/redux/action';
+import {
+  addNotification,
+  changeSnippetComment,
+} from '../../modules/redux/action';
 import Button from '../inputs/Button';
 import InputField from '../inputs/InputField';
 import SelectField from '../inputs/SelectField';
 import Modal from '../Modal';
 import styles from './createSnippetModal.module.scss';
-import { getAllCollection, getAllTags, saveSmartComment } from '../../modules/content-util';
+import {
+  getAllTags,
+  saveSmartComment,
+} from '../../modules/content-util';
 import { mapTagsToOptions } from './helpers';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 import { segmentTrack } from '../../modules/segment';
+import GroupedSelectField from '../inputs/GroupedSelect';
+import { FolderIcon } from '../icons/FolderIcon';
 
-const semaLogo = chrome.runtime.getURL(
-  'img/sema-logo.svg',
-);
+const semaLogo = chrome.runtime.getURL('img/sema-logo.svg');
 
 const CreateSnippetModal = () => {
   const dispatch = useDispatch();
-  const { user: { isLoggedIn } } = useSelector((state) => state);
+  const {
+    teams,
+    user: { isLoggedIn, collections: userCollections },
+  } = useSelector((state) => state);
+
+  const teamsCollections = teams
+    .filter((team) => team.role.canCreateSnippets)
+    .map(({ team }) => ({
+      ...team,
+      collections: team.collections.filter((collection) => collection.isActive),
+    })).reduce((acc, item) => {
+      acc.push(item?.collections ?? []);
+      return acc;
+    }, []).flat();
+
   const snippetComment = useSelector((state) => state.snippetComment);
   const isActive = !!snippetComment;
-  const [collections, setCollections] = useState([]);
-  const [collectionId, setCollectionId] = useState('');
+  const [selectedCollectionId, setSelectedCollectionId] = useState('');
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
   const [languagesOptions, setLanguagesOptions] = useState([]);
@@ -36,31 +55,28 @@ const CreateSnippetModal = () => {
   const [sourceFieldsVisible, setSourceFieldsVisible] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !userCollections) {
       return;
     }
-    getAllCollection()
-      .then(setCollections)
-      .catch(() => setCollections([]));
-    getAllTags()
-      .then((tags) => {
-        setLabelsOptions(mapTagsToOptions(tags, 'custom'));
-        setLanguagesOptions(mapTagsToOptions(tags, 'language'));
-      });
-  }, [isLoggedIn]);
+    getAllTags().then((tags) => {
+      setLabelsOptions(mapTagsToOptions(tags, 'custom'));
+      setLanguagesOptions(mapTagsToOptions(tags, 'language'));
+    });
+  }, [isLoggedIn, userCollections]);
 
   useEffect(() => {
-    if (collectionId) {
+    if (selectedCollectionId) {
       return;
     }
-    const defaultCollection = collections.find(({ collectionData }) => {
+    const defaultCollection = userCollections.find(({ collectionData }) => {
       const collectionName = collectionData.name.toLowerCase();
       return collectionName === DEFAULT_COLLECTION_NAME;
     });
+
     if (defaultCollection) {
-      setCollectionId(defaultCollection.collectionData._id);
+      setSelectedCollectionId(defaultCollection.collectionData?._id);
     }
-  }, [collections]);
+  }, [userCollections]);
 
   useEffect(() => {
     setComment(snippetComment);
@@ -74,13 +90,13 @@ const CreateSnippetModal = () => {
     try {
       segmentTrack(SEGMENT_EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
       await saveSmartComment({
-        collectionId,
+        collectionId: selectedCollectionId,
         comments: [
           {
             title,
             comment,
             author,
-            collectionId,
+            selectedCollectionId,
             source: {
               name: sourceName,
               url: sourceLink,
@@ -89,22 +105,56 @@ const CreateSnippetModal = () => {
           },
         ],
       });
-      dispatch(addNotification({
-        type: 'success',
-        title: 'Snippet saved',
-        text: 'The Snippet was saved to the collection My Snippets',
-        isClosedBtn: true,
-      }));
+      dispatch(
+        addNotification({
+          type: 'success',
+          title: 'Snippet saved',
+          text: 'The Snippet was saved to the collection My Snippets',
+          isClosedBtn: true,
+        })
+      );
       onClose();
     } catch (e) {
-      dispatch(addNotification({
-        type: 'error',
-        title: 'Snippet not saved',
-        text: 'Please try again or report the problem',
-        isClosedBtn: true,
-      }));
+      dispatch(
+        addNotification({
+          type: 'error',
+          title: 'Snippet not saved',
+          text: 'Please try again or report the problem',
+          isClosedBtn: true,
+        })
+      );
     }
   };
+
+  const onCollectionSelect = (id) => {
+    setSelectedCollectionId(id);
+  };
+
+  const selectOptionsMapper = (obj) => {
+    return {
+      id: obj.collectionData?._id,
+      name: obj.name ?? obj.collectionData?.name,
+    };
+  };
+
+  const preparedCollectionsData = useMemo(() => {
+    const variants = {};
+    if (userCollections.length) {
+      variants.userCollections = {
+        fieldName: 'My Snippets',
+        options: userCollections ?? [],
+      };
+    }
+
+    if (teamsCollections.length) {
+      variants.teamCollections = {
+        fieldName: 'Team Snippets',
+        options: teamsCollections ?? [],
+      };
+    }
+
+    return variants;
+  }, [teamsCollections, userCollections]);
 
   if (!isLoggedIn) {
     return null;
@@ -112,22 +162,17 @@ const CreateSnippetModal = () => {
 
   return (
     <Modal isActive={isActive}>
-      <form
-        className={`${styles[getActiveThemeClass()]} ${styles.modal}`}
-        onSubmit={onSubmit}
-      >
+      <form className={`${styles[getActiveThemeClass()]} ${styles.modal}`} onSubmit={onSubmit}>
         <header className={styles.header}>
           <h2 className={styles.title}>Create New Snippet</h2>
-          <div style={{ width: '200px' }}>
-            <SelectField
-              isSpecialTheme
-              disabled
-              options={collections.map((item) => ({
-                label: item.collectionData.name,
-                value: item.collectionData._id,
-              }))}
-              value={collectionId}
-              onInput={setCollectionId}
+          <div style={{ width: '260px' }}>
+            <GroupedSelectField
+              icon={<FolderIcon />}
+              onChange={onCollectionSelect}
+              options={preparedCollectionsData}
+              placeHolder="Choose Snippet Collection"
+              value={selectedCollectionId}
+              optionsMapper={selectOptionsMapper}
             />
           </div>
         </header>
@@ -211,21 +256,11 @@ const CreateSnippetModal = () => {
           </div>
         </main>
         <div className={styles.controls}>
-          <img
-            src={semaLogo}
-            className={styles.logo}
-            alt="sema-logo"
-          />
-          <Button
-            onClick={onClose}
-            style={{ marginRight: '16px' }}
-            secondary
-          >
+          <img src={semaLogo} className={styles.logo} alt="sema-logo" />
+          <Button onClick={onClose} style={{ marginRight: '16px' }} secondary>
             Cancel
           </Button>
-          <Button type="submit">
-            Save New Snippet
-          </Button>
+          <Button type="submit">Save New Snippet</Button>
         </div>
       </form>
     </Modal>

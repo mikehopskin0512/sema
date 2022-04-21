@@ -41,8 +41,9 @@ export const getTeams = async (userId) => {
 export const getTeamsByUser = async (userId) => {
   try {
     const teams = await UserRole.find({ user: userId })
-      .populate('team')
-      .populate('role');
+      .populate({path: 'team', populate: { path: 'collections.collectionData' }})
+      .populate('role').exec();
+
     return teams;
   } catch (err) {
     logger.error(err);
@@ -173,13 +174,13 @@ export async function getTeamMetrics(teamId) {
   let today = new Date();
   while (auxDate <= today) {
     let dateAsString = auxDate.toISOString().split('T')[0];
-    let values = commentsMetrics?.[dateAsString] ?? {        
+    let values = commentsMetrics?.[dateAsString] ?? {
       comments: 0,
       pullRequests: 0,
       commenters: 0
     };
     values.users = userMetrics?.[dateAsString] ?? 0;
-    metrics = [...metrics, values];  
+    metrics = [...metrics, values];
     auxDate.setDate(auxDate.getDate() + 1);
   }
   return metrics;
