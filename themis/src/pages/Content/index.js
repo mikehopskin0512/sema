@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import $ from 'cash-dom';
-import 'adonis/src/styles/styles.css';
+import 'adonis/dist/styles/styles.css';
 import { debounce } from 'lodash';
 import CreateSnippetModal from './components/CreateSnippetModal';
 import Notification from './components/Notification';

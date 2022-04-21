@@ -1,7 +1,7 @@
 
 // v0.1
 // Import initial variables
-@import "node_modules/bulma/sass/utilities/initial-variables";
+@import "../../node_modules/bulma/sass/utilities/initial-variables";
 @import "./_colors.module";
 
 // Update Bulma global variables
@@ -123,13 +123,9 @@ $family-monospace: sans-serif;
 $badge-font-size: 20px;
 $badge-height: 30px;
 
-@import "node_modules/bulma/bulma.sass";
+@import "../../node_modules/bulma/bulma.sass";
 // Sample of individual module import - in case we want to optimize modules
 // @import "../node_modules/bulma/sass/grid/columns.sass";
 
-// Import bulma-extensions
-@import "node_modules/bulma-extensions/src/sass/index.sass";
-
 // 3rd party components  (for CSS imports omit extension)
-@import "node_modules/bulma-social/bin/bulma-social.min";
-//@import "@creativebulma/bulma-badge";
+@import "../../node_modules/bulma-social/bin/bulma-social.min";
