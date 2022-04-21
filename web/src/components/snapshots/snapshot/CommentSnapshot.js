@@ -5,17 +5,15 @@ import clsx from 'clsx';
 import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
 import ActivityItem from '../../activity/item';
-import { OptionsIcon } from '../../Icons';
+import { DragTriggerIcon, OptionsIcon } from "../../Icons";
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
-import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { duplicateSnapshot } = snapshotsOperations;
-const { removeSnapshot } = portfoliosOperations;
 
-const CommentSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
+const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, isOwner }, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
@@ -48,28 +46,31 @@ const CommentSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')}>
-        {isOwner && <div className="is-pulled-right mb-40">
+      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')} ref={preview}>
+        {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline", styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
             options={[
-              { 
-                label: 'Duplicate Snapshot', 
+              {
+                label: 'Duplicate Snapshot',
                 onClick: () => {
                   dispatch(duplicateSnapshot(snapshotData, token));
-                } 
+                }
               },
               { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
-              <div className="is-clickable is-flex">
+              <div className="is-clickable is-flex mr-40">
                 <OptionsIcon />
               </div>
             )}
           />
+          <div ref={ref} className={styles['draggable-container']}>
+            <DragTriggerIcon />
+          </div>
         </div>}
-        <div className={clsx('columns is-multiline mt-25 sema-is-boxed', styles['comments-snap-content'])}>
+        <div className={clsx('columns is-multiline mt-10 sema-is-boxed', styles['comments-snap-content'])}>
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>{description}</div>
@@ -83,7 +84,7 @@ const CommentSnapshot = ({ snapshotData, portfolioId, isOwner }) => {
       </div>
     </>
   );
-};
+});
 
 CommentSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,

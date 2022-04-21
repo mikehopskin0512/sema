@@ -82,6 +82,11 @@ $pink-200: #F08EBB;
 $pink-100: #F5BBD6;
 $pink-50: #FBE4EE;
 
+// DND
+$active-dropzone: #00A2FF;
+$dnd-row-border: #909AA4;
+$dnd-row-bg: #F8F8F8;
+
 :export {
   // neutral
   black950: $black-950;
@@ -160,4 +165,8 @@ $pink-50: #FBE4EE;
   pink200: $pink-200;
   pink100: $pink-100;
   pink50: $pink-50;
+
+  dropzone: $active-dropzone;
+  dndBorder: $dnd-row-border;
+  dndBg: $dnd-row-bg;
 }

@@ -9,6 +9,7 @@ const { Types: { ObjectId } } = mongoose;
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
   headline = null, imageUrl = null, overview = null, type = PORTFOLIO_TYPES.PRIVATE, snapshots = [], title = null,
+  layout = []
 }) => {
   const userAvatarUrl = identities.length && identities[0].avatarUrl;
   const portfolioAvatarUrl = imageUrl || userAvatarUrl;
@@ -23,6 +24,7 @@ const structurePortfolio = ({
     overview,
     type,
     title,
+    layout,
     snapshots: snapshots.map(({ id: snapshot, sort }) => ({ id: new ObjectId(snapshot._id), sort })),
   }
 };
