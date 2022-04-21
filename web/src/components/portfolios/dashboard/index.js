@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -336,7 +336,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
-          <DashboardDraggableList pageLayout={layout} updateLayout={onLayoutChange} />
+          <DashboardDraggableList
+            pageLayout={layout}
+            updateLayout={onLayoutChange}
+            handleSnapshotUpdate={handleSnapshotUpdate}
+            snapshots={snapshots}
+          />
         </div>
       </div>
       </DndProvider>

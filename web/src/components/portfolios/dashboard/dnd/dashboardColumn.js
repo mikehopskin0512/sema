@@ -9,6 +9,7 @@ const style = {};
 const DashboardColumn = ({
   data,
   path,
+  onUpdate
 }) => {
   const ref = useRef(null);
   const {
@@ -61,7 +62,7 @@ const DashboardColumn = ({
           opacity,
         }}
       >
-        <ComponentToRender {...componentProps} ref={ref} preview={preview} />
+        <ComponentToRender {...componentProps} ref={ref} preview={preview} onUpdate={onUpdate} />
       </div>
     </>
   );

@@ -13,6 +13,8 @@ const DashboardRow = ({
   data,
   handleDrop,
   path,
+  handleSnapshotUpdate,
+  snapshots
 }) => {
   const ref = useRef(null);
   const {
@@ -49,7 +51,7 @@ const DashboardRow = ({
           }}
           onDrop={handleDrop}
         />
-        <DashboardColumn path={path} data={data} />
+        <DashboardColumn path={path} data={data} onUpdate={handleSnapshotUpdate} />
       </section>
     );
   };
@@ -60,8 +62,11 @@ const DashboardRow = ({
         componentToRender,
         componentProps,
       } = data;
+      const fallbackData = snapshots.find(i => i._id === data?.data?._id);
+      const props = { ...componentProps, snapshotData: {...componentProps.snapshotData, title: fallbackData?.title, description: fallbackData?.description } };
+
       const ComponentToRender = getDraggableComponent(componentToRender);
-      return <ComponentToRender {...componentProps} ref={ref} preview={preview} />;
+      return <ComponentToRender {...props} ref={ref} preview={preview} onUpdate={handleSnapshotUpdate} />;
     } else {
       return data.children?.map((column, index) => {
         const currentPath = `${path}-${index}`;
