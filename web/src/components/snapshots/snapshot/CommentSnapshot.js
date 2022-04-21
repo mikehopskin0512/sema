@@ -13,7 +13,7 @@ import { snapshotsOperations } from '../../../state/features/snapshots';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
-const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, isOwner }, ref) => {
+const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, isOwner, onUpdate }, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
@@ -32,11 +32,18 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
     toggleDeleteModal(false);
   };
 
+  const handleSnapshotUpdate = (data) => {
+    toggleEditModal(false);
+    if(data) {
+      onUpdate(data);
+    }
+  }
+
   return (
     <>
       <SnapshotModal
         active={isEditModalOpen}
-        onClose={() => toggleEditModal(false)}
+        onClose={handleSnapshotUpdate}
         snapshotData={snapshotData}
         type="edit"
         dataType={componentType}

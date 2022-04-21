@@ -12,6 +12,8 @@ import {
 export const DashboardDraggableList = ({
   pageLayout,
   updateLayout,
+  handleSnapshotUpdate,
+  snapshots
 }) => {
   const [layout, setLayout] = useState([]);
 
@@ -69,7 +71,7 @@ export const DashboardDraggableList = ({
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
   const renderRow = (row, currentPath) => {
-    return <DashboardRow data={row} path={currentPath} handleDrop={handleDrop} />;
+    return <DashboardRow data={row} path={currentPath} handleDrop={handleDrop} handleSnapshotUpdate={handleSnapshotUpdate} snapshots={snapshots} />;
   };
 
   return (
