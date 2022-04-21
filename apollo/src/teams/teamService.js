@@ -43,7 +43,8 @@ export const getTeamsByUser = async (userId) => {
     const teams = await UserRole.find({ user: userId })
       .populate('team')
       .populate('role');
-    return teams;
+    // TODO Investigate why we sometimes get team as null in DB in UserRoles
+    return teams.filter((team) => team.team);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
