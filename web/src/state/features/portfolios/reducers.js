@@ -1,4 +1,4 @@
-import { updatePortfolioType, updatePortfolioTitle } from './helpers';
+import { updatePortfolioTitle, updatePortfolioType } from './helpers';
 import * as types from './types';
 
 const initialState = {
@@ -103,6 +103,27 @@ const reducer = (state = initialState, action) => {
       },
     };
   }
+  case types.REQUEST_CREATE_PORTFOLIO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
+  case types.REQUEST_CREATE_PORTFOLIO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_CREATE_PORTFOLIO_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolio: action.portfolio,
+        portfolios: [action.portfolio, ...state.data.portfolios],
+      },
+    };
   case types.REQUEST_UPDATE_SNAPSHOT_ERROR:
     return {
       ...state,

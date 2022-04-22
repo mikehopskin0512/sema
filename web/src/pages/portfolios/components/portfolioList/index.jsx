@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon, PlusIcon, ShareIcon } from '../../../../components/Icons';
 import DropDownMenu from '../../../../components/dropDownMenu';
@@ -12,10 +12,10 @@ import DeleteModal from '../../../../components/snapshots/deleteModal';
 import { alertOperations } from '../../../../state/features/alerts';
 import { portfoliosOperations } from '../../../../state/features/portfolios';
 import Toaster from '../../../../components/toaster';
+import { copyExistingPortfolio } from '../../../../state/features/portfolios/actions';
 
 const { triggerAlert, clearAlert } = alertOperations;
-const { removePortfolio } = portfoliosOperations;
-import { copyExistingPortfolio } from '../../../../state/features/portfolios/actions';
+const { removePortfolio, createNewPortfolio } = portfoliosOperations;
 
 const PortfolioList = () => {
   const dispatch = useDispatch();
@@ -29,11 +29,35 @@ const PortfolioList = () => {
     data: { portfolios },
   } = portfoliosState;
   const { showAlert, alertType, alertLabel } = alertsState;
-  const { token } = authState;
+  const { token, user } = authState;
   const [copiedToClipboard, setCopiedToClipboard] = useState('');
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
   const [activePortfolioId, setActivePortfolioId] = useState(null);
-  const addPortfolio = () => {};
+
+  const addPortfolio = async () => {
+    const newPortfolio = {
+      userId: user._id,
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      headline: `${user.firstName} ${user.lastName}`,
+      identities: user.identities,
+      overview: '',
+      title: 'New Portfolio',
+    };
+    const { status } = await dispatch(createNewPortfolio({
+      portfolio: newPortfolio,
+      token,
+    }));
+
+    console.log('status', status);
+    if (status === RESPONSE_STATUSES.CREATED) {
+      dispatch(triggerAlert('Portfolio was created.', ALERT_TYPES.SUCCESS));
+    }
+    else {
+      dispatch(triggerAlert('Portfolio was not created.', ALERT_TYPES.ERROR));
+    }
+  };
+
   const copyToClipboard = (id) => {
     navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
     setCopiedToClipboard(id);
