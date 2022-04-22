@@ -67,6 +67,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "sass": "^1.50.1",
     "slugify": "^1.4.5",
     "toasted-notes": "^3.2.0",
     "yup": "^0.32.11"
