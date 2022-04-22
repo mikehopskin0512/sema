@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import toaster from 'toasted-notes';
+import Router from 'next/router';  
+import { RouterContext } from 'next/dist/next-server/lib/router-context';  
 import {
   AlertFilledIcon,
   CheckFilledIcon,
@@ -69,7 +71,9 @@ const notify = (
   }
   return toaster.notify(
     ({ onClose }) => (
-      <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} description={description} />
+      <RouterContext.Provider value={Router}>  
+        <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} description={description} />
+      </RouterContext.Provider>
     ),
     {
       ...options,
