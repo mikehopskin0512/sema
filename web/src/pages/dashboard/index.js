@@ -50,9 +50,8 @@ const Dashboard = () => {
   const { identities, isOnboarded = null, hasExtension = null, username } = user;
   const { roles } = rolesState;
   const { teams } = teamsState;
-  const { teamId: inviteTeamId } = router.query;
+  const { inviteTeamId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
-
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
 
@@ -117,17 +116,16 @@ const Dashboard = () => {
     toggleOnboardingModalActive(status);
   };
 
-  // TODO: should be disabled until new invitations logic
-  // useEffect(() => {
-  //   if (inviteTeamId) {
-  //     const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
-  //     if (invitedTeam && selectedTeam?.team?._id !== inviteTeamId) {
-  //       dispatch(setSelectedTeam(invitedTeam));
-  //       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-  //       router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
-  //     }
-  //   }
-  // }, [inviteTeamId, user.roles]);
+  useEffect(() => {
+    if (inviteTeamId) {
+      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
+      if (invitedTeam) {
+        dispatch(setSelectedTeam(invitedTeam));
+        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+      }
+    }
+  }, [inviteTeamId, user.roles, teams]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
