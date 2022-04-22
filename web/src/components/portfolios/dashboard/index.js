@@ -222,8 +222,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
             />
             <div className="is-relative is-flex is-align-items-center">
               {isOwner && isIndividualView && <>
-                <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
-                  <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                  <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
                         (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
@@ -241,6 +241,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     <label htmlFor={`activeSwitch-${portfolio._id}`} />
                   </div>
                   <div
+                    className="is-flex"
                     onClick={isPublicPortfolio ? onCopy : () => { }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -283,7 +284,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     },
                   ]}
                   trigger={
-                    <div className="is-clickable">
+                    <div className="is-clickable is-flex">
                       <OptionsIcon />
                     </div>
                   }
