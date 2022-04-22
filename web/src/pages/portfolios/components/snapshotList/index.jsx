@@ -63,9 +63,6 @@ const snapshotList = () => {
   const isEditModalOpen = editingSnapshot !== null;
   const clearEditingSnapshot = () => setEditingSnapshot(null);
 
-  const isEditModalOpen = editingSnapshot !== null;
-  const clearEditingSnapshot = () => setEditingSnapshot(null);
-
   const {
     data: { snapshots },
   } = snapshotsState;
