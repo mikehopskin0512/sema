@@ -41,12 +41,7 @@ const TeamReposList = ({ isActive, onClose }) => {
       isAllSelected ? [] : repositories.map((repo) => repo._id),
     ));
   };
-  useEffect(() => {
-    if (!repositories.length) {
-      const adminRepoExternalIds = user?.identities[0].repositories.map(repo => repo.id);
-      dispatch(fetchRepoDashboard(adminRepoExternalIds, token))
-    }
-  }, [])
+
   const columns = useMemo(
     () => [
       {
@@ -102,7 +97,7 @@ const TeamReposList = ({ isActive, onClose }) => {
   const addRepos = async () => {
     try {
       await dispatch(editTeamRepos(team._id, { repos: Array(...activeRepos) }, token));
-      dispatch(fetchTeamRepos(team._id, token));
+      dispatch(fetchTeamRepos({ teamId: team._id }, token));
       dispatch(triggerAlert('Repos were added', 'success'));
       onClose();
     } catch (e) {

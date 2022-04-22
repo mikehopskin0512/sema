@@ -133,9 +133,18 @@ export const getRepository = async (_id) => {
   }
 };
 
-export const getRepositories = async (ids, populateUsers) => {
+export const getRepositories = async (params, populateUsers) => {
+  const {
+    ids,
+    searchQuery = '',
+  } = params;
   try {
-    const query = Repositories.find({ _id: { $in: ids } });
+    const searchRegEx = new RegExp(searchQuery, 'ig');
+
+    const query = Repositories.find({
+        _id: { $in: ids },
+        name: { $regex: searchRegEx },
+    });
     if (populateUsers) {
       query.populate({ path: 'repoStats.userIds', select: 'avatarUrl', model: 'User' });
     }

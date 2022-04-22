@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
 import { createUserCollection, findByAuthor } from '../comments/collections/collectionService';
+const { Types: { ObjectId } } = mongoose;
 
 const userOrgSchema = mongoose.Schema({
   id: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization', index: true },
@@ -49,6 +50,9 @@ const userSchema = mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   isWaitlist: { type: Boolean, default: false },
   isOnboarded: { type: Date, default: null },
+  banners: {
+    teamCreate: { type: Boolean, default: true }
+  },
   verificationToken: String,
   verificationExpires: Date,
   resetToken: String,
@@ -78,8 +82,15 @@ userSchema.pre('save', async function save(next) {
     const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
 
     // Creates default user collection
-    const personalCollection = await createUserCollection(username);
-    this.collections = [personalCollection];
+    if (this.isNew) {
+      this._id = new ObjectId();
+      const personalCollection = await createUserCollection(username, this._id);
+      this.collections = [{
+        isActive: true,
+        collectionData: personalCollection._id,
+        _id: new ObjectId(),
+      }];
+    }
 
     // Allow null password (don't hash if password is null)
     if (this.password) {

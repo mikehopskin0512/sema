@@ -41,9 +41,10 @@ export const getTeams = async (userId) => {
 export const getTeamsByUser = async (userId) => {
   try {
     const teams = await UserRole.find({ user: userId })
-      .populate('team')
-      .populate('role');
-    return teams;
+      .populate({path: 'team', populate: { path: 'collections.collectionData' }})
+      .populate('role').exec();
+    // TODO Investigate why we sometimes get team as null in DB in UserRoles
+    return teams.filter((team) => team.team);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -149,14 +150,15 @@ export const updateTeamRepos = async (teamId, repoIds) => {
   }
 };
 
-export const getTeamRepos = async (teamId) => {
+export const getTeamRepos = async (teamId, params = {}) => {
   try {
+    const { searchQuery = '' } = params;
     const [team] = await Team
       .find({ _id: teamId })
       .select('repos')
       .exec();
     const ids = team?.repos.map(repo => repo._id.toString()) || [];
-    return getRepositories(ids, true);
+    return getRepositories({ ids, searchQuery }, true);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -172,13 +174,13 @@ export async function getTeamMetrics(teamId) {
   let today = new Date();
   while (auxDate <= today) {
     let dateAsString = auxDate.toISOString().split('T')[0];
-    let values = commentsMetrics?.[dateAsString] ?? {        
+    let values = commentsMetrics?.[dateAsString] ?? {
       comments: 0,
       pullRequests: 0,
       commenters: 0
     };
     values.users = userMetrics?.[dateAsString] ?? 0;
-    metrics = [...metrics, values];  
+    metrics = [...metrics, values];
     auxDate.setDate(auxDate.getDate() + 1);
   }
   return metrics;
@@ -245,27 +247,6 @@ export const addTeamMembers = async (team, users, role) => {
     return error;
   }
 };
-
-export const bulkUpdateTeamCollections = async (collectionId, teamId, isActive) => {
-  try {
-    const filter = teamId ? { _id: new ObjectId(teamId) } : {};
-    await Team.updateMany(
-      filter,
-      {
-        $push: {
-          "collections": {
-            isActive,
-            collectionData: collectionId,
-          }
-        }
-      }
-    )
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-}
 
 export const updateTeamAvatar = async (teamId, userId, file) => {
   const team = await Team.findById(teamId);

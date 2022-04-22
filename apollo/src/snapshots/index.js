@@ -4,7 +4,7 @@ import yaml from 'yamljs';
 import path from 'path';
 import { version } from '../config';
 import {
-  addSnapshotToPortfolio,
+  addSnapshotsToPortfolio,
   removeSnapshotFromPortfolio,
   create as createPortfolio,
   getPortfoliosByUser,
@@ -29,7 +29,7 @@ export default (app, passport) => {
         portfolios: portfolioId ? [portfolioId] : [],
       });
       if (portfolioId) {
-        await addSnapshotToPortfolio(portfolioId, savedSnapshot._id);
+        await addSnapshotsToPortfolio(portfolioId, [savedSnapshot._id]);
       }
       return savedSnapshot;
     }

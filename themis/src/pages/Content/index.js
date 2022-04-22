@@ -21,17 +21,16 @@ import {
   getGithubMetadata,
   getHighlights,
   isPRPage,
-  initAmplitude,
   setTextareaSemaIdentifier,
   checkSubmitButton,
-  fireAmplitudeEvent,
   checkIfPullRequestReviewUrl,
   fetchCurrentUser,
   onDeleteComment,
 } from './modules/content-util';
 
+import { initSegment } from './modules/segment';
+
 import {
-  EVENTS,
   SEMA_ICON_ANCHOR_LIGHT,
   SEMABAR_CLASS,
   SEMA_SEARCH_CLASS,
@@ -72,9 +71,6 @@ checkIfPullRequestReviewUrl();
 window.semaExtensionRegistry = new SemaExtensionRegistry();
 
 chrome.runtime.onMessage.addListener(async (request) => {
-  if (request?.amplitude) {
-    fireAmplitudeEvent(request.event);
-  }
   if (request?.isUserUpdated) {
     store.dispatch(updateCurrentUser({ ...request }));
     if (request.token) {
@@ -96,7 +92,6 @@ const checkLoggedIn = (cb) => {
 };
 
 const showLogoutToaster = () => {
-  fireAmplitudeEvent(EVENTS.LOGIN_TOASTER_SHOWED);
   const reminderRoot = document.getElementById(SEMA_REMINDER_ROOT_ID);
   if (!reminderRoot) {
     const node = document.createElement('div');
@@ -120,7 +115,7 @@ const onLoginChecked = () => {
   setSavedProfile();
   $(() => {
     const { user } = store.getState();
-    initAmplitude(user);
+    initSegment(user);
     showLogoutToaster();
   });
   /**

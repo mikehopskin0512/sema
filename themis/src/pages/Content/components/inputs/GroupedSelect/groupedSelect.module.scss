@@ -1,0 +1,106 @@
+@import '../../../styles/colors.module';
+
+.grouped-select {
+  box-sizing: border-box;
+  background: $white-0;
+  border: 1px solid $gray-500;
+  border-radius: 4px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  outline: none;
+
+  &--with-icon {
+    padding-left: 42px;
+    position: relative;
+  }
+
+  &-main-wrapper {
+    position: relative;
+  }
+
+  &-arrow {
+    position: absolute;
+    right: 12px;
+    bottom: 16px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    border-color: $gray-600 transparent transparent transparent;
+  }
+
+  &-overlay {
+    max-height: 265px;
+    overflow: scroll;
+    position: absolute;
+    width: inherit;
+    padding-top: 34px;
+    background: $white-0;
+    z-index: 10;
+
+    border: 1px solid $gray-300;
+    box-sizing: border-box;
+
+    box-shadow: 2px 3px 7px rgba(149, 165, 177, 0.5);
+    border-radius: 8px;
+    top: 50px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &-item {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    margin-bottom: 22px;
+    color: $gray-800;
+    display: block;
+    padding: 5px 0 5px 40px;
+    cursor: pointer;
+
+    &--active:not(:hover) {
+      background-color: $gray-300;
+    }
+
+    &:hover {
+      background-color: $gray-200;
+    }
+  }
+
+  &-group-name {
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    color: $gray-800;
+    margin-bottom: 22px;
+    padding-left: 20px;
+    text-transform: uppercase;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.grouped-select-icon {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  height: 24px;
+  width: 24px;
+}
+
+.grouped-select-value {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 140%;
+  color: $gray-700;
+  margin: 0;
+
+}

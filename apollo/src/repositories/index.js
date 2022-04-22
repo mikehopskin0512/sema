@@ -58,7 +58,7 @@ export default (app, passport) => {
     const idsArray = Ids?.split('-');
 
     try {
-      const repositories = Ids ? await getRepositories(idsArray) : await findByOrg(orgId);
+      const repositories = Ids ? await getRepositories({ ids: idsArray }) : await findByOrg(orgId);
       if (!repositories) {
         throw new errors.NotFound(Ids ? 'No repositories found' : 'No repositories found for this organization');
       }
@@ -90,12 +90,12 @@ export default (app, passport) => {
 
   route.get('/dashboard', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
-      externalIds,
+      externalIds = '[]',
       searchQuery,
     } = req.query;
     try {
       const repositories = await aggregateRepositories({
-        externalIds: JSON.parse(externalIds),
+        externalIds: externalIds ? JSON.parse(externalIds): [],
         searchQuery,
       });
       return res.status(201)

@@ -15,6 +15,7 @@ import DropDownMenu from '../../../components/dropDownMenu';
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
 import { blue700 } from '../../../../styles/_colors.module.scss';
+import { alertOperations } from '../../../state/features/alerts';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -44,13 +45,14 @@ const RepoList = ({
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isTeamAdmin } = usePermission();
+  const { clearAlert } = alertOperations;
 
   const removeRepo = async (repoId) => {
     try {
       const newRepos = repos.filter(repo => repo?._id !== repoId).map(repo => repo._id);
       await dispatch(updateTeamRepositories(selectedTeam.team._id, { repos: newRepos }, token));
       dispatch(triggerAlert('Repo has been deleted', 'success'));
-      dispatch(fetchTeamRepos(selectedTeam.team._id, token));
+      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
     } catch (e) {
       dispatch(triggerAlert('Unable to delete repo', 'error'));
     }
@@ -102,6 +104,11 @@ const RepoList = ({
     ))
   }
 
+  const handleOnClose = () => {
+    dispatch(clearAlert());
+    setRepoListOpen(false);
+  }
+
   useEffect(() => {
     sortRepos();
   }, [sort, repos]);
@@ -113,7 +120,7 @@ const RepoList = ({
         {isTeamAdmin() && (
           <TeamReposList
             isActive={isRepoListOpen}
-            onClose={() => setRepoListOpen(false)}
+            onClose={handleOnClose}
           />
         )}
         <div className="is-flex is-justify-content-space-between">
@@ -164,7 +171,7 @@ const RepoList = ({
                   })
                 }
                 trigger={(
-                  <button class="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
+                  <button className="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
                     <FilterBarsIcon size="small" fill={blue700} />
                     <span className='ml-10 has-text-weight-semibold'>{sort.placeholder || 'Sort By'}</span>
                   </button>

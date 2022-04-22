@@ -204,5 +204,5 @@ export const filterSmartComments = ({ filter, smartComments = [], startDate, end
 
 export const parseSnapshotData = (snapshotData) => {
   const result = [...snapshotData];
-  return result.map(smartComment => ({ smartCommentId: smartComment._id }));
+  return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
 }
