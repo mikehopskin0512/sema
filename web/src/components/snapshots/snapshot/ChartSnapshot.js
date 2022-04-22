@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
 import SnapshotChartContainer from '../snapshotChartContainer';
-import { OptionsIcon } from '../../Icons';
+import { DragTriggerIcon, OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
@@ -15,7 +15,14 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
 
-const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner, onUpdate }) => {
+const ChartSnapshot = React.forwardRef(({
+  snapshotData,
+  portfolioId,
+  preview,
+  spaced,
+  isOwner,
+  onUpdate
+}, ref) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
     (state) => ({
@@ -30,12 +37,12 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner, onUpdate })
   const renderComponentSnapshot = (type) => {
     if (componentData) {
       switch (type) {
-        case 'summaries':
-          return (<SnapshotChartContainer chartType="reactions" {...componentData} />);
-        case 'tags':
-          return (<SnapshotChartContainer chartType="tags" {...componentData} />);
-        default:
-          return '';
+      case 'summaries':
+        return (<SnapshotChartContainer chartType="reactions" {...componentData} />);
+      case 'tags':
+        return (<SnapshotChartContainer chartType="tags" {...componentData} />);
+      default:
+        return '';
       }
     }
     return '';
@@ -59,15 +66,16 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner, onUpdate })
         active={isEditModalOpen}
         onClose={handleSnapshotUpdate}
         snapshotData={snapshotData}
-        type="edit"
+        type='edit'
+        dataType={componentType}
       />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative', spaced && 'mr-16')}>
-        {isOwner && <div className="is-pulled-right mb-40">
+      <div className={clsx(styles.snapshot, styles['chart-snapshot'], 'has-background-gray-200 mb-30 p-25 is-relative', spaced && 'mr-16')} ref={preview}>
+        {isOwner && <div className={clsx('is-pulled-right mb-40 is-flex is-align-items-baseline mr-0', styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
             options={[
@@ -81,20 +89,23 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner, onUpdate })
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
-              <div className="is-clickable is-flex">
+              <div className="is-clickable is-flex mr-40">
                 <OptionsIcon />
               </div>
             )}
           />
+          <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
+            <DragTriggerIcon />
+          </div>
         </div>}
-        <div className="is-multiline mt-15">
+        <div className="is-multiline mt-10 mr-0">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
-              <div>{description}</div>
+              <div className="mb-25">{description}</div>
             </div>
             <div className={clsx(styles['chart-container'])}>
-              <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300">
+              <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300 mr-0">
                 {renderComponentSnapshot(componentType)}
               </div>
             </div>
@@ -103,7 +114,7 @@ const ChartSnapshot = ({ snapshotData, portfolioId, spaced, isOwner, onUpdate })
       </div>
     </>
   );
-};
+});
 
 ChartSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,

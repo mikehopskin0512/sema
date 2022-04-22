@@ -38,6 +38,9 @@ const portfolioSchema = new Schema({
     sort: Number,
     _id: false,
   }],
+  layout: {
+    type: Schema.Types.Array,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Portfolio', portfolioSchema);

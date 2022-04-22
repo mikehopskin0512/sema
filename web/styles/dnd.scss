@@ -1,0 +1,52 @@
+@import "./_colors.module.scss";
+
+.dropZone {
+    flex: 0 0 auto;
+    height: 40px;
+    transition: 200ms all;
+    position: relative;
+    top: -10px;
+}
+
+.dropZone.verticalDrag {
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 10px);
+    z-index: 2;
+    max-height: 650px;
+
+    @media only screen and (max-width: 1440px) {
+        max-height: unset;
+    }
+}
+
+.dropZone.horizontalDrag {
+    width: 40px;
+    height: auto;
+}
+
+.dropZone:not(.horizontalDrag).isLast {
+    flex: 1 1 auto;
+}
+
+.dropZone.active {
+    background: $active-dropzone;
+    opacity: 0.1;
+    transition: 100ms all;
+}
+
+.column-empty {
+    height: calc(100% - 30px);
+    max-height: 625px;
+}
+
+.columns {
+    @media only screen and (max-width: 1439px) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    > section:nth-child(2) {
+        margin-bottom: 0;
+    }
+}

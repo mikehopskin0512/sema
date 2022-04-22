@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
-import { GithubIcon, EditIcon, CloseIcon, AlertFilledIcon, CheckFilledIcon, ShareIcon, OptionsIcon } from '../../Icons';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import CommentSnapshot from '../../snapshots/snapshot/CommentSnapshot';
-import ChartSnapshot from '../../snapshots/snapshot/ChartSnapshot';
+import { DashboardDraggableList } from './dnd/dashboardList';
+import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
 import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
@@ -53,6 +55,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       duration: isError ? 3000 : null,
     });
   };
+
   const dispatch = useDispatch();
   const { auth, portfolios } = useSelector(
     (state) => ({
@@ -86,7 +89,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       const {
         identities = [], headline, imageUrl, overview, snapshots: snapshotsData, title,
       } = portfolio;
-      const { username } = identities.length && identities.find((item) => item?.provider === "github");
+      const { username } = identities.length && identities.find((item) => item?.provider === 'github');
       setUser({ fullName: fullName(portfolio), username, avatar: imageUrl, overview, title });
       if (snapshotsData) {
         const d = snapshotsData.map((s) => s.id);
@@ -97,8 +100,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   };
 
   const onSaveProfile = async (values) => {
-    const { _id, ...rest } = portfolio;
-
+    const {
+      _id,
+      ...rest
+    } = portfolio;
     if (_id && token) {
       const body = {
         _id,
@@ -106,7 +111,13 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         ...values,
       };
 
-      body.snapshots = body.snapshots.map(({ id: snapshot, sort }) => ({ id: { _id: snapshot._id }, sort }));
+      body.snapshots = body.snapshots.map(({
+        id: snapshot,
+        sort,
+      }) => ({
+        id: { _id: snapshot._id },
+        sort,
+      }));
       const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
       if (payload.status === RESPONSE_STATUSES.SUCCESS) {
         toggleEditModal(false);
@@ -132,6 +143,27 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const onClickChild = (e) => {
     e.stopPropagation();
   };
+
+  const layout = useMemo(() => {
+    if (portfolio && snapshots) {
+      if (portfolio.layout?.length) {
+        // Reload list if new items appears
+        const newItemsIds = getNewLayoutItems(snapshots.map(i => i?._id), getSnapsIds(portfolio.layout)) ?? [];
+
+        const newItems = snapshots?.filter(i => newItemsIds.includes(i._id));
+        return newItems.length ?
+          [...getSavedData(portfolio.layout, snapshots), ...getPageLayout(newItems, portfolio)]
+          : getSavedData(portfolio.layout, snapshots);
+      }
+      return getPageLayout(snapshots, portfolio);
+    }
+  }, [portfolio, snapshots, user]);
+
+  const onLayoutChange = async (currentLayout) => changePortfolioOrder({
+    portfolio,
+    token,
+    currentLayout,
+  });
 
   const onChangeToggle = async () => {
     const newType = isPublicPortfolio ? PORTFOLIO_TYPES.PRIVATE : PORTFOLIO_TYPES.PUBLIC;
@@ -166,6 +198,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   return (
     <>
+      <DndProvider backend={HTML5Backend}>
       <AddModal
         isModalActive={isAddModalOpen}
         toggleModalActive={toggleAddModal}
@@ -303,39 +336,28 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
           <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
-          {snapshots?.map((s, i) =>
-            s?.componentType === 'comments' ? (
-              <CommentSnapshot key={s._id} snapshotData={s} portfolioId={portfolio._id} isOwner={isOwner}/>
-            ) : (
-              <section className={clsx(styles['chart-wrap'])}>
-                <ChartSnapshot
-                  key={s._id}
-                  snapshotData={s}
-                  portfolioId={portfolio._id}
-                  spaced={i % 2 === 0}
-                  isOwner={isOwner}
-                onUpdate={handleSnapshotUpdate} />
-              </section>
-            )
-          )}
+          <DashboardDraggableList
+            pageLayout={layout}
+            updateLayout={onLayoutChange}
+            handleSnapshotUpdate={handleSnapshotUpdate}
+            snapshots={snapshots}
+          />
         </div>
       </div>
+      </DndProvider>
     </>
-  )
+  );
 };
-
 
 PortfolioDashboard.defaultProps = {
   isIndividualView: false,
   isLoading: false,
 };
 
-
 PortfolioDashboard.propTypes = {
   portfolio: PropTypes.object.isRequired,
   isIndividualView: PropTypes.bool,
   isLoading: PropTypes.bool,
 };
-
 
 export default PortfolioDashboard;
