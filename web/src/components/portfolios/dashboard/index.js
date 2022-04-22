@@ -118,10 +118,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         id: { _id: snapshot._id },
         sort,
       }));
-      const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
-      if (payload.status === RESPONSE_STATUSES.SUCCESS) {
-        toggleEditModal(false);
-      }
+      dispatch(updatePortfolio(_id, { ...body }, token));
+      toggleEditModal(false);
     }
   };
 
