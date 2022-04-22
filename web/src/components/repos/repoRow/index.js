@@ -7,7 +7,7 @@ import RepoUsers from '../repoUsers';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { OptionsIcon } from '../../Icons';
-import DropDownMenu from '../../DropDownMenu';
+import DropDownMenu from '../../dropDownMenu';
 import usePermission from '../../../hooks/usePermission';
 import DeleteRepoModal from '../repoCard/deleteRepoModal';
 
