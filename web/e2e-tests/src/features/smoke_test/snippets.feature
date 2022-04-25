@@ -233,7 +233,7 @@ Feature: User is able to interact with snippets properly
 
     And  I pause for 1000ms
     And  I click on the button "saveNewCollectionBtn"
-    And  I pause for 2000ms
+    And  I pause for 3000ms
     Then I expect that element "searchIconBtn" becomes displayed
     When I click on the button "searchIconBtn"
     Then I expect that element "searchCollectionInput" becomes displayed

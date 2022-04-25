@@ -7,8 +7,10 @@
     "service_worker": "background.bundle.js"
   },
   "host_permissions": [
-    "https://github.com/*",
-    "https://*.semasoftware.com/*"
+    "*://semasoftware.com/*",
+    "https://*.semasoftware.com/*",
+    "*://github.com/*",
+    "*://*.github.com/*/"
   ],
   "permissions": [
     "activeTab",
@@ -36,7 +38,9 @@
         "https://github.com/*"
       ],
       "run_at": "document_start",
-      "js": ["contentScript.bundle.js"],
+      "js": [
+        "contentScript.bundle.js"
+      ],
       "css": [
         "css/all.min.css",
         "css/sema-custom.css",

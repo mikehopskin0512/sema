@@ -1,0 +1,13 @@
+@import "../../../../styles/_colors.module.scss";
+
+.banner {
+  background-color: $blue-0;
+  border: 1px solid $blue-100;
+  width: 100%;
+}
+
+.hero {
+  flex: 1;
+  height: 50px;
+  width: 50px;
+} 

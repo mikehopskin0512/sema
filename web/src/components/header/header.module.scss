@@ -31,3 +31,10 @@
     background-color: $gray-300;
   }
 }
+
+.avatar-name-wrapper {
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

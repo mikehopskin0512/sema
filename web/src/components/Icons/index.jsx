@@ -89,10 +89,17 @@ import { ReactComponent as TagSvg } from './img/tag.svg';
 import { ReactComponent as InviteSvg } from './img/invite.svg';
 import { ReactComponent as Trophy2Svg } from './img/trophy2.svg';
 import { ReactComponent as FilterBarsSvg } from './img/filter-bars.svg';
+import { ReactComponent as DragTrigger } from './img/drag-trigger.svg';
 
 const getIconUrl = (name) => `/img/icons/svg/${name}.svg`;
 
-const Icon = ({ size = 'medium', color = 'currentColor', style, children, ...props }) => {
+const Icon = ({
+  size = 'medium',
+  color = 'currentColor',
+  style,
+  children,
+  ...props
+}) => {
   const sizes = {
     tiny: '8px',
     small: '16px',
@@ -515,7 +522,7 @@ export const ProductIcon = (props) => (
 );
 export const QuestionIcon = (props) => (
   <Icon {...props}>
-    <img src={getIconUrl('question')} alt="question icon" />
+    <img src={getIconUrl('question')} alt='question icon' />
   </Icon>
 );
 
@@ -587,7 +594,7 @@ export const Trophy2Icon = (props) => (
 
 export const ToolIcon = (props) => (
   <Icon {...props}>
-    <img src={getIconUrl('tool')} alt="fix icon" />
+    <img src={getIconUrl('tool')} alt='fix icon' />
   </Icon>
 );
 
@@ -608,7 +615,6 @@ export const UndoIcon = (props) => (
     <UndoSvg />
   </Icon>
 );
-
 
 export const UploadIcon = (props) => (
   <Icon {...props}>
@@ -673,5 +679,11 @@ export const InviteIcon = (props) => (
 export const FilterBarsIcon = (props) => (
   <Icon {...props}>
     <FilterBarsSvg fill="" />
+  </Icon>
+);
+
+export const DragTriggerIcon = (props) => (
+  <Icon {...props}>
+    <DragTrigger />
   </Icon>
 );
