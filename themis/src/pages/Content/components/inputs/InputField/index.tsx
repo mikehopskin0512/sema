@@ -10,6 +10,7 @@ interface IInputField {
   onInput: (v: string) => typeof v;
   placeholder?: string
   isTextarea?: boolean
+  error: string,
 }
 
 const InputField = (
@@ -19,6 +20,7 @@ const InputField = (
     isRequired = false,
     onInput,
     isTextarea = false,
+    error,
     placeholder = '',
   }: IInputField,
 ) => (
@@ -44,6 +46,7 @@ const InputField = (
         placeholder={placeholder}
       />
     )}
+    {error && <div className={styles.error}>{error}</div>}
   </div>
 );
 

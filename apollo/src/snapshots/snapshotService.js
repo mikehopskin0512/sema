@@ -125,6 +125,8 @@ export const deleteOne = async (snapshotId) => {
 
 export const addPortfolioToSnapshot = async (snapshotId, portfolioId) => {
   try {
+    const snapshot = await Snapshot.findById(snapshotId);
+    if (snapshot?.portfolios?.map(i => i.toString())?.includes(portfolioId)) return snapshotId;
     await Snapshot.findByIdAndUpdate(
       new ObjectId(snapshotId),
       { $push: { portfolios: portfolioId } },

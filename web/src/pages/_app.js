@@ -21,6 +21,7 @@ import * as analytics from '../utils/analytics';
 import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
 import '../../styles/_calendar_overrides.scss';
+import '../../styles/dnd.scss';
 import usePermission from '../hooks/usePermission';
 import useApiError from '../hooks/useApiError';
 import NotFound from './404';
