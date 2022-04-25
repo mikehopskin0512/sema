@@ -42,9 +42,3 @@ export const getSearchTermQuery = () => {
     ]
   )
 };
-
-(async () => {
-  const docs = await getSearchTermQuery();
-  const returnArray = [];
-  docs.forEach((aResult) => returnArray.push(flattenObject(aResult)));
-})();

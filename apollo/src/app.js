@@ -55,7 +55,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(port, async () => {
+app._server = app.listen(port, async () => {
   logger.info('Server listening on port %d', port);
 });
 

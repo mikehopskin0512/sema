@@ -17,8 +17,6 @@ import db from '../shared/mongo';
  */
 passport.use(new BasicStrategy(
   async (clientId, clientSecret, done) => {
-    // logger.info('BASIC');
-
     if (db.verifyConnection(done)) {
       try {
         const payload = await validate(clientId, clientSecret);
@@ -48,8 +46,6 @@ passport.use(new BasicStrategy(
  */
 passport.use(new BearerStrategy(
   async (token, done) => {
-    // logger.info('BEARER');
-
     try {
       const { _id: userId } = await validateAuthToken(token);
       const user = await findById(userId);

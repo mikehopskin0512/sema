@@ -1,4 +1,10 @@
-require('dotenv').config();
+import path from 'path';
+
+const configPath = process.env.NODE_ENV === 'test' ?
+  path.resolve(__dirname, '../../.env.test') :
+  '.env';
+
+require('dotenv').config({ path: configPath });
 
 module.exports = {
   port: process.env.PORT || 3000,
