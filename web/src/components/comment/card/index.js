@@ -217,20 +217,15 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     }
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
+                        <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
+                          Edit Collection
+                        </a>
                         {
-                          isTeamAdmin() && (
-                            <>
-                              <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
-                                Edit Collection
-                              </a>
-                              {
-                                !isSemaDefaultCollection(name) && (
-                                  <a className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
-                                    {isNotArchived ? 'Archive' : 'Unarchive'} Collection
-                                  </a>
-                                )
-                              }
-                            </>
+                          !isSemaDefaultCollection(name) && (
+                            <a className='dropdown-item is-clickable'
+                               onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                              {isNotArchived ? 'Archive' : 'Unarchive'} Collection
+                            </a>
                           )
                         }
                       </div>
