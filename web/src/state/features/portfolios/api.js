@@ -8,5 +8,6 @@ export const deleteSnapshotsFromPortfolio = (id, body, token) => update(`/api/pr
 export const deletePortfolio = (id, token) => deleteItem('/api/proxy/portfolios', id, token);
 export const patchPortfolioType = (id, type, token) => patch(`/api/proxy/portfolios/${id}/type`, { type }, token);
 export const patchPortfolioTitle = (id, title, token) => patch(`/api/proxy/portfolios/${id}/title`, { title }, token);
+export const patchPortfolioOverview = (id, overview, token) => patch(`/api/proxy/portfolios/${id}/overview`, { overview }, token);
 export const createPortfolio = (portfolioData, token) => create('/api/proxy/portfolios', portfolioData, token);
 export const addSnapshotToPortfolio = (portfolioId, snapshots, token) => create(`/api/proxy/portfolios/${portfolioId}/snapshots`, { snapshots }, token);
