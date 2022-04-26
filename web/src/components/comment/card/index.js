@@ -1,20 +1,19 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
+import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
-import { teamsOperations } from '../../../state/features/teams';
 import usePermission from '../../../hooks/usePermission';
-import { PlusIcon, CommentsIcon, OptionsIcon } from '../../../components/Icons';
+import { CommentsIcon, OptionsIcon, PlusIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
-import { updateTeamCollectionIsActiveAndFetchCollections } from "../../../state/features/teams/operations";
+import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
 import { fetchTeamCollections } from '../../../state/features/teams/actions';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
@@ -37,7 +36,12 @@ const Tag = ({ tag, _id, type }) => (
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const titleRef = useRef(null);
-  const { isTeamAdmin } = usePermission();
+  const {
+    isTeamAdmin,
+    isTeamAdminOrLibraryEditor,
+    isSemaAdmin,
+    isIndividualUser,
+  } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
   const { token, user, selectedTeam } = useSelector((state) => state.authState);
@@ -126,6 +130,16 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
 
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
 
+    const isMenuShown = () => {
+      const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+
+      if (isTeamAdminOrLibraryEditor() || isSemaAdmin()) return true;
+      if (isTeamAdmin() && isTeamSnippet) return true
+      if (isIndividualUser()) return collectionData.author.toLowerCase() === user.username.toLowerCase()
+
+      return false;
+    }
+
     return (
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-clickable', styles.card)} aria-hidden="true">
@@ -192,27 +206,26 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     </div>
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
-                    <div className="dropdown-trigger">
-                      <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
-                        <OptionsIcon />
-                      </button>
-                    </div>
+                    {
+                      isMenuShown() && (
+                        <div className="dropdown-trigger">
+                          <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
+                            <OptionsIcon />
+                          </button>
+                        </div>
+                      )
+                    }
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
+                        <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
+                          Edit Collection
+                        </a>
                         {
-                          isTeamAdmin() && (
-                            <>
-                              <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className="dropdown-item">
-                                Edit Collection
-                              </a>
-                              {
-                                !isSemaDefaultCollection(name) && (
-                                  <a className="dropdown-item is-clickable" onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
-                                    {isNotArchived ? 'Archive' : 'Unarchive'} Collection
-                                  </a>
-                                )
-                              }
-                            </>
+                          !isSemaDefaultCollection(name) && (
+                            <a className='dropdown-item is-clickable'
+                               onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
+                              {isNotArchived ? 'Archive' : 'Unarchive'} Collection
+                            </a>
                           )
                         }
                       </div>

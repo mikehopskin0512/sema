@@ -10,6 +10,7 @@ import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../compone
 import toaster from 'toasted-notes';
 import router from 'next/router';
 import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
+import SnapshotModal from '../../../../components/snapshots/modalWindow';
 import { snapshotsOperations } from '../../../../state/features/snapshots';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
@@ -35,8 +36,8 @@ const snapshotList = () => {
                 <CloseIcon size="small" />
               </div>
             </div>
-            {!isError && <div 
-              className="has-text-info is-clickable is-underlined" 
+            {!isError && <div
+              className="has-text-info is-clickable is-underlined"
               onClick={() => {
                 router.push(path);
                 onClose();
@@ -55,10 +56,13 @@ const snapshotList = () => {
   const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
   const isModalActive = !!snapshotIdForPortfolio;
   const dispatch = useDispatch();
-
+  const [editingSnapshot, setEditingSnapshot] = useState(null);
   const [isDeleteModal, setDeleteModal] = useState(false);
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const { snapshotsState, authState } = useSelector((state) => state);
+  const isEditModalOpen = editingSnapshot !== null;
+  const clearEditingSnapshot = () => setEditingSnapshot(null);
+
   const {
     data: { snapshots },
   } = snapshotsState;
@@ -131,9 +135,8 @@ const snapshotList = () => {
               isRight
               options={[
                 {
-                  // TODO: Edit function
                   label: 'Edit',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => setEditingSnapshot(snapshots[row.index])
                 },
                 {
                   label: 'Duplicate',
@@ -199,6 +202,13 @@ const snapshotList = () => {
         additionalWrapperClass={styles["snapshots-modal-wrapper"]}
         titleClass={styles["snapshots-modal-title"]}
         crossClass={styles["snapshots-modal-cross"]}
+      />
+      <SnapshotModal
+        key={editingSnapshot?._id}
+        active={isEditModalOpen}
+        onClose={clearEditingSnapshot}
+        snapshotData={editingSnapshot}
+        type="edit"
       />
     </div>
   );

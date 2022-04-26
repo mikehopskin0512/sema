@@ -42,6 +42,10 @@ const reducer = (state = initialState, action) => {
         isFetching: false,
         data: {
           ...state.data,
+          snapshots: state.data.snapshots.map(someSnapshot => {
+            if (someSnapshot._id === action.snapshot._id) return action.snapshot;
+            return someSnapshot;
+          }),
           snapshot: action.snapshot,
         },
       };
