@@ -2,16 +2,24 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { InputField } from 'adonis';
+import { useDispatch } from 'react-redux';
+import { updatePortfolioOverview } from '../../../state/features/portfolios/actions';
 import Toaster from '../../toaster';
 import styles from './editModal.module.scss';
 import { SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../utils/constants';
 
-const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, onSubmit }) => {
+const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, portfolioId }) => {
   const [overview, setOverview] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setOverview(profileOverview);
   }, [profileOverview]);
+
+  const onSubmit = async () => {
+    dispatch(updatePortfolioOverview(portfolioId, overview));
+    toggleModalActive(false);
+  };
 
   return (
     <>
@@ -65,7 +73,7 @@ EditPortfolio.propTypes = {
   isModalActive: PropTypes.bool.isRequired,
   toggleModalActive: PropTypes.func.isRequired,
   profileOverview: PropTypes.string.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  portfolioId: PropTypes.string.isRequired,
 };
 
 export default EditPortfolio;
