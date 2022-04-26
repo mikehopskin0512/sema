@@ -1,4 +1,4 @@
-import { updatePortfolioType, updatePortfolioTitle } from './helpers';
+import { updatePortfolioFieldById } from './helpers';
 import * as types from './types';
 
 const initialState = {
@@ -57,6 +57,30 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: true,
     };
+  case types.REQUEST_UPDATE_PORTFOLIO_FIELD: {
+    const { portfolioId, field, value } = action;
+    const portfolios = [...state.data.portfolios];
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        portfolios: updatePortfolioFieldById(portfolios, portfolioId, field, value),
+      },
+      error: {},
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_FIELD_ERROR: {
+    const { portfolioId, field, initialValue, error } = action;
+    const portfolios = [...state.data.portfolios];
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        portfolios: updatePortfolioFieldById(portfolios, portfolioId, field, initialValue),
+      },
+      error,
+    };
+  }
   case types.REQUEST_UPDATE_PORTFOLIO_SUCCESS: {
     const { portfolios } = state.data;
     const { portfolio } = action;
@@ -203,34 +227,6 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE: {
-    const { portfolioId, portfolioType } = action;
-    return {
-      ...updatePortfolioType(state, portfolioId, portfolioType),
-      error: {},
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR: {
-    const { portfolioId, portfolioType } = action;
-    return {
-      ...updatePortfolioType(state, portfolioId, portfolioType),
-      error: action.errors,
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TITLE: {
-    const { portfolioId, title } = action;
-    return {
-      ...updatePortfolioTitle(state, portfolioId, title),
-      error: {},
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR: {
-    const { portfolioId, initialTitle } = action;
-    return {
-      ...updatePortfolioTitle(state, portfolioId, initialTitle),
-      error: action.error,
-    };
-  }
   default:
     return state;
   }
