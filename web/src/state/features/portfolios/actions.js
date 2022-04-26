@@ -16,6 +16,7 @@ import {
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
+import { requestAddSnapshotToPortfolio } from '../snapshots/actions';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -356,6 +357,10 @@ export const addSnapshotsToPortfolio = ({
 
     if (type === 'dashboard') {
       dispatch(requestFetchPortfolioSuccess(data));
+    }
+
+    if (type === 'list') {
+      dispatch(requestAddSnapshotToPortfolio(snapshots[0], portfolioId))
     }
 
     if (typeof onSuccess === 'function') onSuccess(snapshots);

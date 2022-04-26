@@ -11,6 +11,12 @@ const requestFetchUserSnapshotsSuccess = (snapshots) => ({
   snapshots,
 });
 
+export const requestAddSnapshotToPortfolio = (snapshotId, portfolioId) => ({
+  type: types.REQUEST_ADD_SNAPSHOT_TO_PORTFOLIO,
+  snapshotId,
+  portfolioId
+});
+
 const requestFetchUserSnapshotsError = (errors) => ({
   type: types.REQUEST_FETCH_USER_SNAPSHOTS_ERROR,
   errors,
@@ -20,7 +26,7 @@ const requestUpdateSnapshot = () => ({
   type: types.REQUEST_UPDATE_SNAPSHOT,
 });
 
-const requestUpdateSnapshotSuccess = (snapshot) => ({
+export const requestUpdateSnapshotSuccess = (snapshot) => ({
   type: types.REQUEST_UPDATE_SNAPSHOT_SUCCESS,
   snapshot,
 });
