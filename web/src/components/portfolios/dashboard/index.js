@@ -25,10 +25,10 @@ import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
 
-const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
     toaster.notify(({ onClose }) => (
@@ -74,7 +74,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
-  const [isActive, setIsActive] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
   const isOwner = portfolio.userId === auth.user._id;
@@ -97,32 +96,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       }
     }
     setIsParsing(false);
-  };
-
-  const onSaveProfile = async (values) => {
-    const {
-      _id,
-      ...rest
-    } = portfolio;
-    if (_id && token) {
-      const body = {
-        _id,
-        ...rest,
-        ...values,
-      };
-
-      body.snapshots = body.snapshots.map(({
-        id: snapshot,
-        sort,
-      }) => ({
-        id: { _id: snapshot._id },
-        sort,
-      }));
-      const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
-      if (payload.status === RESPONSE_STATUSES.SUCCESS) {
-        toggleEditModal(false);
-      }
-    }
   };
 
   const onDeletePortfolio = async () => {
@@ -204,9 +177,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         toggleModalActive={toggleAddModal}
         portfolio={portfolio}
       />
-      {/* TODO: should be removed in future iterations, caused by tickets duplication */}
-      {/* <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} /> */}
-      <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
+      <EditPortfolio
+        isModalActive={isEditModalOpen}
+        toggleModalActive={toggleEditModal}
+        profileOverview={portfolio.overview}
+        portfolioId={portfolio._id}
+      />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
@@ -222,8 +198,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
             />
             <div className="is-relative is-flex is-align-items-center">
               {isOwner && isIndividualView && <>
-                <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
-                  <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                  <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
                         (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
@@ -241,6 +217,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     <label htmlFor={`activeSwitch-${portfolio._id}`} />
                   </div>
                   <div
+                    className="is-flex"
                     onClick={isPublicPortfolio ? onCopy : () => { }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -283,7 +260,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
                     },
                   ]}
                   trigger={
-                    <div className="is-clickable">
+                    <div className="is-clickable is-flex">
                       <OptionsIcon />
                     </div>
                   }
@@ -317,7 +294,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
                 <div className="content is-relative p-10 pr-80 pt-20">
-                  {user.overview}
+                  {portfolio.overview}
                 </div>
                 {
                   isOwner && (
