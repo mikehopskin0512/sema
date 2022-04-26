@@ -12,7 +12,7 @@ import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import { DashboardDraggableList } from './dnd/dashboardList';
+import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
 import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
@@ -295,7 +295,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
         </div>
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
-        <div className="portfolio-content mb-50 container">
+        <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
@@ -335,7 +335,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
           </div>
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
-          <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
+          <p className="mb-5 is-size-4 has-text-weight-semibold">Snapshots</p>
           <DashboardDraggableList
             pageLayout={layout}
             updateLayout={onLayoutChange}
