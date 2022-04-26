@@ -15,14 +15,16 @@ import { InputField } from 'adonis';
 import styles from './modalWindow.module.scss';
 import { isEmpty } from 'lodash';
 import SnapshotChartContainer from '../snapshotChartContainer';
+import { snapshotsOperations } from '../../../state/features/snapshots';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
 import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
-import { notify } from '../../../components/toaster/index.js';
+import { notify } from '../../toaster/index.js';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
+const { requestUpdateSnapshotSuccess } = snapshotsOperations;
 const { triggerAlert } = alertOperations;
 
 const schema = yup.object()
@@ -51,7 +53,7 @@ const SnapshotModal = ({
   onClose,
   snapshotData,
   type,
-  dataType,
+  dataType = snapshotData?.componentType,
   startDate,
   endDate,
 }) => {
@@ -96,6 +98,8 @@ const SnapshotModal = ({
       if (type === SNAPSHOT_MODAL_TYPES.EDIT) {
         const payload = await dispatch(updateSnapshot(snapshotData._id, { ...snapshotData, ...snapshotDataForSave }, token));
         if (payload.status === 200) {
+          dispatch(requestUpdateSnapshotSuccess(payload.data));
+          notify('Snapshot was successfully edited.', { type: 'success' });
           onClose(payload.data);
         }
       } else {

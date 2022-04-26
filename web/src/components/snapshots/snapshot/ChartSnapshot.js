@@ -19,6 +19,7 @@ const ChartSnapshot = React.forwardRef(({
   snapshotData,
   portfolioId,
   preview,
+  spaced,
   isOwner,
   onUpdate
 }, ref) => {
@@ -73,8 +74,8 @@ const ChartSnapshot = React.forwardRef(({
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, styles['chart-snapshot'], "has-background-gray-200 p-25 is-relative")} ref={preview}>
-        {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline mr-0", styles['container-buttons-wrapper'])}>
+      <div className={clsx(styles.snapshot, styles['chart-snapshot'], 'has-background-gray-200 mb-30 p-25 is-relative', spaced && 'mr-16')} ref={preview}>
+        {isOwner && <div className={clsx('is-pulled-right mb-40 is-flex is-align-items-baseline mr-0', styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
             options={[
@@ -82,7 +83,7 @@ const ChartSnapshot = React.forwardRef(({
                 label: 'Duplicate Snapshot',
                 onClick: () => {
                   dispatch(duplicateSnapshot(snapshotData, token));
-                }
+                },
               },
               { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
