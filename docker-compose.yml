@@ -30,6 +30,17 @@ services:
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
+  apollo-test:
+    image: apollo-dev-i
+    volumes:
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
+    command: npm run test
+    depends_on:
+      - mongodb
+    container_name: phoenix.apollo.test.local
+    networks:
+      - sema
   apollo-migrations:
     image: apollo-dev-i
     volumes:
