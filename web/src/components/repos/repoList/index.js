@@ -15,6 +15,7 @@ import DropDownMenu from '../../../components/dropDownMenu';
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
 import { blue700 } from '../../../../styles/_colors.module.scss';
+import { alertOperations } from '../../../state/features/alerts';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
@@ -24,10 +25,10 @@ const LIST_TYPE = {
 
 const filterOptions = [
   { value: 'a-z', label: 'A - Z', placeholder: 'A - Z' },
-  { value: 'z-a', label: 'Z - A',  placeholder: 'Z - A' },
-  { value: 'dateAdded', label: 'Date Added',  placeholder: 'Date Added' },
-  { value: 'mostRecent', label: 'Most Recent Sema Comment',  placeholder: 'Recent comment' },
-  { value: 'mostActive', label: 'Most Active',  placeholder: 'Most Active' },
+  { value: 'z-a', label: 'Z - A', placeholder: 'Z - A' },
+  { value: 'dateAdded', label: 'Date Added', placeholder: 'Date Added' },
+  { value: 'mostRecent', label: 'Most Recent Sema Comment', placeholder: 'Recent comment' },
+  { value: 'mostActive', label: 'Most Active', placeholder: 'Most Active' },
 ]
 
 const RepoList = ({
@@ -44,6 +45,7 @@ const RepoList = ({
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
   const { isTeamAdmin } = usePermission();
+  const { clearAlert } = alertOperations;
 
   const removeRepo = async (repoId) => {
     try {
@@ -102,6 +104,11 @@ const RepoList = ({
     ))
   }
 
+  const handleOnClose = () => {
+    dispatch(clearAlert());
+    setRepoListOpen(false);
+  }
+
   useEffect(() => {
     sortRepos();
   }, [sort, repos]);
@@ -113,7 +120,7 @@ const RepoList = ({
         {isTeamAdmin() && (
           <TeamReposList
             isActive={isRepoListOpen}
-            onClose={() => setRepoListOpen(false)}
+            onClose={handleOnClose}
           />
         )}
         <div className="is-flex is-justify-content-space-between">
@@ -130,16 +137,14 @@ const RepoList = ({
               </button>
             )}
           </div>
-          {type !== 'REPOS' && (
-            <div className="is-flex">
-              <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
-                <ListIcon />
-              </button>
-              <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
-                <GridIcon />
-              </button>
-            </div>
-          )}
+          <div className="is-flex">
+            <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
+              <ListIcon />
+            </button>
+            <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
+              <GridIcon />
+            </button>
+          </div>
         </div>
         <div className='columns'>
           <div className='column'>
@@ -164,7 +169,7 @@ const RepoList = ({
                   })
                 }
                 trigger={(
-                  <button class="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
+                  <button className="button is-primary is-outlined" aria-haspopup="true" aria-controls="dropdown-menu2">
                     <FilterBarsIcon size="small" fill={blue700} />
                     <span className='ml-10 has-text-weight-semibold'>{sort.placeholder || 'Sort By'}</span>
                   </button>
@@ -179,7 +184,7 @@ const RepoList = ({
           </div>
         ) : null}
         {view === 'list' ? (
-          <RepoTable data={filteredRepos} />
+          <RepoTable data={filteredRepos} removeRepo={removeRepo} isTeamView={type !== 'MY_REPOS'} />
         ) : null}
       </div>
     ) : null

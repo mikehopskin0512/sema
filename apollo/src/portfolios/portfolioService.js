@@ -9,6 +9,7 @@ const { Types: { ObjectId } } = mongoose;
 const structurePortfolio = ({
   _id = null, userId = null, firstName = null, lastName = null, identities = [],
   headline = null, imageUrl = null, overview = null, type = PORTFOLIO_TYPES.PRIVATE, snapshots = [], title = null,
+  layout = []
 }) => {
   const userAvatarUrl = identities.length && identities[0].avatarUrl;
   const portfolioAvatarUrl = imageUrl || userAvatarUrl;
@@ -23,6 +24,7 @@ const structurePortfolio = ({
     overview,
     type,
     title,
+    layout,
     snapshots: snapshots.map(({ id: snapshot, sort }) => ({ id: new ObjectId(snapshot._id), sort })),
   }
 };
@@ -166,19 +168,28 @@ export const getPortfolioById = async (portfolioId, populate = true) => {
   }
 };
 
-export const addSnapshotToPortfolio = async (portfolioId, snapshotId) => {
+export const addSnapshotsToPortfolio = async (portfolioId, snapshotIds) => {
   try {
     const portfolio = await getPortfolioById(portfolioId, false);
-    const snapshots = portfolio.snapshots.map(({ id, sort }) => {
-      const position = sort + 1;
-      return { id, sort: position };
-    });
-    snapshots.unshift({ id: snapshotId, sort: 0 });
-    const updatedPortfolio = await Portfolio.findOneAndUpdate(
+
+    const portfolioSnaps = portfolio.snapshots?.map(i => i.id.toString())
+
+    const portfolioSnapshots = portfolio.snapshots?.map(({ id, sort }) => (
+      { id, sort: sort + snapshotIds.length }
+    ));
+
+    const snapshots = [
+      // To exclude duplicates
+      ...snapshotIds.filter(snap => !portfolioSnaps?.includes(snap))?.map((id, sort) => ({ id, sort })),
+      ...portfolioSnapshots,
+    ];
+
+    await Portfolio.findOneAndUpdate(
       { _id: new ObjectId(portfolioId) },
       { $set: { snapshots } },
     ).exec();
-    return updatedPortfolio;
+
+    return getPortfolioById(portfolioId);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);

@@ -9,6 +9,7 @@ import { isEmpty } from 'lodash';
 import { addDays, format } from 'date-fns';
 import { SearchIcon } from '../Icons';
 import { InputField } from 'adonis';
+import { gray500 } from '../../../styles/_colors.module.scss';
 
 const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
   const [filter, setFilter] = useState({
@@ -157,7 +158,7 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
               />
             </div>
             <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
-              <SearchIcon color={'#B7C0C6'} size="medium" className="is-clickable" onClick={handleSearchToggle} />
+              <SearchIcon color={gray500} size="medium" className="is-clickable" onClick={handleSearchToggle} />
             </div>
           </div>
           {toggleSearch && <div className={clsx(`field mt-0 mb-0 is-flex-grow-1 ${styles['search-bar']}`)}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LaunchDarkly from '../components/launchDarkly';
 import { useRouter } from 'next/router';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
@@ -21,6 +21,7 @@ import * as analytics from '../utils/analytics';
 import '../../styles/_theme.scss';
 import '../../styles/_calendar.scss';
 import '../../styles/_calendar_overrides.scss';
+import '../../styles/dnd.scss';
 import usePermission from '../hooks/usePermission';
 import useApiError from '../hooks/useApiError';
 import NotFound from './404';
@@ -87,6 +88,7 @@ const Application = ({ Component, pageProps, store }) => {
     analytics.segmentIdentify(user);
 
     const handleRouteChange = (url) => {
+      analytics.segmentPage();
       analytics.googleAnalyticsPageView(url);
       analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_PAGE, { url });
     };
@@ -105,7 +107,7 @@ const Application = ({ Component, pageProps, store }) => {
   return (
     <Provider store={store}>
       <LaunchDarkly>
-        <Layout Component={Component} pageProps={pageProps}/>
+        <Layout Component={Component} pageProps={pageProps} />
       </LaunchDarkly>
     </Provider>
   );
@@ -118,3 +120,4 @@ Application.getInitialProps = async ({ Component, ctx }) => {
 };
 
 export default withRedux(initStore)(Application);
+

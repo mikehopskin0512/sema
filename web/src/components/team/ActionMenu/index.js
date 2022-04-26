@@ -21,17 +21,15 @@ const ActionMenu = ({ member, onRemove, disabled = false }) => {
   return (
     <div>
       <div className={`dropdown is-right ${isOpen ? 'is-active' : ''}`}>
-        <div className="dropdown-trigger">
+        {!disabled && (<div className="dropdown-trigger">
           <button
             className="button is-text is-small outline-none has-background-white"
             type="button"
             onClick={toggleMenu}
           >
-            {!disabled && (
-              <DotsIcon />
-            )}
+            <DotsIcon />
           </button>
-        </div>
+        </div>)}
         <div className="dropdown-menu" role="menu" ref={popupRef}>
           <div className="dropdown-content py-10">
             <div className="dropdown-item py-0">

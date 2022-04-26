@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -9,8 +9,12 @@ import ReposView from '../../../../components/repos/reposView';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS } from '../../../../utils/constants';
 import { teamsOperations } from '../../../../state/features/teams';
 import withLayout from '../../../../components/layout';
+import Toaster from '../../../../components/toaster';
+import useAuthEffect from '../../../../hooks/useAuthEffect';
+import { repositoriesOperations } from '../../../../state/features/repositories';
 
 const { fetchTeamRepos } = teamsOperations;
+const { fetchRepoDashboard } = repositoriesOperations;
 
 const TeamRepository = () => {
   const dispatch = useDispatch();
@@ -18,15 +22,25 @@ const TeamRepository = () => {
     query: { teamId },
   } = useRouter();
 
-  const { auth, teams } = useSelector(
+  const { alerts, auth, teams, } = useSelector(
     (state) => ({
+      alerts: state.alertsState,
       auth: state.authState,
       teams: state.teamsState,
     }),
   );
+
+  const { token, user } = auth;
+  const { identities } = user;
+
+  const userRepos = identities?.length ? identities[0].repositories : [];
+  const { showAlert, alertType, alertLabel } = alerts;
+
+  const memoizedToaster = useMemo(() => {
+    return <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
+  }, [alertType]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchStarted, setSearchStarted] = useState(false);
-  const { token } = auth;
   const [isReposLoading, toggleReposLoading] = useState(true);
 
   const fetchRepos = async (teamId, token) => {
@@ -50,18 +64,31 @@ const TeamRepository = () => {
     }
   }, [searchQuery])
 
+  useAuthEffect(() => {
+    if (userRepos.length) {
+      const externalIds = userRepos.map((repo) => repo.id);
+      dispatch(fetchRepoDashboard({
+        externalIds,
+        searchQuery,
+      }, token));
+    }
+  }, [userRepos]);
+
   return (
     <>
-      {teams.isFetching || isReposLoading ? (
-        <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-          <Loader />
-        </div>
-      ) : (
-        <div>
-          <Helmet {...TeamReposHelmet} />
-          <ReposView type="team" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
-        </div>
-      )}
+      {memoizedToaster}
+      <>
+        {teams.isFetching || isReposLoading ? (
+          <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
+            <Loader />
+          </div>
+        ) : (
+          <div>
+            <Helmet {...TeamReposHelmet} />
+            <ReposView type="team" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
+          </div>
+        )}
+      </>
     </>
   )
 }
