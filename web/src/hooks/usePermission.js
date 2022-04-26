@@ -50,6 +50,14 @@ function usePermission() {
     return !!adminOrEditor;
   }
 
+  const isIndividualUser = () => {
+    return !isSemaAdmin || !isTeamAdmin || !IsTeamLibraryEditor
+  }
+
+  const isTeamCollection = (id) => {
+    return !!(selectedTeam.team.collections.find(collection => collection.collectionData === id || collection.collectionData._id === id));
+  }
+
   return {
     checkAccess,
     checkTeamPermission,
@@ -58,6 +66,8 @@ function usePermission() {
     isTeamAdmin,
     IsTeamLibraryEditor,
     isTeamAdminOrLibraryEditor,
+    isIndividualUser,
+    isTeamCollection
   };
 }
 

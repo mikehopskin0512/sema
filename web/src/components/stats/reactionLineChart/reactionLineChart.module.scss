@@ -1,0 +1,49 @@
+@import "styles/colors.module";
+
+.containers {
+  height: 500px;
+  width: calc(100% / 2);
+  @media only screen and (max-width: 769px) {
+    width: 100% !important;
+    height: 200px;
+  }
+}
+
+.snapshotContainer {
+  width: 100%;
+  height: 440px;
+  @media only screen and (max-width: 769px) {
+    height: 200px;
+  }
+  padding-bottom: 0;
+}
+
+.shadow {
+  box-shadow: 0px 0px 4.80607px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.tooltip {
+  border: 1px solid $gray-300;
+  box-shadow: 0px 2px 10px 0px #00000012;
+  width: 300px;
+  -webkit-animation: fade-in 250ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+  animation: fade-in 250ms cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+
+  @-webkit-keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}

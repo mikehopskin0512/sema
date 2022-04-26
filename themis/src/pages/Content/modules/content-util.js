@@ -663,6 +663,7 @@ export const toggleTagSelection = (
 export function onSuggestion() {
   const { activeElement } = document;
   const isValid = isValidSemaTextBox(activeElement);
+
   if (isValid) {
     const semabarContainer = $(activeElement).siblings(
       `div.${SEMABAR_CLASS}`,
@@ -675,20 +676,18 @@ export function onSuggestion() {
     const state = store.getState();
 
     const { suggestedReaction, suggestedTags } = payload;
-    const { isReactionDirty, isTagModalDirty } = state.semabars[semabarId];
+    const { isTagModalDirty } = state.semabars[semabarId];
+
     if (suggestedReaction) {
-      // isReactionDirty is true when reaction is manually selected from UI
-      // Should trigger reset when we delete our manually selected suggestion in textarea
-      if (!isReactionDirty || !activeElement.value?.length) {
-        store.dispatch(
-          updateSelectedEmoji({
-            id: semabarId,
-            selectedReaction: suggestedReaction,
-            isReactionDirty: false,
-          }),
-        );
-      }
+      store.dispatch(
+        updateSelectedEmoji({
+          id: semabarId,
+          selectedReaction: suggestedReaction,
+          isReactionDirty: false,
+        }),
+      );
     }
+
     // allow to change state even when empty to remove existing tags if no suggestion
     if (!isTagModalDirty && suggestedTags) {
       store.dispatch(

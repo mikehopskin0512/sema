@@ -115,6 +115,10 @@ export const segmentIdentify = (user) => {
   });
 };
 
+export const segmentPage = () => {
+  global.analytics.page();
+};
+
 export const segmentTrack = (action, properties) => {
   global.analytics.track(action, {
     ...properties,

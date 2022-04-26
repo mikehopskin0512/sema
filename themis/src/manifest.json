@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Sema | Smart Code Reviews",
+  "name": "Sema | Code Review Assistant",
   "description": "Help code reviewers write faster, more accurate, more reusable reviews.",
-  "version": "1.42.36",
+  "version": "1.42.36.3",
   "background": {
     "service_worker": "background.bundle.js"
   },

@@ -1,153 +1,103 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx';
-import { reverse, find, round } from 'lodash';
-import { format, isValid } from 'date-fns';
+import PropTypes from 'prop-types';
 import { TooltipWrapper } from '@nivo/tooltip';
-import BarChart from '../../BarChart';
-import styles from './reactionChart.module.scss';
+import { format, isValid } from 'date-fns';
+import { round, find, findIndex } from 'lodash';
+import LineChart from './lineChart'
 import SnapshotButton from '../../snapshots/snapshotButton';
+import styles from './reactionLineChart.module.scss';
 import { ArrowDownIcon, ArrowUpIcon } from '../../Icons';
 import { BAR_CHART_MIN_TOP, EMOJIS } from '../../../utils/constants';
-import {
-  black900,
-  green600,
-  green100,
-  red200,
-  red600,
-  gray200,
-} from '../../../../styles/_colors.module.scss';
 import { checkIfDateHasMonth, getTotalReactions } from '../../../utils/codeStats';
 
-const ReactionChart = ({
-  reactions, className, yAxisType, groupBy, isSnapshot, onClick,
+
+const ReactionLineChart = ({
+  reactions, className, groupBy, isSnapshot, onClick,
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
-  const [tooltipPosition, setTooltipPosition] = useState('top');
   const [emptyChart, setEmptyChart] = useState(false);
-  const [barChartData, setBarChartData] = useState([]);
-  const [maxValue, setMaxValue] = useState(0);
+  const [lineChartData, setLineChartData] = useState([])
+  const [tooltipPosition, setTooltipPosition] = useState('top');
 
   const handleTooltipPosition = (event) => {
     setTooltipPosition(event.clientY > BAR_CHART_MIN_TOP ? 'top' : 'bottom');
   };
 
-  useEffect(() => {
-    if (yAxisType === "total") {
-      const totalArr = barChartData.filter((chartData) => chartData.total).map((chartData) => chartData.total);
-      setMaxValue(Math.max(...totalArr));
-    } else {
-      setMaxValue(100);
-    }
-  }, [barChartData])
-
-  const parseData = (rawData) => {
-    if (rawData.length) {
-      return rawData.map((item) => {
-        const keys = Object.keys(item);
-        const total = keys.reduce((acc, val) => {
-          if (val === 'date') {
-            return acc;
-          }
-          return acc + item[val].current;
-        }, 0);
-        if (total > 0) {
-          const obj = keys.reduce((acc, curr) => {
-            if (curr === 'date') {
-              return acc[curr] = item[curr], acc;
-            }
-            if (yAxisType === 'total') {
-              return acc[curr] = item[curr].current, acc;
-            }
-            return acc[curr] = round((item[curr].current * 100) / total, 2), acc;
-          }, {});
-          return {
-            total,
-            ...obj,
-          }
+  const reactionsToLineChart = (reactions) => {
+    const lineChartData = []
+    reactions.forEach((r) => {
+      const { date, ...dateReactions } = r;
+      const total = Object.keys(dateReactions).reduce((previous, key) =>  {
+        return previous + dateReactions[key].current;
+      }, 0);
+      EMOJIS.forEach((e) => {
+        const { _id: emojiId, color } = e
+        const percentageValue = total === 0 ? 0 : round(r[emojiId].current * 100 / total, 2) ;
+        const obj = {
+          x: r.date,
+          y: percentageValue,
+          tooltipData: r[emojiId]
         }
-        return {
-          date: item.date,
-        };
-      });
-    }
-    return [];
+        const index = findIndex(lineChartData, { id: emojiId })
+        if (index !== -1) {
+          lineChartData[index].data.unshift(obj)
+        } else {
+          const reactionObj = {
+            id: emojiId,
+            color,
+            data: [obj]
+          };
+          lineChartData.push(reactionObj);
+        }
+      })
+    });
+    return lineChartData;
   };
 
   useEffect(() => {
     const total = getTotalReactions(reactions);
     if (total > 0) {
-      const parsedData = parseData(reactions);
-      setBarChartData(reverse(parsedData));
+      const parsed = reactionsToLineChart(reactions);
+      setLineChartData(parsed)
       setEmptyChart(false);
     } else {
       setEmptyChart(true);
     }
   }, [reactions]);
 
-  const getDataColor = ({ id }) => {
-    const emoji = find(EMOJIS, { _id: id });
-    return emoji.color;
-  };
-
-  const TotalLabels = ({ bars, yScale }) => {
-    const labelMargin = 20;
-    return bars.map(({ data: { data, indexValue }, x, width }, i) => {
-      const total = data?.total
-
-      return (
-        <g
-          transform={`translate(${x}, ${yAxisType === 'percentage' ? -labelMargin : yScale(total) - labelMargin})`}
-          key={`${indexValue}-${i}`}
-        >
-          <text
-            className="bar-total-label"
-            x={width / 2}
-            y={labelMargin / 2}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            style={{
-              fill: black900,
-              fontSize: '14px'
-            }}
-          >
-            {total >= 1 && total}
-          </text>
-        </g>
-      );
-    });
-  };
-
-  const renderTooltip = React.memo((itemData) => {
-    const { id, value, indexValue, data: colData } = itemData;
-    const { emoji, label } = find(EMOJIS, { _id: id });
-    const completeData = find(reactions, { date: indexValue });
+  const renderTooltip = React.memo(({ point }) => {
+    const { serieId, data } = point;
+    const { x: dateId, tooltipData: hoveredData, y: value  } = data;
+    const { emoji, label } = find(EMOJIS, { _id: serieId });
+    const completeData = find(lineChartData, { id: serieId });
+    const reactionObj = find(reactions, { date: dateId })
+    const totalCol = Object.keys(reactionObj).filter((d) => d !== 'date').reduce((previous, b) => (previous + reactionObj[b].current), 0)
     if (completeData) {
-      const thisReactionData = completeData[id];
+      const thisReactionData = hoveredData
 
+      let dateString = dateId;
       // Parse date format
-      let dateString = indexValue;
-      if (indexValue.search('-') !== -1) {
-        let [date1, date2] = indexValue.split('-');
+      if (dateId.search('-') !== -1) {
+        let [date1, date2] = dateId.split('-');
         date2 = checkIfDateHasMonth(date1, date2);
         const parsedDate1 = format(new Date(date1), 'LLL d');
         const parsedDate2 = format(new Date(date2), 'LLL d');
         dateString = `${parsedDate1} - ${parsedDate2}`;
       } else {
-        const parsedDate = new Date(indexValue);
+        const parsedDate = new Date(dateId);
         const dateValid = isValid(parsedDate);
         if (dateValid) {
-          dateString = format(new Date(indexValue), 'LLLL d');
+          dateString = format(new Date(dateId), 'LLLL d');
         }
       }
 
       // Create dynamic totalCommentsLabel
       const totalCommentRange = (groupBy === 'day') ? `on this ${groupBy}` : `this ${groupBy}`;
-      const totalCommentsLabel = (yAxisType === 'total') ? round((value * 100) / colData.total, 2) + `% of total comments ${groupBy && totalCommentRange}` : value +
-        `% of total comments ${groupBy && totalCommentRange}`;
+      const totalCommentsLabel = value + `% of total comments ${groupBy && totalCommentRange}`;
 
       // Increase/decrease percentage
-      const { current, previous } = completeData[id] ?? {};
+      const { current, previous } = hoveredData ?? {};
       const valDifference = current - previous;
       const percentage = previous ? (valDifference/previous)*100 : 100;
 
@@ -179,7 +129,7 @@ const ReactionChart = ({
               <p className="font-size-14 has-text-weight-semibold has-text-white-50">{emoji} {label}</p>
               <div className="font-size-12 has-text-primary has-text-blue-300 has-text-weight-semibold is-uppercase">{dateString}</div>
             </div>
-            <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {colData.total} comment{(colData.total > 1) && `s`}</p>
+            <p className="font-size-12 line-height-18 has-text-gray-400">{thisReactionData.current} of {totalCol} comment{(totalCol > 1) && `s`}</p>
             <p className="font-size-12 line-height-18 has-text-gray-400">{totalCommentsLabel}</p>
             <div
               className={clsx('is-flex is-align-items-center font-size-10 py-3 px-5 border-radius-4px mt-8', getTooltipClasses())}
@@ -206,38 +156,33 @@ const ReactionChart = ({
         <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
           <div className="is-flex">
             <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
-            {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} /> }
+            {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
           </div>
-          <BarChart
-            yAxisType={yAxisType}
+          <LineChart
+            data={lineChartData}
             emptyChart={emptyChart}
-            barChartData={barChartData}
-            getDataColor={getDataColor}
             renderTooltip={renderTooltip}
-            maxValue={maxValue}
-            TotalLabels={TotalLabels}
           />
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-ReactionChart.defaultProps = {
+
+ReactionLineChart.defaultProps = {
   reactions: [],
   className: '',
-  yAxisType: 'percentage',
   groupBy: 'day',
   isSnapshot: false,
 };
 
-ReactionChart.propTypes = {
+ReactionLineChart.propTypes = {
   reactions: PropTypes.array,
   className: PropTypes.string,
-  yAxisType: PropTypes.string,
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.bool,
 };
 
-export default ReactionChart;
+export default ReactionLineChart;
