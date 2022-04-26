@@ -15,7 +15,7 @@ import {
   differenceInDays,
   addDays,
 } from 'date-fns';
-import { findIndex, range, reverse } from 'lodash';
+import { findIndex, range, reverse, round } from 'lodash';
 import { DAYS_IN_WEEK, EMOJIS, TAGS } from './constants';
 
 const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
@@ -411,6 +411,26 @@ const getWeekRange = (weeks) => {
     };
   });
   return { weekRange, reactionsByWeek, tagsArr };
+}
+
+export const checkIfDateHasMonth = (date1, date2) => {
+  const hasMonth = {
+    true: date2,
+    false: `${date1.split(" ")[0]} ${date2}`,
+  }
+  return hasMonth[date2?.includes(" ")];
+}
+
+export const getTotalReactions = (reactions) => {
+  let total = 0;
+  reactions.forEach((item) => {
+    let totalItem = 0;
+    EMOJIS.forEach((emoji) => {
+      totalItem += item[emoji._id].current
+    })
+    total += totalItem;
+  });
+  return total;
 }
 
 // This is used for parsing the tags data to have a similar look on reaction chart, this will be used for the tooltip on the Tags Chart.
