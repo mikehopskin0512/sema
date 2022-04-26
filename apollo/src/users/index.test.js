@@ -1,47 +1,49 @@
 import apollo from '../../test/apolloClient';
-import * as userService from './userService'
-import {createAuthToken} from '../auth/authService'
+import * as userService from './userService';
+import { createAuthToken } from '../auth/authService';
 
 describe('GET /users/:id', () => {
   let user;
   let token;
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     user = await userService.create({
       username: 'Ada',
       password: 's3cr3t',
       firstName: 'Ada',
       lastName: 'Lovelace',
-      identities: [{
-        email: 'ada@example.com',
-        provider: 'github'
-      }],
+      identities: [
+        {
+          email: 'ada@example.com',
+          provider: 'github',
+        },
+      ],
       terms: true,
     });
   });
 
   describe('unauthenticated', () => {
-    it('should return 401 Unauthorized', async() => {
-      await expect(async() => {
+    it('should return 401 Unauthorized', async () => {
+      await expect(async () => {
         await apollo.get(`/v1/users/${user.id}`, {
           headers: {
-            'authorization': `Bearer 123`
-          }
-        })
+            authorization: `Bearer 123`,
+          },
+        });
       }).rejects.toThrow(/401/);
     });
   });
 
   describe('authenticated', () => {
-    beforeAll(async() => {
+    beforeAll(async () => {
       token = await createAuthToken(user);
-    })
+    });
 
-    it('should return a user', async() => {
+    it('should return a user', async () => {
       const { status, data } = await apollo.get(`/v1/users/${user.id}`, {
         headers: {
-          'authorization': `Bearer ${token}`
-        }
+          authorization: `Bearer ${token}`,
+        },
       });
 
       expect(status).toBe(200);
