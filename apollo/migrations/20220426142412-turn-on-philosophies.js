@@ -4,11 +4,11 @@ const { Types: { ObjectId } } = mongoose;
 
 module.exports = {
   async up(db) {
-    const philosophiesCollection = await db.collection('collections').findOne({ type: 'community', name: 'Philosophies2' });
+    const philosophiesCollection = await db.collection('collections').findOne({ type: 'community', name: 'Philosophies' });
     if(!philosophiesCollection) return;
-    
+
     const philosophiesCollectionId = philosophiesCollection._id;
-    await db.collection('collections').updateOne({ _id: philosophiesCollectionId }, { $set: { isAcctiveByDefault: true } });
+    await db.collection('collections').updateOne({ _id: philosophiesCollectionId }, { $set: { isActiveByDefault: true } });
 
     const users = await db.collection('users').find({}).toArray();
     await Promise.all(users.map(async (user) => {
