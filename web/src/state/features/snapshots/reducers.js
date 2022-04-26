@@ -1,4 +1,4 @@
-import * as types from "./types";
+import * as types from './types';
 
 const initialState = {
   isFetching: false,
@@ -78,6 +78,21 @@ const reducer = (state = initialState, action) => {
         },
         error: {},
       };
+
+  case types.REQUEST_ADD_SNAPSHOT_TO_PORTFOLIO:
+    const { portfolioId, snapshotId } = action;
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        snapshots: state.data.snapshots.map(
+          (item) => item._id === snapshotId ? {
+            ...item,
+            portfolios: item.portfolios.includes(portfolioId) ? item.portfolios : [...item.portfolios, portfolioId],
+          } : item,
+        ),
+      }
+    }
 
     default:
       return state;
