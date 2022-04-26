@@ -11,11 +11,10 @@ import { ALERT_TYPES, PATHS, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../..
 import DeleteModal from '../../../../components/snapshots/deleteModal';
 import { alertOperations } from '../../../../state/features/alerts';
 import { portfoliosOperations } from '../../../../state/features/portfolios';
-import Toaster from '../../../../components/toaster';
-import { copyExistingPortfolio } from '../../../../state/features/portfolios/actions';
+import Toaster, { notify } from '../../../../components/toaster/index';
 
 const { triggerAlert, clearAlert } = alertOperations;
-const { removePortfolio, createNewPortfolio } = portfoliosOperations;
+const { removePortfolio, createNewPortfolio, copyExistingPortfolio } = portfoliosOperations;
 
 const PortfolioList = () => {
   const dispatch = useDispatch();
@@ -49,12 +48,16 @@ const PortfolioList = () => {
       token,
     }));
 
-    console.log('status', status);
     if (status === RESPONSE_STATUSES.CREATED) {
-      dispatch(triggerAlert('Portfolio was created.', ALERT_TYPES.SUCCESS));
-    }
-    else {
-      dispatch(triggerAlert('Portfolio was not created.', ALERT_TYPES.ERROR));
+      notify('Portfolio was created.', {
+        type: ALERT_TYPES.SUCCESS,
+        duration: 3000,
+      });
+    } else {
+      notify('Portfolio was not created.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
     }
   };
 
