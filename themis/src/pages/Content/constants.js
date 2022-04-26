@@ -320,14 +320,14 @@ export const SEGMENT_EVENTS = {
   INSTALLED_EXTENSION: 'Installed Extension',
   UNINSTALLED_EXTENSION: 'Uninstalled Extension',
   UPDATED_EXTENSION: 'Updated Extension',
-  VIEWED_GITHUB_PAGE: 'CE: Viewed Github Page',
-  CREATE_SMART_COMMENT: 'CE: Created Smart Comment',
-  CLICKED_COMMENT_LIBRARY_BAR: 'CE: Clicked Comment Library Bar',
-  CLICKED_REACTION: 'CE: Clicked Reaction',
-  CLICKED_ADD_TAGS: 'CE: Clicked Add Tags',
-  CLICKED_SAVE_TO_MY_COMMENTS: 'CE: Clicked Save to My Comments',
-  LOGIN_TOASTER_SHOWED: 'CE: Login Toaster Showed',
-  CLICKED_LOGIN_TOASTER: 'CE: Clicked Login Toaster',
+  VIEWED_GITHUB_PAGE: 'CE Viewed Github Page',
+  CREATE_SMART_COMMENT: 'CE Created Smart Comment',
+  CLICKED_COMMENT_LIBRARY_BAR: 'CE Clicked Comment Library Bar',
+  CLICKED_REACTION: 'CE Clicked Reaction',
+  CLICKED_ADD_TAGS: 'CE Clicked Add Tags',
+  CLICKED_SAVE_TO_MY_COMMENTS: 'CE Clicked Save to My Comments',
+  LOGIN_TOASTER_SHOWED: 'CE Login Toaster Showed',
+  CLICKED_LOGIN_TOASTER: 'CE Clicked Login Toaster',
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';

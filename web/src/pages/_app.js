@@ -88,6 +88,7 @@ const Application = ({ Component, pageProps, store }) => {
     analytics.segmentIdentify(user);
 
     const handleRouteChange = (url) => {
+      analytics.segmentPage();
       analytics.googleAnalyticsPageView(url);
       analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_PAGE, { url });
     };

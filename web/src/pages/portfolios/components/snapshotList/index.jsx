@@ -10,6 +10,7 @@ import { CloseIcon, AlertFilledIcon, CheckFilledIcon } from '../../../../compone
 import toaster from 'toasted-notes';
 import router from 'next/router';
 import DeleteSnapshot from '../../../../components/snapshots/deleteModal';
+import SnapshotModal from '../../../../components/snapshots/modalWindow';
 import { snapshotsOperations } from '../../../../state/features/snapshots';
 import { deleteUserSnapshot } from '../../../../state/features/snapshots/actions';
 import styles from '../../portfolios.module.scss';
@@ -29,17 +30,17 @@ const snapshotList = () => {
           <div>
             <div className="is-flex is-justify-content-space-between">
               <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
-                {isError ? 'Snapshot was not added.' : 'Snapshot was added to your portfolio'}
+                {isError ? 'Snapshot was not added.' : 'Snapshot was added succesfully.'}
               </span>
               <div className="ml-30" onClick={onClose}>
                 <CloseIcon size="small" />
               </div>
             </div>
-            {!isError && <div 
-              className="has-text-info is-clickable is-underlined" 
+            {!isError && <div
+              className="has-text-info is-clickable is-underlined"
               onClick={() => {
-                router.push(path);
                 onClose();
+                router.push(path);
               }}
             >
               View portfolio
@@ -49,24 +50,23 @@ const snapshotList = () => {
       </div>
     ), {
       position: 'top-right',
-      duration: isError ? 3000 : null,
+      duration: 3000,
     });
   };
   const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
   const isModalActive = !!snapshotIdForPortfolio;
   const dispatch = useDispatch();
-
+  const [editingSnapshot, setEditingSnapshot] = useState(null);
   const [isDeleteModal, setDeleteModal] = useState(false);
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const { snapshotsState, authState } = useSelector((state) => state);
+  const isEditModalOpen = editingSnapshot !== null;
+  const clearEditingSnapshot = () => setEditingSnapshot(null);
+
   const {
     data: { snapshots },
   } = snapshotsState;
   const { token } = authState;
-
-  const addToPortfolio = () => {
-    //  TODO: add to portfolio
-  };
 
   const deleteSnapshot = (id, token) => {
     dispatch(deleteUserSnapshot(id, token));
@@ -131,9 +131,8 @@ const snapshotList = () => {
               isRight
               options={[
                 {
-                  // TODO: Edit function
                   label: 'Edit',
-                  onClick: () => console.log('TODO: will be implement later'),
+                  onClick: () => setEditingSnapshot(snapshots[row.index])
                 },
                 {
                   label: 'Duplicate',
@@ -199,6 +198,13 @@ const snapshotList = () => {
         additionalWrapperClass={styles["snapshots-modal-wrapper"]}
         titleClass={styles["snapshots-modal-title"]}
         crossClass={styles["snapshots-modal-cross"]}
+      />
+      <SnapshotModal
+        key={editingSnapshot?._id}
+        active={isEditModalOpen}
+        onClose={clearEditingSnapshot}
+        snapshotData={editingSnapshot}
+        type="edit"
       />
     </div>
   );

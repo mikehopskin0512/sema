@@ -38,7 +38,7 @@ const TeamCreateBanner = () => {
   };
 
   useEffect(() => {
-    toggleActive(teams?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user?.banners?.teamCreate);
+    toggleActive(teams?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
   }, [pathname, teams, isOnboarded, user]);
 
   return (
