@@ -308,9 +308,9 @@ export const getCollectionsActiveByDefault = async () => {
   }
 };
 
-export const getDefaultUserOrTeamCollectionList = async(defaultCollectionId) => {
+export const getDefaultCollections = async(collectionId) => {
   const collectionsActiveByDefault = await getCollectionsActiveByDefault();
-  const collectionIdList = [defaultCollectionId, ...collectionsActiveByDefault.map(collection => collection._id)];
+  const collectionIdList = [collectionId, ...collectionsActiveByDefault.map(collection => collection._id)];
   return collectionIdList.map((id) => ({
     isActive: true,
     collectionData: id,
