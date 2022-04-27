@@ -300,7 +300,7 @@ export const findByAuthor = async (author) => {
 
 export const getCollectionsActiveByDefault = async () => {
   try {
-    return Collection.find({ isActiveByDefault: true });
+    return Collection.find({ isActiveByDefault: true, type: COLLECTION_TYPE.COMMUNITY });
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
