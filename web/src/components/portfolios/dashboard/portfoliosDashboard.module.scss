@@ -1,7 +1,8 @@
-@import "../../../../styles/colors.module";
+@import "../../../../styles/_colors.module.scss";
 
 .user-summary {
   position: relative;
+  border-bottom: 1px solid $gray-400;
 }
 
 .username {
@@ -32,6 +33,9 @@
 }
 
 .edit-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
   &:hover {
     background-color: $gray-100;
     svg {
