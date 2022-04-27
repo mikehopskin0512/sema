@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
-import DropZone from "./dropZone";
-import DashboardRow from "./dashboardRow";
+import React, { useCallback, useEffect, useState } from 'react';
+import DropZone from './dropZone';
+import DashboardRow from './dashboardRow';
 import { ACCEPTABLE_ITEMS, DND_CASES_CHECKS } from './constants';
 import {
   createAdditionalItemsRow,
   reorderChildInRow,
   reorderIndependentRow,
   replaceChildInAnotherParent,
-} from "./manipulations";
+} from './manipulations';
 
-export const DashboardDraggableList = ({
+const DashboardDraggableList = ({
   pageLayout,
   updateLayout,
   handleSnapshotUpdate,
@@ -27,47 +27,46 @@ export const DashboardDraggableList = ({
     (dropZone, item) => {
       const itemPath = item.path;
 
-      const splitDropZonePath = dropZone.path.split("-");
-      const splitItemPath = itemPath.split("-");
+      const splitDropZonePath = dropZone.path.split('-');
+      const splitItemPath = itemPath.split('-');
 
       const updater = (data) => {
         setLayout(data);
         updateLayout(data);
-      }
+      };
 
       if (DND_CASES_CHECKS.IS_INDEPENDENT_ROW(item)) {
         return reorderIndependentRow({
           oldPosition: itemPath,
           newPosition: splitDropZonePath[0],
           currentLayout: layout,
-          updater
+          updater,
         });
-      } else {
-        if (DND_CASES_CHECKS.SAME_ROW_ITEMS(splitItemPath, splitDropZonePath)) {
-          return reorderChildInRow({
-            index: splitItemPath[0],
-            oldPosition: splitItemPath,
-            newPosition: splitDropZonePath,
-            currentLayout: layout,
-            updater
-          });
-        } else if (DND_CASES_CHECKS.DIFF_ROWS_ITEMS(splitItemPath, splitDropZonePath)) {
-          return createAdditionalItemsRow({
-            oldPosition: splitItemPath,
-            newPosition: splitDropZonePath,
-            currentLayout: layout,
-            itemToSet: item,
-            updater
-          })
-        } else {
-          return replaceChildInAnotherParent({
-            oldPosition: splitItemPath,
-            newPosition: splitDropZonePath,
-            currentLayout: layout,
-            updater,
-          });
-        }
       }
+      if (DND_CASES_CHECKS.SAME_ROW_ITEMS(splitItemPath, splitDropZonePath)) {
+        return reorderChildInRow({
+          index: splitItemPath[0],
+          oldPosition: splitItemPath,
+          newPosition: splitDropZonePath,
+          currentLayout: layout,
+          updater,
+        });
+      }
+      if (DND_CASES_CHECKS.DIFF_ROWS_ITEMS(splitItemPath, splitDropZonePath)) {
+        return createAdditionalItemsRow({
+          oldPosition: splitItemPath,
+          newPosition: splitDropZonePath,
+          currentLayout: layout,
+          itemToSet: item,
+          updater,
+        });
+      }
+      return replaceChildInAnotherParent({
+        oldPosition: splitItemPath,
+        newPosition: splitDropZonePath,
+        currentLayout: layout,
+        updater,
+      });
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
   const renderRow = (row, currentPath) => {
@@ -107,3 +106,5 @@ export const DashboardDraggableList = ({
     </div>
   );
 };
+
+export default DashboardDraggableList;
