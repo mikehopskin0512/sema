@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { createTeamCollection } from '../comments/collections/collectionService';
+import { createTeamCollection, getDefaultUserOrTeamCollectionList } from '../comments/collections/collectionService';
 
 const { Schema, Types: { ObjectId }  } = mongoose;
 
@@ -31,9 +31,7 @@ teamSchema.pre('save', async function save(next) {
     if(this.isNew) {
       this._id = new ObjectId();
       const teamCollection = await createTeamCollection(this);
-      this.collections = [
-        { isActive: true, collectionData: teamCollection },
-      ];
+      this.collections = await getDefaultUserOrTeamCollectionList(teamCollection._id);
     }
     if (!this.url) {
       this.url = this._id;
