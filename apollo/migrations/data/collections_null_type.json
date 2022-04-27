@@ -1,0 +1,5791 @@
+[{
+  "_id": {
+    "$oid": "61fb6f7d1c3ec5001f87cd25"
+  },
+  "comments": [
+    {
+      "$oid": "6210cb4da7e88f001dfb57b8"
+    },
+    {
+      "$oid": "6210d72fb3142000239b2190"
+    },
+    {
+      "$oid": "6210d7d3a7e88f001dfb591b"
+    },
+    {
+      "$oid": "6210d80da7e88f001dfb5963"
+    },
+    {
+      "$oid": "6210d83fa7e88f001dfb59e3"
+    },
+    {
+      "$oid": "6210d873b3142000239b2acd"
+    },
+    {
+      "$oid": "6210d8aab3142000239b2aec"
+    },
+    {
+      "$oid": "6210d8fea7e88f001dfb5a40"
+    },
+    {
+      "$oid": "6210dbb2a7e88f001dfb5b58"
+    },
+    {
+      "$oid": "6210dcb1a7e88f001dfb5ba3"
+    },
+    {
+      "$oid": "6210deecb3142000239b2c56"
+    },
+    {
+      "$oid": "6210dfd3a7e88f001dfb5c42"
+    },
+    {
+      "$oid": "6210e08ba7e88f001dfb5c53"
+    },
+    {
+      "$oid": "6210e109a7e88f001dfb5c84"
+    },
+    {
+      "$oid": "6210e1f6b3142000239b2d27"
+    },
+    {
+      "$oid": "6210e24ab3142000239b2d53"
+    },
+    {
+      "$oid": "6210e452a7e88f001dfb5cfc"
+    },
+    {
+      "$oid": "6210e4a2a7e88f001dfb5d15"
+    },
+    {
+      "$oid": "621103f0a7e88f001dfb68a9"
+    },
+    {
+      "$oid": "62110464b3142000239b394c"
+    },
+    {
+      "$oid": "62110cbeb3142000239b39a1"
+    },
+    {
+      "$oid": "62110ceba7e88f001dfb6933"
+    },
+    {
+      "$oid": "62110d14a7e88f001dfb694c"
+    },
+    {
+      "$oid": "62110d37a7e88f001dfb696f"
+    },
+    {
+      "$oid": "62110d7ca7e88f001dfb6985"
+    },
+    {
+      "$oid": "62110dcbb3142000239b3a42"
+    },
+    {
+      "$oid": "62110df8a7e88f001dfb69b2"
+    },
+    {
+      "$oid": "62110e2aa7e88f001dfb69d0"
+    },
+    {
+      "$oid": "62134714a01006002047fdf4"
+    },
+    {
+      "$oid": "62134786a01006002047fe23"
+    },
+    {
+      "$oid": "621348d6cd0fe6001d0329fc"
+    },
+    {
+      "$oid": "62134919a01006002047fe72"
+    },
+    {
+      "$oid": "62134984cd0fe6001d032a57"
+    },
+    {
+      "$oid": "621349e1a01006002047fea3"
+    },
+    {
+      "$oid": "62134aa0a01006002047fece"
+    },
+    {
+      "$oid": "62134b24cd0fe6001d032a9c"
+    },
+    {
+      "$oid": "62134b68a01006002047feff"
+    },
+    {
+      "$oid": "62134ea0cd0fe6001d032bab"
+    },
+    {
+      "$oid": "62134f09a01006002048003a"
+    },
+    {
+      "$oid": "62134fedcd0fe6001d032be9"
+    },
+    {
+      "$oid": "62135074cd0fe6001d032c21"
+    },
+    {
+      "$oid": "6213ae49cd0fe6001d034ee3"
+    },
+    {
+      "$oid": "6213af11a010060020482ad1"
+    },
+    {
+      "$oid": "6213af9aa010060020482ae8"
+    },
+    {
+      "$oid": "6213afeccd0fe6001d034f32"
+    },
+    {
+      "$oid": "6213b04ca010060020482b51"
+    },
+    {
+      "$oid": "6213b10fcd0fe6001d034fba"
+    },
+    {
+      "$oid": "6213b14acd0fe6001d034fde"
+    },
+    {
+      "$oid": "6213b207cd0fe6001d034ff5"
+    },
+    {
+      "$oid": "6213b2a7cd0fe6001d035014"
+    },
+    {
+      "$oid": "6213b31da010060020482bf6"
+    },
+    {
+      "$oid": "6213b378cd0fe6001d035067"
+    },
+    {
+      "$oid": "621f2c3ec4ed13001e88cb82"
+    },
+    {
+      "$oid": "621f2c73d9b52e0020dc5f60"
+    },
+    {
+      "$oid": "621f2ca5f88f59002078bab4"
+    },
+    {
+      "$oid": "621f2cc8f88f59002078bace"
+    },
+    {
+      "$oid": "621f2d165279c5001e7c15fe"
+    },
+    {
+      "$oid": "621f2f67f88f59002078baec"
+    },
+    {
+      "$oid": "621f31398c4e0d0021052fd6"
+    },
+    {
+      "$oid": "621f319bd9b52e0020dc5feb"
+    },
+    {
+      "$oid": "621f31e1d9b52e0020dc5ff6"
+    },
+    {
+      "$oid": "621f33358c4e0d0021052ffb"
+    },
+    {
+      "$oid": "621f337e5279c5001e7c169b"
+    },
+    {
+      "$oid": "621f33a5d9b52e0020dc6016"
+    },
+    {
+      "$oid": "621f3400c4ed13001e88cc3d"
+    },
+    {
+      "$oid": "621f343b8c4e0d002105300e"
+    },
+    {
+      "$oid": "622c8528e0f432001da5879d"
+    },
+    {
+      "$oid": "622c86013e030a00204e92b7"
+    },
+    {
+      "$oid": "622c86107a2fd7001d43c79d"
+    },
+    {
+      "$oid": "622c87047a2fd7001d43c7b0"
+    },
+    {
+      "$oid": "622c87617d22f000203fdf74"
+    },
+    {
+      "$oid": "622c87af701e7d001d578fbb"
+    },
+    {
+      "$oid": "622c880dcd2491001ebaa8f7"
+    },
+    {
+      "$oid": "622c88d0e0f432001da587f7"
+    },
+    {
+      "$oid": "622c89107d22f000203fdf97"
+    },
+    {
+      "$oid": "622c8942e0f432001da58808"
+    },
+    {
+      "$oid": "622c89997d22f000203fdfb6"
+    },
+    {
+      "$oid": "622c8a27701e7d001d57900d"
+    },
+    {
+      "$oid": "622c8a457d22f000203fdfce"
+    },
+    {
+      "$oid": "622c8a5b701e7d001d579035"
+    },
+    {
+      "$oid": "622c8a843e030a00204e9346"
+    },
+    {
+      "$oid": "622c8ac0cd2491001ebaa954"
+    },
+    {
+      "$oid": "622c8af87a2fd7001d43c841"
+    },
+    {
+      "$oid": "622c8b1b3e030a00204e935f"
+    },
+    {
+      "$oid": "622c8b49701e7d001d57906b"
+    },
+    {
+      "$oid": "622c8d263e030a00204e9377"
+    },
+    {
+      "$oid": "622c8d75701e7d001d579096"
+    },
+    {
+      "$oid": "622c8dd77a2fd7001d43c87a"
+    },
+    {
+      "$oid": "622c8e03cd2491001ebaa9a5"
+    },
+    {
+      "$oid": "622c8e567a2fd7001d43c894"
+    },
+    {
+      "$oid": "622c8fd77d22f000203fe074"
+    },
+    {
+      "$oid": "622c8fff7a2fd7001d43c8b8"
+    },
+    {
+      "$oid": "622c903c7a2fd7001d43c8d0"
+    },
+    {
+      "$oid": "622c90943e030a00204e93de"
+    },
+    {
+      "$oid": "622c90ce7d22f000203fe091"
+    },
+    {
+      "$oid": "622c9111e0f432001da588f1"
+    },
+    {
+      "$oid": "622c9184e0f432001da58902"
+    },
+    {
+      "$oid": "622c91db3e030a00204e941f"
+    },
+    {
+      "$oid": "622c9222e0f432001da5891f"
+    },
+    {
+      "$oid": "622c9278cd2491001ebaaa3a"
+    },
+    {
+      "$oid": "622c92b6e0f432001da58937"
+    },
+    {
+      "$oid": "622c9373701e7d001d579153"
+    },
+    {
+      "$oid": "622c93b77a2fd7001d43c92b"
+    },
+    {
+      "$oid": "622c9439e0f432001da58956"
+    },
+    {
+      "$oid": "622c9481701e7d001d579170"
+    },
+    {
+      "$oid": "622c94b87a2fd7001d43c954"
+    },
+    {
+      "$oid": "622c95097d22f000203fe112"
+    },
+    {
+      "$oid": "622c95347a2fd7001d43c965"
+    },
+    {
+      "$oid": "622c9552e0f432001da589a5"
+    },
+    {
+      "$oid": "622c95957d22f000203fe138"
+    },
+    {
+      "$oid": "622c96217a2fd7001d43c986"
+    },
+    {
+      "$oid": "622c9655cd2491001ebaaab5"
+    },
+    {
+      "$oid": "622c96bc3e030a00204e949d"
+    },
+    {
+      "$oid": "622c97c3e0f432001da589cc"
+    },
+    {
+      "$oid": "622c980b701e7d001d5791ed"
+    },
+    {
+      "$oid": "622c9863701e7d001d5791fe"
+    },
+    {
+      "$oid": "622c9978cd2491001ebaaaeb"
+    },
+    {
+      "$oid": "622c99b67d22f000203fe195"
+    },
+    {
+      "$oid": "622c99fa701e7d001d579218"
+    },
+    {
+      "$oid": "622c9a2f7a2fd7001d43c9e1"
+    },
+    {
+      "$oid": "622c9a4d7a2fd7001d43c9fc"
+    },
+    {
+      "$oid": "62305f305b84bc00191ea8c6"
+    },
+    {
+      "$oid": "62305f88d244e9001d08b61b"
+    },
+    {
+      "$oid": "62305fb15b84bc00191ea8f3"
+    },
+    {
+      "$oid": "62305fda345c50001ec85ca0"
+    },
+    {
+      "$oid": "62305ff65b84bc00191ea913"
+    },
+    {
+      "$oid": "62306057345c50001ec85cc4"
+    },
+    {
+      "$oid": "6230607b8daa9c001dfaa210"
+    },
+    {
+      "$oid": "62306159345c50001ec85ceb"
+    },
+    {
+      "$oid": "623061d27dbdac001fec43be"
+    },
+    {
+      "$oid": "62306235d38811001d74af41"
+    },
+    {
+      "$oid": "623062767dbdac001fec43d5"
+    },
+    {
+      "$oid": "623062ff345c50001ec85d3a"
+    },
+    {
+      "$oid": "62306385d38811001d74af76"
+    },
+    {
+      "$oid": "623063bfd244e9001d08bf5b"
+    },
+    {
+      "$oid": "623063e0d38811001d74afab"
+    },
+    {
+      "$oid": "623064168daa9c001dfaa2a3"
+    },
+    {
+      "$oid": "6230646e5b84bc00191eb265"
+    },
+    {
+      "$oid": "6230b6735b84bc00191ecefd"
+    },
+    {
+      "$oid": "6230b6b08daa9c001dfaae24"
+    },
+    {
+      "$oid": "6230b6d9d244e9001d08cc11"
+    },
+    {
+      "$oid": "6230b706345c50001ec869de"
+    },
+    {
+      "$oid": "6230b745d244e9001d08cc53"
+    },
+    {
+      "$oid": "6230b7838daa9c001dfaaebd"
+    },
+    {
+      "$oid": "6230b7efd244e9001d08cc95"
+    },
+    {
+      "$oid": "6230b80e345c50001ec86a58"
+    },
+    {
+      "$oid": "6230b84a8daa9c001dfaaf0a"
+    },
+    {
+      "$oid": "6230b873345c50001ec86a8e"
+    },
+    {
+      "$oid": "6230b8cf5b84bc00191ed02d"
+    },
+    {
+      "$oid": "6230b9f27dbdac001fec6284"
+    },
+    {
+      "$oid": "6230ba40d244e9001d08cd8a"
+    },
+    {
+      "$oid": "6230ba77d38811001d74bd7a"
+    },
+    {
+      "$oid": "6230ba95d38811001d74bd85"
+    },
+    {
+      "$oid": "6230bae77dbdac001fec62db"
+    },
+    {
+      "$oid": "6230bb058daa9c001dfaafd5"
+    },
+    {
+      "$oid": "6230bb1dd244e9001d08cdc9"
+    },
+    {
+      "$oid": "6230bbdbd244e9001d08cdda"
+    },
+    {
+      "$oid": "6230bc148daa9c001dfaaffc"
+    },
+    {
+      "$oid": "6230bc368daa9c001dfab007"
+    },
+    {
+      "$oid": "6230bc7bd38811001d74bdde"
+    },
+    {
+      "$oid": "6230bc99d38811001d74bde9"
+    },
+    {
+      "$oid": "6230bd61345c50001ec86bd5"
+    },
+    {
+      "$oid": "6230be1d345c50001ec86c2c"
+    },
+    {
+      "$oid": "6230bee9d38811001d74bef6"
+    },
+    {
+      "$oid": "6230befdd244e9001d08d793"
+    },
+    {
+      "$oid": "6230bf297dbdac001fec651e"
+    },
+    {
+      "$oid": "6230bf505b84bc00191ed233"
+    },
+    {
+      "$oid": "6230bf9a5b84bc00191ed24a"
+    },
+    {
+      "$oid": "6230bff97dbdac001fec655d"
+    },
+    {
+      "$oid": "6230c02cd38811001d74bf6c"
+    },
+    {
+      "$oid": "6230c061d244e9001d08d803"
+    },
+    {
+      "$oid": "6230c0cc5b84bc00191ed2a2"
+    },
+    {
+      "$oid": "6230c14ad244e9001d08d862"
+    },
+    {
+      "$oid": "6230c1795b84bc00191ed2e6"
+    },
+    {
+      "$oid": "6230c1998daa9c001dfab1f9"
+    },
+    {
+      "$oid": "6230c1b98daa9c001dfab20b"
+    },
+    {
+      "$oid": "6230c30a345c50001ec86e30"
+    },
+    {
+      "$oid": "6230c333d38811001d74c07c"
+    },
+    {
+      "$oid": "6230c37b7dbdac001fec66b7"
+    },
+    {
+      "$oid": "6230c3827dbdac001fec66cb"
+    },
+    {
+      "$oid": "6230c451d244e9001d08d979"
+    },
+    {
+      "$oid": "6230c4d9d244e9001d08d998"
+    },
+    {
+      "$oid": "6235e022fb3bb3001fca964c"
+    },
+    {
+      "$oid": "6235e0eb7adb49001e074bd9"
+    },
+    {
+      "$oid": "6235e121ead259001ead37ba"
+    },
+    {
+      "$oid": "6235e163fb3bb3001fca96b4"
+    },
+    {
+      "$oid": "6235e1ccfb3bb3001fca96bf"
+    },
+    {
+      "$oid": "6235e23f7adb49001e074bf8"
+    },
+    {
+      "$oid": "6235e2c55cab3c001ca0facf"
+    },
+    {
+      "$oid": "6235e308ead259001ead3812"
+    },
+    {
+      "$oid": "6235e3357adb49001e074c47"
+    },
+    {
+      "$oid": "6235e35cfb3bb3001fca96f9"
+    },
+    {
+      "$oid": "6235e490c2b4c50022b265b5"
+    },
+    {
+      "$oid": "625408029c8e60001cb8484e"
+    },
+    {
+      "$oid": "62540844c01ecb001f2f9b49"
+    },
+    {
+      "$oid": "6254086953c699001d532472"
+    },
+    {
+      "$oid": "625408b9360208001c4c717e"
+    },
+    {
+      "$oid": "6254097e9c8e60001cb84875"
+    },
+    {
+      "$oid": "62540a574ba76e001ff47b9b"
+    },
+    {
+      "$oid": "62540aa9360208001c4c7196"
+    },
+    {
+      "$oid": "62540ac89c8e60001cb84895"
+    },
+    {
+      "$oid": "62540aee53c699001d5324b8"
+    },
+    {
+      "$oid": "62540c1b360208001c4c71c5"
+    },
+    {
+      "$oid": "62540c609c8e60001cb848cf"
+    },
+    {
+      "$oid": "62540c8e4ba76e001ff47bed"
+    },
+    {
+      "$oid": "62540cf74ba76e001ff47c10"
+    },
+    {
+      "$oid": "62540d78360208001c4c71f8"
+    },
+    {
+      "$oid": "62540da853c699001d53251e"
+    },
+    {
+      "$oid": "62540ddef7ed90001fa24f12"
+    },
+    {
+      "$oid": "62540e08f7ed90001fa24f2b"
+    },
+    {
+      "$oid": "62540eab53c699001d532568"
+    },
+    {
+      "$oid": "62540f809c8e60001cb849f4"
+    },
+    {
+      "$oid": "62540fe94ba76e001ff47d4d"
+    },
+    {
+      "$oid": "6254107b4ba76e001ff47da6"
+    },
+    {
+      "$oid": "625410bbc01ecb001f2f9d83"
+    },
+    {
+      "$oid": "625410e353c699001d53271c"
+    },
+    {
+      "$oid": "625411229c8e60001cb84b31"
+    },
+    {
+      "$oid": "6254117c9c8e60001cb84b42"
+    },
+    {
+      "$oid": "625411b053c699001d53274a"
+    },
+    {
+      "$oid": "625411da360208001c4c741c"
+    },
+    {
+      "$oid": "6254123fc01ecb001f2f9df8"
+    },
+    {
+      "$oid": "6254146153c699001d5328a6"
+    },
+    {
+      "$oid": "625414eb360208001c4c76ce"
+    },
+    {
+      "$oid": "6254163753c699001d5328f7"
+    },
+    {
+      "$oid": "625416729c8e60001cb84c27"
+    },
+    {
+      "$oid": "625416abf7ed90001fa2597b"
+    },
+    {
+      "$oid": "625416cfc01ecb001f2f9efb"
+    },
+    {
+      "$oid": "625416e94ba76e001ff47f54"
+    },
+    {
+      "$oid": "6254170a53c699001d5330de"
+    },
+    {
+      "$oid": "62541ba053c699001d53405f"
+    },
+    {
+      "$oid": "62541bcf4ba76e001ff48012"
+    },
+    {
+      "$oid": "62541d0b687284001e6639cb"
+    },
+    {
+      "$oid": "62541e0fbd4f77001ed3b57e"
+    },
+    {
+      "$oid": "62541e73bd4f77001ed3b597"
+    },
+    {
+      "$oid": "62541eb0dfe465001d4d4881"
+    },
+    {
+      "$oid": "62541f0bbd4f77001ed3b5b1"
+    },
+    {
+      "$oid": "62541f70dfe465001d4d4892"
+    },
+    {
+      "$oid": "62541f8dcc4e2e001f8581e0"
+    },
+    {
+      "$oid": "62541fb3bd4f77001ed3b5d9"
+    },
+    {
+      "$oid": "625420dfdfe465001d4d48c6"
+    },
+    {
+      "$oid": "6254210bdfe465001d4d48d1"
+    },
+    {
+      "$oid": "6254214bcc4e2e001f85820d"
+    },
+    {
+      "$oid": "6254221124fc7d00215af2ce"
+    },
+    {
+      "$oid": "6254222e24fc7d00215af2e5"
+    },
+    {
+      "$oid": "6254228024fc7d00215af2fd"
+    },
+    {
+      "$oid": "625422c924fc7d00215af31c"
+    },
+    {
+      "$oid": "625423fd24fc7d00215af396"
+    },
+    {
+      "$oid": "6254249f24fc7d00215af3c4"
+    },
+    {
+      "$oid": "62544235b9c01f001f141876"
+    },
+    {
+      "$oid": "6254428b23a695001f6694c6"
+    },
+    {
+      "$oid": "6254439bb9c01f001f141919"
+    },
+    {
+      "$oid": "625443d18db864001e2e17ce"
+    },
+    {
+      "$oid": "625443f243f166001eb4cd6f"
+    },
+    {
+      "$oid": "62544413b9c01f001f14193f"
+    },
+    {
+      "$oid": "62544494b9c01f001f141963"
+    },
+    {
+      "$oid": "625444c73f38b400205af628"
+    },
+    {
+      "$oid": "625444f78db864001e2e192b"
+    },
+    {
+      "$oid": "6254455b3f38b400205af66e"
+    },
+    {
+      "$oid": "62544571006903001fbbc7b2"
+    },
+    {
+      "$oid": "625d7ff90bbe12001d77e783"
+    },
+    {
+      "$oid": "625d80254e2f25001ed668ca"
+    },
+    {
+      "$oid": "625d80cd3bffe9001d999163"
+    },
+    {
+      "$oid": "625d818e92d455001fe4cd32"
+    },
+    {
+      "$oid": "625d81b73bffe9001d99918b"
+    },
+    {
+      "$oid": "625d82450bbe12001d77e7e5"
+    },
+    {
+      "$oid": "625d82ae3bffe9001d9991b0"
+    },
+    {
+      "$oid": "625d82fe0bbe12001d77e813"
+    },
+    {
+      "$oid": "625d83480bbe12001d77e824"
+    },
+    {
+      "$oid": "625d83663bffe9001d999202"
+    },
+    {
+      "$oid": "625d83864e2f25001ed66988"
+    },
+    {
+      "$oid": "625d83aa3bffe9001d999219"
+    },
+    {
+      "$oid": "625d83e692d455001fe4cdd1"
+    },
+    {
+      "$oid": "625d84bed13d00001fdd197e"
+    },
+    {
+      "$oid": "625d84f2d13d00001fdd19c2"
+    },
+    {
+      "$oid": "625d853ef889600022191b02"
+    },
+    {
+      "$oid": "625d8587ded4f7001f5f1c5e"
+    },
+    {
+      "$oid": "625d85f5f889600022191b23"
+    },
+    {
+      "$oid": "625d867817d9a6001e7d8880"
+    },
+    {
+      "$oid": "625d86b717d9a6001e7d8891"
+    },
+    {
+      "$oid": "625d8720fad472001ddf33df"
+    },
+    {
+      "$oid": "625d8764fad472001ddf341b"
+    },
+    {
+      "$oid": "625d8801ded4f7001f5f1cde"
+    },
+    {
+      "$oid": "625d88d3f889600022191bc5"
+    }
+  ],
+  "isActive": true,
+  "author": "Dr. Axel Rauschmayer",
+  "name": "Speaking Javascript By Dr. Axel Rauschmayer",
+  "description": "",
+  "source": {
+    "name": "O’Reilly",
+    "url": "http://speakingjs.com/es5/index.html"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "61fb6f7e1c3ec5001f87cd26"
+      },
+      "label": "JavaScript",
+      "type": "language",
+      "tag": {
+        "$oid": "60f5e20b01f4665089c1d974"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "61fb6f7e1c3ec5001f87cd27"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-03T06:00:30.002Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-04-18T15:50:43.412Z"
+  }
+},{
+  "_id": {
+    "$oid": "6200cacd31e03a0020b55c14"
+  },
+  "comments": [
+    {
+      "$oid": "620b9ea552e5c5001ec8adbe"
+    },
+    {
+      "$oid": "620ba253088bc0001eb6029d"
+    },
+    {
+      "$oid": "620ba289088bc0001eb602ca"
+    },
+    {
+      "$oid": "620ba3f852e5c5001ec8aea3"
+    },
+    {
+      "$oid": "620ba435088bc0001eb60332"
+    },
+    {
+      "$oid": "620ba46252e5c5001ec8aec2"
+    },
+    {
+      "$oid": "620ba4ea088bc0001eb6037a"
+    },
+    {
+      "$oid": "620ba504088bc0001eb6039a"
+    },
+    {
+      "$oid": "620ba52a088bc0001eb603b2"
+    },
+    {
+      "$oid": "620ba55e088bc0001eb603dd"
+    },
+    {
+      "$oid": "620ba5b552e5c5001ec8af60"
+    },
+    {
+      "$oid": "620ba5e4088bc0001eb60403"
+    },
+    {
+      "$oid": "620ba60f52e5c5001ec8af86"
+    },
+    {
+      "$oid": "620ba62852e5c5001ec8af97"
+    },
+    {
+      "$oid": "620ba64152e5c5001ec8afb4"
+    },
+    {
+      "$oid": "620ba6f9088bc0001eb60487"
+    }
+  ],
+  "isActive": true,
+  "author": "Microsoft Team",
+  "name": "C# Coding Conventions by Microsoft Team",
+  "description": "",
+  "source": {
+    "name": "Microsoft",
+    "url": "https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6200cacd31e03a0020b55c15"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6200cacd31e03a0020b55c16"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T07:31:25.255Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-15T13:13:29.516Z"
+  }
+},{
+  "_id": {
+    "$oid": "6200cbf431e03a0020b56119"
+  },
+  "comments": [
+    {
+      "$oid": "6209063073c372002164624f"
+    },
+    {
+      "$oid": "6209065173c372002164626e"
+    },
+    {
+      "$oid": "6209066d73c372002164627e"
+    },
+    {
+      "$oid": "6209068373c3720021646294"
+    },
+    {
+      "$oid": "620906a473c37200216462b9"
+    },
+    {
+      "$oid": "620906c0d3bbe7001e35120f"
+    },
+    {
+      "$oid": "620906e173c37200216462de"
+    },
+    {
+      "$oid": "620906f5d3bbe7001e351242"
+    },
+    {
+      "$oid": "6209070bd3bbe7001e351262"
+    },
+    {
+      "$oid": "62090724d3bbe7001e351272"
+    },
+    {
+      "$oid": "6209073dd3bbe7001e351299"
+    },
+    {
+      "$oid": "62090750d3bbe7001e3512a2"
+    },
+    {
+      "$oid": "6209076b73c3720021646357"
+    },
+    {
+      "$oid": "62090797d3bbe7001e3512d9"
+    },
+    {
+      "$oid": "620907ae73c3720021646384"
+    },
+    {
+      "$oid": "620907cdd3bbe7001e351304"
+    },
+    {
+      "$oid": "620907df73c37200216463a9"
+    },
+    {
+      "$oid": "620907f573c37200216463cf"
+    },
+    {
+      "$oid": "6209081a73c37200216463e5"
+    },
+    {
+      "$oid": "6209083bd3bbe7001e35134f"
+    },
+    {
+      "$oid": "6209085b73c372002164641a"
+    },
+    {
+      "$oid": "62090892d3bbe7001e35137c"
+    }
+  ],
+  "isActive": true,
+  "author": "Ray Wenderlich",
+  "name": "The Official raywenderlich.com C# Style Guide by Ray Wenderlich",
+  "description": "",
+  "source": {
+    "name": "Raywenderlich",
+    "url": "https://github.com/raywenderlich/c-sharp-style-guide"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6200cbf431e03a0020b5611a"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6200cbf431e03a0020b5611b"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T07:36:20.149Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T13:33:06.689Z"
+  }
+},{
+  "_id": {
+    "$oid": "6200cc2031e03a0020b56605"
+  },
+  "comments": [],
+  "isActive": true,
+  "author": "Nikita Starichenko",
+  "name": "C# — Style Guide Cheat Sheet by Nikita Starichenko",
+  "description": "",
+  "source": {
+    "name": "DevGenius",
+    "url": "https://blog.devgenius.io/c-style-guide-cheat-sheet-bd5c8abd557c"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6200cc2031e03a0020b56606"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6200cc2131e03a0020b56607"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T07:37:05Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-07T07:37:05.003Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201506531e03a0020b6210d"
+  },
+  "comments": [
+    {
+      "$oid": "620bd3a379bf1a0020e9918e"
+    },
+    {
+      "$oid": "620bd3c379bf1a0020e991ac"
+    },
+    {
+      "$oid": "620bd42cb830be001dce8f0c"
+    },
+    {
+      "$oid": "620bd45d79bf1a0020e991c3"
+    },
+    {
+      "$oid": "620bd47f79bf1a0020e991e1"
+    },
+    {
+      "$oid": "620bd4d2b830be001dce8f4e"
+    },
+    {
+      "$oid": "620bd50b79bf1a0020e99216"
+    },
+    {
+      "$oid": "620bd51bb830be001dce8f7b"
+    },
+    {
+      "$oid": "620bd52bb830be001dce8f94"
+    },
+    {
+      "$oid": "620bd54379bf1a0020e99257"
+    },
+    {
+      "$oid": "620bd56e79bf1a0020e9926f"
+    },
+    {
+      "$oid": "620bd5a679bf1a0020e99280"
+    },
+    {
+      "$oid": "620bd5f179bf1a0020e9929e"
+    },
+    {
+      "$oid": "620bd60b79bf1a0020e992c4"
+    },
+    {
+      "$oid": "620bd61f79bf1a0020e992e9"
+    },
+    {
+      "$oid": "620bd633b830be001dce904e"
+    },
+    {
+      "$oid": "620bd64eb830be001dce9067"
+    },
+    {
+      "$oid": "620bd667b830be001dce9078"
+    },
+    {
+      "$oid": "620bd68a79bf1a0020e9933f"
+    },
+    {
+      "$oid": "620bd6a879bf1a0020e99356"
+    }
+  ],
+  "isActive": true,
+  "author": "Nikita Starichenko",
+  "name": "C# — Style Guide Cheat Sheet by Nikita Starichenko",
+  "description": "",
+  "source": {
+    "name": "DevGenius",
+    "url": "https://blog.devgenius.io/c-style-guide-cheat-sheet-bd5c8abd557c"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201506531e03a0020b6210e"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201506531e03a0020b6210f"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:01:25.912Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-15T16:36:56.877Z"
+  }
+},{
+  "_id": {
+    "$oid": "620150a831e03a0020b62612"
+  },
+  "comments": [
+    {
+      "$oid": "620bd76e79bf1a0020e99691"
+    },
+    {
+      "$oid": "620bd7b2b830be001dce916d"
+    },
+    {
+      "$oid": "620bd7dcb830be001dce917d"
+    },
+    {
+      "$oid": "620bd80a79bf1a0020e996ec"
+    },
+    {
+      "$oid": "620bd83ab830be001dce91c5"
+    },
+    {
+      "$oid": "620bd864b830be001dce91e1"
+    },
+    {
+      "$oid": "620bd88979bf1a0020e99744"
+    },
+    {
+      "$oid": "620bd8aeb830be001dce9233"
+    },
+    {
+      "$oid": "620bd8d879bf1a0020e99786"
+    },
+    {
+      "$oid": "620bd90879bf1a0020e9979b"
+    },
+    {
+      "$oid": "620bd925b830be001dce9279"
+    },
+    {
+      "$oid": "620bd94db830be001dce929c"
+    },
+    {
+      "$oid": "620bd97879bf1a0020e997f2"
+    },
+    {
+      "$oid": "620bd998b830be001dce92ce"
+    },
+    {
+      "$oid": "620bd9ba79bf1a0020e9983a"
+    },
+    {
+      "$oid": "620bd9de79bf1a0020e9985d"
+    },
+    {
+      "$oid": "620bda0479bf1a0020e99882"
+    },
+    {
+      "$oid": "620bda5279bf1a0020e99898"
+    }
+  ],
+  "isActive": true,
+  "author": "Dofactory Team",
+  "name": "C# Coding Standards Best Practices by Dofactory Team",
+  "description": "",
+  "source": {
+    "name": "Dofactory",
+    "url": "https://www.dofactory.com/csharp-coding-standards"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620150a831e03a0020b62613"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620150a831e03a0020b62614"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:02:32.891Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-15T16:52:34.241Z"
+  }
+},{
+  "_id": {
+    "$oid": "620150f731e03a0020b62b03"
+  },
+  "comments": [
+    {
+      "$oid": "62094b8573c3720021649844"
+    },
+    {
+      "$oid": "62094bded3bbe7001e353134"
+    },
+    {
+      "$oid": "62094c2ed3bbe7001e353144"
+    },
+    {
+      "$oid": "62094c5e73c37200216498a9"
+    },
+    {
+      "$oid": "62094d3073c37200216498c0"
+    },
+    {
+      "$oid": "62094d54d3bbe7001e35317f"
+    },
+    {
+      "$oid": "62094d7073c37200216498f5"
+    },
+    {
+      "$oid": "62094db973c372002164990c"
+    },
+    {
+      "$oid": "62094e7073c372002164992b"
+    },
+    {
+      "$oid": "62094e8e73c372002164994a"
+    },
+    {
+      "$oid": "62094ea5d3bbe7001e3531e4"
+    },
+    {
+      "$oid": "62094f1dd3bbe7001e35321d"
+    },
+    {
+      "$oid": "6209520ad3bbe7001e35323d"
+    },
+    {
+      "$oid": "6209524cd3bbe7001e353261"
+    },
+    {
+      "$oid": "6209527f73c37200216499f5"
+    },
+    {
+      "$oid": "620952b6d3bbe7001e353287"
+    },
+    {
+      "$oid": "620952d2d3bbe7001e3532ae"
+    },
+    {
+      "$oid": "62095307d3bbe7001e3532b7"
+    },
+    {
+      "$oid": "62095330d3bbe7001e3532ce"
+    },
+    {
+      "$oid": "620953a873c3720021649a77"
+    },
+    {
+      "$oid": "6209540f73c3720021649ab1"
+    },
+    {
+      "$oid": "62095429d3bbe7001e353330"
+    },
+    {
+      "$oid": "6209543fd3bbe7001e353347"
+    },
+    {
+      "$oid": "62095458d3bbe7001e35336d"
+    },
+    {
+      "$oid": "6209547773c3720021649afa"
+    },
+    {
+      "$oid": "6209548f73c3720021649b19"
+    },
+    {
+      "$oid": "620954ba73c3720021649b46"
+    },
+    {
+      "$oid": "620954d4d3bbe7001e3533ce"
+    },
+    {
+      "$oid": "620954e6d3bbe7001e3533ee"
+    },
+    {
+      "$oid": "62095843d3bbe7001e353434"
+    },
+    {
+      "$oid": "6209586673c3720021649b9d"
+    },
+    {
+      "$oid": "6209588073c3720021649bba"
+    },
+    {
+      "$oid": "6209589cd3bbe7001e353471"
+    },
+    {
+      "$oid": "620958ba73c3720021649be0"
+    },
+    {
+      "$oid": "620a5ca9046e4f001e20c115"
+    },
+    {
+      "$oid": "620a5d078c3e59001d9ef2a9"
+    },
+    {
+      "$oid": "620a5d4c8c3e59001d9ef2f1"
+    },
+    {
+      "$oid": "620a5d73046e4f001e20c237"
+    },
+    {
+      "$oid": "620a5d98046e4f001e20c264"
+    },
+    {
+      "$oid": "620a5daf8c3e59001d9ef393"
+    },
+    {
+      "$oid": "620a5dd5046e4f001e20c56f"
+    },
+    {
+      "$oid": "620a5e02046e4f001e20c6f1"
+    },
+    {
+      "$oid": "620a5e2a8c3e59001d9ef6c5"
+    },
+    {
+      "$oid": "620a5e418c3e59001d9ef6de"
+    },
+    {
+      "$oid": "620a5e588c3e59001d9ef6fe"
+    },
+    {
+      "$oid": "620a5e70046e4f001e20c756"
+    },
+    {
+      "$oid": "620a5e8c8c3e59001d9ef714"
+    },
+    {
+      "$oid": "620a5ea3046e4f001e20c78b"
+    },
+    {
+      "$oid": "620a5ec18c3e59001d9ef75a"
+    },
+    {
+      "$oid": "620a5ed9046e4f001e20c7b9"
+    },
+    {
+      "$oid": "620a5ef1046e4f001e20c7cf"
+    },
+    {
+      "$oid": "620a5f0a8c3e59001d9ef7a3"
+    },
+    {
+      "$oid": "620a5f21046e4f001e20c7fe"
+    },
+    {
+      "$oid": "620a5f5a046e4f001e20c817"
+    },
+    {
+      "$oid": "620a5fbc046e4f001e20c828"
+    },
+    {
+      "$oid": "620a5fda8c3e59001d9ef7f7"
+    },
+    {
+      "$oid": "620a600d046e4f001e20c85e"
+    },
+    {
+      "$oid": "620a6298046e4f001e20c8df"
+    },
+    {
+      "$oid": "620a62cc8c3e59001d9ef8a1"
+    },
+    {
+      "$oid": "620a62e3046e4f001e20c915"
+    },
+    {
+      "$oid": "620a632d8c3e59001d9ef8ce"
+    },
+    {
+      "$oid": "620a63518c3e59001d9ef8df"
+    },
+    {
+      "$oid": "620a63838c3e59001d9ef8f5"
+    },
+    {
+      "$oid": "620a639f8c3e59001d9ef925"
+    },
+    {
+      "$oid": "620a63b9046e4f001e20c99e"
+    },
+    {
+      "$oid": "620a63ff046e4f001e20c9f2"
+    },
+    {
+      "$oid": "620a64778c3e59001d9ef9cc"
+    },
+    {
+      "$oid": "620a64958c3e59001d9ef9dd"
+    },
+    {
+      "$oid": "620a64ba8c3e59001d9efa26"
+    },
+    {
+      "$oid": "620a652f046e4f001e20ca9a"
+    },
+    {
+      "$oid": "620a65508c3e59001d9efa65"
+    },
+    {
+      "$oid": "620a656e8c3e59001d9efa7d"
+    },
+    {
+      "$oid": "620a6587046e4f001e20cadd"
+    },
+    {
+      "$oid": "620a65c3046e4f001e20cb50"
+    },
+    {
+      "$oid": "620a663d046e4f001e20cb67"
+    },
+    {
+      "$oid": "620a6666046e4f001e20cb87"
+    },
+    {
+      "$oid": "620a66ba8c3e59001d9efb2d"
+    },
+    {
+      "$oid": "620a66dd046e4f001e20cbae"
+    },
+    {
+      "$oid": "620a6745046e4f001e20cbd1"
+    },
+    {
+      "$oid": "620a67608c3e59001d9efb91"
+    },
+    {
+      "$oid": "620a677d8c3e59001d9efba9"
+    },
+    {
+      "$oid": "620a67ba8c3e59001d9efbbf"
+    },
+    {
+      "$oid": "620a67d6046e4f001e20cc33"
+    },
+    {
+      "$oid": "620a67f88c3e59001d9efbea"
+    },
+    {
+      "$oid": "620a681d8c3e59001d9efc0f"
+    },
+    {
+      "$oid": "620a683e046e4f001e20cc83"
+    },
+    {
+      "$oid": "620a685d8c3e59001d9efc37"
+    },
+    {
+      "$oid": "620a6886046e4f001e20ccbc"
+    },
+    {
+      "$oid": "620a689b8c3e59001d9efc6a"
+    },
+    {
+      "$oid": "620a68c9046e4f001e20cce3"
+    },
+    {
+      "$oid": "620a6900046e4f001e20cd1c"
+    },
+    {
+      "$oid": "620a692d8c3e59001d9efcca"
+    },
+    {
+      "$oid": "620a6973046e4f001e20cd42"
+    },
+    {
+      "$oid": "620a69e58c3e59001d9efd1d"
+    },
+    {
+      "$oid": "620a6a0c046e4f001e20cdb6"
+    },
+    {
+      "$oid": "620a6a38046e4f001e20cdc6"
+    },
+    {
+      "$oid": "620a6a54046e4f001e20cde4"
+    },
+    {
+      "$oid": "620a6ac7046e4f001e20ce98"
+    },
+    {
+      "$oid": "620a6ba88c3e59001d9efe68"
+    },
+    {
+      "$oid": "620a6bd5046e4f001e20db7d"
+    },
+    {
+      "$oid": "620a6d6f046e4f001e20dbbc"
+    },
+    {
+      "$oid": "620a6d94046e4f001e20dbd3"
+    },
+    {
+      "$oid": "620a6daa046e4f001e20dbea"
+    },
+    {
+      "$oid": "620a6df6046e4f001e20dc1f"
+    },
+    {
+      "$oid": "620a6e2c8c3e59001d9eff2d"
+    },
+    {
+      "$oid": "620a6e568c3e59001d9effdb"
+    },
+    {
+      "$oid": "620a6e708c3e59001d9efff1"
+    },
+    {
+      "$oid": "620a6e88046e4f001e20dd13"
+    },
+    {
+      "$oid": "620a6eb08c3e59001d9f0023"
+    },
+    {
+      "$oid": "620a6ed28c3e59001d9f0042"
+    },
+    {
+      "$oid": "620a6f2d8c3e59001d9f0074"
+    },
+    {
+      "$oid": "620a6f458c3e59001d9f0083"
+    },
+    {
+      "$oid": "620a6f5c8c3e59001d9f00b4"
+    },
+    {
+      "$oid": "620a6f738c3e59001d9f0105"
+    },
+    {
+      "$oid": "620a6f9c8c3e59001d9f08e6"
+    },
+    {
+      "$oid": "620a6fb88c3e59001d9f0913"
+    },
+    {
+      "$oid": "620a6fe4046e4f001e20de74"
+    },
+    {
+      "$oid": "620a7002046e4f001e20de8a"
+    },
+    {
+      "$oid": "620a701c8c3e59001d9f0964"
+    },
+    {
+      "$oid": "620a702c046e4f001e20deb7"
+    },
+    {
+      "$oid": "620a70af8c3e59001d9f09ae"
+    },
+    {
+      "$oid": "620a70cf8c3e59001d9f09bf"
+    },
+    {
+      "$oid": "620a70e18c3e59001d9f09ec"
+    },
+    {
+      "$oid": "620a70f3046e4f001e20df39"
+    },
+    {
+      "$oid": "620a70fe046e4f001e20df56"
+    },
+    {
+      "$oid": "620a710e8c3e59001d9f0a31"
+    },
+    {
+      "$oid": "620a7124046e4f001e20df83"
+    },
+    {
+      "$oid": "620a7134046e4f001e20df92"
+    },
+    {
+      "$oid": "620a714c8c3e59001d9f0a7a"
+    },
+    {
+      "$oid": "620a715a046e4f001e20dfb2"
+    },
+    {
+      "$oid": "620a716d046e4f001e20dfc8"
+    },
+    {
+      "$oid": "620a717a046e4f001e20dfef"
+    },
+    {
+      "$oid": "620a71b28c3e59001d9f0ad1"
+    },
+    {
+      "$oid": "620a71d08c3e59001d9f0ae9"
+    },
+    {
+      "$oid": "620a71ea8c3e59001d9f0b06"
+    },
+    {
+      "$oid": "620a7206046e4f001e20e049"
+    },
+    {
+      "$oid": "620a7210046e4f001e20e067"
+    },
+    {
+      "$oid": "620a7227046e4f001e20e085"
+    },
+    {
+      "$oid": "620a72578c3e59001d9f0b6d"
+    },
+    {
+      "$oid": "620a7268046e4f001e20e0a3"
+    },
+    {
+      "$oid": "620a7287046e4f001e20e0c2"
+    },
+    {
+      "$oid": "620a729d046e4f001e20e0da"
+    },
+    {
+      "$oid": "620a72c38c3e59001d9f0bc4"
+    },
+    {
+      "$oid": "620a72da8c3e59001d9f0bcd"
+    },
+    {
+      "$oid": "620a7393046e4f001e20e132"
+    },
+    {
+      "$oid": "620a73aa046e4f001e20e14c"
+    },
+    {
+      "$oid": "620a73c9046e4f001e20e164"
+    }
+  ],
+  "isActive": true,
+  "author": "Scott Bellware",
+  "name": "C# Code Style Guide by Scott Bellware",
+  "description": "",
+  "source": {
+    "name": "Sabia",
+    "url": "http://sabia.tic.udc.es/docencia/is/docs/documentos/CSharpCodeStyleGuide.pdf"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620150f731e03a0020b62b04"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620150f731e03a0020b62b05"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:03:51.036Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-14T15:22:49.607Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201513731e03a0020b62ff4"
+  },
+  "comments": [
+    {
+      "$oid": "620c4422b830be001dcec95d"
+    },
+    {
+      "$oid": "620c4454b830be001dcec97b"
+    },
+    {
+      "$oid": "620c458e79bf1a0020e9db71"
+    },
+    {
+      "$oid": "620c45b579bf1a0020e9db95"
+    },
+    {
+      "$oid": "620c45ddb830be001dceca10"
+    },
+    {
+      "$oid": "620c45f2b830be001dceca2e"
+    },
+    {
+      "$oid": "620c460db830be001dceca52"
+    },
+    {
+      "$oid": "620c4623b830be001dceca6e"
+    },
+    {
+      "$oid": "620c463979bf1a0020e9dc1b"
+    },
+    {
+      "$oid": "620c4651b830be001dcecaae"
+    },
+    {
+      "$oid": "620c466db830be001dcecb00"
+    },
+    {
+      "$oid": "620c46a9b830be001dcecb32"
+    },
+    {
+      "$oid": "620c46cf79bf1a0020e9dcc0"
+    },
+    {
+      "$oid": "620c46e9b830be001dcecb71"
+    },
+    {
+      "$oid": "620c470bb830be001dcecb91"
+    },
+    {
+      "$oid": "620c472979bf1a0020e9dd24"
+    },
+    {
+      "$oid": "620c47c2b830be001dcecbdf"
+    }
+  ],
+  "isActive": true,
+  "author": "Phil Vuollet",
+  "name": "The 9 Coding Standards C# Developers Need to Get Started by Phil Vuollet",
+  "description": "",
+  "source": {
+    "name": "Submain",
+    "url": "https://blog.submain.com/coding-standards-c-developers-need/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201513731e03a0020b62ff5"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201513731e03a0020b62ff6"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:04:55.129Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T00:39:30.406Z"
+  }
+},{
+  "_id": {
+    "$oid": "620151b031e03a0020b634e5"
+  },
+  "comments": [
+    {
+      "$oid": "620c820e79bf1a0020e9fa02"
+    },
+    {
+      "$oid": "620c843eb830be001dcedfcb"
+    },
+    {
+      "$oid": "620c8461b830be001dcedff0"
+    },
+    {
+      "$oid": "620c849db830be001dcee01d"
+    },
+    {
+      "$oid": "620c84c279bf1a0020e9fa77"
+    },
+    {
+      "$oid": "620c84f7b830be001dcee056"
+    },
+    {
+      "$oid": "620c8535b830be001dcee082"
+    },
+    {
+      "$oid": "620de2f4e4aacd001dd69136"
+    },
+    {
+      "$oid": "620de32a2015cd001e4c7c42"
+    },
+    {
+      "$oid": "620de372e4aacd001dd6916f"
+    },
+    {
+      "$oid": "620de393e4aacd001dd6917e"
+    },
+    {
+      "$oid": "620de3f32015cd001e4c7c96"
+    },
+    {
+      "$oid": "620de40f2015cd001e4c7cb4"
+    },
+    {
+      "$oid": "620de42c2015cd001e4c7cd3"
+    },
+    {
+      "$oid": "620de4472015cd001e4c7cf0"
+    },
+    {
+      "$oid": "620de45de4aacd001dd69210"
+    },
+    {
+      "$oid": "620de4782015cd001e4c7d2e"
+    },
+    {
+      "$oid": "620de4b4e4aacd001dd69245"
+    },
+    {
+      "$oid": "620de4c9a5b7890020cc1a05"
+    },
+    {
+      "$oid": "620de4e2a5b7890020cc1a0e"
+    },
+    {
+      "$oid": "620de52a7e6216001eeecc9c"
+    },
+    {
+      "$oid": "620de548a5b7890020cc1a61"
+    },
+    {
+      "$oid": "620de58da5b7890020cc1a70"
+    },
+    {
+      "$oid": "620de5baa5b7890020cc1a8e"
+    },
+    {
+      "$oid": "620de600a5b7890020cc1af2"
+    },
+    {
+      "$oid": "620de61b7e6216001eeecd8e"
+    },
+    {
+      "$oid": "620de6337e6216001eeecdba"
+    },
+    {
+      "$oid": "620de65c7e6216001eeecded"
+    },
+    {
+      "$oid": "620e3fcda5b7890020cc348c"
+    },
+    {
+      "$oid": "620e402e7e6216001eeee417"
+    },
+    {
+      "$oid": "620e40457e6216001eeee42e"
+    },
+    {
+      "$oid": "620e40597e6216001eeee44c"
+    },
+    {
+      "$oid": "620e4077a5b7890020cc34fd"
+    },
+    {
+      "$oid": "620e4094a5b7890020cc3514"
+    },
+    {
+      "$oid": "620e4119a5b7890020cc35bd"
+    },
+    {
+      "$oid": "620e41367e6216001eeeeae6"
+    },
+    {
+      "$oid": "620e415da5b7890020cc3607"
+    },
+    {
+      "$oid": "620e41827e6216001eeeeb17"
+    },
+    {
+      "$oid": "620e41e07e6216001eeeeb35"
+    },
+    {
+      "$oid": "620e420fa5b7890020cc365d"
+    },
+    {
+      "$oid": "620e42357e6216001eeeeb67"
+    },
+    {
+      "$oid": "620e424c7e6216001eeeeb8c"
+    },
+    {
+      "$oid": "620e4272a5b7890020cc36ca"
+    },
+    {
+      "$oid": "620e4287a5b7890020cc36ef"
+    },
+    {
+      "$oid": "620e42ae7e6216001eeeebf7"
+    },
+    {
+      "$oid": "620e42c77e6216001eeeec15"
+    },
+    {
+      "$oid": "620e42f17e6216001eeeec46"
+    },
+    {
+      "$oid": "620e4355a5b7890020cc379d"
+    },
+    {
+      "$oid": "620e4379a5b7890020cc37ae"
+    },
+    {
+      "$oid": "620e4386a5b7890020cc37df"
+    },
+    {
+      "$oid": "620e439e7e6216001eeeece8"
+    },
+    {
+      "$oid": "620e43bc7e6216001eeeed04"
+    },
+    {
+      "$oid": "620e43df7e6216001eeeed21"
+    },
+    {
+      "$oid": "620e43f97e6216001eeeed3d"
+    },
+    {
+      "$oid": "620e441ca5b7890020cc3866"
+    },
+    {
+      "$oid": "620e4441a5b7890020cc3881"
+    },
+    {
+      "$oid": "620e445f7e6216001eeeed96"
+    }
+  ],
+  "isActive": true,
+  "author": "Cognitive X Solutions Inc Team",
+  "name": "Cognitive X Solutions Inc C# Style Guide by Cognitive X Solutions Inc Team",
+  "description": "",
+  "source": {
+    "name": "Cognitive X Solutions Inc",
+    "url": "https://c-style-guide.readthedocs.io/en/latest/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620151b031e03a0020b634e6"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620151b031e03a0020b634e7"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:06:56.342Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-17T12:49:35.219Z"
+  }
+},{
+  "_id": {
+    "$oid": "620151f031e03a0020b639d6"
+  },
+  "comments": [
+    {
+      "$oid": "6210ff01b3142000239b2e25"
+    },
+    {
+      "$oid": "6210ff41b3142000239b2e4c"
+    },
+    {
+      "$oid": "6210ff52a7e88f001dfb65a5"
+    },
+    {
+      "$oid": "6210ff74a7e88f001dfb65ca"
+    },
+    {
+      "$oid": "6210ff82b3142000239b2ea5"
+    },
+    {
+      "$oid": "6210ff9ab3142000239b2ebd"
+    },
+    {
+      "$oid": "6210ffc1a7e88f001dfb6618"
+    },
+    {
+      "$oid": "6210ffd2b3142000239b2ef4"
+    },
+    {
+      "$oid": "6210ffe4a7e88f001dfb664c"
+    },
+    {
+      "$oid": "6211002ca7e88f001dfb6679"
+    },
+    {
+      "$oid": "62110053b3142000239b2f40"
+    },
+    {
+      "$oid": "6211006ab3142000239b2f64"
+    },
+    {
+      "$oid": "62110079b3142000239b2f91"
+    },
+    {
+      "$oid": "6211008bb3142000239b2fa9"
+    },
+    {
+      "$oid": "62110097a7e88f001dfb66f5"
+    },
+    {
+      "$oid": "621100b4b3142000239b2fe7"
+    },
+    {
+      "$oid": "621100caa7e88f001dfb6728"
+    },
+    {
+      "$oid": "62110104b3142000239b3028"
+    },
+    {
+      "$oid": "62110112a7e88f001dfb6760"
+    }
+  ],
+  "isActive": true,
+  "author": ".NET Platform Team",
+  "name": "C# Coding Style by .NET Platform Team",
+  "description": "",
+  "source": {
+    "name": ".NET Platform",
+    "url": "https://github.com/dotnet/runtime/blob/main/docs/coding-guidelines/coding-style.md"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620151f031e03a0020b639d7"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620151f031e03a0020b639d8"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:08:00.523Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-19T14:39:14.813Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201523131e03a0020b63ec7"
+  },
+  "comments": [],
+  "isActive": true,
+  "author": "Bridge Team",
+  "name": "C# Coding Style Guide by Bridge Team",
+  "description": "",
+  "source": {
+    "name": "Bridge",
+    "url": "https://bridge.net/general/cs_coding_style_guide/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201523131e03a0020b63ec8"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201523131e03a0020b63ec9"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:09:05.063Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-07T17:09:05.066Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201525a31e03a0020b643b8"
+  },
+  "comments": [
+    {
+      "$oid": "62090b1bd3bbe7001e3513f6"
+    },
+    {
+      "$oid": "62090b4fd3bbe7001e351406"
+    },
+    {
+      "$oid": "62090ba0d3bbe7001e351424"
+    },
+    {
+      "$oid": "62090bda73c3720021646c77"
+    },
+    {
+      "$oid": "62090c0c73c3720021646c90"
+    },
+    {
+      "$oid": "62090c25d3bbe7001e351466"
+    },
+    {
+      "$oid": "62090c3ad3bbe7001e35148d"
+    },
+    {
+      "$oid": "62090c5cd3bbe7001e35149c"
+    },
+    {
+      "$oid": "62090ca6d3bbe7001e3514bc"
+    },
+    {
+      "$oid": "62090cda73c3720021646cf5"
+    },
+    {
+      "$oid": "62090d0dd3bbe7001e3514e1"
+    },
+    {
+      "$oid": "62090d2fd3bbe7001e3514f9"
+    },
+    {
+      "$oid": "62090d8b73c3720021646d3e"
+    },
+    {
+      "$oid": "62090e0273c3720021646d4e"
+    },
+    {
+      "$oid": "62090e32d3bbe7001e351555"
+    },
+    {
+      "$oid": "62090e80d3bbe7001e35156d"
+    },
+    {
+      "$oid": "62090e8fd3bbe7001e351585"
+    },
+    {
+      "$oid": "62090edbd3bbe7001e35159d"
+    },
+    {
+      "$oid": "62090ef473c3720021646dca"
+    },
+    {
+      "$oid": "62090f07d3bbe7001e3515cf"
+    },
+    {
+      "$oid": "62090f2c73c3720021646df1"
+    }
+  ],
+  "isActive": true,
+  "author": "Xamarin Team",
+  "name": "C# style guide by Gitbooks Team",
+  "description": "",
+  "source": {
+    "name": "Xamarin",
+    "url": "https://dvdsgl.gitbooks.io/xamarin-way/content/build/csharp-style-guide.html"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201525a31e03a0020b643b9"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201525a31e03a0020b643ba"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:09:46.708Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T14:01:16.890Z"
+  }
+},{
+  "_id": {
+    "$oid": "620152a631e03a0020b648cd"
+  },
+  "comments": [
+    {
+      "$oid": "620c565879bf1a0020e9e14e"
+    },
+    {
+      "$oid": "620c5678b830be001dcecd2c"
+    },
+    {
+      "$oid": "620c56d279bf1a0020e9e18e"
+    },
+    {
+      "$oid": "620c56ddb830be001dcecd65"
+    },
+    {
+      "$oid": "620c56f879bf1a0020e9e1aa"
+    },
+    {
+      "$oid": "620c570b79bf1a0020e9e1cf"
+    },
+    {
+      "$oid": "620c571c79bf1a0020e9e1ed"
+    },
+    {
+      "$oid": "620c572db830be001dcecdd5"
+    },
+    {
+      "$oid": "620c573bb830be001dcecdf3"
+    },
+    {
+      "$oid": "620c574ab830be001dcece0b"
+    },
+    {
+      "$oid": "620c576f79bf1a0020e9e261"
+    },
+    {
+      "$oid": "620c5a7079bf1a0020e9e2ba"
+    },
+    {
+      "$oid": "620c5a8d79bf1a0020e9e2ce"
+    },
+    {
+      "$oid": "620c5ab679bf1a0020e9e2f5"
+    },
+    {
+      "$oid": "620c5ae079bf1a0020e9e327"
+    },
+    {
+      "$oid": "620c5b11b830be001dceced0"
+    },
+    {
+      "$oid": "620c5b1c79bf1a0020e9e36f"
+    },
+    {
+      "$oid": "620c5b2db830be001dcecf23"
+    },
+    {
+      "$oid": "620c5b40b830be001dcecf46"
+    },
+    {
+      "$oid": "620c5b4eb830be001dcecf63"
+    },
+    {
+      "$oid": "620c5c87b830be001dcecf80"
+    },
+    {
+      "$oid": "620c5c9eb830be001dcecf9e"
+    },
+    {
+      "$oid": "620c5ccfb830be001dcecfc3"
+    },
+    {
+      "$oid": "620c5cf579bf1a0020e9e438"
+    },
+    {
+      "$oid": "620c5d22b830be001dcecff4"
+    },
+    {
+      "$oid": "620c5dfab830be001dced064"
+    },
+    {
+      "$oid": "620c5e1c79bf1a0020e9e51e"
+    },
+    {
+      "$oid": "620c5e3379bf1a0020e9e53a"
+    },
+    {
+      "$oid": "620c5e4e79bf1a0020e9e566"
+    },
+    {
+      "$oid": "620c5ea779bf1a0020e9e597"
+    },
+    {
+      "$oid": "620c5ee379bf1a0020e9e5b3"
+    },
+    {
+      "$oid": "620c5eeeb830be001dced11d"
+    },
+    {
+      "$oid": "620c5efa79bf1a0020e9e5eb"
+    },
+    {
+      "$oid": "620c5f0879bf1a0020e9e611"
+    },
+    {
+      "$oid": "620c5f1479bf1a0020e9e628"
+    },
+    {
+      "$oid": "620c5f8079bf1a0020e9e657"
+    },
+    {
+      "$oid": "620c5f9b79bf1a0020e9e683"
+    },
+    {
+      "$oid": "620c5fc579bf1a0020e9e6a1"
+    },
+    {
+      "$oid": "620c5fe379bf1a0020e9e6bd"
+    },
+    {
+      "$oid": "620c5ff6b830be001dced201"
+    },
+    {
+      "$oid": "620c601b79bf1a0020e9e6f2"
+    },
+    {
+      "$oid": "620c6035b830be001dced245"
+    },
+    {
+      "$oid": "620c604e79bf1a0020e9e72b"
+    },
+    {
+      "$oid": "620c6070b830be001dced28b"
+    },
+    {
+      "$oid": "620c60a779bf1a0020e9e78f"
+    },
+    {
+      "$oid": "620c60e3b830be001dced319"
+    },
+    {
+      "$oid": "620c610179bf1a0020e9e83d"
+    },
+    {
+      "$oid": "620c611bb830be001dced35e"
+    },
+    {
+      "$oid": "620c6137b830be001dced383"
+    },
+    {
+      "$oid": "620c614eb830be001dced3a0"
+    },
+    {
+      "$oid": "620c6165b830be001dced3bf"
+    },
+    {
+      "$oid": "620c617d79bf1a0020e9e8c7"
+    },
+    {
+      "$oid": "620c619679bf1a0020e9e8ec"
+    },
+    {
+      "$oid": "620c61aeb830be001dced429"
+    },
+    {
+      "$oid": "620c61cc79bf1a0020e9e927"
+    },
+    {
+      "$oid": "620c6247b830be001dced45c"
+    },
+    {
+      "$oid": "620c629079bf1a0020e9e967"
+    },
+    {
+      "$oid": "620c62af79bf1a0020e9e985"
+    },
+    {
+      "$oid": "620c62d179bf1a0020e9e99c"
+    },
+    {
+      "$oid": "620c62e679bf1a0020e9e9bc"
+    }
+  ],
+  "isActive": true,
+  "author": "Talegen Team",
+  "name": "C# Programming Style Guide by Talegen Team",
+  "description": "",
+  "source": {
+    "name": "Talegen",
+    "url": "https://talegen.com/c-programming-style-guide/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620152a631e03a0020b648ce"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620152a631e03a0020b648cf"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:11:02.256Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T02:35:18.712Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201530f31e03a0020b64e1c"
+  },
+  "comments": [
+    {
+      "$oid": "620ee6926777cd001f8acbc1"
+    },
+    {
+      "$oid": "620ee6c16777cd001f8acbd8"
+    },
+    {
+      "$oid": "620eeac06777cd001f8acc28"
+    },
+    {
+      "$oid": "620eeb076777cd001f8acc45"
+    },
+    {
+      "$oid": "620eeb216777cd001f8acc69"
+    },
+    {
+      "$oid": "620eeb376777cd001f8acc79"
+    },
+    {
+      "$oid": "620eeb666777cd001f8acc9d"
+    },
+    {
+      "$oid": "620eeb92a0c43b001d240a22"
+    },
+    {
+      "$oid": "620eebbea0c43b001d240a39"
+    },
+    {
+      "$oid": "620eebffa0c43b001d240a64"
+    },
+    {
+      "$oid": "620eec1c6777cd001f8acd06"
+    },
+    {
+      "$oid": "620eec376777cd001f8acd2c"
+    },
+    {
+      "$oid": "620eec78a0c43b001d240aaa"
+    },
+    {
+      "$oid": "620eec946777cd001f8acd5d"
+    },
+    {
+      "$oid": "620eecb4a0c43b001d240afe"
+    },
+    {
+      "$oid": "620fa62cd1ce0b001e6da9ee"
+    },
+    {
+      "$oid": "620fa64bd1ce0b001e6daa0a"
+    },
+    {
+      "$oid": "620fa667fcc0a3001de4149f"
+    },
+    {
+      "$oid": "620fa6a1fcc0a3001de414ff"
+    },
+    {
+      "$oid": "620fa6bdd1ce0b001e6daa8b"
+    },
+    {
+      "$oid": "620fa6f3d1ce0b001e6daac7"
+    },
+    {
+      "$oid": "620fa706fcc0a3001de4156d"
+    },
+    {
+      "$oid": "620fa722d1ce0b001e6dab00"
+    },
+    {
+      "$oid": "620fa73cd1ce0b001e6dab25"
+    },
+    {
+      "$oid": "620fa751fcc0a3001de415ca"
+    },
+    {
+      "$oid": "620fa769d1ce0b001e6dab57"
+    },
+    {
+      "$oid": "620fa77fd1ce0b001e6dab81"
+    },
+    {
+      "$oid": "620fa79ad1ce0b001e6dab97"
+    },
+    {
+      "$oid": "620fa7aefcc0a3001de41633"
+    },
+    {
+      "$oid": "620fa7c0fcc0a3001de41651"
+    },
+    {
+      "$oid": "620fa7edd1ce0b001e6dabec"
+    },
+    {
+      "$oid": "620fa8e0fcc0a3001de416a4"
+    },
+    {
+      "$oid": "620fe9fad1ce0b001e6dec23"
+    },
+    {
+      "$oid": "620fea36d1ce0b001e6dec42"
+    },
+    {
+      "$oid": "620fea52d1ce0b001e6dec65"
+    },
+    {
+      "$oid": "620fea68d1ce0b001e6dec7a"
+    },
+    {
+      "$oid": "620fea7cfcc0a3001de4697c"
+    }
+  ],
+  "isActive": true,
+  "author": "Jetbrains Team",
+  "name": "Code Style. C# by Jetbrains Team",
+  "description": "",
+  "source": {
+    "name": "Jetbrains",
+    "url": "https://www.jetbrains.com/help/rider/Settings_Code_Style_CSHARP.html"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201530f31e03a0020b64e1d"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201530f31e03a0020b64e1e"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:12:47.227Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-18T18:50:36.657Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201533c31e03a0020b6530d"
+  },
+  "comments": [
+    {
+      "$oid": "620e462ca5b7890020cc3a5e"
+    },
+    {
+      "$oid": "620e464b7e6216001eeef27a"
+    },
+    {
+      "$oid": "620e46697e6216001eeef2ad"
+    },
+    {
+      "$oid": "620e4689a5b7890020cc3afa"
+    },
+    {
+      "$oid": "620e46be7e6216001eeef303"
+    },
+    {
+      "$oid": "620e46d57e6216001eeef331"
+    },
+    {
+      "$oid": "620e46f7a5b7890020cc3b72"
+    },
+    {
+      "$oid": "620e4708a5b7890020cc3b90"
+    },
+    {
+      "$oid": "620e4715a5b7890020cc3bad"
+    },
+    {
+      "$oid": "620e47317e6216001eeef3ac"
+    },
+    {
+      "$oid": "620e47477e6216001eeef3d7"
+    },
+    {
+      "$oid": "620e47687e6216001eeef402"
+    },
+    {
+      "$oid": "620e477ea5b7890020cc3c47"
+    },
+    {
+      "$oid": "620e482ca5b7890020cc3cc9"
+    },
+    {
+      "$oid": "620e485ba5b7890020cc3d3f"
+    },
+    {
+      "$oid": "620e486da5b7890020cc3d7e"
+    },
+    {
+      "$oid": "620e487da5b7890020cc3daa"
+    },
+    {
+      "$oid": "620e488da5b7890020cc3df8"
+    },
+    {
+      "$oid": "620e489fa5b7890020cc3e1e"
+    },
+    {
+      "$oid": "620e48ae7e6216001eeef5ec"
+    },
+    {
+      "$oid": "620e48d17e6216001eeef60a"
+    },
+    {
+      "$oid": "620e48e1a5b7890020cc3e6d"
+    },
+    {
+      "$oid": "620e48fa7e6216001eeef647"
+    },
+    {
+      "$oid": "620e4904a5b7890020cc3ea7"
+    },
+    {
+      "$oid": "620e49187e6216001eeef697"
+    },
+    {
+      "$oid": "620e49267e6216001eeef6b3"
+    },
+    {
+      "$oid": "620e494da5b7890020cc3f0e"
+    },
+    {
+      "$oid": "620e495b7e6216001eeef6e3"
+    },
+    {
+      "$oid": "620e4974a5b7890020cc3f5b"
+    },
+    {
+      "$oid": "620e498d7e6216001eeef73b"
+    },
+    {
+      "$oid": "620e49a07e6216001eeef760"
+    },
+    {
+      "$oid": "620e49b5a5b7890020cc3fa0"
+    },
+    {
+      "$oid": "620e49d7a5b7890020cc3fcb"
+    },
+    {
+      "$oid": "620e49e5a5b7890020cc3fe9"
+    },
+    {
+      "$oid": "620e4a09a5b7890020cc3fff"
+    },
+    {
+      "$oid": "620e4a1b7e6216001eeef7e3"
+    },
+    {
+      "$oid": "620e4a2f7e6216001eeef80c"
+    },
+    {
+      "$oid": "620e4a4e7e6216001eeef831"
+    },
+    {
+      "$oid": "620e4a4f7e6216001eeef83b"
+    },
+    {
+      "$oid": "620e4a5ba5b7890020cc4082"
+    },
+    {
+      "$oid": "620e4a69a5b7890020cc40a6"
+    },
+    {
+      "$oid": "620e4a797e6216001eeef885"
+    },
+    {
+      "$oid": "620e4a8f7e6216001eeef8aa"
+    },
+    {
+      "$oid": "620e4aafa5b7890020cc40ed"
+    },
+    {
+      "$oid": "620e4ac27e6216001eeef8db"
+    },
+    {
+      "$oid": "620e4acda5b7890020cc412e"
+    },
+    {
+      "$oid": "620e4ae0a5b7890020cc414c"
+    },
+    {
+      "$oid": "620e4af2a5b7890020cc416b"
+    },
+    {
+      "$oid": "620e4b07a5b7890020cc4183"
+    },
+    {
+      "$oid": "620e4b18a5b7890020cc41af"
+    },
+    {
+      "$oid": "620e4b25a5b7890020cc41be"
+    },
+    {
+      "$oid": "620e4b43a5b7890020cc41e2"
+    },
+    {
+      "$oid": "620e4b527e6216001eeef9b6"
+    },
+    {
+      "$oid": "620e4b5fa5b7890020cc421b"
+    },
+    {
+      "$oid": "620e4b7fa5b7890020cc4239"
+    },
+    {
+      "$oid": "620e4b967e6216001eeefa18"
+    },
+    {
+      "$oid": "620e4ba9a5b7890020cc4277"
+    },
+    {
+      "$oid": "620e4bbba5b7890020cc428f"
+    },
+    {
+      "$oid": "620e4bd5a5b7890020cc42a5"
+    },
+    {
+      "$oid": "620e4c3b7e6216001eeefac5"
+    },
+    {
+      "$oid": "620e4c4ba5b7890020cc4328"
+    },
+    {
+      "$oid": "620e4c5aa5b7890020cc4346"
+    },
+    {
+      "$oid": "620e4c78a5b7890020cc4363"
+    },
+    {
+      "$oid": "620e4c8ba5b7890020cc4389"
+    },
+    {
+      "$oid": "620e4c97a5b7890020cc43a5"
+    },
+    {
+      "$oid": "620e4ca67e6216001eeefb96"
+    },
+    {
+      "$oid": "620e4cb67e6216001eeefbb9"
+    },
+    {
+      "$oid": "620e4cc67e6216001eeefbd0"
+    },
+    {
+      "$oid": "620e4ce3a5b7890020cc442d"
+    },
+    {
+      "$oid": "620e4d13a5b7890020cc4450"
+    },
+    {
+      "$oid": "620e4d2ba5b7890020cc4482"
+    },
+    {
+      "$oid": "620e4d38a5b7890020cc44a1"
+    },
+    {
+      "$oid": "620e4d51a5b7890020cc44b0"
+    },
+    {
+      "$oid": "620e4d64a5b7890020cc44d3"
+    },
+    {
+      "$oid": "620e4d767e6216001eeefc99"
+    },
+    {
+      "$oid": "620e4daaa5b7890020cc4514"
+    },
+    {
+      "$oid": "620e4db9a5b7890020cc453d"
+    },
+    {
+      "$oid": "620e4e02a5b7890020cc4599"
+    },
+    {
+      "$oid": "620e4e127e6216001eeefd63"
+    },
+    {
+      "$oid": "620e4e2ba5b7890020cc45ec"
+    },
+    {
+      "$oid": "620e4e3ca5b7890020cc4610"
+    },
+    {
+      "$oid": "620e4e577e6216001eeefdb5"
+    },
+    {
+      "$oid": "620e4e77a5b7890020cc4674"
+    },
+    {
+      "$oid": "620e4e8b7e6216001eeefe1f"
+    },
+    {
+      "$oid": "620e4ead7e6216001eeefe3d"
+    },
+    {
+      "$oid": "620e4ec57e6216001eeefe5b"
+    },
+    {
+      "$oid": "620e4eeb7e6216001eeefe9d"
+    },
+    {
+      "$oid": "620e4ef8a5b7890020cc473b"
+    },
+    {
+      "$oid": "620e4f047e6216001eeefed1"
+    },
+    {
+      "$oid": "620e4f2f7e6216001eeeff0a"
+    },
+    {
+      "$oid": "620e4f41a5b7890020cc47a2"
+    },
+    {
+      "$oid": "620e4f4ea5b7890020cc47b5"
+    },
+    {
+      "$oid": "620e4f5da5b7890020cc47cb"
+    },
+    {
+      "$oid": "620e4f787e6216001eeeff83"
+    },
+    {
+      "$oid": "620e4fa1a5b7890020cc480a"
+    },
+    {
+      "$oid": "6210b1a1a7e88f001dfb3a62"
+    },
+    {
+      "$oid": "6210b1b1b3142000239b1349"
+    },
+    {
+      "$oid": "6210b1d3b3142000239b1373"
+    },
+    {
+      "$oid": "6210b1e2a7e88f001dfb3ab1"
+    },
+    {
+      "$oid": "6210b200a7e88f001dfb3acd"
+    },
+    {
+      "$oid": "6210b213a7e88f001dfb3ae4"
+    },
+    {
+      "$oid": "6210b23ba7e88f001dfb3b0a"
+    },
+    {
+      "$oid": "6210b252a7e88f001dfb3b21"
+    },
+    {
+      "$oid": "6210b26db3142000239b1410"
+    },
+    {
+      "$oid": "6210b27ba7e88f001dfb3b54"
+    },
+    {
+      "$oid": "6210b287b3142000239b1451"
+    },
+    {
+      "$oid": "6210b295b3142000239b1461"
+    },
+    {
+      "$oid": "6210b2a2a7e88f001dfb3bae"
+    },
+    {
+      "$oid": "6210b2b2b3142000239b14a1"
+    },
+    {
+      "$oid": "6210b2c0b3142000239b14be"
+    },
+    {
+      "$oid": "6210b2edb3142000239b14e2"
+    },
+    {
+      "$oid": "6210b2ffb3142000239b14ff"
+    },
+    {
+      "$oid": "6210b331a7e88f001dfb3c3a"
+    },
+    {
+      "$oid": "6210b342a7e88f001dfb3c66"
+    },
+    {
+      "$oid": "6210b355a7e88f001dfb3c7f"
+    },
+    {
+      "$oid": "6210b374a7e88f001dfb3c9d"
+    },
+    {
+      "$oid": "6210b392b3142000239b1578"
+    },
+    {
+      "$oid": "6210b392b3142000239b1581"
+    },
+    {
+      "$oid": "6210b3adb3142000239b15a3"
+    },
+    {
+      "$oid": "6210b3d6b3142000239b15c0"
+    },
+    {
+      "$oid": "6210b3f0a7e88f001dfb3d11"
+    },
+    {
+      "$oid": "6210b40ea7e88f001dfb3d2d"
+    },
+    {
+      "$oid": "6210b42ca7e88f001dfb3d4c"
+    },
+    {
+      "$oid": "6210b43eb3142000239b162e"
+    },
+    {
+      "$oid": "6210b475b3142000239b164b"
+    },
+    {
+      "$oid": "6210b484b3142000239b1660"
+    },
+    {
+      "$oid": "6210b4a4a7e88f001dfb3dcf"
+    }
+  ],
+  "isActive": true,
+  "author": "Aviva Solutions Team",
+  "name": "C# Coding Guidelines by Aviva Solutions Team",
+  "description": "",
+  "source": {
+    "name": "Aviva Solutions",
+    "url": "https://csharpcodingguidelines.com/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201533c31e03a0020b6530e"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201533c31e03a0020b6530f"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:13:32.627Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-19T09:13:08.600Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201536731e03a0020b657fe"
+  },
+  "comments": [
+    {
+      "$oid": "620ee07b6777cd001f8ac88e"
+    },
+    {
+      "$oid": "620ee0a9a0c43b001d24034d"
+    },
+    {
+      "$oid": "620ee0d9a0c43b001d240378"
+    },
+    {
+      "$oid": "620ee103a0c43b001d240395"
+    },
+    {
+      "$oid": "620ee1326777cd001f8ac90c"
+    },
+    {
+      "$oid": "620ee3e8a0c43b001d2403f4"
+    },
+    {
+      "$oid": "620ee3fc6777cd001f8ac962"
+    },
+    {
+      "$oid": "620ee426a0c43b001d24042a"
+    },
+    {
+      "$oid": "620ee453a0c43b001d240454"
+    },
+    {
+      "$oid": "620ee466a0c43b001d240476"
+    },
+    {
+      "$oid": "620ee481a0c43b001d240492"
+    },
+    {
+      "$oid": "620ee499a0c43b001d2404b0"
+    },
+    {
+      "$oid": "620ee4b3a0c43b001d2404c1"
+    },
+    {
+      "$oid": "620ee4caa0c43b001d2404e5"
+    },
+    {
+      "$oid": "620ee4e86777cd001f8aca4f"
+    },
+    {
+      "$oid": "620ee4fca0c43b001d240526"
+    },
+    {
+      "$oid": "620ee50f6777cd001f8aca83"
+    },
+    {
+      "$oid": "620ee5266777cd001f8acaa7"
+    },
+    {
+      "$oid": "620ee557a0c43b001d24056c"
+    },
+    {
+      "$oid": "620ee59d6777cd001f8acae7"
+    },
+    {
+      "$oid": "620ee5b56777cd001f8acb0c"
+    },
+    {
+      "$oid": "620ee5d7a0c43b001d2405b9"
+    },
+    {
+      "$oid": "620ee5ed6777cd001f8acb3d"
+    }
+  ],
+  "isActive": true,
+  "author": "MiTschMR Studios Team",
+  "name": "C# Code Style Guide For Game Creator by MiTschMR Studios Team",
+  "description": "",
+  "source": {
+    "name": "MiTschMR Studios",
+    "url": "https://docs.mitschmr-studios.io/c-code-style-guide/c-code-style-guide-for-game-creator"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201536731e03a0020b657ff"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201536731e03a0020b65800"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:14:15.342Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-18T00:18:53.290Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201539a31e03a0020b65cef"
+  },
+  "comments": [
+    {
+      "$oid": "620d87c5e4aacd001dd681cf"
+    },
+    {
+      "$oid": "620d87dc2015cd001e4c67c2"
+    },
+    {
+      "$oid": "620d880ae4aacd001dd6821d"
+    },
+    {
+      "$oid": "620d8869e4aacd001dd68255"
+    },
+    {
+      "$oid": "620d8948e4aacd001dd68293"
+    },
+    {
+      "$oid": "620d8969e4aacd001dd682be"
+    },
+    {
+      "$oid": "620d8997e4aacd001dd682e2"
+    },
+    {
+      "$oid": "620d89c0e4aacd001dd68307"
+    },
+    {
+      "$oid": "620d89e22015cd001e4c68ad"
+    },
+    {
+      "$oid": "620d8a3d2015cd001e4c68de"
+    },
+    {
+      "$oid": "620d8af0e4aacd001dd6836d"
+    }
+  ],
+  "isActive": true,
+  "author": "Stanislav Osipov & Koretsky Konstantin",
+  "name": "Stan's Assets Unity C# Coding guidelines by Stanislav Osipov & Koretsky Konstantin",
+  "description": "",
+  "source": {
+    "name": "Union Assets",
+    "url": "https://unionassets.com/blog/stan-s-assets-unity-c-coding-guidelines-465"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201539a31e03a0020b65cf0"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201539a31e03a0020b65cf1"
+      },
+      "label": "Style Guides",
+      "type": "guide",
+      "tag": {
+        "$oid": "60f5e2a3cd37055105469e76"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:15:06.980Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T23:38:24.921Z"
+  }
+},{
+  "_id": {
+    "$oid": "620153d431e03a0020b661e0"
+  },
+  "comments": [
+    {
+      "$oid": "620e8506a0c43b001d23f2de"
+    },
+    {
+      "$oid": "620e8528a0c43b001d23f2f6"
+    },
+    {
+      "$oid": "620e855d6777cd001f8abf81"
+    },
+    {
+      "$oid": "620e858ea0c43b001d23f337"
+    },
+    {
+      "$oid": "620e85a2a0c43b001d23f355"
+    },
+    {
+      "$oid": "620e89b5a0c43b001d23f397"
+    },
+    {
+      "$oid": "620e89d66777cd001f8ac00c"
+    },
+    {
+      "$oid": "620e89ea6777cd001f8ac035"
+    },
+    {
+      "$oid": "620e8a006777cd001f8ac053"
+    },
+    {
+      "$oid": "620e8a1ca0c43b001d23f3f7"
+    },
+    {
+      "$oid": "620e8a306777cd001f8ac08b"
+    },
+    {
+      "$oid": "620e8a4aa0c43b001d23f436"
+    },
+    {
+      "$oid": "620e8a5ea0c43b001d23f459"
+    },
+    {
+      "$oid": "620e8a80a0c43b001d23f471"
+    },
+    {
+      "$oid": "620e8a966777cd001f8ac101"
+    },
+    {
+      "$oid": "620e8c3fa0c43b001d23f9d1"
+    },
+    {
+      "$oid": "620e8c92a0c43b001d23f9f9"
+    },
+    {
+      "$oid": "620e8cc06777cd001f8ac21c"
+    },
+    {
+      "$oid": "620e8ce9a0c43b001d23fa29"
+    },
+    {
+      "$oid": "620e8d0aa0c43b001d23fa54"
+    },
+    {
+      "$oid": "620e8d88a0c43b001d23fa80"
+    },
+    {
+      "$oid": "620e8efaa0c43b001d23fa9e"
+    },
+    {
+      "$oid": "620e8f3a6777cd001f8ac2cb"
+    },
+    {
+      "$oid": "620e8fa16777cd001f8ac323"
+    },
+    {
+      "$oid": "620e8fc9a0c43b001d23fb3e"
+    },
+    {
+      "$oid": "620e8fdba0c43b001d23fb6a"
+    },
+    {
+      "$oid": "620e8ff5a0c43b001d23fb89"
+    },
+    {
+      "$oid": "620e9009a0c43b001d23fbad"
+    }
+  ],
+  "isActive": true,
+  "author": "Kunal Chowdhury «IN»",
+  "name": "Some Best Practices for C# Application Development (Explained) by Kunal Chowdhury",
+  "description": "",
+  "source": {
+    "name": "Сodeproject",
+    "url": "https://www.codeproject.com/Articles/118853/Some-Best-Practices-for-C-Application-Developmen"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620153d431e03a0020b661e1"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620153d431e03a0020b661e2"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:16:04.621Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-17T18:12:25.810Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201543a31e03a0020b666d1"
+  },
+  "comments": [
+    {
+      "$oid": "620d5a33e4aacd001dd670b8"
+    },
+    {
+      "$oid": "620d5a64e4aacd001dd670ce"
+    },
+    {
+      "$oid": "620d5a8fe4aacd001dd670e4"
+    },
+    {
+      "$oid": "620d5adb2015cd001e4c595b"
+    },
+    {
+      "$oid": "620d5b012015cd001e4c5973"
+    },
+    {
+      "$oid": "620d5b3a2015cd001e4c5983"
+    },
+    {
+      "$oid": "620d5b5d2015cd001e4c59af"
+    },
+    {
+      "$oid": "620d5b8b2015cd001e4c59cc"
+    },
+    {
+      "$oid": "620d5bbbe4aacd001dd6719e"
+    },
+    {
+      "$oid": "620d5bfb2015cd001e4c5a60"
+    },
+    {
+      "$oid": "620d5c1d2015cd001e4c5a7c"
+    },
+    {
+      "$oid": "620d5c442015cd001e4c5a99"
+    },
+    {
+      "$oid": "620d5cbd2015cd001e4c5ab7"
+    },
+    {
+      "$oid": "620d61172015cd001e4c5b2c"
+    },
+    {
+      "$oid": "620d612e2015cd001e4c5b4f"
+    },
+    {
+      "$oid": "620d613b2015cd001e4c5b67"
+    },
+    {
+      "$oid": "620d615fe4aacd001dd6732f"
+    },
+    {
+      "$oid": "620d616ce4aacd001dd67340"
+    },
+    {
+      "$oid": "620d617ae4aacd001dd67364"
+    },
+    {
+      "$oid": "620d61932015cd001e4c5be9"
+    },
+    {
+      "$oid": "620d61a92015cd001e4c5bfa"
+    },
+    {
+      "$oid": "620d61bb2015cd001e4c5c16"
+    },
+    {
+      "$oid": "620d61e8e4aacd001dd673c6"
+    },
+    {
+      "$oid": "620d61fbe4aacd001dd673e5"
+    },
+    {
+      "$oid": "620d620a2015cd001e4c5c6f"
+    },
+    {
+      "$oid": "620d62702015cd001e4c5caa"
+    },
+    {
+      "$oid": "620d629ce4aacd001dd6745f"
+    },
+    {
+      "$oid": "620d62aae4aacd001dd67489"
+    },
+    {
+      "$oid": "620d62b92015cd001e4c5d23"
+    },
+    {
+      "$oid": "620d62c8e4aacd001dd674c2"
+    },
+    {
+      "$oid": "620d62e12015cd001e4c5d55"
+    },
+    {
+      "$oid": "620d62fde4aacd001dd674fb"
+    },
+    {
+      "$oid": "620d630c2015cd001e4c5d96"
+    },
+    {
+      "$oid": "620d631be4aacd001dd6752c"
+    },
+    {
+      "$oid": "620d635ce4aacd001dd6755d"
+    },
+    {
+      "$oid": "620d63672015cd001e4c5dfe"
+    },
+    {
+      "$oid": "620d63822015cd001e4c5e34"
+    },
+    {
+      "$oid": "620d6397e4aacd001dd675d0"
+    },
+    {
+      "$oid": "620d63a42015cd001e4c5e84"
+    },
+    {
+      "$oid": "620d63b12015cd001e4c5ea4"
+    },
+    {
+      "$oid": "620d63c3e4aacd001dd67635"
+    },
+    {
+      "$oid": "620d63e72015cd001e4c5ef5"
+    },
+    {
+      "$oid": "620d63f22015cd001e4c5f0c"
+    },
+    {
+      "$oid": "620d63ff2015cd001e4c5f22"
+    },
+    {
+      "$oid": "620d640ee4aacd001dd676a0"
+    },
+    {
+      "$oid": "620d641ae4aacd001dd676c6"
+    },
+    {
+      "$oid": "620d6427e4aacd001dd676dc"
+    },
+    {
+      "$oid": "620d64362015cd001e4c5f97"
+    },
+    {
+      "$oid": "620d645b2015cd001e4c5fb4"
+    },
+    {
+      "$oid": "620d6481e4aacd001dd67733"
+    },
+    {
+      "$oid": "620d648d2015cd001e4c5ff5"
+    },
+    {
+      "$oid": "620d64982015cd001e4c5ffe"
+    },
+    {
+      "$oid": "620d64a92015cd001e4c6023"
+    },
+    {
+      "$oid": "620d64bb2015cd001e4c6041"
+    },
+    {
+      "$oid": "620d64c8e4aacd001dd677bb"
+    },
+    {
+      "$oid": "620d64d7e4aacd001dd677d0"
+    },
+    {
+      "$oid": "620d64ea2015cd001e4c6091"
+    },
+    {
+      "$oid": "620d64f52015cd001e4c60af"
+    }
+  ],
+  "isActive": true,
+  "author": "Yogesh Khurpe",
+  "name": "C# Coding Guidelines And Best Practices v1.0  by Yogesh Khurpe",
+  "description": "",
+  "source": {
+    "name": "С-sharpcorner",
+    "url": "https://www.c-sharpcorner.com/blogs/c-sharp-coding-guidelines-and-best-practices-v10"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201543a31e03a0020b666d2"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201543a31e03a0020b666d3"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:17:46.928Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T20:56:21.474Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201546f31e03a0020b66bc3"
+  },
+  "comments": [
+    {
+      "$oid": "6219a531cd1d5c001e9c8e3b"
+    },
+    {
+      "$oid": "6219a578b2ff7a001d65cd14"
+    },
+    {
+      "$oid": "6219a5c7e429ee0020c88fe7"
+    },
+    {
+      "$oid": "6219a607e429ee0020c88ff7"
+    }
+  ],
+  "isActive": true,
+  "author": "Faisal Pathan",
+  "name": "C# Best Practices by Faisal Pathan",
+  "description": "",
+  "source": {
+    "name": "DZone",
+    "url": "https://dzone.com/articles/c-best-practices"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201546f31e03a0020b66bc4"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201546f31e03a0020b66bc5"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:18:39.323Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-26T04:01:11.899Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201549e31e03a0020b670b4"
+  },
+  "comments": [
+    {
+      "$oid": "620911d973c372002164762e"
+    },
+    {
+      "$oid": "62091207d3bbe7001e35168e"
+    },
+    {
+      "$oid": "62091223d3bbe7001e35169f"
+    },
+    {
+      "$oid": "6209124673c372002164766e"
+    },
+    {
+      "$oid": "620912d973c3720021647684"
+    },
+    {
+      "$oid": "62091310d3bbe7001e3516f1"
+    },
+    {
+      "$oid": "620913aed3bbe7001e351709"
+    },
+    {
+      "$oid": "62091445d3bbe7001e351719"
+    },
+    {
+      "$oid": "620914c773c37200216476f8"
+    },
+    {
+      "$oid": "62091515d3bbe7001e35174b"
+    },
+    {
+      "$oid": "6209153e73c372002164771d"
+    },
+    {
+      "$oid": "6209156ad3bbe7001e351777"
+    },
+    {
+      "$oid": "620915f073c372002164773d"
+    },
+    {
+      "$oid": "62091621d3bbe7001e3517b3"
+    },
+    {
+      "$oid": "620916ebd3bbe7001e3517ca"
+    },
+    {
+      "$oid": "6209174573c3720021647788"
+    },
+    {
+      "$oid": "6209179fd3bbe7001e3517ed"
+    },
+    {
+      "$oid": "62091908d3bbe7001e351820"
+    },
+    {
+      "$oid": "6209193bd3bbe7001e351837"
+    },
+    {
+      "$oid": "6209196cd3bbe7001e35184f"
+    },
+    {
+      "$oid": "62091990d3bbe7001e35186d"
+    },
+    {
+      "$oid": "620919a973c372002164781a"
+    },
+    {
+      "$oid": "620919cc73c372002164782b"
+    },
+    {
+      "$oid": "620919e5d3bbe7001e3518ae"
+    },
+    {
+      "$oid": "620919fcd3bbe7001e3518c5"
+    },
+    {
+      "$oid": "62091a14d3bbe7001e3518dc"
+    },
+    {
+      "$oid": "62091a36d3bbe7001e3518ec"
+    },
+    {
+      "$oid": "62091a7273c372002164789a"
+    },
+    {
+      "$oid": "62091aeed3bbe7001e35191a"
+    },
+    {
+      "$oid": "62091b13d3bbe7001e351932"
+    },
+    {
+      "$oid": "62091b9c73c37200216478da"
+    },
+    {
+      "$oid": "62091bb5d3bbe7001e35196e"
+    },
+    {
+      "$oid": "62091bd473c3720021647906"
+    },
+    {
+      "$oid": "62091bf273c3720021647923"
+    },
+    {
+      "$oid": "62091c55d3bbe7001e3519a5"
+    }
+  ],
+  "isActive": true,
+  "author": "Vincent Maverick Durano",
+  "name": "C# Coding Guidelines and Practices - 2021 by Vincent Maverick Durano",
+  "description": "",
+  "source": {
+    "name": "Vmsdurano",
+    "url": "https://vmsdurano.com/c-coding-guidelines-and-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201549e31e03a0020b670b5"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201549e31e03a0020b670b6"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:19:26.979Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T14:57:25.297Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201550231e03a0020b675a5"
+  },
+  "comments": [
+    {
+      "$oid": "620d3ca62015cd001e4c51e8"
+    },
+    {
+      "$oid": "620d3cc92015cd001e4c5210"
+    },
+    {
+      "$oid": "620d3cec2015cd001e4c5237"
+    },
+    {
+      "$oid": "620d3d6ae4aacd001dd66c77"
+    },
+    {
+      "$oid": "620d3d88e4aacd001dd66ca0"
+    },
+    {
+      "$oid": "620d3d9ae4aacd001dd66cbe"
+    },
+    {
+      "$oid": "620d3dad2015cd001e4c52bd"
+    },
+    {
+      "$oid": "620d3e85e4aacd001dd66d43"
+    },
+    {
+      "$oid": "620d3ead2015cd001e4c5310"
+    },
+    {
+      "$oid": "620d40542015cd001e4c5356"
+    },
+    {
+      "$oid": "620d4079e4aacd001dd66de6"
+    },
+    {
+      "$oid": "620d40a82015cd001e4c539c"
+    },
+    {
+      "$oid": "620d40d7e4aacd001dd66e33"
+    },
+    {
+      "$oid": "620d411de4aacd001dd66e42"
+    },
+    {
+      "$oid": "620d4188e4aacd001dd66e6c"
+    }
+  ],
+  "isActive": true,
+  "author": "Kevin Gosse",
+  "name": "Performance best practices in C# by Kevin Gosse",
+  "description": "",
+  "source": {
+    "name": "Kevin Gosse",
+    "url": "https://kevingosse.medium.com/performance-best-practices-in-c-b85a47bdd93a"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201550231e03a0020b675a6"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201550231e03a0020b675a7"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:21:06.718Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T18:25:12.483Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201555731e03a0020b67a96"
+  },
+  "comments": [
+    {
+      "$oid": "62091e6fd3bbe7001e3521c3"
+    },
+    {
+      "$oid": "62091e7dd3bbe7001e3521e1"
+    },
+    {
+      "$oid": "62091e8c73c37200216479e1"
+    },
+    {
+      "$oid": "62091e9ed3bbe7001e352223"
+    },
+    {
+      "$oid": "62091eac73c3720021647a02"
+    },
+    {
+      "$oid": "62091ec573c3720021647a19"
+    },
+    {
+      "$oid": "62091ed9d3bbe7001e35225e"
+    },
+    {
+      "$oid": "62091ee6d3bbe7001e352276"
+    },
+    {
+      "$oid": "62091ef8d3bbe7001e352296"
+    },
+    {
+      "$oid": "62091f0573c3720021647a6d"
+    },
+    {
+      "$oid": "62091f1173c3720021647a8a"
+    }
+  ],
+  "isActive": true,
+  "author": "GeeksforGeeks Team",
+  "name": "C# Coding Standards Best Practices by GeeksforGeeks Team",
+  "description": "",
+  "source": {
+    "name": "GeeksforGeeks",
+    "url": "https://www.geeksforgeeks.org/c-sharp-coding-standards/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201555731e03a0020b67a97"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201555731e03a0020b67a98"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:22:31.740Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T15:09:05.701Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201559231e03a0020b67f87"
+  },
+  "comments": [
+    {
+      "$oid": "62110365a7e88f001dfb67f2"
+    },
+    {
+      "$oid": "621103a3a7e88f001dfb6816"
+    },
+    {
+      "$oid": "621103eca7e88f001dfb688c"
+    },
+    {
+      "$oid": "62113c6eb3142000239b3ac7"
+    },
+    {
+      "$oid": "62113cc7a7e88f001dfb6a20"
+    },
+    {
+      "$oid": "62113ce0a7e88f001dfb6a4a"
+    },
+    {
+      "$oid": "62113d04b3142000239b3b10"
+    }
+  ],
+  "isActive": true,
+  "author": "Papertrail Team",
+  "name": "7 Best Practices for C# Logging by Papertrail Team",
+  "description": "",
+  "source": {
+    "name": "Papertrail",
+    "url": "https://www.papertrail.com/solution/tips/7-best-practices-for-c-logging-with-examples/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201559231e03a0020b67f88"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201559231e03a0020b67f89"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:23:30.396Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-19T18:55:00.274Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201560531e03a0020b68c6a"
+  },
+  "comments": [
+    {
+      "$oid": "622cf581701e7d001d57a87a"
+    },
+    {
+      "$oid": "622cf5b57a2fd7001d43e006"
+    },
+    {
+      "$oid": "622cf6037d22f000203fe6e5"
+    },
+    {
+      "$oid": "622cf6247d22f000203fe6f0"
+    },
+    {
+      "$oid": "622cf67d701e7d001d57a8a7"
+    },
+    {
+      "$oid": "622cf6c3cd2491001ebab07b"
+    },
+    {
+      "$oid": "622cff87701e7d001d57a8cb"
+    },
+    {
+      "$oid": "622cffb37a2fd7001d43e06c"
+    },
+    {
+      "$oid": "622cffd27a2fd7001d43e085"
+    },
+    {
+      "$oid": "622cffe7cd2491001ebab0b2"
+    },
+    {
+      "$oid": "622d00097a2fd7001d43e09c"
+    },
+    {
+      "$oid": "622d00197a2fd7001d43e0a7"
+    },
+    {
+      "$oid": "622d00557d22f000203fe75c"
+    }
+  ],
+  "isActive": true,
+  "author": "Kip Streithorst",
+  "name": "Best Practices: Starting a New C# Project by Kip Streithorst",
+  "description": "",
+  "source": {
+    "name": "AIS",
+    "url": "https://www.ais.com/best-practices-starting-a-new-c-project/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201560531e03a0020b68c6b"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201560531e03a0020b68c6c"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:25:25.964Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-03-12T20:19:33.225Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201562d31e03a0020b6915b"
+  },
+  "comments": [
+    {
+      "$oid": "620d3a2e2015cd001e4c506d"
+    },
+    {
+      "$oid": "620d3a84e4aacd001dd667be"
+    },
+    {
+      "$oid": "620d3ab9e4aacd001dd667e2"
+    },
+    {
+      "$oid": "620d3acc2015cd001e4c50c7"
+    },
+    {
+      "$oid": "620d3ae1e4aacd001dd66822"
+    },
+    {
+      "$oid": "620d3b2a2015cd001e4c50fb"
+    },
+    {
+      "$oid": "620d3b3ce4aacd001dd6684c"
+    },
+    {
+      "$oid": "620d3b54e4aacd001dd66868"
+    },
+    {
+      "$oid": "620d3b7f2015cd001e4c514a"
+    },
+    {
+      "$oid": "620d3bade4aacd001dd668ae"
+    }
+  ],
+  "isActive": true,
+  "author": "Kumar Ashwin Hubert",
+  "name": "10 Exception handling best practices in C# by Kumar Ashwin Hubert",
+  "description": "",
+  "source": {
+    "name": "Ashwin's Blog",
+    "url": "https://kumarashwinhubert.com/10-exception-handling-best-practices-in-csharp"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201562d31e03a0020b6915c"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201562d31e03a0020b6915d"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:26:05.107Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T18:00:13.685Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201565131e03a0020b69653"
+  },
+  "comments": [
+    {
+      "$oid": "620d266ce4aacd001dd64e00"
+    },
+    {
+      "$oid": "620d267f2015cd001e4c3e56"
+    },
+    {
+      "$oid": "620d26982015cd001e4c3e6c"
+    },
+    {
+      "$oid": "620d26dee4aacd001dd64ee9"
+    },
+    {
+      "$oid": "620d272be4aacd001dd64f17"
+    },
+    {
+      "$oid": "620d273ae4aacd001dd64f36"
+    },
+    {
+      "$oid": "620d27552015cd001e4c3f6a"
+    },
+    {
+      "$oid": "620d2770e4aacd001dd64fac"
+    },
+    {
+      "$oid": "620d27d9e4aacd001dd6501c"
+    }
+  ],
+  "isActive": true,
+  "author": "Aerospike Team",
+  "name": "C# Client Best Practices by Aerospike Team",
+  "description": "",
+  "source": {
+    "name": "Aerospike",
+    "url": "https://docs.aerospike.com/docs/client/csharp/best_practices.html"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201565131e03a0020b69654"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201565131e03a0020b69655"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:26:41.169Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T16:35:37.864Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201569031e03a0020b69b7c"
+  },
+  "comments": [
+    {
+      "$oid": "620d18ebe4aacd001dd62b5c"
+    },
+    {
+      "$oid": "620d18eb2015cd001e4c1679"
+    },
+    {
+      "$oid": "620d19372015cd001e4c16fb"
+    },
+    {
+      "$oid": "620d19452015cd001e4c1710"
+    },
+    {
+      "$oid": "620d195c2015cd001e4c172e"
+    },
+    {
+      "$oid": "620d1966e4aacd001dd62c5c"
+    },
+    {
+      "$oid": "620d1975e4aacd001dd62c9c"
+    },
+    {
+      "$oid": "620d19812015cd001e4c17b5"
+    },
+    {
+      "$oid": "620d198d2015cd001e4c17d2"
+    },
+    {
+      "$oid": "620d199be4aacd001dd62cf6"
+    },
+    {
+      "$oid": "620d19e8e4aacd001dd62d13"
+    },
+    {
+      "$oid": "620d1a122015cd001e4c181c"
+    },
+    {
+      "$oid": "620d1a332015cd001e4c1844"
+    },
+    {
+      "$oid": "620d1a442015cd001e4c1871"
+    },
+    {
+      "$oid": "620d1b0f2015cd001e4c1d64"
+    },
+    {
+      "$oid": "620d1b262015cd001e4c1d81"
+    },
+    {
+      "$oid": "620d1b6be4aacd001dd6322a"
+    },
+    {
+      "$oid": "620d1ca72015cd001e4c2939"
+    },
+    {
+      "$oid": "620d1cc82015cd001e4c2966"
+    },
+    {
+      "$oid": "620d1ceb2015cd001e4c297e"
+    },
+    {
+      "$oid": "620d1d232015cd001e4c29f0"
+    },
+    {
+      "$oid": "620d1d382015cd001e4c2a39"
+    },
+    {
+      "$oid": "620d1d50e4aacd001dd63a90"
+    },
+    {
+      "$oid": "620d1d63e4aacd001dd63aad"
+    },
+    {
+      "$oid": "620d1d7ce4aacd001dd63aca"
+    },
+    {
+      "$oid": "620d1d992015cd001e4c2b59"
+    },
+    {
+      "$oid": "620d1deee4aacd001dd63c64"
+    },
+    {
+      "$oid": "620d1e1ce4aacd001dd63cef"
+    },
+    {
+      "$oid": "620d1e622015cd001e4c2d23"
+    },
+    {
+      "$oid": "620d1ebb2015cd001e4c2e7e"
+    },
+    {
+      "$oid": "620d1ed8e4aacd001dd64108"
+    },
+    {
+      "$oid": "620d1ef8e4aacd001dd64134"
+    },
+    {
+      "$oid": "620d1f1c2015cd001e4c2fee"
+    }
+  ],
+  "isActive": true,
+  "author": "Avangarde Software Team",
+  "name": "[Unity] Coding guidelines & Basic Best Practices by Avangarde Software Team",
+  "description": "",
+  "source": {
+    "name": "Avangarde Software",
+    "url": "https://avangarde-software.com/unity-coding-guidelines-basic-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201569031e03a0020b69b7d"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201569031e03a0020b69b7e"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:27:44.477Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T15:58:20.563Z"
+  }
+},{
+  "_id": {
+    "$oid": "620156bd31e03a0020b6a0a6"
+  },
+  "comments": [
+    {
+      "$oid": "620d1458e4aacd001dd6209e"
+    },
+    {
+      "$oid": "620d1525e4aacd001dd620dd"
+    },
+    {
+      "$oid": "620d153e2015cd001e4c00d1"
+    },
+    {
+      "$oid": "620d15612015cd001e4c00ef"
+    },
+    {
+      "$oid": "620d158ae4aacd001dd62125"
+    },
+    {
+      "$oid": "620d15c52015cd001e4c015e"
+    },
+    {
+      "$oid": "620d15fb2015cd001e4c0a69"
+    },
+    {
+      "$oid": "620d16242015cd001e4c0a87"
+    },
+    {
+      "$oid": "620d1681e4aacd001dd62578"
+    },
+    {
+      "$oid": "620d16fde4aacd001dd625d0"
+    },
+    {
+      "$oid": "620d17182015cd001e4c0b3e"
+    }
+  ],
+  "isActive": true,
+  "author": "Hemant",
+  "name": "C# best coding practices by Hemant",
+  "description": "",
+  "source": {
+    "name": "Helpmecoder",
+    "url": "https://helpmecoder.com/2019/03/15/c-best-coding-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620156bd31e03a0020b6a0a7"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620156bd31e03a0020b6a0a8"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:28:29.510Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T15:24:08.407Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201572431e03a0020b6a5ac"
+  },
+  "comments": [],
+  "isActive": true,
+  "author": "Steve Gordon",
+  "name": "String Manipulation In C#: Best Practices by Steve Gordon",
+  "description": "",
+  "source": {
+    "name": "Stevejgordon",
+    "url": "https://www.stevejgordon.co.uk/string-manipulation-in-csharp-best-practices"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201572431e03a0020b6a5ad"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201572431e03a0020b6a5ae"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:30:12.177Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-07T17:30:12.179Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201574f31e03a0020b6aac7"
+  },
+  "comments": [
+    {
+      "$oid": "622ced073e030a00204e997a"
+    },
+    {
+      "$oid": "622ceeb4701e7d001d579f2d"
+    },
+    {
+      "$oid": "622cef0fe0f432001da58eff"
+    },
+    {
+      "$oid": "622cef2c7d22f000203fe634"
+    },
+    {
+      "$oid": "622cef533e030a00204e99a6"
+    },
+    {
+      "$oid": "622cef747d22f000203fe64b"
+    },
+    {
+      "$oid": "622cef9a7a2fd7001d43df7a"
+    },
+    {
+      "$oid": "622cf0887a2fd7001d43df85"
+    },
+    {
+      "$oid": "622cf0e77d22f000203fe65c"
+    },
+    {
+      "$oid": "622cf0fa7a2fd7001d43df96"
+    },
+    {
+      "$oid": "622cf10ae0f432001da58f4b"
+    },
+    {
+      "$oid": "622cf1197a2fd7001d43dfa1"
+    },
+    {
+      "$oid": "622cf12b7a2fd7001d43dfac"
+    },
+    {
+      "$oid": "622cf1467a2fd7001d43dfc5"
+    },
+    {
+      "$oid": "622cf166701e7d001d579fcf"
+    }
+  ],
+  "isActive": true,
+  "author": "Dave Swersky",
+  "name": "C# Logging best practices in 2021 with examples and tools by Dave Swersky",
+  "description": "",
+  "source": {
+    "name": "Raygun",
+    "url": "https://raygun.com/blog/c-sharp-logging-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201574f31e03a0020b6aac8"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201574f31e03a0020b6aac9"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:30:55.080Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-03-12T19:15:50.013Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201577731e03a0020b6afb8"
+  },
+  "comments": [
+    {
+      "$oid": "6210b615b3142000239b1700"
+    },
+    {
+      "$oid": "6210b623b3142000239b171e"
+    },
+    {
+      "$oid": "6210b62db3142000239b1744"
+    },
+    {
+      "$oid": "6210b63aa7e88f001dfb4673"
+    },
+    {
+      "$oid": "6210b650b3142000239b177f"
+    },
+    {
+      "$oid": "6210b677a7e88f001dfb46a0"
+    },
+    {
+      "$oid": "6210b685a7e88f001dfb46c6"
+    },
+    {
+      "$oid": "6210b6ccb3142000239b17d1"
+    },
+    {
+      "$oid": "6210b6d6b3142000239b17e9"
+    },
+    {
+      "$oid": "6210b6e5b3142000239b1816"
+    },
+    {
+      "$oid": "6210b6f1a7e88f001dfb4725"
+    },
+    {
+      "$oid": "6210b704a7e88f001dfb4750"
+    },
+    {
+      "$oid": "6210b70fa7e88f001dfb476e"
+    },
+    {
+      "$oid": "6210b74eb3142000239b187f"
+    },
+    {
+      "$oid": "6210b75bb3142000239b18aa"
+    },
+    {
+      "$oid": "6210b763b3142000239b18d0"
+    },
+    {
+      "$oid": "6210b771a7e88f001dfb47ce"
+    },
+    {
+      "$oid": "6210b77da7e88f001dfb47ff"
+    },
+    {
+      "$oid": "6210b786b3142000239b1910"
+    },
+    {
+      "$oid": "6210b78fa7e88f001dfb4831"
+    },
+    {
+      "$oid": "6210b798a7e88f001dfb484e"
+    },
+    {
+      "$oid": "6210b7aab3142000239b1967"
+    },
+    {
+      "$oid": "6210b7b3b3142000239b1985"
+    },
+    {
+      "$oid": "6210b7c4b3142000239b19a9"
+    },
+    {
+      "$oid": "6210b7cfa7e88f001dfb48c4"
+    },
+    {
+      "$oid": "6210b7dcb3142000239b19dd"
+    },
+    {
+      "$oid": "6210b7e6a7e88f001dfb48fb"
+    },
+    {
+      "$oid": "6210b7fca7e88f001dfb491a"
+    },
+    {
+      "$oid": "6210b80fa7e88f001dfb493a"
+    },
+    {
+      "$oid": "6210b81bb3142000239b1a3d"
+    },
+    {
+      "$oid": "6210b82ba7e88f001dfb4971"
+    },
+    {
+      "$oid": "6210b837a7e88f001dfb4988"
+    },
+    {
+      "$oid": "6210b842b3142000239b1a9e"
+    },
+    {
+      "$oid": "6210b84cb3142000239b1ac3"
+    },
+    {
+      "$oid": "6210b857a7e88f001dfb49e2"
+    },
+    {
+      "$oid": "6210b863b3142000239b1af9"
+    },
+    {
+      "$oid": "6210b870a7e88f001dfb4a1b"
+    },
+    {
+      "$oid": "6210b880b3142000239b1b2e"
+    },
+    {
+      "$oid": "6210b897b3142000239b1b54"
+    },
+    {
+      "$oid": "6210b8aab3142000239b1b73"
+    },
+    {
+      "$oid": "6210b8b6b3142000239b1b99"
+    },
+    {
+      "$oid": "6210b8c5a7e88f001dfb4ab3"
+    },
+    {
+      "$oid": "6210b8d1a7e88f001dfb4aca"
+    },
+    {
+      "$oid": "6210b8dea7e88f001dfb4aee"
+    },
+    {
+      "$oid": "6210b8e9b3142000239b1c18"
+    },
+    {
+      "$oid": "6210b8f4b3142000239b1c27"
+    },
+    {
+      "$oid": "6210b8ffa7e88f001dfb4b3c"
+    },
+    {
+      "$oid": "6210b908b3142000239b1c6f"
+    },
+    {
+      "$oid": "6210b922a7e88f001dfb4b75"
+    },
+    {
+      "$oid": "6210b930b3142000239b1ca2"
+    },
+    {
+      "$oid": "6210b941b3142000239b1cc5"
+    },
+    {
+      "$oid": "6210b94ea7e88f001dfb4bcb"
+    },
+    {
+      "$oid": "6210b95ca7e88f001dfb4bee"
+    },
+    {
+      "$oid": "6210b965b3142000239b1d13"
+    },
+    {
+      "$oid": "6210b975b3142000239b1d31"
+    },
+    {
+      "$oid": "6210b985b3142000239b1d4f"
+    },
+    {
+      "$oid": "6210b98fb3142000239b1d6c"
+    },
+    {
+      "$oid": "6210b99ab3142000239b1d91"
+    },
+    {
+      "$oid": "6210b9a8b3142000239b1db5"
+    },
+    {
+      "$oid": "6210b9b2a7e88f001dfb4ca9"
+    },
+    {
+      "$oid": "6210b9bba7e88f001dfb4cc7"
+    },
+    {
+      "$oid": "6210b9c5a7e88f001dfb4cdd"
+    },
+    {
+      "$oid": "6210b9cfa7e88f001dfb4cfa"
+    },
+    {
+      "$oid": "6210b9daa7e88f001dfb4d10"
+    },
+    {
+      "$oid": "6210b9e5a7e88f001dfb4d3c"
+    },
+    {
+      "$oid": "6210b9efa7e88f001dfb4d52"
+    },
+    {
+      "$oid": "6210b9fba7e88f001dfb4d77"
+    },
+    {
+      "$oid": "6210ba05a7e88f001dfb4d93"
+    },
+    {
+      "$oid": "6210ba0fa7e88f001dfb4da9"
+    },
+    {
+      "$oid": "6210ba19a7e88f001dfb4dce"
+    },
+    {
+      "$oid": "6210ba23a7e88f001dfb4df2"
+    },
+    {
+      "$oid": "6210ba32a7e88f001dfb4e10"
+    },
+    {
+      "$oid": "6210ba3da7e88f001dfb4e2d"
+    },
+    {
+      "$oid": "6210ba4ab3142000239b1f57"
+    },
+    {
+      "$oid": "6210ba54a7e88f001dfb4e5e"
+    },
+    {
+      "$oid": "6210ba60b3142000239b1f84"
+    },
+    {
+      "$oid": "6210ba6da7e88f001dfb4e9c"
+    },
+    {
+      "$oid": "6210ba81b3142000239b1fb7"
+    },
+    {
+      "$oid": "6210ba8da7e88f001dfb4ecf"
+    },
+    {
+      "$oid": "6210baa3b3142000239b1ff5"
+    },
+    {
+      "$oid": "6210babea7e88f001dfb4f0f"
+    },
+    {
+      "$oid": "6210bacab3142000239b202e"
+    },
+    {
+      "$oid": "6210bad6a7e88f001dfb4f51"
+    }
+  ],
+  "isActive": true,
+  "author": "Suresh Dasari",
+  "name": "C# Coding Standards and Best Programming Practices by Suresh Dasari",
+  "description": "",
+  "source": {
+    "name": "Aspdotnet-Suresh",
+    "url": "https://www.aspdotnet-suresh.com/2010/04/c-coding-standards-and-best-programming.html"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201577731e03a0020b6afb9"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201577731e03a0020b6afba"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:31:35.598Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-19T09:39:34.493Z"
+  }
+},{
+  "_id": {
+    "$oid": "620157b031e03a0020b6b4b0"
+  },
+  "comments": [
+    {
+      "$oid": "620d0ba12015cd001e4bf916"
+    },
+    {
+      "$oid": "620d0bc6e4aacd001dd61b90"
+    },
+    {
+      "$oid": "620d0c272015cd001e4bf95a"
+    },
+    {
+      "$oid": "620d0c74e4aacd001dd61bff"
+    },
+    {
+      "$oid": "620d0c95e4aacd001dd61c24"
+    },
+    {
+      "$oid": "620d0ce7e4aacd001dd61c5d"
+    },
+    {
+      "$oid": "620d0d152015cd001e4bfa00"
+    },
+    {
+      "$oid": "620d0dbf2015cd001e4bfa25"
+    },
+    {
+      "$oid": "620d0e2a2015cd001e4bfaa4"
+    },
+    {
+      "$oid": "620d0e68e4aacd001dd61d3b"
+    },
+    {
+      "$oid": "620d0f022015cd001e4bfb0c"
+    },
+    {
+      "$oid": "620d0f40e4aacd001dd61df2"
+    },
+    {
+      "$oid": "620d0f7e2015cd001e4bfb99"
+    },
+    {
+      "$oid": "620d0fe9e4aacd001dd61e24"
+    },
+    {
+      "$oid": "620d101de4aacd001dd61e47"
+    },
+    {
+      "$oid": "620d10bee4aacd001dd61e71"
+    },
+    {
+      "$oid": "620d10d3e4aacd001dd61e9a"
+    },
+    {
+      "$oid": "620d113ee4aacd001dd61eb0"
+    },
+    {
+      "$oid": "620d11aae4aacd001dd61f1e"
+    },
+    {
+      "$oid": "620d11ebe4aacd001dd61f57"
+    },
+    {
+      "$oid": "620d121e2015cd001e4bfcae"
+    },
+    {
+      "$oid": "620d125a2015cd001e4bfcca"
+    },
+    {
+      "$oid": "620d1275e4aacd001dd61fae"
+    },
+    {
+      "$oid": "620d12c4e4aacd001dd61fde"
+    }
+  ],
+  "isActive": true,
+  "author": "Marinko Spasojevic",
+  "name": "ASP.NET Core Web API Best Practices by Marinko Spasojevic",
+  "description": "",
+  "source": {
+    "name": "Code Maze",
+    "url": "https://code-maze.com/aspnetcore-webapi-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620157b031e03a0020b6b4b1"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620157b031e03a0020b6b4b2"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:32:32.985Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T15:05:40.309Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201581431e03a0020b6b9e9"
+  },
+  "comments": [
+    {
+      "$oid": "622ce818701e7d001d579565"
+    },
+    {
+      "$oid": "622ce83acd2491001ebaae55"
+    },
+    {
+      "$oid": "622ce84e701e7d001d57957e"
+    },
+    {
+      "$oid": "622ce861e0f432001da58da1"
+    },
+    {
+      "$oid": "622ce8757a2fd7001d43de12"
+    },
+    {
+      "$oid": "622ce885cd2491001ebaae81"
+    },
+    {
+      "$oid": "622ce8c0701e7d001d5795a6"
+    },
+    {
+      "$oid": "622ce8de7a2fd7001d43de24"
+    },
+    {
+      "$oid": "622ce9033e030a00204e9875"
+    },
+    {
+      "$oid": "622ce91a3e030a00204e9880"
+    },
+    {
+      "$oid": "622ce92e3e030a00204e989f"
+    },
+    {
+      "$oid": "622ce940e0f432001da58de1"
+    },
+    {
+      "$oid": "622ce95be0f432001da58e01"
+    },
+    {
+      "$oid": "622ce970701e7d001d5795f6"
+    },
+    {
+      "$oid": "622ce986cd2491001ebaaedd"
+    },
+    {
+      "$oid": "622ce9a27d22f000203fe546"
+    },
+    {
+      "$oid": "622ce9b8cd2491001ebaaef0"
+    },
+    {
+      "$oid": "622ce9ca7d22f000203fe563"
+    },
+    {
+      "$oid": "622ce9dd7a2fd7001d43de86"
+    },
+    {
+      "$oid": "622cea707a2fd7001d43de91"
+    },
+    {
+      "$oid": "622cea8c701e7d001d579637"
+    },
+    {
+      "$oid": "622ceaab7d22f000203fe590"
+    },
+    {
+      "$oid": "622ceac2cd2491001ebaaf3e"
+    },
+    {
+      "$oid": "622ceb03e0f432001da58e7f"
+    },
+    {
+      "$oid": "622ceb187a2fd7001d43deea"
+    },
+    {
+      "$oid": "622ceb5a701e7d001d579671"
+    },
+    {
+      "$oid": "622cec3f7d22f000203fe5cd"
+    },
+    {
+      "$oid": "622cec647d22f000203fe5de"
+    }
+  ],
+  "isActive": true,
+  "author": "Matt Watson",
+  "name": "C# Exception Handling Best Practices by Matt Watson",
+  "description": "",
+  "source": {
+    "name": "Stackify",
+    "url": "https://stackify.com/csharp-exception-handling-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201581431e03a0020b6b9ea"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201581431e03a0020b6b9eb"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:34:12.458Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-03-12T18:54:28.803Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201584531e03a0020b6beda"
+  },
+  "comments": [
+    {
+      "$oid": "620d069ce4aacd001dd6182c"
+    },
+    {
+      "$oid": "620d06c32015cd001e4bf35f"
+    },
+    {
+      "$oid": "620d07092015cd001e4bf384"
+    },
+    {
+      "$oid": "620d0789e4aacd001dd61939"
+    },
+    {
+      "$oid": "620d0814e4aacd001dd6195b"
+    },
+    {
+      "$oid": "620d08812015cd001e4bf456"
+    },
+    {
+      "$oid": "620d096a2015cd001e4bf480"
+    },
+    {
+      "$oid": "620d09a92015cd001e4bf496"
+    },
+    {
+      "$oid": "620d09dd2015cd001e4bf4ba"
+    },
+    {
+      "$oid": "620d0a40e4aacd001dd61a2a"
+    }
+  ],
+  "isActive": true,
+  "author": "Kristijan Kralj",
+  "name": "Comments in Code Best Practices: Avoid Common Mistakes in C# by Kristijan Kralj",
+  "description": "",
+  "source": {
+    "name": "Methodpoet",
+    "url": "https://methodpoet.com/comments-in-code-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201584531e03a0020b6bedb"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201584531e03a0020b6bedc"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:35:01.050Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-16T14:29:20.709Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201587d31e03a0020b6c3e0"
+  },
+  "comments": [
+    {
+      "$oid": "62094478d3bbe7001e352f1c"
+    },
+    {
+      "$oid": "620944a3d3bbe7001e352f33"
+    },
+    {
+      "$oid": "620944bcd3bbe7001e352f4a"
+    },
+    {
+      "$oid": "620944efd3bbe7001e352f74"
+    },
+    {
+      "$oid": "62094536d3bbe7001e352faf"
+    },
+    {
+      "$oid": "6209455973c3720021648f35"
+    },
+    {
+      "$oid": "6209456bd3bbe7001e352fd4"
+    },
+    {
+      "$oid": "620945a173c3720021648f6b"
+    },
+    {
+      "$oid": "620945cad3bbe7001e353006"
+    },
+    {
+      "$oid": "6209460d73c3720021648fb3"
+    }
+  ],
+  "isActive": true,
+  "author": "Rico Suter",
+  "name": "Cheat Sheet: Best practices for writing XML documentation in C# by Rico Suter",
+  "description": "",
+  "source": {
+    "name": "Rsuter",
+    "url": "https://blog.rsuter.com/best-practices-for-writing-xml-documentation-phrases-in-c/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201587d31e03a0020b6c3e1"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201587d31e03a0020b6c3e2"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:35:57.314Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T17:55:25.229Z"
+  }
+},{
+  "_id": {
+    "$oid": "620158d131e03a0020b6c8d1"
+  },
+  "comments": [
+    {
+      "$oid": "622ce15e7d22f000203fe444"
+    },
+    {
+      "$oid": "622ce1cc701e7d001d5794ed"
+    },
+    {
+      "$oid": "622ce2ca3e030a00204e97bc"
+    },
+    {
+      "$oid": "622ce2f43e030a00204e97cf"
+    },
+    {
+      "$oid": "622ce3cf3e030a00204e97e0"
+    },
+    {
+      "$oid": "622ce45c3e030a00204e97f9"
+    },
+    {
+      "$oid": "622ce76ee0f432001da58d3e"
+    }
+  ],
+  "isActive": true,
+  "author": "Damir Arh",
+  "name": "Nullable Reference types in C# – Best practices by Damir Arh",
+  "description": "",
+  "source": {
+    "name": "Dotnetcurry",
+    "url": "https://www.dotnetcurry.com/csharp/nullable-reference-types-csharp"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "620158d131e03a0020b6c8d2"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "620158d131e03a0020b6c8d3"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:37:21.919Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-03-12T18:33:18.763Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201590331e03a0020b6cdda"
+  },
+  "comments": [
+    {
+      "$oid": "62117f84a7e88f001dfb6aef"
+    },
+    {
+      "$oid": "62117f9fa7e88f001dfb6b06"
+    },
+    {
+      "$oid": "62117fb5b3142000239b43be"
+    },
+    {
+      "$oid": "62117fc6b3142000239b43db"
+    },
+    {
+      "$oid": "6211801db3142000239b43ea"
+    },
+    {
+      "$oid": "621180b2b3142000239b44b0"
+    },
+    {
+      "$oid": "621180ebb3142000239b44ce"
+    },
+    {
+      "$oid": "621180fcb3142000239b44f4"
+    },
+    {
+      "$oid": "62118121b3142000239b4513"
+    },
+    {
+      "$oid": "62118151a7e88f001dfb6c88"
+    },
+    {
+      "$oid": "6211816ca7e88f001dfb6ca6"
+    },
+    {
+      "$oid": "62118195a7e88f001dfb6cca"
+    },
+    {
+      "$oid": "621181aeb3142000239b457c"
+    }
+  ],
+  "isActive": true,
+  "author": "StudySection Team",
+  "name": "C# Best Practices by StudySection Team",
+  "description": "",
+  "source": {
+    "name": "StudySection",
+    "url": "https://studysection.com/blog/c-best-practices/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201590331e03a0020b6cddb"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201590331e03a0020b6cddc"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:38:11.277Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-19T23:47:58.874Z"
+  }
+},{
+  "_id": {
+    "$oid": "6201592931e03a0020b6d2cb"
+  },
+  "comments": [
+    {
+      "$oid": "620921e673c3720021648a8b"
+    },
+    {
+      "$oid": "62092237d3bbe7001e35238d"
+    },
+    {
+      "$oid": "6209227ed3bbe7001e3523cf"
+    },
+    {
+      "$oid": "620922a173c3720021648aec"
+    },
+    {
+      "$oid": "620922d3d3bbe7001e3523fc"
+    },
+    {
+      "$oid": "620922f8d3bbe7001e35241b"
+    },
+    {
+      "$oid": "6209231b73c3720021648b21"
+    },
+    {
+      "$oid": "62092348d3bbe7001e35243e"
+    },
+    {
+      "$oid": "6209236dd3bbe7001e352465"
+    },
+    {
+      "$oid": "6209239173c3720021648b63"
+    },
+    {
+      "$oid": "620923c1d3bbe7001e352484"
+    },
+    {
+      "$oid": "620923d8d3bbe7001e3524b1"
+    },
+    {
+      "$oid": "6209240373c3720021648b9f"
+    },
+    {
+      "$oid": "6209242673c3720021648bc4"
+    },
+    {
+      "$oid": "6209245f73c3720021648bda"
+    },
+    {
+      "$oid": "62092493d3bbe7001e352503"
+    },
+    {
+      "$oid": "620924c573c3720021648c08"
+    },
+    {
+      "$oid": "620924f173c3720021648c20"
+    },
+    {
+      "$oid": "6209250473c3720021648c38"
+    },
+    {
+      "$oid": "6209251973c3720021648c49"
+    },
+    {
+      "$oid": "62092564d3bbe7001e35257a"
+    },
+    {
+      "$oid": "6209258073c3720021648c7d"
+    },
+    {
+      "$oid": "620925a273c3720021648ca4"
+    },
+    {
+      "$oid": "620925c1d3bbe7001e3525c8"
+    },
+    {
+      "$oid": "620925edd3bbe7001e3525e0"
+    },
+    {
+      "$oid": "6209260973c3720021648ce4"
+    },
+    {
+      "$oid": "62092625d3bbe7001e35261b"
+    },
+    {
+      "$oid": "62092677d3bbe7001e352639"
+    },
+    {
+      "$oid": "6209268a73c3720021648d56"
+    },
+    {
+      "$oid": "620926a6d3bbe7001e352666"
+    },
+    {
+      "$oid": "6209275f73c3720021648da2"
+    }
+  ],
+  "isActive": true,
+  "author": "Jesse Liberty",
+  "name": "C# Coding Standards by Jesse Liberty",
+  "description": "",
+  "source": {
+    "name": "Jesse Liberty",
+    "url": "https://jesseliberty.com/2021/03/02/c-coding-standards-updated/"
+  },
+  "tags": [
+    {
+      "_id": {
+        "$oid": "6201592931e03a0020b6d2cc"
+      },
+      "label": "C#",
+      "type": "language",
+      "tag": {
+        "$oid": "618c2b585705c4001eee89d1"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "6201592931e03a0020b6d2cd"
+      },
+      "label": "Best practices",
+      "type": "guide",
+      "tag": {
+        "$oid": "618c2ac1f474ae001e8237ad"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "60b6211fad927f001e3f4f92"
+  },
+  "createdAt": {
+    "$date": "2022-02-07T17:38:49.951Z"
+  },
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2022-02-13T15:44:31.535Z"
+  }
+}]
