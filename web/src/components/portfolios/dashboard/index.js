@@ -67,7 +67,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
       portfolios: state.portfoliosState.data.portfolios
     }),
   );
-  const { token = '' } = auth;
+  const { token = '', user: userData } = auth;
   const [user, setUser] = useState({
     fullName: '',
     avatar: DEFAULT_AVATAR,
@@ -176,11 +176,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
 
   const goToAddPortfolio = async () => {
     const newPortfolio = {
-      userId: user._id,
-      firstName: user.firstName ?? '',
-      lastName: user.lastName ?? '',
-      headline: `${user.firstName} ${user.lastName}`,
-      identities: user.identities,
+      userId: userData._id,
+      firstName: userData.firstName ?? '',
+      lastName: userData.lastName ?? '',
+      headline: `${userData.firstName} ${userData.lastName}`,
+      identities: userData.identities,
       overview: '',
       title: 'New Portfolio',
     };
@@ -191,11 +191,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     }));
 
     if (status === RESPONSE_STATUSES.CREATED) {
-      await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
       notify('Portfolio was created.', {
         type: ALERT_TYPES.SUCCESS,
         duration: 3000,
       });
+
+      await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
     } else {
       notify('Portfolio was not created.', {
         type: ALERT_TYPES.ERROR,
