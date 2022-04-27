@@ -70,7 +70,8 @@
     "sass": "^1.50.1",
     "slugify": "^1.4.5",
     "toasted-notes": "^3.2.0",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "use-resize-observer": "^8.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -82,7 +83,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "next": "^9.5.3",
-    "use-resize-observer": "^8.0.0"
+    "next": "^9.5.3"
   }
 }
