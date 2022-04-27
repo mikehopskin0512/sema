@@ -204,9 +204,9 @@ export const fetchPortfolio = (id) => async (dispatch) => {
   }
 };
 
-export const createNewPortfolio = ({ portfolio, token }) => async (dispatch) => {
+export const createNewPortfolio = ({ portfolio, token, isLoader = true }) => async (dispatch) => {
   try {
-    dispatch(requestCreatePortfolio());
+    isLoader && dispatch(requestCreatePortfolio());
     const payload = await createPortfolio(portfolio, token);
     const { data } = payload;
     dispatch(requestCreatePortfolioSuccess(data));

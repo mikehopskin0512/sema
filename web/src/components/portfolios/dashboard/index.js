@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router'
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
@@ -18,17 +19,20 @@ import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
-import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
 import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
+import { createNewPortfolio } from '../../../state/features/portfolios/actions';
+import { notify } from '../../../components/toaster/index';
 
 const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }) => {
+  const router = useRouter();
+
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
     toaster.notify(({ onClose }) => (
@@ -170,8 +174,34 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading }
     await dispatch(updatePortfolioType(portfolio._id, newType));
   };
 
-  const goToAddPortfolio = () => {
-    // TODO: Redirect to Add Portfolio
+  const goToAddPortfolio = async () => {
+    const newPortfolio = {
+      userId: user._id,
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      headline: `${user.firstName} ${user.lastName}`,
+      identities: user.identities,
+      overview: '',
+      title: 'New Portfolio',
+    };
+    const { status } = await dispatch(createNewPortfolio({
+      portfolio: newPortfolio,
+      token,
+      isLoader: false
+    }));
+
+    if (status === RESPONSE_STATUSES.CREATED) {
+      await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
+      notify('Portfolio was created.', {
+        type: ALERT_TYPES.SUCCESS,
+        duration: 3000,
+      });
+    } else {
+      notify('Portfolio was not created.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+    }
   }
 
   const onCopy = () => {
