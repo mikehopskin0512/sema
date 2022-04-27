@@ -35,6 +35,7 @@ const AddModal = ({
   }, []);
 
   const formattedSnapshots = useMemo(() =>
+    !Array.isArray(snapshots) ? [] :
     snapshots
       .filter(item => !portfolio?.snapshots?.find(snap => snap.id?._id === item._id))
       ?.map((snapshot) => ({
