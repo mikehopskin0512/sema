@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "12.16.0",
-    "npm": "6.13.4"
+    "node": "^16"
   },
   "scripts": {
     "start": "nodemon --exec babel-node --inspect=0.0.0.0 src/app.js --max-http-header-size=16384",

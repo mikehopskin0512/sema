@@ -1,6 +1,8 @@
 /* eslint-disable import/no-unresolved */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { DEFAULT_COLLECTION_NAME, SEGMENT_EVENTS } from '../../constants';
 import {
   addNotification,
@@ -10,6 +12,7 @@ import Button from '../inputs/Button';
 import InputField from '../inputs/InputField';
 import SelectField from '../inputs/SelectField';
 import Modal from '../Modal';
+import CollectionsSelector from './collectionsSelector';
 import styles from './createSnippetModal.module.scss';
 import {
   getAllTags,
@@ -18,40 +21,35 @@ import {
 import { mapTagsToOptions } from './helpers';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 import { segmentTrack } from '../../modules/segment';
-import GroupedSelectField from '../inputs/GroupedSelect';
-import { FolderIcon } from '../icons/FolderIcon';
+import schema from './validationSchema';
 
 const semaLogo = chrome.runtime.getURL('img/sema-logo.svg');
 
 const CreateSnippetModal = () => {
   const dispatch = useDispatch();
+  const { control, handleSubmit, formState: { errors }, reset } = useForm({
+    defaultValues: {
+      title: '',
+      comment: '',
+      source: {
+        name: '',
+        url: '',
+      },
+      author: '',
+      language: '',
+      label: '',
+    },
+    resolver: yupResolver(schema),
+  });
   const {
-    teams,
     user: { isLoggedIn, collections: userCollections },
   } = useSelector((state) => state);
-
-  const teamsCollections = teams
-    .filter((team) => team.role.canCreateSnippets)
-    .map(({ team }) => ({
-      ...team,
-      collections: team.collections.filter((collection) => collection.isActive),
-    })).reduce((acc, item) => {
-      acc.push(item?.collections ?? []);
-      return acc;
-    }, []).flat();
 
   const snippetComment = useSelector((state) => state.snippetComment);
   const isActive = !!snippetComment;
   const [selectedCollectionId, setSelectedCollectionId] = useState('');
-  const [title, setTitle] = useState('');
-  const [comment, setComment] = useState('');
   const [languagesOptions, setLanguagesOptions] = useState([]);
   const [labelsOptions, setLabelsOptions] = useState([]);
-  const [language, setLanguage] = useState(undefined);
-  const [label, setLabel] = useState('');
-  const [sourceName, setSourceName] = useState('');
-  const [sourceLink, setSourceLink] = useState('');
-  const [author, setAuthor] = useState('');
   const [sourceFieldsVisible, setSourceFieldsVisible] = useState(false);
 
   useEffect(() => {
@@ -59,17 +57,18 @@ const CreateSnippetModal = () => {
       return;
     }
     getAllTags().then((tags) => {
-      setLabelsOptions(mapTagsToOptions(tags, 'custom'));
-      setLanguagesOptions(mapTagsToOptions(tags, 'language'));
+      if (Array.isArray(tags)) {
+        setLabelsOptions(mapTagsToOptions(tags, 'custom'));
+        setLanguagesOptions(mapTagsToOptions(tags, 'language'));
+      }
     });
   }, [isLoggedIn, userCollections]);
-
   useEffect(() => {
     if (selectedCollectionId) {
       return;
     }
     const defaultCollection = userCollections.find(({ collectionData }) => {
-      const collectionName = collectionData.name.toLowerCase();
+      const collectionName = collectionData?.name.toLowerCase();
       return collectionName === DEFAULT_COLLECTION_NAME;
     });
 
@@ -77,33 +76,25 @@ const CreateSnippetModal = () => {
       setSelectedCollectionId(defaultCollection.collectionData?._id);
     }
   }, [userCollections]);
-
   useEffect(() => {
-    setComment(snippetComment);
+    reset({ title: '', comment: snippetComment });
   }, [snippetComment]);
 
   const onClose = () => {
     dispatch(changeSnippetComment({ comment: '' }));
   };
-  const onSubmit = async () => {
-    const existingTags = [label, language].filter((item) => item);
+  const onSubmit = async (formData) => {
+
+    const existingTags = [formData.label, formData.language].filter((item) => item);
     try {
       segmentTrack(SEGMENT_EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
       await saveSmartComment({
         collectionId: selectedCollectionId,
-        comments: [
-          {
-            title,
-            comment,
-            author,
-            selectedCollectionId,
-            source: {
-              name: sourceName,
-              url: sourceLink,
-            },
-            tags: { existingTags },
-          },
-        ],
+        comments: [{
+          ...formData,
+          selectedCollectionId,
+          tags: { existingTags },
+        }],
       });
       dispatch(
         addNotification({
@@ -111,7 +102,7 @@ const CreateSnippetModal = () => {
           title: 'Snippet saved',
           text: 'The Snippet was saved to the collection My Snippets',
           isClosedBtn: true,
-        })
+        }),
       );
       onClose();
     } catch (e) {
@@ -121,40 +112,10 @@ const CreateSnippetModal = () => {
           title: 'Snippet not saved',
           text: 'Please try again or report the problem',
           isClosedBtn: true,
-        })
+        }),
       );
     }
   };
-
-  const onCollectionSelect = (id) => {
-    setSelectedCollectionId(id);
-  };
-
-  const selectOptionsMapper = (obj) => {
-    return {
-      id: obj.collectionData?._id,
-      name: obj.name ?? obj.collectionData?.name,
-    };
-  };
-
-  const preparedCollectionsData = useMemo(() => {
-    const variants = {};
-    if (userCollections.length) {
-      variants.userCollections = {
-        fieldName: 'My Snippets',
-        options: userCollections ?? [],
-      };
-    }
-
-    if (teamsCollections.length) {
-      variants.teamCollections = {
-        fieldName: 'Team Snippets',
-        options: teamsCollections ?? [],
-      };
-    }
-
-    return variants;
-  }, [teamsCollections, userCollections]);
 
   if (!isLoggedIn) {
     return null;
@@ -162,57 +123,78 @@ const CreateSnippetModal = () => {
 
   return (
     <Modal isActive={isActive}>
-      <form className={`${styles[getActiveThemeClass()]} ${styles.modal}`} onSubmit={onSubmit}>
+      <form className={`${styles[getActiveThemeClass()]} ${styles.modal}`} onSubmit={handleSubmit(onSubmit)}>
         <header className={styles.header}>
           <h2 className={styles.title}>Create New Snippet</h2>
           <div style={{ width: '260px' }}>
-            <GroupedSelectField
-              icon={<FolderIcon />}
-              onChange={onCollectionSelect}
-              options={preparedCollectionsData}
-              placeHolder="Choose Snippet Collection"
+            <CollectionsSelector
               value={selectedCollectionId}
-              optionsMapper={selectOptionsMapper}
+              onChange={setSelectedCollectionId}
             />
           </div>
         </header>
         <main>
           <div className={styles['form-field']}>
-            <InputField
-              title="Title"
-              isRequired
-              value={title}
-              placeholder="Title"
-              onInput={setTitle}
+            <Controller
+              control={control}
+              name="title"
+              render={({ field: { onChange, value } }) => (
+                <InputField
+                  title="Title"
+                  isRequired
+                  value={value}
+                  placeholder="Title"
+                  onInput={onChange}
+                  error={errors?.title?.message}
+                />
+              )}
             />
           </div>
           <div className={styles['form-field']}>
-            <InputField
-              title="Body"
-              isTextarea
-              isRequired
-              value={comment}
-              placeholder="Comment"
-              onInput={setComment}
+            <Controller
+              control={control}
+              name="comment"
+              render={({ field: { onChange, value } }) => (
+                <InputField
+                  title="Body"
+                  isRequired
+                  value={value}
+                  placeholder="Comment"
+                  onInput={onChange}
+                  error={errors?.comment?.message}
+                />
+              )}
             />
           </div>
           <div className={`${styles['form-field']} sema-is-flex`}>
             <div style={{ width: '50%' }} className="sema-mr-4">
-              <SelectField
-                title="Language"
-                placeholder="E.g.: Java"
-                options={languagesOptions}
-                value={language}
-                onInput={setLanguage}
+              <Controller
+                control={control}
+                name="language"
+                render={({ field: { onChange, value } }) => (
+                  <SelectField
+                    title="Language"
+                    placeholder="E.g.: Java"
+                    options={languagesOptions}
+                    value={value}
+                    onInput={onChange}
+                  />
+                )}
               />
             </div>
             <div style={{ width: '50%' }}>
-              <SelectField
-                title="Label"
-                options={labelsOptions}
-                value={label}
-                placeholder="E.g.: APIs, Security"
-                onInput={setLabel}
+              <Controller
+                control={control}
+                name="label"
+                render={({ field: { onChange, value } }) => (
+                  <SelectField
+                    title="Label"
+                    options={labelsOptions}
+                    value={value}
+                    placeholder="E.g.: APIs, Security"
+                    onInput={onChange}
+                  />
+                )}
               />
             </div>
           </div>
@@ -230,26 +212,46 @@ const CreateSnippetModal = () => {
             >
               <div className="sema-is-flex">
                 <div style={{ width: '50%' }} className="sema-mr-4">
-                  <InputField
-                    title="Source Name"
-                    value={sourceName}
-                    onInput={setSourceName}
+                  <Controller
+                    control={control}
+                    name="source.name"
+                    render={({ field: { onChange, value } }) => (
+                      <InputField
+                        title="Source Name"
+                        value={value}
+                        onInput={onChange}
+                      />
+                    )}
                   />
                 </div>
                 <div style={{ width: '50%' }}>
-                  <InputField
-                    title="Source Link"
-                    value={sourceLink}
-                    onInput={setSourceLink}
+                  <Controller
+                    control={control}
+                    name="source.url"
+                    render={({ field: { onChange, value } }) => (
+                      <InputField
+                        error={errors?.source?.url?.message}
+                        isRequired
+                        title="Source Link"
+                        value={value}
+                        onInput={onChange}
+                      />
+                    )}
                   />
                 </div>
               </div>
               <div className={styles['form-field']}>
-                <InputField
-                  title="Author Name"
-                  value={author}
-                  placeholder="GitHub User Name"
-                  onInput={setAuthor}
+                <Controller
+                  control={control}
+                  name="author"
+                  render={({ field: { onChange, value } }) => (
+                    <InputField
+                      title="Author Name"
+                      value={value}
+                      placeholder="GitHub User Name"
+                      onInput={onChange}
+                    />
+                  )}
                 />
               </div>
             </div>

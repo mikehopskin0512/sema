@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { InputField } from 'adonis';
+import useDebounce from '../../hooks/useDebounce';
 import styles from './teamStatsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { ReactionList, TagList } from '../../data/activity';
 import { addDays, format } from 'date-fns';
-import { gray400, black900 } from '../../../styles/_colors.module.scss';
 import { SearchIcon } from '../Icons';
+import { gray500 } from '../../../styles/_colors.module.scss';
 
 const TeamStatsFilter = ({ filter, individualFilter, commentView, filterRepoList, filterUserList, filterRequesterList, filterPRList, handleFilter }) => {
+  const [searchString, setSearchString] = useState(filter.search ?? '');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [toggleSearch, setToggleSearch] = useState(false);
+
+  const debouncedSearchString = useDebounce(searchString, 500);
 
   const onChangeFilter = (type, value) => {
     handleFilter({
@@ -31,9 +37,17 @@ const TeamStatsFilter = ({ filter, individualFilter, commentView, filterRepoList
     });
   }
 
+  useEffect(() => {
+    onChangeFilter('search', debouncedSearchString);
+  }, [debouncedSearchString]);
+
+  const handleSearchToggle = () => {
+    setToggleSearch(toggle => !toggle);
+  };
+
   return (
     <>
-    <div className="tile my-20 has-background-gray-200">
+    <div className="tile mt-20 mb-10 has-background-gray-200">
       <div className="tile border-radius-4px is-flex is-flex-wrap-wrap has-background-gray-200">
         <div
           className="is-flex is-flex-wrap-wrap is-align-items-stretch is-relative"
@@ -126,24 +140,23 @@ const TeamStatsFilter = ({ filter, individualFilter, commentView, filterRepoList
               showCheckbox
             />
           </div>
-          <div className="pt-15 pl-15 mr-40">
-            <SearchIcon size="small" color={black900} />
-          </div>
         </div>
-        <div className=" px-5 my-5 is-fullwidth field is-flex-grow-2" style={{width: '100%'}}>
-          <div className="control is-flex is-fullwidth">
-            <input
-              className="input has-no-border has-background-gray-200"
-              style={{boxShadow: 'none', outline: 'none', borderBottom: `1px solid ${gray400}`}}
-              type="text"
-              placeholder=""
-              onChange={(e) => onChangeFilter('search', e.target.value)}
-              value={filter.search}
-            />
-          </div>
-        </div> 
+        <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
+            <SearchIcon color={gray500} size="medium" className="is-clickable" onClick={handleSearchToggle} />
+        </div>
       </div>
     </div>
+    {toggleSearch && <div className={clsx(`field mt-0 mb-0 is-flex-grow-1 ${styles['search-bar']}`)}>
+        <InputField
+          className="has-background-white"
+          type="text"
+          placeholder="Search"
+          onChange={(value) => setSearchString(value)}
+          value={searchString}
+          iconLeft={<SearchIcon />}
+        />
+      </div>}
+    <hr className={`has-background-gray-400 is-full-width ${styles.separator}`} />
     </>
   );
 }

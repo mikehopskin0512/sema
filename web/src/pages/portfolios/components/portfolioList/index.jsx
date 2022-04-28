@@ -178,7 +178,8 @@ const PortfolioList = () => {
                   onClick: () => {
                     toggleDeleteModal(true);
                     setActivePortfolioId(row.values.id);
-                  }
+                  },
+                  isHidden: portfolios.length === 1,
                 },
               ]}
               trigger={(

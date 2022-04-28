@@ -80,9 +80,9 @@
     "saveSnapshotCancelBtn"         : "//form//div[contains(@class,'is-justify-content-right')]/button[text()='Cancel']",
     "saveSnapshotSaveBtn"           : "//form//div[contains(@class,'is-justify-content-right')]/button[text()='Save']",
 
-    "codeStatsSummaries"            : "//div[contains(@class,'reactionChart_containers__18CGO')]/div",
+    "codeStatsSummaries"            : "//div[contains(@class,'reactionLineChart_containers__3cXwM')]/div",
     "codeStatsTags"                 : "//div[contains(@class,'tagsChart_containers__1M6Ih')]/div",
-    "codeStatsSummariesSnapshotBtn" : "//div[contains(@class,'reactionChart_containers__18CGO')]//button/span[text()='Snapshot for Portfolio']",
+    "codeStatsSummariesSnapshotBtn" : "//div[contains(@class,'reactionLineChart_containers__3cXwM')]//button/span[text()='Snapshot for Portfolio']",
     "codeStatsTagsSnapshotBtn"      : "//div[contains(@class,'tagsChart_containers__1M6Ih')]//button/span[text()='Snapshot for Portfolio']",
 
     "last7DaysDateRange"            : "//a[text()='Last 7 days']",

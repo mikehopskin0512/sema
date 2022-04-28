@@ -273,3 +273,9 @@ export const PORTFOLIO_TYPES = {
 export const KEY_CODES = {
   ENTER: 13,
 };
+
+export const COLLECTION_TYPES = {
+  PERSONAL: 'personal',
+  TEAM: 'team',
+  COMMUNITY: 'community',
+};
