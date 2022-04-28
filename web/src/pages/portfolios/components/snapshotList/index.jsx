@@ -30,7 +30,7 @@ const snapshotList = () => {
           <div>
             <div className="is-flex is-justify-content-space-between">
               <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
-                {isError ? 'Snapshot was not added.' : 'Snapshot was added to your portfolio'}
+                {isError ? 'Snapshot was not added.' : 'Snapshot was added succesfully.'}
               </span>
               <div className="ml-30" onClick={onClose}>
                 <CloseIcon size="small" />
@@ -39,8 +39,8 @@ const snapshotList = () => {
             {!isError && <div
               className="has-text-info is-clickable is-underlined"
               onClick={() => {
-                router.push(path);
                 onClose();
+                router.push(path);
               }}
             >
               View portfolio
@@ -50,7 +50,7 @@ const snapshotList = () => {
       </div>
     ), {
       position: 'top-right',
-      duration: isError ? 3000 : null,
+      duration: 3000,
     });
   };
   const [snapshotIdForPortfolio, setSnapshotIdForPortfolio] = useState('');
@@ -67,10 +67,6 @@ const snapshotList = () => {
     data: { snapshots },
   } = snapshotsState;
   const { token } = authState;
-
-  const addToPortfolio = () => {
-    //  TODO: add to portfolio
-  };
 
   const deleteSnapshot = (id, token) => {
     dispatch(deleteUserSnapshot(id, token));

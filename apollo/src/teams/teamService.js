@@ -77,7 +77,8 @@ export const getTeamById = async (id) => {
         author: 1,
         tags: 1,
         source: 1,
-        comments: 1
+        comments: 1,
+        type: 1,
       }
     }).exec();
 

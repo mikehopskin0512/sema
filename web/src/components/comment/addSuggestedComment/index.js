@@ -26,7 +26,7 @@ const defaultValues = {
 const AddSuggestedComment = () => {
   const dispatch = useDispatch();
   const {
-    auth: { token },
+    auth: { token, user },
     collectionState,
     tags,
   } = useSelector((state) => ({
@@ -48,7 +48,7 @@ const AddSuggestedComment = () => {
       setComment({
         ...comment,
         sourceName: collection.source?.name,
-        author: collection.author,
+        author: `${user?.firstName} ${user?.lastName}`,
         languages: addTags(collection.tags, [TAG_TYPE.LANGUAGE]),
         guides: addTags(collection.tags, [TAG_TYPE.GUIDE, TAG_TYPE.CUSTOM]),
       });

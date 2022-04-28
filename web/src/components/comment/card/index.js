@@ -6,16 +6,17 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
-import { CommentsIcon, OptionsIcon, PlusIcon } from '../../../components/Icons';
+import { PlusIcon, CommentsIcon, OptionsIcon, TeamIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
 import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
 import { fetchTeamCollections } from '../../../state/features/teams/actions';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
+import { orange600 } from '../../../../styles/_colors.module.scss';
 
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -129,6 +130,8 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     }
 
     const isMyComments = name.toLowerCase() === DEFAULT_COLLECTION_NAME || name.toLowerCase() === 'custom snippets';
+    const isTeamIconNeeded = collectionData.type === COLLECTION_TYPES.TEAM;
+    const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isTeamIconNeeded;
 
     const isMenuShown = () => {
       const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
@@ -144,19 +147,22 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       <Link href={`?cid=${_id}`}>
         <div className={clsx('p-10 is-flex is-clickable', styles.card)} aria-hidden="true">
           <div className="box has-background-white is-full-width p-0 border-radius-2px is-flex is-flex-direction-column">
-            <div className={clsx('is-full-width', styles['card-bar'], type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
+            <div className={clsx('is-full-width', styles['card-bar'], isHighlightNeeded ? 'has-background-orange-300' : type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
+              {isTeamIconNeeded && <div className={clsx('is-circular has-background-orange-50 is-flex is-align-items-center is-justify-content-center', styles['team-icon-container'])}>
+                <TeamIcon color={orange600} size='small'/>
+              </div>}
               <OverflowTooltip ref={titleRef} text={name}>
                 <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>
               </OverflowTooltip>
               {asPath === PATHS.SNIPPETS._ && (
-                <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                <div className="field" onClick={onClickChild} aria-hidden>
                   <input
                     id={`activeSwitch-${_id}`}
                     type="checkbox"
                     onChange={onChangeToggle}
                     name={`activeSwitch-${_id}`}
-                    className="switch is-rounded"
+                    className={clsx('switch is-rounded', isHighlightNeeded && 'is-orange-300')}
                     checked={isActive}
                     disabled={!isNotArchived}
                   />
