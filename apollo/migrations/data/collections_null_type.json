@@ -1101,51 +1101,6 @@
   }
 },{
   "_id": {
-    "$oid": "6200cc2031e03a0020b56605"
-  },
-  "comments": [],
-  "isActive": true,
-  "author": "Nikita Starichenko",
-  "name": "C# — Style Guide Cheat Sheet by Nikita Starichenko",
-  "description": "",
-  "source": {
-    "name": "DevGenius",
-    "url": "https://blog.devgenius.io/c-style-guide-cheat-sheet-bd5c8abd557c"
-  },
-  "tags": [
-    {
-      "_id": {
-        "$oid": "6200cc2031e03a0020b56606"
-      },
-      "label": "C#",
-      "type": "language",
-      "tag": {
-        "$oid": "618c2b585705c4001eee89d1"
-      }
-    },
-    {
-      "_id": {
-        "$oid": "6200cc2131e03a0020b56607"
-      },
-      "label": "Style Guides",
-      "type": "guide",
-      "tag": {
-        "$oid": "60f5e2a3cd37055105469e76"
-      }
-    }
-  ],
-  "createdBy": {
-    "$oid": "60b6211fad927f001e3f4f92"
-  },
-  "createdAt": {
-    "$date": "2022-02-07T07:37:05Z"
-  },
-  "__v": 0,
-  "updatedAt": {
-    "$date": "2022-02-07T07:37:05.003Z"
-  }
-},{
-  "_id": {
     "$oid": "6201506531e03a0020b6210d"
   },
   "comments": [
@@ -2253,51 +2208,6 @@
   "__v": 0,
   "updatedAt": {
     "$date": "2022-02-19T14:39:14.813Z"
-  }
-},{
-  "_id": {
-    "$oid": "6201523131e03a0020b63ec7"
-  },
-  "comments": [],
-  "isActive": true,
-  "author": "Bridge Team",
-  "name": "C# Coding Style Guide by Bridge Team",
-  "description": "",
-  "source": {
-    "name": "Bridge",
-    "url": "https://bridge.net/general/cs_coding_style_guide/"
-  },
-  "tags": [
-    {
-      "_id": {
-        "$oid": "6201523131e03a0020b63ec8"
-      },
-      "label": "C#",
-      "type": "language",
-      "tag": {
-        "$oid": "618c2b585705c4001eee89d1"
-      }
-    },
-    {
-      "_id": {
-        "$oid": "6201523131e03a0020b63ec9"
-      },
-      "label": "Style Guides",
-      "type": "guide",
-      "tag": {
-        "$oid": "60f5e2a3cd37055105469e76"
-      }
-    }
-  ],
-  "createdBy": {
-    "$oid": "60b6211fad927f001e3f4f92"
-  },
-  "createdAt": {
-    "$date": "2022-02-07T17:09:05.063Z"
-  },
-  "__v": 0,
-  "updatedAt": {
-    "$date": "2022-02-07T17:09:05.066Z"
   }
 },{
   "_id": {
@@ -4665,51 +4575,6 @@
   "__v": 0,
   "updatedAt": {
     "$date": "2022-02-16T15:24:08.407Z"
-  }
-},{
-  "_id": {
-    "$oid": "6201572431e03a0020b6a5ac"
-  },
-  "comments": [],
-  "isActive": true,
-  "author": "Steve Gordon",
-  "name": "String Manipulation In C#: Best Practices by Steve Gordon",
-  "description": "",
-  "source": {
-    "name": "Stevejgordon",
-    "url": "https://www.stevejgordon.co.uk/string-manipulation-in-csharp-best-practices"
-  },
-  "tags": [
-    {
-      "_id": {
-        "$oid": "6201572431e03a0020b6a5ad"
-      },
-      "label": "C#",
-      "type": "language",
-      "tag": {
-        "$oid": "618c2b585705c4001eee89d1"
-      }
-    },
-    {
-      "_id": {
-        "$oid": "6201572431e03a0020b6a5ae"
-      },
-      "label": "Best practices",
-      "type": "guide",
-      "tag": {
-        "$oid": "618c2ac1f474ae001e8237ad"
-      }
-    }
-  ],
-  "createdBy": {
-    "$oid": "60b6211fad927f001e3f4f92"
-  },
-  "createdAt": {
-    "$date": "2022-02-07T17:30:12.177Z"
-  },
-  "__v": 0,
-  "updatedAt": {
-    "$date": "2022-02-07T17:30:12.179Z"
   }
 },{
   "_id": {
