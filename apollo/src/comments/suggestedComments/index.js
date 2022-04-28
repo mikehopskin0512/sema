@@ -101,8 +101,7 @@ export default (app, passport) => {
       }
       await pushCollectionComment(collection._id, newSuggestedComment._id);
       return res.status(201).send({
-        suggestedComment: newSuggestedComment,
-        collection: collection._id,
+        suggestedComment: newSuggestedComment
       });
     } catch (error) {
       logger.error(error);
