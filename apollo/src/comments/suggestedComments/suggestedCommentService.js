@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { COLLECTION_TYPE } from '../collections/constants';
 import SuggestedComment from './suggestedCommentModel';
 import { create as createTags, findTags } from '../tags/tagService';
 import User from '../../users/userModel';
@@ -19,6 +20,10 @@ const { Types: { ObjectId } } = mongoose;
 const SNIPPETS_TO_DISPLAY = 4;
 const { Parser } = Json2CSV;
 
+const hasPersonalCollection = (collections) => !!collections.find(c => c.type === COLLECTION_TYPE.PERSONAL)
+const sortPersonalSnippets = (snippets) => {
+  return [...snippets].sort((a, b) => hasPersonalCollection(a.collections) < hasPersonalCollection(b.collections) ? 1 : -1);
+}
 
 const getUserSnippets = async (userId, searchResults = [], allCollections) => {
   const userActiveSnippetsQuery = [
@@ -139,7 +144,7 @@ const getUserSnippets = async (userId, searchResults = [], allCollections) => {
   const snippetsData = await User.aggregate(snippetsQuery);
   if (!snippetsData || snippetsData.length === 0) return [];
   const [{ snippets }] = snippetsData;
-  return snippets;
+  return sortPersonalSnippets(snippets);
 };
 
 const getTeamSnippets = async(userId, teamId, searchResults = []) => {
@@ -425,18 +430,17 @@ export const updateSnippetCollections = async (id, collection) => {
 
 export const bulkCreateSuggestedComments = async (comments, collectionId, user) => {
   try {
-    let collection = null;
-    if (collectionId) {
-      collection = await getCollectionMetadata(collectionId);
-    }
-
-    const { name: collectionName = '' } = collection
+    const collection = collectionId && await getCollectionMetadata(collectionId);
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
       author: comment.author ? comment.author : fullName(user),
       enteredBy: user._id,
-      collections: collection ? [{ collectionId: new ObjectId(collectionId), name: collectionName }] : [],
+      collections: collection ? [{
+        collectionId: new ObjectId(collectionId),
+        name: collection.name,
+        type: collection.type,
+      }] : [],
       lastModified: new Date(),
     })));
 
