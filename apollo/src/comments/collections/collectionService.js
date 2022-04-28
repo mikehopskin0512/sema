@@ -298,6 +298,26 @@ export const findByAuthor = async (author) => {
   }
 };
 
+export const getCollectionsActiveByDefault = async () => {
+  try {
+    return Collection.find({ isActiveByDefault: true, type: COLLECTION_TYPE.COMMUNITY });
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
+
+export const getDefaultCollections = async(collectionId) => {
+  const collectionsActiveByDefault = await getCollectionsActiveByDefault();
+  const collectionIdList = [collectionId, ...collectionsActiveByDefault.map(collection => collection._id)];
+  return collectionIdList.map((id) => ({
+    isActive: true,
+    collectionData: id,
+    _id: new ObjectId(),
+  }));
+}
+
 export const createUserCollection = async (username, userId) => {
   try {
     const defaultCollection = {

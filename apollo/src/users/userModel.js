@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import logger from '../shared/logger';
-import { createUserCollection, findByAuthor } from '../comments/collections/collectionService';
+import { createUserCollection, getDefaultCollections } from '../comments/collections/collectionService';
 const { Types: { ObjectId } } = mongoose;
 
 const userOrgSchema = mongoose.Schema({
@@ -85,11 +85,7 @@ userSchema.pre('save', async function save(next) {
     if (this.isNew) {
       this._id = new ObjectId();
       const personalCollection = await createUserCollection(username, this._id);
-      this.collections = [{
-        isActive: true,
-        collectionData: personalCollection._id,
-        _id: new ObjectId(),
-      }];
+      this.collections = await getDefaultCollections(personalCollection._id);
     }
 
     // Allow null password (don't hash if password is null)
