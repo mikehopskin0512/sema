@@ -356,7 +356,7 @@ const makeTagsList = async (tags) => {
 
 export const create = async (suggestedComment) => {
   try {
-    const { title, comment, source, tags, enteredBy, collectionId } = suggestedComment;
+    const { title, comment, source, tags, enteredBy, collections } = suggestedComment;
     let suggestedCommentTags = [];
     let sourceMetaData;
     if (tags) {
@@ -375,7 +375,7 @@ export const create = async (suggestedComment) => {
       sourceMetaData,
       enteredBy,
       lastModified: new Date(),
-      collectionId,
+      collections,
     });
     const savedSuggestedComment = await newSuggestedComment.save();
     return savedSuggestedComment;
