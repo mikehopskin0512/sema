@@ -543,7 +543,7 @@ export async function writeSemaToGithub(activeElement) {
     opts.is_sema_bar_used = true;
   }
 
-  segmentTrack(SEGMENT_EVENTS.CREATE_SMART_COMMENT, opts);
+  segmentTrack(SEGMENT_EVENTS.CREATE_SMART_COMMENT, userId, opts);
   const semaIds = getSemaIds(activeElement);
   store.dispatch(resetSemaStates(semaIds));
 }

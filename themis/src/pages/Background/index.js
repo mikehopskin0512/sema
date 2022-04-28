@@ -28,7 +28,7 @@ const setRequestRule = (token) => {
             },
           ],
         },
-        condition: { domains: ['github.com'] },
+        condition: { domains: ['github.com'], urlFilter: 'https://*.semasoftware.com/*' },
       },
     ],
   });
