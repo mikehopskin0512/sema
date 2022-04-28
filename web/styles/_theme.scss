@@ -144,9 +144,8 @@ $family-monospace: sans-serif;
 $badge-font-size: 20px;
 $badge-height: 30px;
 
-@import "../node_modules/bulma/bulma.sass";
-// Sample of individual module import - in case we want to optimize modules
-// @import "../node_modules/bulma/sass/grid/columns.sass";
+@import "bulma";
+@import "bulma-switch";
 
 // 3rd party components  (for CSS imports omit extension)
 @import "../node_modules/bulma-social/bin/bulma-social.min";

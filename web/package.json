@@ -30,7 +30,7 @@
     "axios": "^0.19.2",
     "bulma": "^0.9.0",
     "bulma-social": "^1.1.1",
-    "bulma-switch": "^2.0.0",
+    "bulma-switch": "^2.0.4",
     "bulma-tagsinput": "^2.0.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.10.0",
@@ -69,8 +69,8 @@
     "sass": "^1.50.1",
     "slugify": "^1.4.5",
     "toasted-notes": "^3.2.0",
-    "yup": "^0.32.11",
-    "use-resize-observer": "^8.0.0"
+    "use-resize-observer": "^8.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
