@@ -60,6 +60,20 @@ const requestUpdatePortfolioError = (errors) => ({
   errors,
 });
 
+const requestCreatePortfolio = () => ({
+  type: types.REQUEST_CREATE_PORTFOLIO,
+});
+
+const requestCreatePortfolioSuccess = (portfolio) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_SUCCESS,
+  portfolio,
+});
+
+const requestCreatePortfolioError = (errors) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_ERROR,
+  errors,
+});
+
 const requestUpdateSnapshot = () => ({
   type: types.REQUEST_UPDATE_SNAPSHOT,
 });
@@ -181,6 +195,27 @@ export const fetchPortfolio = (id) => async (dispatch) => {
     dispatch(requestFetchPortfolioError(errMessage));
   }
 };
+
+export const createNewPortfolio = ({ portfolio, token, isLoader = true }) => async (dispatch) => {
+  try {
+    isLoader && dispatch(requestCreatePortfolio());
+    const payload = await createPortfolio(portfolio, token);
+    const { data } = payload;
+    dispatch(requestCreatePortfolioSuccess(data));
+    return payload;
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestCreatePortfolioError(errMessage));
+    return error.response;
+  }
+}
 
 export const updatePortfolio = (id, body, token) => async (dispatch) => {
   try {
