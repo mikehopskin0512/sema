@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { getReactionTagsChartData } from '../../../utils/parsing';
 import ReactionChart from '../../stats/reactionChart';
 import TagsChart from '../../stats/tagsChart';
+import ReactionLineChart from '../../stats/reactionLineChart';
 
 const SnapshotChartContainer = ({
   chartType, smartComments, startDate, endDate, groupBy, dateDiff, yAxisType,
@@ -26,6 +27,8 @@ const SnapshotChartContainer = ({
 
   const renderChart = (type) => {
     switch (type) {
+    case 'reactions-area':
+      return <ReactionLineChart reactions={reactions} groupBy={groupBy} isSnapshot />;
     case 'reactions':
       return <ReactionChart reactions={reactions} yAxisType={yAxisType} groupBy={groupBy} isSnapshot />;
     case 'tags':

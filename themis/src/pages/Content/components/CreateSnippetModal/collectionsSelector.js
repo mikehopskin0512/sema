@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { FolderIcon } from '../icons/FolderIcon';
 import GroupedSelectField from '../inputs/GroupedSelect';
+import { DEFAULT_COLLECTION_NAME } from '../../constants';
 
 const collectionsSelector = ({ value, onChange }) => {
   const {
@@ -13,7 +14,7 @@ const collectionsSelector = ({ value, onChange }) => {
     .filter((team) => team.role.canCreateSnippets)
     .map(({ team }) => ({
       ...team,
-      collections: team.collections.filter((collection) => collection.isActive),
+      collections: team.collections.filter((collection) => collection.isActive && collection?.collectionData?.type !== 'community'),
     })).reduce((acc, item) => {
       acc.push(item?.collections ?? []);
       return acc;
@@ -24,7 +25,7 @@ const collectionsSelector = ({ value, onChange }) => {
     if (userCollections.length) {
       variants.userCollections = {
         fieldName: 'My Snippets',
-        options: userCollections ?? [],
+        options: userCollections.filter(collection => collection.collectionData?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME) ?? [],
       };
     }
 
