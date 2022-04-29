@@ -1,11 +1,3 @@
 {
-  "extends": ["airbnb-base", "prettier"],
-  "parser": "@babel/eslint-parser",
-  "rules": {
-    "no-underscore-dangle": "off",
-    "no-use-before-define": [
-      "error",
-      { "functions": false, "classes": true, "variables": true }
-    ]
-  }
+  "extends": ["../.eslintrc.json"]
 }
