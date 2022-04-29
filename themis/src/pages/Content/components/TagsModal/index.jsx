@@ -1,5 +1,7 @@
 /* eslint-disable max-len */
 import React from 'react';
+import { useSelector } from 'react-redux';
+
 import {
   POSITIVE, NEGATIVE, TOGGLE_OP, SEGMENT_EVENTS,
 } from '../../constants';
@@ -7,8 +9,8 @@ import {
 import { segmentTrack } from '../../modules/segment';
 import { getActiveThemeClass } from '../../../../../utils/theme';
 
-
 function TagsModal({ allTags, toggleTagSelection }) {
+  const { user: { _id: userId } } = useSelector((state) => state);
   const Tag = ({ tag, type }) => {
     const isSelected = tag.selected === type;
     const toggleTag = () => {
@@ -18,7 +20,7 @@ function TagsModal({ allTags, toggleTagSelection }) {
         op: TOGGLE_OP,
       });
       // eslint-disable-next-line object-curly-newline
-      segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
+      segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, userId, {
         change_tag: true, tag: tag[type], tag_type: type, clicked_faq: false,
       });
     };

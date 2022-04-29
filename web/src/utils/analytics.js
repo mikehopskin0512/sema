@@ -1,8 +1,11 @@
+import axios from 'axios';
 import { PATHS } from './constants';
 
+const segmentApiKey = process.env.NEXT_PUBLIC_SEGMENT_API_KEY || null;
 const amplitudeApiKey = process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY || null;
 let amplitude = null;
 
+// -- Amplitude
 export const AMPLITUDE_EVENTS = {
   CLICKED_LOGIN: 'CLICKED_LOGIN',
   CLICKED_LOG_OUT: 'CLICKED_LOG_OUT',
@@ -105,8 +108,27 @@ export const googleAnalyticsEvent = ({ action, params }) => {
   window.gtag('event', action, params);
 };
 
-// Segment
+// -- Segment Track Event via HTTP API
+const host = 'https://api.segment.io/v1'
+const config = {
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  auth: {
+    username: segmentApiKey, password: '',
+  }
+};
+const segmentApi = axios.create({
+  baseURL: process !== 'undefined' ? host : null,
+});
 
+export const segmentTrackViaApi = (event, userId, properties) => {
+  if (segmentApiKey) {
+    segmentApi.post('/track', { event, userId, properties }, config);
+  }
+}
+
+// -- Segment via Analytics2.0 lib
 export const segmentIdentify = (user) => {
   const { _id, username, firstName = '', lastName = '' } = user;
   global.analytics.identify(_id, {
