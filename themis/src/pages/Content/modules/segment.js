@@ -63,14 +63,14 @@ async function loadSegment() {
 
   analytics.factory = function (method) {
     return function () {
-      var args = Array.prototype.slice.call(arguments);
+      const args = Array.prototype.slice.call(arguments);
       args.unshift(method);
       analytics.push(args);
       return analytics;
     };
   };
-  for (var i = 0; i < analytics.methods.length; i++) {
-    var key = analytics.methods[i];
+  for (let i = 0; i < analytics.methods.length; i++) {
+    const key = analytics.methods[i];
     analytics[key] = analytics.factory(key);
   }
 
@@ -91,9 +91,14 @@ const segmentIdentify = (user) => {
   analytics.track(SEGMENT_EVENTS.VIEWED_GITHUB_PAGE);
 };
 
-export const segmentTrack = (action, properties) => {
-  analytics.track(action, {
-    ...properties,
+export const segmentTrack = async (event, userId, properties) => {
+  const res = await fetch('https://api.segment.io/v1/track', {
+    headers: {
+      Authorization: `Basic ${btoa(`${SEGMENT_API_KEY}:`)}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify({ event, userId, properties }),
   });
 };
 

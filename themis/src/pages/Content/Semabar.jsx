@@ -30,6 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     isReactionDirty: semabarState.isReactionDirty,
     isLoggedIn: user?.isLoggedIn,
     isWaitlist: user?.isWaitlist,
+    userId: user?._id,
     isSelectingEmoji: semabarState.isSelectingEmoji,
   };
 };
@@ -49,9 +50,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const {
+    userId,
     isLoggedIn,
     isWaitlist,
-    updateSelectedTags
+    updateSelectedTags,
   } = props;
   const [isHover, setHover] = useState(false);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
@@ -68,7 +70,7 @@ const Semabar = (props) => {
     return (
       <>
         {activeTags.map((tag) => (
-            <Tag tag={tag} updateSelectedTags={updateSelectedTags} key={tag} />
+          <Tag tag={tag} updateSelectedTags={updateSelectedTags} key={tag} />
         ))}
       </>
     );
@@ -164,7 +166,7 @@ const Semabar = (props) => {
                 rel="noreferrer"
                 onClick={() => {
                   // eslint-disable-next-line max-len
-                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
+                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, userId, {
                     change_tag: false, tag: null, tag_type: null, clicked_faq: true,
                   });
                 }}
