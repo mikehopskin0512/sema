@@ -1,5 +1,12 @@
 {
   "extends": ["../.eslintrc.react.json"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "globals": {
     "chrome": "readonly"
   }
