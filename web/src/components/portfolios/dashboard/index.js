@@ -232,17 +232,18 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
                   >
                     + Add Snapshot
                   </button>
-                  {portfolios.length === 1 &&
-                    (
-                      <button
-                        onClick={goToAddPortfolio}
-                        type="button"
-                        className="button is-transparent m-0 ml-15"
-                      >
-                        Create another Portfolio
-                      </button>
-                    )
-                  }
+                  {/* TODO: return it when 1221 will be released */}
+                  {/* {portfolios.length === 1 && */}
+                  {/*   ( */}
+                  {/*     <button */}
+                  {/*       onClick={goToAddPortfolio} */}
+                  {/*       type="button" */}
+                  {/*       className="button is-transparent m-0 ml-15" */}
+                  {/*     > */}
+                  {/*       Create another Portfolio */}
+                  {/*     </button> */}
+                  {/*   ) */}
+                  {/* } */}
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
