@@ -6,16 +6,17 @@ import {
   getPortfolio,
   putPortfolio,
   getUserPortfolio,
-  postSnapshotToPortfolio,
   deletePortfolio,
   patchPortfolioType,
   createPortfolio,
   deleteSnapshotsFromPortfolio,
   patchPortfolioTitle,
-  addSnapshotToPortfolio
+  addSnapshotToPortfolio,
+  patchPortfolioOverview,
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
+import { requestAddSnapshotToPortfolio } from '../snapshots/actions';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -56,6 +57,20 @@ const requestUpdatePortfolioSuccess = (portfolio) => ({
 
 const requestUpdatePortfolioError = (errors) => ({
   type: types.REQUEST_UPDATE_PORTFOLIO_ERROR,
+  errors,
+});
+
+const requestCreatePortfolio = () => ({
+  type: types.REQUEST_CREATE_PORTFOLIO,
+});
+
+const requestCreatePortfolioSuccess = (portfolio) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_SUCCESS,
+  portfolio,
+});
+
+const requestCreatePortfolioError = (errors) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_ERROR,
   errors,
 });
 
@@ -102,28 +117,19 @@ const requestRemovePortfolioError = (errors) => ({
   errors,
 });
 
-const requestUpdatePortfolioType = (portfolioId, portfolioType) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE,
+const requestUpdatePortfolioField = (portfolioId, field, value) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_FIELD,
   portfolioId,
-  portfolioType,
+  field,
+  value,
 });
 
-const requestUpdatePortfolioTitle = (portfolioId, title) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE,
-  portfolioId,
-  title,
-});
-
-const requestUpdatePortfolioTitleError = (error, portfolioId, initialTitle) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR,
+const requestUpdatePortfolioFieldError = (error, portfolioId, field, initialValue) => ({
+  type: types.REQUEST_UPDATE_PORTFOLIO_FIELD_ERROR,
   error,
-  initialTitle,
+  initialValue,
+  field,
   portfolioId,
-});
-
-const requestUpdatePortfolioTypeError = (errors) => ({
-  type: types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR,
-  errors,
 });
 
 const requestPostSnapshotToPortfolio = () => ({
@@ -189,6 +195,27 @@ export const fetchPortfolio = (id) => async (dispatch) => {
     dispatch(requestFetchPortfolioError(errMessage));
   }
 };
+
+export const createNewPortfolio = ({ portfolio, token, isLoader = true }) => async (dispatch) => {
+  try {
+    isLoader && dispatch(requestCreatePortfolio());
+    const payload = await createPortfolio(portfolio, token);
+    const { data } = payload;
+    dispatch(requestCreatePortfolioSuccess(data));
+    return payload;
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestCreatePortfolioError(errMessage));
+    return error.response;
+  }
+}
 
 export const updatePortfolio = (id, body, token) => async (dispatch) => {
   try {
@@ -282,47 +309,25 @@ export const removeSnapshotsFromPortfolio = (portfolioId, snapshots, token) => a
   }
 };
 
-// TODO: should be removed in future iterations, caused by tickets duplication
-// export const addSnapshotToPortfolio = (portfolioId, body, token) => async (dispatch) => {
-//   try {
-//     dispatch(requestPostSnapshotToPortfolio());
-//     const payload = await postSnapshotToPortfolio(portfolioId, body, token);
-//     //const { data } = payload;
-//     //ToDo: Fix this after backend will be ready
-//     dispatch(requestPostSnapshotToPortfolioSuccess());
-//     return payload;
-//   } catch (error) {
-//     const { response: { data: { message }, status, statusText } } = error;
-//     const errMessage = message || `${status} - ${statusText}`;
-//     dispatch(requestPostSnapshotToPortfolioError(errMessage));
-//     return error.response;
-//   }
-// }
-
-export const updatePortfolioType = (portfolioId, type) => async (dispatch, getState) => {
+export const updatePortfolioField = (portfolioId, field, value, updateRequest) => (dispatch, getState) => {
   const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
-  const initialType = portfolios.find(({ _id }) => _id === portfolioId)?.type;
+  const initialValue = portfolios.find(({ _id }) => _id === portfolioId)[field];
   try {
-    dispatch(requestUpdatePortfolioType(portfolioId, type));
-    await patchPortfolioType(portfolioId, type, token);
+    dispatch(requestUpdatePortfolioField(portfolioId, field, value));
+    updateRequest(portfolioId, value, token);
   } catch (error) {
-    const { response: { data: { message }, status, statusText } } = error;
-    const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestUpdatePortfolioTypeError(errMessage, portfolioId, initialType));
+    dispatch(requestUpdatePortfolioFieldError(portfolioId, field, initialValue));
     return error.response;
   }
 };
-
-export const updatePortfolioTitle = (portfolioId, title) => async (dispatch, getState) => {
-  const { portfoliosState: { data: { portfolios } }, authState: { token } } = getState();
-  const initialTitle = portfolios.find(({ _id }) => _id === portfolioId)?.title;
-  try {
-    dispatch(requestUpdatePortfolioTitle(portfolioId, title));
-    await patchPortfolioTitle(portfolioId, title, token);
-  } catch (error) {
-    dispatch(requestUpdatePortfolioTitleError(error, portfolioId, initialTitle));
-    return error.response;
-  }
+export const updatePortfolioType = (portfolioId, type) => {
+  return updatePortfolioField(portfolioId, 'type', type, patchPortfolioType);
+};
+export const updatePortfolioOverview = (portfolioId, overview) => {
+  return updatePortfolioField(portfolioId, 'overview', overview, patchPortfolioOverview);
+};
+export const updatePortfolioTitle = (portfolioId, title) => {
+  return updatePortfolioField(portfolioId, 'title', title, patchPortfolioTitle);
 };
 
 export const removePortfolio = (portfolioId, token) => async (dispatch) => {
@@ -356,6 +361,10 @@ export const addSnapshotsToPortfolio = ({
 
     if (type === 'dashboard') {
       dispatch(requestFetchPortfolioSuccess(data));
+    }
+
+    if (type === 'list') {
+      dispatch(requestAddSnapshotToPortfolio(snapshots[0], portfolioId))
     }
 
     if (typeof onSuccess === 'function') onSuccess(snapshots);

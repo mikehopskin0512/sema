@@ -6,7 +6,6 @@ const prefix = 'aui-';
 const PATHS = {
   FROM: './dist/styles/bulma-style.css',
   TO_DIST: './dist/styles/styles.css',
-  TO_SRC: './src/styles/styles.css',
 }
 function deleteSubstring(string, startsWith, endsWith) {
   const startIndex = string.indexOf(startsWith);
@@ -23,7 +22,6 @@ fs.readFile(PATHS.FROM, (err, css) => {
     .then((result) => {
       const _styles = deleteSubstring(result.css, '/* Bulma Base */', '/* Bulma Elements */');
       fs.writeFile(PATHS.TO_DIST, _styles, () => true);
-      fs.writeFile(PATHS.TO_SRC, _styles, () => true);
     });
 });
 

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { format } from 'date-fns';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
 import { CloseIcon, EyeIcon, EyeOffIcon } from '../../Icons';
-import { black900, red600, green500 } from '../../../../styles/_colors.module.scss';
+import { black900, green500, red600 } from '../../../../styles/_colors.module.scss';
 import styles from './addSnapshotModal.module.scss';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import Table from '../../table';
@@ -14,6 +14,7 @@ import Checkbox from '../../checkbox';
 import CustomRadio from '../../radio';
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
+import { addSnapshotsToPortfolio } from '../../../state/features/portfolios/actions';
 
 const { addSnapshotToPortfolio } = portfoliosOperations;
 
@@ -31,7 +32,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
   const { snapshotsState, portfoliosState, authState } = useSelector((state) => state);
   const { data: { snapshots } } = snapshotsState;
   const { data: { portfolios, portfolio }} = portfoliosState;
-  const { token } = authState;
+  const { token, user } = authState;
   const { handleSubmit } = useForm();
 
   const modalRef = useRef(null);
@@ -125,7 +126,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
     })
   }
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     try {
       let body = { snapshots: [] };
       if (isSnapshotsModalType(type)) {
@@ -133,7 +134,13 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
         await dispatch(addSnapshotToPortfolio(portfolio._id, body, token));
       } else {
         body.snapshots.push(snapshotId);
-        await dispatch(addSnapshotToPortfolio(activePortfolio, body, token));
+        await dispatch(addSnapshotsToPortfolio({
+          portfolioId: activePortfolio,
+          token,
+          snapshots: [snapshotId],
+          userId: user._id,
+          type: 'list'
+        }));
       }
       if (!isEmpty(portfoliosState.error)) {
         showNotification(true);

@@ -13,8 +13,7 @@ import {
   getPortfolioById,
   addSnapshotsToPortfolio,
   removeSnapshotFromPortfolio,
-  updatePortfolioType,
-  updatePortfolioTitle,
+  updateField,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
 
@@ -82,7 +81,7 @@ export default (app, passport) => {
     const { id } = req.params;
     const { title } = req.body;
     try {
-      await updatePortfolioTitle(id, title);
+      await updateField(id, 'title', title);
       return res.status(200).send({ title });
     } catch (error) {
       logger.error(error);
@@ -94,8 +93,20 @@ export default (app, passport) => {
     const { id } = req.params;
     const { type } = req.body;
     try {
-      await updatePortfolioType(id, type);
+      await updateField(id, 'type', type);
       return res.status(200).send({ result: 'ok' });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.patch('/:id/overview', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { id } = req.params;
+    const { overview } = req.body;
+    try {
+      await updateField(id, 'overview', overview);
+      return res.status(200).send();
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

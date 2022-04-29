@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
 import { teamsOperations } from '../../../state/features/teams';
-import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID, COLLECTION_TYPES } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
@@ -24,7 +24,7 @@ const CollectionRow = ({ data }) => {
   const router = useRouter();
   const { token, selectedTeam } = useSelector((state) => state.authState);
   const { collectionData, isActive } = data ?? {};
-  const { _id, name, description, source, author, commentsCount, isActive: isNotArchived } = collectionData;
+  const { _id, name, description, source, author, commentsCount, isActive: isNotArchived, type } = collectionData;
   const { checkAccess, checkTeamPermission } = usePermission();
 
   const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
@@ -50,19 +50,21 @@ const CollectionRow = ({ data }) => {
 
   const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
   const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
+  const isHighlightNeeded = type === COLLECTION_TYPES.PERSONAL || type === COLLECTION_TYPES.TEAM;
   
   return (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">
-        <td className="py-15 has-background-white px-10" width={80}>
+        <td className="py-15 has-background-white px-10 is-relative" width={80}>
+          {isHighlightNeeded && <div className={clsx('has-background-orange-300 is-absolute', styles['collection-highlight'])}/>}
           <div className="is-flex is-flex-direction-column is-justify-content-center">
-          <div className="field switch-input" aria-hidden onClick={onClickChild}>
+          <div className="field" aria-hidden onClick={onClickChild}>
             <input
               id={`activeSwitch-${_id}`}
               type="checkbox"
               onChange={onChangeToggle}
               name={`activeSwitch-${_id}`}
-              className="switch is-rounded"
+              className={clsx('switch is-rounded', isHighlightNeeded && 'is-orange-300')}
               checked={isActive}
               disabled={!isNotArchived}
             />

@@ -4,6 +4,7 @@ import ReactionChart from './reactionChart';
 import TagsChart from './tagsChart';
 import { setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../utils/parsing';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../snapshots/modalWindow';
+import ReactionLineChart from './reactionLineChart';
 
 const StatsPage = ({ startDate, endDate, filter: unsafeFilter }) => {
   const { repositories } = useSelector((state) => ({
@@ -55,9 +56,9 @@ const StatsPage = ({ startDate, endDate, filter: unsafeFilter }) => {
   return(
     <>
       <div className="is-flex is-flex-wrap-wrap mt-10">
-        <ReactionChart reactions={reactions} groupBy={groupBy} onClick={() => setOpenReactionsModal(true)}/>
+        <ReactionLineChart reactions={reactions} groupBy={groupBy}  onClick={() => setOpenReactionsModal(true)}/>
         <TagsChart tags={tags} groupBy={groupBy} onClick={() => setOpenTagsModal(true)}/>
-        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
+        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES_AREA} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
       </div>
     </>

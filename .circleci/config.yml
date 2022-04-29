@@ -345,6 +345,5 @@ workflows:
                 - master
                 - /release-.*/
           requires:
-            - build-chrome-extension
             - deploy-web
             - deploy-apollo

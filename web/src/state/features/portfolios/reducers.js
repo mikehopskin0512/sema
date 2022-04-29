@@ -1,4 +1,4 @@
-import { updatePortfolioType, updatePortfolioTitle } from './helpers';
+import { updatePortfolioFieldById } from './helpers';
 import * as types from './types';
 
 const initialState = {
@@ -57,6 +57,30 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: true,
     };
+  case types.REQUEST_UPDATE_PORTFOLIO_FIELD: {
+    const { portfolioId, field, value } = action;
+    const portfolios = [...state.data.portfolios];
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        portfolios: updatePortfolioFieldById(portfolios, portfolioId, field, value),
+      },
+      error: {},
+    };
+  }
+  case types.REQUEST_UPDATE_PORTFOLIO_FIELD_ERROR: {
+    const { portfolioId, field, initialValue, error } = action;
+    const portfolios = [...state.data.portfolios];
+    return {
+      ...state,
+      data: {
+        ...state.data,
+        portfolios: updatePortfolioFieldById(portfolios, portfolioId, field, initialValue),
+      },
+      error,
+    };
+  }
   case types.REQUEST_UPDATE_PORTFOLIO_SUCCESS: {
     const { portfolios } = state.data;
     const { portfolio } = action;
@@ -85,6 +109,7 @@ const reducer = (state = initialState, action) => {
     };
   case types.REQUEST_UPDATE_SNAPSHOT_SUCCESS: {
     const { portfolios } = state.data;
+    if (portfolios.length === 0) return { ...state, isFetching: false };
     const [portfolio, ...rest] = portfolios;
     if (!portfolio) return {...state, isFetching: false};
     const snapshot = { ...action.snapshot };
@@ -103,6 +128,27 @@ const reducer = (state = initialState, action) => {
       },
     };
   }
+  case types.REQUEST_CREATE_PORTFOLIO_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+    };
+  case types.REQUEST_CREATE_PORTFOLIO:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_CREATE_PORTFOLIO_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolio: action.portfolio,
+        portfolios: [action.portfolio, ...state.data.portfolios],
+      },
+    };
   case types.REQUEST_UPDATE_SNAPSHOT_ERROR:
     return {
       ...state,
@@ -202,34 +248,6 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE: {
-    const { portfolioId, portfolioType } = action;
-    return {
-      ...updatePortfolioType(state, portfolioId, portfolioType),
-      error: {},
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TYPE_ERROR: {
-    const { portfolioId, portfolioType } = action;
-    return {
-      ...updatePortfolioType(state, portfolioId, portfolioType),
-      error: action.errors,
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TITLE: {
-    const { portfolioId, title } = action;
-    return {
-      ...updatePortfolioTitle(state, portfolioId, title),
-      error: {},
-    };
-  }
-  case types.REQUEST_UPDATE_PORTFOLIO_TITLE_ERROR: {
-    const { portfolioId, initialTitle } = action;
-    return {
-      ...updatePortfolioTitle(state, portfolioId, initialTitle),
-      error: action.error,
-    };
-  }
   default:
     return state;
   }

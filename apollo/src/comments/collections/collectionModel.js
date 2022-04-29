@@ -9,6 +9,7 @@ const { Schema } = mongoose;
 const collectionSchema = new Schema({
   name: { $type: String, required: true },
   description: String,
+  isActiveByDefault: Boolean,
   tags: [{
     tag: { $type: Schema.Types.ObjectId, ref: 'Tag' },
     type: String,

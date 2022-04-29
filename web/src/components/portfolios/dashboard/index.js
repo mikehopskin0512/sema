@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router'
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
@@ -12,23 +13,25 @@ import { fullName, getPlatformLink } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
-import { DashboardDraggableList } from './dnd/dashboardList';
+import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
 import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
-import router from 'next/router';
 import { alertOperations } from '../../../state/features/alerts';
 import ErrorPage from '../errorPage';
 import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
+import { createNewPortfolio } from '../../../state/features/portfolios/actions';
+import { notify } from '../../../components/toaster/index';
 
-const { updatePortfolio, updatePortfolioType, removePortfolio } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, printDocument }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocument }) => {
+  const router = useRouter();
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
     toaster.notify(({ onClose }) => (
@@ -63,7 +66,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
       portfolios: state.portfoliosState.data.portfolios
     }),
   );
-  const { token = '' } = auth;
+  const { token = '', user: userData } = auth;
   const [user, setUser] = useState({
     fullName: '',
     avatar: DEFAULT_AVATAR,
@@ -74,7 +77,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isCopied, changeIsCopied] = useState(false);
   const [hover, setHover] = useState(false);
-  const [isActive, setIsActive] = useState(false);
   const [isParsing, setIsParsing] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
   const isOwner = portfolio.userId === auth.user._id;
@@ -97,32 +99,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
       }
     }
     setIsParsing(false);
-  };
-
-  const onSaveProfile = async (values) => {
-    const {
-      _id,
-      ...rest
-    } = portfolio;
-    if (_id && token) {
-      const body = {
-        _id,
-        ...rest,
-        ...values,
-      };
-
-      body.snapshots = body.snapshots.map(({
-        id: snapshot,
-        sort,
-      }) => ({
-        id: { _id: snapshot._id },
-        sort,
-      }));
-      const payload = await dispatch(updatePortfolio(_id, { ...body }, token));
-      if (payload.status === RESPONSE_STATUSES.SUCCESS) {
-        toggleEditModal(false);
-      }
-    }
   };
 
   const onDeletePortfolio = async () => {
@@ -170,8 +146,35 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
     await dispatch(updatePortfolioType(portfolio._id, newType));
   };
 
-  const goToAddPortfolio = () => {
-    // TODO: Redirect to Add Portfolio
+  const goToAddPortfolio = async () => {
+    const newPortfolio = {
+      userId: userData._id,
+      firstName: userData.firstName ?? '',
+      lastName: userData.lastName ?? '',
+      headline: `${userData.firstName} ${userData.lastName}`,
+      identities: userData.identities,
+      overview: '',
+      title: 'New Portfolio',
+    };
+    const { status } = await dispatch(createNewPortfolio({
+      portfolio: newPortfolio,
+      token,
+      isLoader: false
+    }));
+
+    if (status === RESPONSE_STATUSES.CREATED) {
+      notify('Portfolio was created.', {
+        type: ALERT_TYPES.SUCCESS,
+        duration: 3000,
+      });
+
+      await router.push(PATHS.PORTFOLIO.PORTFOLIOS);
+    } else {
+      notify('Portfolio was not created.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+    }
   }
 
   const onCopy = () => {
@@ -204,9 +207,12 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
         toggleModalActive={toggleAddModal}
         portfolio={portfolio}
       />
-      {/* TODO: should be removed in future iterations, caused by tickets duplication */}
-      {/* <AddSnapshotModal active={isActive} onClose={() => setIsActive(false)} type={ADD_SNAPSHOT_MODAL_TYPES.SNAPSHOTS} showNotification={showNotification} /> */}
-      <EditPortfolio isModalActive={isEditModalOpen} toggleModalActive={toggleEditModal} profileOverview={user.overview} onSubmit={onSaveProfile} />
+      <EditPortfolio
+        isModalActive={isEditModalOpen}
+        toggleModalActive={toggleEditModal}
+        profileOverview={portfolio.overview}
+        portfolioId={portfolio._id}
+      />
       <DeleteModal
         isModalActive={isDeleteModalOpen}
         toggleModalActive={toggleDeleteModal}
@@ -222,8 +228,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
             />
             <div className="is-relative is-flex is-align-items-center">
               {isOwner && isIndividualView && <>
-                <div className="is-flex ml-20 pr-40" style={{ paddingTop: '3px' }}>
-                  <div className="field sema-toggle switch-input" onClick={onClickChild} aria-hidden>
+                <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                  <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
                         (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
@@ -241,6 +247,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
                     <label htmlFor={`activeSwitch-${portfolio._id}`} />
                   </div>
                   <div
+                    className="is-flex"
                     onClick={isPublicPortfolio ? onCopy : () => { }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -287,7 +294,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
                     },
                   ]}
                   trigger={
-                    <div className="is-clickable">
+                    <div className="is-clickable is-flex">
                       <OptionsIcon />
                     </div>
                   }
@@ -299,7 +306,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
         </div>
       </div>
       <div className="hero-body pt-20 pb-300 mx-25">
-        <div className="portfolio-content mb-50 container">
+        <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
             <div className={clsx(styles['user-image'], '')}>
@@ -321,7 +328,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
                 <div className="content is-relative p-10 pr-80 pt-20">
-                  {user.overview}
+                  {portfolio.overview}
                 </div>
                 {
                   isOwner && (
@@ -339,7 +346,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isPublic, isLoading, 
           </div>
         </div>
         <div className={clsx('container', styles['snaps-container'])}>
-          <p className="mb-25 is-size-4 has-text-weight-semibold">Snapshots</p>
+          <p className="mb-5 is-size-4 has-text-weight-semibold">Snapshots</p>
           <DashboardDraggableList
             pageLayout={layout}
             updateLayout={onLayoutChange}

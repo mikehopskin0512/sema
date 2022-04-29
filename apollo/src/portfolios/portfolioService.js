@@ -97,32 +97,15 @@ export const update = async (portfolioId, portfolio) => {
   }
 };
 
-export const updatePortfolioTitle = async (portfolioId, title) => {
-  try {
-    return await Portfolio
-      .findOneAndUpdate(
-        { _id: new ObjectId(portfolioId) },
-        { $set: { title } },
-        { new: true },
-      )
-      .exec();
-  } catch (err) {
-    const error = new errors.NotFound(err);
-    logger.error(error);
-    throw error;
-  }
-};
-
-export const updatePortfolioType = async (portfolioId, type) => {
+export const updateField = async (id, field, value) => {
   try {
     await Portfolio
       .findOneAndUpdate(
-        { _id: new ObjectId(portfolioId) },
-        { $set: { type } },
+        { _id: new ObjectId(id) },
+        { $set: { [field]: value } },
         { new: true },
       )
       .exec();
-    return;
   } catch (err) {
     const error = new errors.NotFound(err);
     logger.error(error);

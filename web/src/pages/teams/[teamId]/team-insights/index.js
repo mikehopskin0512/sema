@@ -19,6 +19,7 @@ import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.
 import { AuthorIcon, TeamIcon, InfoFilledIcon } from '../../../../components/Icons';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
+import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 
 const { fetchTeamSmartCommentSummary, fetchTeamSmartCommentOverview, fetchTeamRepos } = teamsOperations;
 const { fetchReposByIds } = repositoriesOperations;
@@ -426,10 +427,10 @@ const TeamInsights = () => {
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400"/>
         <TeamStatsFilter filter={filter} individualFilter={isActive} commentView={commentView} filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <div className="is-flex is-flex-wrap-wrap my-20">
-          <ReactionChart isTeamView className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} />
+          <ReactionLineChart reactions={reactionChartData} groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} />
           <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} />
         </div>
-        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
+        {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES_AREA} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
         {openCommentsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={openCommentsModal} onClose={()=> setOpenCommentsModal(false)} snapshotData={{ componentData }}/>}
         <div className="is-flex is-align-items-center mb-20">

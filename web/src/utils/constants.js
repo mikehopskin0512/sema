@@ -257,6 +257,7 @@ export const ON_INPUT_DEBOUNCE_INTERVAL_MS = 250;
 
 export const RESPONSE_STATUSES = {
   SUCCESS: 200,
+  CREATED: 201
 };
 
 export const ALERT_TYPES = {
@@ -271,4 +272,10 @@ export const PORTFOLIO_TYPES = {
 
 export const KEY_CODES = {
   ENTER: 13,
+};
+
+export const COLLECTION_TYPES = {
+  PERSONAL: 'personal',
+  TEAM: 'team',
+  COMMUNITY: 'community',
 };

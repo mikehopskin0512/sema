@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "12.16.0",
-    "npm": "6.13.4"
+    "node": "^16"
   },
   "scripts": {
     "dev": "next",
@@ -30,9 +29,8 @@
     "amplitude-js": "^8.8.0",
     "axios": "^0.19.2",
     "bulma": "^0.9.0",
-    "bulma-extensions": "^6.2.7",
     "bulma-social": "^1.1.1",
-    "bulma-switch": "^2.0.0",
+    "bulma-switch": "^2.0.4",
     "bulma-tagsinput": "^2.0.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.10.0",
@@ -49,7 +47,6 @@
     "moment": "^2.29.1",
     "next": "^9.5.3",
     "next-redux-wrapper": "^4.0.1",
-    "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-avatar": "^3.9.7",
@@ -71,8 +68,10 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "sass": "^1.50.1",
     "slugify": "^1.4.5",
     "toasted-notes": "^3.2.0",
+    "use-resize-observer": "^8.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -85,7 +84,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "next": "^9.5.3",
-    "use-resize-observer": "^8.0.0"
+    "next": "^9.5.3"
   }
 }
