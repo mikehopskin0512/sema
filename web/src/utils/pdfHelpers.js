@@ -17,7 +17,7 @@ export const DEFAULT_PDF_OPTIONS = {
 };
 
 export const savePdfDocument = async (ref) => {
-  const pngData = await domtoimage.toPng(ref.current, { quality: 0.95 });
+  const pngData = await domtoimage.toPng(ref.current, { quality: 0.6 });
     
   const imgHeight = (ref.current.clientHeight * A4_PAGE.WIDTH) / ref.current.clientWidth;
   let heightLeft = imgHeight;

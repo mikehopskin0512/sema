@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,8 @@ import withLayout from '../../../components/layout';
 import PortfolioDashboard from '../../../components/portfolios/dashboard';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import { savePdfDocument } from '../../../utils/pdfHelpers';
+import { notify } from '../../../components/toaster/index';
+import { ALERT_TYPES } from '../../../utils/constants';
 
 const { fetchPortfolio } = portfoliosOperations;
 
@@ -26,11 +28,22 @@ const PublicPortfolio = () => {
     }),
   );
 
+  const [isPdfCreating, toggleIsPdfCreating] = useState(false);
+
   useEffect(() => {
     dispatch(fetchPortfolio(portfolioId));
   }, [portfolioId, dispatch, token]);
 
   const portfolio = portfolios.find(({ _id }) => _id === portfolioId) || publicPortfolio;
+
+  const savePdf = async () => {
+    toggleIsPdfCreating(true);
+    notify('Downloading the PDF has started', { type: ALERT_TYPES.SUCCESS, duration: 100000 });
+    setTimeout(async () => {
+      await savePdfDocument(portfolioRef);
+      toggleIsPdfCreating(false);
+    }, 0);
+  }
 
   return (
     <div className="has-background-white hero">
@@ -41,7 +54,8 @@ const PublicPortfolio = () => {
             portfolio={portfolio}
             isIndividualView
             isLoading={isLoading}
-            printDocument={() => savePdfDocument(portfolioRef)}
+            pdfView={isPdfCreating}
+            savePdf={savePdf}
           />
         )}
       </div>

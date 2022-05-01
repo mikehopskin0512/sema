@@ -30,7 +30,7 @@ import { notify } from '../../../components/toaster/index';
 const { updatePortfolioType, removePortfolio } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocument }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
   const router = useRouter();
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
@@ -219,15 +219,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocum
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
-      <div className={clsx('mb-10', styles.title)}>
+      <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
             <TitleField
               portfolio={portfolio}
-              isEditable={isOwner}
+              isEditable={isOwner && !pdfView}
             />
             <div className="is-relative is-flex is-align-items-center">
-              {isOwner && isIndividualView && <>
+              {!pdfView && isOwner && isIndividualView && <>
                 <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
                   <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
@@ -262,7 +262,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocum
                   >
                     + Add Snapshot
                   </button>
-                  <button onClick={printDocument} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
                     <p>Save as PDF</p>
                     <PdfIcon />
                   </button>
@@ -313,9 +313,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocum
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
-              <div>
-                <div className="has-text-weight-semibold is-size-4 is-flex">{user.fullName}</div>
-                <div className="flex-break" />
+              <div className="is-full-width">
+                <div className="has-text-weight-semibold is-size-4 is-full-width">{user.fullName}</div>
                 <div className="is-flex is-align-items-center"><GithubIcon />
                   <span className="is-underlined pl-8 is-size-6">
                     <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
@@ -331,7 +330,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocum
                   {portfolio.overview}
                 </div>
                 {
-                  isOwner && (
+                  isOwner && !pdfView && (
                     <button
                       type="button"
                       className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
@@ -352,6 +351,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, printDocum
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
             snapshots={snapshots}
+            isPdfView={pdfView}
           />
         </div>
       </div>
