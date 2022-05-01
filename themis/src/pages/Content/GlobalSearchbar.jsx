@@ -56,7 +56,7 @@ const GlobalSearchbar = (props) => {
     setSearchResults([]);
     props.toggleSearchModal();
     props.onLastUsedSmartComment(suggestion);
-    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, userId, { comment_bar_action: 'insert', comment_source: sourceName, comment_used: title });
     props.commentBox.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
