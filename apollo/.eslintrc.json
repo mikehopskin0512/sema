@@ -1,14 +1,10 @@
 {
-  "extends": ["airbnb-base", "prettier"],
-  "parser": "@babel/eslint-parser",
+  "extends": ["../.eslintrc.json"],
   "overrides": [
     {
       "files": ["**/*.test.js", "test/**/*.js"],
       "plugins": ["jest"],
       "extends": ["plugin:jest/recommended"]
     }
-  ],
-  "rules": {
-    "no-underscore-dangle": "off"
-  }
+  ]
 }

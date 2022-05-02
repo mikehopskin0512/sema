@@ -52,7 +52,7 @@ const snapshotSchema = new Schema({
   componentType: {
     type: String,
     required: true,
-    enum: ['comments', 'summaries', 'tags'],
+    enum: ['comments', 'summaries', 'tags', 'summaries-area'],
   },
   componentData: componentDataSchema,
 

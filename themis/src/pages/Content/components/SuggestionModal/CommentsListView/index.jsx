@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { getActiveThemeClass } from '../../../../../../utils/theme';
 import SuggestionComment from './SuggestionComment';
 import { sourceUrlToLink, truncate } from '../helpers';
 import ControlButton from './ControlButton';
 import { segmentTrack } from '../../../modules/segment';
+
 import { SEGMENT_EVENTS } from '../../../constants';
 import { MAX_CHARACTER_LENGTH } from './constants';
 
@@ -14,13 +16,14 @@ function CommentsList({
   changeIsDetailedView,
   isDetailedView,
 }) {
+  const { user: { _id: userId } } = useSelector((state) => state);
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
   const onViewPressed = (title, sourceName, suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
     changeIsDetailedView(true);
-    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, userId, {
       comment_bar_action: 'view',
       comment_source: sourceName,
       comment_used: title,
@@ -32,7 +35,7 @@ function CommentsList({
       () => {
         setCopiedId(id);
         onLastUsedSmartComment(suggestion);
-        segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+        segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, userId, {
           comment_bar_action: 'copy',
           comment_source: sourceName,
           comment_used: title,

@@ -12,6 +12,7 @@
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
     "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
+    "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "md5": "^2.3.0",
     "method-override": "^3.0.0",
     "migrate-mongo": "^8.2.3",
+    "mongodb-extended-json": "^1.11.1",
     "mongoose": "^5.9.15",
     "multer": "1.4.1",
     "nodemon": "^2.0.4",
@@ -61,15 +63,9 @@
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
-    "@babel/eslint-parser": "^7.17.0",
     "@babel/node": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "babel-jest": "^27.5.1",
-    "eslint": "^8.13.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "nodemon": "^2.0.4",
     "prettier": "^2.6.2"

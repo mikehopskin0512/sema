@@ -42,7 +42,7 @@ const CreateSnippetModal = () => {
     resolver: yupResolver(schema),
   });
   const {
-    user: { isLoggedIn, collections: userCollections },
+    user: { _id: userId, isLoggedIn, collections: userCollections },
   } = useSelector((state) => state);
 
   const snippetComment = useSelector((state) => state.snippetComment);
@@ -84,9 +84,10 @@ const CreateSnippetModal = () => {
     dispatch(changeSnippetComment({ comment: '' }));
   };
   const onSubmit = async (formData) => {
+
     const existingTags = [formData.label, formData.language].filter((item) => item);
     try {
-      segmentTrack(SEGMENT_EVENTS.CLICKED_SAVE_TO_MY_COMMENTS);
+      segmentTrack(SEGMENT_EVENTS.CLICKED_SAVE_TO_MY_COMMENTS, userId);
       await saveSmartComment({
         collectionId: selectedCollectionId,
         comments: [{
@@ -229,6 +230,8 @@ const CreateSnippetModal = () => {
                     name="source.url"
                     render={({ field: { onChange, value } }) => (
                       <InputField
+                        error={errors?.source?.url?.message}
+                        isRequired
                         title="Source Link"
                         value={value}
                         onInput={onChange}

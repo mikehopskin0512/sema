@@ -66,7 +66,7 @@ const SearchBar = ({ id, commentBox, onTextPaste }) => {
     onLastUsedSmartComment(suggestion);
     commentBox.dispatchEvent(new Event('change', { bubbles: true }));
     onTextPaste();
-    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, {
+    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, user._id, {
       comment_bar_action: 'insert',
       comment_source: sourceName,
       comment_used: title,
