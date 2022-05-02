@@ -38,11 +38,6 @@ jobs:
       fail-fast: false
       matrix:
         service: ${{ fromJson(needs.set_changed_services.outputs.matrix) }}
-    services:
-      mongodb:
-        image: mongo
-        ports:
-          - 5000:27017
     steps:
       - uses: actions/checkout@v2
       - name: Build docker images
