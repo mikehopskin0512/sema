@@ -7,15 +7,15 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon } from '../../Icons';
 import TitleField from '../TitleField';
-import { fullName, getPlatformLink } from '../../../utils';
+import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
 import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
-import { black950, gray600 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600, white50 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -24,10 +24,14 @@ import ErrorPage from '../errorPage';
 import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
+import AddPortfolioAvatarModal from '../avatarModals/addPortfolioAvatarModal';
+import ChangePortfolioAvatarModal from '../avatarModals/changePortfolioAvatarModal';
+import ErrorPortfolioAvatarModal from '../avatarModals/errorPortfolioAvatarModal';
+import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSAGE } from '../avatarModals/constants';
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
 
-const { updatePortfolioType, removePortfolio } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
@@ -60,10 +64,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
   };
 
   const dispatch = useDispatch();
-  const { auth, portfolios } = useSelector(
+  const { auth, portfolios, error } = useSelector(
     (state) => ({
       auth: state.authState,
-      portfolios: state.portfoliosState.data.portfolios
+      portfolios: state.portfoliosState.data.portfolios,
+      error: state.portfoliosState.error,
     }),
   );
   const { token = '', user: userData } = auth;
@@ -84,6 +89,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
   const isPrivatePortfolio = portfolio.type === PORTFOLIO_TYPES.PRIVATE;
   const isLoadingScreen = isLoading || isParsing || !portfolio || !portfolio._id;
   const [isAddModalOpen, toggleAddModal] = useState(false);
+  const [isAddAvatarModalOpen, toggleAddAvatarModal] = useState(false);
+  const [isErrorAvatarModalOpen, toggleErrorAvatarModal] = useState(false);
+  const [isChangeAvatarModalOpen, toggleChangeAvatarModal] = useState(false);
+  const [file, setFile] = useState(null);
 
   const parsePortfolio = (portfolio) => {
     setIsParsing(true);
@@ -182,13 +191,18 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
     changeIsCopied(true);
   };
 
-  if (isLoadingScreen) {
-    return <Loader />
-  }
+  useEffect(() => {
+    if(file) {
+      toggleChangeAvatarModal(true);
+    }
+  }, [file]);
 
-  if (!isOwner && isPrivatePortfolio && isIndividualView) {
-    return <ErrorPage />
-  }
+  const fileImageUrl = useMemo(() => {
+    if (file) {
+      return URL.createObjectURL(file);
+    }
+    return '';
+  }, [file]);
 
   const handleSnapshotUpdate = (data) => {
     setSnapshots(snapshots.map(snapshot => {
@@ -197,6 +211,50 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
       }
       return snapshot;
     }))
+  }
+
+  const onAddFileError = () => {
+    toggleAddAvatarModal(false);
+    toggleErrorAvatarModal(true);
+  }
+
+  const onChangeFileError = () => {
+    toggleChangeAvatarModal(false);
+    toggleErrorAvatarModal(true);
+  }
+
+  const onChangeAvatar = (newFile, onError, close) => {
+    if (!newFile || !isValidImageType(newFile.type) || ((newFile.size / BYTES_IN_MEGABYTE) >= MAXIMUM_SIZE_IN_MEGABYTES)) {
+      onError();
+    } else {
+      close();
+      setFile(newFile);
+    }
+  }
+
+  const uploadAvatar = async () => {
+    setUser({ ...user, avatar: fileImageUrl });
+    toggleChangeAvatarModal(false);
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    await dispatch(uploadPortfolioAvatar(portfolio._id, formData, token));
+  };
+
+  useEffect(() => {
+    if (error.message === UPLOAD_AVATAR_ERROR_MESSAGE) {
+      notify(error.message, { type: 'error'});
+      setUser({ ...user, avatar: portfolio.imageUrl });
+    }
+  }, [error]);
+
+  if (isLoadingScreen) {
+    return <Loader />
+  }
+
+  if (!isOwner && isPrivatePortfolio && isIndividualView) {
+    return <ErrorPage />
   }
 
   return (
@@ -219,6 +277,22 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
+      { isAddAvatarModalOpen && <AddPortfolioAvatarModal 
+        close={() => toggleAddAvatarModal(false)}
+        onChange={onChangeAvatar}
+        onError={onAddFileError}
+      /> }
+      { isChangeAvatarModalOpen && <ChangePortfolioAvatarModal
+        close={() => toggleChangeAvatarModal(false)}
+        image={fileImageUrl}
+        onChange={onChangeAvatar}
+        onSubmit={uploadAvatar}
+        onError={onChangeFileError}
+      /> }
+      { isErrorAvatarModalOpen && <ErrorPortfolioAvatarModal
+        close={() => toggleErrorAvatarModal(false)}
+        onChange={onChangeAvatar}
+      /> }
       <div className={clsx('mb-10', styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
@@ -305,8 +379,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-            <div className={clsx(styles['user-image'], '')}>
+            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
+              {isOwner && <div className="is-absolute">
+                <CameraIcon size="large" color={white50}/>
+              </div>}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
               <div>

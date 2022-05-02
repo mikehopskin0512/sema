@@ -123,3 +123,5 @@ export const parseEmails = (str) => {
     return match ? match[1] : match;
   }).filter((item) => !!item);
 }
+
+export const isValidImageType = type => type === 'image/jpeg' || type === 'image/png' || type === 'image/heif' || type === 'image/heic';

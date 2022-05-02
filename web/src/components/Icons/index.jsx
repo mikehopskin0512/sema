@@ -2,6 +2,7 @@ import React from 'react';
 import { ReactComponent as ActivityLogSvg } from './img/activity-log.svg';
 import { ReactComponent as AlertFilledSvg } from './img/alert-filled.svg';
 import { ReactComponent as AlertOutlineSvg } from './img/alert-outline.svg';
+import { ReactComponent as AlertTriangleSvg } from './img/alert-triangle.svg';
 import { ReactComponent as ArrowAscSvg } from './img/arrow-ascending.svg';
 import { ReactComponent as ArrowDescSvg } from './img/arrow-descending.svg';
 import { ReactComponent as ArrowDownSvg } from './img/arrow-down.svg';
@@ -137,6 +138,12 @@ export const CameraIcon = (props) => (
 export const AlertFilledIcon = (props) => (
   <Icon {...props}>
     <AlertFilledSvg />
+  </Icon>
+);
+
+export const AlertTriangleIcon = (props) => (
+  <Icon {...props}>
+    <AlertTriangleSvg />
   </Icon>
 );
 
