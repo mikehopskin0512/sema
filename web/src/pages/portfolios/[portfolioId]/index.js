@@ -37,10 +37,16 @@ const PublicPortfolio = () => {
   const portfolio = portfolios.find(({ _id }) => _id === portfolioId) || publicPortfolio;
 
   const savePdf = async () => {
+    const errorAction = () => {
+      toggleIsPdfCreating(false);
+      notify('Sorry, this Portfolio is too big to save.',
+        { type: ALERT_TYPES.ERROR, description: 'Please reduce the Portfolio to under 25 pages.' });
+    };
+
     toggleIsPdfCreating(true);
     notify('Downloading the PDF has started', { type: ALERT_TYPES.SUCCESS, duration: 100000 });
     setTimeout(async () => {
-      await savePdfDocument(portfolioRef);
+      await savePdfDocument(portfolioRef, errorAction);
       toggleIsPdfCreating(false);
     }, 0);
   }
