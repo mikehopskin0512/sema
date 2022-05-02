@@ -1,4 +1,4 @@
-import { create, get, getAll, updateItem, patch, update, deleteItem } from '../../utils/api';
+import { create, get, getAll, updateItem, patch, update, deleteItem, upload } from '../../utils/api';
 
 export const getUserPortfolio = (userId, token) => getAll(`/api/proxy/users/${userId}/portfolios`, {}, token);
 export const putPortfolio = (id, item, token) => updateItem('/api/proxy/portfolios', id, item, token);
@@ -11,3 +11,4 @@ export const patchPortfolioTitle = (id, title, token) => patch(`/api/proxy/portf
 export const patchPortfolioOverview = (id, overview, token) => patch(`/api/proxy/portfolios/${id}/overview`, { overview }, token);
 export const createPortfolio = (portfolioData, token) => create('/api/proxy/portfolios', portfolioData, token);
 export const addSnapshotToPortfolio = (portfolioId, snapshots, token) => create(`/api/proxy/portfolios/${portfolioId}/snapshots`, { snapshots }, token);
+export const uploadAvatar = (portfolioId, body, token) => upload(`/api/proxy/portfolios/${portfolioId}/avatar`, body, token);
