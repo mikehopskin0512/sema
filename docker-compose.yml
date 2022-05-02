@@ -32,6 +32,9 @@ services:
       - sema
   apollo-test:
     image: apollo-dev-i
+    build:
+      context: apollo/
+      dockerfile: ../.docker/apollo/Dockerfile.dev
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
