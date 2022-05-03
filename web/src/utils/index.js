@@ -2,7 +2,7 @@ import {
   DEFAULT_COLLECTION_NAME,
   GITHUB_URL,
   SEARCH_CATEGORY_TITLES,
-  SEMA_CORPORATE_TEAM_ID
+  SEMA_CORPORATE_TEAM_ID,
 } from './constants';
 
 export const unshift = (arr, newval) => {
