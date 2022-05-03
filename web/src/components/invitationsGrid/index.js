@@ -6,6 +6,7 @@ import Badge from '../badge/badge';
 import { fullName } from '../../utils';
 import styles from './invitationsGrid.module.scss';
 import { CloseIcon, UndoIcon } from '../Icons';
+import { isInvitationPending } from '../../utils/invitations';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isFetching, fetchData, totalInvites = 0 }) => {
 
@@ -109,7 +110,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         Cell: ({ cell: { value: el } }) => (
           <div className={`is-flex is-align-items-center ${styles['actions-cell']}`}>
             {
-              el.isPending && (
+              isInvitationPending(el.redemptions, el.recipient) && (
                 <>
                   <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el.recipient)}>
                     <UndoIcon size="small" />
@@ -135,7 +136,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
 
   const dataSource = useMemo(() => {
     return Array.isArray(invites) ? invites.map(item => ({
-      recipient: item.isPending
+      recipient: isInvitationPending(item.redemptions, item.recipient)
         ? item.recipient
         : (
           <>
@@ -153,13 +154,11 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         </>
       ),
       sent: format(new Date(item.createdAt), 'yyyy-MM-dd'),
-      isPending: item.isPending,
-      companyName: item.companyName,
-      cohort: item.cohort,
-      notes: item.notes,
       actions: item,
     })) : [];
   }, [invites, isFetching]);
+
+  console.log(dataSource)
 
   return (
     <div>

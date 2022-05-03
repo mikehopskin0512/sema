@@ -46,11 +46,13 @@ export default (app, passport) => {
     }
 
     const userRecipient = await findByUsername(invitation.recipient);
+
     if (userRecipient) {
       userRecipient.isWaitlist = false;
       await update(userRecipient);
     }
     const userInvitation = await getInvitationByRecipient(invitation.recipient);
+
     if (userInvitation) {
       if (userInvitation.sender.toString() === invitation.sender) {
         return res.status(401).send({ message: 'You\'ve already invited this user. Either revoke or resend the invitation to continue.' });
@@ -73,19 +75,19 @@ export default (app, passport) => {
         await sendEmail(message);
         await redeemInvite(newInvitation.token, userRecipient._id);
       } else {
-        // Send invitation
+
+        const name = `${userData.firstName} ${userData.lastName}`;
         const {
-          recipient, token, orgName, senderName, senderEmail,
+          recipient, token,
         } = newInvitation;
         const message = {
           recipient,
           url: `${orgDomain}/login?token=${token}`,
           templateName: 'inviteUser',
-          orgName,
-          fullName: senderName,
-          email: senderEmail,
+          fullName: name,
+          email: userData.username,
           sender: {
-            name: `${senderName} via Sema`,
+            name: `${name} via Sema`,
             email: 'invites@semasoftware.io',
           },
         };
@@ -138,14 +140,14 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  
+
   route.post('/accept/:inviteToken', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const {
         params: { inviteToken },
         user,
       } = req;
-  
+
       const invitation = await checkIfInvitedByToken(inviteToken);
       await createUserRole({ team: invitation.team, user: user._id, role: invitation.role });
       await redeemInvite(inviteToken, user._id, invitation._id);

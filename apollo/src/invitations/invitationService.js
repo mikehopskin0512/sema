@@ -10,13 +10,7 @@ export const create = async (invitation) => {
   try {
     const {
       recipient,
-      companyName,
-      cohort,
-      notes,
-      // orgId, orgName,
       sender,
-      senderName,
-      senderEmail,
       team,
       role,
     } = invitation;
@@ -25,26 +19,18 @@ export const create = async (invitation) => {
     /* Token doesn't expire now. */
     const token = await generateToken();
     const now = new Date();
-    // const tokenExpires = now.setHours(now.getHours() + (24 * 7 * 2));
     const tokenExpires = now.setHours(now.getHours() + (9999 * 999));
 
     const newInvite = new Invitation({
       recipient,
-      companyName,
-      cohort,
-      notes,
-      // orgId,
-      // orgName,
       sender,
-      senderName,
-      senderEmail,
       token,
       tokenExpires,
       team: team || null,
       role: role || null,
     });
-    const savedInvite = await newInvite.save();
-    return savedInvite;
+
+    return newInvite.save();
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
@@ -116,7 +102,7 @@ export const getInvitationsBySender = async (params) => {
     }
     query.skip((page - 1) * perPage).limit(perPage)
 
-    const invites = await query.lean().exec();
+    const invites = await query.populate({path: 'sender', model: 'User' }).lean().exec();
     const recipientUsers = await User.find({ username: { $in: invites.map(invite => invite.recipient) } });
 
     const result = [];
@@ -276,10 +262,10 @@ export const getInvitationCountByUserId = async (userId, type = 'pending') => {
     const query = Invitation.find()
     switch (type) {
       case 'pending':
-        query.where('isPending', true);
+        query.where('this.redemptions.length<1');
         break;
       case 'accepted':
-        query.where('isPending', false);
+        query.where('this.redemptions.length>0');
         break;
       default:
         break;

@@ -54,10 +54,7 @@ const Invite = () => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
   const { isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
-  const { _id: userId, firstName = '', lastName = '', username: senderEmail, organizations = [], inviteCount = 0 } = user;
-  const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
-  const [currentOrg = {}] = organizations;
-  const { id: orgId, orgName } = currentOrg;
+  const { _id: userId, inviteCount = 0 } = user;
   const isInviteBtnDisabled = !isSemaAdmin && inviteCount <= 0;
   const [isSupportModalActive, setSupportModalActive] = useState(false);
 
@@ -69,17 +66,14 @@ const Invite = () => {
     const { email } = data;
     const invitation = {
       recipient: email,
-      orgId,
-      orgName,
       sender: userId,
-      senderName: fullName,
-      senderEmail,
-      inviteCount
+      inviteCount,
+      isMagicLink: false
     };
     setRecipient(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
-    
+
     // send segment event tracking
     trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
     const isSent = response.status === 201;

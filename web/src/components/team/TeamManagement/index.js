@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Select from 'react-select';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
 import styles from './TeamManagement.module.scss';
@@ -15,9 +15,10 @@ import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
-import { ArrowDropdownIcon, PlusIcon, LinkIcon } from '../../Icons';
-import { PATHS } from '../../../utils/constants';
+import { ArrowDropdownIcon, CopyButtonIcon, PlusIcon } from '../../Icons';
+import { ALERT_TYPES, PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
+import { notify } from '../../../components/toaster/index';
 
 const { fetchTeamMembers } = teamsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
@@ -161,7 +162,10 @@ const TeamManagement = ({ activeTeam }) => {
     },
   ], [rolesOptions, handleChangeRole, onRemoveMember]);
 
-  const fetchData = useCallback(({ pageIndex, pageSize }) => {
+  const fetchData = useCallback(({
+    pageIndex,
+    pageSize,
+  }) => {
     setPage(pageIndex + 1);
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
@@ -189,11 +193,27 @@ const TeamManagement = ({ activeTeam }) => {
     router.push(PATHS.TEAMS.INVITE(teamId));
   };
 
+  const onInviteLinkCopy = async () => {
+    const value = 'some value to copy real link in future';
+    try {
+      await navigator.clipboard.writeText(value);
+      notify('Invitation link was copied.', {
+        type: ALERT_TYPES.SUCCESS,
+        duration: 3000,
+      });
+    } catch (err) {
+      notify('Invitation link was not copied.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+    }
+  }
+
   return (
-    <div className="hero mx-10">
+    <div className='hero mx-10'>
       <Helmet {...TeamManagementHelmet} />
-      <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
-        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+      <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
+        <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Team Management</div>
         {/* // TODO: should be disabled until new invitations logic */}
         {/* <div className='ml-auto mr-15'> */}
         {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
@@ -202,20 +222,31 @@ const TeamManagement = ({ activeTeam }) => {
         {/*     Copy Invitation Link */}
         {/*   </button> */}
         {/* </div> */}
-        <button
-          className="button is-primary border-radius-4px"
-          type="button"
-          onClick={goToInvitePage}
-        >
-          <PlusIcon size="small" />
-          <span className="ml-10">Invite New Members</span>
-        </button>
+        <div>
+          <button
+            className={clsx('button  border-radius-4px mr-25', styles['copy-button'])}
+            type='button'
+            onClick={onInviteLinkCopy}
+          >
+            <CopyButtonIcon size='small' />
+            <span className='ml-10'>Invite New Members</span>
+          </button>
+
+          <button
+            className='button is-primary border-radius-4px'
+            type='button'
+            onClick={goToInvitePage}
+          >
+            <PlusIcon size='small' />
+            <span className='ml-10'>Invite New Members</span>
+          </button>
+        </div>
       </div>
-      <div className="hero-body py-0 px-0">
-        <div className="content-container px-0">
+      <div className='hero-body py-0 px-0'>
+        <div className='content-container px-0'>
           <div className={clsx('has-background-gray-300 pb-15', styles['table-wrapper'])}>
             <Table
-              className="overflow-unset"
+              className='overflow-unset'
               data={dataSource}
               columns={columns}
               pagination={{

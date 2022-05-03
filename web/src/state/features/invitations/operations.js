@@ -10,17 +10,25 @@ const trackSendInvite = (email, senderName, senderEmail, inviteType) => {
 };
 
 const createInviteAndHydrateUser = (invitationData, token) => async (dispatch) => {
+  const { isMagicLink } = invitationData;
+
+  if (isMagicLink) return;
+
   try {
     const response = await dispatch(actions.createInvite(invitationData, token)) || {};
-    if (!response.user) {
-      return response;
-    }
-    const { recipient, senderName, senderEmail } = invitationData;
-    trackSendInvite(recipient, senderName, senderEmail, 'user');
+
+    if (!response.user) return response;
+
+    const { firstName, lastName, username  } = response.user;
+
+    const { recipient } = invitationData;
+
+    const userName = `${firstName} ${lastName}`
+
+    trackSendInvite(recipient, userName, username, 'user');
     dispatch(hydrateUser(response.user));
   } catch (err) {
-    const error = new Error(err);
-    return error;
+    return  new Error(err);
   }
 
   return { status: 201 };
