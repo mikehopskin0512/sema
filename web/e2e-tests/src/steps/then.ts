@@ -20,9 +20,16 @@ import isEnabled from "../support/check/isEnabled";
 import isSelected from 'webdriverio/build/commands/element/isSelected';
 import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
 import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
+import checkTeamURLPath from "../support/check/checkTeamURLPath";
+import checkRoleForUser from "../support/check/checkRoleForUser";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
+);
+
+Then(
+    /^I expect that the team url is( not)* correct$/,
+    checkTeamURLPath
 );
 
 Then(
@@ -110,8 +117,13 @@ Then(
     /^I expect that selected collection element "([^"]*)?" is( not)* (enabled|disabled)$/,
     checkEqualTextForElements
 )
-
 Then(
     /^I expect that new item "([^"]*)?" is( not)* added to (snippets|collections|portfolios)$/,
     checkEqualTextForElements
+)
+
+
+Then(
+    /^I expect that the role for user "([^"]*)?" is( not)* updated to "([^"]*)?"$/,
+    checkRoleForUser
 )

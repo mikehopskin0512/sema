@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon, PdfIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -34,7 +34,7 @@ import { notify } from '../../../components/toaster/index';
 const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
   const router = useRouter();
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
@@ -293,15 +293,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         close={() => toggleErrorAvatarModal(false)}
         onChange={onChangeAvatar}
       /> }
-      <div className={clsx('mb-10', styles.title)}>
+      <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
             <TitleField
               portfolio={portfolio}
-              isEditable={isOwner}
+              isEditable={isOwner && !pdfView}
             />
             <div className="is-relative is-flex is-align-items-center">
-              {isOwner && isIndividualView && <>
+              {!pdfView && isOwner && isIndividualView && <>
                 <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
                   <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
@@ -335,6 +335,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
                     className="button is-transparent m-0"
                   >
                     + Add Snapshot
+                  </button>
+                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                    <p>Save as PDF</p>
+                    <PdfIcon />
                   </button>
                   {portfolios.length === 1 &&
                     (
@@ -379,16 +383,18 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
+          {/* //ToDo: return this functionality when upload pictures to S3 will be finished */}
+            {/* <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}> */}
+            <div className={styles['user-image']}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
-              {isOwner && <div className="is-absolute">
+              {/* //ToDo: return this component when upload pictures to S3 will be finished */}
+              {/* {isOwner && <div className="is-absolute">
                 <CameraIcon size="large" color={white50}/>
-              </div>}
+              </div>} */}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
-              <div>
-                <div className="has-text-weight-semibold is-size-4 is-flex">{user.fullName}</div>
-                <div className="flex-break" />
+              <div className="is-full-width">
+                <div className="has-text-weight-semibold is-size-4 is-full-width">{user.fullName}</div>
                 <div className="is-flex is-align-items-center"><GithubIcon />
                   <span className="is-underlined pl-8 is-size-6">
                     <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
@@ -404,7 +410,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
                   {portfolio.overview}
                 </div>
                 {
-                  isOwner && (
+                  isOwner && !pdfView && (
                     <button
                       type="button"
                       className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
@@ -425,6 +431,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
             snapshots={snapshots}
+            isPdfView={pdfView}
           />
         </div>
       </div>

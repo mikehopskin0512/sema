@@ -58,6 +58,7 @@ import { ReactComponent as MailSvg } from './img/mail.svg';
 import { ReactComponent as MinusSvg } from './img/minus.svg';
 import { ReactComponent as OptionsSvg } from './img/options.svg';
 import { ReactComponent as OverviewSvg } from './img/overview.svg';
+import { ReactComponent as PdfSvg } from './img/PDF.svg';
 import { ReactComponent as PhotoSvg } from './img/photo.svg';
 import { ReactComponent as PlaySvg } from './img/play.svg';
 import { ReactComponent as PlusSvg } from './img/plus.svg';
@@ -511,6 +512,13 @@ export const OverviewIcon = (props) => (
     <OverviewSvg />
   </Icon>
 );
+
+export const PdfIcon = (props) => (
+  <Icon {...props}>
+    <PdfSvg />
+  </Icon>
+);
+
 export const PhotoIcon = (props) => (
   <Icon {...props}>
     <PhotoSvg />
