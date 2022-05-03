@@ -50,7 +50,7 @@ const DATE_RANGES = {
 
 const DateRangeSelector = (props) => {
   const {
-    start, end, onChange, isRight = false, buttonProps = {}, outlined,
+    start, end, onChange, isRight = false, buttonProps = {}, outlined, onChangeFilter
   } = props;
   const popupRef = useRef(null);
   const [selectedRange, setSelectedRange] = useState('allTime');
@@ -72,6 +72,7 @@ const DateRangeSelector = (props) => {
   };
 
   useEffect(() => {
+    onChangeFilter('dateOption', selectedRange);
     if (selectedRange === 'custom') {
       return;
     }
