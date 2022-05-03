@@ -383,11 +383,14 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
+          {/* //ToDo: return this functionality when upload pictures to S3 will be finished */}
+            {/* <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}> */}
+            <div className={styles['user-image']}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
-              {isOwner && <div className="is-absolute">
+              {/* //ToDo: return this component when upload pictures to S3 will be finished */}
+              {/* {isOwner && <div className="is-absolute">
                 <CameraIcon size="large" color={white50}/>
-              </div>}
+              </div>} */}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
               <div className="is-full-width">
