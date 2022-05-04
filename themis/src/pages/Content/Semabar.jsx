@@ -6,7 +6,7 @@ import EmojiSelection from './EmojiSelection';
 
 import { toggleIsSelectingEmoji, toggleTagModal, updateSelectedEmoji, updateSelectedTags } from './modules/redux/action';
 
-import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
+import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_FAQ_TAGS } from './constants';
 import LoginBar from './LoginBar';
 import Tag from './components/tag';
 import { segmentTrack } from './modules/segment';
@@ -161,7 +161,7 @@ const Semabar = (props) => {
             <div className="learn-more-link">
               All Tags
               <a
-                href={SEMA_LANDING_FAQ_TAGS}
+                href={SEMA_FAQ_TAGS}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
