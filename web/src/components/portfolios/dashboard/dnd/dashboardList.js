@@ -13,7 +13,8 @@ const DashboardDraggableList = ({
   pageLayout,
   updateLayout,
   handleSnapshotUpdate,
-  snapshots
+  snapshots,
+  isPdfView,
 }) => {
   const [layout, setLayout] = useState([]);
 
@@ -70,7 +71,7 @@ const DashboardDraggableList = ({
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
   const renderRow = (row, currentPath) => {
-    return <DashboardRow data={row} path={currentPath} handleDrop={handleDrop} handleSnapshotUpdate={handleSnapshotUpdate} snapshots={snapshots} />;
+    return <DashboardRow data={row} path={currentPath} handleDrop={handleDrop} handleSnapshotUpdate={handleSnapshotUpdate} snapshots={snapshots} isPdfView={isPdfView}/>;
   };
 
   return (

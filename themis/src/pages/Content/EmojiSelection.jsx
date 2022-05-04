@@ -1,12 +1,13 @@
 /* eslint-disable react/no-danger */
 import React, { useRef } from 'react';
+import { useSelector } from 'react-redux';
 import Lottie from 'react-lottie-player';
 import $ from 'cash-dom';
 import useOutsideClick from './helpers/useOutsideClick';
 
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
-import { SEGMENT_EVENTS, SEMA_LANDING_FAQ } from './constants';
+import { SEGMENT_EVENTS, SEMA_FAQ_SUMMARIES } from './constants';
 import { segmentTrack } from './modules/segment';
 
 const EmojiSelection = ({
@@ -19,6 +20,7 @@ const EmojiSelection = ({
   isSelectingEmoji,
   id,
 }) => {
+  const { user: { _id: userId } } = useSelector((state) => state);
   const { title: selectedTitle, emoji: shownEmoji } = selectedReaction;
   const selectedReactionPosition = allEmojis.findIndex((e) => e.title === selectedTitle);
   // depends on actual layout
@@ -77,7 +79,7 @@ const EmojiSelection = ({
                     onEmojiSelected(emoji);
                     toggleIsSelectingEmoji();
                     // eslint-disable-next-line max-len
-                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, { change_reaction: true, reaction: emoji.title, clicked_faq: false });
+                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, userId, { change_reaction: true, reaction: emoji.title, clicked_faq: false });
                   }}
                 >
                   <Emoji symbol={emoji.emoji} />
@@ -91,10 +93,10 @@ const EmojiSelection = ({
                 <a
                   rel="noreferrer"
                   target="_blank"
-                  href={SEMA_LANDING_FAQ}
+                  href={SEMA_FAQ_SUMMARIES}
                   onClick={() => {
                     // eslint-disable-next-line max-len
-                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, { change_reaction: false, reaction: null, clicked_faq: true });
+                    segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, userId, { change_reaction: false, reaction: null, clicked_faq: true });
                   }}
                 >
                   Learn more about summaries

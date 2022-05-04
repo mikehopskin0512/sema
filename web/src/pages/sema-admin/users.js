@@ -35,7 +35,7 @@ const { exportSuggestedComments } = suggestCommentsOperations;
 const UsersPage = () => {
   const dispatch = useDispatch();
   const { users, analytic, totalCount, isFetching } = useSelector((state) => state.usersState);
-  const { token } = useSelector((state) => state.authState);
+  const { token, user } = useSelector((state) => state.authState);
 
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
@@ -83,7 +83,7 @@ const UsersPage = () => {
       value: false,
     }));
     getUsers();
-    trackWaitlistAccepted(email);
+    trackWaitlistAccepted(userId, { approverUserId: user._id, approverEmail: user.username });
   }, [dispatch, getUsers]);
 
   const handleBlockOrDisableUser = useCallback(async (userId) => {

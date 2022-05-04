@@ -45,6 +45,7 @@ export const SNAPSHOT_MODAL_TYPES = {
 export const SNAPSHOT_DATA_TYPES = {
   ACTIVITY: 'comments',
   SUMMARIES: 'summaries',
+  SUMMARIES_AREA: 'summaries-area',
   TAGS: 'tags',
 };
 
@@ -191,6 +192,9 @@ const SnapshotModal = ({
                 dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (
                   activityTypeData.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />)
                 )
+              }
+              {dataType === SNAPSHOT_DATA_TYPES.SUMMARIES_AREA &&
+                <SnapshotChartContainer chartType="reactions-area" {...snapshotData.componentData} />
               }
               {dataType === SNAPSHOT_DATA_TYPES.SUMMARIES &&
                 <SnapshotChartContainer chartType="reactions" {...snapshotData.componentData} />

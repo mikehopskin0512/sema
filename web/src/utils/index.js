@@ -2,7 +2,7 @@ import {
   DEFAULT_COLLECTION_NAME,
   GITHUB_URL,
   SEARCH_CATEGORY_TITLES,
-  SEMA_CORPORATE_TEAM_ID
+  SEMA_CORPORATE_TEAM_ID,
 } from './constants';
 
 export const unshift = (arr, newval) => {
@@ -123,3 +123,5 @@ export const parseEmails = (str) => {
     return match ? match[1] : match;
   }).filter((item) => !!item);
 }
+
+export const isValidImageType = type => type === 'image/jpeg' || type === 'image/png' || type === 'image/heif' || type === 'image/heic';

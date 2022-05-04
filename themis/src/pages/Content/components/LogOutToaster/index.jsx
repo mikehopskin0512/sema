@@ -10,16 +10,10 @@ import { segmentReset, segmentTrack } from '../../modules/segment';
 import { getActiveTheme } from '../../../../../utils/theme';
 import { SEMA_LOGOUT_ICON, SEMA_LOGOUT_PLACEHOLDER } from './constants';
 
-
-const openSemaDashboard = () => {
-  segmentTrack(SEGMENT_EVENTS.CLICKED_LOGIN_TOASTER);
-  window.open(SEMA_UI_URL, '_blank');
-};
-
 const LogOutToaster = () => {
   const dispatch = useDispatch();
   const { isReminderClosed } = useSelector((state) => state);
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { isLoggedIn, id: userId } = useSelector((state) => state.user);
   const [isActivePage, setActivePage] = useState(isPRPage());
   const isToasterActive = !isReminderClosed && !isLoggedIn && isActivePage;
   const activeTheme = getActiveTheme().toUpperCase();
@@ -39,6 +33,11 @@ const LogOutToaster = () => {
       stopDetectURLChange();
     };
   }, []);
+
+  const openSemaDashboard = () => {
+    segmentTrack(SEGMENT_EVENTS.CLICKED_LOGIN_TOASTER, userId);
+    window.open(SEMA_UI_URL, '_blank');
+  };
 
   return (
     <div
@@ -60,7 +59,11 @@ const LogOutToaster = () => {
         </p>
 
         <p className="no-login-modal-text">
-          Sign back in to supercharge your <br /> GitHub comments
+          Sign back in to supercharge your
+          {' '}
+          <br />
+          {' '}
+          GitHub comments
         </p>
 
         <img src={logoPlaceholder} alt="Logout placeholder" />

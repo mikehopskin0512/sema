@@ -11,7 +11,8 @@
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
-    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js"
+    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
@@ -63,9 +64,6 @@
     "@babel/core": "^7.10.2",
     "@babel/node": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
     "nodemon": "^2.0.4"
   }
 }

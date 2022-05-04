@@ -16,6 +16,7 @@ import {
   updateField,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
+import multer from '../multer';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -137,6 +138,20 @@ export default (app, passport) => {
         await removePortfolioFromSnapshot(snapshotId, portfolioId);
       }));
       return res.status(201).send({});
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/:portfolioId/avatar', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
+    try {
+      const { portfolioId } = req.params;
+      const avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${req.file.filename}`;
+
+      await updateField(portfolioId, 'imageUrl', avatarUrl);
+
+      return res.status(200).send({});
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

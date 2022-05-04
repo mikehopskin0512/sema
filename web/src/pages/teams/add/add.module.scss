@@ -1,0 +1,26 @@
+@import "../../../../styles/_colors.module.scss";
+
+.initial-slug {
+    width: 260px;
+    input {
+        border-right: none;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        background-color: $gray-200 !important;
+        color: $gray-600 !important;
+    }
+}
+
+.slug {
+    width: 260px;
+    input {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    > div > div {
+        display: none;
+    }
+    &.url-error input { 
+        border-left: none !important;
+    };
+}
