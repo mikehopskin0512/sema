@@ -17,7 +17,6 @@ const TagsChart = ({
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [tooltipPosition, setTooltipPosition] = useState('top');
   const [emptyChart, setEmptyChart] = useState(false);
-  console.log(startDate)
   const handleTooltipPosition = (event) => {
     setTooltipPosition(event.clientY > CIRCLE_CHART_MIN_TOP ? 'top' : 'bottom');
   };
@@ -90,7 +89,6 @@ const TagsChart = ({
               ? (<span className="has-text-primary">{format(new Date(startDate), 'MMM d, yyyy')} - {format(new Date(endDate), 'MMM d, yyyy')}</span>)
               : (<span className="has-text-primary">{startCase(dateOption)}</span>)
           }
-          {/* <span className="has-text-primary">last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</span> */}
         </div>
         {tag.data.length > 0 && (
           <div className={clsx('py-3', styles['line-chart-container'])}>
