@@ -26,14 +26,14 @@ variable "ec2_capacity_provider_enabled" {
   default     = true
 }
 
-variable "ecs_task_definition_resources" {
-  type = object({
-    cpu    = number
-    memory = number
-  })
+variable "ecs_task_definition_resources_cpu" {
+  type        = number
   description = "CPU and RAM limits for the task definition."
-  default = {
-    cpu    = 4096
-    memory = 32000
-  }
+  default     = 2048
+}
+
+variable "ecs_task_definition_resources_memory" {
+  type        = number
+  description = "CPU and RAM limits for the task definition."
+  default     = 3900
 }

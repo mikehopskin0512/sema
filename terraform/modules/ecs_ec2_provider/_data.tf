@@ -1,6 +1,6 @@
 data "aws_ami" "ecs_image" {
   most_recent = true
-  name_regex  = "amzn2-ami-ecs-gpu-hvm-.*-x86_64-ebs"
+  name_regex  = "amzn2-ami-ecs-hvm-.*-x86_64-ebs"
   owners      = ["591542846629"]
 }
 
