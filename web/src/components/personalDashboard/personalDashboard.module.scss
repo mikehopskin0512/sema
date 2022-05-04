@@ -1,0 +1,14 @@
+@import "../../../styles/_colors.module.scss"; 
+
+.repoContainer {
+  background: $white-0;
+  border: 1px solid $gray-400;
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 495px;
+}
+
+.btnDisabled {
+  background: unset !important;
+  border: unset !important;
+}

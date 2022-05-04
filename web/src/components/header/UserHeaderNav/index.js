@@ -6,17 +6,25 @@ import Link from 'next/link';
 import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
+import { useFlags } from '../../launchDarkly';
 
 const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedTeam }) => {
   const { pathname } = useRouter();
   const { auth } = useSelector((state) => ({
     auth: state.authState,
   }));
-  const {user: { isSemaAdmin }} = auth;
+  const { user: { isSemaAdmin } } = auth;
+
+  const { personalDashboard } = useFlags();
 
   const renderDesktopNav = () => {
     return (
       <>
+        {personalDashboard && isEmpty(selectedTeam) && <Link href={PATHS.PERSONAL}>
+          <a aria-hidden="true" className={`navbar-item has-text-black-950 mr-10 ${pathname === PATHS.PERSONAL && 'has-text-weight-semibold'}`} onClick={toggleHamburger}>
+            Dashboard
+          </a>
+        </Link>}
         {
           !isEmpty(selectedTeam) ? (
             <Link href={`${PATHS.TEAMS._}/${selectedTeam.team._id}${PATHS.DASHBOARD}`}>
