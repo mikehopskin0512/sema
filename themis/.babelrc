@@ -1,11 +1,10 @@
 {
   "presets": [
-    // "@babel/preset-env",
-    // "@babel/preset-react"
+    //    TODO: commented just because it breaks CE env variables / I know JSON doesn't allow comments, but
+    //    "@babel/preset-react"
     "react-app"
   ],
   "plugins": [
-    // "@babel/plugin-proposal-class-properties",
     "react-hot-loader/babel"
   ]
 }

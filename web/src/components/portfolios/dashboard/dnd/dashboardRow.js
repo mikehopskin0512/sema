@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import { useDrag } from "react-dnd";
-import { ELEM_TYPES } from "./constants";
+import { COMPONENTS_TYPES, ELEM_TYPES } from "./constants";
 import DashboardColumn from "./dashboardColumn";
 import clsx from "clsx";
 import styles from "../portfoliosDashboard.module.scss";
@@ -14,7 +14,8 @@ const DashboardRow = ({
   handleDrop,
   path,
   handleSnapshotUpdate,
-  snapshots
+  snapshots,
+  isPdfView,
 }) => {
   const ref = useRef(null);
   const {
@@ -40,7 +41,7 @@ const DashboardRow = ({
 
   const rowOpacity = useMemo(() => isDragging ? 0 : 1, [isDragging]);
 
-  const renderColumn = (data, path) => {
+  const renderColumn = (data, path, isPdfView) => {
     return (
       <section className={clsx(styles["chart-wrap"])}>
         <DropZone
@@ -51,7 +52,7 @@ const DashboardRow = ({
           }}
           onDrop={handleDrop}
         />
-        <DashboardColumn path={path} data={data} onUpdate={handleSnapshotUpdate} />
+        <DashboardColumn path={path} data={data} onUpdate={handleSnapshotUpdate} isPdfView={isPdfView}/>
       </section>
     );
   };
@@ -66,13 +67,13 @@ const DashboardRow = ({
       const props = { ...componentProps, snapshotData: {...componentProps.snapshotData, title: fallbackData?.title, description: fallbackData?.description } };
 
       const ComponentToRender = getDraggableComponent(componentToRender);
-      return <ComponentToRender {...props} ref={ref} preview={preview} onUpdate={handleSnapshotUpdate} />;
+      return (componentToRender === COMPONENTS_TYPES.EMPTY && isPdfView) ? null : <ComponentToRender {...props} ref={ref} preview={preview} onUpdate={handleSnapshotUpdate} />;
     } else {
       return data.children?.map((column, index) => {
         const currentPath = `${path}-${index}`;
         return (
           <React.Fragment key={column.id}>
-            {renderColumn(column, currentPath)}
+            {renderColumn(column, currentPath, isPdfView)}
           </React.Fragment>
         );
       });

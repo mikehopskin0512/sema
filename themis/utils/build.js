@@ -12,8 +12,12 @@ delete config.chromeExtensionBoilerplate;
 
 config.mode = 'production';
 
-const compiler = webpack(config, function (err) {
+const compiler = webpack(config, function (err, stats) {
   if (err) throw err;
+  if (stats.errors?.length) {
+    console.log(stats.errors);
+    process.exit(1);
+  }
 });
 
 compiler.hooks.afterEmit.intercept({

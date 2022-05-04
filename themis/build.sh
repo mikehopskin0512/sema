@@ -21,6 +21,12 @@ elif [ "${ENV}" = "staging" ]; then
 fi
 npm run changeV
 npm ci
+
+pushd ../adonis
+npm ci
+npm run build
+popd
+
 npm run build
 zip -r build.zip build
 # or chrome.exe --pack-extension=build

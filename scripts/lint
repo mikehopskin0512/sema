@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+
+# Runs linters (e.g. ESLint) on a given service (apollo, themis, etc.)
+# Mainly used together with our linter GitHub action.
+#
+# Usage:
+#
+# Lint all services:
+#
+# $ ./scripts/lint
+#
+# Lint all files in one service:
+#
+# $ ./scripts/lint apollo
+#
+#
+# Lint one service and only the files in that service:
+#
+# $ ./scripts/lint apollo apollo/src/users/userModel.js themis/Content/index.js
+#
+
+
+set -euo pipefail
+
+
+root_path=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/..
+
+
+lint_directory() {
+  local directory
+  directory=$1
+  shift
+
+  pushd $root_path/$directory > /dev/null
+
+  echo "Linting $directory..."
+
+  if [[ $# > 0 ]]; then
+    local files
+
+    files=$(
+      tr ' ' '\n' <<< $@ |                 # One line per argument (file)
+      grep -E '\b'$directory/ |            # Files in this directory
+      sed -Ee 's|^'$directory'/||' |       # Remove the directory name itself
+      (grep -E '\.(js|ts|jsx|tsx)$' || :)) # Keep JS files
+
+    if [[ -n $files ]]; then
+      echo "Files: "
+      echo "$files"
+      echo
+
+      prettier_check $files
+      npx eslint $files
+    fi
+  else
+    echo
+    # No files were given, lint the whole directory
+    prettier_check .
+    npx eslint .
+  fi
+
+  echo "Linting $directory done."
+
+  popd > /dev/null
+}
+
+
+prettier_check() {
+  # Transform `prettier check` output into something
+  # that GitHub will turn into an inline annotation
+  # in the PR.
+  # https://github.com/actions/setup-node/blob/main/.github/eslint-compact.json
+  npx -q prettier --list-different $@ | while read line; do
+    echo "$(readlink -f $line): line 1, col 1, Error - Missing Prettier formatting (prettier)"
+  done
+}
+
+
+if [[ -n ${1:-} ]]; then
+  lint_directory $@
+else
+  for directory in apollo adonis themis web; do
+    lint_directory "$directory"
+  done
+fi

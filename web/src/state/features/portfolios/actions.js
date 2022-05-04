@@ -13,10 +13,12 @@ import {
   patchPortfolioTitle,
   addSnapshotToPortfolio,
   patchPortfolioOverview,
+  uploadAvatar,
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 import { requestAddSnapshotToPortfolio } from '../snapshots/actions';
+import { UPLOAD_AVATAR_ERROR_MESSAGE } from '../../../components/portfolios/avatarModals/constants';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -57,6 +59,20 @@ const requestUpdatePortfolioSuccess = (portfolio) => ({
 
 const requestUpdatePortfolioError = (errors) => ({
   type: types.REQUEST_UPDATE_PORTFOLIO_ERROR,
+  errors,
+});
+
+const requestCreatePortfolio = () => ({
+  type: types.REQUEST_CREATE_PORTFOLIO,
+});
+
+const requestCreatePortfolioSuccess = (portfolio) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_SUCCESS,
+  portfolio,
+});
+
+const requestCreatePortfolioError = (errors) => ({
+  type: types.REQUEST_CREATE_PORTFOLIO_ERROR,
   errors,
 });
 
@@ -146,6 +162,11 @@ const requestCopyPortfolioSuccess = (portfolio) => ({
   portfolio,
 });
 
+const uploadAvatarError = (error) => ({
+  type: types.UPLOAD_AVATAR_ERROR,
+  error,
+});
+
 export const fetchPortfoliosOfUser = (userId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchUserPortfolio());
@@ -181,6 +202,27 @@ export const fetchPortfolio = (id) => async (dispatch) => {
     dispatch(requestFetchPortfolioError(errMessage));
   }
 };
+
+export const createNewPortfolio = ({ portfolio, token, isLoader = true }) => async (dispatch) => {
+  try {
+    isLoader && dispatch(requestCreatePortfolio());
+    const payload = await createPortfolio(portfolio, token);
+    const { data } = payload;
+    dispatch(requestCreatePortfolioSuccess(data));
+    return payload;
+  } catch (error) {
+    const {
+      response: {
+        data: { message },
+        status,
+        statusText,
+      },
+    } = error;
+    const errMessage = message || `${status} - ${statusText}`;
+    dispatch(requestCreatePortfolioError(errMessage));
+    return error.response;
+  }
+}
 
 export const updatePortfolio = (id, body, token) => async (dispatch) => {
   try {
@@ -348,3 +390,11 @@ export const addSnapshotsToPortfolio = ({
     dispatch(requestFetchPortfolioError(errMessage));
   }
 }
+
+export const uploadPortfolioAvatar = (portfolioId, body, token) => async (dispatch) => {
+  try {
+    await uploadAvatar(portfolioId, body, token);
+  } catch (error) {
+    dispatch(uploadAvatarError({ message: UPLOAD_AVATAR_ERROR_MESSAGE }));
+  }
+};
