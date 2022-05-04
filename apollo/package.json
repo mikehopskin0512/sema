@@ -11,7 +11,8 @@
     "serve": "node dist/app.js",
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
-    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js"
+    "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
@@ -42,7 +43,9 @@
     "md5": "^2.3.0",
     "method-override": "^3.0.0",
     "migrate-mongo": "^8.2.3",
+    "mongodb-extended-json": "^1.11.1",
     "mongoose": "^5.9.15",
+    "multer": "1.4.1",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",
@@ -54,17 +57,13 @@
     "text-clipper": "^2.1.0",
     "uuid": "^8.1.0",
     "xlsx": "^0.15.5",
-    "yamljs": "^0.3.0",
-    "multer": "1.4.1"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
     "@babel/node": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
-    "eslint-plugin-import": "^2.20.2",
     "nodemon": "^2.0.4"
   }
 }

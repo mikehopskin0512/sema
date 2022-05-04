@@ -6,7 +6,7 @@ import EmojiSelection from './EmojiSelection';
 
 import { toggleIsSelectingEmoji, toggleTagModal, updateSelectedEmoji, updateSelectedTags } from './modules/redux/action';
 
-import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_LANDING_FAQ_TAGS } from './constants';
+import { EMOJIS, SEGMENT_EVENTS, SELECTED, SEMA_FAQ_TAGS } from './constants';
 import LoginBar from './LoginBar';
 import Tag from './components/tag';
 import { segmentTrack } from './modules/segment';
@@ -30,6 +30,7 @@ const mapStateToProps = (state, ownProps) => {
     isReactionDirty: semabarState.isReactionDirty,
     isLoggedIn: user?.isLoggedIn,
     isWaitlist: user?.isWaitlist,
+    userId: user?._id,
     isSelectingEmoji: semabarState.isSelectingEmoji,
   };
 };
@@ -49,9 +50,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const Semabar = (props) => {
   const {
+    userId,
     isLoggedIn,
     isWaitlist,
-    updateSelectedTags
+    updateSelectedTags,
   } = props;
   const [isHover, setHover] = useState(false);
   const [tagsButtonPositionValues, setTagsButtonPositionValues] = useState({});
@@ -68,7 +70,7 @@ const Semabar = (props) => {
     return (
       <>
         {activeTags.map((tag) => (
-            <Tag tag={tag} updateSelectedTags={updateSelectedTags} key={tag} />
+          <Tag tag={tag} updateSelectedTags={updateSelectedTags} key={tag} />
         ))}
       </>
     );
@@ -159,12 +161,12 @@ const Semabar = (props) => {
             <div className="learn-more-link">
               All Tags
               <a
-                href={SEMA_LANDING_FAQ_TAGS}
+                href={SEMA_FAQ_TAGS}
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => {
                   // eslint-disable-next-line max-len
-                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, {
+                  segmentTrack(SEGMENT_EVENTS.CLICKED_ADD_TAGS, userId, {
                     change_tag: false, tag: null, tag_type: null, clicked_faq: true,
                   });
                 }}

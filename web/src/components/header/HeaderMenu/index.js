@@ -107,7 +107,7 @@ const HeaderMenu = ({
     if (portfolios.length === 1) {
       router.push(`${PATHS.PORTFOLIO.VIEW(portfolioId)}`);
     } else {
-      router.push(`${PATHS.PORTFOLIO._}`);
+      router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
     }
   };
 

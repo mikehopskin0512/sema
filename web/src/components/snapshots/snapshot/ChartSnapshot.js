@@ -37,6 +37,8 @@ const ChartSnapshot = React.forwardRef(({
   const renderComponentSnapshot = (type) => {
     if (componentData) {
       switch (type) {
+      case 'summaries-area':
+        return (<SnapshotChartContainer chartType="reactions-area" {...componentData} />);
       case 'summaries':
         return (<SnapshotChartContainer chartType="reactions" {...componentData} />);
       case 'tags':
