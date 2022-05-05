@@ -12,6 +12,7 @@
     "userLogo"                      : ".navbar-menu>.navbar-end>*>a",
     "semaCorporateTeamLogo"         : "//div[contains(@class,'navbar-dropdown')]//p[normalize-space()='Sema Corporate Team']",
     "semaSmartCodeReviewsLogo"      : "//div[contains(@class,'navbar-dropdown')]//p[normalize-space()='Sema Smart Code Reviews']",
+    "myTestAutomationTeamLogo"      : "//div[contains(@class,'navbar-dropdown')]//p[normalize-space()='my test automation team']",
     "createTeamBtn"                 : "//a[@href='/teams/add']",
     "accountBtn"                    : "//span[text()='Account']",
     "signOutBtn"                    : "//span[not(contains(@class,'is-hidden-desktop'))  and text()='Sign out']",
@@ -297,5 +298,30 @@
     "editTeamNameInputError"                : "//input[@placeholder='Team Name']/../p",
     "editTeamDescriptionInputError"         : "//textarea[@placeholder='Description']/../p",
 
-    "changeTeamProfileNotification"         : ""
+    "changeTeamProfileNotification"         : "",
+
+    "######### TEAM LABEL MANAGEMENT LOCATORS ###########################" : "",
+    "searchLabelsInput"                     : "//input[@placeholder='Search by label name']",
+    "languageFilterCheckBox"                : "//p[text()='Language']/../span[@class='customCheckbox_checkmark__33aEh']",
+    "otherLabelsFilterCheckBox"             : "//p[text()='Other labels']/../span[@class='customCheckbox_checkmark__33aEh']",
+    "addLabelsBtn"                          : "//span[normalize-space()='Add Labels']",
+    "labelsTable"                           : "//table[@class='table is-fullwidth repoTable_table__3FI0j']",
+    "labelsTable1stRow"                     : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]",
+    "labelsTable1stRowLabelName"            : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]//p/div[contains(@class,'tag')]",
+    "labelsTable1stRowLabelCategory"        : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]//p[@style='text-transform: capitalize;']",
+    "labelsTable1stRowLabelSnippets"        : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]/td[3]//p[not(@style='text-transform: capitalize;')]",
+    "threeDots1stRowBtn"                    : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]//div[@class='dropdown-trigger']",
+    "editLabelBtn"                          : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item'][normalize-space()='Edit Label']",
+    "deleteLabelBtn"                        : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item'][normalize-space()='Delete Label']",
+
+    "newLabelNameInput"                     : "//input[@name='input-0']",
+    "newLabelLanguageCategoryRadioBtn"      : "//label[normalize-space()='Language']",
+    "newLabelOtherLabelsCategoryRadioBtn"   : "//label[normalize-space()='Other labels']",
+    "newLabelAddAnotherLabelBtn"            : "//button/span[normalize-space()='Add another label']",
+    "newLabelRemoveNotAddedLabelBtn"        : "//button[@class='button is-text']//*[name()='svg']",
+    "newLabelSaveBtn"                       : "//button[@class='button is-small is-primary border-radius-4px']",
+    "newLabelCancelBtn"                     : "//button[@class='button is-small is-outlined is-primary border-radius-4px mr-10'][text()='Cancel']",
+    "newLabelArrowBackBtn"                  : "//a[@class='mr-8 is-flex']//*[name()='svg']",
+    "labelManagementLinkBtn"                : "//a[@class='has-text-grey'][text()='Label Management']",
+    "labelNotificationText"                 : "//div[@class='Toaster__message-wrapper']//h4[@class='has-text-black-950 has-text-weight-semibold']"
 }
