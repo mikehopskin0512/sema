@@ -29,6 +29,15 @@ $ docker-compose up
 # Browse to http://localhost:3000 to test the webapp
 ```
 
+
+## Code Style
+
+We use Prettier and ESLint to ensure a consistent code style and basic
+code quality standards in our codebase. It is recommended that you set
+up your editor to run Prettier and ESLint automatically. Check out
+[this guide](https://semalab.atlassian.net/l/c/mdsnY52F) if you need help.
+
+
 ## Deploying chrome extension
 
 ```sh
