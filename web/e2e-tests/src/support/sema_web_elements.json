@@ -313,6 +313,7 @@
     "threeDots1stRowBtn"                    : "//table[@class='table is-fullwidth repoTable_table__3FI0j']/tbody/tr[1]//div[@class='dropdown-trigger']",
     "editLabelBtn"                          : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item'][normalize-space()='Edit Label']",
     "deleteLabelBtn"                        : "//div[@class='dropdown is-right is-active']//a[@class='dropdown-item'][normalize-space()='Delete Label']",
+    "noTagsFoundMessage"                    : "//div[@class='is-flex py-25 is-justify-content-center'][text()='No tags found!']",
 
     "newLabelNameInput"                     : "//input[@name='input-0']",
     "newLabelLanguageCategoryRadioBtn"      : "//label[normalize-space()='Language']",
@@ -323,5 +324,7 @@
     "newLabelCancelBtn"                     : "//button[@class='button is-small is-outlined is-primary border-radius-4px mr-10'][text()='Cancel']",
     "newLabelArrowBackBtn"                  : "//a[@class='mr-8 is-flex']//*[name()='svg']",
     "labelManagementLinkBtn"                : "//a[@class='has-text-grey'][text()='Label Management']",
-    "labelNotificationText"                 : "//div[@class='Toaster__message-wrapper']//h4[@class='has-text-black-950 has-text-weight-semibold']"
+    "labelNotificationText"                 : "//div[@class='Toaster__message-wrapper']//h4[@class='has-text-black-950 has-text-weight-semibold']",
+    "labelNotificationCloseBtn"             : "//div[@class='Toaster__message-wrapper']//div[@class='is-flex']//*[name()='svg']//*[name()='path'][2]"
+
 }
