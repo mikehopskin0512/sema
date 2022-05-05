@@ -336,10 +336,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   >
                     + Add Snapshot
                   </button>
-                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
+                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
                     <p>Save as PDF</p>
                     <PdfIcon />
-                  </button>
+                  </button> */}
                   {/* TODO: return it when 1221 will be released */}
                   {/* {portfolios.length === 1 && */}
                   {/*   ( */}
