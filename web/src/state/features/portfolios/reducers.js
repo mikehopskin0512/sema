@@ -248,6 +248,11 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: action.errors,
     };
+  case types.UPLOAD_AVATAR_ERROR:
+    return {
+      ...state,
+      error: action.error,
+    }
   default:
     return state;
   }

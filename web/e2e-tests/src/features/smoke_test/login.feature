@@ -1,5 +1,5 @@
 @login @regression
-Feature: Login with different user roles
+Feature: Login
 
     @C1724
     Scenario: Normal user can be logged in and logged out successfully                      

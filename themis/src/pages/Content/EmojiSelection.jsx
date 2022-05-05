@@ -7,7 +7,7 @@ import useOutsideClick from './helpers/useOutsideClick';
 
 import Emoji from './modules/Emoji';
 import * as animationData from './LoadingAnimation.json';
-import { SEGMENT_EVENTS, SEMA_LANDING_FAQ } from './constants';
+import { SEGMENT_EVENTS, SEMA_FAQ_SUMMARIES } from './constants';
 import { segmentTrack } from './modules/segment';
 
 const EmojiSelection = ({
@@ -93,7 +93,7 @@ const EmojiSelection = ({
                 <a
                   rel="noreferrer"
                   target="_blank"
-                  href={SEMA_LANDING_FAQ}
+                  href={SEMA_FAQ_SUMMARIES}
                   onClick={() => {
                     // eslint-disable-next-line max-len
                     segmentTrack(SEGMENT_EVENTS.CLICKED_REACTION, userId, { change_reaction: false, reaction: null, clicked_faq: true });

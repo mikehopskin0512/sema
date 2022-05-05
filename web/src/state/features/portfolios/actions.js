@@ -13,10 +13,12 @@ import {
   patchPortfolioTitle,
   addSnapshotToPortfolio,
   patchPortfolioOverview,
+  uploadAvatar,
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
 import { requestAddSnapshotToPortfolio } from '../snapshots/actions';
+import { UPLOAD_AVATAR_ERROR_MESSAGE } from '../../../components/portfolios/avatarModals/constants';
 
 const requestFetchUserPortfolio = () => ({
   type: types.REQUEST_FETCH_USER_PORTFOLIO,
@@ -158,6 +160,11 @@ const requestCopyPortfolioError = (errors) => ({
 const requestCopyPortfolioSuccess = (portfolio) => ({
   type: types.REQUEST_PORTFOLIO_COPY_SUCCESS,
   portfolio,
+});
+
+const uploadAvatarError = (error) => ({
+  type: types.UPLOAD_AVATAR_ERROR,
+  error,
 });
 
 export const fetchPortfoliosOfUser = (userId, token) => async (dispatch) => {
@@ -383,3 +390,11 @@ export const addSnapshotsToPortfolio = ({
     dispatch(requestFetchPortfolioError(errMessage));
   }
 }
+
+export const uploadPortfolioAvatar = (portfolioId, body, token) => async (dispatch) => {
+  try {
+    await uploadAvatar(portfolioId, body, token);
+  } catch (error) {
+    dispatch(uploadAvatarError({ message: UPLOAD_AVATAR_ERROR_MESSAGE }));
+  }
+};

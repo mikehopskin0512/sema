@@ -20,6 +20,7 @@ import setInputFieldWithTimestamp from "../support/action/setInputFieldWithTimes
 import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoSearchField";
 import clickElementByIndex from "../support/action/clickElementByIndex";
 import switchTab from '../support/action/switchTab';
+import changeTheUserRoleForTheTeam from "../support/action/changeTheUserRoleForTheTeam";
 
 /**
  * Abstracting some steps by functionality. 
@@ -62,7 +63,7 @@ When(
 );
 
 When(
-    /^I search created collection "([^"]*)?"$/,
+    /^I set saved variable to the inputfield "([^"]*)?"$/,
     setGlobalParamIntoSearchField
 );
 
@@ -130,4 +131,9 @@ When(
 When(
     /^I switch to opened tab$/,
     switchTab
+)
+
+When(
+    /^I change the role for "([^"]*)?" to "([^"]*)?"$/,
+    changeTheUserRoleForTheTeam
 )
