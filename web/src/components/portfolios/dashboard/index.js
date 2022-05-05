@@ -277,7 +277,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
-      { isAddAvatarModalOpen && <AddPortfolioAvatarModal 
+      { isAddAvatarModalOpen && <AddPortfolioAvatarModal
         close={() => toggleAddAvatarModal(false)}
         onChange={onChangeAvatar}
         onError={onAddFileError}
@@ -336,21 +336,23 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   >
                     + Add Snapshot
                   </button>
-                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
+                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
                     <p>Save as PDF</p>
                     <PdfIcon />
-                  </button>
-                  {portfolios.length === 1 &&
-                    (
-                      <button
-                        onClick={goToAddPortfolio}
-                        type="button"
-                        className="button is-transparent m-0 ml-15"
-                      >
-                        Create another Portfolio
-                      </button>
-                    )
-                  }
+                  </button> */}
+                  {/* TODO: return it when 1221 will be released */}
+                  {/* {portfolios.length === 1 && */}
+                  {/*   ( */}
+                  {/*     <button */}
+                  {/*       onClick={goToAddPortfolio} */}
+                  {/*       type="button" */}
+                  {/*       className="button is-transparent m-0 ml-15" */}
+                  {/*     > */}
+                  {/*       Create another Portfolio */}
+                  {/*     </button> */}
+                  {/*   ) */}
+                  {/* } */}
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu

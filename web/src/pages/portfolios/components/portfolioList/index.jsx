@@ -169,9 +169,10 @@ const PortfolioList = () => {
                   },
                 },
                 {
-                  // TODO: add Save as PDF ETCR-688
+                  // TODO: add Save as PDF ETCR-688, Will hide for now until Save as PDF is working properly.
                   label: 'Save as PDF',
                   onClick: () => console.log('TODO: will be implement later'),
+                  isHidden: true
                 },
                 {
                   label: 'Delete',
