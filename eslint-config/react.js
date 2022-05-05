@@ -3,7 +3,13 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ['./base', 'airbnb/hooks', 'plugin:react/recommended', 'prettier'],
+  extends: [
+    './base',
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:react/recommended',
+    'prettier',
+  ],
   plugins: ['react', 'jsx-a11y', 'import'],
   settings: {
     'import/resolver': {
