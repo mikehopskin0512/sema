@@ -63,7 +63,7 @@ When(
 );
 
 When(
-    /^I search created collection "([^"]*)?"$/,
+    /^I set saved variable to the inputfield "([^"]*)?"$/,
     setGlobalParamIntoSearchField
 );
 

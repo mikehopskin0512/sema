@@ -1,5 +1,5 @@
 @webapp @regression
-Feature: Web tabs should contains all functionality items
+Feature: Web tabs
 
     Background: Wait for page to be displayed
         When I wait on element "userLogo" for 10000ms to be displayed

@@ -70,7 +70,7 @@ const SuggestedCommentCard = ({ data, selected, onSelectChange, collectionId, is
           </div>
         </div>
       ) }
-      <p className={clsx("has-text-black-950 is-size-6 my-20", styles['comment-container'])}>
+      <p className="has-text-black-950 is-size-6 my-20">
         <Markdown>
           {comment}
         </Markdown>

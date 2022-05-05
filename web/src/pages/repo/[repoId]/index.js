@@ -196,7 +196,7 @@ const RepoPage = () => {
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
-        <Metrics metrics={overview.metrics} totalMetrics={totalMetrics} />
+        <Metrics isLastThirtyDays={true} metrics={overview.metrics} totalMetrics={totalMetrics} />
       </div>
       {
         selectedTab === 'activity' && (

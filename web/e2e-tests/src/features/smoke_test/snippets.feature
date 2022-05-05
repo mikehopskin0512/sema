@@ -1,5 +1,5 @@
 @snippets @regression
-Feature: User is able to interact with snippets properly
+Feature: Snippets
 
 
   #  Background: Wait for page to be displayed
@@ -239,7 +239,7 @@ Feature: User is able to interact with snippets properly
     Then I expect that element "searchCollectionInput" becomes displayed
 
     And  I pause for 2000ms
-    When I search created collection "searchCollectionInput"
+    When I set saved variable to the inputfield "searchCollectionInput"
     Then I expect that element "firstInActiveCollectionName" becomes displayed
     And  I click on the element "firstInActiveCollectionName"
     Then I expect that element "addNewSnippetInCollectionBtn" becomes displayed
@@ -442,7 +442,7 @@ Feature: User is able to interact with snippets properly
 #    When I click on the element "snippetsTab"
 #    Then I expect that element "searchIconBtn" becomes displayed
 #    When I click on the button "searchIconBtn"
-#    And  I search created collection "searchCollectionInput"
+#    And  I set saved variable to the inputfield "searchCollectionInput"
 #    Then I expect that new item "allCollectionsNames" is added to collections
 
 #  @C2786000
@@ -501,7 +501,7 @@ Feature: User is able to interact with snippets properly
 #    When I click on the element "snippetsTab"
 #    Then I expect that element "searchIconBtn" becomes displayed
 #    When I click on the button "searchIconBtn"
-#    And  I search created collection "searchCollectionInput"
+#    And  I set saved variable to the inputfield "searchCollectionInput"
 #    Then I expect that new item "allCollectionsNames" is not added to collections
 
   @C2795  @smoke

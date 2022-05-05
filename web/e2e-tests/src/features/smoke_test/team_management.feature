@@ -1,7 +1,7 @@
-@team_account @regression
-Feature: Team account options
+@team_management @regression
+Feature: Team management
 
-#    @PTA80 @smoke  https://semalab.atlassian.net/browse/WEST-1319
+#    @PTA80 @smoke  ##https://semalab.atlassian.net/browse/WEST-1319
 #    Scenario: Sema member can create new team
 #        Then I expect that element "userLogo" becomes displayed
 #        When I click on the element "userLogo"
