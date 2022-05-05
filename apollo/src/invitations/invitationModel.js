@@ -18,7 +18,7 @@ const invitationSchema = new mongoose.Schema({
   },
   redemptions: [
     {
-      user: {
+      userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
@@ -37,10 +37,10 @@ const invitationSchema = new mongoose.Schema({
     ref: 'Role',
     required: false,
   },
-  recipient: { type: String, required: true },
+  recipient: { type: String, required: false },
   isMagicLink: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
 }, { timestamps: true });
