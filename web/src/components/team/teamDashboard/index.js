@@ -21,6 +21,7 @@ const TeamDashboard = ({ team }) => {
     <>
       <div className="mt-50 mb-30">
         <Metrics
+          isLastThirtyDays={true}
           metrics={metrics?.metrics}
           totalMetrics={{
             pullRequests: metrics?.totalMetrics?.smartCodeReviews ?? 0,
