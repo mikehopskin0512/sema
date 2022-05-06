@@ -11,12 +11,22 @@
 }
 
 .card-width-3c {
-  width: calc(100%/3);
-  max-width: calc(100%/3);
-  @media only screen and (max-width: 769px) {
-    min-width: 100% !important;
-    flex: 1;
-    min-height: auto !important;
+  width: calc(100%/4);
+  max-width: calc(100%/4);
+
+  @media only screen and (max-width: 1440px) {
+    width: calc(100%/3);
+    max-width: calc(100%/3);
+  }
+
+  @media only screen and (max-width: 1280px) {
+    width: calc(100%/2);
+    max-width: 420px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    max-width: 420px;
   }
 }
 
