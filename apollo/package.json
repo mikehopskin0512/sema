@@ -69,6 +69,7 @@
     "babel-jest": "^27.5.1",
     "eslint": "^8.14.0",
     "eslint-config-sema": "file:../eslint-config",
+    "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
     "nodemon": "^2.0.4"
   }
