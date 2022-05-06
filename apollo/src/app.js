@@ -12,9 +12,7 @@ import logger from './shared/logger';
 import errors from './shared/errors';
 
 import routes from '.';
-import * as config from './config';
-
-const { port, allowedOrigin, chromeExtensionId } = config;
+import { port, allowedOrigin, chromeExtensionId } from './config';
 
 const app = express();
 
