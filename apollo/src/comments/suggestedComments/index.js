@@ -3,7 +3,6 @@ import { Router } from 'express';
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
-
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import {
@@ -14,10 +13,12 @@ import {
   bulkCreateSuggestedComments,
   bulkUpdateSuggestedComments,
   getSuggestedCommentsByIds,
-  exportSuggestedComments, updateSnippetCollections,
+  exportSuggestedComments,
 } from './suggestedCommentService';
-import { pushCollectionComment, getUserCollectionsById } from '../collections/collectionService';
+import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
 import checkEnv from "../../middlewares/checkEnv";
+
+const { Types: { ObjectId } } = mongoose;
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -68,11 +69,9 @@ export default (app, passport) => {
     let collectionId = req.body.collectionId;
 
     try {
-      const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME || 'my comments';
-
+      const defaultCollectionName = process.env.DEFAULT_COLLECTION_NAME;
       if (!collectionId) {
         const collections = await getUserCollectionsById(userId);
-        // TODO: we should delete my comments later. It's a legacy name
         const defaultCollection = collections.find((collection) => {
           return collection.collectionData.name.toLowerCase() === defaultCollectionName;
         });
@@ -83,25 +82,24 @@ export default (app, passport) => {
         title = comment.substring(0, 100);
       }
 
+      const collection = await getCollectionMetadata(collectionId);
       const newSuggestedComment = await create({
         title,
         comment,
         source: { name: '', url: source },
         tags,
-        enteredBy: user._id,
-        collections: [{ collectionId, name: defaultCollectionName }]
+        enteredBy: new ObjectId(userId),
+        collections: [{
+          collectionId: new ObjectId(collection._id),
+          name: collection.name,
+          type: collection.type,
+        }]
       });
 
       if (!newSuggestedComment) {
-        throw new errors.BadRequest('Suggested Comment create error');
+        return res.status(400).send('Suggested Comment create error');
       }
-      if (collectionId) {
-        const collection = await pushCollectionComment(collectionId, newSuggestedComment._id);
-        return res.status(201).send({
-          suggestedComment: newSuggestedComment,
-          collection: collection._id,
-        });
-      }
+      await pushCollectionComment(collection._id, newSuggestedComment._id);
       return res.status(201).send({
         suggestedComment: newSuggestedComment
       });
