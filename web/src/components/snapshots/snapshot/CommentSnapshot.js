@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { removeSnapshotsFromPortfolio } from '../../../state/features/portfolios/actions';
 import styles from './snapshot.module.scss';
 import ActivityItem from '../../activity/item';
-import { DragTriggerIcon, OptionsIcon } from "../../Icons";
+import { DragTriggerIcon, OptionsIcon } from '../../Icons';
 import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
@@ -13,10 +13,24 @@ import { snapshotsOperations } from '../../../state/features/snapshots';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
-const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, isOwner, onUpdate }, ref) => {
+const CommentSnapshot = React.forwardRef(({
+  snapshotData,
+  portfolioId,
+  preview,
+  isOwner,
+  onUpdate,
+  onSnapshotDirectionUpdate,
+}, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
-  const { _id: snapshotId = '', userId, title, description, componentType, componentData = { smartComments: [] } } = snapshotData
+  const {
+    _id: snapshotId = '',
+    userId,
+    title,
+    description,
+    componentType,
+    componentData = { smartComments: [] },
+  } = snapshotData;
   const [isEditModalOpen, toggleEditModal] = useState(false);
   const [isDeleteModalOpen, toggleDeleteModal] = useState(false);
 
@@ -37,7 +51,7 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
     if(data) {
       onUpdate(data);
     }
-  }
+  };
 
   return (
     <>
@@ -53,7 +67,9 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, 'has-background-gray-200 p-25 mb-30 is-relative')} ref={preview}>
+      <div
+        className={clsx(styles.snapshot, "has-background-gray-200 p-25 mb-30 is-relative", snapshotData.isHorizontal && styles['snapshot-horizontal'])}
+        ref={preview}>
         {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline", styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
@@ -62,10 +78,23 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
                 label: 'Duplicate Snapshot',
                 onClick: () => {
                   dispatch(duplicateSnapshot(snapshotData, token));
-                }
+                },
               },
-              { label: 'Edit Snapshots', onClick: () => toggleEditModal(true) },
-              { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
+              {
+                label: 'Edit Snapshots',
+                onClick: () => toggleEditModal(true),
+              },
+              {
+                label: 'Delete Snapshots',
+                onClick: () => toggleDeleteModal(true),
+              },
+              {
+                label: `Make ${snapshotData.isHorizontal ? 'Vertical' : 'Horizontal'}`,
+                onClick: () => onSnapshotDirectionUpdate({
+                  snapshot: snapshotData,
+                  type: snapshotData.componentType,
+                }),
+              },
             ]}
             trigger={(
               <div className="is-clickable is-flex mr-40">
@@ -97,10 +126,12 @@ CommentSnapshot.propTypes = {
   snapshotData: PropTypes.object.isRequired,
   portfolioId: PropTypes.string.isRequired,
   isOwner: PropTypes.bool,
+  onDirectionChange: PropTypes.func
 };
 
 CommentSnapshot.defaultProps = {
   isOwner: true,
+  onDirectionChange: () => {}
 };
 
 export default CommentSnapshot;

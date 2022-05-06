@@ -71,6 +71,14 @@
 }
 
 .snaps-container {
+  .comments-wrap {
+    width: 50%;
+  }
+
+  .comments-wrap-horizontal {
+    width: 100%;
+  }
+
   .chart-wrap {
     position: relative;
     margin-bottom: 30px;
@@ -85,6 +93,13 @@
     @media only screen and (min-width: 1440px) {
       margin-right: 32px;
     }
+  }
+
+  .chart-wrap-horizontal {
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    margin-right: 0 !important;
   }
 }
 
@@ -135,4 +150,8 @@
 
 .portfolio-header-actions {
   gap: 10px
+}
+
+.draggable-columns {
+  flex-wrap: wrap;
 }

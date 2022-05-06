@@ -31,7 +31,7 @@ import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSA
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
 
-const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
@@ -213,6 +213,29 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
     }))
   }
 
+  const onSnapshotDirectionUpdate = async ({ snapshot, type }) => {
+    const parseCommentsData = (snapshotData) => {
+      const result = [...snapshotData];
+      return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
+    }
+
+    const snapshotDataForSave = {
+      ...snapshot,
+      userId: userData._id,
+      componentType: type,
+      componentData: {
+        ...snapshot.componentData,
+        smartComments: parseCommentsData(snapshot.componentData?.smartComments)
+      },
+      isHorizontal: !snapshot.isHorizontal
+    }
+
+    await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
+      toggleEditModal(false);
+      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
+    }))
+  }
+
   const onAddFileError = () => {
     toggleAddAvatarModal(false);
     toggleErrorAvatarModal(true);
@@ -337,22 +360,21 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                     + Add Snapshot
                   </button>
                   {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
-                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
-                    <p>Save as PDF</p>
-                    <PdfIcon />
-                  </button> */}
-                  {/* TODO: return it when 1221 will be released */}
-                  {/* {portfolios.length === 1 && */}
-                  {/*   ( */}
-                  {/*     <button */}
-                  {/*       onClick={goToAddPortfolio} */}
-                  {/*       type="button" */}
-                  {/*       className="button is-transparent m-0 ml-15" */}
-                  {/*     > */}
-                  {/*       Create another Portfolio */}
-                  {/*     </button> */}
-                  {/*   ) */}
-                  {/* } */}
+                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}> */}
+                  {/*   <p>Save as PDF</p> */}
+                  {/*   <PdfIcon /> */}
+                  {/* </button>  */}
+                  {portfolios.length === 1 &&
+                    (
+                      <button
+                        onClick={goToAddPortfolio}
+                        type="button"
+                        className="button is-transparent m-0 ml-15"
+                      >
+                        Create another Portfolio
+                      </button>
+                    )
+                  }
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
@@ -432,6 +454,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             pageLayout={layout}
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
+            onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
             snapshots={snapshots}
             isPdfView={pdfView}
           />

@@ -30,7 +30,7 @@ const structureComponentData = ({
 });
 
 const structureSnapshot = ({
-  _id = null, userId = null, title = null, description = null, componentType = null, componentData = null, portfolios = [],
+  _id = null, userId = null, title = null, description = null, componentType = null, componentData = null, portfolios = [], isHorizontal = true
 }) => ({
   _id: _id ? new ObjectId(_id) : new ObjectId(),
   userId: new ObjectId(userId),
@@ -39,6 +39,7 @@ const structureSnapshot = ({
   description,
   componentType,
   componentData: structureComponentData(componentData),
+  isHorizontal
 });
 
 export const getSnapshotsByUserId = async (userId) => {
