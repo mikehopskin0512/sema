@@ -43,4 +43,4 @@ jobs:
       - name: Build docker images
         run: docker-compose build
       - name: Run tests
-        run: docker-compose run ${{ matrix.service }}-test
+        run: docker-compose run ${{ matrix.service }}-tests
