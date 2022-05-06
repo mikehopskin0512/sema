@@ -30,7 +30,7 @@ services:
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
-  apollo-test:
+  apollo-tests:
     image: apollo-dev-i
     build:
       context: apollo/
