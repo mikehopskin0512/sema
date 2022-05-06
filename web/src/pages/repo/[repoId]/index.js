@@ -53,6 +53,7 @@ const RepoPage = () => {
     startDate,
     endDate,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [filter, setFilter] = useState({
     from: [],
@@ -88,6 +89,7 @@ const RepoPage = () => {
   }, []);
 
   useAuthEffect(() => {
+    setIsLoading(true);
     if (
       (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
     ) {
@@ -157,6 +159,7 @@ const RepoPage = () => {
     setFilterRequesterList(uniqBy(requesters, 'value'))
     setFilterUserList(uniqBy(users, 'value'));
     setFilterPRList(filteredPRs);
+    setIsLoading(false);
   }, [overview]);
 
   const onDateChange = ({ startDate, endDate }) => {
@@ -206,7 +209,7 @@ const RepoPage = () => {
       {
         selectedTab === 'stats' && (
           <div className={styles.wrapper}>
-            <StatsPage startDate={startDate} endDate={endDate} filter={filter}/>
+            <StatsPage startDate={startDate} endDate={endDate} filter={filter} isLoading={isLoading} />
           </div>
         )
       }
