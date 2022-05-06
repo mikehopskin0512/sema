@@ -31,7 +31,7 @@ import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSA
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
 
-const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
@@ -210,6 +210,29 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         return data;
       }
       return snapshot;
+    }))
+  }
+
+  const onSnapshotDirectionUpdate = async ({ snapshot, type }) => {
+    const parseCommentsData = (snapshotData) => {
+      const result = [...snapshotData];
+      return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
+    }
+
+    const snapshotDataForSave = {
+      ...snapshot,
+      userId: userData._id,
+      componentType: type,
+      componentData: {
+        ...snapshot.componentData,
+        smartComments: parseCommentsData(snapshot.componentData?.smartComments)
+      },
+      isHorizontal: !snapshot.isHorizontal
+    }
+
+    await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
+      toggleEditModal(false);
+      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
     }))
   }
 
@@ -432,6 +455,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             pageLayout={layout}
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
+            onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
             snapshots={snapshots}
             isPdfView={pdfView}
           />
