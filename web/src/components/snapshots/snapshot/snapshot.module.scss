@@ -50,7 +50,7 @@
 }
 
 .comments-snap-content {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 
@@ -99,4 +99,8 @@
   text-align: center;
   margin-bottom: 5px;
   color: $gray-800;
+}
+
+.empty-chart-img {
+  height: 576px;
 }
