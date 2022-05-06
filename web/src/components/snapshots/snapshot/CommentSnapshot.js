@@ -11,6 +11,15 @@ import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
 
+import { EditorState, convertFromRaw, ContentState } from 'draft-js';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import dynamic from 'next/dynamic';
+
+const Editor = dynamic(
+  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+  { ssr: false }
+);
+
 const { duplicateSnapshot } = snapshotsOperations;
 
 const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, isOwner, onUpdate }, ref) => {
@@ -80,7 +89,17 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
         <div className={clsx('columns is-multiline mt-10 sema-is-boxed', styles['comments-snap-content'])}>
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
-            <div>{description}</div>
+            <div>
+              <Editor
+                readOnly
+                toolbarHidden
+                editorState={!description ? EditorState.createEmpty() :
+                  description[0] !== '{' ?
+                    EditorState.createWithContent(ContentState.createFromText(description)) : 
+                    EditorState.createWithContent(convertFromRaw(JSON.parse(description)))
+                }
+              />
+            </div>
           </div>
           <div className={clsx('column is-full')}>
             <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300">
