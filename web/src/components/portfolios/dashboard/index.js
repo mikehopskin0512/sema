@@ -30,14 +30,8 @@ import ErrorPortfolioAvatarModal from '../avatarModals/errorPortfolioAvatarModal
 import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSAGE } from '../avatarModals/constants';
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
-import { EditorState, convertFromRaw, ContentState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import dynamic from 'next/dynamic';
-
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  { ssr: false }
-);
+import ReadonlyMarkdownEditor from '../../../components/markdownEditor/ReadonlyMarkdownEditor';
 
 const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
@@ -415,15 +409,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
                   <div className="content is-relative p-10 pr-80 pt-20">
-                    <Editor
-                      readOnly
-                      toolbarHidden
-                      editorState={!portfolio.overview ? EditorState.createEmpty() :
-                        portfolio.overview[0] !== '{' ?
-                          EditorState.createWithContent(ContentState.createFromText(portfolio.overview)) :
-                          EditorState.createWithContent(convertFromRaw(JSON.parse(portfolio.overview)))
-                      }
-                    />
+                    <ReadonlyMarkdownEditor value={portfolio.overview} />
                 </div>
                 {
                   isOwner && !pdfView && (

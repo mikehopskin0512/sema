@@ -12,14 +12,8 @@ import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 
-import { EditorState, convertFromRaw, ContentState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import dynamic from 'next/dynamic';
-
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  { ssr: false }
-);
+import ReadonlyMarkdownEditor from '../../markdownEditor/ReadonlyMarkdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 const { removeSnapshot } = portfoliosOperations;
@@ -114,15 +108,7 @@ const ChartSnapshot = React.forwardRef(({
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
               <div className="mb-25">
-                <Editor
-                  readOnly
-                  toolbarHidden
-                  editorState={!description ? EditorState.createEmpty() :
-                    description[0] !== '{' ?
-                      EditorState.createWithContent(ContentState.createFromText(description)) : 
-                      EditorState.createWithContent(convertFromRaw(JSON.parse(description)))
-                  }
-                />
+                <ReadonlyMarkdownEditor value={description} />
               </div>
             </div>
             <div className={clsx(styles['chart-container'])}>

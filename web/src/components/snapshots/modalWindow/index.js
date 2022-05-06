@@ -22,16 +22,11 @@ import { parseSnapshotData } from '../../../utils/parsing';
 import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
 import { notify } from '../../toaster/index.js';
-import { gray400 } from '../../../../styles/_colors.module.scss';
 
-import { EditorState, convertToRaw, convertFromRaw, ContentState } from 'draft-js';
+import { convertToRaw } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import dynamic from 'next/dynamic';
-
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  { ssr: false }
-);
+import { createEditorState } from '../../markdownEditor/utils';
+import MarkdownEditor from '../../markdownEditor/MarkdownEditor';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
@@ -87,11 +82,7 @@ const SnapshotModal = ({
   const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
-  const [description, setDescription] = useState(!snapshotData.description ? EditorState.createEmpty() :
-    snapshotData.description[0] !== '{' ?
-      EditorState.createWithContent(ContentState.createFromText(snapshotData.description)) : 
-      EditorState.createWithContent(convertFromRaw(JSON.parse(snapshotData.description)))
-  );
+  const [description, setDescription] = useState(createEditorState(snapshotData.description));
 
   useOutsideClick(modalRef, onClose);
 
@@ -184,30 +175,7 @@ const SnapshotModal = ({
               />
             </div>
             <div className="field mb-15">
-            <Editor
-                editorState={description}
-                onEditorStateChange={(v) => setDescription(v)}
-                editorClassName={styles.editor}
-                toolbarClassName={styles.toolbar}
-                toolbarStyle={{ margin: 0, border: `1px solid ${gray400}` }}
-                toolbar={{
-                  options: ['inline', 'link', 'list'],
-                  inline: {
-                    inDropdown: false,
-                    options: ['bold', 'italic'],
-                  },
-                  list: {
-                    inDropdown: false,
-                    options: ['unordered'],
-                  },
-                  link: {
-                    inDropdown: false,
-                    showOpenOptionOnHover: true,
-                    defaultTargetOption: '_blank',
-                    options: ['link'],
-                  },
-                }}
-              />
+            <MarkdownEditor value={description} setValue={setDescription}/>
             </div>
             <div className="has-background-gray-300 p-10 mb-20" style={containerStyle}>
               {

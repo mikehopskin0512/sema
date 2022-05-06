@@ -7,22 +7,14 @@ import { updatePortfolioOverview } from '../../../state/features/portfolios/acti
 import Toaster from '../../toaster';
 import styles from './editModal.module.scss';
 import { SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../utils/constants';
-import { EditorState, convertToRaw, convertFromRaw, ContentState } from 'draft-js';
+import { convertToRaw } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import dynamic from 'next/dynamic';
-import { gray400 } from '../../../../styles/_colors.module.scss';
+import MarkdownEditor from '../../markdownEditor/MarkdownEditor';
+import { createEditorState } from '../../markdownEditor/utils';
 
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  { ssr: false }
-);
 
 const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, portfolioId }) => {
-  const [overview, setOverview] = useState(!profileOverview ? EditorState.createEmpty() :
-    profileOverview[0] !== '{' ?
-      EditorState.createWithContent(ContentState.createFromText(profileOverview)) : 
-      EditorState.createWithContent(convertFromRaw(JSON.parse(profileOverview)))
-  );
+  const [overview, setOverview] = useState(createEditorState(profileOverview));
   const dispatch = useDispatch();
 
   const onSubmit = async () => {
@@ -47,39 +39,16 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, port
           <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
             <div className="p-40">
               <div className="has-text-weight-bold is-size-6 mb-10">Overview</div>
-              <Editor
-                editorState={overview}
-                onEditorStateChange={(v) => setOverview(v)}
-                editorClassName={styles.editor}
-                toolbarClassName={styles.toolbar}
-                toolbarStyle={{ margin: 0, border: `1px solid ${gray400}` }}
-                toolbar={{
-                  options: ['inline', 'link', 'list'],
-                  inline: {
-                    inDropdown: false,
-                    options: ['bold', 'italic'],
-                  },
-                  list: {
-                    inDropdown: false,
-                    options: ['unordered'],
-                  },
-                  link: {
-                    inDropdown: false,
-                    showOpenOptionOnHover: true,
-                    defaultTargetOption: '_blank',
-                    options: ['link'],
-                  },
-                }}
-              />
-              {/* TODO: Will be added after markdown implementation */}
+              <MarkdownEditor value={overview} setValue={setOverview} />
               <div className="is-flex is-align-items-center is-justify-content-right mt-20 mb-60">
+              {/* TODO: Will be added after markdown implementation */}
                   {/* You can use markdown to format your personal overview.
                   <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.MARKDOWN}`}>
                     <span className="ml-20 has-text-primary">
                       Learn More
                     </span>
                   </a> */}
-              {/* </div> */}
+                {/* </div> */}
                 <div>
                   <button type="button" className="button" onClick={() => toggleModalActive(false)}>Cancel</button>
                   <button type="button" className="button is-primary ml-10" onClick={() => onSubmit({ overview })}>Save changes</button>

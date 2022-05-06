@@ -10,15 +10,9 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
+import ReadonlyMarkdownEditor from '../../markdownEditor/ReadonlyMarkdownEditor';
 
-import { EditorState, convertFromRaw, ContentState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import dynamic from 'next/dynamic';
-
-const Editor = dynamic(
-  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
-  { ssr: false }
-);
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -90,15 +84,7 @@ const CommentSnapshot = React.forwardRef(({ snapshotData, portfolioId, preview, 
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>
-              <Editor
-                readOnly
-                toolbarHidden
-                editorState={!description ? EditorState.createEmpty() :
-                  description[0] !== '{' ?
-                    EditorState.createWithContent(ContentState.createFromText(description)) : 
-                    EditorState.createWithContent(convertFromRaw(JSON.parse(description)))
-                }
-              />
+              <ReadonlyMarkdownEditor value={description} />
             </div>
           </div>
           <div className={clsx('column is-full')}>
