@@ -33,7 +33,7 @@ import { notify } from '../../../components/toaster/index';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import ReadonlyMarkdownEditor from '../../../components/markdownEditor/ReadonlyMarkdownEditor';
 
-const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
@@ -215,6 +215,29 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
     }))
   }
 
+  const onSnapshotDirectionUpdate = async ({ snapshot, type }) => {
+    const parseCommentsData = (snapshotData) => {
+      const result = [...snapshotData];
+      return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
+    }
+
+    const snapshotDataForSave = {
+      ...snapshot,
+      userId: userData._id,
+      componentType: type,
+      componentData: {
+        ...snapshot.componentData,
+        smartComments: parseCommentsData(snapshot.componentData?.smartComments)
+      },
+      isHorizontal: !snapshot.isHorizontal
+    }
+
+    await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
+      toggleEditModal(false);
+      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
+    }))
+  }
+
   const onAddFileError = () => {
     toggleAddAvatarModal(false);
     toggleErrorAvatarModal(true);
@@ -279,7 +302,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
-      { isAddAvatarModalOpen && <AddPortfolioAvatarModal 
+      { isAddAvatarModalOpen && <AddPortfolioAvatarModal
         close={() => toggleAddAvatarModal(false)}
         onChange={onChangeAvatar}
         onError={onAddFileError}
@@ -338,10 +361,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   >
                     + Add Snapshot
                   </button>
-                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
-                    <p>Save as PDF</p>
-                    <PdfIcon />
-                  </button>
+                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
+                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}> */}
+                  {/*   <p>Save as PDF</p> */}
+                  {/*   <PdfIcon /> */}
+                  {/* </button>  */}
                   {portfolios.length === 1 &&
                     (
                       <button
@@ -432,6 +456,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             pageLayout={layout}
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
+            onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
             snapshots={snapshots}
             isPdfView={pdfView}
           />

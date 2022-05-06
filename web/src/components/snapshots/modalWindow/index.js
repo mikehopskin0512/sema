@@ -92,6 +92,7 @@ const SnapshotModal = ({
       title: data.title,
       description: JSON.stringify(convertToRaw(description.getCurrentContent())),
       componentType: dataType,
+      isHorizontal: dataType === 'comments',
       componentData: {
         ...snapshotData.componentData,
         smartComments: parseSnapshotData(snapshotData.componentData.smartComments)

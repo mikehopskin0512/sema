@@ -166,6 +166,7 @@ export const FACEBOOK_VERIFICATION_META = {
 };
 
 export const PATHS = {
+  PERSONAL: '/personal',
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
   LABELS_MANAGEMENT: '/labels-management',

@@ -22,6 +22,8 @@ import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
 import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
 import checkTeamURLPath from "../support/check/checkTeamURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
+import {GlobalVars} from "../support/GlobalVars";
+import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -71,6 +73,11 @@ Then(
 Then(
     /^I expect that (button|element) "([^"]*)?"( not)* matches the text "([^"]*)?"$/,
     checkEqualsText
+);
+
+Then(
+    /^I expect that (button|element) "([^"]*)?"( not)* matches the saved variable$/,
+    checkEqualTextToSavedVariable
 );
 
 Then(

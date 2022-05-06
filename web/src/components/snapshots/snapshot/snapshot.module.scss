@@ -5,6 +5,22 @@
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(32, 32, 32, 0.2);
   width: 100%;
+
+  &:not(.chart-snapshot) {
+    width: 50%;
+    @media screen and (max-width: 1440px) {
+      width: 100%;
+    }
+  }
+
+}
+
+.snapshot.snapshot-horizontal {
+  width: 100%;
+}
+
+.snapshot.empty-chart-wrapper {
+  width: 100%;
 }
 
 .chart-snapshot {
@@ -34,9 +50,8 @@
 }
 
 .comments-snap-content {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
-
 
 
 .draggable-container {
@@ -84,4 +99,8 @@
   text-align: center;
   margin-bottom: 5px;
   color: $gray-800;
+}
+
+.empty-chart-img {
+  height: 576px;
 }

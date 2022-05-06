@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+#
+# Sets up a local environment for development of Phoenix.
+#
+
+set -euo pipefail
+
+services=(adonis apollo themis web)
+
+with_service() {
+  local service
+  service=$1
+  shift
+  echo -e "\e[93m$service: \e[0m$@"
+  pushd "$service" > /dev/null
+  $@ 2>&1 | sed -e "s/^/$service: /"
+  popd > /dev/null
+}
+
+npm_install() {
+  for service in "${services[@]}"; do
+    with_service $service npm install --quiet
+  done
+}
+
+eslint_config() {
+  with_service eslint-config npm install --quiet
+}
+
+setup_docker() {
+  echo -e "\e[93mSetting up Docker ... \e[0m"
+  docker-compose build
+}
+
+npm_install
+eslint_config
+setup_docker
+
+echo
+echo All done 💪
+echo
+echo You may want to run this now:
+echo
+echo "  docker-compose up"
+echo
