@@ -44,3 +44,20 @@ jobs:
         run: docker-compose build
       - name: Run tests
         run: docker-compose run ${{ matrix.service }}-tests
+
+  test_all:
+    name: Test All
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for any failed job
+        run: |
+          failed=$(curl -s \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs |
+            jq '.jobs | map(select(.conclusion != "success")) | length')
+
+          if [[ $failed > 0 ]]; then
+            exit 1
+          fi
