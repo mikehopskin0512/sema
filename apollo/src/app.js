@@ -14,20 +14,27 @@ import errors from './shared/errors';
 import routes from '.';
 import { port, allowedOrigin, chromeExtensionId } from './config';
 
-const nodeEnv = process.env.NODE_ENV || 'development';
-
 const app = express();
 
-app.use(cors({
-  origin: [allowedOrigin, 'https://github.com', /\.github\.com$/, `chrome-extension://${chromeExtensionId}`],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      allowedOrigin,
+      'https://github.com',
+      /\.github\.com$/,
+      `chrome-extension://${chromeExtensionId}`,
+    ],
+    credentials: true,
+  })
+);
 app.use(compression());
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({
-  extended: true,
-  limit: '2mb'
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: '2mb',
+  })
+);
 app.use(bodyParser.json({ limit: '2mb' }));
 app.use(methodOverride());
 app.use(passport.initialize());
@@ -55,8 +62,8 @@ app.use((error, req, res, next) => {
   });
 });
 
-app._server = app.listen(port, async () => {
+app.server = app.listen(port, async () => {
   logger.info('Server listening on port %d', port);
 });
 
-module.exports = app;
+export default app;

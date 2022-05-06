@@ -1,7 +1,7 @@
 import apollo from '../../test/apolloClient';
 import * as portfolioService from './portfolioService';
 import { createAuthToken } from '../auth/authService';
-import { createUser } from '../../test/helpers/userHelper';
+import createUser from '../../test/helpers/userHelper';
 
 describe('POST /portfolios', () => {
   let user;
@@ -59,10 +59,10 @@ describe('POST /portfolios', () => {
   });
 
   describe('creating for a different user', () => {
-    let anotherUser;
+    // let anotherUser;
 
     beforeAll(async () => {
-      anotherUser = await createUser({
+      await createUser({
         email: 'grace@example.com',
         firstName: 'Grace',
         lastName: 'Hopper',

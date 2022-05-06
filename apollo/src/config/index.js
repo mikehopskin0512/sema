@@ -1,14 +1,12 @@
 import path from 'path';
 
 const isTest = process.env.NODE_ENV === 'test';
-const configPath = isTest ?
-  path.resolve(__dirname, '../../.env.test') :
-  '.env';
+const configPath = isTest ? path.resolve(__dirname, '../../.env.test') : '.env';
 const jestWorkerID = parseInt(process.env.JEST_WORKER_ID || 0, 10);
 
 require('dotenv').config({ path: configPath });
 
-module.exports = {
+const config = {
   ...getMongoDBConnectionDetails(),
   port: getPort(),
   version: process.env.VERSION,
@@ -49,7 +47,8 @@ module.exports = {
   mailchimpServerPrefix: process.env.MAILCHIMP_SERVER_PREFIX || null,
   mailchimpToken: process.env.MAILCHIMP_TOKEN || null,
   mailchimpAudiences: {
-    registeredAndWaitlistUsers: process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID || null,
+    registeredAndWaitlistUsers:
+      process.env.MAILCHIMP_REGISTERED_AND_WAITLIST_USERS_AUDIENCE_ID || null,
   },
   chromeExtensionId: process.env.CHROME_EXTENSION_ID,
   iframelyApiKey: process.env.IFRAMELY_API_KEY,
@@ -57,25 +56,23 @@ module.exports = {
   semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
 };
 
-
 function getPort() {
   const port = parseInt(process.env.PORT || 3000, 10);
-  if (isTest)
-    return port + jestWorkerID;
-  else
-    return port;
+  if (isTest) return port + jestWorkerID;
+  return port;
 }
 
-
 function getMongoDBConnectionDetails() {
-  const databaseName = isTest ?
-    `${process.env.DATABASE_NAME}-${jestWorkerID}` :
-    process.env.DATABASE_NAME;
+  const databaseName = isTest
+    ? `${process.env.DATABASE_NAME}-${jestWorkerID}`
+    : process.env.DATABASE_NAME;
 
   const uri = new URL(process.env.MONGOOSE_URI);
   uri.path = databaseName;
   return {
     mongooseUri: uri.toString(),
-    databaseName
+    databaseName,
   };
 }
+
+export default config;

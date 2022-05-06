@@ -9,7 +9,7 @@ beforeAll(async () => {
 afterAll(async () => {
   // Close MongoDB and HTTP server for graceful shutdown.
   mongoose.connection.close();
-  app._server.close();
+  app.server.close();
 });
 
 async function clearMongoDB() {
