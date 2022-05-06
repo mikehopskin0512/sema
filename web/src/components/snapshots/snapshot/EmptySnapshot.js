@@ -10,7 +10,7 @@ export const EmptySnapshot = () => {
           <p className={clsx(styles["empty-chart-title"], "mb-15")}>Shapshot on the left is so lonely!</p>
           <p className={styles["empty-chart-desc"]}>Add another one here.</p>
         </div>
-        <img src='/img/empty-chart.png' alt="Empty chart image"/>
+        <img src='/img/empty-chart.png' alt="Empty chart image" className={clsx(styles["empty-chart-img"])} />
       </div>
     </div>
   );

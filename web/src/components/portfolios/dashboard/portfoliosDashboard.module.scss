@@ -30,7 +30,7 @@
   &:hover {
     div {
       display: block;
-      top: 75px; 
+      top: 75px;
       left: 75px;
     }
   }
@@ -45,8 +45,8 @@
 
 .edit-icon {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
   &:hover {
     background-color: $gray-100;
     svg {
@@ -82,6 +82,8 @@
   .chart-wrap {
     position: relative;
     margin-bottom: 30px;
+    max-width: 100%;
+    box-sizing: border-box;
     @media only screen and (min-width: 1440px) {
       width: calc(50% - 16px);
       display: inline-flex;
