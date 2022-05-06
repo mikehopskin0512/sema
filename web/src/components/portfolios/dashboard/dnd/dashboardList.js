@@ -2,17 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import DropZone from './dropZone';
 import DashboardRow from './dashboardRow';
 import { ACCEPTABLE_ITEMS, DND_CASES_CHECKS } from './constants';
-import {
-  createAdditionalItemsRow,
-  reorderChildInRow,
-  reorderIndependentRow,
-  replaceChildInAnotherParent,
-} from './manipulations';
+import { createAdditionalItemsRow, reorderChildInRow, reorderIndependentRow, replaceChildInAnotherParent } from './manipulations';
 
 const DashboardDraggableList = ({
   pageLayout,
   updateLayout,
   handleSnapshotUpdate,
+  onSnapshotDirectionUpdate,
   snapshots,
   isPdfView,
 }) => {
@@ -71,7 +67,17 @@ const DashboardDraggableList = ({
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
   const renderRow = (row, currentPath) => {
-    return <DashboardRow data={row} path={currentPath} handleDrop={handleDrop} handleSnapshotUpdate={handleSnapshotUpdate} snapshots={snapshots} isPdfView={isPdfView}/>;
+    return (
+      <DashboardRow
+        data={row}
+        path={currentPath}
+        handleDrop={handleDrop}
+        handleSnapshotUpdate={handleSnapshotUpdate}
+        snapshots={snapshots}
+        onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+        isPdfView={isPdfView}
+      />
+    );
   };
 
   return (

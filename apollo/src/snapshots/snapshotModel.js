@@ -55,7 +55,7 @@ const snapshotSchema = new Schema({
     enum: ['comments', 'summaries', 'tags', 'summaries-area'],
   },
   componentData: componentDataSchema,
-
+  isHorizontal: Boolean
 }, { timestamps: true });
 
 module.exports = mongoose.model('Snapshot', snapshotSchema);
