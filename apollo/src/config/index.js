@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 
 const isTest = process.env.NODE_ENV === 'test';
 const configPath = isTest ? path.resolve(__dirname, '../../.env.test') : '.env';
@@ -6,7 +6,7 @@ const jestWorkerID = parseInt(process.env.JEST_WORKER_ID || 0, 10);
 
 require('dotenv').config({ path: configPath });
 
-const config = {
+module.exports = {
   ...getMongoDBConnectionDetails(),
   port: getPort(),
   version: process.env.VERSION,
@@ -74,5 +74,3 @@ function getMongoDBConnectionDetails() {
     databaseName,
   };
 }
-
-export default config;
