@@ -15,10 +15,8 @@ import db from '../shared/mongo';
  * The authentication data may be delivered using the basic authentication scheme (recommended - in the authorization header)
  * or the client strategy, which means that the authentication data is in the body of the request.
  */
-passport.use(new BasicStrategy(
-  async (clientId, clientSecret, done) => {
-    // logger.info('BASIC');
-
+passport.use(
+  new BasicStrategy(async (clientId, clientSecret, done) => {
     if (db.verifyConnection(done)) {
       try {
         const payload = await validate(clientId, clientSecret);
@@ -35,8 +33,8 @@ passport.use(new BasicStrategy(
     }
 
     return done(null, false, { message: 'No connection to server' });
-  },
-));
+  })
+);
 
 /**
  * BearerStrategy
@@ -46,10 +44,8 @@ passport.use(new BasicStrategy(
  * application, which is issued an access token to make requests on behalf of
  * the authorizing user.
  */
-passport.use(new BearerStrategy(
-  async (token, done) => {
-    // logger.info('BEARER');
-
+passport.use(
+  new BearerStrategy(async (token, done) => {
     try {
       const { _id: userId } = await validateAuthToken(token);
       const user = await findById(userId);
@@ -59,5 +55,5 @@ passport.use(new BearerStrategy(
       logger.error(err);
       return done(err);
     }
-  },
-));
+  })
+);
