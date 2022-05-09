@@ -10,9 +10,7 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
-import ReadonlyMarkdownEditor from '../../markdownEditor/ReadonlyMarkdownEditor';
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -113,7 +111,7 @@ const CommentSnapshot = React.forwardRef(({
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
             <div>
-              <ReadonlyMarkdownEditor value={description} />
+              <MarkdownEditor readOnly={true} value={description} />
             </div>
           </div>
           <div className={clsx('column is-full')}>

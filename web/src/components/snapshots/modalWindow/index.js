@@ -24,9 +24,9 @@ import useOutsideClick from "../../../utils/useOutsideClick";
 import { notify } from '../../toaster/index.js';
 
 import { convertToRaw } from 'draft-js';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+//import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { createEditorState } from '../../markdownEditor/utils';
-import MarkdownEditor from '../../markdownEditor/MarkdownEditor';
+import MarkdownEditor from '../../markdownEditor';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
@@ -176,7 +176,7 @@ const SnapshotModal = ({
               />
             </div>
             <div className="field mb-15">
-            <MarkdownEditor value={description} setValue={setDescription}/>
+            <MarkdownEditor readOnly={false} value={description} setValue={setDescription}/>
             </div>
             <div className="has-background-gray-300 p-10 mb-20" style={containerStyle}>
               {

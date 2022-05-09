@@ -30,8 +30,7 @@ import ErrorPortfolioAvatarModal from '../avatarModals/errorPortfolioAvatarModal
 import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSAGE } from '../avatarModals/constants';
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import ReadonlyMarkdownEditor from '../../../components/markdownEditor/ReadonlyMarkdownEditor';
+import MarkdownEditor from '../../../components/markdownEditor';
 
 const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
@@ -433,7 +432,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
                   <div className="content is-relative p-10 pr-80 pt-20">
-                    <ReadonlyMarkdownEditor value={portfolio.overview} />
+                    <MarkdownEditor readOnly={true} value={portfolio.overview} />
                 </div>
                 {
                   isOwner && !pdfView && (

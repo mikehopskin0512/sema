@@ -8,8 +8,7 @@ import Toaster from '../../toaster';
 import styles from './editModal.module.scss';
 import { SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../utils/constants';
 import { convertToRaw } from 'draft-js';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import MarkdownEditor from '../../markdownEditor/MarkdownEditor';
+import MarkdownEditor from '../../markdownEditor';
 import { createEditorState } from '../../markdownEditor/utils';
 
 
@@ -39,7 +38,7 @@ const EditPortfolio = ({ isModalActive, toggleModalActive, profileOverview, port
           <section className={clsx('modal-card-body p-0', styles['modal-body'])}>
             <div className="p-40">
               <div className="has-text-weight-bold is-size-6 mb-10">Overview</div>
-              <MarkdownEditor value={overview} setValue={setOverview} />
+              <MarkdownEditor readOnly={false} value={overview} setValue={setOverview} />
               <div className="is-flex is-align-items-center is-justify-content-right mt-20 mb-60">
               {/* TODO: Will be added after markdown implementation */}
                   {/* You can use markdown to format your personal overview.

@@ -10,9 +10,7 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import ReadonlyMarkdownEditor from '../../markdownEditor/ReadonlyMarkdownEditor';
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -107,7 +105,7 @@ const ChartSnapshot = React.forwardRef(({
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
               <div className="mb-25">
-                <ReadonlyMarkdownEditor value={description} />
+                <MarkdownEditor readOnly={true} value={description} />
               </div>
             </div>
             <div className={clsx(styles['chart-container'])}>
