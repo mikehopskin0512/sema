@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { autoIndex } from '../config';
 
 const invitationSchema = new mongoose.Schema({
-  sender: {
+  senderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
