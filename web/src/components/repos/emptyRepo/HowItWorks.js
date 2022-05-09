@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import Link from 'next/link';
 import styles from './emptyRepo.module.scss';
 import SupportForm from '../../supportForm';
-import Select from '../../activity/select';
-
-import { SUPPORT_VIDEO_LANGUAGES, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../utils/constants';
 import * as analytics from '../../../utils/analytics';
+import { KNOWLEDGE_BASE_SUMMARIES_URL, KNOWLEDGE_BASE_TAGS_URL, SUPPORT_VIDEO_LANGUAGES } from '../../../utils/constants';
+import { SupportHeroBackIcon, SupportHeroFrontIcon } from '../../Icons';
 
-const HowItWorks = () => {
-  const [language, setLanguage] = useState(SUPPORT_VIDEO_LANGUAGES[0]);
+function HowItWorks() {
+  const [language] = useState(SUPPORT_VIDEO_LANGUAGES[0]);
   const [supportForm, setSupportForm] = useState(false);
-
-  const openSupportForm = () =>  {
-    setSupportForm(true);
-    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_CONTACT_SUPPORT, {});
-  };
   const closeSupportForm = () => setSupportForm(false);
 
-  const openSemaDocs = () => {
-    analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_LEARN_MORE_ABOUT_SUMMARIES_AND_TAGS, {});
-  };
-  
   useEffect(() => {
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_ON_DIFFERENT_LANGUAGE_VIDEO, { language: language.label });
   }, [language]);
@@ -31,15 +20,23 @@ const HowItWorks = () => {
     <div className={clsx("has-background-blue-0 border-radius-4px p-40", styles.container)}>
       <SupportForm active={supportForm} closeForm={closeSupportForm} />
       <div className="has-text-centered">
-        <p className="has-text-weight-semibold has-text-primary is-size-5 mb-10">See how it works</p>
-        <p>Sema supercharges your GitHub reviews with snippets, summaries, and tags.</p>
-        <div className="has-background-white mt-30">
-          <img src="/img/no-repos3.svg" className="my-60" />
+        <p className="has-text-weight-semibold has-text-primary is-size-4 mb-10">See How Sema Works</p>
+        <p>Sema supercharges your GitHub reviews with snippets</p>
+        <p>summaries, and tags.</p>
+        <div className='has-text-left'>
+          <SupportHeroFrontIcon className={`ml-16 ${styles['front-hero']}`} />
         </div>
+        <div className={`has-background-white border-radius-8px ${styles['image-container']}`}>
+          <img alt="sema example" src="/img/no-repos3.svg" className="my-60" />
+        </div>
+        <SupportHeroBackIcon className={styles['back-hero']} />
+        <p className='has-text-gray-700 has-text-weight-semibold'>{'Learn more about '}
+          <a href={KNOWLEDGE_BASE_SUMMARIES_URL} target="_blank" className='has-text-primary is-underlined' rel="noreferrer">Summaries</a>
+          {' and '} 
+          <a href={KNOWLEDGE_BASE_TAGS_URL} target="_blank" className='has-text-primary is-underlined' rel="noreferrer">Tags</a>
+        </p>
       </div>
     </div>
-    <div className="is-divider p-0 m-0" />
-    <div className={clsx("has-background-white border-radius-4px p-40 mb-40", styles.container)}>
       {/* Commented for a future video language implementation */}
       {/* <div className="is-flex is-justify-content-flex-end is-align-items-center mb-15">
         <p className="is-size-7 mr-10">Video Language</p>
@@ -57,16 +54,10 @@ const HowItWorks = () => {
           small
           width={150}
         />
-      </div> */}
+      </div>
       <div className={styles['video-container']}>
         <iframe src={language.url} key={language.url} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-      </div>
-      <div className="has-text-centered is-flex is-flex-direction-column is-align-items-center mt-50">
-        <p>Have more questions or want to get a personal demo?</p>
-        <p>We'd love to show you. </p>
-        <button type="button" className="button is-primary mb-20 has-text-weight-semibold mt-25" onClick={() => openSupportForm('Support')}>Contact Support</button>
-      </div>
-    </div>
+      </div> */}
     </>
   )
 }
