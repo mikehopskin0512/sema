@@ -141,10 +141,12 @@ export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
 export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
+export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
 
 export const SEMA_APP_URL = 'https://app.semasoftware.com';
 
 export const SEMA_FAQ_SLUGS = {
+  LEARN_MORE_ABOUT_TEAM_INSIGHTS: 'articles/6116499-team-insights-who-can-see-what',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   TEAM_INSIGHTS: 'team-insights-who-can-see-what',

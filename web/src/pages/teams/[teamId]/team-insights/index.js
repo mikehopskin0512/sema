@@ -12,7 +12,7 @@ import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
 import { teamsOperations } from "../../../../state/features/teams";
 import { repositoriesOperations } from "../../../../state/features/repositories";
-import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_INTERCOM_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
@@ -361,7 +361,7 @@ const TeamInsights = () => {
                 <span className="ml-8">
                   Only you can see this page.
                 </span>
-                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`} target="_blank" rel="noreferrer noopener">
+                <a href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_TEAM_INSIGHTS}`} target="_blank" rel="noreferrer noopener">
                   <span className="is-underlined ml-5">
                     Learn More
                   </span>
