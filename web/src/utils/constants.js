@@ -149,6 +149,7 @@ export const SEMA_INTERCOM_URL = 'https://intercom.help/sema-software/en/';
 
 export const SEMA_FAQ_SLUGS = {
   LEARN_MORE_ABOUT_TEAM_INSIGHTS: 'articles/6116499-team-insights-who-can-see-what',
+  LEARN_MORE_ABOUT_PERSONAL_INSIGHTS: 'articles/6116505-is-there-an-executive-dashboard-of-all-developers',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   TEAM_INSIGHTS: 'team-insights-who-can-see-what',
