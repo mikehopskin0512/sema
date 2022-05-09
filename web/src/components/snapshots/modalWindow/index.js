@@ -89,6 +89,7 @@ const SnapshotModal = ({
       title: data.title,
       description: data.description,
       componentType: dataType,
+      isHorizontal: dataType === 'comments',
       componentData: {
         ...snapshotData.componentData,
         smartComments: parseSnapshotData(snapshotData.componentData.smartComments)

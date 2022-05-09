@@ -17,6 +17,7 @@ import {
 } from './api';
 import { putSnapshot } from '../snapshots/api';
 import PortfolioListNotification from '../../../pages/portfolios/components/notification';
+import { RESPONSE_STATUSES } from '../../../utils/constants';
 import { requestAddSnapshotToPortfolio } from '../snapshots/actions';
 import { UPLOAD_AVATAR_ERROR_MESSAGE } from '../../../components/portfolios/avatarModals/constants';
 
@@ -278,12 +279,17 @@ export const copyExistingPortfolio = (portfolio, token) => async (dispatch) => {
   }
 };
 
-export const updateSnapshot = (id, body, token) => async (dispatch) => {
+export const updateSnapshot = (id, body, token, isLoader = true, onSuccess) => async (dispatch) => {
   try {
-    dispatch(requestUpdateSnapshot());
+    isLoader && dispatch(requestUpdateSnapshot());
     const payload = await putSnapshot(id, body, token);
     const { data } = payload;
     dispatch(requestUpdateSnapshotSuccess(data));
+
+    if (payload.status === RESPONSE_STATUSES.SUCCESS && typeof onSuccess === 'function') {
+      onSuccess();
+    }
+
     return payload;
   } catch (error) {
     const {

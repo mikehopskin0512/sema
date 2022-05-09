@@ -10,10 +10,8 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
-import { portfoliosOperations } from '../../../state/features/portfolios';
 
 const { duplicateSnapshot } = snapshotsOperations;
-const { removeSnapshot } = portfoliosOperations;
 
 const ChartSnapshot = React.forwardRef(({
   snapshotData,
@@ -21,7 +19,8 @@ const ChartSnapshot = React.forwardRef(({
   preview,
   spaced,
   isOwner,
-  onUpdate
+  onUpdate,
+  onSnapshotDirectionUpdate
 }, ref) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
@@ -76,8 +75,8 @@ const ChartSnapshot = React.forwardRef(({
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, styles['chart-snapshot'], 'has-background-gray-200 mb-30 p-25 is-relative', spaced && 'mr-16')} ref={preview}>
-        {isOwner && <div className={clsx('is-pulled-right mb-40 is-flex is-align-items-baseline mr-0', styles['container-buttons-wrapper'])}>
+      <div className={clsx(styles.snapshot, styles['chart-snapshot'], "has-background-gray-200 p-25 is-relative chart-snapshot", spaced && 'mr-16')} ref={preview}>
+        {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline mr-0", styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
             options={[

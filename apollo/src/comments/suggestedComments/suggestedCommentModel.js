@@ -38,6 +38,7 @@ const suggestedCommentSchema = new Schema({
   collections: [{
     collectionId: { type: Schema.Types.ObjectId, ref: 'Collection' },
     name: String,
+    type: { type: String },
   }],
   engGuides: [{
     engGuide: { type: Schema.Types.ObjectId, ref: 'EngGuide' },
