@@ -12,7 +12,8 @@
     "clean": "rm -rf ./dist && mkdir dist",
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
     "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
@@ -65,8 +66,11 @@
     "@babel/node": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@rushstack/eslint-patch": "^1.1.3",
+    "babel-jest": "^27.5.1",
     "eslint": "^8.14.0",
     "eslint-config-sema": "file:../eslint-config",
+    "eslint-plugin-jest": "^26.1.5",
+    "jest": "^27.5.1",
     "nodemon": "^2.0.4"
   }
 }

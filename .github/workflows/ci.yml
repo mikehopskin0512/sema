@@ -1,0 +1,62 @@
+name: CI
+on:
+  - pull_request
+
+jobs:
+  set_changed_services:
+    name: Triage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get list of changed files
+        uses: jitterbit/get-changed-files@v1
+        id: files
+      - name: Get changed services
+        id: changed_services
+        run: |
+          changed_files="${{ steps.files.outputs.added_modified }}"
+          changed_services=()
+
+          for directory in apollo; do
+            if grep -E -q '\b'$directory/ <<< $changed_files; then
+              changed_services+=($directory)
+            fi
+          done
+
+          json_result=$(jq -nc '$ARGS.positional' --args ${changed_services[@]})
+
+          echo ::set-output name=matrix::"$json_result"
+    outputs:
+      matrix: ${{ steps.changed_services.outputs.matrix }}
+      changed_files: ${{ steps.files.outputs.added_modified }}
+
+  test:
+    name: Test ${{ matrix.service }}
+    needs: set_changed_services
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: ${{ fromJson(needs.set_changed_services.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker images
+        run: docker-compose build
+      - name: Run tests
+        run: docker-compose run ${{ matrix.service }}-tests
+
+  test_all:
+    name: Test All
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for any failed job
+        run: |
+          failed=$(curl -sf -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs | jq '.jobs | map(select(.name != "Test All")) | map(select(.conclusion != "success")) | length')
+
+          echo "Failed jobs: $failed"
+
+          if [[ $failed > 0 ]]; then
+            exit 1
+          fi

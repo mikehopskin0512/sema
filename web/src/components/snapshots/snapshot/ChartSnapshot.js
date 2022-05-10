@@ -10,6 +10,7 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -90,20 +91,24 @@ const ChartSnapshot = React.forwardRef(({
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
-              <div className="is-clickable is-flex mr-40">
+              <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
                 <OptionsIcon />
               </div>
             )}
           />
-          <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
-            <DragTriggerIcon />
-          </div>
+          {isOwner && (
+            <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
+              <DragTriggerIcon />
+            </div>
+          )}
         </div>}
         <div className="is-multiline mt-10 mr-0">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
-              <div className="mb-25">{description}</div>
+              <div className="mb-25">
+                <MarkdownEditor readOnly={true} value={description} />
+              </div>
             </div>
             <div className={clsx(styles['chart-container'])}>
               <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300 mr-0">

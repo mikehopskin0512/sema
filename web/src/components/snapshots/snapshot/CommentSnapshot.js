@@ -10,6 +10,7 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -19,7 +20,7 @@ const CommentSnapshot = React.forwardRef(({
   preview,
   isOwner,
   onUpdate,
-  onSnapshotDirectionUpdate,
+  onSnapshotDirectionUpdate
 }, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
@@ -97,19 +98,23 @@ const CommentSnapshot = React.forwardRef(({
               },
             ]}
             trigger={(
-              <div className="is-clickable is-flex mr-40">
+              <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
                 <OptionsIcon />
               </div>
             )}
           />
-          <div ref={ref} className={styles['draggable-container']}>
-            <DragTriggerIcon />
-          </div>
+          {isOwner && (
+            <div ref={ref} className={styles['draggable-container']}>
+              <DragTriggerIcon />
+            </div>
+          )}
         </div>}
         <div className={clsx('columns is-multiline mt-10 sema-is-boxed', styles['comments-snap-content'])}>
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
-            <div>{description}</div>
+            <div>
+              <MarkdownEditor readOnly={true} value={description} />
+            </div>
           </div>
           <div className={clsx('column is-full')}>
             <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300">

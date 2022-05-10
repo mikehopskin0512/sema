@@ -68,6 +68,7 @@ import { ReactComponent as ResendSvg } from './img/resend.svg';
 import { ReactComponent as SaveSvg } from './img/save.svg';
 import { ReactComponent as SearchSvg } from './img/search.svg';
 import { ReactComponent as SemaSvg } from './img/sema.svg';
+import { ReactComponent as SemaCircleLogoSvg } from './img/sema-circle-logo.svg';
 import { ReactComponent as SeparatorSvg } from './img/separator.svg';
 import { ReactComponent as SettingsSvg } from './img/settings.svg';
 import { ReactComponent as SignOutSvg } from './img/sign-out.svg';
@@ -119,590 +120,613 @@ const Icon = ({
   });
 };
 
-export const ActivityLogIcon = (props) => (
-  <Icon {...props}>
+export function ActivityLogIcon(props) {
+  return <Icon {...props}>
     <ActivityLogSvg />
   </Icon>
-);
+}
 
-export const ShareIcon = (props) => (
-  <Icon {...props}>
+export function ShareIcon(props) {
+  return <Icon {...props}>
     <ShareSvg />
   </Icon>
-);
+}
 
-export const CameraIcon = (props) => (
-  <Icon {...props}>
+export function CameraIcon(props) {
+  return <Icon {...props}>
     <CameraSvg />
   </Icon>
-);
+}
 
-export const AlertFilledIcon = (props) => (
-  <Icon {...props}>
+export function AlertFilledIcon(props) {
+  return <Icon {...props}>
     <AlertFilledSvg />
   </Icon>
-);
+}
 
-export const AlertTriangleIcon = (props) => (
-  <Icon {...props}>
+export function AlertTriangleIcon(props) {
+  return <Icon {...props}>
     <AlertTriangleSvg />
   </Icon>
-);
+}
 
-export const AlertOutlineIcon = (props) => (
-  <Icon {...props}>
+export function AlertOutlineIcon(props) {
+  return <Icon {...props}>
     <AlertOutlineSvg />
   </Icon>
-);
+}
 
-export const ArrowAscIcon = (props) => (
-  <Icon {...props}>
+export function ArrowAscIcon(props) {
+  return <Icon {...props}>
     <ArrowAscSvg />
   </Icon>
-);
+}
 
-export const ArrowDescIcon = (props) => (
-  <Icon {...props}>
+export function ArrowDescIcon(props) {
+  return <Icon {...props}>
     <ArrowDescSvg />
   </Icon>
-);
+}
 
-export const ArrowDownIcon = (props) => (
-  <Icon {...props}>
+export function ArrowDownIcon(props) {
+  return <Icon {...props}>
     <ArrowDownSvg />
   </Icon>
-);
+}
 
-export const ArrowDropdownIcon = (props) => (
-  <Icon {...props}>
+export function ArrowDropdownIcon(props) {
+  return <Icon {...props}>
     <ArrowDrowdownSvg />
   </Icon>
-);
+}
 
-export const ArrowLeftIcon = (props) => (
-  <Icon {...props}>
+export function ArrowLeftIcon(props) {
+  return <Icon {...props}>
     <ArrowLeftSvg />
   </Icon>
-);
+}
 
-export const ArrowRightIcon = (props) => (
-  <Icon {...props}>
+export function ArrowRightIcon(props) {
+  return <Icon {...props}>
     <ArrowRightSvg />
   </Icon>
-);
+}
 
-export const ArrowUpIcon = (props) => (
-  <Icon {...props}>
+export function ArrowUpIcon(props) {
+  return <Icon {...props}>
     <ArrowUpSvg />
   </Icon>
-);
+}
 
-export const AuthorIcon = (props) => (
-  <Icon {...props}>
+export function AuthorIcon(props) {
+  return <Icon {...props}>
     <AuthorSvg />
   </Icon>
-);
+}
 
-export const BroomIcon = (props) => (
-  <Icon {...props}>
+export function BroomIcon(props) {
+  return <Icon {...props}>
     <BroomSvg />
   </Icon>
-);
+}
 
-export const BugsIcon = (props) => (
-  <Icon {...props}>
+export function BugsIcon(props) {
+  return <Icon {...props}>
     <BugsSvg />
   </Icon>
-);
+}
 
-export const CalendarFilledIcon = (props) => (
-  <Icon {...props}>
+export function CalendarFilledIcon(props) {
+  return <Icon {...props}>
     <CalendarFilledSvg />
   </Icon>
-);
+}
 
-export const CalendarOutlineIcon = (props) => (
-  <Icon {...props}>
+export function CalendarOutlineIcon(props) {
+  return <Icon {...props}>
     <CalendarOutlineSvg />
   </Icon>
-);
+}
 
-export const CheckFilledIcon = (props) => (
-  <Icon {...props}>
+export function CheckFilledIcon(props) {
+  return <Icon {...props}>
     <CheckFilledSvg />
   </Icon>
-);
+}
 
-export const CheckOnlineIcon = (props) => (
-  <Icon {...props}>
+export function CheckOnlineIcon(props) {
+  return <Icon {...props}>
     <CheckOnlineSvg />
   </Icon>
-);
+}
 
-export const ChevronDownIcon = (props) => (
-  <Icon {...props}>
+export function ChevronDownIcon(props) {
+  return <Icon {...props}>
     <ChevronDownSvg />
   </Icon>
-);
+}
 
-export const ChevronLeftIcon = (props) => (
-  <Icon {...props}>
+export function ChevronLeftIcon(props) {
+  return <Icon {...props}>
     <ChevronLeftSvg />
   </Icon>
-);
+}
 
-export const ChevronRightIcon = (props) => (
-  <Icon {...props}>
+export function ChevronRightIcon(props) {
+  return <Icon {...props}>
     <ChevronRightSvg />
   </Icon>
-);
+}
 
-export const ChevronUpIcon = (props) => (
-  <Icon {...props}>
+export function ChevronUpIcon(props) {
+  return <Icon {...props}>
     <ChevronUpSvg />
   </Icon>
-);
+}
 
-export const ClockIcon = (props) => (
-  <Icon {...props}>
+export function ClockIcon(props) {
+  return <Icon {...props}>
     <ClockSvg />
   </Icon>
-);
+}
 
-export const CloseIcon = (props) => (
-  <Icon {...props}>
+export function CloseIcon(props) {
+  return <Icon {...props}>
     <CloseSvg />
   </Icon>
-);
+}
 
-export const CodeIcon = (props) => (
-  <Icon {...props}>
+export function CodeIcon(props) {
+  return <Icon {...props}>
     <CodeSvg />
   </Icon>
-);
+}
 
-export const CodeStatsIcon = (props) => (
-  <Icon {...props}>
+export function CodeStatsIcon(props) {
+  return <Icon {...props}>
     <CodeStatsSvg />
   </Icon>
-);
+}
 
-export const CommentsIcon = (props) => (
-  <Icon {...props}>
+export function CommentsIcon(props) {
+  return <Icon {...props}>
     <CommentsSvg />
   </Icon>
-);
+}
 
-export const PlayIcon = (props) => (
-  <Icon {...props}>
+export function PlayIcon(props) {
+  return <Icon {...props}>
     <PlaySvg />
   </Icon>
-);
+}
 
-export const CompassIcon = (props) => (
-  <Icon {...props}>
+export function CompassIcon(props) {
+  return <Icon {...props}>
     <CompassSvg />
   </Icon>
-);
+}
 
-export const CustomerIcon = (props) => (
-  <Icon {...props}>
+export function CustomerIcon(props) {
+  return <Icon {...props}>
     <CustomerSvg />
   </Icon>
-);
+}
 
-export const DeleteIcon = (props) => (
-  <Icon {...props}>
+export function DeleteIcon(props) {
+  return <Icon {...props}>
     <DeleteSvg />
   </Icon>
-);
+}
 
-export const DeveloperIcon = (props) => (
-  <Icon {...props}>
+export function DeveloperIcon(props) {
+  return <Icon {...props}>
     <DeveloperSvg />
   </Icon>
-);
+}
 
-export const DotIcon = (props) => (
-  <Icon {...props}>
+export function DotIcon(props) {
+  return <Icon {...props}>
     <DotSvg />
   </Icon>
-);
+}
 
-export const DotsIcon = (props) => (
-  <Icon {...props}>
+export function DotsIcon(props) {
+  return <Icon {...props}>
     <DotsSvg />
   </Icon>
-);
+}
 
-export const DownloadIcon = (props) => (
-  <Icon {...props}>
+export function DownloadIcon(props) {
+  return <Icon {...props}>
     <DownloadSvg />
   </Icon>
-);
+}
 
-export const DuplicateIcon = (props) => (
-  <Icon {...props}>
+export function DuplicateIcon(props) {
+  return <Icon {...props}>
     <DuplicateSvg />
   </Icon>
-);
+}
 
-export const EditIcon = (props) => (
-  <Icon {...props}>
+export function EditIcon(props) {
+  return <Icon {...props}>
     <EditSvg />
   </Icon>
-);
+}
 
-export const TwitterIcon = (props) => (
-  <Icon {...props}>
+export function TwitterIcon(props) {
+  return <Icon {...props}>
     <TwitterSvg />
   </Icon>
-);
+}
 
-export const LinkedinIcon = (props) => (
-  <Icon {...props}>
+export function LinkedinIcon(props) {
+  return <Icon {...props}>
     <LinkedinSvg />
   </Icon>
-);
+}
 
-export const InstagramIcon = (props) => (
-  <Icon {...props}>
+export function InstagramIcon(props) {
+  return <Icon {...props}>
     <InstagramSvg />
   </Icon>
-);
+}
 
-export const FacebookIcon = (props) => (
-  <Icon {...props}>
+export function FacebookIcon(props) {
+  return <Icon {...props}>
     <FacebookSvg />
   </Icon>
-);
+}
 
-export const ExternalLinkIcon = (props) => (
-  <Icon {...props}>
+export function ExternalLinkIcon(props) {
+  return <Icon {...props}>
     <ExternalLinkSvg />
   </Icon>
-);
+}
 
-export const EyeIcon = (props) => (
-  <Icon {...props}>
+export function EyeIcon(props) {
+  return <Icon {...props}>
     <EyeSvg />
   </Icon>
-);
+}
 
-export const EyeOffIcon = (props) => (
-  <Icon {...props}>
+export function EyeOffIcon(props) {
+  return <Icon {...props}>
     <EyeOffSvg />
   </Icon>
-);
+}
 
-export const RefreshIcon = (props) => (
-  <Icon {...props}>
+export function RefreshIcon(props) {
+  return <Icon {...props}>
     <RefreshSvg />
   </Icon>
-);
+}
 
-export const FileIcon = (props) => (
-  <Icon {...props}>
+export function FileIcon(props) {
+  return <Icon {...props}>
     <FileSvg />
   </Icon>
-);
+}
 
-export const FilterIcon = (props) => (
-  <Icon {...props}>
+export function FilterIcon(props) {
+  return <Icon {...props}>
     <FilterSvg />
   </Icon>
-);
+}
 
-export const GithubIcon = (props) => (
-  <Icon {...props}>
+export function GithubIcon(props) {
+  return <Icon {...props}>
     <GithubSvg />
   </Icon>
-);
+}
 
-export const GridIcon = (props) => (
-  <Icon {...props}>
+export function GridIcon(props) {
+  return <Icon {...props}>
     <GridSvg />
   </Icon>
-);
+}
 
-export const HeartFilledIcon = (props) => (
-  <Icon {...props}>
+export function HeartFilledIcon(props) {
+  return <Icon {...props}>
     <HeartFilledSvg />
   </Icon>
-);
+}
 
-export const HeartOutlineIcon = (props) => (
-  <Icon {...props}>
+export function HeartOutlineIcon(props) {
+  return <Icon {...props}>
     <HeartOutlineSvg />
   </Icon>
-);
+}
 
-export const InfoFilledIcon = (props) => (
-  <Icon {...props}>
+export function InfoFilledIcon(props) {
+  return <Icon {...props}>
     <InfoFilledSvg />
   </Icon>
-);
+}
 
-export const InfoOutlineIcon = (props) => (
-  <Icon {...props}>
+export function InfoOutlineIcon(props) {
+  return <Icon {...props}>
     <InfoOutlineSvg />
   </Icon>
-);
+}
 
-export const ListIcon = (props) => (
-  <Icon {...props}>
+export function ListIcon(props) {
+  return <Icon {...props}>
     <ListSvg />
   </Icon>
-);
+}
 
-export const LoadingBlackIcon = (props) => (
-  <Icon {...props}>
+export function LoadingBlackIcon(props) {
+  return <Icon {...props}>
     <LoadingBlackSvg />
   </Icon>
-);
+}
 
-export const LoadingBlueIcon = (props) => (
-  <Icon {...props}>
+export function LoadingBlueIcon(props) {
+  return <Icon {...props}>
     <LoadingBlueSvg />
   </Icon>
-);
-export const LoadingGreenIcon = (props) => (
-  <Icon {...props}>
+}
+export function LoadingGreenIcon(props) {
+  return <Icon {...props}>
     <LoadingGreenSvg />
   </Icon>
-);
+}
 
-export const LoadingRedIcon = (props) => (
-  <Icon {...props}>
+export function LoadingRedIcon(props) {
+  return <Icon {...props}>
     <LoadingRedSvg />
   </Icon>
-);
+}
 
-export const MailIcon = (props) => (
-  <Icon {...props}>
+export function MailIcon(props) {
+  return <Icon {...props}>
     <MailSvg />
   </Icon>
-);
+}
 
-export const MinusIcon = (props) => (
-  <Icon {...props}>
+export function MinusIcon(props) {
+  return <Icon {...props}>
     <MinusSvg />
   </Icon>
-);
+}
 
-export const NoReactionIcon = (props) => (
-  <Icon {...props}>
+export function NoReactionIcon(props) {
+  return <Icon {...props}>
     <img src={getIconUrl('noreaction')} alt="no reaction icon" />
   </Icon>
-);
+}
 
-export const OkIcon = (props) => (
-  <Icon {...props}>
+export function OkIcon(props) {
+  return <Icon {...props}>
     <img src={getIconUrl('ok')} alt="ok icon" />
   </Icon>
-);
+}
 
-export const OptionsIcon = (props) => (
-  <Icon {...props}>
+export function OptionsIcon(props) {
+  return <Icon {...props}>
     <OptionsSvg />
   </Icon>
-);
+}
 
-export const OverviewIcon = (props) => (
-  <Icon {...props}>
+export function OverviewIcon(props) {
+  return <Icon {...props}>
     <OverviewSvg />
   </Icon>
-);
+}
 
-export const PdfIcon = (props) => (
-  <Icon {...props}>
+export function PdfIcon(props) {
+  return <Icon {...props}>
     <PdfSvg />
   </Icon>
-);
+}
 
-export const PhotoIcon = (props) => (
-  <Icon {...props}>
+export function PhotoIcon(props) {
+  return <Icon {...props}>
     <PhotoSvg />
   </Icon>
-);
+}
 
-export const PlusIcon = (props) => (
-  <Icon {...props}>
+export function PlusIcon(props) {
+  return <Icon {...props}>
     <PlusSvg />
   </Icon>
-);
-export const ProductIcon = (props) => (
-  <Icon {...props}>
+}
+export function ProductIcon(props) {
+  return <Icon {...props}>
     <ProductSvg />
   </Icon>
-);
-export const QuestionIcon = (props) => (
-  <Icon {...props}>
+}
+export function QuestionIcon(props) {
+  return <Icon {...props}>
     <img src={getIconUrl('question')} alt='question icon' />
   </Icon>
-);
+}
 
-export const ResendIcon = (props) => (
-  <Icon {...props}>
+export function ResendIcon(props) {
+  return <Icon {...props}>
     <ResendSvg />
   </Icon>
-);
-export const SaveIcon = (props) => (
-  <Icon {...props}>
+}
+export function SaveIcon(props) {
+  return <Icon {...props}>
     <SaveSvg />
   </Icon>
-);
-export const SearchIcon = (props) => (
-  <Icon {...props}>
+}
+export function SearchIcon(props) {
+  return <Icon {...props}>
     <SearchSvg />
   </Icon>
-);
-export const SemaIcon = (props) => (
-  <Icon {...props}>
+}
+export function SemaIcon(props) {
+  return <Icon {...props}>
     <SemaSvg />
   </Icon>
-);
-export const SeparatorIcon = (props) => (
-  <Icon {...props}>
+}
+export function SemaCircleIcon(props) {
+  return <Icon {...props}>
+    <SemaCircleLogoSvg />
+  </Icon>
+}
+export function SeparatorIcon(props) {
+  return <Icon {...props}>
     <SeparatorSvg />
   </Icon>
-);
-export const SettingsIcon = (props) => (
-  <Icon {...props}>
+}
+export function SettingsIcon(props) {
+  return <Icon {...props}>
     <SettingsSvg />
   </Icon>
-);
+}
 
-export const SignOutIcon = (props) => (
-  <Icon {...props}>
+export function SignOutIcon(props) {
+  return <Icon {...props}>
     <SignOutSvg />
   </Icon>
-);
+}
 
-export const SourceIcon = (props) => (
-  <Icon {...props}>
+export function SourceIcon(props) {
+  return <Icon {...props}>
     <SourceSvg />
   </Icon>
-);
-export const StarFilledIcon = (props) => (
-  <Icon {...props}>
+}
+export function StarFilledIcon(props) {
+  return <Icon {...props}>
     <StarFilledSvg />
   </Icon>
-);
+}
 
-export const StarOutlineScg = (props) => (
-  <Icon {...props}>
+export function StarOutlineScg(props) {
+  return <Icon {...props}>
     <StarOutlineScg />
   </Icon>
-);
+}
 
-export const SwipeIcon = (props) => (
-  <Icon {...props}>
+export function SupportIcon(props) {
+  return <Icon {...props}>
+    <img src={getIconUrl('support')} alt='support icon' />
+  </Icon>
+}
+
+export function SupportHeroFrontIcon(props) {
+  return <Icon {...props}>
+    <img src={getIconUrl('supporthero1')} alt='support icon' />
+  </Icon>
+}
+
+export function SupportHeroBackIcon(props) {
+  return <Icon {...props}>
+    <img src={getIconUrl('supporthero2')} alt='support icon' />
+  </Icon>
+}
+
+export function SwipeIcon(props) {
+  return <Icon {...props}>
     <SwipeSvg />
   </Icon>
-);
+}
 
-export const Trophy2Icon = (props) => (
-  <Icon {...props}>
+export function Trophy2Icon(props) {
+  return <Icon {...props}>
     <Trophy2Svg />
   </Icon>
-);
+}
 
-export const ToolIcon = (props) => (
-  <Icon {...props}>
+export function ToolIcon(props) {
+  return <Icon {...props}>
     <img src={getIconUrl('tool')} alt='fix icon' />
   </Icon>
-);
+}
 
-export const TrashIcon = (props) => (
-  <Icon {...props}>
+export function TrashIcon(props) {
+  return <Icon {...props}>
     <TrashSvg />
   </Icon>
-);
+}
 
-export const TrophyIcon = (props) => (
-  <Icon {...props}>
+export function TrophyIcon(props) {
+  return <Icon {...props}>
     <img src={getIconUrl('trophy')} alt="trophy" />
   </Icon>
-);
+}
 
-export const UndoIcon = (props) => (
-  <Icon {...props}>
+export function UndoIcon(props) {
+  return <Icon {...props}>
     <UndoSvg />
   </Icon>
-);
+}
 
-export const UploadIcon = (props) => (
-  <Icon {...props}>
+export function UploadIcon(props) {
+  return <Icon {...props}>
     <UploadSvg />
   </Icon>
-);
+}
 
-export const VerifiedFilledIcon = (props) => (
-  <Icon {...props}>
+export function VerifiedFilledIcon(props) {
+  return <Icon {...props}>
     <VerifiedFilledSvg />
   </Icon>
-);
+}
 
-export const VerifiedOutlineIcon = (props) => (
-  <Icon {...props}>
+export function VerifiedOutlineIcon(props) {
+  return <Icon {...props}>
     <VerifiedOutlineSvg />
   </Icon>
-);
+}
 
-export const WarningFilledIcon = (props) => (
-  <Icon {...props}>
+export function WarningFilledIcon(props) {
+  return <Icon {...props}>
     <WarningFilledSvg />
   </Icon>
-);
+}
 
-export const WarningOutlineIcon = (props) => (
-  <Icon {...props}>
+export function WarningOutlineIcon(props) {
+  return <Icon {...props}>
     <WarningOutlineSvg />
   </Icon>
-);
+}
 
-export const StarOutlineIcon = (props) => (
-  <Icon {...props}>
+export function StarOutlineIcon(props) {
+  return <Icon {...props}>
     <StarOutlineSvg />
   </Icon>
-);
+}
 
-export const TeamIcon = (props) => (
-  <Icon {...props}>
+export function TeamIcon(props) {
+  return <Icon {...props}>
     <TeamSvg />
   </Icon>
-);
+}
 
-export const LinkIcon = (props) => (
-  <Icon {...props}>
+export function LinkIcon(props) {
+  return <Icon {...props}>
     <LinkSvg />
   </Icon>
-);
+}
 
-export const TagIcon = (props) => (
-  <Icon {...props}>
+export function TagIcon(props) {
+  return <Icon {...props}>
     <TagSvg />
   </Icon>
-);
+}
 
-export const InviteIcon = (props) => (
-  <Icon {...props}>
+export function InviteIcon(props) {
+  return <Icon {...props}>
     <InviteSvg />
   </Icon>
-);
+}
 
-export const FilterBarsIcon = (props) => (
-  <Icon {...props}>
+export function FilterBarsIcon(props) {
+  return <Icon {...props}>
     <FilterBarsSvg fill="" />
   </Icon>
-);
+}
 
-export const DragTriggerIcon = (props) => (
-  <Icon {...props}>
+export function DragTriggerIcon(props) {
+  return <Icon {...props}>
     <DragTrigger />
   </Icon>
-);
+}
 
 export const CopyButtonIcon = (props) => (
   <Icon {...props}>
