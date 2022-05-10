@@ -1,0 +1,24 @@
+#!/usr/bin/env groovy
+pipeline {
+    agent none
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        disableConcurrentBuilds()
+        retry(2)
+        timestamps()
+    }
+
+    stages {
+        stage('Prepare') {
+            agent {
+                docker {
+                    image 'cimg/base:2020.01'
+                    args '-u root --privileged --net host'
+                }
+            }
+            steps {
+                sh 'sudo apt-get update -y && sudo apt-get install -y jq awscli'
+            }
+        }
+    }
+}
