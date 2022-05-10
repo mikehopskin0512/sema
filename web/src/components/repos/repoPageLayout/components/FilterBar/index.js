@@ -36,6 +36,7 @@ const FilterBar = ({
               end={endDate}
               onChange={onDateChange}
               outlined
+              onChangeFilter={onChangeFilter}
             />
           </div>
           {

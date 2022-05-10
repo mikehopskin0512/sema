@@ -48,6 +48,7 @@ const PersonalInsights = () => {
     tags: [],
     pr: [],
     repo: [],
+    dateOption: ''
   });
   const [commentView, setCommentView] = useState('received');
   const [filterUserList, setFilterUserList] = useState([]);
@@ -350,7 +351,7 @@ const PersonalInsights = () => {
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)}/>
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} />
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}

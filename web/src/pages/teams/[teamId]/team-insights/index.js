@@ -48,6 +48,7 @@ const TeamInsights = () => {
     tags: [],
     pr: [],
     repo: [],
+    dateOption: ''
   });
   const [commentView, setCommentView] = useState('received');
   const [filterUserList, setFilterUserList] = useState([]);
@@ -427,7 +428,7 @@ const TeamInsights = () => {
         <TeamStatsFilter filter={filter} individualFilter={isActive} commentView={commentView} filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionLineChart reactions={reactionChartData} groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} />
-          <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} />
+          <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} />
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES_AREA} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
