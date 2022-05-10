@@ -1,0 +1,10 @@
+@import "../../../../styles/_colors.module.scss"; 
+
+.panel {
+  background: $blue-50;
+}
+
+.createBtn {
+  border: 2px solid $blue-700;
+  color: $blue-700;
+}

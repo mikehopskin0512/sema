@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon, PdfIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -15,7 +15,7 @@ import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
-import { black950, gray600, white50 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -30,11 +30,12 @@ import ErrorPortfolioAvatarModal from '../avatarModals/errorPortfolioAvatarModal
 import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSAGE } from '../avatarModals/constants';
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
+import MarkdownEditor from '../../../components/markdownEditor';
 
-const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
-const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
+const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
   const router = useRouter();
   const showNotification = (isError) => {
     //ToDo: change this for new notification component after ETCR-1086 will be merged
@@ -213,6 +214,29 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
     }))
   }
 
+  const onSnapshotDirectionUpdate = async ({ snapshot, type }) => {
+    const parseCommentsData = (snapshotData) => {
+      const result = [...snapshotData];
+      return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
+    }
+
+    const snapshotDataForSave = {
+      ...snapshot,
+      userId: userData._id,
+      componentType: type,
+      componentData: {
+        ...snapshot.componentData,
+        smartComments: parseCommentsData(snapshot.componentData?.smartComments)
+      },
+      isHorizontal: !snapshot.isHorizontal
+    }
+
+    await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
+      toggleEditModal(false);
+      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
+    }))
+  }
+
   const onAddFileError = () => {
     toggleAddAvatarModal(false);
     toggleErrorAvatarModal(true);
@@ -277,7 +301,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         onSubmit={() => onDeletePortfolio()}
         type="portfolio"
       />
-      { isAddAvatarModalOpen && <AddPortfolioAvatarModal 
+      { isAddAvatarModalOpen && <AddPortfolioAvatarModal
         close={() => toggleAddAvatarModal(false)}
         onChange={onChangeAvatar}
         onError={onAddFileError}
@@ -293,17 +317,17 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         close={() => toggleErrorAvatarModal(false)}
         onChange={onChangeAvatar}
       /> }
-      <div className={clsx('mb-10', styles.title)}>
+      <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
         <div className="container py-20">
           <div className="is-relative is-flex mx-10 is-justify-content-space-between">
             <TitleField
               portfolio={portfolio}
-              isEditable={isOwner}
+              isEditable={isOwner && !pdfView}
             />
             <div className="is-relative is-flex is-align-items-center">
-              {isOwner && isIndividualView && <>
+              {!pdfView && isOwner && isIndividualView && <>
                 <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
-                  <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
+                  <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
                         (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
@@ -336,6 +360,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
                   >
                     + Add Snapshot
                   </button>
+                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
+                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}> */}
+                  {/*   <p>Save as PDF</p> */}
+                  {/*   <PdfIcon /> */}
+                  {/* </button>  */}
                   {portfolios.length === 1 &&
                     (
                       <button
@@ -379,16 +408,18 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
+          {/* //ToDo: return this functionality when upload pictures to S3 will be finished */}
+            {/* <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}> */}
+            <div className={styles['user-image']}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
-              {isOwner && <div className="is-absolute">
+              {/* //ToDo: return this component when upload pictures to S3 will be finished */}
+              {/* {isOwner && <div className="is-absolute">
                 <CameraIcon size="large" color={white50}/>
-              </div>}
+              </div>} */}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
-              <div>
-                <div className="has-text-weight-semibold is-size-4 is-flex">{user.fullName}</div>
-                <div className="flex-break" />
+              <div className="is-full-width">
+                <div className="has-text-weight-semibold is-size-4 is-full-width">{user.fullName}</div>
                 <div className="is-flex is-align-items-center"><GithubIcon />
                   <span className="is-underlined pl-8 is-size-6">
                     <a href={getPlatformLink(user.username, 'github')} target="_blank" className='has-text-white-0'>
@@ -400,11 +431,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
             </div>
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
-                <div className="content is-relative p-10 pr-80 pt-20">
-                  {portfolio.overview}
+                  <div className="content is-relative p-10 pr-80 pt-20">
+                    <MarkdownEditor readOnly={true} value={portfolio.overview} />
                 </div>
                 {
-                  isOwner && (
+                  isOwner && !pdfView && (
                     <button
                       type="button"
                       className={clsx(styles['edit-icon'], 'is-clickable is-ghost button mt-10 p-8')}
@@ -424,7 +455,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading }) => {
             pageLayout={layout}
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
+            onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
             snapshots={snapshots}
+            isPdfView={pdfView}
+            isPortfolioOwner={isOwner}
           />
         </div>
       </div>

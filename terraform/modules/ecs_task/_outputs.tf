@@ -7,3 +7,8 @@ output "sg" {
   description = "ECS service security group id."
   value       = aws_security_group.this.id
 }
+
+output "execution_role_arn" {
+  description = "ECS service execution role arn."
+  value       = aws_iam_role.execution.arn
+}

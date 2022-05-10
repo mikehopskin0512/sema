@@ -10,10 +10,9 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
-import { portfoliosOperations } from '../../../state/features/portfolios';
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
-const { removeSnapshot } = portfoliosOperations;
 
 const ChartSnapshot = React.forwardRef(({
   snapshotData,
@@ -21,7 +20,8 @@ const ChartSnapshot = React.forwardRef(({
   preview,
   spaced,
   isOwner,
-  onUpdate
+  onUpdate,
+  onSnapshotDirectionUpdate
 }, ref) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
@@ -76,8 +76,8 @@ const ChartSnapshot = React.forwardRef(({
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, styles['chart-snapshot'], 'has-background-gray-200 mb-30 p-25 is-relative', spaced && 'mr-16')} ref={preview}>
-        {isOwner && <div className={clsx('is-pulled-right mb-40 is-flex is-align-items-baseline mr-0', styles['container-buttons-wrapper'])}>
+      <div className={clsx(styles.snapshot, styles['chart-snapshot'], "has-background-gray-200 p-25 is-relative chart-snapshot", spaced && 'mr-16')} ref={preview}>
+        {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline mr-0", styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
             options={[
@@ -91,20 +91,24 @@ const ChartSnapshot = React.forwardRef(({
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
-              <div className="is-clickable is-flex mr-40">
+              <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
                 <OptionsIcon />
               </div>
             )}
           />
-          <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
-            <DragTriggerIcon />
-          </div>
+          {isOwner && (
+            <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
+              <DragTriggerIcon />
+            </div>
+          )}
         </div>}
         <div className="is-multiline mt-10 mr-0">
           <div className={clsx(styles['wrapper'])}>
             <div className={clsx(styles['description-container'])}>
               <div className="is-size-5 has-text-weight-semibold">{title}</div>
-              <div className="mb-25">{description}</div>
+              <div className="mb-25">
+                <MarkdownEditor readOnly={true} value={description} />
+              </div>
             </div>
             <div className={clsx(styles['chart-container'])}>
               <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300 mr-0">

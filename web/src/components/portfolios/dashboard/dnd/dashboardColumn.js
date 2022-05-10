@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import { useDrag } from "react-dnd";
-import { ELEM_TYPES } from "./constants";
+import { COMPONENTS_TYPES, ELEM_TYPES } from "./constants";
 import useResizeObserver from "use-resize-observer";
 import { getDraggableComponent } from "./helpers";
 import { dndBorder, dndBg } from '../../../../../styles/_colors.module.scss';
@@ -9,7 +9,10 @@ const style = {};
 const DashboardColumn = ({
   data,
   path,
-  onUpdate
+  onUpdate,
+  onSnapshotDirectionUpdate,
+  isPdfView,
+  isPortfolioOwner
 }) => {
   const ref = useRef(null);
   const {
@@ -43,7 +46,7 @@ const DashboardColumn = ({
 
   const ComponentToRender = getDraggableComponent(componentToRender);
 
-  if (!data || !ComponentToRender) return null;
+  if (!data || !ComponentToRender || (componentToRender === COMPONENTS_TYPES.EMPTY && isPdfView)) return null;
 
   return (
     <>
@@ -62,7 +65,14 @@ const DashboardColumn = ({
           opacity,
         }}
       >
-        <ComponentToRender {...componentProps} ref={ref} preview={preview} onUpdate={onUpdate} />
+        <ComponentToRender
+          {...componentProps}
+          ref={ref}
+          preview={preview}
+          onUpdate={onUpdate}
+          onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          isOwner={isPortfolioOwner}
+        />
       </div>
     </>
   );

@@ -1,20 +1,23 @@
-import React, { useMemo, useRef } from "react";
-import { useDrag } from "react-dnd";
-import { ELEM_TYPES } from "./constants";
-import DashboardColumn from "./dashboardColumn";
-import clsx from "clsx";
-import styles from "../portfoliosDashboard.module.scss";
-import DropZone from "./dropZone";
-import useResizeObserver from "use-resize-observer";
-import { getDraggableComponent } from "./helpers";
-import { dndBorder, dndBg } from '../../../../../styles/_colors.module.scss';
+import React, { useMemo, useRef } from 'react';
+import { useDrag } from 'react-dnd';
+import { COMPONENTS_TYPES, ELEM_TYPES } from './constants';
+import DashboardColumn from './dashboardColumn';
+import clsx from 'clsx';
+import styles from '../portfoliosDashboard.module.scss';
+import DropZone from './dropZone';
+import useResizeObserver from 'use-resize-observer';
+import { getDraggableComponent } from './helpers';
+import { dndBg, dndBorder } from '../../../../../styles/_colors.module.scss';
 
 const DashboardRow = ({
   data,
   handleDrop,
   path,
   handleSnapshotUpdate,
-  snapshots
+  onSnapshotDirectionUpdate,
+  snapshots,
+  isPdfView,
+  isPortfolioOwner,
 }) => {
   const ref = useRef(null);
   const {
@@ -40,9 +43,9 @@ const DashboardRow = ({
 
   const rowOpacity = useMemo(() => isDragging ? 0 : 1, [isDragging]);
 
-  const renderColumn = (data, path) => {
+  const renderColumn = (data, path, isPdfView) => {
     return (
-      <section className={clsx(styles["chart-wrap"])}>
+      <section className={styles['chart-wrap']}>
         <DropZone
           className='verticalDrag'
           acceptableItems={[ELEM_TYPES.COLUMN]}
@@ -51,7 +54,14 @@ const DashboardRow = ({
           }}
           onDrop={handleDrop}
         />
-        <DashboardColumn path={path} data={data} onUpdate={handleSnapshotUpdate} />
+        <DashboardColumn
+          path={path}
+          data={data}
+          onUpdate={handleSnapshotUpdate}
+          onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          isPdfView={isPdfView}
+          isPortfolioOwner={isPortfolioOwner}
+        />
       </section>
     );
   };
@@ -63,16 +73,32 @@ const DashboardRow = ({
         componentProps,
       } = data;
       const fallbackData = snapshots.find(i => i._id === data?.data?._id);
-      const props = { ...componentProps, snapshotData: {...componentProps.snapshotData, title: fallbackData?.title, description: fallbackData?.description } };
+      const props = {
+        ...componentProps,
+        snapshotData: {
+          ...componentProps.snapshotData,
+          title: fallbackData?.title,
+          description: fallbackData?.description,
+          isHorizontal: fallbackData?.isHorizontal,
+        },
+      };
 
       const ComponentToRender = getDraggableComponent(componentToRender);
-      return <ComponentToRender {...props} ref={ref} preview={preview} onUpdate={handleSnapshotUpdate} />;
+      return (componentToRender === COMPONENTS_TYPES.EMPTY && isPdfView) ? null :
+        <ComponentToRender
+          {...props}
+          ref={ref}
+          preview={preview}
+          onUpdate={handleSnapshotUpdate}
+          onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          isOwner={isPortfolioOwner}
+        />;
     } else {
       return data.children?.map((column, index) => {
         const currentPath = `${path}-${index}`;
         return (
           <React.Fragment key={column.id}>
-            {renderColumn(column, currentPath)}
+            {renderColumn(column, currentPath, isPdfView)}
           </React.Fragment>
         );
       });
@@ -85,18 +111,18 @@ const DashboardRow = ({
         width,
         height,
         border: `1px dashed ${dndBorder}`,
-        background: dndBg
+        background: dndBg,
       }} />}
       <div ref={ref} style={{
         opacity: rowOpacity,
       }} className='base draggable row'>
-        <div className='columns' ref={wrapperRef}>
+        <div className={clsx('columns', styles['draggable-columns'])} ref={wrapperRef}>
           {renderContent()}
         </div>
       </div>
     </>
   ) : (
-    <div className='columns'>
+    <div className={clsx('columns', styles['draggable-columns'])}>
       {renderContent()}
     </div>
   );

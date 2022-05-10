@@ -13,7 +13,7 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS, EMOJIS } from '../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_INTERCOM_FAQ_URL, SEMA_FAQ_SLUGS, EMOJIS } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getEmojiLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
@@ -314,7 +314,7 @@ const PersonalInsights = () => {
                 <span className="is-size-6 ml-8 has-text-gray-700">
                   Only you can see this page.
                 </span>
-                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`} target="_blank" rel="noreferrer noopener">
+                <a href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_PERSONAL_INSIGHTS}`} target="_blank" rel="noreferrer noopener">
                   <span className="ml-5 has-text-weight-semibold has-text-blue-700">
                     Learn More
                   </span>

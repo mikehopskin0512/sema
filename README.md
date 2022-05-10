@@ -11,22 +11,32 @@ any project that has a .env.template file, be sure to make a copy, rename it to 
 
 ```sh
 # get the code
-$ git clone git@github.com:Semalab/phoenix.git
+$ git clone https://github.com/Semalab/phoenix
 
 # make sure you are in the project root
 $ cd phoenix
 
 # build all docker images for mongo, apollo and web
-# rerun this if you change any docker image build config, such as package.json or node_modules
-$ sudo docker-compose build --no-cache
+# rerun this if you change any docker image build config,
+# such as package.json or node_modules
+$ ./setup
 
 # Run all docker servers
-$ sudo docker-compose up
+$ docker-compose up
 # to verify that the web app is running:
 # look for a "ready - started server on http://localhost:3000" message in console output
 
 # Browse to http://localhost:3000 to test the webapp
 ```
+
+
+## Code Style
+
+We use Prettier and ESLint to ensure a consistent code style and basic
+code quality standards in our codebase. It is recommended that you set
+up your editor to run Prettier and ESLint automatically. Check out
+[this guide](https://semalab.atlassian.net/l/c/mdsnY52F) if you need help.
+
 
 ## Deploying chrome extension
 

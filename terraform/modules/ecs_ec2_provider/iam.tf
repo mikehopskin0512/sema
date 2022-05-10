@@ -24,9 +24,8 @@ resource "aws_iam_role" "ec2" {
 EOF
 }
 
-resource "aws_iam_policy_attachment" "default_instance_ecs" {
-  name       = local.instance_ecs_policy_attachment_name
-  roles      = [aws_iam_role.ec2.name]
+resource "aws_iam_role_policy_attachment" "default_instance_ecs" {
+  role       = aws_iam_role.ec2.name
   policy_arn = data.aws_iam_policy.instance.arn
 }
 

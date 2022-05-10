@@ -13,7 +13,7 @@ import { checkIfDateHasMonth, getTotalReactions } from '../../../utils/codeStats
 
 
 const ReactionLineChart = ({
-  reactions, className, groupBy, isSnapshot, onClick,
+  reactions, className, groupBy, isSnapshot, onClick, isLoading
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [emptyChart, setEmptyChart] = useState(false);
@@ -158,11 +158,14 @@ const ReactionLineChart = ({
             <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
             {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
           </div>
-          <LineChart
+          {!isLoading && <LineChart
             data={lineChartData}
             emptyChart={emptyChart}
             renderTooltip={renderTooltip}
-          />
+          />}
+          {isLoading && <div className={clsx("is-flex is-align-items-center is-justify-content-center", styles.loader)} >
+            <img src="/img/onboarding/logo_loader.gif" alt="loader" />
+          </div>}
         </div>
       </div>
     </>

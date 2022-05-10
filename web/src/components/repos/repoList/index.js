@@ -126,16 +126,6 @@ const RepoList = ({
         <div className="is-flex is-justify-content-space-between">
           <div className="is-flex">
             <p className="is-inline-block has-text-black-950 has-text-weight-semibold is-size-4 mb-20 px-15">{LIST_TYPE[type]}</p>
-            {isTeamAdmin() && (
-              <button
-                type="button"
-                className="ml-16 button is-primary"
-                onClick={() => setRepoListOpen(true)}
-              >
-                <PlusIcon size="small" />
-                <span className="ml-8">Add a Repo</span>
-              </button>
-            )}
           </div>
           <div className="is-flex">
             <button className={clsx("button border-radius-0 is-small", view === 'list' ? 'is-primary' : '')} onClick={() => setView('list')}>
@@ -144,6 +134,16 @@ const RepoList = ({
             <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
               <GridIcon />
             </button>
+            {isTeamAdmin() && (
+              <button
+                type="button"
+                className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
+                onClick={() => setRepoListOpen(true)}
+              >
+                <PlusIcon size="small" />
+                <span className="ml-8">Add a Repo</span>
+              </button>
+            )}
           </div>
         </div>
         <div className='columns'>

@@ -30,7 +30,7 @@
   &:hover {
     div {
       display: block;
-      top: 75px; 
+      top: 75px;
       left: 75px;
     }
   }
@@ -45,8 +45,8 @@
 
 .edit-icon {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
   &:hover {
     background-color: $gray-100;
     svg {
@@ -65,10 +65,25 @@
   min-height: 75px;
 }
 
+.pdfTitle {
+  border-bottom: 1px solid $gray-300;
+  min-height: 75px;
+}
+
 .snaps-container {
+  .comments-wrap {
+    width: 50%;
+  }
+
+  .comments-wrap-horizontal {
+    width: 100%;
+  }
+
   .chart-wrap {
     position: relative;
     margin-bottom: 30px;
+    max-width: 100%;
+    box-sizing: border-box;
     @media only screen and (min-width: 1440px) {
       width: calc(50% - 16px);
       display: inline-flex;
@@ -81,6 +96,13 @@
       margin-right: 32px;
     }
   }
+
+  .chart-wrap-horizontal {
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    margin-right: 0 !important;
+  }
 }
 
 .textContainer {
@@ -88,6 +110,27 @@
   top: -30px;
   background: black;
   color: white;
+}
+
+.pdfButton {
+  p {
+    display: none;
+  }
+  &:hover {
+    background-color: $gray-100 !important;
+    p {
+      padding: 4px;
+      top: -30px;
+      left: -35px;
+      text-align: center;
+      width: 100px;
+      display: block;
+      position: absolute;
+      background: black;
+      color: white;
+      border-radius: 4px;
+    }
+  }
 }
 
 .portfolio-ghost-button {
@@ -109,4 +152,8 @@
 
 .portfolio-header-actions {
   gap: 10px
+}
+
+.draggable-columns {
+  flex-wrap: wrap;
 }

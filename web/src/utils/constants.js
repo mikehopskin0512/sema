@@ -141,10 +141,15 @@ export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
 export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
+export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
 
 export const SEMA_APP_URL = 'https://app.semasoftware.com';
 
+export const SEMA_INTERCOM_URL = 'https://intercom.help/sema-software/en/';
+
 export const SEMA_FAQ_SLUGS = {
+  LEARN_MORE_ABOUT_TEAM_INSIGHTS: 'articles/6116499-team-insights-who-can-see-what',
+  LEARN_MORE_ABOUT_PERSONAL_INSIGHTS: 'articles/6116505-is-there-an-executive-dashboard-of-all-developers',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
   TEAM_INSIGHTS: 'team-insights-who-can-see-what',
@@ -153,7 +158,7 @@ export const SEMA_FAQ_SLUGS = {
   SNAPSHOTS: 'what-are-snapshots',
 };
 
-export const noContactUs = ['/login', '/register/[[...param]]'];
+export const noContactUs = ['/login', '/register/[[...param]]', '/support'];
 
 export const SEARCH_CATEGORY_TITLES = {
   COLLECTIONS: 'snippets collections',
@@ -166,6 +171,7 @@ export const FACEBOOK_VERIFICATION_META = {
 };
 
 export const PATHS = {
+  PERSONAL: '/personal',
   DASHBOARD: '/dashboard',
   PERSONAL_INSIGHTS: '/personal-insights',
   LABELS_MANAGEMENT: '/labels-management',
@@ -279,3 +285,74 @@ export const COLLECTION_TYPES = {
   TEAM: 'team',
   COMMUNITY: 'community',
 };
+
+
+export const KNOWLEDGE_BASE = [
+  {
+    description: 'How do I use Tags in the Chrome Extension?',
+    link: 'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension'
+  },
+  {
+    description: 'What are Snippets?',
+    link: 'https://intercom.help/sema-software/en/articles/6147206-what-are-snippets'
+  },
+  {
+    description: 'How do I set up a team?',
+    link: 'https://intercom.help/sema-software/en/articles/6147266-how-do-i-set-up-a-team'
+  },
+  {
+    description: 'What’s a Developer Portfolio?',
+    link: 'https://intercom.help/sema-software/en/articles/6147276-what-s-a-developer-portfolio'
+  },
+  {
+    description: 'How do I use Snippets in the Chrome Extension?',
+    link: 'https://intercom.help/sema-software/en/articles/6147192-how-do-i-use-snippets-in-the-chrome-extension'
+  },
+  {
+    description: 'How do I add Snippets?',
+    link: 'https://intercom.help/sema-software/en/articles/6147257-how-do-i-add-snippets'
+  },
+  {
+    description: 'How do I invite someone to a team?',
+    link: 'https://intercom.help/sema-software/en/articles/6147271-how-do-i-invite-someone-to-a-team'
+  },
+  {
+    description: 'What’s a Snapshot?',
+    link: 'https://intercom.help/sema-software/en/articles/6147279-what-s-a-snapshot'
+  },
+  {
+    description: 'How do I use Summaries in the Chrome Extension?',
+    link: 'https://intercom.help/sema-software/en/articles/6147171-how-do-i-use-summaries-in-the-chrome-extension'
+  },
+  {
+    description: 'You are missing some best practices',
+    link: 'https://intercom.help/sema-software/en/articles/6147264-you-are-missing-some-best-practices'
+  },
+  {
+    description: 'Team Insights - who can see what?',
+    link: 'https://intercom.help/sema-software/en/articles/6116499-team-insights-who-can-see-what'
+  },
+  {
+    description: 'What are good practices to create Snapshots?',
+    link: 'https://intercom.help/sema-software/en/articles/6147283-what-are-good-practices-to-create-snapshots'
+  },
+];
+
+export const KNOWLEDGE_BASE_TITLES = [
+  {
+    title: 'Chrome Extension',
+  },
+  {
+    title: 'Snippets (Coding Best Practices)',
+  },
+  {
+    title: 'Teams',
+  },
+  {
+    title: 'Developer Portfolio and Snapshots'
+  },
+];
+
+export const KNOWLEDGE_BASE_SUMMARIES_URL = 'https://intercom.help/sema-software/en/articles/6147171-how-do-i-use-summaries-in-the-chrome-extension';
+
+export const KNOWLEDGE_BASE_TAGS_URL = 'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension';
