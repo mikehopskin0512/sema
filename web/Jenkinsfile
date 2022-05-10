@@ -1,6 +1,12 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent none
+    agent {
+        docker {
+            image 'cimg/base:2020.01'
+            args '-u root --privileged --net host'
+        }
+    }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
@@ -9,15 +15,17 @@ pipeline {
     }
 
     stages {
-        stage('Prepare') {
-            agent {
-                docker {
-                    image 'cimg/base:2020.01'
-                    args '-u root --privileged --net host'
-                }
-            }
+        stage('Install dependencies') {
             steps {
                 sh 'sudo apt-get update -y && sudo apt-get install -y jq awscli'
+            }
+        }
+
+        stage('Create phoenix profile for aws cli') {
+            steps {
+                withAWS(role:'jenkins-role-to-assume') {
+                    sh 'aws s3 ls'
+                }
             }
         }
     }
