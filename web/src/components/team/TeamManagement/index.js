@@ -34,8 +34,6 @@ const TeamManagement = ({ activeTeam }) => {
   });
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
-  const [userRole, setUserRole] = useState({});
-  const [copyTooltip, toggleCopyTooltip] = useState(false);
 
   const { auth, team, role } = useSelector((state) => ({
     auth: state.authState,
@@ -170,14 +168,6 @@ const TeamManagement = ({ activeTeam }) => {
     setPerPage(pageSize);
   }, [setPage, setPerPage]);
 
-  const copyInviteLink = async () => {
-    const { origin } = window.location
-    const teamId = activeTeam.team._id;
-    await navigator.clipboard.writeText(`${origin}${PATHS.TEAMS._}/invite/${teamId}`);
-    toggleCopyTooltip(true);
-    setTimeout(() => toggleCopyTooltip(false), 3000);
-  }
-
   const initialState = useMemo(() => {
     let defaultHidden = []
     if (!canModifyRoles) {
@@ -214,24 +204,14 @@ const TeamManagement = ({ activeTeam }) => {
       <Helmet {...TeamManagementHelmet} />
       <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
         <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Team Management</div>
-        {/* // TODO: should be disabled until new invitations logic */}
-        {/* <div className='ml-auto mr-15'> */}
-        {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
-        {/*   <button className={clsx('button is-primary is-outlined')} onClick={copyInviteLink}> */}
-        {/*     <LinkIcon size="small" className={clsx('mr-5')} /> */}
-        {/*     Copy Invitation Link */}
-        {/*   </button> */}
-        {/* </div> */}
-        <div>
+        <div className="is-flex">
           <button
-            className={clsx('button  border-radius-4px mr-25', styles['copy-button'])}
-            type='button'
+            className="button is-primary is-outlined mr-8"
             onClick={onInviteLinkCopy}
           >
             <CopyButtonIcon size='small' />
-            <span className='ml-10'>Invite New Members</span>
+            <span className='ml-10'>Copy Invitation Link</span>
           </button>
-
           <button
             className='button is-primary border-radius-4px'
             type='button'
