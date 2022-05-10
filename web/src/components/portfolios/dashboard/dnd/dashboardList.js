@@ -11,6 +11,7 @@ const DashboardDraggableList = ({
   onSnapshotDirectionUpdate,
   snapshots,
   isPdfView,
+  isPortfolioOwner,
 }) => {
   const [layout, setLayout] = useState([]);
 
@@ -76,6 +77,7 @@ const DashboardDraggableList = ({
         snapshots={snapshots}
         onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
         isPdfView={isPdfView}
+        isPortfolioOwner={isPortfolioOwner}
       />
     );
   };

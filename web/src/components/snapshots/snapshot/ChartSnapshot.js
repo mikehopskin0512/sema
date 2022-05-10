@@ -91,14 +91,16 @@ const ChartSnapshot = React.forwardRef(({
               { label: 'Delete Snapshots', onClick: () => toggleDeleteModal(true) },
             ]}
             trigger={(
-              <div className="is-clickable is-flex mr-40">
+              <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
                 <OptionsIcon />
               </div>
             )}
           />
-          <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
-            <DragTriggerIcon />
-          </div>
+          {isOwner && (
+            <div ref={ref} className={clsx(styles['draggable-container'], "mr-0")}>
+              <DragTriggerIcon />
+            </div>
+          )}
         </div>}
         <div className="is-multiline mt-10 mr-0">
           <div className={clsx(styles['wrapper'])}>

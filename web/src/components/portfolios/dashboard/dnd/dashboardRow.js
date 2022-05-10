@@ -17,6 +17,7 @@ const DashboardRow = ({
   onSnapshotDirectionUpdate,
   snapshots,
   isPdfView,
+  isPortfolioOwner,
 }) => {
   const ref = useRef(null);
   const {
@@ -59,6 +60,7 @@ const DashboardRow = ({
           onUpdate={handleSnapshotUpdate}
           onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
           isPdfView={isPdfView}
+          isPortfolioOwner={isPortfolioOwner}
         />
       </section>
     );
@@ -71,7 +73,8 @@ const DashboardRow = ({
         componentProps,
       } = data;
       const fallbackData = snapshots.find(i => i._id === data?.data?._id);
-      const props = { ...componentProps,
+      const props = {
+        ...componentProps,
         snapshotData: {
           ...componentProps.snapshotData,
           title: fallbackData?.title,
@@ -81,7 +84,15 @@ const DashboardRow = ({
       };
 
       const ComponentToRender = getDraggableComponent(componentToRender);
-      return (componentToRender === COMPONENTS_TYPES.EMPTY && isPdfView) ? null : <ComponentToRender {...props} ref={ref} preview={preview} onUpdate={handleSnapshotUpdate} onSnapshotDirectionUpdate={onSnapshotDirectionUpdate} />;
+      return (componentToRender === COMPONENTS_TYPES.EMPTY && isPdfView) ? null :
+        <ComponentToRender
+          {...props}
+          ref={ref}
+          preview={preview}
+          onUpdate={handleSnapshotUpdate}
+          onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          isOwner={isPortfolioOwner}
+        />;
     } else {
       return data.children?.map((column, index) => {
         const currentPath = `${path}-${index}`;
