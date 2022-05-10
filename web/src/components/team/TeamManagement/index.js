@@ -188,6 +188,12 @@ const TeamManagement = ({ activeTeam }) => {
 
   const onInviteLinkCopy = async () => {
     const invitationToken = invitations.find((invite) => invite.teamId === teamId)?.token;
+    if (!invitationToken) {
+      notify('Invitation link was not copied.', {
+        type: ALERT_TYPES.ERROR,
+        duration: 3000,
+      });
+    }
     const magicLink = `${SEMA_APP_URL}/${PATHS.LOGIN}?token=${invitationToken}`;
     try {
       await navigator.clipboard.writeText(magicLink);
