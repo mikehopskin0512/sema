@@ -171,14 +171,6 @@ export default (app, passport) => {
           }
         });
 
-        // Send email
-        const message = {
-          recipient: username,
-          url: `${orgDomain}/`,
-          templateName: 'userAdmitted',
-        };
-        await sendEmail(message);
-
         // Add user to Intercom
         const { firstName, lastName, avatarUrl } = user;
         await intercom.create('contacts', {
