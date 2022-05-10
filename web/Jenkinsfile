@@ -23,9 +23,27 @@ pipeline {
 
         stage('Create phoenix profile for aws cli') {
             steps {
-                withAWS(role:'jenkins-role-to-assume') {
-                    sh 'aws s3 ls'
+                script {
+                    release_regex = '(release.*|DVPS-268)'
+                    switch (GIT_BRANCH) {
+                    case 'master':
+                            sh "echo 'export ENV=prod' >> $BASH_ENV"
+                            break
+                    case ['qa']:
+                            sh "echo 'export ENV=qa' >> $BASH_ENV"
+                            break
+                    case ['qa1']:
+                            sh "echo 'export ENV=qa1' >> $BASH_ENV"
+                            break
+                    case ~/$release_regex/:
+                            sh "echo 'export ENV=staging' >> $BASH_ENV"
+                            break
+                    }
+                    sh "cat $BASH_ENV"
                 }
+            // withAWS(role:'jenkins-role-to-assume') {
+            //     sh 'aws s3 ls'
+            // }
             }
         }
     }
