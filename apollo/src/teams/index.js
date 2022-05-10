@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import HTTPStatus from 'http-status';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
@@ -60,24 +61,28 @@ export default (app, passport) => {
   });
 
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    const { _id } = req.user;
+    const { members, url, hasMagicLink = true } = req.body;
     try {
-      const { _id } = req.user;
-      const { members, url } = req.body;
-
       if (url) {
         const team = await getTeamByUrl(url.toLowerCase());
         if (team) {
-          return res.status(400).send({
-            message: 'this url is already allocated',
-          });
+          return res
+            .status(HTTPStatus.BAD_REQUEST)
+            .send({ message: 'this url is already allocated' });
         }
       }
-
       const team = await createTeam({
         ...req.body,
         createdBy: _id,
       });
-
+      if (hasMagicLink) {
+        await create({
+          senderId: _id,
+          isMagicLink: true,
+          teamId: team._id,
+        })
+      }
       if (members?.length) {
         await addTeamMembers(team._id, req.body.members, 'member');
       }
@@ -226,7 +231,7 @@ export default (app, passport) => {
       try {
         const { teamId } = req.params;
         const { users, role } = req.body;
-        
+
         const team = await getTeamById(teamId);
 
         const result = await Promise.all(users.map(async (email) => {
