@@ -2,6 +2,7 @@ locals {
   alb            = "${var.name_prefix}-frontend"
   phoenix_secret = "${var.name_prefix}-phoenix-secret"
   apollo_secret  = "${var.name_prefix}-apollo-secret"
+  s3_scr_avatars = "${var.name_prefix}-scr-avatars"
 }
 
 locals {
