@@ -9,11 +9,11 @@ import {
   create,
   findByToken,
   getInvitationsBySender,
-  getInvitationByRecipient,
   getInviteMetrics,
   exportInviteMetrics,
   redeemInvite,
   exportInvitations,
+  checkIsInvitationValid,
 } from './invitationService';
 import { createUserRole } from '../userRoles/userRoleService';
 import { findByUsername, findById as findUserById, update } from '../users/userService';
@@ -54,6 +54,7 @@ const checkAdminRole = (user, res) => {
 export default (app, passport) => {
   app.use(`/${version}/invitations`, route);
   // create
+  // TODO: it works
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
@@ -64,7 +65,7 @@ export default (app, passport) => {
     const isPersonalInvite = !isMagicLink;
     const canCreateInvitation = user.inviteCount > 0 || isAdmin;
 
-    if (canCreateInvitation) {
+    if (!canCreateInvitation) {
       return res
         .status(HTTPStatus.BAD_REQUEST)
         .send({ message: 'User does not have enough invites.' });
@@ -74,7 +75,7 @@ export default (app, passport) => {
         .status(HTTPStatus.UNAUTHORIZED)
         .send({ message: 'Only an admin can create a magic link' });
     }
-    // TODO: I am not sure do wee need it or not
+    // TODO: I am not sure do wee need it or not / could be done later
     // if (!isMagicLink) {
     //   const userInvitation = await getInvitationByRecipient(invitation.recipient);
     //   if (userInvitation) {
@@ -86,14 +87,17 @@ export default (app, passport) => {
     //   }
     // }
     try {
-      const createdInvitation = await create(invitation);
+      const createdInvitation = await create({
+        ...invitation,
+        senderId: user._id,
+      });
       if (isPersonalInvite) {
         const recipient = invitation.recipient ? await findByUsername(invitation.recipient) : undefined;
         if (recipient) {
           recipient.isWaitlist = false;
           await Promise.all([
             update(recipient),
-            redeemInvite(recipient._id, createdInvitation._id),
+            redeemInvite(recipient._id, createdInvitation.token),
           ])
         }
         await sendInvitationByEmail({
@@ -117,44 +121,47 @@ export default (app, passport) => {
     }
   });
   // send email
+  // TODO: it works
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { body: { recipient } } = req;
+    const {
+      body: { id },
+      user,
+    } = req;
     try {
-      // TODO: should be done by ID?
-      const userInvitation = await getInvitationByRecipient(recipient);
-      if (!userInvitation) {
+      const invitations = await getInvitationsBySender(user._id);
+      const invitation = invitations.find(({ _id }) => _id.toString() === id);
+      if (!invitation) {
         return res
-          .status(HTTPStatus.UNAUTHORIZED)
-          .send({ message: `${recipient} has not been invited yet.` });
+          .status(HTTPStatus.BAD_REQUEST)
+          .send({ message: 'Invitation is not found' });
       }
-      const isUserExist = Boolean(await findByUsername(recipient));
+      const isUserExist = Boolean(await findByUsername(invitation.recipient));
       if (isUserExist) {
         return res
-          .status(HTTPStatus.UNAUTHORIZED)
-          .send({ message: `${recipient} is already an active member.` });
+          .status(HTTPStatus.BAD_REQUEST)
+          .send({ message: `${invitation.recipient} is already an active member.` });
       }
-      const sender = await findUserById(userInvitation.senderId);
       await sendInvitationByEmail({
-        ...userInvitation,
-        user: sender,
+        ...invitation,
+        user: invitation.senderId,
       })
       return res
         .status(201)
-        .send({ response: 'Invitation sent successfully' });
+        .send({ recipient: invitation.recipient });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
   // redeem
+  // TODO: it works
   route.patch('/:token/redeem', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       params: { token },
-      body: { userId },
+      user: { _id: userId },
     } = req;
     try {
-      // TODO: should be redeemed only by token?
-      await redeemInvite(userId, null, token);
+      await redeemInvite(userId, token);
       return res
         .status(201)
         .send({ response: 'Invitation successfully redeemed' });
@@ -164,6 +171,7 @@ export default (app, passport) => {
     }
   });
   // get by token
+  // TODO: it works
   route.get('/:token', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { token } = req.params;
     try {
@@ -173,18 +181,11 @@ export default (app, passport) => {
           .status(HTTPStatus.BAD_REQUEST)
           .send({ message: 'No invitation found' });
       }
-      const { isMagicLink, redemptions = [], tokenExpires } = invitation;
-      const isExpired = tokenExpires < Date.now();
-      const isLimited = redemptions.length > 0 && !isMagicLink;
-      if (isExpired) {
+      const error = checkIsInvitationValid(invitation);
+      if (error) {
         return res
           .status(HTTPStatus.FORBIDDEN)
-          .send({ message: `This invitation expired on ${tokenExpires}` });
-      }
-      if (isLimited) {
-        return res
-          .status(HTTPStatus.FORBIDDEN)
-          .send({ message: 'This invitation has reached it\'s invite limit' });
+          .send({ message: error });
       }
       return res.status(200).send({ invitation });
     } catch (error) {
@@ -193,34 +194,18 @@ export default (app, passport) => {
     }
   });
   // Fetch all invitation by senderId
+  // TODO: it works
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
-    const { search, page = 1, perPage = 10 } = req.query;
+    const { recipient, page = 1, perPage = 10 } = req.query;
     const { _id: senderId } = req.user;
     try {
-      const invites = await getInvitationsBySender({
+      const invitations = await getInvitationsBySender({
         page: parseInt(page, 10),
         perPage: parseInt(perPage, 10),
-        search,
+        recipient,
         senderId,
       });
-      console.log(invites);
-      // const pendingInvites = await getInvitationCountByUserId(senderId, 'pending');
-      // const acceptedInvites = await getInvitationCountByUserId(senderId, 'accepted');
-
-      // TODO: it's wrong logic
-      // if (invites.statusCode === 404) {
-      //   if (invites.name === 'Not Found') {
-      //     throw new errors.BadRequest('Invalid Sender ID');
-      //   }
-      //   throw new errors.NotFound('Error Encountered. Please try again');
-      // }
-
-      return res.status(200).send({
-        invitations: invites,
-        // TODO: fix that count
-        // pendingInvites: ,
-        // acceptedInvites: ,
-      });
+      return res.status(200).send({ invitations });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -232,17 +217,18 @@ export default (app, passport) => {
       params: { token },
       user,
     } = req;
-    if (!token) {
-      return res
-        .status(HTTPStatus.BAD_REQUEST)
-        .send({ message: 'token is not valid'});
-    }
     try {
-      // TODO: check if expired / check if limited - look at 'get by token'
       const invitation = await findByToken(token);
+      const error = checkIsInvitationValid(invitation);
+      if (error) {
+        return res.status(HTTPStatus.FORBIDDEN).send({ message: error });
+      }
       await Promise.all([
-        createUserRole({ team: invitation.teamId, user: user._id, role: invitation.roleId }),
-        redeemInvite(token, user._id, invitation._id),
+        createUserRole({
+          team: invitation.teamId,
+          user: user._id,
+          role: invitation.roleId }),
+        redeemInvite(user._id, token),
       ]);
       return res.sendStatus(200);
     } catch (error) {
@@ -250,6 +236,9 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+
+
+  // TODO: it works
   route.post('/export', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     checkAdminRole(req.user, res)
     try {
@@ -263,6 +252,7 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
+  //
   route.get('/metric', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     checkAdminRole(req.user, res)
     try {

@@ -13,7 +13,7 @@ import {
   create, findByUsernameOrIdentity, updateIdentity,
 } from '../../users/userService';
 import { createRefreshToken, setRefreshToken, createIdentityToken } from '../../auth/authService';
-import {checkIfInvitedByToken, redeemInvite} from '../../invitations/invitationService';
+import { checkIsInvitationValid, findByToken, redeemInvite } from '../../invitations/invitationService';
 import { createUserRole } from '../../userRoles/userRoleService';
 import { getTokenData } from '../../shared/utils';
 import checkEnv from '../../middlewares/checkEnv';
@@ -103,15 +103,20 @@ export default (app) => {
 
         // Join the user to the selected team
         if (inviteToken) {
-          const invitation = await checkIfInvitedByToken(inviteToken);
-          await createUserRole({ team: invitation.team, user: user._id, role: invitation.role});
-          await redeemInvite(inviteToken, user._id, invitation._id);
+          const invitation = await findByToken(inviteToken);
+          const error = checkIsInvitationValid(invitation);
+          if (!error) {
+            await Promise.all([
+              createUserRole({ team: invitation.teamId, user: user._id, role: invitation.roleId}),
+              redeemInvite(user._id, inviteToken),
+            ])
 
-          if (!isWaitlist && invitation.team) {
-            return res.redirect(`${orgDomain}/dashboard?inviteTeamId=${invitation.team}`);
+            if (!isWaitlist && invitation.team) {
+              return res.redirect(`${orgDomain}/dashboard?inviteTeamId=${invitation.team}`);
+            }
           }
         }
-        
+
         if (!isWaitlist) {
           // If user is on waitlist, bypass and redirect to register page (below)
           // No need to send jwt. It will pick up the refresh token cookie on frontend
