@@ -30,6 +30,20 @@ services:
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
+  apollo-worker:
+    image: apollo-dev-i
+    build:
+      context: apollo/
+      dockerfile: ../.docker/apollo-worker/Dockerfile.dev
+    volumes:
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
+    command: npm run worker
+    depends_on:
+      - mongodb
+    container_name: phoenix.apollo.worker.local
+    networks:
+      - sema
   apollo-tests:
     image: apollo-dev-i
     build:

@@ -1,0 +1,38 @@
+# ---------- Base ----------
+FROM node:16-alpine3.14 AS base
+
+RUN mkdir /usr/app/ && chown -R node:node /usr/app/
+WORKDIR /usr/app
+
+# ---------- Builder ----------
+FROM base AS builder
+
+COPY package*.json .babelrc ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run build
+
+RUN npm prune --production
+
+# ---------- Release ----------
+FROM base AS release
+
+COPY --chown=node:node --from=builder /usr/app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /usr/app/dist ./dist
+COPY --chown=node:node --from=builder /usr/app/logs ./logs
+COPY --chown=node:node --from=builder /usr/app/data ./data
+COPY --chown=node:node --from=builder /usr/app/migrations ./migrations
+COPY --chown=node:node --from=builder /usr/app/scripts ./scripts
+COPY --chown=node:node --from=builder /usr/app/migrate-mongo-config.js ./migrate-mongo-config.js
+RUN npm install -g pm2
+
+RUN ln -s dist src
+
+USER node
+ENV NODE_ENV production
+
+# Run npm start script with PM2 when container starts
+CMD [ "pm2-runtime", "node", "--", "./bin/worker", "-i", "max" ]

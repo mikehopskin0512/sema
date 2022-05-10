@@ -54,6 +54,7 @@ module.exports = {
   iframelyApiKey: process.env.IFRAMELY_API_KEY,
   semaCorporateTeamName: process.env.SEMA_CORPORATE_TEAM_NAME,
   semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
+  environment: process.env.ENV || 'unknown',
 };
 
 function getPort() {
