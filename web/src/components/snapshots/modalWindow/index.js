@@ -82,7 +82,7 @@ const SnapshotModal = ({
   const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
-  const [description, setDescription] = useState(createEditorState(snapshotData.description));
+  const [description, setDescription] = useState(createEditorState(snapshotData?.description));
 
   useOutsideClick(modalRef, onClose);
 
