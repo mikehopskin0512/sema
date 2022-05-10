@@ -6,7 +6,6 @@ import { generateToken } from '../shared/utils';
 import User from '../users/userModel';
 import Invitation from './invitationModel';
 
-// TODO: it works
 export const create = async (invitation) => {
   try {
     const token = await generateToken();
@@ -55,7 +54,6 @@ export const findByToken = async (token) => {
     return error;
   }
 };
-
 export const checkIsInvitationValid = (invitation) => {
   if (!invitation) {
     return false
@@ -70,8 +68,19 @@ export const checkIsInvitationValid = (invitation) => {
     return 'This invitation has reached it\'s invite limit';
   }
 }
-
-// TODO: it works / partially
+export const getInvitationByRecipient = async (recipient) => {
+  try {
+    const query = Invitation.findOne({
+      recipient,
+    });
+    const result = await query.lean().exec();
+    return result;
+  } catch (err) {
+    const error = new errors.BadRequest(err);
+    logger.error(error);
+    throw (error);
+  }
+};
 export const getInvitationsBySender = async (params) => {
   try {
     const { senderId, search, page, perPage } = params;
@@ -79,7 +88,6 @@ export const getInvitationsBySender = async (params) => {
     if (senderId) {
       query.where('senderId', senderId);
     }
-    // TODO: haven't tried
     if (search) {
       query.where('recipient', new RegExp(search, 'gi'))
     }
@@ -104,21 +112,6 @@ export const getInvitationsBySender = async (params) => {
     throw (error);
   }
 };
-
-export const getInvitationByRecipient = async (recipient) => {
-  try {
-    const query = Invitation.findOne({
-      recipient,
-    });
-    const result = await query.lean().exec();
-    return result;
-  } catch (err) {
-    const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
-  }
-};
-
 export const getInviteMetrics = async (type, timeRange) => {
   try {
     const startDate = timeRange === 'all' ? '' : subDays(new Date(), parseInt(timeRange, 10));
@@ -127,7 +120,7 @@ export const getInviteMetrics = async (type, timeRange) => {
       {
         $lookup: {
           from: 'users',
-          localField: 'sender',
+          localField: 'senderId',
           foreignField: '_id',
           as: 'senders',
         },
@@ -160,7 +153,6 @@ export const getInviteMetrics = async (type, timeRange) => {
     throw (error);
   }
 };
-
 export const exportInviteMetrics = async (type, timeRange) => {
   const metricData = await getInviteMetrics(type, timeRange);
   const mappedMetricData = metricData.map(item => ({
@@ -188,8 +180,6 @@ export const exportInviteMetrics = async (type, timeRange) => {
 
   return csv;
 };
-
-// TODO: it works
 export const exportInvitations = async (params) => {
   const invites = await getInvitationsBySender(params);
   const mappedData = invites.map((item) => {

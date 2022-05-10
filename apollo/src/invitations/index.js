@@ -16,14 +16,13 @@ import {
   checkIsInvitationValid,
 } from './invitationService';
 import { createUserRole } from '../userRoles/userRoleService';
-import { findByUsername, findById as findUserById, update } from '../users/userService';
+import { findByUsername, update } from '../users/userService';
 import { sendEmail } from '../shared/emailService';
 import { isSemaAdmin } from '../shared/utils';
 import checkEnv from '../middlewares/checkEnv';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
-
 const sendInvitationByEmail = async ({ recipient, token, user, isUserAdmitted }) => {
   const fullName = `${user?.firstName} ${user?.lastName}`;
   const message = isUserAdmitted ? {
@@ -50,11 +49,8 @@ const checkAdminRole = (user, res) => {
   }
 };
 
-
 export default (app, passport) => {
   app.use(`/${version}/invitations`, route);
-  // create
-  // TODO: it works
   route.post('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { invitation },
@@ -120,8 +116,6 @@ export default (app, passport) => {
         .send({ message: 'Invitation create error' })
     }
   });
-  // send email
-  // TODO: it works
   route.post('/send', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       body: { id },
@@ -153,8 +147,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  // redeem
-  // TODO: it works
   route.patch('/:token/redeem', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       params: { token },
@@ -170,8 +162,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  // get by token
-  // TODO: it works
   route.get('/:token', passport.authenticate(['basic'], { session: false }), async (req, res) => {
     const { token } = req.params;
     try {
@@ -193,8 +183,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  // Fetch all invitation by senderId
-  // TODO: it works
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { recipient, page = 1, perPage = 10 } = req.query;
     const { _id: senderId } = req.user;
@@ -211,7 +199,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  // accept invitation
   route.post('/accept/:token', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const {
       params: { token },
@@ -236,9 +223,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-
-
-  // TODO: it works
   route.post('/export', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     checkAdminRole(req.user, res)
     try {
@@ -252,7 +236,6 @@ export default (app, passport) => {
       return res.status(error.statusCode).send(error);
     }
   });
-  //
   route.get('/metric', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     checkAdminRole(req.user, res)
     try {
