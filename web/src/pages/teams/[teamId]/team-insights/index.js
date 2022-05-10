@@ -369,7 +369,7 @@ const TeamInsights = () => {
             </p>
 
             <div className="is-flex pt-10 pr-100">
-            <div className="field sema-toggle" onClick={onClickChild} aria-hidden>
+            <div className="field sema-toggle is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
                  <TeamIcon size="small" color={isActive ? gray500 : blue700}/>
                  <span className={`px-5 ${isActive ? 'has-text-gray-500' : 'has-text-blue-700'}`}>Everyone</span>
                   <input
