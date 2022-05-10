@@ -51,6 +51,10 @@ module "hephaestus_summaries" {
     {
       name  = "AWS_SECRETS_HASH"
       value = local.hephaestus_summaries_ecs_secret_data_hash
+    },
+    {
+      name  = "cuda_device"
+      value = "cpu"
     }
   ]
   ecs_external_access = {
@@ -100,6 +104,10 @@ module "hephaestus_tags" {
     {
       name  = "AWS_SECRETS_HASH"
       value = local.hephaestus_tags_ecs_secret_data_hash
+    },
+    {
+      name  = "cuda_device"
+      value = "cpu"
     }
   ]
   ecs_external_access = {
