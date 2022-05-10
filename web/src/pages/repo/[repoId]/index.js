@@ -62,6 +62,7 @@ const RepoPage = () => {
     tags: [],
     search: '',
     pr: [],
+    dateOption: ''
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
