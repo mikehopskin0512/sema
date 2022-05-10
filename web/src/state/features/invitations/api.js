@@ -3,7 +3,7 @@ import { get, create, getAll, patch, deleteItem, exportItem } from '../../utils/
 export const postInvite = (params, token) => create('/api/proxy/invitations', params, token);
 export const getInvite = (id) => get('/api/proxy/invitations', id);
 export const getInvitations = (params, token) => getAll('/api/proxy/invitations', { params }, token);
-export const postResendInvite = (params, token) => create('/api/proxy/invitations/send', params, token);
+export const postResendInvite = (id, token) => create('/api/proxy/invitations/send', { id }, token);
 export const postAcceptInvite = (invitationToken, params, token) => create(`/api/proxy/invitations/accept/${invitationToken}`, params, token);
 export const patchRedeemInvite = (invitationToken, params, token) => patch(`/api/proxy/invitations/${invitationToken}/redeem`, params, token);
 export const deleteInvite = (id, token) => deleteItem('/api/proxy/invitations', id, token);

@@ -58,11 +58,6 @@ const requestResendInvite = () => ({
   type: types.REQUEST_RESEND_INVITE,
 });
 
-const requestResendInviteSuccess = (invitation) => ({
-  type: types.REQUEST_RESEND_INVITE_SUCCESS,
-  invitation,
-});
-
 const requestResendInviteError = (errors) => ({
   type: types.REQUEST_RESEND_INVITE_ERROR,
   errors,
@@ -186,14 +181,11 @@ export const redeemInvite = (invitationToken, userId, token) => async (dispatch)
   }
 };
 
-export const resendInvite = (recipient, token) => async (dispatch) => {
+export const resendInvite = (invitationId, token) => async (dispatch) => {
   try {
     dispatch(requestResendInvite());
-    const payload = await postResendInvite({ recipient }, token);
-    const { data: { invitation = {} } } = payload;
+    const { data: { recipient } } = await postResendInvite(invitationId, token);
     dispatch(triggerAlert(`Invitation successfully sent to ${recipient}`, 'success'));
-
-    dispatch(requestResendInviteSuccess(invitation));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;

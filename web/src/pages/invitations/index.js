@@ -108,8 +108,8 @@ const Invite = () => {
     }
   }, [showAlert, dispatch]);
 
-  const RESEND_INVITE = async (email) => {
-    await dispatch(resendInvite(email, token));
+  const sendInvite = async (invitationId) => {
+    await dispatch(resendInvite(invitationId, token));
   };
 
   const revokeInvitation = async (invitationId, recipient) => {
@@ -119,9 +119,10 @@ const Invite = () => {
   const renderErrorMessage = () => {
     if (!isEmpty(errors)) {
       const error = errors.email.message;
-      if (error.search("has already been invited by another user.") >= 0) {
-        return <span>{error} <a onClick={() => RESEND_INVITE(recipient)}>Click here</a> to remind them.</span>
-      }
+      // TODO: do we need it?
+      // if (error.search("has already been invited by another user.") >= 0) {
+      //   return <span>{error} <a onClick={() => sendInvite(recipient)}>Click here</a> to remind them.</span>
+      // }
       return error;
     }
     return null;
@@ -258,7 +259,7 @@ const Invite = () => {
                   type='dashboard'
                   invites={invitations.data}
                   totalInvites={getTotalInvitations()}
-                  resendInvitation={RESEND_INVITE}
+                  resendInvitation={sendInvite}
                   revokeInvitation={revokeInvitation}
                   fetchData={fetchData}
                   page={page}

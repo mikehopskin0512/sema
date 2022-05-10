@@ -112,7 +112,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
             {
               isInvitationPending(el.redemptions, el.recipient) && (
                 <>
-                  <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el.recipient)}>
+                  <button className="button is-text outline-none pl-4" onClick={() => resendInvitation(el._id)}>
                     <UndoIcon size="small" />
                     <span className="ml-8">
                       Resend Invitation
@@ -157,8 +157,6 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
       actions: item,
     })) : [];
   }, [invites, isFetching]);
-
-  console.log(dataSource)
 
   return (
     <div>
