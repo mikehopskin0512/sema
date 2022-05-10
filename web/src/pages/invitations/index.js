@@ -39,24 +39,27 @@ const Invite = () => {
     resolver: yupResolver(schema),
   });
   const { errors } = formState;
-  const { alerts, auth, invitations } = useSelector((state) => ({
+  const { alerts, auth, invitations, isFetching } = useSelector((state) => ({
     alerts: state.alertsState,
     auth: state.authState,
-    invitations: state.invitationsState,
+    invitations: state.invitationsState.data,
+    isFetching: state.invitationsState.isFetching,
   }));
   const {user: { isSemaAdmin }} = auth;
 
-  const [recipient, setRecipient] = useState("");
   const [tableHeader] = useState('is better with friends, invite yours 🙌');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const cardStyling = 'is-size-5 has-text-weight-semibold p-10 border-radius-4px'
   const { showAlert, alertType, alertLabel } = alerts;
   const { token, user } = auth;
-  const { isFetching, acceptedInvitationCount, pendingInvitationCount } = invitations ?? []
   const { _id: userId, inviteCount = 0 } = user;
   const isInviteBtnDisabled = !isSemaAdmin && inviteCount <= 0;
   const [isSupportModalActive, setSupportModalActive] = useState(false);
+  const personalInvitations = invitations?.filter(({ isMagicLink }) => !isMagicLink);
+  const totalInvitations = personalInvitations?.length;
+  const pendingInvitationCount = personalInvitations?.filter(({ redemptions }) => !redemptions.length)?.length;
+  const acceptedInvitationCount = personalInvitations?.filter(({ redemptions }) => redemptions.length)?.length;
 
   const onSubmit = async (data) => {
     if (isInviteBtnDisabled) {
@@ -70,10 +73,8 @@ const Invite = () => {
       inviteCount,
       isMagicLink: false
     };
-    setRecipient(email);
     const response = await dispatch(createInviteAndHydrateUser(invitation, token));
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_SEND_INVITATION, { recipient: email });
-
     // send segment event tracking
     trackSendInvite(email, invitation.senderName, invitation.senderEmail, 'user');
     const isSent = response.status === 201;
@@ -84,17 +85,6 @@ const Invite = () => {
         type: "manual",
         message: response.data.message
       });
-    }
-  };
-
-  const getTotalInvitations = (type = 'table') => {
-    switch (type) {
-      case 'table':
-        return acceptedInvitationCount + pendingInvitationCount
-      case 'label':
-        return isSemaAdmin ? acceptedInvitationCount + pendingInvitationCount : inviteCount + acceptedInvitationCount + pendingInvitationCount;
-      default:
-        return acceptedInvitationCount + pendingInvitationCount
     }
   };
 
@@ -154,7 +144,7 @@ const Invite = () => {
           <div className="mb-5 mt-30 mx-3 columns">
             <div className={`box column mr-10 px-20 py-30`}>
               <span className={`${cardStyling} ${getCharCount(acceptedInvitationCount) > 1 ? '' : 'px-15'} has-background-primary has-text-white`}>
-                {getTotalInvitations()}
+                {totalInvitations}
               </span>
               <span className="has-text-weight-semibold ml-30">
                 Total Invites
@@ -257,8 +247,8 @@ const Invite = () => {
               <div className={clsx(styles['sema-tile'], styles['sema-is-child'])}>
                 <InvitationsGrid
                   type='dashboard'
-                  invites={invitations.data}
-                  totalInvites={getTotalInvitations()}
+                  invites={invitations}
+                  totalInvites={totalInvitations}
                   resendInvitation={sendInvite}
                   revokeInvitation={revokeInvitation}
                   fetchData={fetchData}

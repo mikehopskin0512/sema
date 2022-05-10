@@ -9,7 +9,6 @@ import { CloseIcon, UndoIcon } from '../Icons';
 import { isInvitationPending } from '../../utils/invitations';
 
 const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, page, perPage, isFetching, fetchData, totalInvites = 0 }) => {
-
   const getHeaderClass = (accessor) => {
     switch (accessor) {
       case 'sender':
@@ -64,16 +63,16 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
         accessor: 'isPending',
         className: getHeaderClass('isPending'),
         Cell: ({ cell: { value } }) => (type === 'admin' ? (
-          <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value ? 'link' : 'success'} />
-        ) : (
-          <div className="py-15">
+            <Badge label={value ? 'Pending Invite' : 'Accepted'} color={value.length ? 'link' : 'success'} />
+          ) : (
+            <div className="py-15">
             <span
               className={`has-text-black-bis tag has-text-weight-medium is-rounded ${value ? 'is-warning is-light' : 'is-success is-light'}`}
             >
-              {value ? 'Pending Invite' : 'Active'}
+              {value ? 'Pending Invite' : 'Accepted'}
             </span>
-          </div>
-        )),
+            </div>
+          ))
       },
       ...type === 'admin' ? [{
         Header: 'Company Name',
@@ -136,6 +135,7 @@ const InvitationsGrid = ({ type, invites, resendInvitation, revokeInvitation, pa
 
   const dataSource = useMemo(() => {
     return Array.isArray(invites) ? invites.map(item => ({
+      isPending: item.redemptions.length === 0,
       recipient: isInvitationPending(item.redemptions, item.recipient)
         ? item.recipient
         : (

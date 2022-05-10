@@ -1,9 +1,14 @@
 import { format } from 'date-fns';
 import * as types from './types';
 import {
-  getInvite, postInvite, getInvitations,
-  patchRedeemInvite, postResendInvite, deleteInvite,
-  getInvitationsMetric, exportInvitationsMetric, exportInvitations,
+  getInvite,
+  postInvite,
+  getInvitations,
+  patchRedeemInvite,
+  postResendInvite,
+  getInvitationsMetric,
+  exportInvitationsMetric,
+  exportInvitations,
   postAcceptInvite
 } from './api';
 import { alertOperations } from '../alerts';
@@ -168,10 +173,10 @@ export const getInvitesBySender = (params, token) => async (dispatch) => {
   }
 };
 
-export const redeemInvite = (invitationToken, userId, token) => async (dispatch) => {
+export const redeemInvite = (invitationToken, token) => async (dispatch) => {
   try {
     dispatch(requestRedeemInvite());
-    const payload = await patchRedeemInvite(invitationToken, { userId }, token);
+    const payload = await patchRedeemInvite(invitationToken, token);
     const { data: { response } } = payload;
     dispatch(requestRedeemInviteSuccess(response));
   } catch (error) {
@@ -194,10 +199,11 @@ export const resendInvite = (invitationId, token) => async (dispatch) => {
   }
 };
 
+// TODO: fix that
 export const revokeInvite = (id, userId, token, recipient) => async (dispatch) => {
   try {
     dispatch(requestDeleteInvite());
-    const payload = await deleteInvite(id, token);
+    const payload = await revokeInvite(id, token);
     const { data: { user }} = payload;
     dispatch(getInvitesBySender({ userId }, token));
     dispatch(triggerAlert(`Invitation sent to ${recipient} is revoked!`, 'success'));

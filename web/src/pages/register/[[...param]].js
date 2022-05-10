@@ -71,7 +71,7 @@ const RegistrationForm = (props) => {
     const { username: email = '' } = data;
     if (inviteToken && authToken) {
       // User is redeeming invite, but already exists (likely on waitlist)
-      dispatch(redeemInvite(inviteToken, userId, authToken));
+      dispatch(redeemInvite(inviteToken, authToken));
       dispatch(partialUpdateUser(userId, { isWaitlist: false }, authToken));
       router.push(teamId ? `${PATHS.DASHBOARD}/?teamId=${teamId}` : PATHS.DASHBOARD);
       trackRedeemedInvite(email);
