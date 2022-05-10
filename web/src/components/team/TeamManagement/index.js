@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
+import { getInvitesBySender } from '../../../state/features/invitations/actions';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
@@ -35,10 +36,11 @@ const TeamManagement = ({ activeTeam }) => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(50);
 
-  const { auth, team, role } = useSelector((state) => ({
+  const { auth, team, role, invitations } = useSelector((state) => ({
     auth: state.authState,
     team: state.teamsState,
     role: state.rolesState,
+    invitations: state.invitationsState.data,
   }));
   const { user = {}, token } = auth;
   const { members, membersCount } = team;
@@ -52,6 +54,7 @@ const TeamManagement = ({ activeTeam }) => {
     if (teamId) {
       dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
       dispatch(fetchRoles(token));
+      dispatch(getInvitesBySender({senderId: user._id}, token))
     }
   }, [user, dispatch, page, perPage, teamId]);
 
@@ -184,9 +187,10 @@ const TeamManagement = ({ activeTeam }) => {
   };
 
   const onInviteLinkCopy = async () => {
-    const value = 'some value to copy real link in future';
+    const invitationToken = invitations.find((invite) => invite.teamId === teamId)?.token;
+    const magicLink = `http://localhost:3000/invitation/${invitationToken}`;
     try {
-      await navigator.clipboard.writeText(value);
+      await navigator.clipboard.writeText(magicLink);
       notify('Invitation link was copied.', {
         type: ALERT_TYPES.SUCCESS,
         duration: 3000,

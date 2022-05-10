@@ -41,7 +41,6 @@ export default (app, passport) => {
     try {
       const { _id } = req.user;
       const teams = await getTeamsByUser(_id);
-
       return res.status(200).send(teams);
     } catch (error) {
       logger.error(error);

@@ -84,10 +84,11 @@ export const getInvitationByRecipient = async (recipient) => {
 export const getInvitationsBySender = async (params) => {
   try {
     const { senderId, search, page, perPage } = params;
-    const query = Invitation.find();
-    if (senderId) {
-      query.where('senderId', senderId);
+    if (!senderId) {
+      return [];
     }
+    const query = Invitation.find();
+    query.where('senderId', senderId);
     if (search) {
       query.where('recipient', new RegExp(search, 'gi'))
     }
