@@ -17,7 +17,7 @@ import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { ArrowDropdownIcon, CopyButtonIcon, PlusIcon } from '../../Icons';
-import { ALERT_TYPES, PATHS } from '../../../utils/constants';
+import { ALERT_TYPES, PATHS, SEMA_APP_URL } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { notify } from '../../../components/toaster/index';
 
@@ -188,7 +188,7 @@ const TeamManagement = ({ activeTeam }) => {
 
   const onInviteLinkCopy = async () => {
     const invitationToken = invitations.find((invite) => invite.teamId === teamId)?.token;
-    const magicLink = `http://localhost:3000/invitation/${invitationToken}`;
+    const magicLink = `${SEMA_APP_URL}/${PATHS.LOGIN}?token=${invitationToken}`;
     try {
       await navigator.clipboard.writeText(magicLink);
       notify('Invitation link was copied.', {
