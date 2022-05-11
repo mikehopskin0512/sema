@@ -40,7 +40,7 @@
     max-height: 625px;
 }
 
-.columns {
+.dashboard-columns {
     @media only screen and (max-width: 1439px) {
         display: flex;
         flex-direction: column;
