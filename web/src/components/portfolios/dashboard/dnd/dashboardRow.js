@@ -116,13 +116,13 @@ const DashboardRow = ({
       <div ref={ref} style={{
         opacity: rowOpacity,
       }} className='base draggable row'>
-        <div className={clsx('columns', styles['draggable-columns'])} ref={wrapperRef}>
+        <div className={clsx('columns dashboard-columns', styles['draggable-columns'])} ref={wrapperRef}>
           {renderContent()}
         </div>
       </div>
     </>
   ) : (
-    <div className={clsx('columns', styles['draggable-columns'])}>
+    <div className={clsx('columns dashboard-columns', styles['draggable-columns'])}>
       {renderContent()}
     </div>
   );
