@@ -95,7 +95,7 @@ function HelpAndSupport() {
 
   useEffect(() => {
     fetchArticles();
-  });
+  }, []);
 
   useEffect(() => {
     if (searchString.length > 2) {
