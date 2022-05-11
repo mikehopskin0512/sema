@@ -1,14 +1,22 @@
 import { EditorState, convertFromRaw, ContentState } from 'draft-js';
 
-export const isJson = str => {
+export const isMarkdownObject = str => {
   try {
-    JSON.parse(str);
-    return true;
+    const data = JSON.parse(str);
+    return typeof data === 'object';
   } catch (e) {
     return false;
   }
 };
 
-export const createEditorState = value => !value ? EditorState.createEmpty() :
-  !isJson(value) ? EditorState.createWithContent(ContentState.createFromText(value)) :
-  EditorState.createWithContent(convertFromRaw(JSON.parse(value)));
+export const createEditorState = value => {
+  if (!value) {
+    return EditorState.createEmpty();
+  }
+  try {
+    const data = !isMarkdownObject(value) ? ContentState.createFromText(value) : convertFromRaw(JSON.parse(value))
+    return EditorState.createWithContent(data);
+  } catch (e) {
+    console.error(e)
+  }
+}
