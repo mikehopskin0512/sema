@@ -103,4 +103,5 @@ module "auto_restore_backup_lambda" {
   name_prefix = "${var.name_prefix}-backups-auto-restore"
   vpc_id      = data.aws_vpc.this.id
   subnet_ids  = data.aws_subnet_ids.private.ids
+  timeout     = 300
 }

@@ -45,8 +45,11 @@ jobs:
           node-version: 16.x
           cache: 'npm'
           cache-dependency-path: ${{ matrix.service }}/package-lock.json
-      - name: Install modules
+      - name: Install ESLint modules
+        working-directory: eslint-config
         run: npm ci
+      - name: Install modules
         working-directory: ${{ matrix.service }}
+        run: npm ci
       - name: Lint
         run: ./scripts/lint ${{ matrix.service }} ${{ needs.set_changed_services.outputs.changed_files }}

@@ -13,7 +13,7 @@ import ReactionChart from '../../components/stats/reactionChart';
 import TagsChart from '../../components/stats/tagsChart';
 import ActivityItemList from '../../components/activity/itemList';
 import { commentsOperations } from "../../state/features/comments";
-import { DEFAULT_AVATAR, SEMA_FAQ_URL, SEMA_FAQ_SLUGS, EMOJIS } from '../../utils/constants';
+import { DEFAULT_AVATAR, SEMA_INTERCOM_FAQ_URL, SEMA_FAQ_SLUGS, EMOJIS } from '../../utils/constants';
 import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments, getEmojiLabel } from '../../utils/parsing';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { gray500 } from '../../../styles/_colors.module.scss';
@@ -48,6 +48,7 @@ const PersonalInsights = () => {
     tags: [],
     pr: [],
     repo: [],
+    dateOption: ''
   });
   const [commentView, setCommentView] = useState('received');
   const [filterUserList, setFilterUserList] = useState([]);
@@ -313,7 +314,7 @@ const PersonalInsights = () => {
                 <span className="is-size-6 ml-8 has-text-gray-700">
                   Only you can see this page.
                 </span>
-                <a href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.LEARN_MORE}`} target="_blank" rel="noreferrer noopener">
+                <a href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_PERSONAL_INSIGHTS}`} target="_blank" rel="noreferrer noopener">
                   <span className="ml-5 has-text-weight-semibold has-text-blue-700">
                     Learn More
                   </span>
@@ -350,7 +351,7 @@ const PersonalInsights = () => {
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
           <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)}/>
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} />
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}

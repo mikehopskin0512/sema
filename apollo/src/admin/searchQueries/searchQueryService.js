@@ -1,6 +1,6 @@
 import * as Json2CSV from 'json2csv';
 import Query from '../../comments/queryModel';
-import { getSearchTermQuery } from '../../comments/suggestedComments/searchTermQueries';
+import getSearchTermQuery from '../../comments/suggestedComments/searchTermQueries';
 
 export const getLastQueries = async ({ page, perPage }) => {
   const aggregate = getSearchTermQuery();
@@ -8,7 +8,7 @@ export const getLastQueries = async ({ page, perPage }) => {
 
   const totalCount = await Query.aggregate([
     ...pipeline,
-    { $count: 'totalCount' }
+    { $count: 'totalCount' },
   ]);
 
   pipeline.push({ $skip: (page - 1) * perPage });
@@ -17,15 +17,15 @@ export const getLastQueries = async ({ page, perPage }) => {
   const queries = await aggregate.exec();
 
   return {
-    totalCount: totalCount[0]? totalCount[0].totalCount : 0,
-    queries
+    totalCount: totalCount[0] ? totalCount[0].totalCount : 0,
+    queries,
   };
 };
 
 export const exportSearchQueries = async () => {
   const searchQueries = await getSearchTermQuery();
 
-  const mappedData = searchQueries.map(item => ({
+  const mappedData = searchQueries.map((item) => ({
     'Search Term': item._id.searchTerm,
     'Matched Count': item._id.matchedCount,
     'Frequency': item.searchTermFrequencyCount,

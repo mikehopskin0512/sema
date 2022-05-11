@@ -58,11 +58,12 @@ const CreateSnippetModal = () => {
     }
     getAllTags().then((tags) => {
       if (Array.isArray(tags)) {
-        setLabelsOptions(mapTagsToOptions(tags, 'custom'));
+        setLabelsOptions(mapTagsToOptions(tags, ['custom', 'other']));
         setLanguagesOptions(mapTagsToOptions(tags, 'language'));
       }
     });
   }, [isLoggedIn, userCollections]);
+
   useEffect(() => {
     if (selectedCollectionId) {
       return;

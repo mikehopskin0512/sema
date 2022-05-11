@@ -88,7 +88,7 @@ export const findSuggestedCommentTags = async () => {
       {
         $match: {
           "type": {
-            $in: ["language", "guide", "custom"],
+            $in: ["language", "guide", "custom", "other"],
           }
         }
       },

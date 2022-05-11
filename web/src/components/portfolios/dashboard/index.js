@@ -15,7 +15,7 @@ import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
-import { black950, gray600, white50 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -30,8 +30,9 @@ import ErrorPortfolioAvatarModal from '../avatarModals/errorPortfolioAvatarModal
 import { BYTES_IN_MEGABYTE, MAXIMUM_SIZE_IN_MEGABYTES, UPLOAD_AVATAR_ERROR_MESSAGE } from '../avatarModals/constants';
 import { createNewPortfolio } from '../../../state/features/portfolios/actions';
 import { notify } from '../../../components/toaster/index';
+import MarkdownEditor from '../../../components/markdownEditor';
 
-const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar } = portfoliosOperations;
+const { updatePortfolioType, removePortfolio, uploadPortfolioAvatar, updateSnapshot } = portfoliosOperations;
 const { triggerAlert } = alertOperations;
 
 const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, savePdf }) => {
@@ -213,6 +214,29 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
     }))
   }
 
+  const onSnapshotDirectionUpdate = async ({ snapshot, type }) => {
+    const parseCommentsData = (snapshotData) => {
+      const result = [...snapshotData];
+      return result.map(smartComment => ({ smartCommentId: smartComment._id || smartComment.smartCommentId }));
+    }
+
+    const snapshotDataForSave = {
+      ...snapshot,
+      userId: userData._id,
+      componentType: type,
+      componentData: {
+        ...snapshot.componentData,
+        smartComments: parseCommentsData(snapshot.componentData?.smartComments)
+      },
+      isHorizontal: !snapshot.isHorizontal
+    }
+
+    await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
+      toggleEditModal(false);
+      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
+    }))
+  }
+
   const onAddFileError = () => {
     toggleAddAvatarModal(false);
     toggleErrorAvatarModal(true);
@@ -303,7 +327,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             <div className="is-relative is-flex is-align-items-center">
               {!pdfView && isOwner && isIndividualView && <>
                 <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
-                  <div className="field sema-toggle switch-input m-0" onClick={onClickChild} aria-hidden>
+                  <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
                         (isCopied && hover && 'Copied! This portfolio is viewable with this link.') :
@@ -407,8 +431,8 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             </div>
             <div className={clsx(styles['user-overview'], 'has-background-white-0 pl-230 pr-35')}>
               <div className="is-relative">
-                <div className="content is-relative p-10 pr-80 pt-20">
-                  {portfolio.overview}
+                  <div className="content is-relative p-10 pr-80 pt-20">
+                    <MarkdownEditor readOnly={true} value={portfolio.overview} />
                 </div>
                 {
                   isOwner && !pdfView && (
@@ -431,8 +455,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
             pageLayout={layout}
             updateLayout={onLayoutChange}
             handleSnapshotUpdate={handleSnapshotUpdate}
+            onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
             snapshots={snapshots}
             isPdfView={pdfView}
+            isPortfolioOwner={isOwner}
           />
         </div>
       </div>

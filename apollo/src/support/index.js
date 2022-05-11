@@ -6,6 +6,7 @@ import path from 'path';
 import { version, sendgrid } from '../config';
 import logger from '../shared/logger';
 import { sendEmail } from '../shared/emailService';
+import intercom from '../shared/apiIntercom';
 import checkEnv from '../middlewares/checkEnv';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -54,6 +55,16 @@ export default (app, passport) => {
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/knowledgeBase', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
+    try {
+      const {data} = await intercom.getAll('articles');
+      return res.status(200).send(data);
+    } catch (error) {
+      logger.error(error);
+      return res.status(400).send(error);
     }
   });
 

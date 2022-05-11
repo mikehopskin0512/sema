@@ -1,6 +1,6 @@
+/* eslint-disable import/no-import-module-exports */
 import axios from 'axios';
-
-import logger from '../shared/logger';
+import logger from "./logger";
 import { intercomToken } from '../config';
 
 const config = {
@@ -25,10 +25,9 @@ const get = (endpoint, { id }) => {
 
 const getAll = (endpoint, { params } = {}) => {
   if (intercomToken) {
-    api.get(endpoint, { params, ...config });
-  } else {
-    logger.error('No Intercom API token present');
-  }
+    return api.get(endpoint, { params, ...config });
+  } 
+  return logger.error('No Intercom API token present');
 }
 
 const create = (endpoint, item) => {

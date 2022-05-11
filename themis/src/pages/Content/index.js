@@ -158,11 +158,12 @@ const onLoginChecked = () => {
     const form = $(activeElement).parents('form')?.[0];
     const isApprovedOption = $(form).find('input[value="approve"]')?.[0]
       .checked;
-    const isEmptyComment = !activeElement.value;
+    const isEmptyComment = !activeElement.value?.length;
     const reaction = isApprovedOption
         && (isEmptyComment || selectedReactionId === EMOJIS_ID.GOOD)
       ? looksGoodEmoji
       : noReactionEmoji;
+
     store.dispatch(
       updateSelectedEmoji({
         id: semabarContainerId,
@@ -378,7 +379,7 @@ const onLoginChecked = () => {
       const barState = store.getState().semabars[semabarContainerId];
       const { isReactionDirty } = barState;
       // eslint-disable-next-line no-underscore-dangle
-      const selectedReactionId = barState.selectedReaction._id;
+      const selectedReactionId = barState.selectedReaction._id ?? EMOJIS_ID.GOOD;
       if (!isReactionDirty) {
         handleReviewChangesClick(
           semabarContainerId,

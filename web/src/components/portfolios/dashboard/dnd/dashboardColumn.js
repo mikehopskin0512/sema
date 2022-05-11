@@ -10,7 +10,9 @@ const DashboardColumn = ({
   data,
   path,
   onUpdate,
-  isPdfView
+  onSnapshotDirectionUpdate,
+  isPdfView,
+  isPortfolioOwner
 }) => {
   const ref = useRef(null);
   const {
@@ -63,7 +65,14 @@ const DashboardColumn = ({
           opacity,
         }}
       >
-        <ComponentToRender {...componentProps} ref={ref} preview={preview} onUpdate={onUpdate} />
+        <ComponentToRender
+          {...componentProps}
+          ref={ref}
+          preview={preview}
+          onUpdate={onUpdate}
+          onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          isOwner={isPortfolioOwner}
+        />
       </div>
     </>
   );

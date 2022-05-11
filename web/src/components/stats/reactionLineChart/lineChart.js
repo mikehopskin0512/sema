@@ -18,6 +18,13 @@ const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
 
   return (
     <ResponsiveLine
+      theme={{
+        "grid": {
+          "line": {
+            "stroke": 'rgba(37, 150, 190, 0.3)'
+          }
+        }
+      }}
       data={data}
       enableArea
       areaOpacity={1}
@@ -40,19 +47,20 @@ const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
       axisRight={null}
       axisBottom={{
         orient: 'bottom',
-        tickSize: 5,
+        tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
       }}
       axisLeft={{
         orient: 'left',
-        tickSize: 5,
+        tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
         legend: '%',
         legendOffset: -40,
         legendPosition: 'middle',
       }}
+      enablePoints={false}
       pointSize={10}
       pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
@@ -72,12 +80,13 @@ const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
           justify: false,
           translateX: 0,
           translateY: 90,
-          itemsSpacing: 5,
+          itemsSpacing:7,
           itemWidth: 100,
           itemHeight: 20,
           itemDirection: 'left-to-right',
           itemOpacity: 0.85,
-          symbolSize: 15,
+          symbolSize: 8,
+          symbolShape: 'circle',
           effects: [
             {
               on: 'hover',
@@ -86,8 +95,10 @@ const LineChart = ({ data = [], renderTooltip, emptyChart }) => {
               },
             },
           ],
+          translateY: 60
         },
       ]}
+      layers={['markers', 'axes', 'areas', 'grid', 'crosshair', 'lines', 'points', 'slices', 'mesh', 'legends']}
     />
   );
 };

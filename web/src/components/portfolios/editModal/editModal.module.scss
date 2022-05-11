@@ -1,7 +1,35 @@
 .modal {
-  width: 960px;
+  width: 860px;
 }
 
 .modal-body {
   max-height: 400px;
+}
+
+.editor {
+  border-bottom: 1px solid rgba(191, 203, 211, 1);
+  border-left: 1px solid rgba(191, 203, 211, 1);
+  border-right: 1px solid rgba(191, 203, 211, 1);
+  margin: 0;
+  min-width: 400px;
+}
+
+.toolbar {
+  margin: 0;
+  [title=Bold] {
+    padding: 0;
+    border: none;
+  }
+  [title=Italic] {
+    padding: 0;
+    border: none;
+  }
+  [title=Link] {
+    padding: 0;
+    border: none;
+  }
+  [title=Unordered] {
+    padding: 0;
+    border: none;
+  }
 }

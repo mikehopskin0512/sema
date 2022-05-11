@@ -58,6 +58,7 @@ const TeamStatsFilter = ({ filter, individualFilter, commentView, filterRepoList
                 start={startDate}
                 end={endDate}
                 onChange={onDateChange}
+                onChangeFilter={onChangeFilter}
               />
           </div>
           {commentView === 'received' && individualFilter && <div className={clsx("my-5 ml-40 mr-10", styles['filter-container'])}>

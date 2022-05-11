@@ -59,3 +59,39 @@ paths:
           description: email sent
         400:
           description: bad input parameter
+  /v1/support/knowledgeBase:
+    get:
+      summary: fetch Sema's Knowledge Base articles.
+      operationId: getKnowledgeBase
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authorization Bearer type header with Intercom API key
+          required: true
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  pages:
+                    type: object
+                  total_count:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        body:
+                          type: string
+                        parent_id:
+                          type: integer
+          description: Fetch Sema's Knowledge Base articles.
+        401:
+          description: Access Token Invalid
