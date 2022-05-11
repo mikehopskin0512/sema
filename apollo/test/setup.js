@@ -1,9 +1,10 @@
 import './env';
 import mongoose from 'mongoose';
+import Ironium from 'ironium';
 import app from '../src/app';
 
 beforeAll(async () => {
-  await clearMongoDB();
+  await Promise.all([clearMongoDB(), Ironium.purgeQueues()]);
 });
 
 afterAll(async () => {

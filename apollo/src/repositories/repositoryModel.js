@@ -86,4 +86,16 @@ const repositoriesSchema = new mongoose.Schema(
 repositoriesSchema.set('autoIndex', autoIndex);
 repositoriesSchema.index({ orgId: 1, externalId: 1 });
 
+// { type, externalId } should be unique.
+repositoriesSchema.index(
+  { type: 1, externalId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      type: { $exists: true },
+      externalId: { $exists: true },
+    },
+  }
+);
+
 module.exports = mongoose.model('Repository', repositoriesSchema);

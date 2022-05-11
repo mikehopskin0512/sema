@@ -18,6 +18,7 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
+import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
@@ -46,13 +47,30 @@ export const create = async ({
       repositoryCreatedAt,
       repositoryUpdatedAt,
     });
+    await handleRepoSync(repository);
     return repository;
   } catch (err) {
+    const isDuplicate =
+      err.code === 11000 && err.keyPattern?.type && err.keyPattern?.externalId;
+    if (isDuplicate) {
+      const repository = await Repositories.findOne({ type, externalId });
+      await handleRepoSync(repository);
+      return repository;
+    }
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
   }
 };
+
+async function handleRepoSync(repository) {
+  const shouldStartSync = !!(
+    repository.type === 'github' && repository.installationId
+  );
+  if (shouldStartSync) {
+    await importRepositoryQueue.queueJob({ id: repository.id });
+  }
+}
 
 export const createMany = async (repositories) => {
   try {
