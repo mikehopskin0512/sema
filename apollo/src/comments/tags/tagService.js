@@ -1,10 +1,13 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 import _ from 'lodash';
-import Tag from "./tagModel";
+import Tag from './tagModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import SuggestedComment from '../suggestedComments/suggestedCommentModel';
 
-const { Types: { ObjectId } } = mongoose;
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 export const getAllTags = async () => {
   try {
@@ -26,7 +29,7 @@ export const getTagsByType = async (type) => {
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
 
 export const getAllTagIds = async () => {
   try {
@@ -44,19 +47,18 @@ export const getTagsById = async (id) => {
     const tags = await Tag.aggregate([
       {
         $match: {
-          "_id": {
+          _id: {
             $eq: new ObjectId(id),
-          }
-        }
+          },
+        },
       },
       {
         $lookup: {
-          from: "suggestedComments",
-          localField: "_id",
-          foreignField: "tags.tag",
-          as: "suggestedComments"
+          from: 'suggestedComments',
+          localField: '_id',
+          foreignField: 'tags.tag',
+          as: 'suggestedComments',
         },
-
       },
       {
         $project: {
@@ -66,53 +68,30 @@ export const getTagsById = async (id) => {
           sentiment: 1,
           isActive: 1,
           suggestedComments: 1,
-        }
+        },
       },
-    ]).exec()
+    ]).exec();
     return tags[0];
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
 
 export const findSuggestedCommentTags = async () => {
   try {
-    // const tags = await Tag.find({
-    //   "type": {
-    //     $in: ["language", "guide", "custom"],
-    //   }
-    // });
-    const tags = await Tag.aggregate([
-      {
-        $match: {
-          "type": {
-            $in: ["language", "guide", "custom", "other"],
-          }
-        }
-      },
-      {
-        $lookup: {
-          from: "suggestedComments",
-          localField: "_id",
-          foreignField: "tags.tag",
-          as: "suggestedCommentsForeign"
-        },
+    const [tags, counts] = await Promise.all([
+      findByType(['language', 'guide', 'custom', 'other']),
+      getSuggestedCommentCountByTagID(),
+    ]);
 
-      },
-      {
-        $project: {
-          _id: 1,
-          label: 1,
-          type: 1,
-          sentiment: 1,
-          isActive: 1,
-          suggestedCommentsCount: { $size: "$suggestedCommentsForeign" },
-        }
-      }
-    ]).exec()
-    return tags;
+    const tagsWithCounts = tags.map((tag) => ({
+      ...tag,
+      suggestedCommentsCount: counts.get(tag._id.toString()) || 0,
+    }));
+
+    return tagsWithCounts;
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
@@ -123,9 +102,9 @@ export const findSuggestedCommentTags = async () => {
 export const findTags = async (tagsArr) => {
   try {
     const tags = await Tag.find({
-      "_id": {
+      _id: {
         $in: tagsArr,
-      }
+      },
     }).exec();
     return tags;
   } catch (err) {
@@ -135,13 +114,12 @@ export const findTags = async (tagsArr) => {
   }
 };
 
-
 export const buildTagsEmptyObject = async () => {
   try {
     const schema = {};
     const tags = await getAllTags();
-    for (const [key, value] of Object.entries(tags)) {
-      schema[tags[key]['_id']] = 0
+    for (const key of Object.keys(tags)) {
+      schema[tags[key]._id] = 0;
     }
     return schema;
   } catch (err) {
@@ -151,7 +129,7 @@ export const buildTagsEmptyObject = async () => {
   }
 };
 
-export const incrementTags = (tagsObject = {}, tagsArray) => {
+export const incrementTags = (tagsObject, tagsArray) => {
   // tagsObject - data from db
   // tagsArray - raw data from smart comments
   const tagsObject2 = {};
@@ -186,7 +164,7 @@ export const deleteTag = async (_id) => {
 
 export const updateTag = async (_id, tag) => {
   try {
-    const res = await Tag.updateOne({ _id }, { $set: { ...tag } });
+    await Tag.updateOne({ _id }, { $set: { ...tag } });
     return { tag };
   } catch (err) {
     logger.error(err);
@@ -194,3 +172,29 @@ export const updateTag = async (_id, tag) => {
     return error;
   }
 };
+
+async function findByType(types) {
+  return Tag.find({
+    type: types,
+  }).lean();
+}
+
+async function getSuggestedCommentCountByTagID() {
+  const docs = await SuggestedComment.aggregate([
+    {
+      $unwind: {
+        path: '$tags',
+      },
+    },
+    {
+      $group: {
+        _id: '$tags.tag',
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  return docs.reduce(
+    (accum, doc) => accum.set(doc._id.toString(), doc.count),
+    new Map()
+  );
+}
