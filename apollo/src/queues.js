@@ -12,7 +12,7 @@ if (isProduction) {
     `Configuring Ironium via ECS remote credentials, region is ${region}`
   );
   Ironium.configure({
-    credentials: AWS.RemoteCredentials,
+    credentials: new AWS.RemoteCredentials(),
     region,
   });
 }
