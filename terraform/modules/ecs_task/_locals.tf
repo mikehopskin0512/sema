@@ -8,7 +8,8 @@ locals {
   task_definition_exec_cw_policy       = "${local.task_definition}-cw-policy"
   task_definition_exec_ssm_policy      = "${local.task_definition}-ssm-policy"
   task_definition_exec_secret_policy   = "${local.task_definition}-secret-policy"
-  task_definition_exec_external_policy = "${local.task_definition}-external-policy"
+  task_definition_external_policy      = "${local.task_definition}-external-policy"
+  task_definition_exec_external_policy = "${local.task_definition}-external-exec-policy"
   cw_log_group                         = "/${var.name_prefix}/ecs/${var.application}"
   sg                                   = "${local.task_definition}-sg"
 }

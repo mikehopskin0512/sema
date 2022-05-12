@@ -77,3 +77,18 @@ data "aws_iam_policy_document" "s3_scr_avatars" {
     ]
   }
 }
+
+data "aws_iam_policy_document" "sqs_repo_sync" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:SendMessage"
+    ]
+
+    resources = [
+      aws_sqs_queue.import_repository.arn,
+      aws_sqs_queue.import_pull_request.arn,
+      aws_sqs_queue.github_webhook.arn,
+    ]
+  }
+}

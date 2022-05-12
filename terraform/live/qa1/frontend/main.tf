@@ -23,7 +23,8 @@ module "phoenix" {
     arn  = aws_ecs_cluster.main.id
     name = aws_ecs_cluster.main.name
   }
-  task_definition_resources = var.ecs_task_definition_resources
+  task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
+  task_definition_resources_memory = var.ecs_task_definition_resources_memory
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.phoenix_web_repo_arn
     kms_key = ""
@@ -52,6 +53,7 @@ module "phoenix" {
 
   min_capacity = 1
   max_capacity = 3
+
 }
 
 module "apollo" {
@@ -65,7 +67,8 @@ module "apollo" {
     arn  = aws_ecs_cluster.main.id
     name = aws_ecs_cluster.main.name
   }
-  task_definition_resources = var.ecs_task_definition_resources
+  task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
+  task_definition_resources_memory = var.ecs_task_definition_resources_memory
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
     kms_key = ""
@@ -95,6 +98,7 @@ module "apollo" {
 
   min_capacity = 1
   max_capacity = 3
+
 }
 
 # module "auto_restore_backup_lambda" {
