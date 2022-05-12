@@ -26,18 +26,6 @@ export default bunyan.createLogger({
 function getOutputStream() {
   if (loggerEnabled === false) return null;
 
-  const isProduction = process.env.NODE_ENV === 'production';
-  if (isProduction) {
-    return {
-      stream: process.stdout,
-      level: 'info',
-    };
-  }
-
-  return getOutputStreamForDevelopment();
-}
-
-function getOutputStreamForDevelopment() {
   const LEVELS = {
     [bunyan.TRACE]: 'trace',
     [bunyan.DEBUG]: 'debug',
@@ -49,8 +37,8 @@ function getOutputStreamForDevelopment() {
 
   const humanReadable = new Transform({
     objectMode: true,
-    transform(object, encoding, callback) {
-      const { level, msg, err } = JSON.parse(object);
+    transform(json, encoding, callback) {
+      const { level, msg, err } = JSON.parse(json);
       const line = `${LEVELS[level]}: ${err ? err.stack : msg}\n`;
       callback(null, line);
     },
