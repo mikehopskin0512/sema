@@ -89,7 +89,13 @@ data "aws_iam_policy_document" "sqs_repo_sync" {
   statement {
     effect = "Allow"
     actions = [
-      "sqs:ReceiveMessage"
+      "sqs:ChangeMessageVisibility",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ListQueues",
+      "sqs:ReceiveMessage",
+      "sqs:SendMessage"
     ]
 
     resources = [
