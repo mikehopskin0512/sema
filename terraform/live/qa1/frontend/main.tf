@@ -119,18 +119,22 @@ module "apollo_worker" {
     kms_key = ""
   }
 
-  datadog_api_key = local.datadog_apollo_worker_api_key
+  datadog_api_key = local.datadog_apollo_api_key
   image           = var.apollo_worker_image
-  ecs_secrets     = local.apollo_worker_ecs_secrets
+  ecs_secrets     = local.apollo_ecs_secrets
   ecs_envs = [
     {
       name  = "AWS_SECRETS_HASH"
-      value = local.apollo_worker_ecs_secret_data_hash
+      value = local.apollo_ecs_secret_data_hash
     }
   ]
 
   min_capacity = 1
   max_capacity = 1
+
+  external_exec_iam_policies = [
+    data.aws_iam_policy_document.sqs_repo_sync.json
+  ]
 }
 
 # module "auto_restore_backup_lambda" {
