@@ -41,9 +41,11 @@ locals {
 }
 
 locals {
-  domain                      = "${var.ecs_external_access.domain_prefix}.${var.ecs_external_access.domain}"
+  domain_prefix               = can(var.ecs_external_access.domain_prefix) ? var.ecs_external_access.domain_prefix : ""
+  ecs_external_access_domain  = can(var.ecs_external_access.domain) ? var.ecs_external_access.domain : ""
+  domain                      = "${local.domain_prefix}.${local.ecs_external_access_domain}"
   requires_compatibilities    = var.requires_compatibilities_ec2_enabled ? ["EC2"] : ["FARGATE"]
-  ecs_external_access_enabled = var.ecs_external_access != null ? true : false
+  ecs_external_access_enabled = var.ecs_external_access != null
   ecs_port_mappings           = local.ecs_external_access_enabled ? [{ containerPort = var.ecs_external_access.port }] : []
   ecs_command                 = var.ecs_command != null ? var.ecs_command : []
   datadog_enabled             = length(compact([null, "", var.datadog_api_key])) > 0 ? true : false
