@@ -4,8 +4,6 @@ import yaml from 'yamljs';
 import path from 'path';
 
 import { version } from '../config';
-import logger from '../shared/logger';
-import errors from '../shared/errors';
 
 import { create as createRepository } from '../repositories/repositoryService';
 import checkEnv from '../middlewares/checkEnv';

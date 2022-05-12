@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import { buildReactionsSchema } from '../comments/reaction/reactionService';
-import { getAllTagIds } from '../comments/tags/tagService';
 import { autoIndex } from '../config';
 
 const tagsScheme = new mongoose.Schema(
@@ -98,4 +96,4 @@ repositoriesSchema.index(
   }
 );
 
-module.exports = mongoose.model('Repository', repositoriesSchema);
+export default mongoose.model('Repository', repositoriesSchema);
