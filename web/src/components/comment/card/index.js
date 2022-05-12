@@ -42,6 +42,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     isTeamAdminOrLibraryEditor,
     isSemaAdmin,
     isIndividualUser,
+    checkTeamPermission
   } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
@@ -89,6 +90,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const { _id = '', name = '', description = '', comments = [], commentsCount, author = '', source, guides = [], languages = [], isActive: isNotArchived } = collectionData;
 
     const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
+    const isAddButtonNeeded = isTeamAdminOrLibraryEditor() || isSemaAdmin();
 
     const onChangeToggle = (e) => {
       e.stopPropagation();
@@ -191,7 +193,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   <p className={clsx('is-size-7 has-text-weight-semibold has-text-blue-500')}>snippets</p>
                 </div>
                 <div className='is-flex is-align-items-center'>
-                  {(isMyComments || isTeamSnippet) && (
+                  {((isMyComments || (isTeamSnippet && checkTeamPermission('canCreateSnippets') && isAddButtonNeeded))) && (
                     <div className={clsx('py-12 is-flex is-flex-grow-1 pl-12 pr-12')} onClick={onClickChild} aria-hidden >
                       <div
                         className={clsx('button has-text-primary has-background-white-0 is-outlined is-clickable is-fullwidth has-text-weight-semibold',
