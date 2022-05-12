@@ -68,11 +68,7 @@ module "apollo" {
     name = aws_ecs_cluster.main.name
   }
   task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
-<<<<<<< HEAD
   task_definition_resources_memory = var.ecs_task_definition_resources_memory
-=======
-  task_definition_resources_memory = var.ecs_task_definition_resources_cpu
->>>>>>> DVPS-276
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
     kms_key = ""
