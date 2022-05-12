@@ -68,7 +68,11 @@ module "apollo" {
     name = aws_ecs_cluster.main.name
   }
   task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
+<<<<<<< HEAD
   task_definition_resources_memory = var.ecs_task_definition_resources_memory
+=======
+  task_definition_resources_memory = var.ecs_task_definition_resources_cpu
+>>>>>>> DVPS-276
   ecr_repo = {
     arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
     kms_key = ""
@@ -99,6 +103,38 @@ module "apollo" {
   min_capacity = 1
   max_capacity = 3
 
+}
+
+module "apollo_worker" {
+  source = "../../../modules/ecs_task"
+
+  name_prefix = var.name_prefix
+  vpc_id      = data.aws_vpc.this.id
+  subnets     = data.aws_subnet_ids.private.ids
+  application = "apollo-worker"
+  ecs_cluster = {
+    arn  = aws_ecs_cluster.main.id
+    name = aws_ecs_cluster.main.name
+  }
+  task_definition_resources_cpu    = var.ecs_task_definition_resources_cpu
+  task_definition_resources_memory = var.ecs_task_definition_resources_memory
+  ecr_repo = {
+    arn     = data.terraform_remote_state.repos.outputs.apollo_web_repo_arn
+    kms_key = ""
+  }
+
+  datadog_api_key = local.datadog_apollo_worker_api_key
+  image           = var.apollo_worker_image
+  ecs_secrets     = local.apollo_worker_ecs_secrets
+  ecs_envs = [
+    {
+      name  = "AWS_SECRETS_HASH"
+      value = local.apollo_worker_ecs_secret_data_hash
+    }
+  ]
+
+  min_capacity = 1
+  max_capacity = 1
 }
 
 # module "auto_restore_backup_lambda" {

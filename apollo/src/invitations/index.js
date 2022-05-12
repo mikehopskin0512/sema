@@ -65,12 +65,6 @@ export default (app, passport) => {
       }
 
       if (userRecipient) {
-        const message = {
-          recipient: userRecipient.username,
-          url: `${orgDomain}/`,
-          templateName: 'userAdmitted',
-        };
-        await sendEmail(message);
         await redeemInvite(newInvitation.token, userRecipient._id);
       } else {
         // Send invitation

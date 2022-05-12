@@ -18,6 +18,7 @@ resource "aws_lb_target_group" "service" {
 }
 
 resource "aws_lb_listener_rule" "service_routing" {
+  for_each     = local.ecs_external_access_enabled ? { "created" = "true" } : {}
   listener_arn = data.aws_lb_listener.https["created"].arn
 
   priority = var.ecs_external_access_priority

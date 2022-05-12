@@ -15,8 +15,6 @@ const templates = {
   userConfirm: 'd-07e2e2aca47b411a9165885ecb7acdb3',
   verifyUser: 'd-ceb1757425874fd9af621484e1e29321',
   accountCreated: 'd-e04500d489e24b2e8b8a38cfafab87ab',
-  userAdmitted: 'd-abd207a163c24162b23294f925c5f5cf',
-  waitlisted: 'd-9154f0015308439fb7b996530edc355f',
   feedbackSupportAdmin: 'd-28ac6f741ee2423489e633725ded543b',
   feedbackSupportUser: 'd-785a1306aaa446f29518af0ff76a4644',
   inviteNewUserToTeam: 'd-ef3a58b2008c446883b97ef25b171b79',

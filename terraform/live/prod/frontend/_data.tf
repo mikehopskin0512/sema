@@ -42,6 +42,13 @@ data "aws_secretsmanager_secret_version" "apollo" {
   ]
 }
 
+data "aws_secretsmanager_secret_version" "apollo_worker" {
+  secret_id = aws_secretsmanager_secret.apollo_worker.id
+  depends_on = [
+    aws_secretsmanager_secret_version.apollo_worker
+  ]
+}
+
 data "aws_iam_policy_document" "s3_scr_avatars" {
   statement {
     sid = "PublicReadGetObject"
