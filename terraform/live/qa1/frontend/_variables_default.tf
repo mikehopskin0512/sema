@@ -16,21 +16,13 @@ variable "name_prefix" {
 
 variable "ecs_task_definition_resources_cpu" {
   type        = number
-<<<<<<< HEAD
   description = "CPU limits for the task definition."
-=======
-  description = "CPU and RAM limits for the task definition."
->>>>>>> DVPS-276
   default     = 1024
 }
 
 variable "ecs_task_definition_resources_memory" {
   type        = number
-<<<<<<< HEAD
   description = "RAM limits for the task definition."
-=======
-  description = "CPU and RAM limits for the task definition."
->>>>>>> DVPS-276
   default     = 2048
 }
 
