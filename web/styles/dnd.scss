@@ -6,6 +6,7 @@
     transition: 200ms all;
     position: relative;
     top: -10px;
+    z-index: 10;
 }
 
 .dropZone.verticalDrag {

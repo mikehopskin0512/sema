@@ -81,7 +81,7 @@ const DashboardDraggableList = ({
       type,
     });
   }
-console.log(layout)
+
   const renderRow = (row, currentPath) => {
     return (
       <DashboardRow

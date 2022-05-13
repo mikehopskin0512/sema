@@ -50,6 +50,7 @@ const changeChildDirection = async ({
   const itemPosition = parseInt(splitPath?.[1]);
   const rowPosition = parseInt(splitPath?.[0]);
   const isHorizontal = data[splitPath[0]]?.children[splitPath[1]]?.isHorizontal;
+  const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
 
   if (!isHorizontal) {
       const sourceElem = data[splitPath[0]]?.children[splitPath[1]];
@@ -72,8 +73,6 @@ const changeChildDirection = async ({
           if (isEmptyInRow) {
             const emptyElemIndex =  previousRow.children?.findIndex(child => child.isEmpty);
 
-            const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
-
             data.splice(rowPosition + 1, 1, {
               children: emptyElemIndex === 0 ? [{...elemToSet, isHorizontal: !isHorizontal},  previousRow.children[1]] : [previousRow.children[0], {...elemToSet, isHorizontal: !isHorizontal}],
               data: null,
@@ -83,7 +82,6 @@ const changeChildDirection = async ({
 
             data.splice(rowPosition, 1);
           } else {
-            const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
             data.splice(rowPosition, 1, {
               children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
               data: null,
@@ -92,7 +90,6 @@ const changeChildDirection = async ({
             });
           }
         } else {
-          const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
           data.splice(rowPosition, 1, {
             children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
             data: null,
@@ -141,15 +138,18 @@ const createAdditionalItemsRow = ({
   updater,
 }) => {
   const data = [...currentLayout];
+  const isHorizontal = itemToSet.data.isHorizontal;
 
-  data[oldPosition[0]]?.children?.splice(oldPosition[1], 1, getEmptyColumn());
+  isHorizontal ?
+    data[oldPosition[0]]?.children?.splice(oldPosition[1], 1) :
+    data[oldPosition[0]]?.children?.splice(oldPosition[1], 1, getEmptyColumn());
 
   if (DND_CASES_CHECKS.EMPTY_CHARTS_ROW(data, oldPosition[0])) {
     data.splice(oldPosition[0], 1);
   }
 
   data.splice(newPosition[0], 0, {
-    children: [itemToSet.data, getEmptyColumn()],
+    children: isHorizontal ? [itemToSet.data] : [itemToSet.data, getEmptyColumn()],
     data: null,
     id: uuid(),
     isIndependent: false,

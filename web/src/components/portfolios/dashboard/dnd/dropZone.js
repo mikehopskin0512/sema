@@ -12,10 +12,12 @@ const DropZone = ({ data, onDrop, isLast, className, acceptableItems }) => {
       const itemPath = item.path;
       if (!itemPath) return false;
       const isHorizontalItem = item?.data?.isHorizontal ?? false;
-      const isNewRowDropzone = item.path?.split('-')?.length === 1;
+      const isNewRowDropzone = data.path?.split('-')?.length === 1;
       const isSamePath = (data.path === item.path?.split('-')?.[0]);
-      if (isHorizontalItem && isNewRowDropzone) return true;
-      return (isSamePath || !!item.path) && !isHorizontalItem;
+
+      if (!isHorizontalItem) return isSamePath || !!item.path;
+
+      return isHorizontalItem && isNewRowDropzone;
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
