@@ -55,6 +55,7 @@ services:
     command: npm run test
     depends_on:
       - mongodb
+      - beanstalkd
     container_name: phoenix.apollo.test.local
     networks:
       - sema
@@ -76,6 +77,13 @@ services:
     volumes:
       - ~/docker/volumes/mongodb:/data/db
     container_name: phoenix.mongodb.sema.local
+    networks:
+      - sema
+  beanstalkd:
+    image: schickling/beanstalkd
+    ports:
+      - "11300:11300"
+    container_name: phoenix.beanstalkd.sema.local
     networks:
       - sema
 networks:
