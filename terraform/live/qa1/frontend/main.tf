@@ -132,9 +132,6 @@ module "apollo_worker" {
   min_capacity = 1
   max_capacity = 1
 
-  # external_exec_iam_policies = [
-  #   data.aws_iam_policy_document.sqs_repo_sync.json
-  # ]
 }
 
 # module "auto_restore_backup_lambda" {

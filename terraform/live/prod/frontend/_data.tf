@@ -42,13 +42,6 @@ data "aws_secretsmanager_secret_version" "apollo" {
   ]
 }
 
-data "aws_secretsmanager_secret_version" "apollo_worker" {
-  secret_id = aws_secretsmanager_secret.apollo_worker.id
-  depends_on = [
-    aws_secretsmanager_secret_version.apollo_worker
-  ]
-}
-
 data "aws_iam_policy_document" "s3_scr_avatars" {
   statement {
     sid = "PublicReadGetObject"
@@ -81,21 +74,6 @@ data "aws_iam_policy_document" "s3_scr_avatars" {
     ]
     resources = [
       "arn:aws:s3:::${local.s3_scr_avatars}/*",
-    ]
-  }
-}
-
-data "aws_iam_policy_document" "sqs_repo_sync" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "sqs:SendMessage"
-    ]
-
-    resources = [
-      aws_sqs_queue.import_repository.arn,
-      aws_sqs_queue.import_pull_request.arn,
-      aws_sqs_queue.github_webhook.arn,
     ]
   }
 }

@@ -117,9 +117,9 @@ module "apollo_worker" {
     kms_key = ""
   }
 
-  datadog_api_key = local.datadog_apollo_worker_api_key
-  image           = var.apollo_worker_image
-  ecs_secrets     = local.apollo_worker_ecs_secrets
+  datadog_api_key = local.datadog_apollo_api_key
+  image           = var.apollo_image
+  ecs_secrets     = local.apollo_ecs_secrets
   ecs_envs = [
     {
       name  = "AWS_SECRETS_HASH"
