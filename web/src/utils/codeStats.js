@@ -52,8 +52,9 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   let reactionsByDay = [];
   const tagsArr = [];
   let day = 0;
+  endDate = subDays(new Date(endDate), 1);
   // Should add +2 here because it's our step for the graph data splitting
-  const countedDays = diff + 2;
+  const countedDays = diff + 1;
   // Create Array of data for the BarChart
   while (day < countedDays) {
     const thisDay = subDays(endOfDay(new Date(endDate)), day);
