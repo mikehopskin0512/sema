@@ -20,7 +20,6 @@ locals {
       kms       = try(aws_secretsmanager_secret.apollo.kms_key_id, null)
     }
   ])
-
   phoenix_ecs_secret_data_hash = nonsensitive(sha256(data.aws_secretsmanager_secret_version.phoenix.secret_string))
   apollo_ecs_secret_data_hash  = nonsensitive(sha256(data.aws_secretsmanager_secret_version.apollo.secret_string))
 
