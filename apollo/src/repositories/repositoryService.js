@@ -141,7 +141,7 @@ export const sendNotification = async (msg) => {
 export const createOrUpdate = async (repository) => {
   if (!repository.externalId) return false;
   try {
-    const query = await Repositories.update(
+    await Repositories.update(
       { externalId: repository.externalId },
       repository,
       { upsert: true, setDefaultsOnInsert: true }
@@ -292,20 +292,19 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
+            smartComments: includeSmartComments
+              ? await findSmartCommentsByExternalId(
+                  externalId,
+                  true,
+                  date
+                    ? {
+                        $gte: toDate(new Date(date.startDate)),
+                        $lte: toDate(endOfDay(new Date(date.endDate))),
+                      }
+                    : undefined
+                )
+              : null,
           };
-          if (includeSmartComments) {
-            const smartComments = await findSmartCommentsByExternalId(
-              externalId,
-              true,
-              date
-                ? {
-                    $gte: toDate(new Date(date.startDate)),
-                    $lte: toDate(endOfDay(new Date(date.endDate))),
-                  }
-                : undefined
-            );
-            data.smartcomments = smartComments;
-          }
           return data;
         })
       );
@@ -375,7 +374,7 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
       const formattedToDate = format(parsedDateTo, 'MM/dd/yyyy');
       const date = format(parsedDateTo, 'MM/dd');
       localReactions.date = date;
-      repo.repoStats.map((stat) => {
+      repo.repoStats.forEach((stat) => {
         const reaction = stat.reactionId;
         const dataDate = new Date(stat.createdAt);
         const formattedDataDate = format(dataDate, 'MM/dd/yyyy');
@@ -439,11 +438,11 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
     const repo = repositories[0];
     const tags = {};
 
-    repo.repoStats.map((stat) => {
+    repo.repoStats.forEach((stat) => {
       const { tagsId } = stat;
       const dataDate = new Date(stat.createdAt);
       const formattedDataDate = format(dataDate, 'MM/dd/yy');
-      tagsId?.map((tag) => {
+      tagsId?.forEach((tag) => {
         if (tags?.[tag]) {
           tags[tag].total += 1;
           const index = _.findIndex(
@@ -456,7 +455,7 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
               tags: 1,
             });
           } else {
-            tags[tag].tally[index].tags++;
+            tags[tag].tally[index].tags += 1;
           }
         } else {
           tags[tag] = {

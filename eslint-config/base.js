@@ -6,6 +6,8 @@ module.exports = {
   rules: {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
     'no-use-before-define': 'off',
+    'no-return-await': 'off',
+    'import/no-cycle': 'off',
     'func-names': ['error', 'as-needed'],
     'import/no-extraneous-dependencies': [
       'error',
