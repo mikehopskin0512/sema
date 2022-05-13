@@ -7,9 +7,13 @@ import logger from './shared/logger';
 
 const isProduction = process.env.NODE_ENV === 'production';
 if (isProduction) {
+  const region = process.env.AWS_REGION || 'us-east-1';
+  logger.info(
+    `Configuring Ironium via ECS remote credentials, region is ${region}`
+  );
   Ironium.configure({
-    credentials: AWS.RemoteCredentials,
-    region: process.env.AWS_REGION || 'us-east-1',
+    credentials: new AWS.RemoteCredentials(),
+    region,
   });
 }
 
@@ -25,6 +29,7 @@ async function loadQueueFile(filename) {
   const queueName = getQueueNameFromFile(filename);
   const { default: handler } = await import(filename);
   Ironium.queue(queueName).eachJob(handler);
+  logger.info(`Registered ${filename} to handle ${queueName}`);
 }
 
 const queues = {
