@@ -15,7 +15,9 @@ const requestPDF = async (reportToken, mostRecentReportRunToken, timeout) => {
     throw new errors.NotFound('No data returned from API');
   }
 
-  const { data: { state = '', filename = '' } } = response;
+  const {
+    data: { state = '', filename = '' },
+  } = response;
   if (state === 'enqueued') {
     // Request stays in 'enqueued' state until completed
     logger.info('Awaiting PDF generation...');
@@ -43,12 +45,18 @@ export const generatePdf = async (reportToken) => {
     }
 
     const { data } = response;
-    const { _embedded: { report_runs = [] } } = data;
-    const { state, token: mostRecentReportRunToken } = report_runs[0];
+    const {
+      _embedded: { report_runs: reportRuns = [] },
+    } = data;
+    const { state, token: mostRecentReportRunToken } = reportRuns[0];
 
     if (state === 'succeeded' || state === 'enqueued') {
-      const timeout = Date.now() + (5 * 60 * 1000); // close the call after 5 min
-      const payload = await requestPDF(reportToken, mostRecentReportRunToken, timeout);
+      const timeout = Date.now() + 5 * 60 * 1000; // close the call after 5 min
+      const payload = await requestPDF(
+        reportToken,
+        mostRecentReportRunToken,
+        timeout
+      );
       return payload;
     }
 
@@ -64,10 +72,9 @@ export const fetchModePdf = async (reportToken, mostRecentReportRunToken) => {
 
   try {
     const chunks = [];
-    getAll(endpoint, { encoding: null })
-      .then((response) => {
-        chunks.push(response.data);
-      });
+    getAll(endpoint, { encoding: null }).then((response) => {
+      chunks.push(response.data);
+    });
 
     return chunks;
   } catch (err) {
@@ -85,7 +92,9 @@ export const getModeSpace = async (spaceToken) => {
   }
 
   const { data } = response;
-  const { _embedded: { reports } } = data;
+  const {
+    _embedded: { reports },
+  } = data;
 
   return reports;
 };
@@ -94,11 +103,24 @@ const signUrl = async (url, key, secret, timestamp) => {
   const requestType = 'GET';
   const contentType = null;
   const contentBody = '';
-  const contentDigest = crypto.createHash('md5').update(contentBody).digest().toString('base64');
+  const contentDigest = crypto
+    .createHash('md5')
+    .update(contentBody)
+    .digest()
+    .toString('base64');
 
-  const requestString = [requestType, contentType, contentDigest, url, timestamp].join(',');
+  const requestString = [
+    requestType,
+    contentType,
+    contentDigest,
+    url,
+    timestamp,
+  ].join(',');
 
-  const signature = crypto.createHmac('sha256', secret).update(requestString).digest('hex');
+  const signature = crypto
+    .createHmac('sha256', secret)
+    .update(requestString)
+    .digest('hex');
 
   const signedUrl = `${url}&signature=${signature}`;
   return signedUrl;
@@ -113,13 +135,20 @@ export const buildModeReportUri = async (reportId, orgId, urlParams) => {
   let requestUri = `${reportUrl}/embed?access_key=${modeEmbedKey}&max_age=${modeMaxAge}&param_organization_id=${orgId}`;
 
   // Add custom urlParams if provided
-  if (urlParams) { requestUri += `&${urlParams}`; }
+  if (urlParams) {
+    requestUri += `&${urlParams}`;
+  }
 
   // Add timestamp (must come after custom urlParams)
   requestUri += `&timestamp=${timestamp}`;
 
   // Sign request and add signature to end
-  requestUri = await signUrl(requestUri, modeEmbedKey, modeEmbedSecret, timestamp);
+  requestUri = await signUrl(
+    requestUri,
+    modeEmbedKey,
+    modeEmbedSecret,
+    timestamp
+  );
 
   return requestUri;
 };
