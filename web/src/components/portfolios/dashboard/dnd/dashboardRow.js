@@ -13,12 +13,14 @@ const DashboardRow = ({
   onSnapshotDirectionUpdate,
   isPdfView,
   isPortfolioOwner,
+  layout
 }) => {
   const renderColumn = (data, path, isPdfView) => {
     const isHorizontalComment = (data?.isHorizontal) &&  data?.componentType === 'comments';
     return (
       <section className={clsx(styles['draggable-item-wrap'], isHorizontalComment && styles['draggable-item-wrap-horizontal'])}>
         <DropZone
+          layout={layout}
           className='verticalDrag'
           acceptableItems={[ELEM_TYPES.COLUMN]}
           data={{

@@ -2,7 +2,7 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import clsx from "clsx";
 
-const DropZone = ({ data, onDrop, isLast, className, acceptableItems }) => {
+const DropZone = ({ data, onDrop, isLast, className, acceptableItems, layout }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: acceptableItems,
     drop: (item) => {
@@ -11,9 +11,12 @@ const DropZone = ({ data, onDrop, isLast, className, acceptableItems }) => {
     canDrop: (item) => {
       const itemPath = item.path;
       if (!itemPath) return false;
+      const parsedPath = data?.path?.split('-');
       const isHorizontalItem = item?.data?.isHorizontal ?? false;
-      const isNewRowDropzone = data.path?.split('-')?.length === 1;
+      const isNewRowDropzone = parsedPath?.length === 1;
       const isSamePath = (data.path === item.path?.split('-')?.[0]);
+
+      if (!isHorizontalItem && layout?.[parsedPath[0]]?.children[parsedPath?.[1]]?.isHorizontal) return false;
 
       if (!isHorizontalItem) return isSamePath || !!item.path;
 

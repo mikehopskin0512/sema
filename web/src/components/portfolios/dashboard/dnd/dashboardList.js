@@ -85,6 +85,7 @@ const DashboardDraggableList = ({
   const renderRow = (row, currentPath) => {
     return (
       <DashboardRow
+        layout={layout}
         data={row}
         path={currentPath}
         handleDrop={handleDrop}
@@ -105,6 +106,7 @@ const DashboardDraggableList = ({
           return (
             <React.Fragment key={element.id}>
               <DropZone
+                layout={layout}
                 data={{
                   path: currentPath,
                   childrenCount: pageLayout.length,
@@ -119,6 +121,7 @@ const DashboardDraggableList = ({
         })
       }
       <DropZone
+        layout={layout}
         acceptableItems={ACCEPTABLE_ITEMS}
         onDrop={handleDrop}
         isLast
