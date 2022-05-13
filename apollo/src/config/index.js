@@ -13,7 +13,6 @@ module.exports = {
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
-  mongooseUri: process.env.MONGOOSE_URI || '',
   databaseName: process.env.DATABASE_NAME || '',
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED !== '0',
@@ -69,7 +68,7 @@ function getMongoDBConnectionDetails() {
     : process.env.DATABASE_NAME;
 
   const uri = new URL(process.env.MONGOOSE_URI);
-  uri.path = databaseName;
+  uri.pathname = databaseName;
   return {
     mongooseUri: uri.toString(),
     databaseName,
