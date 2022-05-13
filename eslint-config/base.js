@@ -8,6 +8,7 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-return-await': 'off',
     'func-names': ['error', 'as-needed'],
+    'import/no-cycle': 'off',
     'import/no-extraneous-dependencies': [
       'error',
       {
