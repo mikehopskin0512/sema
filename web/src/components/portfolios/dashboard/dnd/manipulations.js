@@ -30,13 +30,80 @@ const reorderChildInRow = ({
 
   const result = Array.from(currentLayout);
   const requiredElement = result[index];
-  const transformedChildren = swapArrayElements(requiredElement.children, oldPosition.join('-'), newPosition[0]);
+  const transformedChildren = swapArrayElements(requiredElement.children, oldPosition[1], newPosition[1]);
+
   result.splice(index, 1, {
     ...requiredElement,
     children: transformedChildren.filter(i => !!i),
   });
   return updater(result);
 };
+
+const changeChildDirection = async ({
+  path,
+  currentLayout,
+  updater,
+}) => {
+  const data = [...currentLayout];
+  const splitPath = path.split('-');
+
+  const itemPosition = parseInt(splitPath?.[1]);
+  const rowPosition = parseInt(splitPath?.[0]);
+  const isHorizontal = data[splitPath[0]]?.children[splitPath[1]]?.isHorizontal;
+
+  if (!isHorizontal) {
+      const sourceElem = data[splitPath[0]]?.children[splitPath[1]];
+      data.splice(rowPosition, 0, {
+        children: [{...sourceElem, isHorizontal: !isHorizontal}],
+        data: null,
+        id: uuid(),
+        type: "row",
+      });
+      data[rowPosition + 1].children?.splice(itemPosition, 1, getEmptyColumn());
+
+      if (data[rowPosition + 1]?.children?.every(child => child.isEmpty)) {
+        data.splice(rowPosition + 1, 1);
+      }
+
+    } else {
+        const previousRow = data[rowPosition + 1];
+        if  (previousRow) {
+          const isEmptyInRow = previousRow.children?.some(child => child.isEmpty);
+          if (isEmptyInRow) {
+            const emptyElemIndex =  previousRow.children?.findIndex(child => child.isEmpty);
+
+            const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
+
+            data.splice(rowPosition + 1, 1, {
+              children: emptyElemIndex === 0 ? [{...elemToSet, isHorizontal: !isHorizontal},  previousRow.children[1]] : [previousRow.children[0], {...elemToSet, isHorizontal: !isHorizontal}],
+              data: null,
+              id: uuid(),
+              type: "row",
+            });
+
+            data.splice(rowPosition, 1);
+          } else {
+            const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
+            data.splice(rowPosition, 1, {
+              children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
+              data: null,
+              id: uuid(),
+              type: "row",
+            });
+          }
+        } else {
+          const elemToSet = data[splitPath[0]]?.children[splitPath[1]];
+          data.splice(rowPosition, 1, {
+            children: [{...elemToSet, isHorizontal: !isHorizontal},  getEmptyColumn()],
+            data: null,
+            id: uuid(),
+            type: "row",
+          });
+        }
+    }
+
+  return updater(data);
+}
 
 const replaceChildInAnotherParent = ({
   oldPosition,
@@ -95,6 +162,7 @@ const createAdditionalItemsRow = ({
 export {
   reorderIndependentRow,
   reorderChildInRow,
+  changeChildDirection,
   replaceChildInAnotherParent,
   createAdditionalItemsRow,
   getEmptyColumn

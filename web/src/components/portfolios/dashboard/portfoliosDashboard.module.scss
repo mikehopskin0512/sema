@@ -79,21 +79,22 @@
     width: 100%;
   }
 
-  .chart-wrap {
+  .draggable-item-wrap {
     position: relative;
     margin-bottom: 30px;
     max-width: 100%;
     box-sizing: border-box;
     @media only screen and (min-width: 1440px) {
-      width: calc(50% - 16px);
+      &.draggable-item-wrap-horizontal {
+        width: 100%;
+        display: inline-flex;
+        flex-direction: column;
+        margin-bottom: 0;
+      };
+      width: calc(50% - 20px);
       display: inline-flex;
       flex-direction: column;
       margin-bottom: 0;
-    }
-  }
-  .chart-wrap:nth-of-type(odd) {
-    @media only screen and (min-width: 1440px) {
-      margin-right: 32px;
     }
   }
 
@@ -156,4 +157,5 @@
 
 .draggable-columns {
   flex-wrap: wrap;
+  gap: 40px;
 }

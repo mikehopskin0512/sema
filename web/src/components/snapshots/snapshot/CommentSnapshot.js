@@ -20,7 +20,9 @@ const CommentSnapshot = React.forwardRef(({
   preview,
   isOwner,
   onUpdate,
-  onSnapshotDirectionUpdate
+  onSnapshotDirectionUpdate,
+  path,
+  isDragging
 }, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
@@ -69,7 +71,7 @@ const CommentSnapshot = React.forwardRef(({
         onSubmit={() => onDeleteSnapshot()}
       />
       <div
-        className={clsx(styles.snapshot, "has-background-gray-200 p-25 mb-30 is-relative", snapshotData.isHorizontal && styles['snapshot-horizontal'])}
+        className={clsx(styles.snapshot, 'has-background-gray-200 p-25 is-relative', snapshotData.isHorizontal && styles['snapshot-horizontal'], isDragging && styles['snapshot-dragging'])}
         ref={preview}>
         {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline", styles['container-buttons-wrapper'])}>
           <DropDownMenu
@@ -94,6 +96,7 @@ const CommentSnapshot = React.forwardRef(({
                 onClick: () => onSnapshotDirectionUpdate({
                   snapshot: snapshotData,
                   type: snapshotData.componentType,
+                  path
                 }),
               },
             ]}

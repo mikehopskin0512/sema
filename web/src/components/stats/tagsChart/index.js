@@ -85,8 +85,8 @@ const TagsChart = ({
         <div className="is-flex is-align-items-center is-justify-content-space-between">
           <span className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name}</span>
           {
-            dateOption === 'custom' 
-              ? (<span className="has-text-primary">{format(new Date(startDate), 'MMM d, yyyy')} - {format(new Date(endDate), 'MMM d, yyyy')}</span>)
+            dateOption === 'custom'
+              ? (startDate && <span className="has-text-primary">{format(new Date(startDate), 'MMM d, yyyy')} - {format(new Date(endDate), 'MMM d, yyyy')}</span>)
               : (<span className="has-text-primary">{startCase(dateOption)}</span>)
           }
         </div>

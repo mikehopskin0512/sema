@@ -7,7 +7,6 @@
   width: 100%;
 
   &:not(.chart-snapshot) {
-    width: 50%;
     @media screen and (max-width: 1440px) {
       width: 100%;
     }
@@ -103,4 +102,8 @@
 
 .empty-chart-img {
   height: 576px;
+}
+
+.snapshot-dragging {
+  opacity: 0.2;
 }
