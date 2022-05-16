@@ -10,7 +10,7 @@ fi
 
 NODE_ENV=production
 DOCKER_FILE=../.docker/web/Dockerfile.prod
-BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+BRANCH=$(git branch --show-current)
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
