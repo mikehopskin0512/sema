@@ -110,12 +110,13 @@ const SnapshotModal = ({
       } else {
         const snapshot = await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
         const snapshotPortfolios = snapshot.data.portfolios;
+        const hasNoPortfolios = !portfolioId && snapshotPortfolios.length === 1;
         notify('Snapshot was added to your portfolio', {
           description: (
             <>
               <p>You've successfully added this snapshot.</p>
               {/* This condition shows that the user doesn't have a portfolio yet. */}
-              {!portfolioId && snapshotPortfolios.length === 1 ? (
+              {hasNoPortfolios ? (
                 <Link href={`/portfolios/${snapshotPortfolios[0]}`}>
                   <a>Go to the portfolio</a>
                 </Link>
