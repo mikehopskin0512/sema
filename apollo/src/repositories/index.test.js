@@ -52,7 +52,7 @@ describe('GET /repositories/overview', () => {
     });
 
     beforeAll(async () => {
-      ({ status, data } = await apollo.get('/v1/repositories/overview', {
+      ({ data } = await apollo.get('/v1/repositories/overview', {
         params: { externalId: '123456' },
         headers: {
           authorization: `Bearer ${token}`,
