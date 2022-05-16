@@ -28,7 +28,7 @@ pipeline {
         stage('Create phoenix profile for aws cli') {
             steps {
                 script {
-                    release_regex = '(.*/release.*|.*/DVPS-268)'
+                    release_regex = '(.*release.*|.*DVPS-268)'
                     switch (BRANCH_NAME) {
                     case 'master':
                             ENVIRONMENT = 'prod'
