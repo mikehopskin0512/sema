@@ -24,6 +24,7 @@ pipeline {
         stage('Create phoenix profile for aws cli') {
             steps {
                 script {
+                    git checkout
                     release_regex = '(.*/release.*|.*/DVPS-268)'
                     switch (GIT_BRANCH) {
                     case 'master':
