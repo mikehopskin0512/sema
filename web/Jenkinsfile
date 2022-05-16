@@ -28,7 +28,7 @@ pipeline {
         stage('Build web') {
             steps {
                 script {
-                    release_regex = '(.*release.*|.*DVPS-268)'
+                    release_regex = '(.*release.*)'
                     switch (BRANCH_NAME) {
                     case 'master':
                             ENVIRONMENT = 'prod'

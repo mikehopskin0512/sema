@@ -48,6 +48,6 @@ NEW_TASK_DEFINITION_ARN=$(aws ecs register-task-definition --cli-input-json "$NE
 
 echo "Updating ECS with new task definition..."
 # force update to use new task definition and redeploy
-# aws ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $NAME --task-definition $NEW_TASK_DEFINITION_ARN >/dev/null
+aws ecs update-service --force-new-deployment --cluster $CLUSTER_NAME --service $NAME --task-definition $NEW_TASK_DEFINITION_ARN >/dev/null
 
 # echo "done :)"
