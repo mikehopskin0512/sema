@@ -4,9 +4,15 @@ readonly NAME=phoenix
 readonly ENV="${1}"
 readonly AWS_ACCOUNT="091235034633"
 readonly AWS_REGION="us-east-1"
+readonly BRANCH="${2}"
 
 if [[ -z ${ENV} ]]; then
-    printf "environment name (prod,qa etc) must me specified, e.g. ./build-and-deploy.sh qa \n"
+    printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh staging release-20... \n"
+    exit 1
+fi
+
+if [[ -z ${BRANCH} ]]; then
+    printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh staging release-20... \n"
     exit 1
 fi
 
@@ -15,7 +21,6 @@ CLUSTER_NAME=$ENV-frontend
 TASK_FAMILY_NAME=$ENV-$NAME
 
 NODE_ENV=production
-BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
