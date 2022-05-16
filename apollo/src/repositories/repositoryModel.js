@@ -76,7 +76,10 @@ const repositoriesSchema = new mongoose.Schema(
     legacyId: String,
     cloneUrl: String,
     language: String,
-    repoStats: repoStatsSchema,
+    repoStats: {
+      type: repoStatsSchema,
+      default: {},
+    },
   },
   { timestamps: true }
 );
