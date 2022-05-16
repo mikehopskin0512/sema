@@ -100,8 +100,8 @@ pipeline {
                             ],
                             'accessory': [
                                 'type': 'image',
-                                'image_url': 'https://slack.engineering/wp-content/uploads/sites/7/2021/05/jenkins-fire.png?resize=1280,955',
-                                'alt_text': 'Sema logo'
+                                'image_url': 'https://www.jenkins.io/images/logos/fire/fire.png',
+                                'alt_text': 'failed'
                             ]
                         ],
                         [
