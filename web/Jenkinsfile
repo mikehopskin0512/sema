@@ -24,25 +24,29 @@ pipeline {
         stage('Create phoenix profile for aws cli') {
             steps {
                 script {
-                    release_regex = '(release.*|DVPS-268)'
+                    release_regex = '(.*/release.*|.*/DVPS-268)'
                     switch (GIT_BRANCH) {
                     case 'master':
                             ENVIRONMENT = 'prod'
+                            buildWeb(ENVIRONMENT)
                             break
                     case ['qa']:
                             ENVIRONMENT = 'qa'
+                            buildWeb(ENVIRONMENT)
                             break
                     case ['qa1']:
                             ENVIRONMENT = 'qa1'
+                            buildWeb(ENVIRONMENT)
                             break
                     case ~/$release_regex/:
                             ENVIRONMENT = 'staging'
+                            buildWeb(ENVIRONMENT)
                             break
                     default:
                             ENVIRONMENT = 'undefined'
+                            error('Aborting the build. The environment is ' + environment) // Abort the build
                             break
                     }
-                    sh "echo ${ENVIRONMENT}"
                 }
             // withAWS(role:'jenkins-role-to-assume') {
             //     sh 'aws s3 ls'
@@ -50,4 +54,8 @@ pipeline {
             }
         }
     }
+}
+
+def buildWeb(String environment) {
+    sh './build.sh ' + environment
 }
