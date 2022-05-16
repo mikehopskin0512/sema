@@ -38,8 +38,11 @@ pipeline {
                     case ~/$release_regex/:
                             ENVIRONMENT = 'staging'
                             break
+                    default:
+                            ENVIRONMENT = 'undefined'
+                            break
                     }
-                    sh "echo $ENVIRONMENT"
+                    sh "echo ${ENVIRONMENT}"
                 }
             // withAWS(role:'jenkins-role-to-assume') {
             //     sh 'aws s3 ls'
