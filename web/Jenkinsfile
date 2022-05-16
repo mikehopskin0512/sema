@@ -67,62 +67,58 @@ pipeline {
 
     post {
         failure {
-            slackSend(
-                blocks: """
-                {
-                            "text": "Jenkins job failed.",
-                            "blocks": [
-                                {
-                                    "type": "header",
-                                    "text": {
-                                        "type": "plain_text",
-                                        "text": "Job Failed. :red_circle:",
-                                        "emoji": true
-                                    }
-                                },
-                                {
-                                    "type": "section",
-                                    "fields": [
-                                        {
-                                            "type": "mrkdwn",
-                                            "text": "*Job*: ${env.JOB_NAME}"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "section",
-                                    "fields": [
-                                        {
-                                            "type": "mrkdwn",
-                                            "text": "*Project*: phoenix"
-                                        },
-                                        {
-                                            "type": "mrkdwn",
-                                            "text": "*Branch*: ${BRANCH_NAME}"
-                                        }
-                                    ],
-                                    "accessory": {
-                                        "type": "image",
-                                        "image_url": "https://assets.website-files.com/620d644176745d29e7f19e8f/620d6f5dc8eb1a38b86b7054_Logo%20white.svg",
-                                        "alt_text": "Sema logo"
-                                    }
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "View Job"
-                                            },
-                                            "url": "${BUILD_URL}console"
-                                        }
-                                    ]
-                                }
+            blocks = [
+                        [
+                            'type': 'header',
+                            'text': [
+                                'type': 'plain_text',
+                                'text': 'Job Failed. :red_circle:',
+                                'emoji': true
+                        ]
+                        ],
+                        [
+                            'type': 'section',
+                            'fields': [
+                                [
+                                    'type': 'mrkdwn',
+                                    'text': "*Job*: ${env.JOB_NAME}"
+                                ]
                             ]
-                        }
-                """,
+                        ],
+                        [
+                            'type': 'section',
+                            'fields': [
+                                [
+                                    'type': 'mrkdwn',
+                                    'text': '*Project*: phoenix'
+                                ],
+                                [
+                                    'type': 'mrkdwn',
+                                    'text': "*Branch*: ${BRANCH_NAME}"
+                                ]
+                            ],
+                            'accessory': [
+                                'type': 'image',
+                                'image_url': 'https://assets.website-files.com/620d644176745d29e7f19e8f/620d6f5dc8eb1a38b86b7054_Logo%20white.svg',
+                                'alt_text': 'Sema logo'
+                            ]
+                        ],
+                        [
+                            'type': 'actions',
+                            'elements': [
+                                [
+                                    'type': 'button',
+                                    'text': [
+                                        'type': 'plain_text',
+                                        'text': 'View Job'
+                                    ],
+                                    'url': "${BUILD_URL}console"
+                                ]
+                            ]
+                        ]
+                    ]
+            slackSend(
+                blocks: blocks,
                 channel: '#phoenix-circleci-notifications',
                 color: 'danger',
             )
