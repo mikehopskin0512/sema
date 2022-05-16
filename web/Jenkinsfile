@@ -57,5 +57,7 @@ pipeline {
 }
 
 def buildWeb(String environment) {
-    sh './build.sh ' + environment
+    dir('web') {
+        sh './build.sh ' + environment
+    }
 }
