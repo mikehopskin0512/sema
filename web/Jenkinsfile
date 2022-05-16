@@ -14,7 +14,6 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
-        retry(2)
         timestamps()
     }
 
@@ -69,7 +68,7 @@ pipeline {
     post {
         failure {
             slackSend(
-                message: """
+                blocks: """
                 {
                             "text": "Jenkins job failed.",
                             "blocks": [
