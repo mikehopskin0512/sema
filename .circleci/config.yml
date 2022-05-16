@@ -268,14 +268,6 @@ workflows:
   version: 2
   primary:
     jobs:
-      - deploy-web:
-          filters:
-            branches:
-              only:
-                - qa1
-                - qa
-                - master
-                - /release-.*/
       - deploy-apollo:
           filters:
             branches:
@@ -298,7 +290,6 @@ workflows:
               only:
                 - /release-.*/
           requires:
-            - deploy-web
             - deploy-apollo
       - phoenix-notify:
           context:
@@ -311,5 +302,4 @@ workflows:
                 - master
                 - /release-.*/
           requires:
-            - deploy-web
             - deploy-apollo
