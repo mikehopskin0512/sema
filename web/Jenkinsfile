@@ -7,6 +7,10 @@ pipeline {
         }
     }
 
+    environment {
+        BRANCH_NAME = "${GIT_BRANCH.split('/')[1]}"
+    }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
         disableConcurrentBuilds()
@@ -24,24 +28,23 @@ pipeline {
         stage('Create phoenix profile for aws cli') {
             steps {
                 script {
-                    git checkout
                     release_regex = '(.*/release.*|.*/DVPS-268)'
-                    switch (GIT_BRANCH) {
+                    switch (BRANCH_NAME) {
                     case 'master':
                             ENVIRONMENT = 'prod'
-                            buildWeb(ENVIRONMENT)
+                            buildWeb(ENVIRONMENT, BRANCH_NAME)
                             break
                     case ['qa']:
                             ENVIRONMENT = 'qa'
-                            buildWeb(ENVIRONMENT)
+                            buildWeb(ENVIRONMENT, BRANCH_NAME)
                             break
                     case ['qa1']:
                             ENVIRONMENT = 'qa1'
-                            buildWeb(ENVIRONMENT)
+                            buildWeb(ENVIRONMENT, BRANCH_NAME)
                             break
                     case ~/$release_regex/:
                             ENVIRONMENT = 'staging'
-                            buildWeb(ENVIRONMENT)
+                            buildWeb(ENVIRONMENT, BRANCH_NAME)
                             break
                     default:
                             ENVIRONMENT = 'undefined'
@@ -57,8 +60,8 @@ pipeline {
     }
 }
 
-def buildWeb(String environment) {
+def buildWeb(String environment, String branchName) {
     dir('web') {
-        sh './build.sh ' + environment
+        sh './build.sh ' + environment + ' ' + branchName
     }
 }

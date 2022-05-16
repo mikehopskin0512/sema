@@ -2,15 +2,21 @@
 set -euo pipefail
 readonly NAME=phoenix
 readonly ENV="${1}"
+readonly BRANCH="${2}"
 
 if [[ -z ${ENV} ]]; then
-    printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh qa \n"
+    printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh staging release-20... \n"
+    exit 1
+fi
+
+if [[ -z ${BRANCH} ]]; then
+    printf "environment name (prod,qa etc) must me specified, e.g. ./build.sh staging release-20... \n"
     exit 1
 fi
 
 NODE_ENV=production
 DOCKER_FILE=../.docker/web/Dockerfile.prod
-BRANCH=$(git branch --show-current)
+
 SHA1=$(git rev-parse HEAD)
 VERSION=$BRANCH-$SHA1-$NODE_ENV
 
