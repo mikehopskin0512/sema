@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Repo Sync
+  description: Syncs historical repository data
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+    description: Local Dev
+  - url: https://api-qa.semasoftware.com
+    description: QA
+  - url: https://api-staging.semasoftware.com
+    description: staging
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /v1/repo-sync:
+    post:
+      summary: Add a repository for sync
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repository'
+          description: created repository
+        400:
+          description: bad input parameter
