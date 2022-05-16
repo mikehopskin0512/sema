@@ -3,7 +3,7 @@ pipeline {
     agent {
         docker {
             image 'cimg/base:2020.01'
-            args '-u root --privileged --net host'
+            args '-u root --privileged --net host -v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
 
