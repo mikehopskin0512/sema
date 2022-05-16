@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Create phoenix profile for aws cli') {
+        stage('Build web') {
             steps {
                 script {
                     release_regex = '(.*release.*|.*DVPS-268)'
@@ -52,9 +52,16 @@ pipeline {
                             break
                     }
                 }
-            // withAWS(role:'jenkins-role-to-assume') {
-            //     sh 'aws s3 ls'
-            // }
+            }
+        }
+
+        stage('Deploy web') {
+            steps {
+                script {
+                    withAWS(role:'jenkins-role-to-assume') {
+                        deployWeb(ENVIRONMENT, BRANCH_NAME)
+                    }
+                }
             }
         }
     }
@@ -63,5 +70,11 @@ pipeline {
 def buildWeb(String environment, String branchName) {
     dir('web') {
         sh './build.sh ' + environment + ' ' + branchName
+    }
+}
+
+def deployWeb(String environment, String branchName) {
+    dir('web') {
+        sh './deploy.sh ' + environment + ' ' + branchName
     }
 }
