@@ -42,7 +42,7 @@ function CommentsList({
   const onMenuHandle = async (e) => {
     if (isCommentDetailsVisible) {
       switch (e.keyCode) {
-      case KEY_HANDLERS.DOWN:
+      case KEY_HANDLERS.BACK:
         onCommentDetailBackPressed();
         break;
       case KEY_HANDLERS.ENTER:
