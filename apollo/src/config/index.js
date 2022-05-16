@@ -13,7 +13,6 @@ module.exports = {
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
-  databaseName: process.env.DATABASE_NAME || '',
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED !== '0',
   modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
@@ -63,11 +62,12 @@ function getPort() {
 }
 
 function getMongoDBConnectionDetails() {
-  const databaseName = isTest
-    ? `${process.env.DATABASE_NAME}-${jestWorkerID}`
-    : process.env.DATABASE_NAME;
-
   const uri = new URL(process.env.MONGOOSE_URI);
+  const [, databaseNameFromURI] = uri.pathname.split('/');
+  const databaseName = isTest
+    ? `${databaseNameFromURI}-${jestWorkerID}`
+    : databaseNameFromURI;
+
   uri.pathname = databaseName;
   return {
     mongooseUri: uri.toString(),
