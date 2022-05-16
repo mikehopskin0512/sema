@@ -48,7 +48,7 @@ pipeline {
                             break
                     default:
                             ENVIRONMENT = 'undefined'
-                            error('Aborting the build. The environment is ' + environment) // Abort the build
+                            error('Aborting the build. The environment is ' + ENVIRONMENT) // Abort the build
                             break
                     }
                 }
