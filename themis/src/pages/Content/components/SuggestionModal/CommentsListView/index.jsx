@@ -7,7 +7,7 @@ import ControlButton from './ControlButton';
 import { segmentTrack } from '../../../modules/segment';
 
 import { SEGMENT_EVENTS } from '../../../constants';
-import { MAX_CHARACTER_LENGTH } from './constants';
+import { KEY_HANDLERS, MAX_CHARACTER_LENGTH } from './constants';
 import useEventListener from '../../../../../hooks/useEventListener';
 
 function CommentsList({
@@ -42,10 +42,10 @@ function CommentsList({
   const onMenuHandle = async (e) => {
     if (isCommentDetailsVisible) {
       switch (e.keyCode) {
-      case 8:
+      case KEY_HANDLERS.DOWN:
         onCommentDetailBackPressed();
         break;
-      case 13:
+      case KEY_HANDLERS.ENTER:
         const {
           comment,
           sourceName,
@@ -65,7 +65,7 @@ function CommentsList({
       }
     } else {
       switch (e.keyCode) {
-        case 40:
+        case KEY_HANDLERS.DOWN:
           e.preventDefault();
 
           if (!selectedListItem) {
@@ -74,13 +74,13 @@ function CommentsList({
           }
           menuSelectHandler(1);
           break;
-        case 38:
+        case KEY_HANDLERS.UP:
           e.preventDefault();
           if (!selectedListItem) return;
 
           menuSelectHandler(-1);
           break;
-      case 13:
+      case KEY_HANDLERS.ENTER:
         e.preventDefault();
         const data = searchResults.find(item => item.id === selectedListItem);
 
