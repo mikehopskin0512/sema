@@ -26,7 +26,6 @@ describe('GET /repositories/overview', () => {
   });
 
   describe('authenticated', () => {
-    let status;
     let data;
 
     beforeAll(async () => {
