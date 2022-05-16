@@ -67,7 +67,8 @@ pipeline {
 
     post {
         failure {
-            blocks = [
+            script {
+                def blocks = [
                         [
                             'type': 'header',
                             'text': [
@@ -98,8 +99,8 @@ pipeline {
                                 ]
                             ],
                             'accessory': [
-                                'type': 'image',
-                                'image_url': 'https://assets.website-files.com/620d644176745d29e7f19e8f/620d6f5dc8eb1a38b86b7054_Logo%20white.svg',
+                                'type': 'svg',
+                                'image_url': 'https://slack.engineering/wp-content/uploads/sites/7/2021/05/jenkins-fire.png?resize=1280,955',
                                 'alt_text': 'Sema logo'
                             ]
                         ],
@@ -117,11 +118,12 @@ pipeline {
                             ]
                         ]
                     ]
-            slackSend(
+                slackSend(
                 blocks: blocks,
                 channel: '#phoenix-circleci-notifications',
-                color: 'danger',
-            )
+                color: 'danger'
+                )
+            }
         }
     }
 }
