@@ -38,7 +38,7 @@ const ActivityItem = (props) => {
     avatarUrl = DEFAULT_AVATAR,
   } = user || {};
 
-  const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'MM/dd/yyyy hh:mm aa') : '');
+  const [dateCreated] = useState(!isEmpty(createdAt) ? format(new Date(createdAt), 'MMM dd, yyyy hh:mm aa') : '');
 
   const getPRName = (pull_num, pr_name) => {
     let prName = '';

@@ -5,30 +5,27 @@ import animationComments from './animationComments.json';
 export const content = [
   {
     title: 'Snippets',
-    subtitle: `Leave better reviews by inserting pre-written snippets based on the world's top sources of coding knowledge + internal best pratices.`,
+    subtitle: [`Leave better reviews by inserting pre-written snippets based on the world’s top sources of coding knowledge + internal best practices.`],
     img: '/img/suggested-comments.png',
-    animationData: animationComments,
   },
   {
     title: 'Summaries',
-    subtitle: 'Quickly summarize your review by choosing from a list of reactions. E.g. Awesome, Looks good, needs a fix, I have a question.',
+    subtitle: ['Quickly summarize your review by choosing from a list of reactions.', 'E.g., Awesome, Looks good, Needs a fix, I have a question.'],
     img: '/img/onboarding/onboarding-reactions.png',
-    animationData: animationReactions,
   },
   {
     title: 'Tags',
-    subtitle: 'Quickly categorize your comments with clear, mutually exclusive tags. E.g. Elegant, Secure, Readable',
+    subtitle: ['Automatically categorize your comments with clear, mutually exclusive tags.', 'E.g., Elegant, Secure, Readable'],
     img: '/img/tags.png',
-    animationData: animationTags,
   },
   {
-    title: 'Add the Sema Extension',
-    subtitle: 'The Sema Feedback Panel is part of the Sema Chrome Extension. Please install it to continue.',
+    title: 'Add the Sema Extension!',
+    subtitle: ['The Sema Chrome Extension makes code reviews more impactful. Please install it to continue.'],
     img: '/img/onboarding/install-extension.png'
   },
   {
     title: 'Sema is Better With Your Team!',
-    subtitle: 'Set up shared repos, insights and team snippets to help and better onboarding your engineering efforts.',
+    subtitle: ['Set up shared repos, insights and team snippets to help your team do more.'],
     img: '/img/onboarding/part-of-us.png'
   },
 ];

@@ -69,6 +69,7 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
                 end={endDate}
                 onChange={onDateChange}
                 outlined
+                onChangeFilter={onChangeFilter}
               />
             </div>
             <div className={clsx("my-5 ml-5 mr-5", styles['filter-container'])}>

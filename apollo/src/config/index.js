@@ -13,8 +13,6 @@ module.exports = {
   tokenLife: process.env.TOKENLIFE || 2592000,
   orgDomain: process.env.ORG_DOMAIN,
   rootDomain: process.env.ROOT_DOMAIN,
-  mongooseUri: process.env.MONGOOSE_URI || '',
-  databaseName: process.env.DATABASE_NAME || '',
   autoIndex: true,
   loggerEnabled: process.env.LOGGERENABLED !== '0',
   modeOrg: process.env.MODE_ANALYTICS_ORGANIZATION,
@@ -54,6 +52,7 @@ module.exports = {
   iframelyApiKey: process.env.IFRAMELY_API_KEY,
   semaCorporateTeamName: process.env.SEMA_CORPORATE_TEAM_NAME,
   semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
+  environment: process.env.ENV || 'unknown',
 };
 
 function getPort() {
@@ -63,12 +62,13 @@ function getPort() {
 }
 
 function getMongoDBConnectionDetails() {
-  const databaseName = isTest
-    ? `${process.env.DATABASE_NAME}-${jestWorkerID}`
-    : process.env.DATABASE_NAME;
-
   const uri = new URL(process.env.MONGOOSE_URI);
-  uri.path = databaseName;
+  const [, databaseNameFromURI] = uri.pathname.split('/');
+  const databaseName = isTest
+    ? `${databaseNameFromURI}-${jestWorkerID}`
+    : databaseNameFromURI;
+
+  uri.pathname = databaseName;
   return {
     mongooseUri: uri.toString(),
     databaseName,

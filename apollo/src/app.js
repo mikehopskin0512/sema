@@ -11,7 +11,7 @@ import './auth/passport';
 import logger from './shared/logger';
 import errors from './shared/errors';
 
-import routes from '.';
+import attachRoutes from './index';
 import { port, allowedOrigin, chromeExtensionId } from './config';
 
 const app = express();
@@ -43,7 +43,7 @@ app.disable('x-powered-by');
 app.use('/static', express.static('./uploads'));
 
 // Attach routes
-routes.attachRoutes(app, passport);
+attachRoutes(app, passport);
 
 app.all('*', (req, res, next) => {
   const ans = new errors.Unauthorized('Unauthorized API route');
