@@ -68,7 +68,7 @@ pipeline {
     post {
         failure {
             script {
-                @Library('customSlackLibrary')_
+                library 'customSlackLibrary'
                 slackSendFail
             }
         }
