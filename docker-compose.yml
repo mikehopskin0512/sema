@@ -79,6 +79,7 @@ services:
     container_name: phoenix.mongodb.sema.local
     networks:
       - sema
+    command: --quiet --logpath /dev/null
   beanstalkd:
     image: schickling/beanstalkd
     ports:

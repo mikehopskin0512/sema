@@ -38,7 +38,10 @@ const smartCommentSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      // Comments created from repo sync may reference
+      // a user in our database if the comment author
+      // exists in Sema.
+      required: (comment) => comment.source !== 'repoSync',
     },
     location: { type: String, enum: ['conversation', 'files changed'] },
     suggestedComments: [
@@ -47,6 +50,12 @@ const smartCommentSchema = new Schema(
     reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     githubMetadata: githubMetadataSchema,
+    source: {
+      type: String,
+      enum: ['extension', 'repoSync'],
+      default: 'extension',
+      required: true,
+    },
   },
   { collection: 'smartComments', timestamps: true }
 );
@@ -64,7 +73,7 @@ smartCommentSchema.post('save', async (doc, next) => {
     } = doc;
 
     if (externalId) {
-      const user = await findById(userId);
+      const user = userId && (await findById(userId));
       const { _id: requesterId = null } =
         (await findByUsernameOrIdentity(requester)) || {};
 
@@ -93,7 +102,7 @@ smartCommentSchema.post('save', async (doc, next) => {
 
         const repoUserIds =
           repository.repoStats.userIds?.map((id) => id?.toString()) || [];
-        if (!repoUserIds.includes(userId.toString())) {
+        if (user && !repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
           repository.repoStats.smartCommenters += 1;
           repository.repoStats.semaUsers += 1;
@@ -135,13 +144,15 @@ smartCommentSchema.post('save', async (doc, next) => {
 
       await createOrUpdate(repository);
 
-      const repoData = {
-        name: repo,
-        id: externalId,
-        fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')),
-        githubUrl: url.slice(0, url.search('/pull/')),
-      };
-      await addRepositoryToIdentity(user, repoData);
+      if (user) {
+        const repoData = {
+          name: repo,
+          id: externalId,
+          fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')),
+          githubUrl: url.slice(0, url.search('/pull/')),
+        };
+        await addRepositoryToIdentity(user, repoData);
+      }
     }
     return next();
   } catch (err) {

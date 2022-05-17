@@ -18,13 +18,15 @@
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
-    "@octokit/rest": "^18.0.0",
+    "@octokit/auth-app": "^3.6.1",
+    "@octokit/rest": "^18.12.0",
     "@sendgrid/mail": "^7.2.1",
     "aws-sdk": "^2.796.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.12",
+    "caching-map": "^1.0.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -74,6 +76,7 @@
     "eslint-config-sema": "file:../eslint-config",
     "eslint-plugin-jest": "^26.1.5",
     "jest": "^27.5.1",
+    "nock": "^13.2.4",
     "nodemon": "^2.0.4"
   }
 }
