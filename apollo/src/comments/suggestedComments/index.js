@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { Router } from 'express';
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
@@ -17,6 +16,7 @@ import {
 } from './suggestedCommentService';
 import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
 import checkEnv from "../../middlewares/checkEnv";
+import axios from 'axios';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -156,13 +156,28 @@ export default (app, passport) => {
     try {
       const packer = await exportSuggestedComments();
 
-      res.writeHead(200, {
-        'Content-disposition': 'attachment;filename=suggested_comments.csv',
-      });
-
       return res.end(packer);
     } catch (error) {
       logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/summaries`, req.body);
+      return res.status(200).json(data);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.post('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/tags`, req.body);
+      return res.status(200).json(data);
+    } catch (error) {
       return res.status(error.statusCode).send(error);
     }
   });
