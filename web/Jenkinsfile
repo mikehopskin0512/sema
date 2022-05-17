@@ -19,8 +19,10 @@ pipeline {
 
     stages {
         stage('Init') {
-            scripts {
-                library 'customSlackLibrary'
+            steps {
+                scripts {
+                    library 'customSlackLibrary'
+                }
             }
         }
         stage('Install dependencies') {
