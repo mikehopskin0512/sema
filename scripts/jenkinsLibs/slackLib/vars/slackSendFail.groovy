@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 def call(String JOB_NAME, String BRANCH_NAME, String BUILD_URL) {
-    def blocks = [[
+    script {
+        def blocks = [[
                     'type': 'header',
                     'text': [
                         'type': 'plain_text',
@@ -49,9 +50,10 @@ def call(String JOB_NAME, String BRANCH_NAME, String BUILD_URL) {
                     ]
                 ]
             ]
-    slackSend(
+        slackSend(
         blocks: blocks,
         channel: '#phoenix-circleci-notifications',
         color: 'danger'
     )
+    }
 }
