@@ -41,7 +41,9 @@ const smartCommentSchema = new Schema(
       // Comments created from repo sync may reference
       // a user in our database if the comment author
       // exists in Sema.
-      required: (comment) => comment.source !== 'repoSync',
+      required() {
+        return this.source !== 'repoSync';
+      },
     },
     location: { type: String, enum: ['conversation', 'files changed'] },
     suggestedComments: [
