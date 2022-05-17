@@ -4,7 +4,7 @@ import User from './userModel';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { generateToken, metricsStartDate } from '../shared/utils';
-import { checkIfInvitedByToken } from '../invitations/invitationService';
+import { findById as findInviteById } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
 const { Types: { ObjectId } } = mongoose;
@@ -24,7 +24,7 @@ export const create = async (user, inviteToken) => {
   const verificationExpires = now.setHours(now.getHours() + 24);
 
   try {
-    const invitation = await checkIfInvitedByToken(inviteToken);
+    const invitation = await findInviteById(inviteToken);
     if(!!invitation) {
       isWaitlist = false;
       origin = 'invitation';
@@ -535,22 +535,22 @@ export async function getRepoUsersMetrics(repoExternalId) {
       '$group': {
         '_id': {
           '$dateToString': {
-            'format': '%Y-%m-%d', 
+            'format': '%Y-%m-%d',
             'date': '$createdAt'
           }
-        }, 
+        },
         'users': {
           '$sum': 1
         }
       }
     }, {
       '$project': {
-        '_id': '$$REMOVE', 
+        '_id': '$$REMOVE',
         'values': {
           '$arrayToObject': [
             [
               {
-                'k': '$_id', 
+                'k': '$_id',
                 'v': '$users'
               }
             ]
@@ -559,7 +559,7 @@ export async function getRepoUsersMetrics(repoExternalId) {
       }
     }, {
       '$group': {
-        '_id': null, 
+        '_id': null,
         'values': {
           '$mergeObjects': '$values'
         }
@@ -583,9 +583,9 @@ export async function getTeamUsersMetrics(teamId) {
       }
     }, {
       '$lookup': {
-        'from': 'userroles', 
-        'localField': '_id', 
-        'foreignField': 'user', 
+        'from': 'userroles',
+        'localField': '_id',
+        'foreignField': 'user',
         'as': 'userRole'
       }
     }, {
@@ -598,9 +598,9 @@ export async function getTeamUsersMetrics(teamId) {
     },
      {
       '$lookup': {
-        'from': 'teams', 
-        'localField': 'userRole.team', 
-        'foreignField': '_id', 
+        'from': 'teams',
+        'localField': 'userRole.team',
+        'foreignField': '_id',
         'as': 'team'
       }
     }, {
@@ -609,22 +609,22 @@ export async function getTeamUsersMetrics(teamId) {
       '$group': {
         '_id': {
           '$dateToString': {
-            'format': '%Y-%m-%d', 
+            'format': '%Y-%m-%d',
             'date': '$createdAt'
           }
-        }, 
+        },
         'users': {
           '$sum': 1
         }
       }
     }, {
       '$project': {
-        '_id': '$$REMOVE', 
+        '_id': '$$REMOVE',
         'values': {
           '$arrayToObject': [
             [
               {
-                'k': '$_id', 
+                'k': '$_id',
                 'v': '$users'
               }
             ]
@@ -633,7 +633,7 @@ export async function getTeamUsersMetrics(teamId) {
       }
     }, {
       '$group': {
-        '_id': null, 
+        '_id': null,
         'values': {
           '$mergeObjects': '$values'
         }

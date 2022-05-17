@@ -186,7 +186,7 @@ const TeamManagement = ({ activeTeam }) => {
     router.push(PATHS.TEAMS.INVITE(teamId));
   };
 
-  const onInviteLinkCopy = async () => {
+  const onInviteLinkCopy = async (e) => {
     const invitationToken = invitations.find((invite) => invite.teamId === teamId)?.token;
     if (!invitationToken) {
       notify('Invitation link was not copied.', {
@@ -196,6 +196,9 @@ const TeamManagement = ({ activeTeam }) => {
       return;
     }
     const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.LOGIN}?token=${invitationToken}`;
+
+    e.target?.parentNode?.blur() || e.target?.blur();
+
     try {
       await navigator.clipboard.writeText(magicLink);
       notify('Invitation link was copied.', {
