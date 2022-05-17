@@ -24,6 +24,7 @@ import checkTeamURLPath from "../support/check/checkTeamURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
 import {GlobalVars} from "../support/GlobalVars";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
+import checkSearchedResults from "../support/check/checkSearchedResults";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -51,7 +52,6 @@ Then(
 
 Then(
     /^I expect that element "([^"]*)?" does( not)* appear exactly "([^"]*)?" times$/,
-    // checkIfElementExists
     checkNumberOfElementsExists
 );
 
@@ -63,6 +63,13 @@ Then(
 Then(
     /^I expect that element "([^"]*)?" becomes( not)* displayed$/,
     waitForVisible
+);
+
+
+Then(
+    /^I expect (\d+)(st|nd|rd|th) created label (button|element) "([^"]*)?" becomes( not)* displayed$/,
+    // @ts-ignore
+    checkSearchedResults
 );
 
 Then(
