@@ -37,10 +37,7 @@
   width: 320px;
 }
 
-.copy-button {
-  border: 2px solid $blue-700;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 19px;
-  color: $blue-700;
+.invite-button {
+  &:active,
+  &:focus:not(:active) {}
 }

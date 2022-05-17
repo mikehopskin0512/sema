@@ -26,7 +26,7 @@ const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const TeamManagement = ({ activeTeam }) => {
   const router = useRouter();
-  const { isTeamAdmin } = usePermission();
+  const { isTeamAdmin, isSemaAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
     name: '',
@@ -193,8 +193,9 @@ const TeamManagement = ({ activeTeam }) => {
         type: ALERT_TYPES.ERROR,
         duration: 3000,
       });
+      return;
     }
-    const magicLink = `${SEMA_APP_URL}/${PATHS.LOGIN}?token=${invitationToken}`;
+    const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.LOGIN}?token=${invitationToken}`;
     try {
       await navigator.clipboard.writeText(magicLink);
       notify('Invitation link was copied.', {
@@ -215,13 +216,15 @@ const TeamManagement = ({ activeTeam }) => {
       <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
         <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Team Management</div>
         <div className="is-flex">
-          <button
-            className="button is-primary is-outlined mr-8"
-            onClick={onInviteLinkCopy}
-          >
-            <CopyButtonIcon size='small' />
-            <span className='ml-10'>Copy Invitation Link</span>
-          </button>
+          {(isTeamAdmin || isSemaAdmin) && (
+            <button
+              className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])}
+              onClick={onInviteLinkCopy}
+            >
+              <CopyButtonIcon size='small' />
+              <span className='ml-10'>Copy Invitation Link</span>
+            </button>
+          )}
           <button
             className='button is-primary border-radius-4px'
             type='button'
