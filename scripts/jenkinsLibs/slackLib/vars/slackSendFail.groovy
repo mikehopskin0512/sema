@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-def call() {
+def call(String JOB_NAME, String BRANCH_NAME, String BUILD_URL) {
     def blocks = [[
                     'type': 'header',
                     'text': [
@@ -13,7 +13,7 @@ def call() {
                     'fields': [
                         [
                             'type': 'mrkdwn',
-                            'text': "*Job*: ${env.JOB_NAME}"
+                            'text': "*Job*: ${JOB_NAME}"
                         ]
                     ]
                 ],
