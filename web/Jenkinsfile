@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-@Library('customSlackLibrary') _
 pipeline {
     agent {
         docker {
@@ -19,6 +18,11 @@ pipeline {
     }
 
     stages {
+        stage('Init') {
+            scripts {
+                library 'customSlackLibrary'
+            }
+        }
         stage('Install dependencies') {
             steps {
                 sh 'sudo apt-get update -y && sudo apt-get install -y jq awscli'
