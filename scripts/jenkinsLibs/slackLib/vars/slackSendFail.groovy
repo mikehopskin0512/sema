@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-def slackSendFail() {
+def call() {
     def blocks = [
                 [
                     'type': 'header',
