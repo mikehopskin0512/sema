@@ -69,7 +69,7 @@ pipeline {
         failure {
             script {
                 @Library('slackLibrary')_
-                slackSendFail()
+                slackSendFail
             }
         }
     }
