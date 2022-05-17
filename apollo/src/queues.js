@@ -6,6 +6,8 @@ import { environment } from './config';
 import logger from './shared/logger';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isTest = process.env.NODE_ENV === 'test';
+
 if (isProduction) {
   const region = process.env.AWS_REGION || 'us-east-1';
   logger.info(
@@ -15,6 +17,12 @@ if (isProduction) {
     credentials: new AWS.RemoteCredentials(),
     region,
   });
+}
+
+if (isTest) {
+  // Isolate queues in tests.
+  const jestWorkerID = parseInt(process.env.JEST_WORKER_ID || 0, 10);
+  Ironium.configure({ prefix: `test-${jestWorkerID}-` });
 }
 
 Ironium.onerror = logger.error;

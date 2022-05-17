@@ -63,13 +63,17 @@ const repositoriesSchema = new mongoose.Schema(
     sync: {
       status: {
         type: String,
-        enum: ['pending', 'started', 'completed'],
-        default: 'pending',
+        enum: [null, 'queued', 'started', 'completed'],
+        default: null,
       },
       addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
       },
+      queuedAt: Date,
+      startedAt: Date,
+      completedAt: Date,
+      lastPage: Number,
     },
     repositoryCreatedAt: Date,
     repositoryUpdatedAt: Date,

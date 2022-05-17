@@ -2,6 +2,8 @@ import nock from 'nock';
 import * as userService from '../users/userService';
 import { findByExternalId as findSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 import { create as createRepository } from '../repositories/repositoryService';
+import Repository from '../repositories/repositoryModel';
+import SmartComment from '../comments/smartComments/smartCommentModel';
 import handler from './importRepositoryQueue';
 
 describe('Import Repository Queue', () => {
@@ -39,109 +41,262 @@ describe('Import Repository Queue', () => {
       });
     });
 
-    beforeAll(() => {
-      nock('https://api.github.com')
-        .get('/repositories/237888452')
-        .reply(200, getRepositoryDetail());
+    it('should have sync status "queued"', () => {
+      expect(repository.sync.status).toBe('queued');
     });
 
-    beforeAll(() => {
-      nock('https://api.github.com')
-        .get('/repos/Semalab/phoenix/pulls/comments')
-        .query({ sort: 'created', direction: 'desc' })
-        .reply(200, getFirstPageOfComments(), {
-          Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
-        })
-        .get('/repos/Semalab/phoenix/pulls/comments')
-        .query({ sort: 'created', direction: 'desc', page: 2 })
-        .reply(200, getSecondPageOfComments());
-    });
-
-    beforeAll(() => {
-      nock('https://api.github.com')
-        .get('/repos/Semalab/phoenix/pulls/3')
-        .reply(200, getPullRequestDetail());
-    });
-
-    beforeAll(async () => {
-      await handler({ id: repository.id });
-    });
-
-    beforeAll(async () => {
-      comments = await findSmartCommentsByExternalId(repository.externalId);
-    });
-
-    it('should have three comments', () => {
-      expect(comments.length).toBe(3);
-    });
-
-    describe('comment', () => {
-      let comment;
+    describe('processing queue', () => {
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repositories/237888452')
+          .reply(200, getRepositoryDetail());
+      });
 
       beforeAll(() => {
-        [comment] = comments;
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfComments());
       });
 
-      it('should have source "repoSync"', () => {
-        expect(comment.source).toBe('repoSync');
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetail());
       });
 
-      it('should not reference a user', () => {
-        expect(comment.userId).toBeUndefined();
+      beforeAll(async () => {
+        await handler({ id: repository.id });
       });
 
-      it('should have comment body', () => {
-        expect(comment.comment).toBe(
-          '@jrock17 i know this is the logic you were referring to yesterday...'
-        );
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should have no tags', () => {
-        expect(comment.tags).toEqual([]);
+      it('should have three comments', () => {
+        expect(comments.length).toBe(3);
       });
 
-      describe('GitHub metadata', () => {
-        let githubMetadata;
+      describe('comment', () => {
+        let comment;
 
         beforeAll(() => {
-          githubMetadata = comment.githubMetadata;
+          [comment] = comments;
         });
 
-        it('should store the file name', () => {
-          expect(githubMetadata.filename).toBe('apollo/src/analysis/index.js');
+        it('should have source "repoSync"', () => {
+          expect(comment.source).toBe('repoSync');
         });
 
-        it('should store the repo name', () => {
-          expect(githubMetadata.repo).toBe('phoenix');
+        it('should not reference a user', () => {
+          expect(comment.userId).toBeUndefined();
         });
 
-        it('should store the GitHub repository ID', () => {
-          expect(githubMetadata.repo_id).toBe('237888452');
-        });
-
-        it('should store the GitHub repository URL', () => {
-          expect(githubMetadata.url).toBe('https://github.com/Semalab/phoenix');
-        });
-
-        it('should store the creation timestamp on GitHub', () => {
-          expect(githubMetadata.created_at).toEqual(
-            new Date('2020-12-17T18:41:44Z')
+        it('should have comment body', () => {
+          expect(comment.comment).toBe(
+            '@jrock17 i know this is the logic you were referring to yesterday...'
           );
         });
 
-        it('should store the update timestamp on GitHub', () => {
-          expect(githubMetadata.updated_at).toEqual(
-            new Date('2020-12-17T20:30:14Z')
-          );
+        it('should have no tags', () => {
+          expect(comment.tags).toEqual([]);
         });
 
-        it('should store the comment author details', () => {
-          expect(githubMetadata.user.id).toBe('1270524');
-          expect(githubMetadata.user.login).toBe('jrock17');
+        describe('GitHub metadata', () => {
+          let githubMetadata;
+
+          beforeAll(() => {
+            githubMetadata = comment.githubMetadata;
+          });
+
+          it('should store the file name', () => {
+            expect(githubMetadata.filename).toBe(
+              'apollo/src/analysis/index.js'
+            );
+          });
+
+          it('should store the repo name', () => {
+            expect(githubMetadata.repo).toBe('phoenix');
+          });
+
+          it('should store the GitHub repository ID', () => {
+            expect(githubMetadata.repo_id).toBe('237888452');
+          });
+
+          it('should store the GitHub repository URL', () => {
+            expect(githubMetadata.url).toBe(
+              'https://github.com/Semalab/phoenix'
+            );
+          });
+
+          it('should store the creation timestamp on GitHub', () => {
+            expect(githubMetadata.created_at).toEqual(
+              new Date('2020-12-17T18:41:44Z')
+            );
+          });
+
+          it('should store the update timestamp on GitHub', () => {
+            expect(githubMetadata.updated_at).toEqual(
+              new Date('2020-12-17T20:30:14Z')
+            );
+          });
+
+          it('should store the comment author details', () => {
+            expect(githubMetadata.user.id).toBe('1270524');
+            expect(githubMetadata.user.login).toBe('jrock17');
+          });
+
+          it('should store the pull request author details', () => {
+            expect(githubMetadata.requester).toBe('codykenb');
+          });
+        });
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
         });
 
-        it('should store the pull request author details', () => {
-          expect(githubMetadata.requester).toBe('codykenb');
+        it('should have sync status "completed"', () => {
+          expect(repository.sync.status).toBe('completed');
+        });
+
+        it('should have sync completed at timestamp', () => {
+          expect(repository.sync.completedAt).toBeCloseToDate(new Date());
+        });
+      });
+    });
+
+    describe('when syncing fails half-way through', () => {
+      let handlerError;
+
+      beforeAll(async () => {
+        repository.sync = {};
+        await repository.save();
+        await SmartComment.deleteMany({});
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repositories/237888452')
+          .reply(200, getRepositoryDetail());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(500);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetail());
+      });
+
+      beforeAll(async () => {
+        try {
+          await handler({ id: repository.id });
+        } catch (error) {
+          handlerError = error;
+        }
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should fail', () => {
+        expect(handlerError).not.toBeNull();
+      });
+
+      it('should import some comments', () => {
+        expect(comments.length).toBe(2);
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status "started"', () => {
+          expect(repository.sync.status).toBe('started');
+        });
+
+        it('should have sync started at timestamp', () => {
+          expect(repository.sync.startedAt).toBeCloseToDate(new Date());
+        });
+
+        it('should not have sync completed at timestamp', () => {
+          expect(repository.sync.completedAt).toBeFalsy();
+        });
+      });
+
+      describe('running job again', () => {
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repositories/237888452')
+            .reply(200, getRepositoryDetail());
+        });
+
+        beforeAll(() => {
+          // Set the first page to always fail. This is to
+          // ensure that the job can pick up pagination
+          // where it left off.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(500)
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 2 })
+            .reply(200, getSecondPageOfComments());
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetail());
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        beforeAll(async () => {
+          comments = await findSmartCommentsByExternalId(repository.externalId);
+        });
+
+        it('should import all comments', () => {
+          expect(comments.length).toBe(3);
+        });
+
+        describe('repository', () => {
+          beforeAll(async () => {
+            repository = await Repository.findById(repository._id);
+          });
+
+          it('should have sync status "completed"', () => {
+            expect(repository.sync.status).toBe('completed');
+          });
+
+          it('should have sync completed at timestamp', () => {
+            expect(repository.sync.completedAt).toBeCloseToDate(new Date());
+          });
+
+          it('should not have a record of the last page processed', () => {
+            expect(repository.sync.lastPage).toBe(null);
+          });
         });
       });
     });

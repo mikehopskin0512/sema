@@ -68,6 +68,8 @@ async function handleRepoSync(repository) {
     repository.type === 'github' && repository.installationId
   );
   if (shouldStartSync) {
+    repository.set({ 'sync.status': 'queued', 'sync.queuedAt': new Date() });
+    await repository.save();
     await importRepositoryQueue.queueJob({ id: repository.id });
   }
 }

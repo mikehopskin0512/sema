@@ -1,8 +1,8 @@
 import './env';
+import { differenceInMinutes, addDays } from 'date-fns';
 import mongoose from 'mongoose';
 import Ironium from 'ironium';
 import nock from 'nock';
-import { addDays } from 'date-fns';
 import app from '../src/app';
 
 nock.disableNetConnect();
@@ -34,6 +34,16 @@ expect.extend({
     return {
       pass,
       message: () => `expected ${actualID} to match ${expectedID}`,
+    };
+  },
+
+  toBeCloseToDate(actual, expected) {
+    const diff = differenceInMinutes(actual, expected);
+    const pass = diff === 0;
+    return {
+      pass,
+      message: () =>
+        `expected ${actual} to be within one minute of ${expected}`,
     };
   },
 });

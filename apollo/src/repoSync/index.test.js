@@ -93,7 +93,8 @@ describe('POST /repo-sync', () => {
       expect(repository.type).toBe('github');
       expect(repository.externalId).toBe('123456');
       expect(repository.installationId).toBe('9876543');
-      expect(repository.sync.status).toBe('pending');
+      expect(repository.sync.status).toBe('queued');
+      expect(repository.sync.queuedAt).toBeCloseToDate(new Date());
       expect(repository.sync.addedBy).toEqualID(user);
     });
 

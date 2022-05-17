@@ -10,17 +10,21 @@ import SmartComment from '../comments/smartComments/smartCommentModel';
 const queue = queues.self(module);
 
 export default async function importRepository({ id }) {
-  logger.info(`${queue.name} processing repository ${id}`);
+  logger.info(`Repo sync: ${queue.name} processing repository ${id}`);
 
   const repository = await Repository.findById(id);
 
   const isRepoSyncSupported = repository.type === 'github';
   if (!isRepoSyncSupported) {
     logger.error(
-      `Skipping repo sync for repository ${id}, type is ${repository.type}`
+      `Repo sync: Skipping repo sync for repository ${id}, type is ${repository.type}`
     );
     return;
   }
+
+  await setSyncStarted(repository);
+
+  const lastPage = (repository.sync.lastPage || 0) + 1;
 
   const octokit = getOctokit(repository);
   const { data: repo } = await octokit.request('/repositories/{id}', {
@@ -33,14 +37,23 @@ export default async function importRepository({ id }) {
       repo: repo.name,
       sort: 'created',
       direction: 'desc',
+      page: lastPage,
     }
   );
 
   const importSmartCommentFromGitHub = createGitHubImporter(octokit);
 
-  for await (const page of pages) {
-    await Promise.all(page.data.map(importSmartCommentFromGitHub));
+  for await (const response of pages) {
+    const page = getPageFromResponse(response);
+    logger.info(
+      `Repo sync: Processing page ${page} for ${repo.owner.login}/${repo.name}`
+    );
+    await Promise.all(response.data.map(importSmartCommentFromGitHub));
+    repository.sync.lastPage = page;
+    await repository.save();
   }
+
+  await setSyncCompleted(repository);
 }
 
 function getOctokit(repository) {
@@ -88,6 +101,29 @@ function createGitHubImporter(octokit) {
   };
 
   return importSmartCommentFromGitHub;
+}
+
+function getPageFromResponse(response) {
+  const url = new URL(response.url);
+  const page = parseInt(url.searchParams.get('page') || 1, 10);
+  return page;
+}
+
+async function setSyncStarted(repository) {
+  repository.set({
+    'sync.status': 'started',
+    'sync.startedAt': new Date(),
+  });
+  await repository.save();
+}
+
+async function setSyncCompleted(repository) {
+  repository.set({
+    'sync.status': 'completed',
+    'sync.completedAt': new Date(),
+    'sync.lastPage': null,
+  });
+  await repository.save();
 }
 
 export { queue };
