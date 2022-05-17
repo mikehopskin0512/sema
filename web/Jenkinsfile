@@ -1,8 +1,4 @@
 #!/usr/bin/env groovy
-libraries {
-    lib('SlackLibrary')
-}
-
 pipeline {
     agent {
         docker {
@@ -72,6 +68,7 @@ pipeline {
     post {
         failure {
             script {
+                @Library('SlackLibrary')_
                 slackSendFail()
             }
         }
