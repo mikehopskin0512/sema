@@ -7,7 +7,7 @@ WORKDIR /usr/app
 # ---------- Builder ----------
 FROM base AS builder
 
-COPY package*.json .babelrc bin ./
+COPY package*.json .babelrc ./
 
 RUN npm ci
 
@@ -21,6 +21,7 @@ RUN npm prune --production
 FROM base AS release
 
 COPY --chown=node:node --from=builder /usr/app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /usr/app/bin ./bin
 COPY --chown=node:node --from=builder /usr/app/dist ./dist
 COPY --chown=node:node --from=builder /usr/app/logs ./logs
 COPY --chown=node:node --from=builder /usr/app/data ./data
@@ -31,9 +32,8 @@ RUN npm install -g pm2
 
 RUN ln -s dist src
 
-EXPOSE 3001
 USER node
 ENV NODE_ENV production
 
 # Run npm start script with PM2 when container starts
-CMD [ "pm2-runtime", "node", "--", "./dist/app.js", "-i", "max" ]
+CMD [ "pm2-runtime", "node", "--", "./bin/worker", "-i", "max" ]

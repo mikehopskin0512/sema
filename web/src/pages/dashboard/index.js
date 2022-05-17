@@ -39,6 +39,7 @@ const Dashboard = () => {
   const [isPluginInstalled, togglePluginInstalled] = useState(false);
   const [onboardingPage, setOnboardingPage] = useState(1);
   const [comment, setComment] = useState({});
+  const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
   const dispatch = useDispatch();
   const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
     auth: state.authState,
@@ -108,6 +109,15 @@ const Dashboard = () => {
   //     router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
   //   }
   // }
+
+  if (redirectUser) {
+    setRedirectUser(false);
+    if (selectedTeam) {
+      router.push(`${PATHS.TEAMS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
+    } else {
+      router.push(PATHS.DASHBOARD);
+    }
+  }
 
   const toggleOnboardingModal = (status) => {
     if (status === false) {
