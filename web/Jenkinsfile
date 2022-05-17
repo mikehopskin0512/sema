@@ -29,6 +29,8 @@ pipeline {
             steps {
                 script {
                     release_regex = '(.*release.*)'
+                    env.BRANCH_NAME = BRANCH_NAME
+
                     switch (BRANCH_NAME) {
                     case 'master':
                             ENVIRONMENT = 'prod'
@@ -69,7 +71,7 @@ pipeline {
     post {
         failure {
             script {
-                slackSendFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
+                slackSendFail(env.JOB_NAME, BRANCH_NAME, BUILD_URL)
             }
         }
     }
