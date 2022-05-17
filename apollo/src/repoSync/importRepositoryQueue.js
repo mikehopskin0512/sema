@@ -79,6 +79,7 @@ function createGitHubImporter(octokit) {
     );
     const { repo } = pullRequest.base;
     const githubMetadata = {
+      commentId,
       filename: githubComment.path,
       repo: repo.name,
       repo_id: repo.id,
@@ -92,8 +93,7 @@ function createGitHubImporter(octokit) {
       requester: pullRequest.user.login,
     };
 
-    return await SmartComment.create({
-      commentId,
+    return await findOrCreateSmartComment({
       comment,
       githubMetadata,
       source: 'repoSync',
@@ -124,6 +124,19 @@ async function setSyncCompleted(repository) {
     'sync.lastPage': null,
   });
   await repository.save();
+}
+
+async function findOrCreateSmartComment(attrs) {
+  try {
+    return await SmartComment.create(attrs);
+  } catch (error) {
+    const isDuplicate =
+      error.code === 11000 && error.keyPattern?.['githubMetadata.commentId'];
+    if (isDuplicate) {
+      return await SmartComment.findOne(error.keyValue);
+    }
+    throw error;
+  }
 }
 
 export { queue };

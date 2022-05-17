@@ -162,4 +162,15 @@ smartCommentSchema.post('save', async (doc, next) => {
   }
 });
 
+// githubMetadata.commentId should be unique if present.
+smartCommentSchema.index(
+  { 'githubMetadata.commentId': 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      'githubMetadata.commentId': { $exists: true },
+    },
+  }
+);
+
 export default mongoose.model('SmartComment', smartCommentSchema);

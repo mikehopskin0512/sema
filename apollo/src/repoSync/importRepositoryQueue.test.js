@@ -124,6 +124,10 @@ describe('Import Repository Queue', () => {
             expect(githubMetadata.repo).toBe('phoenix');
           });
 
+          it('should store the GitHub comment ID', () => {
+            expect(githubMetadata.commentId).toBe('545317614');
+          });
+
           it('should store the GitHub repository ID', () => {
             expect(githubMetadata.repo_id).toBe('237888452');
           });
@@ -169,6 +173,44 @@ describe('Import Repository Queue', () => {
         it('should have sync completed at timestamp', () => {
           expect(repository.sync.completedAt).toBeCloseToDate(new Date());
         });
+      });
+    });
+
+    describe('processing queue again', () => {
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repositories/237888452')
+          .reply(200, getRepositoryDetail());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfComments());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetail());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should have three comments', () => {
+        expect(comments.length).toBe(3);
       });
     });
 
