@@ -70,7 +70,7 @@ pipeline {
 
     post {
         failure {
-            slackSendFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
+            slackSendsFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
         }
     }
 }
