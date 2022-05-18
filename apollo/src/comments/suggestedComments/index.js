@@ -17,6 +17,7 @@ import {
 import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
 import checkEnv from "../../middlewares/checkEnv";
 import axios from 'axios';
+import mongoose from 'mongoose';
 
 const { Types: { ObjectId } } = mongoose;
 
@@ -165,7 +166,7 @@ export default (app, passport) => {
 
   route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/summaries`, req.body);
+      const { data } = await axios.post( `${process.env.JAXON_SUMMARIES_SERVER_URL}/summaries`, req.body);
       return res.status(200).json(data);
     } catch (error) {
       logger.error(error);
@@ -175,7 +176,7 @@ export default (app, passport) => {
 
   route.post('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const { data } = await axios.post( `${process.env.JAXON_SERVER_URL}/tags`, req.body);
+      const { data } = await axios.post( `${process.env.JAXON_TAGS_SERVER_URL}/tags`, req.body);
       return res.status(200).json(data);
     } catch (error) {
       return res.status(error.statusCode).send(error);
