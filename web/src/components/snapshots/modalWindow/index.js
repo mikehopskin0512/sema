@@ -24,6 +24,7 @@ import useOutsideClick from '../../../utils/useOutsideClick';
 import { notify } from '../../toaster/index.js';
 
 import { convertToRaw } from 'draft-js';
+// TODO: import additional styles if needed / should be uncommented or deleted after full RTE implementation
 //import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { createEditorState } from '../../markdownEditor/utils';
 import MarkdownEditor from '../../markdownEditor';
@@ -52,6 +53,10 @@ const editSnapSchema = yup.object()
       .required('Title is required'),
   });
 
+const getSnapshotSchema = (type) => {
+  return type === SNAPSHOT_MODAL_TYPES.CREATE ? createSnapSchema : editSnapSchema;
+}
+
 export const SNAPSHOT_MODAL_TYPES = {
   CREATE: 'create',
   EDIT: 'edit',
@@ -78,7 +83,7 @@ const SnapshotModal = ({
     reset,
     handleSubmit,
   } = useForm({
-    resolver: yupResolver(type === SNAPSHOT_MODAL_TYPES.CREATE ? createSnapSchema : editSnapSchema),
+    resolver: yupResolver(getSnapshotSchema(type)),
   });
 
   const { auth, portfolios, alerts } = useSelector((state) => ({
@@ -98,6 +103,7 @@ const SnapshotModal = ({
 
   const onSubmit = async (data) => {
     const selectedPortfolio = data.portfolio?.id;
+    const isPortfolioToSet = selectedPortfolio && selectedPortfolio.value !== '-1';
 
     const snapshotDataForSave = {
       userId: user._id,
@@ -120,7 +126,7 @@ const SnapshotModal = ({
           onClose(payload.data);
         }
       } else {
-        if (selectedPortfolio && selectedPortfolio.value !== '-1') {
+        if (isPortfolioToSet) {
           await postSnapshots({
             ...snapshotDataForSave,
             portfolioId: selectedPortfolio,
