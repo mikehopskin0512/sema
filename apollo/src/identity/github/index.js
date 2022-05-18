@@ -4,6 +4,7 @@ import { createOAuthAppAuth } from '@octokit/auth';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
+import logger from '../../shared/logger';
 import { github, orgDomain, version } from '../../config';
 import { getProfile, getUserEmails } from './utils';
 import {
@@ -56,6 +57,9 @@ export default (app) => {
       if (!token) {
         return res.status(401).end('Github authentication failed.');
       }
+
+      if (process.env.NODE_ENV === 'development')
+        logger.info(`GitHub token: ${token}`);
 
       const profile = await getProfile(token);
       if (!profile) {
