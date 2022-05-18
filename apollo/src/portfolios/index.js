@@ -17,6 +17,7 @@ import {
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
 import multer from '../multer';
+import { uploadImage } from '../utils';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -147,9 +148,9 @@ export default (app, passport) => {
   route.post('/:portfolioId/avatar', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
     try {
       const { portfolioId } = req.params;
-      const avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${req.file.filename}`;
+      const uploadedImage = await uploadImage(req.file);
 
-      await updateField(portfolioId, 'imageUrl', avatarUrl);
+      await updateField(portfolioId, 'imageUrl', uploadedImage.Location);
 
       return res.status(200).send({});
     } catch (error) {
