@@ -17,6 +17,8 @@ module.exports = {
 
     const updatedPortfolios = await Promise.all(portfolios.map(async portfolio => {
       const snaps = portfolio.snapshots;
+      if (!snaps) return portfolio;
+
       return {
         ...portfolio,
         snapshots: await Promise.all(snaps.map(async snap => await db.collection('snapshots')
@@ -25,10 +27,12 @@ module.exports = {
     }));
 
     await Promise.all(updatedPortfolios.map(async portfolio => {
-      if (!portfolio.snapshots.length) return;
+      if (!portfolio.snapshots) return portfolio;
 
       await Promise.all(portfolio.snapshots.map(async (snap) => {
-        const updatedComments = snap.componentData.smartComments.length ? snap.componentData.smartComments.map(com => {
+        if (!snap?.componentData?.smartComments?.length) return snap;
+
+        const updatedComments = snap?.componentData?.smartComments?.length ? snap?.componentData?.smartComments?.map(com => {
           if (users.some(i => i._id.toString() === com.userId.toString())) {
             return com;
           } else {
@@ -40,7 +44,7 @@ module.exports = {
         }) : [];
 
         const updatedComponentData = {
-          ...snap.componentData,
+          ...snap?.componentData,
           smartComments: updatedComments,
         };
 
