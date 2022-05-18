@@ -61,9 +61,16 @@ EOF
 
 resource "aws_iam_role_policy" "external" {
   count  = length(var.external_iam_policies)
-  name   = "${local.task_definition_exec_external_policy}-${count.index}"
+  name   = "${local.task_definition_external_policy}-${count.index}"
   role   = aws_iam_role.task.id
   policy = element(var.external_iam_policies, count.index)
+}
+
+resource "aws_iam_role_policy" "external_exec" {
+  count  = length(var.external_exec_iam_policies)
+  name   = "${local.task_definition_exec_external_policy}-${count.index}"
+  role   = aws_iam_role.execution.id
+  policy = element(var.external_exec_iam_policies, count.index)
 }
 
 resource "aws_iam_role_policy" "ssm_task" {

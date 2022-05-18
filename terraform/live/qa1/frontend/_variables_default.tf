@@ -14,16 +14,16 @@ variable "name_prefix" {
   }
 }
 
-variable "ecs_task_definition_resources" {
-  type = object({
-    cpu    = number
-    memory = number
-  })
-  description = "CPU and RAM limits for the task definition."
-  default = {
-    cpu    = 1024
-    memory = 2048
-  }
+variable "ecs_task_definition_resources_cpu" {
+  type        = number
+  description = "CPU limits for the task definition."
+  default     = 1024
+}
+
+variable "ecs_task_definition_resources_memory" {
+  type        = number
+  description = "RAM limits for the task definition."
+  default     = 2048
 }
 
 variable "aws_region" {
