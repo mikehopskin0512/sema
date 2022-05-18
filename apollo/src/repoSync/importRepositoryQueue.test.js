@@ -1,4 +1,5 @@
 import nock from 'nock';
+import resetNocks from '../../test/nocks';
 import * as userService from '../users/userService';
 import { findByExternalId as findSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
 import { create as createRepository } from '../repositories/repositoryService';
@@ -56,12 +57,24 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, getFirstPageOfComments(), {
+          .reply(200, getFirstPageOfPullRequestComments(), {
             Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
-          .reply(200, getSecondPageOfComments());
+          .reply(200, getSecondPageOfPullRequestComments());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfIssueComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfIssueComments());
       });
 
       beforeAll(() => {
@@ -78,15 +91,17 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should have three comments', () => {
-        expect(comments.length).toBe(3);
+      it('should have six comments', () => {
+        expect(comments.length).toBe(6);
       });
 
-      describe('comment', () => {
+      describe('first pull request comment', () => {
         let comment;
 
         beforeAll(() => {
-          [comment] = comments;
+          comment = comments.find(
+            (c) => c.githubMetadata.entity === 'pullRequestComment'
+          );
         });
 
         it('should have source "repoSync"', () => {
@@ -161,6 +176,85 @@ describe('Import Repository Queue', () => {
         });
       });
 
+      describe('first issue comment', () => {
+        let comment;
+
+        beforeAll(() => {
+          comment = comments.find(
+            (c) => c.githubMetadata.entity === 'issueComment'
+          );
+        });
+
+        it('should have source "repoSync"', () => {
+          expect(comment.source).toBe('repoSync');
+        });
+
+        it('should not reference a user', () => {
+          expect(comment.userId).toBeUndefined();
+        });
+
+        it('should have comment body', () => {
+          expect(comment.comment).toBe(
+            'Test \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n'
+          );
+        });
+
+        it('should have no tags', () => {
+          expect(comment.tags).toEqual([]);
+        });
+
+        describe('GitHub metadata', () => {
+          let githubMetadata;
+
+          beforeAll(() => {
+            githubMetadata = comment.githubMetadata;
+          });
+
+          it('should have no file name', () => {
+            expect(githubMetadata.filename).toBe(null);
+          });
+
+          it('should store the repo name', () => {
+            expect(githubMetadata.repo).toBe('phoenix');
+          });
+
+          it('should store the GitHub comment ID', () => {
+            expect(githubMetadata.commentId).toBe('1130011291');
+          });
+
+          it('should store the GitHub repository ID', () => {
+            expect(githubMetadata.repo_id).toBe('237888452');
+          });
+
+          it('should store the GitHub repository URL', () => {
+            expect(githubMetadata.url).toBe(
+              'https://github.com/Semalab/phoenix'
+            );
+          });
+
+          it('should store the creation timestamp on GitHub', () => {
+            expect(githubMetadata.created_at).toEqual(
+              new Date('2022-05-18T13:21:37.000Z')
+            );
+          });
+
+          it('should store the update timestamp on GitHub', () => {
+            expect(githubMetadata.updated_at).toEqual(
+              new Date('2022-05-18T13:21:37.000Z')
+            );
+          });
+
+          it('should store the comment author details', () => {
+            expect(githubMetadata.user.id).toBe('28770143');
+            expect(githubMetadata.user.login).toBe('jaymendez');
+          });
+
+          it('should store the pull request author details', () => {
+            expect(githubMetadata.requester).toBe('codykenb');
+          });
+        });
+      });
+
       describe('repository', () => {
         beforeAll(async () => {
           repository = await Repository.findById(repository._id);
@@ -187,12 +281,24 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, getFirstPageOfComments(), {
+          .reply(200, getFirstPageOfPullRequestComments(), {
             Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
-          .reply(200, getSecondPageOfComments());
+          .reply(200, getSecondPageOfPullRequestComments());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfIssueComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfIssueComments());
       });
 
       beforeAll(() => {
@@ -209,12 +315,12 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should have three comments', () => {
-        expect(comments.length).toBe(3);
+      it('should have six comments', () => {
+        expect(comments.length).toBe(6);
       });
     });
 
-    describe('when syncing fails half-way through', () => {
+    describe('when syncing pull request comments fails half-way through', () => {
       let handlerError;
 
       beforeAll(async () => {
@@ -233,12 +339,20 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, getFirstPageOfComments(), {
+          .reply(200, getFirstPageOfPullRequestComments(), {
             Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
-          .reply(500);
+          .reply(500, 'GitHub error');
+      });
+
+      beforeAll(() => {
+        // Only test resuming of pull request comments.
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, []);
       });
 
       beforeAll(() => {
@@ -299,10 +413,18 @@ describe('Import Repository Queue', () => {
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
             .query({ sort: 'created', direction: 'desc', page: 1 })
-            .reply(500)
+            .reply(500, 'GitHub error')
             .get('/repos/Semalab/phoenix/pulls/comments')
             .query({ sort: 'created', direction: 'desc', page: 2 })
-            .reply(200, getSecondPageOfComments());
+            .reply(200, getSecondPageOfPullRequestComments());
+        });
+
+        beforeAll(() => {
+          // Only test resuming of pull request comments.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, []);
         });
 
         beforeAll(() => {
@@ -319,8 +441,11 @@ describe('Import Repository Queue', () => {
           comments = await findSmartCommentsByExternalId(repository.externalId);
         });
 
-        it('should import all comments', () => {
-          expect(comments.length).toBe(3);
+        it('should import all pull request comments', () => {
+          const pullRequestComments = comments.filter(
+            (c) => c.githubMetadata.entity === 'pullRequestComment'
+          );
+          expect(pullRequestComments.length).toBe(3);
         });
 
         describe('repository', () => {
@@ -337,7 +462,159 @@ describe('Import Repository Queue', () => {
           });
 
           it('should not have a record of the last page processed', () => {
-            expect(repository.sync.lastPage).toBe(null);
+            expect(repository.sync.lastPage.pullRequestComment).toBe(null);
+          });
+        });
+      });
+    });
+
+    describe('when syncing issue comments fails half-way through', () => {
+      let handlerError;
+
+      beforeAll(() => {
+        resetNocks();
+      });
+
+      beforeAll(async () => {
+        repository.sync = {};
+        await repository.save();
+        await SmartComment.deleteMany({});
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repositories/237888452')
+          .reply(200, getRepositoryDetail());
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfIssueComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(500, 'GitHub Error');
+      });
+
+      beforeAll(() => {
+        // Only test resuming of issue comments.
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetail());
+      });
+
+      beforeAll(async () => {
+        try {
+          await handler({ id: repository.id });
+        } catch (error) {
+          handlerError = error;
+        }
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should fail', () => {
+        expect(handlerError.message).toBe('GitHub Error');
+      });
+
+      it('should import some comments', () => {
+        expect(comments.length).toBe(2);
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status "started"', () => {
+          expect(repository.sync.status).toBe('started');
+        });
+
+        it('should have sync started at timestamp', () => {
+          expect(repository.sync.startedAt).toBeCloseToDate(new Date());
+        });
+
+        it('should not have sync completed at timestamp', () => {
+          expect(repository.sync.completedAt).toBeFalsy();
+        });
+      });
+
+      describe('running job again', () => {
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repositories/237888452')
+            .reply(200, getRepositoryDetail());
+        });
+
+        beforeAll(() => {
+          // Set the first page to always fail. This is to
+          // ensure that the job can pick up pagination
+          // where it left off.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(500, 'GitHub error')
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query({ sort: 'created', direction: 'desc', page: 2 })
+            .reply(200, getSecondPageOfIssueComments());
+        });
+
+        beforeAll(() => {
+          // Only test resuming of issue comments.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, []);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetail());
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        beforeAll(async () => {
+          comments = await findSmartCommentsByExternalId(repository.externalId);
+        });
+
+        it('should import all issue comments', () => {
+          const issueComments = comments.filter(
+            (c) => c.githubMetadata.entity === 'issueComment'
+          );
+          expect(issueComments.length).toBe(3);
+        });
+
+        describe('repository', () => {
+          beforeAll(async () => {
+            repository = await Repository.findById(repository._id);
+          });
+
+          it('should have sync status "completed"', () => {
+            expect(repository.sync.status).toBe('completed');
+          });
+
+          it('should have sync completed at timestamp', () => {
+            expect(repository.sync.completedAt).toBeCloseToDate(new Date());
+          });
+
+          it('should not have a record of the last page processed', () => {
+            expect(repository.sync.lastPage.issueComment).toBe(null);
           });
         });
       });
@@ -386,7 +663,7 @@ function getRepositoryDetail() {
   };
 }
 
-function getFirstPageOfComments() {
+function getFirstPageOfPullRequestComments() {
   return [
     {
       url: 'https://api.github.com/repos/Semalab/phoenix/pulls/comments/545313646',
@@ -439,7 +716,7 @@ function getFirstPageOfComments() {
   ];
 }
 
-function getSecondPageOfComments() {
+function getSecondPageOfPullRequestComments() {
   return [
     {
       url: 'https://api.github.com/repos/Semalab/phoenix/pulls/comments/545317614',
@@ -589,4 +866,164 @@ function getPullRequestDetail() {
     deletions: 2283,
     changed_files: 21,
   };
+}
+
+function getFirstPageOfIssueComments() {
+  return [
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130011291',
+      html_url:
+        'https://github.com/Semalab/phoenix/pull/3#issuecomment-1130011291',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/3',
+      id: 1130011291,
+      node_id: 'IC_kwDODi3jxM5DWpqb',
+      user: {
+        login: 'jaymendez',
+        id: 28770143,
+        node_id: 'MDQ6VXNlcjI4NzcwMTQz',
+        avatar_url: 'https://avatars.githubusercontent.com/u/28770143?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jaymendez',
+        html_url: 'https://github.com/jaymendez',
+        followers_url: 'https://api.github.com/users/jaymendez/followers',
+        following_url:
+          'https://api.github.com/users/jaymendez/following{/other_user}',
+        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
+        subscriptions_url:
+          'https://api.github.com/users/jaymendez/subscriptions',
+        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
+        repos_url: 'https://api.github.com/users/jaymendez/repos',
+        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/jaymendez/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      created_at: '2022-05-18T13:21:37Z',
+      updated_at: '2022-05-18T13:21:37Z',
+      author_association: 'CONTRIBUTOR',
+      body: 'Test \r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Summary:** :trophy: This code is awesome&nbsp; | &nbsp;**Tags:** Fault-tolerant\r\n',
+      reactions: {
+        'url':
+          'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130011291/reactions',
+        'total_count': 0,
+        '+1': 0,
+        '-1': 0,
+        'laugh': 0,
+        'hooray': 0,
+        'confused': 0,
+        'heart': 0,
+        'rocket': 0,
+        'eyes': 0,
+      },
+      performed_via_github_app: null,
+    },
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130010655',
+      html_url:
+        'https://github.com/Semalab/phoenix/pull/3#issuecomment-1130010655',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/3',
+      id: 1130010655,
+      node_id: 'IC_kwDODi3jxM5DWpgf',
+      user: {
+        login: 'jaymendez',
+        id: 28770143,
+        node_id: 'MDQ6VXNlcjI4NzcwMTQz',
+        avatar_url: 'https://avatars.githubusercontent.com/u/28770143?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jaymendez',
+        html_url: 'https://github.com/jaymendez',
+        followers_url: 'https://api.github.com/users/jaymendez/followers',
+        following_url:
+          'https://api.github.com/users/jaymendez/following{/other_user}',
+        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
+        subscriptions_url:
+          'https://api.github.com/users/jaymendez/subscriptions',
+        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
+        repos_url: 'https://api.github.com/users/jaymendez/repos',
+        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/jaymendez/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      created_at: '2022-05-18T13:21:07Z',
+      updated_at: '2022-05-18T13:21:07Z',
+      author_association: 'CONTRIBUTOR',
+      body: 'Test\r\n\r\n__\r\n[![sema-logo](https://app.semasoftware.com/img/sema-tray-logo.svg)](http://semasoftware.com/gh) &nbsp;**Tags:** Not maintainable\r\n',
+      reactions: {
+        'url':
+          'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130010655/reactions',
+        'total_count': 0,
+        '+1': 0,
+        '-1': 0,
+        'laugh': 0,
+        'hooray': 0,
+        'confused': 0,
+        'heart': 0,
+        'rocket': 0,
+        'eyes': 0,
+      },
+      performed_via_github_app: null,
+    },
+  ];
+}
+
+function getSecondPageOfIssueComments() {
+  return [
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130010546',
+      html_url:
+        'https://github.com/Semalab/phoenix/pull/3#issuecomment-1130010546',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/3',
+      id: 1130010546,
+      node_id: 'IC_kwDODi3jxM5DWpey',
+      user: {
+        login: 'jaymendez',
+        id: 28770143,
+        node_id: 'MDQ6VXNlcjI4NzcwMTQz',
+        avatar_url: 'https://avatars.githubusercontent.com/u/28770143?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jaymendez',
+        html_url: 'https://github.com/jaymendez',
+        followers_url: 'https://api.github.com/users/jaymendez/followers',
+        following_url:
+          'https://api.github.com/users/jaymendez/following{/other_user}',
+        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
+        subscriptions_url:
+          'https://api.github.com/users/jaymendez/subscriptions',
+        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
+        repos_url: 'https://api.github.com/users/jaymendez/repos',
+        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/jaymendez/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      created_at: '2022-05-18T13:21:01Z',
+      updated_at: '2022-05-18T13:21:01Z',
+      author_association: 'CONTRIBUTOR',
+      body: 'Test Comment\r\n\r\n',
+      reactions: {
+        'url':
+          'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130010546/reactions',
+        'total_count': 0,
+        '+1': 0,
+        '-1': 0,
+        'laugh': 0,
+        'hooray': 0,
+        'confused': 0,
+        'heart': 0,
+        'rocket': 0,
+        'eyes': 0,
+      },
+      performed_via_github_app: null,
+    },
+  ];
 }

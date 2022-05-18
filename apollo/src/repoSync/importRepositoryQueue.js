@@ -24,12 +24,39 @@ export default async function importRepository({ id }) {
 
   await setSyncStarted(repository);
 
-  const lastPage = (repository.sync.lastPage || 0) + 1;
-
   const octokit = getOctokit(repository);
   const { data: repo } = await octokit.request('/repositories/{id}', {
     id: repository.externalId,
   });
+
+  const importSmartCommentFromGitHub = createGitHubImporter(octokit);
+
+  await Promise.all([
+    importPullRequestComments({
+      octokit,
+      repo,
+      repository,
+      importSmartCommentFromGitHub,
+    }),
+    importIssueComments({
+      octokit,
+      repo,
+      repository,
+      importSmartCommentFromGitHub,
+    }),
+  ]);
+
+  await setSyncCompleted(repository);
+}
+
+async function importPullRequestComments({
+  octokit,
+  repo,
+  repository,
+  importSmartCommentFromGitHub,
+}) {
+  const lastPage = (repository.sync.lastPage.pullRequestComment || 0) + 1;
+
   const pages = octokit.paginate.iterator(
     octokit.pulls.listReviewCommentsForRepo,
     {
@@ -41,19 +68,44 @@ export default async function importRepository({ id }) {
     }
   );
 
-  const importSmartCommentFromGitHub = createGitHubImporter(octokit);
+  for await (const response of pages) {
+    const page = getPageFromResponse(response);
+    logger.info(
+      `Repo sync: Processing pull request comments page ${page} for ${repo.owner.login}/${repo.name}`
+    );
+    await Promise.allSettled(response.data.map(importSmartCommentFromGitHub));
+    await repository.updateOne({ 'sync.lastPage.pullRequestComment': page });
+  }
+
+  await repository.updateOne({ 'sync.lastPage.pullRequestComment': null });
+}
+
+async function importIssueComments({
+  octokit,
+  repo,
+  importSmartCommentFromGitHub,
+  repository,
+}) {
+  const lastPage = (repository.sync.lastPage.issueComment || 0) + 1;
+
+  const pages = octokit.paginate.iterator(octokit.issues.listCommentsForRepo, {
+    owner: repo.owner.login,
+    repo: repo.name,
+    sort: 'created',
+    direction: 'desc',
+    page: lastPage,
+  });
 
   for await (const response of pages) {
     const page = getPageFromResponse(response);
     logger.info(
-      `Repo sync: Processing page ${page} for ${repo.owner.login}/${repo.name}`
+      `Repo sync: Processing issue comments page ${page} for ${repo.owner.login}/${repo.name}`
     );
-    await Promise.all(response.data.map(importSmartCommentFromGitHub));
-    repository.sync.lastPage = page;
-    await repository.save();
+    await Promise.allSettled(response.data.map(importSmartCommentFromGitHub));
+    await repository.updateOne({ 'sync.lastPage.issueComment': page });
   }
 
-  await setSyncCompleted(repository);
+  await repository.updateOne({ 'sync.lastPage.issueComment': null });
 }
 
 function getOctokit(repository) {
@@ -71,12 +123,21 @@ function createGitHubImporter(octokit) {
   const octokitCache = new Cache(50);
   octokitCache.materialize = async (url) => await octokit.request(url);
 
-  const importSmartCommentFromGitHub = async (githubComment) => {
+  function getEntity(githubComment) {
+    if ('pull_request_review_id' in githubComment) return 'pullRequestComment';
+    if ('issue_url' in githubComment) return 'issueComment';
+    throw new Error('Unknown comment type');
+  }
+
+  async function importSmartCommentFromGitHub(githubComment) {
+    const entity = getEntity(githubComment);
+    const pullRequestURL =
+      entity === 'pullRequestComment'
+        ? githubComment.pull_request_url
+        : githubComment.issue_url.replace('/issues/', '/pulls/');
     const commentId = githubComment.id;
     const comment = githubComment.body;
-    const { data: pullRequest } = await octokitCache.get(
-      githubComment.pull_request_url
-    );
+    const { data: pullRequest } = await octokitCache.get(pullRequestURL);
     const { repo } = pullRequest.base;
     const githubMetadata = {
       commentId,
@@ -91,6 +152,7 @@ function createGitHubImporter(octokit) {
         login: githubComment.user.login,
       },
       requester: pullRequest.user.login,
+      entity,
     };
 
     return await findOrCreateSmartComment({
@@ -98,7 +160,7 @@ function createGitHubImporter(octokit) {
       githubMetadata,
       source: 'repoSync',
     });
-  };
+  }
 
   return importSmartCommentFromGitHub;
 }
@@ -121,7 +183,7 @@ async function setSyncCompleted(repository) {
   repository.set({
     'sync.status': 'completed',
     'sync.completedAt': new Date(),
-    'sync.lastPage': null,
+    'sync.lastPage': {},
   });
   await repository.save();
 }

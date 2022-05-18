@@ -30,6 +30,10 @@ const githubMetadataSchema = new Schema({
   title: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  entity: {
+    type: String,
+    enum: ['pullRequestComment', 'issueComment', 'pullRequestReview'],
+  },
 });
 
 const smartCommentSchema = new Schema(

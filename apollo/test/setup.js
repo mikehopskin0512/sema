@@ -1,14 +1,16 @@
 import './env';
-import { differenceInMinutes, addDays } from 'date-fns';
+import { differenceInMinutes } from 'date-fns';
 import mongoose from 'mongoose';
 import Ironium from 'ironium';
 import nock from 'nock';
+import resetNocks from './nocks';
 import app from '../src/app';
 
 nock.disableNetConnect();
 nock.enableNetConnect('localhost');
 
 beforeAll(async () => {
+  resetNocks();
   await Promise.all([clearMongoDB(), Ironium.purgeQueues()]);
 });
 
@@ -47,27 +49,3 @@ expect.extend({
     };
   },
 });
-
-nock('https://api.github.com')
-  .persist()
-  .post('/app/installations/25676597/access_tokens', {})
-  .reply(201, {
-    token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
-    expires_at: addDays(new Date(), 1).toISOString(),
-    permissions: {
-      members: 'read',
-      organization_administration: 'read',
-      organization_projects: 'read',
-      actions: 'read',
-      administration: 'read',
-      contents: 'read',
-      discussions: 'write',
-      issues: 'write',
-      metadata: 'read',
-      pull_requests: 'write',
-      repository_hooks: 'write',
-      repository_projects: 'read',
-      vulnerability_alerts: 'read',
-    },
-    repository_selection: 'selected',
-  });

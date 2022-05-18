@@ -73,7 +73,10 @@ const repositoriesSchema = new mongoose.Schema(
       queuedAt: Date,
       startedAt: Date,
       completedAt: Date,
-      lastPage: Number,
+      lastPage: {
+        pullRequestComment: Number,
+        issueComment: Number,
+      },
     },
     repositoryCreatedAt: Date,
     repositoryUpdatedAt: Date,
