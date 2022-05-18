@@ -25,72 +25,41 @@ export default async function importRepository({ id }) {
   await setSyncStarted(repository);
 
   const octokit = getOctokit(repository);
-  const { data: repo } = await octokit.request('/repositories/{id}', {
-    id: repository.externalId,
-  });
+  const { owner, repo } = await getRepoById(octokit, repository.externalId);
 
-  const importSmartCommentFromGitHub = createGitHubImporter(octokit);
+  const importComment = createGitHubImporter(octokit);
 
   await Promise.all([
-    importPullRequestComments({
+    importComments({
       octokit,
-      repo,
+      entity: 'pullRequestComment',
+      endpoint: `/repos/${owner}/${repo}/pulls/comments`,
       repository,
-      importSmartCommentFromGitHub,
+      importComment,
     }),
-    importIssueComments({
+    importComments({
       octokit,
-      repo,
+      entity: 'issueComment',
+      endpoint: `/repos/${owner}/${repo}/issues/comments`,
       repository,
-      importSmartCommentFromGitHub,
+      importComment,
     }),
   ]);
 
   await setSyncCompleted(repository);
 }
 
-async function importPullRequestComments({
+async function importComments({
   octokit,
-  repo,
+  endpoint,
+  entity,
   repository,
-  importSmartCommentFromGitHub,
+  importComment,
 }) {
-  const lastPage = (repository.sync.lastPage.pullRequestComment || 0) + 1;
+  const lastPageKey = `sync.lastPage.${entity}`;
+  const lastPage = (repository.get(lastPageKey) || 0) + 1;
 
-  const pages = octokit.paginate.iterator(
-    octokit.pulls.listReviewCommentsForRepo,
-    {
-      owner: repo.owner.login,
-      repo: repo.name,
-      sort: 'created',
-      direction: 'desc',
-      page: lastPage,
-    }
-  );
-
-  for await (const response of pages) {
-    const page = getPageFromResponse(response);
-    logger.info(
-      `Repo sync: Processing pull request comments page ${page} for ${repo.owner.login}/${repo.name}`
-    );
-    await Promise.allSettled(response.data.map(importSmartCommentFromGitHub));
-    await repository.updateOne({ 'sync.lastPage.pullRequestComment': page });
-  }
-
-  await repository.updateOne({ 'sync.lastPage.pullRequestComment': null });
-}
-
-async function importIssueComments({
-  octokit,
-  repo,
-  importSmartCommentFromGitHub,
-  repository,
-}) {
-  const lastPage = (repository.sync.lastPage.issueComment || 0) + 1;
-
-  const pages = octokit.paginate.iterator(octokit.issues.listCommentsForRepo, {
-    owner: repo.owner.login,
-    repo: repo.name,
+  const pages = octokit.paginate.iterator(endpoint, {
     sort: 'created',
     direction: 'desc',
     page: lastPage,
@@ -98,14 +67,12 @@ async function importIssueComments({
 
   for await (const response of pages) {
     const page = getPageFromResponse(response);
-    logger.info(
-      `Repo sync: Processing issue comments page ${page} for ${repo.owner.login}/${repo.name}`
-    );
-    await Promise.allSettled(response.data.map(importSmartCommentFromGitHub));
-    await repository.updateOne({ 'sync.lastPage.issueComment': page });
+    logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
+    await Promise.all(response.data.map(importComment));
+    await repository.updateOne({ [lastPageKey]: page });
   }
 
-  await repository.updateOne({ 'sync.lastPage.issueComment': null });
+  await repository.updateOne({ [lastPageKey]: null });
 }
 
 function getOctokit(repository) {
@@ -129,7 +96,7 @@ function createGitHubImporter(octokit) {
     throw new Error('Unknown comment type');
   }
 
-  async function importSmartCommentFromGitHub(githubComment) {
+  return async function importComment(githubComment) {
     const entity = getEntity(githubComment);
     const pullRequestURL =
       entity === 'pullRequestComment'
@@ -160,9 +127,7 @@ function createGitHubImporter(octokit) {
       githubMetadata,
       source: 'repoSync',
     });
-  }
-
-  return importSmartCommentFromGitHub;
+  };
 }
 
 function getPageFromResponse(response) {
@@ -199,6 +164,14 @@ async function findOrCreateSmartComment(attrs) {
     }
     throw error;
   }
+}
+
+async function getRepoById(octokit, id) {
+  const { data: repo } = await octokit.request('/repositories/{id}', { id });
+  return {
+    owner: repo.owner.login,
+    repo: repo.name,
+  };
 }
 
 export { queue };
