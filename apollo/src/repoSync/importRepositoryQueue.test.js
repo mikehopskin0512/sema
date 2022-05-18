@@ -885,19 +885,6 @@ function getFirstPageOfIssueComments() {
         gravatar_id: '',
         url: 'https://api.github.com/users/jaymendez',
         html_url: 'https://github.com/jaymendez',
-        followers_url: 'https://api.github.com/users/jaymendez/followers',
-        following_url:
-          'https://api.github.com/users/jaymendez/following{/other_user}',
-        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
-        starred_url:
-          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
-        subscriptions_url:
-          'https://api.github.com/users/jaymendez/subscriptions',
-        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
-        repos_url: 'https://api.github.com/users/jaymendez/repos',
-        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
-        received_events_url:
-          'https://api.github.com/users/jaymendez/received_events',
         type: 'User',
         site_admin: false,
       },
@@ -935,19 +922,6 @@ function getFirstPageOfIssueComments() {
         gravatar_id: '',
         url: 'https://api.github.com/users/jaymendez',
         html_url: 'https://github.com/jaymendez',
-        followers_url: 'https://api.github.com/users/jaymendez/followers',
-        following_url:
-          'https://api.github.com/users/jaymendez/following{/other_user}',
-        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
-        starred_url:
-          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
-        subscriptions_url:
-          'https://api.github.com/users/jaymendez/subscriptions',
-        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
-        repos_url: 'https://api.github.com/users/jaymendez/repos',
-        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
-        received_events_url:
-          'https://api.github.com/users/jaymendez/received_events',
         type: 'User',
         site_admin: false,
       },
@@ -990,19 +964,6 @@ function getSecondPageOfIssueComments() {
         gravatar_id: '',
         url: 'https://api.github.com/users/jaymendez',
         html_url: 'https://github.com/jaymendez',
-        followers_url: 'https://api.github.com/users/jaymendez/followers',
-        following_url:
-          'https://api.github.com/users/jaymendez/following{/other_user}',
-        gists_url: 'https://api.github.com/users/jaymendez/gists{/gist_id}',
-        starred_url:
-          'https://api.github.com/users/jaymendez/starred{/owner}{/repo}',
-        subscriptions_url:
-          'https://api.github.com/users/jaymendez/subscriptions',
-        organizations_url: 'https://api.github.com/users/jaymendez/orgs',
-        repos_url: 'https://api.github.com/users/jaymendez/repos',
-        events_url: 'https://api.github.com/users/jaymendez/events{/privacy}',
-        received_events_url:
-          'https://api.github.com/users/jaymendez/received_events',
         type: 'User',
         site_admin: false,
       },
