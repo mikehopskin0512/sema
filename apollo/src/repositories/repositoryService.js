@@ -292,7 +292,7 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
-            smartComments: includeSmartComments
+            smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,
                   true,

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -8,6 +9,7 @@ import { InputField } from 'adonis';
 import { isEmpty } from 'lodash';
 import toaster from 'toasted-notes';
 import * as yup from 'yup';
+import checkAvailableUrl from '../../../utils/checkAvailableUrl';
 import TagsInput from '../../../components/tagsInput';
 import Helmet, { TeamCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
@@ -21,7 +23,6 @@ import {
   CloseIcon,
   LoadingBlueIcon,
 } from '../../../components/Icons';
-import { getAll } from '../../../state/utils/api';
 import { PATHS, SEMA_CORPORATE_TEAM_NAME } from '../../../utils/constants';
 import styles from './add.module.scss';
 
@@ -107,6 +108,30 @@ function TeamEditPage() {
   const onCancel = async () => {
     await router.back();
   };
+  const switchToTeam = async (team) => {
+    const roles = await dispatch(fetchTeamsOfUser(token));
+    const activeTeam = roles.find((role) => role.team._id === team._id);
+    dispatch(setSelectedTeam(activeTeam));
+    router.push(`${PATHS.TEAMS._}/${team._id}${PATHS.DASHBOARD}`);
+  };
+  const checkUrl = async (e) => {
+    e?.preventDefault();
+    if (!url) {
+      return null;
+    }
+    setUrlCheckLoading(true);
+    try {
+      const data = await checkAvailableUrl(url, token);
+      setUrlChecks((state) => ({
+        ...state,
+        [url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
+        urlChecked: true,
+      }));
+      return data.isAvailable;
+    } finally {
+      setUrlCheckLoading(false);
+    }
+  };
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -141,34 +166,6 @@ function TeamEditPage() {
       showNotification(null);
     } finally {
       setLoading(false);
-    }
-  };
-  const switchToTeam = async (team) => {
-    const roles = await dispatch(fetchTeamsOfUser(token));
-    const activeTeam = roles.find((role) => role.team._id === team._id);
-    dispatch(setSelectedTeam(activeTeam));
-    router.push(`${PATHS.TEAMS._}/${team._id}${PATHS.DASHBOARD}`);
-  };
-  const checkUrl = async (e) => {
-    e?.preventDefault();
-    if (!url) {
-      return null;
-    }
-    setUrlCheckLoading(true);
-    try {
-      const { data } = await getAll(
-        `/api/proxy/teams/check-url/${url}`,
-        {},
-        token
-      );
-      setUrlChecks((state) => ({
-        ...state,
-        [url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
-        urlChecked: true,
-      }));
-      return data.isAvailable;
-    } finally {
-      setUrlCheckLoading(false);
     }
   };
 
