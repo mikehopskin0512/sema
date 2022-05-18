@@ -28,7 +28,7 @@ const ActivityPage = ({ startDate, endDate, filter }) => {
   return (
     <>
       {isOpen && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.ACTIVITY} active={isOpen} onClose={() => setIsOpen(false)} snapshotData={{ componentData }} />}
-      <SnapshotBar text="Save this as a snapshot on your Portfolio." hasActionButton onClick={() => setIsOpen(true)} />
+      {filteredComments.length ? <SnapshotBar text="Save this as a snapshot on your Portfolio." hasActionButton onClick={() => setIsOpen(true)} /> : null}
       {filteredComments.length ? filteredComments.map((item) => (
         <div className="my-10" key={`activity-${item._id}`}>
           <ActivityItem {...item} />
