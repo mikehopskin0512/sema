@@ -193,6 +193,7 @@ const TeamManagement = ({ activeTeam }) => {
         type: ALERT_TYPES.ERROR,
         duration: 3000,
       });
+      e.target?.parentNode?.blur() || e.target?.blur();
       return;
     }
     const magicLink = `${process.env.NEXT_PUBLIC_BASE_URL}${PATHS.LOGIN}?token=${invitationToken}`;
