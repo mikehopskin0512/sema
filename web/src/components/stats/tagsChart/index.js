@@ -11,6 +11,10 @@ import { white0 } from '../../../../styles/_colors.module.scss';
 import LineChart from '../../LineChart';
 import { format } from 'date-fns';
 
+const DATE_TYPES = {
+  CUSTOM: 'custom'
+}
+
 const TagsChart = ({
   tags, className, groupBy, isSnapshot, onClick, startDate, endDate, dateOption
 }) => {
@@ -85,7 +89,7 @@ const TagsChart = ({
         <div className="is-flex is-align-items-center is-justify-content-space-between">
           <span className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name}</span>
           {
-            dateOption === 'custom'
+            dateOption === DATE_TYPES.CUSTOM
               ? (startDate && <span className="has-text-primary">{format(new Date(startDate ?? Date.now()), 'MMM d, yyyy')} - {format(new Date(endDate  ?? Date.now()), 'MMM d, yyyy')}</span>)
               : (<span className="has-text-primary">{startCase(dateOption)}</span>)
           }

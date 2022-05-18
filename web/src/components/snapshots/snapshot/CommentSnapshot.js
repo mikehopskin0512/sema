@@ -39,8 +39,7 @@ const CommentSnapshot = React.forwardRef(({
 
   const renderCommentSnapshot = () => {
     if (componentData) {
-      const comments = componentData.smartComments?.slice(1, 3);
-      return comments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />);
+      return componentData.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot key={d?._id} />);
     }
     return '';
   };
