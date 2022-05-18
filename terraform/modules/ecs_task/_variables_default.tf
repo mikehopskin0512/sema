@@ -56,7 +56,13 @@ variable "ecs_secrets" {
 
 variable "external_iam_policies" {
   type        = list(string)
-  description = "A list of external iam policies attached to Lambda function."
+  description = "A list of external IAM policies to attach to the ECS task."
+  default     = []
+}
+
+variable "external_exec_iam_policies" {
+  type        = list(string)
+  description = "A list of external iam policies attached to ECS exec role."
   default     = []
 }
 

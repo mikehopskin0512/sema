@@ -15,7 +15,7 @@ import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
-import { black950, gray600 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600, white50 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -360,11 +360,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   >
                     + Add Snapshot
                   </button>
-                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
-                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}> */}
-                  {/*   <p>Save as PDF</p> */}
-                  {/*   <PdfIcon /> */}
-                  {/* </button>  */}
                   {portfolios.length === 1 &&
                     (
                       <button
@@ -376,6 +371,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                       </button>
                     )
                   }
+                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                    <p>Save as PDF</p>
+                    <PdfIcon />
+                  </button>   
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
@@ -408,14 +407,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-          {/* //ToDo: return this functionality when upload pictures to S3 will be finished */}
-            {/* <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}> */}
-            <div className={styles['user-image']}>
+            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
-              {/* //ToDo: return this component when upload pictures to S3 will be finished */}
-              {/* {isOwner && <div className="is-absolute">
+              {isOwner && <div className="is-absolute">
                 <CameraIcon size="large" color={white50}/>
-              </div>} */}
+              </div>}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
               <div className="is-full-width">
