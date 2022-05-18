@@ -57,7 +57,9 @@ const GlobalSearch = () => {
           value={searchTerm}
           className={clsx(styles['global-search_input'], "input has-background-white")}
           type="input"
-          placeholder="Search Collections and Snippets"
+          {/* TODO: move it back after EAST-1252 */}
+          // placeholder="Search Collections and Snippets"
+          placeholder="Search Collections"
         />
         <span className="icon is-small is-left">
           <SearchIcon size="small" />
