@@ -91,7 +91,7 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should have six comments', () => {
+      it('should import six comments', () => {
         expect(comments.length).toBe(6);
       });
 
@@ -315,7 +315,7 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should have six comments', () => {
+      it('should import six comments', () => {
         expect(comments.length).toBe(6);
       });
     });
