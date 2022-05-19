@@ -32,7 +32,7 @@ import SelectField from '../../../components/inputs/selectField';
 
 const { updateSnapshot } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
-const { triggerAlert } = alertOperations;
+const { triggerAlert, clearAlert } = alertOperations;
 
 const createSnapSchema = yup.object()
   .shape({
@@ -153,6 +153,7 @@ const SnapshotModal = ({
       }
     } catch (e) {
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
+      dispatch(clearAlert());
     }
   };
 

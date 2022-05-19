@@ -57,6 +57,7 @@ const userSchema = mongoose.Schema({
   verificationExpires: Date,
   resetToken: String,
   resetExpires: Date,
+  handle: String,
   identities: [identitySchema],
   termsAccepted: { type: Boolean, default: false },
   termsAcceptedAt: { type: Date },

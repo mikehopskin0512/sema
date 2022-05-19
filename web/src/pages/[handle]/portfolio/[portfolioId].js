@@ -9,30 +9,34 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 import { savePdfDocument } from '../../../utils/pdfHelpers';
 import { notify } from '../../../components/toaster/index';
 import { ALERT_TYPES } from '../../../utils/constants';
+import ErrorPage from '../../../components/portfolios/errorPage';
+import useAuthEffect from '../../../hooks/useAuthEffect';
 
-const { fetchPortfolio } = portfoliosOperations;
+const { fetchPortfolioByHandle } = portfoliosOperations;
 
 const PublicPortfolio = () => {
   const router = useRouter();
   const {
-    query: { portfolioId },
+    query: { portfolioId, handle },
   } = router;
   const portfolioRef = useRef(null);
   const dispatch = useDispatch();
-  const { token, portfolios, publicPortfolio, isLoading } = useSelector(
+  const { token, portfoliosState, publicPortfolio, isLoading } = useSelector(
     (state) => ({
       token: state.authState.token,
-      portfolios: state.portfoliosState.data.portfolios,
+      portfoliosState: state.portfoliosState,
       publicPortfolio: state.portfoliosState.data.portfolio,
       isLoading: state.portfoliosState.isFetching
     }),
   );
 
+  const portfolios = portfoliosState?.data.portfolios || []
+
   const [isPdfCreating, toggleIsPdfCreating] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchPortfolio(portfolioId));
-  }, [portfolioId, dispatch, token]);
+    dispatch(fetchPortfolioByHandle(handle, portfolioId, token));
+  }, [handle, portfolioId, dispatch, token]);
 
   const portfolio = portfolios.find(({ _id }) => _id === portfolioId) || publicPortfolio;
 
@@ -55,15 +59,18 @@ const PublicPortfolio = () => {
     <div className="has-background-white hero">
       <Helmet {...PortfolioHelmet} />
       <div className="hero-body pb-300 mx-25" ref={portfolioRef}>
-        {portfolio && (
-          <PortfolioDashboard
-            portfolio={portfolio}
-            isIndividualView
-            isLoading={isLoading}
-            pdfView={isPdfCreating}
-            savePdf={savePdf}
-          />
-        )}
+        {!isLoading && portfoliosState?.errorData?.portfolio?.isPublic === false
+          ? <ErrorPage />
+          : portfolio && (
+            <PortfolioDashboard
+              portfolio={portfolio}
+              isIndividualView
+              isLoading={isLoading}
+              pdfView={isPdfCreating}
+              savePdf={savePdf}
+            />
+          )
+        }
       </div>
     </div>
   );
