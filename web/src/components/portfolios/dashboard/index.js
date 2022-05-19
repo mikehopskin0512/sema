@@ -188,7 +188,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   }
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
   };
 
@@ -277,10 +277,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
     return <Loader />
   }
 
-  if (!isOwner && isPrivatePortfolio && isIndividualView) {
-    return <ErrorPage />
-  }
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>
@@ -318,15 +314,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         onChange={onChangeAvatar}
       /> }
       <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
-        <div className="container py-20">
-          <div className="is-relative is-flex mx-10 is-justify-content-space-between">
+        <div className={clsx("container py-20", styles['portfolio-toolbar'])}>
+          <div className="is-relative is-flex mx-10 is-justify-content-space-between is-align-items-center">
             <TitleField
               portfolio={portfolio}
               isEditable={isOwner && !pdfView}
             />
             <div className="is-relative is-flex is-align-items-center">
               {!pdfView && isOwner && isIndividualView && <>
-                <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                <div className="is-flex is-align-items-center ml-20 pr-40">
                   <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
