@@ -29,6 +29,7 @@ import { convertToRaw } from 'draft-js';
 import { createEditorState } from '../../markdownEditor/utils';
 import MarkdownEditor from '../../markdownEditor';
 import SelectField from '../../../components/inputs/selectField';
+import { fetchPortfoliosOfUser } from '../../../state/features/portfolios/actions';
 
 const { updateSnapshot } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
@@ -102,7 +103,7 @@ const SnapshotModal = ({
   useOutsideClick(modalRef, onClose);
 
   const onSubmit = async (data) => {
-    const selectedPortfolio = data.portfolio?.id;
+    const selectedPortfolio = data.portfolio?.value;
     const isPortfolioToSet = selectedPortfolio && selectedPortfolio.value !== '-1';
 
     const snapshotDataForSave = {
@@ -131,10 +132,11 @@ const SnapshotModal = ({
             ...snapshotDataForSave,
             portfolioId: selectedPortfolio,
           }, token);
+          dispatch(fetchPortfoliosOfUser(user._id, token));
           notify('Snapshot was added to your portfolio.', {
             description: (
               <>
-                <Link href={`/portfolios/${portfolioId}`}>
+                <Link href={`/${user?.identities?.[0]?.username}/portfolio/${portfolioId}`}>
                   <a>View portfolio</a>
                 </Link>
               </>
