@@ -14,7 +14,7 @@ pipeline {
     }
 
     stages {
-        stage('Run jobs') {
+        stage('Prepare the environment') {
             steps {
                 script {
                     release_regex = '(.*release.*)'
@@ -43,23 +43,27 @@ pipeline {
                             break
                     }
                 }
+            }
+        }
 
+        stage('Run jobs') {
                 parallel {
                     stage('Run web job') {
-                        build job: 'web/Jenkinsfile' , parameters: [
+                        steps {
+                            build job: 'web/Jenkinsfile' , parameters: [
                             string(name: 'ENVIRONMENT', value: env.ENVIRONMENT),
-                            string(name: 'BRANCH_NAME', value: env.BRANCH_NAME)
-                            ]
+                            string(name: 'BRANCH_NAME', value: env.BRANCH_NAME )]
+                        }
+
                     // "${env.ENVIRONMENT}-scr-web-deploy"
                     }
                 }
-            }
         }
     }
 
-    post {
-        failure {
-            slackSendsFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
+        post {
+            failure {
+                slackSendsFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
+            }
         }
-    }
 }
