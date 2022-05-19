@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import fs from 'fs';
 import logger from './logger';
 import errors from './errors';
 import { mongooseUri } from '../config';
@@ -49,7 +48,9 @@ mongoose.plugin((schema) => {
     } catch (error) {
       const isDuplicate = error.code === 11000 && error.keyPattern;
       if (isDuplicate) {
-        return await this.findOne(error.keyValue);
+        const doc = await this.findOne(error.keyValue);
+        doc.set(attrs);
+        return await doc.save();
       }
       throw error;
     }
