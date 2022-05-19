@@ -79,6 +79,22 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequests(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfPullRequests())
+          .get('/repos/Semalab/phoenix/pulls/3/reviews')
+          .reply(200, getFirstPageOfPullRequestReviews())
+          .get('/repos/Semalab/phoenix/pulls/4/reviews')
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/3')
           .reply(200, getPullRequestDetail());
       });
@@ -91,8 +107,8 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should import six comments', () => {
-        expect(comments.length).toBe(6);
+      it('should import seven comments', () => {
+        expect(comments.length).toBe(7);
       });
 
       describe('first pull request comment', () => {
@@ -168,6 +184,83 @@ describe('Import Repository Queue', () => {
           it('should store the comment author details', () => {
             expect(githubMetadata.user.id).toBe('1270524');
             expect(githubMetadata.user.login).toBe('jrock17');
+          });
+
+          it('should store the pull request author details', () => {
+            expect(githubMetadata.requester).toBe('codykenb');
+          });
+        });
+      });
+
+      describe('first pull request review comment', () => {
+        let comment;
+
+        beforeAll(() => {
+          comment = comments.find(
+            (c) => c.githubMetadata.entity === 'pullRequestReview'
+          );
+        });
+
+        it('should have source "repoSync"', () => {
+          expect(comment.source).toBe('repoSync');
+        });
+
+        it('should not reference a user', () => {
+          expect(comment.userId).toBeUndefined();
+        });
+
+        it('should have comment body', () => {
+          expect(comment.comment).toBe('LGTM');
+        });
+
+        it('should have no tags', () => {
+          expect(comment.tags).toEqual([]);
+        });
+
+        describe('GitHub metadata', () => {
+          let githubMetadata;
+
+          beforeAll(() => {
+            githubMetadata = comment.githubMetadata;
+          });
+
+          it('should store the file name', () => {
+            expect(githubMetadata.filename).toBeFalsy();
+          });
+
+          it('should store the repo name', () => {
+            expect(githubMetadata.repo).toBe('phoenix');
+          });
+
+          it('should store the GitHub comment ID', () => {
+            expect(githubMetadata.commentId).toBe('368949349');
+          });
+
+          it('should store the GitHub repository ID', () => {
+            expect(githubMetadata.repo_id).toBe('237888452');
+          });
+
+          it('should store the GitHub repository URL', () => {
+            expect(githubMetadata.url).toBe(
+              'https://github.com/Semalab/phoenix'
+            );
+          });
+
+          it('should store the creation timestamp on GitHub', () => {
+            expect(githubMetadata.created_at).toEqual(
+              new Date('2020-03-04T16:51:57Z')
+            );
+          });
+
+          it('should store the update timestamp on GitHub', () => {
+            expect(githubMetadata.updated_at).toEqual(
+              new Date('2020-03-04T16:51:57Z')
+            );
+          });
+
+          it('should store the comment author details', () => {
+            expect(githubMetadata.user.id).toBe('1045023');
+            expect(githubMetadata.user.login).toBe('pangeaware');
           });
 
           it('should store the pull request author details', () => {
@@ -303,6 +396,22 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequests(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next"',
+          })
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 2 })
+          .reply(200, getSecondPageOfPullRequests())
+          .get('/repos/Semalab/phoenix/pulls/3/reviews')
+          .reply(200, getFirstPageOfPullRequestReviews())
+          .get('/repos/Semalab/phoenix/pulls/4/reviews')
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/3')
           .reply(200, getPullRequestDetail());
       });
@@ -315,8 +424,8 @@ describe('Import Repository Queue', () => {
         comments = await findSmartCommentsByExternalId(repository.externalId);
       });
 
-      it('should import six comments', () => {
-        expect(comments.length).toBe(6);
+      it('should import seven comments', () => {
+        expect(comments.length).toBe(7);
       });
     });
 
@@ -351,6 +460,9 @@ describe('Import Repository Queue', () => {
         // Only test resuming of pull request comments.
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, []);
       });
@@ -423,6 +535,9 @@ describe('Import Repository Queue', () => {
           // Only test resuming of pull request comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/issues/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
             .query({ sort: 'created', direction: 'desc', page: 1 })
             .reply(200, []);
         });
@@ -504,6 +619,9 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, [])
+          .get('/repos/Semalab/phoenix/pulls')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, []);
       });
 
@@ -575,6 +693,9 @@ describe('Import Repository Queue', () => {
           // Only test resuming of issue comments.
           nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
             .query({ sort: 'created', direction: 'desc', page: 1 })
             .reply(200, []);
         });
@@ -985,6 +1106,460 @@ function getSecondPageOfIssueComments() {
         'eyes': 0,
       },
       performed_via_github_app: null,
+    },
+  ];
+}
+
+function getFirstPageOfPullRequests() {
+  return [
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/pulls/4',
+      id: 388073838,
+      node_id: 'MDExOlB1bGxSZXF1ZXN0Mzg4MDczODM4',
+      html_url: 'https://github.com/Semalab/phoenix/pull/4',
+      diff_url: 'https://github.com/Semalab/phoenix/pull/4.diff',
+      patch_url: 'https://github.com/Semalab/phoenix/pull/4.patch',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/4',
+      number: 4,
+      state: 'closed',
+      locked: false,
+      title:
+        'SP-22: Add dynamic filters on reports page and integration Mode iframe',
+      user: {
+        login: 'jrock17',
+        id: 1270524,
+        node_id: 'MDQ6VXNlcjEyNzA1MjQ=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1270524?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jrock17',
+        html_url: 'https://github.com/jrock17',
+        type: 'User',
+        site_admin: false,
+      },
+      body: '',
+      created_at: '2020-03-14T00:11:52Z',
+      updated_at: '2020-03-18T21:34:03Z',
+      closed_at: '2020-03-18T21:34:03Z',
+      merged_at: '2020-03-18T21:34:02Z',
+      merge_commit_sha: '1ed82fe7cebdaaa235570eb83b66be92252eaa57',
+      assignee: null,
+      assignees: [],
+      requested_reviewers: [],
+      requested_teams: [],
+      labels: [],
+      milestone: null,
+      draft: false,
+      head: {
+        label: 'Semalab:SP-22',
+        ref: 'SP-22',
+        sha: '1447357503c3692674e0ee40b1f578b4d902c90d',
+        user: {
+          login: 'Semalab',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/Semalab',
+          html_url: 'https://github.com/Semalab',
+          type: 'Organization',
+          site_admin: false,
+        },
+        repo: {
+          id: 237888452,
+          node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+          name: 'phoenix',
+          full_name: 'Semalab/phoenix',
+          private: true,
+          owner: {
+            login: 'Semalab',
+            id: 31629704,
+            node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+            avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+            gravatar_id: '',
+            url: 'https://api.github.com/users/Semalab',
+            html_url: 'https://github.com/Semalab',
+            type: 'Organization',
+            site_admin: false,
+          },
+          html_url: 'https://github.com/Semalab/phoenix',
+          description: 'Sema Code Quality Platform Web App',
+          fork: false,
+          url: 'https://api.github.com/repos/Semalab/phoenix',
+          created_at: '2020-02-03T05:00:24Z',
+          updated_at: '2022-01-10T16:48:10Z',
+          pushed_at: '2022-05-18T18:35:35Z',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+          homepage: '',
+          size: 61619,
+          stargazers_count: 0,
+          watchers_count: 0,
+          language: 'JavaScript',
+          has_issues: true,
+          has_projects: true,
+          has_downloads: true,
+          has_wiki: true,
+          has_pages: false,
+          forks_count: 1,
+          mirror_url: null,
+          archived: false,
+          disabled: false,
+          open_issues_count: 34,
+          license: null,
+          allow_forking: true,
+          is_template: false,
+          topics: [],
+          visibility: 'private',
+          forks: 1,
+          open_issues: 34,
+          watchers: 0,
+          default_branch: 'develop',
+        },
+      },
+      base: {
+        label: 'Semalab:qa',
+        ref: 'qa',
+        sha: '5586e1fbc2058552232b6e04bde865f0c7c017c7',
+        user: {
+          login: 'Semalab',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/Semalab',
+          html_url: 'https://github.com/Semalab',
+          type: 'Organization',
+          site_admin: false,
+        },
+        repo: {
+          id: 237888452,
+          node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+          name: 'phoenix',
+          full_name: 'Semalab/phoenix',
+          private: true,
+          owner: {
+            login: 'Semalab',
+            id: 31629704,
+            node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+            avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+            gravatar_id: '',
+            url: 'https://api.github.com/users/Semalab',
+            html_url: 'https://github.com/Semalab',
+            type: 'Organization',
+            site_admin: false,
+          },
+          html_url: 'https://github.com/Semalab/phoenix',
+          description: 'Sema Code Quality Platform Web App',
+          fork: false,
+          url: 'https://api.github.com/repos/Semalab/phoenix',
+          created_at: '2020-02-03T05:00:24Z',
+          updated_at: '2022-01-10T16:48:10Z',
+          pushed_at: '2022-05-18T18:35:35Z',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+          homepage: '',
+          size: 61619,
+          stargazers_count: 0,
+          watchers_count: 0,
+          language: 'JavaScript',
+          has_issues: true,
+          has_projects: true,
+          has_downloads: true,
+          has_wiki: true,
+          has_pages: false,
+          forks_count: 1,
+          mirror_url: null,
+          archived: false,
+          disabled: false,
+          open_issues_count: 34,
+          license: null,
+          allow_forking: true,
+          is_template: false,
+          topics: [],
+          visibility: 'private',
+          forks: 1,
+          open_issues: 34,
+          watchers: 0,
+          default_branch: 'develop',
+        },
+      },
+      author_association: 'CONTRIBUTOR',
+      auto_merge: null,
+      active_lock_reason: null,
+      merged: true,
+      mergeable: null,
+      rebaseable: null,
+      mergeable_state: 'unknown',
+      merged_by: {
+        login: 'pangeaware',
+        id: 1045023,
+        node_id: 'MDQ6VXNlcjEwNDUwMjM=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1045023?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/pangeaware',
+        html_url: 'https://github.com/pangeaware',
+        type: 'User',
+        site_admin: false,
+      },
+      comments: 3,
+      review_comments: 4,
+      maintainer_can_modify: false,
+      commits: 48,
+      additions: 543,
+      deletions: 35,
+      changed_files: 18,
+    },
+  ];
+}
+
+function getSecondPageOfPullRequests() {
+  return [
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+      id: 383552850,
+      node_id: 'MDExOlB1bGxSZXF1ZXN0MzgzNTUyODUw',
+      html_url: 'https://github.com/Semalab/phoenix/pull/3',
+      diff_url: 'https://github.com/Semalab/phoenix/pull/3.diff',
+      patch_url: 'https://github.com/Semalab/phoenix/pull/3.patch',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/3',
+      number: 3,
+      state: 'closed',
+      locked: false,
+      title: 'SP-224: Add reporting page, state, and wire up to API calls',
+      user: {
+        login: 'jrock17',
+        id: 1270524,
+        node_id: 'MDQ6VXNlcjEyNzA1MjQ=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1270524?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jrock17',
+        html_url: 'https://github.com/jrock17',
+        type: 'User',
+        site_admin: false,
+      },
+      body: '',
+      created_at: '2020-03-04T13:24:05Z',
+      updated_at: '2020-07-30T14:56:13Z',
+      closed_at: '2020-03-04T19:29:26Z',
+      merged_at: '2020-03-04T19:29:26Z',
+      merge_commit_sha: '5586e1fbc2058552232b6e04bde865f0c7c017c7',
+      assignee: null,
+      assignees: [],
+      requested_reviewers: [],
+      requested_teams: [],
+      labels: [],
+      milestone: null,
+      draft: false,
+      head: {
+        label: 'Semalab:SP-224',
+        ref: 'SP-224',
+        sha: '5cf414e8a9cc594cdef7b73156c8adaf68191724',
+        user: {
+          login: 'Semalab',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/Semalab',
+          html_url: 'https://github.com/Semalab',
+          type: 'Organization',
+          site_admin: false,
+        },
+        repo: {
+          id: 237888452,
+          node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+          name: 'phoenix',
+          full_name: 'Semalab/phoenix',
+          private: true,
+          owner: {
+            login: 'Semalab',
+            id: 31629704,
+            node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+            avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+            gravatar_id: '',
+            url: 'https://api.github.com/users/Semalab',
+            html_url: 'https://github.com/Semalab',
+            type: 'Organization',
+            site_admin: false,
+          },
+          html_url: 'https://github.com/Semalab/phoenix',
+          description: 'Sema Code Quality Platform Web App',
+          fork: false,
+          url: 'https://api.github.com/repos/Semalab/phoenix',
+          created_at: '2020-02-03T05:00:24Z',
+          updated_at: '2022-01-10T16:48:10Z',
+          pushed_at: '2022-05-18T18:35:35Z',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+          homepage: '',
+          size: 61619,
+          stargazers_count: 0,
+          watchers_count: 0,
+          language: 'JavaScript',
+          has_issues: true,
+          has_projects: true,
+          has_downloads: true,
+          has_wiki: true,
+          has_pages: false,
+          forks_count: 1,
+          mirror_url: null,
+          archived: false,
+          disabled: false,
+          open_issues_count: 34,
+          license: null,
+          allow_forking: true,
+          is_template: false,
+          topics: [],
+          visibility: 'private',
+          forks: 1,
+          open_issues: 34,
+          watchers: 0,
+          default_branch: 'develop',
+        },
+      },
+      base: {
+        label: 'Semalab:qa',
+        ref: 'qa',
+        sha: '0eb67e6907592253463eff8d6d21f3494b2213ca',
+        user: {
+          login: 'Semalab',
+          id: 31629704,
+          node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+          avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+          gravatar_id: '',
+          url: 'https://api.github.com/users/Semalab',
+          html_url: 'https://github.com/Semalab',
+          type: 'Organization',
+          site_admin: false,
+        },
+        repo: {
+          id: 237888452,
+          node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
+          name: 'phoenix',
+          full_name: 'Semalab/phoenix',
+          private: true,
+          owner: {
+            login: 'Semalab',
+            id: 31629704,
+            node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
+            avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
+            gravatar_id: '',
+            url: 'https://api.github.com/users/Semalab',
+            html_url: 'https://github.com/Semalab',
+            type: 'Organization',
+            site_admin: false,
+          },
+          html_url: 'https://github.com/Semalab/phoenix',
+          description: 'Sema Code Quality Platform Web App',
+          fork: false,
+          url: 'https://api.github.com/repos/Semalab/phoenix',
+          created_at: '2020-02-03T05:00:24Z',
+          updated_at: '2022-01-10T16:48:10Z',
+          pushed_at: '2022-05-18T18:35:35Z',
+          git_url: 'git://github.com/Semalab/phoenix.git',
+          ssh_url: 'git@github.com:Semalab/phoenix.git',
+          clone_url: 'https://github.com/Semalab/phoenix.git',
+          svn_url: 'https://github.com/Semalab/phoenix',
+          homepage: '',
+          size: 61619,
+          stargazers_count: 0,
+          watchers_count: 0,
+          language: 'JavaScript',
+          has_issues: true,
+          has_projects: true,
+          has_downloads: true,
+          has_wiki: true,
+          has_pages: false,
+          forks_count: 1,
+          mirror_url: null,
+          archived: false,
+          disabled: false,
+          open_issues_count: 34,
+          license: null,
+          allow_forking: true,
+          is_template: false,
+          topics: [],
+          visibility: 'private',
+          forks: 1,
+          open_issues: 34,
+          watchers: 0,
+          default_branch: 'develop',
+        },
+      },
+      author_association: 'CONTRIBUTOR',
+      auto_merge: null,
+      active_lock_reason: null,
+      merged: true,
+      mergeable: null,
+      rebaseable: null,
+      mergeable_state: 'unknown',
+      merged_by: {
+        login: 'pangeaware',
+        id: 1045023,
+        node_id: 'MDQ6VXNlcjEwNDUwMjM=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1045023?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/pangeaware',
+        html_url: 'https://github.com/pangeaware',
+        type: 'User',
+        site_admin: false,
+      },
+      comments: 1,
+      review_comments: 16,
+      maintainer_can_modify: false,
+      commits: 28,
+      additions: 2718,
+      deletions: 2283,
+      changed_files: 21,
+    },
+  ];
+}
+
+function getFirstPageOfPullRequestReviews() {
+  return [
+    {
+      id: 368949349,
+      node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MzY4OTQ5MzQ5',
+      user: {
+        login: 'pangeaware',
+        id: 1045023,
+        node_id: 'MDQ6VXNlcjEwNDUwMjM=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1045023?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/pangeaware',
+        html_url: 'https://github.com/pangeaware',
+        type: 'User',
+        site_admin: false,
+      },
+      body: 'LGTM',
+      state: 'COMMENTED',
+      html_url:
+        'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-368949349',
+      pull_request_url: 'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+      author_association: 'NONE',
+      submitted_at: '2020-03-04T16:51:57Z',
+      commit_id: 'ed9af2830a41266bbacc8f3bc18cd38ccb6f5257',
+    },
+    {
+      id: 368961965,
+      node_id: 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MzY4OTYxOTY1',
+      user: {
+        login: 'jrock17',
+        id: 1270524,
+        node_id: 'MDQ6VXNlcjEyNzA1MjQ=',
+        avatar_url:
+          'https://avatars.githubusercontent.com/u/1270524?u=0f267a0eebb8fa1d3ac7c72265e47639f8d3963a&v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jrock17',
+        html_url: 'https://github.com/jrock17',
+        type: 'User',
+        site_admin: false,
+      },
+      body: '', // Make sure we ignore this
+      state: 'COMMENTED',
+      html_url:
+        'https://github.com/Semalab/phoenix/pull/3#pullrequestreview-368961965',
+      pull_request_url: 'https://api.github.com/repos/Semalab/phoenix/pulls/3',
+      author_association: 'CONTRIBUTOR',
+      submitted_at: '2020-03-04T17:07:52Z',
+      commit_id: '41920e77176543a9bd2afe1a54ba7839ff3f7f4f',
     },
   ];
 }

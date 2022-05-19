@@ -44,6 +44,12 @@ export default async function importRepository({ id }) {
       repository,
       importComment,
     }),
+    importReviews({
+      octokit,
+      endpoint: `/repos/${owner}/${repo}/pulls`,
+      repository,
+      importComment,
+    }),
   ]);
 
   await setSyncCompleted(repository);
@@ -75,6 +81,54 @@ async function importComments({
   await repository.updateOne({ [lastPageKey]: null });
 }
 
+async function importReviews({
+  octokit,
+  endpoint,
+  entity = 'pullRequestReview',
+  repository,
+  importComment,
+}) {
+  const lastPageKey = `sync.lastPage.${entity}`;
+  const lastPage = (repository.get(lastPageKey) || 0) + 1;
+
+  const pages = octokit.paginate.iterator(endpoint, {
+    sort: 'created',
+    direction: 'desc',
+    page: lastPage,
+  });
+
+  for await (const response of pages) {
+    const page = getPageFromResponse(response);
+    logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
+    await Promise.all(
+      response.data.map((pullRequest) =>
+        importReviewsFromPullRequest({
+          octokit,
+          pullRequest,
+          importComment,
+        })
+      )
+    );
+    await repository.updateOne({ [lastPageKey]: page });
+  }
+
+  await repository.updateOne({ [lastPageKey]: null });
+}
+
+async function importReviewsFromPullRequest({
+  octokit,
+  pullRequest,
+  importComment,
+}) {
+  const { data: reviews } = await octokit.pulls.listReviews({
+    owner: pullRequest.base.repo.owner.login,
+    repo: pullRequest.base.repo.name,
+    pull_number: pullRequest.number,
+  });
+
+  await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
+}
+
 function getOctokit(repository) {
   return new Octokit({
     authStrategy: createAppAuth,
@@ -93,15 +147,15 @@ function createGitHubImporter(octokit) {
   function getEntity(githubComment) {
     if ('pull_request_review_id' in githubComment) return 'pullRequestComment';
     if ('issue_url' in githubComment) return 'issueComment';
+    if ('body' in githubComment) return 'pullRequestReview';
     throw new Error('Unknown comment type');
   }
 
   return async function importComment(githubComment) {
     const entity = getEntity(githubComment);
     const pullRequestURL =
-      entity === 'pullRequestComment'
-        ? githubComment.pull_request_url
-        : githubComment.issue_url.replace('/issues/', '/pulls/');
+      githubComment.pull_request_url ||
+      githubComment.issue_url.replace('/issues/', '/pulls/');
     const commentId = githubComment.id;
     const comment = githubComment.body;
     const { data: pullRequest } = await octokitCache.get(pullRequestURL);
@@ -112,8 +166,8 @@ function createGitHubImporter(octokit) {
       repo: repo.name,
       repo_id: repo.id,
       url: repo.html_url,
-      created_at: githubComment.created_at,
-      updated_at: githubComment.updated_at,
+      created_at: githubComment.created_at || githubComment.submitted_at,
+      updated_at: githubComment.updated_at || githubComment.submitted_at,
       user: {
         id: githubComment.user.id,
         login: githubComment.user.login,
