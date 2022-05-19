@@ -27,7 +27,8 @@ const HeaderMenu = ({
     firstName = '',
     lastName = '',
     roles = [],
-    avatarUrl: userAvatar
+    avatarUrl: userAvatar,
+    handle
   } = user;
   const fullName = `${firstName} ${lastName}`;
   const { auth: { selectedTeam, token }, teams, portfolios } = useSelector(
@@ -105,7 +106,7 @@ const HeaderMenu = ({
 
   const portfolioRedirect = () => {
     if (portfolios.length === 1) {
-      router.push(`${PATHS.PORTFOLIO.VIEW(portfolioId)}`);
+      router.push(`${PATHS.PORTFOLIO.VIEW(handle, portfolioId)}`);
     } else {
       router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
     }
