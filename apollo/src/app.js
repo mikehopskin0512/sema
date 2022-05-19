@@ -1,3 +1,4 @@
+import './shared/mongo';
 import express from 'express';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';

@@ -155,7 +155,7 @@ function createGitHubImporter(octokit) {
       entity,
     };
 
-    return await findOrCreateSmartComment({
+    return await SmartComment.findOrCreate({
       comment,
       githubMetadata,
       source: 'repoSync',
@@ -178,19 +178,6 @@ async function setSyncCompleted(repository) {
     'sync.lastPage': {},
   });
   await repository.save();
-}
-
-async function findOrCreateSmartComment(attrs) {
-  try {
-    return await SmartComment.create(attrs);
-  } catch (error) {
-    const isDuplicate =
-      error.code === 11000 && error.keyPattern?.['githubMetadata.commentId'];
-    if (isDuplicate) {
-      return await SmartComment.findOne(error.keyValue);
-    }
-    throw error;
-  }
 }
 
 // Make sure we have the latest owner/repo pairs

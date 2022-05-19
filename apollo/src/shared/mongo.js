@@ -41,8 +41,23 @@ process.on('SIGINT', () => {
   });
 });
 
-const mongoService = (() => {
-  const _verify = (done) => {
+mongoose.plugin((schema) => {
+  // eslint-disable-next-line no-param-reassign
+  schema.statics.findOrCreate = async function findOrCreate(attrs) {
+    try {
+      return await this.create(attrs);
+    } catch (error) {
+      const isDuplicate = error.code === 11000 && error.keyPattern;
+      if (isDuplicate) {
+        return await this.findOne(error.keyValue);
+      }
+      throw error;
+    }
+  };
+});
+
+const mongoService = {
+  verifyConnection(done) {
     if (mongoose.connection.readyState === 0) {
       const err = new errors.InternalServer('Not connected to MongoDB');
       logger.error(err);
@@ -50,11 +65,7 @@ const mongoService = (() => {
       return false;
     }
     return true;
-  };
+  },
+};
 
-  return {
-    verifyConnection: _verify,
-  };
-})();
-
-module.exports = mongoService;
+export default mongoService;

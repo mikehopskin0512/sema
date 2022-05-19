@@ -3,8 +3,8 @@ import { differenceInMinutes } from 'date-fns';
 import mongoose from 'mongoose';
 import Ironium from 'ironium';
 import nock from 'nock';
-import resetNocks from './nocks';
 import app from '../src/app';
+import resetNocks from './nocks';
 
 nock.disableNetConnect();
 nock.enableNetConnect('localhost');

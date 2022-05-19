@@ -35,7 +35,7 @@ export const create = async ({
   updated_at: repositoryUpdatedAt,
 }) => {
   try {
-    const repository = await Repositories.create({
+    const repository = await Repositories.findOrCreate({
       externalId,
       name,
       description,
@@ -50,13 +50,6 @@ export const create = async ({
     await handleRepoSync(repository);
     return repository;
   } catch (err) {
-    const isDuplicate =
-      err.code === 11000 && err.keyPattern?.type && err.keyPattern?.externalId;
-    if (isDuplicate) {
-      const repository = await Repositories.findOne({ type, externalId });
-      await handleRepoSync(repository);
-      return repository;
-    }
     const error = new errors.BadRequest(err);
     logger.error(error);
     throw error;
