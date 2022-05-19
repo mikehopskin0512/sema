@@ -8,6 +8,7 @@ const initialState = {
     portfolios: [],
   },
   error: {},
+  errorData: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -247,6 +248,27 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       error: action.errors,
+    };
+  case types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE:
+    return {
+      ...state,
+      isFetching: true,
+    };
+  case types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE_SUCCESS:
+    return {
+      ...state,
+      isFetching: false,
+      data: {
+        ...state.data,
+        portfolio: action.portfolio,
+      },
+    };
+  case types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE_ERROR:
+    return {
+      ...state,
+      isFetching: false,
+      error: action.errors,
+      errorData: action.errorData
     };
   case types.UPLOAD_AVATAR_ERROR:
     return {
