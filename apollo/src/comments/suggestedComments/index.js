@@ -198,9 +198,7 @@ export default (app, passport) => {
         logger.error(error);
         return res.status(error.statusCode).send(error);
       }
-    }
-
-  });
+    });
 
   route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
