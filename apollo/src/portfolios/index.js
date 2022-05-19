@@ -16,7 +16,10 @@ import {
   updateField,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
+import { findByHandle } from '../users/userService';
+import { isEmpty } from 'lodash';
 import multer from '../multer';
+import validateToken from '../middlewares/validateToken';
 import { uploadImage } from '../utils';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
@@ -139,6 +142,25 @@ export default (app, passport) => {
         await removePortfolioFromSnapshot(snapshotId, portfolioId);
       }));
       return res.status(201).send({});
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
+  route.get('/:handle/portfolio/:portfolioId', validateToken(), async (req, res) => {
+    const { params, user: reqUser } = req
+    const { handle, portfolioId } = params;
+    try {
+      const user = await findByHandle(handle);
+      const portfolio = await getPortfolioById(portfolioId, true);
+      if (portfolio.type !== 'public' && (!reqUser || reqUser._id.toString() !== portfolio.userId.toString())) {
+        return res.status(401).send({ message: `You do not have access to this portfolio`, portfolio: { isPublic: false } });
+      }
+      if (!isEmpty(user) && !isEmpty(portfolio) && user._id.toString() === portfolio.userId.toString()) {
+        return res.status(201).send(portfolio);
+      }
+      return res.status(401).send({ message: `Portfolio doesn't exist for user` });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

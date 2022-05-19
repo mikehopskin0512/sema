@@ -188,7 +188,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   }
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
   };
 
@@ -275,10 +275,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
 
   if (isLoadingScreen) {
     return <Loader />
-  }
-
-  if (!isOwner && isPrivatePortfolio && isIndividualView) {
-    return <ErrorPage />
   }
 
   return (

@@ -11,4 +11,5 @@ export const patchPortfolioTitle = (id, title, token) => patch(`/api/proxy/portf
 export const patchPortfolioOverview = (id, overview, token) => patch(`/api/proxy/portfolios/${id}/overview`, { overview }, token);
 export const createPortfolio = (portfolioData, token) => create('/api/proxy/portfolios', portfolioData, token);
 export const addSnapshotToPortfolio = (portfolioId, snapshots, token) => create(`/api/proxy/portfolios/${portfolioId}/snapshots`, { snapshots }, token);
+export const getPortfolioByUserHandle = (handle, id, token) => get(`/api/proxy/portfolios/${handle}/portfolio`, id, token);
 export const uploadAvatar = (portfolioId, body, token) => upload(`/api/proxy/portfolios/${portfolioId}/avatar`, body, token);

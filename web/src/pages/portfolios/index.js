@@ -20,7 +20,7 @@ const Portfolios = () => {
   const { authState, portfoliosState } = useSelector((state) => state);
   const { data: { portfolios } } = portfoliosState;
   const { user: userData, token } = authState;
-  const { _id: userId = '' } = userData;
+  const { _id: userId = '', handle } = userData;
   const router = useRouter();
   const { query: { tab } } = router;
 
@@ -34,7 +34,7 @@ const Portfolios = () => {
       return;
     }
     if (portfolios.length === 1) {
-      router.push(PATHS.PORTFOLIO.VIEW(portfolios[0]._id));
+      router.push(PATHS.PORTFOLIO.VIEW(handle, portfolios[0]._id));
     }
     if (portfolios.length > 1) {
       router.push(PATHS.PORTFOLIO.PORTFOLIOS);
