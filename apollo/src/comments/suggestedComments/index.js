@@ -19,9 +19,6 @@ import {
 } from './suggestedCommentService';
 
 import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
-import checkEnv from "../../middlewares/checkEnv";
-import axios from 'axios';
-import mongoose from 'mongoose';
 
 const {
   Types: { ObjectId },
