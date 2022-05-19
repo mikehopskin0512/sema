@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import logger from '../../shared/logger';
 import {
   createOrUpdate,
   findByExternalId,
@@ -21,7 +22,6 @@ const githubMetadataSchema = new Schema({
   base: String,
   requester: String,
   requesterAvatarUrl: String,
-  commentId: String,
   clone_url: String,
   user: { id: String, login: String },
   filename: { type: String, default: null },
@@ -30,10 +30,12 @@ const githubMetadataSchema = new Schema({
   title: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
-  entity: {
+  id: String,
+  type: {
     type: String,
     enum: ['pullRequestComment', 'issueComment', 'pullRequestReview'],
   },
+  commentId: String,
 });
 
 const smartCommentSchema = new Schema(
@@ -46,7 +48,7 @@ const smartCommentSchema = new Schema(
       // a user in our database if the comment author
       // exists in Sema.
       required() {
-        return this.source !== 'repoSync';
+        return this.source.origin !== 'repoSync';
       },
     },
     location: { type: String, enum: ['conversation', 'files changed'] },
@@ -57,14 +59,34 @@ const smartCommentSchema = new Schema(
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     githubMetadata: githubMetadataSchema,
     source: {
-      type: String,
-      enum: ['extension', 'repoSync'],
-      default: 'extension',
-      required: true,
+      origin: {
+        type: String,
+        enum: ['extension', 'repoSync'],
+        default: 'extension',
+      },
+      provider: {
+        type: String,
+        enum: ['github'],
+      },
+      // Unique identifier in the context of this provider.
+      id: {
+        type: String,
+      },
+      // Date of creation in the source.
+      createdAt: Date,
     },
   },
   { collection: 'smartComments', timestamps: true }
 );
+
+smartCommentSchema.pre('save', function setGitHubDefaults() {
+  if (this.source.provider === 'github') {
+    this.source.createdAt = this.githubMetadata.created_at;
+
+    const commentId = getLegacyCommentId(this.githubMetadata);
+    if (commentId) this.githubMetadata.commentId = commentId;
+  }
+});
 
 smartCommentSchema.post('save', async (doc, next) => {
   const GITHUB_URL = 'https://github.com';
@@ -168,13 +190,33 @@ smartCommentSchema.post('save', async (doc, next) => {
 
 // githubMetadata.commentId should be unique if present.
 smartCommentSchema.index(
-  { 'githubMetadata.commentId': 1 },
+  { 'source.provider': 1, 'source.id': 1 },
   {
     unique: true,
     partialFilterExpression: {
-      'githubMetadata.commentId': { $exists: true },
+      'source.provider': { $exists: true },
+      'source.id': { $exists: true },
     },
   }
 );
+
+function getLegacyCommentId({ type, id }) {
+  if (!(type && id)) return null;
+
+  switch (type) {
+    case 'pullRequestComment':
+      return `r${id}`;
+
+    case 'pullRequestReview':
+      return `pullrequestreview-${id}`;
+
+    case 'issueComment':
+      return `issuecomment-${id}`;
+
+    default:
+      logger.info(`Unknown type ${type}`);
+      return null;
+  }
+}
 
 export default mongoose.model('SmartComment', smartCommentSchema);

@@ -116,12 +116,12 @@ describe('Import Repository Queue', () => {
 
         beforeAll(() => {
           comment = comments.find(
-            (c) => c.githubMetadata.entity === 'pullRequestComment'
+            (c) => c.githubMetadata.type === 'pullRequestComment'
           );
         });
 
-        it('should have source "repoSync"', () => {
-          expect(comment.source).toBe('repoSync');
+        it('should have source origin "repoSync"', () => {
+          expect(comment.source.origin).toBe('repoSync');
         });
 
         it('should not reference a user', () => {
@@ -156,7 +156,11 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the GitHub comment ID', () => {
-            expect(githubMetadata.commentId).toBe('545317614');
+            expect(githubMetadata.id).toBe('545317614');
+          });
+
+          it('should store the legacy GitHub comment ID field', () => {
+            expect(githubMetadata.commentId).toBe('r545317614');
           });
 
           it('should store the GitHub repository ID', () => {
@@ -170,6 +174,9 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the creation timestamp on GitHub', () => {
+            expect(comment.source.createdAt).toEqual(
+              new Date('2020-12-17T18:41:44Z')
+            );
             expect(githubMetadata.created_at).toEqual(
               new Date('2020-12-17T18:41:44Z')
             );
@@ -197,12 +204,12 @@ describe('Import Repository Queue', () => {
 
         beforeAll(() => {
           comment = comments.find(
-            (c) => c.githubMetadata.entity === 'pullRequestReview'
+            (c) => c.githubMetadata.type === 'pullRequestReview'
           );
         });
 
-        it('should have source "repoSync"', () => {
-          expect(comment.source).toBe('repoSync');
+        it('should have source origin "repoSync"', () => {
+          expect(comment.source.origin).toBe('repoSync');
         });
 
         it('should not reference a user', () => {
@@ -233,7 +240,13 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the GitHub comment ID', () => {
-            expect(githubMetadata.commentId).toBe('368949349');
+            expect(githubMetadata.id).toBe('368949349');
+          });
+
+          it('should store the legacy GitHub comment ID field', () => {
+            expect(githubMetadata.commentId).toBe(
+              'pullrequestreview-368949349'
+            );
           });
 
           it('should store the GitHub repository ID', () => {
@@ -247,6 +260,9 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the creation timestamp on GitHub', () => {
+            expect(comment.source.createdAt).toEqual(
+              new Date('2020-03-04T16:51:57Z')
+            );
             expect(githubMetadata.created_at).toEqual(
               new Date('2020-03-04T16:51:57Z')
             );
@@ -274,12 +290,12 @@ describe('Import Repository Queue', () => {
 
         beforeAll(() => {
           comment = comments.find(
-            (c) => c.githubMetadata.entity === 'issueComment'
+            (c) => c.githubMetadata.type === 'issueComment'
           );
         });
 
-        it('should have source "repoSync"', () => {
-          expect(comment.source).toBe('repoSync');
+        it('should have source origin "repoSync"', () => {
+          expect(comment.source.origin).toBe('repoSync');
         });
 
         it('should not reference a user', () => {
@@ -312,7 +328,11 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the GitHub comment ID', () => {
-            expect(githubMetadata.commentId).toBe('1130011291');
+            expect(githubMetadata.id).toBe('1130011291');
+          });
+
+          it('should store the legacy GitHub comment ID field', () => {
+            expect(githubMetadata.commentId).toBe('issuecomment-1130011291');
           });
 
           it('should store the GitHub repository ID', () => {
@@ -326,6 +346,9 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the creation timestamp on GitHub', () => {
+            expect(comment.source.createdAt).toEqual(
+              new Date('2022-05-18T13:21:37.000Z')
+            );
             expect(githubMetadata.created_at).toEqual(
               new Date('2022-05-18T13:21:37.000Z')
             );
@@ -558,7 +581,7 @@ describe('Import Repository Queue', () => {
 
         it('should import all pull request comments', () => {
           const pullRequestComments = comments.filter(
-            (c) => c.githubMetadata.entity === 'pullRequestComment'
+            (c) => c.githubMetadata.type === 'pullRequestComment'
           );
           expect(pullRequestComments.length).toBe(3);
         });
@@ -716,7 +739,7 @@ describe('Import Repository Queue', () => {
 
         it('should import all issue comments', () => {
           const issueComments = comments.filter(
-            (c) => c.githubMetadata.entity === 'issueComment'
+            (c) => c.githubMetadata.type === 'issueComment'
           );
           expect(issueComments.length).toBe(3);
         });

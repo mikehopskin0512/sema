@@ -5,6 +5,7 @@ module.exports = {
   extends: ['sema/base'],
   rules: {
     'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
+    'prefer-arrow-callback': ['error', { allowUnboundThis: true }],
     'import/no-extraneous-dependencies': [
       'error',
       {

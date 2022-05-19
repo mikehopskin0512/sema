@@ -32,14 +32,14 @@ export default async function importRepository({ id }) {
   await Promise.all([
     importComments({
       octokit,
-      entity: 'pullRequestComment',
+      type: 'pullRequestComment',
       endpoint: `/repos/${owner}/${repo}/pulls/comments`,
       repository,
       importComment,
     }),
     importComments({
       octokit,
-      entity: 'issueComment',
+      type: 'issueComment',
       endpoint: `/repos/${owner}/${repo}/issues/comments`,
       repository,
       importComment,
@@ -61,11 +61,11 @@ export default async function importRepository({ id }) {
 async function importComments({
   octokit,
   endpoint,
-  entity,
+  type,
   repository,
   importComment,
 }) {
-  const pages = resumablePaginate({ octokit, endpoint, entity, repository });
+  const pages = resumablePaginate({ octokit, endpoint, type, repository });
   for await (const data of pages) {
     await Promise.all(data.map(importComment));
   }
@@ -77,7 +77,7 @@ async function importReviews({ octokit, endpoint, repository, importComment }) {
   const pages = resumablePaginate({
     octokit,
     endpoint,
-    entity: 'pullRequestReview',
+    type: 'pullRequestReview',
     repository,
   });
 
@@ -123,7 +123,7 @@ function createGitHubImporter(octokit) {
   const octokitCache = new Cache(50);
   octokitCache.materialize = async (url) => await octokit.request(url);
 
-  function getEntity(githubComment) {
+  function getType(githubComment) {
     if ('pull_request_review_id' in githubComment) return 'pullRequestComment';
     if ('issue_url' in githubComment) return 'issueComment';
     if ('body' in githubComment) return 'pullRequestReview';
@@ -131,16 +131,17 @@ function createGitHubImporter(octokit) {
   }
 
   return async function importComment(githubComment) {
-    const entity = getEntity(githubComment);
+    const type = getType(githubComment);
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
-    const commentId = githubComment.id;
     const comment = githubComment.body;
     const { data: pullRequest } = await octokitCache.get(pullRequestURL);
     const { repo } = pullRequest.base;
+    const { id } = githubComment;
     const githubMetadata = {
-      commentId,
+      type,
+      id,
       filename: githubComment.path,
       repo: repo.name,
       repo_id: repo.id,
@@ -152,13 +153,16 @@ function createGitHubImporter(octokit) {
         login: githubComment.user.login,
       },
       requester: pullRequest.user.login,
-      entity,
     };
 
     return await SmartComment.findOrCreate({
       comment,
       githubMetadata,
-      source: 'repoSync',
+      source: {
+        origin: 'repoSync',
+        provider: 'github',
+        id: `${type}:${id}`,
+      },
     });
   };
 }
@@ -196,8 +200,8 @@ async function getRepoById(octokit, id) {
 // for the page to be considered complete.
 // If any item fails to process, we'll reprocess the page
 // the next time this function is called.
-async function* resumablePaginate({ octokit, endpoint, entity, repository }) {
-  const lastPageKey = `sync.lastPage.${entity}`;
+async function* resumablePaginate({ octokit, endpoint, type, repository }) {
+  const lastPageKey = `sync.lastPage.${type}`;
   const lastPage = (repository.get(lastPageKey) || 0) + 1;
 
   const pages = octokit.paginate.iterator(endpoint, {
