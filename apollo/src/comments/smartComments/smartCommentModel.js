@@ -38,7 +38,8 @@ const smartCommentSchema = new Schema({
 smartCommentSchema.post('save', async function (doc, next) {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
+    const noReactionEmojiId = "607f0d1ed7f45b000ec2ed70";
+    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId = noReactionEmojiId, tags: tagsIds, userId, repo } = doc;
 
     if (externalId) {
       const user = await findById(userId);
