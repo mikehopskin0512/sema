@@ -55,6 +55,9 @@ export default async function importRepository({ id }) {
   await setSyncCompleted(repository);
 }
 
+// Imports pull request and issue comments.
+// https://docs.github.com/en/rest/pulls/comments#get-a-review-comment-for-a-pull-request
+// https://docs.github.com/en/rest/issues/comments#get-an-issue-comment
 async function importComments({
   octokit,
   endpoint,
@@ -68,6 +71,8 @@ async function importComments({
   }
 }
 
+// Imports comments from pull request reviews.
+// https://docs.github.com/en/rest/pulls/reviews#get-a-review-for-a-pull-request
 async function importReviews({ octokit, endpoint, repository, importComment }) {
   const pages = resumablePaginate({
     octokit,
@@ -158,12 +163,6 @@ function createGitHubImporter(octokit) {
   };
 }
 
-function getPageFromResponse(response) {
-  const url = new URL(response.url);
-  const page = parseInt(url.searchParams.get('page') || 1, 10);
-  return page;
-}
-
 async function setSyncStarted(repository) {
   repository.set({
     'sync.status': 'started',
@@ -194,6 +193,8 @@ async function findOrCreateSmartComment(attrs) {
   }
 }
 
+// Make sure we have the latest owner/repo pairs
+// for a given repository ID.
 async function getRepoById(octokit, id) {
   const { data: repo } = await octokit.request('/repositories/{id}', { id });
   return {
@@ -202,6 +203,12 @@ async function getRepoById(octokit, id) {
   };
 }
 
+// Async iterator that paginates through GitHub resources
+// and keeps track of progress (page) in the repository model.
+// Consumers must process all items in a page without errors
+// for the page to be considered complete.
+// If any item fails to process, we'll reprocess the page
+// the next time this function is called.
 async function* resumablePaginate({ octokit, endpoint, entity, repository }) {
   const lastPageKey = `sync.lastPage.${entity}`;
   const lastPage = (repository.get(lastPageKey) || 0) + 1;
@@ -213,7 +220,8 @@ async function* resumablePaginate({ octokit, endpoint, entity, repository }) {
   });
 
   for await (const response of pages) {
-    const page = getPageFromResponse(response);
+    const url = new URL(response.url);
+    const page = parseInt(url.searchParams.get('page') || 1, 10);
     logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
     yield response.data;
     await repository.updateOne({ [lastPageKey]: page });
