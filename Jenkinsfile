@@ -1,69 +1,110 @@
 #!/usr/bin/env groovy
 @Library('customSlackLibrary') _
 pipeline {
-    agent any
-
-    environment {
-        BRANCH_NAME = "${GIT_BRANCH.split('/')[1]}"
+    agent {
+        docker {
+            image 'cimg/base:2022.01'
+            args '-u root --privileged --net host'
+        }
     }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
         timestamps()
     }
 
+    environment {
+        GIPHY_KEY = credentials('giphyKey')
+    }
+
     stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'apt-get update -y && apt-get install -y awscli'
+            }
+        }
+
         stage('Prepare the environment') {
             steps {
                 script {
-                    release_regex = '(.*release.*)'
-                    env.BRANCH_NAME = BRANCH_NAME
-
-                    switch (BRANCH_NAME) {
+                    release_regex = '(.*release.*|DVPS-291)'
+                    switch (GIT_BRANCH) {
                     case 'master':
                             env.ENVIRONMENT = 'prod'
-                            buildWeb(env.ENVIRONMENT, BRANCH_NAME)
                             break
-                    case ['qa']:
-                            env.ENVIRONMENT = 'qa'
-                            buildWeb(env.ENVIRONMENT, BRANCH_NAME)
-                            break
-                    case ['qa1']:
-                            env.ENVIRONMENT = 'qa1'
-                            buildWeb(env.ENVIRONMENT, BRANCH_NAME)
+                    case ['qa', 'qa1']:
+                            env.ENVIRONMENT = GIT_BRANCH
                             break
                     case ~/$release_regex/:
                             env.ENVIRONMENT = 'staging'
-                            buildWeb(env.ENVIRONMENT, BRANCH_NAME)
                             break
                     default:
                             env.ENVIRONMENT = 'undefined'
                             error('Aborting the build. The environment is ' + env.ENVIRONMENT) // Abort the build
                             break
                     }
+
+                    JOB_PARAMETERS = [string(name: 'ENVIRONMENT', value: env.ENVIRONMENT), string(name: 'BRANCH_NAME', value: GIT_BRANCH )]
+                }
+            }
+            post {
+                failure {
+                    slackSendsFail(env.JOB_NAME, GIT_BRANCH, BUILD_URL)
                 }
             }
         }
 
         stage('Run jobs') {
-                parallel {
-                    stage('Run web job') {
-                        steps {
-                            build job: 'web/Jenkinsfile' , parameters: [
-                            string(name: 'ENVIRONMENT', value: env.ENVIRONMENT),
-                            string(name: 'BRANCH_NAME', value: env.BRANCH_NAME )]
+            failFast true
+            parallel {
+                stage('Run web job') {
+                    steps {
+                        script {
+                            build job: 'Jobs/scr-web-deploy' , parameters: JOB_PARAMETERS
                         }
-
-                    // "${env.ENVIRONMENT}-scr-web-deploy"
                     }
                 }
+                stage('Run CE job') {
+                    steps {
+                        script {
+                            build job: 'Jobs/scr-build-chrome-extension' , parameters: JOB_PARAMETERS, propagate: false
+                        }
+                    }
+                }
+                stage('Run apollo job') {
+                    steps {
+                        script {
+                            build job: 'Jobs/scr-apollo-deploy' , parameters: JOB_PARAMETERS
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Test web') {
+            when { branch pattern: '.*release.*', comparator: 'REGEXP' }
+            steps {
+                withAWS(role:'jenkins-role-to-assume', region:'us-east-1') {
+                    sh """
+                    aws ecs wait services-stable --cluster "${env.ENVIRONMENT}-frontend" --services apollo phoenix
+                    """
+                }
+
+                slackSendsRelease(GIT_BRANCH, env.GIPHY_KEY)
+
+                build job: 'Regression-tests', propagate: false
+            }
+            post {
+                failure {
+                    slackSendsFail(env.JOB_NAME, GIT_BRANCH, BUILD_URL)
+                }
+            }
         }
     }
 
-        post {
-            failure {
-                slackSendsFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
-            }
+    post {
+        success {
+            slackSendsSuccess(env.JOB_NAME, GIT_BRANCH, BUILD_URL)
         }
+    }
 }
