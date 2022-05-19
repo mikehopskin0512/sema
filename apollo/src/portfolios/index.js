@@ -16,7 +16,11 @@ import {
   updateField,
 } from './portfolioService';
 import checkEnv from '../middlewares/checkEnv';
+import { findByHandle } from '../users/userService';
+import { isEmpty } from 'lodash';
 import multer from '../multer';
+import validateToken from '../middlewares/validateToken';
+import { uploadImage } from '../utils';
 
 const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
 const route = Router();
@@ -144,12 +148,31 @@ export default (app, passport) => {
     }
   });
 
+  route.get('/:handle/portfolio/:portfolioId', validateToken(), async (req, res) => {
+    const { params, user: reqUser } = req
+    const { handle, portfolioId } = params;
+    try {
+      const user = await findByHandle(handle);
+      const portfolio = await getPortfolioById(portfolioId, true);
+      if (portfolio.type !== 'public' && (!reqUser || reqUser._id.toString() !== portfolio.userId.toString())) {
+        return res.status(401).send({ message: `You do not have access to this portfolio`, portfolio: { isPublic: false } });
+      }
+      if (!isEmpty(user) && !isEmpty(portfolio) && user._id.toString() === portfolio.userId.toString()) {
+        return res.status(201).send(portfolio);
+      }
+      return res.status(401).send({ message: `Portfolio doesn't exist for user` });
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
+    }
+  });
+
   route.post('/:portfolioId/avatar', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
     try {
       const { portfolioId } = req.params;
-      const avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${req.file.filename}`;
+      const uploadedImage = await uploadImage(req.file);
 
-      await updateField(portfolioId, 'imageUrl', avatarUrl);
+      await updateField(portfolioId, 'imageUrl', uploadedImage.Location);
 
       return res.status(200).send({});
     } catch (error) {

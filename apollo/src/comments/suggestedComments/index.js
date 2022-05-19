@@ -4,6 +4,7 @@ import yaml from 'yamljs';
 import path from 'path';
 import mongoose from 'mongoose';
 import axios from 'axios';
+import checkEnv from '../../middlewares/checkEnv';
 import { version } from '../../config';
 import logger from '../../shared/logger';
 import {
@@ -21,7 +22,6 @@ import {
   getUserCollectionsById,
   getCollectionMetadata,
 } from '../collections/collectionService';
-import checkEnv from '../../middlewares/checkEnv';
 
 const {
   Types: { ObjectId },

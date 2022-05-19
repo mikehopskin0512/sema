@@ -148,7 +148,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
         <InputField
           className="has-background-white"
           type="text"
-          placeholder="Search Collections and Snippets"
+          placeholder="Search Collections"
           onChange={(value) => onChangeFilter('query', value)}
           value={filter.query}
           iconLeft={<SearchIcon />}
