@@ -1,33 +1,53 @@
 import bunyan from 'bunyan';
+import { Transform } from 'stream';
 import { loggerEnabled } from '../config';
 
-let logger = null;
-
-logger = bunyan.createLogger({
+export default bunyan.createLogger({
   name: 'apollo',
-  streams: [{
-    stream: process.stdout,
-    level: 'info',
-  }, {
-    level: 'info',
-    type: 'rotating-file',
-    path: `logs/apollo-info.${process.pid}.log`,
-    period: '1d',
-    count: 4,
-  }, {
-    level: 'error',
-    type: 'rotating-file',
-    path: `logs/apollo-error.${process.pid}.log`,
-    period: '1d',
-    count: 4,
-  }],
+  streams: [
+    getOutputStream(),
+    {
+      level: 'info',
+      type: 'rotating-file',
+      path: `logs/apollo-info.${process.pid}.log`,
+      period: '1d',
+      count: 4,
+    },
+    {
+      level: 'error',
+      type: 'rotating-file',
+      path: `logs/apollo-error.${process.pid}.log`,
+      period: '1d',
+      count: 4,
+    },
+  ].filter(Boolean),
 });
 
-if (loggerEnabled === false) {
-  logger = bunyan.createLogger({
-    name: 'apollo-test',
-    streams: [],
-  });
-}
+function getOutputStream() {
+  if (loggerEnabled === false) return null;
 
-module.exports = logger;
+  const LEVELS = {
+    [bunyan.TRACE]: 'trace',
+    [bunyan.DEBUG]: 'debug',
+    [bunyan.INFO]: 'info',
+    [bunyan.WARN]: 'warn',
+    [bunyan.ERROR]: 'error',
+    [bunyan.FATAL]: 'fatal',
+  };
+
+  const humanReadable = new Transform({
+    objectMode: true,
+    transform(json, encoding, callback) {
+      const { level, msg, err } = JSON.parse(json);
+      const line = `${LEVELS[level]}: ${err ? err.stack : msg}\n`;
+      callback(null, line);
+    },
+  });
+
+  humanReadable.pipe(process.stdout);
+
+  return {
+    stream: humanReadable,
+    level: 'info',
+  };
+}
