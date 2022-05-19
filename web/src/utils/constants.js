@@ -207,7 +207,7 @@ export const PATHS = {
   SEMA_ADMIN: '/sema-admin',
   PORTFOLIO: {
     _: '/portfolios',
-    VIEW: (id) => `/portfolios/${id}`,
+    VIEW: (handle, id) => `/${handle}/portfolio/${id}`,
     PORTFOLIOS: '/portfolios?tab=portfolios',
     SNAPSHOTS: '/portfolios?tab=snapshots',
   },

@@ -21,6 +21,8 @@ export default async (
         // @ts-ignore
     const parsedSelector = webElements[selector];
     const webElementsArr = await $$(parsedSelector);
+    console.log("webElementsArr ----------------------------" );
+    console.log(webElementsArr)
     // @ts-ignore
     const exactlyInt = parseInt(exactly);
 
