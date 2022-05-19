@@ -62,46 +62,23 @@ async function importComments({
   repository,
   importComment,
 }) {
-  const lastPageKey = `sync.lastPage.${entity}`;
-  const lastPage = (repository.get(lastPageKey) || 0) + 1;
-
-  const pages = octokit.paginate.iterator(endpoint, {
-    sort: 'created',
-    direction: 'desc',
-    page: lastPage,
-  });
-
-  for await (const response of pages) {
-    const page = getPageFromResponse(response);
-    logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
-    await Promise.all(response.data.map(importComment));
-    await repository.updateOne({ [lastPageKey]: page });
+  const pages = resumablePaginate({ octokit, endpoint, entity, repository });
+  for await (const data of pages) {
+    await Promise.all(data.map(importComment));
   }
-
-  await repository.updateOne({ [lastPageKey]: null });
 }
 
-async function importReviews({
-  octokit,
-  endpoint,
-  entity = 'pullRequestReview',
-  repository,
-  importComment,
-}) {
-  const lastPageKey = `sync.lastPage.${entity}`;
-  const lastPage = (repository.get(lastPageKey) || 0) + 1;
-
-  const pages = octokit.paginate.iterator(endpoint, {
-    sort: 'created',
-    direction: 'desc',
-    page: lastPage,
+async function importReviews({ octokit, endpoint, repository, importComment }) {
+  const pages = resumablePaginate({
+    octokit,
+    endpoint,
+    entity: 'pullRequestReview',
+    repository,
   });
 
-  for await (const response of pages) {
-    const page = getPageFromResponse(response);
-    logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
+  for await (const data of pages) {
     await Promise.all(
-      response.data.map((pullRequest) =>
+      data.map((pullRequest) =>
         importReviewsFromPullRequest({
           octokit,
           pullRequest,
@@ -109,10 +86,7 @@ async function importReviews({
         })
       )
     );
-    await repository.updateOne({ [lastPageKey]: page });
   }
-
-  await repository.updateOne({ [lastPageKey]: null });
 }
 
 async function importReviewsFromPullRequest({
@@ -226,6 +200,26 @@ async function getRepoById(octokit, id) {
     owner: repo.owner.login,
     repo: repo.name,
   };
+}
+
+async function* resumablePaginate({ octokit, endpoint, entity, repository }) {
+  const lastPageKey = `sync.lastPage.${entity}`;
+  const lastPage = (repository.get(lastPageKey) || 0) + 1;
+
+  const pages = octokit.paginate.iterator(endpoint, {
+    sort: 'created',
+    direction: 'desc',
+    page: lastPage,
+  });
+
+  for await (const response of pages) {
+    const page = getPageFromResponse(response);
+    logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
+    yield response.data;
+    await repository.updateOne({ [lastPageKey]: page });
+  }
+
+  await repository.updateOne({ [lastPageKey]: null });
 }
 
 export { queue };
