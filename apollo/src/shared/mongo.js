@@ -11,12 +11,6 @@ const options = {
 
 mongoose.Promise = global.Promise;
 
-// if (mongooseCertPath) {
-//   const ca = [fs.readFileSync(process.cwd() + mongooseCertPath)];
-//   options.mongos.sslCA = ca;
-//   options.mongos.ca = ca;
-// }
-
 // Connect to DB
 mongoose.set('useFindAndModify', false);
 mongoose.connect(mongooseUri, options);
