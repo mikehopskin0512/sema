@@ -160,7 +160,7 @@ describe('Import Repository Queue', () => {
           });
 
           it('should store the legacy GitHub comment ID field', () => {
-            expect(githubMetadata.commentId).toBe('r545317614');
+            expect(githubMetadata.commentId).toBe('discussion_r545317614');
           });
 
           it('should store the GitHub repository ID', () => {

@@ -67,6 +67,7 @@ const smartCommentSchema = new Schema(
       provider: {
         type: String,
         enum: ['github'],
+        default: 'github',
       },
       // Unique identifier in the context of this provider.
       id: {
@@ -87,9 +88,6 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
 
   this.source.createdAt = githubMetadata.created_at;
 
-  const commentId = getCommentId(githubMetadata);
-  if (commentId) this.githubMetadata.commentId = commentId;
-
   if (source.origin === 'extension') {
     const shouldInferIds =
       !source.id && !source.type && githubMetadata.commentId;
@@ -102,6 +100,9 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
       }
     }
   }
+
+  const commentId = getCommentId(githubMetadata);
+  if (commentId) this.githubMetadata.commentId = commentId;
 });
 
 smartCommentSchema.post('save', async (doc, next) => {
@@ -220,7 +221,7 @@ function getCommentId({ type, id }) {
 
   switch (type) {
     case 'pullRequestComment':
-      return `r${id}`;
+      return `discussion_r${id}`;
 
     case 'pullRequestReview':
       return `pullrequestreview-${id}`;

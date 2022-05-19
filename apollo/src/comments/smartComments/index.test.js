@@ -1,5 +1,4 @@
 import apollo from '../../../test/apolloClient';
-// import * as portfolioService from './portfolioService';
 import { createAuthToken } from '../../auth/authService';
 import createUser from '../../../test/helpers/userHelper';
 import SmartComment from './smartCommentModel';
