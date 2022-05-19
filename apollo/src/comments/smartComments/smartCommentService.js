@@ -23,6 +23,7 @@ const {
 } = mongoose;
 const { Parser } = Json2CSV;
 
+// Creates smart comments from Chrome Extension.
 export const create = async ({
   commentId = null,
   comment = null,
@@ -43,6 +44,10 @@ export const create = async ({
       reaction,
       tags,
       githubMetadata,
+      source: {
+        origin: 'extension',
+        provider: 'github',
+      },
     });
     const savedSmartComment = await smartComment.save();
     return savedSmartComment;
