@@ -44,7 +44,10 @@ export const create = async ({
       reaction,
       tags,
       githubMetadata,
-      source: 'extension',
+      source: {
+        origin: 'extension',
+        provider: 'github',
+      },
     });
     const savedSmartComment = await smartComment.save();
     return savedSmartComment;

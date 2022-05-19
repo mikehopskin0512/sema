@@ -80,11 +80,27 @@ const smartCommentSchema = new Schema(
 );
 
 smartCommentSchema.pre('save', function setGitHubDefaults() {
-  if (this.source.provider === 'github') {
-    this.source.createdAt = this.githubMetadata.created_at;
+  const { source } = this;
+  const { githubMetadata } = this;
 
-    const commentId = getLegacyCommentId(this.githubMetadata);
-    if (commentId) this.githubMetadata.commentId = commentId;
+  if (source.provider !== 'github') return;
+
+  this.source.createdAt = githubMetadata.created_at;
+
+  const commentId = getCommentId(githubMetadata);
+  if (commentId) this.githubMetadata.commentId = commentId;
+
+  if (source.origin === 'extension') {
+    const shouldInferIds =
+      !source.id && !source.type && githubMetadata.commentId;
+    if (shouldInferIds) {
+      const { type, id } = getIdAndType(githubMetadata);
+      if (type && id) {
+        this.githubMetadata.type = type;
+        this.githubMetadata.id = id;
+        this.source.id = `${type}:${id}`;
+      }
+    }
   }
 });
 
@@ -188,7 +204,6 @@ smartCommentSchema.post('save', async (doc, next) => {
   }
 });
 
-// githubMetadata.commentId should be unique if present.
 smartCommentSchema.index(
   { 'source.provider': 1, 'source.id': 1 },
   {
@@ -200,7 +215,7 @@ smartCommentSchema.index(
   }
 );
 
-function getLegacyCommentId({ type, id }) {
+function getCommentId({ type, id }) {
   if (!(type && id)) return null;
 
   switch (type) {
@@ -217,6 +232,25 @@ function getLegacyCommentId({ type, id }) {
       logger.info(`Unknown type ${type}`);
       return null;
   }
+}
+
+function getIdAndType({ commentId }) {
+  const [, issueCommentId] = commentId.split('issuecomment-');
+  if (issueCommentId) {
+    return { type: 'issueComment', id: issueCommentId };
+  }
+
+  const [, pullRequestReviewId] = commentId.split('pullrequestreview-');
+  if (pullRequestReviewId) {
+    return { type: 'pullRequestReview', id: pullRequestReviewId };
+  }
+
+  const [, pullRequestCommentId] = commentId.match(/r(\d+)/) || [];
+  if (pullRequestCommentId) {
+    return { type: 'pullRequestComment', id: pullRequestCommentId };
+  }
+
+  return {};
 }
 
 export default mongoose.model('SmartComment', smartCommentSchema);
