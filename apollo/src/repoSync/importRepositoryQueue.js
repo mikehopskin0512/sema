@@ -6,6 +6,9 @@ import { queues } from '../queues';
 import { github } from '../config';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
+import * as jaxon from '../shared/apiJaxon';
+import { findOneByTitle as findReactionByTitle } from '../comments/reaction/reactionService';
+import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
 
 const queue = queues.self(module);
 
@@ -155,9 +158,16 @@ function createGitHubImporter(octokit) {
       requester: pullRequest.user.login,
     };
 
+    const [tags, reaction] = await Promise.all([
+      getTags(comment),
+      getReaction(comment),
+    ]);
+
     return await SmartComment.findOrCreate({
       comment,
       githubMetadata,
+      reaction: reaction?._id,
+      tags: tags.map((t) => t._id),
       source: {
         origin: 'repoSync',
         provider: 'github',
@@ -219,6 +229,22 @@ async function* resumablePaginate({ octokit, endpoint, type, repository }) {
   }
 
   await repository.updateOne({ [lastPageKey]: null });
+}
+
+async function getTags(text) {
+  const textTags = await jaxon.getTags(text);
+  const tags = await Promise.all(
+    textTags.map((tag) => findTagByLabel(tag, 'smartComment'))
+  );
+  return tags.filter(Boolean);
+}
+
+async function getReaction(text) {
+  const [textReaction] = await jaxon.getSummaries(text);
+  if (textReaction) {
+    return await findReactionByTitle(textReaction);
+  }
+  return null;
 }
 
 export { queue };

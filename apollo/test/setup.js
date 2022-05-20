@@ -5,6 +5,7 @@ import Ironium from 'ironium';
 import nock from 'nock';
 import app from '../src/app';
 import resetNocks from './nocks';
+import seed from './seed';
 
 nock.disableNetConnect();
 nock.enableNetConnect('localhost');
@@ -23,6 +24,7 @@ afterAll(async () => {
 async function clearMongoDB() {
   const collections = [...Object.values(mongoose.connection.collections)];
   await Promise.all(collections.map((collection) => collection.deleteMany()));
+  await seed();
 }
 
 expect.extend({
@@ -30,9 +32,9 @@ expect.extend({
   toEqualID(actual, expected) {
     // ObjectID#_id returns itself, so this is safe to call
     // on instances of both ObjectID and Mongoose document.
-    const actualID = actual._id;
-    const expectedID = expected._id;
-    const pass = actualID.equals(expectedID);
+    const actualID = (actual._id || actual).toString();
+    const expectedID = (expected._id || expected).toString();
+    const pass = actualID === expectedID;
     return {
       pass,
       message: () => `expected ${actualID} to match ${expectedID}`,

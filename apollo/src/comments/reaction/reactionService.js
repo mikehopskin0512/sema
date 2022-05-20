@@ -1,7 +1,8 @@
-import mongoose from "mongoose";
-import Reaction from "./reactionModel";
+import mongoose from 'mongoose';
+import Reaction from './reactionModel';
 import logger from '../../shared/logger';
 import errors from '../../shared/errors';
+import escapeRegExp from '../../shared/escape';
 
 export const getAllReactions = async () => {
   try {
@@ -17,9 +18,9 @@ export const getAllReactions = async () => {
 export const buildReactionsEmptyObject = async () => {
   try {
     const schema = {};
-    const reactions = await getAllReactions(); 
+    const reactions = await getAllReactions();
     for (const [key, value] of Object.entries(reactions)) {
-      schema[reactions[key]['_id']] = 0
+      schema[reactions[key]._id] = 0;
     }
     return schema;
   } catch (err) {
@@ -29,7 +30,7 @@ export const buildReactionsEmptyObject = async () => {
   }
 };
 
-export  const incrementReactions = (reactionsObject = {}, reaction) => {
+export const incrementReactions = (reactionsObject = {}, reaction) => {
   reactionsObject[reaction] += 1;
   return reactionsObject;
 };
@@ -38,7 +39,7 @@ export const getReactionIdKeys = async () => {
   try {
     const reactions = await getAllReactions();
     const reactionKeys = reactions.map((r) => r._id);
-    const keys = reactionKeys.reduce((a,b) => (a[b] = 0, a), {});
+    const keys = reactionKeys.reduce((a, b) => ((a[b] = 0), a), {});
     return keys;
   } catch (err) {
     logger.error(err);
@@ -46,3 +47,9 @@ export const getReactionIdKeys = async () => {
     return error;
   }
 };
+
+export const findOneByTitle = async (title) => {
+  const regexp = new RegExp(`^${escapeRegExp(title)}$`, 'i');
+  return await Reaction.findOne({ title: regexp, isActive: true });
+};
+

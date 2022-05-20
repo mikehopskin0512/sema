@@ -54,8 +54,11 @@ module.exports = {
   semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
   environment: process.env.ENV || 'unknown',
   jaxon: {
-    summariesApi: process.env.JAXON_SUMMARIES_API,
-    tagsApi: process.env.JAXON_TAGS_API,
+    summariesApi:
+      process.env.JAXON_SUMMARIES_API ||
+      'https://hephaestus-summaries.semasoftware.com',
+    tagsApi:
+      process.env.JAXON_TAGS_API || 'https://hephaestus-tags.semasoftware.com',
   },
 };
 

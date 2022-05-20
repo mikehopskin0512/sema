@@ -130,12 +130,17 @@ describe('Import Repository Queue', () => {
 
         it('should have comment body', () => {
           expect(comment.comment).toBe(
-            '@jrock17 i know this is the logic you were referring to yesterday...'
+            '@jrock17 i know this is the logic you were referring to yesterday... looks awesome and elegant'
           );
         });
 
-        it('should have no tags', () => {
-          expect(comment.tags).toEqual([]);
+        it('should have reaction', () => {
+          expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed71');
+        });
+
+        it('should have a tag', () => {
+          expect(comment.tags.length).toBe(1);
+          expect(comment.tags[0]).toEqualID('607f0594ab1bc1aecbe2ce51');
         });
 
         describe('GitHub metadata', () => {
@@ -883,7 +888,7 @@ function getSecondPageOfPullRequestComments() {
         avatar_url: 'https://avatars.githubusercontent.com/u/1270524?v=4',
         type: 'User',
       },
-      body: '@jrock17 i know this is the logic you were referring to yesterday...',
+      body: '@jrock17 i know this is the logic you were referring to yesterday... looks awesome and elegant',
       created_at: '2020-12-17T18:41:44Z',
       updated_at: '2020-12-17T20:30:14Z',
       html_url:
