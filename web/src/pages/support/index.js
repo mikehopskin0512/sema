@@ -33,7 +33,7 @@ function HelpAndSupport() {
       </div>
       <div className={styles['contact-us-container']}>
         <p className="has-text-weight-semibold has-text-black is-size-3 is-size-4-mobile px-20">Contact us</p>
-        <p className='mt-32'>We will answer in 24 hours</p>
+        <p className='mt-32'>We will answer within 24 hours</p>
         <button type="button" className="button is-primary has-text-weight-semibold mt-12" onClick={() => openSupportForm('Support')}>Contact us via Email</button>
       </div>
     </div>
