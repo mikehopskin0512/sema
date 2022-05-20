@@ -157,3 +157,13 @@
 .draggable-columns {
   flex-wrap: wrap;
 }
+
+.portfolio-toolbar {
+  margin: 0 auto;
+  @media only screen and (min-width: 1024px) {
+    margin: 0px 5%;
+  }
+  @media only screen and (min-width: 1600px) {
+    margin: 0 auto;
+  }
+}

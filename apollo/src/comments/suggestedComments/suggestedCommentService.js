@@ -464,6 +464,7 @@ export const bulkUpdateSuggestedComments = async (comments) => {
     const suggestedComments = await Promise.all(comments.map(async (comment) => ({
       ...comment,
       ...comment.tags ? { tags: await makeTagsList(comment.tags) } : {},
+      sourceMetadata: comment.source?.url ? await getLinkPreviewData(comment.source.url) : comment.sourceMetadata,
       lastModified: new Date(),
     })));
 

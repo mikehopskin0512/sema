@@ -30,7 +30,7 @@ import MarkdownEditor from '../../markdownEditor';
 
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
-const { triggerAlert } = alertOperations;
+const { triggerAlert, clearAlert } = alertOperations;
 
 const schema = yup.object()
   .shape({
@@ -108,16 +108,16 @@ const SnapshotModal = ({
           onClose(payload.data);
         }
       } else {
-        if (!portfolioId) {
-          await dispatch(fetchPortfoliosOfUser(user._id, token));
-        }
-        await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        const snapshot = await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        const snapshotPortfolios = snapshot.data.portfolios;
+        const hasNoPortfolios = !portfolioId && snapshotPortfolios.length === 1;
         notify('Snapshot was added to your portfolio', {
           description: (
             <>
               <p>You've successfully added this snapshot.</p>
-              {portfolioId ? (
-                <Link href={`/portfolios/${portfolioId}`}>
+              {/* This condition shows that the user doesn't have a portfolio yet. */}
+              {hasNoPortfolios ? (
+                <Link href={`/portfolios/${snapshotPortfolios[0]}`}>
                   <a>Go to the portfolio</a>
                 </Link>
               ) : null}
@@ -129,6 +129,7 @@ const SnapshotModal = ({
       }
     } catch (e) {
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
+      dispatch(clearAlert());
     }
   };
 

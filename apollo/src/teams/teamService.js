@@ -15,6 +15,7 @@ import { createUserRole } from '../userRoles/userRoleService';
 import { getRoleByName } from '../roles/roleService';
 import { semaCorporateTeamName } from '../config';
 import { findByUsername, getTeamUsersMetrics } from '../users/userService';
+import { uploadImage } from '../utils';
 
 const {
   Types: { ObjectId },
@@ -278,7 +279,9 @@ export const addTeamMembers = async (team, users, role) => {
 export const updateTeamAvatar = async (teamId, userId, file) => {
   const team = await Team.findById(teamId);
 
-  team.avatarUrl = `${process.env.BASE_URL_APOLLO}/static/${file.filename}`;
+  const uploadedImage = await uploadImage(file);
+
+  team.avatarUrl = uploadedImage.Location;
   await team.save();
 
   const role = await UserRole.findOne({

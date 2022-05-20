@@ -3,40 +3,6 @@ orbs:
   slack: circleci/slack@4.4
   openvpn: titel-media/openvpn@0.1.1
 jobs:
-  deploy-web:
-    environment:
-      AWS_REGION: us-east-1
-    docker:
-      - image: cimg/base:2020.01
-    steps:
-      - checkout
-      - run:
-          name: install utilities
-          command: sudo apt-get update -y && sudo apt-get install awscli -y && sudo apt-get install jq -y
-      - setup_remote_docker:
-          version: 18.09.3
-      - run:
-          name: create phoenix profile for aws cli
-          command: printf "%s\n%s\n"${AWS_REGION}"\njson" "$AWS_ACCESS_KEY_ID" "$AWS_SECRET_ACCESS_KEY" | aws configure --profile phoenix
-      - run:
-          name: set deployment environment
-          command: |
-            if [ $CIRCLE_BRANCH = "master" ]; then
-              echo 'export ENV=prod' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "qa" ]; then
-              echo 'export ENV=qa' >> $BASH_ENV
-            elif [ $CIRCLE_BRANCH = "qa1" ]; then
-              echo 'export ENV=qa1' >> $BASH_ENV
-            elif [[ "$CIRCLE_BRANCH" == "release"* ]]; then
-              echo 'export ENV=staging' >> $BASH_ENV
-            fi
-      - run:
-          name: build and deploy phoenix/web
-          command: cd web && ./build-and-deploy.sh $ENV
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-          channel: "phoenix-circleci-notifications"
   test-web:
     environment:
       AWS_REGION: us-east-1
@@ -76,12 +42,12 @@ jobs:
             elif [[ "$CIRCLE_BRANCH" == "DVPS-125" ]]; then
               echo 'export ENV=staging' >> $BASH_ENV
             fi
-      - run: 
+      - run:
           name: waiting until web and apollo get stable
           command: |
             aws ecs wait services-stable --profile phoenix --cluster "${ENV}-frontend" \
                 --services apollo phoenix
-      - run: 
+      - run:
           name: invoke jenkins test job
           command: |
             import requests
@@ -98,7 +64,7 @@ jobs:
             OVERALL_TIMEOUT = 3600 # 1 hour
 
             # job specifics: should be passed in
-            
+
             auth_token = os.getenv('JENKINS_AUTH_TOKEN')
             jenkins_uri = os.getenv('JENKINS_URI')
             job_name = os.getenv('JENKINS_JOB_NAME')
@@ -178,7 +144,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "phoenix-circleci-notifications"
+          channel: 'phoenix-circleci-notifications'
 
   deploy-apollo:
     environment:
@@ -210,7 +176,7 @@ jobs:
       - run:
           name: build and deploy apollo
           command: cd apollo && ./build-and-deploy.sh $ENV
-      - run: 
+      - run:
           name: auto-restore db
           command: |
             if [[ "$CIRCLE_BRANCH" == "release"* ]]; then
@@ -228,7 +194,7 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "phoenix-circleci-notifications"
+          channel: 'phoenix-circleci-notifications'
   build-chrome-extension:
     docker:
       - image: cimg/node:15.14.0
@@ -264,19 +230,19 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-          channel: "phoenix-circleci-notifications"
+          channel: 'phoenix-circleci-notifications'
   phoenix-notify:
     docker:
-        - image: cimg/base:2020.01
-    steps: 
+      - image: cimg/base:2020.01
+    steps:
       - checkout
       - slack/notify:
           event: pass
           template: basic_success_1
       - slack/notify:
-          branch_pattern: "release.*"
-          event: "pass"
-          channel: "release-management"
+          branch_pattern: 'release.*'
+          event: 'pass'
+          channel: 'release-management'
           custom: |
             {
               "blocks": [
@@ -297,19 +263,11 @@ jobs:
                   "alt_text": "ready"
                 }
               ]
-            } 
+            }
 workflows:
   version: 2
   primary:
     jobs:
-      - deploy-web:
-          filters:
-            branches:
-              only:
-                - qa1
-                - qa
-                - master
-                - /release-.*/
       - deploy-apollo:
           filters:
             branches:
@@ -332,11 +290,10 @@ workflows:
               only:
                 - /release-.*/
           requires:
-            - deploy-web
             - deploy-apollo
       - phoenix-notify:
-          context: 
-           - slack-secrets
+          context:
+            - slack-secrets
           filters:
             branches:
               only:
@@ -345,5 +302,4 @@ workflows:
                 - master
                 - /release-.*/
           requires:
-            - deploy-web
             - deploy-apollo

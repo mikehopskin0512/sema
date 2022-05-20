@@ -118,7 +118,7 @@ module "apollo_worker" {
   }
 
   datadog_api_key = local.datadog_apollo_api_key
-  image           = var.apollo_image
+  image           = var.apollo_worker_image
   ecs_secrets     = local.apollo_ecs_secrets
   ecs_envs = [
     {
