@@ -94,7 +94,6 @@ async function handleDuplicatesInSnapshots({ smartComment, other }) {
     },
   });
   assert(count === 0);
-  // db.snapshots.countDocuments({ 'componentData.smartComments': { $elemMatch: { smartCommentId: ObjectId('61059c00b9f8240024124f03') }}} )
 }
 
 function createProgress() {
