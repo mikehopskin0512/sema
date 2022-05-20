@@ -18,7 +18,7 @@ import { invitationsOperations } from '../../state/features/invitations';
 import { PATHS } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
-const { registerAndAuthUser, partialUpdateUser, trackProductSignUp } = authOperations;
+const { registerAndAuthUser, partialUpdateUser } = authOperations;
 const { fetchInvite, redeemInvite, trackRedeemedInvite } = invitationsOperations;
 
 const InviteError = () => (
@@ -83,7 +83,6 @@ const RegistrationForm = (props) => {
       if (identity) { newUser.identities = [identity]; }
       dispatch(registerAndAuthUser(newUser, invitation));
     }
-    trackProductSignUp(email);
   };
 
   const renderEmailList = (emails) => {
