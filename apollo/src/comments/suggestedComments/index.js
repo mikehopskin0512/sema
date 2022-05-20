@@ -3,7 +3,6 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import path from 'path';
 import mongoose from 'mongoose';
-import axios from 'axios';
 import * as jaxon from '../../shared/apiJaxon';
 import checkEnv from '../../middlewares/checkEnv';
 import { version } from '../../config';
