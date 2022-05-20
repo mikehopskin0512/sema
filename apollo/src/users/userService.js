@@ -12,7 +12,7 @@ const {
 } = mongoose;
 
 export const create = async (user, inviteToken) => {
-  let {
+  const {
     password = null,
     username = '',
     firstName,
@@ -21,10 +21,10 @@ export const create = async (user, inviteToken) => {
     avatarUrl = '',
     identities,
     terms,
-    isWaitlist,
-    origin = 'waitlist',
     collections,
   } = user;
+  let { isWaitlist } = user;
+  let { origin = 'waitlist' } = user;
 
   // Verify token expires 24 hours from now
   const token = await generateToken();
@@ -287,7 +287,7 @@ export const joinOrg = async (userId, org) => {
   }
 };
 
-export const validateLogin = async (username = '', password) => {
+export const validateLogin = async (username, password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
 
@@ -480,8 +480,8 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
       const repo = identityRepo[index];
       return { name, id, fullName, githubUrl, ...repo };
     });
-    identity = Object.assign(identity, { repositories });
-    await updateIdentity(user, identity);
+    const newIdentity = Object.assign(identity, { repositories });
+    await updateIdentity(user, newIdentity);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
