@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
 import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
 import {getPullRequestsByExternalId} from "./smartCommentService";
-import { EMOJIS_ID } from '../suggestedComments/constants.js'
+import { EMOJIS_ID } from '../suggestedComments/constants.js';
 
 const { Schema } = mongoose;
 
