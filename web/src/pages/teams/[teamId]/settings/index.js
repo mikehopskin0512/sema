@@ -64,13 +64,19 @@ const TeamSettings = () => {
       id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
-    (isTeamAdminOrLibraryEditor() && {
+    (isSemaAdmin() && {
       label: 'Labels Management',
       path: PATHS.TEAMS.LABELS(teamId),
       id: TAB.labels,
       icon: <TagIcon />,
     }),
   ];
+
+  useEffect(() => {
+    if (!isSemaAdmin() && tab === 'labels') {
+      setDefaultTag()
+    }
+  }, [tab])
 
   return (
     <>
