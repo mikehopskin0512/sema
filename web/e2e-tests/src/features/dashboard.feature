@@ -112,13 +112,13 @@ Feature: Dashboard options
         And  I expect that element "supportModalCancelBtn" becomes displayed
         And  I expect that element "supportModalSubmitBtn" becomes displayed
 
-    @PTA38
-    Scenario: Footer action Idea Board leads to info page
-        When I open the site "/dashboard"
-        Then I expect that element "reposContainer" becomes displayed
-        When I wait on element "footerIdeaBoardBtn" for 10000ms to be displayed
-        And  I click on the button "footerIdeaBoardBtn"
-        #TODO: Andryi please check this step
+#    @PTA38     #not needed anymore
+#    Scenario: Footer action Idea Board leads to info page
+#        When I open the site "/dashboard"
+#        Then I expect that element "reposContainer" becomes displayed
+#        When I wait on element "footerIdeaBoardBtn" for 10000ms to be displayed
+#        And  I click on the button "footerIdeaBoardBtn"
+#        #TODO: Andryi please check this step
         #And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
         #And  I expect that element "createIdeaInput" becomes displayed
 
@@ -136,15 +136,15 @@ Feature: Dashboard options
         And  I expect that element "supportModalCancelBtn" becomes displayed
         And  I expect that element "supportModalSubmitBtn" becomes displayed
 
-    @PTA40
-    Scenario: Footer Idea Board button opens the board in a new tab
-        When I open the site "/dashboard"
-        Then I expect that element "ideaBoardBtn" becomes displayed
-        When I click on the button "ideaBoardBtn"
-        And  I pause for 2000ms
-        And  I switch to opened tab
-        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
-        And  I expect that element "createIdeaInput" becomes displayed
+#    @PTA40  #not needed anymore
+#    Scenario: Footer Idea Board button opens the board in a new tab
+#        When I open the site "/dashboard"
+#        Then I expect that element "ideaBoardBtn" becomes displayed
+#        When I click on the button "ideaBoardBtn"
+#        And  I pause for 200000ms
+#        And  I switch to opened tab
+#        And  I expect that the absolute url is "sema.uservoice.com/forums/934797-sema"
+#        And  I expect that element "createIdeaInput" becomes displayed
 
     @PTA41 @smoke
     Scenario: Footer's social media links are present on a buttons

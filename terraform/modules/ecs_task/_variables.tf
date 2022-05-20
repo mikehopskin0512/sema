@@ -61,10 +61,7 @@ variable "image" {
 variable "health_check_path" {
   type        = string
   description = "A path in the ecs for checking app health"
-  validation {
-    condition     = length(compact([null, "", var.health_check_path])) > 0
-    error_message = "ECR image tag must not be empty."
-  }
+  default     = null
 }
 
 variable "ecs_external_access" {
@@ -79,4 +76,5 @@ variable "ecs_external_access" {
     lb_zone_id        = string
   })
   description = "Configuration parameters for allowing external access."
+  default     = null
 }
