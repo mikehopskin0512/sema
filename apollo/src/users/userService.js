@@ -29,6 +29,7 @@ export const create = async (user, inviteToken) => {
       isWaitlist = false;
       origin = 'invitation';
     }
+      const { username: handle } = identities.length && identities.find((item) => item?.provider === 'github');
 
     const newUser = new User({
       username: username.toLowerCase(),
@@ -37,6 +38,7 @@ export const create = async (user, inviteToken) => {
       lastName,
       jobTitle,
       avatarUrl,
+      handle,
       identities,
       isWaitlist,
       origin,
@@ -646,3 +648,16 @@ export async function getTeamUsersMetrics(teamId) {
   ]);
   return doc;
 }
+
+export const findByHandle = async (handle) => {
+  try {
+    const query = User.findOne({ handle: handle.toLowerCase() });
+    const user = await query.lean().exec();
+
+    return user;
+  } catch (err) {
+    logger.error(err);
+    const error = new errors.NotFound(err);
+    return error;
+  }
+};
