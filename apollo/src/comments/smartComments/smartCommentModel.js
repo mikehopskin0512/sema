@@ -10,6 +10,7 @@ import {
   findByUsernameOrIdentity,
 } from '../../users/userService';
 import { getPullRequestsByExternalId } from './smartCommentService';
+import { EMOJIS_ID } from '../suggestedComments/constants.js';
 
 const { Schema } = mongoose;
 
@@ -97,10 +98,11 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
 smartCommentSchema.post('save', async (doc, next) => {
   const GITHUB_URL = 'https://github.com';
   try {
+    const { NO_REACTION } = EMOJIS_ID;
     const {
       githubMetadata: { repo_id: externalId, url, requester, pull_number },
       _id,
-      reaction: reactionId,
+      reaction: reactionId = NO_REACTION,
       tags: tagsIds,
       userId,
       repo,
