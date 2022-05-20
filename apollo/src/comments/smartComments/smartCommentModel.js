@@ -10,7 +10,7 @@ import {
   findByUsernameOrIdentity,
 } from '../../users/userService';
 import { getPullRequestsByExternalId } from './smartCommentService';
-import { EMOJIS_ID } from '../suggestedComments/constants.js';
+import { EMOJIS_ID } from '../suggestedComments/constants';
 
 const { Schema } = mongoose;
 
