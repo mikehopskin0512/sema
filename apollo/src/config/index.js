@@ -53,6 +53,10 @@ module.exports = {
   semaCorporateTeamName: process.env.SEMA_CORPORATE_TEAM_NAME,
   semaCorporateTeamId: process.env.SEMA_CORPORATE_TEAM_ID,
   environment: process.env.ENV || 'unknown',
+  jaxon: {
+    summariesApi: process.env.JAXON_SUMMARIES_API,
+    tagsApi: process.env.JAXON_TAGS_API,
+  },
 };
 
 function getPort() {
