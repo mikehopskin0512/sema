@@ -72,6 +72,12 @@ const TeamSettings = () => {
     }),
   ];
 
+  useEffect(() => {
+    if (!isSemaAdmin() && tab === 'labels') {
+      setDefaultTag()
+    }
+  }, [tab])
+
   return (
     <>
       <div className="has-background-white">
