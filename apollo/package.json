@@ -15,7 +15,7 @@
     "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
     "lint": "eslint .",
     "test": "jest --forceExit",
-    "migrate": "babel-node node_modules/.bin/migrate-mongo"
+    "migrate": "babel-node node_modules/.bin/migrate-mongo up"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",
