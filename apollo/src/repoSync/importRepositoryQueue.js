@@ -189,7 +189,6 @@ async function setSyncCompleted(repository) {
   repository.set({
     'sync.status': 'completed',
     'sync.completedAt': new Date(),
-    'sync.lastPage': {},
   });
   await repository.save();
 }
@@ -211,24 +210,61 @@ async function getRepoById(octokit, id) {
 // If any item fails to process, we'll reprocess the page
 // the next time this function is called.
 async function* resumablePaginate({ octokit, endpoint, type, repository }) {
-  const lastPageKey = `sync.lastPage.${type}`;
-  const lastPage = (repository.get(lastPageKey) || 0) + 1;
+  const progressKey = `sync.progress.${type}`;
+  const currentPage = repository.get(progressKey)?.currentPage || 0;
+  const lastPage = repository.get(progressKey)?.lastPage;
+
+  const alreadyDone = lastPage && currentPage + 1 > lastPage;
+  if (alreadyDone) {
+    return;
+  }
 
   const pages = octokit.paginate.iterator(endpoint, {
     sort: 'created',
     direction: 'desc',
-    page: lastPage,
+    page: currentPage + 1,
   });
 
   for await (const response of pages) {
     const url = new URL(response.url);
     const page = parseInt(url.searchParams.get('page') || 1, 10);
+    const pagination = parseLinkHeader(response.headers.link);
+    if (pagination.last) {
+      await repository.updateOne({
+        [`${progressKey}.lastPage`]: pagination.last,
+      });
+    }
     logger.info(`Repo sync: Processing comments ${endpoint} page ${page}`);
     yield response.data;
-    await repository.updateOne({ [lastPageKey]: page });
+    await repository.updateOne({ [`${progressKey}.currentPage`]: page });
   }
+}
 
-  await repository.updateOne({ [lastPageKey]: null });
+// Parse GitHub HTTP Link header into an object
+// with name and page number, e.g.:
+//
+//   {
+//     prev: 3,
+//     next: 5,
+//     last: 10
+//   }
+//
+// Adapted from https://gist.github.com/niallo/3109252.
+function parseLinkHeader(header) {
+  if (!header) return {};
+
+  const parts = header.split(',');
+  const object = parts.reduce((accum, part) => {
+    const section = part.split(';');
+    const url = new URL(section[0].replace(/<(.*)>/, '$1').trim());
+    const name = section[1].replace(/rel="(.*)"/, '$1').trim();
+    const page = parseInt(url.searchParams.get('page'), 10);
+    return {
+      ...accum,
+      [name]: page,
+    };
+  }, {});
+  return object;
 }
 
 async function getTags(text) {

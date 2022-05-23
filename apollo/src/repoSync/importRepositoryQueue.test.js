@@ -58,7 +58,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -70,7 +70,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -82,7 +82,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequests(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -393,6 +393,10 @@ describe('Import Repository Queue', () => {
 
     describe('processing queue again', () => {
       beforeAll(() => {
+        resetNocks();
+      });
+
+      beforeAll(() => {
         nock('https://api.github.com')
           .get('/repositories/237888452')
           .reply(200, getRepositoryDetail());
@@ -403,7 +407,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -415,7 +419,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -427,7 +431,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequests(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -460,6 +464,10 @@ describe('Import Repository Queue', () => {
     describe('when syncing pull request comments fails half-way through', () => {
       let handlerError;
 
+      beforeAll(() => {
+        resetNocks();
+      });
+
       beforeAll(async () => {
         repository.sync = {};
         await repository.save();
@@ -477,7 +485,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequestComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="next", <https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=2&sort=created&direction=desc>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -489,10 +497,14 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, [])
+          .reply(200, [], {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, []);
+          .reply(200, [], {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          });
       });
 
       beforeAll(() => {
@@ -514,7 +526,7 @@ describe('Import Repository Queue', () => {
       });
 
       it('should fail', () => {
-        expect(handlerError).not.toBeNull();
+        expect(handlerError).toBeTruthy();
       });
 
       it('should import some comments', () => {
@@ -540,6 +552,10 @@ describe('Import Repository Queue', () => {
       });
 
       describe('running job again', () => {
+        beforeAll(() => {
+          resetNocks();
+        });
+
         beforeAll(() => {
           nock('https://api.github.com')
             .get('/repositories/237888452')
@@ -603,10 +619,6 @@ describe('Import Repository Queue', () => {
           it('should have sync completed at timestamp', () => {
             expect(repository.sync.completedAt).toBeCloseToDate(new Date());
           });
-
-          it('should not have a record of the last page processed', () => {
-            expect(repository.sync.lastPage.pullRequestComment).toBe(null);
-          });
         });
       });
     });
@@ -635,7 +647,7 @@ describe('Import Repository Queue', () => {
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfIssueComments(), {
-            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="next"',
+            Link: '<https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="next", <https://api.github.com/repos/Semalab/phoenix/issues/comments?sort=created&direction=desc&page=2>; rel="last"',
           })
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 2 })
@@ -647,10 +659,14 @@ describe('Import Repository Queue', () => {
         nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, [])
+          .reply(200, [], {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          })
           .get('/repos/Semalab/phoenix/pulls')
           .query({ sort: 'created', direction: 'desc', page: 1 })
-          .reply(200, []);
+          .reply(200, [], {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls?page=1&sort=created&direction=desc>; rel="last"',
+          });
       });
 
       beforeAll(() => {
@@ -761,10 +777,46 @@ describe('Import Repository Queue', () => {
           it('should have sync completed at timestamp', () => {
             expect(repository.sync.completedAt).toBeCloseToDate(new Date());
           });
+        });
+      });
 
-          it('should not have a record of the last page processed', () => {
-            expect(repository.sync.lastPage.issueComment).toBe(null);
-          });
+      describe('running job again (after complete)', () => {
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repositories/237888452')
+            .reply(200, getRepositoryDetail());
+        });
+
+        beforeAll(() => {
+          // Set the first page to always fail. This is to
+          // ensure that the job is not re-importing the
+          // issue comments if it already completed doing so
+          // in a previous run.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(500, 'GitHub error');
+        });
+
+        beforeAll(() => {
+          // Only test resuming of issue comments.
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query({ sort: 'created', direction: 'desc', page: 1 })
+            .reply(200, []);
+        });
+
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/3')
+            .reply(200, getPullRequestDetail());
+        });
+
+        it('should not fail', async () => {
+          await handler({ id: repository.id });
         });
       });
     });
