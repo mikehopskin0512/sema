@@ -1,4 +1,5 @@
 import { createAppAuth } from '@octokit/auth-app';
+import { differenceInMinutes } from 'date-fns';
 import { Octokit } from '@octokit/rest';
 import Cache from 'caching-map';
 import logger from '../shared/logger';
@@ -150,6 +151,9 @@ function getOwnerAndRepo(repository) {
 }
 
 function createGitHubImporter(octokit) {
+  const commentsWithoutID = new Cache(10);
+  commentsWithoutID.materialize = loadCommentsWithoutID;
+
   const octokitCache = new Cache(50);
   octokitCache.materialize = async (url) => await octokit.request(url);
 
@@ -160,15 +164,44 @@ function createGitHubImporter(octokit) {
     throw new Error('Unknown comment type');
   }
 
+  async function loadCommentsWithoutID(repoID) {
+    return await SmartComment.find({
+      'source.provider': 'github',
+      'source.id': null,
+      'githubMetadata.repo_id': repoID,
+    }).lean();
+  }
+
   return async function importComment(githubComment) {
     const type = getType(githubComment);
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');
-    const comment = githubComment.body;
+    const text = githubComment.body;
     const { data: pullRequest } = await octokitCache.get(pullRequestURL);
     const { repo } = pullRequest.base;
     const { id } = githubComment;
+    const otherComments = await commentsWithoutID.get(repo.id);
+    const candidateForDuplicate = otherComments.find((comment) => {
+      const isSameUser =
+        comment.githubMetadata.user.id.toString() ===
+        githubComment.user.id.toString();
+      const isSimilarTime =
+        differenceInMinutes(
+          comment.githubMetadata.created_at,
+          new Date(githubComment.created_at)
+        ) <= 1;
+      return isSameUser && isSimilarTime;
+    });
+    if (candidateForDuplicate) {
+      const existingComment = await SmartComment.findById(
+        candidateForDuplicate._id
+      );
+      existingComment.githubMetadata.type = type;
+      existingComment.githubMetadata.id = id;
+      await existingComment.save();
+      return existingComment;
+    }
     const githubMetadata = {
       type,
       id,
@@ -186,12 +219,12 @@ function createGitHubImporter(octokit) {
     };
 
     const [tags, reaction] = await Promise.all([
-      getTags(comment),
-      getReaction(comment),
+      getTags(text),
+      getReaction(text),
     ]);
 
     return await SmartComment.findOrCreate({
-      comment,
+      comment: text,
       githubMetadata,
       reaction: reaction?._id,
       tags: tags.map((t) => t._id),

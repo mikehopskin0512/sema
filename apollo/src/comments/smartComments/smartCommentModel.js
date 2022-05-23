@@ -88,16 +88,17 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
   this.source.createdAt = githubMetadata.created_at;
 
   if (source.origin === 'extension') {
-    const shouldInferIds =
-      !source.id && !source.type && githubMetadata.commentId;
+    const shouldInferIds = !source.id && githubMetadata.commentId;
     if (shouldInferIds) {
       const { type, id } = getIdAndType(githubMetadata);
       if (type && id) {
         this.githubMetadata.type = type;
         this.githubMetadata.id = id;
-        this.source.id = `${type}:${id}`;
       }
     }
+
+    if (!source.id && githubMetadata.type && githubMetadata.id)
+      this.source.id = `${githubMetadata.type}:${githubMetadata.id}`;
   }
 
   const commentId = getCommentId(githubMetadata);

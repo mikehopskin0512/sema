@@ -1,7 +1,11 @@
+import assert from 'assert';
 import nock from 'nock';
 import resetNocks from '../../test/nocks';
 import * as userService from '../users/userService';
-import { findByExternalId as findSmartCommentsByExternalId } from '../comments/smartComments/smartCommentService';
+import {
+  findByExternalId as findSmartCommentsByExternalId,
+  create as createSmartComment,
+} from '../comments/smartComments/smartCommentService';
 import { create as createRepository } from '../repositories/repositoryService';
 import Repository from '../repositories/repositoryModel';
 import SmartComment from '../comments/smartComments/smartCommentModel';
@@ -30,6 +34,12 @@ describe('Import Repository Queue', () => {
 
   describe('newly added repository', () => {
     let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
 
     beforeAll(async () => {
       repository = await createRepository({
@@ -972,6 +982,124 @@ describe('Import Repository Queue', () => {
         it('should not query the GitHub API', () => {
           expect(githubNock.isDone()).toBe(false);
         });
+      });
+    });
+  });
+
+  describe('when an another comment exists without ID', () => {
+    let comment;
+
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      comment = await createSmartComment({
+        comment:
+          '@jrock17 this function feels like it should live somewhere else as well with repo code.',
+        userId: user.id,
+        location: 'files changed',
+        suggestedComments: [],
+        reaction: '607f0d1ed7f45b000ec2ed71',
+        tags: [],
+        githubMetadata: {
+          // Comment ID must be null for this test.
+          commentId: null,
+          filename: null,
+          repo: 'phoenix',
+          repo_id: '237888452',
+          url: 'https://github.com/Semalab/phoenix',
+          // created_at intentionally within seconds of the value
+          // provided by the API.
+          created_at: '2020-12-17T18:35:00Z',
+          updated_at: '2020-12-17T20:30:14Z',
+          user: {
+            id: '1045023',
+            login: 'pangeaware',
+          },
+          requester: 'jrock17',
+        },
+      });
+
+      await createSmartComment({
+        comment: 'LGTM',
+        userId: user.id,
+        location: 'files changed',
+        suggestedComments: [],
+        reaction: null,
+        tags: [],
+        githubMetadata: {
+          // Comment ID must be null for this test.
+          commentId: null,
+          filename: null,
+          repo: 'phoenix',
+          repo_id: '237888452',
+          url: 'https://github.com/Semalab/phoenix',
+          // created_at intentionally far away from the comment
+          // provided by the API.
+          created_at: '2020-12-17T18:25:00Z',
+          updated_at: '2020-12-17T20:30:14Z',
+          user: {
+            id: '1045023',
+            login: 'pangeaware',
+          },
+          requester: 'jrock17',
+        },
+      });
+      assert.equal(await SmartComment.countDocuments(), 2);
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        installationId: '25676597',
+        addedBy: user,
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, getFirstPageOfPullRequestComments().slice(0, 1), {
+          Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+        })
+        .get('/repos/Semalab/phoenix/issues/comments')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, [])
+        .get('/repos/Semalab/phoenix/pulls')
+        .query({ sort: 'created', direction: 'desc', page: 1 })
+        .reply(200, []);
+    });
+
+    beforeAll(() => {
+      nock('https://api.github.com')
+        .get('/repos/Semalab/phoenix/pulls/3')
+        .reply(200, getPullRequestDetailPR3());
+    });
+
+    beforeAll(async () => {
+      await handler({ id: repository.id });
+    });
+
+    it('should not create a new smart comment', async () => {
+      const count = await SmartComment.countDocuments();
+      expect(count).toBe(2);
+    });
+
+    describe('existing comment', () => {
+      beforeAll(async () => {
+        comment = await SmartComment.findById(comment._id);
+      });
+
+      it('should have GitHub ID', () => {
+        expect(comment.githubMetadata.id).toBe('545313646');
+        expect(comment.source.id).toBe('pullRequestComment:545313646');
       });
     });
   });
