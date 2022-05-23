@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const Ironium = require('ironium');
+const { loadQueues } = require('../src/queues');
+const logger = require('../src/shared/logger');
+
+async function start() {
+  await loadQueues();
+  Ironium.start();
+  logger.info('Started worker');
+}
+
+start();

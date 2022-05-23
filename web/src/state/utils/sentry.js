@@ -37,7 +37,7 @@ const initialize = async (ctx) => {
   // Redirects w/ exclusions
   if (
     !(ctx.pathname).includes(PATHS.LOGIN) &&
-    !(ctx.pathname).includes(`${PATHS.PORTFOLIO._}/[portfolioId]`) &&
+    !(ctx.pathname).includes(`[handle]/portfolio/[portfolioId]`) &&
     !(ctx.pathname).includes(`${PATHS.TEAMS._}/invite/[teamId]`) &&
     !(ctx.pathname).includes(PATHS.ONBOARDING) &&
     !(ctx.pathname).includes(PATHS.GUIDES) &&

@@ -21,6 +21,8 @@ import setGlobalParamIntoSearchField from "../support/action/setGlobalParamIntoS
 import clickElementByIndex from "../support/action/clickElementByIndex";
 import switchTab from '../support/action/switchTab';
 import changeTheUserRoleForTheTeam from "../support/action/changeTheUserRoleForTheTeam";
+import setParticularInputFieldWithTimestamp from "../support/action/setParticularInputFieldWithTimestamp";
+import setGlobalArrayByIndexToInputField from "../support/action/setGlobalArrayByIndexToInputField";
 
 /**
  * Abstracting some steps by functionality. 
@@ -53,8 +55,19 @@ When(
 );
 
 When(
+    /^I (add|set) (\d+)(st|nd|rd|th) created label name to the inputfield "([^"]*)?"$/,
+// @ts-ignore
+    setGlobalArrayByIndexToInputField
+);
+
+When(
     /^I (add|set) "([^"]*)?" to the inputfield "([^"]*)?"$/,
     setInputField
+);
+
+When(
+    /^I (add|set) "([^"]*)?" with timestamp to the ([^"]*)?(st|nd|rd|th) inputfield "([^"]*)?"$/,
+    setParticularInputFieldWithTimestamp
 );
 
 When(

@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon, PdfIcon } from '../../Icons';
+import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon } from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -15,7 +15,7 @@ import EditPortfolio from '../editModal';
 import { portfoliosOperations } from '../../../state/features/portfolios';
 import DashboardDraggableList from './dnd/dashboardList';
 import { changePortfolioOrder, getNewLayoutItems, getPageLayout, getSavedData, getSnapsIds } from './dnd/helpers';
-import { black950, gray600 } from '../../../../styles/_colors.module.scss';
+import { black950, gray600, white50 } from '../../../../styles/_colors.module.scss';
 import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
@@ -135,7 +135,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
       if (portfolio.layout?.length) {
         // Reload list if new items appears
         const newItemsIds = getNewLayoutItems(snapshots.map(i => i?._id), getSnapsIds(portfolio.layout)) ?? [];
-
         const newItems = snapshots?.filter(i => newItemsIds.includes(i._id));
         return newItems.length ?
           [...getSavedData(portfolio.layout, snapshots), ...getPageLayout(newItems, portfolio)]
@@ -188,7 +187,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
   }
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(portfolio._id)}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(userData.handle, portfolio._id)}`);
     changeIsCopied(true);
   };
 
@@ -233,7 +232,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
 
     await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
       toggleEditModal(false);
-      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
     }))
   }
 
@@ -277,10 +275,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
     return <Loader />
   }
 
-  if (!isOwner && isPrivatePortfolio && isIndividualView) {
-    return <ErrorPage />
-  }
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>
@@ -318,15 +312,15 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         onChange={onChangeAvatar}
       /> }
       <div className={clsx('mb-10', pdfView ? styles.pdfTitle : styles.title)}>
-        <div className="container py-20">
-          <div className="is-relative is-flex mx-10 is-justify-content-space-between">
+        <div className={clsx("container py-20", styles['portfolio-toolbar'])}>
+          <div className="is-relative is-flex mx-10 is-justify-content-space-between is-align-items-center">
             <TitleField
               portfolio={portfolio}
               isEditable={isOwner && !pdfView}
             />
             <div className="is-relative is-flex is-align-items-center">
               {!pdfView && isOwner && isIndividualView && <>
-                <div className="is-flex is-align-items-center ml-20 pr-40" style={{ paddingTop: '3px' }}>
+                <div className="is-flex is-align-items-center ml-20 pr-40">
                   <div className="field sema-toggle switch-input m-0 is-flex is-align-items-center" onClick={onClickChild} aria-hidden>
                     <div className={clsx(styles['textContainer'])}>
                       {isPublicPortfolio ?
@@ -360,11 +354,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   >
                     + Add Snapshot
                   </button>
-                  {/* TODO: Will uncomment Save as PDF feature if everything is fixed. */}
-                  {/* <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}> */}
-                  {/*   <p>Save as PDF</p> */}
-                  {/*   <PdfIcon /> */}
-                  {/* </button>  */}
                   {portfolios.length === 1 &&
                     (
                       <button
@@ -376,6 +365,10 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                       </button>
                     )
                   }
+                  <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
+                    <p>Save as PDF</p>
+                    <PdfIcon />
+                  </button>   
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
@@ -408,14 +401,11 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
         <div className="portfolio-content mb-30 container">
           <PortfolioGuideBanner isActive={snapshots.length === 0} />
           <div className={clsx(styles['user-summary'])}>
-          {/* //ToDo: return this functionality when upload pictures to S3 will be finished */}
-            {/* <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}> */}
-            <div className={styles['user-image']}>
+            <div className={clsx(styles['user-image'], 'is-clickable')} onClick={() => toggleAddAvatarModal(true)}>
               <img className={clsx('is-rounded', styles.avatar)} src={user.avatar} alt="user_icon" />
-              {/* //ToDo: return this component when upload pictures to S3 will be finished */}
-              {/* {isOwner && <div className="is-absolute">
+              {isOwner && <div className="is-absolute">
                 <CameraIcon size="large" color={white50}/>
-              </div>} */}
+              </div>}
             </div>
             <div className={clsx(styles.username, 'has-background-gray-900 pl-250 has-text-white-0 is-flex is-align-items-center')}>
               <div className="is-full-width">

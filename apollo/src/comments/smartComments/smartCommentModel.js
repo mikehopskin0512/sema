@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
 import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
 import {getPullRequestsByExternalId} from "./smartCommentService";
+import { EMOJIS_ID } from '../suggestedComments/constants.js';
 
 const { Schema } = mongoose;
 
@@ -38,7 +39,8 @@ const smartCommentSchema = new Schema({
 smartCommentSchema.post('save', async function (doc, next) {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
+    const { NO_REACTION } = EMOJIS_ID;
+    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId = NO_REACTION, tags: tagsIds, userId, repo } = doc;
 
     if (externalId) {
       const user = await findById(userId);
