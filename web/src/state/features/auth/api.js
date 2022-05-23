@@ -3,6 +3,7 @@ import { get, getAll, create, update, updateItem, patch } from '../../utils/api'
 export const auth = (params) => create('/api/proxy/auth/token', params);
 export const exchangeToken = (params) => create('/api/proxy/auth/refresh-token', params);
 export const getUser = (userId, token) => get('/api/proxy/users', userId, token);
+// export const getUserNotificationsToken = (userId, token) => get(`/api/proxy/users/${userId}/`, '', token);
 export const createUser = (params) => create('/api/proxy/users', params);
 export const putUser = (id, item, token) => updateItem(`/api/proxy/users`, id, item, token);
 export const patchUser = (id, params, token) => patch(`/api/proxy/users/${id}`, params, token);

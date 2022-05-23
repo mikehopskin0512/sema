@@ -148,6 +148,7 @@ const fetchCurrentUser = (id, token) => async (dispatch) => {
     const payload = await getUser(id, token);
     if (!payload) { return false; }
     const { data: { user } } = payload;
+    console.log("fetchCurrentUser -> user", user)
     dispatch(fetchCurrentUserSuccess(user));
     return user;
   } catch (error) {

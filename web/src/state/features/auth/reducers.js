@@ -13,6 +13,8 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
+  // console.log("\n\n\n\n reducer -> state", action.type, action/*, state, action.type, action, '\n\n\n\n'*/)
+  if(action.user) action.user.actio_type = action.type;
   switch (action.type) {
   case REQUEST_CREATE_SUGGEST_COMMENT_SUCCESS: {
     const collections = state.user.collections.map((collection) => {
@@ -60,9 +62,11 @@ const reducer = (state = initialState, action) => {
       error: action.errors,
     };
   case types.HYDRATE_USER:
+    console.log("reducer -> user: action.user", action.user)
     return {
       ...state,
       user: action.user,
+      notificationsToken: action.user.notificationsToken,
       userVoiceToken: action.userVoiceToken,
     };
   case types.DEAUTHENTICATE:
@@ -177,10 +181,14 @@ const reducer = (state = initialState, action) => {
       isFetching: true,
     };
   case types.FETCH_CURRENT_USER_SUCCESS:
+      console.log("reducer -> action", action)
     return {
       ...state,
       isFetching: false,
-      user: action.user,
+      user: {
+        ...action.user,
+        notificationToken: action.notificationToken,
+      },
       error: {},
     };
   case types.FETCH_CURRENT_USER_ERROR:

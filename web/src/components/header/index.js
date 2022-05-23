@@ -15,6 +15,7 @@ import usePermission from '../../hooks/usePermission';
 import { teamsOperations } from '../../state/features/teams';
 import { portfoliosOperations } from '../../state/features/portfolios';
 import Logo from '../Logo';
+import NotificationFeed from '../notificationFeed';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
@@ -161,6 +162,7 @@ const Header = () => {
                   selectedTeam={selectedTeam}
                 />
               </div>
+              <NotificationFeed/>
               {/* Hamburger menu (mobile & tablet) */}
               <div className="navbar-start is-hidden-desktop">
                 <UserHeaderNav
