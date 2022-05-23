@@ -208,7 +208,7 @@ smartCommentSchema.index(
 );
 
 function getCommentId({ type, id }) {
-  if (!(type && id)) return null;
+  if (!type || !id) return null;
 
   switch (type) {
     case 'pullRequestComment':
