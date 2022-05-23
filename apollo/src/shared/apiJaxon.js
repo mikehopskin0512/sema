@@ -1,6 +1,7 @@
 import axios from 'axios';
 import http from 'http';
 import https from 'https';
+import axiosThrottle from 'axios-request-throttle';
 import { jaxon } from '../config';
 
 const tagsEndpoint = `${jaxon.tagsApi}/tags`;
@@ -10,6 +11,10 @@ const client = axios.create({
   httpAgent: new http.Agent({ keepAlive: true }),
   httpsAgent: new https.Agent({ keepAlive: true }),
 });
+
+// Don't overwhelm Jaxon, except in tests.
+if (process.env.NODE_ENV !== 'test')
+  axiosThrottle.use(client, { requestsPerSecond: 20 });
 
 export async function getTags(text) {
   const data = await getTagsRaw(text);
