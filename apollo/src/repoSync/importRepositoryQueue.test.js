@@ -745,12 +745,14 @@ describe('Import Repository Queue', () => {
       });
 
       describe('running job again (after complete)', () => {
+        let githubNock;
+
         beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job is not re-importing the
           // issue comments if it already completed doing so
           // in a previous run.
-          nock('https://api.github.com')
+          githubNock = nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/issues/comments')
             .query(() => true)
             .reply(500, 'GitHub error');
@@ -767,14 +769,12 @@ describe('Import Repository Queue', () => {
             .reply(200, []);
         });
 
-        beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repos/Semalab/phoenix/pulls/3')
-            .reply(200, getPullRequestDetailPR3());
+        beforeAll(async () => {
+          await handler({ id: repository.id });
         });
 
-        it('should not fail', async () => {
-          await handler({ id: repository.id });
+        it('should not query GitHub', async () => {
+          expect(githubNock.isDone()).toBe(false);
         });
       });
     });
@@ -941,12 +941,14 @@ describe('Import Repository Queue', () => {
       });
 
       describe('running job again (after complete)', () => {
+        let githubNock;
+
         beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job is not re-importing the
           // issue comments if it already completed doing so
           // in a previous run.
-          nock('https://api.github.com')
+          githubNock = nock('https://api.github.com')
             .get('/repos/Semalab/phoenix/pulls')
             .query(() => true)
             .reply(500, 'GitHub error');
@@ -963,8 +965,12 @@ describe('Import Repository Queue', () => {
             .reply(200, []);
         });
 
-        it('should not fail', async () => {
+        beforeAll(async () => {
           await handler({ id: repository.id });
+        });
+
+        it('should not query the GitHub API', () => {
+          expect(githubNock.isDone()).toBe(false);
         });
       });
     });
