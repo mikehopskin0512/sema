@@ -265,9 +265,9 @@ export default (app, passport) => {
             recipient: email,
             senderName: fullName(req.user),
             senderEmail: req.user.username,
-            sender: req.user._id,
-            team: teamId,
-            role,
+            senderId: req.user._id,
+            teamId,
+            roleId: role,
           });
 
           const {

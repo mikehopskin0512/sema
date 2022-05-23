@@ -220,23 +220,24 @@ const TeamManagement = ({ activeTeam }) => {
       <div className='is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30'>
         <div className='is-size-4 has-text-weight-semibold has-text-black-950'>Team Management</div>
         <div className="is-flex">
-          {(isTeamAdmin || isSemaAdmin) && (
-            <button
-              className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])}
-              onClick={onInviteLinkCopy}
-            >
-              <CopyButtonIcon size='small' />
-              <span className='ml-10'>Copy Invitation Link</span>
-            </button>
-          )}
-          <button
-            className='button is-primary border-radius-4px'
-            type='button'
-            onClick={goToInvitePage}
-          >
-            <PlusIcon size='small' />
-            <span className='ml-10'>Invite New Members</span>
-          </button>
+          {/* TODO: uncomment when it will be needed  */}
+          {/* {(isTeamAdmin || isSemaAdmin) && ( */}
+          {/*   <button */}
+          {/*     className={clsx('button is-primary is-outlined mr-8', styles['invite-button'])} */}
+          {/*     onClick={onInviteLinkCopy} */}
+          {/*   > */}
+          {/*     <CopyButtonIcon size='small' /> */}
+          {/*     <span className='ml-10'>Copy Invitation Link</span> */}
+          {/*   </button> */}
+          {/* )} */}
+          {/* <button */}
+          {/*   className='button is-primary border-radius-4px' */}
+          {/*   type='button' */}
+          {/*   onClick={goToInvitePage} */}
+          {/* > */}
+          {/*   <PlusIcon size='small' /> */}
+          {/*   <span className='ml-10'>Invite New Members</span> */}
+          {/* </button> */}
         </div>
       </div>
       <div className='hero-body py-0 px-0'>

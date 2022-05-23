@@ -217,7 +217,7 @@ export default (app, passport) => {
           role: invitation.roleId }),
         redeemInvite(user._id, token),
       ]);
-      return res.sendStatus(200);
+      return res.sendStatus(200).send(invitation?.teamId ? { teamId:  invitation.teamId} : {});
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);

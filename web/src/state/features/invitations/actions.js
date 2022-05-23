@@ -216,11 +216,12 @@ export const revokeInvite = (id, userId, token, recipient) => async (dispatch) =
   }
 };
 
-export const acceptInvite = (invitationToken, token) => async (dispatch) => {
+export const acceptInvite = (invitationToken, token, successCallback) => async (dispatch) => {
   try {
     dispatch(requestAcceptInvitation());
-    await postAcceptInvite(invitationToken, { }, token);
+    const { teamId }  = await postAcceptInvite(invitationToken, {}, token);
     dispatch(requestAcceptInvitationSuccess());
+    if (typeof successCallback === 'function' && teamId) successCallback(teamId);
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
