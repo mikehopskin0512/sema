@@ -27,29 +27,27 @@ export default async function importRepository({ id }) {
 
   await setSyncStarted(repository);
 
-  const octokit = getOctokit(repository);
-  const { owner, repo } = await getRepoById(octokit, repository.externalId);
-
+  const octokit = await getOctokit(repository);
   const importComment = createGitHubImporter(octokit);
 
   await Promise.all([
     importComments({
       octokit,
       type: 'pullRequestComment',
-      endpoint: `/repos/${owner}/${repo}/pulls/comments`,
+      endpoint: `/repos/{owner}/{repo}/pulls/comments`,
       repository,
       importComment,
     }),
     importComments({
       octokit,
       type: 'issueComment',
-      endpoint: `/repos/${owner}/${repo}/issues/comments`,
+      endpoint: `/repos/{owner}/{repo}/issues/comments`,
       repository,
       importComment,
     }),
     importReviews({
       octokit,
-      endpoint: `/repos/${owner}/${repo}/pulls`,
+      endpoint: `/repos/{owner}/{repo}/pulls`,
       repository,
       importComment,
     }),
@@ -111,15 +109,44 @@ async function importReviewsFromPullRequest({
   await Promise.all(reviews.filter((r) => r.body.trim()).map(importComment));
 }
 
-function getOctokit(repository) {
+async function getOctokit(repository) {
+  const installationId =
+    repository.installationId ||
+    (await findInstallationIdForRepository(repository));
+
   return new Octokit({
     authStrategy: createAppAuth,
     auth: {
       appId: github.appId,
       privateKey: github.privateKey,
-      installationId: repository.installationId,
+      installationId,
     },
   });
+}
+
+const appOctokit = new Octokit({
+  authStrategy: createAppAuth,
+  auth: {
+    appId: github.appId,
+    privateKey: github.privateKey,
+  },
+});
+
+async function findInstallationIdForRepository(repository) {
+  const { owner, repo } = getOwnerAndRepo(repository);
+  const { data: installation } = await appOctokit.apps.getRepoInstallation({
+    owner,
+    repo,
+  });
+  return installation.id;
+}
+
+function getOwnerAndRepo(repository) {
+  const [, , , owner, repo] = repository.cloneUrl.split('/');
+  return {
+    owner,
+    repo: repo.replace(/\.git$/, ''),
+  };
 }
 
 function createGitHubImporter(octokit) {
@@ -193,16 +220,6 @@ async function setSyncCompleted(repository) {
   await repository.save();
 }
 
-// Make sure we have the latest owner/repo pairs
-// for a given repository ID.
-async function getRepoById(octokit, id) {
-  const { data: repo } = await octokit.request('/repositories/{id}', { id });
-  return {
-    owner: repo.owner.login,
-    repo: repo.name,
-  };
-}
-
 // Async iterator that paginates through GitHub resources
 // and keeps track of progress (page) in the repository model.
 // Consumers must process all items in a page without errors
@@ -219,7 +236,10 @@ async function* resumablePaginate({ octokit, endpoint, type, repository }) {
     return;
   }
 
+  const { owner, repo } = getOwnerAndRepo(repository);
   const pages = octokit.paginate.iterator(endpoint, {
+    owner,
+    repo,
     sort: 'created',
     direction: 'desc',
     page: currentPage + 1,

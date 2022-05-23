@@ -49,12 +49,6 @@ describe('Import Repository Queue', () => {
     describe('processing queue', () => {
       beforeAll(() => {
         nock('https://api.github.com')
-          .get('/repositories/237888452')
-          .reply(200, getRepositoryDetail());
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequestComments(), {
@@ -398,12 +392,6 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         nock('https://api.github.com')
-          .get('/repositories/237888452')
-          .reply(200, getRepositoryDetail());
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/pulls/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfPullRequestComments(), {
@@ -472,12 +460,6 @@ describe('Import Repository Queue', () => {
         repository.sync = {};
         await repository.save();
         await SmartComment.deleteMany({});
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
-          .get('/repositories/237888452')
-          .reply(200, getRepositoryDetail());
       });
 
       beforeAll(() => {
@@ -557,12 +539,6 @@ describe('Import Repository Queue', () => {
         });
 
         beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repositories/237888452')
-            .reply(200, getRepositoryDetail());
-        });
-
-        beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job can pick up pagination
           // where it left off.
@@ -638,12 +614,6 @@ describe('Import Repository Queue', () => {
 
       beforeAll(() => {
         nock('https://api.github.com')
-          .get('/repositories/237888452')
-          .reply(200, getRepositoryDetail());
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
           .get('/repos/Semalab/phoenix/issues/comments')
           .query({ sort: 'created', direction: 'desc', page: 1 })
           .reply(200, getFirstPageOfIssueComments(), {
@@ -715,12 +685,6 @@ describe('Import Repository Queue', () => {
 
       describe('running job again', () => {
         beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repositories/237888452')
-            .reply(200, getRepositoryDetail());
-        });
-
-        beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job can pick up pagination
           // where it left off.
@@ -782,12 +746,6 @@ describe('Import Repository Queue', () => {
 
       describe('running job again (after complete)', () => {
         beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repositories/237888452')
-            .reply(200, getRepositoryDetail());
-        });
-
-        beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job is not re-importing the
           // issue comments if it already completed doing so
@@ -832,12 +790,6 @@ describe('Import Repository Queue', () => {
         repository.sync = {};
         await repository.save();
         await SmartComment.deleteMany({});
-      });
-
-      beforeAll(() => {
-        nock('https://api.github.com')
-          .get('/repositories/237888452')
-          .reply(200, getRepositoryDetail());
       });
 
       beforeAll(() => {
@@ -919,12 +871,6 @@ describe('Import Repository Queue', () => {
 
       describe('running job again', () => {
         beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repositories/237888452')
-            .reply(200, getRepositoryDetail());
-        });
-
-        beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job can pick up pagination
           // where it left off.
@@ -996,12 +942,6 @@ describe('Import Repository Queue', () => {
 
       describe('running job again (after complete)', () => {
         beforeAll(() => {
-          nock('https://api.github.com')
-            .get('/repositories/237888452')
-            .reply(200, getRepositoryDetail());
-        });
-
-        beforeAll(() => {
           // Set the first page to always fail. This is to
           // ensure that the job is not re-importing the
           // issue comments if it already completed doing so
@@ -1030,47 +970,6 @@ describe('Import Repository Queue', () => {
     });
   });
 });
-
-function getRepositoryDetail() {
-  return {
-    id: 237888452,
-    node_id: 'MDEwOlJlcG9zaXRvcnkyMzc4ODg0NTI=',
-    name: 'phoenix',
-    full_name: 'Semalab/phoenix',
-    private: true,
-    owner: {
-      login: 'Semalab',
-      id: 31629704,
-      node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
-      avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
-      url: 'https://api.github.com/users/Semalab',
-      html_url: 'https://github.com/Semalab',
-      type: 'Organization',
-      site_admin: false,
-    },
-    html_url: 'https://github.com/Semalab/phoenix',
-    description: 'Sema Code Quality Platform Web App',
-    fork: false,
-    url: 'https://api.github.com/repos/Semalab/phoenix',
-    created_at: '2020-02-03T05:00:24Z',
-    updated_at: '2022-01-10T16:48:10Z',
-    pushed_at: '2022-05-17T15:44:01Z',
-    clone_url: 'https://github.com/Semalab/phoenix.git',
-    archived: false,
-    disabled: false,
-    organization: {
-      login: 'Semalab',
-      id: 31629704,
-      node_id: 'MDEyOk9yZ2FuaXphdGlvbjMxNjI5NzA0',
-      avatar_url: 'https://avatars.githubusercontent.com/u/31629704?v=4',
-      gravatar_id: '',
-      url: 'https://api.github.com/users/Semalab',
-      html_url: 'https://github.com/Semalab',
-      type: 'Organization',
-      site_admin: false,
-    },
-  };
-}
 
 function getFirstPageOfPullRequestComments() {
   return [
