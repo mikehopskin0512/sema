@@ -62,7 +62,7 @@ const PortfolioList = () => {
   };
 
   const copyToClipboard = (id) => {
-    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(id)}`);
+    navigator.clipboard.writeText(`${SEMA_APP_URL}${PATHS.PORTFOLIO.VIEW(user.handle, id)}`);
     setCopiedToClipboard(id);
   };
 
@@ -108,7 +108,7 @@ const PortfolioList = () => {
       accessor: 'title',
       className: 'p-16 has-text-weight-semibold has-text-black-900',
       Cell: ({ row }) => (
-        <Link href={PATHS.PORTFOLIO.VIEW(row.values.id)}>
+        <Link href={PATHS.PORTFOLIO.VIEW(user.handle, row.values.id)}>
           <span className="is-clickable has-text-black-900">{row.values.title}</span>
         </Link>
       ),

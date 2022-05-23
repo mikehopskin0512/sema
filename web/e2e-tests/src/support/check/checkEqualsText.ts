@@ -1,8 +1,6 @@
 import type { Selector } from 'webdriverio';
 // @ts-ignore
 import webElements = require('../sema_web_elements.json');
-
-// @ts-ignore
 /**
  * Check if the given elements text is the same as the given text
  * @param  {String}   elementType   Element type (element or button)
@@ -22,9 +20,7 @@ export default async (
      * @type {String}
      */
     let command: 'getText' | 'getValue' = 'getValue';
-
     const parsedSelector = webElements[selector];
-
     if (
         elementType === 'button'
         || (await $(parsedSelector).getAttribute('value')) === null

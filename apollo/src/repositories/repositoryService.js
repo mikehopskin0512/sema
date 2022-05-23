@@ -1,46 +1,82 @@
-import _ from "lodash";
-import { endOfDay, toDate, differenceInCalendarDays, format, sub } from "date-fns";
+import _ from 'lodash';
+import {
+  endOfDay,
+  toDate,
+  differenceInCalendarDays,
+  format,
+  sub,
+} from 'date-fns';
 import Repositories from './repositoryModel';
-import Users from './../users/userModel';
-import { getReactionIdKeys } from "../comments/reaction/reactionService";
-import { getRepoUsersMetrics } from "../users/userService";
-import { findByExternalId as findSmartCommentsByExternalId, getRepoSmartCommentsMetrics } from '../comments/smartComments/smartCommentService';
+import Users from '../users/userModel';
+import { getReactionIdKeys } from '../comments/reaction/reactionService';
+import { getRepoUsersMetrics } from '../users/userService';
+import {
+  findByExternalId as findSmartCommentsByExternalId,
+  getRepoSmartCommentsMetrics,
+} from '../comments/smartComments/smartCommentService';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { metricsStartDate } from '../shared/utils';
 import publish from '../shared/sns';
+import { queue as importRepositoryQueue } from '../repoSync/importRepositoryQueue';
 
 const snsTopic = process.env.AMAZON_SNS_CROSS_REGION_TOPIC;
 
-export const create = async (repository) => {
+export const create = async ({
+  id: externalId,
+  name,
+  language,
+  description,
+  type,
+  installationId,
+  cloneUrl,
+  addedBy,
+  created_at: repositoryCreatedAt,
+  updated_at: repositoryUpdatedAt,
+}) => {
   try {
-    const {
-      id: externalId, name, language, description, type,
-      cloneUrl,
-      created_at: repositoryCreatedAt, updated_at: repositoryUpdatedAt
-    } = repository;
-    const newRepository = new Repositories({
+    const repository = await Repositories.create({
       externalId,
       name,
       description,
       type,
+      installationId,
+      'sync.addedBy': addedBy,
       language,
       cloneUrl,
       repositoryCreatedAt,
-      repositoryUpdatedAt
-    })
-    const savedRepository = await newRepository.save();
-    return savedRepository;
+      repositoryUpdatedAt,
+    });
+    await handleRepoSync(repository);
+    return repository;
   } catch (err) {
+    const isDuplicate =
+      err.code === 11000 && err.keyPattern?.type && err.keyPattern?.externalId;
+    if (isDuplicate) {
+      const repository = await Repositories.findOne({ type, externalId });
+      await handleRepoSync(repository);
+      return repository;
+    }
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
+async function handleRepoSync(repository) {
+  const shouldStartSync = !!(
+    repository.type === 'github' && repository.installationId
+  );
+  if (shouldStartSync) {
+    await importRepositoryQueue.queueJob({ id: repository.id });
+  }
+}
+
 export const createMany = async (repositories) => {
   try {
-    const updatedRepositories = await Repositories.insertMany(repositories, { ordered: false });
+    const updatedRepositories = await Repositories.insertMany(repositories, {
+      ordered: false,
+    });
     return updatedRepositories;
   } catch (err) {
     // When using "unordered" insertMany, Mongo will ignore dup key errors and only insert new records
@@ -52,14 +88,17 @@ export const createMany = async (repositories) => {
 
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
 export const get = async (_id) => {
   try {
     const query = Repositories.find({ _id });
-    const repository = await query.lean().populate('sourceId', 'externalSourceId').exec();
+    const repository = await query
+      .lean()
+      .populate('sourceId', 'externalSourceId')
+      .exec();
 
     return repository;
   } catch (err) {
@@ -72,7 +111,10 @@ export const get = async (_id) => {
 export const findByOrg = async (orgId) => {
   try {
     const query = Repositories.find({ orgId });
-    const repositories = await query.lean().populate('sourceId', 'externalSourceId').exec();
+    const repositories = await query
+      .lean()
+      .populate('sourceId', 'externalSourceId')
+      .exec();
 
     return repositories;
   } catch (err) {
@@ -99,7 +141,11 @@ export const sendNotification = async (msg) => {
 export const createOrUpdate = async (repository) => {
   if (!repository.externalId) return false;
   try {
-    const query = await Repositories.update({ externalId: repository.externalId }, repository, { upsert: true, setDefaultsOnInsert: true });
+    await Repositories.update(
+      { externalId: repository.externalId },
+      repository,
+      { upsert: true, setDefaultsOnInsert: true }
+    );
     return true;
   } catch (err) {
     logger.error(err);
@@ -120,7 +166,7 @@ export const findByExternalId = async (externalId) => {
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
 
 export const getRepository = async (_id) => {
   try {
@@ -134,19 +180,20 @@ export const getRepository = async (_id) => {
 };
 
 export const getRepositories = async (params, populateUsers) => {
-  const {
-    ids,
-    searchQuery = '',
-  } = params;
+  const { ids, searchQuery = '' } = params;
   try {
     const searchRegEx = new RegExp(searchQuery, 'ig');
 
     const query = Repositories.find({
-        _id: { $in: ids },
-        name: { $regex: searchRegEx },
+      _id: { $in: ids },
+      name: { $regex: searchRegEx },
     });
     if (populateUsers) {
-      query.populate({ path: 'repoStats.userIds', select: 'avatarUrl', model: 'User' });
+      query.populate({
+        path: 'repoStats.userIds',
+        select: 'avatarUrl',
+        model: 'User',
+      });
     }
     const repositories = await query.lean();
     return repositories;
@@ -158,16 +205,13 @@ export const getRepositories = async (params, populateUsers) => {
 };
 
 export const findByExternalIds = async (params, populateUsers) => {
-  const {
-    externalIds,
-    searchQuery,
-  } = params;
+  const { externalIds, searchQuery } = params;
   const searchRegEx = new RegExp(searchQuery, 'ig');
 
   try {
     const query = Repositories.find({
-      'externalId': { $in: externalIds },
-      'name': { $regex: searchRegEx },
+      externalId: { $in: externalIds },
+      name: { $regex: searchRegEx },
     });
     if (populateUsers) {
       query.populate({
@@ -186,17 +230,17 @@ export const findByExternalIds = async (params, populateUsers) => {
 };
 
 async function getRepoMetrics(externalId) {
-  let usersMetrics = await getRepoUsersMetrics(externalId);
-  let commentsMetrics = await getRepoSmartCommentsMetrics(externalId);
-  let auxDate = new Date(metricsStartDate);
-  let today = new Date();
+  const usersMetrics = await getRepoUsersMetrics(externalId);
+  const commentsMetrics = await getRepoSmartCommentsMetrics(externalId);
+  const auxDate = new Date(metricsStartDate);
+  const today = new Date();
   let metrics = [];
   while (auxDate <= today) {
-    let dateAsString = auxDate.toISOString().split('T')[0];
-    let values = commentsMetrics?.[dateAsString] ?? {
+    const dateAsString = auxDate.toISOString().split('T')[0];
+    const values = commentsMetrics?.[dateAsString] ?? {
       comments: 0,
       pullRequests: 0,
-      commenters: 0
+      commenters: 0,
     };
     values.users = usersMetrics?.[dateAsString] ?? 0;
     metrics = [...metrics, values];
@@ -205,41 +249,65 @@ async function getRepoMetrics(externalId) {
   return metrics;
 }
 
-export const aggregateRepositories = async (params, includeSmartComments, date) => {
+export const aggregateRepositories = async (
+  params,
+  includeSmartComments,
+  date
+) => {
   try {
     // Get Repos by externalId
     const repos = await findByExternalIds(params, true);
     if (repos.length > 0) {
       // Tally stats
-      const repositories = Promise.all(repos.map(async (repo) => {
-        const { _id, externalId = '', name = '', createdAt, updatedAt, repoStats } = repo;
-        const { smartComments = 0, smartCommenters = 0, smartCodeReviews = 0, semaUsers = 0, ...rawRepoStats } = repoStats;
-        const metrics = await getRepoMetrics(externalId);
-        const data = {
-          repoStats: {
-            smartComments,
-            smartCommenters,
-            smartCodeReviews,
-            semaUsers,
+      const repositories = Promise.all(
+        repos.map(async (repo) => {
+          const {
+            _id,
+            externalId = '',
+            name = '',
+            createdAt,
+            updatedAt,
+            repoStats,
+          } = repo;
+          const {
+            smartComments = 0,
+            smartCommenters = 0,
+            smartCodeReviews = 0,
+            semaUsers = 0,
             ...rawRepoStats
-          },
-          metrics,
-          _id,
-          externalId,
-          name,
-          createdAt,
-          users: repo.repoStats.userIds,
-          updatedAt,
-        };
-        if (includeSmartComments) {
-          const smartComments = await findSmartCommentsByExternalId(externalId, true, date ? {
-            $gte: toDate(new Date(date.startDate)),
-            $lte: toDate(endOfDay(new Date(date.endDate))),
-          } : undefined);
-          data.smartcomments = smartComments;
-        }
-        return data;
-      }));
+          } = repoStats;
+          const metrics = await getRepoMetrics(externalId);
+          const data = {
+            repoStats: {
+              smartComments,
+              smartCommenters,
+              smartCodeReviews,
+              semaUsers,
+              ...rawRepoStats,
+            },
+            metrics,
+            _id,
+            externalId,
+            name,
+            createdAt,
+            users: repo.repoStats.userIds,
+            updatedAt,
+            smartcomments: includeSmartComments
+              ? await findSmartCommentsByExternalId(
+                  externalId,
+                  true,
+                  date
+                    ? {
+                        $gte: toDate(new Date(date.startDate)),
+                        $lte: toDate(endOfDay(new Date(date.endDate))),
+                      }
+                    : undefined
+                )
+              : null,
+          };
+          return data;
+        })
+      );
       return repositories;
     }
     return [];
@@ -252,45 +320,46 @@ export const aggregateRepositories = async (params, includeSmartComments, date) 
 
 export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
   try {
-    let condition = {
-      "$and": []
+    const condition = {
+      $and: [],
     };
     const from = new Date(dateFrom);
     const to = new Date(dateTo);
 
     let dateDuration = differenceInCalendarDays(to, from);
     if (dateFrom) {
-      condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
+      condition.$and.push({ $gt: ['$$el.createdAt', from] });
     }
     if (dateTo) {
-      condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
+      condition.$and.push({ $lt: ['$$el.createdAt', to] });
     }
     const repositories = await Repositories.aggregate([
-      { $match: { externalId, } },
+      { $match: { externalId } },
       {
-        "$project": {
-          "externalId": 1, "name": 1,
-          "repoStats": {
-            "$map": {
-              "input": {
-                "$filter": {
-                  "input": "$repoStats.reactions",
-                  "as": "el",
+        $project: {
+          externalId: 1,
+          name: 1,
+          repoStats: {
+            $map: {
+              input: {
+                $filter: {
+                  input: '$repoStats.reactions',
+                  as: 'el',
                   // "cond": {
                   //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ]
                   // },
-                  "cond": condition
-                }
+                  cond: condition,
+                },
               },
-              "as": "item",
-              "in": "$$item"
-            }
-          }
-        }
+              as: 'item',
+              in: '$$item',
+            },
+          },
+        },
       },
     ]);
     const repo = repositories[0];
-    let reactions = await getReactionIdKeys();
+    const reactions = await getReactionIdKeys();
 
     if (dateDuration > 7) {
       dateDuration = 7;
@@ -305,15 +374,15 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
       const formattedToDate = format(parsedDateTo, 'MM/dd/yyyy');
       const date = format(parsedDateTo, 'MM/dd');
       localReactions.date = date;
-      repo.repoStats.map((stat) => {
-        const reaction = stat.reactionId
+      repo.repoStats.forEach((stat) => {
+        const reaction = stat.reactionId;
         const dataDate = new Date(stat.createdAt);
         const formattedDataDate = format(dataDate, 'MM/dd/yyyy');
         if (formattedDataDate === formattedToDate) {
           if (localReactions?.[reaction]) {
             localReactions[reaction] += 1;
           } else {
-            localReactions[reaction] = 1
+            localReactions[reaction] = 1;
           }
         }
       });
@@ -327,67 +396,66 @@ export const aggregateReactions = async (externalId, dateFrom, dateTo) => {
   }
 };
 
-
 export const aggregateTags = async (externalId, dateFrom, dateTo) => {
   try {
-    let condition = {
-      "$and": []
+    const condition = {
+      $and: [],
     };
     const from = new Date(dateFrom);
     const to = new Date(dateTo);
 
     if (dateFrom) {
-      condition['$and'].push({ "$gt": ["$$el.createdAt", from] })
+      condition.$and.push({ $gt: ['$$el.createdAt', from] });
     }
     if (dateTo) {
-      condition['$and'].push({ "$lt": ["$$el.createdAt", to] })
+      condition.$and.push({ $lt: ['$$el.createdAt', to] });
     }
     const repositories = await Repositories.aggregate([
-      { $match: { externalId, } },
+      { $match: { externalId } },
       {
-        "$project": {
-          "externalId": 1, "name": 1,
-          "repoStats": {
-            "$map": {
-              "input": {
-                "$filter": {
-                  "input": "$repoStats.tags",
-                  "as": "el",
+        $project: {
+          externalId: 1,
+          name: 1,
+          repoStats: {
+            $map: {
+              input: {
+                $filter: {
+                  input: '$repoStats.tags',
+                  as: 'el',
                   // "cond": {
                   //   "$and": [ { "$gt": ["$$el.createdAt", from ] }, { "$lt": ["$$el.createdAt", to ] } ]
                   // },
-                  "cond": condition
-                }
+                  cond: condition,
+                },
               },
-              "as": "item",
-              "in": "$$item"
-            }
-          }
-        }
+              as: 'item',
+              in: '$$item',
+            },
+          },
+        },
       },
     ]);
     const repo = repositories[0];
-    const tags = {
+    const tags = {};
 
-    }
-
-    repo.repoStats.map((stat) => {
-      const tagsId = stat.tagsId;
+    repo.repoStats.forEach((stat) => {
+      const { tagsId } = stat;
       const dataDate = new Date(stat.createdAt);
       const formattedDataDate = format(dataDate, 'MM/dd/yy');
-      tagsId?.map((tag) => {
+      tagsId?.forEach((tag) => {
         if (tags?.[tag]) {
           tags[tag].total += 1;
-          const index = _.findIndex(tags[tag].tally, function (o) {
-            return o.date === formattedDataDate
-          });
+          const index = _.findIndex(
+            tags[tag].tally,
+            (o) => o.date === formattedDataDate
+          );
           if (index === -1) {
             tags[tag].tally.push({
               date: formattedDataDate,
               tags: 1,
             });
           } else {
-            tags[tag].tally[index].tags++;
+            tags[tag].tally[index].tags += 1;
           }
         } else {
           tags[tag] = {
@@ -396,11 +464,11 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
               {
                 date: formattedDataDate,
                 tags: 1,
-              }
+              },
             ],
           };
         }
-      })
+      });
     });
     return tags;
   } catch (err) {
@@ -412,7 +480,9 @@ export const aggregateTags = async (externalId, dateFrom, dateTo) => {
 
 export const getSemaUsersOfRepo = async (externalId) => {
   try {
-    const users = await Users.find({ 'identities.repositories': { $elemMatch: { id: externalId } } }).exec();
+    const users = await Users.find({
+      'identities.repositories': { $elemMatch: { id: externalId } },
+    }).exec();
     return users;
   } catch (err) {
     logger.error(err);
@@ -423,7 +493,7 @@ export const getSemaUsersOfRepo = async (externalId) => {
 
 export const getRepoByUserIds = async (userIds = [], populateUsers = false) => {
   try {
-    const query = Repositories.find({ 'repoStats.userIds': { $in: userIds } })
+    const query = Repositories.find({ 'repoStats.userIds': { $in: userIds } });
     if (populateUsers) {
       query.populate({ path: 'repoStats.userIds', model: 'User' });
     }

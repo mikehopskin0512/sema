@@ -2,18 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import toaster from 'toasted-notes';
+import { InputField } from 'adonis';
+import clsx from 'clsx';
+import _ from 'lodash';
+import checkAvailableUrl from '../../../../utils/checkAvailableUrl';
 import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import { teamsOperations } from '../../../../state/features/teams';
-import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon } from '../../../../components/Icons';
-import { PATHS } from '../../../../utils/constants' ;
+import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
+import { PATHS, SEMA_CORPORATE_TEAM_NAME } from '../../../../utils/constants' ;
 import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
 import UploadFile from '../../../../components/team/UploadFile';
 import { uploadTeamAvatar } from "../../../../state/features/teams/actions";
+import styles from './teamEdit.module.scss';
 
 const { editTeam, fetchTeamsOfUser } = teamsOperations;
 
-const TeamEditPage = () => {
+function TeamEditPage() {
   const {
     query: { teamId },
   } = useRouter();
@@ -22,14 +27,27 @@ const TeamEditPage = () => {
     description: '',
     members: '',
     avatarUrl: '',
+    url: null,
   });
   const [errors, setErrors] = useState({
     name: null,
-    description: null,
     url: null,
     avatarUrl: null,
   });
+  const URL_STATUS = {
+    ALLOCATED: 'allocated',
+    AVAILABLE: 'available',
+  };
+  // eslint-disable-next-line no-unused-vars
   const [userRole, setUserRole] = useState({})
+  const [isUrlCheckLoading, setUrlCheckLoading] = useState(false);
+  const [urlChecks, setUrlChecks] = useState({
+    [SEMA_CORPORATE_TEAM_NAME]: URL_STATUS.ALLOCATED,
+    urlChecked: false,
+  });
+  const [originalTeamUrl, setOriginalTeamUrl] = useState(null);
+  const isAllocatedUrl = urlChecks[team.url] === URL_STATUS.ALLOCATED;
+  const isAvailableUrl = urlChecks[team.url] === URL_STATUS.AVAILABLE;
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -43,18 +61,18 @@ const TeamEditPage = () => {
 
   useEffect(() => {
     if (teams.teams.length) {
-      const activeRole = _.find(teams.teams, function (o) {
-        return o.team?._id === teamId
-      });
+      const activeRole = _.find(teams.teams, (o) => o.team?._id === teamId);
       const activeTeam = {
         _id: teamId,
         name: activeRole?.team?.name,
         description: activeRole?.team?.description,
         avatarUrl: activeRole?.team?.avatarUrl,
+        url: activeRole?.team?.url,
       }
       if (activeRole) {
         setUserRole(activeRole)
         setTeam(activeTeam)
+        setOriginalTeamUrl(activeTeam.url);
       }
     }
   }, [teams]);
@@ -70,12 +88,48 @@ const TeamEditPage = () => {
     dispatch(uploadTeamAvatar(teamId, formData, token));
   };
 
+  const mutate = (obj) => {
+    setTeam({
+      ...team,
+      ...obj,
+    });
+  };
+
+  const checkUrl = async (e) => {
+    e?.preventDefault();
+    setUrlCheckLoading(true);
+    try {
+      const data = await checkAvailableUrl(team.url, token);
+      setUrlChecks((state) => ({
+        ...state,
+        [team.url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
+        urlChecked: true,
+      }));
+      return data.isAvailable;
+    } catch (error) {
+      return setErrors({
+        ...errors,
+        url: 'URL is required',
+      });
+    } finally {
+      setUrlCheckLoading(false);
+    }
+  };
+
   const onUpdate = async () => {
-    // validation
-    if (!team.name || !team.description) {
+    const isUrlChanged = team.url && originalTeamUrl !== team.url;
+    if (isUrlChanged) {
+      if (!urlChecks.urlChecked) {
+        const isUrlAvailable = !urlChecks[team.url] && (await checkUrl());
+        if (!isUrlAvailable) {
+          return;
+        }
+      }
+    }
+    if (!team.name || !team.url) {
       setErrors({
         name: !team.name ? 'Team name is required' : null,
-        description: !team.description ? 'Team description is required' : null
+        url: !team.url ? 'URL is required' : null,
       });
       return;
     }
@@ -100,7 +154,7 @@ const TeamEditPage = () => {
               </div>
             </div>
             <div className="has-text-black">
-              You've successfully updated the team
+              You’ve successfully updated the team
             </div>
             <div>
               <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
@@ -116,13 +170,6 @@ const TeamEditPage = () => {
 
     mutate(team);
     await router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
-  };
-
-  const mutate = (obj) => {
-    setTeam({
-      ...team,
-      ...obj,
-    });
   };
 
   const onCancel = async () => {
@@ -171,56 +218,92 @@ const TeamEditPage = () => {
         </div>
         <div className="px-10">
           <div className="mb-15">
-            <label className="label is-size-7 has-text-weight-semibold">Team Name</label>
-            <input
-              className="input has-background-white"
-              type="text"
-              placeholder="Team Name"
-              value={team.name}
-              onChange={(e) => {
-                mutate({ name: e.target.value });
-                setErrors({ ...errors, name: null });
-              }}
-              required={true}
-            />
-            { errors.name && <p className="has-text-danger is-size-7 is-italic">{errors.name}</p> }
+            <span className="label is-size-6">
+              Team Name <span className="has-text-error">*</span>
+            </span>
+            <InputField
+                id="team-name"
+                isRequired
+                value={team.name}
+                onChange={(teamName) => {
+                  mutate({ name: teamName });
+                  setErrors({ ...errors, name: null });
+                }}
+                error={ errors?.name }
+                className='is-flex-grow-1'
+              />
           </div>
           <div className="mb-15">
-            <label className="label is-size-7 has-text-weight-semibold">Team Url</label>
+            <span className="label is-size-6">
+              Team URL <span className="has-text-error">*</span>
+            </span>
             <div className="is-flex">
-              <input
-                className="input has-background-white"
+              <InputField
+                className={`${styles['initial-slug']}`}
                 type="text"
-                placeholder="Team Url"
+                placeholder="app.semasoftware.com/teams/"
+                error={ errors?.url}
+                disabled
+              />
+              <InputField
+                isRequired
                 value={team.url}
-                onChange={(e) => {
-                  mutate({ url: e.target.value });
+                onChange={(teamUrl) => {
+                  mutate({ url: teamUrl });
                   setErrors({ ...errors, url: null });
                 }}
-                required={true}
+                error={ errors?.url }
+                className={clsx(
+                  'is-flex-grow-1',
+                  styles.slug,
+                  errors?.url && styles['url-error']
+                )}
               />
-
-              <button className="button ml-10 px-25">Check</button>
+              <button className="ml-16 button" 
+                onClick={checkUrl}
+                disabled={originalTeamUrl === team.url}
+              >
+                <div
+                  className={clsx(
+                    'is-flex is-align-items-center',
+                    (isAllocatedUrl || errors?.url) &&
+                      'has-text-red-500',
+                    isAvailableUrl && 'has-text-green-500'
+                  )}
+                >
+                  {isUrlCheckLoading ? (
+                    <LoadingBlueIcon className="mr-8" size="small" />
+                  ) : (
+                    ((isAllocatedUrl || errors?.url) && (
+                      <AlertOutlineIcon className="mr-8" size="small" />
+                    )) ||
+                    (isAvailableUrl && (
+                      <CheckOnlineIcon className="mr-8" size="small" />
+                    ))
+                  )}
+                  <span className="has-text-weight-semibold">Check</span>
+                </div>
+              </button>
             </div>
-            { errors.url && <p className="has-text-danger is-size-7 is-italic">{errors.url}</p> }
           </div>
           <div className="mb-15">
-            <label className="label is-size-7 has-text-weight-semibold">Description</label>
+            <span className="label is-size-6">
+              Description
+            </span>
             <textarea
               className="textarea has-background-white mb-10"
               placeholder="Description"
               value={team.description}
               onChange={(e) => {
                 mutate({ description: e.target.value });
-                setErrors({ ...errors, description: null });
               }}
-              required={true}
+              required
             />
-            { errors.description && <p className="has-text-danger is-size-7 is-italic">{errors.description}</p> }
           </div>
-
           <div className="mb-15">
-            <label className="label is-size-7 has-text-weight-semibold">Profile Picture</label>
+            <span className="label is-size-6">
+              Profile Picture
+            </span>
             <UploadFile
               onChange={(file) => {
                 mutate({ avatarUrl: file });
@@ -232,6 +315,6 @@ const TeamEditPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default withSelectedTeam(withLayout(TeamEditPage));

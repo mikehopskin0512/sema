@@ -62,8 +62,7 @@ const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [accountData] = useLocalStorage('sema_selected_team');
-  const { isTeamAdminOrLibraryEditor } = usePermission();
-
+  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
@@ -89,7 +88,7 @@ const AddLabels = () => {
     dispatch(fetchTagList(token))
   }, []);
 
-  const onCancel = async () => {
+  const goBack = async () => {
     await router.back();
   };
 
@@ -150,12 +149,12 @@ const AddLabels = () => {
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet title="Add label" />
       <div className="is-flex is-align-items-center px-10 mb-25">
-        <a href="/labels-management" className="mr-8 is-flex">
+        <a className="mr-8 is-flex" onClick={goBack} aria-hidden>
           <ArrowLeftIcon size="small" color={black950} />
         </a>
         <nav className="breadcrumb" aria-label="breadcrumbs">
           <ul>
-            <li><a href="/labels-management" className="has-text-grey">Label Management</a></li>
+            {isSemaAdmin() && <li><a href={PATHS.LABELS_MANAGEMENT} className="has-text-grey">Label Management</a></li>}
             <li className="is-active has-text-weight-semibold"><div className="px-5">Add Labels</div></li>
           </ul>
         </nav>
@@ -170,7 +169,7 @@ const AddLabels = () => {
           <button
             className="button is-small is-outlined is-primary border-radius-4px mr-10"
             type="button"
-            onClick={onCancel}
+            onClick={goBack}
             disabled={isFetching}
           >
             Cancel

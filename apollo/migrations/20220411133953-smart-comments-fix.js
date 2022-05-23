@@ -28,7 +28,7 @@ module.exports = {
       if (!portfolio.snapshots.length) return;
 
       await Promise.all(portfolio.snapshots.map(async (snap) => {
-        const updatedComments = snap.componentData.smartComments.length ? snap.componentData.smartComments.map(com => {
+        const updatedComments = snap?.componentData?.smartComments?.length ? snap?.componentData?.smartComments?.map(com => {
           if (users.some(i => i._id.toString() === com.userId.toString())) {
             return com;
           } else {
