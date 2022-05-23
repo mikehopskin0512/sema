@@ -18,8 +18,19 @@ export async function getTags(text) {
 
 export async function getTagsRaw(text) {
   const body = { comments: text };
-  const { data } = await client.post(tagsEndpoint, body);
-  return data;
+
+  try {
+    const { data } = await client.post(tagsEndpoint, body);
+    return data;
+  } catch (error) {
+    if (error.isAxiosError) {
+      const customError = new Error(
+        `Error querying Jaxon tags ${error.response?.status ?? error.code}`
+      );
+      customError.body = body;
+      throw customError;
+    } else throw error;
+  }
 }
 
 export async function getSummaries(text) {
@@ -29,6 +40,17 @@ export async function getSummaries(text) {
 
 export async function getSummariesRaw(text) {
   const body = { comments: text };
-  const { data } = await client.post(summariesEndpoint, body);
-  return data;
+
+  try {
+    const { data } = await client.post(summariesEndpoint, body);
+    return data;
+  } catch (error) {
+    if (error.isAxiosError) {
+      const customError = new Error(
+        `Error querying Jaxon summaries ${error.response?.status ?? error.code}`
+      );
+      customError.body = body;
+      throw customError;
+    } else throw error;
+  }
 }
