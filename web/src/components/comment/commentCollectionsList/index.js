@@ -26,6 +26,8 @@ import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
 import { find, isEmpty, uniqBy } from 'lodash';
 import { fetchTeamCollections } from "../../../state/features/teams/actions";
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import SnippetsHeaderSkeleton from '../../../components/skeletons/snippetsHeaderSkeleton';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -158,17 +160,9 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  const isLoaderNeeded = isEmpty(selectedTeam) ? 
-    isFetching : 
+  const isLoaderNeeded = isEmpty(selectedTeam) ?
+    isFetching :
     !teamCollections.length && teamsState.isFetching;
-
-  if (isLoaderNeeded) {
-    return (
-      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '60vh' }}>
-        <Loader />
-      </div>
-    )
-  }
 
   return (
     <div>
@@ -210,11 +204,28 @@ const CommentCollectionsList = () => {
             collections={sortedCollections}
           />
         </div>
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
-        <p className="is-size-6 has-text-black-950 mb-15 px-10">
-          Snippets from these collections will be suggested as you create code reviews
-        </p>
-        {view === 'grid' ? (
+        {isLoaderNeeded ? <div className={styles['snippet-title-skeleton']}><SnippetsHeaderSkeleton /></div> : (
+          <>
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
+            <p className="is-size-6 has-text-black-950 mb-15 px-10">
+              Snippets from these collections will be suggested as you create code reviews
+            </p>
+          </>
+        )}
+        {isLoaderNeeded && (
+          <>
+            <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
+              {new Array(9).fill('').map(card => (
+                <div className={clsx('p-10 is-flex is-clickable', styles['card-wrapper'])} aria-hidden="true">
+                  <div className={styles['snippet-card-wrapper']}>
+                    <RepoSkeleton />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {view === 'grid' && !isLoaderNeeded ? (
           <CardList collections={activeCollections || []} />
         ) : (
           <Table
@@ -227,7 +238,7 @@ const CommentCollectionsList = () => {
           />
         )}
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections ({inactiveCollections.length})</p>
-        {view === 'grid' ? (
+        {view === 'grid' && !isLoaderNeeded ? (
           <>
             <CardList type="others" collections={paginatedInactiveCollections.slice(0, pageSize * currentPage) || []} />
           </>

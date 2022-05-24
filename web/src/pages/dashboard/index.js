@@ -241,14 +241,14 @@ const Dashboard = () => {
     }
   }, [isOnboarded]);
 
-  const isSkeletonShow = isLoaded && !auth.isFetching && !repositories.isFetching;
+  const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
   return (
     !inviteTeamId &&
     <>
       <div>
         <Helmet {...DashboardHelmet} />
-        <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch isLoaded={!isSkeletonShow} />
+        <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch isLoaded={isSkeletonHidden} />
       </div>
 
       {/* TODO: we have to put almost all the props to modal  */}
