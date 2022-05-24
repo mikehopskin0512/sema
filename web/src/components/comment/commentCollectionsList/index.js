@@ -78,7 +78,7 @@ const CommentCollectionsList = () => {
         const languagesIndex = item?.collectionData.languages ? filter.languages?.findIndex((tag) => item.collectionData.languages.findIndex((commentTag) => commentTag.toLowerCase() === tag.label.toLowerCase()) !== -1) : -1;
         const sourcesIndex = item?.collectionData.source ? filter.sources?.findIndex(({value}) => value === item?.collectionData.source) : -1;
         const authorsIndex = item?.collectionData.author ? filter.authors?.findIndex((author) => author.value.toLowerCase() === item.collectionData.author.toLowerCase()) : -1;
-        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.isActive) : -1;
+        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.collectionData.isActive) : -1;
 
         const queryBool = item?.collectionData?.name.toLowerCase().includes(filter.query?.toLowerCase());
         let filterBool = true;
