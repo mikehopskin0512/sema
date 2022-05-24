@@ -7,7 +7,7 @@ import endGuides from './comments/engGuides';
 import github from './identity/github';
 import health from './shared/health';
 import invitations from './invitations';
-// import notifications from './notifications';
+import notifications from './notifications';
 import organizations from './organizations';
 import portfolios from './portfolios';
 import repoSync from './repoSync';
@@ -37,7 +37,7 @@ export default function attachRoutes(app, passport) {
   github(app);
   health(app);
   invitations(app, passport);
-  // notifications(app, passport);
+  notifications(app, passport);
   organizations(app, passport);
   portfolios(app, passport);
   reports(app, passport);

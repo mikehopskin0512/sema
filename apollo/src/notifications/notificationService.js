@@ -15,7 +15,6 @@ export const getUserNotificationToken = userId => {
 };
 
 export const getOrCreateNotificationUser = (userId, user) => {
-  console.log("\n\n\ngetOrCreateNotificationUser -> userId, user", userId, user)
   return client.user(userId).getOrCreate({
     username: user.username,
     firstName: user.firstName,
@@ -23,7 +22,8 @@ export const getOrCreateNotificationUser = (userId, user) => {
   });
 };
 
-export const getOrCreateUserAndToken = async (userId, user) => {
+export const getOrCreateUserAndToken = async (user) => {
+  const userId = user._id.toString();
   await getOrCreateNotificationUser(userId, user);
   return getUserNotificationToken(userId);
 };

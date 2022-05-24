@@ -16,7 +16,7 @@ export default (app, passport) => {
 
   route.get('/notification-token', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-        const notificationsToken = await getOrCreateUserAndToken(id, user);
+        const notificationsToken = await getOrCreateUserAndToken(req.user);
       return res.status(200).send({notificationsToken});
     } catch (error) {
       logger.error(error);
