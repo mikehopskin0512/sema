@@ -112,7 +112,7 @@ const addPublicCollectionsToList = (collections, communityCollectionDataList) =>
   }));
   const basicCollections = collections || [];
   const basicCollectionIdSet = new Set(basicCollections.filter(collection =>  collection.collectionData).map(collection =>  collection.collectionData._id.toString()));
-  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));  
+  const communityCollectionsToAdd  = communityCollections.filter(collection => !basicCollectionIdSet.has(collection.collectionData._id.toString()));
   return [...basicCollections , ...communityCollectionsToAdd]
 
 }
@@ -122,7 +122,7 @@ export const getUserCollectionsById = async (id, teamId = null) => {
     const parent = teamId ? await findTeamById(teamId) : await findUserCollectionsByUserId(id);
     const communityCollectionDataList = await findByType(COLLECTION_TYPE.COMMUNITY);
     if (parent) {
-      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList); 
+      const collectionFullList = addPublicCollectionsToList(parent.collections, communityCollectionDataList);
       const collections = collectionFullList.filter((collection) => collection.collectionData).map((collection) => {
         const { collectionData : { comments, tags, source = null } } = collection;
         let languages = [];
@@ -337,17 +337,17 @@ export const createUserCollection = async (username, userId) => {
   }
 };
 
-export const createTeamCollection = async (team) => {
+export const createOrganizationCollection = async (organization) => {
   try {
     const collection = {
-      name: `${team.name}'s Snippets`,
+      name: `${organization.name}'s Snippets`,
       description: '',
-      author: team.name,
+      author: organization.name,
       isActive: true,
-      type: COLLECTION_TYPE.TEAM,
+      type: COLLECTION_TYPE.ORGANIZATION,
       comments: [],
     };
-    return await create(collection, team.createdBy, team._id);
+    return await create(collection, organization.createdBy, organization._id);
   } catch (err) {
     logger.error(err);
     const error = new errors.NotFound(err);
