@@ -17,11 +17,8 @@ import {
   getSuggestedCommentsByIds,
   exportSuggestedComments,
 } from './suggestedCommentService';
-import {
-  pushCollectionComment,
-  getUserCollectionsById,
-  getCollectionMetadata,
-} from '../collections/collectionService';
+
+import { pushCollectionComment, getUserCollectionsById, getCollectionMetadata } from '../collections/collectionService';
 
 const {
   Types: { ObjectId },
@@ -201,41 +198,27 @@ export default (app, passport) => {
         logger.error(error);
         return res.status(error.statusCode).send(error);
       }
-    }
-  );
+    });
 
-  route.post(
-    '/summaries',
-    passport.authenticate(['bearer'], { session: false }),
-    async (req, res) => {
-      try {
-        const { data } = await axios.post(
-          `${process.env.JAXON_SERVER_URL}/summaries`,
-          req.body
-        );
-        return res.status(200).json(data);
-      } catch (error) {
-        logger.error(error);
-        return res.status(error.statusCode).send(error);
-      }
+  route.post('/summaries', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { data } = await axios.post( `${process.env.JAXON_SUMMARIES_SERVER_URL}/summaries`, req.body);
+      return res.status(200).json(data);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
-  );
+  });
 
-  route.post(
-    '/tags',
-    passport.authenticate(['bearer'], { session: false }),
-    async (req, res) => {
-      try {
-        const { data } = await axios.post(
-          `${process.env.JAXON_SERVER_URL}/tags`,
-          req.body
-        );
-        return res.status(200).json(data);
-      } catch (error) {
-        return res.status(error.statusCode).send(error);
-      }
+  route.post('/tags', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+    try {
+      const { data } = await axios.post( `${process.env.JAXON_TAGS_SERVER_URL}/tags`, req.body);
+      return res.status(200).json(data);
+    } catch (error) {
+      logger.error(error);
+      return res.status(error.statusCode).send(error);
     }
-  );
+  });
 
   // Swagger route
   app.use(

@@ -71,11 +71,6 @@ const trackOnboardingCompleted = () => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.ONBOARDING_COMPLETED, {});
 };
 
-const trackProductSignUp = (email) => {
-  analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, { email });
-};
-
-
 export default {
-  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout, trackOnboardingCompleted,trackProductSignUp
+  ...actions, createAndJoinOrg, registerAndAuthUser, updateUserHasExtension, trackUserLogin, trackUserLogout, trackOnboardingCompleted
 };

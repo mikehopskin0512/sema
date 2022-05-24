@@ -46,7 +46,7 @@ const ContentPage = ({
   };
   const isCreateTeamPage = page === CREATE_TEAM_PAGE;
   const isLastPage = page === TOTAL_PAGES;
-  console.log(subtitle);
+
   return (
     <>
       <div className="columns m-0 is-full-height" style={{}}>
