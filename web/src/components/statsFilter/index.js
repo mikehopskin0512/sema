@@ -47,7 +47,7 @@ const StatsFilter = ({ filterRepoList, filterUserList, filterRequesterList, filt
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    const formatDate = (date) => date ? format(addDays(new Date(date), 1), `yyyy-MM-dd`) : null
+    const formatDate = (date) => date ? format(new Date(date), `yyyy-MM-dd`) : null
     setFilter({
       ...filter,
       startDate: formatDate(startDate),

@@ -57,7 +57,6 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   let reactionsByDay = [];
   const tagsArr = [];
   let day = 0;
-  endDate = subDays(new Date(endDate), 1);
   // Should add +2 here because it's our step for the graph data splitting
   const countedDays = diff + 1;
   // Create Array of data for the BarChart
@@ -96,12 +95,13 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     reactions = mergeTwoData(reactions, 'd');
     tags = reduceTagsData(tags, 'd')
   }
+  console.log(reactions)
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
-  startDate = subDays(new Date(startDate), 1);
-  endDate = endOfDay(subDays(new Date(endDate), 1));
+  startDate = new Date(startDate);
+  endDate = endOfDay(new Date(endDate));
   const weeks = getWeekByDateRange(startOfDay(startDate), endDate);
   let { weekRange, tagsArr, reactionsByWeek } = getWeekRange(weeks, startDate, endDate);
   weekRange = [...weekRange].reverse();
