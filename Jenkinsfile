@@ -28,7 +28,6 @@ pipeline {
             steps {
                 script {
                     release_regex = '(.*release.*)'
-                    release_regex = '(.*release.*)'
                     switch (GIT_BRANCH) {
                     case 'master':
                             env.ENVIRONMENT = 'prod'
