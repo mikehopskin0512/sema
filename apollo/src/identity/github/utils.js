@@ -36,7 +36,7 @@ export const fetchGithubToken = async (externalSourceId) => {
     const { token } = await auth({ type: 'installation' });
     if (!token) {
       throw new errors.NotFound(
-        `No token found for installationId ${externalSourceId}`,
+        `No token found for installationId ${externalSourceId}`
       );
     }
 
@@ -44,7 +44,7 @@ export const fetchGithubToken = async (externalSourceId) => {
   } catch (err) {
     // Do not return error, instead throw
     throw new errors.BadRequest(
-      `Error fetching token for installationId ${externalSourceId}`,
+      `Error fetching token for installationId ${externalSourceId}`
     );
   }
 };
