@@ -57,7 +57,7 @@ const StatsPage = ({ startDate, endDate, filter: unsafeFilter, isLoading }) => {
     <>
       <div className="is-flex is-flex-wrap-wrap mt-10">
         <ReactionLineChart reactions={reactions} groupBy={groupBy}  onClick={() => setOpenReactionsModal(true)} isLoading={isLoading} />
-        <TagsChart tags={tags} groupBy={groupBy} onClick={() => setOpenTagsModal(true)}/>
+        <TagsChart tags={tags} groupBy={groupBy} onClick={() => setOpenTagsModal(true)} startDate={start} endDate={end} dateOption={filter.dateOption} />
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES_AREA} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
       </div>

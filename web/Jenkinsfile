@@ -1,0 +1,64 @@
+#!/usr/bin/env groovy
+@Library('customSlackLibrary') _
+pipeline {
+    agent {
+        docker {
+            image 'cimg/base:2022.01'
+            args '-u root --privileged --net host -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    parameters {
+        string(name: 'ENVIRONMENT', description: 'The name of environment for building')
+        string(name: 'BRANCH_NAME', description: 'The name of branch for building')
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'sudo apt-get update -y && sudo apt-get install -y jq awscli'
+            }
+        }
+
+        stage('Build web') {
+            steps {
+                script {
+                    buildWeb(params.ENVIRONMENT, params.BRANCH_NAME)
+                }
+            }
+        }
+
+        stage('Deploy web') {
+            steps {
+                script {
+                    withAWS(role:'jenkins-role-to-assume') {
+                        deployWeb(params.ENVIRONMENT, params.BRANCH_NAME)
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            slackSendsFail(env.JOB_NAME, params.BRANCH_NAME, BUILD_URL)
+        }
+    }
+}
+
+def buildWeb(String environment, String branchName) {
+    dir('web') {
+        sh './build.sh ' + environment + ' ' + branchName
+    }
+}
+
+def deployWeb(String environment, String branchName) {
+    dir('web') {
+        sh './deploy.sh ' + environment + ' ' + branchName
+    }
+}

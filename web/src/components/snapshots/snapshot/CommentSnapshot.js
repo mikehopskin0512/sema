@@ -10,6 +10,7 @@ import DropDownMenu from '../../dropDownMenu';
 import SnapshotModal from '../modalWindow';
 import DeleteModal from '../deleteModal';
 import { snapshotsOperations } from '../../../state/features/snapshots';
+import MarkdownEditor from '../../markdownEditor';
 
 const { duplicateSnapshot } = snapshotsOperations;
 
@@ -20,6 +21,8 @@ const CommentSnapshot = React.forwardRef(({
   isOwner,
   onUpdate,
   onSnapshotDirectionUpdate,
+  path,
+  isDragging
 }, ref) => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
@@ -36,7 +39,7 @@ const CommentSnapshot = React.forwardRef(({
 
   const renderCommentSnapshot = () => {
     if (componentData) {
-      return componentData.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot />);
+      return componentData.smartComments?.map((d) => <ActivityItem {...d} className='is-full-width my-10' isSnapshot key={d?._id} />);
     }
     return '';
   };
@@ -68,7 +71,7 @@ const CommentSnapshot = React.forwardRef(({
         onSubmit={() => onDeleteSnapshot()}
       />
       <div
-        className={clsx(styles.snapshot, "has-background-gray-200 p-25 mb-30 is-relative", snapshotData.isHorizontal && styles['snapshot-horizontal'])}
+        className={clsx(styles.snapshot, 'has-background-gray-200 p-25 is-relative', snapshotData.isHorizontal && styles['snapshot-horizontal'], isDragging && styles['snapshot-dragging'])}
         ref={preview}>
         {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline", styles['container-buttons-wrapper'])}>
           <DropDownMenu
@@ -93,23 +96,28 @@ const CommentSnapshot = React.forwardRef(({
                 onClick: () => onSnapshotDirectionUpdate({
                   snapshot: snapshotData,
                   type: snapshotData.componentType,
+                  path
                 }),
               },
             ]}
             trigger={(
-              <div className="is-clickable is-flex mr-40">
+              <div className={clsx("is-clickable is-flex", isOwner && "mr-40")}>
                 <OptionsIcon />
               </div>
             )}
           />
-          <div ref={ref} className={styles['draggable-container']}>
-            <DragTriggerIcon />
-          </div>
+          {isOwner && (
+            <div ref={ref} className={styles['draggable-container']}>
+              <DragTriggerIcon />
+            </div>
+          )}
         </div>}
         <div className={clsx('columns is-multiline mt-10 sema-is-boxed', styles['comments-snap-content'])}>
           <div className={clsx('column is-full pt-0')}>
             <div className="is-size-5 has-text-weight-semibold">{title}</div>
-            <div>{description}</div>
+            <div>
+              <MarkdownEditor readOnly={true} value={description} />
+            </div>
           </div>
           <div className={clsx('column is-full')}>
             <div className="is-flex is-flex-wrap-wrap mt-10 p-25 has-background-gray-300">

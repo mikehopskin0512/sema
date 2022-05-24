@@ -1,7 +1,16 @@
 import mongoose from 'mongoose';
-import { createOrUpdate, findByExternalId } from "../../repositories/repositoryService";
-import { addRepositoryToIdentity, findById, findByUsernameOrIdentity } from '../../users/userService';
-import {getPullRequestsByExternalId} from "./smartCommentService";
+import logger from '../../shared/logger';
+import {
+  createOrUpdate,
+  findByExternalId,
+} from '../../repositories/repositoryService';
+import {
+  addRepositoryToIdentity,
+  findById,
+  findByUsernameOrIdentity,
+} from '../../users/userService';
+import { getPullRequestsByExternalId } from './smartCommentService';
+import { EMOJIS_ID } from '../suggestedComments/constants';
 
 const { Schema } = mongoose;
 
@@ -14,7 +23,6 @@ const githubMetadataSchema = new Schema({
   base: String,
   requester: String,
   requesterAvatarUrl: String,
-  commentId: String,
   clone_url: String,
   user: { id: String, login: String },
   filename: { type: String, default: null },
@@ -23,26 +31,87 @@ const githubMetadataSchema = new Schema({
   title: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
+  id: String,
+  type: {
+    type: String,
+    enum: ['pullRequestComment', 'issueComment', 'pullRequestReview'],
+  },
+  commentId: String,
 });
 
-const smartCommentSchema = new Schema({
-  comment: String,
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  location: { type: String, enum: ['conversation', 'files changed'] },
-  suggestedComments: [{ type: Schema.Types.ObjectId, ref: 'SuggestedComment' }],
-  reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
-  tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
-  githubMetadata: githubMetadataSchema,
-}, { collection: 'smartComments', timestamps: true });
+const smartCommentSchema = new Schema(
+  {
+    comment: String,
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    location: { type: String, enum: ['conversation', 'files changed'] },
+    suggestedComments: [
+      { type: Schema.Types.ObjectId, ref: 'SuggestedComment' },
+    ],
+    reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+    githubMetadata: githubMetadataSchema,
+    source: {
+      origin: {
+        type: String,
+        enum: ['extension', 'repoSync'],
+        default: 'extension',
+      },
+      provider: {
+        type: String,
+        enum: ['github'],
+        default: 'github',
+      },
+      // Unique identifier in the context of this provider.
+      id: String,
+      // Date of creation in the source.
+      createdAt: Date,
+    },
+  },
+  { collection: 'smartComments', timestamps: true }
+);
 
-smartCommentSchema.post('save', async function (doc, next) {
+smartCommentSchema.pre('save', function setGitHubDefaults() {
+  const { source } = this;
+  const { githubMetadata } = this;
+
+  if (source.provider !== 'github') return;
+
+  this.source.createdAt = githubMetadata.created_at;
+
+  if (source.origin === 'extension') {
+    const shouldInferIds =
+      !source.id && !source.type && githubMetadata.commentId;
+    if (shouldInferIds) {
+      const { type, id } = getIdAndType(githubMetadata);
+      if (type && id) {
+        this.githubMetadata.type = type;
+        this.githubMetadata.id = id;
+        this.source.id = `${type}:${id}`;
+      }
+    }
+  }
+
+  const commentId = getCommentId(githubMetadata);
+  if (commentId) this.githubMetadata.commentId = commentId;
+});
+
+smartCommentSchema.post('save', async (doc, next) => {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { githubMetadata: { repo_id: externalId, url, requester, pull_number }, _id, reaction: reactionId, tags: tagsIds, userId, repo } = doc;
+    const { NO_REACTION } = EMOJIS_ID;
+    const {
+      githubMetadata: { repo_id: externalId, url, requester, pull_number },
+      _id,
+      reaction: reactionId = NO_REACTION,
+      tags: tagsIds,
+      userId,
+      repo,
+    } = doc;
 
     if (externalId) {
-      const user = await findById(userId);
-      const { _id: requesterId = null } = await findByUsernameOrIdentity(requester) || {};
+      const user = userId && (await findById(userId));
+      const { _id: requesterId = null } =
+        (await findByUsernameOrIdentity(requester)) || {};
 
       let repository = await findByExternalId(externalId);
       const reaction = {
@@ -67,8 +136,9 @@ smartCommentSchema.post('save', async function (doc, next) {
           repository.repoStats.smartCodeReviews += 1;
         }
 
-        const repoUserIds = repository.repoStats.userIds?.map((id) => id?.toString()) || [];
-        if (!repoUserIds.includes(userId.toString())) {
+        const repoUserIds =
+          repository.repoStats.userIds?.map((id) => id?.toString()) || [];
+        if (user && !repoUserIds.includes(userId.toString())) {
           repository.repoStats.userIds.push(userId);
           repository.repoStats.smartCommenters += 1;
           repository.repoStats.semaUsers += 1;
@@ -83,42 +153,42 @@ smartCommentSchema.post('save', async function (doc, next) {
         }
 
         repository.repoStats.smartComments += 1;
-
       } else {
         repository = {
           externalId,
           name: doc.githubMetadata.repo,
-          language: "",
-          description: "",
-          type: "github",
+          language: '',
+          description: '',
+          type: 'github',
           cloneUrl: doc.githubMetadata.clone_url,
-          repositoryCreatedAt: "",
-          repositoryUpdatedAt: "",
+          repositoryCreatedAt: '',
+          repositoryUpdatedAt: '',
           repoStats: {
-            reactions: [
-              reaction
-            ] || [],
-            tags: [
-              tags
-            ] || [],
-            userIds: [
-              userId
-            ] || [],
+            reactions: [reaction] || [],
+            tags: [tags] || [],
+            userIds: [userId] || [],
             smartCodeReviews: 1,
             smartComments: 1,
             smartCommenters: 1,
             semaUsers: 1,
-          }
-        }
+          },
+        };
         if (requesterId) {
           repository.repoStats.userIds.push(requesterId);
         }
       }
 
-      const newRepository = await createOrUpdate(repository);
-      // eslint-disable-next-line max-len
-      const repoData = { name: repo, id: externalId, fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')), githubUrl: url.slice(0, url.search('/pull/')) };
-      await addRepositoryToIdentity(user, repoData);
+      await createOrUpdate(repository);
+
+      if (user) {
+        const repoData = {
+          name: repo,
+          id: externalId,
+          fullName: url.slice(GITHUB_URL.length + 1, url.search('/pull/')),
+          githubUrl: url.slice(0, url.search('/pull/')),
+        };
+        await addRepositoryToIdentity(user, repoData);
+      }
     }
     return next();
   } catch (err) {
@@ -126,4 +196,53 @@ smartCommentSchema.post('save', async function (doc, next) {
   }
 });
 
-module.exports = mongoose.model('SmartComment', smartCommentSchema);
+smartCommentSchema.index(
+  { 'source.provider': 1, 'source.id': 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      'source.provider': { $exists: true },
+      'source.id': { $exists: true },
+    },
+  }
+);
+
+function getCommentId({ type, id }) {
+  if (!type || !id) return null;
+
+  switch (type) {
+    case 'pullRequestComment':
+      return `discussion_r${id}`;
+
+    case 'pullRequestReview':
+      return `pullrequestreview-${id}`;
+
+    case 'issueComment':
+      return `issuecomment-${id}`;
+
+    default:
+      logger.info(`Unknown type ${type}`);
+      return null;
+  }
+}
+
+function getIdAndType({ commentId }) {
+  const [, issueCommentId] = commentId.split('issuecomment-');
+  if (issueCommentId) {
+    return { type: 'issueComment', id: issueCommentId };
+  }
+
+  const [, pullRequestReviewId] = commentId.split('pullrequestreview-');
+  if (pullRequestReviewId) {
+    return { type: 'pullRequestReview', id: pullRequestReviewId };
+  }
+
+  const [, pullRequestCommentId] = commentId.match(/r(\d+)/) || [];
+  if (pullRequestCommentId) {
+    return { type: 'pullRequestComment', id: pullRequestCommentId };
+  }
+
+  return {};
+}
+
+export default mongoose.model('SmartComment', smartCommentSchema);

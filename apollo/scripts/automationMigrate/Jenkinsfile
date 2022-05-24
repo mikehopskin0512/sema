@@ -14,8 +14,8 @@ environment {
          description: 'The branch to get the latest migrations scripts'
       )
       choice(
-          name: 'database', 
-          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'], 
+          name: 'database',
+          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'],
           description: 'Pick something')
    }
 
@@ -39,13 +39,12 @@ environment {
          steps {
             dir('apollo') {
                 sh script: "sed -i \"s|MONGOOSE_URI=.*\$|MONGOOSE_URI=mongodb+srv://phoenix_admin:${env.database_password}@sema-cluster.tpplx.mongodb.net/${params.database}?authSource=admin\\&replicaSet=atlas-bjp57o-shard-0\\&readPreference=primary\\&appname=MongoDB\\%20Compass\\&retryWrites=false\\&ssl=true|g\" .env", returnStdout: false
-                sh script: "sed -i \"s|DATABASE_NAME=.*\$|DATABASE_NAME=${params.database}|g\" .env", returnStdout: false
-                script { 
+                script {
                     MIGRATIONS = sh(script: '''
                     npx migrate-mongo status > migrations_status.txt
                     grep -Po "│.+?\\d{14}.+?js.+?│.+?│" migrations_status.txt | awk '{$1=$1};1' | sed -E 's/\\s[0-9]{4}-.+?Z/ APPLIED/'
                     ''', returnStdout: true).trim()
-                    RUN_LOG = sh(script: 'npx migrate-mongo up', returnStdout: true) 
+                    RUN_LOG = sh(script: 'npm run migrate', returnStdout: true)
                 }
             }
          }

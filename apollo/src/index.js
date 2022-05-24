@@ -1,29 +1,30 @@
+import adminUsers from './admin/users';
 import analysis from './analysis';
 import auth from './auth';
 import collections from './comments/collections';
-import endGuides from './comments/engGuides';
-import smartComments from './comments/smartComments';
-import suggestedComments from './comments/suggestedComments';
-import tags from './comments/tags';
 import credentials from './credentials';
+import endGuides from './comments/engGuides';
 import github from './identity/github';
 import health from './shared/health';
 import invitations from './invitations';
 import organizations from './organizations';
 import portfolios from './portfolios';
+import repoSync from './repoSync';
 import reports from './reports';
 import repositories from './repositories';
-import sources from './sources';
-import users from './users';
-import adminUsers from './admin/users';
-import searchQueries from './admin/searchQueries';
-import snapshots from './snapshots';
-import support from './support';
-import team from './teams';
 import roles from './roles';
+import searchQueries from './admin/searchQueries';
+import smartComments from './comments/smartComments';
+import snapshots from './snapshots';
+import sources from './sources';
+import suggestedComments from './comments/suggestedComments';
+import support from './support';
+import tags from './comments/tags';
+import team from './teams';
 import userRoles from './userRoles';
+import users from './users';
 
-function attachRoutes(app, passport) {
+export default function attachRoutes(app, passport) {
   analysis(app, passport);
   auth(app, passport);
   collections(app, passport);
@@ -39,6 +40,7 @@ function attachRoutes(app, passport) {
   portfolios(app, passport);
   reports(app, passport);
   repositories(app, passport);
+  repoSync(app, passport);
   sources(app, passport);
   users(app, passport);
   adminUsers(app, passport);
@@ -49,5 +51,3 @@ function attachRoutes(app, passport) {
   roles(app, passport);
   userRoles(app, passport);
 }
-
-module.exports.attachRoutes = attachRoutes;

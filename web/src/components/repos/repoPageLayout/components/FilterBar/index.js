@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import CustomSelect from '../../../../activity/select';
+import { DROPDOWN_SORTING_TYPES } from '../../../../../utils/constants';
 import SearchFilter from '../SearchFilter';
 import DateRangeSelector from '../../../../dateRangeSelector';
 import { ReactionList, TagList } from '../../../../../data/activity';
@@ -18,13 +19,13 @@ const FilterBar = ({
   onChangeFilter,
   filterRequesterList,
   filterPRList,
-  tab,
+  tab
 }) => {
   const [toggleSearch, setToggleSearch] = useState(false);
 
   const handleSearchToggle = () => {
     setToggleSearch(toggle => !toggle);
-  }
+  };
 
   return (
     <div>
@@ -36,42 +37,47 @@ const FilterBar = ({
               end={endDate}
               onChange={onDateChange}
               outlined
+              onChangeFilter={onChangeFilter}
             />
           </div>
-          {
-            tab === 'activity' && (
-              <>
-                <div className="px-5 my-5">
-                  <CustomSelect
-                    selectProps={{
-                      options: filterUserList,
-                      placeholder: '',
-                      isMulti: true,
-                      onChange: ((value) => onChangeFilter('from', value)),
-                      value: filter.from,
-                    }}
-                    label="From"
-                    showCheckbox
-                    outlined
-                  />
-                </div>
-                <div className="px-5 my-5">
-                  <CustomSelect
-                    selectProps={{
-                      options: filterRequesterList,
-                      placeholder: '',
-                      isMulti: true,
-                      onChange: ((value) => onChangeFilter('to', value)),
-                      value: filter.to,
-                    }}
-                    label="To"
-                    showCheckbox
-                    outlined
-                  />
-                </div>
-              </>
-            )
-          }
+          {tab === 'activity' && (
+            <>
+              <div className="px-5 my-5">
+                <CustomSelect
+                  selectProps={{
+                    options: filterUserList,
+                    placeholder: '',
+                    isMulti: true,
+                    onChange: value => onChangeFilter('from', value),
+                    value: filter.from
+                  }}
+                  sortType={
+                    DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
+                  }
+                  label="From"
+                  showCheckbox
+                  outlined
+                />
+              </div>
+              <div className="px-5 my-5">
+                <CustomSelect
+                  selectProps={{
+                    options: filterRequesterList,
+                    placeholder: '',
+                    isMulti: true,
+                    onChange: value => onChangeFilter('to', value),
+                    value: filter.to
+                  }}
+                  sortType={
+                    DROPDOWN_SORTING_TYPES.ALPHABETICAL_USER_PRIORIY_SORT
+                  }
+                  label="To"
+                  showCheckbox
+                  outlined
+                />
+              </div>
+            </>
+          )}
           <div className="px-5 my-5">
             <CustomSelect
               selectProps={{
@@ -79,9 +85,10 @@ const FilterBar = ({
                 placeholder: '',
                 hideSelectedOptions: false,
                 isMulti: true,
-                onChange: ((value) => onChangeFilter('reactions', value)),
-                value: filter.reactions,
+                onChange: value => onChangeFilter('reactions', value),
+                value: filter.reactions
               }}
+              sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
               label="Summaries"
               showCheckbox
               outlined
@@ -93,10 +100,11 @@ const FilterBar = ({
                 options: TagList,
                 placeholder: '',
                 isMulti: true,
-                onChange: ((value) => onChangeFilter('tags', value)),
+                onChange: value => onChangeFilter('tags', value),
                 value: filter.tags,
-                hideSelectedOptions: false,
+                hideSelectedOptions: false
               }}
+              sortType={DROPDOWN_SORTING_TYPES.NO_SORT}
               label="Tags"
               showCheckbox
               outlined
@@ -108,44 +116,56 @@ const FilterBar = ({
                 options: filterPRList,
                 placeholder: '',
                 isMulti: true,
-                onChange: ((value) => onChangeFilter('pr', value)),
+                onChange: value => onChangeFilter('pr', value),
                 value: filter.pr,
-                hideSelectedOptions: false,
+                hideSelectedOptions: false
               }}
+              sortType={DROPDOWN_SORTING_TYPES.CHRONOLOGICAL_SORT}
               label="Pull requests"
               showCheckbox
               outlined
             />
           </div>
           <div className="field px-5 my-5 is-flex-grow-1 is-flex is-align-items-center is-justify-content-end">
-            <SearchIcon color={'#B7C0C6'} size="medium" className="is-clickable" onClick={handleSearchToggle} />
+            <SearchIcon
+              color={'#B7C0C6'}
+              size="medium"
+              className="is-clickable"
+              onClick={handleSearchToggle}
+            />
           </div>
         </div>
       </div>
-      {toggleSearch && <div className={clsx(`field mt-0 mx-8 is-flex-grow-1 ${styles['search-bar']}`)}>
-        <InputField
-          className="has-background-white"
-          type="text"
-          placeholder="Search"
-          onChange={(value) => onChangeFilter('search', value)}
-          value={filter.search}
-          iconLeft={<SearchIcon />}
-        />
-      </div>}
+      {toggleSearch && (
+        <div
+          className={clsx(
+            `field mt-0 mx-8 is-flex-grow-1 ${styles['search-bar']}`
+          )}
+        >
+          <InputField
+            className="has-background-white"
+            type="text"
+            placeholder="Search"
+            onChange={value => onChangeFilter('search', value)}
+            value={filter.search}
+            iconLeft={<SearchIcon />}
+          />
+        </div>
+      )}
     </div>
-  )
+  );
 };
 
 FilterBar.defaultProps = {
   filter: {},
   startDate: new Date(),
   endDate: new Date(),
-  onDateChange: () => { },
+  onDateChange: () => {},
   filterUserList: [],
-  onChangeFilter: () => { },
+  onChangeFilter: () => {},
   filterRequesterList: [],
   filterPRList: [],
-  tab: '',
+  tab: ''
 };
 
 FilterBar.propTypes = {
@@ -157,7 +177,7 @@ FilterBar.propTypes = {
   onChangeFilter: PropTypes.func,
   filterRequesterList: PropTypes.array,
   filterPRList: PropTypes.array,
-  tab: PropTypes.string,
+  tab: PropTypes.string
 };
 
 export default FilterBar;

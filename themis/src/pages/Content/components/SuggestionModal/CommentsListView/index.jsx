@@ -117,8 +117,7 @@ function CommentsList({
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
     changeIsDetailedView(true);
-    segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, userId, {
-      comment_bar_action: 'view',
+    segmentTrack(SEGMENT_EVENTS.VIEWED_SNIPPET, userId, {
       comment_source: sourceName,
       comment_used: title,
     });
@@ -129,8 +128,7 @@ function CommentsList({
       () => {
         setCopiedId(id);
         onLastUsedSmartComment(suggestion);
-        segmentTrack(SEGMENT_EVENTS.CLICKED_COMMENT_LIBRARY_BAR, userId, {
-          comment_bar_action: 'copy',
+        segmentTrack(SEGMENT_EVENTS.COPIED_SNIPPET, userId, {
           comment_source: sourceName,
           comment_used: title,
         });

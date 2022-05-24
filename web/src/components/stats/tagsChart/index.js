@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { find, isEmpty } from 'lodash';
+import { find, isEmpty, startCase } from 'lodash';
 import { TooltipWrapper } from '@nivo/tooltip';
 import CircularPacking from '../../CircularPackingChart';
 import styles from './tagsChart.module.scss';
@@ -9,14 +9,18 @@ import SnapshotButton from '../../snapshots/snapshotButton';
 import { CIRCLE_CHART_MIN_TOP, TAGS, CIRCULAR_PACKING_COLORS } from '../../../utils/constants';
 import { white0 } from '../../../../styles/_colors.module.scss';
 import LineChart from '../../LineChart';
+import { format } from 'date-fns';
+
+const DATE_TYPES = {
+  CUSTOM: 'custom'
+}
 
 const TagsChart = ({
-  tags, className, groupBy, isSnapshot, onClick,
+  tags, className, groupBy, isSnapshot, onClick, startDate, endDate, dateOption
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [tooltipPosition, setTooltipPosition] = useState('top');
   const [emptyChart, setEmptyChart] = useState(false);
-
   const handleTooltipPosition = (event) => {
     setTooltipPosition(event.clientY > CIRCLE_CHART_MIN_TOP ? 'top' : 'bottom');
   };
@@ -84,7 +88,11 @@ const TagsChart = ({
       <div className={clsx('box has-background-black-900 p-20 border-radius-4px', styles.tooltip)}>
         <div className="is-flex is-align-items-center is-justify-content-space-between">
           <span className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name}</span>
-          <span className="has-text-primary">last {tag.data.length} {groupBy}{tag.data.length > 1 && 's'}</span>
+          {
+            dateOption === DATE_TYPES.CUSTOM
+              ? (startDate && <span className="has-text-primary">{format(new Date(startDate ?? Date.now()), 'MMM d, yyyy')} - {format(new Date(endDate  ?? Date.now()), 'MMM d, yyyy')}</span>)
+              : (<span className="has-text-primary">{startCase(dateOption)}</span>)
+          }
         </div>
         {tag.data.length > 0 && (
           <div className={clsx('py-3', styles['line-chart-container'])}>
@@ -123,6 +131,7 @@ TagsChart.defaultProps = {
   className: '',
   groupBy: 'week',
   isSnapshot: false,
+  dateOption: 'custom'
 };
 
 TagsChart.propTypes = {
@@ -131,6 +140,9 @@ TagsChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.func,
+  startDate: PropTypes.string.isRequired,
+  endDate: PropTypes.string.isRequired,
+  dateOption: PropTypes.string,
 };
 
 export default TagsChart;

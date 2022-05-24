@@ -5,25 +5,22 @@ import checkTitleContains from '../support/check/checkTitleContains';
 import isExisting from '../support/check/isExisting';
 import isVisible from '../support/check/isDisplayed';
 import waitForVisible from '../support/action/waitForDisplayed';
-import checkIfElementExists from '../support/lib/checkIfElementExists';
 import checkURLPath from "../support/check/checkURLPath";
 import checkEqualsText from '../support/check/checkEqualsText';
 import checkContainsAnyText from '../support/check/checkContainsAnyText';
 import checkIsEmpty from '../support/check/checkIsEmpty';
 import checkProperty from '../support/check/checkProperty';
 import checkFontProperty from '../support/check/checkFontProperty';
-import checkSelected from '../support/check/checkSelected';
 import waitFor from '../support/action/waitFor';
 import checkNumberOfElementsExists from "../support/lib/checkNumberOfElementsExists";
 import checkEqualTextForElements from "../support/check/checkEqualTextForElements";
 import isEnabled from "../support/check/isEnabled";
-import isSelected from 'webdriverio/build/commands/element/isSelected';
 import checkAbsoluteURLPath from "../support/check/checkAbsoluteURLPath";
 import checkSelectedDropDownOption from '../support/check/checkSelectedDropDownOption';
 import checkTeamURLPath from "../support/check/checkTeamURLPath";
 import checkRoleForUser from "../support/check/checkRoleForUser";
-import {GlobalVars} from "../support/GlobalVars";
 import checkEqualTextToSavedVariable from "../support/check/checkEqualTextToSavedVariable";
+import checkSearchedResults from "../support/check/checkSearchedResults";
 Then(
     /^I expect that the url is( not)* "([^"]*)?"$/,
     checkURLPath
@@ -51,7 +48,6 @@ Then(
 
 Then(
     /^I expect that element "([^"]*)?" does( not)* appear exactly "([^"]*)?" times$/,
-    // checkIfElementExists
     checkNumberOfElementsExists
 );
 
@@ -63,6 +59,13 @@ Then(
 Then(
     /^I expect that element "([^"]*)?" becomes( not)* displayed$/,
     waitForVisible
+);
+
+
+Then(
+    /^I expect (\d+)(st|nd|rd|th) created label (button|element) "([^"]*)?" becomes( not)* displayed$/,
+    // @ts-ignore
+    checkSearchedResults
 );
 
 Then(

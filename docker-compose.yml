@@ -30,6 +30,20 @@ services:
     container_name: phoenix.apollo.sema.local
     networks:
       - sema
+  apollo-worker:
+    image: apollo-dev-i
+    build:
+      context: apollo/
+      dockerfile: ../.docker/apollo-worker/Dockerfile.dev
+    volumes:
+      - ./apollo:/usr/app
+      - /usr/app/node_modules
+    command: npm run worker
+    depends_on:
+      - mongodb
+    container_name: phoenix.apollo.worker.local
+    networks:
+      - sema
   apollo-tests:
     image: apollo-dev-i
     build:
@@ -41,6 +55,7 @@ services:
     command: npm run test
     depends_on:
       - mongodb
+      - beanstalkd
     container_name: phoenix.apollo.test.local
     networks:
       - sema
@@ -49,7 +64,7 @@ services:
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
-    command: migrate-mongo up
+    command: npm run migrate
     depends_on:
       - mongodb
     container_name: phoenix.apollo.migrations.local
@@ -62,6 +77,13 @@ services:
     volumes:
       - ~/docker/volumes/mongodb:/data/db
     container_name: phoenix.mongodb.sema.local
+    networks:
+      - sema
+  beanstalkd:
+    image: schickling/beanstalkd
+    ports:
+      - "11300:11300"
+    container_name: phoenix.beanstalkd.sema.local
     networks:
       - sema
 networks:

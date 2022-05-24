@@ -60,7 +60,7 @@ export default (app, passport) => {
 
   route.get('/knowledgeBase', passport.authenticate(['basic', 'bearer'], { session: false }), async (req, res) => {
     try {
-      const {data} = await intercom.getAll('articles');
+      const {data} = await intercom.getAll('articles/?per_page=250');
       return res.status(200).send(data);
     } catch (error) {
       logger.error(error);

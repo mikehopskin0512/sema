@@ -28,9 +28,16 @@ data "terraform_remote_state" "repos" {
   }
 }
 
-data "aws_secretsmanager_secret_version" "hephaestus" {
-  secret_id = aws_secretsmanager_secret.hephaestus.id
+data "aws_secretsmanager_secret_version" "hephaestus_summaries" {
+  secret_id = aws_secretsmanager_secret.hephaestus_summaries.id
   depends_on = [
-    aws_secretsmanager_secret_version.hephaestus
+    aws_secretsmanager_secret_version.hephaestus_summaries
+  ]
+}
+
+data "aws_secretsmanager_secret_version" "hephaestus_tags" {
+  secret_id = aws_secretsmanager_secret.hephaestus_tags.id
+  depends_on = [
+    aws_secretsmanager_secret_version.hephaestus_tags
   ]
 }

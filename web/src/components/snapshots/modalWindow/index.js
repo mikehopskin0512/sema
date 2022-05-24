@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useForm, Controller } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,18 +23,20 @@ import Toaster from '../../toaster';
 import useOutsideClick from "../../../utils/useOutsideClick";
 import { notify } from '../../toaster/index.js';
 
+import { convertToRaw } from 'draft-js';
+//import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { createEditorState } from '../../markdownEditor/utils';
+import MarkdownEditor from '../../markdownEditor';
+
 const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
-const { triggerAlert } = alertOperations;
+const { triggerAlert, clearAlert } = alertOperations;
 
 const schema = yup.object()
   .shape({
     title: yup
       .string()
       .required('Title is required'),
-    description: yup
-      .string()
-      .required('Description is required'),
   });
 
 export const SNAPSHOT_MODAL_TYPES = {
@@ -80,6 +82,7 @@ const SnapshotModal = ({
   const { _id: portfolioId = null } = portfolios.length ? portfolios[0] : {};
 
   const modalRef = useRef(null);
+  const [description, setDescription] = useState(createEditorState(snapshotData?.description));
 
   useOutsideClick(modalRef, onClose);
 
@@ -87,7 +90,7 @@ const SnapshotModal = ({
     const snapshotDataForSave = {
       userId: user._id,
       title: data.title,
-      description: data.description,
+      description: JSON.stringify(convertToRaw(description.getCurrentContent())),
       componentType: dataType,
       isHorizontal: dataType === 'comments',
       componentData: {
@@ -105,16 +108,16 @@ const SnapshotModal = ({
           onClose(payload.data);
         }
       } else {
-        if (!portfolioId) {
-          await dispatch(fetchPortfoliosOfUser(user._id, token));
-        }
-        await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        const snapshot = await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
+        const snapshotPortfolios = snapshot.data.portfolios;
+        const hasNoPortfolios = !portfolioId && snapshotPortfolios.length === 1;
         notify('Snapshot was added to your portfolio', {
           description: (
             <>
               <p>You've successfully added this snapshot.</p>
-              {portfolioId ? (
-                <Link href={`/portfolios/${portfolioId}`}>
+              {/* This condition shows that the user doesn't have a portfolio yet. */}
+              {hasNoPortfolios ? (
+                <Link href={`/portfolios/${snapshotPortfolios[0]}`}>
                   <a>Go to the portfolio</a>
                 </Link>
               ) : null}
@@ -126,6 +129,7 @@ const SnapshotModal = ({
       }
     } catch (e) {
       dispatch(triggerAlert('Unable to create snapshot!', 'error'));
+      dispatch(clearAlert());
     }
   };
 
@@ -135,7 +139,6 @@ const SnapshotModal = ({
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
       reset({
         title: snapshotData.title,
-        description: snapshotData.description,
       });
     }
   }, [snapshotData]);
@@ -174,19 +177,7 @@ const SnapshotModal = ({
               />
             </div>
             <div className="field mb-15">
-              <Controller
-                name="description"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    isMultiLine
-                    title="Description"
-                    textSizeClassName="aui-is-size-8"
-                    {...field}
-                    error={errors?.description?.message}
-                  />
-                )}
-              />
+            <MarkdownEditor readOnly={false} value={description} setValue={setDescription}/>
             </div>
             <div className="has-background-gray-300 p-10 mb-20" style={containerStyle}>
               {

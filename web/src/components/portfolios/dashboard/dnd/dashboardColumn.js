@@ -11,7 +11,8 @@ const DashboardColumn = ({
   path,
   onUpdate,
   onSnapshotDirectionUpdate,
-  isPdfView
+  isPdfView,
+  isPortfolioOwner
 }) => {
   const ref = useRef(null);
   const {
@@ -68,8 +69,11 @@ const DashboardColumn = ({
           {...componentProps}
           ref={ref}
           preview={preview}
+          isDragging={isDragging}
           onUpdate={onUpdate}
           onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+          path={path}
+          isOwner={isPortfolioOwner}
         />
       </div>
     </>

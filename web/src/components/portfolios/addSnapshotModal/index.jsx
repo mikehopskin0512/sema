@@ -147,7 +147,7 @@ const AddSnapshotModal = ({ active, onClose, type, snapshotId, showNotification 
       } else if (isSnapshotsModalType(type)) {
         showNotification(false);
       } else {
-        showNotification(false, PATHS.PORTFOLIO.VIEW(activePortfolio));
+        showNotification(false, PATHS.PORTFOLIO.VIEW(user.handle, activePortfolio));
       }
     } catch (error) {
       showNotification(true);

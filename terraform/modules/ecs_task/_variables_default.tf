@@ -9,16 +9,16 @@ variable "requires_compatibilities_ec2_enabled" {
   default     = false
 }
 
-variable "task_definition_resources" {
-  type = object({
-    cpu    = number
-    memory = number
-  })
+variable "task_definition_resources_cpu" {
+  type        = number
   description = "CPU and RAM limits for the task definition."
-  default = {
-    cpu    = 512
-    memory = 1024
-  }
+  default     = null
+}
+
+variable "task_definition_resources_memory" {
+  type        = number
+  description = "CPU and RAM limits for the task definition."
+  default     = null
 }
 
 variable "ecs_command" {
@@ -56,7 +56,13 @@ variable "ecs_secrets" {
 
 variable "external_iam_policies" {
   type        = list(string)
-  description = "A list of external iam policies attached to Lambda function."
+  description = "A list of external IAM policies to attach to the ECS task."
+  default     = []
+}
+
+variable "external_exec_iam_policies" {
+  type        = list(string)
+  description = "A list of external iam policies attached to ECS exec role."
   default     = []
 }
 

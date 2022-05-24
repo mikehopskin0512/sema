@@ -9,6 +9,7 @@ import { InputField } from 'adonis';
 import { content } from './content';
 import ExtensionButton from './extension-button';
 import styles from './onboarding.module.scss';
+import { useRouter } from 'next/router';
 
 import { authOperations } from '../../state/features/auth';
 
@@ -27,20 +28,21 @@ const ContentPage = ({
 }) => {
   const [teamName, setTeamName] = useState('');
   const [title, setTitle] = useState('');
-  const [subtitle, setSubtitle] = useState('');
+  const [subtitle, setSubtitle] = useState([]);
   const [img, setImg] = useState('');
-  const [animationData, setAnimationData] = useState('');
-
   useEffect(() => {
     setTitle(content[page - 1].title);
     setSubtitle(content[page - 1].subtitle);
     setImg(content[page - 1].img);
-    setAnimationData(content[page - 1].animationData);
   }, [page]);
+  const Router = useRouter();
 
   const handleOnClick = () => {
     trackOnboardingCompleted();
     closeModal();
+    if(isCreateTeamPage) {
+      Router.push(`/teams/add?name=${teamName}`);
+    }
   };
   const isCreateTeamPage = page === CREATE_TEAM_PAGE;
   const isLastPage = page === TOTAL_PAGES;
@@ -51,29 +53,18 @@ const ContentPage = ({
         <div className="is-flex is-justify-content-space-between is-align-items-center p-15 is-hidden-desktop">
           <p className="has-text-primary has-text-weight-semibold is-size-4 p-5">{isLastPage ? 'One last step' : 'Here\'s how it works'}</p>
           <button className="button is-white" onClick={handleOnClick}>
-            <FontAwesomeIcon className="is-clickable" icon={faTimes} size="lg" />
+            <FontAwesomeIcon className="is-clickable has-text-weight-regular" icon={faTimes} size="lg" />
           </button>
         </div>
         <div className={clsx('column is-flex is-justify-content-center is-6 p-25', styles['animation-container'])}>
           <div className={clsx('is-flex is-justify-content-center is-align-items-center')}>
             {/* <img src={img} alt="sema-img" className="is-full-width" /> */}
             <div className={styles.relative}>
-              {page === EXTENSION_PAGE && <img alt="" src="/img/onboarding/install-extension.png" />}
-              {page === CREATE_TEAM_PAGE && <img alt="" src="/img/onboarding/part-of-us.png" />}
-              {animationData && (
-                <>
-                  <div className={styles['animation-gradient']} />
-                  <Lottie
-                    play
-                    loop
-                    animationData={animationData}
-                  />
-                </>
-              )}
+            <img alt="" src={img} />
             </div>
           </div>
         </div>
-        <div className="column is-6 p-20 px-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
+        <div className="column is-6 p-40 is-relative is-flex is-flex-direction-column is-justify-content-space-between">
           <div className="is-flex is-justify-content-space-between is-align-items-center is-hidden-touch">
             <p className="has-text-primary has-text-weight-semibold is-size-5 p-5">{isLastPage ? 'One last step' : 'Here\'s how it works'}</p>
             <button className="button is-white" onClick={handleOnClick}>
@@ -81,18 +72,19 @@ const ContentPage = ({
             </button>
           </div>
           <div className={`${styles.info} is-flex is-flex-direction-column is-align-items-flex-start`}>
-            <p className={clsx('mb-20 is-size-4 has-text-weight-semibold has-text-black-950 ')}>{title}</p>
-            <p className={clsx('mt-20')}>{subtitle}</p>
+            <p className={clsx('mb-20 is-size-3 has-text-weight-semibold has-text-black-900')}>{title}</p>
+            {subtitle && subtitle.map(subtitleLine => (<p className='has-text-black-900'>{subtitleLine}</p>))}
             {page === EXTENSION_PAGE && <ExtensionButton isInstalled={isPluginInstalled} />}
             {isCreateTeamPage &&  <InputField
               className="mt-20 is-full-width"
               value={teamName}
               onChange={setTeamName}
               title="Team name"
+              placeholder="Your team name here"
             />}
             {isCreateTeamPage && <button
               type="button"
-              className="mt-20 is-align-self-flex-end button is-outlined is-primary"
+              className={clsx('mt-20 is-align-self-flex-end button is-outlined is-primary has-text-weight-semibold has-border-4', styles['skip-btn'])}
               onClick={closeModal}
             >
               Skip This for Now
@@ -101,12 +93,8 @@ const ContentPage = ({
           <div className={clsx('is-flex is-justify-content-space-between is-align-items-center mb-10', styles.footer)}>
             {
               page !== 1 ? (
-                <button
-                  type="button"
-                  className={clsx('button is-primary is-outlined')}
-                  onClick={previousPage}
-                >
-                  <FontAwesomeIcon icon={faArrowLeft} color="primary" size="lg" />
+                <button className="button is-white" onClick={previousPage}>
+                  <FontAwesomeIcon icon={faArrowLeft} className='has-text-black-900' size="lg" />
                 </button>
               ) : <div className={styles.space} />
             }
@@ -114,18 +102,18 @@ const ContentPage = ({
               {range(TOTAL_PAGES).map((index) => <li key={index} className={clsx((page === (index + 1)) && styles.active)} />)}
             </ul>
             {isCreateTeamPage ? (
-              <a
-                className={clsx('button is-primary')}
-                href={`/teams/add?name=${teamName}`}
+              <button
+                type="button"
+                className={clsx('button is-primary has-text-weight-semibold', styles.nextBtn)}
                 onClick={handleOnClick}
               >
-                Create Team
-              </a>
+               Create Team
+              </button>
 
             ) : (
               <button
                 type="button"
-                className={clsx('button is-primary')}
+                className={clsx('button is-primary has-text-weight-semibold', styles.nextBtn)}
                 onClick={nextPage}
               >
                 Next

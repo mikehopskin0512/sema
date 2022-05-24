@@ -13,6 +13,7 @@ import {
   patchPortfolioTitle,
   addSnapshotToPortfolio,
   patchPortfolioOverview,
+  getPortfolioByUserHandle,
   uploadAvatar,
 } from './api';
 import { putSnapshot } from '../snapshots/api';
@@ -47,6 +48,21 @@ const requestFetchPortfolioSuccess = (portfolio) => ({
 const requestFetchPortfolioError = (errors) => ({
   type: types.REQUEST_FETCH_PORTFOLIO_ERROR,
   errors,
+});
+
+const requestFetchPortfolioByHandle = () => ({
+  type: types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE,
+});
+
+const requestFetchPortfolioByHandleSuccess = (portfolio) => ({
+  type: types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE_SUCCESS,
+  portfolio,
+});
+
+const requestFetchPortfolioByHandleError = (errors, errorData) => ({
+  type: types.REQUEST_FETCH_PORTFOLIO_BY_HANDLE_ERROR,
+  errors,
+  errorData
 });
 
 const requestUpdatePortfolio = () => ({
@@ -394,6 +410,25 @@ export const addSnapshotsToPortfolio = ({
 
     const errMessage = `${status} - ${statusText}`;
     dispatch(requestFetchPortfolioError(errMessage));
+  }
+};
+
+export const fetchPortfolioByHandle = (handle, portfolioId, token) => async (dispatch) => {
+  try {
+    dispatch(requestFetchPortfolioByHandle());
+    const payload = await getPortfolioByUserHandle(handle, portfolioId, token);
+    const { data } = payload;
+    dispatch(requestFetchPortfolioByHandleSuccess(data));
+  } catch (error) {
+    const {
+      response: {
+        status,
+        statusText,
+        data
+      },
+    } = error;
+    const errMessage = `${status} - ${statusText}`;
+    dispatch(requestFetchPortfolioByHandleError(errMessage, data));
   }
 }
 

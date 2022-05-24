@@ -23,26 +23,28 @@ const { fetchTeamRepos } = teamsOperations;
 const tabTitle = {
   activity: 'Activity Log',
   stats: 'Repo Stats'
-}
+};
 
 const RepoPage = () => {
   const dispatch = useDispatch();
 
-  const { auth, repositories } = useSelector((state) => ({
+  const { auth, repositories } = useSelector(state => ({
     auth: state.authState,
-    repositories: state.repositoriesState,
+    repositories: state.repositoriesState
   }));
-  const { token, selectedTeam } = auth;
-  const { data: { overview } } = repositories;
+  const { token, selectedTeam, user } = auth;
+  const {
+    data: { overview }
+  } = repositories;
   const totalMetrics = {
     pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
     comments: overview.repoStats?.smartComments ?? 0,
     commenters: overview.repoStats?.smartCommenters ?? 0,
-    users: overview.repoStats?.semaUsers ?? 0,
+    users: overview.repoStats?.semaUsers ?? 0
   };
 
   const {
-    query: { repoId },
+    query: { repoId }
   } = useRouter();
 
   const firstUpdate = useRef(true);
@@ -51,7 +53,7 @@ const RepoPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
     startDate,
-    endDate,
+    endDate
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -62,6 +64,7 @@ const RepoPage = () => {
     tags: [],
     search: '',
     pr: [],
+    dateOption: ''
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
@@ -73,7 +76,7 @@ const RepoPage = () => {
   }, [selectedTeam]);
 
   useAuthEffect(() => {
-    if(!isEmpty(selectedTeam)){
+    if (!isEmpty(selectedTeam)) {
       dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
     }
   }, []);
@@ -91,9 +94,18 @@ const RepoPage = () => {
   useAuthEffect(() => {
     setIsLoading(true);
     if (
-      (dates.startDate && dates.endDate) || (!dates.startDate && !dates.endDate)
+      (dates.startDate && dates.endDate) ||
+      (!dates.startDate && !dates.endDate)
     ) {
-      dispatch(fetchRepositoryOverview(repoId, token, dates.startDate && dates.endDate ? getDateSub(dates.startDate, dates.endDate) : null));
+      dispatch(
+        fetchRepositoryOverview(
+          repoId,
+          token,
+          dates.startDate && dates.endDate
+            ? getDateSub(dates.startDate, dates.endDate)
+            : null
+        )
+      );
     }
   }, [repoId, dates]);
 
@@ -110,7 +122,7 @@ const RepoPage = () => {
     if (!startDate && !endDate) {
       setDates({
         startDate: null,
-        endDate: null,
+        endDate: null
       });
     }
   }, [startDate, endDate]);
@@ -120,33 +132,54 @@ const RepoPage = () => {
       return;
     }
     const requesters = overview.smartcomments
-      .filter((item) => item.githubMetadata.requester)
-      .map((({ githubMetadata }) => {
+      .filter(item => item.githubMetadata.requester)
+      .map(({ githubMetadata }) => {
         return {
           label: githubMetadata.requester,
           value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
-        }
-      }))
-    const users = overview.smartcomments.filter((item) => item.userId).map((item) => {
-      const { firstName = '', lastName = '', _id = '', avatarUrl = '', username = 'User@email.com' } = item.userId;
-      return {
-        label: isEmpty(firstName) && isEmpty(lastName) ? username.split('@')[0] : `${firstName} ${lastName}`,
-        value: _id,
-        img: avatarUrl || DEFAULT_AVATAR,
-      };
-    });
-    const prs = overview.smartcomments.filter((item) => item.githubMetadata).map((item) => {
-      const { githubMetadata: { head, title = '', pull_number: pullNum = '' } } = item;
-      const prName = title || head || 'Pull Request';
-      return {
-        label: `${prName} (#${pullNum || '0'})`,
-        value: pullNum,
-        name: prName,
-      };
-    });
-    let filteredPRs = []
-    prs.forEach((item) => {
+          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
+        };
+      });
+    const users = overview.smartcomments
+      .filter(item => item.userId)
+      .map(item => {
+        const {
+          firstName = '',
+          lastName = '',
+          _id = '',
+          avatarUrl = '',
+          username = 'User@email.com'
+        } = item.userId;
+        return {
+          label:
+            isEmpty(firstName) && isEmpty(lastName)
+              ? username.split('@')[0]
+              : `${firstName} ${lastName}`,
+          value: _id,
+          img: avatarUrl || DEFAULT_AVATAR
+        };
+      });
+    const prs = overview.smartcomments
+      .filter(item => item.githubMetadata)
+      .map(item => {
+        const {
+          githubMetadata: {
+            head,
+            title = '',
+            pull_number: pullNum = '',
+            updated_at
+          }
+        } = item;
+        const prName = title || head || 'Pull Request';
+        return {
+          updated_at: new Date(updated_at),
+          label: `${prName} (#${pullNum || '0'})`,
+          value: pullNum,
+          name: prName
+        };
+      });
+    let filteredPRs = [];
+    prs.forEach(item => {
       const index = findIndex(filteredPRs, { value: item.value });
       if (index !== -1) {
         if (isEmpty(filteredPRs[index].prName)) {
@@ -156,7 +189,7 @@ const RepoPage = () => {
         filteredPRs.push(item);
       }
     });
-    setFilterRequesterList(uniqBy(requesters, 'value'))
+    setFilterRequesterList(uniqBy(requesters, 'value'));
     setFilterUserList(uniqBy(users, 'value'));
     setFilterPRList(filteredPRs);
     setIsLoading(false);
@@ -165,12 +198,12 @@ const RepoPage = () => {
   const onDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-  }
+  };
 
   const onChangeFilter = (type, value) => {
     setFilter({
       ...filter,
-      [type]: value,
+      [type]: value
     });
   };
 
@@ -199,20 +232,25 @@ const RepoPage = () => {
 
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
-        <Metrics isLastThirtyDays={true} metrics={overview.metrics} totalMetrics={totalMetrics} />
+        <Metrics
+          isLastThirtyDays={true}
+          metrics={overview.metrics}
+          totalMetrics={totalMetrics}
+        />
       </div>
-      {
-        selectedTab === 'activity' && (
-          <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />
-        )
-      }
-      {
-        selectedTab === 'stats' && (
-          <div className={styles.wrapper}>
-            <StatsPage startDate={startDate} endDate={endDate} filter={filter} isLoading={isLoading} />
-          </div>
-        )
-      }
+      {selectedTab === 'activity' && (
+        <ActivityPage startDate={startDate} endDate={endDate} filter={filter} />
+      )}
+      {selectedTab === 'stats' && (
+        <div className={styles.wrapper}>
+          <StatsPage
+            startDate={startDate}
+            endDate={endDate}
+            filter={filter}
+            isLoading={isLoading}
+          />
+        </div>
+      )}
     </RepoPageLayout>
   );
 };

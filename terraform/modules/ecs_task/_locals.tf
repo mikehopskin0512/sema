@@ -8,7 +8,8 @@ locals {
   task_definition_exec_cw_policy       = "${local.task_definition}-cw-policy"
   task_definition_exec_ssm_policy      = "${local.task_definition}-ssm-policy"
   task_definition_exec_secret_policy   = "${local.task_definition}-secret-policy"
-  task_definition_exec_external_policy = "${local.task_definition}-external-policy"
+  task_definition_external_policy      = "${local.task_definition}-external-policy"
+  task_definition_exec_external_policy = "${local.task_definition}-external-exec-policy"
   cw_log_group                         = "/${var.name_prefix}/ecs/${var.application}"
   sg                                   = "${local.task_definition}-sg"
 }
@@ -41,15 +42,17 @@ locals {
 }
 
 locals {
-  domain                      = "${var.ecs_external_access.domain_prefix}.${var.ecs_external_access.domain}"
+  domain_prefix               = can(var.ecs_external_access.domain_prefix) ? var.ecs_external_access.domain_prefix : ""
+  ecs_external_access_domain  = can(var.ecs_external_access.domain) ? var.ecs_external_access.domain : ""
+  domain                      = "${local.domain_prefix}.${local.ecs_external_access_domain}"
   requires_compatibilities    = var.requires_compatibilities_ec2_enabled ? ["EC2"] : ["FARGATE"]
-  ecs_external_access_enabled = var.ecs_external_access != null ? true : false
+  ecs_external_access_enabled = var.ecs_external_access != null
   ecs_port_mappings           = local.ecs_external_access_enabled ? [{ containerPort = var.ecs_external_access.port }] : []
   ecs_command                 = var.ecs_command != null ? var.ecs_command : []
   datadog_enabled             = length(compact([null, "", var.datadog_api_key])) > 0 ? true : false
   gpu_enabled                 = length(compact([null, "", var.gpu])) > 0 ? true : false
-  ecs_main_container_cpu      = local.datadog_enabled ? var.task_definition_resources.cpu - 124 : var.task_definition_resources.cpu
-  ecs_main_container_memory   = local.datadog_enabled ? var.task_definition_resources.memory - 124 : var.task_definition_resources.memory
+  ecs_main_container_cpu      = local.datadog_enabled ? var.task_definition_resources_cpu - 124 : var.task_definition_resources_cpu
+  ecs_main_container_memory   = local.datadog_enabled ? var.task_definition_resources_memory - 124 : var.task_definition_resources_memory
 
   log_configuration = local.datadog_enabled ? jsonencode({
     logDriver = "awsfirelens",
@@ -72,25 +75,27 @@ locals {
   })
 
   gpu_configuration = local.gpu_enabled ? [{
-          type  = "GPU",
-          value = "${var.gpu}"
+    type  = "GPU",
+    value = "${var.gpu}"
     },
   ] : null
   ecs_main_container = [
-    {
-      name   = var.application,
-      image  = "${var.image}",
-      cpu    = local.ecs_main_container_cpu,
-      memory = local.ecs_main_container_memory,
-      resourceRequirements = "${local.gpu_configuration}",
-      essential        = true,
-      portMappings     = local.ecs_port_mappings,
-      environment      = var.ecs_envs,
-      secrets          = local.ecs_secrets,
-      command          = local.ecs_command,
-      logConfiguration = jsondecode(local.log_configuration)
-    }
-    ]
+    merge(
+      {
+        name                 = var.application,
+        image                = "${var.image}",
+        cpu                  = local.ecs_main_container_cpu,
+        resourceRequirements = "${local.gpu_configuration}",
+        essential            = true,
+        portMappings         = local.ecs_port_mappings,
+        environment          = var.ecs_envs,
+        secrets              = local.ecs_secrets,
+        command              = local.ecs_command,
+        logConfiguration     = jsondecode(local.log_configuration)
+      },
+      local.ecs_main_container_memory != null ? { memory = local.ecs_main_container_memory } : null
+    )
+  ]
 
   ecs_container_definitions = local.datadog_enabled ? jsonencode(concat(local.ecs_main_container, [
     {

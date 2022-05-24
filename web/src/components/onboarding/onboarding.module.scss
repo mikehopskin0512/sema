@@ -73,14 +73,14 @@
         color: $gray-500;
         position: relative;
         display: inline-block;
-        background-color: $gray-500;
+        background-color: $gray-400;
         border-radius: 100px;
         vertical-align: middle;
-        min-width: 12px;
-        min-height: 12px;
+        min-width: 8px;
+        min-height: 8px;
         padding: 0px;
         transition: all .3s ease;
-        margin-right: 5px;
+        margin-right: 8px;
         cursor: hand;
         cursor: pointer;
         &:hover{
@@ -90,9 +90,9 @@
 }
 
 .active{
-    min-width: 15px !important;
-    min-height: 15px !important;
-    background-color: $blue-600 !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    background-color: $blue-700 !important;
     &:hover{
         opacity:1;
     }
@@ -134,8 +134,10 @@
     position: relative;
 }
 
-.chrome-button {
-    width: 25px;
+.download-button {
+    path {
+        fill: white;
+    }
 }
 
 .footer {
@@ -146,4 +148,12 @@
 
 .loader {
     width: 25px;
+}
+
+.nextBtn {
+    height: 48px;
+}
+
+.skip-btn {
+    border-width: 2px;
 }

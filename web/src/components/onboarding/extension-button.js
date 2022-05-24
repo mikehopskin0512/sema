@@ -11,10 +11,10 @@ export default function ExtensionButton({ isInstalled }) {
       <>
         <button
           type="button"
-          className="button is-primary has-text-weight-semibold mt-25"
+          className="button is-primary has-text-weight-semibold mt-25 p-0 pr-15"
           onClick={() => window.open(EXTENSION_LINK, '_blank')}
         >
-          <img src="/img/onboarding/google-extension.png" alt="install" className={clsx("mr-10", styles['chrome-button'])} />
+          <img src="/img/icons/svg/download.svg" alt="install" className={clsx("mx-15 my-18")} />
           Add Extension Here
         </button>
       </>
@@ -22,8 +22,8 @@ export default function ExtensionButton({ isInstalled }) {
   }
   return (
     <div className="is-flex is-align-items-center mt-25">
-      <FontAwesomeIcon icon={faCheckCircle} className="has-text-primary mr-10" size="lg" />
-      <p>Extension Added</p>
+      <img src="/img/icons/svg/green-check.svg"></img>
+      <p className="has-text-black-900 has-text-weight-semibold ml-15">Extension Installed</p>
     </div>
   );
 };
