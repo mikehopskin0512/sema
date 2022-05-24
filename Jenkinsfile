@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 @Library('customSlackLibrary') _
+@Library('jenkinsSharedLibs') _
 pipeline {
     agent {
         docker {
@@ -27,6 +28,7 @@ pipeline {
         stage('Prepare the environment') {
             steps {
                 script {
+                    addHeadBuildName()
                     release_regex = '(.*release.*)'
                     switch (GIT_BRANCH) {
                     case 'master':
