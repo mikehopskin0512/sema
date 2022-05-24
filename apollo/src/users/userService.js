@@ -491,9 +491,6 @@ export const updateUserRepositoryList = async (user, repos, identity) => {
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    if (!user.identities?.[0]) {
-      console.log('### No identity found for user', user);
-    }
     const identityRepo = user.identities?.[0].repositories || [];
     if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
       return true;

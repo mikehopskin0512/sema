@@ -21,7 +21,8 @@ const ChartSnapshot = React.forwardRef(({
   spaced,
   isOwner,
   onUpdate,
-  onSnapshotDirectionUpdate
+  onSnapshotDirectionUpdate,
+  isDragging
 }, ref) => {
   const dispatch = useDispatch();
   const { auth } = useSelector(
@@ -76,7 +77,9 @@ const ChartSnapshot = React.forwardRef(({
         toggleModalActive={toggleDeleteModal}
         onSubmit={() => onDeleteSnapshot()}
       />
-      <div className={clsx(styles.snapshot, styles['chart-snapshot'], "has-background-gray-200 p-25 is-relative chart-snapshot", spaced && 'mr-16')} ref={preview}>
+      <div
+        className={clsx(styles.snapshot, styles['chart-snapshot'], 'has-background-gray-200 p-25 is-relative chart-snapshot', spaced && 'mr-16', isDragging && styles['snapshot-dragging'])}
+        ref={preview}>
         {isOwner && <div className={clsx("is-pulled-right mb-40 is-flex is-align-items-baseline mr-0", styles['container-buttons-wrapper'])}>
           <DropDownMenu
             isRight
