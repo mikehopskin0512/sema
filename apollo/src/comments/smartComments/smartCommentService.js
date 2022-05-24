@@ -124,7 +124,7 @@ export const filterSmartComments = async ({
       .lean()
       .populate('userId')
       .populate('tags')
-      .sort('-createdAt')
+      .sort({ 'source.createdAt': -1 })
       .exec();
 
     return smartComments;
@@ -203,7 +203,7 @@ export const getSowMetrics = async (params) => {
           .fill(0)
           .map(async (item, index) => {
             const comments = await SmartComment.find(query)
-              .sort({ createdAt: -1 })
+              .sort({ 'source.createdAt': -1 })
               .skip(10 * index)
               .limit(10);
             const reactions = comments.filter(
@@ -618,7 +618,7 @@ export const findByExternalId = async (repoId, populate, createdAt) => {
       });
       query.populate({ select: ['label'], path: 'tags' });
     }
-    const comments = await query.sort({ createdAt: -1 }).lean();
+    const comments = await query.sort({ 'source.createdAt': -1 }).lean();
     return comments;
   } catch (err) {
     const error = new errors.BadRequest(err);
