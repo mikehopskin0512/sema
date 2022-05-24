@@ -27,7 +27,8 @@ pipeline {
         stage('Prepare the environment') {
             steps {
                 script {
-                    release_regex = '(.*release.*|DVPS-291)'
+                    release_regex = '(.*release.*)'
+                    release_regex = '(.*release.*)'
                     switch (GIT_BRANCH) {
                     case 'master':
                             env.ENVIRONMENT = 'prod'
