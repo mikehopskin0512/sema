@@ -144,6 +144,14 @@ $family-monospace: sans-serif;
 $badge-font-size: 20px;
 $badge-height: 30px;
 
+//fix for markdown link dropdown styles
+.rdw-link-modal-target-option {
+  display: none;
+}
+.rdw-link-modal {
+  height: 173px !important;
+}
+
 @import "bulma";
 @import "bulma-switch";
 
