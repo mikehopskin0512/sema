@@ -6,21 +6,21 @@ const LineChartSkeleton = (props) => (
     speed={2}
     width="100%"
     height={382}
-    viewBox="0 0 624 382"
+    viewBox="0 0 624 328"
     backgroundColor="#d3d7d9"
     foregroundColor="#ecebeb"
     {...props}
   >
-    <rect x="5" y="17" rx="0" ry="0" width="144" height="42" />
-    <rect x="449" y="15" rx="0" ry="0" width="144" height="42" />
-    <rect x="3" y="236" rx="0" ry="0" width="43" height="144" />
-    <rect x="244" y="239" rx="0" ry="0" width="43" height="144" />
-    <rect x="324" y="241" rx="0" ry="0" width="43" height="144" />
-    <rect x="404" y="241" rx="0" ry="0" width="43" height="144" />
-    <rect x="481" y="241" rx="0" ry="0" width="43" height="144" />
-    <rect x="555" y="238" rx="0" ry="0" width="43" height="144" />
-    <rect x="84" y="236" rx="0" ry="0" width="43" height="144" />
-    <rect x="163" y="237" rx="0" ry="0" width="43" height="144" />
+    <rect x="475" y="0" rx="0" ry="0" width="144" height="42" />
+    <rect x="5" y="209" rx="0" ry="0" width="43" height="119" />
+    <rect x="247" y="125" rx="0" ry="0" width="43" height="202" />
+    <rect x="327" y="215" rx="0" ry="0" width="43" height="113" />
+    <rect x="407" y="151" rx="0" ry="0" width="43" height="177" />
+    <rect x="482" y="208" rx="0" ry="0" width="43" height="120" />
+    <rect x="558" y="226" rx="0" ry="0" width="43" height="102" />
+    <rect x="162" y="285" rx="0" ry="0" width="43" height="42" />
+    <rect x="0" y="0" rx="0" ry="0" width="144" height="42" />
+    <rect x="80" y="137" rx="0" ry="0" width="43" height="192" />
   </ContentLoader>
 )
 
