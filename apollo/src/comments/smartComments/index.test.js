@@ -25,7 +25,6 @@ describe('GET /comments/smart', () => {
   });
 
   describe('with two comments', () => {
-    let status;
     let data;
 
     beforeAll(async () => {
@@ -85,7 +84,7 @@ describe('GET /comments/smart', () => {
       assert(earlierComment.createdAt > laterComment.createdAt);
       assert(earlierComment.source.createdAt < laterComment.source.createdAt);
 
-      ({ status, data } = await apollo.get('/v1/comments/smart', {
+      ({ data } = await apollo.get('/v1/comments/smart', {
         headers: {
           authorization: `Bearer ${token}`,
         },
