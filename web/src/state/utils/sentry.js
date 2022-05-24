@@ -14,7 +14,7 @@ const isServer = () => typeof window === 'undefined';
 
 const redirect = (ctx, location) => {
   if (ctx.req) {
-    ctx.res.writeHead(302, { Location: location }).end();
+    if (!ctx.headersSent) ctx.res.writeHead(302, { Location: location }).end();
   } else {
     Router.push(location);
   }
