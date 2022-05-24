@@ -2,12 +2,10 @@ import Router from 'next/router';
 import jwtDecode from 'jwt-decode';
 
 import { authOperations } from '../features/auth';
-import { alertOperations } from '../features/alerts';
 import { getCookie } from './cookie';
 import { PATHS } from '../../utils/constants';
 
 const { refreshJwt } = authOperations;
-const { triggerAlert } = alertOperations;
 
 const refreshCookie = process.env.NEXT_PUBLIC_REFRESH_COOKIE;
 const isServer = () => typeof window === 'undefined';
