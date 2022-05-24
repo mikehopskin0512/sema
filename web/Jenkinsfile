@@ -8,13 +8,13 @@ pipeline {
         }
     }
 
-    environment {
-        BRANCH_NAME = "${GIT_BRANCH.split('/')[1]}"
+    parameters {
+        string(name: 'ENVIRONMENT', description: 'The name of environment for building')
+        string(name: 'BRANCH_NAME', description: 'The name of branch for building')
     }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
-        disableConcurrentBuilds()
         timestamps()
     }
 
@@ -28,31 +28,7 @@ pipeline {
         stage('Build web') {
             steps {
                 script {
-                    release_regex = '(.*release.*)'
-                    env.BRANCH_NAME = BRANCH_NAME
-
-                    switch (BRANCH_NAME) {
-                    case 'master':
-                            ENVIRONMENT = 'prod'
-                            buildWeb(ENVIRONMENT, BRANCH_NAME)
-                            break
-                    case ['qa']:
-                            ENVIRONMENT = 'qa'
-                            buildWeb(ENVIRONMENT, BRANCH_NAME)
-                            break
-                    case ['qa1']:
-                            ENVIRONMENT = 'qa1'
-                            buildWeb(ENVIRONMENT, BRANCH_NAME)
-                            break
-                    case ~/$release_regex/:
-                            ENVIRONMENT = 'staging'
-                            buildWeb(ENVIRONMENT, BRANCH_NAME)
-                            break
-                    default:
-                            ENVIRONMENT = 'undefined'
-                            error('Aborting the build. The environment is ' + ENVIRONMENT) // Abort the build
-                            break
-                    }
+                    buildWeb(params.ENVIRONMENT, params.BRANCH_NAME)
                 }
             }
         }
@@ -61,7 +37,7 @@ pipeline {
             steps {
                 script {
                     withAWS(role:'jenkins-role-to-assume') {
-                        deployWeb(ENVIRONMENT, BRANCH_NAME)
+                        deployWeb(params.ENVIRONMENT, params.BRANCH_NAME)
                     }
                 }
             }
@@ -70,7 +46,7 @@ pipeline {
 
     post {
         failure {
-            slackSendsFail(env.JOB_NAME, env.BRANCH_NAME, BUILD_URL)
+            slackSendsFail(env.JOB_NAME, params.BRANCH_NAME, BUILD_URL)
         }
     }
 }
