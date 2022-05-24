@@ -1,0 +1,88 @@
+#!/usr/bin/env groovy
+@Library('customSlackLibrary') _
+pipeline {
+    agent {
+        docker {
+            image 'cimg/base:2022.01'
+            args '-u root --privileged --net host -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    parameters {
+        string(name: 'ENVIRONMENT', description: 'The name of environment for building')
+        string(name: 'BRANCH_NAME', description: 'The name of branch for building')
+    }
+
+    environment {
+        STAGING_MONGOOSE_URI = credentials('STAGING_MONGOOSE_URI')
+        STAGING_MONGODB_NAME = credentials('STAGING_MONGODB_NAME')
+        BACKUP_SERVER_PASS = credentials('BACKUP_SERVER_PASS')
+        BACKUP_SERVER_USER = credentials('BACKUP_SERVER_USER')
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'sudo apt-get update -y && sudo apt-get install -y jq awscli'
+            }
+        }
+
+        stage('Build apollo') {
+            steps {
+                script {
+                    buildApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+                }
+            }
+        }
+
+        stage('Refrash DB') {
+            when { branch pattern: '.*release.*', comparator: 'REGEXP' }
+            steps {
+                script {
+                    withAWS(role:'jenkins-role-to-assume') {
+                        def result = invokeLambda(functionName: 'staging-backups-auto-restore-lambda',
+                            returnValueAsString: true,
+                            payload: [ 'connection_string':"${env.STAGING_MONGOOSE_URI}", 'database_name':"${env.STAGING_MONGODB_NAME}", 'db_webserver_password':"${env.BACKUP_SERVER_PASS}", 'db_webserver_user':"${env.BACKUP_SERVER_USER}"])
+
+                        if (! result.equals('0')) {
+                            error('Aborting the build. The lambda is failed') // Abort the build
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy apollo') {
+            steps {
+                script {
+                    withAWS(role:'jenkins-role-to-assume') {
+                        deployApollo(params.ENVIRONMENT, params.BRANCH_NAME)
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            slackSendsFail(env.JOB_NAME, params.BRANCH_NAME, BUILD_URL)
+        }
+    }
+}
+
+def buildApollo(String environment, String branchName) {
+    dir('apollo') {
+        sh './build.sh ' + environment + ' ' + branchName
+    }
+}
+
+def deployApollo(String environment, String branchName) {
+    dir('apollo') {
+        sh './deploy.sh ' + environment + ' ' + branchName
+    }
+}

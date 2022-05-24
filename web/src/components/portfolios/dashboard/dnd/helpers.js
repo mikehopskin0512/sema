@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { COMPONENTS_TYPES, DND_CASES_CHECKS, ELEM_TYPES, SNAPSHOTS_TYPES } from '../../../portfolios/dashboard/dnd/constants';
+import { COMPONENTS_TYPES, DND_CASES_CHECKS, ELEM_TYPES } from '../../../portfolios/dashboard/dnd/constants';
 import { EmptySnapshot } from "../../../snapshots/snapshot/EmptySnapshot";
 import ChartSnapshot from "../../../snapshots/snapshot/ChartSnapshot";
 import CommentSnapshot from "../../../snapshots/snapshot/CommentSnapshot";
@@ -12,11 +12,7 @@ import { isEqual } from "lodash";
 const sortSnapshotsByType = (items) => {
   if (!items.length) return {};
   return items.reduce((acc, item) => {
-    if (item.componentType === SNAPSHOTS_TYPES.COMMENTS) {
-      acc.comments.push(item);
-    } else {
-      acc.others.push(item);
-    }
+    acc.others.push(item);
     return acc;
   }, {
     comments: [],
@@ -38,20 +34,26 @@ const splitArrToChunks = (inputArray, chunkSize = 2) => {
 };
 
 const getInitialLayoutStructure = (items, portfolioData) => {
-  const commentsLayout = items.comments?.map(item => ({
-    type: ELEM_TYPES.ROW,
-    id: uuid(),
-    maxItemsCount: 1,
-    data: item,
-    isIndependent: true,
-    componentToRender: COMPONENTS_TYPES.COMMENTS,
-    componentProps: {
-      portfolioId: portfolioData?._id,
-      snapshotData: item,
-    },
-  })) ?? [];
+  const fullWidthBlocks = items.filter(i => i.isHorizontal).map(item => {
+    return {
+      type: ELEM_TYPES.ROW,
+      id: uuid(),
+      isIndependent: false,
+      children: [{
+        type: ELEM_TYPES.COLUMN,
+        componentToRender: COMPONENTS_TYPES.COMMENTS,
+        componentProps: {
+          portfolioId: portfolioData?._id,
+          snapshotData: item,
+        },
+        id: item._id,
+        ...item,
+      }],
+      data: null,
+    };
+  });
 
-  const otherLayout = splitArrToChunks(items.others)
+  const parsedLayout = splitArrToChunks(items.filter(i => !i.isHorizontal))
     .map(item => {
       return {
         type: ELEM_TYPES.ROW,
@@ -59,7 +61,7 @@ const getInitialLayoutStructure = (items, portfolioData) => {
         isIndependent: false,
         children: item.map(item => ({
           type: ELEM_TYPES.COLUMN,
-          componentToRender: COMPONENTS_TYPES.CHART,
+          componentToRender: item?.componentType ===  "comments" ? COMPONENTS_TYPES.COMMENTS : COMPONENTS_TYPES.CHART,
           componentProps: {
             portfolioId: portfolioData?._id,
             snapshotData: item,
@@ -72,17 +74,16 @@ const getInitialLayoutStructure = (items, portfolioData) => {
     });
 
   // Add placeholder for droppable item if its needed
-  const lastItemChildren = otherLayout?.[otherLayout.length -1]?.children;
+  const lastItemChildren = parsedLayout?.[parsedLayout.length -1]?.children;
 
   if (lastItemChildren?.length === 1) {
     lastItemChildren?.push(getEmptyColumn());
   }
-  return [...commentsLayout, ...otherLayout];
+  return [...fullWidthBlocks, ...parsedLayout];
 };
 
 const getPageLayout = (items, portfolioData) => {
-  const parsedItems = sortSnapshotsByType(items);
-  return getInitialLayoutStructure(parsedItems, portfolioData);
+  return getInitialLayoutStructure(items, portfolioData);
 };
 
 const getDraggableComponent = (type) => {
@@ -140,38 +141,26 @@ const parseLayoutPayload = (layout) => {
 // Data should be restored before displaying on page after layout changes
 const getSavedData = (savedLayout, snaps) => {
   return savedLayout.map(item => {
-    if (item.isIndependent) {
-      const data = snaps.find(i => i._id === item.data) ?? null;
-      return {
-        ...item,
-        data,
-      };
-    } else {
-      return {
-        ...item,
-        children: item.children?.map(child => {
-          if (child.isEmpty) {
-            return child;
-          } else {
-            const data = snaps?.find(i => i._id === child.id) ?? null;
-            if (!data) return getEmptyColumn()
-            return {
-              ...child,
-              componentData: data.componentData ?? {},
-              componentProps: {
-                ...child.componentProps,
-                snapshotData: data,
-              },
-            };
-          }
-        }),
-      };
-    }
+    return {
+      ...item,
+      children: item.children?.map(child => {
+        if (child.isEmpty) {
+          return child;
+        } else {
+          const data = snaps?.find(i => i._id === child.id) ?? null;
+          if (!data) return getEmptyColumn()
+          return {
+            ...child,
+            componentData: data.componentData ?? {},
+            componentProps: {
+              ...child.componentProps,
+              snapshotData: data,
+            },
+          };
+        }
+      }),
+    };
   })?.filter(i => {
-    if (i.isIndependent) {
-      return Boolean(i?.data);
-    }
-
     return !(i.children && DND_CASES_CHECKS.EMPTY_CHILDREN_ROW(i));
   });
 };
@@ -208,13 +197,11 @@ const changePortfolioOrder = async ({ portfolio, token, currentLayout }) => {
 
 const getSnapsIds = (layout) => {
  return layout.reduce((acc, i) => {
-   if (i.isIndependent) {
-     acc.push(i.data);
-   } else {
-     i.children?.forEach(child => {
-       acc.push(child?.id);
-     })
-   }
+
+   i.children?.forEach(child => {
+     acc.push(child?.id);
+   })
+
    return acc;
  }, [])
 }
