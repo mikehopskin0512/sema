@@ -14,7 +14,8 @@ const isServer = () => typeof window === 'undefined';
 
 const redirect = (ctx, location) => {
   if (ctx.req) {
-    if (!ctx.headersSent) ctx.res.writeHead(302, { Location: location }).end();
+    if (!ctx.res.headersSent)
+      ctx.res.writeHead(302, { Location: location }).end();
   } else {
     Router.push(location);
   }
@@ -26,30 +27,34 @@ const initialize = async (ctx) => {
   if (isServer()) {
     // On server-side, get refreshCookie and call refreshJwt (which will return isVerified)
     jwt = getCookie(refreshCookie, ctx.req);
-    const payload = (jwt) ? await ctx.store.dispatch(refreshJwt(jwt)) : {};
+    const payload = jwt ? await ctx.store.dispatch(refreshJwt(jwt)) : {};
     ({ isVerified } = payload);
   } else {
     // On client-side, get jwt from state and decode to get isVerified
-    ({ authState: { token: jwt } } = ctx.store.getState());
-    ({ isVerified } = (jwt) ? jwtDecode(jwt) : {});
+    ({
+      authState: { token: jwt },
+    } = ctx.store.getState());
+    ({ isVerified } = jwt ? jwtDecode(jwt) : {});
   }
 
   // Redirects w/ exclusions
   if (
-    !(ctx.pathname).includes(PATHS.LOGIN) &&
-    !(ctx.pathname).includes(`[handle]/portfolio/[portfolioId]`) &&
-    !(ctx.pathname).includes(`${PATHS.TEAMS._}/invite/[teamId]`) &&
-    !(ctx.pathname).includes(PATHS.ONBOARDING) &&
-    !(ctx.pathname).includes(PATHS.GUIDES) &&
-    !(ctx.pathname).includes(PATHS.REGISTER) &&
-    !(ctx.pathname).includes(PATHS.PASSWORD_RESET)
+    !ctx.pathname.includes(PATHS.LOGIN) &&
+    !ctx.pathname.includes(`[handle]/portfolio/[portfolioId]`) &&
+    !ctx.pathname.includes(`${PATHS.TEAMS._}/invite/[teamId]`) &&
+    !ctx.pathname.includes(PATHS.ONBOARDING) &&
+    !ctx.pathname.includes(PATHS.GUIDES) &&
+    !ctx.pathname.includes(PATHS.REGISTER) &&
+    !ctx.pathname.includes(PATHS.PASSWORD_RESET)
   ) {
-    if (!jwt) { redirect(ctx, PATHS.LOGIN); }
-    if (ctx.store.getState().authState.user.isWaitlist) { redirect(ctx, PATHS.LOGIN); }
+    if (!jwt) {
+      redirect(ctx, PATHS.LOGIN);
+    }
+    if (ctx.store.getState().authState.user.isWaitlist) {
+      redirect(ctx, PATHS.LOGIN);
+    }
     if (!isVerified) {
-      ctx.res.setHeader(
-        'Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`],
-      );
+      ctx.res.setHeader('Set-Cookie', [`${refreshCookie}=deleted; Max-Age=0`]);
       redirect(ctx, PATHS.LOGIN);
     }
   }
