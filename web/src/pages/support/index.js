@@ -42,7 +42,7 @@ function HelpAndSupport() {
   const renderKnowledgeBase = () => (
     <div className="has-background-white py-60 has-text-centered container">
       <p className="has-text-weight-semibold has-text-black is-size-3 is-size-4-mobile px-20">Knowledge Base</p>
-      <div className={`dropdown ml-5 is-full-width ${searchString.length > 2 && filteredArticles.length > 0 && 'is-active'}`}>
+      <div className={`dropdown ml-5 is-full-width ${searchString.length > 2 && 'is-active'}`}>
         <div className="dropdown-trigger is-full-width">
           <InputField
             className={clsx(styles['search-wrapper'])}
@@ -55,7 +55,11 @@ function HelpAndSupport() {
         </div>
         <div className={`dropdown-menu is-full-width pt-10 my-0 mx-auto ${styles['dropdown-container']}`} id="status-filter-popup" role="menu">
           <div className={`dropdown-content px-15 py-10 is-background-white ${styles['dropwdown-wrapper']}`}>
-            {filteredArticles.map((article) => (
+            {filteredArticles.length < 1 ? (
+              <div className={`has-text-left is-clickable py-5 ${styles['search-item']}`}>
+                <span className='is-size-7'>No articles found!</span>
+              </div>
+            ) : filteredArticles.map((article) => (
               <div key={article.id} className={`has-text-left is-clickable py-5 ${styles['search-item']}`} onClick={() => window.open(article.url, '_blank')}>
                 <span className='is-size-7'>{article.title}</span>
               </div>
@@ -99,7 +103,7 @@ function HelpAndSupport() {
 
   useEffect(() => {
     if (searchString.length > 2) {
-      setFilteredArticles(articles.filter((article) => article.title.toLowerCase().includes(searchString.toLowerCase()) && article.url !== null));
+      setFilteredArticles(articles.filter((article) => article.title?.toLowerCase().includes(searchString.toLowerCase()) && article.url !== null));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString])
