@@ -37,7 +37,7 @@ services:
       TOKENLIFE: ${apollo_TOKENLIFE}
       VERSION: ${apollo_VERSION}
     image: apollo-migrations-ecr
-    command: migrate-mongo up
+    command: npm run migrate
     build:
       context: apollo/
       dockerfile: ../.docker/apollo/Dockerfile.dev

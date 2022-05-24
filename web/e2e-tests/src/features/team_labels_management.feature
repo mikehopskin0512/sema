@@ -169,6 +169,41 @@ Feature: Team Labels Management
         Then I expect that element "labelNameErrorMessage" does appear exactly "1" times
         And  I expect that element "labelNameErrorMessage" matches the text "Label name is required!"
 
+    @PTA89_4
+    Scenario: Sema member can remove label from the snippet during editing in Label Management table
+        Then I expect that element "userLogo" becomes displayed
+        When I click on the element "userLogo"
+        Then I expect that element "semaCorporateTeamLogo" becomes displayed
+        When I click on the element "semaCorporateTeamLogo"
+        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
+        When I click on the element "viewAllTeamMembersBtn"
+        Then I expect that element "teamLabelsManagementTab" becomes displayed
+        When I click on the element "teamLabelsManagementTab"
+        Then I expect that element "searchLabelsInput" becomes displayed
+        When I set "All" to the inputfield "searchLabelsInput"
+        And  I pause for 3000ms
+        Then I expect that element "labelsTable1stRowLabelName" matches the text "ALL"
+        When I save the text of element "labelsTable1stRowLabelSnippets"
+        And  I expect that element "threeDots1stRowBtn" becomes displayed
+        When I click on the element "threeDots1stRowBtn"
+        Then I expect that element "editLabelBtn" becomes displayed
+        When I click on the element "editLabelBtn"
+        Then I expect that element "editLabelAddedOnTable" becomes displayed
+        And  I expect that element "editLabelAddedOn1stRowToggle" becomes displayed
+        When I click on the element "editLabelAddedOn1stRowToggle"
+        Then I expect that element "labelNotificationText" matches the text "Successfully removed tag from this snippet!"
+        And  I expect that element "labelNotificationCloseBtn" becomes displayed
+        When I click on the element "labelNotificationCloseBtn"
+        Then I expect that element "labelNotificationCloseBtn" becomes not displayed
+        And  I expect that element "newLabelSaveBtn" becomes displayed
+        When I click on the element "newLabelSaveBtn"
+        Then I expect that element "labelNotificationText" matches the text "Label updated successfully"
+        And  I expect that element "searchLabelsInput" becomes displayed
+        When I set "All" to the inputfield "searchLabelsInput"
+        And  I pause for 3000ms
+        Then I expect that element "labelsTable1stRowLabelName" matches the text "ALL"
+        And  I expect that button "labelsTable1stRowLabelSnippets" not matches the saved variable
+
 #    @PTA90   #https://semalab.atlassian.net/browse/EAST-1344
 #    Scenario: Sema member can remove label in Label Management table
 #        Then I expect that element "userLogo" becomes displayed
@@ -327,41 +362,6 @@ Feature: Team Labels Management
         Then I expect that element "labelNotificationText" becomes not displayed
         When I click on the element "editLabelAddedOn1stRowToggle"
         Then I expect that element "labelNotificationText" matches the text "Successfully added tag to this snippet!"
-
-    @PTA89_4
-    Scenario: Sema member can remove label from the snippet during editing in Label Management table
-        Then I expect that element "userLogo" becomes displayed
-        When I click on the element "userLogo"
-        Then I expect that element "semaCorporateTeamLogo" becomes displayed
-        When I click on the element "semaCorporateTeamLogo"
-        Then I expect that element "viewAllTeamMembersBtn" becomes displayed
-        When I click on the element "viewAllTeamMembersBtn"
-        Then I expect that element "teamLabelsManagementTab" becomes displayed
-        When I click on the element "teamLabelsManagementTab"
-        Then I expect that element "searchLabelsInput" becomes displayed
-        When I set "All" to the inputfield "searchLabelsInput"
-        And  I pause for 3000ms
-        Then I expect that element "labelsTable1stRowLabelName" matches the text "ALL"
-        When I save the text of element "labelsTable1stRowLabelSnippets"
-        And  I expect that element "threeDots1stRowBtn" becomes displayed
-        When I click on the element "threeDots1stRowBtn"
-        Then I expect that element "editLabelBtn" becomes displayed
-        When I click on the element "editLabelBtn"
-        Then I expect that element "editLabelAddedOnTable" becomes displayed
-        And  I expect that element "editLabelAddedOn1stRowToggle" becomes displayed
-        When I click on the element "editLabelAddedOn1stRowToggle"
-        Then I expect that element "labelNotificationText" matches the text "Successfully removed tag from this snippet!"
-        And  I expect that element "labelNotificationCloseBtn" becomes displayed
-        When I click on the element "labelNotificationCloseBtn"
-        Then I expect that element "labelNotificationCloseBtn" becomes not displayed
-        And  I expect that element "newLabelSaveBtn" becomes displayed
-        When I click on the element "newLabelSaveBtn"
-        Then I expect that element "labelNotificationText" matches the text "Label updated successfully"
-        And  I expect that element "searchLabelsInput" becomes displayed
-        When I set "All" to the inputfield "searchLabelsInput"
-        And  I pause for 3000ms
-        Then I expect that element "labelsTable1stRowLabelName" matches the text "ALL"
-        And  I expect that button "labelsTable1stRowLabelSnippets" not matches the saved variable
 
 #    @PTA89_5    #https://semalab.atlassian.net/browse/EAST-1288
 #    Scenario: Sema member can go back to the team from Edit label page by back arrow and Label Management link

@@ -14,8 +14,8 @@ environment {
          description: 'The branch to get the latest migrations scripts'
       )
       choice(
-          name: 'database', 
-          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'], 
+          name: 'database',
+          choices: ['phoenix_qa', 'phoenix_qa1', 'phoenix_staging'],
           description: 'Pick something')
    }
 
@@ -44,7 +44,7 @@ environment {
                     npx migrate-mongo status > migrations_status.txt
                     grep -Po "│.+?\\d{14}.+?js.+?│.+?│" migrations_status.txt | awk '{$1=$1};1' | sed -E 's/\\s[0-9]{4}-.+?Z/ APPLIED/'
                     ''', returnStdout: true).trim()
-                    RUN_LOG = sh(script: 'npx migrate-mongo up', returnStdout: true) 
+                    RUN_LOG = sh(script: 'npm run migrate', returnStdout: true)
                 }
             }
          }
