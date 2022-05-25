@@ -7,16 +7,24 @@ import { generateToken, metricsStartDate } from '../shared/utils';
 import { checkIfInvitedByToken } from '../invitations/invitationService';
 import UserRole from '../userRoles/userRoleModel';
 
-const { Types: { ObjectId } } = mongoose;
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 export const create = async (user, inviteToken) => {
-  let {
-    password = null, username = '', firstName, lastName,
-    jobTitle = '', avatarUrl = '',
-    identities, terms,
-    isWaitlist, origin = 'waitlist',
+  const {
+    password = null,
+    username = '',
+    firstName,
+    lastName,
+    jobTitle = '',
+    avatarUrl = '',
+    identities,
+    terms,
     collections,
   } = user;
+  let { isWaitlist } = user;
+  let { origin = 'waitlist' } = user;
 
   // Verify token expires 24 hours from now
   const token = await generateToken();
@@ -25,11 +33,13 @@ export const create = async (user, inviteToken) => {
 
   try {
     const invitation = await checkIfInvitedByToken(inviteToken);
-    if(!!invitation) {
+    if (invitation) {
       isWaitlist = false;
       origin = 'invitation';
     }
-      const { username: handle } = identities.length && identities.find((item) => item?.provider === 'github');
+    const { username: handle } =
+      identities.length &&
+      identities.find((item) => item?.provider === 'github');
 
     const newUser = new User({
       username: username.toLowerCase(),
@@ -51,14 +61,18 @@ export const create = async (user, inviteToken) => {
     const savedUser = await newUser.save();
 
     if (!!invitation && invitation.team) {
-      await UserRole.create({ team: invitation.team, user: savedUser._id, role: invitation.role });
+      await UserRole.create({
+        team: invitation.team,
+        user: savedUser._id,
+        role: invitation.role,
+      });
     }
 
     return savedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -68,17 +82,20 @@ export const update = async (user) => {
     const query = User.findOneAndUpdate(
       { _id: new ObjectId(_id) },
       { $set: user },
-      { new: true },
+      { new: true }
     );
-    const updatedUser = await query.lean().populate({
-      path: 'collections.collectionData',
-      model: 'Collection',
-    }).exec();
+    const updatedUser = await query
+      .lean()
+      .populate({
+        path: 'collections.collectionData',
+        model: 'Collection',
+      })
+      .exec();
     return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -87,14 +104,14 @@ export const patch = async (id, fields) => {
     const query = User.findOneAndUpdate(
       { _id: new ObjectId(id) },
       { $set: fields },
-      { new: true },
+      { new: true }
     );
     const updatedUser = await query.lean().exec();
     return updatedUser;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -107,12 +124,12 @@ export const updateIdentity = async (user, identity) => {
     // need to pull old identity and then push new one
     const queryPull = User.updateOne(
       { _id: new ObjectId(_id) },
-      { $pull: { identities: { provider } } },
+      { $pull: { identities: { provider } } }
     );
 
     const queryAdd = User.updateOne(
       { _id: new ObjectId(_id) },
-      { $addToSet: { identities: identity } },
+      { $addToSet: { identities: identity } }
     );
 
     await queryPull.exec();
@@ -121,7 +138,7 @@ export const updateIdentity = async (user, identity) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -138,19 +155,21 @@ export const findByUsername = async (username = '') => {
   }
 };
 
-export const findByUsernameOrIdentity = async (username = '', identity = {}) => {
+export const findByUsernameOrIdentity = async (
+  username = '',
+  identity = {}
+) => {
   try {
     const query = User.findOne({
-      $or:
-        [
-          { username: username.toLowerCase() },
-          {
-            $and: [
-              { 'identities.provider': identity.provider },
-              { 'identities.id': identity.id },
-            ]
-          },
-        ],
+      $or: [
+        { username: username.toLowerCase() },
+        {
+          $and: [
+            { 'identities.provider': identity.provider },
+            { 'identities.id': identity.id },
+          ],
+        },
+      ],
     });
     const user = await query.lean().exec();
 
@@ -165,27 +184,28 @@ export const findByUsernameOrIdentity = async (username = '', identity = {}) => 
 export const findById = async (id) => {
   try {
     const query = User.findById(id);
-    const user = await query.lean().populate({
-      path: 'collections.collectionData',
-      model: 'Collection',
-      select: {
-        _id: 1,
-        isActive: 1,
-        name: 1,
-      }
-    }).exec();
+    const user = await query
+      .lean()
+      .populate({
+        path: 'collections.collectionData',
+        model: 'Collection',
+        select: {
+          _id: 1,
+          isActive: 1,
+          name: 1,
+        },
+      })
+      .exec();
 
     // If no user found, abort
-    if (!user) {
-      return {};
-    }
+    if (!user) return null;
 
     let roles = await UserRole.find({ user: id })
-    .populate('team')
-    .populate('role');
+      .populate('team')
+      .populate('role');
 
     if (roles) {
-      roles = roles.map((role) => (role.toJSON()));
+      roles = roles.map((role) => role.toJSON());
     }
 
     return { ...user, roles };
@@ -200,30 +220,33 @@ export const findUserCollectionsByUserId = async (id) => {
   try {
     const query = User.findOne({ _id: id });
     // TODO: we have to delete that populate / it slows down /snippet page
-    const user = await query.lean().populate({
-      path: 'collections.collectionData',
-      model: 'Collection',
-      select: {
-        _id: 1,
-        isActive: 1,
-        name: 1,
-        description: 1,
-        author: 1,
-        tags: 1,
-        source: 1,
-        type: 1,
-      },
-      populate: {
-        path: 'comments',
-        model: 'SuggestedComment',
+    const user = await query
+      .lean()
+      .populate({
+        path: 'collections.collectionData',
+        model: 'Collection',
         select: {
+          _id: 1,
+          isActive: 1,
+          name: 1,
+          description: 1,
+          author: 1,
+          tags: 1,
           source: 1,
+          type: 1,
         },
         populate: {
-          path: 'tags.tag'
-        }
-      }
-    }).exec();
+          path: 'comments',
+          model: 'SuggestedComment',
+          select: {
+            source: 1,
+          },
+          populate: {
+            path: 'tags.tag',
+          },
+        },
+      })
+      .exec();
 
     return user;
   } catch (err) {
@@ -231,7 +254,7 @@ export const findUserCollectionsByUserId = async (id) => {
     const error = new errors.NotFound(err);
     return error;
   }
-}
+};
 
 export const findByOrgId = async (orgId) => {
   try {
@@ -250,9 +273,9 @@ export const joinOrg = async (userId, org) => {
   const { id: orgId } = org;
   try {
     const query = User.findOneAndUpdate(
-      { _id: new ObjectId(userId), 'organizations.id': { $ne: orgId } },
+      { '_id': new ObjectId(userId), 'organizations.id': { $ne: orgId } },
       { $addToSet: { organizations: org } },
-      { new: true },
+      { new: true }
     );
 
     const updatedUser = await query.exec();
@@ -260,11 +283,11 @@ export const joinOrg = async (userId, org) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
-export const validateLogin = async (username = '', password) => {
+export const validateLogin = async (username, password) => {
   const query = User.findOne({ username: username.toLowerCase() });
   const user = await query.select('+password').exec();
 
@@ -287,7 +310,7 @@ export const validateLogin = async (username = '', password) => {
   const payload = user.toObject();
   delete payload.password;
 
-  return (payload);
+  return payload;
 };
 
 export const initiatePasswordReset = async (username = '') => {
@@ -300,7 +323,7 @@ export const initiatePasswordReset = async (username = '') => {
     const query = User.findOneAndUpdate(
       { username: username.toLowerCase() },
       { $set: { resetToken: token, resetExpires } },
-      { new: true },
+      { new: true }
     );
     const updatedUser = await query.lean().exec();
 
@@ -311,7 +334,7 @@ export const initiatePasswordReset = async (username = '') => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -337,7 +360,7 @@ export const verifyUser = async (verificationToken) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -351,14 +374,13 @@ export const resetVerification = async (username = '') => {
     const query = User.findOneAndUpdate(
       { username: username.toLowerCase() },
       {
-        $set:
-        {
+        $set: {
           isVerified: false,
           verificationToken: token,
           verificationExpires,
         },
       },
-      { new: true },
+      { new: true }
     );
     const updatedUser = await query.lean().exec();
 
@@ -370,7 +392,7 @@ export const resetVerification = async (username = '') => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -384,14 +406,13 @@ export const resetPassword = async (token, password) => {
         },
       },
       {
-        $set:
-        {
+        $set: {
           password,
           resetToken: null,
           resetExpires: null,
         },
       },
-      { new: true },
+      { new: true }
     );
     const updatedUser = await query.lean().exec();
 
@@ -402,20 +423,18 @@ export const resetPassword = async (token, password) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
 export const validatePasswordReset = async (token) => {
   try {
-    const query = User.findOne(
-      {
-        resetToken: token,
-        resetExpires: {
-          $gt: Date.now(),
-        },
+    const query = User.findOne({
+      resetToken: token,
+      resetExpires: {
+        $gt: Date.now(),
       },
-    );
+    });
     const user = await query.lean().exec();
 
     if (!user) {
@@ -425,7 +444,7 @@ export const validatePasswordReset = async (token) => {
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
@@ -434,143 +453,155 @@ export const updateLastLogin = async (user) => {
     const { _id } = user;
     const query = User.findOneAndUpdate(
       { _id: new ObjectId(_id) },
-      { lastLogin: Date.now() },
+      { lastLogin: Date.now() }
     );
     await query.exec();
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
 export const updateUserRepositoryList = async (user, repos, identity) => {
   try {
-    const identityRepo = user.identities?.[0].repositories;
+    const identityRepo = user.identities?.[0].repositories || [];
 
     const repositories = repos.map((el) => {
       const { name, id, full_name: fullName, html_url: githubUrl } = el;
-      const index = _.findIndex(identityRepo, function(o) {
-        return o.id.toString() === el.id.toString();
-      } );
+      const index = _.findIndex(
+        identityRepo,
+        (o) => o.id.toString() === el.id.toString()
+      );
       if (index === -1) {
         return { name, id, fullName, githubUrl };
       }
       const repo = identityRepo[index];
       return { name, id, fullName, githubUrl, ...repo };
     });
-    identity = Object.assign(identity, { repositories });
-    await updateIdentity(user, identity);
+    const newIdentity = Object.assign(identity, { repositories });
+    await updateIdentity(user, newIdentity);
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
 export const addRepositoryToIdentity = async (user, repository) => {
   try {
-    const identityRepo = user.identities?.[0].repositories;
-    if (_.findIndex(identityRepo, { 'id': repository.id }) !== -1) {
+    const identityRepo = user.identities?.[0].repositories || [];
+    if (_.findIndex(identityRepo, { id: repository.id }) !== -1) {
       return true;
     }
     let identity = user.identities?.[0];
-    identity = Object.assign(identity, { repositories: [ ...identityRepo, repository ] });
+    identity = Object.assign(identity, {
+      repositories: [...identityRepo, repository],
+    });
     await updateIdentity(user, identity);
     return true;
   } catch (err) {
     const error = new errors.BadRequest(err);
-    logger.error(error);
-    throw (error);
+    logger.error(err);
+    throw error;
   }
 };
 
 export const revokeInvitation = async (senderEmail) => {
   try {
-    await User.findOneAndUpdate({ username: senderEmail }, { $inc: { inviteCount: 1 }});
+    await User.findOneAndUpdate(
+      { username: senderEmail },
+      { $inc: { inviteCount: 1 } }
+    );
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
 };
 
 export const bulkUpdateUserCollections = async (doc, ids) => {
   try {
-    const filter = ids ? {
-      _id: { $in: ids }
-    } : {};
-    await User.updateMany(
-      filter,
-      {
-        $push: {
-          "collections": {
-            isActive: false,
-            collectionData: doc
-          }
+    const filter = ids
+      ? {
+          _id: { $in: ids },
         }
-      }
-    )
+      : {};
+    await User.updateMany(filter, {
+      $push: {
+        collections: {
+          isActive: false,
+          collectionData: doc,
+        },
+      },
+    });
   } catch (err) {
     const error = new errors.BadRequest(err);
     logger.error(error);
-    throw (error);
+    throw error;
   }
-}
+};
 
-export const getUserMetadata = async(id) => {
-  const user = await User.findById(id).select({ firstName: 1, lastName: 1, avatarUrl: 1, identities: 1 }).lean().exec();
+export const getUserMetadata = async (id) => {
+  const user = await User.findById(id)
+    .select({ firstName: 1, lastName: 1, avatarUrl: 1, identities: 1 })
+    .lean()
+    .exec();
   return user;
 };
 
 export async function getRepoUsersMetrics(repoExternalId) {
   const [doc] = await User.aggregate([
     {
-      '$match': {
+      $match: {
         'createdAt': {
-          '$gte': metricsStartDate
+          $gte: metricsStartDate,
         },
-        'identities.repositories.id': repoExternalId
-      }
-    }, {
-      '$group': {
-        '_id': {
-          '$dateToString': {
-            'format': '%Y-%m-%d', 
-            'date': '$createdAt'
-          }
-        }, 
-        'users': {
-          '$sum': 1
-        }
-      }
-    }, {
-      '$project': {
-        '_id': '$$REMOVE', 
-        'values': {
-          '$arrayToObject': [
+        'identities.repositories.id': repoExternalId,
+      },
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: '%Y-%m-%d',
+            date: '$createdAt',
+          },
+        },
+        users: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $project: {
+        _id: '$$REMOVE',
+        values: {
+          $arrayToObject: [
             [
               {
-                'k': '$_id', 
-                'v': '$users'
-              }
-            ]
-          ]
-        }
-      }
-    }, {
-      '$group': {
-        '_id': null, 
-        'values': {
-          '$mergeObjects': '$values'
-        }
-      }
-    }, {
-      '$replaceRoot': {
-        'newRoot': '$values'
-      }
-    }
+                k: '$_id',
+                v: '$users',
+              },
+            ],
+          ],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        values: {
+          $mergeObjects: '$values',
+        },
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$values',
+      },
+    },
   ]);
   return doc;
 }
@@ -578,73 +609,80 @@ export async function getRepoUsersMetrics(repoExternalId) {
 export async function getTeamUsersMetrics(teamId) {
   const [doc] = await User.aggregate([
     {
-      '$match': {
-        'createdAt': {
-          '$gte': metricsStartDate
-        }
-      }
-    }, {
-      '$lookup': {
-        'from': 'userroles', 
-        'localField': '_id', 
-        'foreignField': 'user', 
-        'as': 'userRole'
-      }
-    }, {
-      '$unwind': '$userRole'
+      $match: {
+        createdAt: {
+          $gte: metricsStartDate,
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: 'userroles',
+        localField: '_id',
+        foreignField: 'user',
+        as: 'userRole',
+      },
+    },
+    {
+      $unwind: '$userRole',
     },
     {
       $match: {
-        'userRole.team': (new ObjectId(teamId))
-      }
+        'userRole.team': new ObjectId(teamId),
+      },
     },
-     {
-      '$lookup': {
-        'from': 'teams', 
-        'localField': 'userRole.team', 
-        'foreignField': '_id', 
-        'as': 'team'
-      }
-    }, {
-      '$unwind': '$team'
-    }, {
-      '$group': {
-        '_id': {
-          '$dateToString': {
-            'format': '%Y-%m-%d', 
-            'date': '$createdAt'
-          }
-        }, 
-        'users': {
-          '$sum': 1
-        }
-      }
-    }, {
-      '$project': {
-        '_id': '$$REMOVE', 
-        'values': {
-          '$arrayToObject': [
+    {
+      $lookup: {
+        from: 'teams',
+        localField: 'userRole.team',
+        foreignField: '_id',
+        as: 'team',
+      },
+    },
+    {
+      $unwind: '$team',
+    },
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: '%Y-%m-%d',
+            date: '$createdAt',
+          },
+        },
+        users: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $project: {
+        _id: '$$REMOVE',
+        values: {
+          $arrayToObject: [
             [
               {
-                'k': '$_id', 
-                'v': '$users'
-              }
-            ]
-          ]
-        }
-      }
-    }, {
-      '$group': {
-        '_id': null, 
-        'values': {
-          '$mergeObjects': '$values'
-        }
-      }
-    }, {
-      '$replaceRoot': {
-        'newRoot': '$values'
-      }
-    }
+                k: '$_id',
+                v: '$users',
+              },
+            ],
+          ],
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        values: {
+          $mergeObjects: '$values',
+        },
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: '$values',
+      },
+    },
   ]);
   return doc;
 }
