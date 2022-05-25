@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { addDays } from 'date-fns';
 import nock from 'nock';
 import resetNocks from '../../test/nocks';
 import * as userService from '../users/userService';
@@ -1100,6 +1101,107 @@ describe('Import Repository Queue', () => {
       it('should have GitHub ID', () => {
         expect(comment.githubMetadata.id).toBe('545313646');
         expect(comment.source.id).toBe('pullRequestComment:545313646');
+      });
+    });
+  });
+
+  describe('public repository', () => {
+    let comments;
+
+    beforeAll(async () => {
+      resetNocks();
+      await Repository.deleteMany();
+      await SmartComment.deleteMany();
+    });
+
+    beforeAll(async () => {
+      repository = await createRepository({
+        name: 'phoenix',
+        type: 'github',
+        id: '237888452',
+        addedBy: user,
+        cloneUrl: 'https://github.com/Semalab/phoenix',
+      });
+    });
+
+    describe('processing queue', () => {
+      let defaultInstallationNock;
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/installation')
+          .reply(404);
+
+        defaultInstallationNock = nock('https://api.github.com')
+          .persist()
+          .get('/app/installations')
+          .reply(200, [{ id: 35676598 }])
+          .post('/app/installations/35676598/access_tokens', {})
+          .reply(201, {
+            token: 'ghs_3X0VGC4uvSelTLk3bbumXa8IycJNAx3I0j2z',
+            expires_at: addDays(new Date(), 1).toISOString(),
+            permissions: {
+              members: 'read',
+              organization_administration: 'read',
+              organization_projects: 'read',
+              actions: 'read',
+              administration: 'read',
+              contents: 'read',
+              discussions: 'write',
+              issues: 'write',
+              metadata: 'read',
+              pull_requests: 'write',
+              repository_hooks: 'write',
+              repository_projects: 'read',
+              vulnerability_alerts: 'read',
+            },
+            repository_selection: 'selected',
+          });
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query({ sort: 'created', direction: 'desc', page: 1 })
+          .reply(200, getFirstPageOfPullRequestComments(), {
+            Link: '<https://api.github.com/repos/Semalab/phoenix/pulls/comments?page=1&sort=created&direction=desc>; rel="last"',
+          });
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls')
+          .query(() => true)
+          .reply(200, []);
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/3')
+          .reply(200, getPullRequestDetailPR3());
+      });
+
+      beforeAll(async () => {
+        await handler({ id: repository.id });
+      });
+
+      beforeAll(async () => {
+        comments = await findSmartCommentsByExternalId(repository.externalId);
+      });
+
+      it('should import comments', () => {
+        expect(comments.length).toBe(2);
+      });
+
+      it('should use any installation ID', () => {
+        expect(defaultInstallationNock.isDone()).toBe(true);
       });
     });
   });

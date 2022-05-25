@@ -108,7 +108,8 @@ async function importReviewsFromPullRequest({
 async function getOctokit(repository) {
   const installationId =
     repository.installationId ||
-    (await findInstallationIdForRepository(repository));
+    (await findInstallationIdForRepository(repository)) ||
+    (await findSomeInstallationId());
 
   return new Octokit({
     authStrategy: createAppAuth,
@@ -129,12 +130,23 @@ const appOctokit = new Octokit({
 });
 
 async function findInstallationIdForRepository(repository) {
-  const { owner, repo } = getOwnerAndRepo(repository);
-  const { data: installation } = await appOctokit.apps.getRepoInstallation({
-    owner,
-    repo,
-  });
-  return installation.id;
+  try {
+    const { owner, repo } = getOwnerAndRepo(repository);
+    const { data: installation } = await appOctokit.apps.getRepoInstallation({
+      owner,
+      repo,
+    });
+    return installation.id;
+  } catch (error) {
+    if (error.status === 404) return null;
+    throw error;
+  }
+}
+
+// Use any installation ID, hopefully importing a public repository.
+async function findSomeInstallationId() {
+  const { data: installations } = await appOctokit.apps.listInstallations();
+  return installations[0]?.id;
 }
 
 function getOwnerAndRepo(repository) {
