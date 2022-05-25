@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
-@Library('customSlackLibrary') _
-@Library('jenkinsSharedLibs') _
+@Library(['customSlackLibrary', 'jenkinsSharedLibs']) _
 pipeline {
     agent {
         docker {
