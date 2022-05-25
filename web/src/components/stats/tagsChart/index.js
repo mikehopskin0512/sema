@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { find, isEmpty, startCase } from 'lodash';
@@ -6,17 +6,26 @@ import { TooltipWrapper } from '@nivo/tooltip';
 import CircularPacking from '../../CircularPackingChart';
 import styles from './tagsChart.module.scss';
 import SnapshotButton from '../../snapshots/snapshotButton';
-import { CIRCLE_CHART_MIN_TOP, TAGS, CIRCULAR_PACKING_COLORS } from '../../../utils/constants';
+import { CIRCLE_CHART_MIN_TOP, CIRCULAR_PACKING_COLORS, TAGS } from '../../../utils/constants';
 import { white0 } from '../../../../styles/_colors.module.scss';
 import LineChart from '../../LineChart';
 import { format } from 'date-fns';
+import DiagramChartSkeleton from '../../../components/skeletons/diagramChartSkeleton';
 
 const DATE_TYPES = {
-  CUSTOM: 'custom'
-}
+  CUSTOM: 'custom',
+};
 
 const TagsChart = ({
-  tags, className, groupBy, isSnapshot, onClick, startDate, endDate, dateOption
+  tags,
+  className,
+  groupBy,
+  isSnapshot,
+  onClick,
+  startDate,
+  endDate,
+  dateOption,
+  isLoading,
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [tooltipPosition, setTooltipPosition] = useState('top');
@@ -83,15 +92,20 @@ const TagsChart = ({
     }
   }, [tags]);
 
-  const renderTooltip = React.memo(({ formattedValue, value, data: tag }) => (
+  const renderTooltip = React.memo(({
+    formattedValue,
+    value,
+    data: tag,
+  }) => (
     <TooltipWrapper anchor={tooltipPosition} position={[0, 0]}>
       <div className={clsx('box has-background-black-900 p-20 border-radius-4px', styles.tooltip)}>
-        <div className="is-flex is-align-items-center is-justify-content-space-between">
-          <span className="has-text-weight-semibold is-size-7 has-text-white-50">{tag.name}</span>
+        <div className='is-flex is-align-items-center is-justify-content-space-between'>
+          <span className='has-text-weight-semibold is-size-7 has-text-white-50'>{tag.name}</span>
           {
             dateOption === DATE_TYPES.CUSTOM
-              ? (startDate && <span className="has-text-primary">{format(new Date(startDate ?? Date.now()), 'MMM d, yyyy')} - {format(new Date(endDate  ?? Date.now()), 'MMM d, yyyy')}</span>)
-              : (<span className="has-text-primary">{startCase(dateOption)}</span>)
+              ? (startDate && <span
+                className='has-text-primary'>{format(new Date(startDate ?? Date.now()), 'MMM d, yyyy')} - {format(new Date(endDate ?? Date.now()), 'MMM d, yyyy')}</span>)
+              : (<span className='has-text-primary'>{startCase(dateOption)}</span>)
           }
         </div>
         {tag.data.length > 0 && (
@@ -99,25 +113,31 @@ const TagsChart = ({
             <LineChart data={[tag]} />
           </div>
         )}
-        <p className="is-size-7 has-text-white-50">{value} comments</p>
-        <p className="is-size-7 has-text-white-50">{formattedValue} of all tags</p>
+        <p className='is-size-7 has-text-white-50'>{value} comments</p>
+        <p className='is-size-7 has-text-white-50'>{formattedValue} of all tags</p>
       </div>
     </TooltipWrapper>
   ));
 
   return (
     <>
-      <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)} onMouseMove={handleTooltipPosition}>
+      <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)}
+           onMouseMove={handleTooltipPosition}>
         <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-          <div className="is-flex">
-            <p className="has-text-black-950 has-text-weight-semibold">Tags</p>
-            {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
-          </div>
-          <CircularPacking
-            circlePackingData={circlePackingData}
-            emptyChart={emptyChart}
-            renderTooltip={renderTooltip}
-          />
+          {!isLoading && (
+            <div className='is-flex'>
+              <p className='has-text-black-950 has-text-weight-semibold'>Tags</p>
+              {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
+            </div>
+          )}
+          {!isLoading && (
+            <CircularPacking
+              circlePackingData={circlePackingData}
+              emptyChart={emptyChart}
+              renderTooltip={renderTooltip}
+            />
+          )}
+          {isLoading && <DiagramChartSkeleton />}
         </div>
       </div>
     </>
@@ -131,7 +151,8 @@ TagsChart.defaultProps = {
   className: '',
   groupBy: 'week',
   isSnapshot: false,
-  dateOption: 'custom'
+  dateOption: 'custom',
+  isLoading: false,
 };
 
 TagsChart.propTypes = {
@@ -143,6 +164,7 @@ TagsChart.propTypes = {
   startDate: PropTypes.string.isRequired,
   endDate: PropTypes.string.isRequired,
   dateOption: PropTypes.string,
+  isLoading: PropTypes.bool,
 };
 
 export default TagsChart;

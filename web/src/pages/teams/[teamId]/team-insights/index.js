@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from "react-redux";
-import clsx from 'clsx'
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import clsx from 'clsx';
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
@@ -9,21 +9,16 @@ import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
-import { teamsOperations } from "../../../../state/features/teams";
-import { repositoriesOperations } from "../../../../state/features/repositories";
-import { DEFAULT_AVATAR, SEMA_INTERCOM_FAQ_URL, SEMA_FAQ_SLUGS } from '../../../../utils/constants';
-import { getEmoji, getTagLabel, setSmartCommentsDateRange, getReactionTagsChartData, filterSmartComments } from '../../../../utils/parsing';
+import { teamsOperations } from '../../../../state/features/teams';
+import { repositoriesOperations } from '../../../../state/features/repositories';
+import { DEFAULT_AVATAR, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
+import { filterSmartComments, getEmoji, getReactionTagsChartData, getTagLabel, setSmartCommentsDateRange } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
-import { AuthorIcon, TeamIcon, InfoFilledIcon } from '../../../../components/Icons';
+import { AuthorIcon, InfoFilledIcon, TeamIcon } from '../../../../components/Icons';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
-import styles from '../../../../components/skeletons/charts.module.scss';
-import LineChartSkeleton from '@/components/skeletons/lineChartSkeleton';
-import DiagramChartSkeleton from '@/components/skeletons/diagramChartSkeleton';
-import { CommentSnapTitleSkeleton } from '@/components/skeletons/commentSnapTitleSkeleton';
-import CommentSnapSkeleton from '@/components/skeletons/commentSnapSkeleton';
 
 const { fetchTeamSmartCommentSummary, fetchTeamSmartCommentOverview, fetchTeamRepos } = teamsOperations;
 const { fetchReposByIds } = repositoriesOperations;
@@ -433,25 +428,21 @@ const TeamInsights = () => {
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400"/>
         <TeamStatsFilter filter={filter} individualFilter={isActive} commentView={commentView} filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <div className="is-flex is-flex-wrap-wrap my-20">
-          {isFetching ? (
-            <>
-              <div className={clsx('is-flex-grow-1 mb-20 px-10', styles['line-chart-containers'])}>
-                <div className={styles['inner-wrapper']}>
-                  <LineChartSkeleton />
-                </div>
-              </div>
-              <div className={clsx('is-flex-grow-1 mb-20 px-10', styles['tags-container'])}>
-                <div className={styles['inner-wrapper']}>
-                  <DiagramChartSkeleton />
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <ReactionLineChart reactions={reactionChartData} groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} />
-              <TagsChart isTeamView className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} />
-            </>
-          )}
+          <ReactionLineChart
+            reactions={reactionChartData}
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenReactionsModal(true)}
+            isLoading={isFetching}
+          />
+          <TagsChart
+            isTeamView
+            className='mr-neg10'
+            tags={tagsChartData}
+            groupBy={dateData.groupBy}
+            onClick={() => setOpenTagsModal(true)}
+            dateOption={filter.dateOption}
+            isLoading={isFetching}
+          />
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES_AREA} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
@@ -463,21 +454,7 @@ const TeamInsights = () => {
           </div>
         </div>
         }
-        {isFetching ? (
-          <div className="my-10">
-            <div className={styles['inner-wrapper']}>
-              <div className={styles['comment-title']}>
-                <CommentSnapTitleSkeleton />
-              </div>
-              <div className={styles['comment-wrapper']}>
-                <CommentSnapSkeleton />
-              </div>
-              <div className={styles['comment-wrapper']}>
-                <CommentSnapSkeleton />
-              </div>
-            </div>
-          </div>
-        ) : <ActivityItemList comments={filteredComments} />}
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
       </div>
     </div>)
 }

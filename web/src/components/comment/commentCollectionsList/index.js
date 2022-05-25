@@ -24,7 +24,7 @@ import { ListIcon, GridIcon } from '../../../components/Icons';
 import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
-import { find, isEmpty, uniqBy } from 'lodash';
+import { isEmpty, range, uniqBy } from 'lodash';
 import { fetchTeamCollections } from "../../../state/features/teams/actions";
 import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
 import SnippetsHeaderSkeleton from '../../../components/skeletons/snippetsHeaderSkeleton';
@@ -215,7 +215,7 @@ const CommentCollectionsList = () => {
         {isLoaderNeeded && (
           <>
             <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
-              {new Array(9).fill('').map(card => (
+              {range(9).map(_ => (
                 <div className={clsx('p-10 is-flex is-clickable', styles['card-wrapper'])} aria-hidden="true">
                   <div className={styles['snippet-card-wrapper']}>
                     <RepoSkeleton />

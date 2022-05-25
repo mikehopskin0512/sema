@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { range } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
 import TeamReposList from '../../../components/teamReposList';
@@ -183,7 +184,7 @@ const RepoList = ({
         </div>
         {view === 'grid' ? (
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
-            {!isLoaded ? new Array(9).fill('').map(_ => (
+            {!isLoaded ? range(9).map(_ => (
               <div
                 className={clsx(
                   'p-10 is-flex is-flex-grow-1 is-clickable',
