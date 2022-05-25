@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import { setSelectedTeam } from '../auth/actions';
+import { setSelectedOrganization } from '../auth/actions';
 import { find } from 'lodash';
 import { setActiveTeamCollections } from './actions';
 
@@ -11,7 +11,7 @@ export const updateTeamCollectionIsActiveAndFetchCollections = (collectionId, te
       return o.team?._id === teamId
     })
     if (activeTeam) {
-      await dispatch(setSelectedTeam(activeTeam))
+      await dispatch(setSelectedOrganization(activeTeam))
     }
   } catch (err) {
     const error = new Error(err);
@@ -26,7 +26,7 @@ export const updateTeamRepositories = (teamId, repos, token) => async (dispatch)
     return o.team?._id === teamId
   })
   if (activeTeam) {
-    await dispatch(setSelectedTeam(activeTeam))
+    await dispatch(setSelectedOrganization(activeTeam))
   }
 }
 

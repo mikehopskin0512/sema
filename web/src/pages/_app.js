@@ -36,7 +36,7 @@ library.add(faUser, faEnvelope, faLock, faArrowLeft, faArrowRight, faAngleDown,
   faSearch, faCog, faUserFriends, faDownload, faPaperPlane, faFileContract, faFileSignature
 );
 
-const { setProfileViewMode, setSelectedTeam } = authOperations;
+const { setProfileViewMode, setSelectedOrganization } = authOperations;
 
 function Layout({ Component, pageProps }) {
   const apiError = useApiError();
@@ -68,7 +68,7 @@ function Layout({ Component, pageProps }) {
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     setDataLoaded(true);
-    dispatch(setSelectedTeam(selectedTeam || {}));
+    dispatch(setSelectedOrganization(selectedTeam || {}));
   }, []);
 
   if (apiError) return <ErrorScreen imagePath="/img/500.svg" title="We are sorry..." subtitle="Something went wrong." />;

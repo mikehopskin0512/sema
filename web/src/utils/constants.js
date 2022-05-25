@@ -136,7 +136,7 @@ export const GITHUB_URL = 'https://github.com';
 
 export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
-export const SEMA_CORPORATE_TEAM_NAME = 'Sema Corporate Team';
+export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Team';
 
 export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
 

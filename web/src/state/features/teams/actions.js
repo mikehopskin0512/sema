@@ -1,366 +1,366 @@
 import {
-  addTeam,
-  getTeamMembers,
-  getTeamMetrics,
-  getTeamRepos,
-  getTeams,
-  postInviteUsersToTeam,
-  updateTeam,
-  updateTeamRepos,
-  postTeamInvitationEmailValidation,
-  getAllTeamCollections,
-  inviteToTeam,
+  addOrganization,
+  getOrganizationMembers,
+  getOrganizationMetrics,
+  getOrganizationRepos,
+  getOrganizations,
+  postInviteUsersToOrganization,
+  updateOrganization,
+  updateOrganizationRepos,
+  postOrganizationInvitationEmailValidation,
+  getAllOrganizationCollections,
+  inviteToOrganization,
   uploadAvatar,
 } from './api';
 import { toggleActiveCollection, getSmartCommentOverview, getSmartCommentSummary } from '../comments/api';
 import * as types from './types';
-import { setSelectedTeam } from '../auth/actions';
+import { setSelectedOrganization } from '../auth/actions';
 
-const requestFetchTeamsOfUser = () => ({
-  type: types.REQUEST_FETCH_TEAMS_OF_USER,
+const requestFetchOrganizationsOfUser = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATIONS_OF_USER,
 });
 
-const requestFetchTeamsOfUserSuccess = (teams) => ({
-  type: types.REQUEST_FETCH_TEAMS_OF_USER_SUCCESS,
+const requestFetchOrganizationsOfUserSuccess = (teams) => ({
+  type: types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_SUCCESS,
   teams,
 });
 
-const requestFetchTeamsOfUserError = (errors) => ({
-  type: types.REQUEST_FETCH_TEAMS_OF_USER_ERROR,
+const requestFetchOrganizationsOfUserError = (errors) => ({
+  type: types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_ERROR,
   errors,
 });
 
-const createTeamRequest = () => ({
-  type: types.CREATE_NEW_TEAM,
+const createOrganizationRequest = () => ({
+  type: types.CREATE_NEW_ORGANIZATION,
 });
 
-const createTeamSuccess = () => ({
-  type: types.CREATE_NEW_TEAM_SUCCESS,
+const createOrganizationSuccess = () => ({
+  type: types.CREATE_NEW_ORGANIZATION_SUCCESS,
 });
 
-const createTeamError = (errors) => ({
-  type: types.CREATE_NEW_TEAM_ERROR,
+const createOrganizationError = (errors) => ({
+  type: types.CREATE_NEW_ORGANIZATION_ERROR,
   errors,
 });
 
-const requestFetchTeamMembers = () => ({
-  type: types.REQUEST_FETCH_TEAM_MEMBERS
+const requestFetchOrganizationMembers = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_MEMBERS
 });
 
-const requestFetchTeamMembersSuccess = (members, membersCount) => ({
-  type: types.REQUEST_FETCH_TEAM_MEMBERS_SUCCESS,
+const requestFetchOrganizationMembersSuccess = (members, membersCount) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_MEMBERS_SUCCESS,
   members,
   membersCount,
 });
 
-const requestFetchTeamMembersError = () => ({
-  type: types.REQUEST_FETCH_TEAM_MEMBERS_ERROR
+const requestFetchOrganizationMembersError = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_MEMBERS_ERROR
 });
 
-const requestFetchTeamMetrics = () => ({
-  type: types.REQUEST_FETCH_TEAM_METRICS
+const requestFetchOrganizationMetrics = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_METRICS
 });
 
-const requestFetchTeamMetricsSuccess = (metrics) => ({
-  type: types.REQUEST_FETCH_TEAM_METRICS_SUCCESS,
+const requestFetchOrganizationMetricsSuccess = (metrics) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_METRICS_SUCCESS,
   metrics
 });
 
-const requestFetchTeamMetricsError = () => ({
-  type: types.REQUEST_FETCH_TEAM_METRICS_ERROR
+const requestFetchOrganizationMetricsError = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_METRICS_ERROR
 });
 
-const requestFetchTeamRepos = () => ({
-  type: types.REQUEST_FETCH_TEAM_REPOS
+const requestFetchOrganizationRepos = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS
 });
 
-const requestFetchTeamReposSuccess = (repos) => ({
-  type: types.REQUEST_FETCH_TEAM_REPOS_SUCCESS,
+const requestFetchOrganizationReposSuccess = (repos) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS_SUCCESS,
   repos
 });
 
-const requestFetchTeamReposError = () => ({
-  type: types.REQUEST_FETCH_TEAM_REPOS_ERROR
+const requestFetchOrganizationReposError = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_REPOS_ERROR
 });
 
-const inviteTeamUsersRequest = () => ({
-  type: types.INVITE_TEAM_USERS,
+const inviteOrganizationUsersRequest = () => ({
+  type: types.INVITE_ORGANIZATION_USERS,
 });
 
-const inviteTeamUsersSuccess = () => ({
-  type: types.INVITE_TEAM_USERS_SUCCESS,
+const inviteOrganizationUsersSuccess = () => ({
+  type: types.INVITE_ORGANIZATION_USERS_SUCCESS,
 });
 
-const inviteTeamUsersError = () => ({
-  type: types.INVITE_TEAM_USERS_ERROR,
+const inviteOrganizationUsersError = () => ({
+  type: types.INVITE_ORGANIZATION_USERS_ERROR,
 });
 
-const requestTeamInvitationEmailValidationRequest = () => ({
+const requestOrganizationInvitationEmailValidationRequest = () => ({
   type: types.REQUEST_INVITATION_EMAIL_VALIDATION,
 });
 
-const requestTeamInvitationEmailValidationSuccess = (invalidEmails) => ({
+const requestOrganizationInvitationEmailValidationSuccess = (invalidEmails) => ({
   type: types.REQUEST_INVITATION_EMAIL_VALIDATION_SUCCESS,
   invalidEmails,
 });
 
-const requestTeamInvitationEmailValidationError = () => ({
+const requestOrganizationInvitationEmailValidationError = () => ({
   type: types.REQUEST_INVITATION_EMAIL_VALIDATION_ERROR,
 });
 
-const requestEditTeam = () => ({
-  type: types.REQUEST_EDIT_TEAM
+const requestEditOrganization = () => ({
+  type: types.REQUEST_EDIT_ORGANIZATION
 });
 
-const requestEditTeamSuccess = () => ({
-  type: types.REQUEST_EDIT_TEAM_SUCCESS
+const requestEditOrganizationSuccess = () => ({
+  type: types.REQUEST_EDIT_ORGANIZATION_SUCCESS
 });
 
-const requestEditTeamError = (errors) => ({
-  type: types.REQUEST_EDIT_TEAM_ERROR,
+const requestEditOrganizationError = (errors) => ({
+  type: types.REQUEST_EDIT_ORGANIZATION_ERROR,
   errors,
 });
 
-const requestToggleTeamCollection = () => ({
+const requestToggleOrganizationCollection = () => ({
   type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION
 });
 
-const requestToggleTeamCollectionSuccess = () => ({
+const requestToggleOrganizationCollectionSuccess = () => ({
   type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION_SUCCESS
 });
 
-const requestToggleTeamCollectionError = (errors) => ({
+const requestToggleOrganizationCollectionError = (errors) => ({
   type: types.REQUEST_TOGGLE_ACTIVE_COLLECTION_ERROR,
   errors,
 });
 
-const requestFetchTeamCollectionsRequest = () => ({
-  type: types.FETCH_TEAM_COLLECTIONS,
+const requestFetchOrganizationCollectionsRequest = () => ({
+  type: types.FETCH_ORGANIZATION_COLLECTIONS,
 });
 
-const requestFetchTeamCollectionsSuccess = (collections) => ({
-  type: types.FETCH_TEAM_COLLECTIONS_SUCCESS,
+const requestFetchOrganizationCollectionsSuccess = (collections) => ({
+  type: types.FETCH_ORGANIZATION_COLLECTIONS_SUCCESS,
   collections,
 });
 
-const requestFetchTeamCollectionsError = (errors) => ({
-  type: types.FETCH_TEAM_COLLECTIONS_ERROR,
+const requestFetchOrganizationCollectionsError = (errors) => ({
+  type: types.FETCH_ORGANIZATION_COLLECTIONS_ERROR,
   errors,
 });
 
-const requestFetchTeamSmartCommentSummary = () => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY
+const requestFetchOrganizationSmartCommentSummary = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY
 });
 
-const requestFetchTeamSmartCommentSummarySuccess = (summary) => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_SUCCESS,
+const requestFetchOrganizationSmartCommentSummarySuccess = (summary) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY_SUCCESS,
   summary
 });
 
-const requestFetchTeamSmartCommentSummaryError = () => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_ERROR
+const requestFetchOrganizationSmartCommentSummaryError = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY_ERROR
 });
 
-const requestFetchTeamSmartCommentOverview = () => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW
+const requestFetchOrganizationSmartCommentOverview = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW
 });
 
-const requestFetchTeamSmartCommentOverviewSuccess = (overview) => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_SUCCESS,
+const requestFetchOrganizationSmartCommentOverviewSuccess = (overview) => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW_SUCCESS,
   overview
 });
 
-const requestFetchTeamSmartCommentOverviewError = () => ({
-  type: types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_ERROR
+const requestFetchOrganizationSmartCommentOverviewError = () => ({
+  type: types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW_ERROR
 });
 
-export const fetchTeamsOfUser = (token) => async (dispatch) => {
+export const fetchOrganizationsOfUser = (token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamsOfUser());
-    const payload = await getTeams(token);
+    dispatch(requestFetchOrganizationsOfUser());
+    const payload = await getOrganizations(token);
     const { data } = payload;
-    dispatch(requestFetchTeamsOfUserSuccess(data));
+    dispatch(requestFetchOrganizationsOfUserSuccess(data));
     return data
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamsOfUserError(errMessage));
+    dispatch(requestFetchOrganizationsOfUserError(errMessage));
   }
 };
 
-export const createTeam = (body, token) => async (dispatch) => {
+export const createOrganization = (body, token) => async (dispatch) => {
   try {
-    dispatch(createTeamRequest());
-    const payload = await addTeam(body, token);
+    dispatch(createOrganizationRequest());
+    const payload = await addOrganization(body, token);
     const { data } = payload;
-    dispatch(createTeamSuccess(data));
+    dispatch(createOrganizationSuccess(data));
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(createTeamError(errMessage));
+    dispatch(createOrganizationError(errMessage));
   }
 };
 
-export const editTeam = (body, token) => async (dispatch) => {
+export const editOrganization = (body, token) => async (dispatch) => {
   try {
-    dispatch(requestEditTeam());
-    const payload = await updateTeam(body, token);
+    dispatch(requestEditOrganization());
+    const payload = await updateOrganization(body, token);
     const { data } = payload;
-    dispatch(requestEditTeamSuccess(data));
+    dispatch(requestEditOrganizationSuccess(data));
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestEditTeamError(errMessage));
+    dispatch(requestEditOrganizationError(errMessage));
   }
 };
 
-export const fetchTeamMembers = (id, params, token) => async (dispatch) => {
+export const fetchOrganizationMembers = (id, params, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamMembers());
-    const { data } = await getTeamMembers(id, params, token);
-    dispatch(requestFetchTeamMembersSuccess(data?.members, data?.totalCount));
+    dispatch(requestFetchOrganizationMembers());
+    const { data } = await getOrganizationMembers(id, params, token);
+    dispatch(requestFetchOrganizationMembersSuccess(data?.members, data?.totalCount));
     return data;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamMembersError(errMessage));
+    dispatch(requestFetchOrganizationMembersError(errMessage));
   }
 };
 
-export const editTeamRepos = (teamId, repos, token) => async (dispatch) => {
+export const editOrganizationRepos = (teamId, repos, token) => async (dispatch) => {
   try {
-    await updateTeamRepos(teamId, repos, token);
+    await updateOrganizationRepos(teamId, repos, token);
     return repos;
   } catch (e) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamReposError(errMessage));
+    dispatch(requestFetchOrganizationReposError(errMessage));
   }
 }
 
-export const fetchTeamMetrics = (teamId, token) => async (dispatch) => {
+export const fetchOrganizationMetrics = (teamId, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamMetrics());
-    const payload = await getTeamMetrics(teamId, token);
+    dispatch(requestFetchOrganizationMetrics());
+    const payload = await getOrganizationMetrics(teamId, token);
     const { data } = payload;
-    dispatch(requestFetchTeamMetricsSuccess(data));
+    dispatch(requestFetchOrganizationMetricsSuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamMetricsError(errMessage));
+    dispatch(requestFetchOrganizationMetricsError(errMessage));
   }
 }
 
-export const fetchTeamRepos = ({ teamId, searchParams = '' }, token) => async (dispatch) => {
+export const fetchOrganizationRepos = ({ teamId, searchParams = '' }, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamRepos());
-    const payload = await getTeamRepos(teamId, { searchParams }, token);
+    dispatch(requestFetchOrganizationRepos());
+    const payload = await getOrganizationRepos(teamId, { searchParams }, token);
     const { data } = payload;
-    dispatch(requestFetchTeamReposSuccess(data));
+    dispatch(requestFetchOrganizationReposSuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamReposError(errMessage));
+    dispatch(requestFetchOrganizationReposError(errMessage));
   }
 }
 
-export const inviteTeamUsers = (teamId, body, token) => async (dispatch) => {
+export const inviteOrganizationUsers = (teamId, body, token) => async (dispatch) => {
   try {
-    dispatch(inviteTeamUsersRequest());
-    await postInviteUsersToTeam(teamId, body, token);
-    dispatch(inviteTeamUsersSuccess());
+    dispatch(inviteOrganizationUsersRequest());
+    await postInviteUsersToOrganization(teamId, body, token);
+    dispatch(inviteOrganizationUsersSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(inviteTeamUsersError(errMessage));
+    dispatch(inviteOrganizationUsersError(errMessage));
   }
 };
 
-export const validateTeamInvitationEmails = (teamId, body, token) => async (dispatch) => {
+export const validateOrganizationInvitationEmails = (teamId, body, token) => async (dispatch) => {
   try {
-    dispatch(requestTeamInvitationEmailValidationRequest());
-    const payload = await postTeamInvitationEmailValidation(teamId, body, token);
+    dispatch(requestOrganizationInvitationEmailValidationRequest());
+    const payload = await postOrganizationInvitationEmailValidation(teamId, body, token);
     const { data } = payload;
-    dispatch(requestTeamInvitationEmailValidationSuccess(data?.invalidEmails));
+    dispatch(requestOrganizationInvitationEmailValidationSuccess(data?.invalidEmails));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestTeamInvitationEmailValidationError(errMessage));
+    dispatch(requestOrganizationInvitationEmailValidationError(errMessage));
   }
 };
 
-export const setActiveTeamCollections = (id, teamId, token) => async (dispatch) => {
+export const setActiveOrganizationCollections = (id, teamId, token) => async (dispatch) => {
   try {
-    dispatch(requestToggleTeamCollection());
+    dispatch(requestToggleOrganizationCollection());
     await toggleActiveCollection(id, { teamId }, token);
-    dispatch(requestToggleTeamCollectionSuccess());
+    dispatch(requestToggleOrganizationCollectionSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestToggleTeamCollectionError(errMessage));
+    dispatch(requestToggleOrganizationCollectionError(errMessage));
   }
 }
 
-export const fetchTeamCollections = (teamId, token) => async (dispatch) => {
+export const fetchOrganizationCollections = (teamId, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamCollectionsRequest());
-    const collections = await getAllTeamCollections(teamId, token);
+    dispatch(requestFetchOrganizationCollectionsRequest());
+    const collections = await getAllOrganizationCollections(teamId, token);
     if (collections?.status === 200) {
-      dispatch(requestFetchTeamCollectionsSuccess(collections.data));
+      dispatch(requestFetchOrganizationCollectionsSuccess(collections.data));
     }
     return false;
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamCollectionsError(errMessage));
+    dispatch(requestFetchOrganizationCollectionsError(errMessage));
   }
 }
 
-export const fetchTeamSmartCommentSummary = (params, token) => async (dispatch) => {
+export const fetchOrganizationSmartCommentSummary = (params, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamSmartCommentSummary())
+    dispatch(requestFetchOrganizationSmartCommentSummary())
     const { data } = await getSmartCommentSummary(params, token);
-    dispatch(requestFetchTeamSmartCommentSummarySuccess(data));
+    dispatch(requestFetchOrganizationSmartCommentSummarySuccess(data));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamSmartCommentSummaryError(errMessage));
+    dispatch(requestFetchOrganizationSmartCommentSummaryError(errMessage));
   }
 };
 
-export const fetchTeamSmartCommentOverview = (params, token) => async (dispatch) => {
+export const fetchOrganizationSmartCommentOverview = (params, token) => async (dispatch) => {
   try {
-    dispatch(requestFetchTeamSmartCommentOverview())
+    dispatch(requestFetchOrganizationSmartCommentOverview())
     const { data: { overview } } = await getSmartCommentOverview(params, token);
-    dispatch(requestFetchTeamSmartCommentOverviewSuccess(overview));
+    dispatch(requestFetchOrganizationSmartCommentOverviewSuccess(overview));
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(requestFetchTeamSmartCommentOverviewError(errMessage));
+    dispatch(requestFetchOrganizationSmartCommentOverviewError(errMessage));
   }
 };
 
 /* Invite a single member */
-export const inviteTeamUser = (teamId, token) => async (dispatch) => {
+export const inviteOrganizationUser = (teamId, token) => async (dispatch) => {
   try {
-    dispatch(inviteTeamUsersRequest());
-    await inviteToTeam(teamId, token);
-    dispatch(inviteTeamUsersSuccess());
+    dispatch(inviteOrganizationUsersRequest());
+    await inviteToOrganization(teamId, token);
+    dispatch(inviteOrganizationUsersSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
     const errMessage = message || `${status} - ${statusText}`;
-    dispatch(inviteTeamUsersError(errMessage));
+    dispatch(inviteOrganizationUsersError(errMessage));
   }
 };
 
-export const uploadTeamAvatar = (teamId, body, token) => async (dispatch) => {
+export const uploadOrganizationAvatar = (teamId, body, token) => async (dispatch) => {
   try {
     const res = await uploadAvatar(teamId, body, token);
 
-    dispatch(setSelectedTeam(res.data));
-    dispatch(fetchTeamsOfUser(token));
+    dispatch(setSelectedOrganization(res.data));
+    dispatch(fetchOrganizationsOfUser(token));
   } catch (error) {
     console.error(error);
   }

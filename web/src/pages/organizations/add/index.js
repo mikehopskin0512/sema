@@ -11,7 +11,7 @@ import toaster from 'toasted-notes';
 import * as yup from 'yup';
 import checkAvailableUrl from '../../../utils/checkAvailableUrl';
 import TagsInput from '../../../components/tagsInput';
-import Helmet, { TeamCreateHelmet } from '../../../components/utils/Helmet';
+import Helmet, { OrganizationCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
 import { teamsOperations } from '../../../state/features/teams';
 import { authOperations } from '../../../state/features/auth';
@@ -23,24 +23,24 @@ import {
   CloseIcon,
   LoadingBlueIcon,
 } from '../../../components/Icons';
-import { PATHS, SEMA_CORPORATE_TEAM_NAME } from '../../../utils/constants';
+import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../utils/constants';
 import styles from './add.module.scss';
 
 const { createTeam, fetchTeamsOfUser } = teamsOperations;
-const { setSelectedTeam } = authOperations;
+const { setSelectedOrganization } = authOperations;
 const URL_STATUS = {
   ALLOCATED: 'allocated',
   AVAILABLE: 'available',
 };
 const schema = yup.object().shape({
-  name: yup.string().nullable().required('Team name is required'),
+  name: yup.string().nullable().required('Organization name is required'),
   description: yup.string().nullable(),
   url: yup.string().required('URL is required'),
 });
 
-function TeamEditPage() {
+function OrganizationEditPage() {
   const [urlChecks, setUrlChecks] = useState({
-    [SEMA_CORPORATE_TEAM_NAME]: URL_STATUS.ALLOCATED,
+    [SEMA_CORPORATE_ORGANIZATION_NAME]: URL_STATUS.ALLOCATED,
     urlChecked: false,
   });
   const router = useRouter();
@@ -62,8 +62,8 @@ function TeamEditPage() {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
   const { teamsState } = useSelector((state) => state);
-  const showNotification = (team) => {
-    const isError = !team;
+  const showNotification = (organization) => {
+    const isError = !organization;
     toaster.notify(
       ({ onClose }) => (
         <div
@@ -81,14 +81,14 @@ function TeamEditPage() {
             <div>
               <div className="is-flex is-justify-content-space-between mb-15">
                 <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">
-                  {isError ? 'Team is not created' : 'Team Created'}
+                  {isError ? 'Organization is not created' : 'Organization Created'}
                 </span>
                 <div onClick={onClose}>
                   <CloseIcon size="small" />
                 </div>
               </div>
               <div className="has-text-black">
-                {isError ? 'Error' : "You've successfully created the team"}
+                {isError ? 'Error' : "You've successfully created the organization"}
               </div>
             </div>
           </div>
@@ -108,11 +108,11 @@ function TeamEditPage() {
   const onCancel = async () => {
     await router.back();
   };
-  const switchToTeam = async (team) => {
+  const switchToOrganization = async (organization) => {
     const roles = await dispatch(fetchTeamsOfUser(token));
-    const activeTeam = roles.find((role) => role.team._id === team._id);
-    dispatch(setSelectedTeam(activeTeam));
-    router.push(`${PATHS.TEAMS._}/${team._id}${PATHS.DASHBOARD}`);
+    const activeOrganization = roles.find((role) => role.team._id === organization._id);
+    dispatch(setSelectedOrganization(activeOrganization));
+    router.push(`${PATHS.TEAMS._}/${organization._id}${PATHS.DASHBOARD}`);
   };
   const checkUrl = async (e) => {
     e?.preventDefault();
@@ -144,7 +144,7 @@ function TeamEditPage() {
           }
         }
       }
-      const team = await dispatch(
+      const organization = await dispatch(
         createTeam(
           {
             ...data,
@@ -156,9 +156,9 @@ function TeamEditPage() {
       if (!isEmpty(teamsState.error)) {
         showNotification(null);
       }
-      if (team) {
-        showNotification(team);
-        switchToTeam(team);
+      if (organization) {
+        showNotification(organization);
+        switchToOrganization(organization);
       }
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -171,12 +171,12 @@ function TeamEditPage() {
 
   return (
     <div className="has-background-gray-200 hero">
-      <Helmet {...TeamCreateHelmet} />
+      <Helmet {...OrganizationCreateHelmet} />
       <form className="hero-body pb-100" onSubmit={handleSubmit(onSubmit)}>
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-              Create a Team
+              Create an Organization
             </p>
           </div>
           <div className="is-flex">
@@ -205,7 +205,7 @@ function TeamEditPage() {
               render={({ field }) => (
                 <InputField
                   {...field}
-                  title="Team Name"
+                  title="Organization Name"
                   isRequired
                   error={errors?.name?.message}
                 />
@@ -215,7 +215,7 @@ function TeamEditPage() {
           <div className="mb-15">
             {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
             <label className="label is-size-6">
-              Team URL <span className="has-text-error">*</span>
+              Organization URL <span className="has-text-error">*</span>
             </label>
             <div className="is-flex">
               <div className="is-full-width">
@@ -225,7 +225,7 @@ function TeamEditPage() {
                   render={({ field }) => (
                     <div className={clsx('is-flex')}>
                       <InputField
-                        value="app.semasoftware.com/teams/"
+                        value="app.semasoftware.com/organizations/"
                         disabled
                         error={
                           (isAllocatedUrl &&
@@ -237,7 +237,7 @@ function TeamEditPage() {
                       <InputField
                         {...field}
                         isRequired
-                        onChange={(teamUrl) => field.onChange(teamUrl.toLowerCase())}
+                        onChange={(organizationUrl) => field.onChange(organizationUrl.toLowerCase())}
                         error={
                           (isAllocatedUrl &&
                             'This URL is not available. Try a different url.') ||
@@ -291,7 +291,7 @@ function TeamEditPage() {
               Invite Members
             </p>
             <p className="is-size-7">
-              You can add multiple team members by adding commas
+              You can add multiple organization members by adding commas
             </p>
             <div className="mt-20 mb-50">
               {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
@@ -309,4 +309,4 @@ function TeamEditPage() {
   );
 }
 
-export default withLayout(TeamEditPage);
+export default withLayout(OrganizationEditPage);

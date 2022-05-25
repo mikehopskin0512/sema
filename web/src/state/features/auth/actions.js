@@ -280,7 +280,7 @@ export const setProfileViewModeSuccess = (profileViewMode) => ({
   profileViewMode,
 });
 
-export const setSelectedTeam = (selectedTeam) => (dispatch) => {
+export const setSelectedOrganization = (selectedTeam) => (dispatch) => {
   localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
   dispatch(setSelectedTeamSuccess(selectedTeam));
 };

@@ -22,7 +22,7 @@ const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 const { updateUser, updateUserHasExtension } = authOperations;
 const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
-const { setSelectedTeam, setProfileViewMode } = authOperations;
+const { setSelectedOrganization, setProfileViewMode } = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
@@ -130,7 +130,7 @@ const Dashboard = () => {
     if (inviteTeamId) {
       const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
       if (invitedTeam) {
-        dispatch(setSelectedTeam(invitedTeam));
+        dispatch(setSelectedOrganization(invitedTeam));
         dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
         router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
       }

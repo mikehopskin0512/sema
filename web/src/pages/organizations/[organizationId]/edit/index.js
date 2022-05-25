@@ -10,7 +10,7 @@ import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import { teamsOperations } from '../../../../state/features/teams';
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
-import { PATHS, SEMA_CORPORATE_TEAM_NAME } from '../../../../utils/constants' ;
+import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../../utils/constants' ;
 import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
 import UploadFile from '../../../../components/team/UploadFile';
 import { uploadTeamAvatar } from "../../../../state/features/teams/actions";
@@ -42,7 +42,7 @@ function TeamEditPage() {
   const [userRole, setUserRole] = useState({})
   const [isUrlCheckLoading, setUrlCheckLoading] = useState(false);
   const [urlChecks, setUrlChecks] = useState({
-    [SEMA_CORPORATE_TEAM_NAME]: URL_STATUS.ALLOCATED,
+    [SEMA_CORPORATE_ORGANIZATION_NAME]: URL_STATUS.ALLOCATED,
     urlChecked: false,
   });
   const [originalTeamUrl, setOriginalTeamUrl] = useState(null);
@@ -259,7 +259,7 @@ function TeamEditPage() {
                   errors?.url && styles['url-error']
                 )}
               />
-              <button className="ml-16 button" 
+              <button className="ml-16 button"
                 onClick={checkUrl}
                 disabled={originalTeamUrl === team.url}
               >

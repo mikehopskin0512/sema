@@ -16,7 +16,7 @@ import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
 import Tooltip from '../../Tooltip';
-const { setSelectedTeam, setProfileViewMode } = authOperations;
+const { setSelectedOrganization, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
   handleLogout,
@@ -71,7 +71,7 @@ const HeaderMenu = ({
   }, [selectedTeam, user]);
 
   const onSwitchPersonalAccount = () => {
-    dispatch(setSelectedTeam({}));
+    dispatch(setSelectedOrganization({}));
     dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     toggleUserMenu(false);
     router.push(PATHS.DASHBOARD);

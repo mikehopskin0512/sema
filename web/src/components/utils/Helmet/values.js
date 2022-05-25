@@ -64,7 +64,7 @@ export const LabelsManagementHelmet = {
   description: null,
 };
 
-export const TeamCreateHelmet = {
+export const OrganizationCreateHelmet = {
   title: 'Create a Team',
   description: null,
 };

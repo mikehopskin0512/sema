@@ -16,7 +16,7 @@ export {
   HelpSupportHelmet,
   PersonalInsightsHelmet,
   LabelsManagementHelmet,
-  TeamCreateHelmet,
+  OrganizationCreateHelmet,
   TeamManagementHelmet,
   TeamDashboardHelmet,
   TeamReposHelmet,

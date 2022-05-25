@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { setProfileViewMode } from '../../../state/features/auth/actions';
 import { SettingsIcon } from "../../Icons";
 
-const { setSelectedTeam } = authOperations;
+const { setSelectedOrganization } = authOperations;
 
 const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
     if (!!role?.team?._id) {
       viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
     }
-    dispatch(setSelectedTeam(role));
+    dispatch(setSelectedOrganization(role));
     dispatch(setProfileViewMode(viewMode));
   }
 
