@@ -24,6 +24,8 @@ export const SMART_COMMENT_URL = `${SEMA_URL}/v1/comments/smart`;
 export const SUGGESTED_COMMENTS_URL = `${SEMA_URL}/v1/comments/suggested`;
 export const COLLECTIONS_URL = `${SEMA_URL}/v1/comments/collections`;
 export const TAGS_URL = `${SEMA_URL}/v1/comments/tags/suggested-comment`;
+export const SUMMARIES_SUGGESTIONS_URL = `${SUGGESTED_COMMENTS_URL}/summaries`;
+export const TAGS_SUGGESTIONS_URL = `${SUGGESTED_COMMENTS_URL}/tags`;
 export const USERS_URL = `${SEMA_URL}/v1/users`;
 export const TEAMS_URL = `${SEMA_URL}/v1/teams`;
 export const ADD_OP = 'ADD_OP';
@@ -168,30 +170,35 @@ export const EMOJIS = [
     title: 'No reaction',
     emoji: '⚪',
     github_emoji: ':white_circle:',
+    key: 'none'
   },
   {
     _id: EMOJIS_ID.AWESOME,
     title: 'This code is <b>awesome</b>',
     emoji: '🏆',
     github_emoji: ':trophy:',
+    key: 'awesome'
   },
   {
     _id: EMOJIS_ID.GOOD,
     title: 'This code <b>looks good</b>',
     emoji: '👌',
     github_emoji: ':ok_hand:',
+    key: 'good'
   },
   {
     _id: EMOJIS_ID.QUESTION,
     title: 'I have a <b>question</b>',
     emoji: '❓',
     github_emoji: ':question:',
+    key: 'question'
   },
   {
     _id: EMOJIS_ID.FIX,
     title: 'This code <b>needs a fix</b>',
     emoji: '🛠',
     github_emoji: ':hammer_and_wrench:',
+    key: 'fix'
   },
 ];
 
@@ -326,12 +333,14 @@ export const SEGMENT_EVENTS = {
   UPDATED_EXTENSION: 'Updated Extension',
   VIEWED_GITHUB_PAGE: 'CE Viewed Github Page',
   CREATE_SMART_COMMENT: 'CE Created Smart Comment',
-  CLICKED_COMMENT_LIBRARY_BAR: 'CE Clicked Comment Library Bar',
   CLICKED_REACTION: 'CE Clicked Reaction',
   CLICKED_ADD_TAGS: 'CE Clicked Add Tags',
   CLICKED_SAVE_TO_MY_COMMENTS: 'CE Clicked Save to My Comments',
   LOGIN_TOASTER_SHOWED: 'CE Login Toaster Showed',
   CLICKED_LOGIN_TOASTER: 'CE Clicked Login Toaster',
+  INSERTED_SNIPPET: 'CE Inserted Snippet',
+  VIEWED_SNIPPET: 'CE Viewed Snippet',
+  COPIED_SNIPPET: 'CE Copied Snippet'
 };
 
 export const SEMA_TEXTAREA_IDENTIFIER = 'sema-identifier';
@@ -342,3 +351,22 @@ export const STORAGE_ITEMS = {
 
 export const ANIMATION_TIME = 0.5;
 export const ANIMATION_TIMEOUT = 550;
+
+export const REQUEST_DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
+
+export const TAGS_KEYS = {
+  BRITTLE: 'Brittle',
+  EFFICIENT: 'Efficient',
+  ELEGANT: 'Elegant',
+  FAULTTOLERANT: 'Fault-tolerant',
+  INEFFICIENT: 'Inefficient',
+  INELEGANT: 'Inefficient',
+  MAINTAINABLE: 'Maintainable',
+  NOTMAINTAINABLE: 'Not maintainable',
+  NOTREUSABLE: 'Not reusable',
+  NOTSECURE: 'Not secure',
+  READABLE: 'Readable',
+  REUSABLE: 'Reusable',
+  SECURE: 'Secure',
+  UNREADABLE: 'Unreadable'
+}

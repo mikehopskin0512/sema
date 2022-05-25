@@ -1,0 +1,65 @@
+#!/usr/bin/env groovy
+@Library('customSlackLibrary') _
+pipeline {
+    agent {
+        docker {
+            image 'cimg/node:15.14.0'
+            args '-u root --privileged --net host'
+        }
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    parameters {
+        string(name: 'ENVIRONMENT', description: 'The name of environment for building')
+        string(name: 'BRANCH_NAME', description: 'The name of branch for building')
+    }
+
+    stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'sudo apt-get update -y && sudo apt-get install -y python awscli'
+            }
+        }
+
+        stage('Build CE') {
+            steps {
+                script {
+                    buildCE(params.ENVIRONMENT)
+                }
+            }
+        }
+
+        stage('Upload CE') {
+            steps {
+                script {
+                    withAWS(role:'jenkins-role-to-assume', region: 'us-east-1') {
+                        dir('themis') {
+                            CE_FILENAME = sh(
+                            script: 'ls | grep Sema_Code_Review_Assistant_ | head -1',
+                            returnStdout: true
+                            ).trim()
+
+                            s3Upload(file:"${CE_FILENAME}", bucket:"${params.ENVIRONMENT}-chrome-store")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            slackSendsFail(env.JOB_NAME, params.BRANCH_NAME, BUILD_URL)
+        }
+    }
+}
+
+def buildCE(String environment) {
+    dir('themis') {
+        sh './build.sh ' + environment
+    }
+}
