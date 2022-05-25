@@ -691,7 +691,7 @@ export function StarOutlineIcon(props) {
   </Icon>
 }
 
-export function TeamIcon(props) {
+export function OrganizationIcon(props) {
   return <Icon {...props}>
     <TeamSvg />
   </Icon>

@@ -8,10 +8,10 @@ import Helmet, {
   TeamInsightsHelmet
 } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
-import TeamStatsFilter from '../../../../components/teamStatsFilter';
+import OrganizationStatsFilter from '../../../../components/organizationStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 import {
   DEFAULT_AVATAR,
@@ -33,7 +33,7 @@ import {
 } from '../../../../../styles/_colors.module.scss';
 import {
   AuthorIcon,
-  TeamIcon,
+  OrganizationIcon,
   InfoFilledIcon
 } from '../../../../components/Icons';
 import SnapshotModal, {
@@ -461,7 +461,7 @@ const TeamInsights = () => {
                     : 'All your team members can see this page.'}
                 </span>
                 <a
-                  href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_TEAM_INSIGHTS}`}
+                  href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_ORGANIZATION_INSIGHTS}`}
                   target="_blank"
                   rel="noreferrer noopener"
                 >
@@ -476,7 +476,7 @@ const TeamInsights = () => {
                 onClick={onClickChild}
                 aria-hidden
               >
-                <TeamIcon size="small" color={isActive ? gray500 : blue700} />
+                <OrganizationIcon size="small" color={isActive ? gray500 : blue700} />
                 <span
                   className={`px-5 ${
                     isActive ? 'has-text-gray-500' : 'has-text-blue-700'
@@ -559,7 +559,7 @@ const TeamInsights = () => {
           </div>
         </div>
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400" />
-        <TeamStatsFilter
+        <OrganizationStatsFilter
           filter={filter}
           individualFilter={isActive}
           commentView={commentView}

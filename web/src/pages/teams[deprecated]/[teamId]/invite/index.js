@@ -10,7 +10,7 @@ import styles from './teamInvite.module.scss';
 import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
 import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { fetchUsers } from '../../../../state/features/users/actions';
 import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';

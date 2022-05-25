@@ -8,10 +8,10 @@ import Helmet, {
   OrganizationInsightsHelmet
 } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
-import TeamStatsFilter from '../../../../components/teamStatsFilter';
+import OrganizationStatsFilter from '../../../../components/organizationStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 import {
   DEFAULT_AVATAR,
@@ -33,7 +33,7 @@ import {
 } from '../../../../../styles/_colors.module.scss';
 import {
   AuthorIcon,
-  TeamIcon,
+  OrganizationIcon,
   InfoFilledIcon
 } from '../../../../components/Icons';
 import SnapshotModal, {
@@ -43,19 +43,19 @@ import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 
 const {
-  fetchTeamSmartCommentSummary,
-  fetchTeamSmartCommentOverview,
-  fetchTeamRepos
+  fetchOrganizationSmartCommentSummary,
+  fetchOrganizationSmartCommentOverview,
+  fetchOrganizationRepos
 } = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
-const TeamInsights = () => {
+const OrganizationInsights = () => {
   const dispatch = useDispatch();
   const { auth, organizations } = useSelector(state => ({
     auth: state.authState,
-    organizations: state.organizationsState
+    organizations: state.organizationsNewState
   }));
-  const { token, user, selectedTeam } = auth;
+  const { token, user, selectedOrganization } = auth;
   const githubUser = user.identities?.[0];
   const fullName = `${user.firstName} ${user.lastName}`;
 
@@ -105,10 +105,10 @@ const TeamInsights = () => {
   const getUserSummary = async username => {
     const params = {
       user: username,
-      teamId: selectedTeam?.team?._id || '',
+      organizationId: selectedOrganization?.organization?._id || '',
       individual: isActive
     };
-    dispatch(fetchTeamSmartCommentSummary(params, token));
+    dispatch(fetchOrganizationSmartCommentSummary(params, token));
   };
 
   const getCommentsOverview = async filter => {
@@ -131,9 +131,9 @@ const TeamInsights = () => {
         params.externalIds += index === 0 ? item.value : `-${item.value}`;
       });
     }
-    params.teamId = selectedTeam?.team?._id;
+    params.organizationId = selectedOrganization?.organization?._id;
     if ((startDate && endDate) || (!startDate && !endDate)) {
-      dispatch(fetchTeamSmartCommentOverview(params, token));
+      dispatch(fetchOrganizationSmartCommentOverview(params, token));
     }
   };
 
@@ -184,7 +184,7 @@ const TeamInsights = () => {
   };
 
   useEffect(() => {
-    const { overview } = teams;
+    const { overview } = organizations;
     const { startDate, endDate } = filter;
     if (overview?.smartComments && overview?.smartComments.length > 0) {
       const dates = setSmartCommentsDateRange(
@@ -200,7 +200,7 @@ const TeamInsights = () => {
         endDate: endDay
       });
     }
-  }, [teams, filter]);
+  }, [organizations, filter]);
 
   useEffect(() => {
     const { startDate, endDate, groupBy } = dateData;
@@ -224,44 +224,44 @@ const TeamInsights = () => {
   }, [auth, isActive]);
 
   useAuthEffect(() => {
-    if (!isEmpty(selectedTeam)) {
-      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
+    if (!isEmpty(selectedOrganization)) {
+      dispatch(fetchOrganizationRepos({ organizationId: selectedOrganization.organization._id }, token));
     }
   }, []);
 
   useEffect(() => {
     const reposList =
-      teams?.repos.map(({ name, externalId }) => ({
+      organizations?.repos.map(({ name, externalId }) => ({
         name,
         label: name,
         value: externalId
       })) || [];
     setFilterRepoList([...reposList]);
-  }, [teams]);
+  }, [organizations]);
 
   useEffect(() => {
-    const { summary } = teams;
+    const { summary } = organizations;
     getTopReactions(summary.reactions);
     getTopTags(summary.tags);
     setTotalSmartComments(summary?.smartComments?.length || 0);
-  }, [teams]);
+  }, [organizations]);
 
   useEffect(() => {
-    if (!selectedTeam?.team?._id) {
+    if (!selectedOrganization?.organization?._id) {
       return;
     }
     getCommentsOverview(filter);
   }, [JSON.stringify(filter), commentView, isActive]);
 
   useAuthEffect(() => {
-    const { repos } = selectedTeam.team || {};
+    const { repos } = selectedOrganization.organizations || {};
     if (repos?.length) {
       const idsParamString = repos.join('-');
       dispatch(fetchReposByIds(idsParamString, token));
     }
-  }, [selectedTeam]);
+  }, [selectedOrganization]);
 
-  const setFilterValues = overview => {
+  const setFilterValues = (overview) => {
     if (!overview?.smartComments?.length) {
       return;
     }
@@ -352,10 +352,10 @@ const TeamInsights = () => {
   };
 
   useEffect(() => {
-    const { overview } = teams;
+    const { overview } = organizations;
     filterComments(overview);
     setFilterValues(overview);
-  }, [JSON.stringify(filter), teams]);
+  }, [JSON.stringify(filter), organizations]);
 
   const renderTopReactions = () => {
     return topReactions.map(reaction => {
@@ -385,7 +385,7 @@ const TeamInsights = () => {
 
   return (
     <div className="has-background-gray-200">
-      <Helmet {...TeamInsightsHelmet} />
+      <Helmet {...OrganizationInsightsHelmet} />
       <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400" />
       <div className="pb-40 is-hidden-mobile">
         <div>
@@ -393,8 +393,8 @@ const TeamInsights = () => {
             <p className="has-text-black-950 has-text-weight-semibold is-size-4 pb-20 px-15">
               {!isActive ? (
                 <Avatar
-                  name={selectedTeam?.team?.name || 'Team'}
-                  src={selectedTeam?.team?.avatarUrl}
+                  name={selectedOrganization?.organization?.name || 'Organization'}
+                  src={selectedOrganization?.organization?.avatarUrl}
                   size="35"
                   round
                   textSizeRatio={2.5}
@@ -435,8 +435,8 @@ const TeamInsights = () => {
                     }}
                   >
                     <Avatar
-                      name={selectedTeam?.team?.name || 'Team'}
-                      src={selectedTeam?.team?.avatarUrl}
+                      name={selectedOrganization?.organization?.name || 'Organization'}
+                      src={selectedOrganization?.organization?.avatarUrl}
                       size="35"
                       round
                       textSizeRatio={2.5}
@@ -447,7 +447,7 @@ const TeamInsights = () => {
                 </>
               )}
               <span className={isActive ? 'pl-40 ml-40' : 'pl-20 ml-20'}>
-                {isActive ? 'My contributions' : 'Our team'}
+                {isActive ? 'My contributions' : 'Our organization'}
               </span>
               <span className="ml-20 is-size-7 has-text-weight-normal">
                 <InfoFilledIcon
@@ -458,10 +458,10 @@ const TeamInsights = () => {
                 <span className="ml-8">
                   {isActive
                     ? 'Only you can see this page.'
-                    : 'All your team members can see this page.'}
+                    : 'All your organization members can see this page.'}
                 </span>
                 <a
-                  href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_TEAM_INSIGHTS}`}
+                  href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_ORGANIZATION_INSIGHTS}`}
                   target="_blank"
                   rel="noreferrer noopener"
                 >
@@ -476,7 +476,7 @@ const TeamInsights = () => {
                 onClick={onClickChild}
                 aria-hidden
               >
-                <TeamIcon size="small" color={isActive ? gray500 : blue700} />
+                <OrganizationIcon size="small" color={isActive ? gray500 : blue700} />
                 <span
                   className={`px-5 ${
                     isActive ? 'has-text-gray-500' : 'has-text-blue-700'
@@ -559,7 +559,7 @@ const TeamInsights = () => {
           </div>
         </div>
         <div className="is-divider is-hidden-mobile m-0 p-0 has-background-gray-400" />
-        <TeamStatsFilter
+        <OrganizationStatsFilter
           filter={filter}
           individualFilter={isActive}
           commentView={commentView}
@@ -576,7 +576,7 @@ const TeamInsights = () => {
             onClick={() => setOpenReactionsModal(true)}
           />
           <TagsChart
-            isTeamView
+            isOrganizationView
             className="mr-neg10"
             tags={tagsChartData}
             groupBy={dateData.groupBy}
@@ -622,4 +622,4 @@ const TeamInsights = () => {
   );
 };
 
-export default withLayout(TeamInsights);
+export default withLayout(OrganizationInsights);

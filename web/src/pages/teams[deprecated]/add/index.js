@@ -13,7 +13,7 @@ import checkAvailableUrl from '../../../utils/checkAvailableUrl';
 import TagsInput from '../../../components/tagsInput';
 import Helmet, { OrganizationCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { authOperations } from '../../../state/features/auth';
 import {
   AlertFilledIcon,

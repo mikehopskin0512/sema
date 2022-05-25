@@ -7,7 +7,7 @@ import { TeamReposHelmet } from '../../../../components/utils/Helmet';
 import Loader from '../../../../components/Loader';
 import ReposView from '../../../../components/repos/reposView';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS } from '../../../../utils/constants';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import withLayout from '../../../../components/layout';
 import Toaster from '../../../../components/toaster';
 import useAuthEffect from '../../../../hooks/useAuthEffect';

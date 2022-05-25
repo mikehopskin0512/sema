@@ -6,7 +6,7 @@ import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
-import { organizationsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/organizations[new]';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';

@@ -13,7 +13,7 @@ import checkAvailableUrl from '../../../utils/checkAvailableUrl';
 import TagsInput from '../../../components/tagsInput';
 import Helmet, { OrganizationCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { authOperations } from '../../../state/features/auth';
 import {
   AlertFilledIcon,
@@ -26,7 +26,7 @@ import {
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../utils/constants';
 import styles from './add.module.scss';
 
-const { createTeam, fetchOrganizationsOfUser } = organizationsOperations;
+const { createOrganization, fetchOrganizationsOfUser } = organizationsOperations;
 const { setSelectedOrganization } = authOperations;
 const URL_STATUS = {
   ALLOCATED: 'allocated',
@@ -61,7 +61,7 @@ function OrganizationEditPage() {
   const url = watch('url');
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.authState);
-  const { teamsState } = useSelector((state) => state);
+  const { organizationsNewState } = useSelector((state) => state);
   const showNotification = (organization) => {
     const isError = !organization;
     toaster.notify(
@@ -110,7 +110,7 @@ function OrganizationEditPage() {
   };
   const switchToOrganization = async (organization) => {
     const roles = await dispatch(fetchOrganizationsOfUser(token));
-    const activeOrganization = roles.find((role) => role.team._id === organization._id);
+    const activeOrganization = roles.find((role) => role.organization._id === organization._id);
     dispatch(setSelectedOrganization(activeOrganization));
     router.push(`${PATHS.ORGANIZATIONS._}/${organization._id}${PATHS.DASHBOARD}`);
   };
@@ -145,7 +145,7 @@ function OrganizationEditPage() {
         }
       }
       const organization = await dispatch(
-        createTeam(
+        createOrganization(
           {
             ...data,
             members: data.members.map((member) => member.label),
@@ -153,7 +153,7 @@ function OrganizationEditPage() {
           token
         )
       );
-      if (!isEmpty(teamsState.error)) {
+      if (!isEmpty(organizationsNewState.error)) {
         showNotification(null);
       }
       if (organization) {

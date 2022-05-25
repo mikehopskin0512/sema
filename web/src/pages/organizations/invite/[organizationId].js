@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { PATHS } from '../../../utils/constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
-const { inviteTeamUser, fetchTeamsOfUser } = organizationsOperations;
+const { inviteOrganizationUser, fetchOrganizationsOfUser } = organizationsOperations;
 
 const PublicOrganizationInvite = () => {
   const dispatch = useDispatch();
@@ -19,8 +19,8 @@ const PublicOrganizationInvite = () => {
   const { user, token } = auth;
 
   const joinTeam = async () => {
-    await dispatch(inviteTeamUser(teamId, token));
-    await dispatch(fetchTeamsOfUser(token));
+    await dispatch(inviteOrganizationUser(teamId, token));
+    await dispatch(fetchOrganizationsOfUser(token));
   };
 
   useEffect(() => {

@@ -10,11 +10,11 @@ import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_ORGANI
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
-import { PlusIcon, CommentsIcon, OptionsIcon, TeamIcon } from '../../../components/Icons';
+import { PlusIcon, CommentsIcon, OptionsIcon, OrganizationIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
-import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
-import { fetchTeamCollections } from '../../../state/features/teams/actions';
+import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/organizations[new]/operations';
+import { fetchTeamCollections } from '../../../state/features/organizations[new]/actions';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { orange600 } from '../../../../styles/_colors.module.scss';
 
@@ -152,7 +152,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
             <div className={clsx('is-full-width', styles['card-bar'], isHighlightNeeded ? 'has-background-orange-300' : type === 'active' ? 'has-background-primary' : 'has-background-gray-400')} />
             <div className="is-flex is-justify-content-space-between px-25 pb-10 pt-20 is-align-items-center">
               {isTeamIconNeeded && <div className={clsx('is-circular has-background-orange-50 is-flex is-align-items-center is-justify-content-center', styles['team-icon-container'])}>
-                <TeamIcon color={orange600} size='small'/>
+                <OrganizationIcon color={orange600} size='small'/>
               </div>}
               <OverflowTooltip ref={titleRef} text={name}>
                 <p ref={titleRef} className={clsx('has-text-black-900 has-text-weight-semibold is-size-5 pr-10', styles.title)}>{name}</p>

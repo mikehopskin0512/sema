@@ -12,7 +12,7 @@ import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
 import usePermission from '../../hooks/usePermission';
-import { organizationsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/organizations[new]';
 import { portfoliosOperations } from '../../state/features/portfolios';
 import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';

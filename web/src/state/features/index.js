@@ -15,7 +15,7 @@ export { default as usersState } from './users';
 export { default as searchQueriesState } from './search-queries';
 export { default as suggestSnippetsState } from './suggest-snippets';
 export { default as smartCommentsState } from './smart-comments';
-export { default as teamsState } from './teams';
+export { default as teamsState } from './organizations[new]';
 export { default as rolesState } from './roles';
 export { default as selectedUserState } from './selected-user';
 export { default as portfoliosState } from './portfolios';

@@ -5,10 +5,10 @@ import clsx from 'clsx';
 import { Helmet } from 'react-helmet';
 import TeamDashboard from '../../../../components/team/teamDashboard';
 import withLayout from '../../../../components/layout';
-import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';
 import styles from './dashboard.module.scss';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import OnboardingModal from '../../../../components/onboarding/onboardingModal';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
@@ -148,7 +148,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Helmet title={TeamDashboardHelmet.title} />
+      <Helmet title={OrganizationDashboardHelmet.title} />
       <div className="sema-wide-container">
         <TeamDashboard team={teams} />
         <div className="is-flex is-align-items-center is-justify-content-space-between py-40 px-35 mb-50 has-background-blue-50">

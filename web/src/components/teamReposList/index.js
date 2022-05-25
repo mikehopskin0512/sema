@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '../../components/checkbox';
 import { fetchRepoDashboard, fetchReposByIds } from '../../state/features/repositories/actions';
-import { editTeamRepos, fetchTeamRepos } from '../../state/features/teams/actions';
+import { editTeamRepos, fetchTeamRepos } from '../../state/features/organizations[new]/actions';
 import Loader from '../../components/Loader';
 import Table from '../table';
 import { alertOperations } from '../../state/features/alerts';

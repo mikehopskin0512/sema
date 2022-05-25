@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import withLayout from '../../../../components/layout';
-import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { getCollectionById } from '../../../../state/features/comments/actions';
@@ -38,7 +38,7 @@ const Snippets = () => {
 
   return (
     <>
-      <Helmet title={TeamDashboardHelmet.title} />
+      <Helmet title={OrganizationDashboardHelmet.title} />
       <div className='sema-wide-container'>
         {team.name}
       </div>

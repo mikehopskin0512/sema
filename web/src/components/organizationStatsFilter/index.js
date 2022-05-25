@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { InputField } from 'adonis';
 import useDebounce from '../../hooks/useDebounce';
-import styles from './teamStatsFilter.module.scss';
+import styles from './organizationStatsFilter.module.scss';
 import DateRangeSelector from '../dateRangeSelector';
 import CustomSelect from '../activity/select';
 import { DROPDOWN_SORTING_TYPES } from '../../utils/constants';
@@ -12,7 +12,7 @@ import { addDays, format } from 'date-fns';
 import { SearchIcon } from '../Icons';
 import { gray500 } from '../../../styles/_colors.module.scss';
 
-const TeamStatsFilter = ({
+const OrganizationStatsFilter = ({
   filter,
   individualFilter,
   commentView,
@@ -222,7 +222,7 @@ const TeamStatsFilter = ({
     </>
   );
 };
-TeamStatsFilter.defaultProps = {
+OrganizationStatsFilter.defaultProps = {
   filterUserList: [],
   filterRequesterList: [],
   filterPRList: [],
@@ -232,7 +232,7 @@ TeamStatsFilter.defaultProps = {
   individualFilter: true
 };
 
-TeamStatsFilter.propTypes = {
+OrganizationStatsFilter.propTypes = {
   filterUserList: PropTypes.array.isRequired,
   filterRequesterList: PropTypes.array.isRequired,
   filterPRList: PropTypes.array.isRequired,
@@ -242,4 +242,4 @@ TeamStatsFilter.propTypes = {
   individualFilter: PropTypes.bool
 };
 
-export default TeamStatsFilter;
+export default OrganizationStatsFilter;

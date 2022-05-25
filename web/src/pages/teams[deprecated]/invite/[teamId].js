@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { PATHS } from '../../../utils/constants';
 import useLocalStorage from '../../../hooks/useLocalStorage';
 

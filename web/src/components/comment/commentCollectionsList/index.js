@@ -25,7 +25,7 @@ import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
 import { find, isEmpty, uniqBy } from 'lodash';
-import { fetchTeamCollections } from "../../../state/features/teams/actions";
+import { fetchTeamCollections } from "../../../state/features/organizations[new]/actions";
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;

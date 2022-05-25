@@ -18,7 +18,7 @@ export {
   LabelsManagementHelmet,
   OrganizationCreateHelmet,
   TeamManagementHelmet,
-  TeamDashboardHelmet,
+  OrganizationDashboardHelmet,
   TeamReposHelmet,
   OrganizationInsightsHelmet,
   TeamInviteHelmet,

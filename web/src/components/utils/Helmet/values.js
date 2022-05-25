@@ -74,7 +74,7 @@ export const TeamManagementHelmet = {
   description: null,
 };
 
-export const TeamDashboardHelmet = {
+export const OrganizationDashboardHelmet = {
   title: 'Team Dashboard',
   description: null,
 };

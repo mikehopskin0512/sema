@@ -2,71 +2,71 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
-import { TagIcon, TeamIcon } from '../../../../components/Icons';
+import { TagIcon, OrganizationIcon } from '../../../../components/Icons';
 
-const { fetchTeamMembers } = organizationsOperations;
+const { fetchOrganizationMembers } = organizationsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
+  const { isOrganizationAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const router = useRouter();
   const {
-    query: { teamId, tab },
+    query: { organizationId, tab },
   } = router;
 
-  const { auth, teams } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState
+      organizations: state.organizationsNewState
     }),
   );
-  const { token, user } = auth;
+  const { token } = auth;
   const [activeTeam, setActiveTeam] = useState({});
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, {}, token));
-  }, [teamId]);
+    dispatch(fetchOrganizationMembers(organizationId, {}, token));
+  }, [organizationId]);
 
   const setDefaultTag = () => {
     router.push({
-      pathname: PATHS.ORGANIZATIONS.SETTINGS(teamId),
+      pathname: PATHS.ORGANIZATIONS.SETTINGS(organizationId),
       query: { tab: TAB.management },
     });
   };
 
   useEffect(() => {
-    if (teams.teams.length) {
-      const team = teams.teams.find(({ team }) => {
-        return (team?.url === teamId) || (team?._id === teamId)
+    if (organizations.organizations.length) {
+      const organization = organizations.organizations.find(({ organization }) => {
+        return (organization?.url === organizationId) || (organization?._id === organizationId)
       });
-      if (team) {
-        setActiveTeam(team);
+      if (organization) {
+        setActiveTeam(organization);
       }
     }
-  }, [teams, teamId]);
+  }, [organizations, organizationId]);
 
   useEffect(() => {
     !tab && setDefaultTag();
   }, []);
 
   const menus = [
-    (isTeamAdminOrLibraryEditor() && {
+    (isOrganizationAdminOrLibraryEditor() && {
       label: 'Team Management',
-      path: PATHS.ORGANIZATIONS.MANAGEMENT(teamId),
+      path: PATHS.ORGANIZATIONS.MANAGEMENT(organizationId),
       id: TAB.management,
-      icon: <TeamIcon width={20} />,
+      icon: <OrganizationIcon width={20} />,
     }),
     (isSemaAdmin() && {
       label: 'Labels Management',
-      path: PATHS.ORGANIZATIONS.LABELS(teamId),
+      path: PATHS.ORGANIZATIONS.LABELS(organizationId),
       id: TAB.labels,
       icon: <TagIcon />,
     }),
@@ -82,7 +82,7 @@ const TeamSettings = () => {
     <>
       <div className="has-background-white">
         <div className="container pt-40">
-          <Helmet {...TeamDashboardHelmet} />
+          <Helmet {...OrganizationDashboardHelmet} />
           <PageHeader menus={menus} userRole={activeTeam} />
         </div>
       </div>

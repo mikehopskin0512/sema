@@ -10,7 +10,7 @@ import Table from '../../table';
 import withSelectedOrganization from '../../auth/withSelectedOrganization';
 import RoleChangeModal from '../roleChangeModal';
 import ActionMenu from '../ActionMenu';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';

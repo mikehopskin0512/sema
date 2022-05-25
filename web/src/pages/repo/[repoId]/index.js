@@ -8,7 +8,7 @@ import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';

@@ -8,12 +8,12 @@ import _ from 'lodash';
 import checkAvailableUrl from '../../../../utils/checkAvailableUrl';
 import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
-import { organizationsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../../utils/constants' ;
 import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import UploadFile from '../../../../components/team/UploadFile';
-import { uploadTeamAvatar } from "../../../../state/features/teams/actions";
+import { uploadTeamAvatar } from "../../../../state/features/organizations[new]/actions";
 import styles from './teamEdit.module.scss';
 
 const { editTeam, fetchTeamsOfUser } = organizationsOperations;

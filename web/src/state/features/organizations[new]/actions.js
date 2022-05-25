@@ -229,9 +229,9 @@ export const fetchOrganizationMembers = (id, params, token) => async (dispatch) 
   }
 };
 
-export const editOrganizationRepos = (teamId, repos, token) => async (dispatch) => {
+export const editOrganizationRepos = (organizationId, repos, token) => async (dispatch) => {
   try {
-    await updateOrganizationRepos(teamId, repos, token);
+    await updateOrganizationRepos(organizationId, repos, token);
     return repos;
   } catch (e) {
     const { response: { data: { message }, status, statusText } } = error;
@@ -240,10 +240,10 @@ export const editOrganizationRepos = (teamId, repos, token) => async (dispatch) 
   }
 }
 
-export const fetchOrganizationMetrics = (teamId, token) => async (dispatch) => {
+export const fetchOrganizationMetrics = (organizationId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchOrganizationMetrics());
-    const payload = await getOrganizationMetrics(teamId, token);
+    const payload = await getOrganizationMetrics(organizationId, token);
     const { data } = payload;
     dispatch(requestFetchOrganizationMetricsSuccess(data));
   } catch (error) {
@@ -253,10 +253,10 @@ export const fetchOrganizationMetrics = (teamId, token) => async (dispatch) => {
   }
 }
 
-export const fetchOrganizationRepos = ({ teamId, searchParams = '' }, token) => async (dispatch) => {
+export const fetchOrganizationRepos = ({ organizationId, searchParams = '' }, token) => async (dispatch) => {
   try {
     dispatch(requestFetchOrganizationRepos());
-    const payload = await getOrganizationRepos(teamId, { searchParams }, token);
+    const payload = await getOrganizationRepos(organizationId, { searchParams }, token);
     const { data } = payload;
     dispatch(requestFetchOrganizationReposSuccess(data));
   } catch (error) {
@@ -266,10 +266,10 @@ export const fetchOrganizationRepos = ({ teamId, searchParams = '' }, token) => 
   }
 }
 
-export const inviteOrganizationUsers = (teamId, body, token) => async (dispatch) => {
+export const inviteOrganizationUsers = (organizationId, body, token) => async (dispatch) => {
   try {
     dispatch(inviteOrganizationUsersRequest());
-    await postInviteUsersToOrganization(teamId, body, token);
+    await postInviteUsersToOrganization(organizationId, body, token);
     dispatch(inviteOrganizationUsersSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
@@ -278,10 +278,10 @@ export const inviteOrganizationUsers = (teamId, body, token) => async (dispatch)
   }
 };
 
-export const validateOrganizationInvitationEmails = (teamId, body, token) => async (dispatch) => {
+export const validateOrganizationInvitationEmails = (organizationId, body, token) => async (dispatch) => {
   try {
     dispatch(requestOrganizationInvitationEmailValidationRequest());
-    const payload = await postOrganizationInvitationEmailValidation(teamId, body, token);
+    const payload = await postOrganizationInvitationEmailValidation(organizationId, body, token);
     const { data } = payload;
     dispatch(requestOrganizationInvitationEmailValidationSuccess(data?.invalidEmails));
   } catch (error) {
@@ -291,10 +291,10 @@ export const validateOrganizationInvitationEmails = (teamId, body, token) => asy
   }
 };
 
-export const setActiveOrganizationCollections = (id, teamId, token) => async (dispatch) => {
+export const setActiveOrganizationCollections = (id, organizationId, token) => async (dispatch) => {
   try {
     dispatch(requestToggleOrganizationCollection());
-    await toggleActiveCollection(id, { teamId }, token);
+    await toggleActiveCollection(id, { organizationId }, token);
     dispatch(requestToggleOrganizationCollectionSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
@@ -303,10 +303,10 @@ export const setActiveOrganizationCollections = (id, teamId, token) => async (di
   }
 }
 
-export const fetchOrganizationCollections = (teamId, token) => async (dispatch) => {
+export const fetchOrganizationCollections = (organizationId, token) => async (dispatch) => {
   try {
     dispatch(requestFetchOrganizationCollectionsRequest());
-    const collections = await getAllOrganizationCollections(teamId, token);
+    const collections = await getAllOrganizationCollections(organizationId, token);
     if (collections?.status === 200) {
       dispatch(requestFetchOrganizationCollectionsSuccess(collections.data));
     }
@@ -343,10 +343,10 @@ export const fetchOrganizationSmartCommentOverview = (params, token) => async (d
 };
 
 /* Invite a single member */
-export const inviteOrganizationUser = (teamId, token) => async (dispatch) => {
+export const inviteOrganizationUser = (organizationId, token) => async (dispatch) => {
   try {
     dispatch(inviteOrganizationUsersRequest());
-    await inviteToOrganization(teamId, token);
+    await inviteToOrganization(organizationId, token);
     dispatch(inviteOrganizationUsersSuccess());
   } catch (error) {
     const { response: { data: { message }, status, statusText } } = error;
@@ -355,9 +355,9 @@ export const inviteOrganizationUser = (teamId, token) => async (dispatch) => {
   }
 };
 
-export const uploadOrganizationAvatar = (teamId, body, token) => async (dispatch) => {
+export const uploadOrganizationAvatar = (organizationId, body, token) => async (dispatch) => {
   try {
-    const res = await uploadAvatar(teamId, body, token);
+    const res = await uploadAvatar(organizationId, body, token);
 
     dispatch(setSelectedOrganization(res.data));
     dispatch(fetchOrganizationsOfUser(token));

@@ -8,8 +8,8 @@ import { alertOperations } from '../../../state/features/alerts';
 import { isSemaDefaultCollection } from '../../../utils';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import usePopup from "../../../hooks/usePopup";
-import { fetchTeamCollections } from '../../../state/features/teams/actions';
-import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
+import { fetchTeamCollections } from '../../../state/features/organizations[new]/actions';
+import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/organizations[new]/operations';
 
 const { triggerAlert } = alertOperations;
 const { updateCollection, fetchAllUserCollections } = collectionsOperations;

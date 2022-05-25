@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
-import { organizationsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/organizations[new]';
 import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_ORGANIZATION_ID, COLLECTION_TYPES } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';

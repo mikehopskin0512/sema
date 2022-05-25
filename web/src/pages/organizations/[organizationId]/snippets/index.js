@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import withLayout from '../../../../components/layout';
-import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { getCollectionById } from '../../../../state/features/comments/actions';
@@ -13,18 +13,18 @@ import { getCollectionById } from '../../../../state/features/comments/actions';
 const Snippets = () => {
   const dispatch = useDispatch();
   const {
-    query: { teamId },
+    query: { organizationId },
   } = useRouter();
-  const { auth, teams } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState.teams,
+      organizations: state.organizationsNewState.organizations,
     }),
   );
   const { collection } = useSelector((state) => (state.commentsState));
   const { token } = auth;
-  const team = teams?.find((it) => it.team._id === teamId)?.team;
-  const collectionId = team?.collections[0];
+  const organization = organizations?.find((it) => it.organization._id === organizationId)?.organization;
+  const collectionId = organization?.collections[0];
 
   useAuthEffect(() => {
     if (collectionId) {
@@ -32,15 +32,15 @@ const Snippets = () => {
     }
   }, [collectionId]);
 
-  if (!team) {
+  if (!organization) {
     return null
   }
 
   return (
     <>
-      <Helmet title={TeamDashboardHelmet.title} />
+      <Helmet title={OrganizationDashboardHelmet.title} />
       <div className='sema-wide-container'>
-        {team.name}
+        {organization.name}
       </div>
       <div>
         {collection.comments?.map((comment) => (
