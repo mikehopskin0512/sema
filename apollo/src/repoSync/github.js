@@ -22,6 +22,13 @@ export default function createGitHubImporter(octokit) {
 
   return async function importComment(githubComment) {
     const type = getType(githubComment);
+    // Ignore issue comments that belong to GitHub issues
+    // and not pull requests.
+    const shouldIgnore =
+      type === 'issueComment' &&
+      githubComment.html_url.split('/')[5] === 'issues';
+    if (shouldIgnore) return null;
+
     const pullRequestURL =
       githubComment.pull_request_url ||
       githubComment.issue_url.replace('/issues/', '/pulls/');

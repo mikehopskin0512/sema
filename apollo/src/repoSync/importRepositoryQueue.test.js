@@ -1584,6 +1584,43 @@ function getFirstPageOfIssueComments() {
       },
       performed_via_github_app: null,
     },
+    {
+      url: 'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130011292',
+      html_url:
+        'https://github.com/Semalab/phoenix/issues/3#issuecomment-1130011292',
+      issue_url: 'https://api.github.com/repos/Semalab/phoenix/issues/3',
+      id: 1130011292,
+      node_id: 'IC_kwDODi3jxM5DWpqb',
+      user: {
+        login: 'jaymendez',
+        id: 28770143,
+        node_id: 'MDQ6VXNlcjI4NzcwMTQz',
+        avatar_url: 'https://avatars.githubusercontent.com/u/28770143?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/jaymendez',
+        html_url: 'https://github.com/jaymendez',
+        type: 'User',
+        site_admin: false,
+      },
+      created_at: '2022-06-18T13:21:37Z',
+      updated_at: '2022-06-18T13:21:37Z',
+      author_association: 'CONTRIBUTOR',
+      body: 'A test',
+      reactions: {
+        'url':
+          'https://api.github.com/repos/Semalab/phoenix/issues/comments/1130011292/reactions',
+        'total_count': 0,
+        '+1': 0,
+        '-1': 0,
+        'laugh': 0,
+        'hooray': 0,
+        'confused': 0,
+        'heart': 0,
+        'rocket': 0,
+        'eyes': 0,
+      },
+      performed_via_github_app: null,
+    },
   ];
 }
 
