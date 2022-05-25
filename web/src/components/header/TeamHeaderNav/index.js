@@ -11,26 +11,26 @@ const TeamHeaderNav = ({ teamId = '', type = 'desktop' }) => {
     if (teamId) {
       return (
         <>
-          <Link href={`${PATHS.TEAMS._}/${teamId}${PATHS.DASHBOARD}`}>
+          <Link href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.DASHBOARD}`}>
             <a
               aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[teamId]${PATHS.DASHBOARD}` && 'has-text-weight-semibold'}`}
             >
               Dashboard
             </a>
           </Link>
-          <Link href={`${PATHS.TEAMS._}/${teamId}${PATHS.REPOS}`}>
+          <Link href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.REPOS}`}>
             <a
               aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[teamId]${PATHS.REPOS}` && 'has-text-weight-semibold'}`}
             >
               Repos
             </a>
           </Link>
-          <Link href={`${PATHS.TEAMS._}/${teamId}${PATHS.TEAM_INSIGHTS}`}>
+          <Link href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.ORGANIZATION_INSIGHTS}`}>
             <a
               aria-hidden="true"
-              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.TEAMS._}/[teamId]${PATHS.TEAM_INSIGHTS}` && 'has-text-weight-semibold'}`}
+              className={`navbar-item has-text-black-950 mr-10 ${pathname === `${PATHS.ORGANIZATIONS._}/[teamId]${PATHS.ORGANIZATION_INSIGHTS}` && 'has-text-weight-semibold'}`}
             >
               Team Insights
             </a>
@@ -44,7 +44,7 @@ const TeamHeaderNav = ({ teamId = '', type = 'desktop' }) => {
     if (teamId) {
       return (
         <>
-          <Link href={`${PATHS.TEAMS._}/${teamId}${PATHS.DASHBOARD}`}>
+          <Link href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.DASHBOARD}`}>
             <a
               aria-hidden="true"
               className="navbar-item has-text-weight-semibold is-uppercase"
@@ -52,7 +52,7 @@ const TeamHeaderNav = ({ teamId = '', type = 'desktop' }) => {
               Dashboard
             </a>
           </Link>
-          <Link href={`${PATHS.TEAMS._}/${teamId}${PATHS.REPOS}`}>
+          <Link href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.REPOS}`}>
             <a
               aria-hidden="true"
               className="navbar-item has-text-weight-semibold is-uppercase"

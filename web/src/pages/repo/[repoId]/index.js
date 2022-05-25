@@ -8,7 +8,7 @@ import RepoPageLayout from '../../../components/repos/repoPageLayout';
 import StatsPage from '../../../components/stats';
 import Helmet from '../../../components/utils/Helmet';
 import { repositoriesOperations } from '../../../state/features/repositories';
-import { teamsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/teams';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
@@ -18,7 +18,7 @@ import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
-const { fetchTeamRepos } = teamsOperations;
+const { fetchTeamRepos } = organizationsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',

@@ -1,7 +1,7 @@
 import * as types from './types';
 
 const initialState = {
-  teams: [],
+  ORGANIZATIONS: [],
   members: [],
   membersCount: 0,
   repos: [],
@@ -16,46 +16,46 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-  case types.REQUEST_FETCH_TEAMS_OF_USER:
+  case types.REQUEST_FETCH_ORGANIZATIONS_OF_USER:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_FETCH_TEAMS_OF_USER_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_SUCCESS:
     return {
       ...state,
       isFetching: false,
-      teams: [...action.teams],
+      ORGANIZATIONS: [...action.ORGANIZATIONS],
     };
-  case types.REQUEST_FETCH_TEAMS_OF_USER_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.CREATE_NEW_TEAM:
+  case types.CREATE_NEW_ORGANIZATION:
     return {
       ...state,
       isFetching: true,
     };
-  case types.CREATE_NEW_TEAM_SUCCESS:
+  case types.CREATE_NEW_ORGANIZATION_SUCCESS:
     return {
       ...state,
       isFetching: false,
       error: {},
     };
-  case types.CREATE_NEW_TEAM_ERROR:
+  case types.CREATE_NEW_ORGANIZATION_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_FETCH_TEAM_MEMBERS:
+  case types.REQUEST_FETCH_ORGANIZATION_MEMBERS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_FETCH_TEAM_MEMBERS_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATION_MEMBERS_SUCCESS:
     return {
       ...state,
       members: action.members,
@@ -63,112 +63,112 @@ const reducer = (state = initialState, action) => {
       isFetching: false,
       error: {},
     };
-  case types.REQUEST_FETCH_TEAM_MEMBERS_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATION_MEMBERS_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_FETCH_TEAM_METRICS:
+  case types.REQUEST_FETCH_ORGANIZATION_METRICS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_FETCH_TEAM_METRICS_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATION_METRICS_SUCCESS:
     return {
       ...state,
       metrics: action.metrics,
       isFetching: false,
       error: {},
     };
-  case types.REQUEST_FETCH_TEAM_METRICS_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATION_METRICS_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_FETCH_TEAM_REPOS:
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_FETCH_TEAM_REPOS_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS_SUCCESS:
     return {
       ...state,
       repos: action.repos,
       isFetching: false,
       error: {},
     };
-  case types.REQUEST_FETCH_TEAM_REPOS_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATION_REPOS_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.REQUEST_EDIT_TEAM:
+  case types.REQUEST_EDIT_ORGANIZATION:
     return {
       ...state,
       isFetching: true,
     };
-  case types.REQUEST_EDIT_TEAM_SUCCESS:
+  case types.REQUEST_EDIT_ORGANIZATION_SUCCESS:
     return {
       ...state,
       isFetching: false,
       error: {},
     };
-  case types.REQUEST_EDIT_TEAM_ERROR:
+  case types.REQUEST_EDIT_ORGANIZATION_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-  case types.FETCH_TEAM_COLLECTIONS:
+  case types.FETCH_ORGANIZATION_COLLECTIONS:
     return {
       ...state,
       isFetching: true,
     };
-  case types.FETCH_TEAM_COLLECTIONS_SUCCESS:
+  case types.FETCH_ORGANIZATION_COLLECTIONS_SUCCESS:
     return {
       ...state,
       isFetching: false,
       teamCollections: action.collections,
     };
-  case types.FETCH_TEAM_COLLECTIONS_ERROR:
+  case types.FETCH_ORGANIZATION_COLLECTIONS_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.errors,
     };
-    case types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY:
+    case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY:
     return {
       ...state,
       isFetching: true,
     }
-  case types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY_SUCCESS:
     return {
       ...state,
       summary: action.summary,
       smartComments: action.summary.smartComments,
       isFetching: false,
     }
-  case types.REQUEST_FETCH_TEAM_SMART_COMMENT_SUMMARY_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_SUMMARY_ERROR:
     return {
       ...state,
       isFetching: false,
       error: action.error
     }
-  case types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW:
+  case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW:
     return {
       ...state,
       isFetching: true,
     }
-  case types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_SUCCESS:
+  case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW_SUCCESS:
     return {
       ...state,
       overview: action.overview,
       isFetching: false,
     }
-  case types.REQUEST_FETCH_TEAM_SMART_COMMENT_OVERVIEW_ERROR:
+  case types.REQUEST_FETCH_ORGANIZATION_SMART_COMMENT_OVERVIEW_ERROR:
     return {
       ...state,
       isFetching: false,

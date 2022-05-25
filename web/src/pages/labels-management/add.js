@@ -10,7 +10,7 @@ import Helmet from '../../components/utils/Helmet';
 import usePermission from '../../hooks/usePermission';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations } from '../../state/features/tags';
-import {PATHS, SEMA_CORPORATE_TEAM_ID} from '../../utils/constants';
+import {PATHS, SEMA_CORPORATE_ORGANIZATION_ID} from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, PlusIcon } from '../../components/Icons';
 import { black950 } from '../../../styles/_colors.module.scss';
 import useLocalStorage from '../../hooks/useLocalStorage';
@@ -61,7 +61,7 @@ export const validateTags = (tags, existingTags = [], currentTag = false) => {
 const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const [accountData] = useLocalStorage('sema_selected_team');
+  const [accountData] = useLocalStorage('sema_selected_organization');
   const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
 
@@ -124,7 +124,7 @@ const AddLabels = () => {
     const data = dispatch(createTags(tags, token));
     if (data) {
       router.push({
-        pathname: PATHS.TEAMS.SETTINGS(teamId),
+        pathname: PATHS.ORGANIZATIONS.SETTINGS(teamId),
         query: { tab: 'labels' },
       });
     }

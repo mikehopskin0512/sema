@@ -6,14 +6,14 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants'
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
 import { PlusIcon, CommentsIcon, OptionsIcon, TeamIcon } from '../../../components/Icons';
 import { isSemaDefaultCollection } from '../../../utils';
 import { isEmpty } from 'lodash';
-import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
+import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
 import { fetchTeamCollections } from '../../../state/features/teams/actions';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import { orange600 } from '../../../../styles/_colors.module.scss';
@@ -96,7 +96,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       e.stopPropagation();
       // TODO: would be great to add error handling here in case of network error
       if (!isEmpty(selectedTeam)) {
-        dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+        dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
       } else {
         dispatch(updateCollectionIsActiveAndFetchCollections(_id, token));
       }
@@ -110,7 +110,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
       try {
         await dispatch(updateCollection(_id, { collection: { isActive: false } }, token));
         if(isActive) {
-          dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+          dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
         }
         dispatch(triggerAlert('Collection archived!', 'success'));
         dispatch(fetchAllUserCollections(token));

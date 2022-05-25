@@ -10,7 +10,7 @@ import FilterLabels from '../../labels-management/FilterLabels';
 import usePermission from '../../../hooks/usePermission';
 import { tagsOperations } from '../../../state/features/tags';
 import { alertOperations } from '../../../state/features/alerts';
-import { SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;

@@ -5,14 +5,14 @@ import { Helmet } from 'react-helmet';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
 import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
-const { fetchTeamMembers } = teamsOperations;
+const { fetchTeamMembers } = organizationsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const TeamSettings = () => {
 
   const setDefaultTag = () => {
     router.push({
-      pathname: PATHS.TEAMS.SETTINGS(teamId),
+      pathname: PATHS.ORGANIZATIONS.SETTINGS(teamId),
       query: { tab: TAB.management },
     });
   };
@@ -60,13 +60,13 @@ const TeamSettings = () => {
   const menus = [
     (isTeamAdminOrLibraryEditor() && {
       label: 'Team Management',
-      path: PATHS.TEAMS.MANAGEMENT(teamId),
+      path: PATHS.ORGANIZATIONS.MANAGEMENT(teamId),
       id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
     (isSemaAdmin() && {
       label: 'Labels Management',
-      path: PATHS.TEAMS.LABELS(teamId),
+      path: PATHS.ORGANIZATIONS.LABELS(teamId),
       id: TAB.labels,
       icon: <TagIcon />,
     }),

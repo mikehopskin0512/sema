@@ -10,7 +10,7 @@ import styles from './teamInvite.module.scss';
 import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
 import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import { fetchUsers } from '../../../../state/features/users/actions';
 import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
@@ -20,7 +20,7 @@ import { invitationsOperations } from '../../../../state/features/invitations';
 import { isEmpty } from "lodash";
 
 const { fetchRoles } = rolesOperations;
-const { inviteTeamUsers, validateTeamInvitationEmails } = teamsOperations;
+const { inviteTeamUsers, validateTeamInvitationEmails } = organizationsOperations;
 const { trackSendInvite } = invitationsOperations;
 import TagsInput from '../../../../components/tagsInput';
 
@@ -81,7 +81,7 @@ const TeamInvitePage = () => {
   };
 
   const handleClose = async () => {
-    await router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`);
+    await router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`);
   };
 
   const onCancel = async () => {
@@ -96,7 +96,7 @@ const TeamInvitePage = () => {
 
   const copyInviteLink = async (e) => {
     const { origin } = window.location
-    await navigator.clipboard.writeText(`${origin}${PATHS.TEAMS._}/invite/${teamId}`);
+    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${teamId}`);
     toggleCopyTooltip(true);
     setTimeout(() => toggleCopyTooltip(false), 3000);
   }
@@ -123,7 +123,7 @@ const TeamInvitePage = () => {
         newEmails = [...values, ...parseEmails(lastValue.value).map((item) => ({ label: item, value: item }))];
         setValue('emails', newEmails);
       }
-  
+
       dispatch(validateTeamInvitationEmails(teamId, {
         users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
       }, token));
@@ -149,7 +149,7 @@ const TeamInvitePage = () => {
       <Helmet {...TeamInviteHelmet} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={PATHS.TEAMS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-500">Team Management</span>
           </a>

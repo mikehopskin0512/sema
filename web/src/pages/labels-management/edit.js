@@ -14,7 +14,7 @@ import usePermission from '../../hooks/usePermission';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import { alertOperations } from '../../state/features/alerts';
 import { tagsOperations  } from '../../state/features/tags';
-import {PATHS, SEMA_CORPORATE_TEAM_ID} from '../../utils/constants';
+import {PATHS, SEMA_CORPORATE_ORGANIZATION_ID} from '../../utils/constants';
 import { ArrowLeftIcon, CheckOnlineIcon, SearchIcon } from '../../components/Icons';
 import { black950 } from '../../../styles/_colors.module.scss';
 
@@ -24,8 +24,8 @@ const { updateTagAndReloadTag, fetchTagsById, fetchTagList } = tagsOperations;
 const EditLabel = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isTeamAdminOrLibraryEditor } = usePermission();
-  const [accountData] = useLocalStorage('sema_selected_team');
+  const { isOrganizationAdminOrLibraryEditor } = usePermission();
+  const [accountData] = useLocalStorage('sema_selected_organization');
 
   const { query } = router;
   const { id } = query;
@@ -44,7 +44,7 @@ const EditLabel = () => {
   const { token } = auth;
   const { isFetching, tag, tags: existingTags } = tagsState;
 
-  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
+  const isAuthorized = useMemo(() => isOrganizationAdminOrLibraryEditor(), [isOrganizationAdminOrLibraryEditor]);
 
   useEffect(() => {
     dispatch(fetchTagsById(id, token));
@@ -79,7 +79,7 @@ const EditLabel = () => {
   };
 
   const onSubmit = () => {
-    const {team: {_id: teamId}} = accountData;
+    const {organization: {_id: organizationId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags, tag);
     if (tagsErrors) {
@@ -89,7 +89,7 @@ const EditLabel = () => {
     if (tags.length > 0) {
       dispatch(updateTagAndReloadTag(tags[0]._id, tags[0], token));
       router.push({
-        pathname: PATHS.TEAMS.SETTINGS(teamId),
+        pathname: PATHS.ORGANIZATIONS.SETTINGS(organizationId),
         query: { tab: 'labels' },
       });
     }

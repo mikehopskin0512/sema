@@ -5,13 +5,13 @@ import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
 import Helmet, {
-  TeamInsightsHelmet
+  OrganizationInsightsHelmet
 } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 import {
   DEFAULT_AVATAR,
@@ -46,14 +46,14 @@ const {
   fetchTeamSmartCommentSummary,
   fetchTeamSmartCommentOverview,
   fetchTeamRepos
-} = teamsOperations;
+} = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
 const TeamInsights = () => {
   const dispatch = useDispatch();
-  const { auth, teams } = useSelector(state => ({
+  const { auth, organizations } = useSelector(state => ({
     auth: state.authState,
-    teams: state.teamsState
+    organizations: state.organizationsState
   }));
   const { token, user, selectedTeam } = auth;
   const githubUser = user.identities?.[0];

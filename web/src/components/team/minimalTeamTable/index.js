@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import Table from '../../table';
 import styles from './minimalTeamTable.module.scss'
-import { DEFAULT_AVATAR, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { DEFAULT_AVATAR, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { differenceInCalendarDays, differenceInHours } from 'date-fns';
 
 const MAX_MEMBERS = 6;
@@ -82,10 +82,10 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
       <div className='is-bordered'>
         <div className={clsx('is-flex is-align-items-center is-justify-content-space-between', styles['custom-header'])}>
           <p className="has-text-deep-black has-text-weight-semibold is-size-6 px-15 ml-15">{count} members</p>
-          {checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+          {checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditUsers') && (
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(PATHS.TEAMS.INVITE(teamId))}
+              onClick={() => router.push(PATHS.ORGANIZATIONS.INVITE(teamId))}
             >
               <PlusIcon size="small" />
               <span className="ml-8">Invite new members</span>

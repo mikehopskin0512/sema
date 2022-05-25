@@ -2,7 +2,7 @@ import {
   DEFAULT_COLLECTION_NAME,
   GITHUB_URL,
   SEARCH_CATEGORY_TITLES,
-  SEMA_CORPORATE_TEAM_ID,
+  SEMA_CORPORATE_ORGANIZATION_ID,
 } from './constants';
 
 export const unshift = (arr, newval) => {
@@ -100,7 +100,7 @@ export const addTags = (tags, types) => tags
   .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
 
 export const filterNonSemaUsers = (users) => {
-  return users ? users.filter((user) => !user.teams || !user.teams.length || user.teams.every((team) => team._id !== SEMA_CORPORATE_TEAM_ID)) : [];
+  return users ? users.filter((user) => !user.teams || !user.teams.length || user.teams.every((team) => team._id !== SEMA_CORPORATE_ORGANIZATION_ID)) : [];
 }
 
 export const getPlatformLink = (username, type) => {

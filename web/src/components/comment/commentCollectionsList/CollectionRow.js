@@ -5,8 +5,8 @@ import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { collectionsOperations } from '../../../state/features/collections';
-import { teamsOperations } from '../../../state/features/teams';
-import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_TEAM_ID, COLLECTION_TYPES } from '../../../utils/constants';
+import { organizationsOperations } from '../../../state/features/teams';
+import { PATHS, DEFAULT_COLLECTION_NAME, SEMA_CORPORATE_ORGANIZATION_ID, COLLECTION_TYPES } from '../../../utils/constants';
 import { PlusIcon } from '../../Icons';
 import ActionMenu from '../actionMenu';
 import usePermission from '../../../hooks/usePermission';
@@ -16,7 +16,7 @@ import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 import styles from "./commentCollectionsList.module.scss";
 
 const { updateCollectionIsActiveAndFetchCollections } = collectionsOperations;
-const { updateTeamCollectionIsActiveAndFetchCollections } = teamsOperations;
+const { updateTeamCollectionIsActiveAndFetchCollections } = organizationsOperations;
 
 const CollectionRow = ({ data }) => {
   const titleRef = useRef();
@@ -48,10 +48,10 @@ const CollectionRow = ({ data }) => {
     router.push(`${PATHS.SNIPPETS.ADD}?cid=${_id}`)
   };
 
-  const canEdit = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditCollections');
+  const canEdit = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditCollections');
   const canEditSnippets = checkTeamPermission('canEditSnippets') || isSemaDefaultCollection(name) || isTeamDefaultCollection(selectedTeam, { name })
   const isHighlightNeeded = type === COLLECTION_TYPES.PERSONAL || type === COLLECTION_TYPES.TEAM;
-  
+
   return (
     <Link href={`?cid=${_id}`}>
       <tr className="has-background-white my-10 is-clickable">

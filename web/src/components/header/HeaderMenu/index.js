@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
 import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
-import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
@@ -141,7 +141,7 @@ const HeaderMenu = ({
           <hr className="navbar-divider m-0 has-background-gray-300" />
 
           {
-            checkAccess(SEMA_CORPORATE_TEAM_ID, 'canEditUsers') && (
+            checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditUsers') && (
               <>
           <Link href={`${PATHS.SEMA_ADMIN}/users`}>
             <span

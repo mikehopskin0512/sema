@@ -13,7 +13,7 @@ import checkAvailableUrl from '../../../utils/checkAvailableUrl';
 import TagsInput from '../../../components/tagsInput';
 import Helmet, { OrganizationCreateHelmet } from '../../../components/utils/Helmet';
 import withLayout from '../../../components/layout';
-import { teamsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/teams';
 import { authOperations } from '../../../state/features/auth';
 import {
   AlertFilledIcon,
@@ -26,7 +26,7 @@ import {
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../utils/constants';
 import styles from './add.module.scss';
 
-const { createTeam, fetchTeamsOfUser } = teamsOperations;
+const { createTeam, fetchOrganizationsOfUser } = organizationsOperations;
 const { setSelectedOrganization } = authOperations;
 const URL_STATUS = {
   ALLOCATED: 'allocated',
@@ -109,10 +109,10 @@ function OrganizationEditPage() {
     await router.back();
   };
   const switchToOrganization = async (organization) => {
-    const roles = await dispatch(fetchTeamsOfUser(token));
+    const roles = await dispatch(fetchOrganizationsOfUser(token));
     const activeOrganization = roles.find((role) => role.team._id === organization._id);
     dispatch(setSelectedOrganization(activeOrganization));
-    router.push(`${PATHS.TEAMS._}/${organization._id}${PATHS.DASHBOARD}`);
+    router.push(`${PATHS.ORGANIZATIONS._}/${organization._id}${PATHS.DASHBOARD}`);
   };
   const checkUrl = async (e) => {
     e?.preventDefault();

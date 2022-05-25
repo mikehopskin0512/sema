@@ -3,18 +3,18 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { PATHS } from '../../utils/constants';
 
-const withSelectedTeam = (WrappedComponent) => {
+const withSelectedOrganization = (WrappedComponent) => {
   return (props) => {
     if (typeof window !== 'undefined') {
       const Router = useRouter();
-      const accountData = localStorage.getItem('sema_selected_team');
+      const accountData = localStorage.getItem('sema_selected_organization');
       const selectedTeam = accountData ? JSON.parse(accountData) : null;
 
       if (!selectedTeam || !selectedTeam.team) {
         Router.push(PATHS.DASHBOARD);
         return null;
       } else if (Router.pathname.search('teamId') === -1) {
-        Router.push(`${PATHS.TEAMS}/${selectedTeam.team._id}`);
+        Router.push(`${PATHS.ORGANIZATIONS}/${selectedTeam.team._id}`);
         return null
       }
       return <WrappedComponent {...props} />;
@@ -24,4 +24,4 @@ const withSelectedTeam = (WrappedComponent) => {
   };
 };
 
-export default withSelectedTeam;
+export default withSelectedOrganization;

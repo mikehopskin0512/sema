@@ -7,10 +7,10 @@ import Avatar from 'react-avatar';
 import styles from './TeamManagement.module.scss';
 import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
-import withSelectedTeam from '../../auth/withSelectedTeam';
+import withSelectedOrganization from '../../auth/withSelectedOrganization';
 import RoleChangeModal from '../roleChangeModal';
 import ActionMenu from '../ActionMenu';
-import { teamsOperations } from '../../../state/features/teams';
+import { organizationsOperations } from '../../../state/features/teams';
 import { rolesOperations } from '../../../state/features/roles';
 import { fullName } from '../../../utils';
 import usePermission from '../../../hooks/usePermission';
@@ -19,7 +19,7 @@ import { ArrowDropdownIcon, PlusIcon, LinkIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
-const { fetchTeamMembers } = teamsOperations;
+const { fetchTeamMembers } = organizationsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
 const TeamManagement = ({ activeTeam }) => {
@@ -169,7 +169,7 @@ const TeamManagement = ({ activeTeam }) => {
   const copyInviteLink = async () => {
     const { origin } = window.location
     const teamId = activeTeam.team._id;
-    await navigator.clipboard.writeText(`${origin}${PATHS.TEAMS._}/invite/${teamId}`);
+    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${teamId}`);
     toggleCopyTooltip(true);
     setTimeout(() => toggleCopyTooltip(false), 3000);
   }
@@ -186,7 +186,7 @@ const TeamManagement = ({ activeTeam }) => {
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   const goToInvitePage = () => {
-    router.push(PATHS.TEAMS.INVITE(teamId));
+    router.push(PATHS.ORGANIZATIONS.INVITE(teamId));
   };
 
   return (
@@ -239,4 +239,4 @@ const TeamManagement = ({ activeTeam }) => {
   );
 };
 
-export default withSelectedTeam(TeamManagement);
+export default withSelectedOrganization(TeamManagement);

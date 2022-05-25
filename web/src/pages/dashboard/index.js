@@ -6,7 +6,7 @@ import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
 import { authOperations } from '../../state/features/auth';
-import { teamsOperations } from '../../state/features/teams';
+import { organizationsOperations } from '../../state/features/teams';
 import useLocalStorage from '../../hooks/useLocalStorage';
 import withLayout from '../../components/layout';
 import Helmet, { DashboardHelmet } from '../../components/utils/Helmet';
@@ -21,7 +21,7 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 const { updateUser, updateUserHasExtension } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
+const { inviteTeamUser, fetchTeamsOfUser } = organizationsOperations;
 const { setSelectedOrganization, setProfileViewMode } = authOperations;
 
 const Dashboard = () => {
@@ -106,14 +106,14 @@ const Dashboard = () => {
   //     await dispatch(inviteTeamUser(teamId, token));
   //     await dispatch(fetchTeamsOfUser(token));
   //     setTeamIdInvitation('');
-  //     router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+  //     router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
   //   }
   // }
 
   if (redirectUser) {
     setRedirectUser(false);
     if (selectedTeam) {
-      router.push(`${PATHS.TEAMS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
+      router.push(`${PATHS.ORGANIZATIONS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
     } else {
       router.push(PATHS.DASHBOARD);
     }
@@ -132,7 +132,7 @@ const Dashboard = () => {
       if (invitedTeam) {
         dispatch(setSelectedOrganization(invitedTeam));
         dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-        router.push(`${PATHS.TEAMS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+        router.push(`${PATHS.ORGANIZATIONS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
       }
     }
   }, [inviteTeamId, user.roles, teams]);

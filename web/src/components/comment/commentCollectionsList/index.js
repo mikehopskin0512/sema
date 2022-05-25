@@ -12,7 +12,7 @@ import Table from '../../labels-management/LabelsTable';
 import {
   DEFAULT_COLLECTION_NAME,
   PATHS,
-  SEMA_CORPORATE_TEAM_ID,
+  SEMA_CORPORATE_ORGANIZATION_ID,
   SEMA_COLLECTIONS_VIEW_MODE,
   NUM_PER_PAGE,
   PROFILE_VIEW_MODE
@@ -58,7 +58,7 @@ const CommentCollectionsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(NUM_PER_PAGE);
 
-  const canCreate = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+  const canCreate = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canCreateCollections');
 
   const setDefaultCollectionAsActive = () => {
     const collection = data.find((collection) => collection?.collectionData?.name?.toLowerCase() === DEFAULT_COLLECTION_NAME);
@@ -158,8 +158,8 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  const isLoaderNeeded = isEmpty(selectedTeam) ? 
-    isFetching : 
+  const isLoaderNeeded = isEmpty(selectedTeam) ?
+    isFetching :
     !teamCollections.length && teamsState.isFetching;
 
   if (isLoaderNeeded) {

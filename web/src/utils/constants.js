@@ -138,7 +138,7 @@ export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
 export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Team';
 
-export const SEMA_CORPORATE_TEAM_ID = '614f2fe7811ae802fc08e36e';
+export const SEMA_CORPORATE_ORGANIZATION_ID = '614f2fe7811ae802fc08e36e';
 
 export const SEMA_FAQ_URL = 'https://semasoftware.com/content/faqs';
 export const SEMA_INTERCOM_FAQ_URL = 'https://intercom.help/sema-software/en';
@@ -190,14 +190,14 @@ export const PATHS = {
   SUPPORT: '/support',
   GUIDES: '/guides',
   LOGIN: '/login',
-  TEAMS: {
-    _: '/teams',
+  ORGANIZATIONS: {
+    _: '/organizations',
     EDIT: id => `/teams/${id}/edit`,
-    ADD: '/teams/add',
-    INVITE: id => `/teams/${id}/invite`,
-    SETTINGS: id => `/teams/${id}/settings`,
-    LABELS: id => `/teams/${id}/settings?tab=labels`,
-    MANAGEMENT: id => `/teams/${id}/settings?tab=management`
+    ADD: '/organizations/add',
+    INVITE: id => `/organizations/${id}/invite`,
+    SETTINGS: id => `/organizations/${id}/settings`,
+    LABELS: id => `/organizations/${id}/settings?tab=labels`,
+    MANAGEMENT: id => `/organizations/${id}/settings?tab=management`
   },
   ONBOARDING: '/onboarding',
   REGISTER: '/register',
@@ -214,7 +214,7 @@ export const PATHS = {
     SNAPSHOTS: '/portfolios?tab=snapshots'
   },
   IDENTITIES: '/api/identities/github',
-  TEAM_INSIGHTS: '/team-insights'
+  ORGANIZATION_INSIGHTS: '/team-insights'
 };
 
 export const SUPPORT_VIDEO_LANGUAGES = [
@@ -228,7 +228,7 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: `${PATHS.TEAMS._}/[teamId]/edit`
+    path: `${PATHS.ORGANIZATIONS._}/[teamId]/edit`
   }
 ];
 

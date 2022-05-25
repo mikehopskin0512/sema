@@ -84,8 +84,8 @@ export const TeamReposHelmet = {
   description: null,
 };
 
-export const TeamInsightsHelmet = {
-  title: 'Team Insights',
+export const OrganizationInsightsHelmet = {
+  title: 'Organization Insights',
   description: null,
 };
 

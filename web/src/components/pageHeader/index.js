@@ -35,7 +35,7 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
   const { team } = userRole;
 
   const goToEditPage = () => {
-    router.push(PATHS.TEAMS.EDIT(team?._id));
+    router.push(PATHS.ORGANIZATIONS.EDIT(team?._id));
   };
 
   return (

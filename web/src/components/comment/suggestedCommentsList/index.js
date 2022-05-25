@@ -13,7 +13,7 @@ import ActionGroup from '../actionGroup';
 import Helmet from '../../utils/Helmet';
 import Toaster from '../../toaster';
 import Loader from '../../Loader';
-import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 
 import { commentsOperations } from '../../../state/features/comments';
 import { alertOperations } from '../../../state/features/alerts';

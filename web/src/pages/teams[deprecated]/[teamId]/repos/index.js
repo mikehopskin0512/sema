@@ -7,13 +7,13 @@ import { TeamReposHelmet } from '../../../../components/utils/Helmet';
 import Loader from '../../../../components/Loader';
 import ReposView from '../../../../components/repos/reposView';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS } from '../../../../utils/constants';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import withLayout from '../../../../components/layout';
 import Toaster from '../../../../components/toaster';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 
-const { fetchTeamRepos } = teamsOperations;
+const { fetchTeamRepos } = organizationsOperations;
 const { fetchRepoDashboard } = repositoriesOperations;
 
 const TeamRepository = () => {

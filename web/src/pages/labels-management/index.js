@@ -12,7 +12,7 @@ import Helmet, { LabelsManagementHelmet } from '../../components/utils/Helmet';
 import usePermission from '../../hooks/usePermission';
 import { tagsOperations } from '../../state/features/tags';
 import { alertOperations } from '../../state/features/alerts';
-import { SEMA_CORPORATE_TEAM_ID } from '../../utils/constants';
+import { SEMA_CORPORATE_ORGANIZATION_ID } from '../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
@@ -40,10 +40,10 @@ const LabelsManagement = () => {
   const roleTeam = roles.find((role) => {
     const { team } = role;
     // While teams selection is not implemented
-    return team?._id === SEMA_CORPORATE_TEAM_ID;
+    return team?._id === SEMA_CORPORATE_ORGANIZATION_ID;
   });
 
-  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_TEAM_ID, 'canViewAdmin') || false, []);
+  const isAuthorized = useMemo(() => checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canViewAdmin') || false, []);
 
   useEffect(() => {
     if (showAlert === true) {

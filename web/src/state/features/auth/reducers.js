@@ -190,7 +190,7 @@ const reducer = (state = initialState, action) => {
       user: {},
       error: action.errors,
     };
-  case types.SET_SELECTED_TEAM:
+  case types.SET_SELECTED_ORGANIZATION:
     return {
       ...state,
       selectedTeam: action.selectedTeam,

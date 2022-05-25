@@ -11,7 +11,7 @@ import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 import {
   DEFAULT_AVATAR,
@@ -46,7 +46,7 @@ const {
   fetchTeamSmartCommentSummary,
   fetchTeamSmartCommentOverview,
   fetchTeamRepos
-} = teamsOperations;
+} = organizationsOperations;
 const { fetchReposByIds } = repositoriesOperations;
 
 const TeamInsights = () => {

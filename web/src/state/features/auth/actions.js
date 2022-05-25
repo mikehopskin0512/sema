@@ -271,7 +271,7 @@ export const setUser = function (user) {
 };
 
 export const setSelectedTeamSuccess = (selectedTeam) => ({
-  type: types.SET_SELECTED_TEAM,
+  type: types.SET_SELECTED_ORGANIZATION,
   selectedTeam,
 });
 
@@ -281,7 +281,7 @@ export const setProfileViewModeSuccess = (profileViewMode) => ({
 });
 
 export const setSelectedOrganization = (selectedTeam) => (dispatch) => {
-  localStorage.setItem('sema_selected_team', JSON.stringify(selectedTeam));
+  localStorage.setItem('sema_selected_organization', JSON.stringify(selectedTeam));
   dispatch(setSelectedTeamSuccess(selectedTeam));
 };
 

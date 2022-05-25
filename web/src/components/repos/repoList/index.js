@@ -10,7 +10,7 @@ import styles from './repoList.module.scss';
 import { ListIcon, GridIcon, PlusIcon, FilterBarsIcon, SearchIcon } from '../../Icons';
 import { triggerAlert } from '../../../state/features/alerts/actions';
 import { fetchTeamRepos } from '../../../state/features/teams/actions';
-import { updateTeamRepositories } from '../../../state/features/teams/operations';
+import { updateOrganizationRepositories } from '../../../state/features/teams/operations';
 import DropDownMenu from '../../../components/dropDownMenu';
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
@@ -50,7 +50,7 @@ const RepoList = ({
   const removeRepo = async (repoId) => {
     try {
       const newRepos = repos.filter(repo => repo?._id !== repoId).map(repo => repo._id);
-      await dispatch(updateTeamRepositories(selectedTeam.team._id, { repos: newRepos }, token));
+      await dispatch(updateOrganizationRepositories(selectedTeam.team._id, { repos: newRepos }, token));
       dispatch(triggerAlert('Repo has been deleted', 'success'));
       dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
     } catch (e) {

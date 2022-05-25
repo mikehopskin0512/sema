@@ -8,8 +8,8 @@ import withLayout from '../../../../components/layout';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
 import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';
 import styles from './dashboard.module.scss';
-import { teamsOperations } from '../../../../state/features/teams';
-import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
+import { organizationsOperations } from '../../../../state/features/teams';
+import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import OnboardingModal from '../../../../components/onboarding/onboardingModal';
 import useLocalStorage from '../../../../hooks/useLocalStorage';
 import { authOperations } from '../../../../state/features/auth';
@@ -18,9 +18,9 @@ import * as analytics from '../../../../utils/analytics';
 import { isExtensionInstalled } from '../../../../utils/extension';
 import { collectionsOperations } from '../../../../state/features/collections';
 
-const { fetchTeamMembers, fetchTeamMetrics, fetchTeamRepos } = teamsOperations;
+const { fetchTeamMembers, fetchTeamMetrics, fetchTeamRepos } = organizationsOperations;
 const { updateUser } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
+const { inviteTeamUser, fetchTeamsOfUser } = organizationsOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 
 const Dashboard = () => {
@@ -91,7 +91,7 @@ const Dashboard = () => {
       await dispatch(inviteTeamUser(teamId, token));
       await dispatch(fetchTeamsOfUser(token));
       setTeamIdInvitation('');
-      router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+      router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
     }
   }
 
@@ -199,4 +199,4 @@ const Dashboard = () => {
   );
 };
 
-export default withSelectedTeam(withLayout(Dashboard));
+export default withSelectedOrganization(withLayout(Dashboard));

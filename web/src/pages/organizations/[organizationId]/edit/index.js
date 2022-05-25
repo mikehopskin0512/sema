@@ -8,15 +8,15 @@ import _ from 'lodash';
 import checkAvailableUrl from '../../../../utils/checkAvailableUrl';
 import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
-import { teamsOperations } from '../../../../state/features/teams';
+import { organizationsOperations } from '../../../../state/features/teams';
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../../utils/constants' ;
-import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
+import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import UploadFile from '../../../../components/team/UploadFile';
 import { uploadTeamAvatar } from "../../../../state/features/teams/actions";
 import styles from './teamEdit.module.scss';
 
-const { editTeam, fetchTeamsOfUser } = teamsOperations;
+const { editTeam, fetchTeamsOfUser } = organizationsOperations;
 
 function TeamEditPage() {
   const {
@@ -158,7 +158,7 @@ function TeamEditPage() {
             </div>
             <div>
               <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
-              <a href={`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <a href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -169,7 +169,7 @@ function TeamEditPage() {
     });
 
     mutate(team);
-    await router.push(`${PATHS.TEAMS._}/${teamId}${PATHS.SETTINGS}`);
+    await router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
   };
 
   const onCancel = async () => {
@@ -181,7 +181,7 @@ function TeamEditPage() {
       <Helmet {...TeamUpdateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={PATHS.TEAMS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
             <span className="ml-10 has-text-gray-600">Team Management</span>
           </a>
@@ -317,4 +317,4 @@ function TeamEditPage() {
   );
 }
 
-export default withSelectedTeam(withLayout(TeamEditPage));
+export default withSelectedOrganization(withLayout(TeamEditPage));

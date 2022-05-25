@@ -9,7 +9,7 @@ import { isSemaDefaultCollection } from '../../../utils';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import usePopup from "../../../hooks/usePopup";
 import { fetchTeamCollections } from '../../../state/features/teams/actions';
-import { updateTeamCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
+import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/teams/operations';
 
 const { triggerAlert } = alertOperations;
 const { updateCollection, fetchAllUserCollections } = collectionsOperations;
@@ -29,7 +29,7 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
     try {
       await dispatch(updateCollection(_id, { collection: { isActive: activeStatus } }, token));
       if(collectionActive) {
-        dispatch(updateTeamCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+        dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
       }
       dispatch(triggerAlert(activeStatus ? 'Collection unarchived!' : 'Collection archived!', 'success'));
       dispatch(fetchAllUserCollections(token));
@@ -38,7 +38,7 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
       dispatch(triggerAlert(activeStatus ? 'Unable to unarchived collection' : 'Unable to archive collection', 'error'));
     }
   };
-  
+
   useOutsideClick(popupRef, () => {
     if (isOpen) closeMenu();
   });

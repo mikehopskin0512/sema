@@ -20,7 +20,7 @@ export {
   TeamManagementHelmet,
   TeamDashboardHelmet,
   TeamReposHelmet,
-  TeamInsightsHelmet,
+  OrganizationInsightsHelmet,
   TeamInviteHelmet,
   TeamUpdateHelmet,
   PortfolioHelmet,

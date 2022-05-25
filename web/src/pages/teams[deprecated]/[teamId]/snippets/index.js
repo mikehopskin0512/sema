@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import withLayout from '../../../../components/layout';
 import { TeamDashboardHelmet } from '../../../../components/utils/Helmet';
-import withSelectedTeam from '../../../../components/auth/withSelectedTeam';
+import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { getCollectionById } from '../../../../state/features/comments/actions';
 
@@ -58,4 +58,4 @@ const Snippets = () => {
   )
 }
 
-export default withSelectedTeam(withLayout(Snippets))
+export default withSelectedOrganization(withLayout(Snippets))

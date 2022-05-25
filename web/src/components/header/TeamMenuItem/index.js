@@ -27,13 +27,13 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
 
   const handleOnTeamClick = () => {
     setTeam();
-    router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.DASHBOARD}`);
+    router.push(`${PATHS.ORGANIZATIONS._}/${role?.team?._id}${PATHS.DASHBOARD}`);
     toggleUserMenu();
   };
 
   const handleSettingsClick = () => {
     setTeam();
-    router.push(`${PATHS.TEAMS._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
+    router.push(`${PATHS.ORGANIZATIONS._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
   }
 
   const isFirstTeam = (index) => index === 0;
