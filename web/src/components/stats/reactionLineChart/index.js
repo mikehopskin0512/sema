@@ -153,18 +153,20 @@ const ReactionLineChart = ({
   return (
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)} onMouseMove={handleTooltipPosition}>
-        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
+        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow, isLoading && styles['loading-container'])}>
           {!isLoading && (
-            <div className="is-flex">
-              <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
-              {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
-            </div>
+            <>
+              <div className="is-flex">
+                <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
+                {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} />}
+              </div>
+              <LineChart
+                data={lineChartData}
+                emptyChart={emptyChart}
+                renderTooltip={renderTooltip}
+              />
+            </>
           )}
-          {!isLoading && <LineChart
-            data={lineChartData}
-            emptyChart={emptyChart}
-            renderTooltip={renderTooltip}
-          />}
           {isLoading && <LineChartSkeleton />}
         </div>
       </div>

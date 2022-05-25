@@ -32,7 +32,8 @@ const PersonalInsights = () => {
   }));
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
-
+  // const { isFetching } = comments;
+  const isFetching = true;
   const [totalSmartComments, setTotalSmartComments] = useState(0);
   const [topTags, setTopTags] = useState([])
   const [topReactions, setTopReactions] = useState([])
@@ -168,9 +169,9 @@ const PersonalInsights = () => {
 
   useEffect(() => {
     const reposList = githubUser.repositories?.map(item => (
-      {  
-        name: item.fullName, 
-        label: item.fullName, 
+      {
+        name: item.fullName,
+        label: item.fullName,
         value: item.id,
       })) || [];
     setFilterRepoList([...reposList]);
@@ -350,8 +351,8 @@ const PersonalInsights = () => {
         <StatsFilter filterRepoList={filterRepoList} filterUserList={filterUserList} filterRequesterList={filterRequesterList} filterPRList={filterPRList} handleFilter={handleFilter} />
         <SnapshotBar text="New Feature! Save these charts and comments as Snapshots on your Portfolio." />
         <div className="is-flex is-flex-wrap-wrap my-20">
-          <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)}/>
-          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} />
+          <ReactionChart className="ml-neg10" reactions={reactionChartData} yAxisType='total' groupBy={dateData.groupBy} onClick={() => setOpenReactionsModal(true)} isLoading={isFetching} />
+          <TagsChart className="mr-neg10" tags={tagsChartData} groupBy={dateData.groupBy} onClick={() => setOpenTagsModal(true)} dateOption={filter.dateOption} isLoading={isFetching} />
         </div>
         {openReactionsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.SUMMARIES} active={openReactionsModal} onClose={()=>setOpenReactionsModal(false)} snapshotData={{ componentData }}/>}
         {openTagsModal && <SnapshotModal dataType={SNAPSHOT_DATA_TYPES.TAGS} active={openTagsModal} onClose={()=>setOpenTagsModal(false)} snapshotData={{ componentData }}/>}
@@ -362,7 +363,7 @@ const PersonalInsights = () => {
             {filteredComments.length > 0 && <SnapshotButton onClick={() => setOpenCommentsModal(true)} />}
           </div>
         </div>
-        <ActivityItemList comments={filteredComments} />
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
       </div>
     </>
   )
