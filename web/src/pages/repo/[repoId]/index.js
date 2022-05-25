@@ -12,7 +12,6 @@ import { teamsOperations } from '../../../state/features/teams';
 import { getDateSub } from '../../../utils/parsing';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import FilterBar from '../../../components/repos/repoPageLayout/components/FilterBar';
-import StatsView from '../../../components/repos/repoPageLayout/components/StatsView';
 import Metrics from '../../../components/metrics';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
@@ -22,29 +21,29 @@ const { fetchTeamRepos } = teamsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
-  stats: 'Repo Stats'
+  stats: 'Repo Stats',
 };
 
-const RepoPage = () => {
+function RepoPage() {
   const dispatch = useDispatch();
 
-  const { auth, repositories } = useSelector(state => ({
+  const { auth, repositories } = useSelector((state) => ({
     auth: state.authState,
-    repositories: state.repositoriesState
+    repositories: state.repositoriesState,
   }));
-  const { token, selectedTeam, user } = auth;
+  const { token, selectedTeam } = auth;
   const {
-    data: { overview }
+    data: { overview },
   } = repositories;
   const totalMetrics = {
     pullRequests: overview.repoStats?.smartCodeReviews ?? 0,
     comments: overview.repoStats?.smartComments ?? 0,
     commenters: overview.repoStats?.smartCommenters ?? 0,
-    users: overview.repoStats?.semaUsers ?? 0
+    users: overview.repoStats?.semaUsers ?? 0,
   };
 
   const {
-    query: { repoId }
+    query: { repoId },
   } = useRouter();
 
   const firstUpdate = useRef(true);
@@ -53,7 +52,7 @@ const RepoPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [dates, setDates] = useState({
     startDate,
-    endDate
+    endDate,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,7 +63,7 @@ const RepoPage = () => {
     tags: [],
     search: '',
     pr: [],
-    dateOption: ''
+    dateOption: '',
   });
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
@@ -122,7 +121,7 @@ const RepoPage = () => {
     if (!startDate && !endDate) {
       setDates({
         startDate: null,
-        endDate: null
+        endDate: null,
       });
     }
   }, [startDate, endDate]);
@@ -132,23 +131,21 @@ const RepoPage = () => {
       return;
     }
     const requesters = overview.smartcomments
-      .filter(item => item.githubMetadata.requester)
-      .map(({ githubMetadata }) => {
-        return {
-          label: githubMetadata.requester,
-          value: githubMetadata.requester,
-          img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR
-        };
-      });
+      .filter((item) => item.githubMetadata.requester)
+      .map(({ githubMetadata }) => ({
+        label: githubMetadata.requester,
+        value: githubMetadata.requester,
+        img: githubMetadata.requesterAvatarUrl || DEFAULT_AVATAR,
+      }));
     const users = overview.smartcomments
-      .filter(item => item.userId)
-      .map(item => {
+      .filter((item) => item.userId)
+      .map((item) => {
         const {
           firstName = '',
           lastName = '',
           _id = '',
           avatarUrl = '',
-          username = 'User@email.com'
+          username = 'User@email.com',
         } = item.userId;
         return {
           label:
@@ -156,30 +153,30 @@ const RepoPage = () => {
               ? username.split('@')[0]
               : `${firstName} ${lastName}`,
           value: _id,
-          img: avatarUrl || DEFAULT_AVATAR
+          img: avatarUrl || DEFAULT_AVATAR,
         };
       });
     const prs = overview.smartcomments
-      .filter(item => item.githubMetadata)
-      .map(item => {
+      .filter((item) => item.githubMetadata)
+      .map((item) => {
         const {
           githubMetadata: {
             head,
             title = '',
             pull_number: pullNum = '',
-            updated_at
-          }
+            updated_at: updatedAt,
+          },
         } = item;
         const prName = title || head || 'Pull Request';
         return {
-          updated_at: new Date(updated_at),
+          updated_at: new Date(updatedAt),
           label: `${prName} (#${pullNum || '0'})`,
           value: pullNum,
-          name: prName
+          name: prName,
         };
       });
-    let filteredPRs = [];
-    prs.forEach(item => {
+    const filteredPRs = [];
+    prs.forEach((item) => {
       const index = findIndex(filteredPRs, { value: item.value });
       if (index !== -1) {
         if (isEmpty(filteredPRs[index].prName)) {
@@ -195,15 +192,15 @@ const RepoPage = () => {
     setIsLoading(false);
   }, [overview]);
 
-  const onDateChange = ({ startDate, endDate }) => {
-    setStartDate(startDate);
-    setEndDate(endDate);
+  const onDateChange = ({ startDate: newStartDate, endDate: newEndDate }) => {
+    setStartDate(newStartDate);
+    setEndDate(newEndDate);
   };
 
   const onChangeFilter = (type, value) => {
     setFilter({
       ...filter,
-      [type]: value
+      [type]: value,
     });
   };
 
@@ -233,7 +230,7 @@ const RepoPage = () => {
         <div className={clsx(styles.divider, 'my-20 mx-10')} />
 
         <Metrics
-          isLastThirtyDays={true}
+          isLastThirtyDays
           metrics={overview.metrics}
           totalMetrics={totalMetrics}
         />
@@ -253,6 +250,6 @@ const RepoPage = () => {
       )}
     </RepoPageLayout>
   );
-};
+}
 
 export default RepoPage;
