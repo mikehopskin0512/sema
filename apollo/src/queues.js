@@ -45,7 +45,23 @@ async function loadQueueFile(filename) {
 const queues = {
   self({ filename }) {
     const queueName = getQueueNameFromFile(filename);
-    return Ironium.queue(queueName);
+    const queue = Ironium.queue(queueName);
+    if (isTest) {
+      // Allow inspecting jobs in tests.
+      // This soon to be included in Ironium directly.
+      queue.jobs = [];
+      const originalQueueJob = queue.queueJob.bind(queue);
+      queue.queueJob = async (payload) => {
+        queue.jobs.push(payload);
+        await originalQueueJob(payload);
+      };
+      const originalPurgeQueue = queue.purgeQueue.bind(queue);
+      queue.purgeQueue = async () => {
+        await originalPurgeQueue();
+        queue.jobs.splice(0);
+      };
+    }
+    return queue;
   },
 };
 

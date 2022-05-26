@@ -41,13 +41,12 @@ export const create = async ({
       description,
       type,
       installationId,
-      'sync.addedBy': addedBy,
       language,
       cloneUrl,
       repositoryCreatedAt,
       repositoryUpdatedAt,
     });
-    await handleRepoSync(repository);
+    await handleRepoSync({ repository, user: addedBy });
     return repository;
   } catch (err) {
     const error = new errors.BadRequest(err);
@@ -56,16 +55,25 @@ export const create = async ({
   }
 };
 
-async function handleRepoSync(repository) {
+async function handleRepoSync({ repository, user }) {
   const shouldStartSync = !!(
     repository.type === 'github' && repository.installationId
   );
   if (shouldStartSync) {
-    repository.set({ 'sync.status': 'queued', 'sync.queuedAt': new Date() });
-    await repository.save();
-    await importRepositoryQueue.queueJob({ id: repository.id });
+    await startSync({ repository, user });
   }
 }
+
+export const startSync = async ({ repository, user }) => {
+  // eslint-disable-next-line no-param-reassign
+  repository.sync = {
+    status: 'queued',
+    queuedAt: new Date(),
+    addedBy: user,
+  };
+  await repository.save();
+  await importRepositoryQueue.queueJob({ id: repository.id });
+};
 
 export const createMany = async (repositories) => {
   try {
@@ -263,6 +271,7 @@ export const aggregateRepositories = async (
             createdAt,
             updatedAt,
             repoStats,
+            sync,
           } = repo;
           const {
             smartComments = 0,
@@ -287,6 +296,7 @@ export const aggregateRepositories = async (
             createdAt,
             users: repo.repoStats.userIds,
             updatedAt,
+            sync,
             smartcomments: includeSmartComments
               ? await findSmartCommentsByExternalId(
                   externalId,

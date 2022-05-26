@@ -32,9 +32,13 @@ expect.extend({
   toEqualID(actual, expected) {
     // ObjectID#_id returns itself, so this is safe to call
     // on instances of both ObjectID and Mongoose document.
-    const actualID = (actual._id || actual).toString();
-    const expectedID = (expected._id || expected).toString();
-    const pass = actualID === expectedID;
+    const actualID = actual?._id || actual;
+    const expectedID = expected?._id || expected;
+    const pass = !!(
+      actualID &&
+      expectedID &&
+      actualID.toString() === expectedID.toString()
+    );
     return {
       pass,
       message: () => `expected ${actualID} to match ${expectedID}`,
