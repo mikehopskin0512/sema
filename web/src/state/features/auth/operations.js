@@ -42,7 +42,7 @@ const registerAndAuthUser = (user, invitation = {}) => async (dispatch) => {
     analytics.segmentTrack(analytics.SEGMENT_EVENTS.WAITLIST_SIGNUP, { first_name, last_name, email });
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.CLICKED_JOIN_WAITLIST, {});
     analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.VIEWED_DASHBOARD_PAGE, { url: PATHS.DASHBOARD });
-    Router.push(invitation?.team ? `${PATHS.DASHBOARD}/?organizationId=${invitation?.orgId}` : PATHS.DASHBOARD);
+    Router.push(invitation?.organization ? `${PATHS.DASHBOARD}/?organizationId=${invitation?.organization}` : PATHS.DASHBOARD);
   } catch (error) {
     const { response: { data: { message } = {}, status, statusText } = {} } = error || '';
     const errMessage = message || `${status} - ${statusText}`;

@@ -20,12 +20,12 @@ const TeamCreateBanner = () => {
     teamsState,
   } = useSelector((state) => ({
     auth: state.authState,
-    teamsState: state.teamsState,
+    teamsState: state.organizationsNewState,
   }));
   const [active, toggleActive] = useState(false);
   const { user, token } = auth;
   const { isOnboarded } = user;
-  const { teams } = teamsState;
+  const { organizations: teams } = teamsState;
 
   const redirectUser = () => {
     router.push(PATHS.TEAM_CREATE);

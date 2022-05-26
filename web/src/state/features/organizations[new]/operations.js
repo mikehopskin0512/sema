@@ -3,15 +3,15 @@ import { setActiveOrganizationCollections } from './actions';
 import { setSelectedOrganization } from '../auth/actions';
 import { find } from 'lodash';
 
-export const updateOrganizationCollectionIsActiveAndFetchCollections = (collectionId, teamId, token) => async (dispatch) => {
+export const updateOrganizationCollectionIsActiveAndFetchCollections = (collectionId, organizationId, token) => async (dispatch) => {
   try {
-    await dispatch(setActiveOrganizationCollections(collectionId, teamId, token));
+    await dispatch(setActiveOrganizationCollections(collectionId, organizationId, token));
     const roles = await dispatch(actions.fetchOrganizationsOfUser(token))
-    const activeTeam = find(roles, function(o) {
-      return o.team?._id === teamId
+    const activeOrganization = find(roles, function(o) {
+      return o.organization?._id === organizationId
     })
-    if (activeTeam) {
-      await dispatch(setSelectedOrganization(activeTeam))
+    if (activeOrganization) {
+      await dispatch(setSelectedOrganization(activeOrganization))
     }
   } catch (err) {
     const error = new Error(err);
@@ -19,14 +19,14 @@ export const updateOrganizationCollectionIsActiveAndFetchCollections = (collecti
   }
 };
 
-export const updateOrganizationRepositories = (teamId, repos, token) => async (dispatch) => {
-  await dispatch(actions.editOrganizationRepos(teamId, repos, token));
-  const teams = await dispatch(actions.fetchOrganizationsOfUser(token))
-  const activeTeam = find(teams, (o) => {
-    return o.team?._id === teamId
+export const updateOrganizationRepositories = (organizationId, repos, token) => async (dispatch) => {
+  await dispatch(actions.editOrganizationRepos(organizationId, repos, token));
+  const organizations = await dispatch(actions.fetchOrganizationsOfUser(token))
+  const activeOrganization = find(organizations, (o) => {
+    return o.organization?._id === organizationId
   })
-  if (activeTeam) {
-    await dispatch(setSelectedOrganization(activeTeam))
+  if (activeOrganization) {
+    await dispatch(setSelectedOrganization(activeOrganization))
   }
 }
 

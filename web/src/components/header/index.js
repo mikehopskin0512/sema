@@ -18,6 +18,7 @@ import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
+import { fetchOrganizationsOfUser } from '../../state/features/organizations[new]/actions';
 
 const { fetchTeamsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
@@ -71,7 +72,7 @@ const Header = () => {
   ));
 
   useAuthEffect(() => {
-    dispatch(fetchTeamsOfUser(token));
+    dispatch(fetchOrganizationsOfUser(token));
     dispatch(fetchPortfoliosOfUser(user._id, token));
   }, [dispatch]);
 

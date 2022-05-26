@@ -1,13 +1,13 @@
 import * as types from './types';
 
 const initialState = {
-  ORGANIZATIONS: [],
+  organizations: [],
   members: [],
   membersCount: 0,
   repos: [],
   metrics: undefined,
   isFetching: false,
-  teamCollections: [],
+  organizationCollections: [],
   smartComments: [],
   summary: {},
   overview: {},
@@ -25,7 +25,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      ORGANIZATIONS: [...action.ORGANIZATIONS],
+      organizations: [...action.organizations],
     };
   case types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_ERROR:
     return {
@@ -131,7 +131,7 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      teamCollections: action.collections,
+      organizationCollections: action.collections,
     };
   case types.FETCH_ORGANIZATION_COLLECTIONS_ERROR:
     return {

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
@@ -31,10 +31,10 @@ const HeaderMenu = ({
     handle
   } = user;
   const fullName = `${firstName} ${lastName}`;
-  const { auth: { selectedTeam, token }, teams, portfolios } = useSelector(
+  const { auth: { selectedOrganization, token }, organizations, portfolios } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState.teams,
+      organizations: state.organizationsNewState.organizations,
       portfolios: state.portfoliosState.data.portfolios
     }),
   );
@@ -42,7 +42,7 @@ const HeaderMenu = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
-  const orderedTeams = Object.values(teams);
+  const orderedTeams = Object.values(organizations);
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -64,11 +64,11 @@ const HeaderMenu = ({
   useOutsideClick(userMenu, onClickOutside);
 
   const avatarUrl = useMemo(() => {
-    if (selectedTeam?.team) {
-      return selectedTeam?.team?.avatarUrl;
+    if (selectedOrganization?.organization) {
+      return selectedOrganization?.organization?.avatarUrl;
     }
     return user.avatarUrl;
-  }, [selectedTeam, user]);
+  }, [selectedOrganization, user]);
 
   const onSwitchPersonalAccount = () => {
     dispatch(setSelectedOrganization({}));
@@ -79,28 +79,28 @@ const HeaderMenu = ({
 
   const getAvatarName = useMemo(() => {
     let name = fullName
-    if (selectedTeam?.team?.name) {
-      name = selectedTeam?.team.name;
+    if (selectedOrganization?.organization?.name) {
+      name = selectedOrganization?.organization.name;
     }
     return name;
-  }, [selectedTeam, user])
+  }, [selectedOrganization, user])
 
   const renderMenuItems = useMemo(() => {
-    // Sort teams, first one should be the selected team.
-    const selectedTeamIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.team?._id === selectedTeam?.team?._id), 1)[0];
-    selectedTeamIndex && orderedTeams.unshift(selectedTeamIndex);
+    // Sort organizations, first one should be the selected organization.
+    const selectedOrganizationIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.organization?._id === selectedOrganization?.organization?._id), 1)[0];
+    selectedOrganizationIndex && orderedTeams.unshift(selectedOrganizationIndex);
 
     const menuItems = orderedTeams.map((team, index) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team?._id === selectedTeam?.team?._id}/>
+      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team?._id === selectedOrganization?.organization?._id}/>
     ))
 
     const userMenu =
       <>
-        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedTeam).length === 0} />
+        <UserMenuItem user={user} onSwitchPersonalAccount={onSwitchPersonalAccount} isSelected={Object.keys(selectedOrganization).length === 0} />
         <hr className="navbar-divider m-0 has-background-gray-300" />
       </>
 
-    Object.keys(selectedTeam).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
+    Object.keys(selectedOrganization).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
     return menuItems;
   }, [orderedTeams]);
 
@@ -112,7 +112,7 @@ const HeaderMenu = ({
     }
   };
 
-  const isNoTeams = !teams.length;
+  const isNoTeams = !organizations.length;
 
   return (
     <>
@@ -133,7 +133,7 @@ const HeaderMenu = ({
             onClick={toggleUserMenu}
           >
             <div>
-              <span>{isNoTeams ? 'Create a Team' : 'Add a Team'}</span>
+              <span>{isNoTeams ? 'Create an Organization' : 'Add an Organization'}</span>
               <span className="is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
             </div>
           </a>

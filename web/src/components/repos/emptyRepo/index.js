@@ -14,7 +14,7 @@ const EmptyRepo = () => {
   const [isRepoListOpen, setRepoListOpen] = useState(false);
   const { isTeamAdmin } = usePermission();
   const {
-    teamsState: { teams },
+    organizationsNewState: { organizations: teams },
     authState: { profileViewMode },
   } = useSelector((state) => state);
   const isTeamView = profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW;

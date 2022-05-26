@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { createOrganizationCollection, getDefaultCollections } from '../comments/collections/collectionService';
 
 const organizationSchema = new Schema({

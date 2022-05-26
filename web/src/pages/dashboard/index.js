@@ -45,12 +45,12 @@ const Dashboard = () => {
     auth: state.authState,
     repositories: state.repositoriesState,
     rolesState: state.rolesState,
-    teamsState: state.teamsState
+    teamsState: state.organizationsNewState
   }));
   const { token, user, selectedTeam } = auth;
   const { identities, isOnboarded = null, hasExtension = null, username } = user;
   const { roles } = rolesState;
-  const { teams } = teamsState;
+  const { organizations: teams } = teamsState;
   const { inviteTeamId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays

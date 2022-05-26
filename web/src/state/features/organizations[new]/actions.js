@@ -20,9 +20,9 @@ const requestFetchOrganizationsOfUser = () => ({
   type: types.REQUEST_FETCH_ORGANIZATIONS_OF_USER,
 });
 
-const requestFetchOrganizationsOfUserSuccess = (teams) => ({
+const requestFetchOrganizationsOfUserSuccess = (organizations) => ({
   type: types.REQUEST_FETCH_ORGANIZATIONS_OF_USER_SUCCESS,
-  teams,
+  organizations,
 });
 
 const requestFetchOrganizationsOfUserError = (errors) => ({
