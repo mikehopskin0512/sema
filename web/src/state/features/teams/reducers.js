@@ -11,7 +11,8 @@ const initialState = {
   smartComments: [],
   summary: {},
   overview: {},
-  invalidEmails: []
+  invalidEmails: [],
+  fetchedTeams: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -26,6 +27,7 @@ const reducer = (state = initialState, action) => {
       ...state,
       isFetching: false,
       teams: [...action.teams],
+      fetchedTeams: true,
     };
   case types.REQUEST_FETCH_TEAMS_OF_USER_ERROR:
     return {
