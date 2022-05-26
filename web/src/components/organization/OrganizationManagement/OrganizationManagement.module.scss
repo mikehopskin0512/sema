@@ -1,0 +1,38 @@
+@import "../../../../styles/colors.module";
+
+.tag {
+  background-color: $blue-50 !important;
+  color: $blue-700 !important;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  background-color: $gray-300;
+  border: 1px solid $blue-700;
+  color: $black-950;
+  border-radius: 5px;
+}
+
+.table-wrapper {
+  table {
+    border: 0 !important;
+  }
+}
+
+.status {
+  min-width: 150px;
+  max-width: 250px;
+}
+
+.form-input {
+  max-width: 500px;
+}
+
+.name {
+  width: 210px;
+}
+
+.email {
+  width: 320px;
+}

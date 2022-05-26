@@ -9,16 +9,16 @@ import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
 import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
 import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
-import TeamCreateBanner from '../banners/teamCreate';
+import OrganizationCreateBanner from '../banners/organizationCreate';
 
 const widescreenPages = [
   `${PATHS.REPO}/[repoId]`,
   PATHS.SUPPORT,
   PATHS.LOGIN,
-  `${PATHS.ORGANIZATIONS._}/[teamId]/${PATHS.DASHBOARD}`,
+  `${PATHS.ORGANIZATIONS._}/[organizationId]/${PATHS.DASHBOARD}`,
   `${PATHS.PORTFOLIO._}/[portfolioId]`,
   PATHS.PORTFOLIO._,
-  `${PATHS.ORGANIZATIONS._}/[teamId]${PATHS.SETTINGS}`,
+  `${PATHS.ORGANIZATIONS._}/[organizationId]${PATHS.SETTINGS}`,
 ];
 
 const noHeaderPages = [PATHS.LOGIN];
@@ -71,7 +71,7 @@ const withLayout = (Page) => (props) => {
       </Head>
       <ExtensionStatus />
       {!hasNoHeader && (<Header />) }
-      <TeamCreateBanner />
+      <OrganizationCreateBanner />
       <div className={clsx(!isWideScreen && 'container', !noContactUs.includes(pathname) && 'pb-250')}>
         <Page {...props} />
       </div>

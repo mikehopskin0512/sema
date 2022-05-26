@@ -32,13 +32,13 @@ const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
 
 RepoTable.defaultProps = {
   data: [],
-  isTeamView: false,
+  isOrganizationView: false,
 };
 
 RepoTable.propTypes = {
   data: PropTypes.array,
   removeRepo: PropTypes.func.isRequired,
-  isTeamView: PropTypes.bool,
+  isOrganizationView: PropTypes.bool,
 };
 
 export default RepoTable;

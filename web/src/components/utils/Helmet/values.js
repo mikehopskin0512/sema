@@ -65,22 +65,22 @@ export const LabelsManagementHelmet = {
 };
 
 export const OrganizationCreateHelmet = {
-  title: 'Create a Team',
+  title: 'Create a Organization',
   description: null,
 };
 
 export const OrganizationManagementHelmet = {
-  title: 'Team Management',
+  title: 'Organization Management',
   description: null,
 };
 
 export const OrganizationDashboardHelmet = {
-  title: 'Team Dashboard',
+  title: 'Organization Dashboard',
   description: null,
 };
 
 export const OrganizationReposHelmet = {
-  title: 'Team Repository',
+  title: 'Organization Repository',
   description: null,
 };
 
@@ -90,12 +90,12 @@ export const OrganizationInsightsHelmet = {
 };
 
 export const OrganizationInviteHelmet = {
-  title: 'Invite Team',
+  title: 'Invite Organization',
   description: null,
 };
 
 export const OrganizationUpdateHelmet = {
-  title: 'Update Team',
+  title: 'Update Organization',
   description: null,
 };
 

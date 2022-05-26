@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
-import OrganizationReposList from '../../../components/teamReposList';
+import OrganizationReposList from '../../../components/organizationReposList';
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import { ListIcon, GridIcon, PlusIcon, FilterBarsIcon, SearchIcon } from '../../Icons';

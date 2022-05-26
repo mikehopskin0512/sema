@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Metrics from '../metrics';
 import RepoCard from '../repos/repoCard';
-import TeamCreatePanel from './teamCreatePanel';
+import OrganizationCreatePanel from './organizationCreatePanel';
 import { PATHS } from '../../utils/constants';
 import styles from "./personalDashboard.module.scss";
 import clsx from 'clsx';
@@ -42,7 +42,7 @@ const PersonalDashboard = ({ metrics, repos }) => {
         </div>
       </div>}
       <div class="column">
-        <TeamCreatePanel />
+        <OrganizationCreatePanel />
       </div>
     </>
   )
