@@ -12,6 +12,9 @@ import {
 import { getPullRequestsByExternalId } from './smartCommentService';
 import { EMOJIS_ID } from '../suggestedComments/constants';
 
+const {
+  Types: { ObjectId },
+} = mongoose;
 const { Schema } = mongoose;
 
 const githubMetadataSchema = new Schema({
@@ -56,7 +59,7 @@ const smartCommentSchema = new Schema(
     suggestedComments: [
       { type: Schema.Types.ObjectId, ref: 'SuggestedComment' },
     ],
-    reaction: { type: Schema.Types.ObjectId, ref: 'Reaction' },
+    reaction: { type: Schema.Types.ObjectId, ref: 'Reaction', required: true },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     githubMetadata: githubMetadataSchema,
     source: {
@@ -105,14 +108,17 @@ smartCommentSchema.pre('save', function setGitHubDefaults() {
   if (commentId) this.githubMetadata.commentId = commentId;
 });
 
+smartCommentSchema.pre('validate', function setDefaultReaction() {
+  if (!this.reaction) this.reaction = ObjectId(EMOJIS_ID.NO_REACTION);
+});
+
 smartCommentSchema.post('save', async (doc, next) => {
   const GITHUB_URL = 'https://github.com';
   try {
-    const { NO_REACTION } = EMOJIS_ID;
     const {
       githubMetadata: { repo_id: externalId, url, requester, pull_number },
       _id,
-      reaction: reactionId = NO_REACTION,
+      reaction: reactionId,
       tags: tagsIds,
       userId,
       repo,

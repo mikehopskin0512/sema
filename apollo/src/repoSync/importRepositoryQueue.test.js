@@ -230,6 +230,10 @@ describe('Import Repository Queue', () => {
           expect(comment.comment).toBe('LGTM');
         });
 
+        it('should have the "No reaction" reaction', () => {
+          expect(comment.reaction).toEqualID('607f0d1ed7f45b000ec2ed70');
+        });
+
         it('should have no tags', () => {
           expect(comment.tags).toEqual([]);
         });
@@ -987,7 +991,7 @@ describe('Import Repository Queue', () => {
     });
   });
 
-  describe('when an another comment exists without ID', () => {
+  describe('when another comment exists without ID', () => {
     let comment;
 
     beforeAll(async () => {
