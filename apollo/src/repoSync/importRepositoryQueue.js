@@ -76,6 +76,7 @@ async function importReviews({ octokit, endpoint, repository, importComment }) {
     endpoint,
     type: 'pullRequestReview',
     repository,
+    query: { state: 'all' },
   });
 
   for await (const data of pages) {
@@ -179,7 +180,13 @@ async function setSyncCompleted(repository) {
 // for the page to be considered complete.
 // If any item fails to process, we'll reprocess the page
 // the next time this function is called.
-async function* resumablePaginate({ octokit, endpoint, type, repository }) {
+async function* resumablePaginate({
+  octokit,
+  endpoint,
+  type,
+  repository,
+  query = {},
+}) {
   const progressKey = `sync.progress.${type}`;
   const currentPage = repository.get(progressKey)?.currentPage || 0;
   const lastPage = repository.get(progressKey)?.lastPage;
@@ -196,6 +203,7 @@ async function* resumablePaginate({ octokit, endpoint, type, repository }) {
     sort: 'created',
     direction: 'desc',
     page: currentPage + 1,
+    ...query,
   });
 
   for await (const response of pages) {
