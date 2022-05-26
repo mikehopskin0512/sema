@@ -214,7 +214,7 @@ paths:
     post:
       tags:
         - acceptInvitation
-      summary: accept team invitations when user is already sema user
+      summary: accept organization invitations when user is already sema user
       operationId: acceptInvitations
       parameters:
         - in: path
