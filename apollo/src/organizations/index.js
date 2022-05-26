@@ -11,15 +11,15 @@ import logger from '../shared/logger';
 import errors from '../shared/errors';
 import { _checkPermission, fullName } from '../shared/utils';
 import {
-  addTeamMembers,
-  createTeam, getTeamById,
-  getTeamByUrl, getTeamMembers, getTeamMetrics,
-  getTeamRepos,
-  getTeamsByUser, getTeamTotalMetrics, ROLE_NAMES,
-  updateTeam,
-  updateTeamAvatar,
-  updateTeamRepos,
-} from '../teams/teamService';
+  addOrganizationMembers,
+  createOrganization, getOrganizationById,
+  getOrganizationByUrl, getOrganizationMembers, getOrganizationMetrics,
+  getOrganizationRepos,
+  getOrganizationsByUser, getOrganizationTotalMetrics, ROLE_NAMES,
+  updateOrganization,
+  updateOrganizationAvatar,
+  updateOrganizationRepos,
+} from '../organizations/organizationService';
 import UserRole from '../userRoles/userRoleModel';
 import { findByUsername } from '../users/userService';
 import { create, findBySlug, sendNotification } from './organizationService';
@@ -34,9 +34,9 @@ export default (app, passport) => {
   route.get('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { _id } = req.user;
-      const teams = await getTeamsByUser(_id);
+      const organizations = await getOrganizationsByUser(_id);
 
-      return res.status(200).send(teams);
+      return res.status(200).send(organizations);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -46,8 +46,8 @@ export default (app, passport) => {
   route.get('/check-url/:url', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
       const { url } = req.params;
-      const team = await getTeamByUrl(url.toLowerCase());
-      return res.status(200).send({ isAvailable: !team });
+      const organization = await getOrganizationByUrl(url.toLowerCase());
+      return res.status(200).send({ isAvailable: !organization });
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -60,24 +60,24 @@ export default (app, passport) => {
       const { members, url } = req.body;
 
       if (url) {
-        const team = await getTeamByUrl(url.toLowerCase());
-        if (team) {
+        const organization = await getOrganizationByUrl(url.toLowerCase());
+        if (organization) {
           return res.status(400).send({
             message: 'this url is already allocated',
           });
         }
       }
 
-      const team = await createTeam({
+      const organization = await createOrganization({
         ...req.body,
         createdBy: _id,
       });
 
       if (members?.length) {
-        await addTeamMembers(team._id, req.body.members, 'member');
+        await addOrganizationMembers(organization._id, req.body.members, 'member');
       }
 
-      return res.status(200).send(team);
+      return res.status(200).send(organization);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
@@ -87,27 +87,27 @@ export default (app, passport) => {
   route.put('/', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { user } = req;
     try {
-      const { action, ...teamData } = req.body;
-      if (action === 'toggleTeamCollection') {
+      const { action, ...organizationData } = req.body;
+      if (action === 'toggleOrganizationCollection') {
         // This is toggle option
-        if (!(_checkPermission(teamData._id, 'canEditCollections', user))) {
+        if (!(_checkPermission(organizationData._id, 'canEditCollections', user))) {
           throw new errors.Unauthorized('User does not have permission');
         }
       }
-      const team = await updateTeam(teamData);
-      return res.status(200).send(team);
+      const organization = await updateOrganization(organizationData);
+      return res.status(200).send(organization);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
 
-  route.post('/:teamId/upload', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
+  route.post('/:organizationId/upload', passport.authenticate(['bearer'], { session: false }), multer.single('avatar'), async (req, res) => {
     try {
-      const { teamId } = req.params;
+      const { organizationId } = req.params;
       const { _id: userId } = req.user;
 
-      const userRole = await updateTeamAvatar(teamId, userId, req.file);
+      const userRole = await updateOrganizationAvatar(organizationId, userId, req.file);
 
       return res.status(200).send(userRole);
     } catch (error) {
@@ -116,11 +116,11 @@ export default (app, passport) => {
     }
   });
 
-  route.get('/:teamId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/:organizationId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const { teamId } = req.params;
+      const { organizationId } = req.params;
       const { searchParams = '' } = req.query;
-      const repos = await getTeamRepos(teamId, { searchQuery: searchParams });
+      const repos = await getOrganizationRepos(organizationId, { searchQuery: searchParams });
       return res.status(200).send(repos);
     } catch (error) {
       logger.error(error);
@@ -128,23 +128,23 @@ export default (app, passport) => {
     }
   });
 
-  route.put('/:teamId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.put('/:organizationId/repositories', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const { teamId } = req.params;
+      const { organizationId } = req.params;
       const { repos } = req.body;
-      const team = await updateTeamRepos(teamId, repos);
-      return res.status(200).send(team);
+      const organization = await updateOrganizationRepos(organizationId, repos);
+      return res.status(200).send(organization);
     } catch (error) {
       logger.error(error);
       return res.status(error.statusCode).send(error);
     }
   });
 
-  route.get('/:teamId/metrics', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
+  route.get('/:organizationId/metrics', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     try {
-      const { teamId } = req.params;
-      const metrics = await getTeamMetrics(teamId);
-      const totalMetrics = await getTeamTotalMetrics(teamId);
+      const { organizationId } = req.params;
+      const metrics = await getOrganizationMetrics(organizationId);
+      const totalMetrics = await getOrganizationTotalMetrics(organizationId);
       return res.status(200).send({ metrics, totalMetrics });
     } catch (error) {
       logger.error(error);
@@ -153,14 +153,14 @@ export default (app, passport) => {
   });
 
   route.get(
-    '/:teamId/members',
+    '/:organizationId/members',
     passport.authenticate(['bearer'], { session: false }),
     async (req, res) => {
       try {
-        const { teamId } = req.params;
+        const { organizationId } = req.params;
         const { page = 1, perPage = 10 } = req.query;
 
-        const { members, totalCount } = await getTeamMembers(teamId, {
+        const { members, totalCount } = await getOrganizationMembers(organizationId, {
           page: parseInt(page, 10),
           perPage: parseInt(perPage, 10),
         });
@@ -174,12 +174,12 @@ export default (app, passport) => {
   );
 
   route.post(
-    '/:teamId/invite/validate-emails',
+    '/:organizationId/invite/validate-emails',
     passport.authenticate(['bearer'], { session: false }),
     checkAccess('canEditUsers'),
     async (req, res) => {
       try {
-        const { teamId } = req.params;
+        const { organizationId } = req.params;
         const { users } = req.body;
 
         const result = await Promise.all(users.map(async (email) => {
@@ -193,9 +193,9 @@ export default (app, passport) => {
           }
 
           if (semaUser) {
-            const isTeamMember = await UserRole.exists({ team: teamId, user: semaUser._id });
-            // already team member
-            if (isTeamMember) {
+            const isOrganizationMember = await UserRole.exists({ organization: organizationId, user: semaUser._id });
+            // already organization member
+            if (isOrganizationMember) {
               return {
                 email,
                 reason: 'existing'
@@ -214,18 +214,18 @@ export default (app, passport) => {
     });
 
   route.post(
-    '/:teamId/invite',
+    '/:organizationId/invite',
     passport.authenticate(['bearer'], { session: false }),
     checkAccess('canEditUsers'),
     async (req, res) => {
       try {
-        const { teamId } = req.params;
+        const { organizationId } = req.params;
         const { users, role } = req.body;
 
-        const team = await getTeamById(teamId);
+        const organization = await getOrganizationById(organizationId);
 
         const result = await Promise.all(users.map(async (email) => {
-          let templateName = 'inviteNewUserToTeam';
+          let templateName = 'inviteNewUserToOrganization';
           const semaUser = await findByUsername(email);
 
           // blocked status
@@ -237,18 +237,18 @@ export default (app, passport) => {
           }
 
           if (semaUser) {
-            const isTeamMember = await UserRole.exists({ team: teamId, user: semaUser._id });
+            const isOrganizationMember = await UserRole.exists({ organization: organizationId, user: semaUser._id });
 
-            // already team member
-            if (isTeamMember) {
+            // already organization member
+            if (isOrganizationMember) {
               return {
                 email,
                 reason: 'existing',
               };
             }
 
-            if (semaUser.isActive && !isTeamMember) {
-              templateName = 'inviteExistingUserToTeam';
+            if (semaUser.isActive && !isOrganizationMember) {
+              templateName = 'inviteExistingUserToOrganization';
             }
           }
 
@@ -257,7 +257,7 @@ export default (app, passport) => {
             senderName: fullName(req.user),
             senderEmail: req.user.username,
             sender: req.user._id,
-            team: teamId,
+            organization: organizationId,
             role,
           });
 
@@ -267,10 +267,10 @@ export default (app, passport) => {
 
           const message = {
             recipient,
-            url: `${orgDomain}/login?token=${token}&team=${teamId}`,
+            url: `${orgDomain}/login?token=${token}&organization=${organizationId}`,
             templateName,
             orgName,
-            teamName: team?.name,
+            organizationName: organization?.name,
             fullName: senderName,
             email: senderEmail,
             sender: {
@@ -299,7 +299,7 @@ export default (app, passport) => {
   );
 
   route.get(
-    '/invite/:teamId',
+    '/invite/:organizationId',
     passport.authenticate(['bearer'], { session: false }),
     async (req, res) => {
       try {
@@ -308,9 +308,9 @@ export default (app, passport) => {
           return res.status(404).send({ message: 'User not found'});
         }
         const { username } = user;
-        const { teamId } = req.params;
+        const { organizationId } = req.params;
         const { _id: role } = await getRoleByName(ROLE_NAMES.MEMBER)
-        const result = await addTeamMembers(teamId, [username], role);
+        const result = await addOrganizationMembers(organizationId, [username], role);
         return res.status(200).send(result);
       } catch (error) {
         logger.error(error);
