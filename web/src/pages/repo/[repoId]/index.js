@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
@@ -15,13 +16,15 @@ import FilterBar from '../../../components/repos/repoPageLayout/components/Filte
 import Metrics from '../../../components/metrics';
 import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
+import * as api from '../../../state/utils/api';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
 const { fetchTeamRepos } = teamsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
-  stats: 'Repo Stats',
+  stats: 'Code Stats',
+  sync: 'Sync',
 };
 
 function RepoPage() {
@@ -90,22 +93,30 @@ function RepoPage() {
     }
   }, []);
 
-  useAuthEffect(() => {
+  const refresh = useCallback(async () => {
     setIsLoading(true);
-    if (
-      (dates.startDate && dates.endDate) ||
-      (!dates.startDate && !dates.endDate)
-    ) {
-      dispatch(
-        fetchRepositoryOverview(
-          repoId,
-          token,
-          dates.startDate && dates.endDate
-            ? getDateSub(dates.startDate, dates.endDate)
-            : null
-        )
-      );
+    try {
+      if (
+        (dates.startDate && dates.endDate) ||
+        (!dates.startDate && !dates.endDate)
+      ) {
+        await dispatch(
+          fetchRepositoryOverview(
+            repoId,
+            token,
+            dates.startDate && dates.endDate
+              ? getDateSub(dates.startDate, dates.endDate)
+              : null
+          )
+        );
+      }
+    } finally {
+      setIsLoading(false);
     }
+  }, [repoId, dates, dispatch, token]);
+
+  useAuthEffect(() => {
+    refresh();
   }, [repoId, dates]);
 
   // Prevent from doing multiple calls while user is selecting dates
@@ -248,7 +259,82 @@ function RepoPage() {
           />
         </div>
       )}
+      {selectedTab === 'sync' && (
+        <div className={styles.wrapper}>
+          <SyncPage refresh={refresh} />
+        </div>
+      )}
     </RepoPageLayout>
+  );
+}
+
+function SyncPage({ refresh }) {
+  const { token } = useSelector((state) => state.authState);
+  const { repositories } = useSelector((state) => ({
+    repositories: state.repositoriesState,
+  }));
+
+  const {
+    data: { overview },
+  } = repositories;
+
+  const { _id } = overview;
+  const sync = overview.sync || {};
+
+  async function onClick() {
+    await api.create(`/api/proxy/repositories/${_id}/sync`, {}, token);
+  }
+
+  useEffect(() => {
+    const id = setInterval(refresh, 5000);
+    return () => {
+      clearInterval(id);
+    };
+  }, [refresh]);
+
+  return (
+    <div className="my-20">
+      <h2 className="has-text-black-950 has-text-weight-semibold is-size-4">
+        Sync
+      </h2>
+      <div className="my-10">
+        Status: {sync.status || 'not requested'}
+        {sync.startedAt && (
+          <>
+            <br />
+            Started: {format(new Date(sync.startedAt), 'MMM dd h:mm a')}
+          </>
+        )}
+        {sync.completedAt && (
+          <>
+            <br />
+            Completed: {format(new Date(sync.completedAt), 'MMM dd h:mm a')}
+          </>
+        )}
+      </div>
+      <div className="my-10">
+        <h3 className="is-size-5">Progress</h3>
+        Conversation comments (issue comments):{' '}
+        {sync.progress?.issueComment?.currentPage ?? 0}/
+        {sync.progress?.issueComment?.lastPage ?? 0} pages
+        <br />
+        Inline comments (pull request comments):{' '}
+        {sync.progress?.pullRequestComment?.currentPage ?? 0}/
+        {sync.progress?.pullRequestComment?.lastPage ?? 0} pages
+        <br />
+        Review comments (pull request reviews):{' '}
+        {sync.progress?.pullRequestReview?.currentPage ?? 0}/
+        {sync.progress?.pullRequestReview?.lastPage ?? 0} pages
+      </div>
+      <div className="my-20">
+        <div className="my-10">
+          <button className="button is-primary" onClick={onClick}>
+            Start Sync
+          </button>
+        </div>
+        Starting sync after complete will re-sync.
+      </div>
+    </div>
   );
 }
 

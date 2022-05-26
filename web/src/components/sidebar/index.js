@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { ActivityLogIcon, CodeStatsIcon } from '../Icons';
+import { ActivityLogIcon, CodeStatsIcon, RefreshIcon } from '../Icons';
+import { useFlags } from '../launchDarkly';
 
 import styles from './sidebar.module.scss';
 
@@ -30,31 +31,33 @@ MenuItem.propTypes = {
 };
 
 function Sidebar({ children, ...menuItemProps }) {
-  const [menus] = useState([
-    {
-      name: 'Activity Logs',
-      pathName: 'activity',
-      icon: <ActivityLogIcon />,
-    },
-    {
-      name: 'Code Stats',
-      pathName: 'stats',
-      icon: <CodeStatsIcon />,
-    },
-  ]);
+  const { repoSyncTab } = useFlags();
 
   return (
     <div className="px-20 is-flex">
       <div className="is-flex is-justify-content-space-between mt-10 is-flex-wrap-wrap">
-        {menus.map((item) => (
+        <MenuItem
+          pathName="activity"
+          name="Activity Logs"
+          icon={<ActivityLogIcon />}
+          {...menuItemProps}
+        />
+
+        <MenuItem
+          pathName="stats"
+          name="Code Stats"
+          icon={<CodeStatsIcon />}
+          {...menuItemProps}
+        />
+
+        {repoSyncTab && (
           <MenuItem
-            key={item.pathName}
-            pathName={item.pathName}
-            name={item.name}
-            icon={item.icon}
+            pathName="sync"
+            name="Sync"
+            icon={<RefreshIcon />}
             {...menuItemProps}
           />
-        ))}
+        )}
       </div>
     </div>
   );
