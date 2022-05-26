@@ -23,33 +23,38 @@ export default async function importRepository({ id }) {
 
   await setSyncStarted(repository);
 
-  const octokit = await getOctokit(repository);
-  const importComment = createGitHubImporter(octokit);
+  try {
+    const octokit = await getOctokit(repository);
+    const importComment = createGitHubImporter(octokit);
 
-  await Promise.all([
-    importComments({
-      octokit,
-      type: 'pullRequestComment',
-      endpoint: `/repos/{owner}/{repo}/pulls/comments`,
-      repository,
-      importComment,
-    }),
-    importComments({
-      octokit,
-      type: 'issueComment',
-      endpoint: `/repos/{owner}/{repo}/issues/comments`,
-      repository,
-      importComment,
-    }),
-    importReviews({
-      octokit,
-      endpoint: `/repos/{owner}/{repo}/pulls`,
-      repository,
-      importComment,
-    }),
-  ]);
+    await Promise.all([
+      importComments({
+        octokit,
+        type: 'pullRequestComment',
+        endpoint: `/repos/{owner}/{repo}/pulls/comments`,
+        repository,
+        importComment,
+      }),
+      importComments({
+        octokit,
+        type: 'issueComment',
+        endpoint: `/repos/{owner}/{repo}/issues/comments`,
+        repository,
+        importComment,
+      }),
+      importReviews({
+        octokit,
+        endpoint: `/repos/{owner}/{repo}/pulls`,
+        repository,
+        importComment,
+      }),
+    ]);
 
-  await setSyncCompleted(repository);
+    await setSyncCompleted(repository);
+  } catch (error) {
+    await setSyncErrored(repository, error);
+    throw error;
+  }
 }
 
 // Imports pull request and issue comments.
@@ -162,6 +167,8 @@ async function setSyncStarted(repository) {
   repository.set({
     'sync.status': 'started',
     'sync.startedAt': new Date(),
+    'sync.erroredAt': null,
+    'sync.error': null,
   });
   await repository.save();
 }
@@ -170,6 +177,17 @@ async function setSyncCompleted(repository) {
   repository.set({
     'sync.status': 'completed',
     'sync.completedAt': new Date(),
+    'sync.erroredAt': null,
+    'sync.error': null,
+  });
+  await repository.save();
+}
+
+async function setSyncErrored(repository, error) {
+  repository.set({
+    'sync.status': 'errored',
+    'sync.erroredAt': new Date(),
+    'sync.error': error.message || error.toString().split('\n')[0],
   });
   await repository.save();
 }

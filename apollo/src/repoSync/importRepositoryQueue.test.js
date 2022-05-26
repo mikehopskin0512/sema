@@ -535,10 +535,6 @@ describe('Import Repository Queue', () => {
           repository = await Repository.findById(repository._id);
         });
 
-        it('should have sync status "started"', () => {
-          expect(repository.sync.status).toBe('started');
-        });
-
         it('should have sync started at timestamp', () => {
           expect(repository.sync.startedAt).toBeCloseToDate(new Date());
         });
@@ -688,10 +684,6 @@ describe('Import Repository Queue', () => {
       describe('repository', () => {
         beforeAll(async () => {
           repository = await Repository.findById(repository._id);
-        });
-
-        it('should have sync status "started"', () => {
-          expect(repository.sync.status).toBe('started');
         });
 
         it('should have sync started at timestamp', () => {
@@ -886,10 +878,6 @@ describe('Import Repository Queue', () => {
           repository = await Repository.findById(repository._id);
         });
 
-        it('should have sync status "started"', () => {
-          expect(repository.sync.status).toBe('started');
-        });
-
         it('should have sync started at timestamp', () => {
           expect(repository.sync.startedAt).toBeCloseToDate(new Date());
         });
@@ -1011,6 +999,105 @@ describe('Import Repository Queue', () => {
 
         it('should not query the GitHub API', () => {
           expect(githubNock.isDone()).toBe(false);
+        });
+      });
+    });
+
+    describe('on error', () => {
+      let handlerError;
+
+      beforeAll(() => {
+        resetNocks();
+      });
+
+      beforeAll(async () => {
+        repository.sync = {};
+        await repository.save();
+      });
+
+      beforeAll(() => {
+        nock('https://api.github.com')
+          .get('/repos/Semalab/phoenix/pulls/comments')
+          .query(() => true)
+          .reply(404, {
+            message: 'Not Found',
+          })
+          .get('/repos/Semalab/phoenix/issues/comments')
+          .query(() => true)
+          .reply(404, {
+            message: 'Not Found',
+          })
+          .get('/repos/Semalab/phoenix/pulls')
+          .query(() => true)
+          .reply(404, {
+            message: 'Not Found',
+          });
+      });
+
+      beforeAll(async () => {
+        try {
+          await handler({ id: repository.id });
+        } catch (error) {
+          handlerError = error;
+        }
+      });
+
+      it('should fail the job', () => {
+        expect(handlerError.message).toBe('Not Found');
+      });
+
+      describe('repository', () => {
+        beforeAll(async () => {
+          repository = await Repository.findById(repository._id);
+        });
+
+        it('should have sync status "errored"', () => {
+          expect(repository.sync.status).toBe('errored');
+        });
+
+        it('should have sync errored at timestamp', () => {
+          expect(repository.sync.erroredAt).toBeCloseToDate(new Date());
+        });
+
+        it('should have sync error message', () => {
+          expect(repository.sync.error).toBe('Not Found');
+        });
+      });
+
+      describe('processing again successfully', () => {
+        beforeAll(() => {
+          nock('https://api.github.com')
+            .get('/repos/Semalab/phoenix/pulls/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/issues/comments')
+            .query(() => true)
+            .reply(200, [])
+            .get('/repos/Semalab/phoenix/pulls')
+            .query(() => true)
+            .reply(200, []);
+        });
+
+        beforeAll(async () => {
+          await handler({ id: repository.id });
+        });
+
+        describe('repository', () => {
+          beforeAll(async () => {
+            repository = await Repository.findById(repository._id);
+          });
+
+          it('should have sync status "completed"', () => {
+            expect(repository.sync.status).toBe('completed');
+          });
+
+          it('should not have sync errored at timestamp', () => {
+            expect(repository.sync.erroredAt).toBeFalsy();
+          });
+
+          it('should not have sync error message', () => {
+            expect(repository.sync.error).toBeFalsy();
+          });
         });
       });
     });

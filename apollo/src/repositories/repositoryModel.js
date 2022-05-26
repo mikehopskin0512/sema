@@ -63,7 +63,7 @@ const repositoriesSchema = new mongoose.Schema(
     sync: {
       status: {
         type: String,
-        enum: [null, 'queued', 'started', 'completed'],
+        enum: [null, 'queued', 'started', 'completed', 'errored'],
         default: null,
       },
       addedBy: {
@@ -73,6 +73,8 @@ const repositoriesSchema = new mongoose.Schema(
       queuedAt: Date,
       startedAt: Date,
       completedAt: Date,
+      erroredAt: Date,
+      error: String,
       progress: {
         pullRequestComment: {
           currentPage: Number,
