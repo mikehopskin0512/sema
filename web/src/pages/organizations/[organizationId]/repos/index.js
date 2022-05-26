@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { debounce } from 'lodash';
-import { TeamReposHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationReposHelmet } from '../../../../components/utils/Helmet';
 import Loader from '../../../../components/Loader';
 import ReposView from '../../../../components/repos/reposView';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS } from '../../../../utils/constants';
@@ -13,20 +13,20 @@ import Toaster from '../../../../components/toaster';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { repositoriesOperations } from '../../../../state/features/repositories';
 
-const { fetchTeamRepos } = organizationsOperations;
+const { fetchOrganizationRepos } = organizationsOperations;
 const { fetchRepoDashboard } = repositoriesOperations;
 
-const TeamRepository = () => {
+const OrganizationRepository = () => {
   const dispatch = useDispatch();
   const {
-    query: { teamId },
+    query: { organizationId },
   } = useRouter();
 
-  const { alerts, auth, teams, } = useSelector(
+  const { alerts, auth, organizations, } = useSelector(
     (state) => ({
       alerts: state.alertsState,
       auth: state.authState,
-      teams: state.teamsState,
+      organizations: state.organizationsNewState,
     }),
   );
 
@@ -43,13 +43,13 @@ const TeamRepository = () => {
   const [isSearchStarted, setSearchStarted] = useState(false);
   const [isReposLoading, toggleReposLoading] = useState(true);
 
-  const fetchRepos = async (teamId, token) => {
-    await dispatch(fetchTeamRepos({ teamId, searchParams: searchQuery }, token));
+  const fetchRepos = async (organizationId, token) => {
+    await dispatch(fetchOrganizationRepos({ organizationId, searchParams: searchQuery }, token));
     toggleReposLoading(false);
   };
 
   useEffect(() => {
-    fetchRepos(teamId, token);
+    fetchRepos(organizationId, token);
   }, [teamId, token]);
 
   const onSearchChange = () => debounce((val) => {
@@ -60,7 +60,7 @@ const TeamRepository = () => {
     if (!searchQuery.length) setSearchStarted(false);
     if (searchQuery.length > 1 || isSearchStarted) {
       if (!isSearchStarted) setSearchStarted(true);
-      fetchRepos(teamId, token);
+      fetchRepos(organizationId, token);
     }
   }, [searchQuery])
 
@@ -78,14 +78,14 @@ const TeamRepository = () => {
     <>
       {memoizedToaster}
       <>
-        {teams.isFetching || isReposLoading ? (
+        {organizations.isFetching || isReposLoading ? (
           <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
             <Loader />
           </div>
         ) : (
           <div>
-            <Helmet {...TeamReposHelmet} />
-            <ReposView type="team" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
+            <Helmet {...OrganizationReposHelmet} />
+            <ReposView type="organization" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
           </div>
         )}
       </>
@@ -93,4 +93,4 @@ const TeamRepository = () => {
   )
 }
 
-export default withLayout(TeamRepository);
+export default withLayout(OrganizationRepository);

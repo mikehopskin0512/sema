@@ -5,8 +5,8 @@ import styles from './repoTable.module.scss';
 import RepoRow from '../repoRow';
 import usePermission from '../../../hooks/usePermission';
 
-const RepoTable = ({ data, removeRepo, isTeamView }) => {
-  const { isTeamAdmin } = usePermission();
+const RepoTable = ({ data, removeRepo, isOrganizationView }) => {
+  const { isOrganizationAdmin } = usePermission();
 
   return (
     <div className={clsx('table-container', styles['table-wrapper'])}>
@@ -19,11 +19,11 @@ const RepoTable = ({ data, removeRepo, isTeamView }) => {
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema comments</th>
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema commenters</th>
             <th className="is-uppercase has-text-weight-semibold is-size-8 p-10 has-text-centered">Sema Users</th>
-            {isTeamAdmin() && <th aria-label="action-header" />}
+            {isOrganizationAdmin() && <th aria-label="action-header" />}
           </tr>
         </thead>
         <tbody className="is-fullwidth">
-          {data.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isTeamView={isTeamView} />))}
+          {data.map((item) => (<RepoRow {...item} key={`guide-${item._id}`} removeRepo={removeRepo} isOrganizationView={isOrganizationView} />))}
         </tbody>
       </table>
     </div>

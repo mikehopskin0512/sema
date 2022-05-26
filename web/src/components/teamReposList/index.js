@@ -3,8 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '../../components/checkbox';
-import { fetchRepoDashboard, fetchReposByIds } from '../../state/features/repositories/actions';
-import { editTeamRepos, fetchTeamRepos } from '../../state/features/organizations[new]/actions';
+import { editOrganizationRepos, fetchOrganizationRepos } from '../../state/features/organizations[new]/actions';
 import Loader from '../../components/Loader';
 import Table from '../table';
 import { alertOperations } from '../../state/features/alerts';
@@ -12,18 +11,18 @@ import { CloseIcon, SearchIcon } from '../../components/Icons';
 import { InputField } from 'adonis';
 import useDebounce from '../../hooks/useDebounce';
 
-const TeamReposList = ({ isActive, onClose }) => {
+const OrganizationReposList = ({ isActive, onClose }) => {
   const { triggerAlert } = alertOperations;
   const dispatch = useDispatch();
-  const { selectedTeam, user, token } = useSelector((state) => state.authState);
-  const { repos } = useSelector((state) => state.teamsState);
+  const { selectedOrganization, user, token } = useSelector((state) => state.authState);
+  const { repos } = useSelector((state) => state.organizationsNewState);
   const {
     data: { repositories },
     isFetching: isFetchingAdminRepos
   } = useSelector((state) => state.repositoriesState);
   const [activeRepos, setActiveRepos] = useState(new Set(repos.map(repo => repo._id)));
   const isAllSelected = activeRepos.size === repositories.length;
-  const { team } = selectedTeam;
+  const { organization } = selectedOrganization;
   const [searchTerm, setSearchTerm] = useState('');
   const debounceSearchTerm = useDebounce(searchTerm);
 
@@ -96,15 +95,15 @@ const TeamReposList = ({ isActive, onClose }) => {
 
   const addRepos = async () => {
     try {
-      await dispatch(editTeamRepos(team._id, { repos: Array(...activeRepos) }, token));
-      dispatch(fetchTeamRepos({ teamId: team._id }, token));
+      await dispatch(editOrganizationRepos(organization._id, { repos: Array(...activeRepos) }, token));
+      dispatch(fetchOrganizationRepos({ organizationId: organization._id }, token));
       dispatch(triggerAlert('Repos were added', 'success'));
       onClose();
     } catch (e) {
       dispatch(triggerAlert('Unable to add repos', 'error'));
     }
   };
-  if (!team) {
+  if (!organization) {
     return null
   }
   return (
@@ -114,11 +113,11 @@ const TeamReposList = ({ isActive, onClose }) => {
         <div className="is-relative has-background-white px-40 py-30 is-rounded border-radius-8px">
           <div className="is-flex is-align-items-center is-justify-content-space-between mb-20">
             <p className="is-size-4 has-text-weight-semibold is-size-3-mobile">
-              Choose Repos for {team.name}
+              Choose Repos for {organization.name}
             </p>
             <CloseIcon onClick={onClose} />
           </div>
-          <p className="is-size-7 mb-15">Remember, adding the selected repos will give your team full access to code review information</p>
+          <p className="is-size-7 mb-15">Remember, adding the selected repos will give your organization full access to code review information</p>
           <div className="control mb-10">
             <InputField
               className="has-background-white is-small border-radius-4px"
@@ -161,4 +160,4 @@ const TeamReposList = ({ isActive, onClose }) => {
   );
 };
 
-export default TeamReposList;
+export default OrganizationReposList;

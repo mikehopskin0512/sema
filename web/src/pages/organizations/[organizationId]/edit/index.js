@@ -6,23 +6,23 @@ import { InputField } from 'adonis';
 import clsx from 'clsx';
 import _ from 'lodash';
 import checkAvailableUrl from '../../../../utils/checkAvailableUrl';
-import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
+import Helmet, { OrganizationUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../../utils/constants' ;
-import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
+import withSelectedOrganization from '../../../../components/auth/withSelectedOrganization';
 import UploadFile from '../../../../components/team/UploadFile';
-import { uploadTeamAvatar } from "../../../../state/features/organizations[new]/actions";
+import { uploadOrganizationAvatar } from "../../../../state/features/organizations[new]/actions";
 import styles from './teamEdit.module.scss';
 
-const { editTeam, fetchTeamsOfUser } = organizationsOperations;
+const { editOrganization, fetchOrganizationsOfUser } = organizationsOperations;
 
-function TeamEditPage() {
+function OrganizationEditPage() {
   const {
-    query: { teamId },
+    query: { organizationId },
   } = useRouter();
-  const [team, setTeam] = useState({
+  const [organization, setOrganization] = useState({
     name: '',
     description: '',
     members: '',
@@ -45,52 +45,52 @@ function TeamEditPage() {
     [SEMA_CORPORATE_ORGANIZATION_NAME]: URL_STATUS.ALLOCATED,
     urlChecked: false,
   });
-  const [originalTeamUrl, setOriginalTeamUrl] = useState(null);
-  const isAllocatedUrl = urlChecks[team.url] === URL_STATUS.ALLOCATED;
-  const isAvailableUrl = urlChecks[team.url] === URL_STATUS.AVAILABLE;
+  const [originalOrganizationUrl, setOriginalOrganizationUrl] = useState(null);
+  const isAllocatedUrl = urlChecks[organization.url] === URL_STATUS.ALLOCATED;
+  const isAvailableUrl = urlChecks[organization.url] === URL_STATUS.AVAILABLE;
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { auth, teams } = useSelector(
+  const { auth, organizations } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState
+      organizations: state.organizationsNewState
     }),
   );
   const { token } = auth
 
   useEffect(() => {
-    if (teams.teams.length) {
-      const activeRole = _.find(teams.teams, (o) => o.team?._id === teamId);
-      const activeTeam = {
-        _id: teamId,
-        name: activeRole?.team?.name,
-        description: activeRole?.team?.description,
-        avatarUrl: activeRole?.team?.avatarUrl,
-        url: activeRole?.team?.url,
+    if (organizations.organizations.length) {
+      const activeRole = _.find(organizations.organizations, (o) => o.organization?._id === organizationId);
+      const activeOrganization = {
+        _id: organizationId,
+        name: activeRole?.organization?.name,
+        description: activeRole?.organization?.description,
+        avatarUrl: activeRole?.organization?.avatarUrl,
+        url: activeRole?.organization?.url,
       }
       if (activeRole) {
         setUserRole(activeRole)
-        setTeam(activeTeam)
-        setOriginalTeamUrl(activeTeam.url);
+        setOrganization(activeOrganization)
+        setOriginalOrganizationUrl(activeOrganization.url);
       }
     }
-  }, [teams]);
+  }, [organizations]);
 
   useEffect(() => {
-    dispatch(fetchTeamsOfUser(token));
+    dispatch(fetchOrganizationsOfUser(token));
   }, []);
 
   const uploadAvatar = async (file) => {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    dispatch(uploadTeamAvatar(teamId, formData, token));
+    dispatch(uploadOrganizationAvatar(organizationId, formData, token));
   };
 
   const mutate = (obj) => {
-    setTeam({
-      ...team,
+    setOrganization({
+      ...organization,
       ...obj,
     });
   };
@@ -99,10 +99,10 @@ function TeamEditPage() {
     e?.preventDefault();
     setUrlCheckLoading(true);
     try {
-      const data = await checkAvailableUrl(team.url, token);
+      const data = await checkAvailableUrl(organization.url, token);
       setUrlChecks((state) => ({
         ...state,
-        [team.url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
+        [organization.url]: data.isAvailable ? URL_STATUS.AVAILABLE : URL_STATUS.ALLOCATED,
         urlChecked: true,
       }));
       return data.isAvailable;
@@ -117,30 +117,30 @@ function TeamEditPage() {
   };
 
   const onUpdate = async () => {
-    const isUrlChanged = team.url && originalTeamUrl !== team.url;
+    const isUrlChanged = organization.url && originalOrganizationUrl !== organization.url;
     if (isUrlChanged) {
       if (!urlChecks.urlChecked) {
-        const isUrlAvailable = !urlChecks[team.url] && (await checkUrl());
+        const isUrlAvailable = !urlChecks[organization.url] && (await checkUrl());
         if (!isUrlAvailable) {
           return;
         }
       }
     }
-    if (!team.name || !team.url) {
+    if (!organization.name || !organization.url) {
       setErrors({
-        name: !team.name ? 'Team name is required' : null,
-        url: !team.url ? 'URL is required' : null,
+        name: !organization.name ? 'Organization name is required' : null,
+        url: !organization.url ? 'URL is required' : null,
       });
       return;
     }
 
-    const { avatarUrl, ...teamData } = team;
+    const { avatarUrl, ...organizationData } = organization;
 
     if (avatarUrl) {
       await uploadAvatar(avatarUrl);
     }
 
-    await dispatch(editTeam(teamData, token));
+    await dispatch(editOrganization(organizationData, token));
 
     toaster.notify(({ onClose }) => (
       <div className="message is-success shadow mt-60">
@@ -148,17 +148,17 @@ function TeamEditPage() {
           <CheckFilledIcon size="small" />
           <div>
             <div className="is-flex is-justify-content-space-between mb-15">
-              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">Team Updated</span>
+              <span className="is-line-height-1 has-text-weight-semibold has-text-black ml-8">Organization Updated</span>
               <div onClick={onClose}>
                 <CloseIcon size="small" />
               </div>
             </div>
             <div className="has-text-black">
-              You’ve successfully updated the team
+              You’ve successfully updated the organization
             </div>
             <div>
-              <span className="has-text-black has-text-weight-semibold">{ team.name }.</span>
-              <a href={`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <span className="has-text-black has-text-weight-semibold">{ organization.name }.</span>
+              <a href={`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
             </div>
           </div>
         </div>
@@ -168,8 +168,8 @@ function TeamEditPage() {
       duration: 4000,
     });
 
-    mutate(team);
-    await router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
+    mutate(organization);
+    await router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`);
   };
 
   const onCancel = async () => {
@@ -178,22 +178,22 @@ function TeamEditPage() {
 
   return (
     <div className="has-background-gray-200 hero">
-      <Helmet {...TeamUpdateHelmet} />
+      <Helmet {...OrganizationUpdateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.ORGANIZATIONS.SETTINGS(organizationId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
-            <span className="ml-10 has-text-gray-600">Team Management</span>
+            <span className="ml-10 has-text-gray-600">Organization Management</span>
           </a>
           <div className="has-text-black-950 mx-5">/</div>
-          <div className="has-text-black-950 mr-5">Edit Team Profile</div>
+          <div className="has-text-black-950 mr-5">Edit Organization Profile</div>
           <InviteIcon size="small" />
         </div>
 
         <div className="is-flex px-10 mb-25 is-justify-content-space-between is-align-items-center">
           <div className="is-flex is-flex-wrap-wrap is-align-items-center">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mr-10">
-              Edit Team Profile
+              Edit Organization Profile
             </p>
           </div>
           <div className="is-flex">
@@ -219,14 +219,14 @@ function TeamEditPage() {
         <div className="px-10">
           <div className="mb-15">
             <span className="label is-size-6">
-              Team Name <span className="has-text-error">*</span>
+              Organization Name <span className="has-text-error">*</span>
             </span>
             <InputField
-                id="team-name"
+                id="organization-name"
                 isRequired
-                value={team.name}
-                onChange={(teamName) => {
-                  mutate({ name: teamName });
+                value={organization.name}
+                onChange={(organizationName) => {
+                  mutate({ name: organizationName });
                   setErrors({ ...errors, name: null });
                 }}
                 error={ errors?.name }
@@ -235,21 +235,21 @@ function TeamEditPage() {
           </div>
           <div className="mb-15">
             <span className="label is-size-6">
-              Team URL <span className="has-text-error">*</span>
+              Organization URL <span className="has-text-error">*</span>
             </span>
             <div className="is-flex">
               <InputField
                 className={`${styles['initial-slug']}`}
                 type="text"
-                placeholder="app.semasoftware.com/teams/"
+                placeholder="app.semasoftware.com/organizations/"
                 error={ errors?.url}
                 disabled
               />
               <InputField
                 isRequired
-                value={team.url}
-                onChange={(teamUrl) => {
-                  mutate({ url: teamUrl });
+                value={organization.url}
+                onChange={(organizationUrl) => {
+                  mutate({ url: organizationUrl });
                   setErrors({ ...errors, url: null });
                 }}
                 error={ errors?.url }
@@ -261,7 +261,7 @@ function TeamEditPage() {
               />
               <button className="ml-16 button"
                 onClick={checkUrl}
-                disabled={originalTeamUrl === team.url}
+                disabled={originalOrganizationUrl === organization.url}
               >
                 <div
                   className={clsx(
@@ -293,7 +293,7 @@ function TeamEditPage() {
             <textarea
               className="textarea has-background-white mb-10"
               placeholder="Description"
-              value={team.description}
+              value={organization.description}
               onChange={(e) => {
                 mutate({ description: e.target.value });
               }}
@@ -317,4 +317,4 @@ function TeamEditPage() {
   );
 }
 
-export default withSelectedOrganization(withLayout(TeamEditPage));
+export default withSelectedOrganization(withLayout(OrganizationEditPage));

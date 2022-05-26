@@ -20,7 +20,7 @@ const defaultMenus = [
     path: '/repos',
   },
   {
-    name: 'Team Management',
+    name: 'Organization Management',
     path: '/repos',
   },
   {
@@ -31,11 +31,11 @@ const defaultMenus = [
 
 const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) => {
   const router = useRouter();
-  const { isTeamAdmin } = usePermission();
-  const { team } = userRole;
+  const { isOrganizationAdmin } = usePermission();
+  const { organization } = userRole;
 
   const goToEditPage = () => {
-    router.push(PATHS.ORGANIZATIONS.EDIT(team?._id));
+    router.push(PATHS.ORGANIZATIONS.EDIT(organization?._id));
   };
 
   return (
@@ -43,8 +43,8 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
       <div className='is-flex is-justify-content-space-between'>
         <div className="is-flex mb-25">
           <Avatar
-            name={team?.name || "Team"}
-            src={team?.avatarUrl}
+            name={organization?.name || "Organization"}
+            src={organization?.avatarUrl}
             size="35"
             round
             textSizeRatio={2.5}
@@ -52,12 +52,12 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
           />
           <div className="ml-20">
             <p className="has-text-weight-semibold has-text-black-950 is-size-4 mb-5">
-              {team?.name || ''}
+              {organization?.name || ''}
             </p>
-            <div className="has-text-gray-600">{team?.description}</div>
+            <div className="has-text-gray-600">{organization?.description}</div>
           </div>
         </div>
-        {isTeamAdmin() && (
+        {isOrganizationAdmin() && (
           <div className='is-flex'>
             <button
               className="button has-background-white has-text-primary border-none border-radius-4px outline-none"
@@ -65,7 +65,7 @@ const PageHeader = ({ menus = defaultMenus, userRole = {}, type = 'normal' }) =>
               onClick={goToEditPage}
             >
               <EditIcon size="small" />
-              <span className="ml-10">Edit Team Profile</span>
+              <span className="ml-10">Edit Organization Profile</span>
             </button>
           </div>
         )}

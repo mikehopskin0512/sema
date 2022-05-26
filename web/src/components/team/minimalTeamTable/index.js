@@ -12,7 +12,7 @@ import { differenceInCalendarDays, differenceInHours } from 'date-fns';
 
 const MAX_MEMBERS = 6;
 
-const MinimalTeamTable = ({ members, count, teamId }) => {
+const MinimalOrganizationTable = ({ members, count, organizationId }) => {
   const router = useRouter();
   const { checkAccess } = usePermission();
   const columns = useMemo(
@@ -85,7 +85,7 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
           {checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canEditUsers') && (
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(PATHS.ORGANIZATIONS.INVITE(teamId))}
+              onClick={() => router.push(PATHS.ORGANIZATIONS.INVITE(organizationId))}
             >
               <PlusIcon size="small" />
               <span className="ml-8">Invite new members</span>
@@ -102,7 +102,7 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
             <div className="is-flex is-align-content-center is-justify-content-center py-120 is-flex-direction-column">
               <img className={styles['no-data-img']} src="/img/empty-invite-table.png" />
               <div className={"subtitle has-text-centered mt-50 has-text-gray-dark is-size-5"}>
-                You haven't added anyone on the team yet.
+                You haven't added anyone on the organization yet.
               </div>
             </div>
           )}
@@ -112,4 +112,4 @@ const MinimalTeamTable = ({ members, count, teamId }) => {
   )
 }
 
-export default MinimalTeamTable
+export default MinimalOrganizationTable

@@ -10,16 +10,15 @@ import FilterLabels from '../../labels-management/FilterLabels';
 import usePermission from '../../../hooks/usePermission';
 import { tagsOperations } from '../../../state/features/tags';
 import { alertOperations } from '../../../state/features/alerts';
-import { SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 
 const { clearAlert } = alertOperations;
 const { fetchTagList } = tagsOperations;
 
-const LabelsManagement = ({ activeTeam }) => {
+const LabelsManagement = ({ activeOrganization }) => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { isOrganizationAdminOrLibraryEditor } = usePermission();
   const router = useRouter();
-  const teamId = activeTeam?._id;
+
   const { auth, tagsState, alerts } = useSelector((state) => ({
     auth: state.authState,
     tagsState: state.tagsState,
@@ -34,7 +33,7 @@ const LabelsManagement = ({ activeTeam }) => {
   const { showAlert, alertType, alertLabel } = alerts;
   const { token } = auth;
   const { tags = [], isFetching } = tagsState;
-  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
+  const isAuthorized = useMemo(() => isOrganizationAdminOrLibraryEditor());
 
   useEffect(() => {
     if (showAlert === true) {
@@ -56,10 +55,10 @@ const LabelsManagement = ({ activeTeam }) => {
   }, [tags, filters]);
 
   useEffect(() => {
-    if (activeTeam && !isAuthorized) {
+    if (activeOrganization && !isAuthorized) {
       router.replace('/');
     }
-  }, [activeTeam]);
+  }, [activeOrganization]);
 
   if (!isAuthorized) {
     return(
@@ -73,7 +72,7 @@ const LabelsManagement = ({ activeTeam }) => {
     <div className="px-10">
       <Toaster type={alertType} message={alertLabel} showAlert={showAlert} />
       <Helmet {...LabelsManagementHelmet} />
-      <FilterLabels setFilters={setFilters} filters={filters} teamId={teamId} />
+      <FilterLabels setFilters={setFilters} filters={filters} />
       { isFetching ? (
         <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '30vh' }}>
           <Loader />

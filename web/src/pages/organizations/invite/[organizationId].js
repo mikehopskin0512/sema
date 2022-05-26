@@ -13,7 +13,7 @@ const PublicOrganizationInvite = () => {
     auth: state.authState,
     rolesState: state.rolesState,
   }));
-  const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-team-invite', '');
+  const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const router = useRouter();
   const { teamId } = router.query;
   const { user, token } = auth;

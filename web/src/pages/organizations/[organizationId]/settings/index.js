@@ -7,7 +7,7 @@ import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
-import TeamManagement from '../../../../components/team/TeamManagement';
+import OrganizationManagement from '../../../../components/team/OrganizationManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
 import { TagIcon, OrganizationIcon } from '../../../../components/Icons';
@@ -29,7 +29,7 @@ const TeamSettings = () => {
     }),
   );
   const { token } = auth;
-  const [activeTeam, setActiveTeam] = useState({});
+  const [activeOrganization, setActiveOrganization] = useState({});
 
   useEffect(() => {
     dispatch(fetchOrganizationMembers(organizationId, {}, token));
@@ -48,7 +48,7 @@ const TeamSettings = () => {
         return (organization?.url === organizationId) || (organization?._id === organizationId)
       });
       if (organization) {
-        setActiveTeam(organization);
+        setActiveOrganization(organization);
       }
     }
   }, [organizations, organizationId]);
@@ -59,7 +59,7 @@ const TeamSettings = () => {
 
   const menus = [
     (isOrganizationAdminOrLibraryEditor() && {
-      label: 'Team Management',
+      label: 'Organization Management',
       path: PATHS.ORGANIZATIONS.MANAGEMENT(organizationId),
       id: TAB.management,
       icon: <OrganizationIcon width={20} />,
@@ -83,14 +83,14 @@ const TeamSettings = () => {
       <div className="has-background-white">
         <div className="container pt-40">
           <Helmet {...OrganizationDashboardHelmet} />
-          <PageHeader menus={menus} userRole={activeTeam} />
+          <PageHeader menus={menus} userRole={activeOrganization} />
         </div>
       </div>
       <div className="container">
         <div className="has-background-white-50">
           <div className="hero-body pt-0 pb-100 px-0">
-            {tab === 'management' && <TeamManagement activeTeam={activeTeam}/>}
-            {tab === 'labels' && <LabelsManagement activeTeam={activeTeam}/>}
+            {tab === 'management' && <OrganizationManagement activeOrganization={activeOrganization}/>}
+            {tab === 'labels' && <LabelsManagement activeOrganization={activeOrganization}/>}
           </div>
         </div>
       </div>

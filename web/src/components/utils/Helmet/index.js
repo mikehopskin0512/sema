@@ -17,12 +17,12 @@ export {
   PersonalInsightsHelmet,
   LabelsManagementHelmet,
   OrganizationCreateHelmet,
-  TeamManagementHelmet,
+  OrganizationManagementHelmet,
   OrganizationDashboardHelmet,
-  TeamReposHelmet,
+  OrganizationReposHelmet,
   OrganizationInsightsHelmet,
-  TeamInviteHelmet,
-  TeamUpdateHelmet,
+  OrganizationInviteHelmet,
+  OrganizationUpdateHelmet,
   PortfolioHelmet,
 } from './values';
 

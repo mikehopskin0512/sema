@@ -69,7 +69,7 @@ export const OrganizationCreateHelmet = {
   description: null,
 };
 
-export const TeamManagementHelmet = {
+export const OrganizationManagementHelmet = {
   title: 'Team Management',
   description: null,
 };
@@ -79,7 +79,7 @@ export const OrganizationDashboardHelmet = {
   description: null,
 };
 
-export const TeamReposHelmet = {
+export const OrganizationReposHelmet = {
   title: 'Team Repository',
   description: null,
 };
@@ -89,12 +89,12 @@ export const OrganizationInsightsHelmet = {
   description: null,
 };
 
-export const TeamInviteHelmet = {
+export const OrganizationInviteHelmet = {
   title: 'Invite Team',
   description: null,
 };
 
-export const TeamUpdateHelmet = {
+export const OrganizationUpdateHelmet = {
   title: 'Update Team',
   description: null,
 };

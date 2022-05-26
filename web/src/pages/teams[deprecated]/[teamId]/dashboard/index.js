@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Helmet } from 'react-helmet';
-import TeamDashboard from '../../../../components/team/teamDashboard';
+import OrganizationDashboard from '../../../../components/team/teamDashboard';
 import withLayout from '../../../../components/layout';
 import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';
@@ -18,15 +18,15 @@ import * as analytics from '../../../../utils/analytics';
 import { isExtensionInstalled } from '../../../../utils/extension';
 import { collectionsOperations } from '../../../../state/features/collections';
 
-const { fetchTeamMembers, fetchTeamMetrics, fetchTeamRepos } = organizationsOperations;
+const { fetchOrganizationMembers, fetchOrganizationMetrics, fetchOrganizationRepos } = organizationsOperations;
 const { updateUser } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = organizationsOperations;
+const { inviteOrganizationUser, fetchOrganizationsOfUser } = organizationsOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 
 const Dashboard = () => {
   const router = useRouter();
   const { step, page = parseInt(step) } = router.query;
-  const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
+  const [teamIdInvitation, setOrganizationsIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
   const [isOnboardingModalActive, toggleOnboardingModalActive] = useState(false);
   const [onboardingPage, setOnboardingPage] = useState(1);
@@ -68,10 +68,10 @@ const Dashboard = () => {
     push,
     query: { teamId },
   } = useRouter();
-  const { auth, teams, rolesState } = useSelector(
+  const { auth, organizations, rolesState } = useSelector(
     (state) => ({
       auth: state.authState,
-      teams: state.teamsState,
+      organizations: state.teamsState,
       rolesState: state.rolesState,
     }),
   );
@@ -80,17 +80,17 @@ const Dashboard = () => {
   const { isOnboarded = null } = user;
 
   useEffect(() => {
-    dispatch(fetchTeamMembers(teamId, { page: 1, perPage: 6 }, token));
-    dispatch(fetchTeamMetrics(teamId, token));
-    dispatch(fetchTeamRepos({ teamId }, token));
+    dispatch(fetchOrganizationMembers(teamId, { page: 1, perPage: 6 }, token));
+    dispatch(fetchOrganizationMetrics(teamId, token));
+    dispatch(fetchOrganizationRepos({ teamId }, token));
   }, [dispatch, teamId, token]);
 
-  const inviteToTeam = async () => {
+  const inviteToOrganizations = async () => {
     const memberRole = roles.find((role) => role.name === 'Member')
     if (!isEmpty(memberRole)) {
-      await dispatch(inviteTeamUser(teamId, token));
-      await dispatch(fetchTeamsOfUser(token));
-      setTeamIdInvitation('');
+      await dispatch(inviteOrganizationUser(teamId, token));
+      await dispatch(fetchOrganizationsOfUser(token));
+      setOrganizationsIdInvitation('');
       router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
     }
   }
@@ -100,7 +100,7 @@ const Dashboard = () => {
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
     if (teamIdInvitation) {
-      inviteToTeam();
+      inviteToOrganizations();
     }
   };
 
@@ -150,11 +150,11 @@ const Dashboard = () => {
     <>
       <Helmet title={OrganizationDashboardHelmet.title} />
       <div className="sema-wide-container">
-        <TeamDashboard team={teams} />
+        <OrganizationDashboard organization={organizations} />
         <div className="is-flex is-align-items-center is-justify-content-space-between py-40 px-35 mb-50 has-background-blue-50">
           <div>
             <p className="is-size-4 has-text-weight-semibold">
-              Encourage consistent best practices amongst your team
+              Encourage consistent best practices amongst your organization
             </p>
             <p className="is-size-6">
               Be sure to review and update your snippets library. &nbsp;
@@ -174,7 +174,7 @@ const Dashboard = () => {
               onClick={() => push(PATHS.SNIPPETS._)}
               className={clsx('button p-25 is-primary is-outlined is-medium', styles.button)}
             >
-              Update Your Team Snippets
+              Update Your Organization Snippets
             </button>
           </div>
         </div>

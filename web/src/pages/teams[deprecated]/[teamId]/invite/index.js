@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
+import Helmet, { OrganizationInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
 import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
@@ -15,7 +15,6 @@ import { fetchUsers } from '../../../../state/features/users/actions';
 import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
-import EmailsInput from "../../../../components/team/EmailsInput";
 import { invitationsOperations } from '../../../../state/features/invitations';
 import { isEmpty } from "lodash";
 
@@ -146,7 +145,7 @@ const TeamInvitePage = () => {
 
   return (
     <div className="has-background-gray-100 hero">
-      <Helmet {...TeamInviteHelmet} />
+      <Helmet {...OrganizationInviteHelmet} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-30 mb-40">
           <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">

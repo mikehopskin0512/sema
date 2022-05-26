@@ -32,7 +32,7 @@ const PersonalDashboard = ({ metrics, repos }) => {
       </div>
       {repos?.other?.length > 0 && <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
         {repos.other.slice(0, MAX_REPOS).map((child, i) => (
-          <RepoCard {...child} isTeamView key={`card-${i}`} column={3} />
+          <RepoCard {...child} isOrgaizationView key={`card-${i}`} column={3} />
         ))}
       </div>}
       {!repos?.other?.length > 0 && <div class="column">

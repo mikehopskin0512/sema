@@ -6,7 +6,7 @@ import { InputField } from 'adonis';
 import clsx from 'clsx';
 import _ from 'lodash';
 import checkAvailableUrl from '../../../../utils/checkAvailableUrl';
-import Helmet, { TeamUpdateHelmet } from '../../../../components/utils/Helmet';
+import Helmet, { OrganizationUpdateHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
@@ -178,7 +178,7 @@ function TeamEditPage() {
 
   return (
     <div className="has-background-gray-200 hero">
-      <Helmet {...TeamUpdateHelmet} />
+      <Helmet {...OrganizationUpdateHelmet} />
       <div className="hero-body pb-100">
         <div className="is-flex is-align-items-center px-30 mb-40">
           <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">

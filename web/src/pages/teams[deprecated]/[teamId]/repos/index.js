@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { debounce } from 'lodash';
-import { TeamReposHelmet } from '../../../../components/utils/Helmet';
+import { OrganizationReposHelmet } from '../../../../components/utils/Helmet';
 import Loader from '../../../../components/Loader';
 import ReposView from '../../../../components/repos/reposView';
 import { ON_INPUT_DEBOUNCE_INTERVAL_MS } from '../../../../utils/constants';
@@ -84,7 +84,7 @@ const TeamRepository = () => {
           </div>
         ) : (
           <div>
-            <Helmet {...TeamReposHelmet} />
+            <Helmet {...OrganizationReposHelmet} />
             <ReposView type="team" withSearch searchQuery={searchQuery} onSearchChange={onSearchChange()} />
           </div>
         )}

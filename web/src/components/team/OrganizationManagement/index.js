@@ -4,8 +4,8 @@ import Select from 'react-select';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Avatar from 'react-avatar';
-import styles from './TeamManagement.module.scss';
-import Helmet, { TeamManagementHelmet } from '../../utils/Helmet';
+import styles from './OrganizationManagement.module.scss';
+import Helmet, { OrganizationManagementHelmet } from '../../utils/Helmet';
 import Table from '../../table';
 import withSelectedOrganization from '../../auth/withSelectedOrganization';
 import RoleChangeModal from '../roleChangeModal';
@@ -19,12 +19,12 @@ import { ArrowDropdownIcon, PlusIcon, LinkIcon } from '../../Icons';
 import { PATHS } from '../../../utils/constants';
 import OverflowTooltip from '../../Tooltip/OverflowTooltip';
 
-const { fetchTeamMembers } = organizationsOperations;
+const { fetchOrganizationMembers } = organizationsOperations;
 const { fetchRoles, updateUserRole, removeUserRole } = rolesOperations;
 
-const TeamManagement = ({ activeTeam }) => {
+const OrganizationManagement = ({ activeOrganization }) => {
   const router = useRouter();
-  const { isTeamAdmin } = usePermission();
+  const { isOrganizationAdmin } = usePermission();
   const [isOpen, setIsOpen] = useState(false);
   const [editableMember, setEditableMember] = useState({
     name: '',
@@ -36,25 +36,25 @@ const TeamManagement = ({ activeTeam }) => {
   const [userRole, setUserRole] = useState({});
   const [copyTooltip, toggleCopyTooltip] = useState(false);
 
-  const { auth, team, role } = useSelector((state) => ({
+  const { auth, organization, role } = useSelector((state) => ({
     auth: state.authState,
-    team: state.teamsState,
+    organization: state.organizationsNewState,
     role: state.rolesState,
   }));
   const { user = {}, token } = auth;
-  const { members, membersCount } = team;
+  const { members, membersCount } = organization;
   const { roles } = role;
 
   const dispatch = useDispatch();
-  const canModifyRoles = isTeamAdmin();
-  const teamId = activeTeam?.team?._id;
+  const canModifyRoles = isOrganizationAdmin();
+  const organizationId = activeOrganization?.organization?._id;
 
   useAuthEffect(() => {
-    if (teamId) {
-      dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
+    if (organizationId) {
+      dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
       dispatch(fetchRoles(token));
     }
-  }, [user, dispatch, page, perPage, teamId]);
+  }, [user, dispatch, page, perPage, organizationId]);
 
   const rolesOptions = useMemo(() => roles?.map((role) => ({
     value: role._id,
@@ -85,14 +85,14 @@ const TeamManagement = ({ activeTeam }) => {
   }, []);
 
   const updateRole = async (userRoleId, newRole) => {
-    await dispatch(updateUserRole(userRoleId, { role: newRole, teamId }, token));
-    await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
+    await dispatch(updateUserRole(userRoleId, { role: newRole, organizationId }, token));
+    await dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
   };
 
   const onRemoveMember = useCallback(async (userRoleId) => {
-    await dispatch(removeUserRole(teamId, userRoleId, token));
-    await dispatch(fetchTeamMembers(teamId, { page, perPage }, token));
-  }, [dispatch, page, perPage, token, user, teamId]);
+    await dispatch(removeUserRole(organizationId, userRoleId, token));
+    await dispatch(fetchOrganizationMembers(organizationId, { page, perPage }, token));
+  }, [dispatch, page, perPage, token, user, organizationId]);
 
   const columns = useMemo(() => [
     {
@@ -168,8 +168,8 @@ const TeamManagement = ({ activeTeam }) => {
 
   const copyInviteLink = async () => {
     const { origin } = window.location
-    const teamId = activeTeam.team._id;
-    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${teamId}`);
+    const organizationId = activeOrganization.organization._id;
+    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${organizationId}`);
     toggleCopyTooltip(true);
     setTimeout(() => toggleCopyTooltip(false), 3000);
   }
@@ -186,14 +186,14 @@ const TeamManagement = ({ activeTeam }) => {
   }, [canModifyRoles, rolesOptions, handleChangeRole, onRemoveMember])
 
   const goToInvitePage = () => {
-    router.push(PATHS.ORGANIZATIONS.INVITE(teamId));
+    router.push(PATHS.ORGANIZATIONS.INVITE(organizationId));
   };
 
   return (
     <div className="hero mx-10">
-      <Helmet {...TeamManagementHelmet} />
+      <Helmet {...OrganizationManagementHelmet} />
       <div className="is-flex is-justify-content-space-between is-align-items-center mt-10 mb-30">
-        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Team Management</div>
+        <div className="is-size-4 has-text-weight-semibold has-text-black-950">Organization Management</div>
         {/* // TODO: should be disabled until new invitations logic */}
         {/* <div className='ml-auto mr-15'> */}
         {/*   {copyTooltip && <div className='tooltip is-tooltip-active sema-tooltip' data-tooltip='Copied!' />} */}
@@ -239,4 +239,4 @@ const TeamManagement = ({ activeTeam }) => {
   );
 };
 
-export default withSelectedOrganization(TeamManagement);
+export default withSelectedOrganization(OrganizationManagement);

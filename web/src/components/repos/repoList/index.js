@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import usePermission from '../../../hooks/usePermission';
 import RepoCard from '../repoCard';
-import TeamReposList from '../../../components/teamReposList';
+import OrganizationReposList from '../../../components/teamReposList';
 import RepoTable from '../repoTable';
 import styles from './repoList.module.scss';
 import { ListIcon, GridIcon, PlusIcon, FilterBarsIcon, SearchIcon } from '../../Icons';
 import { triggerAlert } from '../../../state/features/alerts/actions';
-import { fetchTeamRepos } from '../../../state/features/organizations[new]/actions';
+import { fetchOrganizationRepos } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationRepositories } from '../../../state/features/organizations[new]/operations';
 import DropDownMenu from '../../../components/dropDownMenu';
 import { getCommentsCountLastMonth } from '../../../utils/codeStats';
@@ -39,20 +39,20 @@ const RepoList = ({
   withSearch,
 }) => {
   const dispatch = useDispatch();
-  const { token, selectedTeam } = useSelector((state) => state.authState);
+  const { token, selectedOrganization } = useSelector((state) => state.authState);
 
   const [view, setView] = useState('grid');
   const [sort, setSort] = useState({});
   const [filteredRepos, setFilteredRepos] = useState([]);
-  const { isTeamAdmin } = usePermission();
+  const { isOrganizationAdmin } = usePermission();
   const { clearAlert } = alertOperations;
 
   const removeRepo = async (repoId) => {
     try {
       const newRepos = repos.filter(repo => repo?._id !== repoId).map(repo => repo._id);
-      await dispatch(updateOrganizationRepositories(selectedTeam.team._id, { repos: newRepos }, token));
+      await dispatch(updateOrganizationRepositories(selectedOrganization.organization._id, { repos: newRepos }, token));
       dispatch(triggerAlert('Repo has been deleted', 'success'));
-      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
+      dispatch(fetchOrganizationRepos({ organizationId: selectedOrganization.organization._id }, token));
     } catch (e) {
       dispatch(triggerAlert('Unable to delete repo', 'error'));
     }
@@ -100,7 +100,7 @@ const RepoList = ({
 
   const renderCards = (repos) => {
     return repos.map((child, i) => (
-      <RepoCard {...child} isTeamView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} onRemoveRepo={removeRepo} />
+      <RepoCard {...child} isOrganizationView={type !== 'MY_REPOS'} isFavorite={type === 'FAVORITES'} key={i} onRemoveRepo={removeRepo} />
     ))
   }
 
@@ -117,8 +117,8 @@ const RepoList = ({
   return (
     (repos.length > 0 || withSearch) ? (
       <div className='mb-50'>
-        {isTeamAdmin() && (
-          <TeamReposList
+        {isOrganizationAdmin() && (
+          <OrganizationReposList
             isActive={isRepoListOpen}
             onClose={handleOnClose}
           />
@@ -134,7 +134,7 @@ const RepoList = ({
             <button className={clsx("button border-radius-0 is-small", view === 'grid' ? 'is-primary' : '')} onClick={() => setView('grid')}>
               <GridIcon />
             </button>
-            {isTeamAdmin() && (
+            {isOrganizationAdmin() && (
               <button
                 type="button"
                 className={clsx("ml-16 button is-primary", styles['add-repo-button'])}
@@ -184,7 +184,7 @@ const RepoList = ({
           </div>
         ) : null}
         {view === 'list' ? (
-          <RepoTable data={filteredRepos} removeRepo={removeRepo} isTeamView={type !== 'MY_REPOS'} />
+          <RepoTable data={filteredRepos} removeRepo={removeRepo} isOrganizationView={type !== 'MY_REPOS'} />
         ) : null}
       </div>
     ) : null

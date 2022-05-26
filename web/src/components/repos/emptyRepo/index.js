@@ -4,7 +4,7 @@ import usePermission from '../../../hooks/usePermission';
 import { PROFILE_VIEW_MODE } from '../../../utils/constants';
 import HowItWorks from './HowItWorks';
 import * as analytics from '../../../utils/analytics';
-import TeamReposList from '../../../components/teamReposList';
+import OrganizationReposList from '../../../components/teamReposList';
 
 const openGithub = () => {
   analytics.fireAmplitudeEvent(analytics.AMPLITUDE_EVENTS.ESR_CLICKED_START_REVIEWING_CODE_ON_GITHUB, {});
@@ -23,7 +23,7 @@ const EmptyRepo = () => {
   return (
     <div className="container">
       {isAddRepoEnable && (
-        <TeamReposList
+        <OrganizationReposList
           onClose={() => setRepoListOpen(false)}
           isActive={isRepoListOpen}
         />
@@ -31,9 +31,9 @@ const EmptyRepo = () => {
       <div className="has-text-centered py-50 is-flex is-flex-direction-column">
         <p className="has-text-weight-semibold is-size-5">No Repos Yet!</p>
         <p className="mt-15 mb-15">
-          {!isTeamView ? 
+          {!isTeamView ?
             <>
-              <span>Make some code reviews on GitHub with the Sema Plugin installed</span> 
+              <span>Make some code reviews on GitHub with the Sema Plugin installed</span>
               <br/>
               <span>and your Repos will appear here.</span>
             </>

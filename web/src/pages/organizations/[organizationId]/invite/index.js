@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
-import Helmet, { TeamInviteHelmet } from '../../../../components/utils/Helmet';
+import Helmet, { OrganizationInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import styles from './teamInvite.module.scss';
 import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
@@ -15,18 +15,17 @@ import { fetchUsers } from '../../../../state/features/users/actions';
 import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
-import EmailsInput from "../../../../components/team/EmailsInput";
 import { invitationsOperations } from '../../../../state/features/invitations';
 import { isEmpty } from "lodash";
 
 const { fetchRoles } = rolesOperations;
-const { inviteTeamUsers, validateTeamInvitationEmails } = organizationsOperations;
+const { inviteOrganizationUsers, validateOrganizationInvitationEmails } = organizationsOperations;
 const { trackSendInvite } = invitationsOperations;
 import TagsInput from '../../../../components/tagsInput';
 
-const TeamInvitePage = () => {
+const OrganizationInvitePage = () => {
   const router = useRouter();
-  const { query: { teamId } } = router;
+  const { query: { organizationId } } = router;
   const [copyTooltip, toggleCopyTooltip] = useState(false);
   const dispatch = useDispatch();
   const {
@@ -34,9 +33,9 @@ const TeamInvitePage = () => {
   } = useForm();
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { authState, rolesState, usersState, teamsState } = useSelector((state) => ({
+  const { authState, rolesState, usersState, organizationsState } = useSelector((state) => ({
     authState: state.authState,
-    teamsState: state.teamsState,
+    organizationsState: state.organizationsNewState,
     rolesState: state.rolesState,
     usersState: state.usersState
   }));
@@ -44,7 +43,7 @@ const TeamInvitePage = () => {
   const { user, token } = authState;
   const { roles } = rolesState;
   const { users } = usersState;
-  const { invalidEmails } = teamsState;
+  const { invalidEmails } = organizationsState;
   const { _id: userId, firstName = '', lastName = '', username: senderEmail, organizations = [], inviteCount = 0 } = user;
   const fullName = !isEmpty(firstName) || !isEmpty(lastName) ? `${firstName} ${lastName}` : null;
 
@@ -67,11 +66,11 @@ const TeamInvitePage = () => {
 
       // fire segment event for all invited users
       userIds.forEach((userEmail) => {
-        trackSendInvite(userEmail, fullName, senderEmail, 'team');
+        trackSendInvite(userEmail, fullName, senderEmail, 'organization');
       })
 
-      // adding normal users to Sema Corporate Team
-      await dispatch(inviteTeamUsers(teamId, {
+      // adding normal users to Sema Corporate Organization
+      await dispatch(inviteOrganizationUsers(organizationId, {
         users: userIds,
         role: role ? role.value : '',
       }, token));
@@ -81,28 +80,28 @@ const TeamInvitePage = () => {
   };
 
   const handleClose = async () => {
-    await router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`);
+    await router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}?tab=${TAB.management}`);
   };
 
   const onCancel = async () => {
     await router.back();
   };
 
-  const checkForSelectedTeam = () => {
-    if (!authState.selectedTeam || !authState.selectedTeam.team) {
+  const checkForSelectedOrganization = () => {
+    if (!authState.selectedOrganization || !authState.selectedOrganization.organization) {
       return router.push(PATHS.DASHBOARD);
     }
   }
 
   const copyInviteLink = async (e) => {
     const { origin } = window.location
-    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${teamId}`);
+    await navigator.clipboard.writeText(`${origin}${PATHS.ORGANIZATIONS._}/invite/${organizationId}`);
     toggleCopyTooltip(true);
     setTimeout(() => toggleCopyTooltip(false), 3000);
   }
 
   useEffect(() => {
-    checkForSelectedTeam();
+    checkForSelectedOrganization();
   }, []);
 
   const DropdownIndicator = () => (
@@ -124,7 +123,7 @@ const TeamInvitePage = () => {
         setValue('emails', newEmails);
       }
 
-      dispatch(validateTeamInvitationEmails(teamId, {
+      dispatch(validateOrganizationInvitationEmails(organizationId, {
         users: newEmails && newEmails.length > 0 ? newEmails.map(item => item.label) : []
       }, token));
     }
@@ -133,25 +132,25 @@ const TeamInvitePage = () => {
   const blockedEmailsError = useMemo(() => {
     const blockedEmails = invalidEmails.filter(item => item?.reason === 'blocked').map(item => item.email);
     return blockedEmails && blockedEmails.length > 0
-      ? `The following user account(s) are not able to be added to this team: ${blockedEmails.join(', ')}. \n Contact support@semasoftware.com for more info`
+      ? `The following user account(s) are not able to be added to this organization: ${blockedEmails.join(', ')}. \n Contact support@semasoftware.com for more info`
       : null;
   }, [invalidEmails]);
 
   const existingEmailsError = useMemo(() => {
     const existingEmails = invalidEmails.filter(item => item?.reason === 'existing').map(item => item.email);
     return existingEmails && existingEmails.length > 0
-      ? `The following user account(s) are already in this team: ${existingEmails.join(', ')}.`
+      ? `The following user account(s) are already in this organization: ${existingEmails.join(', ')}.`
       : null;
   }, [invalidEmails]);
 
   return (
     <div className="has-background-gray-100 hero">
-      <Helmet {...TeamInviteHelmet} />
+      <Helmet {...OrganizationInviteHelmet} />
       <div className="hero-body pb-300">
         <div className="is-flex is-align-items-center px-30 mb-40">
-          <a href={PATHS.ORGANIZATIONS.SETTINGS(teamId)} className="has-text-black-950 is-flex is-align-items-center">
+          <a href={PATHS.ORGANIZATIONS.SETTINGS(organizationId)} className="has-text-black-950 is-flex is-align-items-center">
             <ArrowLeftIcon />
-            <span className="ml-10 has-text-gray-500">Team Management</span>
+            <span className="ml-10 has-text-gray-500">Organization Management</span>
           </a>
           <div className="has-text-black-950 mx-5">/</div>
           <div className="has-text-black-950 mr-5">Invite new members</div>
@@ -246,4 +245,4 @@ const TeamInvitePage = () => {
   );
 };
 
-export default withLayout(TeamInvitePage);
+export default withLayout(OrganizationInvitePage);

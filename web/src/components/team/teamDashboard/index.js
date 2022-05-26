@@ -3,18 +3,17 @@ import { useRouter } from 'next/router';
 import usePermission from '../../../hooks/usePermission';
 import Metrics from '../../metrics';
 import RepoCard from '../../repos/repoCard';
-import MinimalTeamTable from '../minimalTeamTable';
+import MinimalOrganizationTable from '../minimalTeamTable';
 import { PATHS, TAB } from '../../../utils/constants';
-import styles from "./teamDashboard.module.scss";
 
 const MAX_REPOS = 6;
 
-const TeamDashboard = ({ team }) => {
-  const { metrics, members, repos, membersCount } = team;
+const OrganizationDashboard = ({ organization }) => {
+  const { metrics, members, repos, membersCount } = organization;
   const router = useRouter();
   const { checkAccess } = usePermission();
   const {
-    query: { teamId },
+    query: { organizationId },
   } = useRouter();
 
   return (
@@ -35,29 +34,29 @@ const TeamDashboard = ({ team }) => {
         <div className="column is-8">
           <div className='is-flex is-align-items-center is-justify-content-space-between'>
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Recent Repos</p>
-            <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.REPOS}`)}>View All</button>
+            <button className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold" onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.REPOS}`)}>View All</button>
           </div>
           <div className="is-flex is-flex-wrap-wrap is-align-content-stretch">
             {repos.slice(0, MAX_REPOS).map((child, i) => (
-              <RepoCard {...child} isTeamView key={`card-${i}`} column={2} />
+              <RepoCard {...child} isOrganizationView key={`card-${i}`} column={2} />
             ))}
           </div>
         </div>
         <div className="column is-4">
           <div className="is-flex is-align-items-center is-justify-content-space-between mb-10">
-            <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Team Members</p>
+            <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Organization Members</p>
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}?tab=${TAB.management}`)}
+              onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${organization}${PATHS.SETTINGS}?tab=${TAB.management}`)}
             >
               View All
             </button>
           </div>
-          <MinimalTeamTable members={members} count={membersCount} teamId={teamId} />
+          <MinimalOrganizationTable members={members} count={membersCount} organizationId={organizationId} />
         </div>
       </div>
     </>
   )
 }
 
-export default TeamDashboard;
+export default OrganizationDashboard;
