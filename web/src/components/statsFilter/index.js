@@ -55,7 +55,7 @@ const StatsFilter = ({
     setStartDate(startDate);
     setEndDate(endDate);
     const formatDate = date =>
-      date ? format(addDays(new Date(date), 1), `yyyy-MM-dd`) : null;
+      date ? format(new Date(date), `yyyy-MM-dd`) : null;
     setFilter({
       ...filter,
       startDate: formatDate(startDate),
