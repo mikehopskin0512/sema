@@ -93,7 +93,7 @@ export const isSuggestedCollectionTitle = (title) => title === SEARCH_CATEGORY_T
 
 export const isSemaDefaultCollection = (name) => name?.toLowerCase() === DEFAULT_COLLECTION_NAME;
 
-export const isTeamDefaultCollection = (team, collection) => `${team?.name}'s Snippets` === collection?.name;
+export const isOrganizationDefaultCollection = (team, collection) => `${team?.name}'s Snippets` === collection?.name;
 
 export const addTags = (tags, types) => tags
   .filter((tag) => types.some((type) => type === tag.type))

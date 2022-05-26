@@ -88,9 +88,9 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
   )
 };
 
-TeamMenuItem.propTypes = {
+OrganizationMenuItem.propTypes = {
   toggleUserMenu: PropTypes.func.isRequired,
   role: PropTypes.object.isRequired,
 };
 
-export default TeamMenuItem;
+export default OrganizationMenuItem;
