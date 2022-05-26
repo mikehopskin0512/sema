@@ -5,6 +5,8 @@ import AWS from 'aws-sdk';
 import { environment } from './config';
 import logger from './shared/logger';
 
+import './shared/mongo';
+
 const isProduction = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test';
 
