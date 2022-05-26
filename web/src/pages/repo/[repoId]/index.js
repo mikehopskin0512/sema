@@ -311,6 +311,14 @@ function SyncPage({ refresh }) {
             Completed: {format(new Date(sync.completedAt), 'MMM dd h:mm a')}
           </>
         )}
+        {sync.erroredAt && (
+          <>
+            <br />
+            Errored: {format(new Date(sync.erroredAt), 'MMM dd h:mm a')}
+            <br />
+            Error Message: {sync.error || 'N/A'}
+          </>
+        )}
       </div>
       <div className="my-10">
         <h3 className="is-size-5">Progress</h3>
