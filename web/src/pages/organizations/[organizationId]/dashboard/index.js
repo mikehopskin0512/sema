@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Helmet } from 'react-helmet';
-import OrganizationDashboard from '../../../../components/team/teamDashboard';
+import OrganizationDashboard from '../../../../components/organization/organizationDashboard';
 import withLayout from '../../../../components/layout';
 import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
 import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';

@@ -50,7 +50,7 @@ const OrganizationRepository = () => {
 
   useEffect(() => {
     fetchRepos(organizationId, token);
-  }, [teamId, token]);
+  }, [organizationId, token]);
 
   const onSearchChange = () => debounce((val) => {
     setSearchQuery(val);

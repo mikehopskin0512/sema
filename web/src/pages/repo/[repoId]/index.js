@@ -18,7 +18,7 @@ import { DEFAULT_AVATAR } from '../../../utils/constants';
 import styles from './styles.module.scss';
 
 const { fetchRepositoryOverview, fetchReposByIds } = repositoriesOperations;
-const { fetchTeamRepos } = organizationsOperations;
+const { fetchOrganizationRepos } = organizationsOperations;
 
 const tabTitle = {
   activity: 'Activity Log',
@@ -32,7 +32,7 @@ const RepoPage = () => {
     auth: state.authState,
     repositories: state.repositoriesState
   }));
-  const { token, selectedTeam, user } = auth;
+  const { token, selectedOrganization, user } = auth;
   const {
     data: { overview }
   } = repositories;
@@ -69,21 +69,21 @@ const RepoPage = () => {
   const [filterUserList, setFilterUserList] = useState([]);
   const [filterRequesterList, setFilterRequesterList] = useState([]);
   const [filterPRList, setFilterPRList] = useState([]);
-  const [isTeamRepo, setIsTeamRepo] = useState(!isEmpty(selectedTeam));
+  const [isOrganizationRepo, setIsOrganizationRepo] = useState(!isEmpty(selectedOrganization));
 
   useEffect(() => {
-    setIsTeamRepo(!isEmpty(selectedTeam));
-  }, [selectedTeam]);
+    setIsOrganizationRepo(!isEmpty(selectedOrganization));
+  }, [selectedOrganization]);
 
   useAuthEffect(() => {
-    if (!isEmpty(selectedTeam)) {
-      dispatch(fetchTeamRepos({ teamId: selectedTeam.team._id }, token));
+    if (!isEmpty(selectedOrganization)) {
+      dispatch(fetchOrganizationRepos({ organizationId: selectedOrganization.organization._id }, token));
     }
   }, []);
 
   useAuthEffect(() => {
-    if (isTeamRepo) {
-      const { repos } = selectedTeam.team;
+    if (isOrganizationRepo) {
+      const { repos } = selectedOrganization.organization;
       if (repos?.length) {
         const idsParamString = repos.join('-');
         dispatch(fetchReposByIds(idsParamString, token));
@@ -213,7 +213,7 @@ const RepoPage = () => {
       selectedTab={selectedTab}
       dates={dates}
       onDateChange={onDateChange}
-      isTeamRepo={isTeamRepo}
+      isOrganizationRepo={isOrganizationRepo}
     >
       <Helmet title={`${tabTitle[selectedTab]} - ${overview?.name}`} />
 

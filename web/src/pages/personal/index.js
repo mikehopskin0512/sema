@@ -18,10 +18,10 @@ const Personal = () => {
     router.push(PATHS.DASHBOARD)
   }
 
-  const { githubUser, repositories, teams, auth } = useSelector((state) => ({
+  const { githubUser, repositories, organizations, auth } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
     repositories: state.repositoriesState.data.repositories,
-    teams: state.teamsState,
+    organizations: state.organizationsState,
     auth: state.authState,
   }));
 

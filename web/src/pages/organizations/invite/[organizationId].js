@@ -15,23 +15,23 @@ const PublicOrganizationInvite = () => {
   }));
   const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const router = useRouter();
-  const { teamId } = router.query;
+  const { organizationId } = router.query;
   const { user, token } = auth;
 
-  const joinTeam = async () => {
-    await dispatch(inviteOrganizationUser(teamId, token));
+  const joinOrganization = async () => {
+    await dispatch(inviteOrganizationUser(organizationId, token));
     await dispatch(fetchOrganizationsOfUser(token));
   };
 
   useEffect(() => {
     if (user && token) {
-      joinTeam();
-      router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
+      joinOrganization();
+      router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`);
     } else {
-      setOrganizationIdInvitation(teamId);
+      setOrganizationIdInvitation(organizationId);
       router.push('/login');
     }
-  }, [teamId, user, token, router]);
+  }, [organizationId, user, token, router]);
 
   return (
     ''

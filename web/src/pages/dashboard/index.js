@@ -21,7 +21,7 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
 const { updateUser, updateUserHasExtension } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = organizationsOperations;
+const { inviteOrganizationUser, fetchOrganizationsOfUser } = organizationsOperations;
 const { setSelectedOrganization, setProfileViewMode } = authOperations;
 
 const Dashboard = () => {
@@ -29,7 +29,7 @@ const Dashboard = () => {
   const { step, page = parseInt(step) } = router.query;
 
   // TODO: should be disabled until new invitations logic
-  // const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
+  // const [organizationIdInvitation, setOrganizationIdInvitation] = useLocalStorage('sema-organization-invite', '');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchStarted, setSearchStarted] = useState(false);
   const [onboardingProgress, setOnboardingProgress] = useLocalStorage('sema-onboarding', {});
@@ -41,17 +41,17 @@ const Dashboard = () => {
   const [comment, setComment] = useState({});
   const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
   const dispatch = useDispatch();
-  const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
+  const { auth, repositories, rolesState, organizationsState } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
     rolesState: state.rolesState,
-    teamsState: state.organizationsNewState
+    organizationsState: state.organizationsNewState
   }));
-  const { token, user, selectedTeam } = auth;
+  const { token, user, selectedOrganization } = auth;
   const { identities, isOnboarded = null, hasExtension = null, username } = user;
   const { roles } = rolesState;
-  const { organizations: teams } = teamsState;
-  const { inviteTeamId } = router.query;
+  const { organizations: organizations } = organizationsState;
+  const { inviteOrganizationId } = router.query;
   const userRepos = identities?.length ? identities[0].repositories : [];
   // Now we should show the UI in cases when we receive an empty arrays
   const isLoaded = !userRepos || (userRepos && repositories.data.repositories);
@@ -93,27 +93,27 @@ const Dashboard = () => {
     setOnboardingProgress({});
     dispatch(updateUser(updatedUser, token));
     // TODO: should be disabled until new invitations logic
-    // if (teamIdInvitation) {
-    //   inviteToTeam();
+    // if (organizationIdInvitation) {
+    //   inviteToOrganization();
     // }
   };
 
   // TODO: should be disabled until new invitations logic
-  // const inviteToTeam = async () => {
+  // const inviteToOrganization = async () => {
   //   const memberRole = roles.find((role) => role.name === 'Member')
   //   if (!isEmpty(memberRole)) {
-  //     const teamId = teamIdInvitation;
-  //     await dispatch(inviteTeamUser(teamId, token));
-  //     await dispatch(fetchTeamsOfUser(token));
-  //     setTeamIdInvitation('');
-  //     router.push(`${PATHS.ORGANIZATIONS._}/${teamId}${PATHS.SETTINGS}`);
+  //     const organizationId = organizationIdInvitation;
+  //     await dispatch(inviteOrganizationUser(organizationId, token));
+  //     await dispatch(fetchOrganizationsOfUser(token));
+  //     setOrganizationIdInvitation('');
+  //     router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`);
   //   }
   // }
 
   if (redirectUser) {
     setRedirectUser(false);
-    if (selectedTeam) {
-      router.push(`${PATHS.ORGANIZATIONS._}/${selectedTeam._id}${PATHS.DASHBOARD}`);
+    if (selectedOrganization) {
+      router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization._id}${PATHS.DASHBOARD}`);
     } else {
       router.push(PATHS.DASHBOARD);
     }
@@ -127,15 +127,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (inviteTeamId) {
-      const invitedTeam = teams?.find(item => item.team?._id == inviteTeamId);
-      if (invitedTeam) {
-        dispatch(setSelectedOrganization(invitedTeam));
-        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
-        router.push(`${PATHS.ORGANIZATIONS._}/${inviteTeamId}${PATHS.DASHBOARD}`);
+    if (inviteOrganizationId) {
+      const invitedOrganization = organizations?.find(item => item.organization?._id == inviteOrganizationId);
+      if (invitedOrganization) {
+        dispatch(setSelectedOrganization(invitedOrganization));
+        dispatch(setProfileViewMode(PROFILE_VIEW_MODE.ORGANIZATION_VIEW));
+        router.push(`${PATHS.ORGANIZATIONS._}/${inviteOrganizationId}${PATHS.DASHBOARD}`);
       }
     }
-  }, [inviteTeamId, user.roles, teams]);
+  }, [inviteOrganizationId, user.roles, organizations]);
 
   useAuthEffect(() => {
     if (userRepos.length) {
@@ -215,7 +215,7 @@ const Dashboard = () => {
   }
 
   return (
-    !inviteTeamId &&
+    !inviteOrganizationId &&
     <>
       {!isLoaded ? (
         <LoaderScreen />

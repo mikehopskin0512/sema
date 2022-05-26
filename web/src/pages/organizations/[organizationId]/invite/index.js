@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select';
 import Helmet, { OrganizationInviteHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
-import styles from './teamInvite.module.scss';
+import styles from './organizationInvite.module.scss';
 import { ArrowDropdownIcon, ArrowLeftIcon, CheckOnlineIcon, InviteIcon, LinkIcon } from '../../../../components/Icons';
 import { PATHS, TAB } from '../../../../utils/constants';
 import { rolesOperations } from '../../../../state/features/roles';
@@ -14,7 +14,7 @@ import { organizationsOperations } from '../../../../state/features/organization
 import { fetchUsers } from '../../../../state/features/users/actions';
 import { parseEmails } from '../../../../utils';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
-import InviteSentConfirmModal from '../../../../components/team/InviteSentConfirmModal';
+import InviteSentConfirmModal from '../../../../components/organization/InviteSentConfirmModal';
 import { invitationsOperations } from '../../../../state/features/invitations';
 import { isEmpty } from "lodash";
 

@@ -62,8 +62,8 @@ const AddLabels = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [accountData] = useLocalStorage('sema_selected_organization');
-  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
-  const isAuthorized = useMemo(() => isTeamAdminOrLibraryEditor());
+  const { isOrganizationAdminOrLibraryEditor, isSemaAdmin } = usePermission();
+  const isAuthorized = useMemo(() => isOrganizationAdminOrLibraryEditor());
 
   const { tagsState, auth, alerts } = useSelector((state) => ({
     tagsState: state.tagsState,
@@ -114,7 +114,7 @@ const AddLabels = () => {
   }
 
   const onSubmit = () => {
-    const {team: {_id: teamId}} = accountData;
+    const {organization: {_id: organizationId}} = accountData;
     setErrors([]);
     const tagsErrors = validateTags(tags, existingTags);
     if (tagsErrors) {
@@ -124,7 +124,7 @@ const AddLabels = () => {
     const data = dispatch(createTags(tags, token));
     if (data) {
       router.push({
-        pathname: PATHS.ORGANIZATIONS.SETTINGS(teamId),
+        pathname: PATHS.ORGANIZATIONS.SETTINGS(organizationId),
         query: { tab: 'labels' },
       });
     }

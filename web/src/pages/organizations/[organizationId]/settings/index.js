@@ -6,15 +6,15 @@ import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet
 import withLayout from '../../../../components/layout';
 import PageHeader from '../../../../components/pageHeader';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
-import LabelsManagement from '../../../../components/team/LabelsManagement';
-import OrganizationManagement from '../../../../components/team/OrganizationManagement';
+import LabelsManagement from '../../../../components/organization/LabelsManagement';
+import OrganizationManagement from '../../../../components/organization/OrganizationManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
 import { TagIcon, OrganizationIcon } from '../../../../components/Icons';
 
 const { fetchOrganizationMembers } = organizationsOperations;
 
-const TeamSettings = () => {
+const OrganizationSettings = () => {
   const dispatch = useDispatch();
   const { isOrganizationAdminOrLibraryEditor, isSemaAdmin } = usePermission();
   const router = useRouter();
@@ -98,4 +98,4 @@ const TeamSettings = () => {
   )
 }
 
-export default withLayout(TeamSettings);
+export default withLayout(OrganizationSettings);

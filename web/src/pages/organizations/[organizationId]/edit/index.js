@@ -12,9 +12,9 @@ import { organizationsOperations } from '../../../../state/features/organization
 import { ArrowLeftIcon, CheckFilledIcon, CheckOnlineIcon, CloseIcon, InviteIcon, LoadingBlueIcon, AlertOutlineIcon } from '../../../../components/Icons';
 import { PATHS, SEMA_CORPORATE_ORGANIZATION_NAME } from '../../../../utils/constants' ;
 import withSelectedOrganization from '../../../../components/auth/withSelectedOrganization';
-import UploadFile from '../../../../components/team/UploadFile';
+import UploadFile from '../../../../components/organization/UploadFile';
 import { uploadOrganizationAvatar } from "../../../../state/features/organizations[new]/actions";
-import styles from './teamEdit.module.scss';
+import styles from './organizationEdit.module.scss';
 
 const { editOrganization, fetchOrganizationsOfUser } = organizationsOperations;
 
@@ -158,7 +158,7 @@ function OrganizationEditPage() {
             </div>
             <div>
               <span className="has-text-black has-text-weight-semibold">{ organization.name }.</span>
-              <a href={`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the team page</a>
+              <a href={`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}`} className="has-text-primary ml-10" aria-hidden="true">Go to the organization page</a>
             </div>
           </div>
         </div>

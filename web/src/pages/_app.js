@@ -56,19 +56,19 @@ function Layout({ Component, pageProps }) {
   useEffect(() => {
     setDataLoaded(false);
     const accountData = localStorage.getItem('sema_selected_organization');
-    let selectedTeam = accountData ? JSON.parse(accountData) : null;
+    let selectedOrganization = accountData ? JSON.parse(accountData) : null;
 
-    if (!!selectedTeam?.team?._id && user._id === selectedTeam?.user) {
-      // team view mode
-      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.TEAM_VIEW));
+    if (!!selectedOrganization?.organization?._id && user._id === selectedOrganization?.user) {
+      // organization view mode
+      dispatch(setProfileViewMode(PROFILE_VIEW_MODE.ORGANIZATION_VIEW));
     } else {
       // individual view mode
-      selectedTeam = null;
+      selectedOrganization = null;
       localStorage.removeItem('sema_selected_organization')
       dispatch(setProfileViewMode(PROFILE_VIEW_MODE.INDIVIDUAL_VIEW));
     }
     setDataLoaded(true);
-    dispatch(setSelectedOrganization(selectedTeam || {}));
+    dispatch(setSelectedOrganization(selectedOrganization || {}));
   }, []);
 
   if (apiError) return <ErrorScreen imagePath="/img/500.svg" title="We are sorry..." subtitle="Something went wrong." />;
