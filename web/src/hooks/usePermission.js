@@ -7,7 +7,7 @@ function usePermission() {
   const checkAccess = (orgId, permission) => {
     // need to check first if current view mode is Organization view
     if (profileViewMode === PROFILE_VIEW_MODE.INDIVIDUAL_VIEW || !selectedOrganization) return false;
-    const role = selectedOrganization?.role?.[permission] && selectedOrganization?.organization?._id == organizationId;
+    const role = selectedOrganization?.role?.[permission] && selectedOrganization?.organization?._id == orgId;
     return !!role;
   };
 

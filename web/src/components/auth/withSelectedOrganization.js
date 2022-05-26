@@ -10,7 +10,7 @@ const withSelectedOrganization = (WrappedComponent) => {
       const accountData = localStorage.getItem('sema_selected_organization');
       const selectedOrganization = accountData ? JSON.parse(accountData) : null;
 
-      if (!selectedOrganization || !selectedOrganization.team) {
+      if (!selectedOrganization || !selectedOrganization.organization) {
         Router.push(PATHS.DASHBOARD);
         return null;
       } else if (Router.pathname.search('organizationId') === -1) {

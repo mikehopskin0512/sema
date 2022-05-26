@@ -12,40 +12,40 @@ import { SettingsIcon } from "../../Icons";
 
 const { setSelectedOrganization } = authOperations;
 
-const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
+const OrganizationMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const setTeam = () => {
+  const setOrganization = () => {
     let viewMode = PROFILE_VIEW_MODE.INDIVIDUAL_VIEW;
-    if (!!role?.team?._id) {
-      viewMode = PROFILE_VIEW_MODE.TEAM_VIEW;
+    if (!!role?.organization?._id) {
+      viewMode = PROFILE_VIEW_MODE.ORGANIZATION_VIEW;
     }
     dispatch(setSelectedOrganization(role));
     dispatch(setProfileViewMode(viewMode));
   }
 
-  const handleOnTeamClick = () => {
-    setTeam();
-    router.push(`${PATHS.ORGANIZATIONS._}/${role?.team?._id}${PATHS.DASHBOARD}`);
+  const handleOnOrganizationClick = () => {
+    setOrganization();
+    router.push(`${PATHS.ORGANIZATIONS._}/${role?.organization?._id}${PATHS.DASHBOARD}`);
     toggleUserMenu();
   };
 
   const handleSettingsClick = () => {
-    setTeam();
-    router.push(`${PATHS.ORGANIZATIONS._}/${role?.team?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
+    setOrganization();
+    router.push(`${PATHS.ORGANIZATIONS._}/${role?.organization?._id}${PATHS.SETTINGS}?tab=${TAB.management}`);
   }
 
-  const isFirstTeam = (index) => index === 0;
+  const isFirstOrganization = (index) => index === 0;
 
   return (
     <>
       <div className={`${isSelected ? 'has-background-white' : ''} p-15 is-relative`}>
         <div>
-          <div className={clsx(`is-flex ${isSelected && 'is-flex-direction-column'} is-align-items-center py-5`, styles.team)} onClick={handleOnTeamClick}>
+          <div className={clsx(`is-flex ${isSelected && 'is-flex-direction-column'} is-align-items-center py-5`, styles.organization)} onClick={handleOnOrganizationClick}>
             <Avatar
-              name={role?.team?.name || "Team"}
-              src={role?.team?.avatarUrl}
+              name={role?.organization?.name || "Organization"}
+              src={role?.organization?.avatarUrl}
               size="35"
               round
               textSizeRatio={2.5}
@@ -54,13 +54,13 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
             />
             {isSelected ? (
               <>
-                <p className={`has-text-black-950 has-text-weight-semibold mb-5`}>{role.team?.name}</p>
-                <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Team Account</p>
+                <p className={`has-text-black-950 has-text-weight-semibold mb-5`}>{role.organization?.name}</p>
+                <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Organization Account</p>
               </>
             ) : (
               <div>
-                <p className={`has-text-black-950 has-text-weight-semibold`}>{role.team?.name}</p>
-                <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Team Account</p>
+                <p className={`has-text-black-950 has-text-weight-semibold`}>{role.organization?.name}</p>
+                <p className="has-text-weight-semibold is-uppercase has-text-gray-500 is-size-9">Organization Account</p>
               </div>
             )}
           </div>
@@ -70,8 +70,8 @@ const TeamMenuItem = ({ role, toggleUserMenu, index, isSelected }) => {
           >
             <SettingsIcon size="small" onClick={handleSettingsClick} />
           </a>
-          {/* TODO: Activate when Label Managements with teams is working. */}
-          {/* {checkAccess({name: role?.team?.name}, ViewAdmin) && (
+          {/* TODO: Activate when Label Managements with organizations is working. */}
+          {/* {checkAccess({name: role?.organization?.name}, ViewAdmin) && (
             <a
               className="has-text-blue-600 has-text-weight-semibold is-size-7 is-small ml-40 p-5"
               href="/labels-management"

@@ -46,8 +46,8 @@ const trackRedeemedInvite = (email) => {
   analytics.segmentTrack(analytics.SEGMENT_EVENTS.PRODUCT_SIGNUP, { email });
 };
 
-const trackOrganizationInviteAccepted = (teamId, traits) => {
-  analytics.segmentGroup(teamId, traits);
+const trackOrganizationInviteAccepted = (organizationId, traits) => {
+  analytics.segmentGroup(organizationId, traits);
 };
 
 export default {

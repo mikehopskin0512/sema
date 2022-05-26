@@ -110,6 +110,7 @@ function OrganizationEditPage() {
   };
   const switchToOrganization = async (organization) => {
     const roles = await dispatch(fetchOrganizationsOfUser(token));
+    console.log(roles)
     const activeOrganization = roles.find((role) => role.organization._id === organization._id);
     dispatch(setSelectedOrganization(activeOrganization));
     router.push(`${PATHS.ORGANIZATIONS._}/${organization._id}${PATHS.DASHBOARD}`);
@@ -157,6 +158,7 @@ function OrganizationEditPage() {
         showNotification(null);
       }
       if (organization) {
+        console.log(organization, '!!')
         showNotification(organization);
         switchToOrganization(organization);
       }

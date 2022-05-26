@@ -128,6 +128,7 @@ export const createOrganization = async (data) => {
 
     return organization;
   } catch (err) {
+    console.log("ERRRRRRRRRTR!", err);
     logger.error(err);
     const error = new errors.NotFound(err);
     return error;

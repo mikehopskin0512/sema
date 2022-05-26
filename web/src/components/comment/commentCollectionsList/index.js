@@ -25,7 +25,7 @@ import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
 import { find, isEmpty, uniqBy } from 'lodash';
-import { fetchTeamCollections } from "../../../state/features/organizations[new]/actions";
+import { fetchOrganizationCollections } from "../../../state/features/organizations[new]/actions";
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -34,11 +34,11 @@ const { getCollectionById } = commentsOperations;
 const CommentCollectionsList = () => {
   const dispatch = useDispatch();
   const { checkAccess, isSemaAdmin } = usePermission();
-  const { auth, collectionsState, alerts, teamsState } = useSelector((state) => ({
+  const { auth, collectionsState, alerts, organizationsNewState } = useSelector((state) => ({
     auth: state.authState,
     collectionsState: state.collectionsState,
     alerts: state.alertsState,
-    teamsState: state.teamsState
+    organizationsNewState: state.organizationsNewState
   }));
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState({
@@ -50,8 +50,8 @@ const CommentCollectionsList = () => {
     query: '',
   });
   const { showAlert, alertType, alertLabel } = alerts;
-  const { token, profileViewMode, selectedTeam } = auth;
-  const { teamCollections } = teamsState;
+  const { token, profileViewMode, selectedOrganization } = auth;
+  const { organizationCollections } = organizationsNewState;
 
   const { data = [], isFetching } = collectionsState;
 
@@ -68,7 +68,7 @@ const CommentCollectionsList = () => {
   };
 
   const sortedCollections = useMemo(() => {
-    let collections = profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW ? [...teamCollections] : [...data];
+    let collections = profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW ? [...organizationCollections] : [...data];
     if (!isSemaAdmin()) {
       collections = collections.filter((collection) => collection?.collectionData?.isActive);
     }
@@ -100,7 +100,7 @@ const CommentCollectionsList = () => {
         if (filter.query) {
           filterBool = filterBool && queryBool;
         }
-        if (!isEmpty(selectedTeam)) {
+        if (!isEmpty(selectedOrganization)) {
           filterBool = filterBool && (item?.collectionData?.name?.toLowerCase() !== DEFAULT_COLLECTION_NAME)
         }
         return filterBool;
@@ -114,7 +114,7 @@ const CommentCollectionsList = () => {
       return a >= b ? 1 : -1
     });
     return uniqBy(collections, 'collectionData._id');
-  }, [data, teamCollections, filter, selectedTeam]);
+  }, [data, organizationCollections, filter, selectedOrganization]);
 
   const paginatedInactiveCollections = useMemo(() => {
     const firstPageIndex = (currentPage - 1) * pageSize;
@@ -122,14 +122,14 @@ const CommentCollectionsList = () => {
     // PUT OTHER FILTERS HERE
     const filteredCollections = sortedCollections.filter((collection) => !collection.isActive).slice(firstPageIndex, lastPageIndex);
     return filteredCollections;
-  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
+  }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, organizationCollections]);
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
   const inactiveCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {
-    if (profileViewMode === PROFILE_VIEW_MODE.TEAM_VIEW && selectedTeam?.team?._id) {
-      dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+    if (profileViewMode === PROFILE_VIEW_MODE.ORGANIZATION_VIEW && selectedOrganization?.organization?._id) {
+      dispatch(fetchOrganizationCollections(selectedOrganization?.organization?._id, token));
     } else {
       dispatch(fetchAllUserCollections(token));
     }
@@ -139,13 +139,13 @@ const CommentCollectionsList = () => {
     if (viewMode) {
       setView(viewMode);
     }
-  }, [selectedTeam]);
+  }, [selectedOrganization]);
 
   useEffect(() => {
-    if (isEmpty(selectedTeam) && data) {
+    if (isEmpty(selectedOrganization) && data) {
       setDefaultCollectionAsActive();
     }
-  }, [data, teamCollections]);
+  }, [data, organizationCollections]);
 
   useEffect(() => {
     if (showAlert === true) {
@@ -158,9 +158,9 @@ const CommentCollectionsList = () => {
     localStorage.setItem(SEMA_COLLECTIONS_VIEW_MODE, value);
   }
 
-  const isLoaderNeeded = isEmpty(selectedTeam) ?
+  const isLoaderNeeded = isEmpty(selectedOrganization) ?
     isFetching :
-    !teamCollections.length && teamsState.isFetching;
+    !organizationCollections.length && organizationsNewState.isFetching;
 
   if (isLoaderNeeded) {
     return (

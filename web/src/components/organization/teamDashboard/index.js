@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import usePermission from '../../../hooks/usePermission';
 import Metrics from '../../metrics';
 import RepoCard from '../../repos/repoCard';
-import MinimalOrganizationTable from '../minimalOrganizationTable';
+import MinimalOrganizationTable from '../minimalTeamTable';
 import { PATHS, TAB } from '../../../utils/constants';
 
 const MAX_REPOS = 6;
@@ -47,7 +47,7 @@ const OrganizationDashboard = ({ organization }) => {
             <p className="has-text-deep-black has-text-weight-semibold is-size-4 px-15">Organization Members</p>
             <button
               className="button has-text-blue-700 is-ghost is-pulled-right has-text-weight-semibold"
-              onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${organization}${PATHS.SETTINGS}?tab=${TAB.management}`)}
+              onClick={() => router.push(`${PATHS.ORGANIZATIONS._}/${organizationId}${PATHS.SETTINGS}?tab=${TAB.management}`)}
             >
               View All
             </button>

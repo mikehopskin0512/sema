@@ -17,39 +17,39 @@ const TeamCreateBanner = () => {
   const dispatch = useDispatch();
   const {
     auth,
-    teamsState,
+    organizationsState,
   } = useSelector((state) => ({
     auth: state.authState,
-    teamsState: state.organizationsNewState,
+    organizationsState: state.organizationsNewState,
   }));
   const [active, toggleActive] = useState(false);
   const { user, token } = auth;
   const { isOnboarded } = user;
-  const { organizations: teams } = teamsState;
+  const { organizations } = organizationsState;
 
   const redirectUser = () => {
-    router.push(PATHS.TEAM_CREATE);
+    router.push(PATHS.ORGANIZATION_CREATE);
   };
 
   const disableTeamCreateBanner = () => {
     const banners = { ...user.banners };
-    const updatedUser = { ...user, banners: { ...banners, teamCreate: false } };
+    const updatedUser = { ...user, banners: { ...banners, organizationCreate: false } };
     dispatch(updateUser(updatedUser, token));
   };
 
   useEffect(() => {
-    toggleActive(teams?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
-  }, [pathname, teams, isOnboarded, user]);
+    toggleActive(organizations?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
+  }, [pathname, organizations, isOnboarded, user]);
 
   return (
     <>
       <div className={clsx(styles.banner, 'px-160 py-15 is-flex is-align-items-center', !active && 'is-hidden')}>
         <span className="has-text-weight-semibold mr-10">Sema is better with friends!</span>
-        <span className="mr-20">Create a team to share best practices, and view repos together.</span>
+        <span className="mr-20">Create an organization to share best practices, and view repos together.</span>
         <div className={clsx(styles.hero, '')}>
           <img src="/img/hero-character.svg" alt="hero" />
         </div>
-        <button type="button" className="button mr-30" onClick={redirectUser}>Create a Team</button>
+        <button type="button" className="button mr-30" onClick={redirectUser}>Create an Organization</button>
         <CloseIcon className="is-clickable" onClick={disableTeamCreateBanner} />
       </div>
     </>

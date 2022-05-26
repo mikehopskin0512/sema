@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { OptionsIcon } from '../../Icons';
@@ -8,7 +8,7 @@ import { alertOperations } from '../../../state/features/alerts';
 import { isSemaDefaultCollection } from '../../../utils';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import usePopup from "../../../hooks/usePopup";
-import { fetchTeamCollections } from '../../../state/features/organizations[new]/actions';
+import { fetchOrganizationCollections } from '../../../state/features/organizations[new]/actions';
 import { updateOrganizationCollectionIsActiveAndFetchCollections } from '../../../state/features/organizations[new]/operations';
 
 const { triggerAlert } = alertOperations;
@@ -19,7 +19,7 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const dispatch = useDispatch();
   const { _id = '', isActive, name } = collectionData || {};
-  const { token, selectedTeam } = useSelector((state) => state.authState);
+  const { token, selectedOrganization } = useSelector((state) => state.authState);
 
   const onClickChild = (e) => {
     e.stopPropagation();
@@ -29,11 +29,11 @@ const ActionMenu = ({ collectionData, collectionActive }) => {
     try {
       await dispatch(updateCollection(_id, { collection: { isActive: activeStatus } }, token));
       if(collectionActive) {
-        dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedTeam.team?._id, token));
+        dispatch(updateOrganizationCollectionIsActiveAndFetchCollections(_id, selectedOrganization.organization?._id, token));
       }
       dispatch(triggerAlert(activeStatus ? 'Collection unarchived!' : 'Collection archived!', 'success'));
       dispatch(fetchAllUserCollections(token));
-      dispatch(fetchTeamCollections(selectedTeam?.team?._id, token));
+      dispatch(fetchOrganizationCollections(selectedOrganization?.organization?._id, token));
     } catch (error) {
       dispatch(triggerAlert(activeStatus ? 'Unable to unarchived collection' : 'Unable to archive collection', 'error'));
     }

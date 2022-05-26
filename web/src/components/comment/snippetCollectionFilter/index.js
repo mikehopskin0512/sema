@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
@@ -23,7 +22,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   }));
   const { tags } = tagState;
   const { token } = auth;
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { isOrganizationAdminOrLibraryEditor } = usePermission();
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -127,7 +126,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        {isTeamAdminOrLibraryEditor() && (
+        {isOrganizationAdminOrLibraryEditor() && (
           <div className="column">
             <CustomSelect
               selectProps={{

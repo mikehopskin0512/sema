@@ -2,7 +2,7 @@ import { getAll } from "../state/utils/api";
 
 const checkAvailableUrl = async (teamUrl, token) => {
     const { data } = await getAll(
-        `/api/proxy/teams/check-url/${teamUrl}`,
+        `/api/proxy/organizations/check-url/${teamUrl}`,
         {},
         token
     );

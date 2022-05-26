@@ -1,6 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import { createOrganizationCollection, getDefaultCollections } from '../comments/collections/collectionService';
 
+const { Types: { ObjectId } } = mongoose;
+
 const organizationSchema = new Schema({
   id: String,
   name: { type: String, required: true },

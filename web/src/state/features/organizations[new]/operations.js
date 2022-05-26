@@ -30,4 +30,4 @@ export const updateOrganizationRepositories = (organizationId, repos, token) => 
   }
 }
 
-export default { ...actions, updateTeamCollectionIsActiveAndFetchCollections: updateOrganizationCollectionIsActiveAndFetchCollections, updateTeamRepositories: updateOrganizationRepositories };
+export default { ...actions, updateorganizationCollectionIsActiveAndFetchCollections: updateOrganizationCollectionIsActiveAndFetchCollections, updateorganizationRepositories: updateOrganizationRepositories };

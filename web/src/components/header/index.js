@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import styles from './header.module.scss';
 import HeaderMenu from './HeaderMenu';
-import OrganizationMenuItem from './OrganizationMenuItem';
+import OrganizationMenuItem from './TeamMenuItem';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
@@ -18,7 +18,6 @@ import Logo from '../Logo';
 import { PATHS } from '../../utils/constants';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import UserHeaderNav from './UserHeaderNav';
-import { fetchOrganizationsOfUser } from '../../state/features/organizations[new]/actions';
 
 const { fetchOrganizationsOfUser } = organizationsOperations;
 const { fetchPortfoliosOfUser } = portfoliosOperations;
@@ -60,7 +59,7 @@ const Header = () => {
 
   const handleClick = () => {
     if (selectedOrganization) {
-      return router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization?.team?._id}${PATHS.DASHBOARD}`);
+      return router.push(`${PATHS.ORGANIZATIONS._}/${selectedOrganization?.organization?._id}${PATHS.DASHBOARD}`);
     }
     return router.push(`${PATHS.DASHBOARD}`);
   }
@@ -200,11 +199,11 @@ const Header = () => {
                 </Link>
                 <hr className="navbar-divider" />
                 {roles.map((role, item) => (
-                  <OrganizationMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`team-${item}`} />
+                  <OrganizationMenuItem role={role} toggleUserMenu={toggleUserMenu} key={`organization-${item}`} />
                 ))}
                 <div className="has-background-white p-15">
                   <Link href='/'>
-                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.team)} onClick={toggleUserMenu}>
+                    <div className={clsx("is-flex is-flex-wrap-wrap is-align-items-center py-5", styles.organization)} onClick={toggleUserMenu}>
                       <Avatar
                         name={`${firstName} ${lastName}` || "User"}
                         src={avatarUrl}

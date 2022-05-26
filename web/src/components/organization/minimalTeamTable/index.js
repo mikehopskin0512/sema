@@ -3,10 +3,9 @@ import React, { useMemo } from 'react'
 import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import Avatar from 'react-avatar';
-import { isEmpty } from 'lodash';
 import usePermission from '../../../hooks/usePermission';
 import Table from '../../table';
-import styles from './minimalOrganizationTable.module.scss'
+import styles from './minimalTeamTable.module.scss'
 import { DEFAULT_AVATAR, PATHS, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { differenceInCalendarDays, differenceInHours } from 'date-fns';
 

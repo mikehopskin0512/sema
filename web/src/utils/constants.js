@@ -204,8 +204,8 @@ export const PATHS = {
   PASSWORD_RESET: '/password-reset',
   REPORTS: '/reports',
   SETTINGS: '/settings',
-  TEAM_CREATE: '/teams/add',
-  TEAM_INVITE: '/teams/invite',
+  ORGANIZATION_CREATE: '/organizations/add',
+  ORGANIZATION_INVITE: '/organizations/invite',
   SEMA_ADMIN: '/sema-admin',
   PORTFOLIO: {
     _: '/portfolios',
@@ -234,7 +234,7 @@ export const TEAM_MENU_HEADERS = [
 
 export const PROFILE_VIEW_MODE = {
   INDIVIDUAL_VIEW: 'individual_view',
-  TEAM_VIEW: 'team_view'
+  ORGANIZATION_VIEW: 'team_view'
 };
 
 export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
@@ -284,7 +284,7 @@ export const KEY_CODES = {
 
 export const COLLECTION_TYPES = {
   PERSONAL: 'personal',
-  TEAM: 'team',
+  ORGANIZATION: 'organization',
   COMMUNITY: 'community'
 };
 

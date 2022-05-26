@@ -8,7 +8,7 @@ import Avatar from 'react-avatar';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
-import TeamMenuItem from '../TeamMenuItem';
+import OrganizationMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
@@ -42,7 +42,7 @@ const HeaderMenu = ({
   const dispatch = useDispatch();
   const router = useRouter();
   const { checkAccess } = usePermission();
-  const orderedTeams = Object.values(organizations);
+  const orderedOrganizations = Object.values(organizations);
 
   const toggleUserMenu = (status) => {
     if (userMenu.current) {
@@ -87,11 +87,11 @@ const HeaderMenu = ({
 
   const renderMenuItems = useMemo(() => {
     // Sort organizations, first one should be the selected organization.
-    const selectedOrganizationIndex = orderedTeams.splice(orderedTeams.findIndex(team => team.organization?._id === selectedOrganization?.organization?._id), 1)[0];
-    selectedOrganizationIndex && orderedTeams.unshift(selectedOrganizationIndex);
+    const selectedOrganizationIndex = orderedOrganizations.splice(orderedOrganizations.findIndex(organization => organization.organization?._id === selectedOrganization?.organization?._id), 1)[0];
+    selectedOrganizationIndex && orderedOrganizations.unshift(selectedOrganizationIndex);
 
-    const menuItems = orderedTeams.map((team, index) => (
-      <TeamMenuItem role={team} toggleUserMenu={toggleUserMenu} key={`team-${team._id}`} index={index} isSelected={team.team?._id === selectedOrganization?.organization?._id}/>
+    const menuItems = orderedOrganizations.map((organization, index) => (
+      <OrganizationMenuItem role={organization} toggleUserMenu={toggleUserMenu} key={`organization-${organization._id}`} index={index} isSelected={organization.organization?._id === selectedOrganization?.organization?._id}/>
     ))
 
     const userMenu =
@@ -102,7 +102,7 @@ const HeaderMenu = ({
 
     Object.keys(selectedOrganization).length ? menuItems.push(userMenu) : menuItems.unshift(userMenu);
     return menuItems;
-  }, [orderedTeams]);
+  }, [orderedOrganizations]);
 
   const portfolioRedirect = () => {
     if (portfolios.length === 1) {
@@ -112,7 +112,7 @@ const HeaderMenu = ({
     }
   };
 
-  const isNoTeams = !organizations.length;
+  const isNoOrganizations = !organizations.length;
 
   return (
     <>
@@ -121,11 +121,11 @@ const HeaderMenu = ({
           <TrophyIcon />
         </div>
       </Tooltip>
-      <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
+      <div className={clsx('navbar-item has-dropdown', styles.organization)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>
           {renderMenuItems}
-          <Link href={PATHS.TEAM_CREATE}>
+          <Link href={PATHS.ORGANIZATION_CREATE}>
           <a
             aria-hidden="true"
             type="button"
@@ -133,7 +133,7 @@ const HeaderMenu = ({
             onClick={toggleUserMenu}
           >
             <div>
-              <span>{isNoTeams ? 'Create an Organization' : 'Add an Organization'}</span>
+              <span>{isNoOrganizations ? 'Create an Organization' : 'Add an Organization'}</span>
               <span className="is-size-8 has-text-weight-semibold has-text-primary ml-3">(NEW)</span>
             </div>
           </a>
