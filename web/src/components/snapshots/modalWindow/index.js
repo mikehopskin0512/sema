@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useForm, Controller } from 'react-hook-form';
-import { useSelector, useDispatch } from 'react-redux';
+import { Controller, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
@@ -20,24 +20,43 @@ import { portfoliosOperations } from '../../../state/features/portfolios';
 import { alertOperations } from '../../../state/features/alerts';
 import { parseSnapshotData } from '../../../utils/parsing';
 import Toaster from '../../toaster';
-import useOutsideClick from "../../../utils/useOutsideClick";
+import useOutsideClick from '../../../utils/useOutsideClick';
 import { notify } from '../../toaster/index.js';
 
 import { convertToRaw } from 'draft-js';
+// TODO: import additional styles if needed / should be uncommented or deleted after full RTE implementation
 //import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { createEditorState } from '../../markdownEditor/utils';
 import MarkdownEditor from '../../markdownEditor';
+import SelectField from '../../../components/inputs/selectField';
+import { fetchPortfoliosOfUser } from '../../../state/features/portfolios/actions';
 
-const { updateSnapshot, fetchPortfoliosOfUser } = portfoliosOperations;
+const { updateSnapshot } = portfoliosOperations;
 const { requestUpdateSnapshotSuccess } = snapshotsOperations;
 const { triggerAlert, clearAlert } = alertOperations;
 
-const schema = yup.object()
+const createSnapSchema = yup.object()
+  .shape({
+    title: yup
+      .string()
+      .required('Title is required'),
+    portfolio: yup
+      .object().shape({
+        label: yup.string(),
+        id: yup.string()
+      }).required('Portfolio is required')
+  });
+
+const editSnapSchema = yup.object()
   .shape({
     title: yup
       .string()
       .required('Title is required'),
   });
+
+const getSnapshotSchema = (type) => {
+  return type === SNAPSHOT_MODAL_TYPES.CREATE ? createSnapSchema : editSnapSchema;
+}
 
 export const SNAPSHOT_MODAL_TYPES = {
   CREATE: 'create',
@@ -57,8 +76,6 @@ const SnapshotModal = ({
   snapshotData,
   type,
   dataType = snapshotData?.componentType,
-  startDate,
-  endDate,
 }) => {
   const dispatch = useDispatch();
   const {
@@ -66,9 +83,8 @@ const SnapshotModal = ({
     formState: { errors },
     reset,
     handleSubmit,
-    setValue,
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(getSnapshotSchema(type)),
   });
 
   const { auth, portfolios, alerts } = useSelector((state) => ({
@@ -87,6 +103,9 @@ const SnapshotModal = ({
   useOutsideClick(modalRef, onClose);
 
   const onSubmit = async (data) => {
+    const selectedPortfolio = data.portfolio?.value;
+    const isPortfolioToSet = selectedPortfolio && selectedPortfolio.value !== '-1';
+
     const snapshotDataForSave = {
       userId: user._id,
       title: data.title,
@@ -108,22 +127,29 @@ const SnapshotModal = ({
           onClose(payload.data);
         }
       } else {
-        const snapshot = await postSnapshots({ ...snapshotDataForSave, portfolioId }, token);
-        const snapshotPortfolios = snapshot.data.portfolios;
-        const hasNoPortfolios = !portfolioId && snapshotPortfolios.length === 1;
-        notify('Snapshot was added to your portfolio', {
-          description: (
-            <>
-              <p>You've successfully added this snapshot.</p>
-              {/* This condition shows that the user doesn't have a portfolio yet. */}
-              {hasNoPortfolios ? (
-                <Link href={`/portfolios/${snapshotPortfolios[0]}`}>
-                  <a>Go to the portfolio</a>
+        if (isPortfolioToSet) {
+          await postSnapshots({
+            ...snapshotDataForSave,
+            portfolioId: selectedPortfolio,
+          }, token);
+          dispatch(fetchPortfoliosOfUser(user._id, token));
+          notify('Snapshot was added to your portfolio.', {
+            description: (
+              <>
+                <Link href={`/${user?.identities?.[0]?.username}/portfolio/${portfolioId}`}>
+                  <a>View portfolio</a>
                 </Link>
-              ) : null}
-            </>
-          ),
-        });
+              </>
+            ),
+            duration: 3000,
+          });
+        } else {
+          await postSnapshots({
+            ...snapshotDataForSave,
+          }, token);
+          notify('Snapshot was saved to the Snapshot Library.', { duration: 3000 });
+        }
+
         reset();
         onClose();
       }
@@ -133,7 +159,9 @@ const SnapshotModal = ({
     }
   };
 
+  const defaultSelectValue = { value: '-1', label: 'None' };
   const activityTypeData = useMemo(() => snapshotData?.componentData?.smartComments || [], [snapshotData]);
+  const mappedPortfolios = useMemo(() => [defaultSelectValue, ...portfolios?.map(i => ({ value: i._id, label: i.title }))], [portfolios]);
 
   useEffect(() => {
     if (type === SNAPSHOT_MODAL_TYPES.EDIT && !isEmpty(snapshotData)) {
@@ -177,8 +205,29 @@ const SnapshotModal = ({
               />
             </div>
             <div className="field mb-15">
-            <MarkdownEditor readOnly={false} value={description} setValue={setDescription}/>
+              <MarkdownEditor readOnly={false} value={description} setValue={setDescription}/>
             </div>
+            {type === SNAPSHOT_MODAL_TYPES.CREATE && (
+              <div className="field mb-15">
+                <Controller
+                  name="portfolio"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <SelectField
+                        title='Add to the following portfolio'
+                        placeholder="None"
+                        options={mappedPortfolios}
+                        isRequired
+                        error={errors?.portfolio?.message}
+                        value={field.value}
+                        {...field}
+                      />
+                    )}
+                  }
+                />
+              </div>
+            )}
             <div className="has-background-gray-300 p-10 mb-20" style={containerStyle}>
               {
                 dataType === SNAPSHOT_DATA_TYPES.ACTIVITY && (
@@ -195,14 +244,17 @@ const SnapshotModal = ({
                 <SnapshotChartContainer chartType="tags" {...snapshotData.componentData} />
               }
             </div>
-            <div className="is-flex is-justify-content-right">
-              <button className="button has-text-weight-semibold is-size-7 mx-10" onClick={() => onClose()} type="button">Cancel</button>
-              <button
-                className={clsx('button is-primary has-text-weight-semibold is-size-7 mx-10')}
-                type="submit"
-              >
-                {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save' : 'Save Changes'}
-              </button>
+            <div className="is-flex is-justify-content-space-between is-align-items-center">
+              <p className='has-text-black'>{type === SNAPSHOT_MODAL_TYPES.CREATE ? 'All snapshots will be added to the snapshot library' : ''}</p>
+              <div>
+                <button className="button has-text-weight-semibold is-size-7 mx-10" onClick={() => onClose()} type="button">Cancel</button>
+                <button
+                  className={clsx('button is-primary has-text-weight-semibold is-size-7 mx-10')}
+                  type="submit"
+                >
+                  {type === SNAPSHOT_MODAL_TYPES.CREATE ? 'Save' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           </form>
         </div>
