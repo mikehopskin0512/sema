@@ -4,9 +4,7 @@ import clsx from 'clsx';
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
-import Helmet, {
-  TeamInsightsHelmet
-} from '../../../../components/utils/Helmet';
+import Helmet, { TeamInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
@@ -591,17 +589,19 @@ const TeamInsights = () => {
             snapshotData={{ componentData }}
           />
         )}
-        <div className="is-flex is-align-items-center mb-20">
-          <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">
+        <div className='is-flex is-align-items-center mb-20'>
+          <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>
             Comments {commentView}
           </p>
-        {!isFetching && <div className="is-flex is-align-items-center mb-20">
-          <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">Comments {commentView}</p>
-          <div>
-            <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
-          </div>
         </div>
-        }
+        {!isFetching && (
+          <div className='is-flex is-align-items-center mb-20'>
+            <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>Comments {commentView}</p>
+            <div>
+              <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
+            </div>
+          </div>
+        )}
         <ActivityItemList comments={filteredComments} isLoading={isFetching} />
       </div>
     </div>
