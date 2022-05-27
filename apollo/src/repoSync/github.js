@@ -122,10 +122,12 @@ async function findDuplicate(githubComment, otherComments) {
     const isSameUser =
       comment.githubMetadata.user.login === githubComment.user.login;
     const isSimilarTime =
-      differenceInMinutes(
-        comment.githubMetadata.created_at,
-        new Date(githubComment.created_at)
-      ) <= 1;
+      Math.abs(
+        differenceInMinutes(
+          comment.githubMetadata.created_at,
+          new Date(githubComment.created_at)
+        )
+      ) < 1;
     return isSameUser && isSimilarTime;
   });
 
