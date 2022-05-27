@@ -52,6 +52,10 @@ const smartCommentSchema = new Schema(
       // a user in our database if the comment author
       // exists in Sema.
       required() {
+        // Temporarily allowing old documents to be saved,
+        // see https://semalab.atlassian.net/browse/DESIGN-830
+        if (!this.isNew) return false;
+
         return this.source.origin !== 'repoSync';
       },
     },
