@@ -1,12 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants'
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_ROLES } from '../../../utils/constants';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
@@ -21,19 +21,10 @@ import { orange600 } from '../../../../styles/_colors.module.scss';
 const { triggerAlert } = alertOperations;
 const { updateCollectionIsActiveAndFetchCollections, updateCollection, fetchAllUserCollections } = collectionsOperations;
 
-const Tag = ({ tag, _id, type }) => (
-  <div
-    className={
-      clsx(
-        'tag is-uppercase is-rounded is-size-8 has-text-weight-semibold mr-5 is-clipped my-5',
-        type === 'language' ? 'has-text-primary has-background-primary-light' : 'is-light',
-        styles.tag
-      )
-    }
-    key={`${type}-${tag}-${_id}`}>
-    <p>{tag}</p>
-  </div>
-)
+const MENU_ITEMS_TYPES = {
+  EDIT: 'edit',
+  ARCHIVE: 'archive'
+}
 
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const titleRef = useRef(null);
@@ -42,7 +33,8 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     isTeamAdminOrLibraryEditor,
     isSemaAdmin,
     isIndividualUser,
-    checkTeamPermission
+    checkTeamPermission,
+    IsTeamLibraryEditor
   } = usePermission();
   const popupRef = useRef(null);
   const router = useRouter();
@@ -135,15 +127,23 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const isTeamIconNeeded = collectionData.type === COLLECTION_TYPES.TEAM;
     const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isTeamIconNeeded;
 
-    const isMenuShown = () => {
+    const getMenuItems = () => {
       const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
 
-      if (isTeamAdminOrLibraryEditor() || isSemaAdmin()) return true;
-      if (isTeamAdmin() && isTeamSnippet) return true
-      if (isIndividualUser()) return collectionData.author.toLowerCase() === user.username.toLowerCase()
+      if (isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name))
+        return [MENU_ITEMS_TYPES.EDIT]
 
-      return false;
+      // TODO: add Sema Library Editor role when it will be implemented
+      if (isSemaAdmin()) return [MENU_ITEMS_TYPES.EDIT, MENU_ITEMS_TYPES.ARCHIVE];
+
+      if (IsTeamLibraryEditor && !isSemaAdmin() && isTeamSnippet) return [MENU_ITEMS_TYPES.EDIT];
+
+      if (!isTeamAdminOrLibraryEditor() && selectedTeam?.role === SEMA_ROLES.member) return []
+
+      return [];
     }
+
+    const actualMenuItems = getMenuItems();
 
     return (
       <Link href={`?cid=${_id}`}>
@@ -215,7 +215,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     {
-                      isMenuShown() && (
+                      Boolean(actualMenuItems.length) && (
                         <div className="dropdown-trigger">
                           <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                             <OptionsIcon />
@@ -225,11 +225,13 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     }
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
-                        <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
-                          Edit Collection
-                        </a>
+                        {actualMenuItems.includes(MENU_ITEMS_TYPES.EDIT) && (
+                          <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
+                            Edit Collection
+                          </a>
+                        )}
                         {
-                          !isSemaDefaultCollection(name) && (
+                          actualMenuItems.includes(MENU_ITEMS_TYPES.ARCHIVE) && (
                             <a className='dropdown-item is-clickable'
                                onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
                               {isNotArchived ? 'Archive' : 'Unarchive'} Collection
