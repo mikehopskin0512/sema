@@ -22,7 +22,7 @@ function ActivityItem(props) {
       title = '',
       url = '#',
       user: { login = '' },
-      pull_number = '',
+      pull_number: pullNumber = '',
       commentId = '',
       requester = 'Github User',
     },
@@ -42,15 +42,15 @@ function ActivityItem(props) {
       : ''
   );
 
-  const getPRName = (pull_num, pr_name) => {
+  const getPRName = (number, name) => {
     let prName = '';
-    if (!isEmpty(pr_name)) {
-      prName = pr_name;
+    if (!isEmpty(name)) {
+      prName = name;
     } else {
       prName = 'Pull Request';
     }
-    if (!isEmpty(pull_num)) {
-      prName += ` (#${pull_num})`;
+    if (!isEmpty(number)) {
+      prName += ` (#${number})`;
     }
     return prName;
   };
@@ -66,7 +66,8 @@ function ActivityItem(props) {
 
     if (!isEmpty(commentId)) {
       if (/^r/i.test(commentId)) {
-        return (prUrl += `#discussion_${commentId}`);
+        prUrl += `#discussion_${commentId}`;
+        return prUrl;
       }
       prUrl += `#${commentId}`;
     }
@@ -136,7 +137,7 @@ function ActivityItem(props) {
                 target="_blank"
                 rel="noreferrer"
               >
-                {getPRName(pull_number, title)}
+                {getPRName(pullNumber, title)}
               </a>
               {` by ${requester}`}
             </p>
