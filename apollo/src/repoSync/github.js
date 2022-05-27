@@ -1,5 +1,6 @@
 import { differenceInMinutes } from 'date-fns';
 import Cache from 'caching-map';
+import logger from '../shared/logger';
 import * as jaxon from '../shared/apiJaxon';
 import { findOneByTitle as findReactionByTitle } from '../comments/reaction/reactionService';
 import { findOneByLabel as findTagByLabel } from '../comments/tags/tagService';
@@ -115,9 +116,11 @@ function getType(githubComment) {
 
 async function findDuplicate(githubComment, otherComments) {
   const existing = otherComments.find((comment) => {
+    // At the time of writing, githubMetadata.user.id
+    // contains bogus information. Comparing by login for now.
+    // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
     const isSameUser =
-      comment.githubMetadata.user.id.toString() ===
-      githubComment.user.id.toString();
+      comment.githubMetadata.user.login === githubComment.user.login;
     const isSimilarTime =
       differenceInMinutes(
         comment.githubMetadata.created_at,
@@ -127,5 +130,13 @@ async function findDuplicate(githubComment, otherComments) {
   });
 
   if (existing) return await SmartComment.findById(existing._id);
+
+  const looksLikeSemaComment = githubComment.body.includes('[![sema-logo]');
+  if (looksLikeSemaComment) {
+    logger.warn(
+      'This looks like a Sema comment, yet could not match it to a smart comment in our database',
+      githubComment
+    );
+  }
   return null;
 }

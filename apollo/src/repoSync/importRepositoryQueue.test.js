@@ -1133,7 +1133,12 @@ describe('Import Repository Queue', () => {
           created_at: '2020-12-17T18:35:00Z',
           updated_at: '2020-12-17T20:30:14Z',
           user: {
-            id: '1045023',
+            // At the time of writing, githubMetadata.user.id
+            // contains bogus information. Comparing by login for now.
+            // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
+            // This doesn't match the user ID for pangeaware
+            // on purpose, to ensure the code matches by login.
+            id: '2045024',
             login: 'pangeaware',
           },
           requester: 'jrock17',
