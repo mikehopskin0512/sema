@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from 'react';
+import Dayjs from 'dayjs';
 // import {
 //   EnrichedActivity,
 //   EnrichedUser,
@@ -13,19 +14,16 @@ import {
   Dropdown,
   Link
 } from 'react-activity-feed';
+import { NOTIFICATION_TYPE } from '../../utils/constants';
+import { useOnClickUser, humanizeTimestamp } from './copied_library/utils';
 // import {
-//   humanizeTimestamp,
+// humanizeTimestamp,
 //   useOnClickUser,
 //   userOrDefault,
 //   OnClickUserHandler,
 //   PropsWithElementAttributes
 // } from '../utils';
-// import {
-//   DefaultUT,
-//   DefaultAT,
-//   useTranslationContext,
-//   FeedManager
-// } from '../context';
+import { TranslationContext } from './copied_library/context';
 
 let format = require('string-template');
 
@@ -34,22 +32,10 @@ const getUsers = activities => activities.map(item => item.actor);
 const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
   if (activitiesLen === 1) {
     switch (verb) {
-      case 'like':
-        return t('{actorName} liked your {activityVerb}', {
-          actorName,
-          activityVerb
-        });
-      case 'repost':
-        return t('{actorName} reposted your {activityVerb}', {
-          actorName,
-          activityVerb
-        });
       case 'follow':
-        return t('{actorName} followed you', { actorName });
-      case 'comment':
-        return t('{actorName} commented on your {activityVerb}', {
-          actorName,
-          activityVerb
+      case NOTIFICATION_TYPE.JOINED_SEMA:
+        return t('{actorName} has joined Sema.', {
+          actorName
         });
       default:
         console.warn(
@@ -61,22 +47,10 @@ const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
 
   if (activitiesLen > 1 && activitiesLen < 3) {
     switch (verb) {
-      case 'like':
-        return t('{actorName} and 1 other liked your {activityVerb}', {
-          actorName,
-          activityVerb
-        });
-      case 'repost':
-        return t('{actorName} and 1 other reposted your {activityVerb}', {
-          actorName,
-          activityVerb
-        });
       case 'follow':
-        return t('{actorName} and 1 other followed you', { actorName });
-      case 'comment':
-        return t('{actorName} and 1 other commented on your {activityVerb}', {
-          actorName,
-          activityVerb
+      case NOTIFICATION_TYPE.JOINED_SEMA:
+        return t('{actorName} and 1 other has joined Sema.', {
+          actorName
         });
       default:
         console.warn(
@@ -88,38 +62,12 @@ const getHeaderText = (t, activitiesLen, verb, actorName, activityVerb) => {
 
   const countOtherActors = activitiesLen - 1;
   switch (verb) {
-    case 'like':
-      return t(
-        '{actorName} and {countOtherActors} others liked your {activityVerb}',
-        {
-          actorName,
-          activityVerb,
-          countOtherActors
-        }
-      );
-    case 'repost':
-      return t(
-        '{actorName} and {countOtherActors} others reposted your {activityVerb}',
-        {
-          actorName,
-          activityVerb,
-          countOtherActors
-        }
-      );
     case 'follow':
-      return t('{actorName} and {countOtherActors} others followed you', {
+    case NOTIFICATION_TYPE.JOINED_SEMA:
+      return t('{actorName} and {countOtherActors} others has joined Sema.', {
         actorName,
         countOtherActors
       });
-    case 'comment':
-      return t(
-        '{actorName} and {countOtherActors} others commented on your {activityVerb}',
-        {
-          actorName,
-          activityVerb,
-          countOtherActors
-        }
-      );
     default:
       console.warn(
         'No notification styling found for your verb, please create your own custom Notification group.'
@@ -138,12 +86,11 @@ export const NotificationCustom = ({
 }) => {
   // console.log('\n\n\nactivityGroup', activityGroup);
 
-  // const { t, tDateTimeParser } = useTranslationContext();
   const t = (template, params) => format(template, params);
+  const { tDateTimeParser } = TranslationContext;
   const { activities } = activityGroup;
   console.log('activities', activities);
   const [latestActivity, ...restOfActivities] = activities;
-  console.log('typeof latestActivity.object', typeof latestActivity.object);
 
   let lastObject = {};
   try {
@@ -165,8 +112,8 @@ export const NotificationCustom = ({
     lastActor.data.name,
     lastObject.verb
   );
-  // TODO
-  const handleUserClick = () => {}; //useOnClickUser(onClickUser);
+
+  const handleUserClick = useOnClickUser(onClickUser);
   const handleNotificationClick = onClickNotification
     ? e => {
         e.stopPropagation();
@@ -212,18 +159,17 @@ export const NotificationCustom = ({
         </div>
         <div>
           <small>
-            {latestActivity.time}
-            {/* TODO */}
-            {/* {humanizeTimestamp(latestActivity.time, tDateTimeParser)} */}
+            {humanizeTimestamp(latestActivity.time, tDateTimeParser)}
           </small>
         </div>
-        {latestActivity.verb !== 'follow' && (
+        {/* TODO add logic for different types by AvatarGroup or AttachedActivity */}
+        {/* {latestActivity.verb !== 'follow' && (
           <AttachedActivity activity={latestActivity.object} />
-        )}
+        )} */}
       </div>
 
       <div className="raf-notification__extra">
-        {activities.length > 1 && latestActivity.verb === 'follow' && (
+        {activities.length > 1 /*&& latestActivity.verb === 'follow'*/ && (
           <AvatarGroup
             onClickUser={onClickUser}
             avatarSize={30}

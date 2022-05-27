@@ -356,3 +356,7 @@ export const KNOWLEDGE_BASE_TITLES = [
 export const KNOWLEDGE_BASE_SUMMARIES_URL = 'https://intercom.help/sema-software/en/articles/6147171-how-do-i-use-summaries-in-the-chrome-extension';
 
 export const KNOWLEDGE_BASE_TAGS_URL = 'https://intercom.help/sema-software/en/articles/6147189-how-do-i-use-tags-in-the-chrome-extension';
+
+export const NOTIFICATION_TYPE = {
+  JOINED_SEMA: 'joined_sema'
+};
