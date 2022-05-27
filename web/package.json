@@ -74,6 +74,7 @@
     "redux-thunk": "^2.3.0",
     "sass": "^1.50.1",
     "slugify": "^1.4.5",
+    "string-template": "^1.0.0",
     "toasted-notes": "^3.2.0",
     "use-resize-observer": "^8.0.0",
     "yup": "^0.32.11"

@@ -162,7 +162,6 @@ const Header = () => {
                   selectedTeam={selectedTeam}
                 />
               </div>
-              <NotificationFeed/>
               {/* Hamburger menu (mobile & tablet) */}
               <div className="navbar-start is-hidden-desktop">
                 <UserHeaderNav

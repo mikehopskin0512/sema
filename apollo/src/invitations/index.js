@@ -6,6 +6,7 @@ import path from 'path';
 import { version, orgDomain } from '../config';
 import logger from '../shared/logger';
 import errors from '../shared/errors';
+import { addUserActivity } from '../notifications/notificationService';
 import {
   create,
   deleteInvitation,
@@ -63,6 +64,8 @@ export default (app, passport) => {
       if (!newInvitation) {
         throw new errors.BadRequest('Invitation create error');
       }
+      addUserActivity(userData._id, userData._id, 'invite', 'invited')
+
 
       if (userRecipient) {
         await redeemInvite(newInvitation.token, userRecipient._id);

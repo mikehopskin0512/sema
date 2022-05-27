@@ -7,6 +7,7 @@ import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
 import { useFlags } from '../../launchDarkly';
+import NotificationFeed from '../../notificationFeed';
 
 const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedTeam }) => {
   const { pathname } = useRouter();
@@ -97,6 +98,7 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
             Support
           </a>
         </Link>
+        <NotificationFeed/>
         {/* TODO: Activate if we ever need Support form */}
         {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">

@@ -1,16 +1,15 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { StreamApp, NotificationDropdown } from 'react-activity-feed';
+import { StreamApp, NotificationDropdown, FlatFeed } from 'react-activity-feed';
 import 'react-activity-feed/dist/index.css';
 import useAuthEffect from '../../hooks/useAuthEffect';
 import { notificationsOperations } from '../../state/features/notifications';
-// How to create user tokens: https://getstream.io/activity-feeds/docs/node/auth_and_permissions/?language=javascript#user-tokens
+import { NotificationCustom, NotificationCustom2 } from './NotificationCustom';
 
 const { fetchNotificationsToken } = notificationsOperations;
 
 const NotificationFeed = () => {
   const APP_KEY = '';
   const APP_ID = '';
-//   console.log("Header -> auth", auth)
   const dispatch = useDispatch();
   const auth = useSelector(state => state.authState);
   const { user = {}, token } = auth;
@@ -19,10 +18,17 @@ const NotificationFeed = () => {
     dispatch(fetchNotificationsToken(token));
   }, [user, dispatch]);
   return (
-    <div style={{ width: '600px', margin: '0 auto' }}>
+    // style={{ width: '600px', margin: '0 auto' }}
+    <div>
       {notificationsToken && (
         <StreamApp apiKey={APP_KEY} appId={APP_ID} token={notificationsToken}>
-          <NotificationDropdown />
+          <NotificationDropdown
+            feedGroup="notification"
+            // userId={props.userId}
+            notify={true}
+            right
+            Group={NotificationCustom}
+          />
         </StreamApp>
       )}
     </div>
