@@ -15,7 +15,8 @@ import {
   SEMA_CORPORATE_TEAM_ID,
   SEMA_COLLECTIONS_VIEW_MODE,
   NUM_PER_PAGE,
-  PROFILE_VIEW_MODE
+  PROFILE_VIEW_MODE,
+  COLLECTION_TYPE
 } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
@@ -78,9 +79,9 @@ const CommentCollectionsList = () => {
       if (item.collectionData) {
         const labelsIndex = item?.collectionData.guides ? filter.labels?.findIndex((tag) => item.collectionData.guides.findIndex((commentTag) => commentTag.toLowerCase() === tag.label.toLowerCase()) !== -1) : -1;
         const languagesIndex = item?.collectionData.languages ? filter.languages?.findIndex((tag) => item.collectionData.languages.findIndex((commentTag) => commentTag.toLowerCase() === tag.label.toLowerCase()) !== -1) : -1;
-        const sourcesIndex = item?.collectionData.source ? filter.sources?.findIndex(({value}) => value === item?.collectionData.source) : -1;
+        const sourcesIndex = item?.collectionData.source ? filter.sources?.findIndex(({ value }) => value === item?.collectionData.source) : -1;
         const authorsIndex = item?.collectionData.author ? filter.authors?.findIndex((author) => author.value.toLowerCase() === item.collectionData.author.toLowerCase()) : -1;
-        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.isActive) : -1;
+        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.collectionData.isActive) : -1;
 
         const queryBool = item?.collectionData?.name.toLowerCase().includes(filter.query?.toLowerCase());
         let filterBool = true;
@@ -111,9 +112,9 @@ const CommentCollectionsList = () => {
     }).sort((_a, _b) => {
       const a = _a.collectionData?.name.toLowerCase();
       const b = _b.collectionData?.name.toLowerCase();
-      if (a === DEFAULT_COLLECTION_NAME) return -1;
-      if (b === DEFAULT_COLLECTION_NAME) return 1;
-      return a >= b ? 1 : -1
+      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.TEAM) return -1;
+      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.TEAM) return 1;
+      return a >= b ? 1 : -1;
     });
     return uniqBy(collections, 'collectionData._id');
   }, [data, teamCollections, filter, selectedTeam]);
@@ -127,6 +128,7 @@ const CommentCollectionsList = () => {
   }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, teamCollections]);
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
+
   const inactiveCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {

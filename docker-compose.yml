@@ -64,7 +64,7 @@ services:
     volumes:
       - ./apollo:/usr/app
       - /usr/app/node_modules
-    command: migrate-mongo up
+    command: npm run migrate
     depends_on:
       - mongodb
     container_name: phoenix.apollo.migrations.local

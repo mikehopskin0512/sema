@@ -14,8 +14,10 @@ import {
   startOfDay,
   differenceInDays,
   addDays,
+  isBefore,
+  isSameDay,
 } from 'date-fns';
-import { findIndex, range, reverse, round } from 'lodash';
+import { findIndex, isEmpty, range, reverse } from 'lodash';
 import { DAYS_IN_WEEK, EMOJIS, TAGS } from './constants';
 
 const checkifEndOfMonth = (startDay, endDay, endWeekDay) => {
@@ -43,6 +45,9 @@ const mergeTwoData = (reactions, type) => {
       });
       chart.push(item);
     }
+    if (currentIndex === reactions.length - 1) {
+      chart.push(currentValue)
+    }
     return currentValue;
   });
   return chart;
@@ -53,7 +58,7 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
   const tagsArr = [];
   let day = 0;
   // Should add +2 here because it's our step for the graph data splitting
-  const countedDays = diff + 2;
+  const countedDays = diff + 1;
   // Create Array of data for the BarChart
   while (day < countedDays) {
     const thisDay = subDays(endOfDay(new Date(endDate)), day);
@@ -90,12 +95,15 @@ export const generateChartDataByDays = (smartcomments, diff, startDate, endDate)
     reactions = mergeTwoData(reactions, 'd');
     tags = reduceTagsData(tags, 'd')
   }
+  console.log(reactions)
   return { reactionsByDay: reactions, tagsByDay: tags };
 }
 
 export const generateChartDataByWeeks = (smartcomments, startDate, endDate) => {
-  const weeks = getWeekByDateRange(startOfDay(new Date(startDate)), endOfDay(new Date(endDate)));
-  let { weekRange, tagsArr, reactionsByWeek } = getWeekRange(weeks);
+  startDate = new Date(startDate);
+  endDate = endOfDay(new Date(endDate));
+  const weeks = getWeekByDateRange(startOfDay(startDate), endDate);
+  let { weekRange, tagsArr, reactionsByWeek } = getWeekRange(weeks, startDate, endDate);
   weekRange = [...weekRange].reverse();
   let tagsByWeek = createTags(tagsArr);
   // Separate comments within and outside the date range
@@ -368,15 +376,16 @@ const getWeekByDateRange = (startDate, endDate) => {
     if (day === WEEKS_COUNT - 1) {
       return endOfDay(startDate);
     }
-    return subDays(endDate, DAYS_IN_WEEK * day)
+    const date = subDays(endDate, DAYS_IN_WEEK * day);
+    return date
   });
   return reverse(daysOfWeekRange);
 }
 
-const getWeekRange = (weeks) => {
+const getWeekRange = (weeks, startDate, endDate) => {
   let reactionsByWeek = [];
   const tagsArr = [];
-  const weekRange = reverse(weeks).map((week, index) => {
+  let weekRange = reverse(weeks).map((week, index) => {
     let startDay = startOfDay(new Date(week))
     let endDay = endOfDay(new Date(week));
     if (weeks[index + 1]) {
@@ -384,8 +393,12 @@ const getWeekRange = (weeks) => {
     } else {
       startDay = startOfWeek(new Date(week))
     }
-    // const startDay = new Date(week);
-    // const endDay = endOfWeek(new Date(week));
+    if (isBefore(startDay, startDate)) {
+      startDay = startOfDay(startDate)
+    }
+    if (isSameDay(startDay, endDay)) {
+      return {};
+    }
     const startWeekDay = format(startDay, 'MMM dd');
     let endWeekDay = format(endDay, 'dd');
     endWeekDay = checkifEndOfMonth(startDay, endDay, endWeekDay);
@@ -410,6 +423,7 @@ const getWeekRange = (weeks) => {
       endDay
     };
   });
+  weekRange = weekRange.filter((week) => !isEmpty(week))
   return { weekRange, reactionsByWeek, tagsArr };
 }
 

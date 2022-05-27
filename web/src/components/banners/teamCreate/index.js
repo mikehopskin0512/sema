@@ -11,7 +11,7 @@ const { updateUser } = authOperations;
 
 const ENABLED_PAGES = [PATHS.DASHBOARD, PATHS.PERSONAL_INSIGHTS, PATHS.INVITATIONS];
 
-const TeamCreateBanner = () => {
+function TeamCreateBanner() {
   const router = useRouter();
   const { pathname } = router;
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ const TeamCreateBanner = () => {
   const [active, toggleActive] = useState(false);
   const { user, token } = auth;
   const { isOnboarded } = user;
-  const { teams } = teamsState;
+  const { teams, fetchedTeams } = teamsState;
 
   const redirectUser = () => {
     router.push(PATHS.TEAM_CREATE);
@@ -38,12 +38,11 @@ const TeamCreateBanner = () => {
   };
 
   useEffect(() => {
-    toggleActive(teams?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
-  }, [pathname, teams, isOnboarded, user]);
+    toggleActive(fetchedTeams && teams?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
+  }, [fetchedTeams, pathname, teams, isOnboarded, user]);
 
-  return (
-    <>
-      <div className={clsx(styles.banner, 'px-160 py-15 is-flex is-align-items-center', !active && 'is-hidden')}>
+  return active && (
+    <div className={clsx(styles.banner, 'px-160 py-15 is-flex is-align-items-center')}>
         <span className="has-text-weight-semibold mr-10">Sema is better with friends!</span>
         <span className="mr-20">Create a team to share best practices, and view repos together.</span>
         <div className={clsx(styles.hero, '')}>
@@ -52,8 +51,7 @@ const TeamCreateBanner = () => {
         <button type="button" className="button mr-30" onClick={redirectUser}>Create a Team</button>
         <CloseIcon className="is-clickable" onClick={disableTeamCreateBanner} />
       </div>
-    </>
   );
-};
+}
 
 export default TeamCreateBanner;

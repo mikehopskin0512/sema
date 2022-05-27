@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import toaster from 'toasted-notes';
-import Router from 'next/router';  
-import { RouterContext } from 'next/dist/next-server/lib/router-context';  
+import Router from 'next/router';
+import { RouterContext } from 'next/dist/next-server/lib/router-context';
 import {
   AlertFilledIcon,
   CheckFilledIcon,
@@ -31,7 +31,7 @@ function ToasterElement({ onClose, description, title, type, subtitle }) {
       <div className="is-flex is-flex-direction-column">
         <div className={`${styles.title} has-text-weight-semibold`}>{title}</div>
         {!!subtitle && <div className={`${styles.subtitle}`}>{subtitle}</div>}
-        {description && <div className="mt-8 is-size-7">
+        {description && <div className="mt-8 is-size-7" onClick={onClose}>
           {description}
         </div>}
       </div>
@@ -71,7 +71,7 @@ const notify = (
   }
   return toaster.notify(
     ({ onClose }) => (
-      <RouterContext.Provider value={Router}>  
+      <RouterContext.Provider value={Router}>
         <ToasterElement type={type} onClose={onClose} title={message} subtitle={subtitle} description={description} />
       </RouterContext.Provider>
     ),

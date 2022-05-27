@@ -7,7 +7,9 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CameraIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, PdfIcon, ShareIcon } from '../../Icons';
+import { AlertFilledIcon, CameraIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, PdfIcon,
+  ShareIcon,
+} from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
