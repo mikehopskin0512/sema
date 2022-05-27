@@ -1,5 +1,6 @@
 import { differenceInMinutes } from 'date-fns';
 import Cache from 'caching-map';
+import { findBestMatch } from 'string-similarity';
 import logger from '../shared/logger';
 import * as jaxon from '../shared/apiJaxon';
 import { findOneByTitle as findReactionByTitle } from '../comments/reaction/reactionService';
@@ -115,7 +116,7 @@ function getType(githubComment) {
 }
 
 async function findDuplicate(githubComment, otherComments) {
-  const existing = otherComments.find((comment) => {
+  const candidates = otherComments.filter((comment) => {
     // At the time of writing, githubMetadata.user.id
     // contains bogus information. Comparing by login for now.
     // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
@@ -131,14 +132,22 @@ async function findDuplicate(githubComment, otherComments) {
     return isSameUser && isSimilarTime;
   });
 
-  if (existing) return await SmartComment.findById(existing._id);
-
-  const looksLikeSemaComment = githubComment.body.includes('[![sema-logo]');
-  if (looksLikeSemaComment) {
-    logger.warn(
-      'This looks like a Sema comment, yet could not match it to a smart comment in our database',
-      githubComment
-    );
+  if (candidates.length === 0) {
+    const looksLikeSemaComment = githubComment.body.includes('[![sema-logo]');
+    if (looksLikeSemaComment) {
+      logger.warn(
+        'This looks like a Sema comment, yet could not match it to a smart comment in our database',
+        githubComment
+      );
+    }
+    return null;
   }
-  return null;
+
+  const { bestMatchIndex } = findBestMatch(
+    githubComment.body,
+    candidates.map((c) => c.comment)
+  );
+  const existing = candidates[bestMatchIndex];
+
+  return await SmartComment.findById(existing._id);
 }
