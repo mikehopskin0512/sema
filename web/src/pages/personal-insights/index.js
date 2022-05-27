@@ -50,8 +50,7 @@ const PersonalInsights = () => {
   }));
   const { token, user } = auth;
   const githubUser = user.identities?.[0];
-  // const { isFetching } = comments;
-  const isFetching = true;
+  const { isFetching } = comments;
   const [totalSmartComments, setTotalSmartComments] = useState(0);
   const [topTags, setTopTags] = useState([]);
   const [topReactions, setTopReactions] = useState([]);
