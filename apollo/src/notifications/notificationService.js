@@ -51,8 +51,7 @@ export const addUserActivity = async (
     verb,
     object: {
       verb: activityVerb
-    },
-    message
+    }
   };
 
   const rsp = await userFeed.addActivity(activity_data);

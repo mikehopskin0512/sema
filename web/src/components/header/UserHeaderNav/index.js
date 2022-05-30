@@ -98,7 +98,6 @@ const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, sel
             Support
           </a>
         </Link>
-        <NotificationFeed/>
         {/* TODO: Activate if we ever need Support form */}
         {/*
         <div aria-hidden="true" onClick={openSupportForm} className="is-flex is-align-items-center">

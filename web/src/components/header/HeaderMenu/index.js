@@ -11,6 +11,7 @@ import styles from '../header.module.scss';
 import TeamMenuItem from '../TeamMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import NotificationFeed from '../../notificationFeed';
 import { authOperations } from '../../../state/features/auth';
 import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
@@ -117,10 +118,13 @@ const HeaderMenu = ({
   return (
     <>
       <Tooltip text={'Here is your Developer Portfolio'}>
-        <div onClick={() => portfolioRedirect()} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px', styles['portfolio-container'])}>
+        <div onClick={() => portfolioRedirect()} className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px mx-12', styles['portfolio-container'])}>
           <TrophyIcon />
         </div>
       </Tooltip>
+      <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['portfolio-container'])}>
+          <NotificationFeed />
+      </div>
       <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>

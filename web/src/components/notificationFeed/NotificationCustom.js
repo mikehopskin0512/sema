@@ -127,7 +127,7 @@ export const NotificationCustom = ({
       className={
         className ??
         `raf-notification ${
-          activityGroup.is_read ? 'raf-notification--read' : ''
+          activityGroup.is_seen ? 'raf-notification--read' : ''
         }`
       }
       style={style}
