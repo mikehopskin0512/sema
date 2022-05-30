@@ -1,11 +1,7 @@
 import { connect } from 'getstream';
-
-const APP_KEY = '';
-const API_KEY_SECRET =
-  '';
-const APP_ID = '';
-
-const client = connect(APP_KEY, API_KEY_SECRET, APP_ID);
+import { NOTIFICATION_TYPE } from '../constants';
+import { getstream } from '../config';
+const client = connect(getstream.apiKey, getstream.apiKeySecret, getstream.appId);
 
 export const getUserNotificationToken = userId => {
   return client.createUserToken(userId.toString());
