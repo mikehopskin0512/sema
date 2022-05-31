@@ -8,7 +8,7 @@ import CustomSelect from '../../activity/select';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { tagsOperations } from '../../../state/features/tags';
 import { addTags } from '../../../utils';
-import { DROPDOWN_SORTING_TYPES } from '../../../utils/constants';
+import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
 import usePermission from '../../../hooks/usePermission';
 import styles from './snippetCollectionFilter.module.scss';
 import { gray500 } from '../../../../styles/_colors.module.scss';
@@ -23,7 +23,8 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   }));
   const { tags } = tagState;
   const { token } = auth;
-  const { isTeamAdminOrLibraryEditor } = usePermission();
+  const { checkAccess, isTeamAdminOrLibraryEditor } = usePermission();
+  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
@@ -70,7 +71,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   return (
     <>
       <div className="p-0 mb-0 columns is-multiline is-vcentered">
-        <div className="column">
+        <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: addTags(tags, ['guide', 'other', 'custom']),
@@ -84,7 +85,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        <div className="column">
+        <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: addTags(tags, ['language']),
@@ -98,7 +99,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        <div className="column">
+        <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: sources,
@@ -112,7 +113,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        <div className="column">
+        {isTeamAdminOrLibraryEditor() && <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: authors,
@@ -126,9 +127,9 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             showCheckbox
             outlined
           />
-        </div>
-        {isTeamAdminOrLibraryEditor() && (
-          <div className="column">
+        </div>}
+        {isSemaAdminOrLibraryEditor && (
+          <div className={clsx(`column ${styles['filter-box']}`)}>
             <CustomSelect
               selectProps={{
                 options: statusOptions,
