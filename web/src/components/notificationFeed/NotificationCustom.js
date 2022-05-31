@@ -1,28 +1,8 @@
 import React, { SyntheticEvent } from 'react';
-import Dayjs from 'dayjs';
-// import {
-//   EnrichedActivity,
-//   EnrichedUser,
-//   NotificationActivityEnriched,
-//   UR
-// } from 'getstream';
-// import { TFunction } from 'i18next';
-import {
-  Avatar,
-  AvatarGroup,
-  AttachedActivity,
-  Dropdown,
-  Link
-} from 'react-activity-feed';
+import { Avatar, Dropdown, Link } from 'react-activity-feed';
 import { NOTIFICATION_TYPE } from '../../utils/constants';
 import { useOnClickUser, humanizeTimestamp } from './copied_library/utils';
-// import {
-// humanizeTimestamp,
-//   useOnClickUser,
-//   userOrDefault,
-//   OnClickUserHandler,
-//   PropsWithElementAttributes
-// } from '../utils';
+import { AvatarGroupCustom } from './AvatarGroupCustom';
 import { TranslationContext } from './copied_library/context';
 
 let format = require('string-template');
@@ -84,12 +64,9 @@ export const NotificationCustom = ({
   className,
   style
 }) => {
-  // console.log('\n\n\nactivityGroup', activityGroup);
-
   const t = (template, params) => format(template, params);
   const { tDateTimeParser } = TranslationContext;
   const { activities } = activityGroup;
-  console.log('activities', activities);
   const [latestActivity, ...restOfActivities] = activities;
 
   let lastObject = {};
@@ -103,7 +80,6 @@ export const NotificationCustom = ({
     return null;
   }
 
-  console.log('lastObject', lastObject);
   const lastActor = latestActivity.actor; // userOrDefault
   const headerText = getHeaderText(
     t,
@@ -170,7 +146,7 @@ export const NotificationCustom = ({
 
       <div className="raf-notification__extra">
         {activities.length > 1 /*&& latestActivity.verb === 'follow'*/ && (
-          <AvatarGroup
+          <AvatarGroupCustom
             onClickUser={onClickUser}
             avatarSize={30}
             users={getUsers(restOfActivities)}

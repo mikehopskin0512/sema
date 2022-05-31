@@ -1,4 +1,4 @@
-@import "../../../styles/_colors.module.scss";
+@import '../../../styles/_colors.module.scss';
 
 $text-color: $white-50;
 $background-color: $black-900;
@@ -48,4 +48,11 @@ $margin: 20px;
   right: calc(100% + #{$margin});
   top: 50%;
   transform: translateX(0) translateY(-50%);
+}
+
+.top-left {
+  left: auto;
+  right: calc(#{$margin});
+  top: calc(#{$margin} * -1);
+  transform: translateX(0);
 }
