@@ -183,7 +183,8 @@ export default (app, passport) => {
   route.get('/summary', passport.authenticate(['bearer'], { session: false }), async (req, res) => {
     const { user, organizationId = '', individual = false } = req.query;
     try {
-      const summary = await getSmartCommentsTagsReactions({ user, organizationId, individual });
+      const fields = { _id: 1, reaction: 1, tags: 1, githubMetadata: 1, createdAt: 1, userId: 1 }
+      const summary = await getSmartCommentsTagsReactions({ user, organizationId, individual, fields });
       return res.status(201).send({
         ...summary,
         smartComments: summary.smartComments.map((comment) => comment._id),

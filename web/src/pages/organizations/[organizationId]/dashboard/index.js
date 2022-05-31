@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import OrganizationDashboard from '../../../../components/organization/teamDashboard';
 import withLayout from '../../../../components/layout';
 import { OrganizationDashboardHelmet } from '../../../../components/utils/Helmet';
-import { PATHS, SEMA_FAQ_SLUGS, SEMA_FAQ_URL } from '../../../../utils/constants';
+import { PATHS, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
 import styles from './dashboard.module.scss';
 import { organizationsOperations } from '../../../../state/features/organizations[new]';
 import withSelectedOrganization from '@/components/auth/withSelectedOrganization';
@@ -162,7 +162,7 @@ const Dashboard = () => {
                 target="_blank"
                 rel="noreferrer"
                 className="is-text"
-                href={`${SEMA_FAQ_URL}#${SEMA_FAQ_SLUGS.SNIPPETS}`}
+                href={`${SEMA_INTERCOM_FAQ_URL}/${SEMA_FAQ_SLUGS.LEARN_MORE_ABOUT_SNIPPETS}`}
               >
                 Tell me more.
               </a>

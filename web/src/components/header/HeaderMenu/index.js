@@ -105,11 +105,7 @@ const HeaderMenu = ({
   }, [orderedOrganizations]);
 
   const portfolioRedirect = () => {
-    if (portfolios.length === 1) {
-      router.push(`${PATHS.PORTFOLIO.VIEW(handle, portfolioId)}`);
-    } else {
-      router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
-    }
+    router.push(`${PATHS.PORTFOLIO.PORTFOLIOS}`);
   };
 
   const isNoOrganizations = !organizations.length;

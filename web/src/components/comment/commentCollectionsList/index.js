@@ -15,7 +15,8 @@ import {
   SEMA_CORPORATE_ORGANIZATION_ID,
   SEMA_COLLECTIONS_VIEW_MODE,
   NUM_PER_PAGE,
-  PROFILE_VIEW_MODE
+  PROFILE_VIEW_MODE,
+  COLLECTION_TYPE
 } from '../../../utils/constants';
 import { collectionsOperations } from "../../../state/features/collections";
 import { alertOperations } from '../../../state/features/alerts';
@@ -24,8 +25,10 @@ import { ListIcon, GridIcon } from '../../../components/Icons';
 import Pagination from '../../../components/pagination';
 import { commentsOperations } from '../../../state/features/comments';
 import styles from './commentCollectionsList.module.scss';
-import { find, isEmpty, uniqBy } from 'lodash';
+import { isEmpty, range, uniqBy } from 'lodash';
 import { fetchOrganizationCollections } from "../../../state/features/organizations[new]/actions";
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
+import SnippetsHeaderSkeleton from '../../../components/skeletons/snippetsHeaderSkeleton';
 
 const { clearAlert } = alertOperations;
 const { fetchAllUserCollections } = collectionsOperations;
@@ -76,9 +79,9 @@ const CommentCollectionsList = () => {
       if (item.collectionData) {
         const labelsIndex = item?.collectionData.guides ? filter.labels?.findIndex((tag) => item.collectionData.guides.findIndex((commentTag) => commentTag.toLowerCase() === tag.label.toLowerCase()) !== -1) : -1;
         const languagesIndex = item?.collectionData.languages ? filter.languages?.findIndex((tag) => item.collectionData.languages.findIndex((commentTag) => commentTag.toLowerCase() === tag.label.toLowerCase()) !== -1) : -1;
-        const sourcesIndex = item?.collectionData.source ? filter.sources?.findIndex(({value}) => value === item?.collectionData.source) : -1;
+        const sourcesIndex = item?.collectionData.source ? filter.sources?.findIndex(({ value }) => value === item?.collectionData.source) : -1;
         const authorsIndex = item?.collectionData.author ? filter.authors?.findIndex((author) => author.value.toLowerCase() === item.collectionData.author.toLowerCase()) : -1;
-        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.isActive) : -1;
+        const statusIndex = (typeof item?.isActive === 'boolean') ? filter.status?.findIndex((status) => status.value === item.collectionData.isActive) : -1;
 
         const queryBool = item?.collectionData?.name.toLowerCase().includes(filter.query?.toLowerCase());
         let filterBool = true;
@@ -109,9 +112,9 @@ const CommentCollectionsList = () => {
     }).sort((_a, _b) => {
       const a = _a.collectionData?.name.toLowerCase();
       const b = _b.collectionData?.name.toLowerCase();
-      if (a === DEFAULT_COLLECTION_NAME) return -1;
-      if (b === DEFAULT_COLLECTION_NAME) return 1;
-      return a >= b ? 1 : -1
+      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.TEAM) return -1;
+      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.TEAM) return 1;
+      return a >= b ? 1 : -1;
     });
     return uniqBy(collections, 'collectionData._id');
   }, [data, organizationCollections, filter, selectedOrganization]);
@@ -125,6 +128,7 @@ const CommentCollectionsList = () => {
   }, [currentPage, pageSize, isFetching, filter, sortedCollections, data, organizationCollections]);
 
   const activeCollections = sortedCollections.filter((collection) => collection.isActive);
+
   const inactiveCollections = sortedCollections.filter((collection) => !collection.isActive);
 
   useEffect(() => {
@@ -161,14 +165,6 @@ const CommentCollectionsList = () => {
   const isLoaderNeeded = isEmpty(selectedOrganization) ?
     isFetching :
     !organizationCollections.length && organizationsNewState.isFetching;
-
-  if (isLoaderNeeded) {
-    return (
-      <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '60vh' }}>
-        <Loader />
-      </div>
-    )
-  }
 
   return (
     <div>
@@ -210,11 +206,28 @@ const CommentCollectionsList = () => {
             collections={sortedCollections}
           />
         </div>
-        <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
-        <p className="is-size-6 has-text-black-950 mb-15 px-10">
-          Snippets from these collections will be suggested as you create code reviews
-        </p>
-        {view === 'grid' ? (
+        {isLoaderNeeded ? <div className={styles['snippet-title-skeleton']}><SnippetsHeaderSkeleton /></div> : (
+          <>
+            <p className="has-text-weight-semibold has-text-black-950 is-size-4 p-10">Active Collections ({activeCollections.length})</p>
+            <p className="is-size-6 has-text-black-950 mb-15 px-10">
+              Snippets from these collections will be suggested as you create code reviews
+            </p>
+          </>
+        )}
+        {isLoaderNeeded && (
+          <>
+            <div className="is-flex is-justify-content-flex-start is-flex-wrap-wrap">
+              {range(9).map(_ => (
+                <div className={clsx('p-10 is-flex is-clickable', styles['card-wrapper'])} aria-hidden="true">
+                  <div className={styles['snippet-card-wrapper']}>
+                    <RepoSkeleton />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        {view === 'grid' && !isLoaderNeeded ? (
           <CardList collections={activeCollections || []} />
         ) : (
           <Table
@@ -227,7 +240,7 @@ const CommentCollectionsList = () => {
           />
         )}
         <p className="has-text-weight-semibold has-text-black-950 is-size-4 mt-60 p-10">Other Collections ({inactiveCollections.length})</p>
-        {view === 'grid' ? (
+        {view === 'grid' && !isLoaderNeeded ? (
           <>
             <CardList type="others" collections={paginatedInactiveCollections.slice(0, pageSize * currentPage) || []} />
           </>

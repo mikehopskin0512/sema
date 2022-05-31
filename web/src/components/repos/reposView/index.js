@@ -17,7 +17,8 @@ const ReposView = ({
   type = 'user',
   onSearchChange,
   searchQuery,
-  withSearch
+  withSearch,
+  isLoaded
 }) => {
   const { githubUser, repositories, organizations } = useSelector((state) => ({
     githubUser: state.authState.user.identities?.[0],
@@ -65,6 +66,7 @@ const ReposView = ({
           search={searchQuery}
           onSearchChange={onSearchChange}
           withSearch={withSearch}
+          isLoaded={isLoaded}
         />
         {isEmptyRepo && <EmptyRepo />}
       </div>

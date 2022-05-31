@@ -53,7 +53,7 @@ const DateRangeSelector = (props) => {
     start, end, onChange, isRight = false, buttonProps = {}, outlined, onChangeFilter
   } = props;
   const popupRef = useRef(null);
-  const [selectedRange, setSelectedRange] = useState('allTime');
+  const [selectedRange, setSelectedRange] = useState('last30Days');
   const [focusedInput, setFocusedInput] = useState('startDate');
   const { isOpen, toggleMenu, closeMenu } = usePopup(popupRef);
   const [startDate, setStartDate] = useState(null);
@@ -83,7 +83,7 @@ const DateRangeSelector = (props) => {
   }, [selectedRange]);
 
   useEffect(() => {
-    setSelectedRange('allTime');
+    setSelectedRange('last30Days');
   }, []);
 
   const setAllTime = () => {
