@@ -88,7 +88,7 @@ const CollectionRow = ({ data }) => {
                 <div className="is-flex is-align-items-center mr-10">
                   <PlusIcon size="small" />
                 </div>
-                Add a snippet
+                New Snippet
               </div>
             )}
           </div>
