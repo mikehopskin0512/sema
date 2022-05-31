@@ -28,19 +28,19 @@ const deleteorganizationsForUser = async (db, userId) => {
   if (organizationsForUser && organizationsForUser.length > 0) {
     await Promise.all(organizationsForUser.map(async (organizationForUser) => {
       const organizationsCollectionIds = organizationForUser.collections ? organizationForUser.collections.map(item => item.collectionData) : [];
-      const teamsDefaultCollections = await db.collection('collections').find({ _id: { $in: teamsCollectionIds }, name: `${teamForUser.name}'s Snippets` }).toArray();
-      const defaultCollectionIds = teamsDefaultCollections ? teamsDefaultCollections.map(item => item._id) : [];
+      const organizationsDefaultCollections = await db.collection('collections').find({ _id: { $in: organizationsCollectionIds }, name: `${organizationForUser.name}'s Snippets` }).toArray();
+      const defaultCollectionIds = organizationsDefaultCollections ? organizationsDefaultCollections.map(item => item._id) : [];
       // delete all snippets under My Snippets collection
-      if (teamsDefaultCollections && teamsDefaultCollections.length > 0) {
+      if (organizationsDefaultCollections && organizationsDefaultCollections.length > 0) {
         console.log(`-- deleting snippets for the collections for the user`);
         console.log(defaultCollectionIds);
         await db.collection('suggestedComments').deleteMany({ collectionId: { $in: defaultCollectionIds } });
       }
-      // delete the team's collection
+      // delete the organization's collection
       await db.collection('collections').deleteMany({ _id: { $in: defaultCollectionIds } });
     }));
-    // delete all teams created by the user
-    await db.collection('teams').deleteMany({ createdBy: userId });
+    // delete all organizations created by the user
+    await db.collection('organizations').deleteMany({ createdBy: userId });
   }
 }
 
@@ -67,7 +67,7 @@ module.exports = {
       console.log(`-- deleting userRole for the user`);
       await deleteUserRoleForUser(db, user._id);
 
-      // remove teams created by these invalid users
+      // remove organizations created by these invalid users
       console.log(`-- deleting team created by the user`);
       await deleteTeamsForUser(db, user._id);
 

@@ -38,7 +38,7 @@ function OrganizationCreateBanner() {
   };
 
   useEffect(() => {
-    toggleActive(fetchedOrganizations && organizations?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
+    toggleActive(fetchedOrganizations && organizations?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.organizationCreate);
   }, [fetchedOrganizations, pathname, organizations, isOnboarded, user]);
 
   if (!active) {

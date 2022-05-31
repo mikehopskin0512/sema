@@ -136,7 +136,7 @@ export const GITHUB_URL = 'https://github.com';
 
 export const DEFAULT_COLLECTION_NAME = 'my snippets';
 
-export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Team';
+export const SEMA_CORPORATE_ORGANIZATION_NAME = 'Sema Corporate Organization';
 
 export const SEMA_CORPORATE_ORGANIZATION_ID = '614f2fe7811ae802fc08e36e';
 
@@ -156,7 +156,7 @@ export const SEMA_FAQ_SLUGS = {
     'articles/6147206-what-are-snippets',
   LEARN_MORE: 'is-there-a-manager-dashboard-of-all-developers',
   SUMMARIES: 'what-do-summaries-mean',
-  TEAM_INSIGHTS: 'team-insights-who-can-see-what',
+  ORGANIZATION_INSIGHTS: 'team-insights-who-can-see-what',
   MARKDOWN: 'whats-markdown-and-how-do-i-use-it',
   SNIPPETS: 'what-are-snippets',
   SNAPSHOTS: 'what-are-snapshots'
@@ -227,9 +227,9 @@ export const SUPPORT_VIDEO_LANGUAGES = [
   }
 ];
 
-export const TEAM_MENU_HEADERS = [
+export const ORGANIZATION_MENU_HEADERS = [
   {
-    name: 'Team Management',
+    name: 'Organization Management',
     path: `${PATHS.ORGANIZATIONS._}/[organizationId]/edit`
   }
 ];

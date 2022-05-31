@@ -15,7 +15,7 @@ import { DEFAULT_AVATAR, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../
 import { filterSmartComments, getEmoji, getReactionTagsChartData, getTagLabel, setSmartCommentsDateRange } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
 import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
-import { AuthorIcon, InfoFilledIcon, TeamIcon } from '../../../../components/Icons';
+import { AuthorIcon, InfoFilledIcon, OrganizationIcon } from '../../../../components/Icons';
 import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';

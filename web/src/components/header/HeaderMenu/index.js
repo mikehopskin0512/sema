@@ -8,7 +8,7 @@ import Avatar from 'react-avatar';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../header.module.scss';
-import OrganizationMenuItem from '../TeamMenuItem';
+import OrganizationMenuItem from '../OrganizationMenuItem';
 import useOutsideClick from '../../../utils/useOutsideClick';
 import { PATHS, PROFILE_VIEW_MODE, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';

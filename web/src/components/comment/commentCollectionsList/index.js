@@ -112,8 +112,8 @@ const CommentCollectionsList = () => {
     }).sort((_a, _b) => {
       const a = _a.collectionData?.name.toLowerCase();
       const b = _b.collectionData?.name.toLowerCase();
-      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.TEAM) return -1;
-      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.TEAM) return 1;
+      if (a === DEFAULT_COLLECTION_NAME || _a.collectionData.type === COLLECTION_TYPE.ORGANIZATION) return -1;
+      if (b === DEFAULT_COLLECTION_NAME || _b.collectionData.type === COLLECTION_TYPE.ORGANIZATION) return 1;
       return a >= b ? 1 : -1;
     });
     return uniqBy(collections, 'collectionData._id');

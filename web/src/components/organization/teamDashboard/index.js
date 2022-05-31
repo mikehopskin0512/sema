@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import usePermission from '../../../hooks/usePermission';
 import Metrics from '../../metrics';
 import RepoCard from '../../repos/repoCard';
-import MinimalOrganizationTable from '../minimalTeamTable';
+import MinimalOrganizationTable from '../minimalOrganizationTable';
 import { PATHS, TAB } from '../../../utils/constants';
 
 const MAX_REPOS = 6;

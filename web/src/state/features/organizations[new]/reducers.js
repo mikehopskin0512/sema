@@ -12,7 +12,7 @@ const initialState = {
   summary: {},
   overview: {},
   invalidEmails: [],
-  fetchedTeams: false,
+  fetchedOrganizations: false,
 };
 
 const reducer = (state = initialState, action) => {

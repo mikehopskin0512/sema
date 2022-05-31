@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Avatar from 'react-avatar';
 import styles from './header.module.scss';
 import HeaderMenu from './HeaderMenu';
-import OrganizationMenuItem from './TeamMenuItem';
+import OrganizationMenuItem from './OrganizationMenuItem';
 import useOutsideClick from '../../utils/useOutsideClick';
 import SupportForm from '../supportForm';
 import SignOutModal from '../signOutModal';
