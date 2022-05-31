@@ -7,15 +7,7 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import {
-  AlertFilledIcon,
-  CameraIcon,
-  CheckFilledIcon,
-  CloseIcon,
-  EditIcon,
-  GithubIcon,
-  OptionsIcon,
-  PdfIcon,
+import { AlertFilledIcon, CameraIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, PdfIcon,
   ShareIcon,
 } from '../../Icons';
 import TitleField from '../TitleField';
