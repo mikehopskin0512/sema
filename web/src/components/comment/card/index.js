@@ -6,7 +6,7 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import styles from './card.module.scss';
-import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS, SEMA_ROLES } from '../../../utils/constants';
+import { COLLECTION_TYPES, DEFAULT_COLLECTION_NAME, PATHS } from '../../../utils/constants';
 import { alertOperations } from '../../../state/features/alerts';
 import { collectionsOperations } from '../../../state/features/collections';
 import usePermission from '../../../hooks/usePermission';
@@ -29,7 +29,6 @@ const MENU_ITEMS_TYPES = {
 const Card = ({ isActive, collectionData, addNewComment, type }) => {
   const titleRef = useRef(null);
   const {
-    isTeamAdmin,
     isTeamAdminOrLibraryEditor,
     isSemaAdmin,
     isIndividualUser,
@@ -127,23 +126,20 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
     const isTeamIconNeeded = collectionData.type === COLLECTION_TYPES.TEAM;
     const isHighlightNeeded = collectionData.type === COLLECTION_TYPES.PERSONAL || isTeamIconNeeded;
 
-    const getMenuItems = () => {
-      const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false
-
-      if (isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name))
-        return [MENU_ITEMS_TYPES.EDIT]
+    const menuItems = useMemo(() => {
+      const isTeamSnippet = selectedTeam?.team?.name?.toLowerCase() === author?.toLowerCase() || false;
+      const isDefaultUserCollection = isIndividualUser() && collectionData.author.toLowerCase() === user.username.toLowerCase() && isSemaDefaultCollection(name);
 
       // TODO: add Sema Library Editor role when it will be implemented
       if (isSemaAdmin()) return [MENU_ITEMS_TYPES.EDIT, MENU_ITEMS_TYPES.ARCHIVE];
 
-      if (IsTeamLibraryEditor && !isSemaAdmin() && isTeamSnippet) return [MENU_ITEMS_TYPES.EDIT];
+      if (isTeamAdminOrLibraryEditor() && !isSemaAdmin() && isTeamSnippet) return [MENU_ITEMS_TYPES.EDIT];
 
-      if (!isTeamAdminOrLibraryEditor() && selectedTeam?.role === SEMA_ROLES.member) return []
+      if (isDefaultUserCollection) return [MENU_ITEMS_TYPES.EDIT]
 
       return [];
-    }
+    }, [selectedTeam, collectionData, user]);
 
-    const actualMenuItems = getMenuItems();
 
     return (
       <Link href={`?cid=${_id}`}>
@@ -215,7 +211,7 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                   )}
                   <div className={clsx("dropdown is-right", showMenu ? "is-active" : null)} onClick={onClickChild}>
                     {
-                      Boolean(actualMenuItems.length) && (
+                      Boolean(menuItems.length) && (
                         <div className="dropdown-trigger">
                           <button className="button is-ghost has-text-black-900 pl-0" aria-haspopup="true" aria-controls="dropdown-menu" onClick={toggleMenu}>
                             <OptionsIcon />
@@ -225,19 +221,17 @@ const Card = ({ isActive, collectionData, addNewComment, type }) => {
                     }
                     <div className="dropdown-menu" id="dropdown-menu" role="menu" ref={popupRef}>
                       <div className="dropdown-content">
-                        {actualMenuItems.includes(MENU_ITEMS_TYPES.EDIT) && (
-                          <a href={`${PATHS.SNIPPETS.EDIT}?cid=${_id}`} className='dropdown-item'>
+                        {menuItems.includes(MENU_ITEMS_TYPES.EDIT) && (
+                          <a href={`${PATHS.SNIPPETS._}?cid=${_id}`} className='dropdown-item'>
                             Edit Collection
                           </a>
                         )}
-                        {
-                          actualMenuItems.includes(MENU_ITEMS_TYPES.ARCHIVE) && (
+                        {menuItems.includes(MENU_ITEMS_TYPES.ARCHIVE) && (
                             <a className='dropdown-item is-clickable'
                                onClick={isNotArchived ? onClickArchiveCollection : onClickUnarchiveCollection}>
                               {isNotArchived ? 'Archive' : 'Unarchive'} Collection
                             </a>
-                          )
-                        }
+                          )}
                       </div>
                     </div>
                   </div>

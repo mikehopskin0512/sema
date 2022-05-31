@@ -51,7 +51,7 @@ function usePermission() {
   }
 
   const isIndividualUser = () => {
-    return !isSemaAdmin || !isTeamAdmin || !IsTeamLibraryEditor
+    return !isSemaAdmin() && !isTeamAdmin() && !IsTeamLibraryEditor()
   }
 
   const isTeamCollection = (id) => {
