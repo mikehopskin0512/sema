@@ -2,7 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import DropZone from './dropZone';
 import DashboardRow from './dashboardRow';
 import { ACCEPTABLE_ITEMS, DND_CASES_CHECKS } from './constants';
-import { createAdditionalItemsRow, reorderChildInRow, reorderIndependentRow, replaceChildInAnotherParent } from './manipulations';
+import {
+  changeChildDirection,
+  createAdditionalItemsRow,
+  reorderChildInRow,
+  reorderIndependentRow,
+  replaceChildInAnotherParent,
+} from './manipulations';
 
 const DashboardDraggableList = ({
   pageLayout,
@@ -33,14 +39,6 @@ const DashboardDraggableList = ({
         updateLayout(data);
       };
 
-      if (DND_CASES_CHECKS.IS_INDEPENDENT_ROW(item)) {
-        return reorderIndependentRow({
-          oldPosition: itemPath,
-          newPosition: splitDropZonePath[0],
-          currentLayout: layout,
-          updater,
-        });
-      }
       if (DND_CASES_CHECKS.SAME_ROW_ITEMS(splitItemPath, splitDropZonePath)) {
         return reorderChildInRow({
           index: splitItemPath[0],
@@ -67,15 +65,33 @@ const DashboardDraggableList = ({
       });
     }, [layout, pageLayout, replaceChildInAnotherParent, reorderChildInRow, reorderIndependentRow]);
 
+
+  const onDirectionUpdateClick = async ({ snapshot, type, path }) => {
+    if (type !== 'comments') return;
+
+    const updater = (data) => {
+      setLayout(data);
+      updateLayout(data);
+    };
+
+    await changeChildDirection({ currentLayout: layout, updater, path, isHorizontal: snapshot.isHorizontal });
+
+    onSnapshotDirectionUpdate({
+      snapshot,
+      type,
+    });
+  }
+
   const renderRow = (row, currentPath) => {
     return (
       <DashboardRow
+        layout={layout}
         data={row}
         path={currentPath}
         handleDrop={handleDrop}
         handleSnapshotUpdate={handleSnapshotUpdate}
         snapshots={snapshots}
-        onSnapshotDirectionUpdate={onSnapshotDirectionUpdate}
+        onSnapshotDirectionUpdate={onDirectionUpdateClick}
         isPdfView={isPdfView}
         isPortfolioOwner={isPortfolioOwner}
       />
@@ -90,6 +106,7 @@ const DashboardDraggableList = ({
           return (
             <React.Fragment key={element.id}>
               <DropZone
+                layout={layout}
                 data={{
                   path: currentPath,
                   childrenCount: pageLayout.length,
@@ -104,6 +121,7 @@ const DashboardDraggableList = ({
         })
       }
       <DropZone
+        layout={layout}
         acceptableItems={ACCEPTABLE_ITEMS}
         onDrop={handleDrop}
         isLast

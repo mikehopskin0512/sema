@@ -7,7 +7,6 @@
   width: 100%;
 
   &:not(.chart-snapshot) {
-    width: 50%;
     @media screen and (max-width: 1440px) {
       width: 100%;
     }
@@ -47,6 +46,10 @@
   @media only screen and (min-width: 1024px) {
     min-width: 600px;
   }
+
+  @media only screen and (min-width: 1440px) and (max-width: 1650px){
+    min-width: 520px;
+  }
 }
 
 .comments-snap-content {
@@ -67,7 +70,7 @@
 
 .empty-chart-wrapper {
   height: 100%;
-  max-height: 640px;
+  max-height: 670px;
 
   @media only screen and (max-width: 1440px) {
     max-height: unset;
@@ -103,4 +106,8 @@
 
 .empty-chart-img {
   height: 576px;
+}
+
+.snapshot-dragging {
+  opacity: 0.2;
 }

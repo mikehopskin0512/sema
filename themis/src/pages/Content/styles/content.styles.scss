@@ -573,6 +573,17 @@ button.sema-reaction-selection {
     display: none;
   }
 
+  .active-buttons-container.active-buttons-container-selected {
+    display: block;
+    width: fit-content;
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    padding-left: 8px;
+    background: var(--color-hover-comment);
+  }
+
+
   &:hover {
     background: var(--color-hover-comment);
     border-radius: 4px;
@@ -582,10 +593,38 @@ button.sema-reaction-selection {
       display: block;
       width: fit-content;
       position: absolute;
-      top: 3px;
       right: 10px;
+      top: 7px !important;
+      padding-left: 8px;
+      background: var(--color-hover-comment);
     }
   }
+}
+
+.suggestion-comment-active {
+  min-height: 85px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding-left: 8px;
+
+  background: var(--color-hover-comment);
+  border-radius: 4px;
+  cursor: pointer;
+
+  .active-buttons-container {
+    display: block;
+    width: fit-content;
+    position: absolute;
+    top: 3px;
+    right: 10px;
+  }
+}
+
+.suggestion-comment-pending {
+  outline: 1px solid #FFA20F;
+  margin-left: 2px;
+  width: 99%;
+  padding-left: 10px;
 }
 
 .sema-button.sema-is-inverted.sema-is-small:not(.viewed) {
@@ -596,6 +635,7 @@ button.sema-reaction-selection {
   min-height: 85px;
   box-sizing: border-box;
   margin-bottom: 8px;
+  overflow: inherit;
 }
 
 .suggestion-content-truncated-container {

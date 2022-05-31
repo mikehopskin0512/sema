@@ -7,14 +7,12 @@ Sema web application back-end
 ```sh
 # install dependencies
 $ npm install
-$ npm install -g migrate
 # start server
 $ npm start
 # project will be available on http://localhost:3001
 # files will automatically rebuild and refresh the browser as you make changes
 # in a separate terminal, run db migrations
-$ migrate-mongo down
-$ migrate-mongo up
+$ npm run migrate
 ```
 
 ### Directory Layout

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import _, { debounce, isEmpty } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import _, { debounce } from 'lodash';
 import * as analytics from '../../utils/analytics';
 import { repositoriesOperations } from '../../state/features/repositories';
 import { collectionsOperations } from '../../state/features/collections';
@@ -20,13 +20,25 @@ import { ON_INPUT_DEBOUNCE_INTERVAL_MS, PATHS, PROFILE_VIEW_MODE } from '../../u
 
 const { fetchRepoDashboard } = repositoriesOperations;
 const { findCollectionsByAuthor } = collectionsOperations;
-const { updateUser, updateUserHasExtension } = authOperations;
-const { inviteTeamUser, fetchTeamsOfUser } = teamsOperations;
-const { setSelectedTeam, setProfileViewMode } = authOperations;
+const {
+  updateUser,
+  updateUserHasExtension,
+} = authOperations;
+const {
+  inviteTeamUser,
+  fetchTeamsOfUser,
+} = teamsOperations;
+const {
+  setSelectedTeam,
+  setProfileViewMode,
+} = authOperations;
 
 const Dashboard = () => {
   const router = useRouter();
-  const { step, page = parseInt(step) } = router.query;
+  const {
+    step,
+    page = parseInt(step),
+  } = router.query;
 
   // TODO: should be disabled until new invitations logic
   // const [teamIdInvitation, setTeamIdInvitation] = useLocalStorage('sema-team-invite', '');
@@ -41,14 +53,28 @@ const Dashboard = () => {
   const [comment, setComment] = useState({});
   const [redirectUser, setRedirectUser] = useLocalStorage('redirect_user', false);
   const dispatch = useDispatch();
-  const { auth, repositories, rolesState, teamsState } = useSelector((state) => ({
+  const {
+    auth,
+    repositories,
+    rolesState,
+    teamsState,
+  } = useSelector((state) => ({
     auth: state.authState,
     repositories: state.repositoriesState,
     rolesState: state.rolesState,
-    teamsState: state.teamsState
+    teamsState: state.teamsState,
   }));
-  const { token, user, selectedTeam } = auth;
-  const { identities, isOnboarded = null, hasExtension = null, username } = user;
+  const {
+    token,
+    user,
+    selectedTeam,
+  } = auth;
+  const {
+    identities,
+    isOnboarded = null,
+    hasExtension = null,
+    username,
+  } = user;
   const { roles } = rolesState;
   const { teams } = teamsState;
   const { inviteTeamId } = router.query;
@@ -67,14 +93,20 @@ const Dashboard = () => {
   const nextOnboardingPage = (currentPage) => {
     const newPage = currentPage + 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    setOnboardingProgress({
+      ...onboardingProgress,
+      page: newPage,
+    });
     logOnboardingAcitvity(newPage);
   };
 
   const previousOnboardingPage = (currentPage) => {
     const newPage = currentPage - 1;
     setOnboardingPage(newPage);
-    setOnboardingProgress({ ...onboardingProgress, page: newPage });
+    setOnboardingProgress({
+      ...onboardingProgress,
+      page: newPage,
+    });
     logOnboardingAcitvity(newPage);
   };
 
@@ -85,7 +117,10 @@ const Dashboard = () => {
   };
 
   const handleCommentFields = (e) => {
-    setComment({ ...comment, [e.target.name]: e.target.value });
+    setComment({
+      ...comment,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const onboardUser = async () => {
@@ -175,8 +210,7 @@ const Dashboard = () => {
         }, token));
       }
     }
-  }, [searchQuery])
-
+  }, [searchQuery]);
 
   const getCollectionsByAuthor = async (author) => {
     const defaultCollections = await dispatch(findCollectionsByAuthor(author, token));
@@ -193,7 +227,10 @@ const Dashboard = () => {
     if (page && typeof page === 'number') {
       if (!isOnboarded) {
         setOnboardingPage(page);
-        setOnboardingProgress({ ...onboardingProgress, page });
+        setOnboardingProgress({
+          ...onboardingProgress,
+          page,
+        });
         toggleOnboardingModalActive(true);
       }
     }
@@ -204,27 +241,16 @@ const Dashboard = () => {
     }
   }, [isOnboarded]);
 
-  const LoaderScreen = () => (
-    <div className="is-flex is-align-items-center is-justify-content-center" style={{ height: '55vh' }}>
-      <Loader />
-    </div>
-  );
-
-  if (auth.isFetching || repositories.isFetching) {
-    return <LoaderScreen />;
-  }
+  const isSkeletonHidden = isLoaded && !auth.isFetching && !repositories.isFetching;
 
   return (
     !inviteTeamId &&
     <>
-      {!isLoaded ? (
-        <LoaderScreen />
-      ) : (
-        <div>
-          <Helmet {...DashboardHelmet} />
-          <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch />
-        </div>
-      )}
+      <div>
+        <Helmet {...DashboardHelmet} />
+        <ReposView searchQuery={searchQuery} onSearchChange={onSearchChange()} withSearch isLoaded={isSkeletonHidden} />
+      </div>
+
       {/* TODO: we have to put almost all the props to modal  */}
       <OnboardingModal
         isModalActive={isOnboardingModalActive}

@@ -7,7 +7,9 @@ import { isEmpty } from 'lodash';
 import styles from './portfoliosDashboard.module.scss';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { AlertFilledIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, ShareIcon, CameraIcon, PdfIcon } from '../../Icons';
+import { AlertFilledIcon, CameraIcon, CheckFilledIcon, CloseIcon, EditIcon, GithubIcon, OptionsIcon, PdfIcon,
+  ShareIcon,
+} from '../../Icons';
 import TitleField from '../TitleField';
 import { fullName, getPlatformLink, isValidImageType } from '../../../utils';
 import { ALERT_TYPES, DEFAULT_AVATAR, PATHS, PORTFOLIO_TYPES, RESPONSE_STATUSES, SEMA_APP_URL } from '../../../utils/constants';
@@ -20,7 +22,6 @@ import toaster from 'toasted-notes';
 import DeleteModal from '../../snapshots/deleteModal';
 import DropDownMenu from '../../dropDownMenu';
 import { alertOperations } from '../../../state/features/alerts';
-import ErrorPage from '../errorPage';
 import AddModal from '../addModal';
 import PortfolioGuideBanner from '../../../components/banners/portfolioGuide';
 import Loader from '../../../components/Loader';
@@ -135,7 +136,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
       if (portfolio.layout?.length) {
         // Reload list if new items appears
         const newItemsIds = getNewLayoutItems(snapshots.map(i => i?._id), getSnapsIds(portfolio.layout)) ?? [];
-
         const newItems = snapshots?.filter(i => newItemsIds.includes(i._id));
         return newItems.length ?
           [...getSavedData(portfolio.layout, snapshots), ...getPageLayout(newItems, portfolio)]
@@ -233,7 +233,6 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
 
     await dispatch(updateSnapshot(snapshot._id, snapshotDataForSave, token, false, () => {
       toggleEditModal(false);
-      handleSnapshotUpdate({...snapshot, isHorizontal: !snapshot?.isHorizontal })
     }))
   }
 
@@ -370,7 +369,7 @@ const PortfolioDashboard = ({ portfolio, isIndividualView, isLoading, pdfView, s
                   <button onClick={savePdf} type="button" className={clsx(styles['pdfButton'], "has-no-border has-background-white ml-10 is-clickable is-relative")}>
                     <p>Save as PDF</p>
                     <PdfIcon />
-                  </button>   
+                  </button>
                 </div>
               <div className={styles['dropdownContainer']}>
                 <DropDownMenu
