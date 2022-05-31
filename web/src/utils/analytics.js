@@ -47,11 +47,11 @@ export const initAmplitude = (user) => {
       const { _id, username, firstName = '', lastName = '', isVerified, isWaitlist, roles = [] } = user;
 
       // ## REFACTORING NEEDED ##
-      // Roles is an array (ie. users can have several roles and teams)
-      // This needs to be refactored to decide what role/team we'd want to pass to Amplitude (if any)
-      // Trying to handle it as a single role/team won't work and a user without a userrole will fail
+      // Roles is an array (ie. users can have several roles and organizations)
+      // This needs to be refactored to decide what role/organization we'd want to pass to Amplitude (if any)
+      // Trying to handle it as a single role/organization won't work and a user without a userrole will fail
 
-      // const [{ role = null, team = null }] = roles;
+      // const [{ role = null, organization = null }] = roles;
 
       amplitude = require('amplitude-js');
       amplitude.getInstance().init(amplitudeApiKey, username);
@@ -65,7 +65,7 @@ export const initAmplitude = (user) => {
         // Removed based on comments above
         // ## REFACTORING NEEDED ##
         // role: role?.name,
-        // team: team?.name,
+        // organization: organization?.name,
       });
     }
   }

@@ -112,7 +112,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
             outlined
           />
         </div>
-        {isTeamAdminOrLibraryEditor() && <div className={clsx(`column ${styles['filter-box']}`)}>
+        {isOrganizationAdminOrLibraryEditor() && <div className={clsx(`column ${styles['filter-box']}`)}>
           <CustomSelect
             selectProps={{
               options: authors,

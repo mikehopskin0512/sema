@@ -12,7 +12,7 @@ const deleteDefaultCollectionForUser = async (db, user) => {
   console.log(`-- -- deleting snippets for the collections for the user`);
   console.log(defaultCollectionIds);
   await db.collection('suggestedComments').deleteMany({ collectionId: { $in: defaultCollectionIds } });
-  
+
   // delete the default collection created by the user
   await db.collection('collections').deleteMany({ _id: { $in: defaultCollectionIds }, name: 'My Snippets' });
 }
@@ -22,12 +22,12 @@ const deleteUserRoleForUser = async (db, userId) => {
   await db.collection('userroles').deleteOne({ user: userId });
 }
 
-const deleteTeamsForUser = async (db, userId) => {
-  // find all default teams created by the user
-  const teamsForUser = await db.collection('teams').find({ createdBy: userId }).toArray();
-  if (teamsForUser && teamsForUser.length > 0) {
-    await Promise.all(teamsForUser.map(async (teamForUser) => {
-      const teamsCollectionIds = teamForUser.collections ? teamForUser.collections.map(item => item.collectionData) : [];
+const deleteorganizationsForUser = async (db, userId) => {
+  // find all default organizations created by the user
+  const organizationsForUser = await db.collection('organizations').find({ createdBy: userId }).toArray();
+  if (organizationsForUser && organizationsForUser.length > 0) {
+    await Promise.all(organizationsForUser.map(async (organizationForUser) => {
+      const organizationsCollectionIds = organizationForUser.collections ? organizationForUser.collections.map(item => item.collectionData) : [];
       const teamsDefaultCollections = await db.collection('collections').find({ _id: { $in: teamsCollectionIds }, name: `${teamForUser.name}'s Snippets` }).toArray();
       const defaultCollectionIds = teamsDefaultCollections ? teamsDefaultCollections.map(item => item._id) : [];
       // delete all snippets under My Snippets collection
@@ -54,29 +54,29 @@ module.exports = {
       'jay@semasoftware.com',
       'matt@semasoftware.com',
     ]
-    
+
     const users = await db.collection('users').find({ username: { $in: usersToRemove } }).toArray();
-    
+
     await Promise.all(users.map(async (user) => {
       console.log(`processing ${user.username}`);
       // remove My Snippets collections and snippets of these invalid users
       console.log(`-- deleting default collection for the user`);
       await deleteDefaultCollectionForUser(db, user);
-      
+
       // remove userRole mapping for the user
       console.log(`-- deleting userRole for the user`);
       await deleteUserRoleForUser(db, user._id);
-      
+
       // remove teams created by these invalid users
       console.log(`-- deleting team created by the user`);
       await deleteTeamsForUser(db, user._id);
-      
+
       // remove the user itself
       console.log(`-- deleting the user`);
       await db.collection('users').deleteOne({ _id: user._id });
     }));
   },
-  
+
   async down(db, client) {
     // No
   }

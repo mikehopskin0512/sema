@@ -9,7 +9,7 @@ import Footer from '../footer';
 import ExtensionStatus from '../extensionStatus';
 import { noContactUs, FACEBOOK_VERIFICATION_META, PATHS } from '../../utils/constants';
 import { white0, blue200, blue900 } from '../../../styles/_colors.module.scss';
-import OrganizationCreateBanner from '../banners/teamCreate';
+import OrganizationCreateBanner from '../banners/organizationCreate';
 
 const widescreenPages = [
   `${PATHS.REPO}/[repoId]`,

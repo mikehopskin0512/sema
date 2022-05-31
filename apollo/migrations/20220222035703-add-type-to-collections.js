@@ -6,7 +6,7 @@ module.exports = {
   async up(db) {
     try {
       // -- Sema Community Collections
-      const [semaTeam] = await db.collection('teams').find({ name: 'Sema Corporate Team' }).toArray();
+      const [semaTeam] = await db.collection('organizations').find({ name: 'Sema Corporate Team' }).toArray();
       const communityCollectionsIds = semaTeam.collections.map(({ collectionData }) => (new ObjectId(collectionData)));
 
       await db.collection('collections').updateMany({ _id: { $in: communityCollectionsIds } }, { $set: { type: 'community' } });

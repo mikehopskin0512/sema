@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { CloseIcon } from '../../Icons';
-import styles from './teamCreate.module.scss';
+import styles from './organizationCreate.module.scss';
 import { PATHS } from '../../../utils/constants';
 import { authOperations } from '../../../state/features/auth';
 

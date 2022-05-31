@@ -93,14 +93,14 @@ export const isSuggestedCollectionTitle = (title) => title === SEARCH_CATEGORY_T
 
 export const isSemaDefaultCollection = (name) => name?.toLowerCase() === DEFAULT_COLLECTION_NAME;
 
-export const isOrganizationDefaultCollection = (team, collection) => `${team?.name}'s Snippets` === collection?.name;
+export const isOrganizationDefaultCollection = (organization, collection) => `${organization?.name}'s Snippets` === collection?.name;
 
 export const addTags = (tags, types) => tags
   .filter((tag) => types.some((type) => type === tag.type))
   .map(({ tag, _id, label }) => ({ value: tag || _id, label }))
 
 export const filterNonSemaUsers = (users) => {
-  return users ? users.filter((user) => !user.teams || !user.teams.length || user.teams.every((team) => team._id !== SEMA_CORPORATE_ORGANIZATION_ID)) : [];
+  return users ? users.filter((user) => !user.organizations || !user.organizations.length || user.organizations.every((organization) => organization._id !== SEMA_CORPORATE_ORGANIZATION_ID)) : [];
 }
 
 export const getPlatformLink = (username, type) => {

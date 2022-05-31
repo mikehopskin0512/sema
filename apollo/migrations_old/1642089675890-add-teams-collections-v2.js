@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const teamsCollections = require('../data/teamsCollections.json');
+const organizationsCollections = require('../data/organizationsCollections.json');
 
 const { mongooseUri } = require('../src/config');
 
@@ -14,7 +14,7 @@ module.exports.up = async (next) => {
   try {
     await mongoose.connect(mongooseUri, options);
 
-    const teams = await mongoose.connection.collection('teams').find({ collections: { $exists: false } }).toArray();
+    const organizations = await mongoose.connection.collection('teams').find({ collections: { $exists: false } }).toArray();
     const collections = [];
     await Promise.all(teams.map(async (team) => {
       const collection = await mongoose.connection.collection('collections').insertOne({

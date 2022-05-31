@@ -4,9 +4,9 @@ const { Types: { ObjectId } } = mongoose;
 
 module.exports = {
   async up(db) {
-    const eddieCollection = await db.collection('collections').findOne({ type: 'team', name: 'EddieHub\'s Snippets' });
+    const eddieCollection = await db.collection('collections').findOne({ type: 'organization', name: 'EddieHub\'s Snippets' });
     const eddieCollectionId = eddieCollection ? eddieCollection._id : null;
-    const eddieTeam = await db.collection('teams').findOne({ name: 'EddieHub' });
+    const eddieTeam = await db.collection('organizations').findOne({ name: 'EddieHub' });
     const eddieTeamId = eddieTeam ? eddieTeam._id : null;
 
     await db.collection('collections').deleteMany({ $and: [{ type: 'team' }, { _id: { $ne: eddieCollectionId } }] });

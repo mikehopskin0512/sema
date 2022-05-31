@@ -25,9 +25,9 @@ module.exports = {
       });
     }));
 
-    const teams = await db.collection('teams').find({}).toArray();
+    const organizations = await db.collection('organizations').find({}).toArray();
 
-    await Promise.all(teams.map(async (team) => {
+    await Promise.all(organizations.map(async (organization) => {
       const collections = team.collections.filter((collection) => !collection.collectionData.equals(philosophiesCollectionId));
 
       await db.collection('teams').updateOne({ _id: team._id }, {

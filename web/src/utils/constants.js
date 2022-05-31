@@ -123,7 +123,7 @@ export const CIRCULAR_PACKING_COLORS = {
 export const COLLECTION_TYPE = {
   COMMUNITY: 'community',
   PERSONAL: 'personal',
-  TEAM: 'team'
+  ORGANIZATION: 'organization'
 };
 
 export const DAYS_IN_WEEK = 7;
@@ -194,7 +194,7 @@ export const PATHS = {
   LOGIN: '/login',
   ORGANIZATIONS: {
     _: '/organizations',
-    EDIT: id => `/teams/${id}/edit`,
+    EDIT: id => `/organizations/${id}/edit`,
     ADD: '/organizations/add',
     INVITE: id => `/organizations/${id}/invite`,
     SETTINGS: id => `/organizations/${id}/settings`,
@@ -216,7 +216,7 @@ export const PATHS = {
     SNAPSHOTS: '/portfolios?tab=snapshots'
   },
   IDENTITIES: '/api/identities/github',
-  ORGANIZATION_INSIGHTS: '/team-insights'
+  ORGANIZATION_INSIGHTS: '/organization-insights'
 };
 
 export const SUPPORT_VIDEO_LANGUAGES = [
@@ -230,13 +230,13 @@ export const SUPPORT_VIDEO_LANGUAGES = [
 export const TEAM_MENU_HEADERS = [
   {
     name: 'Team Management',
-    path: `${PATHS.ORGANIZATIONS._}/[teamId]/edit`
+    path: `${PATHS.ORGANIZATIONS._}/[organizationId]/edit`
   }
 ];
 
 export const PROFILE_VIEW_MODE = {
   INDIVIDUAL_VIEW: 'individual_view',
-  ORGANIZATION_VIEW: 'team_view'
+  ORGANIZATION_VIEW: 'organization_view'
 };
 
 export const SEMA_COLLECTIONS_VIEW_MODE = 'sema_collections_view_mode';
@@ -302,7 +302,7 @@ export const KNOWLEDGE_BASE = [
       'https://intercom.help/sema-software/en/articles/6147206-what-are-snippets'
   },
   {
-    description: 'How do I set up a team?',
+    description: 'How do I set up a organization?',
     link:
       'https://intercom.help/sema-software/en/articles/6147266-how-do-i-set-up-a-team'
   },

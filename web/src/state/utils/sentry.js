@@ -38,7 +38,7 @@ const initialize = async (ctx) => {
   if (
     !(ctx.pathname).includes(PATHS.LOGIN) &&
     !(ctx.pathname).includes(`[handle]/portfolio/[portfolioId]`) &&
-    !(ctx.pathname).includes(`${PATHS.ORGANIZATIONS._}/invite/[teamId]`) &&
+    !(ctx.pathname).includes(`${PATHS.ORGANIZATIONS._}/invite/[organizationId]`) &&
     !(ctx.pathname).includes(PATHS.ONBOARDING) &&
     !(ctx.pathname).includes(PATHS.GUIDES) &&
     !(ctx.pathname).includes(PATHS.REGISTER) &&
