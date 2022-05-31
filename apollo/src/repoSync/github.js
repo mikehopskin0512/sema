@@ -1,4 +1,3 @@
-import { differenceInMinutes } from 'date-fns';
 import Cache from 'caching-map';
 import { findBestMatch } from 'string-similarity';
 import logger from '../shared/logger';
@@ -116,21 +115,24 @@ function getType(githubComment) {
 }
 
 async function findDuplicate(githubComment, otherComments) {
-  const candidates = otherComments.filter((comment) => {
-    // At the time of writing, githubMetadata.user.id
-    // contains bogus information. Comparing by login for now.
-    // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
-    const isSameUser =
-      comment.githubMetadata.user.login === githubComment.user.login;
-    const isSimilarTime =
-      Math.abs(
-        differenceInMinutes(
-          comment.githubMetadata.created_at,
-          new Date(githubComment.created_at)
-        )
-      ) < 1;
-    return isSameUser && isSimilarTime;
-  });
+  const timeDifference = (comment) =>
+    Math.abs(
+      comment.githubMetadata.created_at - new Date(githubComment.created_at)
+    );
+
+  const candidates = otherComments
+    .filter((comment) => {
+      // At the time of writing, githubMetadata.user.id
+      // contains bogus information. Comparing by login for now.
+      // https://semasoftware.slack.com/archives/C01MXTW3DRS/p1653602721759599
+      const isSameUser =
+        comment.githubMetadata.user.login === githubComment.user.login;
+      const isSimilarTime = timeDifference(comment) < 60000;
+      return isSameUser && isSimilarTime;
+    })
+    // Try to find the comment that is closer in time to the one
+    // coming from the API.
+    .sort((a, b) => timeDifference(a) - timeDifference(b));
 
   if (candidates.length === 0) {
     const looksLikeSemaComment = githubComment.body.includes('[![sema-logo]');
