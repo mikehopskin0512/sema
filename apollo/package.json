@@ -14,7 +14,8 @@
     "importCommentsAndGuides": "nodemon --exec babel-node scripts/importCommentsAndGuides.js",
     "fixSlugs": "nodemon --exec babel-node scripts/fixSlugs.js",
     "lint": "eslint .",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "migrate": "babel-node node_modules/.bin/migrate-mongo up"
   },
   "dependencies": {
     "@octokit/auth": "^2.0.0",

@@ -8,19 +8,13 @@ import BarChart from '../../BarChart';
 import styles from './reactionChart.module.scss';
 import SnapshotButton from '../../snapshots/snapshotButton';
 import { ArrowDownIcon, ArrowUpIcon } from '../../Icons';
+import LineChartSkeleton from '../../skeletons/lineChartSkeleton';
 import { BAR_CHART_MIN_TOP, EMOJIS } from '../../../utils/constants';
-import {
-  black900,
-  green600,
-  green100,
-  red200,
-  red600,
-  gray200,
-} from '../../../../styles/_colors.module.scss';
+import { black900 } from '../../../../styles/_colors.module.scss';
 import { checkIfDateHasMonth, getTotalReactions } from '../../../utils/codeStats';
 
 const ReactionChart = ({
-  reactions, className, yAxisType, groupBy, isSnapshot, onClick,
+  reactions, className, yAxisType, groupBy, isSnapshot, onClick, isLoading
 }) => {
   const containerStyles = useMemo(() => (isSnapshot ? styles.snapshotContainer : styles.containers), [isSnapshot]);
   const [tooltipPosition, setTooltipPosition] = useState('top');
@@ -203,20 +197,25 @@ const ReactionChart = ({
   return (
     <>
       <div className={clsx(`is-flex-grow-1 ${isSnapshot ? 'mb-10 pl-5' : 'mb-20 px-10'} ${className}`, containerStyles)} onMouseMove={handleTooltipPosition}>
-        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow)}>
-          <div className="is-flex">
-            <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
-            {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} /> }
-          </div>
-          <BarChart
-            yAxisType={yAxisType}
-            emptyChart={emptyChart}
-            barChartData={barChartData}
-            getDataColor={getDataColor}
-            renderTooltip={renderTooltip}
-            maxValue={maxValue}
-            TotalLabels={TotalLabels}
-          />
+        <div className={clsx('has-background-white border-radius-2px p-15', styles.shadow, isLoading && styles['loading-container'])}>
+          {!isLoading && (
+            <>
+              <div className="is-flex">
+                <p className="has-text-black-950 has-text-weight-semibold">Summaries</p>
+                {!emptyChart && !isSnapshot && onClick && <SnapshotButton onClick={onClick} /> }
+              </div>
+              <BarChart
+                yAxisType={yAxisType}
+                emptyChart={emptyChart}
+                barChartData={barChartData}
+                getDataColor={getDataColor}
+                renderTooltip={renderTooltip}
+                maxValue={maxValue}
+                TotalLabels={TotalLabels}
+              />
+            </>
+          )}
+          {isLoading && <LineChartSkeleton />}
         </div>
       </div>
     </>
@@ -229,6 +228,7 @@ ReactionChart.defaultProps = {
   yAxisType: 'percentage',
   groupBy: 'day',
   isSnapshot: false,
+  isLoading: false
 };
 
 ReactionChart.propTypes = {
@@ -238,6 +238,7 @@ ReactionChart.propTypes = {
   groupBy: PropTypes.string,
   isSnapshot: PropTypes.bool,
   onClick: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export default ReactionChart;

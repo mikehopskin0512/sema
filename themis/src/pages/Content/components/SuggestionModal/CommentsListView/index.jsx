@@ -7,7 +7,8 @@ import ControlButton from './ControlButton';
 import { segmentTrack } from '../../../modules/segment';
 
 import { SEGMENT_EVENTS } from '../../../constants';
-import { MAX_CHARACTER_LENGTH } from './constants';
+import { KEY_HANDLERS, MAX_CHARACTER_LENGTH } from './constants';
+import useEventListener from '../../../../../hooks/useEventListener';
 
 function CommentsList({
   searchResults,
@@ -16,9 +17,102 @@ function CommentsList({
   changeIsDetailedView,
   isDetailedView,
 }) {
+  const [selectedListItem, setSelectedListItem] = useState(null);
+  const [isSelectMode, setSelectMode] = useState(false);
   const { user: { _id: userId } } = useSelector((state) => state);
   const [isCommentDetailsVisible, toggleCommentDetails] = useState(false);
   const [currentSuggestion, setCurrentSuggestion] = useState(null);
+
+
+  const menuSelectHandler = (step) => {
+    const oldIndex = searchResults.findIndex(i => i.id === selectedListItem);
+    if (oldIndex === -1) return;
+    const newIndex = searchResults.findIndex(i => i.id === selectedListItem) + step;
+    const newItem = searchResults[newIndex]?.id;
+    if (newItem) {
+      setSelectedListItem(newItem);
+      const el = document.getElementById(newItem);
+      if (el) el.scrollIntoView({
+        block: "center",
+        inline: "nearest"
+      })
+    }
+  }
+
+  const onMenuHandle = async (e) => {
+    if (isCommentDetailsVisible) {
+      switch (e.keyCode) {
+      case KEY_HANDLERS.BACK:
+        onCommentDetailBackPressed();
+        break;
+      case KEY_HANDLERS.ENTER:
+        const {
+          comment,
+          sourceName,
+          title,
+          id,
+          sourceUrl,
+        } = currentSuggestion || {};
+        onInsertPressed(
+          id,
+          title,
+          sourceName,
+          comment + sourceUrlToLink(sourceName, sourceUrl),
+        );
+        break;
+      default:
+        return;
+      }
+    } else {
+      switch (e.keyCode) {
+        case KEY_HANDLERS.DOWN:
+          e.preventDefault();
+
+          if (!selectedListItem) {
+            setSelectedListItem(searchResults?.[0]?.id ?? null);
+            return;
+          }
+          menuSelectHandler(1);
+          break;
+        case KEY_HANDLERS.UP:
+          e.preventDefault();
+          if (!selectedListItem) return;
+
+          menuSelectHandler(-1);
+          break;
+      case KEY_HANDLERS.ENTER:
+        e.preventDefault();
+        const data = searchResults.find(item => item.id === selectedListItem);
+
+        if (data) {
+          const {
+            comment,
+            sourceName,
+            title,
+            id,
+            sourceUrl,
+          } = data;
+
+          setSelectMode(true);
+          await new Promise((rs) => setTimeout(rs, 2000));
+          setSelectMode(false);
+
+          onInsertPressed(
+            id,
+            truncate(title, MAX_CHARACTER_LENGTH.TITLE),
+            sourceName,
+            truncate(comment, MAX_CHARACTER_LENGTH.TEXT) + sourceUrlToLink(sourceName, sourceUrl),
+          );
+        }
+        break;
+      default:
+        return;
+      }
+    }
+  };
+
+  useEventListener('keydown', onMenuHandle);
+
   const onViewPressed = (title, sourceName, suggestion) => {
     setCurrentSuggestion(suggestion);
     toggleCommentDetails(true);
@@ -64,15 +158,14 @@ function CommentsList({
     const isCopied = copiedId === id;
 
     return (
-      <div
-        key={id}
-        className="suggestion-comment-container"
-        onClick={() => onViewPressed(title, sourceName, searchResult)}
-      >
+      <div key={id} className="suggestion-comment-container">
         <SuggestionComment
           id={id}
           title={truncate(title, MAX_CHARACTER_LENGTH.TITLE)}
           sourceName={sourceName}
+          isSelected={selectedListItem === id}
+          isSelectMode={isSelectMode}
+          onViewChange={() => onViewPressed(title, sourceName, searchResult)}
           comment={truncate(comment, MAX_CHARACTER_LENGTH.TEXT)}
           engGuides={engGuides}
           onCopyPressed={onCopyPressed}
@@ -85,6 +178,7 @@ function CommentsList({
       </div>
     );
   });
+
   const Comment = () => {
     const {
       comment,
@@ -171,7 +265,9 @@ function CommentsList({
       </>
     );
   };
+
   const wrapperWidth = '100%';
+
   return (
     <div
       className="sema-is-flex overflow-hidden"

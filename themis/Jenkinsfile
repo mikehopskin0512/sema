@@ -36,7 +36,7 @@ pipeline {
         stage('Upload CE') {
             steps {
                 script {
-                    withAWS(role:'jenkins-role-to-assume') {
+                    withAWS(role:'jenkins-role-to-assume', region: 'us-east-1') {
                         dir('themis') {
                             CE_FILENAME = sh(
                             script: 'ls | grep Sema_Code_Review_Assistant_ | head -1',

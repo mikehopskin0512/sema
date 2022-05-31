@@ -14,14 +14,47 @@ function SuggestionComment({
   author,
   sourceUrl,
   sourceIcon,
+  isSelected,
+  isSelectMode,
+  onViewChange
 }) {
   const NoteIcon = chrome.runtime.getURL('img/notebook.svg');
 
+  const getWrapperClass = () => {
+    const classes = [];
+    if (isSelected) {
+      classes.push('suggestion-comment-active');
+    }
+
+    if (isSelectMode && isSelected) {
+      classes.push('suggestion-comment-pending');
+    }
+
+    isViewed ? classes.push('suggestion-comment-no-hover') : classes.push('suggestion-comment');
+
+    return classes.join(' ');
+  };
+
+  const getButtonsWrapperClass = () => {
+    const classes = ['active-buttons-container'];
+
+    if (isSelected) classes.push('active-buttons-container-selected')
+
+    return classes.join(' ');
+  };
+
+  const onInsertClick = () => onInsertPressed(
+    id,
+    title,
+    sourceName,
+    comment + sourceUrlToLink(sourceName, sourceUrl),
+  );
+
   return (
     <div
-      className={
-        isViewed ? 'suggestion-comment-no-hover' : 'suggestion-comment'
-      }
+      className={getWrapperClass()}
+      id={id}
+      onClick={onInsertClick}
     >
       {!isViewed && (
         <div className="suggestion-title">
@@ -35,7 +68,13 @@ function SuggestionComment({
             <>
               {' | '}
               <span className="suggestion-author">{author}</span>
-              <div className="active-buttons-container">
+              <div className={getButtonsWrapperClass()}>
+                <ControlButton
+                  icon="fa-copy"
+                  title="Learn more"
+                  // eslint-disable-next-line max-len
+                  onClick={onViewChange}
+                />
                 <ControlButton
                   icon="fa-copy"
                   title={isCopied ? 'Copied!' : 'Copy'}
@@ -51,12 +90,7 @@ function SuggestionComment({
                   icon="fa-file-import"
                   title="Insert"
                   // eslint-disable-next-line max-len
-                  onClick={() => onInsertPressed(
-                    id,
-                    title,
-                    sourceName,
-                    comment + sourceUrlToLink(sourceName, sourceUrl),
-                  )}
+                  onClick={onInsertClick}
                 />
               </div>
             </>
