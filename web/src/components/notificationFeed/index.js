@@ -19,7 +19,7 @@ const NotificationFeed = () => {
   }, [user, dispatch]);
   return (
     // style={{ width: '600px', margin: '0 auto' }}
-    <div>
+    <div className='notification-feed'>
       {notificationsToken && (
         <StreamApp apiKey={APP_KEY} appId={APP_ID} token={notificationsToken}>
           <NotificationDropdown

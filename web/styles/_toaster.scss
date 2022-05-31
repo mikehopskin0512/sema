@@ -50,3 +50,8 @@
 .toaster-error:after {
   background-color: $red-500;
 }
+
+// Notification bell color on hover - TODO to be moved to different file.
+.notification-feed .raf-notification-dropdown .raf-icon-badge:hover svg {
+  fill: $blue-700;
+}
