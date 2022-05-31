@@ -9,14 +9,15 @@ import { teamsOperations } from '../../../../state/features/teams';
 import LabelsManagement from '../../../../components/team/LabelsManagement';
 import TeamManagement from '../../../../components/team/TeamManagement';
 import usePermission from '../../../../hooks/usePermission';
-import {PATHS, TAB} from '../../../../utils/constants';
+import {PATHS, SEMA_CORPORATE_TEAM_ID, TAB} from '../../../../utils/constants';
 import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
 const { fetchTeamMembers } = teamsOperations;
 
 const TeamSettings = () => {
   const dispatch = useDispatch();
-  const { isTeamAdminOrLibraryEditor, isSemaAdmin } = usePermission();
+  const { isTeamAdminOrLibraryEditor, checkAccess } = usePermission();
+  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
   const router = useRouter();
   const {
     query: { teamId, tab },
@@ -64,7 +65,7 @@ const TeamSettings = () => {
       id: TAB.management,
       icon: <TeamIcon width={20} />,
     }),
-    (isSemaAdmin() && {
+    (isSemaAdminOrLibraryEditor && {
       label: 'Labels Management',
       path: PATHS.TEAMS.LABELS(teamId),
       id: TAB.labels,
@@ -73,7 +74,7 @@ const TeamSettings = () => {
   ];
 
   useEffect(() => {
-    if (!isSemaAdmin() && tab === 'labels') {
+    if (!isSemaAdminOrLibraryEditor && tab === 'labels') {
       setDefaultTag()
     }
   }, [tab])
