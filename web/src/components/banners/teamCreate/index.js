@@ -11,7 +11,7 @@ const { updateUser } = authOperations;
 
 const ENABLED_PAGES = [PATHS.DASHBOARD, PATHS.PERSONAL_INSIGHTS, PATHS.INVITATIONS];
 
-function TeamCreateBanner() {
+function OrganizationCreateBanner() {
   const router = useRouter();
   const { pathname } = router;
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function TeamCreateBanner() {
     organizationsState,
   } = useSelector((state) => ({
     auth: state.authState,
-    organizationsState: state.organizationsNewState,
+    organizationsState: state.organizationsState,
   }));
   const [active, toggleActive] = useState(false);
   const { user, token } = auth;
@@ -31,7 +31,7 @@ function TeamCreateBanner() {
     router.push(PATHS.ORGANIZATION_CREATE);
   };
 
-  const disableTeamCreateBanner = () => {
+  const disableOrganizationCreateBanner = () => {
     const banners = { ...user.banners };
     const updatedUser = { ...user, banners: { ...banners, organizationCreate: false } };
     dispatch(updateUser(updatedUser, token));
@@ -41,17 +41,21 @@ function TeamCreateBanner() {
     toggleActive(fetchedOrganizations && organizations?.length === 0 && ENABLED_PAGES.includes(pathname) && isOnboarded && user.banners && user?.banners?.teamCreate);
   }, [fetchedOrganizations, pathname, organizations, isOnboarded, user]);
 
-  return active && (
+  if (!active) {
+    return null
+  }
+
+  return (
     <div className={clsx(styles.banner, 'px-160 py-15 is-flex is-align-items-center')}>
-        <span className="has-text-weight-semibold mr-10">Sema is better with friends!</span>
-        <span className="mr-20">Create an organization to share best practices, and view repos together.</span>
-        <div className={clsx(styles.hero, '')}>
-          <img src="/img/hero-character.svg" alt="hero" />
-        </div>
-        <button type="button" className="button mr-30" onClick={redirectUser}>Create an Organization</button>
-        <CloseIcon className="is-clickable" onClick={disableTeamCreateBanner} />
+      <span className="has-text-weight-semibold mr-10">Sema is better with friends!</span>
+      <span className="mr-20">Create an organization to share best practices, and view repos together.</span>
+      <div className={clsx(styles.hero, '')}>
+        <img src="/img/hero-character.svg" alt="hero" />
       </div>
+      <button type="button" className="button mr-30" onClick={redirectUser}>Create an Organization</button>
+      <CloseIcon className="is-clickable" onClick={disableOrganizationCreateBanner} />
+    </div>
   );
 }
 
-export default TeamCreateBanner;
+export default OrganizationCreateBanner;

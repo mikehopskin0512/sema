@@ -7,7 +7,7 @@ import CustomSelect from '../../activity/select';
 import useAuthEffect from '../../../hooks/useAuthEffect';
 import { tagsOperations } from '../../../state/features/tags';
 import { addTags } from '../../../utils';
-import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_TEAM_ID } from '../../../utils/constants';
+import { DROPDOWN_SORTING_TYPES, SEMA_CORPORATE_ORGANIZATION_ID } from '../../../utils/constants';
 import usePermission from '../../../hooks/usePermission';
 import styles from './snippetCollectionFilter.module.scss';
 import { gray500 } from '../../../../styles/_colors.module.scss';
@@ -23,7 +23,7 @@ const SnippetCollectionFilter = ({ filter, setFilter, collections }) => {
   const { tags } = tagState;
   const { token } = auth;
   const { isOrganizationAdminOrLibraryEditor, checkAccess } = usePermission();
-  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_TEAM_ID, 'canCreateCollections');
+  const isSemaAdminOrLibraryEditor = checkAccess(SEMA_CORPORATE_ORGANIZATION_ID, 'canCreateCollections');
 
   useAuthEffect(() => {
     dispatch(fetchTagList(token));
