@@ -18,7 +18,7 @@ import { getCommentsCountLastMonth } from '../../../utils/codeStats';
 import InputField from '../../../components/inputs/InputField';
 import { blue700 } from '../../../../styles/_colors.module.scss';
 import { alertOperations } from '../../../state/features/alerts';
-import RepoSkeleton from '@/components/skeletons/repoSkeleton';
+import RepoSkeleton from '../../../components/skeletons/repoSkeleton';
 
 const LIST_TYPE = {
   FAVORITES: 'Favorite Repos',
