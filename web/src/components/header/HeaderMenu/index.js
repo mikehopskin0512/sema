@@ -118,7 +118,7 @@ const HeaderMenu = ({
           <TrophyIcon />
         </div>
       </Tooltip>
-      <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['portfolio-container'])}>
+      <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['notifications-container'])}>
           <NotificationFeed />
       </div>
       <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
