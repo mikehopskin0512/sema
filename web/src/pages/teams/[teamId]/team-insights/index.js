@@ -4,41 +4,19 @@ import clsx from 'clsx';
 import { findIndex, isEmpty, uniqBy } from 'lodash';
 import { endOfDay, isWithinInterval, startOfDay } from 'date-fns';
 import Avatar from 'react-avatar';
-import Helmet, {
-  TeamInsightsHelmet
-} from '../../../../components/utils/Helmet';
+import Helmet, { TeamInsightsHelmet } from '../../../../components/utils/Helmet';
 import withLayout from '../../../../components/layout';
 import TeamStatsFilter from '../../../../components/teamStatsFilter';
 import TagsChart from '../../../../components/stats/tagsChart';
 import ActivityItemList from '../../../../components/activity/itemList';
 import { teamsOperations } from '../../../../state/features/teams';
 import { repositoriesOperations } from '../../../../state/features/repositories';
-import {
-  DEFAULT_AVATAR,
-  SEMA_INTERCOM_FAQ_URL,
-  SEMA_FAQ_SLUGS
-} from '../../../../utils/constants';
-import {
-  getEmoji,
-  getTagLabel,
-  setSmartCommentsDateRange,
-  getReactionTagsChartData,
-  filterSmartComments
-} from '../../../../utils/parsing';
+import { DEFAULT_AVATAR, SEMA_FAQ_SLUGS, SEMA_INTERCOM_FAQ_URL } from '../../../../utils/constants';
+import { filterSmartComments, getEmoji, getReactionTagsChartData, getTagLabel, setSmartCommentsDateRange } from '../../../../utils/parsing';
 import useAuthEffect from '../../../../hooks/useAuthEffect';
-import {
-  blue600,
-  blue700,
-  gray500
-} from '../../../../../styles/_colors.module.scss';
-import {
-  AuthorIcon,
-  TeamIcon,
-  InfoFilledIcon
-} from '../../../../components/Icons';
-import SnapshotModal, {
-  SNAPSHOT_DATA_TYPES
-} from '../../../../components/snapshots/modalWindow';
+import { blue600, blue700, gray500 } from '../../../../../styles/_colors.module.scss';
+import { AuthorIcon, InfoFilledIcon, TeamIcon } from '../../../../components/Icons';
+import SnapshotModal, { SNAPSHOT_DATA_TYPES } from '../../../../components/snapshots/modalWindow';
 import SnapshotButton from '../../../../components/snapshots/snapshotButton';
 import ReactionLineChart from '../../../../components/stats/reactionLineChart';
 
@@ -54,8 +32,9 @@ const TeamInsights = () => {
   const { auth, teams } = useSelector(state => ({
     auth: state.authState,
     teams: state.teamsState
-  }));
+  }))
   const { token, user, selectedTeam } = auth;
+  const { isFetching } = teams;
   const githubUser = user.identities?.[0];
   const fullName = `${user.firstName} ${user.lastName}`;
 
@@ -574,14 +553,16 @@ const TeamInsights = () => {
             reactions={reactionChartData}
             groupBy={dateData.groupBy}
             onClick={() => setOpenReactionsModal(true)}
+            isLoading={isFetching}
           />
           <TagsChart
             isTeamView
-            className="mr-neg10"
+            className='mr-neg10'
             tags={tagsChartData}
             groupBy={dateData.groupBy}
             onClick={() => setOpenTagsModal(true)}
             dateOption={filter.dateOption}
+            isLoading={isFetching}
           />
         </div>
         {openReactionsModal && (
@@ -608,15 +589,20 @@ const TeamInsights = () => {
             snapshotData={{ componentData }}
           />
         )}
-        <div className="is-flex is-align-items-center mb-20">
-          <p className="has-text-black-950 has-text-weight-semibold is-size-4 px-15">
+        <div className='is-flex is-align-items-center mb-20'>
+          <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>
             Comments {commentView}
           </p>
-          <div>
-            <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
-          </div>
         </div>
-        <ActivityItemList comments={filteredComments} />
+        {!isFetching && (
+          <div className='is-flex is-align-items-center mb-20'>
+            <p className='has-text-black-950 has-text-weight-semibold is-size-4 px-15'>Comments {commentView}</p>
+            <div>
+              <SnapshotButton onClick={() => setOpenCommentsModal(true)} />
+            </div>
+          </div>
+        )}
+        <ActivityItemList comments={filteredComments} isLoading={isFetching} />
       </div>
     </div>
   );

@@ -61,3 +61,8 @@
     width: 25px;
   }
 }
+
+.loading-container {
+  background-color: rgba($skeleton-back, 0.3) !important;
+  box-shadow: none !important;
+}
