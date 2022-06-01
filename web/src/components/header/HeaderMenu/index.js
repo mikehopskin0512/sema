@@ -17,6 +17,7 @@ import usePermission from "../../../hooks/usePermission";
 import { TrophyIcon } from '../../Icons';
 import UserMenuItem from '../UserMenuItem';
 import Tooltip from '../../Tooltip';
+import { useFlags } from '../../launchDarkly';
 const { setSelectedTeam, setProfileViewMode } = authOperations;
 
 const HeaderMenu = ({
@@ -31,6 +32,7 @@ const HeaderMenu = ({
     avatarUrl: userAvatar,
     handle
   } = user;
+  const { notificationFeed } = useFlags();
   const fullName = `${firstName} ${lastName}`;
   const { auth: { selectedTeam, token }, teams, portfolios } = useSelector(
     (state) => ({
@@ -118,9 +120,12 @@ const HeaderMenu = ({
           <TrophyIcon />
         </div>
       </Tooltip>
-      <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['notifications-container'])}>
+      {
+        notificationFeed &&
+        <div className={clsx('is-flex is-align-items-center is-justify-content-center border-radius-24px py-20', styles['notifications-container'])}>
           <NotificationFeed />
-      </div>
+        </div>
+      }
       <div className={clsx('navbar-item has-dropdown', styles.team)} ref={userMenu}>
         {/* Menu Items */}
         <div className={clsx(styles['menu-item-container'], "navbar-dropdown is-right p-0 border-radius-8px")}>

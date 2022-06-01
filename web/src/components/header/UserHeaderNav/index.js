@@ -7,7 +7,6 @@ import styles from "../header.module.scss";
 import { PATHS } from '../../../utils/constants';
 import { isEmpty } from 'lodash';
 import { useFlags } from '../../launchDarkly';
-import NotificationFeed from '../../notificationFeed';
 
 const UserHeaderNav = ({ toggleHamburger, type = 'desktop', inviteCount = 0, selectedTeam }) => {
   const { pathname } = useRouter();
