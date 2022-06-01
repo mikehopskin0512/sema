@@ -1,9 +1,10 @@
+import assert from 'assert';
 import apollo from '../../../test/apolloClient';
 import { createAuthToken } from '../../auth/authService';
 import createUser from '../../../test/helpers/userHelper';
 import SmartComment from './smartCommentModel';
 
-describe('POST /comments/smart', () => {
+describe('GET /comments/smart', () => {
   let user;
   let token;
 
@@ -14,11 +15,114 @@ describe('POST /comments/smart', () => {
   describe('unauthenticated', () => {
     it('should return 401 Unauthorized', async () => {
       await expect(async () => {
-        await apollo.post('/v1/comments/smart', {
+        await apollo.get('/v1/comments/smart', {
           headers: {
             authorization: 'Bearer 123',
           },
         });
+      }).rejects.toThrow(/401/);
+    });
+  });
+
+  describe('with two comments', () => {
+    let data;
+
+    beforeAll(async () => {
+      token = await createAuthToken(user);
+    });
+
+    beforeAll(async () => {
+      const laterComment = await SmartComment.create({
+        comment: 'The later comment',
+        location: 'conversation',
+        suggestedComments: [],
+        reaction: null,
+        tags: [],
+        githubMetadata: {
+          commentId: 'issuecomment-14049223',
+          filename: null,
+          repo: 'phoenix',
+          repo_id: '237888452',
+          url: 'https://github.com/Semalab/phoenix',
+          created_at: '2020-12-18T20:30:00Z',
+          updated_at: '2020-12-17T20:30:14Z',
+          user: {
+            id: '1270524',
+            login: 'jrock17',
+          },
+          requester: 'codykenb',
+        },
+      });
+      const earlierComment = await SmartComment.create({
+        comment: 'The earlier comment',
+        location: 'conversation',
+        suggestedComments: [],
+        reaction: null,
+        tags: [],
+        githubMetadata: {
+          commentId: 'issuecomment-23049209',
+          filename: null,
+          repo: 'phoenix',
+          repo_id: '237888452',
+          url: 'https://github.com/Semalab/phoenix',
+          created_at: '2020-12-17T18:30:00Z',
+          updated_at: '2020-12-17T20:30:14Z',
+          user: {
+            id: '1270524',
+            login: 'jrock17',
+          },
+          requester: 'codykenb',
+        },
+        source: {
+          provider: 'github',
+          origin: 'repoSync',
+        },
+      });
+
+      // Ensure the earlier comment was created last in the database.
+      assert(earlierComment._id.toString() > laterComment._id.toString());
+      assert(earlierComment.createdAt > laterComment.createdAt);
+      assert(earlierComment.source.createdAt < laterComment.source.createdAt);
+
+      ({ data } = await apollo.get('/v1/comments/smart', {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }));
+    });
+
+    it.todo('should respond with 200 OK');
+
+    describe('list of comments', () => {
+      it('should be sorted by creation date at the source, descending', () => {
+        expect(data.comments[0].comment).toBe('The later comment');
+        expect(data.comments[1].comment).toBe('The earlier comment');
+      });
+    });
+  });
+});
+
+describe('POST /comments/smart', () => {
+  let user;
+  let token;
+
+  beforeAll(async () => {
+    await SmartComment.deleteMany();
+    user = await createUser();
+  });
+
+  describe('unauthenticated', () => {
+    it('should return 401 Unauthorized', async () => {
+      await expect(async () => {
+        await apollo.post(
+          '/v1/comments/smart',
+          {},
+          {
+            headers: {
+              authorization: 'Bearer 123',
+            },
+          }
+        );
       }).rejects.toThrow(/401/);
     });
   });
