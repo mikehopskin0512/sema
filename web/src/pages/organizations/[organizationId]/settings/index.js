@@ -10,7 +10,7 @@ import LabelsManagement from '../../../../components/organization/LabelsManageme
 import OrganizationManagement from '../../../../components/organization/OrganizationManagement';
 import usePermission from '../../../../hooks/usePermission';
 import {PATHS, TAB} from '../../../../utils/constants';
-import { TagIcon, OrganizationIcon } from '../../../../components/Icons';
+import { TagIcon, TeamIcon } from '../../../../components/Icons';
 
 const { fetchOrganizationMembers } = organizationsOperations;
 
@@ -62,7 +62,7 @@ const OrganizationSettings = () => {
       label: 'Organization Management',
       path: PATHS.ORGANIZATIONS.MANAGEMENT(organizationId),
       id: TAB.management,
-      icon: <OrganizationIcon width={20} />,
+      icon: <TeamIcon width={20} />,
     }),
     (isSemaAdmin() && {
       label: 'Labels Management',
